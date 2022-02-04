@@ -20,18 +20,18 @@ using GreenEnergyHub.Charges.WebApi.ModelPredicates;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace GreenEnergyHub.Charges.WebApi.Controllers
+namespace GreenEnergyHub.Charges.WebApi.Controllers.V2
 {
     /// <summary>
     /// Version 1: Introduce action to get charge links.
     /// Version 2: Breaking changes to get charge links.
     /// </summary>
     [ApiController]
-    [Route("[controller]")]
-    [ApiVersion("1.0", Deprecated = true)]
-    [ApiVersion("2.0")]
+    [ApiVersion(Version2)]
+    [Route("v{version:apiVersion}/[controller]")]
     public class ChargeLinksController : ControllerBase
     {
+        public const string Version2 = "2.0";
         private readonly IData _data;
 
         public ChargeLinksController(IData data)
@@ -41,48 +41,12 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers
 
         /// <summary>
         /// Returns all charge links data for a given metering point.
-        ///
-        /// This V1 can be removed when the BFF uses the new V2.
         /// </summary>
         /// <param name="meteringPointId">The 18-digits metering point identifier used by the Danish version of Green Energy Hub.
         /// Use 404 to get a "404 Not Found" response.</param>
         /// <returns>Charge links data or "404 Not Found"</returns>
-        [HttpGet("GetAsync")]
-        [MapToApiVersion("1.0")]
-        public async Task<IActionResult> GetV1Async(string meteringPointId)
-        {
-            if (meteringPointId == null)
-                return BadRequest();
-
-            var meteringPointExists = await _data
-                .MeteringPoints
-                .AnyAsync(m => m.MeteringPointId == meteringPointId)
-                .ConfigureAwait(false);
-
-            if (!meteringPointExists)
-                return NotFound();
-
-            var chargeLinks = await _data
-                .ChargeLinks
-                .ForMeteringPoint(meteringPointId)
-                .OrderBy(c => c.Charge.Type)
-                .ThenBy(c => c.Charge.SenderProvidedChargeId)
-                .ThenByDescending(c => c.StartDateTime)
-                .AsChargeLinkV1Dto()
-                .ToListAsync()
-                .ConfigureAwait(false);
-
-            return Ok(chargeLinks);
-        }
-
-        /// <summary>
-        /// Returns all charge links data for a given metering point.
-        /// </summary>
-        /// <param name="meteringPointId">The 18-digits metering point identifier used by the Danish version of Green Energy Hub.
-        /// Use 404 to get a "404 Not Found" response.</param>
-        /// <returns>Charge links data or "404 Not Found"</returns>
-        [HttpGet("GetAsync")]
-        [MapToApiVersion("2.0")]
+        [HttpGet]
+        [MapToApiVersion(Version2)]
         public async Task<IActionResult> GetAsync(string meteringPointId)
         {
             if (meteringPointId == null)

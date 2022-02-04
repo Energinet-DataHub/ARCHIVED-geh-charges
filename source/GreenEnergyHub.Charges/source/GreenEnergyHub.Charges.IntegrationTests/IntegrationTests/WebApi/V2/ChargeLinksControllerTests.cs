@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
@@ -27,7 +28,7 @@ using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
+namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V2
 {
     [IntegrationTest]
     [Collection(nameof(ChargesWebApiCollectionFixture))]
@@ -37,7 +38,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
         IClassFixture<WebApiFactory>,
         IAsyncLifetime
     {
-        private const string BaseUrl = "/ChargeLinks/GetAsync?meteringPointId=";
+        private const string BaseUrl = "/v2/ChargeLinks?meteringPointId=";
         private const string KnownMeteringPointId = SeededData.MeteringPoints.Mp571313180000000005.Id;
         private readonly HttpClient _client;
         private readonly AuthenticationClient _authenticationClient;
@@ -87,9 +88,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
 
             // Assert
             var jsonString = await response.Content.ReadAsStringAsync();
-            var actual = JsonSerializer.Deserialize<List<ChargeLinkV1Dto>>(
-                jsonString,
-                GetJsonSerializerOptions());
+            var actual = Deserialize<List<ChargeLinkV2Dto>>(jsonString);
 
             actual.Should().BeInAscendingOrder(c => c.ChargeType)
                 .And.ThenBeInAscendingOrder(c => c.ChargeId)
@@ -111,12 +110,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
 
-        private static JsonSerializerOptions GetJsonSerializerOptions()
+        private static T Deserialize<T>(string jsonSerialized)
         {
-            return new JsonSerializerOptions
+            var jsonSerializerOptions = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true, Converters = { new JsonStringEnumConverter() },
             };
+            return JsonSerializer.Deserialize<T>(jsonSerialized, jsonSerializerOptions)!;
         }
     }
 }

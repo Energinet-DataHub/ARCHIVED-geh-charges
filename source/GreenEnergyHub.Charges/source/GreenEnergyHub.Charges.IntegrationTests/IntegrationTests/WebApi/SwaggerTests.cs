@@ -12,14 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Energinet.Charges.Contracts.ChargeLink;
 using FluentAssertions;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures.WebApi;
 using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
@@ -31,18 +26,16 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
 {
     [IntegrationTest]
     [Collection(nameof(ChargesWebApiCollectionFixture))]
-    public class ChargeLinksV2ControllerTests :
+    public class SwaggerTests :
         WebApiTestBase<ChargesWebApiFixture>,
         IClassFixture<ChargesWebApiFixture>,
         IClassFixture<WebApiFactory>,
         IAsyncLifetime
     {
-        private const string BaseUrl = "/ChargeLinks/GetAsync?api-version=2.0&meteringPointId=";
-        private const string KnownMeteringPointId = SeededData.MeteringPoints.Mp571313180000000005.Id;
         private readonly HttpClient _client;
         private readonly AuthenticationClient _authenticationClient;
 
-        public ChargeLinksV2ControllerTests(
+        public SwaggerTests(
             ChargesWebApiFixture chargesWebApiFixture,
             WebApiFactory factory,
             ITestOutputHelper testOutputHelper)
@@ -68,55 +61,19 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
         }
 
         [Fact]
-        public async Task GetAsync_WhenMeteringPointIdHasChargeLinks_ReturnsOkAndCorrectContentType()
+        public async Task StartPage_ReturnsOk()
         {
-            // Act
-            var response = await _client.GetAsync($"{BaseUrl}{KnownMeteringPointId}");
-
-            // Assert
-            var contentType = response.Content.Headers.ContentType!.ToString();
+            var response = await _client.GetAsync("/swagger/index.html");
             response.StatusCode.Should().Be(HttpStatusCode.OK);
-            contentType.Should().Be("application/json; charset=utf-8");
         }
 
-        [Fact]
-        public async Task GetAsync_WhenMeteringPointIdHasChargeLinks_ReturnsOrderedChargeLinks()
+        [Theory]
+        [InlineData("v1")]
+        [InlineData("v2")]
+        public async Task SpecificationForVersion_ReturnsOk(string version)
         {
-            // Act
-            var response = await _client.GetAsync($"{BaseUrl}{KnownMeteringPointId}");
-
-            // Assert
-            var jsonString = await response.Content.ReadAsStringAsync();
-            var actual = JsonSerializer.Deserialize<List<ChargeLinkV2Dto>>(
-                jsonString,
-                GetJsonSerializerOptions());
-
-            actual.Should().BeInAscendingOrder(c => c.ChargeType)
-                .And.ThenBeInAscendingOrder(c => c.ChargeId)
-                .And.ThenBeInDescendingOrder(c => c.StartDate);
-        }
-
-        [Fact]
-        public async Task GetAsync_WhenMeteringPointIdDoesNotExist_ReturnsNotFound()
-        {
-            var response = await _client.GetAsync($"{BaseUrl}{Guid.NewGuid()}");
-            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
-        }
-
-        [Fact]
-        public async Task GetAsync_WhenNoMeteringPointIdInput_ReturnsBadRequest()
-        {
-            var missingMeteringPointId = string.Empty;
-            var response = await _client.GetAsync($"{BaseUrl}{missingMeteringPointId}");
-            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        }
-
-        private static JsonSerializerOptions GetJsonSerializerOptions()
-        {
-            return new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true, Converters = { new JsonStringEnumConverter() },
-            };
+            var response = await _client.GetAsync($"/swagger/{version}/swagger.json");
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
         }
     }
 }
