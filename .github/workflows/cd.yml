@@ -20,13 +20,13 @@ on:
 
 jobs:
   publish_release:
-    uses: Energinet-DataHub/.github/.github/workflows/publish-release.yml@4.0.0
+    uses: Energinet-DataHub/.github/.github/workflows/publish-release.yml@3.0.3
     secrets:
       PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
 
   dispatch_deployment_request:
     needs: publish_release
-    uses: Energinet-DataHub/.github/.github/workflows/dispatch-deployment-request.yml@4.0.0
+    uses: Energinet-DataHub/.github/.github/workflows/dispatch-deployment-request.yml@3.0.3
     with:
       CALLER_REPOSITORY_NAME: geh-charges
       CALLER_REPOSITORY_PATH: Energinet-DataHub/geh-charges
