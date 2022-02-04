@@ -32,7 +32,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Seriali
 
         public override async Task<IInboundMessage> FromBytesAsync(byte[] data, CancellationToken cancellationToken = default)
         {
+#pragma warning disable CA2007
             await using var stream = new MemoryStream(data);
+#pragma warning restore CA2007
+
             return (TInboundMessage)await _jsonSerializer.DeserializeAsync(stream, typeof(TInboundMessage)).ConfigureAwait(false);
         }
     }
