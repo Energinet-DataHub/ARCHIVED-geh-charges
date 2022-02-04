@@ -51,7 +51,7 @@ jobs:
   functionhost_ci:
     # Depend on these validating jobs in order to avoid potentially creating artifacts that should never be used if this job fails
     needs: [ci_base, terraform_validate, dotnet_solution_ci]
-    uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@4.0.0
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@3.0.2
     with:
       CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.FunctionHost/GreenEnergyHub.Charges.FunctionHost.csproj'
       DOTNET_VERSION: '5.0.404'
