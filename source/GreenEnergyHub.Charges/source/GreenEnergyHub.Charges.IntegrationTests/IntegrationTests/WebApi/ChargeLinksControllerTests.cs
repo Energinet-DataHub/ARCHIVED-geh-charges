@@ -52,6 +52,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
 
         public async Task InitializeAsync()
         {
+            await Task.CompletedTask;
         }
 
         public Task DisposeAsync()

@@ -77,7 +77,8 @@ namespace GreenEnergyHub.Charges.WebApi
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "GreenEnergyHub.Charges.WebApi v1"));
             }
-            else
+
+            if (!env.IsDevelopment())
             {
                 // ATM. we only register this middleware when not in development.
                 app.UseMiddleware<JwtTokenMiddleware>();
