@@ -54,7 +54,7 @@ jobs:
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@3.0.3
     with:
       CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.FunctionHost/GreenEnergyHub.Charges.FunctionHost.csproj'
-      DOTNET_VERSION: '5.0.202'
+      DOTNET_VERSION: '5.0.404'
       ARTIFACT_NAME: functionhost
 
   # Create web API artifact for deployment
