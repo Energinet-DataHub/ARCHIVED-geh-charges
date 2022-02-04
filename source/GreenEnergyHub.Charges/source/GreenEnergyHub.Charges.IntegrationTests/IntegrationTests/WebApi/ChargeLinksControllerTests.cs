@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
         private const string BaseUrl = "/ChargeLinks/GetAsync?meteringPointId=";
         private const string KnownMeteringPointId = SeededData.MeteringPoints.Mp571313180000000005.Id;
         private readonly HttpClient _client;
-        private readonly AuthenticationClient _authenticationClient;
+        private readonly BackendAuthenticationClient _backendAuthenticationClient;
 
         public ChargeLinksControllerTests(
             ChargesWebApiFixture chargesWebApiFixture,
@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
             : base(chargesWebApiFixture, testOutputHelper)
         {
             _client = factory.CreateClient();
-            _authenticationClient = new AuthenticationClient(
+            _backendAuthenticationClient = new BackendAuthenticationClient(
                 chargesWebApiFixture.AuthorizationConfiguration.BackendAppScope,
                 chargesWebApiFixture.AuthorizationConfiguration.ClientCredentialsSettings,
                 chargesWebApiFixture.AuthorizationConfiguration.B2cTenantId);
@@ -57,7 +57,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
 
         public async Task InitializeAsync()
         {
-            var authenticationResult = await _authenticationClient.GetAuthenticationTokenAsync();
+            var authenticationResult = await _backendAuthenticationClient.GetAuthenticationTokenAsync();
             _client.DefaultRequestHeaders.Add("Authorization", $"Bearer {authenticationResult.AccessToken}");
         }
 

@@ -65,7 +65,7 @@ namespace GreenEnergyHub.Charges.WebApi
             });
 
             services.AddQueryApi(Configuration);
-            services.AddJwtTokenSecurity();
+            //services.AddJwtTokenSecurity();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
