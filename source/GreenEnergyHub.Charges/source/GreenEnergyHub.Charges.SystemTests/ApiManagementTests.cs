@@ -70,7 +70,7 @@ namespace GreenEnergyHub.Charges.SystemTests
             using var actualResponse = await httpClient.SendAsync(request);
 
             // Assert
-            actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+            actualResponse.StatusCode.Should().Be(HttpStatusCode.Accepted);
         }
 
         // This shows our request will fail if we call API Management without a valid access token
