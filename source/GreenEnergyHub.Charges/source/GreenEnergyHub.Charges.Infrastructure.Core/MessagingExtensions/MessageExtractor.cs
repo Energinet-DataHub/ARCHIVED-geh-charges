@@ -45,12 +45,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions
 
         private static async Task<byte[]> GetBytesFromStreamAsync(Stream data, CancellationToken cancellationToken)
         {
-#pragma warning disable CA2007
-            await using var stream = new MemoryStream();
-#pragma warning restore CA2007
-            await data.CopyToAsync(stream, cancellationToken).ConfigureAwait(false);
-            var bytes = stream.ToArray();
-            return bytes;
+            var stream = new MemoryStream();
+            await using (stream.ConfigureAwait(false))
+            {
+                await data.CopyToAsync(stream, cancellationToken).ConfigureAwait(false);
+                var bytes = stream.ToArray();
+                return bytes;
+            }
         }
     }
 }

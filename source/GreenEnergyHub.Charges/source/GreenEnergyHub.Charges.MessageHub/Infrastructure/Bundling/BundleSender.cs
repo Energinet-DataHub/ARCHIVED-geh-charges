@@ -42,13 +42,12 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Bundling
             try
             {
                 var bundleCreator = _bundleCreatorProvider.Get(request);
-
-#pragma warning disable CA2007
-                await using var bundleStream = new MemoryStream();
-#pragma warning restore CA2007
-
-                await bundleCreator.CreateAsync(request, bundleStream).ConfigureAwait(false);
-                await _bundleReplier.ReplyAsync(bundleStream, request).ConfigureAwait(false);
+                var bundleStream = new MemoryStream();
+                await using (bundleStream.ConfigureAwait(false))
+                {
+                    await bundleCreator.CreateAsync(request, bundleStream).ConfigureAwait(false);
+                    await _bundleReplier.ReplyAsync(bundleStream, request).ConfigureAwait(false);
+                }
             }
             catch (Exception e)
             {
