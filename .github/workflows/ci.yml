@@ -61,30 +61,30 @@ jobs:
   webapi_ci:
     # Depend on these validating jobs in order to avoid potentially creating artifacts that should never be used if this job fails
     needs: [ci_base, terraform_validate, dotnet_solution_ci]
-    uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-webapi-artifact.yml@3.0.3
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-webapi-artifact.yml@4.0.0
     with:
       CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.WebApi/GreenEnergyHub.Charges.WebApi.csproj'
-      DOTNET_VERSION: '5.0.202'
+      DOTNET_VERSION: '5.0.404'
       ARTIFACT_NAME: webapi
 
   # Create DbUp artifact for deployment
   database_migration_ci:
     # Depend on these validating jobs in order to avoid potentially creating artifacts that should never be used if this job fails
     needs: [ci_base, terraform_validate, dotnet_solution_ci]
-    uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@3.0.3
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@4.0.0
     with:
       CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ApplyDBMigrationsApp/GreenEnergyHub.Charges.ApplyDBMigrationsApp.csproj'
-      DOTNET_VERSION: '5.0.202'
+      DOTNET_VERSION: '5.0.404'
       ARTIFACT_NAME: databasemigration
 
   # # Create system tests artifact for testing after deployment
   # systemtest_ci:
   #   # Depend on these validating jobs in order to avoid potentially creating artifacts that should never be used if this job fails
   #   needs: [ci_base, terraform_validate, dotnet_solution_ci]
-  #   uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@3.0.3
+  #   uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@4.0.0
   #   with:
   #     CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.SystemTests/GreenEnergyHub.Charges.SystemTests.csproj'
-  #     DOTNET_VERSION: '5.0.202'
+  #     DOTNET_VERSION: '5.0.404'
   #     ARTIFACT_NAME: systemtests
 
   # Create pre-release that might eventually be deployed in CD pipeline
@@ -95,7 +95,7 @@ jobs:
       database_migration_ci
       #systemtest_ci
     ]
-    uses: Energinet-DataHub/.github/.github/workflows/create-prerelease.yml@3.0.3
+    uses: Energinet-DataHub/.github/.github/workflows/create-prerelease.yml@4.0.0
     with:
       CALLER_REPOSITORY_PATH: Energinet-DataHub/geh-charges
     secrets:
