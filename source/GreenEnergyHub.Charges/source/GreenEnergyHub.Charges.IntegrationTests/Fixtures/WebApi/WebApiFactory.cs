@@ -13,14 +13,9 @@
 // limitations under the License.
 
 using System;
-using System.Linq;
-using Energinet.DataHub.Core.App.Common.Identity;
-using Energinet.DataHub.Core.App.Common.Security;
-using Energinet.DataHub.Core.App.WebApp.Middleware;
 using GreenEnergyHub.Charges.WebApi;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures.WebApi
 {
@@ -33,27 +28,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures.WebApi
             builder.ConfigureServices(services =>
             {
                 // This can be used for changing registrations in the container (e.g. for mocks).
-               // RemoveJwtTokenSecurity(services);
+
+                // var sp = services.BuildServiceProvider();
+                // using var scope = sp.CreateScope();
+                // var scopedServices = scope.ServiceProvider;
             });
-        }
-
-        /// <summary>
-        /// Removes registrations of JwtTokenMiddleware and corresponding dependencies.
-        /// </summary>
-        /// <param name="serviceCollection">ServiceCollection container</param>
-        private static void RemoveJwtTokenSecurity(IServiceCollection serviceCollection)
-        {
-            var jwtTokenMiddleware = serviceCollection.First(x => x.ImplementationType == typeof(JwtTokenMiddleware));
-            serviceCollection.Remove(jwtTokenMiddleware);
-
-            var jwtTokenValidator = serviceCollection.First(x => x.ImplementationType == typeof(JwtTokenValidator));
-            serviceCollection.Remove(jwtTokenValidator);
-
-            var claimsPrincipalAccessor = serviceCollection.First(x => x.ImplementationType == typeof(ClaimsPrincipalAccessor));
-            serviceCollection.Remove(claimsPrincipalAccessor);
-
-            var claimsPrincipalContext = serviceCollection.First(x => x.ImplementationType == typeof(ClaimsPrincipalContext));
-            serviceCollection.Remove(claimsPrincipalContext);
         }
     }
 }
