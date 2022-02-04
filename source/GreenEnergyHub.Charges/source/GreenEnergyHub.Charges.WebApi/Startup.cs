@@ -65,7 +65,7 @@ namespace GreenEnergyHub.Charges.WebApi
             });
 
             services.AddQueryApi(Configuration);
-            //services.AddJwtTokenSecurity();
+            services.AddJwtTokenSecurity();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -77,12 +77,15 @@ namespace GreenEnergyHub.Charges.WebApi
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "GreenEnergyHub.Charges.WebApi v1"));
             }
+            else
+            {
+                // ATM. we only register this middleware when not in development.
+                app.UseMiddleware<JwtTokenMiddleware>();
+            }
 
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
-            app.UseMiddleware<JwtTokenMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

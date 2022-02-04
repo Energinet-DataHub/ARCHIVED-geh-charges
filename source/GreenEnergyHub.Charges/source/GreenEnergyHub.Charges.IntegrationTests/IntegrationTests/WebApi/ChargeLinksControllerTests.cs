@@ -40,7 +40,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
         private const string BaseUrl = "/ChargeLinks/GetAsync?meteringPointId=";
         private const string KnownMeteringPointId = SeededData.MeteringPoints.Mp571313180000000005.Id;
         private readonly HttpClient _client;
-        private readonly BackendAuthenticationClient _backendAuthenticationClient;
 
         public ChargeLinksControllerTests(
             ChargesWebApiFixture chargesWebApiFixture,
@@ -49,16 +48,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
             : base(chargesWebApiFixture, testOutputHelper)
         {
             _client = factory.CreateClient();
-            _backendAuthenticationClient = new BackendAuthenticationClient(
-                chargesWebApiFixture.AuthorizationConfiguration.BackendAppScope,
-                chargesWebApiFixture.AuthorizationConfiguration.ClientCredentialsSettings,
-                chargesWebApiFixture.AuthorizationConfiguration.B2cTenantId);
         }
 
         public async Task InitializeAsync()
         {
-            var authenticationResult = await _backendAuthenticationClient.GetAuthenticationTokenAsync();
-            _client.DefaultRequestHeaders.Add("Authorization", $"Bearer {authenticationResult.AccessToken}");
         }
 
         public Task DisposeAsync()
@@ -109,19 +102,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
             var missingMeteringPointId = string.Empty;
             var response = await _client.GetAsync($"{BaseUrl}{missingMeteringPointId}");
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        }
-
-        [Fact]
-        public async Task When_RequestIsUnauthenticated_Then_AHttp401UnauthorizedIsReturned()
-        {
-            // Arrange
-            _client.DefaultRequestHeaders.Remove("Authorization");
-
-            // Act
-            var response = await _client.GetAsync($"{BaseUrl}{KnownMeteringPointId}");
-
-            // Assert
-            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
 
         private static JsonSerializerOptions GetJsonSerializerOptions()
