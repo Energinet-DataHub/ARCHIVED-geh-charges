@@ -16,6 +16,8 @@
     "ACTOR_REGISTER_CONNECTION_STRING": "<actor register database connection string>",
     "MESSAGEHUB_STORAGE_CONNECTION_STRING": "<connection string for writing to the Message Hub storage account for bundles>",
     "REQUEST_RESPONSE_LOGGING_CONNECTION_STRING": "<connection string for logging request and response to storage>",
+    "B2C_TENANT_ID": "<Azure B2C tenant id>",
+    "BACKEND_SERVICE_APP_ID": "<Backend service application id>",
 
     // From this point on, it is settings that change with the code and not the environment
     // Localization

@@ -31,10 +31,12 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 
         public async Task<Charge> CreateFromCommandAsync(ChargeCommand command)
         {
-            var owner = await _marketParticipantRepository.GetOrNullAsync(command.ChargeOperation.ChargeOwner);
+            var owner = await _marketParticipantRepository
+                .GetOrNullAsync(command.ChargeOperation.ChargeOwner)
+                .ConfigureAwait(false);
 
             if (owner == null)
-                throw new Exception($"Market participant '{command.ChargeOperation.ChargeOwner}' does not exist.");
+                throw new InvalidOperationException($"Market participant '{command.ChargeOperation.ChargeOwner}' does not exist.");
 
             return new Charge(
                 Guid.NewGuid(),

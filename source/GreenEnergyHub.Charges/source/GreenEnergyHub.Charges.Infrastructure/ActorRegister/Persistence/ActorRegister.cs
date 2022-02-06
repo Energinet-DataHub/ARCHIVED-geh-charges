@@ -16,6 +16,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using GreenEnergyHub.Charges.Infrastructure.ActorRegister.Persistence.Actors;
+using GreenEnergyHub.Charges.Infrastructure.ActorRegister.Persistence.GridAreaLinks;
 using GreenEnergyHub.Charges.Infrastructure.ActorRegister.Persistence.GridAreas;
 using Microsoft.EntityFrameworkCore;
 
@@ -34,9 +35,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister.Persistence
 
         public IQueryable<GridArea> GridAreas => GridAreasSet.AsNoTracking();
 
+        public IQueryable<GridAreaLink> GridAreaLinks => GridAreaLinksSet.AsNoTracking();
+
         private DbSet<Actor> ActorsSet { get; set; }
 
         private DbSet<GridArea> GridAreasSet { get; set; }
+
+        private DbSet<GridAreaLink> GridAreaLinksSet { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -46,6 +51,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ActorRegister.Persistence
 
             modelBuilder.ApplyConfiguration(new ActorEntityConfiguration());
             modelBuilder.ApplyConfiguration(new GridAreaEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new GridAreaLinkEntityConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

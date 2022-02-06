@@ -49,7 +49,6 @@ using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using GreenEnergyHub.Iso8601;
-using GreenEnergyHub.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -62,12 +61,13 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped(typeof(IClock), _ => SystemClock.Instance);
-            serviceCollection.AddSingleton<IJsonSerializer, JsonSerializer>();
             serviceCollection.AddLogging();
             serviceCollection.AddScoped<CorrelationIdMiddleware>();
             serviceCollection.AddScoped<FunctionTelemetryScopeMiddleware>();
             serviceCollection.AddScoped<MessageMetaDataMiddleware>();
             serviceCollection.AddScoped<FunctionInvocationLoggingMiddleware>();
+            serviceCollection.AddJwtTokenSecurity();
+            //serviceCollection.AddActorContext();
             serviceCollection.AddApplicationInsightsTelemetryWorkerService(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.AppInsightsInstrumentationKey));
 

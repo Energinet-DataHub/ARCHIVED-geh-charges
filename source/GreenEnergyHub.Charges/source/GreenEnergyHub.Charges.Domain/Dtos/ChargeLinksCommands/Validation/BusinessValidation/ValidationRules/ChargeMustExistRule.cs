@@ -32,6 +32,10 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
 
         public bool IsValid => _existingCharge is not null;
 
+        /// <summary>
+        /// This validation rule validates each ChargeLink in a list of ChargeLink(s). This property will
+        /// tell which ChargeLink triggered the rule. The ChargeLink is identified by SenderProvidedChargeId.
+        /// </summary>
         public string TriggeredBy => _chargeLinkDto.SenderProvidedChargeId;
     }
 }

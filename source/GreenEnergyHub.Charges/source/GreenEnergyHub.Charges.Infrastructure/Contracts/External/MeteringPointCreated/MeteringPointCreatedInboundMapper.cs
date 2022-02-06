@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Runtime.InteropServices.ComTypes;
 using Energinet.DataHub.Core.Messaging.Protobuf;
 using Energinet.DataHub.Core.Messaging.Transport;
 using GreenEnergyHub.Charges.Core.DateTime;
@@ -80,7 +80,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Contracts.External.MeteringPoint
 
             return new MeteringPointCreatedEvent(
                 meteringPointCreated.GsrnNumber,
-                meteringPointCreated.GridAreaCode,
+                Guid.Parse(meteringPointCreated.GridAreaCode), // The GridAreaCode name is wrong - it's a grid area link id
                 settlementMethod,
                 connectionState,
                 meteringPointCreated.EffectiveDate.ToInstant(),

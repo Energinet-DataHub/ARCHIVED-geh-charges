@@ -40,10 +40,10 @@ jobs:
     needs: pre_job
     if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
     name: Validate build Clients CI
-    uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci.yml@2.6.1
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci.yml@4.0.0
     with:
       SOLUTION_FILE_PATH: 'source/Energinet.Charges.Libraries/Energinet.DataHub.Charges.Libraries.sln'
-      DOTNET_VERSION: '5.0.202'
+      DOTNET_VERSION: '5.0.404'
       USE_AZURITE: true
       USE_AZURE_FUNCTIONS_CORE_TOOLS: true
     secrets:
@@ -52,3 +52,4 @@ jobs:
       AZURE_SPN_ID: ${{ secrets.AZURE_SPN_ID }}
       AZURE_SPN_SECRET: ${{ secrets.AZURE_SPN_SECRET }}
       AZURE_KEYVAULT_URL: ${{ secrets.AZURE_KEYVAULT_URL }}
+      AZURE_SECRETS_KEYVAULT_URL: ${{ secrets.AZURE_SECRETS_KEYVAULT_URL }}

@@ -24,7 +24,6 @@ using GreenEnergyHub.TestHelpers;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NodaTime;
-using NodaTime.Extensions;
 using Xunit;
 using Xunit.Categories;
 
@@ -104,7 +103,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
             var existingMeteringPoint = MeteringPoint.Create(
                 meteringPointCreatedEvent.MeteringPointId,
                 MeteringPointType.Production,
-                "DiffGridArea",
+                Guid.NewGuid(),
                 meteringPointCreatedEvent.EffectiveDate,
                 meteringPointCreatedEvent.ConnectionState,
                 SettlementMethod.NonProfiled);
@@ -124,7 +123,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
                 $"Received 'settlement method' event data '{meteringPoint.SettlementMethod}' was not equal to the already persisted value '{existingMeteringPoint.SettlementMethod}' for Metering Point ID '{meteringPoint.MeteringPointId}'",
                 LogLevel.Error);
             logger.VerifyLoggerWasCalled(
-                $"Received 'grid area id' event data '{meteringPoint.GridAreaId}' was not equal to the already persisted value '{existingMeteringPoint.GridAreaId}' for Metering Point ID '{meteringPoint.MeteringPointId}'",
+                $"Received 'grid area link id' event data '{meteringPoint.GridAreaLinkId}' was not equal to the already persisted value '{existingMeteringPoint.GridAreaLinkId}' for Metering Point ID '{meteringPoint.MeteringPointId}'",
                 LogLevel.Error);
         }
 
@@ -146,7 +145,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
         {
             return new MeteringPointCreatedEvent(
                 "123",
-                "2",
+                Guid.NewGuid(),
                 SettlementMethod.Flex,
                 ConnectionState.New,
                 SystemClock.Instance.GetCurrentInstant(),
@@ -158,7 +157,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
             var meteringPoint = MeteringPoint.Create(
                 meteringPointCreatedEvent.MeteringPointId,
                 meteringPointCreatedEvent.MeteringPointType,
-                meteringPointCreatedEvent.GridAreaId,
+                meteringPointCreatedEvent.GridAreaLinkId,
                 meteringPointCreatedEvent.EffectiveDate,
                 meteringPointCreatedEvent.ConnectionState,
                 meteringPointCreatedEvent.SettlementMethod);

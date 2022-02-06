@@ -42,7 +42,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
         public async Task<IValidationRuleSet> CreateRulesAsync(ChargeLinksCommand chargeLinksCommand)
         {
             if (chargeLinksCommand == null) throw new ArgumentNullException(nameof(chargeLinksCommand));
-            var meteringPoint = await _meteringPointRepository.GetOrNullAsync(chargeLinksCommand.MeteringPointId);
+            var meteringPoint = await _meteringPointRepository
+                .GetOrNullAsync(chargeLinksCommand.MeteringPointId)
+                .ConfigureAwait(false);
 
             var rules = GetMandatoryRulesForCommand(meteringPoint);
             if (meteringPoint == null)
@@ -58,8 +60,11 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
                 if (charge == null)
                     continue;
 
-                var existingChargeLinks = await _chargeLinksRepository.GetAsync(charge.Id, meteringPoint.Id);
-                GetMandatoryRulesForSingleLinks(rules, chargeLinksCommand, existingChargeLinks);
+                var existingChargeLinks = await _chargeLinksRepository
+                    .GetAsync(charge.Id, meteringPoint.Id)
+                    .ConfigureAwait(false);
+
+                rules.AddRange(GetMandatoryRulesForSingleLinks(chargeLinksCommand, existingChargeLinks));
             }
 
             return ValidationRuleSet.FromRules(rules);
@@ -73,12 +78,14 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
             };
         }
 
-        private void GetMandatoryRulesForSingleLinks(
-            List<IValidationRule> rules,
+        private List<IValidationRule> GetMandatoryRulesForSingleLinks(
             ChargeLinksCommand chargeLinksCommand,
             IReadOnlyCollection<ChargeLink> existingChargeLinks)
         {
-            rules.Add(new ChargeLinksUpdateNotYetSupportedRule(chargeLinksCommand, existingChargeLinks));
+            return new List<IValidationRule>
+            {
+                new ChargeLinksUpdateNotYetSupportedRule(chargeLinksCommand, existingChargeLinks),
+            };
         }
     }
 }

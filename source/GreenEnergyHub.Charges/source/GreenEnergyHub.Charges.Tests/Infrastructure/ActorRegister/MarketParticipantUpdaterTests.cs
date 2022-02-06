@@ -15,6 +15,7 @@
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.ActorRegister;
+using GreenEnergyHub.Charges.Infrastructure.ActorRegister.MarketParticipantsSynchronization;
 using GreenEnergyHub.Charges.Infrastructure.ActorRegister.Persistence.Actors;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders;
@@ -56,6 +57,24 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ActorRegister
             MarketParticipantUpdater.Update(marketParticipant, actor, expectedRole);
 
             marketParticipant.BusinessProcessRole.Should().Be(expectedRole);
+        }
+
+        /// <summary>
+        /// This is not a valid business operation. We however need to support it for now as the temporary
+        /// actor register exhibits this kind of updates to actors.
+        /// </summary>
+        [Theory]
+        [InlineAutoMoqData]
+        public void Update_SetsMarketParticipantId(
+            MarketParticipantBuilder marketParticipantBuilder,
+            Actor actor)
+        {
+            var anyValidRole = MarketParticipantRole.SystemOperator;
+            var marketParticipant = marketParticipantBuilder.Build();
+
+            MarketParticipantUpdater.Update(marketParticipant, actor, anyValidRole);
+
+            marketParticipant.MarketParticipantId.Should().Be(actor.IdentificationNumber);
         }
     }
 }

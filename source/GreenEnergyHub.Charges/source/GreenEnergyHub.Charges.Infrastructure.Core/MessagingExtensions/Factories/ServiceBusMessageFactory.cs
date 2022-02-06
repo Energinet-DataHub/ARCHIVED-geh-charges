@@ -40,11 +40,16 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factori
                 {
                     CorrelationId = _correlationContext.Id,
                     ApplicationProperties =
-                        { new KeyValuePair<string, object>("ReplyTo", _messageMetaDataContext.ReplyTo), },
+                    {
+                        new KeyValuePair<string, object>("ReplyTo", _messageMetaDataContext.ReplyTo),
+                    },
                 };
             }
 
-            return new ServiceBusMessage(data) { CorrelationId = _correlationContext.Id, };
+            return new ServiceBusMessage(data)
+            {
+                CorrelationId = _correlationContext.Id,
+            };
         }
 
         public ServiceBusMessage CreateExternalMessage(byte[] data)

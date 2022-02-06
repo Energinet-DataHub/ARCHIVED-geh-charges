@@ -28,7 +28,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders
         {
             Id = Guid.NewGuid().ToString(),
             CreatedDateTime = SystemClock.Instance.GetCurrentInstant(),
-            BusinessReasonCode = BusinessReasonCode.UpdateChargeInformation,
+            BusinessReasonCode = BusinessReasonCode.UpdateMasterDataSettlement,
             IndustryClassification = IndustryClassification.Electricity,
             RequestDate = SystemClock.Instance.GetCurrentInstant(),
             Recipient = new MarketParticipantDto { Id = Guid.NewGuid().ToString(), BusinessProcessRole = MarketParticipantRole.EnergyAgency },
@@ -47,6 +47,11 @@ namespace GreenEnergyHub.Charges.Tests.Builders
         public ChargeLinksCommand Build()
         {
             return new ChargeLinksCommand(_meteringPointId, _document, _links);
+        }
+
+        public ChargeLinksCommand Build(string meteringPointId)
+        {
+            return new ChargeLinksCommand(meteringPointId, _document, _links);
         }
     }
 }

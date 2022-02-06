@@ -31,47 +31,27 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
             _chargesDatabaseContext = chargesDatabaseContext;
         }
 
-        public Task<MarketParticipant> GetOrNullAsync(string marketParticipantId)
-        {
-            return _chargesDatabaseContext
-                .MarketParticipants
-                .SingleOrDefaultAsync(mp => mp.MarketParticipantId == marketParticipantId);
-        }
-
-        /// <summary>
-        /// This implementation is temp until grid areas and market participants are implemented in their own
-        /// domains and integration event are used  to update a query model in the charges domain.
-        ///
-        /// Later we need to use the metering point ID to find the grid area and then find the responsible market
-        /// participant of the grid area.
-        /// </summary>
-        /// <param name="meteringPointId">ID of the metering point to find the grid access provider for</param>
-        /// <returns>The grid access provider responsible for the metering point</returns>
-        public MarketParticipant GetGridAccessProvider(string meteringPointId)
-        {
-            return new MarketParticipant(
-                Guid.NewGuid(),
-                "8100000000030",
-                true,
-                MarketParticipantRole.GridAccessProvider);
-        }
-
-        public async Task<List<MarketParticipant>> GetActiveGridAccessProvidersAsync()
+        public async Task<MarketParticipant?> GetOrNullAsync(Guid id)
         {
             return await _chargesDatabaseContext
+                .MarketParticipants
+                .SingleOrDefaultAsync(mp => mp.Id == id).ConfigureAwait(false);
+        }
+
+        public async Task<MarketParticipant?> GetOrNullAsync(string marketParticipantId)
+        {
+            return await _chargesDatabaseContext
+                .MarketParticipants
+                .SingleOrDefaultAsync(mp => mp.MarketParticipantId == marketParticipantId).ConfigureAwait(false);
+        }
+
+        public Task<List<MarketParticipant>> GetGridAccessProvidersAsync()
+        {
+            return _chargesDatabaseContext
                 .MarketParticipants
                 .Where(mp => mp.BusinessProcessRole == MarketParticipantRole.GridAccessProvider)
                 .Where(m => m.IsActive)
                 .ToListAsync();
-        }
-
-        public async Task<MarketParticipant> GetAsync(MarketParticipantRole marketParticipantRole)
-        {
-            return await _chargesDatabaseContext
-                .MarketParticipants
-                .Where(mp => mp.BusinessProcessRole == marketParticipantRole)
-                .SingleAsync()
-                .ConfigureAwait(false);
         }
 
         public async Task<IReadOnlyCollection<MarketParticipant>> GetAsync(IEnumerable<Guid> ids)
@@ -79,14 +59,46 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
             return await _chargesDatabaseContext
                 .MarketParticipants
                 .Where(mp => ids.Contains(mp.Id))
-                .ToListAsync();
+                .ToListAsync()
+                .ConfigureAwait(false);
         }
 
-        public async Task<MarketParticipant> GetHubSenderAsync()
+        public Task<MarketParticipant> GetGridAccessProviderAsync(string meteringPointId)
         {
-            return await _chargesDatabaseContext
+            if (meteringPointId == null) throw new ArgumentNullException(nameof(meteringPointId));
+            if (string.IsNullOrEmpty(meteringPointId.Trim())) throw new ArgumentException();
+
+            // According to product owner the business processes should not be able to result
+            // in encountering an inactive grid area nor a grid area without
+            // an owner grid access provider. So no special handling of those cases.
+            return (from meteringPoint in _chargesDatabaseContext.MeteringPoints
+                    from gridAreaLink in _chargesDatabaseContext.GridAreaLinks
+                    from gridArea in _chargesDatabaseContext.GridAreas
+                    from marketParticipant in _chargesDatabaseContext.MarketParticipants
+                    where gridArea.GridAccessProviderId == marketParticipant.Id
+                    where meteringPoint.MeteringPointId == meteringPointId
+                    where meteringPoint.GridAreaLinkId == gridAreaLink.Id
+                    where gridAreaLink.GridAreaId == gridArea.Id
+                    select marketParticipant)
+                .SingleAsync();
+        }
+
+        public Task<MarketParticipant> GetMeteringPointAdministratorAsync()
+        {
+            return GetAsync(MarketParticipantRole.MeteringPointAdministrator);
+        }
+
+        public Task<MarketParticipant> GetSystemOperatorAsync()
+        {
+            return GetAsync(MarketParticipantRole.SystemOperator);
+        }
+
+        private Task<MarketParticipant> GetAsync(MarketParticipantRole marketParticipantRole)
+        {
+            return _chargesDatabaseContext
                 .MarketParticipants
-                .Where(mp => mp.BusinessProcessRole == MarketParticipantRole.MeteringPointAdministrator)
+                .Where(mp => mp.BusinessProcessRole == marketParticipantRole)
+                .Where(mp => mp.IsActive)
                 .SingleAsync();
         }
     }

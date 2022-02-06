@@ -12,9 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.Core.FunctionApp.Common.Middleware;
 using Energinet.DataHub.Core.Logging.RequestResponseMiddleware;
 using GreenEnergyHub.Charges.FunctionHost.Configuration;
 using GreenEnergyHub.Charges.FunctionHost.System;
+using GreenEnergyHub.Charges.Infrastructure.Core.Authentication;
 using GreenEnergyHub.Charges.Infrastructure.Core.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
@@ -35,6 +37,7 @@ namespace GreenEnergyHub.Charges.FunctionHost
                     builder.UseMiddleware<MessageMetaDataMiddleware>();
                     builder.UseMiddleware<FunctionInvocationLoggingMiddleware>();
                     builder.UseMiddleware<RequestResponseLoggingMiddleware>();
+                    builder.UseMiddleware<JwtTokenWrapperMiddleware>();
                 })
                 .ConfigureServices(ConfigureServices)
                 .Build();

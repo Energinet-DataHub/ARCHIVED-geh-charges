@@ -15,7 +15,7 @@ on:
 
 env:
   SOLUTION_PATH: 'source\GreenEnergyHub.Charges\GreenEnergyHub.Charges.sln'
-  DOTNET_VERSION: '5.0.202'
+  DOTNET_VERSION: '5.0.404'
   SONAR_PROJECTKEY: 'geh-charges'
   SOURCE_PATH_ON_BUILDMACHINE: 'D:\a\geh-charges\geh-charges\source' # We have to be speficic with this path to get around a .NET 5.0 issue in SonarCLoud
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

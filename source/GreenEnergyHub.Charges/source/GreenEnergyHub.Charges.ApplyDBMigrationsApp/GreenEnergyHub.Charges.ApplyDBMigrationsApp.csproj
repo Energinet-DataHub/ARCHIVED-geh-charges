@@ -30,13 +30,12 @@ limitations under the License.
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Include="Scripts\Model\202201200801 Create tables.sql" />
-      <EmbeddedResource Include="Scripts\Seed\202201200810 Add default charges owner.sql" />
-      <EmbeddedResource Include="Scripts\Test\202201200831 Add metering points.sql" />
-      <EmbeddedResource Include="Scripts\Seed\202201200811 Add default charges.sql" />
-      <EmbeddedResource Include="Scripts\Seed\202201200812 Add default charge links.sql" />
-      <EmbeddedResource Include="Scripts\Test\202201200830 Add market participants.sql" />
-      <EmbeddedResource Include="Scripts\Test\202201200832 Add charges and links.sql" />
+      <EmbeddedResource Include="Scripts\Model\202201261730 Create tables.sql" />
+      <EmbeddedResource Include="Scripts\Model\202201281340 Increase OriginalOperationId length.sql" />
+      <EmbeddedResource Include="Scripts\Seed\202201261740 Add default charges owner.sql" />
+      <EmbeddedResource Include="Scripts\Seed\202201261741 Add default charges.sql" />
+      <EmbeddedResource Include="Scripts\Seed\202201261742 Add default charge links.sql" />
+      <EmbeddedResource Include="Scripts\Test\202201261750 Add test data.sql" />
     </ItemGroup>
 
 </Project>

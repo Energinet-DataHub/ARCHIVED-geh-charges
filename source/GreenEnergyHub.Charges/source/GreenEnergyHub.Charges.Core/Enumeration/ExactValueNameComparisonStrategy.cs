@@ -19,9 +19,9 @@ namespace GreenEnergyHub.Charges.Core.Enumeration
 {
     public class ExactValueNameComparisonStrategy : IEnumValueNameComparisonStrategy
     {
-        public bool IsEquivalent([NotNull] Enum subjectValue, [NotNull] Enum comparisonValue)
+        public bool IsEquivalent([NotNull] Enum protobufValue, [NotNull] Enum comparisonValue)
         {
-            return subjectValue.ToString() == comparisonValue.ToString();
+            return protobufValue.ToString() == comparisonValue.ToString();
         }
     }
 }

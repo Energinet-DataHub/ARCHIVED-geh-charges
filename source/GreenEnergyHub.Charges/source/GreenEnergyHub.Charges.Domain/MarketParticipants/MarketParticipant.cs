@@ -55,8 +55,11 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
         /// The ID that identifies the market participant. In Denmark this would be the GLN number or EIC code.
         /// This ID must be immutable. A new market participant id would require de-activating the market participant
         /// and replacing it by a new market participant.
+        ///
+        /// IMPORTANT: There should not be a private setter but it's a temporary solution to handle non-valid
+        /// updates in the temporary actor register solution.
         /// </summary>
-        public string MarketParticipantId { get; }
+        public string MarketParticipantId { get; private set; }
 
         /// <summary>
         /// The roles of the market participant.
