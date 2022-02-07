@@ -24,10 +24,10 @@ jobs:
   # Markdown, links and spell checks
   ci_base:
     uses: Energinet-DataHub/.github/.github/workflows/ci-base.yml@4.0.0
-  
+
   # Build and test solution, and publish coverage report
   dotnet_solution_ci:
-    uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci.yml@4.0.0
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci.yml@dstenroejl/improve-ci-build
     with:
       SOLUTION_FILE_PATH: 'source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln'
       DOTNET_VERSION: '5.0'
@@ -50,7 +50,8 @@ jobs:
   # Create function host artifact for deployment
   functionhost_ci:
     # Depend on these validating jobs in order to avoid potentially creating artifacts that should never be used if this job fails
-    needs: [ci_base, terraform_validate, dotnet_solution_ci]
+    # TODO: Spike - disabled dependencies
+    #needs: [ci_base, terraform_validate, dotnet_solution_ci]
     # dotnet-create-function-artifact.yml version 3.0.2 is intentionally not updated to 4.0.0 due to an error introduced in 3.0.3
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@3.0.2
     with:
@@ -61,7 +62,8 @@ jobs:
   # Create web API artifact for deployment
   webapi_ci:
     # Depend on these validating jobs in order to avoid potentially creating artifacts that should never be used if this job fails
-    needs: [ci_base, terraform_validate, dotnet_solution_ci]
+    # TODO: Spike - disabled dependencies
+    #needs: [ci_base, terraform_validate, dotnet_solution_ci]
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-webapi-artifact.yml@4.0.0
     with:
       CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.WebApi/GreenEnergyHub.Charges.WebApi.csproj'
@@ -71,7 +73,8 @@ jobs:
   # Create DbUp artifact for deployment
   database_migration_ci:
     # Depend on these validating jobs in order to avoid potentially creating artifacts that should never be used if this job fails
-    needs: [ci_base, terraform_validate, dotnet_solution_ci]
+    # TODO: Spike - disabled dependencies
+    #needs: [ci_base, terraform_validate, dotnet_solution_ci]
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@4.0.0
     with:
       CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ApplyDBMigrationsApp/GreenEnergyHub.Charges.ApplyDBMigrationsApp.csproj'
@@ -90,7 +93,11 @@ jobs:
 
   # Create pre-release that might eventually be deployed in CD pipeline
   create_prerelease:
+    # TODO: Spike - added dependencies
     needs: [
+      ci_base,
+      terraform_validate,
+      dotnet_solution_ci,
       functionhost_ci,
       webapi_ci,
       database_migration_ci
