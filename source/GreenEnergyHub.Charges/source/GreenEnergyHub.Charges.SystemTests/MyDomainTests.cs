@@ -57,7 +57,7 @@ namespace GreenEnergyHub.Charges.SystemTests
                 async () =>
                 {
                     expectedResponse = await httpClient.GetAsync("api/myPeekEndpoint");
-                    return expectedResponse.StatusCode == HttpStatusCode.OK;
+                    return expectedResponse.StatusCode == HttpStatusCode.Accepted;
                 },
                 timeLimit: TimeSpan.FromMinutes(1),
                 delay: TimeSpan.FromSeconds(2));
