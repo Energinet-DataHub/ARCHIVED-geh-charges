@@ -73,14 +73,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             }
 
             [Fact]
-            public async Task When_ChargeIsReceived_Then_AHttp200ResponseIsReturned()
+            public async Task When_ChargeIsReceived_Then_AHttp202ResponseIsReturned()
             {
                 var request = await _authenticatedHttpRequestGenerator
                     .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.AnyValid);
 
                 var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request.Request);
 
-                actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+                actualResponse.StatusCode.Should().Be(HttpStatusCode.Accepted);
             }
 
             [Fact]
