@@ -73,8 +73,8 @@ namespace GreenEnergyHub.Charges.FunctionHost
             // Message Hub
             BundleSenderEndpointConfiguration.ConfigureServices(serviceCollection);
 
-            // Actor Register
-            ActorRegisterEndpointConfiguration.ConfigureServices(serviceCollection);
+            // Market participant registry
+            MarketParticipantRegistryEndpointConfiguration.ConfigureServices(serviceCollection);
         }
     }
 }
