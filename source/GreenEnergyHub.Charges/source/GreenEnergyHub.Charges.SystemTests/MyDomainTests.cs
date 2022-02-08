@@ -69,7 +69,7 @@ namespace GreenEnergyHub.Charges.SystemTests
 
         // This is just to be able to verify everything works with regards to settings and executing the tests after deployment.
         // If needed, this test can be removed when the actual system test has been implemented.
-        // Or it can be used to actually verify the HealthStatus after deplyoment.
+        // Or it can be used to actually verify the HealthStatus after deployment.
         [SystemFact]
         public async Task When_RequestHealthStatus_Then_ResponseIsOKAndDoesNotContainFalse()
         {
