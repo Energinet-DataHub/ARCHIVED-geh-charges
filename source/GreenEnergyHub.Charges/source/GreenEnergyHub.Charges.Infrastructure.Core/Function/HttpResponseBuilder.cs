@@ -24,8 +24,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
     {
         public async Task<HttpResponseData> CreateAcceptedResponseAsync<T>(HttpRequestData request, T response)
         {
-            var httpResponse = request.CreateResponse(HttpStatusCode.Accepted);
-            await httpResponse.WriteAsJsonAsync(response).ConfigureAwait(false);
+            var httpResponse = request.CreateResponse();
+            await httpResponse.WriteAsJsonAsync(response, HttpStatusCode.Accepted).ConfigureAwait(false);
             return httpResponse;
         }
 
