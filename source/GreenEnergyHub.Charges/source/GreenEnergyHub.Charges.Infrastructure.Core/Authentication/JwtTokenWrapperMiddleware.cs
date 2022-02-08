@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Authentication
     public class JwtTokenWrapperMiddleware : IFunctionsWorkerMiddleware
     {
         private readonly JwtTokenMiddleware _jwtTokenMiddleware;
-        private readonly List<string> _functionNamesToExclude = new() { "HealthStatus", "SynchronizeFromActorRegister" };
+        private readonly List<string> _functionNamesToExclude = new() { "HealthStatus", "SynchronizeFromMarketParticipantRegistry" };
 
         public JwtTokenWrapperMiddleware(JwtTokenMiddleware jwtTokenMiddleware)
         {

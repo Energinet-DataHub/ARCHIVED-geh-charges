@@ -225,11 +225,16 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures.FunctionApp
             await DatabaseManager.CreateDatabaseAsync();
 
             // Overwrites the setting so the function app uses the database we have control of in the test
-            Environment.SetEnvironmentVariable(EnvironmentSettingNames.ChargeDbConnectionString, DatabaseManager.ConnectionString);
+            Environment.SetEnvironmentVariable(
+                EnvironmentSettingNames.ChargeDbConnectionString,
+                DatabaseManager.ConnectionString);
 
-            // Only actor register thing being tested is connectivity - so for now we just cheat and provide another connection string
-            var actorRegisterConnectionString = DatabaseManager.ConnectionString;
-            Environment.SetEnvironmentVariable(EnvironmentSettingNames.ActorRegisterDbConnectionString, actorRegisterConnectionString);
+            // Only market participant registry thing being tested is connectivity
+            // - so for now we just cheat and provide another connection string
+            var marketParticipantRegistryConnectionString = DatabaseManager.ConnectionString;
+            Environment.SetEnvironmentVariable(
+                EnvironmentSettingNames.MarketParticipantRegistryDbConnectionString,
+                marketParticipantRegistryConnectionString);
         }
 
         /// <inheritdoc/>
@@ -276,8 +281,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures.FunctionApp
                 .SetEnvironmentVariableToQueueName(EnvironmentSettingNames.MessageHubReplyQueue)
                 .CreateAsync();
 
-            Environment.SetEnvironmentVariable(EnvironmentSettingNames.MessageHubStorageConnectionString, ChargesServiceBusResourceNames.MessageHubStorageConnectionString);
-            Environment.SetEnvironmentVariable(EnvironmentSettingNames.MessageHubStorageContainer, ChargesServiceBusResourceNames.MessageHubStorageContainerName);
+            Environment.SetEnvironmentVariable(
+                EnvironmentSettingNames.MessageHubStorageConnectionString,
+                ChargesServiceBusResourceNames.MessageHubStorageConnectionString);
+            Environment.SetEnvironmentVariable(
+                EnvironmentSettingNames.MessageHubStorageContainer,
+                ChargesServiceBusResourceNames.MessageHubStorageContainerName);
 
             var messageHubSimulationConfig = new MessageHubSimulationConfig(
                 ServiceBusResourceProvider.ConnectionString,
@@ -295,10 +304,18 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures.FunctionApp
 
         private async Task SetUpRequestResponseLoggingAsync()
         {
-            Environment.SetEnvironmentVariable(EnvironmentSettingNames.RequestResponseLoggingConnectionString, ChargesServiceBusResourceNames.RequestResponseLoggingConnectionString);
-            Environment.SetEnvironmentVariable(EnvironmentSettingNames.RequestResponseLoggingContainerName, ChargesServiceBusResourceNames.RequestResponseLoggingContainerName);
+            Environment.SetEnvironmentVariable(
+                EnvironmentSettingNames.RequestResponseLoggingConnectionString,
+                ChargesServiceBusResourceNames.RequestResponseLoggingConnectionString);
 
-            var storage = new BlobContainerClient(ChargesServiceBusResourceNames.RequestResponseLoggingConnectionString, ChargesServiceBusResourceNames.RequestResponseLoggingContainerName);
+            Environment.SetEnvironmentVariable(
+                EnvironmentSettingNames.RequestResponseLoggingContainerName,
+                ChargesServiceBusResourceNames.RequestResponseLoggingContainerName);
+
+            var storage = new BlobContainerClient(
+                ChargesServiceBusResourceNames.RequestResponseLoggingConnectionString,
+                ChargesServiceBusResourceNames.RequestResponseLoggingContainerName);
+
             if (!await storage.ExistsAsync())
                 await storage.CreateAsync();
         }
