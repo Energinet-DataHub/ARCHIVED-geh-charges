@@ -53,7 +53,7 @@ namespace GreenEnergyHub.Charges.SystemTests
 
         // This shows how we can call API Management using a valid access token
         [SystemFact]
-        public async Task When_RequestApiManagementWithAccessToken_Then_ResponseIsOk()
+        public async Task When_RequestApiManagementWithAccessToken_Then_ResponseIsAccepted()
         {
             // Arrange
             using var httpClient = await CreateHttpClientAsync(TeamVoltClientApp);
@@ -70,7 +70,7 @@ namespace GreenEnergyHub.Charges.SystemTests
             using var actualResponse = await httpClient.SendAsync(request);
 
             // Assert
-            actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+            actualResponse.StatusCode.Should().Be(HttpStatusCode.Accepted);
         }
 
         // This shows our request will fail if we call API Management without a valid access token
