@@ -75,43 +75,19 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
             // Please keep sorted by CimValidationErrorTextToken
             return token switch
             {
-                CimValidationErrorTextToken.ChargeDescription =>
-                    CimValidationErrorTextTemplateMessages.Unknown,
                 CimValidationErrorTextToken.ChargeLinkStartDate =>
                     GetChargeLinkStartDate(chargeLinksCommand, triggeredBy),
-                CimValidationErrorTextToken.ChargeName =>
-                    CimValidationErrorTextTemplateMessages.Unknown,
                 CimValidationErrorTextToken.ChargeOwner =>
                     GetChargeOwner(chargeLinksCommand, triggeredBy),
-                CimValidationErrorTextToken.ChargePointPosition =>
-                    CimValidationErrorTextTemplateMessages.Unknown,
-                CimValidationErrorTextToken.ChargePointPrice =>
-                    CimValidationErrorTextTemplateMessages.Unknown,
-                CimValidationErrorTextToken.ChargePointsCount =>
-                    CimValidationErrorTextTemplateMessages.Unknown,
-                CimValidationErrorTextToken.ChargeResolution =>
-                    CimValidationErrorTextTemplateMessages.Unknown,
                 CimValidationErrorTextToken.ChargeStartDateTime =>
                     GetChargeLinkStartDate(chargeLinksCommand, triggeredBy),
-                CimValidationErrorTextToken.ChargeTaxIndicator =>
-                    CimValidationErrorTextTemplateMessages.Unknown,
                 CimValidationErrorTextToken.ChargeType =>
                     GetChargeType(chargeLinksCommand, triggeredBy),
-                CimValidationErrorTextToken.ChargeVatClass =>
-                    CimValidationErrorTextTemplateMessages.Unknown,
-                CimValidationErrorTextToken.DocumentBusinessReasonCode =>
-                    CimValidationErrorTextTemplateMessages.Unknown,
-                CimValidationErrorTextToken.DocumentId =>
-                    CimValidationErrorTextTemplateMessages.Unknown,
-                CimValidationErrorTextToken.DocumentSenderId =>
-                    CimValidationErrorTextTemplateMessages.Unknown,
                 CimValidationErrorTextToken.DocumentSenderProvidedChargeId =>
                     GetDocumentSenderProvidedChargeId(chargeLinksCommand, triggeredBy),
-                CimValidationErrorTextToken.DocumentType =>
-                    CimValidationErrorTextTemplateMessages.Unknown,
                 CimValidationErrorTextToken.MeteringPointId =>
                     chargeLinksCommand.MeteringPointId,
-                _ => throw new ArgumentOutOfRangeException(token.ToString()),
+                _ => CimValidationErrorTextTemplateMessages.Unknown,
             };
         }
 

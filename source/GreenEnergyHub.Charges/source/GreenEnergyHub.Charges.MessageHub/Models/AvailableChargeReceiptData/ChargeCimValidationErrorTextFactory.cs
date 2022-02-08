@@ -77,8 +77,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             {
                 CimValidationErrorTextToken.ChargeDescription =>
                     chargeCommand.ChargeOperation.ChargeDescription,
-                CimValidationErrorTextToken.ChargeLinkStartDate =>
-                    CimValidationErrorTextTemplateMessages.Unknown,
                 CimValidationErrorTextToken.ChargeName =>
                     chargeCommand.ChargeOperation.ChargeName,
                 CimValidationErrorTextToken.ChargeOwner =>
@@ -109,9 +107,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                     chargeCommand.ChargeOperation.ChargeId,
                 CimValidationErrorTextToken.DocumentType =>
                     chargeCommand.Document.Type.ToString(),
-                CimValidationErrorTextToken.MeteringPointId =>
-                    CimValidationErrorTextTemplateMessages.Unknown,
-                _ => throw new ArgumentOutOfRangeException(token.ToString()),
+                _ => CimValidationErrorTextTemplateMessages.Unknown,
             };
         }
 
