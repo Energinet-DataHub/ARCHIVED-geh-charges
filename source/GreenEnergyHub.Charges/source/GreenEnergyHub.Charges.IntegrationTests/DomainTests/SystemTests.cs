@@ -25,7 +25,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 {
     [IntegrationTest]
-    public class HealthStatusTests
+    public class SystemTests
     {
         [Collection(nameof(ChargesFunctionAppCollectionFixture))]
         public class Run : FunctionAppTestBase<ChargesFunctionAppFixture>
@@ -40,16 +40,16 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             }
 
             [Fact]
-            public async Task When_RequestingHealthStatus_Then_ReturnStatusOK()
+            public async Task When_RequestingUnknownEndpoint_Then_ReturnStatusNotFound()
             {
                 // Arrange
-                var result = _httpRequestGenerator.CreateHttpGetRequest("api/HealthStatus");
+                var result = _httpRequestGenerator.CreateHttpGetRequest("api/unknown");
 
                 // Act
                 var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(result.Request);
 
                 // Assert
-                actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+                actualResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);
             }
         }
     }

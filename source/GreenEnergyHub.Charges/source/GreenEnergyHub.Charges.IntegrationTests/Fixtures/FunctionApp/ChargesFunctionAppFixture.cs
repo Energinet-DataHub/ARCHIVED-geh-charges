@@ -67,6 +67,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures.FunctionApp
         [NotNull]
         public TopicResource? MeteringPointCreatedTopic { get; private set; }
 
+        [NotNull]
+        public TopicResource? ChargeLinksAcceptedTopic { get; private set; }
+
         public AuthorizationConfiguration AuthorizationConfiguration { get; }
 
         private AzuriteManager AzuriteManager { get; }
@@ -111,7 +114,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures.FunctionApp
             Environment.SetEnvironmentVariable("B2C_TENANT_ID", AuthorizationConfiguration.B2cTenantId);
             Environment.SetEnvironmentVariable("BACKEND_SERVICE_APP_ID", AuthorizationConfiguration.BackendAppId);
 
-            var chargeLinkAcceptedTopic = await ServiceBusResourceProvider
+            ChargeLinksAcceptedTopic = await ServiceBusResourceProvider
                 .BuildTopic(ChargesServiceBusResourceNames.ChargeLinksAcceptedTopicKey)
                 .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.ChargeLinksAcceptedTopicName)
                 .AddSubscription(ChargesServiceBusResourceNames.ChargeLinksAcceptedDataAvailableNotifierSubscriptionName)
@@ -297,7 +300,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures.FunctionApp
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.RequestResponseLoggingContainerName, ChargesServiceBusResourceNames.RequestResponseLoggingContainerName);
 
             var storage = new BlobContainerClient(ChargesServiceBusResourceNames.RequestResponseLoggingConnectionString, ChargesServiceBusResourceNames.RequestResponseLoggingContainerName);
-            await storage.CreateIfNotExistsAsync();
+            if (!await storage.ExistsAsync())
+                await storage.CreateAsync();
         }
 
         private static string GetBuildConfiguration()

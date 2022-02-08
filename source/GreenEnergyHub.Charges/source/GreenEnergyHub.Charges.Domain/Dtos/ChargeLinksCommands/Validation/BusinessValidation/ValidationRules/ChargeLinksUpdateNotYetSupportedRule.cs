@@ -14,6 +14,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
@@ -35,22 +36,22 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
             _existingChargeLinks = existingChargeLinks;
         }
 
-        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.UpdateNotYetSupported;
+        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeLinkUpdateNotYetSupported;
 
         public bool IsValid => _chargeLinksCommand.ChargeLinks.All(ChargeLinkDateRangeIsNotOverlapping);
 
         private bool ChargeLinkDateRangeIsNotOverlapping(ChargeLinkDto newLink)
         {
-            foreach (var existingLink in _existingChargeLinks)
-            {
-                // See https://stackoverflow.com/questions/325933/determine-whether-two-date-ranges-overlap
-                if (existingLink.StartDateTime < newLink.EndDateTime && existingLink.EndDateTime > newLink.StartDateTime)
-                {
-                    return false;
-                }
-            }
+            return _existingChargeLinks.All(existingLink => !IsOverlapping(existingLink, newLink));
+        }
 
-            return true;
+        private static bool IsOverlapping(ChargeLink existingLink, ChargeLinkDto newLink)
+        {
+            // See https://stackoverflow.com/questions/325933/determine-whether-two-date-ranges-overlap
+            var isOverlapping = (newLink.EndDateTime == null || existingLink.StartDateTime < newLink.EndDateTime)
+                                && newLink.StartDateTime < existingLink.EndDateTime;
+
+            return isOverlapping;
         }
 
         /// <summary>
