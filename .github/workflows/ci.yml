@@ -52,8 +52,7 @@ jobs:
     # Depend on these validating jobs in order to avoid potentially creating artifacts that should never be used if this job fails
     # TODO: Spike - disabled dependencies
     #needs: [ci_base, terraform_validate, dotnet_solution_ci]
-    # dotnet-create-function-artifact.yml version 3.0.2 is intentionally not updated to 4.0.0 due to an error introduced in 3.0.3
-    uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@3.0.2
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@dstenroejl/improve-ci-build
     with:
       CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.FunctionHost/GreenEnergyHub.Charges.FunctionHost.csproj'
       DOTNET_VERSION: '5.0.404'
@@ -86,8 +85,7 @@ jobs:
     # Depend on these validating jobs in order to avoid potentially creating artifacts that should never be used if this job fails
     # TODO: Spike - disabled dependencies
     #needs: [ci_base, terraform_validate, dotnet_solution_ci]
-    # dotnet-create-function-artifact.yml version 3.0.2 is intentionally not updated to 4.0.0 due to an error introduced in 3.0.3
-    uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@3.0.2
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@dstenroejl/improve-ci-build
     with:
       CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.SystemTests/GreenEnergyHub.Charges.SystemTests.csproj'
       DOTNET_VERSION: '5.0.404'
