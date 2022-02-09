@@ -20,7 +20,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Inpu
 {
     public class ChargeLinksCommandInputValidationRulesFactory : IInputValidationRulesFactory<ChargeLinksCommand>
     {
-        public IValidationRuleSet CreateRulesForChargeCommand(ChargeLinksCommand chargeLinksCommand)
+        public IValidationRuleSet CreateRulesForCommand(ChargeLinksCommand chargeLinksCommand)
         {
             if (chargeLinksCommand == null) throw new ArgumentNullException(nameof(chargeLinksCommand));
 

@@ -77,47 +77,71 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
             {
                 CimValidationErrorTextToken.ChargeLinkStartDate =>
                     GetChargeLinkStartDate(chargeLinksCommand, triggeredBy),
+                CimValidationErrorTextToken.ChargeOwner =>
+                    GetChargeOwner(chargeLinksCommand, triggeredBy),
+                CimValidationErrorTextToken.ChargeStartDateTime =>
+                    GetChargeLinkStartDate(chargeLinksCommand, triggeredBy),
+                CimValidationErrorTextToken.ChargeType =>
+                    GetChargeType(chargeLinksCommand, triggeredBy),
                 CimValidationErrorTextToken.DocumentSenderProvidedChargeId =>
                     GetDocumentSenderProvidedChargeId(chargeLinksCommand, triggeredBy),
                 CimValidationErrorTextToken.MeteringPointId =>
                     chargeLinksCommand.MeteringPointId,
-                _ => string.Empty,
+                _ => CimValidationErrorTextTemplateMessages.Unknown,
             };
+        }
+
+        private string GetChargeOwner(ChargeLinksCommand chargeLinksCommand, string? triggeredBy)
+        {
+            var chargeLinkDto = GetChargeLinkDto(chargeLinksCommand, triggeredBy);
+            return chargeLinkDto != null ? chargeLinkDto.ChargeOwnerId : CimValidationErrorTextTemplateMessages.Unknown;
         }
 
         private string GetChargeLinkStartDate(ChargeLinksCommand chargeLinksCommand, string? triggeredBy)
         {
-            try
-            {
-                return chargeLinksCommand.ChargeLinks
-                    .Single(p => p.SenderProvidedChargeId == triggeredBy)
-                    .StartDateTime.ToString();
-            }
-            catch (Exception e)
-            {
-                LogError(triggeredBy, nameof(ChargeLinkDto.StartDateTime), e);
-                return CimValidationErrorTextTemplateMessages.Unknown;
-            }
+            var chargeLinkDto = GetChargeLinkDto(chargeLinksCommand, triggeredBy);
+
+            return chargeLinkDto != null ?
+                chargeLinkDto.StartDateTime.ToString() :
+                CimValidationErrorTextTemplateMessages.Unknown;
+        }
+
+        private string GetChargeType(ChargeLinksCommand chargeLinksCommand, string? triggeredBy)
+        {
+            var chargeLinkDto = GetChargeLinkDto(chargeLinksCommand, triggeredBy);
+
+            return chargeLinkDto != null ?
+                chargeLinkDto.ChargeType.ToString() :
+                CimValidationErrorTextTemplateMessages.Unknown;
         }
 
         private string GetDocumentSenderProvidedChargeId(ChargeLinksCommand chargeLinksCommand, string? triggeredBy)
         {
+            var chargeLinkDto = GetChargeLinkDto(chargeLinksCommand, triggeredBy);
+
+            return chargeLinkDto != null ?
+                chargeLinkDto.SenderProvidedChargeId :
+                CimValidationErrorTextTemplateMessages.Unknown;
+        }
+
+        private ChargeLinkDto? GetChargeLinkDto(ChargeLinksCommand chargeLinksCommand, string? triggeredBy)
+        {
+            ChargeLinkDto? chargeLinkDto = null;
             try
             {
-                return chargeLinksCommand.ChargeLinks
-                    .Single(p => p.SenderProvidedChargeId == triggeredBy)
-                    .SenderProvidedChargeId;
+                chargeLinkDto = chargeLinksCommand.ChargeLinks.Single(p => p.SenderProvidedChargeId == triggeredBy);
             }
             catch (Exception e)
             {
                 LogError(triggeredBy, nameof(ChargeLinkDto.SenderProvidedChargeId), e);
-                return CimValidationErrorTextTemplateMessages.Unknown;
             }
+
+            return chargeLinkDto;
         }
 
         private void LogError(string? triggeredBy, string elementNotFound, Exception e)
         {
-            var errorMessage = $"{elementNotFound} not found by operationId: {triggeredBy}";
+            var errorMessage = $"{elementNotFound} not found by senderProvidedChargeId: {triggeredBy}";
             _logger.LogError(e, errorMessage);
         }
     }
