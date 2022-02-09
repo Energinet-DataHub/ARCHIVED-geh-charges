@@ -68,7 +68,7 @@ module "func_functionhost" {
     INTEGRATIONEVENT_SENDER_CONNECTION_STRING                       = data.azurerm_key_vault_secret.sb_domain_relay_send_connection_string.value
     INTEGRATIONEVENT_LISTENER_CONNECTION_STRING                     = data.azurerm_key_vault_secret.sb_domain_relay_listen_connection_string.value
     INTEGRATIONEVENT_MANAGER_CONNECTION_STRING                      = data.azurerm_key_vault_secret.sb_domain_relay_manage_connection_string.value
-    ACTOR_REGISTER_CONNECTION_STRING                                = local.MS_ACTOR_REGISTER_CONNECTION_STRING
+    MARKET_PARTICIPANT_REGISTRY_CONNECTION_STRING                   = local.MS_MARKET_PARTICIPANT_REGISTRY_CONNECTION_STRING
 
     # Message Hub
     MESSAGEHUB_STORAGE_CONNECTION_STRING                            = data.azurerm_key_vault_secret.messagehub_storage_connection_string.value

@@ -48,6 +48,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures.WebApi
             Environment.SetEnvironmentVariable(
                 $"CONNECTIONSTRINGS:{EnvironmentSettingNames.ChargeDbConnectionString}",
                 DatabaseManager.ConnectionString);
+
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.FrontEndOpenIdUrl, AuthorizationConfiguration.FrontendOpenIdUrl);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.FrontEndServiceAppId, AuthorizationConfiguration.FrontendAppId);
         }
 
         /// <inheritdoc/>

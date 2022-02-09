@@ -14,11 +14,16 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 #nullable disable
 
 namespace GreenEnergyHub.Charges.QueryApi.Model
 {
+    [Table("MarketParticipant", Schema = "Charges")]
+    [Index(nameof(MarketParticipantId), Name = "UC_MarketParticipantId", IsUnique = true)]
     public partial class MarketParticipant
     {
         public MarketParticipant()
@@ -27,16 +32,21 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
             GridAreas = new HashSet<GridArea>();
         }
 
+        [Key]
         public Guid Id { get; set; }
 
+        [Required]
+        [StringLength(35)]
         public string MarketParticipantId { get; set; }
 
         public int BusinessProcessRole { get; set; }
 
         public bool IsActive { get; set; }
 
+        [InverseProperty(nameof(Charge.Owner))]
         public virtual ICollection<Charge> Charges { get; set; }
 
+        [InverseProperty(nameof(GridArea.GridAccessProvider))]
         public virtual ICollection<GridArea> GridAreas { get; set; }
     }
 }

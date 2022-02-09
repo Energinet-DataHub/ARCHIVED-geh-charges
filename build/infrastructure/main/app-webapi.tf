@@ -24,6 +24,12 @@ module "app_webapi" {
   app_service_plan_id                       = module.plan_webapi.id
   application_insights_instrumentation_key  = data.azurerm_key_vault_secret.appi_shared_instrumentation_key.value
 
+  app_settings = {
+    "APPINSIGHTS_INSTRUMENTATIONKEY" = "${data.azurerm_key_vault_secret.appi_shared_instrumentation_key.value}",
+    "FRONTEND_OPEN_ID_URL" = "${data.azurerm_key_vault_secret.frontend_open_id_url.value}",
+    "FRONTEND_SERVICE_APP_ID" = "${data.azurerm_key_vault_secret.frontend_service_app_id.value}"
+  }
+
   connection_strings = [
     {
       name  = "CHARGE_DB_CONNECTION_STRING"
@@ -31,6 +37,8 @@ module "app_webapi" {
       value = local.MS_CHARGE_DB_CONNECTION_STRING
     }
   ]
+
+  tags              = azurerm_resource_group.this.tags
 
   tags                                      = azurerm_resource_group.this.tags
 }

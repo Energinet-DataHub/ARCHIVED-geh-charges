@@ -22,7 +22,6 @@ using System.Threading.Tasks;
 using Energinet.Charges.Contracts.ChargeLink;
 using FluentAssertions;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures.WebApi;
-using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
@@ -40,7 +39,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
         private const string BaseUrl = "/ChargeLinks/GetAsync?meteringPointId=";
         private const string KnownMeteringPointId = SeededData.MeteringPoints.Mp571313180000000005.Id;
         private readonly HttpClient _client;
-        private readonly AuthenticationClient _authenticationClient;
 
         public ChargeLinksControllerTests(
             ChargesWebApiFixture chargesWebApiFixture,
@@ -49,16 +47,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
             : base(chargesWebApiFixture, testOutputHelper)
         {
             _client = factory.CreateClient();
-            _authenticationClient = new AuthenticationClient(
-                chargesWebApiFixture.AuthorizationConfiguration.BackendAppScope,
-                chargesWebApiFixture.AuthorizationConfiguration.ClientCredentialsSettings,
-                chargesWebApiFixture.AuthorizationConfiguration.B2cTenantId);
         }
 
         public async Task InitializeAsync()
         {
-            var authenticationResult = await _authenticationClient.GetAuthenticationTokenAsync();
-            _client.DefaultRequestHeaders.Add("Authorization", $"Bearer {authenticationResult.AccessToken}");
+            await Task.CompletedTask;
         }
 
         public Task DisposeAsync()
