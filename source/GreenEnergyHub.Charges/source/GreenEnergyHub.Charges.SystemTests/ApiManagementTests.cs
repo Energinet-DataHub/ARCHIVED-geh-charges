@@ -19,7 +19,8 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
-using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
+using GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.ChargeLinks;
+using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.SystemTests.Fixtures;
 using Microsoft.Identity.Client;
 using NodaTime;
@@ -59,7 +60,7 @@ namespace GreenEnergyHub.Charges.SystemTests
             using var httpClient = await CreateHttpClientAsync(TeamVoltClientApp);
 
             var clock = SystemClock.Instance;
-            var xml = EmbeddedResourceHelper.GetEmbeddedFile("TestFiles/RequestChangeBillingMasterData.xml", clock);
+            var xml = EmbeddedResourceHelper.GetEmbeddedFile(ChargeLinkDocument.AnyValid, clock);
 
             var request = new HttpRequestMessage(HttpMethod.Post, "v1.0/cim/requestchangebillingmasterdata")
             {
@@ -81,7 +82,7 @@ namespace GreenEnergyHub.Charges.SystemTests
             using var httpClient = await CreateHttpClientAsync();
 
             var clock = SystemClock.Instance;
-            var xml = EmbeddedResourceHelper.GetEmbeddedFile("TestFiles/RequestChangeBillingMasterData.xml", clock);
+            var xml = EmbeddedResourceHelper.GetEmbeddedFile(ChargeLinkDocument.AnyValid, clock);
 
             var request = new HttpRequestMessage(HttpMethod.Post, "v1.0/cim/requestchangebillingmasterdata")
             {
@@ -95,7 +96,7 @@ namespace GreenEnergyHub.Charges.SystemTests
             actualResponse.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
 
-        private IConfidentialClientApplication CreateConfidentialClientApp(string team)
+        private IConfidentialClientApplication CreateConfidentialClientApp(string team) // TODO: use BackendAuthenticationClient
         {
             var teamClientSettings = Configuration.RetrieveB2CTeamClientSettings(team);
 

@@ -16,8 +16,9 @@ using System.Net;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using FluentAssertions;
-using GreenEnergyHub.Charges.IntegrationTests.Fixtures.FunctionApp;
-using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
+using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
+using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
+using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
@@ -40,7 +41,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             }
 
             [Fact]
-            public async Task When_RequestingSynchronization_Then_ReturnStatusOK()
+            public async Task When_RequestingSynchronization_Then_ReturnStatusIsNotUnauthorized()
             {
                 // Arrange
                 var result = _httpRequestGenerator.CreateHttpPutRequest("api/SynchronizeFromMarketParticipantRegistry");
@@ -48,8 +49,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // Act
                 var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(result.Request);
 
-                // Assert - should actually be 200 OK, but the temp market participant registry solution is not currently supported
-                // by the test fixture. But at least we can verify that we don't get a 401.
+                // Assert - should actually be 200 OK, but the temp market participant registry solution is not
+                // currently supported by the test fixture, hence the test will result in a 500 internal server error
+                // due to missing elements in the database. But at least we can verify that we don't get a 401.
                 actualResponse.StatusCode.Should().NotBe(HttpStatusCode.Unauthorized);
             }
         }

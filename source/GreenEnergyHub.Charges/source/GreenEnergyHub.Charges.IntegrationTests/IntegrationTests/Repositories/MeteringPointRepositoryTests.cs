@@ -19,7 +19,7 @@ using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
-using GreenEnergyHub.Charges.IntegrationTests.Fixtures.Database;
+using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using GreenEnergyHub.TestHelpers;
 using NodaTime;
 using Xunit;
