@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.FunctionHost.Common;
-using GreenEnergyHub.Charges.FunctionHost.Configuration;
+using GreenEnergyHub.Charges.Infrastructure.Core.Registration;
 using GreenEnergyHub.Charges.Infrastructure.MarketParticipantRegistry;
 using GreenEnergyHub.Charges.Infrastructure.MarketParticipantRegistry.GridAreaLinksSynchronization;
 using GreenEnergyHub.Charges.Infrastructure.MarketParticipantRegistry.GridAreasSynchronization;
