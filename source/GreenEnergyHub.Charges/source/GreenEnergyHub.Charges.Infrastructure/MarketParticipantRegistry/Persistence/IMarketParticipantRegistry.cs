@@ -12,13 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
+using System.Linq;
+using GreenEnergyHub.Charges.Infrastructure.MarketParticipantRegistry.Persistence.Actors;
+using GreenEnergyHub.Charges.Infrastructure.MarketParticipantRegistry.Persistence.GridAreaLinks;
+using GreenEnergyHub.Charges.Infrastructure.MarketParticipantRegistry.Persistence.GridAreas;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
+namespace GreenEnergyHub.Charges.Infrastructure.MarketParticipantRegistry.Persistence
 {
-    public interface IInputValidationRulesFactory<in TCommand>
-        where TCommand : CommandBase
+    public interface IMarketParticipantRegistry
     {
-    IValidationRuleSet CreateRulesForCommand(TCommand command);
+        IQueryable<Actor> Actors { get; }
+
+        IQueryable<GridArea> GridAreas { get; }
+
+        IQueryable<GridAreaLink> GridAreaLinks { get; }
     }
 }

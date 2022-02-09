@@ -12,13 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
+using System;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
+namespace GreenEnergyHub.Charges.Infrastructure.MarketParticipantRegistry.Persistence.GridAreaLinks
 {
-    public interface IInputValidationRulesFactory<in TCommand>
-        where TCommand : CommandBase
+    /// <summary>
+    /// Immutable grid area.
+    /// </summary>
+    public class GridAreaLink
     {
-    IValidationRuleSet CreateRulesForCommand(TCommand command);
+        // Solely used by persistence framework
+        private GridAreaLink()
+        {
+        }
+
+        /// <summary>
+        /// Primary key.
+        /// </summary>
+        public Guid Id { get; }
+
+        /// <summary>
+        /// The target grid area of this link.
+        /// </summary>
+        public Guid GridAreaId { get; set; }
     }
 }

@@ -148,6 +148,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
                 var actual = sut.Create(new ValidationError(validationRuleIdentifier, triggeredBy), chargeCommand);
                 actual.Should().NotBeNullOrWhiteSpace();
                 actual.Should().NotContain("{");
+                actual.Should().NotContain("  ");
             }
         }
 

@@ -53,8 +53,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.System
         {
             var connectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubManagerConnectionString);
             var chargesDbConnectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeDbConnectionString);
-            var actorRegisterDbConnectionString =
-                EnvironmentHelper.GetEnv(EnvironmentSettingNames.ActorRegisterDbConnectionString);
+            var marketParticipantRegistryDbConnectionString =
+                EnvironmentHelper.GetEnv(EnvironmentSettingNames.MarketParticipantRegistryDbConnectionString);
 
             return new Dictionary<string, bool>
             {
@@ -63,8 +63,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.System
                     await IsDatabaseAvailableAsync(chargesDbConnectionString).ConfigureAwait(false)
                 },
                 {
-                    "ActorRegisterDatabaseIsAvailable",
-                    await IsDatabaseAvailableAsync(actorRegisterDbConnectionString).ConfigureAwait(false)
+                    "MarketParticipantRegistryDatabaseIsAvailable",
+                    await IsDatabaseAvailableAsync(marketParticipantRegistryDbConnectionString).ConfigureAwait(false)
                 },
                 {
                     "MessageHubDataAvailableQueueExists",

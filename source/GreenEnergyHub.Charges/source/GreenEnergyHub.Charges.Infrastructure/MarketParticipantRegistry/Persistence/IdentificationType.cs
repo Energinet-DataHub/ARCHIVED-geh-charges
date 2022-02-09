@@ -12,13 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
-
-namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
+namespace GreenEnergyHub.Charges.Infrastructure.MarketParticipantRegistry.Persistence
 {
-    public interface IInputValidationRulesFactory<in TCommand>
-        where TCommand : CommandBase
+    /// <summary>
+    /// Identification type of the actor identification number.
+    /// </summary>
+    public enum IdentificationType
     {
-    IValidationRuleSet CreateRulesForCommand(TCommand command);
+        Gln = 1,
+        Eic = 2,
     }
 }

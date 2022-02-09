@@ -12,13 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
+using System.Threading.Tasks;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
+namespace GreenEnergyHub.Charges.Infrastructure.MarketParticipantRegistry.GridAreasSynchronization
 {
-    public interface IInputValidationRulesFactory<in TCommand>
-        where TCommand : CommandBase
+    public interface IGridAreasSynchronizer
     {
-    IValidationRuleSet CreateRulesForCommand(TCommand command);
+        Task SynchronizeAsync();
     }
 }
