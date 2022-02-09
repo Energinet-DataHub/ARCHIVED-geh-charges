@@ -13,13 +13,12 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.FunctionHost.Common;
-using GreenEnergyHub.Charges.FunctionHost.Configuration;
+using GreenEnergyHub.Charges.Infrastructure.Core.Registration;
 using GreenEnergyHub.Charges.Infrastructure.MarketParticipantRegistry;
 using GreenEnergyHub.Charges.Infrastructure.MarketParticipantRegistry.GridAreaLinksSynchronization;
 using GreenEnergyHub.Charges.Infrastructure.MarketParticipantRegistry.GridAreasSynchronization;
 using GreenEnergyHub.Charges.Infrastructure.MarketParticipantRegistry.MarketParticipantsSynchronization;
 using GreenEnergyHub.Charges.Infrastructure.MarketParticipantRegistry.Persistence;
-using GreenEnergyHub.Charges.Infrastructure.Core.Registration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
