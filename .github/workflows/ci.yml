@@ -23,7 +23,7 @@ on:
 jobs:
   # Markdown, links and spell checks
   ci_base:
-    uses: Energinet-DataHub/.github/.github/workflows/ci-base.yml@4.0.0
+    uses: Energinet-DataHub/.github/.github/workflows/ci-base.yml@5.0.0
 
   # Build and test solution, and publish coverage report
   dotnet_solution_ci:
