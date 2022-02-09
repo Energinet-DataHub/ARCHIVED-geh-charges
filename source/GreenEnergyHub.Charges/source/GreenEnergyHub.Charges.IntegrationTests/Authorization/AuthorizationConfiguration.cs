@@ -39,16 +39,26 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Authorization
             SecretsConfiguration = BuildSecretsKeyVaultConfiguration(RootConfiguration.GetValue<string>("AZURE_SECRETS_KEYVAULT_URL"));
             B2cTenantId = SecretsConfiguration.GetValue<string>(BuildB2CEnvironmentSecretName(Environment, "tenant-id"));
             var backendAppId = SecretsConfiguration.GetValue<string>(BuildB2CEnvironmentSecretName(Environment, "backend-app-id"));
+            var frontendAppId = SecretsConfiguration.GetValue<string>(BuildB2CEnvironmentSecretName(Environment, "frontend-app-id"));
             BackendAppScope = new[] { $"{backendAppId}/.default" };
+            FrontendAppScope = new[] { $"{frontendAppId}/.default" };
 
             BackendAppId = SecretsConfiguration.GetValue<string>(BuildB2CBackendAppId(Environment));
+            FrontendAppId = SecretsConfiguration.GetValue<string>(BuildB2CFrontendAppId(Environment));
             var teamClientId = SecretsConfiguration.GetValue<string>(BuildB2CTeamSecretName(Environment, teamName, "client-id"));
             var teamClientSecret = SecretsConfiguration.GetValue<string>(BuildB2CTeamSecretName(Environment, teamName, "client-secret"));
 
             ClientCredentialsSettings = RetrieveB2CTeamClientSettings(teamName, teamClientId, teamClientSecret);
 
             ApiManagementBaseAddress = SecretsConfiguration.GetValue<Uri>(BuildApiManagementEnvironmentSecretName(Environment, "host-url"));
+            FrontendOpenIdUrl = SecretsConfiguration.GetValue<string>("B2C-frontend-open-id-url");
         }
+
+        public IEnumerable<string> FrontendAppScope { get; }
+
+        public string FrontendOpenIdUrl { get; }
+
+        public string FrontendAppId { get; }
 
         /// <summary>
         /// Backend application ID
@@ -127,6 +137,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Authorization
         private static string BuildB2CBackendAppId(string environment)
         {
             return $"B2C-{environment}-backend-app-id";
+        }
+
+        private static string BuildB2CFrontendAppId(string environment)
+        {
+            return $"B2C-{environment}-frontend-app-id";
         }
 
         private static string BuildB2CTeamSecretName(string environment, string team, string secret)

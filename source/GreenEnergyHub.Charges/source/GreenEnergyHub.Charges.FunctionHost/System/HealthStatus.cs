@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus.Administration;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.FunctionHost.Configuration;
+using GreenEnergyHub.Charges.Infrastructure.Core.Registration;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Data.SqlClient;

@@ -26,7 +26,9 @@ resource "azurerm_app_service" "webapi" {
   }
 
   app_settings = {
-    "APPINSIGHTS_INSTRUMENTATIONKEY" = "${data.azurerm_key_vault_secret.appi_shared_instrumentation_key.value}"
+    "APPINSIGHTS_INSTRUMENTATIONKEY" = "${data.azurerm_key_vault_secret.appi_shared_instrumentation_key.value}",
+    "FRONTEND_OPEN_ID_URL" = "${data.azurerm_key_vault_secret.frontend_open_id_url.value}",
+    "FRONTEND_SERVICE_APP_ID" = "${data.azurerm_key_vault_secret.frontend_service_app_id.value}"
   }
 
   connection_string {

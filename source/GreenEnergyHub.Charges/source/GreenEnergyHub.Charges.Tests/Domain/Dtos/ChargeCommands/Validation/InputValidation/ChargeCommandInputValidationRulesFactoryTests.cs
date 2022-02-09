@@ -64,7 +64,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             };
 
             // Act
-            var actualRuleTypes = sut.CreateRulesForChargeCommand(chargeCommand).GetRules()
+            var actualRuleTypes = sut.CreateRulesForCommand(chargeCommand).GetRules()
                 .Select(r => r.GetType()).ToList();
 
             var expectedRuleTypes = expectedRules.Select(r => r.GetType()).ToList();
@@ -80,7 +80,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             var sut = new ChargeCommandInputValidationRulesFactory();
 
             // Act & Assert
-            Assert.Throws<ArgumentNullException>(() => sut.CreateRulesForChargeCommand(null!));
+            Assert.Throws<ArgumentNullException>(() => sut.CreateRulesForCommand(null!));
         }
 
         [Theory]
@@ -93,7 +93,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         {
             // Arrange
             // Act
-            var validationRules = sut.CreateRulesForChargeCommand(chargeCommand).GetRules();
+            var validationRules = sut.CreateRulesForCommand(chargeCommand).GetRules();
 
             // Assert
             var type = typeof(CimValidationErrorTextTemplateMessages);
