@@ -27,6 +27,7 @@ jobs:
 
   # Build and test solution, and publish coverage report
   dotnet_solution_ci:
+    # TODO: Update to use latest version when released
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci.yml@dstenroejl/improve-ci-build
     with:
       SOLUTION_FILE_PATH: 'source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln'
