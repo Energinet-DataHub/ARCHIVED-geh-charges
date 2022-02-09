@@ -31,7 +31,7 @@ jobs:
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci.yml@dstenroejl/improve-ci-build
     with:
       SOLUTION_FILE_PATH: 'source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln'
-      DOTNET_VERSION: '5.0'
+      DOTNET_VERSION: '5.0.404'
       USE_AZURE_FUNCTIONS_TOOLS: true
     secrets:
       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
