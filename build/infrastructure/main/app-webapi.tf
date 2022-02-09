@@ -38,8 +38,6 @@ module "app_webapi" {
     }
   ]
 
-  tags              = azurerm_resource_group.this.tags
-
   tags                                      = azurerm_resource_group.this.tags
 }
 
