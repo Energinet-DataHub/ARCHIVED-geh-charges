@@ -21,14 +21,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
     public class AuthenticatedHttpRequestGenerator
     {
         private readonly HttpRequestGenerator _httpRequestGenerator;
-        private readonly AuthenticationClient _authenticationClient;
+        private readonly BackendAuthenticationClient _backendAuthenticationClient;
 
         public AuthenticatedHttpRequestGenerator(
             HttpRequestGenerator httpRequestGenerator,
             AuthorizationConfiguration authorizationConfiguration)
         {
             _httpRequestGenerator = httpRequestGenerator;
-            _authenticationClient = new AuthenticationClient(
+            _backendAuthenticationClient = new BackendAuthenticationClient(
                 authorizationConfiguration.BackendAppScope,
                 authorizationConfiguration.ClientCredentialsSettings,
                 authorizationConfiguration.B2cTenantId);
@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
 
         private async Task AddAuthenticationAsync(HttpRequestMessage request)
         {
-            var authenticationResult = await _authenticationClient.GetAuthenticationTokenAsync();
+            var authenticationResult = await _backendAuthenticationClient.GetAuthenticationTokenAsync();
             request.Headers.Add("Authorization", $"Bearer {authenticationResult.AccessToken}");
         }
     }

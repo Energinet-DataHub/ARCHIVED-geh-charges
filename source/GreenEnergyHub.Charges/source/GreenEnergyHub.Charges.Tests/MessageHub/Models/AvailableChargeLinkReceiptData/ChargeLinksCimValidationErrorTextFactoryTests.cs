@@ -31,7 +31,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
     {
         [Theory]
         [InlineAutoMoqData]
-        public void Create_WhenThreeMergeFields_ReturnsExpectedDescription(
+        public void Create_WhenTwoMergeFields_ReturnsExpectedDescription(
             ChargeLinksCommand chargeLinksCommand,
             CimValidationErrorTextProvider cimValidationErrorTextProvider,
             ILoggerFactory loggerFactory)
@@ -73,6 +73,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
                 var actual = sut.Create(new ValidationError(validationRuleIdentifier, triggeredBy), chargeLinksCommand);
                 actual.Should().NotBeNullOrWhiteSpace();
                 actual.Should().NotContain("{");
+                actual.Should().NotContain("  ");
             }
         }
 

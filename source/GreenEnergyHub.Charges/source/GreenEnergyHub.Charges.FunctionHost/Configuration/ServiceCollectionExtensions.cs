@@ -20,11 +20,12 @@ using Energinet.DataHub.Core.FunctionApp.Common.Middleware;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure;
 using GreenEnergyHub.Charges.Infrastructure.Core.Authentication;
+using GreenEnergyHub.Charges.Infrastructure.Core.Registration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
-    public static class ContainerExtensions
+    internal static class ServiceCollectionExtensions
     {
         /// <summary>
         /// Adds registrations of JwtTokenMiddleware and corresponding dependencies.

@@ -20,13 +20,13 @@ using Microsoft.Identity.Client;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.TestHelpers
 {
-    public class AuthenticationClient
+    public class BackendAuthenticationClient
     {
         private readonly IEnumerable<string> _backendAppScope;
         private readonly ClientCredentialsSettings _clientCredentialsSettings;
         private readonly string _b2CTenantId;
 
-        public AuthenticationClient(
+        public BackendAuthenticationClient(
             IEnumerable<string> backendAppScope,
             ClientCredentialsSettings clientCredentialsSettings,
             string b2CTenantId)
