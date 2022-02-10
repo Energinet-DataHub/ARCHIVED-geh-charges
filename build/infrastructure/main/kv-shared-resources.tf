@@ -147,13 +147,13 @@ data "azurerm_key_vault_secret" "frontend_service_app_id" {
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
 }
 
-data "azurerm_key_vault_secret" "vnet_name" {
-  name         = "vnet-name"
+data "azurerm_key_vault_secret" "vnet_internal_name" {
+  name         = "vnet-internal-name"
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
 }
 
-data "azurerm_key_vault_secret" "vnet_resource_group_name" {
-  name         = "vnet-resource-group-name"
+data "azurerm_key_vault_secret" "vnet_internal_resource_group_name" {
+  name         = "vnet-internal-resource-group-name"
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
 }
 

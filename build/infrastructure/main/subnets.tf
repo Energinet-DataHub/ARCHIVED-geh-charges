@@ -18,8 +18,8 @@ module "snet_internal_private_endpoints" {
   project_name                                    = var.domain_name_short
   environment_short                               = var.environment_short
   environment_instance                            = var.environment_instance
-  resource_group_name                             = data.azurerm_key_vault_secret.vnet_resource_group_name.value
-  virtual_network_name                            = data.azurerm_key_vault_secret.vnet_name.value
+  resource_group_name                             = data.azurerm_key_vault_secret.vnet_internal_resource_group_name.value
+  virtual_network_name                            = data.azurerm_key_vault_secret.vnet_internal_name.value
   address_prefixes                                = []
   enforce_private_link_endpoint_network_policies  = true
   enforce_private_link_service_network_policies   = true
@@ -31,8 +31,8 @@ module "snet_external_private_endpoints" {
   project_name                                    = var.domain_name_short
   environment_short                               = var.environment_short
   environment_instance                            = var.environment_instance
-  resource_group_name                             = data.azurerm_key_vault_secret.vnet_resource_group_name.value
-  virtual_network_name                            = data.azurerm_key_vault_secret.vnet_name.value
+  resource_group_name                             = data.azurerm_key_vault_secret.vnet_internal_resource_group_name.value
+  virtual_network_name                            = data.azurerm_key_vault_secret.vnet_internal_name.value
   address_prefixes                                = []
   enforce_private_link_endpoint_network_policies  = true
 }
@@ -43,8 +43,8 @@ module "vnet_integrations_webapi" {
   project_name                                    = var.domain_name_short
   environment_short                               = var.environment_short
   environment_instance                            = var.environment_instance
-  resource_group_name                             = data.azurerm_key_vault_secret.vnet_resource_group_name.value
-  virtual_network_name                            = data.azurerm_key_vault_secret.vnet_name.value
+  resource_group_name                             = data.azurerm_key_vault_secret.vnet_internal_resource_group_name.value
+  virtual_network_name                            = data.azurerm_key_vault_secret.vnet_internal_name.value
   address_prefixes                                = []
   enforce_private_link_service_network_policies   = true
 
@@ -62,8 +62,8 @@ module "vnet_integrations_functionhost" {
   project_name                                    = var.domain_name_short
   environment_short                               = var.environment_short
   environment_instance                            = var.environment_instance
-  resource_group_name                             = data.azurerm_key_vault_secret.vnet_resource_group_name.value
-  virtual_network_name                            = data.azurerm_key_vault_secret.vnet_name.value
+  resource_group_name                             = data.azurerm_key_vault_secret.vnet_internal_resource_group_name.value
+  virtual_network_name                            = data.azurerm_key_vault_secret.vnet_internal_name.value
   address_prefixes                                = []
   enforce_private_link_service_network_policies   = true
 
