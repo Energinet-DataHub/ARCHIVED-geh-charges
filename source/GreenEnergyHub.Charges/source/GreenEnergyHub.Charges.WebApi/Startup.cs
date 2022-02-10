@@ -13,6 +13,8 @@
 // limitations under the License.
 
 using System.Text.Json.Serialization;
+using Energinet.DataHub.Core.App.WebApp.Middleware;
+using GreenEnergyHub.Charges.WebApi.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +23,7 @@ using Microsoft.AspNetCore.OData;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 
 namespace GreenEnergyHub.Charges.WebApi
 {
@@ -42,6 +45,26 @@ namespace GreenEnergyHub.Charges.WebApi
                 .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()))
                 .AddOData(option => option.Select().Filter().Count().OrderBy().Expand().SetMaxTop(100));
 
+            services.AddSwaggerGen(c =>
+            {
+                // c.SwaggerDoc("v1", new OpenApiInfo { Title = "GreenEnergyHub.Charges.WebApi", Version = "v1" });
+                var securitySchema = new OpenApiSecurityScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer", },
+                };
+
+                c.AddSecurityDefinition("Bearer", securitySchema);
+
+                var securityRequirement = new OpenApiSecurityRequirement { { securitySchema, new[] { "Bearer" } }, };
+
+                c.AddSecurityRequirement(securityRequirement);
+            });
+
             services.AddApiVersioning(config =>
             {
                 config.DefaultApiVersion = new ApiVersion(1, 0);
@@ -56,10 +79,10 @@ namespace GreenEnergyHub.Charges.WebApi
                 setup.GroupNameFormat = "'v'VVV";
                 setup.SubstituteApiVersionInUrl = true;
             });
-            services.AddSwaggerGen();
-            services.ConfigureOptions<ConfigureSwaggerOptions>();
 
+            services.ConfigureOptions<ConfigureSwaggerOptions>();
             services.AddQueryApi(Configuration);
+            services.AddJwtTokenSecurity();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -78,6 +101,12 @@ namespace GreenEnergyHub.Charges.WebApi
                             description.GroupName.ToUpperInvariant());
                     }
                 });
+            }
+
+            if (!env.IsDevelopment())
+            {
+                // ATM. we only register this middleware when not in development. As we are unable to token auth a user.
+                app.UseMiddleware<JwtTokenMiddleware>();
             }
 
             app.UseHttpsRedirection();

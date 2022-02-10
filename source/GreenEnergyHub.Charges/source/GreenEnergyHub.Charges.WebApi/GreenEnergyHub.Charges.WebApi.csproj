@@ -21,6 +21,8 @@ limitations under the License.
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Energinet.DataHub.Core.App.Common.Security" Version="1.0.3" />
+    <PackageReference Include="Energinet.DataHub.Core.App.WebApp" Version="1.0.3" />
     <PackageReference Include="EntityFrameworkCore.SqlServer.NodaTime" Version="5.0.1" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.20.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
@@ -31,6 +33,7 @@ limitations under the License.
 
   <ItemGroup>
     <ProjectReference Include="..\GreenEnergyHub.Charges.Domain\GreenEnergyHub.Charges.Domain.csproj" />
+    <ProjectReference Include="..\GreenEnergyHub.Charges.Infrastructure.Core\GreenEnergyHub.Charges.Infrastructure.Core.csproj" />
     <ProjectReference Include="..\GreenEnergyHub.Charges.QueryApi\GreenEnergyHub.Charges.QueryApi.csproj" />
   </ItemGroup>
 

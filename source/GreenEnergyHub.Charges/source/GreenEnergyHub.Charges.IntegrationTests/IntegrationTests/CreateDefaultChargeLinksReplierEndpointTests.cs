@@ -70,7 +70,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests
                     () => Fixture.ChargeLinksAcceptedTopic.SenderClient.SendMessageAsync(message), correlationId, parentId);
 
                 // Assert
-                var isMessageReceivedByQueue = isMessageReceived.MessageAwaiter!.Wait(TimeSpan.FromSeconds(20));
+                var isMessageReceivedByQueue = isMessageReceived.MessageAwaiter!.Wait(TimeSpan.FromSeconds(60));
                 isMessageReceivedByQueue.Should().BeTrue();
             }
 

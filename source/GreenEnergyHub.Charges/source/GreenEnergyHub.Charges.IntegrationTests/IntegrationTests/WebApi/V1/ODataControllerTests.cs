@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
     {
         private const string BaseUrl = "/odata";
         private readonly HttpClient _client;
-        private readonly AuthenticationClient _authenticationClient;
+        private readonly BackendAuthenticationClient _authenticationClient;
 
         public ChargeLinksV1ControllerTests(
             ChargesWebApiFixture chargesWebApiFixture,
@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
             : base(chargesWebApiFixture, testOutputHelper)
         {
             _client = factory.CreateClient();
-            _authenticationClient = new AuthenticationClient(
+            _authenticationClient = new BackendAuthenticationClient(
                 chargesWebApiFixture.AuthorizationConfiguration.BackendAppScope,
                 chargesWebApiFixture.AuthorizationConfiguration.ClientCredentialsSettings,
                 chargesWebApiFixture.AuthorizationConfiguration.B2cTenantId);

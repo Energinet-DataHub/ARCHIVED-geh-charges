@@ -44,7 +44,7 @@ namespace GreenEnergyHub.Charges.SystemTests
 
         // This shows how we can extract an access token for accessing the 'backend app' on behalf of the 'team client app'
         [SystemFact]
-        public async Task When_AquireTokenForTeamVoltClientApp_Then_AccessTokenIsReturned()
+        public async Task When_AcquireTokenForTeamVoltClientApp_Then_AccessTokenIsReturned()
         {
             var actualAuthenticationResult = await TeamVoltClientApp.AcquireTokenForClient(Configuration.BackendAppScope).ExecuteAsync();
 
@@ -111,7 +111,7 @@ namespace GreenEnergyHub.Charges.SystemTests
         /// <summary>
         /// Create a http client. Will add an access token if <paramref name="confidentialClientApp"/> is specified.
         /// </summary>
-        /// <param name="confidentialClientApp">If not null: an access token is aquired using the client, and set in the authorization header of the http client.</param>
+        /// <param name="confidentialClientApp">If not null: an access token is acquired using the client, and set in the authorization header of the http client.</param>
         private async Task<HttpClient> CreateHttpClientAsync(IConfidentialClientApplication? confidentialClientApp = null)
         {
             var httpClient = new HttpClient
