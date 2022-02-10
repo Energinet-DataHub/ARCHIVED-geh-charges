@@ -6,6 +6,7 @@ All process flows within the Charges domain will be gathered here.
 |-------------------|
 |<b>[Charge Price List Flow](#Charge-Price-List-Flow)</b>|
 |   - [Persist Charge](#Persist-Charge)|
+|   - [Persist Charge Prices](#Persist-Charge-Prices)|
 |<b>[Charge Link Flow](#Charge-Link-Flow)<b>|
 <br>
 
@@ -26,6 +27,11 @@ The rule set was built upon the scenarios listed [here](images/PersistingCharges
 Note, stopping a charge results in a removal of any registered prices from the stop date and onwards.
 
 ![Persist charge](images/PersistingChargesRuleSet_ProcessFlow.png)
+<br>
+
+### Persist Charge Prices
+
+The rule set for persisting charge prices is yet to be defined. Pending business reason code decision.
 <br>
 
 ## Charge Link Flow
