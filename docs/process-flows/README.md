@@ -18,10 +18,10 @@ It also shows the micro services involved along with the activities they perform
 
 ### Persist Charge and Charge Prices
 
-Below process flow depicts the rule set applied in the `ChargeCommandReceiverEndpoint` for persisting incoming charges with and without prices in the SQL database.  
-It documents the different persistence paths the system takes given circumstances like charge already exists (same Charge ID, type and owner), whether it is an update or stop operation and whether a stop already exists on the charge's timeline, and if this stop is being cancelled or not.
+The below process flow depicts the rule set applied in the `ChargeCommandReceiverEndpoint` for persisting incoming charges with and without prices in the SQL database.  
+It documents the different persistence paths the system takes given circumstances like charge already exists (same Charge ID, type and owner), whether it is an update or stop operation, and whether a stop already exists on the charge's timeline and if this stop is being cancelled or not.
 
-The rule set was built upon the scenarios listed [here](images/PersistingCharges_Update_And_Stop_MasterData_Examples.png) and it is assumed that the incoming charge has been converted to an internal model, i.e. the Charge Command, and it has passed both input and business validation.
+The rule set was built upon the scenarios listed [here](images/PersistingCharges_Update_And_Stop_MasterData_Examples.png) and it is assumed that the incoming charge has been converted to an internal model, i.e. the Charge Command and has passed both input and business validation.
 
 ![Persist charge](images/PersistingChargesRuleSet_ProcessFlow.png)
 <br>
