@@ -79,7 +79,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
                 {
                     ChargeType = pair.Value.Type,
                     SenderProvidedChargeId = pair.Value.SenderProvidedChargeId,
-                    ChargeOwnerId = GetChargeOwnerId(pair.Value, owners),
+                    ChargeOwner = GetChargeOwnerId(pair.Value, owners),
                     StartDateTime = pair.Key.GetStartDateTime(meteringPoint.EffectiveDate),
                     EndDateTime = pair.Key.EndDateTime,
                     OperationId = Guid.NewGuid().ToString(), // When creating default charge links, the TSO starts a new operation, which is why a new OperationId is provided.
