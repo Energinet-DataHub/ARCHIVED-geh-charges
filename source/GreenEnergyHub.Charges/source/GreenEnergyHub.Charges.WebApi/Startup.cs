@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Linq;
 using System.Text.Json.Serialization;
 using Energinet.DataHub.Core.App.WebApp.Middleware;
 using GreenEnergyHub.Charges.WebApi.Configuration;
@@ -94,11 +95,9 @@ namespace GreenEnergyHub.Charges.WebApi
                 app.UseSwagger();
                 app.UseSwaggerUI(options =>
                 {
-                    foreach (var description in provider.ApiVersionDescriptions)
+                    foreach (var groupName in provider.ApiVersionDescriptions.Select(x => x.GroupName))
                     {
-                        options.SwaggerEndpoint(
-                            $"/swagger/{description.GroupName}/swagger.json",
-                            description.GroupName.ToUpperInvariant());
+                        options.SwaggerEndpoint($"/swagger/{groupName}/swagger.json", groupName.ToUpperInvariant());
                     }
                 });
             }
