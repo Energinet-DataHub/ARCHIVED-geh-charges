@@ -29,7 +29,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
         public const string DomainEventManagerConnectionString = "DOMAINEVENT_MANAGER_CONNECTION_STRING";
         public const string DomainEventSenderConnectionString = "DOMAINEVENT_SENDER_CONNECTION_STRING";
         public const string DataHubListenerConnectionString = "INTEGRATIONEVENT_LISTENER_CONNECTION_STRING";
-        public const string ActorRegisterDbConnectionString = "ACTOR_REGISTER_CONNECTION_STRING";
+        public const string MarketParticipantRegistryDbConnectionString = "MARKET_PARTICIPANT_REGISTRY_CONNECTION_STRING";
         public const string DataHubManagerConnectionString = "INTEGRATIONEVENT_MANAGER_CONNECTION_STRING";
         public const string DataHubSenderConnectionString = "INTEGRATIONEVENT_SENDER_CONNECTION_STRING";
         public const string MessageHubStorageConnectionString = "MESSAGEHUB_STORAGE_CONNECTION_STRING";

@@ -14,7 +14,7 @@
     "INTEGRATIONEVENT_LISTENER_CONNECTION_STRING": "<sb listener connection string for integration events (without EntityPath)>",
     "INTEGRATIONEVENT_MANAGER_CONNECTION_STRING": "<sb manager connection string for integration events (without EntityPath)>",
     "INTEGRATIONEVENT_SENDER_CONNECTION_STRING": "<sb sender connection string for integration events (without EntityPath)>",
-    "ACTOR_REGISTER_CONNECTION_STRING": "<actor register database connection string>",
+    "MARKET_PARTICIPANT_REGISTRY_CONNECTION_STRING": "<market participant registry database connection string>",
     "MESSAGEHUB_STORAGE_CONNECTION_STRING": "<connection string for writing to the Message Hub storage account for bundles>",
     "REQUEST_RESPONSE_LOGGING_CONNECTION_STRING": "<connection string for logging request and response to storage>",
     "B2C_TENANT_ID": "<Azure B2C tenant id>",
