@@ -24,7 +24,7 @@ It documents the different persistence paths the system takes given circumstance
 
 The rule set was built upon the scenarios listed [here](images/PersistingCharges_Update_And_Stop_MasterData_Examples.png) and it is assumed that the incoming charge has been converted to an internal model, i.e. the Charge Command and has passed both input and business validation.
 
-Note, stopping a charge results in a removal of any registered prices from the stop date and onwards.
+Note, stopping a charge results in a removal of any registered prices from the stop date and forwards.
 
 ![Persist charge](images/PersistingChargesRuleSet_ProcessFlow.png)
 <br>
