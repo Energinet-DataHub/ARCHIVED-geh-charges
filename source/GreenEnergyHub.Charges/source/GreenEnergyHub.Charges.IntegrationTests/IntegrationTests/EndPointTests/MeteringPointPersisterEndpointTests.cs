@@ -113,7 +113,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndPointTests
                     .Select(s => s[MyRandom.Next(s.Length)]).ToArray());
             }
 
-            private ServiceBusMessage CreateServiceBusMessage(
+            private static ServiceBusMessage CreateServiceBusMessage(
                 IChargesDatabaseContext chargesDatabaseContext,
                 string meteringPointId,
                 MeteringPointType meteringPointType,
