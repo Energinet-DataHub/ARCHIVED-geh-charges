@@ -19,6 +19,7 @@ using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTests.TestCommon;
@@ -58,6 +59,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndPointTests
                 return Task.CompletedTask;
             }
 
+            /// <summary>
+            /// The attempt to update charge link (in this case using the same command) is not allowed for now and
+            /// must be rejected by <see cref="ChargeLinksUpdateNotYetSupportedRule"/>. When charge link update is
+            /// allowed and this rule is removed, this test should be removed, too.
+            /// </summary>
+            /// <param name="chargeLinksCommandBuilder"></param>
+            /// <param name="chargeLinkDtoBuilder"></param>
             [Theory]
             [InlineAutoMoqData]
             public async Task When_ChargeLinksUpdateAttempted_Then_CreateRejection(
