@@ -22,11 +22,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
 {
     public sealed class HttpResponseBuilder : IHttpResponseBuilder
     {
-        public async Task<HttpResponseData> CreateAcceptedResponseAsync<T>(HttpRequestData request, T response)
+        public HttpResponseData CreateAcceptedResponse(HttpRequestData request)
         {
-            var httpResponse = request.CreateResponse();
-            await httpResponse.WriteAsJsonAsync(response, HttpStatusCode.Accepted).ConfigureAwait(false);
-            return httpResponse;
+            return request.CreateResponse(HttpStatusCode.Accepted);
         }
 
         public async Task<HttpResponseData> CreateBadRequestResponseAsync(HttpRequestData request, ErrorResponse response)
