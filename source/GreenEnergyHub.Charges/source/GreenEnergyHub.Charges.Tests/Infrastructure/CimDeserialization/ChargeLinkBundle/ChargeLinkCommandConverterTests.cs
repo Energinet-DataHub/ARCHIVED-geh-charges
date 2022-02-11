@@ -75,7 +75,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeL
             chargeLink.EndDateTime.Should().Be(InstantPattern.ExtendedIso.Parse("2021-11-05T23:00:00Z").Value);
             chargeLink.SenderProvidedChargeId.Should().Be("ChargeId01");
             chargeLink.Factor.Should().Be(1);
-            chargeLink.ChargeOwnerId.Should().Be("8100000000016");
+            chargeLink.ChargeOwner.Should().Be("8100000000016");
             chargeLink.ChargeType.Should().Be(ChargeType.Tariff);
         }
 
@@ -165,7 +165,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeL
             chargeLink1.EndDateTime.Should().Be(InstantPattern.ExtendedIso.Parse("2021-11-05T23:00:00Z").Value);
             chargeLink1.SenderProvidedChargeId.Should().Be("ChargeId01");
             chargeLink1.Factor.Should().Be(1);
-            chargeLink1.ChargeOwnerId.Should().Be("8100000000016");
+            chargeLink1.ChargeOwner.Should().Be("8100000000016");
             chargeLink1.ChargeType.Should().Be(ChargeType.Tariff);
 
             // ChargeLink 2
@@ -176,7 +176,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeL
             chargeLink2.EndDateTime.Should().Be(InstantPattern.ExtendedIso.Parse("2021-12-05T23:00:00Z").Value);
             chargeLink2.SenderProvidedChargeId.Should().Be("ChargeId01");
             chargeLink2.Factor.Should().Be(1);
-            chargeLink2.ChargeOwnerId.Should().Be("8100000000016");
+            chargeLink2.ChargeOwner.Should().Be("8100000000016");
             chargeLink2.ChargeType.Should().Be(ChargeType.Tariff);
         }
 

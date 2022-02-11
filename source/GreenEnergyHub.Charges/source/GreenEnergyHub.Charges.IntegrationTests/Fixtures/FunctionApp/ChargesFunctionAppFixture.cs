@@ -56,6 +56,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures.FunctionApp
         public MessageHubSimulation? MessageHubMock { get; private set; }
 
         [NotNull]
+        public TopicResource? ChargeLinksReceivedTopic { get; private set; }
+
+        [NotNull]
         public QueueResource? CreateLinkRequestQueue { get; private set; }
 
         [NotNull]
@@ -132,7 +135,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures.FunctionApp
                 .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.ChargeLinksCreatedTopicName)
                 .CreateAsync();
 
-            var chargeLinkReceivedTopic = await ServiceBusResourceProvider
+            ChargeLinksReceivedTopic = await ServiceBusResourceProvider
                 .BuildTopic(ChargesServiceBusResourceNames.ChargeLinksReceivedTopicKey)
                 .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.ChargeLinksReceivedTopicName)
                 .AddSubscription(ChargesServiceBusResourceNames.ChargeLinksReceivedSubscriptionName)
@@ -173,7 +176,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures.FunctionApp
                 .BuildQueue(ChargesServiceBusResourceNames.CreateLinksReplyQueueKey)
                 .CreateAsync();
 
-            await ServiceBusResourceProvider
+            var chargeLinksCommandRejectedTopic = await ServiceBusResourceProvider
                 .BuildTopic(ChargesServiceBusResourceNames.ChargeLinksRejectedTopicKey)
                 .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.ChargeLinksRejectedTopicName)
                 .AddSubscription(ChargesServiceBusResourceNames.ChargeLinksRejectedSubscriptionName)
