@@ -20,7 +20,7 @@ module "snet_internal_private_endpoints" {
   environment_instance                            = var.environment_instance
   resource_group_name                             = data.azurerm_key_vault_secret.vnet_internal_resource_group_name.value
   virtual_network_name                            = data.azurerm_key_vault_secret.vnet_internal_name.value
-  address_prefixes                                = []
+  address_prefixes                                = [var.subnet_internal_private_endpoints_address_space]
   enforce_private_link_endpoint_network_policies  = true
   enforce_private_link_service_network_policies   = true
 }
@@ -33,7 +33,7 @@ module "snet_external_private_endpoints" {
   environment_instance                            = var.environment_instance
   resource_group_name                             = data.azurerm_key_vault_secret.vnet_internal_resource_group_name.value
   virtual_network_name                            = data.azurerm_key_vault_secret.vnet_internal_name.value
-  address_prefixes                                = []
+  address_prefixes                                = [var.subnet_external_private_endpoints_address_space]
   enforce_private_link_endpoint_network_policies  = true
 }
 
@@ -45,7 +45,7 @@ module "vnet_integrations_webapi" {
   environment_instance                            = var.environment_instance
   resource_group_name                             = data.azurerm_key_vault_secret.vnet_internal_resource_group_name.value
   virtual_network_name                            = data.azurerm_key_vault_secret.vnet_internal_name.value
-  address_prefixes                                = []
+  address_prefixes                                = [var.subnet_vnet_integrations_webapi_address_space]
   enforce_private_link_service_network_policies   = true
 
   # Delegate the subnet to "Microsoft.Web/serverFarms"
@@ -64,7 +64,7 @@ module "vnet_integrations_functionhost" {
   environment_instance                            = var.environment_instance
   resource_group_name                             = data.azurerm_key_vault_secret.vnet_internal_resource_group_name.value
   virtual_network_name                            = data.azurerm_key_vault_secret.vnet_internal_name.value
-  address_prefixes                                = []
+  address_prefixes                                = [var.subnet_vnet_integrations_functions_address_space]
   enforce_private_link_service_network_policies   = true
 
   # Delegate the subnet to "Microsoft.Web/serverFarms"
