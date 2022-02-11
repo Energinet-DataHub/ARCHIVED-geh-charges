@@ -53,7 +53,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
             foreach (var link in chargeLinksCommand.ChargeLinks)
             {
                 var charge = await _chargeRepository
-                    .GetOrNullAsync(new ChargeIdentifier(link.SenderProvidedChargeId, link.ChargeOwnerId, link.ChargeType))
+                    .GetOrNullAsync(new ChargeIdentifier(link.SenderProvidedChargeId, link.ChargeOwner, link.ChargeType))
                     .ConfigureAwait(false);
 
                 rules.Add(new ChargeMustExistRule(charge, link));
