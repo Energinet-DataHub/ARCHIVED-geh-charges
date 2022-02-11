@@ -48,7 +48,6 @@ namespace GreenEnergyHub.Charges.WebApi
 
             services.AddSwaggerGen(c =>
             {
-                // c.SwaggerDoc("v1", new OpenApiInfo { Title = "GreenEnergyHub.Charges.WebApi", Version = "v1" });
                 var securitySchema = new OpenApiSecurityScheme
                 {
                     Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
