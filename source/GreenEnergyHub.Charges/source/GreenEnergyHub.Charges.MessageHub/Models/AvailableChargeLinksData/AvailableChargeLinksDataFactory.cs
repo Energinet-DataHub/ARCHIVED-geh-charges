@@ -54,7 +54,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData
 
             foreach (var link in acceptedEvent.ChargeLinksCommand.ChargeLinks)
             {
-                var chargeIdentifier = new ChargeIdentifier(link.SenderProvidedChargeId, link.ChargeOwnerId, link.ChargeType);
+                var chargeIdentifier = new ChargeIdentifier(link.SenderProvidedChargeId, link.ChargeOwner, link.ChargeType);
                 var charge = await _chargeRepository.GetAsync(chargeIdentifier).ConfigureAwait(false);
                 var sender = await GetSenderAsync().ConfigureAwait(false);
 
@@ -69,7 +69,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData
                         _messageMetaDataContext.RequestDataTime,
                         Guid.NewGuid(), // ID of each available piece of data must be unique
                         link.SenderProvidedChargeId,
-                        link.ChargeOwnerId,
+                        link.ChargeOwner,
                         link.ChargeType,
                         acceptedEvent.ChargeLinksCommand.MeteringPointId,
                         link.Factor,

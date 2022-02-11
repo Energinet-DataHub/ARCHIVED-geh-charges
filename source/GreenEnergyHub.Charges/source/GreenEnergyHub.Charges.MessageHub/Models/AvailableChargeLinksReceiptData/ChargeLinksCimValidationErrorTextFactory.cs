@@ -94,7 +94,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
         private string GetChargeOwner(ChargeLinksCommand chargeLinksCommand, string? triggeredBy)
         {
             var chargeLinkDto = GetChargeLinkDto(chargeLinksCommand, triggeredBy);
-            return chargeLinkDto != null ? chargeLinkDto.ChargeOwnerId : CimValidationErrorTextTemplateMessages.Unknown;
+            return chargeLinkDto != null ? chargeLinkDto.ChargeOwner : CimValidationErrorTextTemplateMessages.Unknown;
         }
 
         private string GetChargeLinkStartDate(ChargeLinksCommand chargeLinksCommand, string? triggeredBy)
