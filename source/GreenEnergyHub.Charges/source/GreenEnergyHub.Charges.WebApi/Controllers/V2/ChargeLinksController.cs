@@ -20,12 +20,18 @@ using GreenEnergyHub.Charges.WebApi.ModelPredicates;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace GreenEnergyHub.Charges.WebApi.Controllers
+namespace GreenEnergyHub.Charges.WebApi.Controllers.V2
 {
+    /// <summary>
+    /// Version 1: Introduce action to get charge links.
+    /// Version 2: Breaking changes to get charge links.
+    /// </summary>
     [ApiController]
-    [Route("[controller]")]
+    [ApiVersion(Version2)]
+    [Route("v{version:apiVersion}/[controller]")]
     public class ChargeLinksController : ControllerBase
     {
+        public const string Version2 = "2.0";
         private readonly IData _data;
 
         public ChargeLinksController(IData data)
@@ -34,12 +40,13 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers
         }
 
         /// <summary>
-        /// Returns all charge links data for a given metering point. Currently it returns mocked data.
+        /// Returns all charge links data for a given metering point.
         /// </summary>
         /// <param name="meteringPointId">The 18-digits metering point identifier used by the Danish version of Green Energy Hub.
         /// Use 404 to get a "404 Not Found" response.</param>
-        /// <returns>Mocked charge links data or "404 Not Found"</returns>
-        [HttpGet("GetAsync")]
+        /// <returns>Charge links data or "404 Not Found"</returns>
+        [HttpGet]
+        [MapToApiVersion(Version2)]
         public async Task<IActionResult> GetAsync(string meteringPointId)
         {
             if (meteringPointId == null)
@@ -59,7 +66,7 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers
                 .OrderBy(c => c.Charge.Type)
                 .ThenBy(c => c.Charge.SenderProvidedChargeId)
                 .ThenByDescending(c => c.StartDateTime)
-                .AsChargeLinkDto()
+                .AsChargeLinkV2Dto()
                 .ToListAsync()
                 .ConfigureAwait(false);
 
