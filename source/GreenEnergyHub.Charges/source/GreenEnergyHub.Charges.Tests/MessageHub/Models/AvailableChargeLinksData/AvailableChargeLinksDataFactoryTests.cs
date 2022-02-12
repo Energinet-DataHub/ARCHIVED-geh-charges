@@ -77,7 +77,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinksDat
                     .Be(acceptedEvent.ChargeLinksCommand.Document.BusinessReasonCode);
                 actual[i].RequestDateTime.Should().Be(now);
                 actual[i].ChargeId.Should().Be(expectedLinks[i].SenderProvidedChargeId);
-                actual[i].ChargeOwner.Should().Be(expectedLinks[i].ChargeOwnerId);
+                actual[i].ChargeOwner.Should().Be(expectedLinks[i].ChargeOwner);
                 actual[i].ChargeType.Should().Be(expectedLinks[i].ChargeType);
                 actual[i].MeteringPointId.Should().Be(acceptedEvent.ChargeLinksCommand.MeteringPointId);
                 actual[i].Factor.Should().Be(expectedLinks[i].Factor);

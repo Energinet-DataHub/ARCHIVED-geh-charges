@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinkCreatedEvents
             foreach (var c in chargeLinkCreatedEvents)
             {
                 c.Key.Factor.Should().Be(c.Value.ChargeLinkPeriod.Factor);
-                c.Key.ChargeOwnerId.Should().Be(c.Value.ChargeOwner);
+                c.Key.ChargeOwner.Should().Be(c.Value.ChargeOwner);
                 c.Key.ChargeType.Should().Be(c.Value.ChargeType);
                 c.Key.OperationId.Should().Be(c.Value.ChargeLinkId);
                 c.Key.EndDateTime.Should().Be(c.Value.ChargeLinkPeriod.EndDateTime);
