@@ -16,15 +16,17 @@ using GreenEnergyHub.Charges.QueryApi;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 
-namespace GreenEnergyHub.Charges.WebApi.Controllers
+namespace GreenEnergyHub.Charges.WebApi.Controllers.V1
 {
     [ApiController]
-    [Route("[controller]")]
-    public class OData : Controller
+    [ApiVersion("1.0")]
+    [Route("v{version:apiVersion}/[controller]")]
+    [Route("[controller]")] // for backward compatibility
+    public class ODataController : Controller
     {
         private readonly IData _data;
 
-        public OData(IData data)
+        public ODataController(IData data)
         {
             _data = data;
         }
@@ -55,6 +57,13 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers
         public IActionResult ChargeLinks()
         {
             return Ok(_data.ChargeLinks);
+        }
+
+        [HttpGet("DefaultChargeLinks")]
+        [EnableQuery]
+        public IActionResult DefaultChargeLinks()
+        {
+            return Ok(_data.DefaultChargeLinks);
         }
     }
 }

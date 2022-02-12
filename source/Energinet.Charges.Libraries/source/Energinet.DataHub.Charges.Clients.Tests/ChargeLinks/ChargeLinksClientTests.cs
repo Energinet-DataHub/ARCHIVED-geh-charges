@@ -35,15 +35,15 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
     [UnitTest]
     public class ChargeLinksClientTests
     {
-        private const string BaseUrl = "http://chargelinks-test.com/";
+        private const string BaseUrl = "https://chargelinks-test.com/";
         private const string MeteringPointId = "57131310000000000";
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task GetAsync_WhenMeteringPointHasLinks_ReturnsChargeLinks(ChargeLinkDto chargeLinkDto)
+        public async Task GetAsync_WhenMeteringPointHasLinks_ReturnsChargeLinks(ChargeLinkV2Dto chargeLinkDto)
         {
             // Arrange
-            var chargeLinks = new List<ChargeLinkDto>();
+            var chargeLinks = new List<ChargeLinkV2Dto>();
             chargeLinks.Add(chargeLinkDto);
 
             var options = new JsonSerializerOptions(JsonSerializerDefaults.Web)
@@ -51,7 +51,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
                 Converters = { new JsonStringEnumConverter() },
             };
 
-            var responseContent = JsonSerializer.Serialize<IList<ChargeLinkDto>>(chargeLinks, options);
+            var responseContent = JsonSerializer.Serialize<IList<ChargeLinkV2Dto>>(chargeLinks, options);
 
             var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.OK, responseContent);
             var httpClient = new HttpClient(mockHttpMessageHandler.Object)
@@ -93,7 +93,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
             var result = await sut.GetAsync(MeteringPointId).ConfigureAwait(false);
 
             // Assert
-            result.Should().BeOfType<List<ChargeLinkDto>>();
+            result.Should().BeOfType<List<ChargeLinkV2Dto>>();
             result.Should().BeEmpty();
         }
 
