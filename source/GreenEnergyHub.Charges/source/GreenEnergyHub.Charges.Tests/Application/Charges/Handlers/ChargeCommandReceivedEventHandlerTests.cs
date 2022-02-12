@@ -36,8 +36,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         [InlineAutoMoqData]
         public async Task HandleAsync_WhenValidationSucceed_StoreAndConfirmCommand(
             [Frozen] Mock<IValidator<ChargeCommand>> validator,
-            [Frozen] Mock<IChargeRepository> repository,
-            [Frozen] Mock<IChargeCommandReceiptService> confirmationService,
+            [Frozen] Mock<IChargeRepository> chargeRepository,
+            [Frozen] Mock<IChargeCommandReceiptService> receiptService,
             [Frozen] Mock<Charge> charge,
             [Frozen] Mock<IChargeFactory> chargeFactory,
             ChargeCommandReceivedEvent receivedEvent,
@@ -45,32 +45,21 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         {
             // Arrange
             var validationResult = ValidationResult.CreateSuccess();
-            validator.Setup(
-                    v => v.ValidateAsync(
-                        It.IsAny<ChargeCommand>()))
-                .Returns(
-                    Task.FromResult(validationResult));
+            SetupValidator(validator, validationResult);
 
             var stored = false;
-            repository.Setup(
-                    r => r.StoreChargeAsync(
-                        It.IsAny<Charge>()))
-                .Callback<Charge>(
-                    _ => stored = true);
+            chargeRepository.Setup(r => r.StoreChargeAsync(It.IsAny<Charge>()))
+                .Callback<Charge>(_ => stored = true);
 
             var confirmed = false;
-            confirmationService.Setup(
-                    s => s.AcceptAsync(
-                        It.IsAny<ChargeCommand>()))
-                .Callback<ChargeCommand>(
-                    _ => confirmed = true);
+            receiptService.Setup(s => s.AcceptAsync(It.IsAny<ChargeCommand>()))
+                .Callback<ChargeCommand>(_ => confirmed = true);
 
-            chargeFactory.Setup(s => s.CreateFromCommandAsync(
-                    It.IsAny<ChargeCommand>()))
+            chargeFactory.Setup(s => s.CreateFromCommandAsync(It.IsAny<ChargeCommand>()))
                 .ReturnsAsync(charge.Object);
 
             // Act
-            await sut.HandleAsync(receivedEvent).ConfigureAwait(false);
+            await sut.HandleAsync(receivedEvent);
 
             // Assert
             Assert.True(stored);
@@ -81,28 +70,20 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         [InlineAutoMoqData]
         public async Task HandleAsync_WhenValidationFails_RejectsEvent(
             [Frozen] Mock<IValidator<ChargeCommand>> validator,
-            [Frozen] Mock<IChargeCommandReceiptService> confirmationService,
+            [Frozen] Mock<IChargeCommandReceiptService> receiptService,
             ChargeCommandReceivedEvent receivedEvent,
             ChargeCommandReceivedEventHandler sut)
         {
             // Arrange
             var validationResult = GetFailedValidationResult();
-            validator.Setup(
-                    v => v.ValidateAsync(
-                        It.IsAny<ChargeCommand>()))
-                .Returns(
-                    Task.FromResult(validationResult));
+            SetupValidator(validator, validationResult);
 
             var rejected = false;
-            confirmationService.Setup(
-                    s => s.RejectAsync(
-                        It.IsAny<ChargeCommand>(),
-                        validationResult))
-                .Callback<ChargeCommand, ValidationResult>(
-                    (_, _) => rejected = true);
+            receiptService.Setup(s => s.RejectAsync(It.IsAny<ChargeCommand>(), validationResult))
+                .Callback<ChargeCommand, ValidationResult>((_, _) => rejected = true);
 
             // Act
-            await sut.HandleAsync(receivedEvent).ConfigureAwait(false);
+            await sut.HandleAsync(receivedEvent);
 
             // Assert
             Assert.True(rejected);
@@ -117,20 +98,23 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             ChargeCommandReceivedEvent? receivedEvent = null;
 
             // Act / Assert
-            await Assert.ThrowsAsync<ArgumentNullException>(
-                    () => sut.HandleAsync(receivedEvent!))
-                .ConfigureAwait(false);
+            await Assert.ThrowsAsync<ArgumentNullException>(() => sut.HandleAsync(receivedEvent!));
         }
 
         private static ValidationResult GetFailedValidationResult()
         {
             var failedRule = new Mock<IValidationRule>();
-            failedRule.Setup(
-                    r => r.IsValid)
-                .Returns(false);
+            failedRule.Setup(r => r.IsValid).Returns(false);
 
-            return ValidationResult.CreateFailure(
-                new List<IValidationRule> { failedRule.Object });
+            return ValidationResult.CreateFailure(new List<IValidationRule> { failedRule.Object });
+        }
+
+        private static void SetupValidator(
+            Mock<IValidator<ChargeCommand>> validator, ValidationResult validationResult)
+        {
+            validator.Setup(v => v.InputValidate(It.IsAny<ChargeCommand>())).Returns(validationResult);
+            validator.Setup(v => v.BusinessValidateAsync(It.IsAny<ChargeCommand>()))
+                .Returns(Task.FromResult(validationResult));
         }
     }
 }

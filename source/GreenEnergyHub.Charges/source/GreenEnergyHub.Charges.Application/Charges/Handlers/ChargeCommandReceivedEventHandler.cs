@@ -13,6 +13,8 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Domain.Charges;
@@ -45,19 +47,81 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         {
             if (commandReceivedEvent == null) throw new ArgumentNullException(nameof(commandReceivedEvent));
 
-            var validationResult = await _validator.ValidateAsync(commandReceivedEvent.Command).ConfigureAwait(false);
-            if (validationResult.IsFailed)
+            // input validation
+            var inputValidationResult = _validator.InputValidate(commandReceivedEvent.Command);
+            if (inputValidationResult.IsFailed)
             {
-                await _chargeCommandReceiptService.RejectAsync(commandReceivedEvent.Command, validationResult).ConfigureAwait(false);
+                await _chargeCommandReceiptService
+                    .RejectAsync(commandReceivedEvent.Command, inputValidationResult).ConfigureAwait(false);
                 return;
             }
 
-            var charge = await _chargeFactory
-                .CreateFromCommandAsync(commandReceivedEvent.Command)
-                .ConfigureAwait(false);
-            await _chargeRepository.StoreChargeAsync(charge).ConfigureAwait(false);
+            // business validation
+            var businessValidationResult = await _validator
+                .BusinessValidateAsync(commandReceivedEvent.Command).ConfigureAwait(false);
+            if (businessValidationResult.IsFailed)
+            {
+                await _chargeCommandReceiptService.RejectAsync(
+                    commandReceivedEvent.Command, businessValidationResult).ConfigureAwait(false);
+                return;
+            }
+
+            // get charges
+            var charges = await GetChargesAsync(commandReceivedEvent.Command).ConfigureAwait(false);
+
+            // is create, update or stop?
+            var operationType = GetOperationType(commandReceivedEvent.Command, charges);
+
+            // create flow
+            if (operationType == OperationType.Create)
+            {
+                var charge = await _chargeFactory
+                    .CreateFromCommandAsync(commandReceivedEvent.Command)
+                    .ConfigureAwait(false);
+                await _chargeRepository.StoreChargeAsync(charge).ConfigureAwait(false);
+            }
+
+            // update flow
+            if (operationType == OperationType.Update)
+            {
+                // new update flow
+            }
+
+            // stop flow
+            if (operationType == OperationType.Update)
+            {
+                // new stop flow
+            }
 
             await _chargeCommandReceiptService.AcceptAsync(commandReceivedEvent.Command).ConfigureAwait(false);
         }
+
+        private static OperationType GetOperationType(ChargeCommand command, IEnumerable<Charge> charges)
+        {
+            if (command.ChargeOperation.StartDateTime == command.ChargeOperation.EndDateTime)
+            {
+                return OperationType.Stop;
+            }
+
+            return charges.Any() ? OperationType.Update : OperationType.Create;
+        }
+
+        private async Task<List<Charge>> GetChargesAsync(ChargeCommand command)
+        {
+            var chargeIdentifier = new ChargeIdentifier(
+                command.ChargeOperation.ChargeId,
+                command.ChargeOperation.ChargeOwner,
+                command.ChargeOperation.Type);
+
+            return await _chargeRepository.GetChargesAsync(chargeIdentifier).ConfigureAwait(false);
+        }
+    }
+
+    // Internal, so far...
+    internal enum OperationType
+    {
+        Create = 0,
+        Update = 1,
+        Stop = 2,
     }
 }

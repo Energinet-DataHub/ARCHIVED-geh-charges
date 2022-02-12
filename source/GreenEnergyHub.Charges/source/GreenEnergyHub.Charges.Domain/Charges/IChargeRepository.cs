@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace GreenEnergyHub.Charges.Domain.Charges
@@ -32,5 +33,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         Task<IReadOnlyCollection<Charge>> GetAsync(IReadOnlyCollection<Guid> ids);
 
         Task<Charge?> GetOrNullAsync(ChargeIdentifier chargeIdentifier);
+
+        Task<List<Charge>> GetChargesAsync(ChargeIdentifier chargeIdentifier);
     }
 }
