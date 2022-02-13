@@ -20,7 +20,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.WebApi.Model.ChargeLink
 {
     [UnitTest]
-    public class ChargeLinkDtoTests
+    public class ChargeLinkV2DtoTests
     {
         /// <summary>
         /// See https://github.com/Energinet-DataHub/geh-charges/issues/933 regarding naming decisions.
@@ -28,16 +28,15 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.Model.ChargeLink
         [Fact]
         public void Props_HaveCorrectNames()
         {
-            nameof(ChargeLinkDto.ChargeId).Should().Be("ChargeId");
-            nameof(ChargeLinkDto.ChargeName).Should().Be("ChargeName");
-            nameof(ChargeLinkDto.Quantity).Should().Be("Quantity");
-            nameof(ChargeLinkDto.ChargeOwner).Should().Be("ChargeOwner"); // ID of the charge owner
-            nameof(ChargeLinkDto.ChargeOwnerName).Should().Be("ChargeOwnerName");
-            nameof(ChargeLinkDto.ChargeType).Should().Be("ChargeType");
-            nameof(ChargeLinkDto.TaxIndicator).Should().Be("TaxIndicator");
-            nameof(ChargeLinkDto.TransparentInvoicing).Should().Be("TransparentInvoicing");
-            nameof(ChargeLinkDto.StartDate).Should().Be("StartDate");
-            nameof(ChargeLinkDto.EndDate).Should().Be("EndDate");
+            nameof(ChargeLinkV2Dto.ChargeId).Should().Be("ChargeId");
+            nameof(ChargeLinkV2Dto.ChargeName).Should().Be("ChargeName");
+            nameof(ChargeLinkV2Dto.Quantity).Should().Be("Quantity");
+            nameof(ChargeLinkV2Dto.ChargeOwnerId).Should().Be("ChargeOwnerId");
+            nameof(ChargeLinkV2Dto.ChargeType).Should().Be("ChargeType");
+            nameof(ChargeLinkV2Dto.TaxIndicator).Should().Be("TaxIndicator");
+            nameof(ChargeLinkV2Dto.TransparentInvoicing).Should().Be("TransparentInvoicing");
+            nameof(ChargeLinkV2Dto.StartDate).Should().Be("StartDate");
+            nameof(ChargeLinkV2Dto.EndDate).Should().Be("EndDate");
         }
     }
 }
