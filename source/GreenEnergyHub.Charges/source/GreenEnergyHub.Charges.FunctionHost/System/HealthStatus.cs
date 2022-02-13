@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.System
             return response;
         }
 
-        private async Task<Dictionary<string, bool>> GetDeepHealthCheckStatusAsync()
+        private static async Task<Dictionary<string, bool>> GetDeepHealthCheckStatusAsync()
         {
             var chargesDbConnectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeDbConnectionString);
             var actorRegisterDbConnectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.ActorRegisterDbConnectionString);
