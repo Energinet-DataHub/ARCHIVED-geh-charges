@@ -44,6 +44,7 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers.V1
         /// <param name="meteringPointId">The 18-digits metering point identifier used by the Danish version of Green Energy Hub.
         /// Use 404 to get a "404 Not Found" response.</param>
         /// <returns>Charge links data or "404 Not Found"</returns>
+        [HttpGet]
         [HttpGet("GetAsync")]
         [MapToApiVersion(Version1)]
         public async Task<IActionResult> GetAsync(string meteringPointId)
