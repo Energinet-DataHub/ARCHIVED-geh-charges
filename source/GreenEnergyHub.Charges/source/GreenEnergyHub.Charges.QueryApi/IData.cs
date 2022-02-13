@@ -26,5 +26,7 @@ namespace GreenEnergyHub.Charges.QueryApi
         public IQueryable<MeteringPoint> MeteringPoints { get; }
 
         public IQueryable<MarketParticipant> MarketParticipants { get; }
+
+        public IQueryable<DefaultChargeLink> DefaultChargeLinks { get; }
     }
 }

@@ -12,10 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using AutoFixture;
+using Energinet.Charges.Contracts.Charge;
 using Energinet.Charges.Contracts.ChargeLink;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Core.DateTime;
@@ -25,25 +24,64 @@ using GreenEnergyHub.Charges.WebApi.ModelPredicates;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.WebApi
+namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
 {
     [UnitTest]
     public class ChargeLinkQueryLogicTests
     {
         [Theory]
         [InlineAutoMoqData]
-        public void AsChargeLinkDto_WhenChargeLinkContainsEndDefaultEndDate_EndDateReturnsAsNull(ChargeLink chargeLink)
+        public void AsChargeLinkV1Dto_WhenChargeLinkContainsEndDefaultEndDate_EndDateReturnsAsNull(ChargeLink chargeLink)
         {
             // Arrange
             chargeLink.Charge.Type = 1;
             chargeLink.EndDateTime = InstantExtensions.GetEndDefault().ToDateTimeUtc();
-            var chargeLinks = new List<ChargeLink>
-            {
-                chargeLink,
-            }.AsQueryable();
+            var chargeLinks = new List<ChargeLink> { chargeLink, }.AsQueryable();
 
             // Act
-            var actual = chargeLinks.AsChargeLinkDto();
+            var actual = chargeLinks.AsChargeLinkV1Dto();
+
+            // Assert
+            actual.Should().NotContain(c => c.EndDate == InstantExtensions.GetEndDefault().ToDateTimeUtc());
+        }
+
+        [Theory]
+        [InlineAutoMoqData]
+        public void AsChargeLinkV2Dto_SetsAllProperties(ChargeLink chargeLink)
+        {
+            // Arrange
+            chargeLink.Charge.Type = 1;
+            chargeLink.Charge.OwnerId = chargeLink.Charge.Owner.Id;
+            var chargeLinks = new List<ChargeLink> { chargeLink, }.AsQueryable();
+            var expected = new ChargeLinkV2Dto(
+                (ChargeType)chargeLink.Charge.Type,
+                chargeLink.Charge.SenderProvidedChargeId,
+                chargeLink.Charge.Name,
+                chargeLink.Charge.OwnerId,
+                chargeLink.Charge.TaxIndicator,
+                chargeLink.Charge.TransparentInvoicing,
+                chargeLink.Factor,
+                chargeLink.StartDateTime,
+                chargeLink.EndDateTime);
+
+            // Act
+            var actual = chargeLinks.AsChargeLinkV2Dto();
+
+            // Assert
+            actual.Single().Should().BeEquivalentTo(expected);
+        }
+
+        [Theory]
+        [InlineAutoMoqData]
+        public void AsChargeLinkV2Dto_WhenChargeLinkContainsEndDefaultEndDate_EndDateReturnsAsNull(ChargeLink chargeLink)
+        {
+            // Arrange
+            chargeLink.Charge.Type = 1;
+            chargeLink.EndDateTime = InstantExtensions.GetEndDefault().ToDateTimeUtc();
+            var chargeLinks = new List<ChargeLink> { chargeLink, }.AsQueryable();
+
+            // Act
+            var actual = chargeLinks.AsChargeLinkV2Dto();
 
             // Assert
             actual.Should().NotContain(c => c.EndDate == InstantExtensions.GetEndDefault().ToDateTimeUtc());
