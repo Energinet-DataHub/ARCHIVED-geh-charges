@@ -104,7 +104,7 @@ namespace GreenEnergyHub.Charges.WebApi
             if (!env.IsDevelopment())
             {
                 // ATM. we only register this middleware when not in development. As we are unable to token auth a user.
-                app.UseMiddleware<JwtTokenMiddleware>();
+                // app.UseMiddleware<JwtTokenMiddleware>();
             }
 
             app.UseHttpsRedirection();
