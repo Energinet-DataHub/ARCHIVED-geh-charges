@@ -53,7 +53,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
             foreach (var link in chargeLinksCommand.ChargeLinks)
             {
                 var charge = await _chargeRepository
-                    .GetOrNullAsync(new ChargeIdentifier(link.SenderProvidedChargeId, link.ChargeOwnerId, link.ChargeType))
+                    .GetOrNullAsync(new ChargeIdentifier(link.SenderProvidedChargeId, link.ChargeOwner, link.ChargeType))
                     .ConfigureAwait(false);
 
                 rules.Add(new ChargeMustExistRule(charge, link));
@@ -63,7 +63,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
                 var existingChargeLinks = await _chargeLinksRepository
                     .GetAsync(charge.Id, meteringPoint.Id)
                     .ConfigureAwait(false);
-                GetMandatoryRulesForSingleLinks(rules, chargeLinksCommand, existingChargeLinks);
+
+                rules.AddRange(GetMandatoryRulesForSingleLinks(chargeLinksCommand, existingChargeLinks));
             }
 
             return ValidationRuleSet.FromRules(rules);
@@ -77,12 +78,14 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
             };
         }
 
-        private void GetMandatoryRulesForSingleLinks(
-            List<IValidationRule> rules,
+        private List<IValidationRule> GetMandatoryRulesForSingleLinks(
             ChargeLinksCommand chargeLinksCommand,
             IReadOnlyCollection<ChargeLink> existingChargeLinks)
         {
-            rules.Add(new ChargeLinksUpdateNotYetSupportedRule(chargeLinksCommand, existingChargeLinks));
+            return new List<IValidationRule>
+            {
+                new ChargeLinksUpdateNotYetSupportedRule(chargeLinksCommand, existingChargeLinks),
+            };
         }
     }
 }

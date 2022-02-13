@@ -57,7 +57,7 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
         /// and replacing it by a new market participant.
         ///
         /// IMPORTANT: There should not be a private setter but it's a temporary solution to handle non-valid
-        /// updates in the temporary actor register solution.
+        /// updates in the temporary market participant registry solution.
         /// </summary>
         public string MarketParticipantId { get; private set; }
 

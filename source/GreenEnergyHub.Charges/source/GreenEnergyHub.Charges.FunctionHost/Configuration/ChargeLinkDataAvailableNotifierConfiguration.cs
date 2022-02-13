@@ -17,6 +17,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksDataAvailableNotifiedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
+using GreenEnergyHub.Charges.Infrastructure.Core.Registration;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification.ChargeLinks;
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
@@ -46,7 +47,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection
                 .AddMessaging()
                 .AddInternalMessageExtractor<ChargeLinksAcceptedEvent>()
-                .AddExternalMessageDispatcher<ChargeLinksDataAvailableNotifiedEvent>(
+                .AddInternalMessageDispatcher<ChargeLinksDataAvailableNotifiedEvent>(
                     EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
                     EnvironmentHelper.GetEnv(EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName));
         }

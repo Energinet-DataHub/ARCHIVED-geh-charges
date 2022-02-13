@@ -14,11 +14,16 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 #nullable disable
 
 namespace GreenEnergyHub.Charges.QueryApi.Model
 {
+    [Table("Charge", Schema = "Charges")]
+    [Index(nameof(SenderProvidedChargeId), nameof(Type), nameof(OwnerId), Name = "IX_SenderProvidedChargeId_ChargeType_MarketParticipantId")]
     public partial class Charge
     {
         public Charge()
@@ -28,8 +33,11 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
             DefaultChargeLinks = new HashSet<DefaultChargeLink>();
         }
 
+        [Key]
         public Guid Id { get; set; }
 
+        [Required]
+        [StringLength(35)]
         public string SenderProvidedChargeId { get; set; }
 
         public int Type { get; set; }
@@ -42,8 +50,12 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
 
         public bool TransparentInvoicing { get; set; }
 
+        [Required]
+        [StringLength(2048)]
         public string Description { get; set; }
 
+        [Required]
+        [StringLength(132)]
         public string Name { get; set; }
 
         public int VatClassification { get; set; }
@@ -52,12 +64,17 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
 
         public DateTime EndDateTime { get; set; }
 
+        [ForeignKey(nameof(OwnerId))]
+        [InverseProperty(nameof(MarketParticipant.Charges))]
         public virtual MarketParticipant Owner { get; set; }
 
+        [InverseProperty(nameof(ChargeLink.Charge))]
         public virtual ICollection<ChargeLink> ChargeLinks { get; set; }
 
+        [InverseProperty(nameof(ChargePoint.Charge))]
         public virtual ICollection<ChargePoint> ChargePoints { get; set; }
 
+        [InverseProperty(nameof(DefaultChargeLink.Charge))]
         public virtual ICollection<DefaultChargeLink> DefaultChargeLinks { get; set; }
     }
 }

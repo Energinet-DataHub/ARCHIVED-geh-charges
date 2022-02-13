@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus.Administration;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.FunctionHost.Configuration;
+using GreenEnergyHub.Charges.Infrastructure.Core.Registration;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Data.SqlClient;
@@ -51,9 +52,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.System
         private static async Task<Dictionary<string, bool>> GetDeepHealthCheckStatusAsync()
         {
             var chargesDbConnectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeDbConnectionString);
-            var actorRegisterDbConnectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.ActorRegisterDbConnectionString);
+
             var integrationConnectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubManagerConnectionString);
             var domainConnectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventManagerConnectionString);
+
+            var marketParticipantRegistryDbConnectionString =
+                EnvironmentHelper.GetEnv(EnvironmentSettingNames.MarketParticipantRegistryDbConnectionString);
 
             return new Dictionary<string, bool>
             {
@@ -63,8 +67,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.System
                     await IsDatabaseAvailableAsync(chargesDbConnectionString).ConfigureAwait(false)
                 },
                 {
-                    "ActorRegisterDatabaseIsAvailable",
-                    await IsDatabaseAvailableAsync(actorRegisterDbConnectionString).ConfigureAwait(false)
+                    "MarketParticipantRegistryDatabaseIsAvailable",
+                    await IsDatabaseAvailableAsync(marketParticipantRegistryDbConnectionString).ConfigureAwait(false)
                 },
 
                 // Integration events, charges

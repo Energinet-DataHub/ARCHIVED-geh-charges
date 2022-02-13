@@ -31,7 +31,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
     {
         [Theory]
         [InlineAutoMoqData]
-        public void Create_WhenThreeMergeFields_ReturnsExpectedDescription(
+        public void Create_WhenTwoMergeFields_ReturnsExpectedDescription(
             ChargeLinksCommand chargeLinksCommand,
             CimValidationErrorTextProvider cimValidationErrorTextProvider,
             ILoggerFactory loggerFactory)
@@ -73,6 +73,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
                 var actual = sut.Create(new ValidationError(validationRuleIdentifier, triggeredBy), chargeLinksCommand);
                 actual.Should().NotBeNullOrWhiteSpace();
                 actual.Should().NotContain("{");
+                actual.Should().NotContain("  ");
             }
         }
 
@@ -83,7 +84,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
             {
                 case ValidationRuleIdentifier.ChargeDoesNotExist:
                 case ValidationRuleIdentifier.MeteringPointDoesNotExist:
-                case ValidationRuleIdentifier.UpdateNotYetSupported:
+                case ValidationRuleIdentifier.ChargeLinkUpdateNotYetSupported:
                     return chargeLinksCommand.ChargeLinks.First().SenderProvidedChargeId;
                 default:
                     return null;

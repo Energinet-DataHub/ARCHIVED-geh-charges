@@ -28,7 +28,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 
         public ValidationResult Validate(TCommand command)
         {
-            IValidationRuleSet ruleSet = _inputValidationRulesFactory.CreateRulesForChargeCommand(command);
+            IValidationRuleSet ruleSet = _inputValidationRulesFactory.CreateRulesForCommand(command);
             return ruleSet.Validate();
         }
     }

@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using NodaTime;
 
@@ -20,7 +22,11 @@ namespace GreenEnergyHub.Charges.Tests.Builders
     public class ChargeLinkDtoBuilder
     {
         private Instant _startDate = SystemClock.Instance.GetCurrentInstant();
-        private Instant _endDate = Instant.MaxValue;
+        private Instant? _endDate = Instant.MaxValue;
+        private int _factor = 1;
+        private string _senderProvidedChargeId = string.Empty;
+        private ChargeType _chargeType;
+        private string _chargeOwner = string.Empty;
 
         public ChargeLinkDtoBuilder WithStartDate(Instant startDate)
         {
@@ -28,7 +34,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders
             return this;
         }
 
-        public ChargeLinkDtoBuilder WithEndDate(Instant endDate)
+        public ChargeLinkDtoBuilder WithEndDate(Instant? endDate)
         {
             _endDate = endDate;
             return this;
@@ -40,7 +46,20 @@ namespace GreenEnergyHub.Charges.Tests.Builders
             {
                 StartDateTime = _startDate,
                 EndDateTime = _endDate,
+                ChargeType = _chargeType,
+                ChargeOwner = _chargeOwner,
+                SenderProvidedChargeId = _senderProvidedChargeId,
+                Factor = _factor,
+                OperationId = Guid.NewGuid().ToString("N"),
             };
+        }
+
+        public ChargeLinkDtoBuilder WithCharge(string senderProvidedChargeId, ChargeType chargeType, string chargeOwner)
+        {
+            _senderProvidedChargeId = senderProvidedChargeId;
+            _chargeType = chargeType;
+            _chargeOwner = chargeOwner;
+            return this;
         }
     }
 }
