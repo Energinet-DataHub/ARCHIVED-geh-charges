@@ -210,6 +210,18 @@ namespace GreenEnergyHub.Charges.FunctionHost.System
                         EnvironmentSettingNames.CommandAcceptedTopicName)
                         .ConfigureAwait(false)
                 },
+                {
+                    "ChargeCommandRejectedTopicExists", await TopicExistsAsync(domainConnectionString, EnvironmentSettingNames.CommandRejectedTopicName)
+                    .ConfigureAwait(false)
+                },
+                {
+                    "ChargeCommandRejectedSubscriptionExists",
+                    await SubscriptionExistsAsync(
+                        domainConnectionString,
+                        EnvironmentSettingNames.CommandRejectedSubscriptionName,
+                        EnvironmentSettingNames.CommandRejectedTopicName)
+                        .ConfigureAwait(false)
+                },
             };
         }
 
