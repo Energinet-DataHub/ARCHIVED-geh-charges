@@ -199,6 +199,18 @@ namespace GreenEnergyHub.Charges.FunctionHost.System
 
                 // Internal events, charges
                 {
+                    "ChargeCommandReceivedTopicExists", await TopicExistsAsync(domainConnectionString, EnvironmentSettingNames.CommandReceivedTopicName)
+                    .ConfigureAwait(false)
+                },
+                {
+                    "ChargeCommandReceivedSubscriptionExists",
+                    await SubscriptionExistsAsync(
+                        domainConnectionString,
+                        EnvironmentSettingNames.CommandReceivedSubscriptionName,
+                        EnvironmentSettingNames.CommandReceivedTopicName)
+                        .ConfigureAwait(false)
+                },
+                {
                     "ChargeCommandAcceptedTopicExists", await TopicExistsAsync(domainConnectionString, EnvironmentSettingNames.CommandAcceptedTopicName)
                     .ConfigureAwait(false)
                 },
