@@ -31,7 +31,7 @@ using Xunit.Abstractions;
 using Xunit.Categories;
 using static Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated.Types;
 
-namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests
+namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 {
     [IntegrationTest]
     public class MeteringPointPersisterEndpointTests
@@ -114,7 +114,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests
                     .Select(s => s[MyRandom.Next(s.Length)]).ToArray());
             }
 
-            private ServiceBusMessage CreateServiceBusMessage(
+            private static ServiceBusMessage CreateServiceBusMessage(
                 IChargesDatabaseContext chargesDatabaseContext,
                 string meteringPointId,
                 MeteringPointType meteringPointType,

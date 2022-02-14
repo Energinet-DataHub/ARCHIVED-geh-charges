@@ -26,7 +26,7 @@ using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
+namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
 {
     [IntegrationTest]
     [Collection(nameof(ChargesWebApiCollectionFixture))]
@@ -80,7 +80,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
 
             // Assert
             var jsonString = await response.Content.ReadAsStringAsync();
-            var actual = JsonSerializer.Deserialize<List<ChargeLinkDto>>(
+            var actual = JsonSerializer.Deserialize<List<ChargeLinkV1Dto>>(
                 jsonString,
                 GetJsonSerializerOptions());
 
