@@ -211,6 +211,18 @@ namespace GreenEnergyHub.Charges.FunctionHost.System
                         .ConfigureAwait(false)
                 },
                 {
+                    "ChargeCommandRejectedTopicExists", await TopicExistsAsync(domainConnectionString, EnvironmentSettingNames.CommandRejectedTopicName)
+                    .ConfigureAwait(false)
+                },
+                {
+                    "ChargeCommandRejectedSubscriptionExists",
+                    await SubscriptionExistsAsync(
+                        domainConnectionString,
+                        EnvironmentSettingNames.CommandRejectedSubscriptionName,
+                        EnvironmentSettingNames.CommandRejectedTopicName)
+                        .ConfigureAwait(false)
+                },
+                {
                     "ChargeCommandAcceptedTopicExists", await TopicExistsAsync(domainConnectionString, EnvironmentSettingNames.CommandAcceptedTopicName)
                     .ConfigureAwait(false)
                 },
@@ -223,15 +235,21 @@ namespace GreenEnergyHub.Charges.FunctionHost.System
                         .ConfigureAwait(false)
                 },
                 {
-                    "ChargeCommandRejectedTopicExists", await TopicExistsAsync(domainConnectionString, EnvironmentSettingNames.CommandRejectedTopicName)
-                    .ConfigureAwait(false)
-                },
-                {
-                    "ChargeCommandRejectedSubscriptionExists",
+                    // Used by ChargeDataAvailableNotifierEndpoint
+                    "ChargeCommandDataAvailableNotifierSubscriptionExists",
                     await SubscriptionExistsAsync(
                         domainConnectionString,
-                        EnvironmentSettingNames.CommandRejectedSubscriptionName,
-                        EnvironmentSettingNames.CommandRejectedTopicName)
+                        EnvironmentSettingNames.ChargeAcceptedSubDataAvailableNotifier,
+                        EnvironmentSettingNames.CommandAcceptedTopicName)
+                        .ConfigureAwait(false)
+                },
+                {
+                    // Used by ChargeIntegrationEventsPublisherEndpoint
+                    "ChargeCommandAcceptedReceiverSubscriptionExists",
+                    await SubscriptionExistsAsync(
+                        domainConnectionString,
+                        EnvironmentSettingNames.CommandAcceptedReceiverSubscriptionName,
+                        EnvironmentSettingNames.CommandAcceptedTopicName)
                         .ConfigureAwait(false)
                 },
             };
