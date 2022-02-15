@@ -32,7 +32,9 @@ module "sb_charges" {
     },
     {
       name    = "manage",
-      manage    = true
+      send    = true,
+      listen  = true,
+      manage  = true
     },
   ]
 
