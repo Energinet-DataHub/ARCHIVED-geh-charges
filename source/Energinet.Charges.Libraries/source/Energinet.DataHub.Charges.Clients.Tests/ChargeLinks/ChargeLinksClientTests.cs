@@ -40,25 +40,18 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task GetAsync_WhenMeteringPointHasLinks_ReturnsChargeLinks(ChargeLinkV2Dto chargeLinkDto)
+        public async Task GetAsync_WhenMeteringPointHasLinks_ReturnsChargeLinks(
+            ChargeLinkV2Dto chargeLinkDto,
+            Mock<IChargeLinksClientFactory> chargeLinksClientFactory)
         {
             // Arrange
-            var chargeLinks = new List<ChargeLinkV2Dto>();
-            chargeLinks.Add(chargeLinkDto);
-
-            var options = new JsonSerializerOptions(JsonSerializerDefaults.Web)
-            {
-                Converters = { new JsonStringEnumConverter() },
-            };
-
-            var responseContent = JsonSerializer.Serialize<IList<ChargeLinkV2Dto>>(chargeLinks, options);
-
+            var responseContent = CreateValidResponseContent(chargeLinkDto);
             var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.OK, responseContent);
-            var httpClient = new HttpClient(mockHttpMessageHandler.Object)
-            {
-                BaseAddress = new Uri(BaseUrl),
-            };
-            var sut = ChargeLinksClientFactory.CreateClient(httpClient);
+            var httpClient = CreateHttpClient(mockHttpMessageHandler);
+            chargeLinksClientFactory.Setup(x => x.CreateClient(httpClient))
+                                    .Returns(new ChargeLinksClient(httpClient));
+
+            var sut = chargeLinksClientFactory.Object.CreateClient(httpClient);
 
             var expectedUri = new Uri($"{BaseUrl}{ChargesRelativeUris.GetChargeLinks(MeteringPointId)}");
 
@@ -78,16 +71,18 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
                 ItExpr.IsAny<CancellationToken>());
         }
 
-        [Fact]
-        public async Task GetAsync_WhenResponseIsNotFound_ReturnsEmptyList()
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task GetAsync_WhenResponseIsNotFound_ReturnsEmptyList(
+            Mock<IChargeLinksClientFactory> chargeLinksClientFactory)
         {
             // Arrange
             var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.NotFound, string.Empty);
-            var httpClient = new HttpClient(mockHttpMessageHandler.Object)
-            {
-                BaseAddress = new Uri(BaseUrl),
-            };
-            var sut = ChargeLinksClientFactory.CreateClient(httpClient);
+            var httpClient = CreateHttpClient(mockHttpMessageHandler);
+            chargeLinksClientFactory.Setup(x => x.CreateClient(httpClient))
+                                    .Returns(new ChargeLinksClient(httpClient));
+
+            var sut = chargeLinksClientFactory.Object.CreateClient(httpClient);
 
             // Act
             var result = await sut.GetAsync(MeteringPointId).ConfigureAwait(false);
@@ -95,6 +90,26 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
             // Assert
             result.Should().BeOfType<List<ChargeLinkV2Dto>>();
             result.Should().BeEmpty();
+        }
+
+        private static string CreateValidResponseContent(ChargeLinkV2Dto chargeLinkDto)
+        {
+            var chargeLinks = new List<ChargeLinkV2Dto> { chargeLinkDto };
+            var options = new JsonSerializerOptions(JsonSerializerDefaults.Web)
+            {
+                Converters = { new JsonStringEnumConverter() },
+            };
+
+            var responseContent = JsonSerializer.Serialize<IList<ChargeLinkV2Dto>>(chargeLinks, options);
+            return responseContent;
+        }
+
+        private static HttpClient CreateHttpClient(Mock<HttpMessageHandler> mockHttpMessageHandler)
+        {
+            return new HttpClient(mockHttpMessageHandler.Object)
+            {
+                BaseAddress = new Uri(BaseUrl),
+            };
         }
 
         private static Mock<HttpMessageHandler> GetMockHttpMessageHandler(HttpStatusCode statusCode, string responseContent)
