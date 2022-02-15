@@ -9,6 +9,7 @@
     "APPINSIGHTS_INSTRUMENTATIONKEY": "<App insights instrumentation key>",
     "CHARGE_DB_CONNECTION_STRING": "<charge db connection string>",
     "DOMAINEVENT_LISTENER_CONNECTION_STRING": "<connection string for listening for domain events on the service bus (without entity path)>",
+    "DOMAINEVENT_MANAGER_CONNECTION_STRING": "<sb manager connection string for domain events (without EntityPath)>",
     "DOMAINEVENT_SENDER_CONNECTION_STRING": "<connection string for sending domain events to the service bus (without entity path)>",
     "INTEGRATIONEVENT_LISTENER_CONNECTION_STRING": "<sb listener connection string for integration events (without EntityPath)>",
     "INTEGRATIONEVENT_MANAGER_CONNECTION_STRING": "<sb manager connection string for integration events (without EntityPath)>",

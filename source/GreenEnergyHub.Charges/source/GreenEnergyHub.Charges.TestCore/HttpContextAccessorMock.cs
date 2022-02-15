@@ -12,22 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using System.Transactions;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using System;
+using Microsoft.AspNetCore.Http;
 
-namespace GreenEnergyHub.Charges.Application.Charges.Handlers
+namespace GreenEnergyHub.Charges.TestCore
 {
-    /// <summary>
-    /// Contract for handling a change of charges message.
-    /// </summary>
-    public interface IChargeCommandHandler
+    public class HttpContextAccessorMock : IHttpContextAccessor
     {
-        /// <summary>
-        /// Synchronously handle the message.
-        /// Supports <see cref="TransactionScope"/>.
-        /// </summary>
-        /// <param name="command">ChargeCommand</param>
-        Task HandleAsync(ChargeCommand command);
+        public HttpContextAccessorMock(string token)
+        {
+            if (token == null) throw new ArgumentNullException(nameof(token));
+            HttpContext = new DefaultHttpContext();
+            HttpContext.Request.Headers.Add("Authorization", $"Bearer {token}");
+        }
+
+        public HttpContext? HttpContext { get; set; }
     }
 }

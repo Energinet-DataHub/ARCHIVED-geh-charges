@@ -12,22 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using System.Transactions;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using System;
+using System.Net.Http;
 
-namespace GreenEnergyHub.Charges.Application.Charges.Handlers
+namespace Energinet.DataHub.Charges.Clients.ChargeLinks
 {
-    /// <summary>
-    /// Contract for handling a change of charges message.
-    /// </summary>
-    public interface IChargeCommandHandler
+    public interface IChargeLinksClientFactory
     {
-        /// <summary>
-        /// Synchronously handle the message.
-        /// Supports <see cref="TransactionScope"/>.
-        /// </summary>
-        /// <param name="command">ChargeCommand</param>
-        Task HandleAsync(ChargeCommand command);
+        ChargeLinksClient CreateClient(HttpClient httpClient);
+
+        ChargeLinksClient CreateClient(Uri baseUrl);
     }
 }
