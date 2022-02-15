@@ -41,7 +41,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
         [Theory]
         [InlineAutoMoqData]
         public async Task GetAsync_WhenMeteringPointHasLinks_ReturnsChargeLinks(
-            ChargeLinkV2Dto chargeLinkDto,
+            ChargeLinkV1Dto chargeLinkDto,
             Mock<IChargeLinksClientFactory> chargeLinksClientFactory)
         {
             // Arrange
@@ -88,19 +88,19 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
             var result = await sut.GetAsync(MeteringPointId).ConfigureAwait(false);
 
             // Assert
-            result.Should().BeOfType<List<ChargeLinkV2Dto>>();
+            result.Should().BeOfType<List<ChargeLinkV1Dto>>();
             result.Should().BeEmpty();
         }
 
-        private static string CreateValidResponseContent(ChargeLinkV2Dto chargeLinkDto)
+        private static string CreateValidResponseContent(ChargeLinkV1Dto chargeLinkDto)
         {
-            var chargeLinks = new List<ChargeLinkV2Dto> { chargeLinkDto };
+            var chargeLinks = new List<ChargeLinkV1Dto> { chargeLinkDto };
             var options = new JsonSerializerOptions(JsonSerializerDefaults.Web)
             {
                 Converters = { new JsonStringEnumConverter() },
             };
 
-            var responseContent = JsonSerializer.Serialize<IList<ChargeLinkV2Dto>>(chargeLinks, options);
+            var responseContent = JsonSerializer.Serialize<IList<ChargeLinkV1Dto>>(chargeLinks, options);
             return responseContent;
         }
 

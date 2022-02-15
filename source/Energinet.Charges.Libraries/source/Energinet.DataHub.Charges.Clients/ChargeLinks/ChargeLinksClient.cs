@@ -37,9 +37,9 @@ namespace Energinet.DataHub.Charges.Clients.ChargeLinks
         /// Use 404 to get a "404 Not Found" response.
         /// Empty input will result in a "400 Bad Request" response</param>
         /// <returns>A collection of mocked charge links data (Dtos)</returns>
-        public async Task<IList<ChargeLinkV2Dto>> GetAsync(string meteringPointId)
+        public async Task<IList<ChargeLinkV1Dto>> GetAsync(string meteringPointId)
         {
-            var list = new List<ChargeLinkV2Dto>();
+            var list = new List<ChargeLinkV1Dto>();
             var response = await _httpClient
                 .GetAsync(ChargesRelativeUris.GetChargeLinks(meteringPointId))
                 .ConfigureAwait(false);
@@ -53,7 +53,7 @@ namespace Energinet.DataHub.Charges.Clients.ChargeLinks
             };
 
             var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            var result = JsonSerializer.Deserialize<List<ChargeLinkV2Dto>>(content, options);
+            var result = JsonSerializer.Deserialize<List<ChargeLinkV1Dto>>(content, options);
 
             if (result != null)
                 list.AddRange(result);

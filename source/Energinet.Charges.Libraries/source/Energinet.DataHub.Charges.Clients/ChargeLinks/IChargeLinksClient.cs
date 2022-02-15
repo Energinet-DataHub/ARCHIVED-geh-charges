@@ -28,6 +28,6 @@ namespace Energinet.DataHub.Charges.Clients.ChargeLinks
         /// </summary>
         /// <param name="meteringPointId">The 18-digits metering point identifier used by the Danish version of Green Energy Hub.</param>
         /// <returns>A collection of Charge Link DTOs</returns>
-        public Task<IList<ChargeLinkV2Dto>> GetAsync(string meteringPointId);
+        public Task<IList<ChargeLinkV1Dto>> GetAsync(string meteringPointId);
     }
 }
