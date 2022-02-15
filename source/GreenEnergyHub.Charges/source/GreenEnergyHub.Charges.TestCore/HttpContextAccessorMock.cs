@@ -12,21 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Linq;
-using GreenEnergyHub.Charges.QueryApi.Model;
+using System;
+using Microsoft.AspNetCore.Http;
 
-namespace GreenEnergyHub.Charges.QueryApi
+namespace GreenEnergyHub.Charges.TestCore
 {
-    public interface IData
+    public class HttpContextAccessorMock : IHttpContextAccessor
     {
-        public IQueryable<ChargeLink> ChargeLinks { get; }
+        public HttpContextAccessorMock(string token)
+        {
+            if (token == null) throw new ArgumentNullException(nameof(token));
+            HttpContext = new DefaultHttpContext();
+            HttpContext.Request.Headers.Add("Authorization", $"Bearer {token}");
+        }
 
-        public IQueryable<Charge> Charges { get; }
-
-        public IQueryable<MeteringPoint> MeteringPoints { get; }
-
-        public IQueryable<MarketParticipant> MarketParticipants { get; }
-
-        public IQueryable<DefaultChargeLink> DefaultChargeLinks { get; }
+        public HttpContext? HttpContext { get; set; }
     }
 }

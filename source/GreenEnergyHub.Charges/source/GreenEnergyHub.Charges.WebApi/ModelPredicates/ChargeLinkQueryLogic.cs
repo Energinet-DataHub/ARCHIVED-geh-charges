@@ -23,15 +23,30 @@ namespace GreenEnergyHub.Charges.WebApi.ModelPredicates
 {
     public static class ChargeLinkQueryLogic
     {
-        public static IQueryable<ChargeLinkDto> AsChargeLinkDto(this IQueryable<ChargeLink> queryable)
+        public static IQueryable<ChargeLinkV1Dto> AsChargeLinkV1Dto(this IQueryable<ChargeLink> queryable)
         {
             return queryable
-                .Select(c => new ChargeLinkDto(
+                .Select(c => new ChargeLinkV1Dto(
                     Map(c.Charge.GetChargeType()),
                     c.Charge.SenderProvidedChargeId,
                     c.Charge.Name,
                     c.Charge.Owner.MarketParticipantId,
                     "<Aktørnavn XYZ>", // Hardcoded as we currently don't have the ChargeOwnerName data
+                    c.Charge.TaxIndicator,
+                    c.Charge.TransparentInvoicing,
+                    c.Factor,
+                    c.StartDateTime,
+                    c.EndDateTime == InstantExtensions.GetEndDefault().ToDateTimeOffset() ? null : c.EndDateTime)); // Nullify "EndDefault" end dates
+        }
+
+        public static IQueryable<ChargeLinkV2Dto> AsChargeLinkV2Dto(this IQueryable<ChargeLink> queryable)
+        {
+            return queryable
+                .Select(c => new ChargeLinkV2Dto(
+                    Map(c.Charge.GetChargeType()),
+                    c.Charge.SenderProvidedChargeId,
+                    c.Charge.Name,
+                    c.Charge.Owner.Id,
                     c.Charge.TaxIndicator,
                     c.Charge.TransparentInvoicing,
                     c.Factor,
