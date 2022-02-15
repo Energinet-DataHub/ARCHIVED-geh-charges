@@ -2,7 +2,7 @@
 
 ## Version 2.0.2
 
-`IChargeLinksClient` Charges.Clients exposes ChargeLinkV1Dto
+`IChargeLinksClient` Charges.Clients exposes `ChargeLinkV1Dto`
 
 ## Version 2.0.1
 
