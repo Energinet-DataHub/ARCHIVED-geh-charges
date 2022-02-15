@@ -14,9 +14,10 @@
 
 using System;
 using Energinet.DataHub.Charges.Clients.ChargeLinks;
-using Energinet.DataHub.Charges.Clients.Registration;
 using Energinet.DataHub.Charges.Clients.Registration.ChargeLinks.ServiceCollectionExtensions;
 using FluentAssertions;
+using GreenEnergyHub.Charges.TestCore;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using Xunit.Categories;
@@ -31,6 +32,7 @@ namespace Energinet.DataHub.Charges.Clients.RegistrationTests.ChargeLinks
         {
             // Arrange
             var serviceCollection = new ServiceCollection();
+            serviceCollection.AddScoped<IHttpContextAccessor>(_ => new HttpContextAccessorMock("fake token"));
 
             // Act
             serviceCollection.AddChargeLinksClient(new Uri("http://chargelinks-test.com/"));
