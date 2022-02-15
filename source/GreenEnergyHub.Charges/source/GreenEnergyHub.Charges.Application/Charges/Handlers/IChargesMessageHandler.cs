@@ -26,8 +26,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         /// <summary>
         /// Synchronously handle the message.
         /// </summary>
-        /// <param name="message"></param>
-        /// <returns>Returns the result of the synchronous handling of the message.</returns>
+        /// <param name="message">ChargesMessage</param>
         Task HandleAsync(ChargesMessage message);
     }
 }
