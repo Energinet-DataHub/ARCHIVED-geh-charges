@@ -31,10 +31,10 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
         {
             // Arrange
             var httpContextAccessor = new HttpContextAccessorMock("fake token");
-            var chargeLinksClientFactory = new ChargeLinksClientFactory(httpClientFactory, httpContextAccessor);
+            var sut = new ChargeLinksClientFactory(httpClientFactory, httpContextAccessor);
 
             // Act
-            var result = chargeLinksClientFactory.CreateClient(new HttpClient());
+            var result = sut.CreateClient(new HttpClient());
 
             // Assert
             result.Should().NotBeNull();
@@ -47,10 +47,10 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
         {
             // Arrange
             var httpContextAccessor = new HttpContextAccessorMock("fake token");
-            var chargeLinksClientFactory = new ChargeLinksClientFactory(httpClientFactory, httpContextAccessor);
+            var sut = new ChargeLinksClientFactory(httpClientFactory, httpContextAccessor);
 
             // Act
-            var result = chargeLinksClientFactory.CreateClient(new Uri("http://some.uri"));
+            var result = sut.CreateClient(new Uri("http://some.uri"));
 
             // Assert
             result.Should().NotBeNull();
