@@ -30,13 +30,13 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Authorization
     /// </summary>
     public class AuthorizationConfiguration
     {
-        public AuthorizationConfiguration()
+        public AuthorizationConfiguration(string localSettingsJsonFilename, string azureSecretsKeyVaultUrlKey)
         {
             // Team name and environment is required to get client-id and client-secret for integration tests
             const string teamName = "volt";
             Environment = "u002";
-            RootConfiguration = BuildKeyVaultConfigurationRoot();
-            SecretsConfiguration = BuildSecretsKeyVaultConfiguration(RootConfiguration.GetValue<string>("AZURE_SECRETS_KEYVAULT_URL"));
+            RootConfiguration = BuildKeyVaultConfigurationRoot(localSettingsJsonFilename);
+            SecretsConfiguration = BuildSecretsKeyVaultConfiguration(RootConfiguration.GetValue<string>(azureSecretsKeyVaultUrlKey));
             B2cTenantId = SecretsConfiguration.GetValue<string>(BuildB2CEnvironmentSecretName(Environment, "tenant-id"));
             var backendAppId = SecretsConfiguration.GetValue<string>(BuildB2CEnvironmentSecretName(Environment, "backend-app-id"));
             var frontendAppId = SecretsConfiguration.GetValue<string>(BuildB2CEnvironmentSecretName(Environment, "frontend-app-id"));
@@ -121,10 +121,10 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Authorization
                 .Build();
         }
 
-        private static IConfigurationRoot BuildKeyVaultConfigurationRoot()
+        private static IConfigurationRoot BuildKeyVaultConfigurationRoot(string localSettingsJsonFilename)
         {
             return new ConfigurationBuilder()
-                .AddJsonFile("integrationtest.local.settings.json", optional: true)
+                .AddJsonFile(localSettingsJsonFilename, optional: true)
                 .AddEnvironmentVariables()
                 .Build();
         }

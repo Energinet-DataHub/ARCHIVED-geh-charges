@@ -26,7 +26,9 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.WebApi
         public ChargesWebApiFixture()
         {
             DatabaseManager = new ChargesDatabaseManager();
-            AuthorizationConfiguration = new AuthorizationConfiguration();
+            AuthorizationConfiguration = new AuthorizationConfiguration(
+                "integrationtest.local.settings.json",
+                "AZURE_SECRETS_KEYVAULT_URL");
         }
 
         public ChargesDatabaseManager DatabaseManager { get; }

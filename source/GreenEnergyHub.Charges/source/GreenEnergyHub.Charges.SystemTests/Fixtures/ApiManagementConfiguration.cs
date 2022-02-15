@@ -14,6 +14,7 @@
 
 using System;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.Configuration;
+using GreenEnergyHub.Charges.IntegrationTest.Core.Authorization;
 using Microsoft.Extensions.Configuration;
 
 namespace GreenEnergyHub.Charges.SystemTests.Fixtures
@@ -43,6 +44,10 @@ namespace GreenEnergyHub.Charges.SystemTests.Fixtures
             BackendAppScope = new[] { $"{backendAppId}/.default" };
 
             ApiManagementBaseAddress = KeyVaultConfiguration.GetValue<Uri>(BuildApiManagementEnvironmentSecretName(Environment, "host-url"));
+
+            AuthorizationConfiguration = new AuthorizationConfiguration(
+                "systemtest.local.settings.json",
+                "AZURE_SYSTEMTESTS_KEYVAULT_URL");
         }
 
         /// <summary>
@@ -66,6 +71,11 @@ namespace GreenEnergyHub.Charges.SystemTests.Fixtures
         public Uri ApiManagementBaseAddress { get; }
 
         /// <summary>
+        /// Configuration for Azure Authorization
+        /// </summary>
+        public AuthorizationConfiguration AuthorizationConfiguration { get; }
+
+        /// <summary>
         /// Can be used to extract secrets from the Key Vault.
         /// </summary>
         private IConfigurationRoot KeyVaultConfiguration { get; }
@@ -75,7 +85,7 @@ namespace GreenEnergyHub.Charges.SystemTests.Fixtures
         /// </summary>
         /// <param name="team">Team name or shorthand.</param>
         /// <returns>Settings for 'team client app'</returns>
-        public B2CTeamClientSettings RetrieveB2CTeamClientSettings(string team)
+        public ClientCredentialsSettings RetrieveB2CTeamClientSettings(string team)
         {
             if (string.IsNullOrWhiteSpace(team))
                 throw new ArgumentException($"'{nameof(team)}' cannot be null or whitespace.", nameof(team));
@@ -83,7 +93,7 @@ namespace GreenEnergyHub.Charges.SystemTests.Fixtures
             var teamClientId = KeyVaultConfiguration.GetValue<string>(BuildB2CTeamSecretName(Environment, team, "client-id"));
             var teamClientSecret = KeyVaultConfiguration.GetValue<string>(BuildB2CTeamSecretName(Environment, team, "client-secret"));
 
-            return new B2CTeamClientSettings(teamClientId, teamClientSecret);
+            return new ClientCredentialsSettings(teamClientId, teamClientSecret);
         }
 
         /// <summary>

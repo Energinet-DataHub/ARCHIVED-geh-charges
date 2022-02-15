@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -33,22 +32,26 @@ namespace GreenEnergyHub.Charges.SystemTests
     /// </summary>
     public class ApiManagementTests : IClassFixture<ApiManagementConfiguration>
     {
+        private readonly BackendAuthenticationClient _authenticationClient;
+
         public ApiManagementTests(ApiManagementConfiguration configuration)
         {
             Configuration = configuration;
-            TeamVoltClientApp = CreateConfidentialClientApp("volt");
+
+            var test = Configuration.BackendAppScope == Configuration.AuthorizationConfiguration.BackendAppScope;
+            _authenticationClient = new BackendAuthenticationClient(
+                Configuration.BackendAppScope,
+                Configuration.RetrieveB2CTeamClientSettings("volt"),
+                Configuration.B2cTenantId);
         }
 
         private ApiManagementConfiguration Configuration { get; }
-
-        private IConfidentialClientApplication TeamVoltClientApp { get; }
 
         // This shows how we can extract an access token for accessing the 'backend app' on behalf of the 'team client app'
         [SystemFact]
         public async Task When_AcquireTokenForTeamVoltClientApp_Then_AccessTokenIsReturned()
         {
-            var actualAuthenticationResult = await TeamVoltClientApp.AcquireTokenForClient(Configuration.BackendAppScope).ExecuteAsync();
-
+            var actualAuthenticationResult = await _authenticationClient.GetAuthenticationTokenAsync();
             actualAuthenticationResult.AccessToken.Should().NotBeNullOrWhiteSpace();
         }
 
@@ -57,7 +60,7 @@ namespace GreenEnergyHub.Charges.SystemTests
         public async Task When_RequestApiManagementWithAccessToken_Then_ResponseIsAccepted()
         {
             // Arrange
-            using var httpClient = await CreateHttpClientAsync(TeamVoltClientApp);
+            using var httpClient = await CreateHttpClientAsync(_authenticationClient);
 
             var clock = SystemClock.Instance;
             var xml = EmbeddedResourceHelper.GetEmbeddedFile(ChargeLinkDocument.AnyValid, clock);
@@ -96,24 +99,11 @@ namespace GreenEnergyHub.Charges.SystemTests
             actualResponse.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
 
-        private IConfidentialClientApplication CreateConfidentialClientApp(string team) // TODO: use BackendAuthenticationClient
-        {
-            var teamClientSettings = Configuration.RetrieveB2CTeamClientSettings(team);
-
-            var confidentialClientApp = ConfidentialClientApplicationBuilder
-                .Create(teamClientSettings.TeamClientId)
-                .WithClientSecret(teamClientSettings.TeamClientSecret)
-                .WithAuthority(new Uri($"https://login.microsoftonline.com/{Configuration.B2cTenantId}"))
-                .Build();
-
-            return confidentialClientApp;
-        }
-
         /// <summary>
         /// Create a http client. Will add an access token if <paramref name="confidentialClientApp"/> is specified.
         /// </summary>
         /// <param name="confidentialClientApp">If not null: an access token is acquired using the client, and set in the authorization header of the http client.</param>
-        private async Task<HttpClient> CreateHttpClientAsync(IConfidentialClientApplication? confidentialClientApp = null)
+        private async Task<HttpClient> CreateHttpClientAsync(BackendAuthenticationClient? confidentialClientApp = null)
         {
             var httpClient = new HttpClient
             {
@@ -122,7 +112,7 @@ namespace GreenEnergyHub.Charges.SystemTests
 
             if (confidentialClientApp != null)
             {
-                var authenticationResult = await confidentialClientApp.AcquireTokenForClient(Configuration.BackendAppScope).ExecuteAsync();
+                var authenticationResult = await _authenticationClient.GetAuthenticationTokenAsync();
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authenticationResult.AccessToken);
             }
 
