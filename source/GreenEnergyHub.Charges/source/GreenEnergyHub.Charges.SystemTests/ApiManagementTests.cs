@@ -21,7 +21,6 @@ using FluentAssertions;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.ChargeLinks;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.SystemTests.Fixtures;
-using Microsoft.Identity.Client;
 using NodaTime;
 using Xunit;
 
@@ -38,11 +37,10 @@ namespace GreenEnergyHub.Charges.SystemTests
         {
             Configuration = configuration;
 
-            var test = Configuration.BackendAppScope == Configuration.AuthorizationConfiguration.BackendAppScope;
             _authenticationClient = new BackendAuthenticationClient(
-                Configuration.BackendAppScope,
-                Configuration.RetrieveB2CTeamClientSettings("volt"),
-                Configuration.B2cTenantId);
+                Configuration.AuthorizationConfiguration.BackendAppScope,
+                Configuration.AuthorizationConfiguration.ClientCredentialsSettings,
+                Configuration.AuthorizationConfiguration.B2cTenantId);
         }
 
         private ApiManagementConfiguration Configuration { get; }

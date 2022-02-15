@@ -30,11 +30,14 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Authorization
     /// </summary>
     public class AuthorizationConfiguration
     {
-        public AuthorizationConfiguration(string localSettingsJsonFilename, string azureSecretsKeyVaultUrlKey)
+        public AuthorizationConfiguration(
+            string environment,
+            string localSettingsJsonFilename,
+            string azureSecretsKeyVaultUrlKey)
         {
             // Team name and environment is required to get client-id and client-secret for integration tests
             const string teamName = "volt";
-            Environment = "u002";
+            Environment = environment;
             RootConfiguration = BuildKeyVaultConfigurationRoot(localSettingsJsonFilename);
             SecretsConfiguration = BuildSecretsKeyVaultConfiguration(RootConfiguration.GetValue<string>(azureSecretsKeyVaultUrlKey));
             B2cTenantId = SecretsConfiguration.GetValue<string>(BuildB2CEnvironmentSecretName(Environment, "tenant-id"));
