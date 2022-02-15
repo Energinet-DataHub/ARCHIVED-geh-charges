@@ -19,7 +19,6 @@ using System.Net;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus.Administration;
 using GreenEnergyHub.Charges.FunctionHost.Common;
-using GreenEnergyHub.Charges.FunctionHost.Configuration;
 using GreenEnergyHub.Charges.Infrastructure.Core.Registration;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
@@ -51,209 +50,167 @@ namespace GreenEnergyHub.Charges.FunctionHost.System
 
         private static async Task<Dictionary<string, bool>> GetDeepHealthCheckStatusAsync()
         {
-            var chargesDbConnectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeDbConnectionString);
-
             var integrationConnectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubManagerConnectionString);
             var domainConnectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventManagerConnectionString);
 
-            var marketParticipantRegistryDbConnectionString =
-                EnvironmentHelper.GetEnv(EnvironmentSettingNames.MarketParticipantRegistryDbConnectionString);
+            var healthStatus = new Dictionary<string, bool>();
 
-            return new Dictionary<string, bool>
-            {
-                // Database connections
-                {
-                    "ChargesDatabaseIsAvailable",
-                    await IsDatabaseAvailableAsync(chargesDbConnectionString).ConfigureAwait(false)
-                },
-                {
-                    "MarketParticipantRegistryDatabaseIsAvailable",
-                    await IsDatabaseAvailableAsync(marketParticipantRegistryDbConnectionString).ConfigureAwait(false)
-                },
+            await GetDatabaseConnectionStatusAsync(healthStatus).ConfigureAwait(false);
 
-                // Integration events, charges
-                {
-                    "ChargeCreatedTopicExists", await TopicExistsAsync(integrationConnectionString, EnvironmentSettingNames.ChargeCreatedTopicName)
-                    .ConfigureAwait(false)
-                },
-                {
-                    "ChargePricesUpdatedTopicExists", await TopicExistsAsync(integrationConnectionString, EnvironmentSettingNames.ChargePricesUpdatedTopicName)
-                    .ConfigureAwait(false)
-                },
+            await GetIntegrationEventsForChargesStatusAsync(integrationConnectionString, healthStatus).ConfigureAwait(false);
+            await GetIntegrationEventsForChargeLinksStatusAsync(integrationConnectionString, healthStatus).ConfigureAwait(false);
+            await GetIntegrationEventsMeteringPointDomainStatusAsync(integrationConnectionString, healthStatus).ConfigureAwait(false);
+            await GetIntegrationEventsMessageHubStatusAsync(integrationConnectionString, healthStatus).ConfigureAwait(false);
 
-                // Integration events, charge links
-                {
-                    "ChargeLinksCreatedTopicExists", await TopicExistsAsync(integrationConnectionString, EnvironmentSettingNames.ChargeLinksCreatedTopicName)
-                    .ConfigureAwait(false)
-                },
+            await GetInternalEventsForDefaultChargeLinksStatusAsync(domainConnectionString, healthStatus).ConfigureAwait(false);
+            await GetInternalEventsForChargesStatusAsync(domainConnectionString, healthStatus).ConfigureAwait(false);
+            await GetInternalEventsForChargeLinksStatusAsync(domainConnectionString, healthStatus).ConfigureAwait(false);
 
-                // Integration events, metering point domain
-                {
-                    "MeteringPointCreatedTopicExists", await TopicExistsAsync(integrationConnectionString, EnvironmentSettingNames.MeteringPointCreatedTopicName)
-                    .ConfigureAwait(false)
-                },
-                {
-                    "MeteringPointCreatedSubscriptionExists",
-                    await SubscriptionExistsAsync(
-                        integrationConnectionString,
-                        EnvironmentSettingNames.MeteringPointCreatedSubscriptionName,
-                        EnvironmentSettingNames.MeteringPointCreatedTopicName)
-                        .ConfigureAwait(false)
-                },
-                {
-                    "CreateLinksRequestQueueExists", await QueueExistsAsync(integrationConnectionString, EnvironmentSettingNames.CreateLinksRequestQueueName)
-                    .ConfigureAwait(false)
-                },
+            return healthStatus;
+        }
 
-                // Integration events, MessageHub
-                {
-                    "MessageHubDataAvailableQueueExists", await QueueExistsAsync(integrationConnectionString, EnvironmentSettingNames.MessageHubDataAvailableQueue)
-                    .ConfigureAwait(false)
-                },
-                {
-                    "MessageHubRequestQueueExists", await QueueExistsAsync(integrationConnectionString, EnvironmentSettingNames.MessageHubRequestQueue)
-                    .ConfigureAwait(false)
-                },
-                {
-                    "MessageHubResponseQueueExists", await QueueExistsAsync(integrationConnectionString, EnvironmentSettingNames.MessageHubReplyQueue)
-                    .ConfigureAwait(false)
-                },
+        private static async Task GetDatabaseConnectionStatusAsync(Dictionary<string, bool> healthStatus)
+        {
+            var chargesDbConnectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeDbConnectionString);
+            var marketParticipantRegistryDbConnectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.MarketParticipantRegistryDbConnectionString);
 
-                // Internal event, create default charge links
-                {
-                    "DefaultChargeLinksDataAvailableNotifiedTopicExists",
-                    await TopicExistsAsync(
-                        domainConnectionString,
-                        EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName)
-                        .ConfigureAwait(false)
-                },
-                {
-                    "DefaultChargeLinksDataAvailableNotifiedSubscriptionExists",
-                    await SubscriptionExistsAsync(
-                        domainConnectionString,
-                        EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedSubscription,
-                        EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName)
-                        .ConfigureAwait(false)
-                },
+            healthStatus.Add("ChargesDatabaseIsAvailable", await IsDatabaseAvailableAsync(chargesDbConnectionString).ConfigureAwait(false));
+            healthStatus.Add("MarketParticipantRegistryDatabaseIsAvailable", await IsDatabaseAvailableAsync(marketParticipantRegistryDbConnectionString).ConfigureAwait(false));
+        }
 
-                // Internal events, charge links
-                {
-                    "ChargeLinksAcceptedTopicExists", await TopicExistsAsync(domainConnectionString, EnvironmentSettingNames.ChargeLinksAcceptedTopicName)
-                    .ConfigureAwait(false)
-                },
-                {
-                    "ChargeLinksAcceptedReplierSubscriptionExists",
-                    await SubscriptionExistsAsync(
-                        domainConnectionString,
-                        EnvironmentSettingNames.ChargeLinksAcceptedReplier,
-                        EnvironmentSettingNames.ChargeLinksAcceptedTopicName)
-                        .ConfigureAwait(false)
-                },
-                {
-                    "ChargeLinksAcceptedEventPublisherSubscriptionExists",
-                    await SubscriptionExistsAsync(
-                        domainConnectionString,
-                        EnvironmentSettingNames.ChargeLinksAcceptedSubEventPublisher,
-                        EnvironmentSettingNames.ChargeLinksAcceptedTopicName)
-                        .ConfigureAwait(false)
-                },
-                {
-                    "ChargeLinksAcceptedDataAvailableNotifierSubscriptionExists",
-                    await SubscriptionExistsAsync(
-                        domainConnectionString,
-                        EnvironmentSettingNames.ChargeLinksAcceptedSubDataAvailableNotifier,
-                        EnvironmentSettingNames.ChargeLinksAcceptedTopicName)
-                        .ConfigureAwait(false)
-                },
-                {
-                    "ChargeLinksAcceptedConfirmationNotifierSubscriptionExists",
-                    await SubscriptionExistsAsync(
-                        domainConnectionString,
-                        EnvironmentSettingNames.ChargeLinksAcceptedSubConfirmationNotifier,
-                        EnvironmentSettingNames.ChargeLinksAcceptedTopicName)
-                        .ConfigureAwait(false)
-                },
-                {
-                    "ChargeLinksRejectedTopicExists", await TopicExistsAsync(domainConnectionString, EnvironmentSettingNames.ChargeLinksRejectedTopicName)
-                    .ConfigureAwait(false)
-                },
-                {
-                    "ChargeLinksRejectedSubscriptionExists",
-                    await SubscriptionExistsAsync(
-                        domainConnectionString,
-                        EnvironmentSettingNames.ChargeLinksRejectedSubscriptionName,
-                        EnvironmentSettingNames.ChargeLinksRejectedTopicName)
-                        .ConfigureAwait(false)
-                },
-                {
-                    "ChargeLinksReceivedTopicExists", await TopicExistsAsync(domainConnectionString, EnvironmentSettingNames.ChargeLinksReceivedTopicName)
-                    .ConfigureAwait(false)
-                },
-                {
-                    "ChargeLinksReceivedSubscriptionExists",
-                    await SubscriptionExistsAsync(
-                        domainConnectionString,
-                        EnvironmentSettingNames.ChargeLinksReceivedSubscriptionName,
-                        EnvironmentSettingNames.ChargeLinksReceivedTopicName)
-                        .ConfigureAwait(false)
-                },
+        private static async Task GetIntegrationEventsForChargesStatusAsync(string connectionString, Dictionary<string, bool> healthStatus)
+        {
+            healthStatus.Add(
+                "ChargeCreatedTopicExists",
+                await TopicExistsAsync(connectionString, EnvironmentSettingNames.ChargeCreatedTopicName).ConfigureAwait(false));
 
-                // Internal events, charges
-                {
-                    "ChargeCommandReceivedTopicExists", await TopicExistsAsync(domainConnectionString, EnvironmentSettingNames.CommandReceivedTopicName)
-                    .ConfigureAwait(false)
-                },
-                {
-                    "ChargeCommandReceivedSubscriptionExists",
-                    await SubscriptionExistsAsync(
-                        domainConnectionString,
-                        EnvironmentSettingNames.CommandReceivedSubscriptionName,
-                        EnvironmentSettingNames.CommandReceivedTopicName)
-                        .ConfigureAwait(false)
-                },
-                {
-                    "ChargeCommandRejectedTopicExists", await TopicExistsAsync(domainConnectionString, EnvironmentSettingNames.CommandRejectedTopicName)
-                    .ConfigureAwait(false)
-                },
-                {
-                    "ChargeCommandRejectedSubscriptionExists",
-                    await SubscriptionExistsAsync(
-                        domainConnectionString,
-                        EnvironmentSettingNames.CommandRejectedSubscriptionName,
-                        EnvironmentSettingNames.CommandRejectedTopicName)
-                        .ConfigureAwait(false)
-                },
-                {
-                    "ChargeCommandAcceptedTopicExists", await TopicExistsAsync(domainConnectionString, EnvironmentSettingNames.CommandAcceptedTopicName)
-                    .ConfigureAwait(false)
-                },
-                {
-                    "ChargeCommandAcceptedSubscriptionExists",
-                    await SubscriptionExistsAsync(
-                        domainConnectionString,
-                        EnvironmentSettingNames.CommandAcceptedSubscriptionName,
-                        EnvironmentSettingNames.CommandAcceptedTopicName)
-                        .ConfigureAwait(false)
-                },
-                {
-                    // Used by ChargeDataAvailableNotifierEndpoint
-                    "ChargeCommandDataAvailableNotifierSubscriptionExists",
-                    await SubscriptionExistsAsync(
-                        domainConnectionString,
-                        EnvironmentSettingNames.ChargeAcceptedSubDataAvailableNotifier,
-                        EnvironmentSettingNames.CommandAcceptedTopicName)
-                        .ConfigureAwait(false)
-                },
-                {
-                    // Used by ChargeIntegrationEventsPublisherEndpoint
-                    "ChargeCommandAcceptedReceiverSubscriptionExists",
-                    await SubscriptionExistsAsync(
-                        domainConnectionString,
-                        EnvironmentSettingNames.CommandAcceptedReceiverSubscriptionName,
-                        EnvironmentSettingNames.CommandAcceptedTopicName)
-                        .ConfigureAwait(false)
-                },
-            };
+            healthStatus.Add(
+                "ChargePricesUpdatedTopicExists",
+                await TopicExistsAsync(connectionString, EnvironmentSettingNames.ChargePricesUpdatedTopicName).ConfigureAwait(false));
+        }
+
+        private static async Task GetIntegrationEventsForChargeLinksStatusAsync(string connectionString, Dictionary<string, bool> healthStatus)
+        {
+            healthStatus.Add(
+                "ChargeLinksCreatedTopicExists",
+                await TopicExistsAsync(connectionString, EnvironmentSettingNames.ChargeLinksCreatedTopicName).ConfigureAwait(false));
+        }
+
+        private static async Task GetIntegrationEventsMeteringPointDomainStatusAsync(string connectionString, Dictionary<string, bool> healthStatus)
+        {
+            healthStatus.Add(
+                "MeteringPointCreatedTopicExists",
+                await TopicExistsAsync(connectionString, EnvironmentSettingNames.MeteringPointCreatedTopicName).ConfigureAwait(false));
+
+            healthStatus.Add(
+                "MeteringPointCreatedSubscriptionExists",
+                await SubscriptionExistsAsync(connectionString, EnvironmentSettingNames.MeteringPointCreatedSubscriptionName, EnvironmentSettingNames.MeteringPointCreatedTopicName).ConfigureAwait(false));
+
+            healthStatus.Add(
+                "CreateLinksRequestQueueExists",
+                await QueueExistsAsync(connectionString, EnvironmentSettingNames.CreateLinksRequestQueueName).ConfigureAwait(false));
+        }
+
+        private static async Task GetIntegrationEventsMessageHubStatusAsync(string connectionString, Dictionary<string, bool> healthStatus)
+        {
+            healthStatus.Add(
+                "MessageHubDataAvailableQueueExists",
+                await QueueExistsAsync(connectionString, EnvironmentSettingNames.MessageHubDataAvailableQueue).ConfigureAwait(false));
+
+            healthStatus.Add(
+                "MessageHubRequestQueueExists",
+                await QueueExistsAsync(connectionString, EnvironmentSettingNames.MessageHubRequestQueue).ConfigureAwait(false));
+
+            healthStatus.Add(
+                "MessageHubResponseQueueExists",
+                await QueueExistsAsync(connectionString, EnvironmentSettingNames.MessageHubReplyQueue).ConfigureAwait(false));
+        }
+
+        private static async Task GetInternalEventsForDefaultChargeLinksStatusAsync(string connectionString, Dictionary<string, bool> healthStatus)
+        {
+            healthStatus.Add(
+                "DefaultChargeLinksDataAvailableNotifiedTopicExists",
+                await TopicExistsAsync(connectionString, EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName).ConfigureAwait(false));
+
+            healthStatus.Add(
+                "DefaultChargeLinksDataAvailableNotifiedSubscriptionExists",
+                await SubscriptionExistsAsync(connectionString, EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedSubscription, EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName).ConfigureAwait(false));
+        }
+
+        private static async Task GetInternalEventsForChargesStatusAsync(string connectionString, Dictionary<string, bool> healthStatus)
+        {
+            healthStatus.Add(
+                "ChargeCommandReceivedTopicExists",
+                await TopicExistsAsync(connectionString, EnvironmentSettingNames.CommandReceivedTopicName).ConfigureAwait(false));
+
+            healthStatus.Add(
+                "ChargeCommandReceivedSubscriptionExists",
+                await SubscriptionExistsAsync(connectionString, EnvironmentSettingNames.CommandReceivedSubscriptionName, EnvironmentSettingNames.CommandReceivedTopicName).ConfigureAwait(false));
+
+            healthStatus.Add(
+                "ChargeCommandRejectedTopicExists",
+                await TopicExistsAsync(connectionString, EnvironmentSettingNames.CommandRejectedTopicName).ConfigureAwait(false));
+
+            healthStatus.Add(
+                "ChargeCommandRejectedSubscriptionExists",
+                await SubscriptionExistsAsync(connectionString, EnvironmentSettingNames.CommandRejectedSubscriptionName, EnvironmentSettingNames.CommandRejectedTopicName).ConfigureAwait(false));
+
+            healthStatus.Add(
+                "ChargeCommandAcceptedTopicExists",
+                await TopicExistsAsync(connectionString, EnvironmentSettingNames.CommandAcceptedTopicName).ConfigureAwait(false));
+
+            healthStatus.Add(
+                "ChargeCommandAcceptedSubscriptionExists",
+                await SubscriptionExistsAsync(connectionString, EnvironmentSettingNames.CommandAcceptedSubscriptionName, EnvironmentSettingNames.CommandAcceptedTopicName).ConfigureAwait(false));
+
+            // Used by ChargeDataAvailableNotifierEndpoint
+            healthStatus.Add(
+                "ChargeCommandDataAvailableNotifierSubscriptionExists",
+                await SubscriptionExistsAsync(connectionString, EnvironmentSettingNames.ChargeAcceptedSubDataAvailableNotifier, EnvironmentSettingNames.CommandAcceptedTopicName).ConfigureAwait(false));
+
+            // Used by ChargeIntegrationEventsPublisherEndpoint
+            healthStatus.Add(
+                "ChargeCommandAcceptedReceiverSubscriptionExists",
+                await SubscriptionExistsAsync(connectionString, EnvironmentSettingNames.CommandAcceptedReceiverSubscriptionName, EnvironmentSettingNames.CommandAcceptedTopicName).ConfigureAwait(false));
+        }
+
+        private static async Task GetInternalEventsForChargeLinksStatusAsync(string connectionString, Dictionary<string, bool> healthStatus)
+        {
+            healthStatus.Add(
+                "ChargeLinksAcceptedTopicExists",
+                await TopicExistsAsync(connectionString, EnvironmentSettingNames.ChargeLinksAcceptedTopicName).ConfigureAwait(false));
+
+            healthStatus.Add(
+                "ChargeLinksAcceptedReplierSubscriptionExists",
+                await SubscriptionExistsAsync(connectionString, EnvironmentSettingNames.ChargeLinksAcceptedReplier, EnvironmentSettingNames.ChargeLinksAcceptedTopicName).ConfigureAwait(false));
+
+            healthStatus.Add(
+                "ChargeLinksAcceptedEventPublisherSubscriptionExists",
+                await SubscriptionExistsAsync(connectionString, EnvironmentSettingNames.ChargeLinksAcceptedSubEventPublisher, EnvironmentSettingNames.ChargeLinksAcceptedTopicName).ConfigureAwait(false));
+
+            healthStatus.Add(
+                "ChargeLinksAcceptedDataAvailableNotifierSubscriptionExists",
+                await SubscriptionExistsAsync(connectionString, EnvironmentSettingNames.ChargeLinksAcceptedSubDataAvailableNotifier, EnvironmentSettingNames.ChargeLinksAcceptedTopicName).ConfigureAwait(false));
+
+            healthStatus.Add(
+                "ChargeLinksAcceptedConfirmationNotifierSubscriptionExists",
+                await SubscriptionExistsAsync(connectionString, EnvironmentSettingNames.ChargeLinksAcceptedSubConfirmationNotifier, EnvironmentSettingNames.ChargeLinksAcceptedTopicName).ConfigureAwait(false));
+
+            healthStatus.Add(
+                "ChargeLinksRejectedTopicExists",
+                await TopicExistsAsync(connectionString, EnvironmentSettingNames.ChargeLinksRejectedTopicName).ConfigureAwait(false));
+
+            healthStatus.Add(
+                "ChargeLinksRejectedSubscriptionExists",
+                await SubscriptionExistsAsync(connectionString, EnvironmentSettingNames.ChargeLinksRejectedSubscriptionName, EnvironmentSettingNames.ChargeLinksRejectedTopicName).ConfigureAwait(false));
+
+            healthStatus.Add(
+                "ChargeLinksReceivedTopicExists",
+                await TopicExistsAsync(connectionString, EnvironmentSettingNames.ChargeLinksReceivedTopicName).ConfigureAwait(false));
+
+            healthStatus.Add(
+                "ChargeLinksReceivedSubscriptionExists",
+                await SubscriptionExistsAsync(connectionString, EnvironmentSettingNames.ChargeLinksReceivedSubscriptionName, EnvironmentSettingNames.ChargeLinksReceivedTopicName).ConfigureAwait(false));
         }
 
         private static async Task<bool> IsDatabaseAvailableAsync(string connectionString)
