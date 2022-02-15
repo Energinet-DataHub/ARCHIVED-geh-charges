@@ -138,6 +138,9 @@ https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.Char
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="..\..\..\Contracts\ChargeLink\ChargeLinkV1Dto.cs">
+      <Link>ChargeLinks\Model\ChargeLinkV1Dto.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\Contracts\ChargeLink\ChargeLinkV2Dto.cs">
       <Link>ChargeLinks\Model\ChargeLinkV2Dto.cs</Link>
     </Compile>
