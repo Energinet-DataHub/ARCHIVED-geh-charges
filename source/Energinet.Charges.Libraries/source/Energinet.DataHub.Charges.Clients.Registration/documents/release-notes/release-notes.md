@@ -2,7 +2,7 @@
 
 ## Version 0.1.6
 
-Adds IHttpContextAccessor injection to enable token forwarding
+Adds `IHttpContextAccessor` injection to enable token forwarding
 
 ## Version 0.1.5
 
