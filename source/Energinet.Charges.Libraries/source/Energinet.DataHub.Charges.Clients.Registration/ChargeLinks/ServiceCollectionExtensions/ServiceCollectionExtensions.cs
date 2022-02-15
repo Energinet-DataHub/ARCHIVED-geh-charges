@@ -16,6 +16,7 @@ using System;
 using System.Linq;
 using System.Net.Http;
 using Energinet.DataHub.Charges.Clients.ChargeLinks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Energinet.DataHub.Charges.Clients.Registration.ChargeLinks.ServiceCollectionExtensions
@@ -30,7 +31,11 @@ namespace Energinet.DataHub.Charges.Clients.Registration.ChargeLinks.ServiceColl
         /// <returns>Service Collection with ChargeLinkClient</returns>
         public static IServiceCollection AddChargeLinksClient(this IServiceCollection services, Uri baseUri)
         {
-            services.AddScoped<IChargeLinksClient>(x => new ChargeLinksClientFactory(x.GetRequiredService<IHttpClientFactory>()).CreateClient(baseUri));
+            services.AddHttpContextAccessor();
+            services.AddScoped<IChargeLinksClient>(x => new ChargeLinksClientFactory(
+                    x.GetRequiredService<IHttpClientFactory>(),
+                    x.GetRequiredService<IHttpContextAccessor>())
+                .CreateClient(baseUri));
 
             if (services.Any(x => x.ServiceType == typeof(IHttpClientFactory)))
                 return services;
