@@ -12,22 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Energinet.Charges.Contracts.ChargeLink;
+using System;
+using System.Net.Http;
 
 namespace Energinet.DataHub.Charges.Clients.ChargeLinks
 {
-    /// <summary>
-    /// Charge Links Client Interface
-    /// </summary>
-    public interface IChargeLinksClient
+    public interface IChargeLinksClientFactory
     {
-        /// <summary>
-        /// Gets all charge links data for a given metering point.
-        /// </summary>
-        /// <param name="meteringPointId">The 18-digits metering point identifier used by the Danish version of Green Energy Hub.</param>
-        /// <returns>A collection of Charge Link DTOs</returns>
-        public Task<IList<ChargeLinkV2Dto>> GetAsync(string meteringPointId);
+        ChargeLinksClient CreateClient(HttpClient httpClient);
+
+        ChargeLinksClient CreateClient(Uri baseUrl);
     }
 }

@@ -109,6 +109,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures.FunctionApp
             // Overwrite service bus related settings, so the function app uses the names we have control of in the test
             // We overwrite all the service bus connection strings, since we will create all topics/queues in our shared Service Bus namespace
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.DomainEventSenderConnectionString, ServiceBusResourceProvider.ConnectionString);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.DomainEventManagerConnectionString, ServiceBusResourceProvider.ConnectionString);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.DomainEventListenerConnectionString, ServiceBusResourceProvider.ConnectionString);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.DataHubSenderConnectionString, ServiceBusResourceProvider.ConnectionString);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.DataHubListenerConnectionString, ServiceBusResourceProvider.ConnectionString);

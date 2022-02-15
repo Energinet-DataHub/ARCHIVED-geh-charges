@@ -34,6 +34,7 @@ module "func_functionhost" {
     CURRENCY                                                        = "DKK"
     CHARGE_DB_CONNECTION_STRING                                     = local.MS_CHARGE_DB_CONNECTION_STRING
     DOMAINEVENT_SENDER_CONNECTION_STRING                            = module.sb_charges.primary_connection_strings["send"]
+    DOMAINEVENT_MANAGER_CONNECTION_STRING                           = module.sb_charges.primary_connection_strings["manage"]
     DOMAINEVENT_LISTENER_CONNECTION_STRING                          = module.sb_charges.primary_connection_strings["listen"]
     CHARGE_CREATED_TOPIC_NAME                                       = data.azurerm_key_vault_secret.sbt_charge_created_name.value
     CHARGE_PRICES_UPDATED_TOPIC_NAME                                = data.azurerm_key_vault_secret.sbt_charge_prices_updated_name.value
