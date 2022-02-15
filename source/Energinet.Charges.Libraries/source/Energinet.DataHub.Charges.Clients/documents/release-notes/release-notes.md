@@ -1,5 +1,9 @@
 # Energinet.DataHub.Charges.Clients Release notes
 
+## Version 2.0.2
+
+`IChargeLinksClient` Charges.Clients exposes `ChargeLinkV1Dto`
+
 ## Version 2.0.1
 
 `ChargeLinksClientFactory` has been updated to provide a `IChargeLinksClient` with token forwarding

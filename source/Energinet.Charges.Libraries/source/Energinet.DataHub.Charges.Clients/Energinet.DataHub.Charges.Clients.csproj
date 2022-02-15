@@ -28,7 +28,7 @@ limitations under the License.
   <!-- Configuration for NuGet package -->
   <PropertyGroup>
     <PackageId>Energinet.DataHub.Charges.Clients</PackageId>
-    <PackageVersion>2.0.1$(VersionSuffix)</PackageVersion>
+    <PackageVersion>2.0.2$(VersionSuffix)</PackageVersion>
     <Title>Energinet.DataHub.Charges.Clients</Title>
     <Company>Energinet DataHub A/S</Company>
     <Authors>DataHub</Authors>
@@ -138,6 +138,9 @@ https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.Char
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="..\..\..\Contracts\ChargeLink\ChargeLinkV1Dto.cs">
+      <Link>ChargeLinks\Model\ChargeLinkV1Dto.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\Contracts\ChargeLink\ChargeLinkV2Dto.cs">
       <Link>ChargeLinks\Model\ChargeLinkV2Dto.cs</Link>
     </Compile>
