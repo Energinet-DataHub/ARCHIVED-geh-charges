@@ -13,13 +13,12 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers.Message;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
     public interface IChargeLinksCommandBundleHandler
     {
-        Task<ChargeLinksMessageResult> HandleAsync(ChargeLinksCommandBundle chargeLinksCommandBundle);
+        Task HandleAsync(ChargeLinksCommandBundle chargeLinksCommandBundle);
     }
 }
