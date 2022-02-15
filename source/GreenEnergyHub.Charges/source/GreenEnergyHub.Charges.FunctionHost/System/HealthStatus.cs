@@ -132,7 +132,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.System
                     await SubscriptionExistsAsync(
                         domainConnectionString,
                         EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedSubscription,
-                        EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName).ConfigureAwait(false)
+                        EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName)
+                        .ConfigureAwait(false)
                 },
 
                 // Internal events, charge links
