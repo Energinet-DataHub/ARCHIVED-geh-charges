@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using Energinet.DataHub.MessageHub.Model.Protobuf;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim;
 
@@ -53,6 +54,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.Shared
                 ValidationRuleIdentifier.MeteringPointDoesNotExist => ReasonCode.E10,
                 ValidationRuleIdentifier.ChargeDoesNotExist => ReasonCode.E0I,
                 ValidationRuleIdentifier.ChargeLinkUpdateNotYetSupported => ReasonCode.D13,
+                ValidationRuleIdentifier.StopChargeNotYetSupported => ReasonCode.D13,
                 _ => throw new NotImplementedException(),
             };
         }
