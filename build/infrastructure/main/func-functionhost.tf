@@ -14,6 +14,7 @@
 module "func_functionhost" {
   source                                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/function-app?ref=7.0.0"
 
+
   name                                      = "functionhost"
   project_name                              = var.domain_name_short
   environment_short                         = var.environment_short
