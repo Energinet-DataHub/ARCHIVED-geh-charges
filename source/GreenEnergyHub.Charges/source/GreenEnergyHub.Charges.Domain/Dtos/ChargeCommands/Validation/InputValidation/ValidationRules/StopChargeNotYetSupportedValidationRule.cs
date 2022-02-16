@@ -14,13 +14,13 @@
 
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.Factories
+namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
 {
-    internal class StopChargeNotYetSupportedRule : IValidationRule
+    public class StopChargeNotYetSupportedValidationRule : IValidationRule
     {
         private readonly ChargeCommand _chargeCommand;
 
-        public StopChargeNotYetSupportedRule(ChargeCommand chargeCommand)
+        public StopChargeNotYetSupportedValidationRule(ChargeCommand chargeCommand)
         {
             _chargeCommand = chargeCommand;
         }
