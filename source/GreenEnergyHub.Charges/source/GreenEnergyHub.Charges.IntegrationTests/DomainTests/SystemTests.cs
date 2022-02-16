@@ -31,20 +31,17 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
         [Collection(nameof(ChargesFunctionAppCollectionFixture))]
         public class Run : FunctionAppTestBase<ChargesFunctionAppFixture>
         {
-            private readonly HttpRequestGenerator _httpRequestGenerator;
-
             public Run(ChargesFunctionAppFixture fixture, ITestOutputHelper testOutputHelper)
                 : base(fixture, testOutputHelper)
             {
                 TestDataGenerator.GenerateDataForIntegrationTests(fixture);
-                _httpRequestGenerator = new HttpRequestGenerator();
             }
 
             [Fact]
             public async Task When_RequestingUnknownEndpoint_Then_ReturnStatusNotFound()
             {
                 // Arrange
-                var result = _httpRequestGenerator.CreateHttpGetRequest("api/unknown");
+                var result = HttpRequestGenerator.CreateHttpGetRequest("api/unknown");
 
                 // Act
                 var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(result.Request);

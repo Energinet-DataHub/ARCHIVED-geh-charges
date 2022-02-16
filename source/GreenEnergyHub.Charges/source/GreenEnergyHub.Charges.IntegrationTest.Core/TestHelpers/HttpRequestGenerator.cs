@@ -18,9 +18,9 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
 {
-    public class HttpRequestGenerator
+    public static class HttpRequestGenerator
     {
-        public (HttpRequestMessage Request, string CorrelationId) CreateHttpPostRequest(
+        public static (HttpRequestMessage Request, string CorrelationId) CreateHttpPostRequest(
             string endpointUrl, string testFilePath)
         {
             var (request, correlationId) = CreateHttpRequest(HttpMethod.Post, endpointUrl);
@@ -32,12 +32,12 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
             return (request, correlationId);
         }
 
-        public (HttpRequestMessage Request, string CorrelationId) CreateHttpGetRequest(string endpointUrl)
+        public static (HttpRequestMessage Request, string CorrelationId) CreateHttpGetRequest(string endpointUrl)
         {
             return CreateHttpRequest(HttpMethod.Get, endpointUrl);
         }
 
-        public (HttpRequestMessage Request, string CorrelationId) CreateHttpPutRequest(string endpointUrl)
+        public static (HttpRequestMessage Request, string CorrelationId) CreateHttpPutRequest(string endpointUrl)
         {
             return CreateHttpRequest(HttpMethod.Put, endpointUrl);
         }

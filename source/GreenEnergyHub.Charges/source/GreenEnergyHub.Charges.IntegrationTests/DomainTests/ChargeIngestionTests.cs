@@ -37,16 +37,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
         public class RunAsync : FunctionAppTestBase<ChargesFunctionAppFixture>, IAsyncLifetime
         {
             private readonly AuthenticatedHttpRequestGenerator _authenticatedHttpRequestGenerator;
-            private readonly HttpRequestGenerator _httpRequestGenerator;
 
             public RunAsync(ChargesFunctionAppFixture fixture, ITestOutputHelper testOutputHelper)
                 : base(fixture, testOutputHelper)
             {
-                _httpRequestGenerator = new HttpRequestGenerator();
                 TestDataGenerator.GenerateDataForIntegrationTests(fixture);
-                _authenticatedHttpRequestGenerator = new AuthenticatedHttpRequestGenerator(
-                    _httpRequestGenerator,
-                    fixture.AuthorizationConfiguration);
+                _authenticatedHttpRequestGenerator = new AuthenticatedHttpRequestGenerator(fixture.AuthorizationConfiguration);
             }
 
             public Task InitializeAsync()
@@ -65,8 +61,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             [Fact]
             public async Task When_RequestIsUnauthenticated_Then_AHttp401UnauthorizedIsReturned()
             {
-                var (request, _) = _httpRequestGenerator
-                    .CreateHttpPostRequest(EndpointUrl, ChargeDocument.TariffBundleWithValidAndInvalid);
+                var (request, _) = HttpRequestGenerator.CreateHttpPostRequest(EndpointUrl, ChargeDocument.TariffBundleWithValidAndInvalid);
 
                 var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
 

@@ -31,20 +31,17 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
         [Collection(nameof(ChargesFunctionAppCollectionFixture))]
         public class Run : FunctionAppTestBase<ChargesFunctionAppFixture>
         {
-            private readonly HttpRequestGenerator _httpRequestGenerator;
-
             public Run(ChargesFunctionAppFixture fixture, ITestOutputHelper testOutputHelper)
                 : base(fixture, testOutputHelper)
             {
                 TestDataGenerator.GenerateDataForIntegrationTests(fixture);
-                _httpRequestGenerator = new HttpRequestGenerator();
             }
 
             [Fact]
             public async Task When_RequestingHealthStatus_Then_ReturnStatusOK()
             {
                 // Arrange
-                var result = _httpRequestGenerator.CreateHttpGetRequest("api/HealthStatus");
+                var result = HttpRequestGenerator.CreateHttpGetRequest("api/HealthStatus");
 
                 // Act
                 var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(result.Request);

@@ -31,20 +31,17 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
         [Collection(nameof(ChargesFunctionAppCollectionFixture))]
         public class Run : FunctionAppTestBase<ChargesFunctionAppFixture>
         {
-            private readonly HttpRequestGenerator _httpRequestGenerator;
-
             public Run(ChargesFunctionAppFixture fixture, ITestOutputHelper testOutputHelper)
                 : base(fixture, testOutputHelper)
             {
                 TestDataGenerator.GenerateDataForIntegrationTests(fixture);
-                _httpRequestGenerator = new HttpRequestGenerator();
             }
 
             [Fact]
             public async Task When_RequestingSynchronization_Then_ReturnStatusIsNotUnauthorized()
             {
                 // Arrange
-                var result = _httpRequestGenerator.CreateHttpPutRequest("api/SynchronizeFromMarketParticipantRegistry");
+                var result = HttpRequestGenerator.CreateHttpPutRequest("api/SynchronizeFromMarketParticipantRegistry");
 
                 // Act
                 var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(result.Request);
