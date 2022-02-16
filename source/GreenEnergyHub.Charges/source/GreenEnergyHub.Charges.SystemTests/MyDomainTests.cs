@@ -36,7 +36,6 @@ namespace GreenEnergyHub.Charges.SystemTests
 
         private MyDomainConfiguration Configuration { get; }
 
-#pragma warning disable VSTHRD200 // Use "Async" suffix for async methods
         [SystemFact(Skip = "This test will be refactored as part of story #951 in the Charges repo")]
         public async Task When_TriggeringAction_Then_PeekReturnsExpectedContent()
         {
@@ -88,6 +87,5 @@ namespace GreenEnergyHub.Charges.SystemTests
             var content = await actualResponse.Content.ReadAsStringAsync();
             content.Should().NotContain("false");
         }
-#pragma warning restore VSTHRD200 // Use "Async" suffix for async methods
     }
 }

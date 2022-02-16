@@ -21,7 +21,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Energinet.Charges.Contracts.ChargeLink;
 using FluentAssertions;
-using GreenEnergyHub.Charges.IntegrationTests.Fixtures.WebApi;
+using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.WebApi;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
