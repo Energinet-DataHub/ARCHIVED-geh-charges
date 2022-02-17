@@ -22,7 +22,7 @@ module "plan_shared" {
   location              = azurerm_resource_group.this.location
   kind                  = "FunctionApp"
   sku                   = {
-    tier  = "Premium"
+    tier  = "Premium" 
     size  = "P1V2"
   }
 
