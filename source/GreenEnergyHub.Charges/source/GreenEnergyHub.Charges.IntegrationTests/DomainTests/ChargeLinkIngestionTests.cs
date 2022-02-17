@@ -16,9 +16,10 @@ using System.Net;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using FluentAssertions;
-using GreenEnergyHub.Charges.IntegrationTests.Fixtures.FunctionApp;
-using GreenEnergyHub.Charges.IntegrationTests.TestFiles.ChargeLinks;
-using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
+using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
+using GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.ChargeLinks;
+using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
+using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
@@ -33,16 +34,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
         {
             private const string EndpointUrl = "api/ChargeLinksIngestion";
             private readonly AuthenticatedHttpRequestGenerator _authenticatedHttpRequestGenerator;
-            private readonly HttpRequestGenerator _httpRequestGenerator;
 
             public RunAsync(ChargesFunctionAppFixture fixture, ITestOutputHelper testOutputHelper)
                 : base(fixture, testOutputHelper)
             {
-                _httpRequestGenerator = new HttpRequestGenerator();
                 TestDataGenerator.GenerateDataForIntegrationTests(fixture);
-                _authenticatedHttpRequestGenerator = new AuthenticatedHttpRequestGenerator(
-                    _httpRequestGenerator,
-                    fixture.AuthorizationConfiguration);
+                _authenticatedHttpRequestGenerator = new AuthenticatedHttpRequestGenerator(fixture.AuthorizationConfiguration);
             }
 
             public Task InitializeAsync()
@@ -59,7 +56,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             [Fact]
             public async Task When_RequestIsUnauthenticated_Then_AHttp401UnauthorizedIsReturned()
             {
-                var (request, _) = _httpRequestGenerator.CreateHttpPostRequest(EndpointUrl, ChargeLinkDocument.AnyValid);
+                var (request, _) = HttpRequestGenerator.CreateHttpPostRequest(EndpointUrl, ChargeLinkDocument.AnyValid);
 
                 var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
 
