@@ -67,10 +67,10 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             }
 
             // get charges
-            var charges = await GetChargesAsync(commandReceivedEvent.Command).ConfigureAwait(false);
+            var existingCharge = await GetChargeAsync(commandReceivedEvent.Command).ConfigureAwait(false);
 
             // is create, update or stop?
-            var operationType = GetOperationType(commandReceivedEvent.Command, charges);
+            var operationType = GetOperationType(commandReceivedEvent.Command, existingCharge);
 
             // create flow
             if (operationType == OperationType.Create)
@@ -88,7 +88,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             }
 
             // stop flow
-            if (operationType == OperationType.Update)
+            if (operationType == OperationType.Stop)
             {
                 // new stop flow
             }
@@ -96,24 +96,24 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             await _chargeCommandReceiptService.AcceptAsync(commandReceivedEvent.Command).ConfigureAwait(false);
         }
 
-        private static OperationType GetOperationType(ChargeCommand command, IEnumerable<Charge> charges)
+        private static OperationType GetOperationType(ChargeCommand command, Charge? charge)
         {
             if (command.ChargeOperation.StartDateTime == command.ChargeOperation.EndDateTime)
             {
                 return OperationType.Stop;
             }
 
-            return charges.Any() ? OperationType.Update : OperationType.Create;
+            return charge != null ? OperationType.Update : OperationType.Create;
         }
 
-        private async Task<List<Charge>> GetChargesAsync(ChargeCommand command)
+        private async Task<Charge?> GetChargeAsync(ChargeCommand command)
         {
             var chargeIdentifier = new ChargeIdentifier(
                 command.ChargeOperation.ChargeId,
                 command.ChargeOperation.ChargeOwner,
                 command.ChargeOperation.Type);
 
-            return await _chargeRepository.GetChargesAsync(chargeIdentifier).ConfigureAwait(false);
+            return await _chargeRepository.GetChargeAsync(chargeIdentifier).ConfigureAwait(false);
         }
     }
 
