@@ -2,9 +2,12 @@
 -- Add table ChargePeriod
 ------------------------------------------------------------------------------------------------------------------------
 
+DROP TABLE IF EXISTS Charges.ChargePeriod
+GO
+
 CREATE TABLE [Charges].[ChargePeriod](
     [Id] [uniqueidentifier] NOT NULL DEFAULT NEWID(),
-    [TaxIndicator] [bit] NOT NULL,
+    [ChargeId] [uniqueidentifier] NOT NULL,
     [TransparentInvoicing] [bit] NOT NULL,
     [Description] [nvarchar](2048) NOT NULL,
     [Name] [nvarchar](132) NOT NULL,
@@ -18,19 +21,27 @@ CREATE TABLE [Charges].[ChargePeriod](
     ) ON [PRIMARY]
     GO
 
-    ------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------
+-- Set ChargeId foreign key
+------------------------------------------------------------------------------------------------------------------------
+
+ALTER TABLE [Charges].[ChargePeriod]  WITH CHECK ADD  CONSTRAINT [FK_ChargePeriod_Charge] FOREIGN KEY([ChargeId])
+    REFERENCES [Charges].[Charge] ([Id])
+    GO
+
+------------------------------------------------------------------------------------------------------------------------
 -- Insert periods into ChargePeriod table from Charge table
 ------------------------------------------------------------------------------------------------------------------------
 
-    INSERT INTO [Charges].[ChargePeriod](
-    [TaxIndicator],
+INSERT INTO [Charges].[ChargePeriod](
+    [ChargeId],
     [TransparentInvoicing],
     [Description],
     [Name],
     [VatClassification],
     [StartDateTime],
 [EndDateTime])
-SELECT [TaxIndicator],
+SELECT [Id],
     [TransparentInvoicing],
     [Description],
     [Name],
@@ -38,13 +49,13 @@ SELECT [TaxIndicator],
     [StartDateTime],
     [EndDateTime]
 FROM [Charges].[Charge]
+GO
 
 ------------------------------------------------------------------------------------------------------------------------
 -- Remove period related columns from Charge table
 ------------------------------------------------------------------------------------------------------------------------
 
 ALTER TABLE [Charges].[Charge] DROP COLUMN
-    [TaxIndicator],
     [TransparentInvoicing],
     [Description],
     [Name],

@@ -64,7 +64,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
 
             var actual = await chargesDatabaseReadContext.Charges
-                .Include(x => x.Points)
                 .SingleOrDefaultAsync(x =>
                     x.Id == charge.Id &&
                     x.SenderProvidedChargeId == charge.SenderProvidedChargeId &&
@@ -73,6 +72,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
             actual.Should().BeEquivalentTo(charge);
             actual.Points.Should().NotBeNullOrEmpty();
+            actual.Periods.Should().NotBeNullOrEmpty();
         }
 
         [Fact]
@@ -178,19 +178,21 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             var charge = new Charge(
                 Guid.NewGuid(),
                 "SenderProvidedId",
-                "Name",
-                "description",
                 _marketParticipantId,
-                SystemClock.Instance.GetCurrentInstant(),
-                Instant.FromUtc(9999, 12, 31, 23, 59, 59),
                 ChargeType.Fee,
-                VatClassification.Unknown,
                 Resolution.P1D,
-                true,
                 false,
-                new List<Point>
+                new List<Point> { new(0, 200m, SystemClock.Instance.GetCurrentInstant()) },
+                new List<ChargePeriod>
                 {
-                    new(0, 200m, SystemClock.Instance.GetCurrentInstant()),
+                    new(
+                        Guid.NewGuid(),
+                        "Name",
+                        "description",
+                        VatClassification.Unknown,
+                        true,
+                        SystemClock.Instance.GetCurrentInstant(),
+                        Instant.FromUtc(9999, 12, 31, 23, 59, 59)),
                 });
 
             return charge;

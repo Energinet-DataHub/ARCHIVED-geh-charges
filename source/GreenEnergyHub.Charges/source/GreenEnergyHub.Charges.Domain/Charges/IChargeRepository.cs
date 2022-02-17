@@ -34,6 +34,6 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 
         Task<Charge?> GetOrNullAsync(ChargeIdentifier chargeIdentifier);
 
-        Task<List<Charge>> GetChargesAsync(ChargeIdentifier chargeIdentifier);
+        Task<Charge?> GetChargeAsync(ChargeIdentifier chargeIdentifier);
     }
 }

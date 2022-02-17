@@ -71,7 +71,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
             ChargeCommand command,
             Charge charge)
         {
-            rules.Add(new ChangingTariffVatValueNotAllowedRule(command, charge));
             rules.Add(new ChangingTariffTaxValueNotAllowedRule(command, charge));
         }
 
