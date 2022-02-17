@@ -22,8 +22,8 @@ module "plan_shared" {
   location              = azurerm_resource_group.this.location
   kind                  = "FunctionApp"
   sku                   = {
-    tier  = "Premium" 
-    size  = "P1V2"
+    tier  = "PremiumV2" 
+    size  = "P1v2"
   }
 
   tags                = azurerm_resource_group.this.tags
