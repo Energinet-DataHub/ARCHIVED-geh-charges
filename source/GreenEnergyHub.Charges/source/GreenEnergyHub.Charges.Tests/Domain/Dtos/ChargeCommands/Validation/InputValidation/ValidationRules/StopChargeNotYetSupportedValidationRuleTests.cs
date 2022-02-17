@@ -19,7 +19,6 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.TestHelpers;
-using NodaTime.Text;
 using Xunit;
 using Xunit.Categories;
 
@@ -34,7 +33,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         {
             var chargeCommand = chargeCommandBuilder.WithEndDateTimeAsNull().Build();
             var sut = new StopChargeNotYetSupportedValidationRule(chargeCommand);
-            sut.IsValid.Should().Be(true);
+            sut.IsValid.Should().BeTrue();
         }
 
         [Theory]
@@ -43,7 +42,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         {
             var chargeCommand = chargeCommandBuilder.Build();
             var sut = new StopChargeNotYetSupportedValidationRule(chargeCommand);
-            sut.IsValid.Should().Be(false);
+            sut.IsValid.Should().BeFalse();
         }
 
         [Theory]
