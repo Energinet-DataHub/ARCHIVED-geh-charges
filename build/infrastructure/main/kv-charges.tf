@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 module "kv_charges" {
-  source                          = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/key-vault?ref=5.1.0"
+  source                          = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/key-vault?ref=6.0.0"
 
   name                            = "charges"
   project_name                    = var.domain_name_short
@@ -22,6 +22,8 @@ module "kv_charges" {
   location                        = azurerm_resource_group.this.location
   enabled_for_template_deployment = true
   sku_name                        = "standard"
-  
+  private_endpoint_subnet_id      = module.snet_internal_private_endpoints.id
+  private_dns_resource_group_name = data.azurerm_key_vault_secret.pdns_resource_group_name.value
+
   tags                            = azurerm_resource_group.this.tags
 }

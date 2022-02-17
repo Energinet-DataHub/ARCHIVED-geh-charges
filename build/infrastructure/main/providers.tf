@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 terraform {
-  required_version = "=1.0.10"
+  required_version = "=1.1.5"
 
   required_providers {
     # It is recommended to pin to a given version of the Azure provider
-    azurerm = "=2.78.0"
+    azurerm = "=2.94.0"
 	  null = "~> 2.1"
   }
 }

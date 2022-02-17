@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 module "func_functionhost" {
-  source                                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/function-app?ref=5.1.0"
+  source                                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/function-app?ref=7.0.0"
+
 
   name                                      = "functionhost"
   project_name                              = var.domain_name_short
@@ -20,6 +21,10 @@ module "func_functionhost" {
   environment_instance                      = var.environment_instance
   resource_group_name                       = azurerm_resource_group.this.name
   location                                  = azurerm_resource_group.this.location
+  vnet_integration_subnet_id                = module.vnet_integrations_functionhost.id
+  private_endpoint_subnet_id                = module.snet_internal_private_endpoints.id
+  external_private_endpoint_subnet_id       = module.snet_external_private_endpoints.id
+  private_dns_resource_group_name           = data.azurerm_key_vault_secret.pdns_resource_group_name.value
   app_service_plan_id                       = module.plan_shared.id
   application_insights_instrumentation_key  = data.azurerm_key_vault_secret.appi_shared_instrumentation_key.value
   always_on                                 = true
@@ -83,6 +88,6 @@ module "func_functionhost" {
     B2C_TENANT_ID                                                   = data.azurerm_key_vault_secret.b2c_tenant_id.value
     BACKEND_SERVICE_APP_ID                                          = data.azurerm_key_vault_secret.backend_service_app_id.value
   }
-  
+
   tags                                      = azurerm_resource_group.this.tags
 }

@@ -25,9 +25,7 @@ resource "azurerm_dashboard" "dash_charges" {
   name                = "dash-${lower(var.domain_name_short)}-${lower(var.environment_short)}-${lower(var.environment_instance)}"
   resource_group_name = azurerm_resource_group.this.name
   location            = azurerm_resource_group.this.location
-  tags = {
-    source         = "terraform",
-    "hidden-title" = "Charges Domain"
-  }
   dashboard_properties = data.template_file.dash_charges_template.rendered
+  
+  tags                = azurerm_resource_group.this.tags
 }
