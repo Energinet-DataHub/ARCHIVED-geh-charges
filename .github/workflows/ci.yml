@@ -26,19 +26,19 @@ jobs:
     uses: Energinet-DataHub/.github/.github/workflows/ci-base.yml@5.0.0
 
   # Build and test solution, and publish coverage report
-  dotnet_solution_ci:
-    uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci.yml@5.0.0
-    with:
-      SOLUTION_FILE_PATH: 'source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln'
-      DOTNET_VERSION: '5.0.404'
-      USE_AZURE_FUNCTIONS_TOOLS: true
-    secrets:
-      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      AZURE_SPN_ID: ${{ secrets.AZURE_SPN_ID }}
-      AZURE_SPN_SECRET: ${{ secrets.AZURE_SPN_SECRET }}
-      AZURE_KEYVAULT_URL: ${{ secrets.AZURE_KEYVAULT_URL }}
-      AZURE_SECRETS_KEYVAULT_URL: ${{ secrets.AZURE_SECRETS_KEYVAULT_URL }}
+  # dotnet_solution_ci:
+  #   uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci.yml@5.0.0
+  #   with:
+  #     SOLUTION_FILE_PATH: 'source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln'
+  #     DOTNET_VERSION: '5.0.404'
+  #     USE_AZURE_FUNCTIONS_TOOLS: true
+  #   secrets:
+  #     AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+  #     AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  #     AZURE_SPN_ID: ${{ secrets.AZURE_SPN_ID }}
+  #     AZURE_SPN_SECRET: ${{ secrets.AZURE_SPN_SECRET }}
+  #     AZURE_KEYVAULT_URL: ${{ secrets.AZURE_KEYVAULT_URL }}
+  #     AZURE_SECRETS_KEYVAULT_URL: ${{ secrets.AZURE_SECRETS_KEYVAULT_URL }}
 
   terraform_validate:
     uses: Energinet-DataHub/.github/.github/workflows/terraform-validate.yml@5.0.0
@@ -95,7 +95,7 @@ jobs:
     needs: [
       ci_base,
       terraform_validate,
-      dotnet_solution_ci,
+      # dotnet_solution_ci,
       functionhost_ci,
       webapi_ci,
       database_migration_ci,
