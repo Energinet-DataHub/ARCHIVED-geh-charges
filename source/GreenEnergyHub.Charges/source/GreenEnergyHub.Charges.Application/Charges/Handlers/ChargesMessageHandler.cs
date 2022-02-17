@@ -26,20 +26,17 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             _chargeCommandHandler = chargeCommandHandler;
         }
 
-        public async Task<ChargesMessageResult> HandleAsync(ChargesMessage message)
+        public Task HandleAsync(ChargesMessage message)
         {
-            var result = await HandleChargeCommandsAsync(message).ConfigureAwait(false);
-            return result;
+            return HandleChargeCommandsAsync(message);
         }
 
-        private async Task<ChargesMessageResult> HandleChargeCommandsAsync(ChargesMessage message)
+        private async Task HandleChargeCommandsAsync(ChargesMessage message)
         {
             foreach (var chargeCommand in message.ChargeCommands)
             {
                 await _chargeCommandHandler.HandleAsync(chargeCommand).ConfigureAwait(false);
             }
-
-            return ChargesMessageResult.CreateSuccess();
         }
     }
 }

@@ -25,6 +25,8 @@ limitations under the License.
     <PackageReference Include="Energinet.DataHub.Core.App.WebApp" Version="1.0.3" />
     <PackageReference Include="EntityFrameworkCore.SqlServer.NodaTime" Version="5.0.1" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.20.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.OData" Version="8.0.6" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
@@ -43,8 +45,11 @@ limitations under the License.
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\..\Contracts\ChargeLink\ChargeLinkDto.cs">
-      <Link>Dtos\ChargeLink\ChargeLinkDto.cs</Link>
+    <Compile Include="..\..\..\Contracts\ChargeLink\ChargeLinkV1Dto.cs">
+      <Link>Dtos\ChargeLink\ChargeLinkV1Dto.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Contracts\ChargeLink\ChargeLinkV2Dto.cs">
+      <Link>Dtos\ChargeLink\ChargeLinkV2Dto.cs</Link>
     </Compile>
     <Compile Include="..\..\..\Contracts\Charge\ChargeType.cs">
       <Link>Dtos\Charge\ChargeType.cs</Link>

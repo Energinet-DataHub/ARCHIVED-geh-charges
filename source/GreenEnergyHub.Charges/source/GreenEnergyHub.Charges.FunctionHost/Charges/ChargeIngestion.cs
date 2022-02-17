@@ -64,12 +64,10 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
                 ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(chargeCommand);
             }
 
-            var messageResult = await _chargesMessageHandler.HandleAsync(message)
+            await _chargesMessageHandler.HandleAsync(message)
                 .ConfigureAwait(false);
 
-            return await _httpResponseBuilder
-                .CreateAcceptedResponseAsync(req, messageResult)
-                .ConfigureAwait(false);
+            return _httpResponseBuilder.CreateAcceptedResponse(req);
         }
 
         private async Task<SchemaValidatedInboundMessage<ChargeCommandBundle>> ValidateMessageAsync(HttpRequestData req)

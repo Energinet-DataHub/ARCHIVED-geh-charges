@@ -1,5 +1,19 @@
 # Energinet.DataHub.Charges.Clients Release notes
 
+## Version 2.0.2
+
+`IChargeLinksClient` Charges.Clients exposes `ChargeLinkV1Dto`
+
+## Version 2.0.1
+
+`ChargeLinksClientFactory` has been updated to provide a `IChargeLinksClient` with token forwarding
+
+## Version 2.0.0
+
+`IChargeLinksClient` has been updated to use version 2 of the underlying API.
+This is a breaking change. Only the UUID charge owner ID of charge owners are now returned in result.
+Other attributes of actors must be read from the actor register.
+
 ## Version 1.0.25
 
 Updated Nuget packages

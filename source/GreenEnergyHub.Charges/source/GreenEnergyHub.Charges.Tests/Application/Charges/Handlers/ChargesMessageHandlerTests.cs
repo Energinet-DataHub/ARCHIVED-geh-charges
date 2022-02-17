@@ -15,7 +15,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
-using FluentAssertions;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Tests.Builders;
@@ -44,12 +43,11 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                 .Build();
 
             // Act
-            var response = await sut.HandleAsync(changeOfChargesMessage).ConfigureAwait(false);
+            await sut.HandleAsync(changeOfChargesMessage).ConfigureAwait(false);
 
             // Assert
             changeOfChargesTransactionHandler
                 .Verify(v => v.HandleAsync(It.IsAny<ChargeCommand>()), Times.Exactly(3));
-            response.IsSucceeded.Should().BeTrue();
         }
     }
 }
