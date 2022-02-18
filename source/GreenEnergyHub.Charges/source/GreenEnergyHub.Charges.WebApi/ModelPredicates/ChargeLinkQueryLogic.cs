@@ -29,11 +29,11 @@ namespace GreenEnergyHub.Charges.WebApi.ModelPredicates
                 .Select(c => new ChargeLinkV1Dto(
                     Map(c.Charge.GetChargeType()),
                     c.Charge.SenderProvidedChargeId,
-                    c.Charge.ChargePeriods.First().Name,
+                    GetCurrentChargePeriod(c).Name,
                     c.Charge.Owner.MarketParticipantId,
                     "<Aktørnavn XYZ>", // Hardcoded as we currently don't have the ChargeOwnerName data
                     c.Charge.TaxIndicator,
-                    c.Charge.ChargePeriods.First().TransparentInvoicing,
+                    GetCurrentChargePeriod(c).TransparentInvoicing,
                     c.Factor,
                     c.StartDateTime,
                     c.EndDateTime == InstantExtensions.GetEndDefault().ToDateTimeOffset() ? null : c.EndDateTime)); // Nullify "EndDefault" end dates
@@ -45,10 +45,10 @@ namespace GreenEnergyHub.Charges.WebApi.ModelPredicates
                 .Select(c => new ChargeLinkV2Dto(
                     Map(c.Charge.GetChargeType()),
                     c.Charge.SenderProvidedChargeId,
-                    c.Charge.ChargePeriods.First().Name,
+                    GetCurrentChargePeriod(c).Name,
                     c.Charge.Owner.Id,
                     c.Charge.TaxIndicator,
-                    c.Charge.ChargePeriods.First().TransparentInvoicing,
+                    GetCurrentChargePeriod(c).TransparentInvoicing,
                     c.Factor,
                     c.StartDateTime,
                     c.EndDateTime == InstantExtensions.GetEndDefault().ToDateTimeOffset() ? null : c.EndDateTime)); // Nullify "EndDefault" end dates
@@ -64,5 +64,11 @@ namespace GreenEnergyHub.Charges.WebApi.ModelPredicates
             _ =>
                 throw new ArgumentOutOfRangeException(nameof(chargeType)),
         };
+
+        private static ChargePeriod GetCurrentChargePeriod(ChargeLink chargeLink)
+        {
+            return chargeLink.Charge.ChargePeriods.Where(cp => cp.StartDateTime < DateTime.UtcNow)
+                .OrderByDescending(cp => cp.StartDateTime).First();
+        }
     }
 }
