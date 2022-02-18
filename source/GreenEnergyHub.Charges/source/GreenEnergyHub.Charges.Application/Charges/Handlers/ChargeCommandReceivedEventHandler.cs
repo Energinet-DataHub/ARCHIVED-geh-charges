@@ -13,8 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Domain.Charges;
@@ -113,7 +111,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 command.ChargeOperation.ChargeOwner,
                 command.ChargeOperation.Type);
 
-            return await _chargeRepository.GetChargeAsync(chargeIdentifier).ConfigureAwait(false);
+            return await _chargeRepository.GetOrNullAsync(chargeIdentifier).ConfigureAwait(false);
         }
     }
 
