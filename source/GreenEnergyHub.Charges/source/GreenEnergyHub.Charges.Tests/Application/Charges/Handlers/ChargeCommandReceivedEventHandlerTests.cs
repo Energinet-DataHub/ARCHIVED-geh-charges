@@ -50,6 +50,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             var stored = false;
             chargeRepository.Setup(r => r.StoreChargeAsync(It.IsAny<Charge>()))
                 .Callback<Charge>(_ => stored = true);
+            chargeRepository.Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
+                .ReturnsAsync(null as Charge);
 
             var confirmed = false;
             receiptService.Setup(s => s.AcceptAsync(It.IsAny<ChargeCommand>()))
