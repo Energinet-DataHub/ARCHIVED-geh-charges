@@ -83,10 +83,10 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
             var expected = new ChargeLinkV2Dto(
                 (ChargeType)chargeLink.Charge.Type,
                 chargeLink.Charge.SenderProvidedChargeId,
-                chargeLink.Charge.ChargePeriods.First().Name,
+                chargeLink.Charge.ChargePeriods.Where(cp => cp.StartDateTime <= DateTime.UtcNow.Date).OrderByDescending(cp => cp.StartDateTime).First().Name,
                 chargeLink.Charge.OwnerId,
                 chargeLink.Charge.TaxIndicator,
-                chargeLink.Charge.ChargePeriods.First().TransparentInvoicing,
+                chargeLink.Charge.ChargePeriods.Where(cp => cp.StartDateTime <= DateTime.UtcNow.Date).OrderByDescending(cp => cp.StartDateTime).First().TransparentInvoicing,
                 chargeLink.Factor,
                 chargeLink.StartDateTime,
                 chargeLink.EndDateTime);
