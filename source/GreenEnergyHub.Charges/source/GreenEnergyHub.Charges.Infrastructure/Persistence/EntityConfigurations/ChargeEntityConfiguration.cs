@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
             // This field is defined in the SQL model (as a foreign key)
             periods.WithOwner().HasForeignKey($"{_aggregateTableName}Id");
 
-            var tableName = $"{_aggregateTableName}{nameof(ChargePeriod)}";
+            var tableName = $"{nameof(ChargePeriod)}";
             periods.ToTable(tableName);
 
             // This is a database-only column - doesn't exist in domain model as period is not an aggregate
