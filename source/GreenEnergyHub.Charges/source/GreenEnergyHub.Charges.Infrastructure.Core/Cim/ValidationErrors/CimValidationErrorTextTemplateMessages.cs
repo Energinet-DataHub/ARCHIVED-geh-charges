@@ -143,7 +143,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.StopChargeNotYetSupported)]
         public const string StopChargeNotYetSupportedErrorText =
-            "Charge ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}} cannot stopped. The functionality is not yet implemented.";
+            "Charge ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}} cannot be stopped. The functionality is not yet implemented.";
 
         public const string Unknown = "unknown";
     }
