@@ -56,10 +56,10 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
             var expected = new ChargeLinkV2Dto(
                 (ChargeType)chargeLink.Charge.Type,
                 chargeLink.Charge.SenderProvidedChargeId,
-                chargeLink.Charge.Name,
+                chargeLink.Charge.ChargePeriods.First().Name,
                 chargeLink.Charge.OwnerId,
                 chargeLink.Charge.TaxIndicator,
-                chargeLink.Charge.TransparentInvoicing,
+                chargeLink.Charge.ChargePeriods.First().TransparentInvoicing,
                 chargeLink.Factor,
                 chargeLink.StartDateTime,
                 chargeLink.EndDateTime);

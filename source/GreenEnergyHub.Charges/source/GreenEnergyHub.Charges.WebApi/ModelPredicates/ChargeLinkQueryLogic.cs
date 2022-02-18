@@ -29,11 +29,11 @@ namespace GreenEnergyHub.Charges.WebApi.ModelPredicates
                 .Select(c => new ChargeLinkV1Dto(
                     Map(c.Charge.GetChargeType()),
                     c.Charge.SenderProvidedChargeId,
-                    c.Charge.Name,
+                    c.Charge.ChargePeriods.First().Name,
                     c.Charge.Owner.MarketParticipantId,
                     "<Aktørnavn XYZ>", // Hardcoded as we currently don't have the ChargeOwnerName data
                     c.Charge.TaxIndicator,
-                    c.Charge.TransparentInvoicing,
+                    c.Charge.ChargePeriods.First().TransparentInvoicing,
                     c.Factor,
                     c.StartDateTime,
                     c.EndDateTime == InstantExtensions.GetEndDefault().ToDateTimeOffset() ? null : c.EndDateTime)); // Nullify "EndDefault" end dates
@@ -45,10 +45,10 @@ namespace GreenEnergyHub.Charges.WebApi.ModelPredicates
                 .Select(c => new ChargeLinkV2Dto(
                     Map(c.Charge.GetChargeType()),
                     c.Charge.SenderProvidedChargeId,
-                    c.Charge.Name,
+                    c.Charge.ChargePeriods.First().Name,
                     c.Charge.Owner.Id,
                     c.Charge.TaxIndicator,
-                    c.Charge.TransparentInvoicing,
+                    c.Charge.ChargePeriods.First().TransparentInvoicing,
                     c.Factor,
                     c.StartDateTime,
                     c.EndDateTime == InstantExtensions.GetEndDefault().ToDateTimeOffset() ? null : c.EndDateTime)); // Nullify "EndDefault" end dates

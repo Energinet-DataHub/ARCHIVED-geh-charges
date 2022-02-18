@@ -35,6 +35,8 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
 
         public virtual DbSet<ChargeLink> ChargeLinks { get; set; }
 
+        public virtual DbSet<ChargePeriod> ChargePeriods { get; set; }
+
         public virtual DbSet<ChargePoint> ChargePoints { get; set; }
 
         public virtual DbSet<DefaultChargeLink> DefaultChargeLinks { get; set; }
@@ -83,6 +85,20 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
                     .HasForeignKey(d => d.MeteringPointId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ChargeLink_MeteringPoint");
+            });
+
+            modelBuilder.Entity<ChargePeriod>(entity =>
+            {
+                entity.HasKey(e => e.Id)
+                    .IsClustered(false);
+
+                entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
+
+                entity.HasOne(d => d.Charge)
+                    .WithMany(p => p.ChargePeriods)
+                    .HasForeignKey(d => d.ChargeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ChargePeriod_Charge");
             });
 
             modelBuilder.Entity<ChargePoint>(entity =>
