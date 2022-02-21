@@ -15,15 +15,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Azure.Messaging.EventHubs.Producer;
 using Energinet.Charges.Contracts.Charge;
 using Energinet.Charges.Contracts.ChargeLink;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.QueryApi.Model;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.Tests.Builders.Query;
 using GreenEnergyHub.Charges.WebApi.ModelPredicates;
-using Microsoft.OData.Edm;
 using Xunit;
 using Xunit.Categories;
 
@@ -39,24 +38,30 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
             // Arrange
             chargeLink.Charge.Type = 1;
             chargeLink.EndDateTime = InstantExtensions.GetEndDefault().ToDateTimeUtc();
+            chargeLink.Charge.ChargePeriods.Clear();
+            chargeLink.Charge.ChargePeriods.Add(GenerateChargePeriod(chargeLink.Charge));
+
             var chargeLinks = new List<ChargeLink> { chargeLink, }.AsQueryable();
 
             // Act
             var actual = chargeLinks.AsChargeLinkV1Dto();
 
             // Assert
-            actual.Should().NotContain(c => c.EndDate == InstantExtensions.GetEndDefault().ToDateTimeUtc());
+            actual.Should().HaveCount(1);
+            actual.Should().Contain(c => c.EndDate == null);
         }
 
         [Theory]
-        [InlineAutoMoqData]
-        public void AsChargeLinkV1Dto_WhenChargeLinkHasChargeWithManyChargePeriods_UsesCurrentPeriodValues(ChargeLink chargeLink)
+        [InlineAutoMoqData(false, "SecondPeriodName", false)]
+        [InlineAutoMoqData(true, "ThirdPeriodName", true)]
+        public void AsChargeLinkV1Dto_WhenChargeLinkHasChargeWithManyChargePeriods_UsesCurrentPeriodValues(
+            bool includePeriodStartingToday, string expectedName, bool expectedTransparentInvoicing, ChargeLink chargeLink)
         {
             // Arrange
             chargeLink.Charge.Type = 1;
             chargeLink.Charge.ChargePeriods.Clear();
 
-            var chargePeriods = CreateListWithChargePeriodsForBoundaryTests(chargeLink.Charge);
+            var chargePeriods = GenerateChargePeriods(chargeLink.Charge, includePeriodStartingToday);
 
             foreach (var period in chargePeriods)
             {
@@ -69,8 +74,8 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
             var actual = chargeLinks.AsChargeLinkV1Dto();
 
             // Assert
-            actual.Single().ChargeName.Should().Be("ThirdName");
-            actual.Single().TransparentInvoicing.Should().BeTrue();
+            actual.Single().ChargeName.Should().Be(expectedName);
+            actual.Single().TransparentInvoicing.Should().Be(expectedTransparentInvoicing);
         }
 
         [Theory]
@@ -80,14 +85,19 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
             // Arrange
             chargeLink.Charge.Type = 1;
             chargeLink.Charge.OwnerId = chargeLink.Charge.Owner.Id;
+
+            chargeLink.Charge.ChargePeriods.Clear();
+            chargeLink.Charge.ChargePeriods.Add(GenerateChargePeriod(chargeLink.Charge));
+
             var chargeLinks = new List<ChargeLink> { chargeLink, }.AsQueryable();
+
             var expected = new ChargeLinkV2Dto(
                 (ChargeType)chargeLink.Charge.Type,
                 chargeLink.Charge.SenderProvidedChargeId,
-                chargeLink.Charge.ChargePeriods.Where(cp => cp.StartDateTime <= DateTime.UtcNow.Date).OrderByDescending(cp => cp.StartDateTime).First().Name,
+                chargeLink.Charge.ChargePeriods.Single().Name,
                 chargeLink.Charge.OwnerId,
                 chargeLink.Charge.TaxIndicator,
-                chargeLink.Charge.ChargePeriods.Where(cp => cp.StartDateTime <= DateTime.UtcNow.Date).OrderByDescending(cp => cp.StartDateTime).First().TransparentInvoicing,
+                chargeLink.Charge.ChargePeriods.Single().TransparentInvoicing,
                 chargeLink.Factor,
                 chargeLink.StartDateTime,
                 chargeLink.EndDateTime);
@@ -106,24 +116,31 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
             // Arrange
             chargeLink.Charge.Type = 1;
             chargeLink.EndDateTime = InstantExtensions.GetEndDefault().ToDateTimeUtc();
+
+            chargeLink.Charge.ChargePeriods.Clear();
+            chargeLink.Charge.ChargePeriods.Add(GenerateChargePeriod(chargeLink.Charge));
+
             var chargeLinks = new List<ChargeLink> { chargeLink, }.AsQueryable();
 
             // Act
             var actual = chargeLinks.AsChargeLinkV2Dto();
 
             // Assert
-            actual.Should().NotContain(c => c.EndDate == InstantExtensions.GetEndDefault().ToDateTimeUtc());
+            actual.Should().HaveCount(1);
+            actual.Should().Contain(c => c.EndDate == null);
         }
 
         [Theory]
-        [InlineAutoMoqData]
-        public void AsChargeLinkV2Dto_WhenChargeLinkHasChargeWithManyChargePeriods_UsesCurrentPeriodValues(ChargeLink chargeLink)
+        [InlineAutoMoqData(false, "SecondPeriodName", false)]
+        [InlineAutoMoqData(true, "ThirdPeriodName", true)]
+        public void AsChargeLinkV2Dto_WhenChargeLinkHasChargeWithManyChargePeriods_UsesCurrentPeriodValues(
+            bool includePeriodStartingToday, string expectedName, bool expectedTransparentInvoice, ChargeLink chargeLink)
         {
             // Arrange
             chargeLink.Charge.Type = 1;
             chargeLink.Charge.ChargePeriods.Clear();
 
-            var chargePeriods = CreateListWithChargePeriodsForBoundaryTests(chargeLink.Charge);
+            var chargePeriods = GenerateChargePeriods(chargeLink.Charge, includePeriodStartingToday);
 
             foreach (var period in chargePeriods)
             {
@@ -136,39 +153,42 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
             var actual = chargeLinks.AsChargeLinkV2Dto();
 
             // Assert
-            actual.Single().ChargeName.Should().Be("ThirdName");
-            actual.Single().TransparentInvoicing.Should().BeTrue();
+            actual.Single().ChargeName.Should().Be(expectedName);
+            actual.Single().TransparentInvoicing.Should().Be(expectedTransparentInvoice);
         }
 
-        private static IEnumerable<ChargePeriod> CreateListWithChargePeriodsForBoundaryTests(Charge charge)
+        private static ChargePeriod GenerateChargePeriod(Charge charge)
         {
-            var today = DateTime.UtcNow.Date;
-
-            var chargePeriods = new List<ChargePeriod>
-            {
-                GenerateChargePeriod(today.AddDays(-2), today.AddDays(-1), charge, "FirstName", true),
-                GenerateChargePeriod(today.AddDays(-1), today.AddDays(0), charge, "SecondName", false),
-                GenerateChargePeriod(today.AddDays(0), today.AddDays(1), charge, "ThirdName", true),
-                GenerateChargePeriod(today.AddDays(1), today.AddDays(2), charge, "FourthName", false),
-            };
-
-            return chargePeriods;
+            var period = new ChargePeriodBuilder().Build(charge);
+            return period;
         }
 
-        private static ChargePeriod GenerateChargePeriod(DateTime periodStart, DateTime periodEnd, Charge charge, string name, bool transparentInvoicing)
+        private static IEnumerable<ChargePeriod> GenerateChargePeriods(Charge charge, bool includePeriodStartingToday)
         {
-            return new ChargePeriod
+            var chargePeriodBuilder = new ChargePeriodBuilder();
+            var today = DateTime.Now.Date.ToUniversalTime();
+
+            if (includePeriodStartingToday)
             {
-                Id = Guid.NewGuid(),
-                Charge = charge,
-                ChargeId = charge.Id,
-                TransparentInvoicing = transparentInvoicing,
-                Description = "Description",
-                Name = name,
-                VatClassification = 0,
-                StartDateTime = periodStart,
-                EndDateTime = periodEnd,
-            };
+                var chargePeriods = new List<ChargePeriod>
+                {
+                    chargePeriodBuilder.WithName("FirstPeriodName").WithTransparentInvoicing(true).WithStartDateTime(today.AddDays(-2)).WithEndDateTime(today.AddDays(-1)).Build(charge),
+                    chargePeriodBuilder.WithName("SecondPeriodName").WithTransparentInvoicing(false).WithStartDateTime(today.AddDays(-1)).WithEndDateTime(today).Build(charge),
+                    chargePeriodBuilder.WithName("ThirdPeriodName").WithTransparentInvoicing(true).WithStartDateTime(today).WithEndDateTime(today.AddDays(1)).Build(charge),
+                    chargePeriodBuilder.WithName("FourthPeriodName").WithTransparentInvoicing(false).WithStartDateTime(today.AddDays(1)).WithEndDateTime(today.AddDays(2)).Build(charge),
+                };
+                return chargePeriods;
+            }
+            else
+            {
+                var chargePeriods = new List<ChargePeriod>
+                {
+                    chargePeriodBuilder.WithName("FirstPeriodName").WithTransparentInvoicing(true).WithStartDateTime(today.AddDays(-2)).WithEndDateTime(today.AddDays(-1)).Build(charge),
+                    chargePeriodBuilder.WithName("SecondPeriodName").WithTransparentInvoicing(false).WithStartDateTime(today.AddDays(-1)).WithEndDateTime(today.AddDays(1)).Build(charge),
+                    chargePeriodBuilder.WithName("ThirdPeriodName").WithTransparentInvoicing(true).WithStartDateTime(today.AddDays(1)).WithEndDateTime(today.AddDays(2)).Build(charge),
+                };
+                return chargePeriods;
+            }
         }
     }
 }

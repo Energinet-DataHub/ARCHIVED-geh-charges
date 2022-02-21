@@ -67,7 +67,7 @@ namespace GreenEnergyHub.Charges.WebApi.ModelPredicates
 
         private static ChargePeriod GetCurrentChargePeriod(ChargeLink chargeLink)
         {
-            return chargeLink.Charge.ChargePeriods.Where(cp => cp.StartDateTime <= DateTime.UtcNow.Date)
+            return chargeLink.Charge.ChargePeriods.Where(cp => cp.StartDateTime <= DateTime.Now.Date.ToUniversalTime())
                 .OrderByDescending(cp => cp.StartDateTime).First();
         }
     }
