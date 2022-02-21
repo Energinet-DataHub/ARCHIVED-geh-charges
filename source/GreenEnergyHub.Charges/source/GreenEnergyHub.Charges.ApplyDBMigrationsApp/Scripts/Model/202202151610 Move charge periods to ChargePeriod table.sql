@@ -1,4 +1,36 @@
 ﻿------------------------------------------------------------------------------------------------------------------------
+-- Ensure data consistency before migration
+------------------------------------------------------------------------------------------------------------------------
+
+begin tran
+  
+    select
+           Id,
+           row_number() over(partition by SenderProvidedChargeId, [Type], OwnerId order by SenderProvidedChargeId, [Type], OwnerId) as rownumber
+    into Duplicates
+    from Charges.Charge
+    
+    delete cl
+    from Charges.ChargeLink as cl
+        inner join Duplicates as dpl
+        on dpl.Id = cl.ChargeId
+    where dpl.rownumber > 1
+
+    delete cp
+    from Charges.ChargePoint as cp
+        inner join Duplicates as dpl
+        on dpl.Id = cp.ChargeId
+    where dpl.rownumber > 1
+
+    delete c
+    from Charges.Charge as c
+        inner join Duplicates as dpl
+        on dpl.Id = c.Id
+    where dpl.rownumber > 1
+
+commit
+
+------------------------------------------------------------------------------------------------------------------------
 -- Add table ChargePeriod
 ------------------------------------------------------------------------------------------------------------------------
 
