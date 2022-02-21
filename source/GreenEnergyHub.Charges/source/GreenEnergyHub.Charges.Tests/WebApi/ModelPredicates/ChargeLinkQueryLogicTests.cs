@@ -70,6 +70,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
 
             // Assert
             actual.Single().ChargeName.Should().Be("ThirdName");
+            actual.Single().TransparentInvoicing.Should().BeTrue();
         }
 
         [Theory]
@@ -136,6 +137,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
 
             // Assert
             actual.Single().ChargeName.Should().Be("ThirdName");
+            actual.Single().TransparentInvoicing.Should().BeTrue();
         }
 
         private static IEnumerable<ChargePeriod> CreateListWithChargePeriodsForBoundaryTests(Charge charge)
@@ -160,7 +162,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
                 Id = Guid.NewGuid(),
                 Charge = charge,
                 ChargeId = charge.Id,
-                TransparentInvoicing = false,
+                TransparentInvoicing = transparentInvoicing,
                 Description = "Description",
                 Name = name,
                 VatClassification = 0,
