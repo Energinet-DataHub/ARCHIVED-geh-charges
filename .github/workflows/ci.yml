@@ -95,7 +95,7 @@ jobs:
     needs: [
       ci_base,
       terraform_validate,
-      # dotnet_solution_ci,
+      dotnet_solution_ci,
       functionhost_ci,
       webapi_ci,
       database_migration_ci,
