@@ -25,33 +25,37 @@ namespace GreenEnergyHub.Charges.WebApi.ModelPredicates
     {
         public static IQueryable<ChargeLinkV1Dto> AsChargeLinkV1Dto(this IQueryable<ChargeLink> queryable)
         {
+            var now = DateTime.Now.Date.ToUniversalTime();
+
             return queryable
-                .Select(c => new ChargeLinkV1Dto(
-                    Map(c.Charge.GetChargeType()),
-                    c.Charge.SenderProvidedChargeId,
-                    GetCurrentChargePeriod(c).Name,
-                    c.Charge.Owner.MarketParticipantId,
+                .Select(cl => new ChargeLinkV1Dto(
+                    Map(cl.Charge.GetChargeType()),
+                    cl.Charge.SenderProvidedChargeId,
+                    cl.Charge.ChargePeriods.Where(cp => cp.StartDateTime <= now).OrderByDescending(cp => cp.StartDateTime).First().Name,
+                    cl.Charge.Owner.MarketParticipantId,
                     "<Aktørnavn XYZ>", // Hardcoded as we currently don't have the ChargeOwnerName data
-                    c.Charge.TaxIndicator,
-                    GetCurrentChargePeriod(c).TransparentInvoicing,
-                    c.Factor,
-                    c.StartDateTime,
-                    c.EndDateTime == InstantExtensions.GetEndDefault().ToDateTimeOffset() ? null : c.EndDateTime)); // Nullify "EndDefault" end dates
+                    cl.Charge.TaxIndicator,
+                    cl.Charge.ChargePeriods.Where(cp => cp.StartDateTime <= now).OrderByDescending(cp => cp.StartDateTime).First().TransparentInvoicing,
+                    cl.Factor,
+                    cl.StartDateTime,
+                    cl.EndDateTime == InstantExtensions.GetEndDefault().ToDateTimeOffset() ? null : cl.EndDateTime)); // Nullify "EndDefault" end dates
         }
 
         public static IQueryable<ChargeLinkV2Dto> AsChargeLinkV2Dto(this IQueryable<ChargeLink> queryable)
         {
+            var now = DateTime.Now.Date.ToUniversalTime();
+
             return queryable
-                .Select(c => new ChargeLinkV2Dto(
-                    Map(c.Charge.GetChargeType()),
-                    c.Charge.SenderProvidedChargeId,
-                    GetCurrentChargePeriod(c).Name,
-                    c.Charge.Owner.Id,
-                    c.Charge.TaxIndicator,
-                    GetCurrentChargePeriod(c).TransparentInvoicing,
-                    c.Factor,
-                    c.StartDateTime,
-                    c.EndDateTime == InstantExtensions.GetEndDefault().ToDateTimeOffset() ? null : c.EndDateTime)); // Nullify "EndDefault" end dates
+                .Select(cl => new ChargeLinkV2Dto(
+                    Map(cl.Charge.GetChargeType()),
+                    cl.Charge.SenderProvidedChargeId,
+                    cl.Charge.ChargePeriods.Where(cp => cp.StartDateTime <= now).OrderByDescending(cp => cp.StartDateTime).First().Name,
+                    cl.Charge.Owner.Id,
+                    cl.Charge.TaxIndicator,
+                    cl.Charge.ChargePeriods.Where(cp => cp.StartDateTime <= now).OrderByDescending(cp => cp.StartDateTime).First().TransparentInvoicing,
+                    cl.Factor,
+                    cl.StartDateTime,
+                    cl.EndDateTime == InstantExtensions.GetEndDefault().ToDateTimeOffset() ? null : cl.EndDateTime)); // Nullify "EndDefault" end dates
         }
 
         private static ChargeType Map(Domain.Charges.ChargeType chargeType) => chargeType switch
@@ -64,11 +68,5 @@ namespace GreenEnergyHub.Charges.WebApi.ModelPredicates
             _ =>
                 throw new ArgumentOutOfRangeException(nameof(chargeType)),
         };
-
-        private static ChargePeriod GetCurrentChargePeriod(ChargeLink chargeLink)
-        {
-            return chargeLink.Charge.ChargePeriods.Where(cp => cp.StartDateTime <= DateTime.Now.Date.ToUniversalTime())
-                .OrderByDescending(cp => cp.StartDateTime).First();
-        }
     }
 }

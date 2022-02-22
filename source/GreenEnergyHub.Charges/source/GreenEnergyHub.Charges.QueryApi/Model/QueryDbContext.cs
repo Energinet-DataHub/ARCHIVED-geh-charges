@@ -12,9 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 
 #nullable disable
 
@@ -92,7 +90,7 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
                 entity.HasKey(e => e.Id)
                     .IsClustered(false);
 
-                entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
+                entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.HasOne(d => d.Charge)
                     .WithMany(p => p.ChargePeriods)
