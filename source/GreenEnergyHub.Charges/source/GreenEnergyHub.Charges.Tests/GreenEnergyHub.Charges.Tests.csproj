@@ -105,9 +105,5 @@ limitations under the License.
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Builders\Command\" />
-      <Folder Include="Infrastructure\ReplySender" />
-    </ItemGroup>
+  
 </Project>

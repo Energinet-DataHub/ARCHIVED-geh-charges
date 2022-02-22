@@ -67,10 +67,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands
                 ChargeType.Fee,
                 Resolution.P1D,
                 true,
-                new List<Point>
-                {
-                    new Point(0, 200m, SystemClock.Instance.GetCurrentInstant()),
-                },
+                new List<Point> { new(1, 200m, SystemClock.Instance.GetCurrentInstant()) },
                 new List<ChargePeriod>
                 {
                     new ChargePeriod(
