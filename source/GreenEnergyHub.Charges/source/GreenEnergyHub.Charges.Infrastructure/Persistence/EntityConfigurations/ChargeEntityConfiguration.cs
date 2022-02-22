@@ -27,6 +27,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
         {
             builder.ToTable(_aggregateTableName);
             builder.HasKey(c => c.Id);
+            builder.Property(x => x.Id).ValueGeneratedNever();
 
             builder.Property(c => c.OwnerId);
             builder.Property(c => c.SenderProvidedChargeId);
@@ -54,8 +55,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
             var tableName = $"{nameof(ChargePeriod)}";
             periods.ToTable(tableName);
 
-            // This is a database-only column - doesn't exist in domain model as period is not an aggregate
-            periods.Property<Guid>("Id").ValueGeneratedOnAdd();
+            periods.HasKey(c => c.Id);
+            periods.Property(x => x.Id).ValueGeneratedNever();
 
             periods.Property(p => p.Name);
             periods.Property(p => p.Description);
