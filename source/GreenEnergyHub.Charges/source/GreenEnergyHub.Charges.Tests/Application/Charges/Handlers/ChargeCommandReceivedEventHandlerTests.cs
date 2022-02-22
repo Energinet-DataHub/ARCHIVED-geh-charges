@@ -24,6 +24,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Moq;
+using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
@@ -105,6 +106,34 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 
             // Act / Assert
             await Assert.ThrowsAsync<ArgumentNullException>(() => sut.HandleAsync(receivedEvent!));
+        }
+
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task HandleAsync_IfValidUpdateEvent_ExistingChargeUpdated(
+            [Frozen] Mock<IValidator<ChargeCommand>> validator,
+            [Frozen] Mock<IChargeRepository> chargeRepository,
+            [Frozen] Mock<Charge> charge,
+            ChargeCommandReceivedEvent receivedEvent,
+            ChargeCommandReceivedEventHandler sut)
+        {
+            // Arrange
+            var validationResult = ValidationResult.CreateSuccess();
+            SetupValidator(validator, validationResult);
+
+            chargeRepository
+                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
+                .ReturnsAsync(charge.Object);
+
+            var updated = false;
+            chargeRepository.Setup(r => r.UpdateChargeAsync(It.IsAny<Charge>()))
+                .Callback<Charge>(_ => updated = true);
+
+            // Act
+            await sut.HandleAsync(receivedEvent);
+
+            // Assert
+            Assert.True(updated);
         }
 
         private static ValidationResult GetFailedValidationResult()
