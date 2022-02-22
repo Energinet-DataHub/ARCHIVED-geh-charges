@@ -61,12 +61,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
             await _chargesDatabaseContext.SaveChangesAsync().ConfigureAwait(false);
         }
 
-        public async Task UpdateChargeAsync(Charge charge)
-        {
-            _chargesDatabaseContext.Charges.Update(charge);
-            await _chargesDatabaseContext.SaveChangesAsync().ConfigureAwait(false);
-        }
-
         private IQueryable<Charge> GetChargesAsQueryable()
         {
             return _chargesDatabaseContext.Charges

@@ -13,11 +13,8 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
-using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
@@ -85,53 +82,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             // update flow
             if (operationType == OperationType.Update)
             {
-                if (existingCharge == null)
-                    throw new InvalidOperationException("Could not update charge period. Charge is null");
-
-                var newChargePeriod = new ChargePeriod(
-                    Guid.NewGuid(),
-                    commandReceivedEvent.Command.ChargeOperation.ChargeName,
-                    commandReceivedEvent.Command.ChargeOperation.ChargeDescription,
-                    commandReceivedEvent.Command.ChargeOperation.VatClassification,
-                    commandReceivedEvent.Command.ChargeOperation.TransparentInvoicing,
-                    commandReceivedEvent.Command.ChargeOperation.StartDateTime,
-                    commandReceivedEvent.Command.ChargeOperation.EndDateTime.TimeOrEndDefault());
-
-                var previousPeriods = existingCharge.Periods.Where(p =>
-                    p.EndDateTime <= newChargePeriod.StartDateTime);
-
-                var updatedChargePeriods = new List<ChargePeriod>();
-                updatedChargePeriods.AddRange(previousPeriods);
-
-                var overlappingPeriod = existingCharge.Periods.SingleOrDefault(p =>
-                    p.EndDateTime >= newChargePeriod.EndDateTime);
-
-                if (overlappingPeriod != null)
-                {
-                    var updatedOverlappingPeriod = new ChargePeriod(
-                        overlappingPeriod.Id,
-                        overlappingPeriod.Name,
-                        overlappingPeriod.Description,
-                        overlappingPeriod.VatClassification,
-                        overlappingPeriod.TransparentInvoicing,
-                        overlappingPeriod.StartDateTime,
-                        newChargePeriod.StartDateTime);
-                    updatedChargePeriods.Add(updatedOverlappingPeriod);
-                }
-
-                updatedChargePeriods.Add(newChargePeriod);
-
-                var updatedCharge = new Charge(
-                    existingCharge.Id,
-                    existingCharge.SenderProvidedChargeId,
-                    existingCharge.OwnerId,
-                    existingCharge.Type,
-                    existingCharge.Resolution,
-                    existingCharge.TaxIndicator,
-                    existingCharge.Points.ToList(),
-                    updatedChargePeriods);
-
-                await _chargeRepository.UpdateChargeAsync(updatedCharge).ConfigureAwait(false);
+                // new update flow
             }
 
             // stop flow
