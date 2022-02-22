@@ -76,7 +76,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         }
 
         [Fact]
-        public async Task CheckIfChargeExistsAsync_WhenChargeIsCreated_ThenSuccessReturnedAsync()
+        public async Task CheckIfChargeExistsAsync_WhenChargeIsCreated_ThenChargeExists()
         {
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
 
@@ -110,7 +110,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         }
 
         [Fact]
-        public async Task GetChargeAsync_WithId_ThenSuccessReturnedAsync()
+        public async Task GetChargeAsync_WithId_ReturnsCharge()
         {
             await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
 
@@ -182,7 +182,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 ChargeType.Fee,
                 Resolution.P1D,
                 false,
-                new List<Point> { new(0, 200m, SystemClock.Instance.GetCurrentInstant()) },
+                new List<Point> { new(1, 200m, SystemClock.Instance.GetCurrentInstant()) },
                 new List<ChargePeriod>
                 {
                     new(
