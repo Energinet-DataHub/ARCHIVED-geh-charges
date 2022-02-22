@@ -48,16 +48,20 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             SetupValidator(validator, validationResult);
 
             var stored = false;
-            chargeRepository.Setup(r => r.StoreChargeAsync(It.IsAny<Charge>()))
+            chargeRepository
+                .Setup(r => r.StoreChargeAsync(It.IsAny<Charge>()))
                 .Callback<Charge>(_ => stored = true);
-            chargeRepository.Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
+            chargeRepository
+                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(null as Charge);
 
             var confirmed = false;
-            receiptService.Setup(s => s.AcceptAsync(It.IsAny<ChargeCommand>()))
+            receiptService
+                .Setup(s => s.AcceptAsync(It.IsAny<ChargeCommand>()))
                 .Callback<ChargeCommand>(_ => confirmed = true);
 
-            chargeFactory.Setup(s => s.CreateFromCommandAsync(It.IsAny<ChargeCommand>()))
+            chargeFactory
+                .Setup(s => s.CreateFromCommandAsync(It.IsAny<ChargeCommand>()))
                 .ReturnsAsync(charge.Object);
 
             // Act

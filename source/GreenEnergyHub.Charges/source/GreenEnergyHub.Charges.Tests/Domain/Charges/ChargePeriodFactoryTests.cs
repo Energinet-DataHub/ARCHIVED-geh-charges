@@ -12,43 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using GreenEnergyHub.Charges.Tests.Builders.Testables;
 using GreenEnergyHub.TestHelpers;
 using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
-using Moq;
 using Xunit;
 using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.Domain.Charges
 {
     [UnitTest]
-    public class ChargeFactoryTests
+    public class ChargePeriodFactoryTests
     {
         [Theory]
         [InlineAutoDomainData]
-        public async Task CreateFromCommandAsync_Charge_HasNoNullsOrEmptyCollections(
-            TestMarketParticipant owner,
-            ChargeCommand chargeCommand,
-            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
-            Mock<ChargePeriod> chargePeriod,
-            ChargeFactory sut)
+        public void CreateFromChargeOperationDto_ChargePeriod_HasNoNullsOrEmptyCollections(
+            ChargeOperationDto chargeOperationDto,
+            ChargePeriodFactory sut)
         {
-            marketParticipantRepository
-                .Setup(repo => repo.GetOrNullAsync(chargeCommand.ChargeOperation.ChargeOwner))
-                .ReturnsAsync(owner);
-
-            chargePeriodFactory
-                .Setup(f => f.CreateFromChargeOperationDto(It.IsAny<ChargeOperationDto>()))
-                .Returns(chargePeriod.Object);
-
-            var actual = await sut.CreateFromCommandAsync(chargeCommand);
+            var actual = sut.CreateFromChargeOperationDto(chargeOperationDto);
 
             actual.Should().NotContainNullsOrEmptyEnumerables();
         }

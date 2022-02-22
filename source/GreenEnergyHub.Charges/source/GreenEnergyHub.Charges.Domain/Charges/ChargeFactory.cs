@@ -15,7 +15,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
@@ -24,10 +23,14 @@ namespace GreenEnergyHub.Charges.Domain.Charges
     public class ChargeFactory : IChargeFactory
     {
         private readonly IMarketParticipantRepository _marketParticipantRepository;
+        private readonly IChargePeriodFactory _chargePeriodFactory;
 
-        public ChargeFactory(IMarketParticipantRepository marketParticipantRepository)
+        public ChargeFactory(
+            IMarketParticipantRepository marketParticipantRepository,
+            IChargePeriodFactory chargePeriodFactory)
         {
             _marketParticipantRepository = marketParticipantRepository;
+            _chargePeriodFactory = chargePeriodFactory;
         }
 
         public async Task<Charge> CreateFromCommandAsync(ChargeCommand command)
@@ -39,14 +42,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             if (owner == null)
                 throw new InvalidOperationException($"Market participant '{command.ChargeOperation.ChargeOwner}' does not exist.");
 
-            var period = new ChargePeriod(
-                Guid.NewGuid(),
-                command.ChargeOperation.ChargeName,
-                command.ChargeOperation.ChargeDescription,
-                command.ChargeOperation.VatClassification,
-                command.ChargeOperation.TransparentInvoicing,
-                command.ChargeOperation.StartDateTime,
-                command.ChargeOperation.EndDateTime.TimeOrEndDefault());
+            var period = _chargePeriodFactory.CreateFromChargeOperationDto(command.ChargeOperation);
 
             return new Charge(
                 Guid.NewGuid(),
