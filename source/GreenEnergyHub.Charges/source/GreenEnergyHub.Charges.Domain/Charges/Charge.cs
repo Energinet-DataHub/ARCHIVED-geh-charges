@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Charges
 {
@@ -82,5 +83,15 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         public IReadOnlyCollection<Point> Points => _points;
 
         public IReadOnlyCollection<ChargePeriod> Periods => _periods;
+
+        public void StopCharge(Instant endDate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdateCharge(ChargePeriod chargePeriod)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

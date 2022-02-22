@@ -13,15 +13,13 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
-using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
@@ -31,17 +29,20 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         private readonly IValidator<ChargeCommand> _validator;
         private readonly IChargeRepository _chargeRepository;
         private readonly IChargeFactory _chargeFactory;
+        private readonly IChargePeriodFactory _chargePeriodFactory;
 
         public ChargeCommandReceivedEventHandler(
             IChargeCommandReceiptService chargeCommandReceiptService,
             IValidator<ChargeCommand> validator,
             IChargeRepository chargeRepository,
-            IChargeFactory chargeFactory)
+            IChargeFactory chargeFactory,
+            IChargePeriodFactory chargePeriodFactory)
         {
             _chargeCommandReceiptService = chargeCommandReceiptService;
             _validator = validator;
             _chargeRepository = chargeRepository;
             _chargeFactory = chargeFactory;
+            _chargePeriodFactory = chargePeriodFactory;
         }
 
         public async Task HandleAsync(ChargeCommandReceivedEvent commandReceivedEvent)
@@ -67,80 +68,56 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 return;
             }
 
-            // get charges
-            var existingCharge = await GetChargeAsync(commandReceivedEvent.Command).ConfigureAwait(false);
+            // get existing charge
+            var charge = await GetChargeAsync(commandReceivedEvent.Command).ConfigureAwait(false);
 
             // is create, update or stop?
-            var operationType = GetOperationType(commandReceivedEvent.Command, existingCharge);
+            var operationType = GetOperationType(commandReceivedEvent.Command, charge);
 
-            // create flow
-            if (operationType == OperationType.Create)
+            switch (operationType)
             {
-                var charge = await _chargeFactory
-                    .CreateFromCommandAsync(commandReceivedEvent.Command)
-                    .ConfigureAwait(false);
-                await _chargeRepository.StoreChargeAsync(charge).ConfigureAwait(false);
-            }
-
-            // update flow
-            if (operationType == OperationType.Update)
-            {
-                if (existingCharge == null)
-                    throw new InvalidOperationException("Could not update charge period. Charge is null");
-
-                var newChargePeriod = new ChargePeriod(
-                    Guid.NewGuid(),
-                    commandReceivedEvent.Command.ChargeOperation.ChargeName,
-                    commandReceivedEvent.Command.ChargeOperation.ChargeDescription,
-                    commandReceivedEvent.Command.ChargeOperation.VatClassification,
-                    commandReceivedEvent.Command.ChargeOperation.TransparentInvoicing,
-                    commandReceivedEvent.Command.ChargeOperation.StartDateTime,
-                    commandReceivedEvent.Command.ChargeOperation.EndDateTime.TimeOrEndDefault());
-
-                var previousPeriods = existingCharge.Periods.Where(p =>
-                    p.EndDateTime <= newChargePeriod.StartDateTime);
-
-                var updatedChargePeriods = new List<ChargePeriod>();
-                updatedChargePeriods.AddRange(previousPeriods);
-
-                var overlappingPeriod = existingCharge.Periods.SingleOrDefault(p =>
-                    p.EndDateTime >= newChargePeriod.EndDateTime);
-
-                if (overlappingPeriod != null)
-                {
-                    var updatedOverlappingPeriod = new ChargePeriod(
-                        overlappingPeriod.Id,
-                        overlappingPeriod.Name,
-                        overlappingPeriod.Description,
-                        overlappingPeriod.VatClassification,
-                        overlappingPeriod.TransparentInvoicing,
-                        overlappingPeriod.StartDateTime,
-                        newChargePeriod.StartDateTime);
-                    updatedChargePeriods.Add(updatedOverlappingPeriod);
-                }
-
-                updatedChargePeriods.Add(newChargePeriod);
-
-                var updatedCharge = new Charge(
-                    existingCharge.Id,
-                    existingCharge.SenderProvidedChargeId,
-                    existingCharge.OwnerId,
-                    existingCharge.Type,
-                    existingCharge.Resolution,
-                    existingCharge.TaxIndicator,
-                    existingCharge.Points.ToList(),
-                    updatedChargePeriods);
-
-                await _chargeRepository.UpdateChargeAsync(updatedCharge).ConfigureAwait(false);
-            }
-
-            // stop flow
-            if (operationType == OperationType.Stop)
-            {
-                // new stop flow
+                case OperationType.Create:
+                    await HandleCreateEventAsync(commandReceivedEvent.Command).ConfigureAwait(false);
+                    break;
+                case OperationType.Update:
+                    if (charge == null)
+                        throw new InvalidOperationException("Could not update charge. Charge not found.");
+                    await HandleUpdateEventAsync(charge, commandReceivedEvent.Command).ConfigureAwait(false);
+                    break;
+                case OperationType.Stop:
+                    if (charge == null)
+                        throw new InvalidOperationException("Could not stop charge. Charge not found.");
+                    if (commandReceivedEvent.Command.ChargeOperation.EndDateTime == null)
+                        throw new InvalidOperationException("Could not stop charge. Invalid end date.");
+                    await StopChargeAsync(charge, commandReceivedEvent.Command.ChargeOperation.EndDateTime.Value)
+                        .ConfigureAwait(false);
+                    break;
+                default:
+                    throw new InvalidOperationException("Could not handle charge command.");
             }
 
             await _chargeCommandReceiptService.AcceptAsync(commandReceivedEvent.Command).ConfigureAwait(false);
+        }
+
+        private async Task HandleCreateEventAsync(ChargeCommand chargeCommand)
+        {
+            var charge = await _chargeFactory
+                .CreateFromCommandAsync(chargeCommand)
+                .ConfigureAwait(false);
+            await _chargeRepository.StoreChargeAsync(charge).ConfigureAwait(false);
+        }
+
+        private async Task HandleUpdateEventAsync(Charge charge, ChargeCommand chargeCommand)
+        {
+            var newChargePeriod = _chargePeriodFactory.CreateFromChargeOperationDto(chargeCommand.ChargeOperation);
+            charge.UpdateCharge(newChargePeriod);
+            await _chargeRepository.UpdateChargeAsync(charge).ConfigureAwait(false);
+        }
+
+        private async Task StopChargeAsync(Charge charge, Instant chargeOperationEndDateTime)
+        {
+            charge.StopCharge(chargeOperationEndDateTime);
+            await _chargeRepository.UpdateChargeAsync(charge).ConfigureAwait(false);
         }
 
         private static OperationType GetOperationType(ChargeCommand command, Charge? charge)

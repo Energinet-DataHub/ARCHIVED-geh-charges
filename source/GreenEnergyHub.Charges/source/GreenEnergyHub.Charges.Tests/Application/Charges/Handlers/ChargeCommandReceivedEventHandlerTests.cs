@@ -110,10 +110,12 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task HandleAsync_IfValidUpdateEvent_ExistingChargeUpdated(
+        public async Task HandleAsync_IfValidUpdateEvent_ChargeUpdated(
             [Frozen] Mock<IValidator<ChargeCommand>> validator,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<Charge> charge,
+            [Frozen] Mock<ChargePeriod> chargePeriod,
+            [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
             ChargeCommandReceivedEvent receivedEvent,
             ChargeCommandReceivedEventHandler sut)
         {
@@ -124,16 +126,56 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             chargeRepository
                 .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(charge.Object);
+            chargePeriodFactory
+                .Setup(r => r.CreateFromChargeOperationDto(It.IsAny<ChargeOperationDto>()))
+                .Returns(chargePeriod.Object);
 
-            var updated = false;
+            var chargeUpdated = false;
             chargeRepository.Setup(r => r.UpdateChargeAsync(It.IsAny<Charge>()))
-                .Callback<Charge>(_ => updated = true);
+                .Callback<Charge>(_ => chargeUpdated = true);
+            var chargePeriodUpdated = false;
 
             // Act
             await sut.HandleAsync(receivedEvent);
 
             // Assert
-            Assert.True(updated);
+            Assert.True(chargeUpdated);
+            Assert.True(chargePeriodUpdated);
+            charge.Verify(c => c.UpdateCharge(It.IsAny<ChargePeriod>()));
+        }
+
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task HandleAsync_IfValidStopEvent_ChargeStopped(
+            [Frozen] Mock<IValidator<ChargeCommand>> validator,
+            [Frozen] Mock<IChargeRepository> chargeRepository,
+            [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
+            [Frozen] Mock<Charge> charge,
+            [Frozen] Mock<ChargePeriod> chargePeriod,
+            ChargeCommandReceivedEvent receivedEvent,
+            ChargeCommandReceivedEventHandler sut)
+        {
+            // Arrange
+            var validationResult = ValidationResult.CreateSuccess();
+            SetupValidator(validator, validationResult);
+
+            chargeRepository
+                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
+                .ReturnsAsync(charge.Object);
+            chargePeriodFactory
+                .Setup(r => r.CreateFromChargeOperationDto(It.IsAny<ChargeOperationDto>()))
+                .Returns(chargePeriod.Object);
+
+            var chargeUpdated = false;
+            chargeRepository.Setup(r => r.UpdateChargeAsync(It.IsAny<Charge>()))
+                .Callback<Charge>(_ => chargeUpdated = true);
+
+            // Act
+            await sut.HandleAsync(receivedEvent);
+
+            // Assert
+            Assert.True(chargeUpdated);
+            charge.Verify(c => c.StopCharge(It.IsAny<Instant>()));
         }
 
         private static ValidationResult GetFailedValidationResult()
