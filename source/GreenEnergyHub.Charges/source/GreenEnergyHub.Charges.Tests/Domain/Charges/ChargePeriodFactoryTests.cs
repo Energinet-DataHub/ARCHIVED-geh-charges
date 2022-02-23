@@ -14,34 +14,26 @@
 
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.TestHelpers;
+using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules
+namespace GreenEnergyHub.Charges.Tests.Domain.Charges
 {
     [UnitTest]
-    public class ChargeUpdateNotYetSupportedRuleTests
+    public class ChargePeriodFactoryTests
     {
-        [Fact]
-        public void IsValid_WhenChargeIsNull_IsTrue()
-        {
-            var sut = new ChargeUpdateNotYetSupportedRule(null);
-            sut.IsValid.Should().BeTrue();
-        }
-
         [Theory]
         [InlineAutoDomainData]
-        public void IsValid_WhenChargeIsNotNull_IsFalse(Charge charge)
+        public void CreateFromChargeOperationDto_ChargePeriod_HasNoNullsOrEmptyCollections(
+            ChargeOperationDto chargeOperationDto,
+            ChargePeriodFactory sut)
         {
-            var sut = CreateInvalidRule(charge);
-            sut.IsValid.Should().BeFalse();
-        }
+            var actual = sut.CreateFromChargeOperationDto(chargeOperationDto);
 
-        private static ChargeUpdateNotYetSupportedRule CreateInvalidRule(Charge charge)
-        {
-            return new ChargeUpdateNotYetSupportedRule(charge);
+            actual.Should().NotContainNullsOrEmptyEnumerables();
         }
     }
 }

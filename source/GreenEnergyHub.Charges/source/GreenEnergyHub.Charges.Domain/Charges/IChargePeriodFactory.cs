@@ -12,16 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
+namespace GreenEnergyHub.Charges.Domain.Charges
 {
-    public interface IValidator<TCommand>
-        where TCommand : CommandBase
+    public interface IChargePeriodFactory
     {
-        ValidationResult InputValidate(TCommand command);
-
-        Task<ValidationResult> BusinessValidateAsync(TCommand command);
+        ChargePeriod CreateFromChargeOperationDto(ChargeOperationDto chargeOperationDto);
     }
 }
