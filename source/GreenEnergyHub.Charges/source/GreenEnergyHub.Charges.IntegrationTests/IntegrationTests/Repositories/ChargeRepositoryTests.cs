@@ -77,6 +77,49 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         }
 
         [Fact]
+        public async Task GetChargeAsync_WhenChargeIsUpdated_ThenUpdatedChargeIsPersisted()
+        {
+            // Arrange
+            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
+            await SeedDatabaseAsync(chargesDatabaseWriteContext);
+            var charge = GetValidCharge();
+
+            chargesDatabaseWriteContext.Charges.Add(charge);
+            await chargesDatabaseWriteContext.SaveChangesAsync();
+
+            var firstPeriod = charge.Periods.First();
+
+            charge.UpdateCharge(new ChargePeriod(
+                Guid.NewGuid(),
+                "new period name",
+                "new period description",
+                firstPeriod.VatClassification,
+                firstPeriod.TransparentInvoicing,
+                firstPeriod.StartDateTime.Plus(Duration.FromDays(2)),
+                firstPeriod.EndDateTime));
+
+            var sut = new ChargeRepository(chargesDatabaseWriteContext);
+
+            // Act
+            await sut.UpdateChargeAsync(charge);
+
+            // Assert
+            await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
+
+            var actual = await chargesDatabaseReadContext.Charges
+                .SingleOrDefaultAsync(x =>
+                    x.Id == charge.Id &&
+                    x.SenderProvidedChargeId == charge.SenderProvidedChargeId &&
+                    x.OwnerId == charge.OwnerId &&
+                    x.Type == charge.Type);
+
+            actual.Should().BeEquivalentTo(charge);
+            actual.Points.Should().NotBeNullOrEmpty();
+            actual.Periods.Should().NotBeNullOrEmpty();
+            actual.Periods.Count.Should().Be(2);
+        }
+
+        [Fact]
         public async Task CheckIfChargeExistsAsync_WhenChargeIsCreated_ThenChargeExists()
         {
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
@@ -192,7 +235,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                         "description",
                         VatClassification.Unknown,
                         true,
-                        SystemClock.Instance.GetCurrentInstant(),
+                        Instant.FromDateTimeUtc(DateTime.Now.Date.ToUniversalTime()),
                         InstantHelper.GetEndDefault()),
                 });
 
