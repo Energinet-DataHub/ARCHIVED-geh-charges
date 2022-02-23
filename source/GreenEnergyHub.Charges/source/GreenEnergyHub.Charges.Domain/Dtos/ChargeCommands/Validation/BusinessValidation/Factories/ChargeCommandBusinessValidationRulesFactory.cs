@@ -88,7 +88,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
                     _zonedDateTimeService,
                     _clock),
                 new CommandSenderMustBeAnExistingMarketParticipantRule(sender),
-                new ChargeUpdateNotYetSupportedRule(charge),
             };
 
             return rules;
