@@ -14,42 +14,32 @@
 
 using System;
 using System.Collections.Generic;
-using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Charges
 {
     public class Charge
     {
         private readonly List<Point> _points;
+        private readonly List<ChargePeriod> _periods;
 
         public Charge(
             Guid id,
             string senderProvidedChargeId,
-            string name,
-            string description,
             Guid ownerId,
-            Instant startDateTime,
-            Instant endDateTime,
             ChargeType type,
-            VatClassification vatClassification,
             Resolution resolution,
-            bool transparentInvoicing,
             bool taxIndicator,
-            List<Point> points)
+            List<Point> points,
+            List<ChargePeriod> periods)
         {
             Id = id;
             SenderProvidedChargeId = senderProvidedChargeId;
-            Name = name;
-            Description = description;
             OwnerId = ownerId;
-            StartDateTime = startDateTime;
-            EndDateTime = endDateTime;
             Type = type;
-            VatClassification = vatClassification;
             Resolution = resolution;
-            TransparentInvoicing = transparentInvoicing;
-            TaxIndicator = taxIndicator;
             _points = points;
+            _periods = periods;
+            TaxIndicator = taxIndicator;
         }
 
         /// <summary>
@@ -59,9 +49,8 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         private Charge()
         {
             SenderProvidedChargeId = null!;
-            Name = null!;
-            Description = null!;
             _points = new List<Point>();
+            _periods = new List<ChargePeriod>();
         }
 
         /// <summary>
@@ -78,43 +67,20 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         public ChargeType Type { get; }
 
         /// <summary>
-        /// The charge name
-        /// </summary>
-        public string Name { get; }
-
-        public string Description { get; }
-
-        /// <summary>
-        /// Valid from, of a charge price list. Also known as Effective Date.
-        /// </summary>
-        public Instant StartDateTime { get; }
-
-        /// <summary>
-        /// Valid to, of a charge price list.
-        /// </summary>
-        public Instant EndDateTime { get; }
-
-        public VatClassification VatClassification { get; }
-
-        /// <summary>
-        /// In Denmark the Energy Supplier invoices the customer, including the charges from the Grid Access Provider and the System Operator.
-        /// This boolean can be use to indicate that a charge must be visible on the invoice sent to the customer.
-        /// </summary>
-        public bool TransparentInvoicing { get; }
-
-        /// <summary>
-        /// Indicates whether the Charge is tax or not.
-        /// </summary>
-        // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Local - private setter used in unit test
-        public bool TaxIndicator { get; private set; }
-
-        /// <summary>
         ///  Aggregate ID reference to the owning market participant.
         /// </summary>
         public Guid OwnerId { get; }
 
         public Resolution Resolution { get; }
 
+        /// <summary>
+        /// Indicates whether the Charge is tax or not.
+        /// </summary>
+        // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Local - private setter used in unit test
+        public bool TaxIndicator { get; private set;  }
+
         public IReadOnlyCollection<Point> Points => _points;
+
+        public IReadOnlyCollection<ChargePeriod> Periods => _periods;
     }
 }

@@ -36,11 +36,17 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             TestMarketParticipant owner,
             ChargeCommand chargeCommand,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
+            [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
+            Mock<ChargePeriod> chargePeriod,
             ChargeFactory sut)
         {
             marketParticipantRepository
                 .Setup(repo => repo.GetOrNullAsync(chargeCommand.ChargeOperation.ChargeOwner))
                 .ReturnsAsync(owner);
+
+            chargePeriodFactory
+                .Setup(f => f.CreateFromChargeOperationDto(It.IsAny<ChargeOperationDto>()))
+                .Returns(chargePeriod.Object);
 
             var actual = await sut.CreateFromCommandAsync(chargeCommand);
 

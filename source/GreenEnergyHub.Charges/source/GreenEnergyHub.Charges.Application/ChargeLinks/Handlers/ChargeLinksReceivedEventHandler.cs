@@ -42,11 +42,21 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 
         public async Task HandleAsync(ChargeLinksReceivedEvent chargeLinksReceivedEvent)
         {
-            var validationResult = await _validator.ValidateAsync(chargeLinksReceivedEvent.ChargeLinksCommand).ConfigureAwait(false);
-            if (validationResult.IsFailed)
+            var inputValidationResult = _validator.InputValidate(chargeLinksReceivedEvent.ChargeLinksCommand);
+            if (inputValidationResult.IsFailed)
             {
                 await _chargeLinksReceiptService
-                    .RejectAsync(chargeLinksReceivedEvent.ChargeLinksCommand, validationResult)
+                    .RejectAsync(chargeLinksReceivedEvent.ChargeLinksCommand, inputValidationResult)
+                    .ConfigureAwait(false);
+                return;
+            }
+
+            var businessValidationResult = await _validator
+                .BusinessValidateAsync(chargeLinksReceivedEvent.ChargeLinksCommand).ConfigureAwait(false);
+            if (businessValidationResult.IsFailed)
+            {
+                await _chargeLinksReceiptService
+                    .RejectAsync(chargeLinksReceivedEvent.ChargeLinksCommand, businessValidationResult)
                     .ConfigureAwait(false);
                 return;
             }

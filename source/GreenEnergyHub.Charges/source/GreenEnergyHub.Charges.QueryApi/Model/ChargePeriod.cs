@@ -20,23 +20,32 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GreenEnergyHub.Charges.QueryApi.Model
 {
-    [Table("ChargePoint", Schema = "Charges")]
-    public partial class ChargePoint
+    [Table("ChargePeriod", Schema = "Charges")]
+    public partial class ChargePeriod
     {
         [Key]
         public Guid Id { get; set; }
 
         public Guid ChargeId { get; set; }
 
-        public DateTime Time { get; set; }
+        public bool TransparentInvoicing { get; set; }
 
-        [Column(TypeName = "decimal(14, 6)")]
-        public decimal Price { get; set; }
+        [Required]
+        [StringLength(2048)]
+        public string Description { get; set; }
 
-        public int Position { get; set; }
+        [Required]
+        [StringLength(132)]
+        public string Name { get; set; }
+
+        public int VatClassification { get; set; }
+
+        public DateTime StartDateTime { get; set; }
+
+        public DateTime EndDateTime { get; set; }
 
         [ForeignKey(nameof(ChargeId))]
-        [InverseProperty("ChargePoints")]
+        [InverseProperty("ChargePeriods")]
         public virtual Charge Charge { get; set; }
     }
 }
