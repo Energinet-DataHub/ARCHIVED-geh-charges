@@ -15,6 +15,7 @@
 using System;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.TestCore;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Tests.Builders.Command
@@ -25,7 +26,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         private const bool TransparentInvoicing = false;
         private string _name = "name";
         private Instant _startDateTime = Instant.MinValue;
-        private Instant _endDateTime = InstantExtensions.GetEndDefault();
+        private Instant _endDateTime = InstantHelper.GetEndDefault();
 
         public ChargePeriodBuilder WithName(string name)
         {

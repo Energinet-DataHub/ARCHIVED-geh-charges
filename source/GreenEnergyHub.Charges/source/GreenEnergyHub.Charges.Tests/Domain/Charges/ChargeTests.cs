@@ -12,10 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using FluentAssertions;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
@@ -29,7 +28,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
     public class ChargeTests
     {
         [Fact]
-        public void UpdateCharge_WhenOverlappingPeriodExist_OverlappingEndDateIsSetAndNewPeriodInserted()
+
+        // public void UpdateCharge_WhenOverlappingPeriodExist_OverlappingEndDateIsSetAndNewPeriodInserted() - is new test method name better?
+        public void UpdateCharge_WhenNewPeriodStartsInsideExistingPeriod_ExistingPeriodGetsNewEndDateAndNewPeriodIsInserted()
         {
             // Arrange
             var newPeriodStartDate = Instant.FromUtc(2021, 8, 8, 22, 0, 0);
@@ -47,11 +48,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
 
             // Assert
             var newTimeline = sut.Periods.OrderBy(p => p.StartDateTime).ToList();
-            Assert.True(newTimeline.Count == 2);
-            Assert.Equal("periodOne", newTimeline[0].Name);
-            Assert.Equal(newPeriodStartDate, newTimeline[0].EndDateTime);
-            Assert.Equal("newPeriod", newTimeline[1].Name);
-            Assert.Equal(newPeriodEndDate, newTimeline[1].EndDateTime);
+            newTimeline.Count.Should().Be(2);
+            newTimeline[0].Name.Should().Be("periodOne");
+            newTimeline[0].EndDateTime.Should().Be(newPeriodStartDate);
+            newTimeline[1].Name.Should().Be("newPeriod");
+            newTimeline[1].EndDateTime.Should().Be(newPeriodEndDate);
         }
 
         // [Fact]
@@ -61,7 +62,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
         //     // Act
         //     // Assert
         // }
-        private List<ChargePeriod> CreatePeriods()
+        private static List<ChargePeriod> CreatePeriods()
         {
             return new List<ChargePeriod>
             {
