@@ -18,7 +18,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
     {
         StartDateValidation = 1, // VR209-1 / E17
 
-        //ChangingTariffVatValueNotAllowed = 2, // VR630 / D14 // REMOVED
+        // ChangingTariffVatValueNotAllowed = 2, // VR630 / D14 // REMOVED
         ChangingTariffTaxValueNotAllowed = 3, // VR903 / D14
         SenderIsMandatoryTypeValidation = 5, // VR150 / D02
         RecipientIsMandatoryTypeValidation = 6, // VR153 / D02
