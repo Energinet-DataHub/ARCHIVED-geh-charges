@@ -19,7 +19,7 @@ using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.Tests.Builders
+namespace GreenEnergyHub.Charges.Tests.Builders.MessageHub
 {
     public class AvailableChargeDataBuilder
     {
