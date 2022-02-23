@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.TestCore;
 using NodaTime;
