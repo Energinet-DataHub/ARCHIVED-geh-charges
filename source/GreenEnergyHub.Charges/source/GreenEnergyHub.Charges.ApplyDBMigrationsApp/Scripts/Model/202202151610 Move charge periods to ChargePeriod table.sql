@@ -38,7 +38,7 @@ DROP TABLE IF EXISTS Charges.ChargePeriod
 GO
 
 CREATE TABLE [Charges].[ChargePeriod](
-    [Id] [uniqueidentifier] NOT NULL DEFAULT NEWID(),
+    [Id] [uniqueidentifier] NOT NULL,
     [ChargeId] [uniqueidentifier] NOT NULL,
     [TransparentInvoicing] [bit] NOT NULL,
     [Description] [nvarchar](2048) NOT NULL,
@@ -66,14 +66,17 @@ ALTER TABLE [Charges].[ChargePeriod]  WITH CHECK ADD  CONSTRAINT [FK_ChargePerio
 ------------------------------------------------------------------------------------------------------------------------
 
 INSERT INTO [Charges].[ChargePeriod](
+    [Id],
     [ChargeId],
     [TransparentInvoicing],
     [Description],
     [Name],
     [VatClassification],
     [StartDateTime],
-[EndDateTime])
-SELECT [Id],
+    [EndDateTime])
+SELECT 
+    NEWID(),
+    [Id],
     [TransparentInvoicing],
     [Description],
     [Name],
