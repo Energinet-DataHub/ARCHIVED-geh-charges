@@ -133,15 +133,12 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             var chargeUpdated = false;
             chargeRepository.Setup(r => r.UpdateChargeAsync(It.IsAny<Charge>()))
                 .Callback<Charge>(_ => chargeUpdated = true);
-            var chargePeriodUpdated = false;
 
             // Act
             await sut.HandleAsync(receivedEvent);
 
             // Assert
             Assert.True(chargeUpdated);
-            Assert.True(chargePeriodUpdated);
-            charge.Verify(c => c.UpdateCharge(It.IsAny<ChargePeriod>()));
         }
 
         [Theory]
@@ -175,7 +172,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 
             // Assert
             Assert.True(chargeUpdated);
-            charge.Verify(c => c.StopCharge(It.IsAny<Instant>()));
         }
 
         private static ValidationResult GetFailedValidationResult()
