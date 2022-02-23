@@ -50,13 +50,11 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
         {
             if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
 
-            var configuration = await _rulesConfigurationRepository.GetConfigurationAsync().ConfigureAwait(false);
-
             var senderId = chargeCommand.Document.Sender.Id;
             var sender = await _marketParticipantRepository.GetOrNullAsync(senderId).ConfigureAwait(false);
+            var configuration = await _rulesConfigurationRepository.GetConfigurationAsync().ConfigureAwait(false);
 
             var charge = await GetChargeOrNullAsync(chargeCommand).ConfigureAwait(false);
-
             var rules = GetMandatoryRules(chargeCommand, charge, configuration, sender);
 
             if (charge == null)
@@ -73,7 +71,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
             ChargeCommand command,
             Charge charge)
         {
-            rules.Add(new ChangingTariffVatValueNotAllowedRule(command, charge));
             rules.Add(new ChangingTariffTaxValueNotAllowedRule(command, charge));
         }
 
@@ -99,15 +96,12 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
 
         private Task<Charge?> GetChargeOrNullAsync(ChargeCommand command)
         {
-            var chargeId = command.ChargeOperation.ChargeId;
-            var chargeOperationChargeOwner = command.ChargeOperation.ChargeOwner;
-            var chargeType = command.ChargeOperation.Type;
+            var chargeIdentifier = new ChargeIdentifier(
+                command.ChargeOperation.ChargeId,
+                command.ChargeOperation.ChargeOwner,
+                command.ChargeOperation.Type);
 
-            return _chargeRepository
-                .GetOrNullAsync(new ChargeIdentifier(
-                    chargeId,
-                    chargeOperationChargeOwner,
-                    chargeType));
+            return _chargeRepository.GetOrNullAsync(chargeIdentifier);
         }
     }
 }

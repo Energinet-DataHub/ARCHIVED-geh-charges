@@ -13,8 +13,8 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
@@ -23,10 +23,14 @@ namespace GreenEnergyHub.Charges.Domain.Charges
     public class ChargeFactory : IChargeFactory
     {
         private readonly IMarketParticipantRepository _marketParticipantRepository;
+        private readonly IChargePeriodFactory _chargePeriodFactory;
 
-        public ChargeFactory(IMarketParticipantRepository marketParticipantRepository)
+        public ChargeFactory(
+            IMarketParticipantRepository marketParticipantRepository,
+            IChargePeriodFactory chargePeriodFactory)
         {
             _marketParticipantRepository = marketParticipantRepository;
+            _chargePeriodFactory = chargePeriodFactory;
         }
 
         public async Task<Charge> CreateFromCommandAsync(ChargeCommand command)
@@ -38,20 +42,17 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             if (owner == null)
                 throw new InvalidOperationException($"Market participant '{command.ChargeOperation.ChargeOwner}' does not exist.");
 
+            var period = _chargePeriodFactory.CreateFromChargeOperationDto(command.ChargeOperation);
+
             return new Charge(
                 Guid.NewGuid(),
                 command.ChargeOperation.ChargeId,
-                command.ChargeOperation.ChargeName,
-                command.ChargeOperation.ChargeDescription,
                 owner.Id,
-                command.ChargeOperation.StartDateTime,
-                command.ChargeOperation.EndDateTime.TimeOrEndDefault(),
                 command.ChargeOperation.Type,
-                command.ChargeOperation.VatClassification,
                 command.ChargeOperation.Resolution,
-                command.ChargeOperation.TransparentInvoicing,
                 command.ChargeOperation.TaxIndicator,
-                command.ChargeOperation.Points);
+                command.ChargeOperation.Points,
+                new List<ChargePeriod> { period });
         }
     }
 }

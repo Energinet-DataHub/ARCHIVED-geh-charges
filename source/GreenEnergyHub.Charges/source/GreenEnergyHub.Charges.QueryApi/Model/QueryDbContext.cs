@@ -12,9 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 
 #nullable disable
 
@@ -34,6 +32,8 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
         public virtual DbSet<Charge> Charges { get; set; }
 
         public virtual DbSet<ChargeLink> ChargeLinks { get; set; }
+
+        public virtual DbSet<ChargePeriod> ChargePeriods { get; set; }
 
         public virtual DbSet<ChargePoint> ChargePoints { get; set; }
 
@@ -83,6 +83,20 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
                     .HasForeignKey(d => d.MeteringPointId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ChargeLink_MeteringPoint");
+            });
+
+            modelBuilder.Entity<ChargePeriod>(entity =>
+            {
+                entity.HasKey(e => e.Id)
+                    .IsClustered(false);
+
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
+                entity.HasOne(d => d.Charge)
+                    .WithMany(p => p.ChargePeriods)
+                    .HasForeignKey(d => d.ChargeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ChargePeriod_Charge");
             });
 
             modelBuilder.Entity<ChargePoint>(entity =>
