@@ -59,8 +59,8 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 .BusinessValidateAsync(commandReceivedEvent.Command).ConfigureAwait(false);
             if (businessValidationResult.IsFailed)
             {
-                await _chargeCommandReceiptService.RejectAsync(
-                    commandReceivedEvent.Command, businessValidationResult).ConfigureAwait(false);
+                await _chargeCommandReceiptService
+                    .RejectAsync(commandReceivedEvent.Command, businessValidationResult).ConfigureAwait(false);
                 return;
             }
 
