@@ -28,7 +28,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
     public class ChargeTests
     {
         [Fact]
-        public void UpdateCharge_WhenOverlappingPeriodExist_OverlappingEndDateIsSetAndNewPeriodInserted()
+
+        // public void UpdateCharge_WhenOverlappingPeriodExist_OverlappingEndDateIsSetAndNewPeriodInserted() - is new test method name better?
+        public void UpdateCharge_WhenNewPeriodStartsInsideExistingPeriod_ExistingPeriodGetsNewEndDateAndNewPeriodIsInserted()
         {
             // Arrange
             var newPeriodStartDate = Instant.FromUtc(2021, 8, 8, 22, 0, 0);

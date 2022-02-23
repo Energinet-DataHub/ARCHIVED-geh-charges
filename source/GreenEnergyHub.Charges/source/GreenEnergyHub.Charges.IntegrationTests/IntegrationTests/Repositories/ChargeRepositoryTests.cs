@@ -22,6 +22,7 @@ using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
+using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
@@ -192,7 +193,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                         VatClassification.Unknown,
                         true,
                         SystemClock.Instance.GetCurrentInstant(),
-                        Instant.FromUtc(9999, 12, 31, 23, 59, 59)),
+                        InstantHelper.GetEndDefault()),
                 });
 
             return charge;
