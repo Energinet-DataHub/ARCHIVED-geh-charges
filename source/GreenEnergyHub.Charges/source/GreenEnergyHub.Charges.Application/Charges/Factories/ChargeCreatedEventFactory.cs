@@ -38,9 +38,8 @@ namespace GreenEnergyHub.Charges.Application.Charges.Factories
                 _currencyConfigurationIso4217.Currency,
                 chargeCommandAcceptedEvent.Command.ChargeOperation.Resolution,
                 chargeCommandAcceptedEvent.Command.ChargeOperation.TaxIndicator,
-                new Period(
-                    chargeCommandAcceptedEvent.Command.ChargeOperation.StartDateTime,
-                    chargeCommandAcceptedEvent.Command.ChargeOperation.EndDateTime.GetValueOrDefault()));
+                chargeCommandAcceptedEvent.Command.ChargeOperation.StartDateTime,
+                chargeCommandAcceptedEvent.Command.ChargeOperation.EndDateTime.GetValueOrDefault());
         }
     }
 }

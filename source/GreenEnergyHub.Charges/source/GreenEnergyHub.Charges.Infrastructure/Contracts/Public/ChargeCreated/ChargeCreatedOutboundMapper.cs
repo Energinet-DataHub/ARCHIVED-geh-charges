@@ -18,7 +18,6 @@ using Google.Protobuf;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Core.Enumeration;
-using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeCreated;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Contracts.Public.ChargeCreated
 {
@@ -34,11 +33,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Contracts.Public.ChargeCreated
                 Currency = chargeCreatedEvent.Currency,
                 Resolution = chargeCreatedEvent.Resolution.Cast<Infrastructure.Integration.ChargeCreated.ChargeCreated.Types.Resolution>(),
                 TaxIndicator = chargeCreatedEvent.TaxIndicator,
-                ChargePeriod = new ChargePeriod
-                {
-                    StartDateTime = chargeCreatedEvent.ChargePeriod.StartDateTime.ToTimestamp(),
-                    EndDateTime = chargeCreatedEvent.ChargePeriod.EndDateTime.ToTimestamp(),
-                },
+                StartDateTime = chargeCreatedEvent.StartDateTime.ToTimestamp(),
+                EndDateTime = chargeCreatedEvent.EndDateTime.ToTimestamp(),
             };
         }
     }
