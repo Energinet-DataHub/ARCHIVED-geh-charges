@@ -30,51 +30,49 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Validation
     {
         [Theory]
         [InlineAutoDomainData]
-        public async Task ValidateAsync_WhenInputValidationFails_ReturnsInvalid(
+        public void ValidateAsync_WhenInputValidationFails_ReturnsInvalid(
             [Frozen] Mock<IInputValidator<ChargeCommand>> inputValidator,
             Validator<ChargeCommand> sut,
             ChargeCommand anyCommand)
         {
             ConfigureValidatorToReturnInvalidResult(inputValidator, anyCommand);
-            var actual = await sut.ValidateAsync(anyCommand).ConfigureAwait(false);
+            var actual = sut.InputValidate(anyCommand);
             Assert.True(actual.IsFailed);
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public async Task ValidateAsync_WhenInputValidationSucceedsAndBusinessValidationFails_ReturnsInvalid(
-            [Frozen] Mock<IInputValidator<ChargeCommand>> inputValidator,
+        public async Task ValidateAsync_WhenBusinessValidationFails_ReturnsInvalid(
             [Frozen] Mock<IBusinessValidator<ChargeCommand>> businessValidator,
             Validator<ChargeCommand> sut,
             ChargeCommand anyCommand)
         {
-            // Arrange
-            ConfigureValidatorToReturnValidResult(inputValidator, anyCommand);
             ConfigureValidatorToReturnInvalidResult(businessValidator, anyCommand);
-
-            // Act
-            var actual = await sut.ValidateAsync(anyCommand).ConfigureAwait(false);
-
-            // Assert
+            var actual = await sut.BusinessValidateAsync(anyCommand).ConfigureAwait(false);
             Assert.True(actual.IsFailed);
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public async Task ValidateAsync_WhenInputValidationSucceedsAndBusinessValidationSucceeds_ReturnsValid(
+        public void ValidateAsync_WhenInputValidationSucceeds_ReturnsValid(
             [Frozen] Mock<IInputValidator<ChargeCommand>> inputValidator,
+            Validator<ChargeCommand> sut,
+            ChargeCommand anyCommand)
+        {
+            ConfigureValidatorToReturnValidResult(inputValidator, anyCommand);
+            var actual = sut.InputValidate(anyCommand);
+            Assert.False(actual.IsFailed);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task ValidateAsync_WhenBusinessValidationSucceeds_ReturnsValid(
             [Frozen] Mock<IBusinessValidator<ChargeCommand>> businessValidator,
             Validator<ChargeCommand> sut,
             ChargeCommand anyCommand)
         {
-            // Arrange
-            ConfigureValidatorToReturnValidResult(inputValidator, anyCommand);
             ConfigureValidatorToReturnValidResult(businessValidator, anyCommand);
-
-            // Act
-            var actual = await sut.ValidateAsync(anyCommand).ConfigureAwait(false);
-
-            // Assert
+            var actual = await sut.BusinessValidateAsync(anyCommand).ConfigureAwait(false);
             Assert.False(actual.IsFailed);
         }
 

@@ -29,10 +29,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         public const string StartDateValidationErrorText =
             "Effective date {{ChargeStartDateTime}} incorrect: The information is not received within the correct time period (either too soon or too late)";
 
-        [ErrorMessageFor(ValidationRuleIdentifier.ChangingTariffVatValueNotAllowed)]
-        public const string ChangingTariffVatValueNotAllowedErrorText =
-            "VAT class {{ChargeVatClass}} not allowed: charge {{DocumentSenderProvidedChargeId}} cannot be updated with another entitlement for VAT";
-
         [ErrorMessageFor(ValidationRuleIdentifier.ChangingTariffTaxValueNotAllowed)]
         public const string ChangingTariffTaxValueNotAllowedErrorText =
             "It is not allowed to change the tax indicator to {{ChargeTaxIndicator}} for charge {{DocumentSenderProvidedChargeId}}";
