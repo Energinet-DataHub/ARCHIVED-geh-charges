@@ -23,7 +23,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
     // ChargeEvent integrity is null checked by ChargeCommandNullChecker
 
     /// <summary>
-    /// The ChargeEvent class contains the intend of the charge command, e.g. it's an update of a charge plus an ID provided by the sender.
+    /// The ChargeOperationDto class contains the intend of the charge command, e.g. updating an existing charge.
     /// </summary>
     public class ChargeOperationDto
     {
@@ -59,7 +59,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
         }
 
         /// <summary>
-        /// Contains a unique ID for the specific Charge Event, provided by the sender.
+        /// Contains a unique ID for the specific Charge Operation, provided by the sender.
         /// </summary>
         public string Id { get; }
 
