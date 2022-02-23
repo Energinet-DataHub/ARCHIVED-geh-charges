@@ -14,9 +14,11 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using NodaTime;
 using Xunit;
@@ -27,6 +29,43 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
     [UnitTest]
     public class ChargeTests
     {
+        private readonly ChargePeriodBuilder _chargePeriodBuilder;
+
+        public ChargeTests()
+        {
+            _chargePeriodBuilder = new ChargePeriodBuilder();
+        }
+
+        [Fact]
+        public void UpdateCharge_NewPeriodInsideSingleExistingPeriod_SetsNewEndDateForExistingPeriodAndInsertsNewPeriod() // Update scenario 1
+        {
+            // Arrange
+            var existingPeriod = _chargePeriodBuilder
+                .WithName("ExistingPeriod")
+                .WithStartDateTime(InstantHelper.GetTodayAtMidnightUtc())
+                .Build();
+
+            var sut = new ChargeBuilder().WithPeriods(new List<ChargePeriod> { existingPeriod }).Build();
+
+            var newPeriod = _chargePeriodBuilder
+                .WithName("NewPeriod")
+                .WithStartDateTime(InstantHelper.GetTomorrowAtMidnightUtc())
+                .Build();
+
+            // Act
+            sut.UpdateCharge(newPeriod);
+
+            // Assert
+            var actualTimeline = sut.Periods.OrderBy(p => p.StartDateTime).ToList();
+            actualTimeline.Count.Should().Be(2);
+            actualTimeline[0].Name.Should().Be("ExistingPeriod");
+            actualTimeline[0].StartDateTime.Should().Be(InstantHelper.GetTodayAtMidnightUtc());
+            actualTimeline[0].EndDateTime.Should().Be(InstantHelper.GetTomorrowAtMidnightUtc());
+            actualTimeline[1].Name.Should().Be("NewPeriod");
+            actualTimeline[1].StartDateTime.Should().Be(InstantHelper.GetTomorrowAtMidnightUtc());
+            actualTimeline[1].EndDateTime.Should().Be(InstantHelper.GetEndDefault());
+        }
+
         [Fact]
 
         // public void UpdateCharge_WhenOverlappingPeriodExist_OverlappingEndDateIsSetAndNewPeriodInserted() - is new test method name better?
@@ -35,7 +74,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             // Arrange
             var newPeriodStartDate = Instant.FromUtc(2021, 8, 8, 22, 0, 0);
             var newPeriodEndDate = InstantExtensions.GetEndDefault();
-            var newPeriod = new ChargePeriodBuilder()
+            var newPeriod = _chargePeriodBuilder
                 .WithName("newPeriod")
                 .WithStartDateTime(newPeriodStartDate)
                 .WithEndDateTime(newPeriodEndDate)
@@ -55,13 +94,6 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             newTimeline[1].EndDateTime.Should().Be(newPeriodEndDate);
         }
 
-        // [Fact]
-        // public Task UpdateCharge_WhenNoOverlappingPeriodExist_NewPeriodInserted()
-        // {
-        //     // Arrange
-        //     // Act
-        //     // Assert
-        // }
         private static List<ChargePeriod> CreatePeriods()
         {
             return new List<ChargePeriod>
