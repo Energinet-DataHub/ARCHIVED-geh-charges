@@ -18,6 +18,7 @@ using GreenEnergyHub.Charges.Infrastructure.MarketParticipantRegistry.MarketPart
 using GreenEnergyHub.Charges.Infrastructure.MarketParticipantRegistry.Persistence.Actors;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders;
+using GreenEnergyHub.Charges.Tests.Builders.Command;
 using Xunit;
 
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.MarketParticipantRegistry
