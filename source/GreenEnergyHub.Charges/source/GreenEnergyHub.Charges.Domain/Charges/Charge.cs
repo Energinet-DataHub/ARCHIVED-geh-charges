@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Charges
@@ -21,7 +22,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
     public class Charge
     {
         private readonly List<Point> _points;
-        private readonly List<ChargePeriod> _periods;
+        private readonly List<Period> _periods;
 
         public Charge(
             Guid id,
@@ -31,7 +32,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             Resolution resolution,
             bool taxIndicator,
             List<Point> points,
-            List<ChargePeriod> periods)
+            List<Period> periods)
         {
             Id = id;
             SenderProvidedChargeId = senderProvidedChargeId;
@@ -51,7 +52,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         {
             SenderProvidedChargeId = null!;
             _points = new List<Point>();
-            _periods = new List<ChargePeriod>();
+            _periods = new List<Period>();
         }
 
         /// <summary>
@@ -82,16 +83,32 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 
         public IReadOnlyCollection<Point> Points => _points;
 
-        public IReadOnlyCollection<ChargePeriod> Periods => _periods;
+        public IReadOnlyCollection<Period> Periods => _periods;
 
         public void StopCharge(Instant endDate)
         {
             throw new NotImplementedException();
         }
 
-        public void UpdateCharge(ChargePeriod chargePeriod)
+        public void UpdateCharge(Period newPeriod)
         {
-            throw new NotImplementedException();
+            if (newPeriod == null) throw new ArgumentNullException(nameof(newPeriod));
+
+            // Remove all periods after update. If later periods are to be
+            // preserved, the market actor must re-submit later update
+            _periods.RemoveAll(p => p.StartDateTime >= newPeriod.StartDateTime);
+
+            // Find overlapping period
+            var overlappingPeriod = _periods.SingleOrDefault(p =>
+                p.EndDateTime > newPeriod.StartDateTime &&
+                p.StartDateTime <= newPeriod.StartDateTime);
+
+            // Set new end date if overlapping period is found
+            if (overlappingPeriod != null)
+                overlappingPeriod.SetNewEndDate(newPeriod.StartDateTime);
+
+            // Add new period to timeline
+            _periods.Add(newPeriod);
         }
     }
 }

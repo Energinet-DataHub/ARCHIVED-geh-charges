@@ -27,6 +27,7 @@ using Microsoft.EntityFrameworkCore;
 using NodaTime;
 using Xunit;
 using Xunit.Categories;
+using Period = GreenEnergyHub.Charges.Domain.Charges.Period;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 {
@@ -183,7 +184,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 Resolution.P1D,
                 false,
                 new List<Point> { new(1, 200m, SystemClock.Instance.GetCurrentInstant()) },
-                new List<ChargePeriod>
+                new List<Period>
                 {
                     new(
                         Guid.NewGuid(),

@@ -47,12 +47,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
                 .SetPropertyAccessMode(PropertyAccessMode.Field);
         }
 
-        private void ConfigurePeriods(OwnedNavigationBuilder<Charge, ChargePeriod> periods)
+        private void ConfigurePeriods(OwnedNavigationBuilder<Charge, Period> periods)
         {
             // This field is defined in the SQL model (as a foreign key)
             periods.WithOwner().HasForeignKey($"{_aggregateTableName}Id");
 
-            var tableName = $"{nameof(ChargePeriod)}";
+            var tableName = $"{nameof(Period)}";
             periods.ToTable(tableName);
 
             periods.HasKey(c => c.Id);

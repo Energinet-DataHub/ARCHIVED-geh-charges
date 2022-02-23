@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             ChargeCommand chargeCommand,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
-            Mock<ChargePeriod> chargePeriod,
+            Mock<Period> chargePeriod,
             ChargeFactory sut)
         {
             marketParticipantRepository

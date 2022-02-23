@@ -27,6 +27,7 @@ using Moq;
 using NodaTime;
 using Xunit;
 using Xunit.Categories;
+using Period = GreenEnergyHub.Charges.Domain.Charges.Period;
 
 namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 {
@@ -114,7 +115,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             [Frozen] Mock<IValidator<ChargeCommand>> validator,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<Charge> charge,
-            [Frozen] Mock<ChargePeriod> chargePeriod,
+            [Frozen] Mock<Period> chargePeriod,
             [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
             ChargeCommandReceivedEvent receivedEvent,
             ChargeCommandReceivedEventHandler sut)
@@ -148,7 +149,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
             [Frozen] Mock<Charge> charge,
-            [Frozen] Mock<ChargePeriod> chargePeriod,
+            [Frozen] Mock<Period> chargePeriod,
             ChargeCommandReceivedEvent receivedEvent,
             ChargeCommandReceivedEventHandler sut)
         {

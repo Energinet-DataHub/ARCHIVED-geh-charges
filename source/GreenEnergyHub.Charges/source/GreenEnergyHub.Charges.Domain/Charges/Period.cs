@@ -20,9 +20,9 @@ namespace GreenEnergyHub.Charges.Domain.Charges
     /// <summary>
     /// Class is used for handling charge periods and corresponding charge master data in that period.
     /// </summary>
-    public class ChargePeriod
+    public class Period
     {
-        public ChargePeriod(
+        public Period(
             Guid id,
             string name,
             string description,
@@ -74,6 +74,14 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         /// <summary>
         /// Valid to, of a charge period.
         /// </summary>
-        public Instant EndDateTime { get; }
+        public Instant EndDateTime { get; private set; }
+
+        public void SetNewEndDate(Instant newEndDate)
+        {
+            if (newEndDate < StartDateTime)
+                throw new InvalidOperationException($"{nameof(EndDateTime)} must be the same or after the StartDateTime of a {nameof(Period)}");
+
+            EndDateTime = newEndDate;
+        }
     }
 }
