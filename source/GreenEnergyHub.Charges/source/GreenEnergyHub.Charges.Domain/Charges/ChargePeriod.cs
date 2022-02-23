@@ -67,12 +67,12 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         public bool TransparentInvoicing { get; }
 
         /// <summary>
-        /// Valid from, of a charge price list. Also known as Effective Date.
+        /// Valid from, of a charge period. Also known as Effective Date.
         /// </summary>
         public Instant StartDateTime { get; }
 
         /// <summary>
-        /// Valid to, of a charge price list.
+        /// Valid to, of a charge period. Also known as Termination Date.
         /// </summary>
         public Instant EndDateTime { get; }
     }

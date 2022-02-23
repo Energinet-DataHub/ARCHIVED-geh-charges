@@ -25,7 +25,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.Shared
             return validationRuleIdentifier switch
             {
                 ValidationRuleIdentifier.StartDateValidation => ReasonCode.E17,
-                ValidationRuleIdentifier.ChangingTariffVatValueNotAllowed => ReasonCode.D14,
                 ValidationRuleIdentifier.ChangingTariffTaxValueNotAllowed => ReasonCode.D14,
                 ValidationRuleIdentifier.SenderIsMandatoryTypeValidation => ReasonCode.D02,
                 ValidationRuleIdentifier.RecipientIsMandatoryTypeValidation => ReasonCode.D02,
