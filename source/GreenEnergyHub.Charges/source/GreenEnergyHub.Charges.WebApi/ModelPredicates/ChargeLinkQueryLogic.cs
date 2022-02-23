@@ -47,7 +47,6 @@ namespace GreenEnergyHub.Charges.WebApi.ModelPredicates
                         .OrderByDescending(cp => cp.StartDateTime)
                         .FirstOrDefault() ??
                      cl.Charge.ChargePeriods
-                         .Where(cp => cp.StartDateTime <= todayAtMidnightUtc)
                          .OrderBy(cp => cp.StartDateTime)
                          .First()).TransparentInvoicing,
                     cl.Factor,
@@ -79,7 +78,6 @@ namespace GreenEnergyHub.Charges.WebApi.ModelPredicates
                         .OrderByDescending(cp => cp.StartDateTime)
                         .FirstOrDefault() ??
                      cl.Charge.ChargePeriods
-                         .Where(cp => cp.StartDateTime <= todayAtMidnightUtc)
                          .OrderBy(cp => cp.StartDateTime)
                          .First()).TransparentInvoicing,
                     cl.Factor,
