@@ -30,7 +30,6 @@ using Moq;
 using NodaTime;
 using Xunit;
 using Xunit.Categories;
-using Period = GreenEnergyHub.Charges.Domain.Charges.Period;
 
 namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands
 {
@@ -69,9 +68,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands
                 Resolution.P1D,
                 true,
                 new List<Point> { new(1, 200m, SystemClock.Instance.GetCurrentInstant()) },
-                new List<Period>
+                new List<ChargePeriod>
                 {
-                    new Period(
+                    new ChargePeriod(
                         chargePeriodId,
                         "Name",
                         "Description",

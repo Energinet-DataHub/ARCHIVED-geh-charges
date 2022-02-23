@@ -20,9 +20,9 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
 {
     public class ChargeBuilder
     {
-        private List<Period> _periods = new();
+        private List<ChargePeriod> _periods = new();
 
-        public ChargeBuilder WithPeriods(List<Period> periods)
+        public ChargeBuilder WithPeriods(List<ChargePeriod> periods)
         {
             _periods = periods;
             return this;

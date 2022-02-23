@@ -20,9 +20,9 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 {
     public class ChargePeriodFactory : IChargePeriodFactory
     {
-        public Period CreateFromChargeOperationDto(ChargeOperationDto chargeOperationDto)
+        public ChargePeriod CreateFromChargeOperationDto(ChargeOperationDto chargeOperationDto)
         {
-            var period = new Period(
+            var period = new ChargePeriod(
                 Guid.NewGuid(),
                 chargeOperationDto.ChargeName,
                 chargeOperationDto.ChargeDescription,

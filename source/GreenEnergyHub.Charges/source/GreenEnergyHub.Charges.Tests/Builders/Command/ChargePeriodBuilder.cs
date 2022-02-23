@@ -13,47 +13,45 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
 using NodaTime;
-using Period = GreenEnergyHub.Charges.Domain.Charges.Period;
 
 namespace GreenEnergyHub.Charges.Tests.Builders.Command
 {
-    public class PeriodBuilder
+    public class ChargePeriodBuilder
     {
         private const string Description = "description";
-        private const VatClassification VatClassification = Charges.Domain.Charges.VatClassification.Unknown;
         private const bool TransparentInvoicing = false;
         private string _name = "name";
         private Instant _startDateTime = Instant.MinValue;
-        private Instant _endDateTime = Instant.FromUtc(9999, 12, 31, 23, 59, 59);
+        private Instant _endDateTime = InstantExtensions.GetEndDefault();
 
-        public PeriodBuilder WithName(string name)
+        public ChargePeriodBuilder WithName(string name)
         {
             _name = name;
             return this;
         }
 
-        public PeriodBuilder WithStartDateTime(Instant startDateTime)
+        public ChargePeriodBuilder WithStartDateTime(Instant startDateTime)
         {
             _startDateTime = startDateTime;
             return this;
         }
 
-        public PeriodBuilder WithEndDateTime(Instant endDateTime)
+        public ChargePeriodBuilder WithEndDateTime(Instant endDateTime)
         {
             _endDateTime = endDateTime;
             return this;
         }
 
-        public Period Build()
+        public ChargePeriod Build()
         {
-            return new Period(
+            return new ChargePeriod(
                 Guid.NewGuid(),
                 _name,
                 Description,
-                VatClassification,
+                VatClassification.Vat25,
                 TransparentInvoicing,
                 _startDateTime,
                 _endDateTime);

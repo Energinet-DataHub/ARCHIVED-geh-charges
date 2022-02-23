@@ -52,7 +52,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
                 command.ChargeOperation.Resolution,
                 command.ChargeOperation.TaxIndicator,
                 command.ChargeOperation.Points,
-                new List<Period> { period });
+                new List<ChargePeriod> { period });
         }
     }
 }

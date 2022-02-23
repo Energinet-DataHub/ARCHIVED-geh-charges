@@ -22,7 +22,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
     public class Charge
     {
         private readonly List<Point> _points;
-        private readonly List<Period> _periods;
+        private readonly List<ChargePeriod> _periods;
 
         public Charge(
             Guid id,
@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             Resolution resolution,
             bool taxIndicator,
             List<Point> points,
-            List<Period> periods)
+            List<ChargePeriod> periods)
         {
             Id = id;
             SenderProvidedChargeId = senderProvidedChargeId;
@@ -52,7 +52,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         {
             SenderProvidedChargeId = null!;
             _points = new List<Point>();
-            _periods = new List<Period>();
+            _periods = new List<ChargePeriod>();
         }
 
         /// <summary>
@@ -83,32 +83,32 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 
         public IReadOnlyCollection<Point> Points => _points;
 
-        public IReadOnlyCollection<Period> Periods => _periods;
+        public IReadOnlyCollection<ChargePeriod> Periods => _periods;
 
         public void StopCharge(Instant endDate)
         {
             throw new NotImplementedException();
         }
 
-        public void UpdateCharge(Period newPeriod)
+        public void UpdateCharge(ChargePeriod newChargePeriod)
         {
-            if (newPeriod == null) throw new ArgumentNullException(nameof(newPeriod));
+            if (newChargePeriod == null) throw new ArgumentNullException(nameof(newChargePeriod));
 
             // Remove all periods after update. If later periods are to be
             // preserved, the market actor must re-submit later update
-            _periods.RemoveAll(p => p.StartDateTime >= newPeriod.StartDateTime);
+            _periods.RemoveAll(p => p.StartDateTime >= newChargePeriod.StartDateTime);
 
             // Find overlapping period
             var overlappingPeriod = _periods.SingleOrDefault(p =>
-                p.EndDateTime > newPeriod.StartDateTime &&
-                p.StartDateTime <= newPeriod.StartDateTime);
+                p.EndDateTime > newChargePeriod.StartDateTime &&
+                p.StartDateTime <= newChargePeriod.StartDateTime);
 
             // Set new end date if overlapping period is found
             if (overlappingPeriod != null)
-                overlappingPeriod.SetNewEndDate(newPeriod.StartDateTime);
+                overlappingPeriod.SetNewEndDate(newChargePeriod.StartDateTime);
 
             // Add new period to timeline
-            _periods.Add(newPeriod);
+            _periods.Add(newChargePeriod);
         }
     }
 }

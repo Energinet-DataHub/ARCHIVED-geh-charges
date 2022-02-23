@@ -18,6 +18,6 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 {
     public interface IChargePeriodFactory
     {
-        Period CreateFromChargeOperationDto(ChargeOperationDto chargeOperationDto);
+        ChargePeriod CreateFromChargeOperationDto(ChargeOperationDto chargeOperationDto);
     }
 }

@@ -22,9 +22,6 @@ using GreenEnergyHub.Charges.Tests.Builders.Command;
 using NodaTime;
 using Xunit;
 using Xunit.Categories;
-using Charge = GreenEnergyHub.Charges.Domain.Charges.Charge;
-using Period = GreenEnergyHub.Charges.Domain.Charges.Period;
-using PeriodBuilder = GreenEnergyHub.Charges.Tests.Builders.Command.PeriodBuilder;
 
 namespace GreenEnergyHub.Charges.Tests.Domain.Charges
 {
@@ -36,8 +33,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
         {
             // Arrange
             var newPeriodStartDate = Instant.FromUtc(2021, 8, 8, 22, 0, 0);
-            var newPeriodEndDate = Instant.FromUtc(9999, 12, 31, 23, 59, 59);
-            var newPeriod = new PeriodBuilder()
+            var newPeriodEndDate = InstantExtensions.GetEndDefault();
+            var newPeriod = new ChargePeriodBuilder()
                 .WithName("newPeriod")
                 .WithStartDateTime(newPeriodStartDate)
                 .WithEndDateTime(newPeriodEndDate)
@@ -64,21 +61,21 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
         //     // Act
         //     // Assert
         // }
-        private List<Period> CreatePeriods()
+        private List<ChargePeriod> CreatePeriods()
         {
-            return new List<Period>
+            return new List<ChargePeriod>
             {
-                new PeriodBuilder()
+                new ChargePeriodBuilder()
                     .WithName("periodOne")
                     .WithStartDateTime(Instant.FromUtc(2021, 8, 1, 22, 0, 0))
                     .WithEndDateTime(Instant.FromUtc(2021, 8, 10, 22, 0, 0))
                     .Build(),
-                new PeriodBuilder()
+                new ChargePeriodBuilder()
                     .WithName("periodTwo")
                     .WithStartDateTime(Instant.FromUtc(2021, 8, 10, 22, 0, 0))
                     .WithEndDateTime(Instant.FromUtc(2021, 8, 15, 22, 0, 0))
                     .Build(),
-                new PeriodBuilder()
+                new ChargePeriodBuilder()
                     .WithName("periodThree")
                     .WithStartDateTime(Instant.FromUtc(2021, 8, 15, 22, 0, 0))
                     .WithEndDateTime(Instant.FromUtc(2021, 8, 30, 22, 0, 0))
