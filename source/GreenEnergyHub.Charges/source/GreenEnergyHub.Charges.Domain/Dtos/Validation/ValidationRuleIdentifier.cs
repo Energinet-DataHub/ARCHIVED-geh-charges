@@ -17,8 +17,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
     public enum ValidationRuleIdentifier
     {
         StartDateValidation = 1, // VR209-1 / E17
-
-        // ChangingTariffVatValueNotAllowed = 2, // VR630 / D14 // REMOVED
         ChangingTariffTaxValueNotAllowed = 3, // VR903 / D14
         SenderIsMandatoryTypeValidation = 5, // VR150 / D02
         RecipientIsMandatoryTypeValidation = 6, // VR153 / D02
@@ -42,8 +40,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
         FeeMustHaveSinglePrice = 25, // VR507-2 / E87
         SubscriptionMustHaveSinglePrice = 26, // VR507-2 / E87
         CommandSenderMustBeAnExistingMarketParticipant = 27, // VR152 / D02
-
-        // ChargeUpdateNotYetSupported = 28, // VR902 / D13 / REMOVED
         MeteringPointDoesNotExist = 29, // VR200 / E10
         ChargeDoesNotExist = 30, // VR679 / E0I
         ChargeLinkUpdateNotYetSupported = 31, // VR902 / D13
