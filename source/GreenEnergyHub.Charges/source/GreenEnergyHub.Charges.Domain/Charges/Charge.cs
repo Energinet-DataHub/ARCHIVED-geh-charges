@@ -101,7 +101,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             // Find overlapping period
             var overlappingPeriod = _periods.SingleOrDefault(p =>
                 p.EndDateTime > newChargePeriod.StartDateTime &&
-                p.StartDateTime <= newChargePeriod.StartDateTime);
+                p.StartDateTime < newChargePeriod.StartDateTime);
 
             // Set new end date if overlapping period is found
             if (overlappingPeriod != null)
