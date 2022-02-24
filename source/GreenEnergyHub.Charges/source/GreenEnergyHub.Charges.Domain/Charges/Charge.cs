@@ -90,24 +90,26 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Use this method to update the charge periods timeline of a charge upon receiving a charge update request
+        /// Please see the persist charge documentation where the update flow is covered:
+        /// https://github.com/Energinet-DataHub/geh-charges/tree/main/docs/process-flows#persist-charge
+        /// </summary>
+        /// <param name="newChargePeriod">New Charge Period from update charge request</param>
+        /// <exception cref="ArgumentNullException">Throws when <paramref name="newChargePeriod"/> is empty</exception>
         public void UpdateCharge(ChargePeriod newChargePeriod)
         {
             if (newChargePeriod == null) throw new ArgumentNullException(nameof(newChargePeriod));
 
-            // Remove all periods after update. If later periods are to be
-            // preserved, the market actor must re-submit later update
             _periods.RemoveAll(p => p.StartDateTime >= newChargePeriod.StartDateTime);
 
-            // Find overlapping period
             var overlappingPeriod = _periods.SingleOrDefault(p =>
                 p.EndDateTime > newChargePeriod.StartDateTime &&
                 p.StartDateTime < newChargePeriod.StartDateTime);
 
-            // Set new end date if overlapping period is found
             if (overlappingPeriod != null)
                 overlappingPeriod.SetNewEndDate(newChargePeriod.StartDateTime);
 
-            // Add new period to timeline
             _periods.Add(newChargePeriod);
         }
     }
