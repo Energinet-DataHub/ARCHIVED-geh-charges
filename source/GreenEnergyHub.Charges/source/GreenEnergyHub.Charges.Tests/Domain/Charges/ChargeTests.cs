@@ -29,25 +29,20 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
     [UnitTest]
     public class ChargeTests
     {
-        private readonly ChargePeriodBuilder _chargePeriodBuilder;
-
-        public ChargeTests()
-        {
-            _chargePeriodBuilder = new ChargePeriodBuilder();
-        }
-
         [Fact]
-        public void UpdateCharge_NewPeriodInsideSingleExistingPeriod_SetsNewEndDateForExistingPeriodAndInsertsNewPeriod() // Update scenario 1
+        public void UpdateCharge_NewPeriodInsideSingleExistingPeriod_SetsNewEndDateForExistingPeriodAndInsertsNewPeriod()
         {
             // Arrange
-            var existingPeriod = _chargePeriodBuilder
+            var existingPeriod = new ChargePeriodBuilder()
                 .WithName("ExistingPeriod")
                 .WithStartDateTime(InstantHelper.GetTodayAtMidnightUtc())
                 .Build();
 
-            var sut = new ChargeBuilder().WithPeriods(new List<ChargePeriod> { existingPeriod }).Build();
+            var sut = new ChargeBuilder()
+                .WithPeriods(new List<ChargePeriod> { existingPeriod })
+                .Build();
 
-            var newPeriod = _chargePeriodBuilder
+            var newPeriod = new ChargePeriodBuilder()
                 .WithName("NewPeriod")
                 .WithStartDateTime(InstantHelper.GetTomorrowAtMidnightUtc())
                 .Build();
@@ -67,51 +62,106 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
         }
 
         [Fact]
-
-        // public void UpdateCharge_WhenOverlappingPeriodExist_OverlappingEndDateIsSetAndNewPeriodInserted() - is new test method name better?
-        public void UpdateCharge_NewPeriodStartsInsideFirstOfThreeExistingPeriods_SetsNewEndDateTimeForFirstExistingPeriod_AndRemovesSecondAndThird_AndInsertsNewPeriod() // Update scenario 2
+        public void UpdateCharge_NewPeriodStartsInsideFirstOfThreeExistingPeriods_SetsNewEndDateTimeForFirstExistingPeriod_AndRemovesSecondAndThird_AndInsertsNewPeriod()
         {
             // Arrange
-            var newPeriodStartDate = Instant.FromUtc(2021, 8, 8, 22, 0, 0);
-            var newPeriodEndDate = InstantExtensions.GetEndDefault();
-            var newPeriod = _chargePeriodBuilder
-                .WithName("newPeriod")
-                .WithStartDateTime(newPeriodStartDate)
-                .WithEndDateTime(newPeriodEndDate)
+            var sut = new ChargeBuilder()
+                .WithPeriods(CreateThreeExistingPeriods())
                 .Build();
 
-            var sut = new ChargeBuilder().WithPeriods(CreatePeriods()).Build();
+            var newPeriod = new ChargePeriodBuilder()
+                .WithName("NewPeriod")
+                .WithStartDateTime(InstantHelper.GetTodayAtMidnightUtc())
+                .Build();
 
             // Act
             sut.UpdateCharge(newPeriod);
 
             // Assert
-            var newTimeline = sut.Periods.OrderBy(p => p.StartDateTime).ToList();
-            newTimeline.Count.Should().Be(2);
-            newTimeline[0].Name.Should().Be("periodOne");
-            newTimeline[0].EndDateTime.Should().Be(newPeriodStartDate);
-            newTimeline[1].Name.Should().Be("newPeriod");
-            newTimeline[1].EndDateTime.Should().Be(newPeriodEndDate);
+            var actualTimeline = sut.Periods.OrderBy(p => p.StartDateTime).ToList();
+            actualTimeline.Count.Should().Be(2);
+            actualTimeline[0].Name.Should().Be("FirstPeriod");
+            actualTimeline[0].StartDateTime.Should().Be(InstantHelper.GetYesterdayAtMidnightUtc());
+            actualTimeline[0].EndDateTime.Should().Be(InstantHelper.GetTodayAtMidnightUtc());
+            actualTimeline[1].Name.Should().Be("NewPeriod");
+            actualTimeline[1].StartDateTime.Should().Be(InstantHelper.GetTodayAtMidnightUtc());
+            actualTimeline[1].EndDateTime.Should().Be(InstantHelper.GetEndDefault());
         }
 
-        private static List<ChargePeriod> CreatePeriods()
+        [Fact]
+        public void UpdateCharge_NewPeriodStartEqualsSecondOfThreeExistingPeriods_NewPeriodOverwritesSecondAndThird()
+        {
+            // Arrange
+            var sut = new ChargeBuilder()
+                .WithPeriods(CreateThreeExistingPeriods())
+                .Build();
+
+            var newPeriod = new ChargePeriodBuilder()
+                .WithName("NewPeriod")
+                .WithStartDateTime(InstantHelper.GetTomorrowAtMidnightUtc())
+                .Build();
+
+            // Act
+            sut.UpdateCharge(newPeriod);
+
+            // Assert
+            var actualTimeline = sut.Periods.OrderBy(p => p.StartDateTime).ToList();
+            actualTimeline.Count.Should().Be(2);
+            actualTimeline[0].Name.Should().Be("FirstPeriod");
+            actualTimeline[0].StartDateTime.Should().Be(InstantHelper.GetYesterdayAtMidnightUtc());
+            actualTimeline[0].EndDateTime.Should().Be(InstantHelper.GetTomorrowAtMidnightUtc());
+            actualTimeline[1].Name.Should().Be("NewPeriod");
+            actualTimeline[1].StartDateTime.Should().Be(InstantHelper.GetTomorrowAtMidnightUtc());
+            actualTimeline[1].EndDateTime.Should().Be(InstantHelper.GetEndDefault());
+        }
+
+        [Fact]
+        public void UpdateCharge_NewPeriodStartsBeforeExistingPeriod_NewPeriodOverwritesExisting()
+        {
+            // Arrange
+            var existingPeriod = new ChargePeriodBuilder()
+                .WithName("ExistingPeriod")
+                .WithStartDateTime(InstantHelper.GetTodayAtMidnightUtc())
+                .Build();
+
+            var sut = new ChargeBuilder()
+                .WithPeriods(new List<ChargePeriod> { existingPeriod })
+                .Build();
+
+            var newPeriod = new ChargePeriodBuilder()
+                .WithName("NewPeriod")
+                .WithStartDateTime(InstantHelper.GetYesterdayAtMidnightUtc())
+                .Build();
+
+            // Act
+            sut.UpdateCharge(newPeriod);
+
+            // Assert
+            var actualTimeline = sut.Periods.OrderBy(p => p.StartDateTime).ToList();
+            actualTimeline.Count.Should().Be(1);
+            actualTimeline[0].Name.Should().Be("NewPeriod");
+            actualTimeline[0].StartDateTime.Should().Be(InstantHelper.GetYesterdayAtMidnightUtc());
+            actualTimeline[0].EndDateTime.Should().Be(InstantHelper.GetEndDefault());
+        }
+
+        private static List<ChargePeriod> CreateThreeExistingPeriods()
         {
             return new List<ChargePeriod>
             {
                 new ChargePeriodBuilder()
-                    .WithName("periodOne")
-                    .WithStartDateTime(Instant.FromUtc(2021, 8, 1, 22, 0, 0))
-                    .WithEndDateTime(Instant.FromUtc(2021, 8, 10, 22, 0, 0))
+                    .WithName("FirstPeriod")
+                    .WithStartDateTime(InstantHelper.GetYesterdayAtMidnightUtc())
+                    .WithEndDateTime(InstantHelper.GetTomorrowAtMidnightUtc())
                     .Build(),
                 new ChargePeriodBuilder()
-                    .WithName("periodTwo")
-                    .WithStartDateTime(Instant.FromUtc(2021, 8, 10, 22, 0, 0))
-                    .WithEndDateTime(Instant.FromUtc(2021, 8, 15, 22, 0, 0))
+                    .WithName("SecondPeriod")
+                    .WithStartDateTime(InstantHelper.GetTomorrowAtMidnightUtc())
+                    .WithEndDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(2))
                     .Build(),
                 new ChargePeriodBuilder()
-                    .WithName("periodThree")
-                    .WithStartDateTime(Instant.FromUtc(2021, 8, 15, 22, 0, 0))
-                    .WithEndDateTime(Instant.FromUtc(2021, 8, 30, 22, 0, 0))
+                    .WithName("ThirdPeriod")
+                    .WithStartDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(2))
+                    .WithEndDateTime(InstantHelper.GetEndDefault())
                     .Build(),
             };
         }

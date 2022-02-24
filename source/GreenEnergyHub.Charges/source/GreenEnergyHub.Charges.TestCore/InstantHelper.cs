@@ -24,6 +24,11 @@ namespace GreenEnergyHub.Charges.TestCore
             return Instant.FromUtc(9999, 12, 31, 23, 59, 59);
         }
 
+        public static Instant GetYesterdayAtMidnightUtc()
+        {
+            return Instant.FromDateTimeUtc(DateTime.Now.AddDays(-1).Date.ToUniversalTime());
+        }
+
         public static Instant GetTodayAtMidnightUtc()
         {
             return Instant.FromDateTimeUtc(DateTime.Now.Date.ToUniversalTime());
@@ -32,6 +37,11 @@ namespace GreenEnergyHub.Charges.TestCore
         public static Instant GetTomorrowAtMidnightUtc()
         {
             return Instant.FromDateTimeUtc(DateTime.Now.AddDays(1).Date.ToUniversalTime());
+        }
+
+        public static Instant GetTodayPlusDaysAtMidnightUtc(int noOfDaysToAdd)
+        {
+            return Instant.FromDateTimeUtc(DateTime.Now.AddDays(noOfDaysToAdd).Date.ToUniversalTime());
         }
     }
 }
