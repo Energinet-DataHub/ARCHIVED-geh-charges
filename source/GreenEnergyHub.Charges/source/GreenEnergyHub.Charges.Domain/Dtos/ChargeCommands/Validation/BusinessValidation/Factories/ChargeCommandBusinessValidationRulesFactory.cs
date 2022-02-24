@@ -55,7 +55,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
             var configuration = await _rulesConfigurationRepository.GetConfigurationAsync().ConfigureAwait(false);
 
             var charge = await GetChargeOrNullAsync(chargeCommand).ConfigureAwait(false);
-            var rules = GetMandatoryRules(chargeCommand, charge, configuration, sender);
+            var rules = GetMandatoryRules(chargeCommand, configuration, sender);
 
             if (charge == null)
                 return ValidationRuleSet.FromRules(rules);
@@ -76,7 +76,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
 
         private List<IValidationRule> GetMandatoryRules(
             ChargeCommand chargeCommand,
-            Charge? charge,
             RulesConfiguration configuration,
             MarketParticipant? sender)
         {
