@@ -12,12 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
+using GreenEnergyHub.TestHelpers;
+using Microsoft.Identity.Client.Extensions.Msal;
 using Xunit;
 using Xunit.Categories;
 
@@ -139,6 +143,15 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             actualTimeline[0].Name.Should().Be("NewPeriod");
             actualTimeline[0].StartDateTime.Should().Be(InstantHelper.GetYesterdayAtMidnightUtc());
             actualTimeline[0].EndDateTime.Should().Be(InstantHelper.GetEndDefault());
+        }
+
+        [Theory]
+        [InlineAutoMoqData]
+        public void UpdateCharge_WhenChargePeriodIsNull_ThrowsArgumentNullException(Charge sut)
+        {
+            ChargePeriod? chargePeriod = null;
+
+            Assert.Throws<ArgumentNullException>(() => sut.UpdateCharge(chargePeriod!));
         }
 
         private static List<ChargePeriod> CreateThreeExistingPeriods()
