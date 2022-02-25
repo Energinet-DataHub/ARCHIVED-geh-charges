@@ -22,6 +22,7 @@ using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.TestHelpers;
 using Microsoft.Identity.Client.Extensions.Msal;
+using NuGet.Frameworks;
 using Xunit;
 using Xunit.Categories;
 
@@ -163,6 +164,50 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             ChargePeriod? chargePeriod = null;
 
             Assert.Throws<ArgumentNullException>(() => sut.UpdateCharge(chargePeriod!));
+        }
+
+        [Fact]
+        public void Validate_WhenGapsInChargePeriodTimeline_ThrowsInvalidOperationException()
+        {
+            // Arrange
+            var firstChargePeriod = new ChargePeriodBuilder()
+                .WithStartDateTime(InstantHelper.GetYesterdayAtMidnightUtc())
+                .WithEndDateTime(InstantHelper.GetTodayAtMidnightUtc())
+                .Build();
+
+            var secondChargePeriod = new ChargePeriodBuilder()
+                .WithStartDateTime(InstantHelper.GetTomorrowAtMidnightUtc())
+                .WithEndDateTime(InstantHelper.GetEndDefault())
+                .Build();
+
+            var sut = new ChargeBuilder()
+                .WithPeriods(new List<ChargePeriod> { firstChargePeriod, secondChargePeriod })
+                .Build();
+
+            // Act / Assert
+            Assert.Throws<InvalidOperationException>(() => sut.IsValid);
+        }
+
+        [Fact]
+        public void Validate_WhenNoGapsInChargePeriodTimeline_IsValid()
+        {
+            // Arrange
+            var firstChargePeriod = new ChargePeriodBuilder()
+                .WithStartDateTime(InstantHelper.GetYesterdayAtMidnightUtc())
+                .WithEndDateTime(InstantHelper.GetTodayAtMidnightUtc())
+                .Build();
+
+            var secondChargePeriod = new ChargePeriodBuilder()
+                .WithStartDateTime(InstantHelper.GetTodayAtMidnightUtc())
+                .WithEndDateTime(InstantHelper.GetEndDefault())
+                .Build();
+
+            var sut = new ChargeBuilder()
+                .WithPeriods(new List<ChargePeriod> { firstChargePeriod, secondChargePeriod })
+                .Build();
+
+            // Act / Assert
+            sut.IsValid.Should().BeTrue();
         }
 
         private static List<ChargePeriod> CreateThreeExistingPeriods()

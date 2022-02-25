@@ -85,6 +85,8 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 
         public IReadOnlyCollection<ChargePeriod> Periods => _periods;
 
+        public bool IsValid => Validate();
+
         public void StopCharge(Instant endDate)
         {
             throw new NotImplementedException();
@@ -120,6 +122,31 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         private void RemoveAllPeriodsFromNewPeriodStart(ChargePeriod newChargePeriod)
         {
             _periods.RemoveAll(p => p.StartDateTime >= newChargePeriod.StartDateTime);
+        }
+
+        private bool Validate()
+        {
+            var result = EnsureNoGapsInChargePeriodTimeline();
+            return result;
+        }
+
+        private bool EnsureNoGapsInChargePeriodTimeline()
+        {
+            var orderedPeriods = _periods.OrderBy(cp => cp.StartDateTime).ToList();
+            var pointInTimeline = orderedPeriods[0].StartDateTime;
+            foreach (var p in _periods)
+            {
+                if (p.StartDateTime == pointInTimeline)
+                {
+                    pointInTimeline = p.EndDateTime;
+                }
+                else
+                {
+                    throw new InvalidOperationException("Charge validation failed due to a gap in charge period timeline");
+                }
+            }
+
+            return true;
         }
     }
 }
