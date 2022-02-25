@@ -101,16 +101,25 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         {
             if (newChargePeriod == null) throw new ArgumentNullException(nameof(newChargePeriod));
 
-            _periods.RemoveAll(p => p.StartDateTime >= newChargePeriod.StartDateTime);
+            RemoveAllPeriodsFromNewPeriodStart(newChargePeriod);
+            HandleAnyOverlappingPeriod(newChargePeriod);
+            _periods.Add(newChargePeriod);
+        }
 
-            var overlappingPeriod = _periods.SingleOrDefault(p =>
+        private void HandleAnyOverlappingPeriod(ChargePeriod newChargePeriod)
+        {
+            var overlappingPeriod = _periods
+                .SingleOrDefault(p =>
                 p.EndDateTime > newChargePeriod.StartDateTime &&
                 p.StartDateTime < newChargePeriod.StartDateTime);
 
             if (overlappingPeriod != null)
                 overlappingPeriod.SetNewEndDate(newChargePeriod.StartDateTime);
+        }
 
-            _periods.Add(newChargePeriod);
+        private void RemoveAllPeriodsFromNewPeriodStart(ChargePeriod newChargePeriod)
+        {
+            _periods.RemoveAll(p => p.StartDateTime >= newChargePeriod.StartDateTime);
         }
     }
 }
