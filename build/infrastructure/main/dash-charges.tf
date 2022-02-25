@@ -31,7 +31,6 @@ resource "azurerm_dashboard" "dash_charges" {
 
   lifecycle {
     ignore_changes = [
-      source_control,
       # Ignore changes to tags, e.g. because a management agent
       # updates these based on some ruleset managed elsewhere.
       tags,
