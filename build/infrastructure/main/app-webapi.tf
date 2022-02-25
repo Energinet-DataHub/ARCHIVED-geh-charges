@@ -39,14 +39,6 @@ module "app_webapi" {
       value = local.MS_CHARGE_DB_CONNECTION_STRING
     }
   ]
-
-  lifecycle {
-    ignore_changes = [
-      # Ignore changes to tags, e.g. because a management agent
-      # updates these based on some ruleset managed elsewhere.
-      tags,
-    ]
-  }
 }
 
 module "kvs_app_charges_webapi_base_url" {
