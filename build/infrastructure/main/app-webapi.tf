@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 module "app_webapi" {
-  source                                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/app-service?ref=7.0.0"
+  source                                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/app-service?ref=6.0.0"
 
   name                                      = "webapi"
   project_name                              = var.domain_name_short
@@ -21,15 +21,15 @@ module "app_webapi" {
   resource_group_name                       = azurerm_resource_group.this.name
   location                                  = azurerm_resource_group.this.location
   vnet_integration_subnet_id                = module.vnet_integrations_webapi.id
-  external_private_endpoint_subnet_id       = module.snet_external_private_endpoints.id
+  private_endpoint_subnet_id                = module.snet_external_private_endpoints.id
   private_dns_resource_group_name           = data.azurerm_key_vault_secret.pdns_resource_group_name.value
-  app_service_plan_id                       = module.plan_webapi.id
+  app_service_plan_id                       = data.azurerm_key_vault_secret.plan_shared_id.value
   application_insights_instrumentation_key  = data.azurerm_key_vault_secret.appi_shared_instrumentation_key.value
 
   app_settings = {
-    "APPINSIGHTS_INSTRUMENTATIONKEY" = "${data.azurerm_key_vault_secret.appi_shared_instrumentation_key.value}",
-    "FRONTEND_OPEN_ID_URL" = "${data.azurerm_key_vault_secret.frontend_open_id_url.value}",
-    "FRONTEND_SERVICE_APP_ID" = "${data.azurerm_key_vault_secret.frontend_service_app_id.value}"
+    APPINSIGHTS_INSTRUMENTATIONKEY = "${data.azurerm_key_vault_secret.appi_shared_instrumentation_key.value}",
+    FRONTEND_OPEN_ID_URL = "${data.azurerm_key_vault_secret.frontend_open_id_url.value}",
+    FRONTEND_SERVICE_APP_ID = "${data.azurerm_key_vault_secret.frontend_service_app_id.value}"
   }
 
   connection_strings = [
@@ -40,26 +40,13 @@ module "app_webapi" {
     }
   ]
 
-  tags                                      = azurerm_resource_group.this.tags
-}
-
-module "plan_webapi" {
-  source                = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/app-service-plan?ref=6.0.0"
-
-  name                  = "webapi"
-  project_name          = var.domain_name_short
-  environment_short     = var.environment_short
-  environment_instance  = var.environment_instance
-  resource_group_name   = azurerm_resource_group.this.name
-  location              = azurerm_resource_group.this.location
-  kind                  = "Linux"
-  reserved              = true
-  sku                   = {
-    tier  = "PremiumV2"
-    size  = "P1v2"
+  lifecycle {
+    ignore_changes = [
+      # Ignore changes to tags, e.g. because a management agent
+      # updates these based on some ruleset managed elsewhere.
+      tags,
+    ]
   }
-
-  tags                  = azurerm_resource_group.this.tags
 }
 
 module "kvs_app_charges_webapi_base_url" {

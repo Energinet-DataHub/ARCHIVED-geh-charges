@@ -25,7 +25,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.Shared
             return validationRuleIdentifier switch
             {
                 ValidationRuleIdentifier.StartDateValidation => ReasonCode.E17,
-                ValidationRuleIdentifier.ChangingTariffVatValueNotAllowed => ReasonCode.D14,
                 ValidationRuleIdentifier.ChangingTariffTaxValueNotAllowed => ReasonCode.D14,
                 ValidationRuleIdentifier.SenderIsMandatoryTypeValidation => ReasonCode.D02,
                 ValidationRuleIdentifier.RecipientIsMandatoryTypeValidation => ReasonCode.D02,
@@ -53,6 +52,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.Shared
                 ValidationRuleIdentifier.MeteringPointDoesNotExist => ReasonCode.E10,
                 ValidationRuleIdentifier.ChargeDoesNotExist => ReasonCode.E0I,
                 ValidationRuleIdentifier.ChargeLinkUpdateNotYetSupported => ReasonCode.D13,
+                ValidationRuleIdentifier.StopChargeNotYetSupported => ReasonCode.D13,
                 _ => throw new NotImplementedException(),
             };
         }

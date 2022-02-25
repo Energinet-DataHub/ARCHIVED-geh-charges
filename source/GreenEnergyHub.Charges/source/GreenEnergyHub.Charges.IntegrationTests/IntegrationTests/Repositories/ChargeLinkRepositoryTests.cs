@@ -23,7 +23,7 @@ using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
-using GreenEnergyHub.Charges.IntegrationTests.Fixtures.Database;
+using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
@@ -90,19 +90,24 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             context.SaveChanges(); // Sets marketParticipant.RowId
 
             var charge = new Charge(
-                id: Guid.NewGuid(),
-                senderProvidedChargeId: "charge id",
-                name: "charge name",
-                description: "charge description",
-                ownerId: marketParticipant.Id,
-                startDateTime: SystemClock.Instance.GetCurrentInstant(),
-                endDateTime: SystemClock.Instance.GetCurrentInstant(),
-                type: ChargeType.Tariff,
-                vatClassification: VatClassification.Vat25,
-                resolution: Resolution.P1D,
-                transparentInvoicing: false,
-                taxIndicator: false,
-                points: new List<Point>());
+                Guid.NewGuid(),
+                "charge id",
+                marketParticipant.Id,
+                ChargeType.Tariff,
+                Resolution.P1D,
+                false,
+                new List<Point>(),
+                new List<ChargePeriod>
+                {
+                    new ChargePeriod(
+                        Guid.NewGuid(),
+                        "charge name",
+                        "charge description",
+                        VatClassification.Vat25,
+                        false,
+                        SystemClock.Instance.GetCurrentInstant(),
+                        SystemClock.Instance.GetCurrentInstant()),
+                });
             context.Charges.Add(charge);
 
             var gridAreaLinkId = context.GridAreaLinks.First().Id;

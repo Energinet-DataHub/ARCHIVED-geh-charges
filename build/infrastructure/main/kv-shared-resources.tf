@@ -147,6 +147,12 @@ data "azurerm_key_vault_secret" "frontend_service_app_id" {
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
 }
 
+data "azurerm_key_vault_secret" "plan_shared_id" {
+  name         = "plan-shared-id"
+  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
+}
+}
+
 data "azurerm_key_vault_secret" "vnet_internal_name" {
   name         = "vnet-internal-name"
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id

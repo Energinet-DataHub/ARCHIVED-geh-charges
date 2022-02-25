@@ -57,13 +57,11 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
                     .ConfigureAwait(false);
             }
 
-            var chargeLinksMessageResult = await _chargeLinksCommandBundleHandler
+            await _chargeLinksCommandBundleHandler
                 .HandleAsync(inboundMessage.ValidatedMessage)
                 .ConfigureAwait(false);
 
-            return await _httpResponseBuilder
-                .CreateAcceptedResponseAsync(req, chargeLinksMessageResult)
-                .ConfigureAwait(false);
+            return _httpResponseBuilder.CreateAcceptedResponse(req);
         }
 
         private async Task<SchemaValidatedInboundMessage<ChargeLinksCommandBundle>> ValidateMessageAsync(HttpRequestData req)

@@ -25,7 +25,7 @@ module "func_functionhost" {
   private_endpoint_subnet_id                = module.snet_internal_private_endpoints.id
   external_private_endpoint_subnet_id       = module.snet_external_private_endpoints.id
   private_dns_resource_group_name           = data.azurerm_key_vault_secret.pdns_resource_group_name.value
-  app_service_plan_id                       = module.plan_shared.id
+  app_service_plan_id                       = data.azurerm_key_vault_secret.plan_shared_id.value
   application_insights_instrumentation_key  = data.azurerm_key_vault_secret.appi_shared_instrumentation_key.value
   always_on                                 = true
   app_settings                              = {
@@ -39,6 +39,7 @@ module "func_functionhost" {
     CURRENCY                                                        = "DKK"
     CHARGE_DB_CONNECTION_STRING                                     = local.MS_CHARGE_DB_CONNECTION_STRING
     DOMAINEVENT_SENDER_CONNECTION_STRING                            = module.sb_charges.primary_connection_strings["send"]
+    DOMAINEVENT_MANAGER_CONNECTION_STRING                           = module.sb_charges.primary_connection_strings["manage"]
     DOMAINEVENT_LISTENER_CONNECTION_STRING                          = module.sb_charges.primary_connection_strings["listen"]
     CHARGE_CREATED_TOPIC_NAME                                       = data.azurerm_key_vault_secret.sbt_charge_created_name.value
     CHARGE_PRICES_UPDATED_TOPIC_NAME                                = data.azurerm_key_vault_secret.sbt_charge_prices_updated_name.value

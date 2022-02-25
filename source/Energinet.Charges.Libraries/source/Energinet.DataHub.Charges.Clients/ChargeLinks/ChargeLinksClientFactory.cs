@@ -13,29 +13,49 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
 using System.Net.Http;
+using Microsoft.AspNetCore.Http;
 
 namespace Energinet.DataHub.Charges.Clients.ChargeLinks
 {
-    public class ChargeLinksClientFactory
+    public class ChargeLinksClientFactory : IChargeLinksClientFactory
     {
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public ChargeLinksClientFactory(IHttpClientFactory httpClientFactory)
+        public ChargeLinksClientFactory(IHttpClientFactory httpClientFactory, IHttpContextAccessor httpContextAccessor)
         {
             _httpClientFactory = httpClientFactory;
+            _httpContextAccessor = httpContextAccessor;
         }
 
-        public static ChargeLinksClient CreateClient(HttpClient httpClient)
+        public ChargeLinksClient CreateClient(HttpClient httpClient)
         {
+            SetAuthorizationHeader(httpClient);
             return new ChargeLinksClient(httpClient);
         }
 
         public ChargeLinksClient CreateClient(Uri baseUrl)
         {
             var httpClient = _httpClientFactory.CreateClient();
+            SetAuthorizationHeader(httpClient);
             httpClient.BaseAddress = baseUrl;
             return new ChargeLinksClient(httpClient);
+        }
+
+        private void SetAuthorizationHeader(HttpClient httpClient)
+        {
+            var authHeaderValue = GetAuthorizationHeaderValue();
+            httpClient.DefaultRequestHeaders.Add("Authorization", authHeaderValue);
+        }
+
+        private string GetAuthorizationHeaderValue()
+        {
+            return _httpContextAccessor.HttpContext.Request.Headers
+                .Where(x => x.Key.Equals("Authorization", StringComparison.OrdinalIgnoreCase))
+                .Select(x => x.Value.ToString())
+                .Single();
         }
     }
 }

@@ -14,6 +14,7 @@
 
 using System;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.Configuration;
+using GreenEnergyHub.Charges.IntegrationTest.Core.Authorization;
 using Microsoft.Extensions.Configuration;
 
 namespace GreenEnergyHub.Charges.SystemTests.Fixtures
@@ -31,18 +32,20 @@ namespace GreenEnergyHub.Charges.SystemTests.Fixtures
     {
         public ApiManagementConfiguration()
         {
-            Environment =
-                Root.GetValue<string>("ENVIRONMENT_SHORT") +
-                Root.GetValue<string>("ENVIRONMENT_INSTANCE");
+            const string azureSecretsKeyVaultUrlKey = "AZURE_SYSTEMTESTS_KEYVAULT_URL";
+            const string systemtestLocalSettingsJson = "systemtest.local.settings.json";
 
-            var keyVaultUrl = Root.GetValue<string>("AZURE_SYSTEMTESTS_KEYVAULT_URL");
+            Environment = Root.GetValue<string>("ENVIRONMENT_SHORT") +
+                          Root.GetValue<string>("ENVIRONMENT_INSTANCE");
+
+            var keyVaultUrl = Root.GetValue<string>(azureSecretsKeyVaultUrlKey);
             KeyVaultConfiguration = BuildKeyVaultConfigurationRoot(keyVaultUrl);
 
-            B2cTenantId = KeyVaultConfiguration.GetValue<string>(BuildB2CEnvironmentSecretName(Environment, "tenant-id"));
-            var backendAppId = KeyVaultConfiguration.GetValue<string>(BuildB2CEnvironmentSecretName(Environment, "backend-app-id"));
-            BackendAppScope = new[] { $"{backendAppId}/.default" };
+            ApiManagementBaseAddress = KeyVaultConfiguration.GetValue<Uri>(
+                BuildApiManagementEnvironmentSecretName(Environment, "host-url"));
 
-            ApiManagementBaseAddress = KeyVaultConfiguration.GetValue<Uri>(BuildApiManagementEnvironmentSecretName(Environment, "host-url"));
+            AuthorizationConfiguration = new AuthorizationConfiguration(
+                Environment, systemtestLocalSettingsJson, azureSecretsKeyVaultUrlKey);
         }
 
         /// <summary>
@@ -51,40 +54,19 @@ namespace GreenEnergyHub.Charges.SystemTests.Fixtures
         public string Environment { get; }
 
         /// <summary>
-        /// The B2C tenant id in the configured environment.
-        /// </summary>
-        public string B2cTenantId { get; }
-
-        /// <summary>
-        /// The scope for which we must request an access token, to be authorized by the API Management.
-        /// </summary>
-        public string[] BackendAppScope { get; }
-
-        /// <summary>
         /// The base address for the API Management in the configured environment.
         /// </summary>
         public Uri ApiManagementBaseAddress { get; }
 
         /// <summary>
+        /// Configuration for Azure Authorization
+        /// </summary>
+        public AuthorizationConfiguration AuthorizationConfiguration { get; }
+
+        /// <summary>
         /// Can be used to extract secrets from the Key Vault.
         /// </summary>
         private IConfigurationRoot KeyVaultConfiguration { get; }
-
-        /// <summary>
-        /// Retrieve B2C team client settings necessary for aquiring an access token for a given 'team client app' in the configured environment.
-        /// </summary>
-        /// <param name="team">Team name or shorthand.</param>
-        /// <returns>Settings for 'team client app'</returns>
-        public B2CTeamClientSettings RetrieveB2CTeamClientSettings(string team)
-        {
-            if (string.IsNullOrWhiteSpace(team))
-                throw new ArgumentException($"'{nameof(team)}' cannot be null or whitespace.", nameof(team));
-
-            var teamClientId = KeyVaultConfiguration.GetValue<string>(BuildB2CTeamSecretName(Environment, team, "client-id"));
-            var teamClientSecret = KeyVaultConfiguration.GetValue<string>(BuildB2CTeamSecretName(Environment, team, "client-secret"));
-
-            return new B2CTeamClientSettings(teamClientId, teamClientSecret);
-        }
 
         /// <summary>
         /// Load settings from key vault.
@@ -99,16 +81,6 @@ namespace GreenEnergyHub.Charges.SystemTests.Fixtures
         private static string BuildApiManagementEnvironmentSecretName(string environment, string secret)
         {
             return $"APIM-{environment}-{secret}";
-        }
-
-        private static string BuildB2CTeamSecretName(string environment, string team, string secret)
-        {
-            return $"B2C-{environment}-{team}-{secret}";
-        }
-
-        private static string BuildB2CEnvironmentSecretName(string environment, string secret)
-        {
-            return $"B2C-{environment}-{secret}";
         }
     }
 }

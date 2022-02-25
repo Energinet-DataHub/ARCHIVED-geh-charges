@@ -20,6 +20,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
     public interface IValidator<TCommand>
         where TCommand : CommandBase
     {
-        Task<ValidationResult> ValidateAsync(TCommand command);
+        ValidationResult InputValidate(TCommand command);
+
+        Task<ValidationResult> BusinessValidateAsync(TCommand command);
     }
 }

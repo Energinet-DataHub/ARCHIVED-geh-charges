@@ -51,23 +51,38 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             fixture.Customizations.Add(new StringGenerator(() => Guid.NewGuid().ToString()[..16]));
             var chargeLink = fixture.Create<ChargeLink>();
 
-            validator.Setup(x => x.ValidateAsync(It.IsAny<ChargeLinksCommand>()))
-                .ReturnsAsync(ValidationResult.CreateSuccess());
+            SetupValidator(validator);
+            SetupFactories(chargeLinkFactory, chargeLinkCommandAcceptedEventFactory, chargeLinksAcceptedEvent, chargeLink);
 
+            // Act
+            await sut.HandleAsync(chargeLinksReceivedEvent);
+
+            // Assert
+            chargeLinksReceiptService.Verify(x => x.AcceptAsync(It.IsAny<ChargeLinksCommand>()));
+        }
+
+        private static void SetupValidator(Mock<IValidator<ChargeLinksCommand>> validator)
+        {
+            validator.Setup(x => x.InputValidate(It.IsAny<ChargeLinksCommand>()))
+                .Returns(ValidationResult.CreateSuccess());
+
+            validator.Setup(x => x.BusinessValidateAsync(It.IsAny<ChargeLinksCommand>()))
+                .ReturnsAsync(ValidationResult.CreateSuccess());
+        }
+
+        private static void SetupFactories(
+            Mock<IChargeLinkFactory> chargeLinkFactory,
+            Mock<IChargeLinksAcceptedEventFactory> chargeLinkCommandAcceptedEventFactory,
+            ChargeLinksAcceptedEvent chargeLinksAcceptedEvent,
+            ChargeLink chargeLink)
+        {
             chargeLinkFactory
                 .Setup(x => x.CreateAsync(It.IsAny<ChargeLinksReceivedEvent>()))
                 .ReturnsAsync(new List<ChargeLink> { chargeLink, chargeLink });
 
-            chargeLinkCommandAcceptedEventFactory.Setup(
-                    x => x.Create(
-                        It.IsAny<ChargeLinksCommand>()))
+            chargeLinkCommandAcceptedEventFactory
+                .Setup(x => x.Create(It.IsAny<ChargeLinksCommand>()))
                 .Returns(chargeLinksAcceptedEvent);
-
-            // Act
-            await sut.HandleAsync(chargeLinksReceivedEvent).ConfigureAwait(false);
-
-            // Assert
-            chargeLinksReceiptService.Verify(x => x.AcceptAsync(It.IsAny<ChargeLinksCommand>()));
         }
     }
 }

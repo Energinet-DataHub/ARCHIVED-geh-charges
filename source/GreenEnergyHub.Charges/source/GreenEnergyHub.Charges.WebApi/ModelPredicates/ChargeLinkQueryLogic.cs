@@ -23,20 +23,67 @@ namespace GreenEnergyHub.Charges.WebApi.ModelPredicates
 {
     public static class ChargeLinkQueryLogic
     {
-        public static IQueryable<ChargeLinkDto> AsChargeLinkDto(this IQueryable<ChargeLink> queryable)
+        public static IQueryable<ChargeLinkV1Dto> AsChargeLinkV1Dto(this IQueryable<ChargeLink> queryable)
         {
+            var todayAtMidnightUtc = DateTime.Now.Date.ToUniversalTime();
+
+#pragma warning disable SA1118
             return queryable
-                .Select(c => new ChargeLinkDto(
-                    Map(c.Charge.GetChargeType()),
-                    c.Charge.SenderProvidedChargeId,
-                    c.Charge.Name,
-                    c.Charge.Owner.MarketParticipantId,
+                .Select(cl => new ChargeLinkV1Dto(
+                    Map(cl.Charge.GetChargeType()),
+                    cl.Charge.SenderProvidedChargeId,
+                    (cl.Charge.ChargePeriods
+                        .Where(cp => cp.StartDateTime <= todayAtMidnightUtc)
+                        .OrderByDescending(cp => cp.StartDateTime)
+                        .FirstOrDefault() ??
+                     cl.Charge.ChargePeriods
+                         .OrderBy(cp => cp.StartDateTime)
+                         .First()).Name,
+                    cl.Charge.Owner.MarketParticipantId,
                     "<Aktørnavn XYZ>", // Hardcoded as we currently don't have the ChargeOwnerName data
-                    c.Charge.TaxIndicator,
-                    c.Charge.TransparentInvoicing,
-                    c.Factor,
-                    c.StartDateTime,
-                    c.EndDateTime == InstantExtensions.GetEndDefault().ToDateTimeOffset() ? null : c.EndDateTime)); // Nullify "EndDefault" end dates
+                    cl.Charge.TaxIndicator,
+                    (cl.Charge.ChargePeriods
+                        .Where(cp => cp.StartDateTime <= todayAtMidnightUtc)
+                        .OrderByDescending(cp => cp.StartDateTime)
+                        .FirstOrDefault() ??
+                     cl.Charge.ChargePeriods
+                         .OrderBy(cp => cp.StartDateTime)
+                         .First()).TransparentInvoicing,
+                    cl.Factor,
+                    cl.StartDateTime,
+                    cl.EndDateTime == InstantExtensions.GetEndDefault().ToDateTimeOffset() ? null : cl.EndDateTime)); // Nullify "EndDefault" end dates
+#pragma warning restore SA1118
+        }
+
+        public static IQueryable<ChargeLinkV2Dto> AsChargeLinkV2Dto(this IQueryable<ChargeLink> queryable)
+        {
+            var todayAtMidnightUtc = DateTime.Now.Date.ToUniversalTime();
+
+#pragma warning disable SA1118
+            return queryable
+                .Select(cl => new ChargeLinkV2Dto(
+                    Map(cl.Charge.GetChargeType()),
+                    cl.Charge.SenderProvidedChargeId,
+                    (cl.Charge.ChargePeriods
+                         .Where(cp => cp.StartDateTime <= todayAtMidnightUtc)
+                         .OrderByDescending(cp => cp.StartDateTime)
+                         .FirstOrDefault() ??
+                     cl.Charge.ChargePeriods
+                         .OrderBy(cp => cp.StartDateTime)
+                         .First()).Name,
+                    cl.Charge.Owner.Id,
+                    cl.Charge.TaxIndicator,
+                    (cl.Charge.ChargePeriods
+                        .Where(cp => cp.StartDateTime <= todayAtMidnightUtc)
+                        .OrderByDescending(cp => cp.StartDateTime)
+                        .FirstOrDefault() ??
+                     cl.Charge.ChargePeriods
+                         .OrderBy(cp => cp.StartDateTime)
+                         .First()).TransparentInvoicing,
+                    cl.Factor,
+                    cl.StartDateTime,
+                    cl.EndDateTime == InstantExtensions.GetEndDefault().ToDateTimeOffset() ? null : cl.EndDateTime)); // Nullify "EndDefault" end dates
+#pragma warning restore SA1118
         }
 
         private static ChargeType Map(Domain.Charges.ChargeType chargeType) => chargeType switch

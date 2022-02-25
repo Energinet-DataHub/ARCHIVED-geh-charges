@@ -29,10 +29,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         public const string StartDateValidationErrorText =
             "Effective date {{ChargeStartDateTime}} incorrect: The information is not received within the correct time period (either too soon or too late)";
 
-        [ErrorMessageFor(ValidationRuleIdentifier.ChangingTariffVatValueNotAllowed)]
-        public const string ChangingTariffVatValueNotAllowedErrorText =
-            "VAT class {{ChargeVatClass}} not allowed: charge {{DocumentSenderProvidedChargeId}} cannot be updated with another entitlement for VAT";
-
         [ErrorMessageFor(ValidationRuleIdentifier.ChangingTariffTaxValueNotAllowed)]
         public const string ChangingTariffTaxValueNotAllowedErrorText =
             "It is not allowed to change the tax indicator to {{ChargeTaxIndicator}} for charge {{DocumentSenderProvidedChargeId}}";
@@ -127,7 +123,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeUpdateNotYetSupported)]
         public const string ChargeUpdateNotYetSupportedErrorText =
-            "Charge ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}} cannot yet be updated or stopped. The functionality is not implemented yet.";
+            "Charge ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}} cannot yet be updated or stopped. The functionality is not implemented yet";
 
         [ErrorMessageFor(ValidationRuleIdentifier.MeteringPointDoesNotExist)]
         public const string MeteringPointDoesNotExistValidationErrorText =
@@ -135,11 +131,15 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeDoesNotExist)]
         public const string ChargeDoesNotExistValidationErrorText =
-            "Charge {{DocumentSenderProvidedChargeId}} not allowed: The charge is not an existing charge on date {{ChargeLinkStartDate}}.";
+            "Charge {{DocumentSenderProvidedChargeId}} not allowed: The charge is not an existing charge on date {{ChargeLinkStartDate}}";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeLinkUpdateNotYetSupported)]
         public const string ChargeLinksUpdateNotYetSupportedErrorText =
-            "Charge link for metering point ID {{MeteringPointId}} and Charge with ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}} cannot yet be updated or stopped. The functionality is not implemented yet.";
+            "Charge link for metering point ID {{MeteringPointId}} and Charge with ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}} cannot yet be updated or stopped. The functionality is not implemented yet";
+
+        [ErrorMessageFor(ValidationRuleIdentifier.StopChargeNotYetSupported)]
+        public const string StopChargeNotYetSupportedErrorText =
+            "Charge ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}} cannot be stopped. The functionality is not yet implemented";
 
         public const string Unknown = "unknown";
     }

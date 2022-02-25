@@ -20,9 +20,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
 {
     public interface IHttpResponseBuilder
     {
-        Task<HttpResponseData> CreateAcceptedResponseAsync<T>(
-            HttpRequestData request,
-            T response);
+        HttpResponseData CreateAcceptedResponse(HttpRequestData request);
 
         Task<HttpResponseData> CreateBadRequestResponseAsync(
             HttpRequestData request,
