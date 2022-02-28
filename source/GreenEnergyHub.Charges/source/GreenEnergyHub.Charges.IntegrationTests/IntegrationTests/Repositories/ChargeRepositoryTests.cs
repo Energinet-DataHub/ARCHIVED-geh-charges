@@ -60,7 +60,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             var sut = new ChargeRepository(chargesDatabaseWriteContext);
 
             // Act
-            await sut.StoreChargeAsync(charge);
+            await sut.AddAsync(charge);
             await unitOfWork.SaveChangesAsync();
 
             // Assert
@@ -88,7 +88,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             var charge = GetValidCharge();
 
             chargesDatabaseWriteContext.Charges.Add(charge);
-            await chargesDatabaseWriteContext.SaveChangesAsync();
+            await unitOfWork.SaveChangesAsync();
 
             var firstPeriod = charge.Periods.First();
 
@@ -104,7 +104,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             var sut = new ChargeRepository(chargesDatabaseWriteContext);
 
             // Act
-            sut.UpdateCharge(charge);
+            sut.Update(charge);
             await unitOfWork.SaveChangesAsync();
 
             // Assert
@@ -126,17 +126,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         [Fact]
         public async Task StoreChargeAsync_WhenChargeIsValid_ThenChargeIsStored()
         {
-            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-            var unitOfWork = new UnitOfWork(chargesDatabaseWriteContext);
-
             // Arrange
+            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
             await SeedDatabaseAsync(chargesDatabaseWriteContext);
             var charge = GetValidCharge();
             var sut = new ChargeRepository(chargesDatabaseWriteContext);
 
             // Act
-            await sut.StoreChargeAsync(charge);
-            await unitOfWork.SaveChangesAsync();
+            await sut.AddAsync(charge);
+            await chargesDatabaseWriteContext.SaveChangesAsync();
 
             // Assert
             await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
@@ -156,7 +154,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             Charge? charge = null;
 
             // Act / Assert
-            await Assert.ThrowsAsync<ArgumentNullException>(() => sut.StoreChargeAsync(charge!));
+            await Assert.ThrowsAsync<ArgumentNullException>(() => sut.AddAsync(charge!));
         }
 
         [Fact]
@@ -167,7 +165,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             // Arrange
             var sut = new ChargeRepository(chargesDatabaseContext);
             var charge = GetValidCharge();
-            await sut.StoreChargeAsync(charge);
+            await sut.AddAsync(charge);
             await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
             var createdCharge = chargesDatabaseReadContext.Charges.First(x =>
                     x.SenderProvidedChargeId == charge.SenderProvidedChargeId &&

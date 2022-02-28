@@ -50,7 +50,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 
             var stored = false;
             chargeRepository
-                .Setup(r => r.StoreChargeAsync(It.IsAny<Charge>()))
+                .Setup(r => r.AddAsync(It.IsAny<Charge>()))
                 .Callback<Charge>(_ => stored = true);
             chargeRepository
                 .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
@@ -131,40 +131,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                 .Returns(chargePeriod.Object);
 
             var chargeUpdated = false;
-            chargeRepository.Setup(r => r.UpdateCharge(It.IsAny<Charge>()))
-                .Callback<Charge>(_ => chargeUpdated = true);
-
-            // Act
-            await sut.HandleAsync(receivedEvent);
-
-            // Assert
-            Assert.True(chargeUpdated);
-        }
-
-        [Theory]
-        [InlineAutoMoqData]
-        public async Task HandleAsync_IfValidStopEvent_ChargeStopped(
-            [Frozen] Mock<IValidator<ChargeCommand>> validator,
-            [Frozen] Mock<IChargeRepository> chargeRepository,
-            [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
-            [Frozen] Mock<Charge> charge,
-            [Frozen] Mock<ChargePeriod> chargePeriod,
-            ChargeCommandReceivedEvent receivedEvent,
-            ChargeCommandReceivedEventHandler sut)
-        {
-            // Arrange
-            var validationResult = ValidationResult.CreateSuccess();
-            SetupValidator(validator, validationResult);
-
-            chargeRepository
-                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
-                .ReturnsAsync(charge.Object);
-            chargePeriodFactory
-                .Setup(r => r.CreateFromChargeOperationDto(It.IsAny<ChargeOperationDto>()))
-                .Returns(chargePeriod.Object);
-
-            var chargeUpdated = false;
-            chargeRepository.Setup(r => r.UpdateCharge(It.IsAny<Charge>()))
+            chargeRepository.Setup(r => r.Update(It.IsAny<Charge>()))
                 .Callback<Charge>(_ => chargeUpdated = true);
 
             // Act
