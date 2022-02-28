@@ -23,10 +23,10 @@ namespace GreenEnergyHub.Charges.Domain.MeteringPoints
     public interface IMeteringPointRepository
     {
         /// <summary>
-        /// Saves the supplied metering point to the database.
+        /// Adds the supplied metering point to the context.
         /// </summary>
         /// <param name="meteringPoint"></param>
-        Task StoreMeteringPointAsync(MeteringPoint meteringPoint);
+        Task AddAsync(MeteringPoint meteringPoint);
 
         /// <summary>
         /// Used to find a Metering Point.

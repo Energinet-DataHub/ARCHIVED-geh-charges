@@ -13,12 +13,12 @@
 // limitations under the License.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application.MeteringPoints.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.MeteringPointCreatedEvents;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
+using GreenEnergyHub.Charges.Infrastructure.Core.Persistence;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.TestHelpers;
 using Microsoft.Extensions.Logging;
@@ -35,9 +35,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
         [Theory]
         [InlineAutoDomainData]
         public async Task PersistAsync_WhenCalledWithNonExistentMeteringPoint_ShouldPersist(
-            [NotNull][Frozen] Mock<IMeteringPointRepository> meteringPointRepository,
-            [NotNull][Frozen] Mock<ILoggerFactory> loggerFactory,
-            [NotNull] Mock<ILogger> logger)
+            [Frozen] Mock<IMeteringPointRepository> meteringPointRepository,
+            [Frozen] Mock<ILoggerFactory> loggerFactory,
+            Mock<ILogger> logger,
+            IUnitOfWork unitOfWork)
         {
             // Arrange
             var meteringPointCreatedEvent = GetMeteringPointCreatedEvent();
@@ -45,14 +46,13 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
 
             meteringPointRepository.Setup(x => x.GetOrNullAsync(It.IsAny<string>())).ReturnsAsync(() => null);
 
-            var sut = new MeteringPointPersister(meteringPointRepository.Object, loggerFactory.Object);
+            var sut = new MeteringPointPersister(meteringPointRepository.Object, loggerFactory.Object, unitOfWork);
 
             // Act
             await sut.PersistAsync(meteringPointCreatedEvent).ConfigureAwait(false);
 
             // Assert
-            meteringPointRepository
-                .Verify(v => v.StoreMeteringPointAsync(It.IsAny<MeteringPoint>()), Times.Exactly(1));
+            meteringPointRepository.Verify(v => v.AddAsync(It.IsAny<MeteringPoint>()), Times.Exactly(1));
             logger.VerifyLoggerWasCalled(
                 $"Metering Point ID '{meteringPointCreatedEvent.MeteringPointId}' has been persisted",
                 LogLevel.Information);
@@ -61,9 +61,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
         [Theory]
         [InlineAutoDomainData]
         public async Task PersistAsync_WhenCalledWithExistingMeteringPoint_ShouldNotPersist(
-            [NotNull][Frozen] Mock<IMeteringPointRepository> meteringPointRepository,
-            [NotNull][Frozen] Mock<ILoggerFactory> loggerFactory,
-            [NotNull] Mock<ILogger> logger)
+            [Frozen] Mock<IMeteringPointRepository> meteringPointRepository,
+            [Frozen] Mock<ILoggerFactory> loggerFactory,
+            Mock<ILogger> logger,
+            IUnitOfWork unitOfWork)
         {
             // Arrange
             var meteringPointCreatedEvent = GetMeteringPointCreatedEvent();
@@ -74,14 +75,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
 
             meteringPointRepository.Setup(x => x.GetOrNullAsync(It.IsAny<string>())).ReturnsAsync(existingMeteringPoint);
 
-            var sut = new MeteringPointPersister(meteringPointRepository.Object, loggerFactory.Object);
+            var sut = new MeteringPointPersister(meteringPointRepository.Object, loggerFactory.Object, unitOfWork);
 
             // Act
             await sut.PersistAsync(meteringPointCreatedEvent).ConfigureAwait(false);
 
             // Assert
             meteringPointRepository
-                .Verify(v => v.StoreMeteringPointAsync(It.IsAny<MeteringPoint>()), Times.Never());
+                .Verify(v => v.AddAsync(It.IsAny<MeteringPoint>()), Times.Never());
             logger.VerifyLoggerWasCalled(
                 $"Metering Point ID '{meteringPointCreatedEvent.MeteringPointId}' already exists in storage",
                 LogLevel.Information);
@@ -90,9 +91,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
         [Theory]
         [InlineAutoDomainData]
         public async Task PersistAsync_WhenNewMeteringPointDeviatesExisting_ShouldLogDifferences(
-            [NotNull][Frozen] Mock<IMeteringPointRepository> meteringPointRepository,
-            [NotNull][Frozen] Mock<ILoggerFactory> loggerFactory,
-            [NotNull] Mock<ILogger> logger)
+            [Frozen] Mock<IMeteringPointRepository> meteringPointRepository,
+            [Frozen] Mock<ILoggerFactory> loggerFactory,
+            Mock<ILogger> logger,
+            IUnitOfWork unitOfWork)
         {
             // Arrange
             var meteringPointCreatedEvent = GetMeteringPointCreatedEvent();
@@ -110,27 +112,32 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
 
             meteringPointRepository.Setup(x => x.GetOrNullAsync(It.IsAny<string>())).ReturnsAsync(existingMeteringPoint);
 
-            var sut = new MeteringPointPersister(meteringPointRepository.Object, loggerFactory.Object);
+            var sut = new MeteringPointPersister(meteringPointRepository.Object, loggerFactory.Object, unitOfWork);
 
             // Act
             await sut.PersistAsync(meteringPointCreatedEvent).ConfigureAwait(false);
 
             // Assert
             logger.VerifyLoggerWasCalled(
-                $"Received 'metering point type' event data '{meteringPoint.MeteringPointType}' was not equal to the already persisted value '{existingMeteringPoint.MeteringPointType}' for Metering Point ID '{meteringPoint.MeteringPointId}'",
+                $"Received 'metering point type' event data '{meteringPoint.MeteringPointType}' was not equal to " +
+                $"the already persisted value '{existingMeteringPoint.MeteringPointType}' for Metering Point ID " +
+                $"'{meteringPoint.MeteringPointId}'",
                 LogLevel.Error);
             logger.VerifyLoggerWasCalled(
-                $"Received 'settlement method' event data '{meteringPoint.SettlementMethod}' was not equal to the already persisted value '{existingMeteringPoint.SettlementMethod}' for Metering Point ID '{meteringPoint.MeteringPointId}'",
+                $"Received 'settlement method' event data '{meteringPoint.SettlementMethod}' was not equal to the " +
+                $"already persisted value '{existingMeteringPoint.SettlementMethod}' for Metering Point ID " +
+                $"'{meteringPoint.MeteringPointId}'",
                 LogLevel.Error);
             logger.VerifyLoggerWasCalled(
-                $"Received 'grid area link id' event data '{meteringPoint.GridAreaLinkId}' was not equal to the already persisted value '{existingMeteringPoint.GridAreaLinkId}' for Metering Point ID '{meteringPoint.MeteringPointId}'",
+                $"Received 'grid area link id' event data '{meteringPoint.GridAreaLinkId}' was not equal to the " +
+                $"already persisted value '{existingMeteringPoint.GridAreaLinkId}' for Metering Point ID " +
+                $"'{meteringPoint.MeteringPointId}'",
                 LogLevel.Error);
         }
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task PersistAsync_WhenEventIsNull_ThrowsArgumentNullException(
-            [NotNull] MeteringPointPersister sut)
+        public async Task PersistAsync_WhenEventIsNull_ThrowsArgumentNullException(MeteringPointPersister sut)
         {
             // Arrange
             MeteringPointCreatedEvent? meteringPointCreatedEvent = null;
