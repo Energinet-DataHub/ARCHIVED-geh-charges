@@ -90,7 +90,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
             chargesDatabaseWriteContext.Charges.Add(charge);
             await chargesDatabaseWriteContext.SaveChangesAsync();
-            await unitOfWork.SaveChangesAsync();
 
             var firstPeriod = charge.Periods.First();
 
@@ -100,7 +99,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 "new period description",
                 firstPeriod.VatClassification,
                 firstPeriod.TransparentInvoicing,
-                firstPeriod.StartDateTime.Plus(Duration.FromDays(2)),
+                Instant.FromDateTimeUtc(DateTime.Now.AddDays(2).Date.ToUniversalTime()),
                 firstPeriod.EndDateTime));
 
             var sut = new ChargeRepository(chargesDatabaseWriteContext);
@@ -126,7 +125,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         }
 
         [Fact]
-        public async Task CheckIfChargeExistsAsync_WhenChargeIsCreated_ThenChargeExists()
+        public async Task StoreChargeAsync_WhenChargeIsValid_ThenChargeIsStored()
         {
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
             var unitOfWork = new UnitOfWork(chargesDatabaseWriteContext);
@@ -241,7 +240,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                         Guid.NewGuid(),
                         "Name",
                         "description",
-                        VatClassification.Unknown,
+                        VatClassification.Vat25,
                         true,
                         Instant.FromDateTimeUtc(DateTime.Now.Date.ToUniversalTime()),
                         InstantHelper.GetEndDefault()),
