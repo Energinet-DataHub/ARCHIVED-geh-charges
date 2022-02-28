@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
@@ -22,7 +23,9 @@ using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.Tests.Builders.Command;
 using Moq;
 using NodaTime;
 using Xunit;
@@ -113,8 +116,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         public async Task HandleAsync_IfValidUpdateEvent_ChargeUpdated(
             [Frozen] Mock<IValidator<ChargeCommand>> validator,
             [Frozen] Mock<IChargeRepository> chargeRepository,
-            [Frozen] Mock<Charge> charge,
-            [Frozen] Mock<ChargePeriod> chargePeriod,
             [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
             ChargeCommandReceivedEvent receivedEvent,
             ChargeCommandReceivedEventHandler sut)
@@ -122,13 +123,19 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             // Arrange
             var validationResult = ValidationResult.CreateSuccess();
             SetupValidator(validator, validationResult);
+            var periods = CreateValidPeriods(3);
+            var charge = CreateValidCharge(periods);
+            var newPeriod = new ChargePeriodBuilder()
+                .WithStartDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(3))
+                .WithEndDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(4))
+                .Build();
 
             chargeRepository
                 .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
-                .ReturnsAsync(charge.Object);
+                .ReturnsAsync(charge);
             chargePeriodFactory
                 .Setup(r => r.CreateFromChargeOperationDto(It.IsAny<ChargeOperationDto>()))
-                .Returns(chargePeriod.Object);
+                .Returns(newPeriod);
 
             var chargeUpdated = false;
             chargeRepository.Setup(r => r.Update(It.IsAny<Charge>()))
@@ -139,6 +146,24 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 
             // Assert
             Assert.True(chargeUpdated);
+        }
+
+        private static IEnumerable<ChargePeriod> CreateValidPeriods(int numberOfPeriods = 1)
+        {
+            for (var i = 0; i < numberOfPeriods; i++)
+            {
+                yield return new ChargePeriodBuilder()
+                    .WithStartDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(i))
+                    .WithEndDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(i + 1))
+                    .Build();
+            }
+        }
+
+        private static Charge CreateValidCharge(IEnumerable<ChargePeriod> periods)
+        {
+            return new ChargeBuilder()
+                .WithPeriods(periods)
+                .Build();
         }
 
         private static ValidationResult GetFailedValidationResult()

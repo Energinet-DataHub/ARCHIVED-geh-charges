@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using GreenEnergyHub.Charges.Domain.Charges;
 
 namespace GreenEnergyHub.Charges.Tests.Builders.Command
@@ -22,9 +23,9 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
     {
         private List<ChargePeriod> _periods = new();
 
-        public ChargeBuilder WithPeriods(List<ChargePeriod> periods)
+        public ChargeBuilder WithPeriods(IEnumerable<ChargePeriod> periods)
         {
-            _periods = periods;
+            _periods = periods.ToList();
             return this;
         }
 
