@@ -135,7 +135,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         {
             var orderedPeriods = _periods.OrderBy(cp => cp.StartDateTime).ToList();
             var pointInTimeline = orderedPeriods[0].StartDateTime;
-            foreach (var p in _periods)
+            foreach (var p in orderedPeriods)
             {
                 if (p.StartDateTime == pointInTimeline)
                 {
