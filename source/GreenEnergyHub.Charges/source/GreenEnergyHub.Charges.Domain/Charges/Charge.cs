@@ -106,6 +106,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             RemoveAllPeriodsFromNewPeriodStart(newChargePeriod);
             HandleAnyOverlappingPeriod(newChargePeriod);
             _periods.Add(newChargePeriod);
+            Validate();
         }
 
         private void HandleAnyOverlappingPeriod(ChargePeriod newChargePeriod)

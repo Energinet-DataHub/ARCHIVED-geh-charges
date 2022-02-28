@@ -108,20 +108,20 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             var charge = await _chargeFactory
                 .CreateFromCommandAsync(chargeCommand)
                 .ConfigureAwait(false);
-            await _chargeRepository.StoreChargeAsync(charge).ConfigureAwait(false);
+            await _chargeRepository.AddAsync(charge).ConfigureAwait(false);
         }
 
         private void HandleUpdateEvent(Charge charge, ChargeCommand chargeCommand)
         {
             var newChargePeriod = _chargePeriodFactory.CreateFromChargeOperationDto(chargeCommand.ChargeOperation);
             charge.UpdateCharge(newChargePeriod);
-            _chargeRepository.UpdateCharge(charge);
+            _chargeRepository.Update(charge);
         }
 
         private void StopCharge(Charge charge, Instant chargeOperationEndDateTime)
         {
             charge.StopCharge(chargeOperationEndDateTime);
-            _chargeRepository.UpdateCharge(charge);
+            _chargeRepository.Update(charge);
         }
 
         private static OperationType GetOperationType(ChargeCommand command, Charge? charge)
