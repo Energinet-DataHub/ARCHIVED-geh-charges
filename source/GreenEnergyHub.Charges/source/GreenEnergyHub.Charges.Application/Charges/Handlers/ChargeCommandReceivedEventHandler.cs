@@ -19,6 +19,7 @@ using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Infrastructure.Core.Persistence;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
@@ -30,19 +31,22 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         private readonly IChargeRepository _chargeRepository;
         private readonly IChargeFactory _chargeFactory;
         private readonly IChargePeriodFactory _chargePeriodFactory;
+        private readonly IUnitOfWork _unitOfWork;
 
         public ChargeCommandReceivedEventHandler(
             IChargeCommandReceiptService chargeCommandReceiptService,
             IValidator<ChargeCommand> validator,
             IChargeRepository chargeRepository,
             IChargeFactory chargeFactory,
-            IChargePeriodFactory chargePeriodFactory)
+            IChargePeriodFactory chargePeriodFactory,
+            IUnitOfWork unitOfWork)
         {
             _chargeCommandReceiptService = chargeCommandReceiptService;
             _validator = validator;
             _chargeRepository = chargeRepository;
             _chargeFactory = chargeFactory;
             _chargePeriodFactory = chargePeriodFactory;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task HandleAsync(ChargeCommandReceivedEvent commandReceivedEvent)
@@ -82,20 +86,20 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 case OperationType.Update:
                     if (charge == null)
                         throw new InvalidOperationException("Could not update charge. Charge not found.");
-                    await HandleUpdateEventAsync(charge, commandReceivedEvent.Command).ConfigureAwait(false);
+                    HandleUpdateEvent(charge, commandReceivedEvent.Command);
                     break;
                 case OperationType.Stop:
                     if (charge == null)
                         throw new InvalidOperationException("Could not stop charge. Charge not found.");
                     if (commandReceivedEvent.Command.ChargeOperation.EndDateTime == null)
                         throw new InvalidOperationException("Could not stop charge. Invalid end date.");
-                    await StopChargeAsync(charge, commandReceivedEvent.Command.ChargeOperation.EndDateTime.Value)
-                        .ConfigureAwait(false);
+                    StopCharge(charge, commandReceivedEvent.Command.ChargeOperation.EndDateTime.Value);
                     break;
                 default:
                     throw new InvalidOperationException("Could not handle charge command.");
             }
 
+            await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             await _chargeCommandReceiptService.AcceptAsync(commandReceivedEvent.Command).ConfigureAwait(false);
         }
 
@@ -107,17 +111,17 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             await _chargeRepository.StoreChargeAsync(charge).ConfigureAwait(false);
         }
 
-        private async Task HandleUpdateEventAsync(Charge charge, ChargeCommand chargeCommand)
+        private void HandleUpdateEvent(Charge charge, ChargeCommand chargeCommand)
         {
             var newChargePeriod = _chargePeriodFactory.CreateFromChargeOperationDto(chargeCommand.ChargeOperation);
             charge.UpdateCharge(newChargePeriod);
-            await _chargeRepository.UpdateChargeAsync(charge).ConfigureAwait(false);
+            _chargeRepository.UpdateCharge(charge);
         }
 
-        private async Task StopChargeAsync(Charge charge, Instant chargeOperationEndDateTime)
+        private void StopCharge(Charge charge, Instant chargeOperationEndDateTime)
         {
             charge.StopCharge(chargeOperationEndDateTime);
-            await _chargeRepository.UpdateChargeAsync(charge).ConfigureAwait(false);
+            _chargeRepository.UpdateCharge(charge);
         }
 
         private static OperationType GetOperationType(ChargeCommand command, Charge? charge)

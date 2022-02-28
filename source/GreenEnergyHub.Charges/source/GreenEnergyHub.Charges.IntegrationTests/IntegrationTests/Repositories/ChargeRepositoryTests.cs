@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Infrastructure.Core.Persistence;
 using GreenEnergyHub.Charges.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
@@ -32,7 +33,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 {
     /// <summary>
-    /// Tests <see cref="ChargeRepository"/> using a database created with squadron.
+    /// Tests <see cref="ChargeRepository"/> using a database.
     /// </summary>
     [IntegrationTest]
     public class ChargeRepositoryTests : IClassFixture<ChargesDatabaseFixture>
@@ -54,12 +55,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         {
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
+            var unitOfWork = new UnitOfWork(chargesDatabaseWriteContext);
             await SeedDatabaseAsync(chargesDatabaseWriteContext);
             var charge = GetValidCharge();
             var sut = new ChargeRepository(chargesDatabaseWriteContext);
 
             // Act
             await sut.StoreChargeAsync(charge);
+            await unitOfWork.SaveChangesAsync();
 
             // Assert
             await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
@@ -81,11 +84,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         {
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
+            var unitOfWork = new UnitOfWork(chargesDatabaseWriteContext);
             await SeedDatabaseAsync(chargesDatabaseWriteContext);
             var charge = GetValidCharge();
 
             chargesDatabaseWriteContext.Charges.Add(charge);
             await chargesDatabaseWriteContext.SaveChangesAsync();
+            await unitOfWork.SaveChangesAsync();
 
             var firstPeriod = charge.Periods.First();
 
@@ -101,7 +106,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             var sut = new ChargeRepository(chargesDatabaseWriteContext);
 
             // Act
-            await sut.UpdateChargeAsync(charge);
+            sut.UpdateCharge(charge);
+            await unitOfWork.SaveChangesAsync();
 
             // Assert
             await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
@@ -123,6 +129,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         public async Task CheckIfChargeExistsAsync_WhenChargeIsCreated_ThenChargeExists()
         {
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
+            var unitOfWork = new UnitOfWork(chargesDatabaseWriteContext);
 
             // Arrange
             await SeedDatabaseAsync(chargesDatabaseWriteContext);
@@ -131,6 +138,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
             // Act
             await sut.StoreChargeAsync(charge);
+            await unitOfWork.SaveChangesAsync();
 
             // Assert
             await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();

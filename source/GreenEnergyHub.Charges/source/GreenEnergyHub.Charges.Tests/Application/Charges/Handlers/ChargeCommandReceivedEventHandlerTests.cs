@@ -131,7 +131,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                 .Returns(chargePeriod.Object);
 
             var chargeUpdated = false;
-            chargeRepository.Setup(r => r.UpdateChargeAsync(It.IsAny<Charge>()))
+            chargeRepository.Setup(r => r.UpdateCharge(It.IsAny<Charge>()))
                 .Callback<Charge>(_ => chargeUpdated = true);
 
             // Act
@@ -164,7 +164,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                 .Returns(chargePeriod.Object);
 
             var chargeUpdated = false;
-            chargeRepository.Setup(r => r.UpdateChargeAsync(It.IsAny<Charge>()))
+            chargeRepository.Setup(r => r.UpdateCharge(It.IsAny<Charge>()))
                 .Callback<Charge>(_ => chargeUpdated = true);
 
             // Act

@@ -33,7 +33,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 {
     /// <summary>
-    /// Tests <see cref="ChargeRepository"/> using a SQL database.
+    /// Tests <see cref="ChargeRepository"/> using a database.
     /// </summary>
     [IntegrationTest]
     public class ChargeLinkRepositoryTests : IClassFixture<ChargesDatabaseFixture>

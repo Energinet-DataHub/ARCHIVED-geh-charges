@@ -27,6 +27,9 @@ using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 {
+    /// <summary>
+    /// Tests <see cref="MeteringPointRepository"/> using a database.
+    /// </summary>
     [IntegrationTest]
     public class MeteringPointRepositoryTests : IClassFixture<ChargesDatabaseFixture>
     {
