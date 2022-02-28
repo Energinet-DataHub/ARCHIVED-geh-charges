@@ -12,13 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Infrastructure.Core.Persistence;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Persistence
 {
-    public class UnitOfWork : IUnitOfWork/*, IDisposable*/
+    public class UnitOfWork : IUnitOfWork
     {
         private readonly IChargesDatabaseContext _chargesDatabaseContext;
 
@@ -31,25 +30,5 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence
         {
             await _chargesDatabaseContext.SaveChangesAsync().ConfigureAwait(false);
         }
-
-        /*private bool _disposed = false;
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!_disposed)
-            {
-                if (disposing)
-                {
-                    _chargesDatabaseContext.Dispose();
-                }
-            }
-            this._disposed = true;
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }*/
     }
 }
