@@ -13,10 +13,10 @@
 // limitations under the License.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.MeteringPointCreatedEvents;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
+using GreenEnergyHub.Charges.Infrastructure.Core.Persistence;
 using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.Application.MeteringPoints.Handlers
@@ -24,13 +24,16 @@ namespace GreenEnergyHub.Charges.Application.MeteringPoints.Handlers
     public class MeteringPointPersister : IMeteringPointPersister
     {
         private readonly IMeteringPointRepository _meteringPointRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger _logger;
 
         public MeteringPointPersister(
             IMeteringPointRepository meteringPointRepository,
-            [NotNull] ILoggerFactory loggerFactory)
+            ILoggerFactory loggerFactory,
+            IUnitOfWork unitOfWork)
         {
             _meteringPointRepository = meteringPointRepository;
+            _unitOfWork = unitOfWork;
             _logger = loggerFactory.CreateLogger(nameof(MeteringPointPersister));
         }
 
@@ -47,7 +50,8 @@ namespace GreenEnergyHub.Charges.Application.MeteringPoints.Handlers
 
             if (existingMeteringPoint == null)
             {
-                await _meteringPointRepository.StoreMeteringPointAsync(meteringPoint).ConfigureAwait(false);
+                await _meteringPointRepository.AddAsync(meteringPoint).ConfigureAwait(false);
+                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                 _logger.LogInformation($"Metering Point ID '{meteringPoint.MeteringPointId}' has been persisted");
             }
             else
