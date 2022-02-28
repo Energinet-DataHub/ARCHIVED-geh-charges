@@ -111,13 +111,24 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 
         private void HandleAnyOverlappingPeriod(ChargePeriod newChargePeriod)
         {
-            var overlappingPeriod = _periods
+            var previousPeriod = _periods
                 .SingleOrDefault(p =>
                 p.EndDateTime > newChargePeriod.StartDateTime &&
                 p.StartDateTime < newChargePeriod.StartDateTime);
 
-            if (overlappingPeriod != null)
-                overlappingPeriod.SetNewEndDate(newChargePeriod.StartDateTime);
+            if (previousPeriod != null)
+            {
+                var newPreviousPeriod = new ChargePeriod(
+                    previousPeriod.Id,
+                    previousPeriod.Name,
+                    previousPeriod.Description,
+                    previousPeriod.VatClassification,
+                    previousPeriod.TransparentInvoicing,
+                    previousPeriod.StartDateTime,
+                    newChargePeriod.StartDateTime);
+                _periods.Remove(previousPeriod);
+                _periods.Add(newPreviousPeriod);
+            }
         }
 
         private void RemoveAllPeriodsFromNewPeriodStart(ChargePeriod newChargePeriod)

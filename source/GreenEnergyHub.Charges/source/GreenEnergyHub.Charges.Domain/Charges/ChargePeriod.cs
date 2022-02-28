@@ -74,14 +74,6 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         /// <summary>
         /// Valid to, of a charge period.
         /// </summary>
-        public Instant EndDateTime { get; private set; }
-
-        public void SetNewEndDate(Instant newEndDate)
-        {
-            if (newEndDate < StartDateTime)
-                throw new InvalidOperationException($"{nameof(EndDateTime)} must be the same or after the StartDateTime of a {nameof(ChargePeriod)}");
-
-            EndDateTime = newEndDate;
-        }
+        public Instant EndDateTime { get; }
     }
 }
