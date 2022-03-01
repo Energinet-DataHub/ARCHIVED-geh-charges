@@ -49,9 +49,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
             _client = factory.CreateClient();
         }
 
-        public async Task InitializeAsync()
+        public Task InitializeAsync()
         {
-            await Task.CompletedTask;
+            _client.DefaultRequestHeaders.Add("Authorization", $"Bearer xxx");
+            return Task.CompletedTask;
         }
 
         public Task DisposeAsync()

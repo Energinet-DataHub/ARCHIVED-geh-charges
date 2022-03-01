@@ -38,6 +38,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.WebApi
                 {
                     var jwtTokenValidatorMock = new Mock<IJwtTokenValidator>();
 
+                    jwtTokenValidatorMock.Reset();
+
                     var claims = new ClaimsPrincipal();
                     jwtTokenValidatorMock
                         .Setup(m => m.ValidateTokenAsync(It.IsAny<string>()))
