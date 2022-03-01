@@ -24,7 +24,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 {
     /// <summary>
-    /// Tests <see cref="DefaultChargeLinkRepository"/> using an SQLite in-memory database.
+    /// Tests <see cref="DefaultChargeLinkRepository"/> using a database.
     /// </summary>
     [IntegrationTest]
     public class DefaultChargeLinkRepositoryTests : IClassFixture<ChargesDatabaseFixture>

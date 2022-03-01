@@ -33,7 +33,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 {
     /// <summary>
-    /// Tests <see cref="ChargeRepository"/> using a SQL database.
+    /// Tests <see cref="ChargeRepository"/> using a database.
     /// </summary>
     [IntegrationTest]
     public class ChargeLinkRepositoryTests : IClassFixture<ChargesDatabaseFixture>
@@ -57,7 +57,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             var sut = new ChargeLinksRepository(chargesDatabaseWriteContext);
 
             // Act
-            await sut.StoreAsync(new List<ChargeLink> { expected }).ConfigureAwait(false);
+            await sut.AddRangeAsync(new List<ChargeLink> { expected }).ConfigureAwait(false);
+            await chargesDatabaseWriteContext.SaveChangesAsync();
 
             // Assert
             await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();

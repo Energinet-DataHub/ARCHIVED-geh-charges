@@ -12,20 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using NodaTime;
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Infrastructure.Core.Persistence;
 
-namespace GreenEnergyHub.Charges.Core
+namespace GreenEnergyHub.Charges.Infrastructure.Persistence
 {
-    public class Period
+    public class UnitOfWork : IUnitOfWork
     {
-        public Period(Instant startDateTime, Instant endDateTime)
+        private readonly IChargesDatabaseContext _chargesDatabaseContext;
+
+        public UnitOfWork(IChargesDatabaseContext chargesDatabaseContext)
         {
-            StartDateTime = startDateTime;
-            EndDateTime = endDateTime;
+            _chargesDatabaseContext = chargesDatabaseContext;
         }
 
-        public Instant StartDateTime { get; }
-
-        public Instant EndDateTime { get; }
+        public async Task SaveChangesAsync()
+        {
+            await _chargesDatabaseContext.SaveChangesAsync().ConfigureAwait(false);
+        }
     }
 }
