@@ -13,9 +13,14 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
+using System.Security.Claims;
+using Energinet.DataHub.Core.App.Common.Abstractions.Security;
 using GreenEnergyHub.Charges.WebApi;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection;
+using Moq;
 
 namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.WebApi
 {
@@ -25,14 +30,32 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.WebApi
         {
             if (builder == null) throw new ArgumentNullException(nameof(builder));
 
+            // This can be used for changing registrations in the container (e.g. for mocks).
             builder.ConfigureServices(services =>
             {
-                // This can be used for changing registrations in the container (e.g. for mocks).
+                UnregisterService<IJwtTokenValidator>(services);
+                services.AddScoped<IJwtTokenValidator>(sp =>
+                {
+                    var jwtTokenValidatorMock = new Mock<IJwtTokenValidator>();
+
+                    var claims = new ClaimsPrincipal();
+                    jwtTokenValidatorMock
+                        .Setup(m => m.ValidateTokenAsync(It.IsAny<string>()))
+                        .ReturnsAsync((IsValid: true, ClaimsPrincipal: claims));
+
+                    return jwtTokenValidatorMock.Object;
+                });
 
                 // var sp = services.BuildServiceProvider();
                 // using var scope = sp.CreateScope();
                 // var scopedServices = scope.ServiceProvider;
             });
+        }
+
+        private static void UnregisterService<TService>(IServiceCollection services)
+        {
+            var descriptor = services.Single(d => d.ServiceType == typeof(TService));
+            services.Remove(descriptor);
         }
     }
 }
