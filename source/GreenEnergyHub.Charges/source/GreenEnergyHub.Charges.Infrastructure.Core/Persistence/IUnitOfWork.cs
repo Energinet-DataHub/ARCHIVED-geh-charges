@@ -12,10 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Infrastructure.Core.EntityFrameworkCore
+using System.Threading.Tasks;
+
+namespace GreenEnergyHub.Charges.Infrastructure.Core.Persistence
 {
-    public static class DbTypes
+    public interface IUnitOfWork
     {
-        public const string Price = "decimal(14,6)";
+        Task SaveChangesAsync();
     }
 }
