@@ -22,7 +22,6 @@ using System.Threading.Tasks;
 using Energinet.Charges.Contracts.ChargeLink;
 using FluentAssertions;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.WebApi;
-using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
@@ -39,6 +38,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V2
     {
         private const string BaseUrl = "/v2/ChargeLinks?meteringPointId=";
         private const string KnownMeteringPointId = SeededData.MeteringPoints.Mp571313180000000005.Id;
+
         private readonly HttpClient _client;
 
         public ChargeLinksControllerTests(
@@ -48,6 +48,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V2
             : base(chargesWebApiFixture, testOutputHelper)
         {
             _client = factory.CreateClient();
+            factory.SetupJwtTokenValidatorMock(isValid: true);
         }
 
         public Task InitializeAsync()
@@ -108,7 +109,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V2
         {
             var jsonSerializerOptions = new JsonSerializerOptions
             {
-                PropertyNameCaseInsensitive = true, Converters = { new JsonStringEnumConverter() },
+                PropertyNameCaseInsensitive = true,
+                Converters = { new JsonStringEnumConverter() },
             };
             return JsonSerializer.Deserialize<T>(jsonSerialized, jsonSerializerOptions)!;
         }

@@ -26,27 +26,33 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.WebApi
 {
     public class WebApiFactory : WebApplicationFactory<Startup>
     {
+        public Mock<IJwtTokenValidator>? JwtTokenValidatorMock { get; private set; }
+
+        /// <summary>
+        /// IMPORTANT: Call after 'factory.CreateClient()' to ensure 'builder.ConfigureServices' has been executed.
+        /// </summary>
+        public void SetupJwtTokenValidatorMock(bool isValid)
+        {
+            JwtTokenValidatorMock.Reset();
+
+            var claims = new ClaimsPrincipal();
+            JwtTokenValidatorMock!
+                .Setup(m => m.ValidateTokenAsync(It.IsAny<string>()))
+                .ReturnsAsync((IsValid: isValid, ClaimsPrincipal: claims));
+        }
+
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
-            if (builder == null) throw new ArgumentNullException(nameof(builder));
+            if (builder == null)
+                throw new ArgumentNullException(nameof(builder));
 
             // This can be used for changing registrations in the container (e.g. for mocks).
             builder.ConfigureServices(services =>
             {
                 UnregisterService<IJwtTokenValidator>(services);
-                services.AddScoped<IJwtTokenValidator>(sp =>
-                {
-                    var jwtTokenValidatorMock = new Mock<IJwtTokenValidator>();
 
-                    jwtTokenValidatorMock.Reset();
-
-                    var claims = new ClaimsPrincipal();
-                    jwtTokenValidatorMock
-                        .Setup(m => m.ValidateTokenAsync(It.IsAny<string>()))
-                        .ReturnsAsync((IsValid: true, ClaimsPrincipal: claims));
-
-                    return jwtTokenValidatorMock.Object;
-                });
+                JwtTokenValidatorMock = new Mock<IJwtTokenValidator>();
+                services.AddScoped<IJwtTokenValidator>(_ => JwtTokenValidatorMock.Object);
 
                 // var sp = services.BuildServiceProvider();
                 // using var scope = sp.CreateScope();
