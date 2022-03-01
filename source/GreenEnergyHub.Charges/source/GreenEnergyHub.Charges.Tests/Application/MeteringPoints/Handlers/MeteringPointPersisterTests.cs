@@ -37,8 +37,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
         public async Task PersistAsync_WhenCalledWithNonExistentMeteringPoint_ShouldPersist(
             [Frozen] Mock<IMeteringPointRepository> meteringPointRepository,
             [Frozen] Mock<ILoggerFactory> loggerFactory,
-            Mock<ILogger> logger,
-            IUnitOfWork unitOfWork)
+            [Frozen] Mock<IUnitOfWork> unitOfWork,
+            Mock<ILogger> logger)
         {
             // Arrange
             var meteringPointCreatedEvent = GetMeteringPointCreatedEvent();
@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
 
             meteringPointRepository.Setup(x => x.GetOrNullAsync(It.IsAny<string>())).ReturnsAsync(() => null);
 
-            var sut = new MeteringPointPersister(meteringPointRepository.Object, loggerFactory.Object, unitOfWork);
+            var sut = new MeteringPointPersister(meteringPointRepository.Object, loggerFactory.Object, unitOfWork.Object);
 
             // Act
             await sut.PersistAsync(meteringPointCreatedEvent).ConfigureAwait(false);
@@ -63,8 +63,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
         public async Task PersistAsync_WhenCalledWithExistingMeteringPoint_ShouldNotPersist(
             [Frozen] Mock<IMeteringPointRepository> meteringPointRepository,
             [Frozen] Mock<ILoggerFactory> loggerFactory,
-            Mock<ILogger> logger,
-            IUnitOfWork unitOfWork)
+            [Frozen] Mock<IUnitOfWork> unitOfWork,
+            Mock<ILogger> logger)
         {
             // Arrange
             var meteringPointCreatedEvent = GetMeteringPointCreatedEvent();
@@ -75,7 +75,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
 
             meteringPointRepository.Setup(x => x.GetOrNullAsync(It.IsAny<string>())).ReturnsAsync(existingMeteringPoint);
 
-            var sut = new MeteringPointPersister(meteringPointRepository.Object, loggerFactory.Object, unitOfWork);
+            var sut = new MeteringPointPersister(meteringPointRepository.Object, loggerFactory.Object, unitOfWork.Object);
 
             // Act
             await sut.PersistAsync(meteringPointCreatedEvent).ConfigureAwait(false);
@@ -93,8 +93,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
         public async Task PersistAsync_WhenNewMeteringPointDeviatesExisting_ShouldLogDifferences(
             [Frozen] Mock<IMeteringPointRepository> meteringPointRepository,
             [Frozen] Mock<ILoggerFactory> loggerFactory,
-            Mock<ILogger> logger,
-            IUnitOfWork unitOfWork)
+            [Frozen] Mock<IUnitOfWork> unitOfWork,
+            Mock<ILogger> logger)
         {
             // Arrange
             var meteringPointCreatedEvent = GetMeteringPointCreatedEvent();
@@ -112,7 +112,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
 
             meteringPointRepository.Setup(x => x.GetOrNullAsync(It.IsAny<string>())).ReturnsAsync(existingMeteringPoint);
 
-            var sut = new MeteringPointPersister(meteringPointRepository.Object, loggerFactory.Object, unitOfWork);
+            var sut = new MeteringPointPersister(meteringPointRepository.Object, loggerFactory.Object, unitOfWork.Object);
 
             // Act
             await sut.PersistAsync(meteringPointCreatedEvent).ConfigureAwait(false);
