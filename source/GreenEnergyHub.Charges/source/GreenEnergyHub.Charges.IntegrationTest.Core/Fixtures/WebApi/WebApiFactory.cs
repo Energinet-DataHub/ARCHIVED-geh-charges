@@ -31,7 +31,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.WebApi
         /// <summary>
         /// IMPORTANT: Call after 'factory.CreateClient()' to ensure 'builder.ConfigureServices' has been executed.
         /// </summary>
-        public void SetupJwtTokenValidatorMock(bool isValid)
+        public void ReconfigureJwtTokenValidatorMock(bool isValid)
         {
             JwtTokenValidatorMock.Reset();
 

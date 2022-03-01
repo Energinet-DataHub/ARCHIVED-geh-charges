@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V2
             : base(chargesWebApiFixture, testOutputHelper)
         {
             _client = factory.CreateClient();
-            factory.SetupJwtTokenValidatorMock(isValid: true);
+            factory.ReconfigureJwtTokenValidatorMock(isValid: true);
         }
 
         public Task InitializeAsync()
