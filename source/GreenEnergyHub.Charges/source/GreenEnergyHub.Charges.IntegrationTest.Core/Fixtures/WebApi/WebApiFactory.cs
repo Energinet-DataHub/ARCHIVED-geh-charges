@@ -30,6 +30,9 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.WebApi
 
         /// <summary>
         /// IMPORTANT: Call after 'factory.CreateClient()' to ensure 'builder.ConfigureServices' has been executed.
+        ///
+        /// We reset the mock first because the mock instance is shared between tests. This way we can
+        /// reconfigure the mock per test.
         /// </summary>
         public void ReconfigureJwtTokenValidatorMock(bool isValid)
         {
