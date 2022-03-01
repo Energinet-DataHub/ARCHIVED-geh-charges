@@ -34,7 +34,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
         IAsyncLifetime
     {
         private readonly HttpClient _client;
-        private readonly BackendAuthenticationClient _backendAuthenticationClient;
 
         public ODataControllerTests(
             ChargesWebApiFixture chargesWebApiFixture,
@@ -43,16 +42,19 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
             : base(chargesWebApiFixture, testOutputHelper)
         {
             _client = factory.CreateClient();
-            _backendAuthenticationClient = new BackendAuthenticationClient(
-                chargesWebApiFixture.AuthorizationConfiguration.BackendAppScope,
-                chargesWebApiFixture.AuthorizationConfiguration.ClientCredentialsSettings,
-                chargesWebApiFixture.AuthorizationConfiguration.B2cTenantId);
+            factory.ReconfigureJwtTokenValidatorMock(isValid: true);
         }
 
-        public async Task InitializeAsync()
+        public Task InitializeAsync()
         {
-            var authenticationResult = await _backendAuthenticationClient.GetAuthenticationTokenAsync();
-            _client.DefaultRequestHeaders.Add("Authorization", $"Bearer {authenticationResult.AccessToken}");
+            _client.DefaultRequestHeaders.Add("Authorization", $"Bearer xxx");
+            return Task.CompletedTask;
+        }
+
+        public Task DisposeAsync()
+        {
+            _client.Dispose();
+            return Task.CompletedTask;
         }
 
         [Theory]
@@ -69,12 +71,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
             var contentType = response.Content.Headers.ContentType!.ToString();
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             contentType.Should().Be("application/json; charset=utf-8");
-        }
-
-        public Task DisposeAsync()
-        {
-            _client.Dispose();
-            return Task.CompletedTask;
         }
     }
 }
