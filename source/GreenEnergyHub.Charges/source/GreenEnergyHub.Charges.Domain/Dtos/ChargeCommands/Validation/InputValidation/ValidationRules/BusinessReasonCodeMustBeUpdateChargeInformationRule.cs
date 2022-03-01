@@ -19,17 +19,17 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 {
     public class BusinessReasonCodeMustBeUpdateChargeInformationRule : IValidationRule
     {
-        private readonly ChargeCommand _chargeCommand;
+        private readonly ChargeDto _chargeDto;
 
-        public BusinessReasonCodeMustBeUpdateChargeInformationRule(ChargeCommand chargeCommand)
+        public BusinessReasonCodeMustBeUpdateChargeInformationRule(ChargeDto chargeDto)
         {
-            _chargeCommand = chargeCommand;
+            _chargeDto = chargeDto;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.BusinessReasonCodeMustBeUpdateChargeInformation;
 
-        public bool IsValid => _chargeCommand.Document.BusinessReasonCode ==
+        public bool IsValid => _chargeDto.Document.BusinessReasonCode ==
                                BusinessReasonCode.UpdateChargeInformation;
     }
 }

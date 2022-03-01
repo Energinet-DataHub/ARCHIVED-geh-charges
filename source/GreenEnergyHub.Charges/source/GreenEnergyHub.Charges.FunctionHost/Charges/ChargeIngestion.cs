@@ -61,7 +61,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
 
             foreach (var chargeCommand in message.ChargeCommands)
             {
-                ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(chargeCommand);
+                ChargeDtoNullChecker.ThrowExceptionIfRequiredPropertyIsNull(chargeCommand);
             }
 
             await _chargesMessageHandler.HandleAsync(message)

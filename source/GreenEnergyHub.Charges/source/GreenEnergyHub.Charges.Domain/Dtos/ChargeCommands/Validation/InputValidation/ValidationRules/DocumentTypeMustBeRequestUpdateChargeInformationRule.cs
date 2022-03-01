@@ -19,16 +19,16 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 {
     public class DocumentTypeMustBeRequestUpdateChargeInformationRule : IValidationRule
     {
-        private readonly ChargeCommand _chargeCommand;
+        private readonly ChargeDto _chargeDto;
 
-        public DocumentTypeMustBeRequestUpdateChargeInformationRule(ChargeCommand chargeCommand)
+        public DocumentTypeMustBeRequestUpdateChargeInformationRule(ChargeDto chargeDto)
         {
-            _chargeCommand = chargeCommand;
+            _chargeDto = chargeDto;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.DocumentTypeMustBeRequestUpdateChargeInformation;
 
-        public bool IsValid => _chargeCommand.Document.Type == DocumentType.RequestUpdateChargeInformation;
+        public bool IsValid => _chargeDto.Document.Type == DocumentType.RequestUpdateChargeInformation;
     }
 }

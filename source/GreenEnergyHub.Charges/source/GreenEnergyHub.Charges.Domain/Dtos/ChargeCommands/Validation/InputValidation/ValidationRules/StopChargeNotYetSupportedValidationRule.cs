@@ -18,14 +18,14 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 {
     public class StopChargeNotYetSupportedValidationRule : IValidationRule
     {
-        private readonly ChargeCommand _chargeCommand;
+        private readonly ChargeDto _chargeDto;
 
-        public StopChargeNotYetSupportedValidationRule(ChargeCommand chargeCommand)
+        public StopChargeNotYetSupportedValidationRule(ChargeDto chargeDto)
         {
-            _chargeCommand = chargeCommand;
+            _chargeDto = chargeDto;
         }
 
-        public bool IsValid => _chargeCommand.ChargeOperation.EndDateTime == null;
+        public bool IsValid => _chargeDto.ChargeOperation.EndDateTime == null;
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.StopChargeNotYetSupported;

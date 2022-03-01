@@ -17,14 +17,14 @@ using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
 {
-    public static class ChargeCommandNullChecker
+    public static class ChargeDtoNullChecker
     {
-        public static void ThrowExceptionIfRequiredPropertyIsNull(ChargeCommand chargeCommand)
+        public static void ThrowExceptionIfRequiredPropertyIsNull(ChargeDto chargeDto)
         {
-            if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
+            if (chargeDto == null) throw new ArgumentNullException(nameof(chargeDto));
 
-            CheckDocument(chargeCommand.Document);
-            CheckChargeOperation(chargeCommand.ChargeOperation);
+            CheckDocument(chargeDto.Document);
+            CheckChargeOperation(chargeDto.ChargeOperation);
         }
 
         private static void CheckChargeOperation(ChargeOperationDto chargeOperationDto)

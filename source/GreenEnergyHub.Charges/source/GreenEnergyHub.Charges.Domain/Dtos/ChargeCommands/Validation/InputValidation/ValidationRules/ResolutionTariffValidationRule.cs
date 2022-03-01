@@ -19,11 +19,11 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 {
     public class ResolutionTariffValidationRule : IValidationRule
     {
-        private readonly ChargeCommand _chargeCommand;
+        private readonly ChargeDto _chargeDto;
 
-        public ResolutionTariffValidationRule(ChargeCommand chargeCommand)
+        public ResolutionTariffValidationRule(ChargeDto chargeDto)
         {
-            _chargeCommand = chargeCommand;
+            _chargeDto = chargeDto;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ResolutionTariffValidation;
@@ -32,9 +32,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
         {
             get
             {
-                if (_chargeCommand.ChargeOperation.Type == ChargeType.Tariff)
+                if (_chargeDto.ChargeOperation.Type == ChargeType.Tariff)
                 {
-                    return _chargeCommand.ChargeOperation.Resolution is
+                    return _chargeDto.ChargeOperation.Resolution is
                         Resolution.P1D or
                         Resolution.PT1H or
                         Resolution.PT15M;

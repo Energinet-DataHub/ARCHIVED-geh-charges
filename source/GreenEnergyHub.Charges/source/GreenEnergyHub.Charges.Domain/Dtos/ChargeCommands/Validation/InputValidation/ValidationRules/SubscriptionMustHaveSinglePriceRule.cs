@@ -20,11 +20,11 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
     public class SubscriptionMustHaveSinglePriceRule : IValidationRule
     {
         private const int PricePointsRequired = 1;
-        private readonly ChargeCommand _chargeCommand;
+        private readonly ChargeDto _chargeDto;
 
-        public SubscriptionMustHaveSinglePriceRule(ChargeCommand chargeCommand)
+        public SubscriptionMustHaveSinglePriceRule(ChargeDto chargeDto)
         {
-            _chargeCommand = chargeCommand;
+            _chargeDto = chargeDto;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
@@ -34,9 +34,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
         {
             get
             {
-                if (_chargeCommand.ChargeOperation.Type is ChargeType.Subscription)
+                if (_chargeDto.ChargeOperation.Type is ChargeType.Subscription)
                 {
-                    return _chargeCommand.ChargeOperation.Points.Count == PricePointsRequired;
+                    return _chargeDto.ChargeOperation.Points.Count == PricePointsRequired;
                 }
 
                 return true;

@@ -21,7 +21,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.SharedDtos
 {
     // Non-nullable member is uninitialized is ignored
     // Only properties which is allowed to be null is nullable
-    // Document integrity is null checked by ChargeCommandNullChecker
+    // Document integrity is null checked by ChargeDtoNullChecker
 
     /// <summary>
     /// The Document class contains relevant information from the Business Message in which the ChargeEvent(s) were delivered to the Charges domain.

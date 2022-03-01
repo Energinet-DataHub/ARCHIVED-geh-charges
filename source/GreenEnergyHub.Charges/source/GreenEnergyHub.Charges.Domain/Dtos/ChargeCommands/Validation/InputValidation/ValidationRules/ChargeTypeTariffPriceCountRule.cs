@@ -23,11 +23,11 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
         private const int PricePointsRequiredInP1D = 1;
         private const int PricePointsRequiredInPt1H = 24;
         private const int PricePointsRequiredInPt15M = 96;
-        private readonly ChargeCommand _chargeCommand;
+        private readonly ChargeDto _chargeDto;
 
-        public ChargeTypeTariffPriceCountRule(ChargeCommand chargeCommand)
+        public ChargeTypeTariffPriceCountRule(ChargeDto chargeDto)
         {
-            _chargeCommand = chargeCommand;
+            _chargeDto = chargeDto;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeTypeTariffPriceCount;
@@ -36,14 +36,14 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 
         private bool Validate()
         {
-            if (_chargeCommand.ChargeOperation.Type == ChargeType.Tariff)
+            if (_chargeDto.ChargeOperation.Type == ChargeType.Tariff)
             {
-                return _chargeCommand.ChargeOperation.Resolution switch
+                return _chargeDto.ChargeOperation.Resolution switch
                 {
-                    Resolution.PT15M => _chargeCommand.ChargeOperation.Points.Count == PricePointsRequiredInPt15M,
-                    Resolution.PT1H => _chargeCommand.ChargeOperation.Points.Count == PricePointsRequiredInPt1H,
-                    Resolution.P1D => _chargeCommand.ChargeOperation.Points.Count == PricePointsRequiredInP1D,
-                    _ => throw new ArgumentException(nameof(_chargeCommand.ChargeOperation.Resolution)),
+                    Resolution.PT15M => _chargeDto.ChargeOperation.Points.Count == PricePointsRequiredInPt15M,
+                    Resolution.PT1H => _chargeDto.ChargeOperation.Points.Count == PricePointsRequiredInPt1H,
+                    Resolution.P1D => _chargeDto.ChargeOperation.Points.Count == PricePointsRequiredInP1D,
+                    _ => throw new ArgumentException(nameof(_chargeDto.ChargeOperation.Resolution)),
                 };
             }
 

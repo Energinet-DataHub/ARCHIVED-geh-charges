@@ -50,39 +50,43 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
         {
             if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
 
-            var senderId = chargeCommand.Document.Sender.Id;
-            var sender = await _marketParticipantRepository.GetOrNullAsync(senderId).ConfigureAwait(false);
-            var configuration = await _rulesConfigurationRepository.GetConfigurationAsync().ConfigureAwait(false);
+            var rules = new List<IValidationRule>();
 
-            var charge = await GetChargeOrNullAsync(chargeCommand).ConfigureAwait(false);
-            var rules = GetMandatoryRules(chargeCommand, configuration, sender);
+            foreach (var chargeDto in chargeCommand.Charges)
+            {
+                var senderId = chargeDto.Document.Sender.Id;
+                var sender = await _marketParticipantRepository.GetOrNullAsync(senderId).ConfigureAwait(false);
+                var configuration = await _rulesConfigurationRepository.GetConfigurationAsync().ConfigureAwait(false);
 
-            if (charge == null)
-                return ValidationRuleSet.FromRules(rules);
+                var charge = await GetChargeOrNullAsync(chargeDto).ConfigureAwait(false);
+                var rulesForDto = GetMandatoryRules(chargeDto, configuration, sender);
 
-            if (chargeCommand.ChargeOperation.Type == ChargeType.Tariff)
-                AddTariffOnlyRules(rules, chargeCommand, charge);
+                if (charge != null)
+                {
+                    if (chargeDto.ChargeOperation.Type == ChargeType.Tariff)
+                        AddTariffOnlyRules(rulesForDto, chargeDto, charge);
+                }
+
+                rules.AddRange(rulesForDto);
+            }
 
             return ValidationRuleSet.FromRules(rules);
         }
 
-        private static void AddTariffOnlyRules(
-            List<IValidationRule> rules,
-            ChargeCommand command,
-            Charge charge)
+        private static void AddTariffOnlyRules(ICollection<IValidationRule> rules, ChargeDto chargeDto, Charge charge)
         {
-            rules.Add(new ChangingTariffTaxValueNotAllowedRule(command, charge));
+            rules.Add(new ChangingTariffTaxValueNotAllowedRule(chargeDto, charge));
         }
 
         private List<IValidationRule> GetMandatoryRules(
-            ChargeCommand chargeCommand,
+            ChargeDto chargeDto,
             RulesConfiguration configuration,
             MarketParticipant? sender)
         {
             var rules = new List<IValidationRule>
             {
                 new StartDateValidationRule(
-                    chargeCommand,
+                    chargeDto,
                     configuration.StartDateValidationRuleConfiguration,
                     _zonedDateTimeService,
                     _clock),
@@ -92,12 +96,12 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
             return rules;
         }
 
-        private Task<Charge?> GetChargeOrNullAsync(ChargeCommand command)
+        private Task<Charge?> GetChargeOrNullAsync(ChargeDto chargeDto)
         {
             var chargeIdentifier = new ChargeIdentifier(
-                command.ChargeOperation.ChargeId,
-                command.ChargeOperation.ChargeOwner,
-                command.ChargeOperation.Type);
+                chargeDto.ChargeOperation.ChargeId,
+                chargeDto.ChargeOperation.ChargeOwner,
+                chargeDto.ChargeOperation.Type);
 
             return _chargeRepository.GetOrNullAsync(chargeIdentifier);
         }

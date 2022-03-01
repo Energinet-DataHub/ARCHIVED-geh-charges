@@ -12,21 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
+#pragma warning disable 8618
+
+namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
 {
-    public class ChargeIdRequiredValidationRule : IValidationRule
+    // TODO: ChargeDtoNullChecker renamed to ChargeDtoNullChecker and comment update?
+    // Non-nullable member is uninitialized is ignored
+    // Only properties which is allowed to be null is nullable
+    // ChargeCommand integrity is null checked by ChargeDtoNullChecker
+    public class ChargeDto
     {
-        private readonly ChargeDto _chargeDto;
+        public DocumentDto Document { get; set; }
 
-        public ChargeIdRequiredValidationRule(ChargeDto chargeDto)
-        {
-            _chargeDto = chargeDto;
-        }
-
-        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeIdRequiredValidation;
-
-        public bool IsValid => !string.IsNullOrWhiteSpace(_chargeDto.ChargeOperation.ChargeId);
+        public ChargeOperationDto ChargeOperation { get; set; }
     }
 }

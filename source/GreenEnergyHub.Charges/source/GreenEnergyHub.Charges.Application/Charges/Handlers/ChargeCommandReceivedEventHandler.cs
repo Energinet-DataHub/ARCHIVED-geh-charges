@@ -82,11 +82,13 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             {
                 case OperationType.Create:
                     await HandleCreateEventAsync(commandReceivedEvent.Command).ConfigureAwait(false);
+                    // await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                     break;
                 case OperationType.Update:
                     if (charge == null)
                         throw new InvalidOperationException("Could not update charge. Charge not found.");
                     HandleUpdateEvent(charge, commandReceivedEvent.Command);
+                    // await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                     break;
                 case OperationType.Stop:
                     if (charge == null)
@@ -94,6 +96,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                     if (commandReceivedEvent.Command.ChargeOperation.EndDateTime == null)
                         throw new InvalidOperationException("Could not stop charge. Invalid end date.");
                     StopCharge(charge, commandReceivedEvent.Command.ChargeOperation.EndDateTime.Value);
+                    // await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                     break;
                 default:
                     throw new InvalidOperationException("Could not handle charge command.");

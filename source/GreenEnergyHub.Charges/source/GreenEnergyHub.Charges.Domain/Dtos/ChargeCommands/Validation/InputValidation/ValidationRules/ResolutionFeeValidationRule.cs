@@ -19,11 +19,11 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 {
     public class ResolutionFeeValidationRule : IValidationRule
     {
-        private readonly ChargeCommand _chargeCommand;
+        private readonly ChargeDto _chargeDto;
 
-        public ResolutionFeeValidationRule(ChargeCommand chargeCommand)
+        public ResolutionFeeValidationRule(ChargeDto chargeDto)
         {
-            _chargeCommand = chargeCommand;
+            _chargeDto = chargeDto;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ResolutionFeeValidation;
@@ -32,9 +32,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
         {
             get
             {
-                if (_chargeCommand.ChargeOperation.Type == ChargeType.Fee)
+                if (_chargeDto.ChargeOperation.Type == ChargeType.Fee)
                 {
-                    return _chargeCommand.ChargeOperation.Resolution is Resolution.P1D;
+                    return _chargeDto.ChargeOperation.Resolution is Resolution.P1D;
                 }
 
                 return true;

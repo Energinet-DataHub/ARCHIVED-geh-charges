@@ -33,26 +33,33 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             _chargePeriodFactory = chargePeriodFactory;
         }
 
-        public async Task<Charge> CreateFromCommandAsync(ChargeCommand command)
+        public async Task<IReadOnlyCollection<Charge>> CreateFromCommandAsync(ChargeCommand chargeCommand)
         {
-            var owner = await _marketParticipantRepository
-                .GetOrNullAsync(command.ChargeOperation.ChargeOwner)
-                .ConfigureAwait(false);
+            var chargeCreated = new List<Charge>();
 
-            if (owner == null)
-                throw new InvalidOperationException($"Market participant '{command.ChargeOperation.ChargeOwner}' does not exist.");
+            foreach (var chargeDto in chargeCommand.Charges)
+            {
+                var owner = await _marketParticipantRepository
+                    .GetOrNullAsync(chargeDto.ChargeOperation.ChargeOwner)
+                    .ConfigureAwait(false);
 
-            var period = _chargePeriodFactory.CreateFromChargeOperationDto(command.ChargeOperation);
+                if (owner == null)
+                    throw new InvalidOperationException($"Market participant '{chargeDto.ChargeOperation.ChargeOwner}' does not exist.");
 
-            return new Charge(
-                Guid.NewGuid(),
-                command.ChargeOperation.ChargeId,
-                owner.Id,
-                command.ChargeOperation.Type,
-                command.ChargeOperation.Resolution,
-                command.ChargeOperation.TaxIndicator,
-                command.ChargeOperation.Points,
-                new List<ChargePeriod> { period });
+                var period = _chargePeriodFactory.CreateFromChargeOperationDto(chargeDto.ChargeOperation);
+
+                chargeCreated.Add(new Charge(
+                    Guid.NewGuid(),
+                    chargeDto.ChargeOperation.ChargeId,
+                    owner.Id,
+                    chargeDto.ChargeOperation.Type,
+                    chargeDto.ChargeOperation.Resolution,
+                    chargeDto.ChargeOperation.TaxIndicator,
+                    chargeDto.ChargeOperation.Points,
+                    new List<ChargePeriod> { period }));
+            }
+
+            return chargeCreated;
         }
     }
 }

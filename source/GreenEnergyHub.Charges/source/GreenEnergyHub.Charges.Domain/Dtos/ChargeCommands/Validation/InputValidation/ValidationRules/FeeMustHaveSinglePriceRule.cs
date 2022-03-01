@@ -20,9 +20,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
     public class FeeMustHaveSinglePriceRule : IValidationRule
     {
         private const int PricePointsRequired = 1;
-        private readonly ChargeCommand _chargeCommand;
+        private readonly ChargeDto _chargeCommand;
 
-        public FeeMustHaveSinglePriceRule(ChargeCommand chargeCommand)
+        public FeeMustHaveSinglePriceRule(ChargeDto chargeCommand)
         {
             _chargeCommand = chargeCommand;
         }
