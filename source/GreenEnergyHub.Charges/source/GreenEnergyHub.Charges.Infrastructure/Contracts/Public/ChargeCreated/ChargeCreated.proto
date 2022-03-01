@@ -43,10 +43,6 @@ message ChargeCreated {
   }
   Resolution resolution = 5;  // The resolution of a charge price list, e.g. 15 min, hourly, daily, monthly
   bool tax_indicator = 6; // Indicates whether a tariff is considered a tax or not
-  ChargePeriod charge_period = 7; // Contains the charge's validity period
-}
-
-message ChargePeriod {
-  google.protobuf.Timestamp StartDateTime = 1; // In UTC. The charge period's valid from date and time
-  google.protobuf.Timestamp EndDateTime = 2; // In UTC. The charge period's valid to date and time. The default value will be the equivalent to 9999-12-31T23:59:59Z without milliseconds
+  google.protobuf.Timestamp StartDateTime = 7; // In UTC. The charge period's valid from date and time
+  google.protobuf.Timestamp EndDateTime = 8; // In UTC. The charge period's valid to date and time. The default value will be the equivalent to 9999-12-31T23:59:59Z without milliseconds
 }

@@ -72,7 +72,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         public Instant StartDateTime { get; }
 
         /// <summary>
-        /// Valid to, of a charge period. Also known as Termination Date.
+        /// Valid to, of a charge period.
         /// </summary>
         public Instant EndDateTime { get; }
     }

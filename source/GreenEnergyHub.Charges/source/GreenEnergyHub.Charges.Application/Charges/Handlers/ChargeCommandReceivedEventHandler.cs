@@ -19,6 +19,8 @@ using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Infrastructure.Core.Persistence;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
@@ -28,17 +30,23 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         private readonly IValidator<ChargeCommand> _validator;
         private readonly IChargeRepository _chargeRepository;
         private readonly IChargeFactory _chargeFactory;
+        private readonly IChargePeriodFactory _chargePeriodFactory;
+        private readonly IUnitOfWork _unitOfWork;
 
         public ChargeCommandReceivedEventHandler(
             IChargeCommandReceiptService chargeCommandReceiptService,
             IValidator<ChargeCommand> validator,
             IChargeRepository chargeRepository,
-            IChargeFactory chargeFactory)
+            IChargeFactory chargeFactory,
+            IChargePeriodFactory chargePeriodFactory,
+            IUnitOfWork unitOfWork)
         {
             _chargeCommandReceiptService = chargeCommandReceiptService;
             _validator = validator;
             _chargeRepository = chargeRepository;
             _chargeFactory = chargeFactory;
+            _chargePeriodFactory = chargePeriodFactory;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task HandleAsync(ChargeCommandReceivedEvent commandReceivedEvent)
@@ -59,39 +67,61 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 .BusinessValidateAsync(commandReceivedEvent.Command).ConfigureAwait(false);
             if (businessValidationResult.IsFailed)
             {
-                await _chargeCommandReceiptService
-                    .RejectAsync(commandReceivedEvent.Command, businessValidationResult).ConfigureAwait(false);
+                await _chargeCommandReceiptService.RejectAsync(
+                    commandReceivedEvent.Command, businessValidationResult).ConfigureAwait(false);
                 return;
             }
 
-            // get charges
-            var existingCharge = await GetChargeAsync(commandReceivedEvent.Command).ConfigureAwait(false);
+            // get existing charge
+            var charge = await GetChargeAsync(commandReceivedEvent.Command).ConfigureAwait(false);
 
             // is create, update or stop?
-            var operationType = GetOperationType(commandReceivedEvent.Command, existingCharge);
+            var operationType = GetOperationType(commandReceivedEvent.Command, charge);
 
-            // create flow
-            if (operationType == OperationType.Create)
+            switch (operationType)
             {
-                var charge = await _chargeFactory
-                    .CreateFromCommandAsync(commandReceivedEvent.Command)
-                    .ConfigureAwait(false);
-                await _chargeRepository.StoreChargeAsync(charge).ConfigureAwait(false);
+                case OperationType.Create:
+                    await HandleCreateEventAsync(commandReceivedEvent.Command).ConfigureAwait(false);
+                    break;
+                case OperationType.Update:
+                    if (charge == null)
+                        throw new InvalidOperationException("Could not update charge. Charge not found.");
+                    HandleUpdateEvent(charge, commandReceivedEvent.Command);
+                    break;
+                case OperationType.Stop:
+                    if (charge == null)
+                        throw new InvalidOperationException("Could not stop charge. Charge not found.");
+                    if (commandReceivedEvent.Command.ChargeOperation.EndDateTime == null)
+                        throw new InvalidOperationException("Could not stop charge. Invalid end date.");
+                    StopCharge(charge, commandReceivedEvent.Command.ChargeOperation.EndDateTime.Value);
+                    break;
+                default:
+                    throw new InvalidOperationException("Could not handle charge command.");
             }
 
-            // update flow
-            if (operationType == OperationType.Update)
-            {
-                // new update flow
-            }
-
-            // stop flow
-            if (operationType == OperationType.Stop)
-            {
-                // new stop flow
-            }
-
+            await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             await _chargeCommandReceiptService.AcceptAsync(commandReceivedEvent.Command).ConfigureAwait(false);
+        }
+
+        private async Task HandleCreateEventAsync(ChargeCommand chargeCommand)
+        {
+            var charge = await _chargeFactory
+                .CreateFromCommandAsync(chargeCommand)
+                .ConfigureAwait(false);
+            await _chargeRepository.AddAsync(charge).ConfigureAwait(false);
+        }
+
+        private void HandleUpdateEvent(Charge charge, ChargeCommand chargeCommand)
+        {
+            var newChargePeriod = _chargePeriodFactory.CreateFromChargeOperationDto(chargeCommand.ChargeOperation);
+            charge.UpdateCharge(newChargePeriod);
+            _chargeRepository.Update(charge);
+        }
+
+        private void StopCharge(Charge charge, Instant chargeOperationEndDateTime)
+        {
+            charge.StopCharge(chargeOperationEndDateTime);
+            _chargeRepository.Update(charge);
         }
 
         private static OperationType GetOperationType(ChargeCommand command, Charge? charge)

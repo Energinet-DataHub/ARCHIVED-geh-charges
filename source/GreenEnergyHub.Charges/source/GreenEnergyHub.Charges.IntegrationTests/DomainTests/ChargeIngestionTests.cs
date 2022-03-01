@@ -143,7 +143,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Act and assert
-                // We expect three peaks, one for the charge and one for the receipt and one rejection
+                // We expect three peeks, one for the charge and one for the receipt and one rejection
                 await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId, 3);
             }
         }

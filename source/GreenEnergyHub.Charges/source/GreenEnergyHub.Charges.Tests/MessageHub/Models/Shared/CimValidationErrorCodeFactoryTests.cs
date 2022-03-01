@@ -34,7 +34,6 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared
         [InlineAutoMoqData(ValidationRuleIdentifier.ChargeIdLengthValidation, ReasonCode.E86)]
         [InlineAutoMoqData(ValidationRuleIdentifier.ChargeIdRequiredValidation, ReasonCode.E0H)]
         [InlineAutoMoqData(ValidationRuleIdentifier.ChargeOperationIdRequired, ReasonCode.E0H)]
-        [InlineAutoMoqData(ValidationRuleIdentifier.ChargeUpdateNotYetSupported, ReasonCode.D13)]
         [InlineAutoMoqData(ValidationRuleIdentifier.ChargeDescriptionHasMaximumLength, ReasonCode.E86)]
         [InlineAutoMoqData(ValidationRuleIdentifier.ChargeNameHasMaximumLength, ReasonCode.E86)]
         [InlineAutoMoqData(ValidationRuleIdentifier.ChargeOwnerIsRequiredValidation, ReasonCode.E0H)]

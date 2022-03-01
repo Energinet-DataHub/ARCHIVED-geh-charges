@@ -27,6 +27,9 @@ using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 {
+    /// <summary>
+    /// Tests <see cref="MeteringPointRepository"/> using a database.
+    /// </summary>
     [IntegrationTest]
     public class MeteringPointRepositoryTests : IClassFixture<ChargesDatabaseFixture>
     {
@@ -46,7 +49,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             var sut = new MeteringPointRepository(chargesDatabaseWriteContext);
 
             // Act
-            await sut.StoreMeteringPointAsync(expected).ConfigureAwait(false);
+            await sut.AddAsync(expected).ConfigureAwait(false);
+            await chargesDatabaseWriteContext.SaveChangesAsync();
 
             // Assert
             await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
@@ -59,7 +63,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         public async Task StoreMeteringPointAsync_WhenMeteringPointIsNull_ShouldThrow(MeteringPointRepository sut)
         {
             await Assert
-                .ThrowsAsync<ArgumentNullException>(() => sut.StoreMeteringPointAsync(null!))
+                .ThrowsAsync<ArgumentNullException>(() => sut.AddAsync(null!))
                 .ConfigureAwait(false);
         }
 
