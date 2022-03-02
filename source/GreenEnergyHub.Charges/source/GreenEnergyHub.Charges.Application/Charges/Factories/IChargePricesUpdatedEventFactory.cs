@@ -12,14 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Factories
 {
     public interface IChargePricesUpdatedEventFactory
     {
-        ChargePricesUpdatedEvent Create([NotNull] ChargeCommandAcceptedEvent chargeCommandAcceptedEvent);
+        ChargePricesUpdatedEvent Create(ChargeDto chargeDto);
     }
 }

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Collections.Generic;
+using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
@@ -23,10 +24,18 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
     // ChargeCommand integrity is null checked by ChargeDtoNullChecker
     public class ChargeCommand : CommandBase
     {
+        /*public ChargeCommand(IReadOnlyCollection<ChargeDto> charges, ChargeIdentifier chargeIdentifier)
+        {
+            Charges = charges;
+            ChargeIdentifier = chargeIdentifier;
+        }*/
+
         public ChargeCommand(IReadOnlyCollection<ChargeDto> charges)
         {
             Charges = charges;
         }
+
+        /*public ChargeIdentifier ChargeIdentifier { get; }*/
 
         public IReadOnlyCollection<ChargeDto> Charges { get; }
     }

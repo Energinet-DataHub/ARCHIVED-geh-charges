@@ -14,11 +14,14 @@
 
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
 {
     public interface IChargePublisher
     {
-        Task PublishChargeCreatedAsync(ChargeCommandAcceptedEvent chargeCommandAcceptedEvent);
+        Task PublishChargeCreatedAsync(ChargeDto chargeDto);
+
+        Task PublishChargeUpdatedAsync(ChargeCommandAcceptedEvent chargeCommandAcceptedEvent);
     }
 }

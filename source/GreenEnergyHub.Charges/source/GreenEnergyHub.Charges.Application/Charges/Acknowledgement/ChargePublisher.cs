@@ -15,6 +15,7 @@
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Factories;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
@@ -32,10 +33,20 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
             _chargeCreatedEventFactory = chargeCreatedEventFactory;
         }
 
-        public async Task PublishChargeCreatedAsync(ChargeCommandAcceptedEvent chargeCommandAcceptedEvent)
+        public async Task PublishChargeCreatedAsync(ChargeDto chargeDto)
         {
-            var chargeCreatedEvent = _chargeCreatedEventFactory.Create(chargeCommandAcceptedEvent);
+            var chargeCreatedEvent = _chargeCreatedEventFactory.Create(chargeDto);
             await _messageChargeDispatcher.DispatchAsync(chargeCreatedEvent).ConfigureAwait(false);
+        }
+
+        public Task PublishChargeUpdatedAsync(ChargeCommandAcceptedEvent chargeCommandAcceptedEvent)
+        {
+            // Todo: for now we will just log this
+
+            /*var chargeCreatedEvent = _chargeCreatedEventFactory.Create(chargeDto);
+            await _messageChargeDispatcher.DispatchAsync(chargeCreatedEvent).ConfigureAwait(false);*/
+
+            return Task.CompletedTask;
         }
     }
 }

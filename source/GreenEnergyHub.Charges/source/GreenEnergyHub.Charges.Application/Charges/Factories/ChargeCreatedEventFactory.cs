@@ -12,11 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
-using GreenEnergyHub.Charges.Core;
 using GreenEnergyHub.Charges.Core.Currency;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Factories
 {
@@ -29,17 +27,17 @@ namespace GreenEnergyHub.Charges.Application.Charges.Factories
             _currencyConfigurationIso4217 = currencyConfigurationIso4217;
         }
 
-        public ChargeCreatedEvent Create([NotNull] ChargeCommandAcceptedEvent chargeCommandAcceptedEvent)
+        public ChargeCreatedEvent Create(ChargeDto chargeDto)
         {
             return new ChargeCreatedEvent(
-                chargeCommandAcceptedEvent.Command.ChargeOperation.ChargeId,
-                chargeCommandAcceptedEvent.Command.ChargeOperation.Type,
-                chargeCommandAcceptedEvent.Command.ChargeOperation.ChargeOwner,
+                chargeDto.ChargeOperation.ChargeId,
+                chargeDto.ChargeOperation.Type,
+                chargeDto.ChargeOperation.ChargeOwner,
                 _currencyConfigurationIso4217.Currency,
-                chargeCommandAcceptedEvent.Command.ChargeOperation.Resolution,
-                chargeCommandAcceptedEvent.Command.ChargeOperation.TaxIndicator,
-                chargeCommandAcceptedEvent.Command.ChargeOperation.StartDateTime,
-                chargeCommandAcceptedEvent.Command.ChargeOperation.EndDateTime.GetValueOrDefault());
+                chargeDto.ChargeOperation.Resolution,
+                chargeDto.ChargeOperation.TaxIndicator,
+                chargeDto.ChargeOperation.StartDateTime,
+                chargeDto.ChargeOperation.EndDateTime.GetValueOrDefault());
         }
     }
 }

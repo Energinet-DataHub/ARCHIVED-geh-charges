@@ -46,9 +46,25 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
             DocumentDto document)
         {
             var chargeOperationsAsync = await ParseChargeOperationsAsync(reader).ConfigureAwait(false);
-            var chargeCommands = chargeOperationsAsync
-                .Select(chargeOperationDto => new ChargeCommand { Document = document, ChargeOperation = chargeOperationDto })
+
+            var chargeCommands = chargeOperationsAsync.GroupBy(x => new { x.ChargeId, x.ChargeOwner, x.Type })
+                .Select(chargeOperationDtoGroup =>
+                    new ChargeCommand(chargeOperationDtoGroup.AsEnumerable()
+                        .Select(dto => new ChargeDto { Document = document, ChargeOperation = dto }).ToList()))
                 .ToList();
+
+            /*foreach (var chargeOperationDtoGroup in chargeOperationsAsync.GroupBy(x => new { x.ChargeId, x.ChargeOwner, x.Type }))
+            {
+                var firstOperationDto = chargeOperationDtoGroup.Select(x => x).First();
+
+                chargeCommands.Add(new ChargeCommand(
+                    chargeOperationDtoGroup.AsQueryable()
+                        .Select(dto => new ChargeDto { Document = document, ChargeOperation = dto }).ToList(),
+                    new ChargeIdentifier(
+                        firstOperationDto.ChargeId,
+                        firstOperationDto.ChargeOwner,
+                        firstOperationDto.Type)));
+            }*/
 
             return new ChargeCommandBundle(chargeCommands);
         }

@@ -20,7 +20,6 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Persistence;
-using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
@@ -53,7 +52,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         {
             if (commandReceivedEvent == null) throw new ArgumentNullException(nameof(commandReceivedEvent));
 
-            // input validation
             var inputValidationResult = _validator.InputValidate(commandReceivedEvent.Command);
             if (inputValidationResult.IsFailed)
             {
@@ -62,7 +60,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 return;
             }
 
-            // business validation
             var businessValidationResult = await _validator
                 .BusinessValidateAsync(commandReceivedEvent.Command).ConfigureAwait(false);
             if (businessValidationResult.IsFailed)
@@ -72,77 +69,84 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 return;
             }
 
-            // get existing charge
-            var charge = await GetChargeAsync(commandReceivedEvent.Command).ConfigureAwait(false);
-
-            // is create, update or stop?
-            var operationType = GetOperationType(commandReceivedEvent.Command, charge);
-
-            switch (operationType)
+            foreach (var chargeDto in commandReceivedEvent.Command.Charges)
             {
-                case OperationType.Create:
-                    await HandleCreateEventAsync(commandReceivedEvent.Command).ConfigureAwait(false);
-                    // await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-                    break;
-                case OperationType.Update:
-                    if (charge == null)
-                        throw new InvalidOperationException("Could not update charge. Charge not found.");
-                    HandleUpdateEvent(charge, commandReceivedEvent.Command);
-                    // await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-                    break;
-                case OperationType.Stop:
-                    if (charge == null)
-                        throw new InvalidOperationException("Could not stop charge. Charge not found.");
-                    if (commandReceivedEvent.Command.ChargeOperation.EndDateTime == null)
-                        throw new InvalidOperationException("Could not stop charge. Invalid end date.");
-                    StopCharge(charge, commandReceivedEvent.Command.ChargeOperation.EndDateTime.Value);
-                    // await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-                    break;
-                default:
-                    throw new InvalidOperationException("Could not handle charge command.");
+                var charge = await GetChargeAsync(chargeDto).ConfigureAwait(false);
+                var operationType = GetOperationType(chargeDto, charge);
+
+                switch (operationType)
+                {
+                    case OperationType.Create:
+                        await HandleCreateEventAsync(chargeDto).ConfigureAwait(false);
+                        break;
+                    case OperationType.Update:
+                        HandleUpdateEvent(charge, chargeDto);
+                        break;
+                    case OperationType.Stop:
+                        StopCharge(charge, chargeDto);
+                        break;
+                    default:
+                        throw new InvalidOperationException("Could not handle charge dto");
+                }
             }
 
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+
             await _chargeCommandReceiptService.AcceptAsync(commandReceivedEvent.Command).ConfigureAwait(false);
         }
 
-        private async Task HandleCreateEventAsync(ChargeCommand chargeCommand)
+        private async Task HandleCreateEventAsync(ChargeDto chargeDto)
         {
             var charge = await _chargeFactory
-                .CreateFromCommandAsync(chargeCommand)
+                .CreateFromChargeOperationDtoAsync(chargeDto.ChargeOperation)
                 .ConfigureAwait(false);
+
             await _chargeRepository.AddAsync(charge).ConfigureAwait(false);
         }
 
-        private void HandleUpdateEvent(Charge charge, ChargeCommand chargeCommand)
+        private void HandleUpdateEvent(Charge? charge, ChargeDto chargeCommand)
         {
+            if (charge == null)
+                throw new InvalidOperationException("Could not update charge. Charge not found.");
+
             var newChargePeriod = _chargePeriodFactory.CreateFromChargeOperationDto(chargeCommand.ChargeOperation);
             charge.UpdateCharge(newChargePeriod);
             _chargeRepository.Update(charge);
         }
 
-        private void StopCharge(Charge charge, Instant chargeOperationEndDateTime)
+        private void StopCharge(Charge? charge, ChargeDto chargeDto)
         {
+            if (charge == null)
+                throw new InvalidOperationException("Could not stop charge. Charge not found.");
+
+            if (chargeDto.ChargeOperation.EndDateTime == null)
+                throw new InvalidOperationException("Could not stop charge. Invalid end date.");
+
+            var chargeOperationEndDateTime = chargeDto.ChargeOperation.EndDateTime.Value;
+
             charge.StopCharge(chargeOperationEndDateTime);
             _chargeRepository.Update(charge);
         }
 
-        private static OperationType GetOperationType(ChargeCommand command, Charge? charge)
+        private static OperationType GetOperationType(
+            ChargeDto command,
+            Charge? charge)
         {
             if (command.ChargeOperation.StartDateTime == command.ChargeOperation.EndDateTime)
             {
                 return OperationType.Stop;
             }
 
+            // Todo: If not first in list then it is also an update!
             return charge != null ? OperationType.Update : OperationType.Create;
         }
 
-        private async Task<Charge?> GetChargeAsync(ChargeCommand command)
+        private async Task<Charge?> GetChargeAsync(ChargeDto chargeDto)
         {
             var chargeIdentifier = new ChargeIdentifier(
-                command.ChargeOperation.ChargeId,
-                command.ChargeOperation.ChargeOwner,
-                command.ChargeOperation.Type);
+                chargeDto.ChargeOperation.ChargeId,
+                chargeDto.ChargeOperation.ChargeOwner,
+                chargeDto.ChargeOperation.Type);
 
             return await _chargeRepository.GetOrNullAsync(chargeIdentifier).ConfigureAwait(false);
         }
