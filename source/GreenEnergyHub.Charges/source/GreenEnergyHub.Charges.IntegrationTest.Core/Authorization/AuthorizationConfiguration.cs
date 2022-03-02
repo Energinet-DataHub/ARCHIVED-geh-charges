@@ -54,7 +54,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Authorization
             ClientCredentialsSettings = RetrieveB2CTeamClientSettings(teamName, teamClientId, teamClientSecret);
 
             ApiManagementBaseAddress = SecretsConfiguration.GetValue<Uri>(BuildApiManagementEnvironmentSecretName(Environment, "host-url"));
-            FrontendOpenIdUrl = SecretsConfiguration.GetValue<string>("B2C-frontend-open-id-url");
+            FrontendOpenIdUrl = SecretsConfiguration.GetValue<string>(BuildB2CFrontendOpenIdUrl(Environment));
         }
 
         public IEnumerable<string> FrontendAppScope { get; }
@@ -145,6 +145,11 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Authorization
         private static string BuildB2CFrontendAppId(string environment)
         {
             return $"B2C-{environment}-frontend-app-id";
+        }
+
+        private static string BuildB2CFrontendOpenIdUrl(string environment)
+        {
+            return $"B2C-{environment}-frontend-open-id-url";
         }
 
         private static string BuildB2CTeamSecretName(string environment, string team, string secret)
