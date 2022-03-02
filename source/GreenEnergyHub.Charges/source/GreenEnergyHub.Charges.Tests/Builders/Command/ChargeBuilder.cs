@@ -12,27 +12,34 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
-using GreenEnergyHub.Charges.Application.Charges.Handlers.Message;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using System.Linq;
+using GreenEnergyHub.Charges.Domain.Charges;
 
-namespace GreenEnergyHub.Charges.Tests.Builders.Application
+namespace GreenEnergyHub.Charges.Tests.Builders.Command
 {
-    public class ChargesMessageBuilder
+    public class ChargeBuilder
     {
-        private readonly List<ChargeCommand> _transactions = new();
+        private List<ChargePeriod> _periods = new();
 
-        public ChargesMessageBuilder WithTransaction(ChargeCommand command)
+        public ChargeBuilder WithPeriods(IEnumerable<ChargePeriod> periods)
         {
-            _transactions.Add(command);
+            _periods = periods.ToList();
             return this;
         }
 
-        public ChargesMessage Build()
+        public Charge Build()
         {
-            var changeOfChargesMessage = new ChargesMessage();
-            changeOfChargesMessage.ChargeCommands.AddRange(_transactions);
-            return changeOfChargesMessage;
+            return new Charge(
+                Guid.NewGuid(),
+                "senderProvidedChargeId",
+                Guid.NewGuid(),
+                ChargeType.Tariff,
+                Resolution.PT1H,
+                true,
+                new List<Point>(),
+                _periods);
         }
     }
 }

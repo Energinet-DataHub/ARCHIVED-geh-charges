@@ -14,6 +14,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Charges
 {
@@ -82,5 +84,81 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         public IReadOnlyCollection<Point> Points => _points;
 
         public IReadOnlyCollection<ChargePeriod> Periods => _periods;
+
+        public bool IsValid => Validate();
+
+        public void StopCharge(Instant endDate)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Use this method to update the charge periods timeline of a charge upon receiving a charge update request
+        /// Please see the persist charge documentation where the update flow is covered:
+        /// https://github.com/Energinet-DataHub/geh-charges/tree/main/docs/process-flows#persist-charge
+        /// </summary>
+        /// <param name="newChargePeriod">New Charge Period from update charge request</param>
+        /// <exception cref="ArgumentNullException">Throws when <paramref name="newChargePeriod"/> is empty</exception>
+        public void UpdateCharge(ChargePeriod newChargePeriod)
+        {
+            if (newChargePeriod == null) throw new ArgumentNullException(nameof(newChargePeriod));
+
+            RemoveAllPeriodsFromNewPeriodStart(newChargePeriod);
+            HandleAnyOverlappingPeriod(newChargePeriod);
+            _periods.Add(newChargePeriod);
+            Validate();
+        }
+
+        private void HandleAnyOverlappingPeriod(ChargePeriod newChargePeriod)
+        {
+            var previousPeriod = _periods
+                .SingleOrDefault(p =>
+                p.EndDateTime > newChargePeriod.StartDateTime &&
+                p.StartDateTime < newChargePeriod.StartDateTime);
+
+            if (previousPeriod != null)
+            {
+                var newPreviousPeriod = new ChargePeriod(
+                    previousPeriod.Id,
+                    previousPeriod.Name,
+                    previousPeriod.Description,
+                    previousPeriod.VatClassification,
+                    previousPeriod.TransparentInvoicing,
+                    previousPeriod.StartDateTime,
+                    newChargePeriod.StartDateTime);
+                _periods.Remove(previousPeriod);
+                _periods.Add(newPreviousPeriod);
+            }
+        }
+
+        private void RemoveAllPeriodsFromNewPeriodStart(ChargePeriod newChargePeriod)
+        {
+            _periods.RemoveAll(p => p.StartDateTime >= newChargePeriod.StartDateTime);
+        }
+
+        private bool Validate()
+        {
+            var result = EnsureNoGapsInChargePeriodTimeline();
+            return result;
+        }
+
+        private bool EnsureNoGapsInChargePeriodTimeline()
+        {
+            var orderedPeriods = _periods.OrderBy(cp => cp.StartDateTime).ToList();
+            var pointInTimeline = orderedPeriods[0].StartDateTime;
+            foreach (var p in orderedPeriods)
+            {
+                if (p.StartDateTime == pointInTimeline)
+                {
+                    pointInTimeline = p.EndDateTime;
+                }
+                else
+                {
+                    throw new InvalidOperationException("Charge validation failed due to a gap in charge period timeline");
+                }
+            }
+
+            return true;
+        }
     }
 }

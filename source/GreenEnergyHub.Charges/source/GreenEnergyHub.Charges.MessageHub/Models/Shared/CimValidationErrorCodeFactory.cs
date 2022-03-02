@@ -48,7 +48,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.Shared
                 ValidationRuleIdentifier.FeeMustHaveSinglePrice => ReasonCode.E87,
                 ValidationRuleIdentifier.SubscriptionMustHaveSinglePrice => ReasonCode.E87,
                 ValidationRuleIdentifier.CommandSenderMustBeAnExistingMarketParticipant => ReasonCode.D02,
-                ValidationRuleIdentifier.ChargeUpdateNotYetSupported => ReasonCode.D13,
                 ValidationRuleIdentifier.MeteringPointDoesNotExist => ReasonCode.E10,
                 ValidationRuleIdentifier.ChargeDoesNotExist => ReasonCode.E0I,
                 ValidationRuleIdentifier.ChargeLinkUpdateNotYetSupported => ReasonCode.D13,
