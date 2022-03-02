@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.Factories
@@ -28,17 +29,17 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
             var rules = new List<IValidationRule>();
             foreach (var chargeDto in chargeCommand.Charges)
             {
-                rules = GetRules(chargeDto);
+                rules = GetRules(chargeCommand.Document, chargeDto);
             }
 
             return ValidationRuleSet.FromRules(rules);
         }
 
-        private static List<IValidationRule> GetRules(ChargeDto chargeDto)
+        private static List<IValidationRule> GetRules(DocumentDto documentDto, ChargeDto chargeDto)
         {
             var rules = new List<IValidationRule>
             {
-                new BusinessReasonCodeMustBeUpdateChargeInformationRule(chargeDto),
+                new BusinessReasonCodeMustBeUpdateChargeInformationRule(documentDto),
                 new ChargeDescriptionHasMaximumLengthRule(chargeDto),
                 new ChargeIdLengthValidationRule(chargeDto),
                 new ChargeIdRequiredValidationRule(chargeDto),
@@ -48,14 +49,14 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
                 new ChargePriceMaximumDigitsAndDecimalsRule(chargeDto),
                 new ChargeTypeIsKnownValidationRule(chargeDto),
                 new ChargeTypeTariffPriceCountRule(chargeDto),
-                new DocumentTypeMustBeRequestUpdateChargeInformationRule(chargeDto),
+                new DocumentTypeMustBeRequestUpdateChargeInformationRule(documentDto),
                 new FeeMustHaveSinglePriceRule(chargeDto),
                 new MaximumPriceRule(chargeDto),
-                new RecipientIsMandatoryTypeValidationRule(chargeDto),
+                new RecipientIsMandatoryTypeValidationRule(documentDto),
                 new ResolutionFeeValidationRule(chargeDto),
                 new ResolutionSubscriptionValidationRule(chargeDto),
                 new ResolutionTariffValidationRule(chargeDto),
-                new SenderIsMandatoryTypeValidationRule(chargeDto),
+                new SenderIsMandatoryTypeValidationRule(documentDto),
                 new StartDateTimeRequiredValidationRule(chargeDto),
                 new StopChargeNotYetSupportedValidationRule(chargeDto),
                 new SubscriptionMustHaveSinglePriceRule(chargeDto),

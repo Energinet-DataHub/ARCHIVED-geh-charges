@@ -18,14 +18,12 @@ using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
 {
-    // TODO: ChargeDtoNullChecker renamed to ChargeDtoNullChecker and comment update?
+    // TODO: ChargeCommandNullChecker renamed to ChargeCommandNullChecker and comment update?
     // Non-nullable member is uninitialized is ignored
     // Only properties which is allowed to be null is nullable
-    // ChargeCommand integrity is null checked by ChargeDtoNullChecker
+    // ChargeCommand integrity is null checked by ChargeCommandNullChecker
     public class ChargeDto
     {
-        public DocumentDto Document { get; set; }
-
         public ChargeOperationDto ChargeOperation { get; set; }
     }
 }

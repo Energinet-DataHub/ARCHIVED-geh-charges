@@ -60,10 +60,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
 
             var message = GetChargesMessage(inboundMessage.ValidatedMessage);
 
-            foreach (var chargeDto in message.ChargeCommands.SelectMany(chargeCommand => chargeCommand.Charges))
-            {
-                ChargeDtoNullChecker.ThrowExceptionIfRequiredPropertyIsNull(chargeDto);
-            }
+            ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(message.ChargeCommands);
 
             await _chargesMessageHandler.HandleAsync(message).ConfigureAwait(false);
 

@@ -13,18 +13,27 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
 {
-    public static class ChargeDtoNullChecker
+    public static class ChargeCommandNullChecker
     {
-        public static void ThrowExceptionIfRequiredPropertyIsNull(ChargeDto chargeDto)
+        public static void ThrowExceptionIfRequiredPropertyIsNull(List<ChargeCommand> chargeCommands)
         {
-            if (chargeDto == null) throw new ArgumentNullException(nameof(chargeDto));
+            if (chargeCommands == null) throw new ArgumentNullException(nameof(chargeCommands));
 
-            CheckDocument(chargeDto.Document);
-            CheckChargeOperation(chargeDto.ChargeOperation);
+            foreach (var chargeCommand in chargeCommands)
+            {
+                CheckDocument(chargeCommand.Document);
+
+                foreach (var chargeDto in chargeCommand.Charges)
+                {
+                    CheckChargeOperation(chargeDto.ChargeOperation);
+                }
+            }
         }
 
         private static void CheckChargeOperation(ChargeOperationDto chargeOperationDto)

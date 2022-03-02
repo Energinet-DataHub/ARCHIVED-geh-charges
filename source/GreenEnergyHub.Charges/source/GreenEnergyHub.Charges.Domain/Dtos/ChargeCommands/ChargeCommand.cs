@@ -15,13 +15,14 @@
 using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
 {
     // TODO: delete comment?
     // Non-nullable member is uninitialized is ignored
     // Only properties which is allowed to be null is nullable
-    // ChargeCommand integrity is null checked by ChargeDtoNullChecker
+    // ChargeCommand integrity is null checked by ChargeCommandNullChecker
     public class ChargeCommand : CommandBase
     {
         /*public ChargeCommand(IReadOnlyCollection<ChargeDto> charges, ChargeIdentifier chargeIdentifier)
@@ -30,12 +31,15 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
             ChargeIdentifier = chargeIdentifier;
         }*/
 
-        public ChargeCommand(IReadOnlyCollection<ChargeDto> charges)
+        public ChargeCommand(DocumentDto document, IReadOnlyCollection<ChargeDto> charges)
         {
+            Document = document;
             Charges = charges;
         }
 
         /*public ChargeIdentifier ChargeIdentifier { get; }*/
+
+        public DocumentDto Document { get; }
 
         public IReadOnlyCollection<ChargeDto> Charges { get; }
     }
