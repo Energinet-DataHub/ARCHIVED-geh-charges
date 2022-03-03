@@ -58,7 +58,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 InputValidator<ChargeLinksCommand, ChargeLinkDto>>();
             serviceCollection.AddScoped<IAvailableChargeLinksReceiptValidationErrorFactory,
                 AvailableChargeLinksReceiptValidationErrorFactory>();
-            serviceCollection.AddScoped<ICimValidationErrorTextFactory<ChargeLinksCommand>,
+            serviceCollection.AddScoped<ICimValidationErrorTextFactory<ChargeLinksCommand, ChargeLinkDto>,
                 ChargeLinksCimValidationErrorTextFactory>();
 
             serviceCollection.AddMessaging()

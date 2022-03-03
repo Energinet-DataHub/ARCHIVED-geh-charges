@@ -21,6 +21,7 @@ using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Services;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
@@ -41,7 +42,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             [Frozen] Mock<IChargeLinksReceiptService> chargeLinksReceiptService,
             [Frozen] Mock<IChargeLinkFactory> chargeLinkFactory,
             [Frozen] Mock<IChargeLinksAcceptedEventFactory> chargeLinkCommandAcceptedEventFactory,
-            [Frozen] Mock<IValidator<ChargeLinksCommand>> validator,
+            [Frozen] Mock<IValidator<ChargeLinksCommand, ChargeOperationDto>> validator,
             ChargeLinksReceivedEvent chargeLinksReceivedEvent,
             ChargeLinksAcceptedEvent chargeLinksAcceptedEvent,
             ChargeLinksReceivedEventHandler sut)
@@ -61,7 +62,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             chargeLinksReceiptService.Verify(x => x.AcceptAsync(It.IsAny<ChargeLinksCommand>()));
         }
 
-        private static void SetupValidator(Mock<IValidator<ChargeLinksCommand>> validator)
+        private static void SetupValidator(Mock<IValidator<ChargeLinksCommand, ChargeOperationDto>> validator)
         {
             validator.Setup(x => x.InputValidate(It.IsAny<ChargeLinksCommand>()))
                 .Returns(ValidationResult.CreateSuccess());

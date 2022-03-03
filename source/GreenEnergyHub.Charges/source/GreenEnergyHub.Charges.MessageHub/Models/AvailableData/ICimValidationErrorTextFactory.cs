@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
@@ -21,13 +20,14 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableData
     /// <summary>
     /// Factory for creating CIM error text of charge rejections.
     /// </summary>
-    public interface ICimValidationErrorTextFactory<TCommand>
+    public interface ICimValidationErrorTextFactory<in TCommand, in TOperation>
         where TCommand : CommandBase
+        where TOperation : OperationBase
     {
         /// <summary>
         /// Creates an error text by replacing occurrences of the
-        /// placeholder texts with values from the TCommand/>.
+        /// placeholder texts with values from the TCommand and/or TOperation/>.
         /// </summary>
-        string Create(ValidationError validationError, TCommand command);
+        string Create(ValidationError validationError, TCommand command, TOperation chargeOperationDto);
     }
 }

@@ -24,7 +24,7 @@ using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 {
-    public class ChargeCimValidationErrorTextFactory : ICimValidationErrorTextFactory<ChargeCommand>
+    public class ChargeCimValidationErrorTextFactory : ICimValidationErrorTextFactory<ChargeCommand, ChargeOperationDto>
     {
         private readonly ICimValidationErrorTextProvider _cimValidationErrorTextProvider;
         private readonly ILogger _logger;
@@ -37,11 +37,12 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             _logger = loggerFactory.CreateLogger(nameof(ChargeCimValidationErrorTextFactory));
         }
 
-        public string Create(ValidationError validationError, ChargeCommand chargeCommand)
+        public string Create(
+            ValidationError validationError,
+            ChargeCommand command,
+            ChargeOperationDto chargeOperationDto)
         {
-            //TODO provide chargeOperationDto
-            /*return GetMergedErrorMessage(validationError, chargeCommand.Document, chargeOperationDto);*/
-            return GetMergedErrorMessage(validationError, chargeCommand.Document, null!);
+            return GetMergedErrorMessage(validationError, command.Document, chargeOperationDto);
         }
 
         private string GetMergedErrorMessage(

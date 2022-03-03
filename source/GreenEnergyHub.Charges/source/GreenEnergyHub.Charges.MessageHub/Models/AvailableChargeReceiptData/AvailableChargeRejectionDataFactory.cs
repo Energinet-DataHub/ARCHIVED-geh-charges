@@ -15,7 +15,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
@@ -69,9 +68,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
         {
             return input
                 .ValidationErrors
-                .Select(
-                    validationError => _availableChargeReceiptValidationErrorFactory
-                        .Create(validationError, input.Command, chargeOperationDto))
+                .Select(validationError => _availableChargeReceiptValidationErrorFactory
+                    .Create(validationError, input.Command, chargeOperationDto))
                 .ToList();
         }
     }
