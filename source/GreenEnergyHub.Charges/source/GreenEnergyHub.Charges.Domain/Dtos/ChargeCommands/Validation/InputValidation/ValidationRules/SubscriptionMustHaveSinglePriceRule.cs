@@ -17,7 +17,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
 {
-    public class SubscriptionMustHaveSinglePriceRule : IValidationRule
+    public class SubscriptionMustHaveSinglePriceRule : IValidationRuleForOperation
     {
         private const int PricePointsRequired = 1;
         private readonly ChargeOperationDto _chargeOperationDto;
@@ -33,5 +33,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
         public bool IsValid =>
             _chargeOperationDto.Type is not ChargeType.Subscription ||
             _chargeOperationDto.Points.Count == PricePointsRequired;
+
+        public string OperationId => _chargeOperationDto.Id;
     }
 }

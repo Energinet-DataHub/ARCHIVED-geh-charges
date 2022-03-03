@@ -16,7 +16,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
 {
-    public class StartDateTimeRequiredValidationRule : IValidationRule
+    public class StartDateTimeRequiredValidationRule : IValidationRuleForOperation
     {
         private readonly ChargeOperationDto _chargeOperationDto;
 
@@ -30,5 +30,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 
         // Instant is a struct, so to ensure caller supplied it, we check if it has the default value.
         public bool IsValid => _chargeOperationDto.StartDateTime != default;
+
+        public string OperationId => _chargeOperationDto.Id;
     }
 }

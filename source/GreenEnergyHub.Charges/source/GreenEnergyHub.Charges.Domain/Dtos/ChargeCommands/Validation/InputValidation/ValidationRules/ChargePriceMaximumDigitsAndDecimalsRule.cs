@@ -33,9 +33,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.ChargePriceMaximumDigitsAndDecimals;
 
-        public string OperationId => _chargeOperationDto.Id;
-
         public bool IsValid => _chargeOperationDto.Points.All(PointIsValid);
+
+        public string OperationId => _chargeOperationDto.Id;
 
         /// <summary>
         /// This validation rule validates each Price in a list of Point(s). This property

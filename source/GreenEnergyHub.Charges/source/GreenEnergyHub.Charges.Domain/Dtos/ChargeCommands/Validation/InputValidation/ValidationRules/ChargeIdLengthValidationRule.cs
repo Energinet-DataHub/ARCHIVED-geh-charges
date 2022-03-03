@@ -16,7 +16,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
 {
-    public class ChargeIdLengthValidationRule : IValidationRule
+    public class ChargeIdLengthValidationRule : IValidationRuleForOperation
     {
         private const int ValidLength = 10;
 
@@ -30,5 +30,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
         public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeIdLengthValidation;
 
         public bool IsValid => _chargeOperationDto.ChargeId?.Length <= ValidLength;
+
+        public string OperationId => _chargeOperationDto.Id;
     }
 }

@@ -16,7 +16,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
 {
-    public class StopChargeNotYetSupportedValidationRule : IValidationRule
+    public class StopChargeNotYetSupportedValidationRule : IValidationRuleForOperation
     {
         private readonly ChargeOperationDto _chargeOperationDto;
 
@@ -29,5 +29,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
             ValidationRuleIdentifier.StopChargeNotYetSupported;
 
         public bool IsValid => _chargeOperationDto.EndDateTime == null;
+
+        public string OperationId => _chargeOperationDto.Id;
     }
 }

@@ -17,7 +17,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
 {
-    public class VatClassificationValidationRule : IValidationRule
+    public class VatClassificationValidationRule : IValidationRuleForOperation
     {
         private readonly ChargeOperationDto _chargeOperationDto;
 
@@ -32,5 +32,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
         public bool IsValid => _chargeOperationDto.VatClassification
             is VatClassification.NoVat
             or VatClassification.Vat25;
+
+        public string OperationId => _chargeOperationDto.Id;
     }
 }

@@ -30,9 +30,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 
         public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.MaximumPrice;
 
-        public string OperationId => _chargeOperationDto.Id;
-
         public bool IsValid => _chargeOperationDto.Points.All(Validate);
+
+        public string OperationId => _chargeOperationDto.Id;
 
         /// <summary>
         /// This validation rule validates each Price in a list of Point(s). This property

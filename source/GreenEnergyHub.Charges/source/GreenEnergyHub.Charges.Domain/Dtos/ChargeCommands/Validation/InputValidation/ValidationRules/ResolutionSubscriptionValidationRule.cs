@@ -17,7 +17,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
 {
-    public class ResolutionSubscriptionValidationRule : IValidationRule
+    public class ResolutionSubscriptionValidationRule : IValidationRuleForOperation
     {
         private readonly ChargeOperationDto _chargeOperationDto;
 
@@ -32,5 +32,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
         public bool IsValid =>
             _chargeOperationDto.Type != ChargeType.Subscription ||
             _chargeOperationDto.Resolution is Resolution.P1M;
+
+        public string OperationId => _chargeOperationDto.Id;
     }
 }

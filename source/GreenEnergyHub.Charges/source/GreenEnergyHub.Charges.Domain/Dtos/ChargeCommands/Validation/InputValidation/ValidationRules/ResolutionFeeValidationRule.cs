@@ -17,7 +17,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
 {
-    public class ResolutionFeeValidationRule : IValidationRule
+    public class ResolutionFeeValidationRule : IValidationRuleForOperation
     {
         private readonly ChargeOperationDto _chargeOperationDto;
 
@@ -30,5 +30,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 
         public bool IsValid => _chargeOperationDto.Type != ChargeType.Fee ||
                                _chargeOperationDto.Resolution is Resolution.P1D;
+
+        public string OperationId => _chargeOperationDto.Id;
     }
 }

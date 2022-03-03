@@ -17,7 +17,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules
 {
-    public class ChangingTariffTaxValueNotAllowedRule : IValidationRule
+    public class ChangingTariffTaxValueNotAllowedRule : IValidationRuleForOperation
     {
         private readonly ChargeOperationDto _chargeOperationDto;
         private readonly Charge _charge;
@@ -32,5 +32,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
             ValidationRuleIdentifier.ChangingTariffTaxValueNotAllowed;
 
         public bool IsValid => _chargeOperationDto.TaxIndicator == _charge.TaxIndicator;
+
+        public string OperationId => _chargeOperationDto.Id;
     }
 }
