@@ -18,16 +18,16 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 {
     public class ChargeOwnerIsRequiredValidationRule : IValidationRule
     {
-        private readonly ChargeDto _chargeDto;
+        private readonly ChargeOperationDto _chargeOperationDto;
 
-        public ChargeOwnerIsRequiredValidationRule(ChargeDto chargeDto)
+        public ChargeOwnerIsRequiredValidationRule(ChargeOperationDto chargeOperationDto)
         {
-            _chargeDto = chargeDto;
+            _chargeOperationDto = chargeOperationDto;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.ChargeOwnerIsRequiredValidation;
 
-        public bool IsValid => !string.IsNullOrWhiteSpace(_chargeDto.ChargeOperation.ChargeOwner);
+        public bool IsValid => !string.IsNullOrWhiteSpace(_chargeOperationDto.ChargeOwner);
     }
 }

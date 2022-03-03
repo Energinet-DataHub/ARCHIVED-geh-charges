@@ -17,12 +17,13 @@ using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 {
-    public class BusinessValidator<TCommand> : IBusinessValidator<TCommand>
+    public class BusinessValidator<TCommand, TOperation> : IBusinessValidator<TCommand, TOperation>
         where TCommand : CommandBase
+        where TOperation : OperationBase
     {
-        private readonly IBusinessValidationRulesFactory<TCommand> _businessValidationRulesFactory;
+        private readonly IBusinessValidationRulesFactory<TCommand, TOperation> _businessValidationRulesFactory;
 
-        public BusinessValidator(IBusinessValidationRulesFactory<TCommand> businessValidationRulesFactory)
+        public BusinessValidator(IBusinessValidationRulesFactory<TCommand, TOperation> businessValidationRulesFactory)
         {
             _businessValidationRulesFactory = businessValidationRulesFactory;
         }
@@ -31,6 +32,13 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
         {
             var businessValidationResult = await _businessValidationRulesFactory
                 .CreateRulesAsync(command).ConfigureAwait(false);
+            return businessValidationResult.Validate();
+        }
+
+        public async Task<ValidationResult> ValidateAsync(TOperation operation)
+        {
+            var businessValidationResult = await _businessValidationRulesFactory
+                .CreateRulesAsync(operation).ConfigureAwait(false);
             return businessValidationResult.Validate();
         }
     }

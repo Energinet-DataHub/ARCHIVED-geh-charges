@@ -23,12 +23,12 @@ using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 {
-    public class AvailableChargeConfirmationDataFactory
+    public class AvailableChargeReceiptDataFactory
         : AvailableDataFactoryBase<AvailableChargeReceiptData, ChargeCommandAcceptedEvent>
     {
         private readonly IMessageMetaDataContext _messageMetaDataContext;
 
-        public AvailableChargeConfirmationDataFactory(
+        public AvailableChargeReceiptDataFactory(
             IMessageMetaDataContext messageMetaDataContext,
             IMarketParticipantRepository marketParticipantRepository)
             : base(marketParticipantRepository)
@@ -52,7 +52,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                     _messageMetaDataContext.RequestDataTime,
                     Guid.NewGuid(), // ID of each available piece of data must be unique
                     ReceiptStatus.Confirmed,
-                    input.Command.ChargeOperation.Id,
+                    "ChargeOperation.Id missing!", /* Todo: ChargeOperation.Id, */
                     new List<AvailableReceiptValidationError>()),
             };
         }

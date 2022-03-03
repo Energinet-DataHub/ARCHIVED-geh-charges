@@ -15,8 +15,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
@@ -45,29 +47,31 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             var recipient = input.Command.Document.Sender; // The original sender is the recipient of the receipt
             var sender = await GetSenderAsync().ConfigureAwait(false);
 
-            return new List<AvailableChargeReceiptData>()
-            {
-                new AvailableChargeReceiptData(
-                    sender.MarketParticipantId,
-                    sender.BusinessProcessRole,
-                    recipient.Id,
-                    recipient.BusinessProcessRole,
-                    input.Command.Document.BusinessReasonCode,
-                    _messageMetaDataContext.RequestDataTime,
-                    Guid.NewGuid(), // ID of each available piece of data must be unique
-                    ReceiptStatus.Rejected,
-                    input.Command.ChargeOperation.Id,
-                    GetReasons(input)),
-            };
+            return input.Command.Charges.Select(
+                    chargeOperationDto =>
+                        new AvailableChargeReceiptData(
+                            sender.MarketParticipantId,
+                            sender.BusinessProcessRole,
+                            recipient.Id,
+                            recipient.BusinessProcessRole,
+                            input.Command.Document.BusinessReasonCode,
+                            _messageMetaDataContext.RequestDataTime,
+                            Guid.NewGuid(), // ID of each available piece of data must be unique
+                            ReceiptStatus.Rejected,
+                            chargeOperationDto.Id,
+                            GetReasons(input, chargeOperationDto)))
+                .ToList();
         }
 
-        private List<AvailableReceiptValidationError> GetReasons(ChargeCommandRejectedEvent input)
+        private List<AvailableReceiptValidationError> GetReasons(
+            ChargeCommandRejectedEvent input,
+            ChargeOperationDto chargeOperationDto)
         {
             return input
                 .ValidationErrors
                 .Select(
                     validationError => _availableChargeReceiptValidationErrorFactory
-                        .Create(validationError, input.Command))
+                        .Create(validationError, input.Command, chargeOperationDto))
                 .ToList();
         }
     }

@@ -13,13 +13,11 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
 {
-    // TODO: delete comment?
     // Non-nullable member is uninitialized is ignored
     // Only properties which is allowed to be null is nullable
     // ChargeCommand integrity is null checked by ChargeCommandNullChecker
@@ -31,7 +29,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
             ChargeIdentifier = chargeIdentifier;
         }*/
 
-        public ChargeCommand(DocumentDto document, IReadOnlyCollection<ChargeDto> charges)
+        public ChargeCommand(DocumentDto document, IReadOnlyCollection<ChargeOperationDto> charges)
         {
             Document = document;
             Charges = charges;
@@ -41,6 +39,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
 
         public DocumentDto Document { get; }
 
-        public IReadOnlyCollection<ChargeDto> Charges { get; }
+        public IReadOnlyCollection<ChargeOperationDto> Charges { get; }
     }
 }

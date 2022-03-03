@@ -30,6 +30,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
 
         public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeDoesNotExist;
 
+        public string OperationId => _chargeLinkDto.OperationId;
+
         public bool IsValid => _existingCharge is not null;
 
         /// <summary>

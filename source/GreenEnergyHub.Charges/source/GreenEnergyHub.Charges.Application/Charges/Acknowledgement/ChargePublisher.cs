@@ -33,9 +33,9 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
             _chargeCreatedEventFactory = chargeCreatedEventFactory;
         }
 
-        public async Task PublishChargeCreatedAsync(ChargeDto chargeDto)
+        public async Task PublishChargeCreatedAsync(ChargeOperationDto chargeOperationDto)
         {
-            var chargeCreatedEvent = _chargeCreatedEventFactory.Create(chargeDto);
+            var chargeCreatedEvent = _chargeCreatedEventFactory.Create(chargeOperationDto);
             await _messageChargeDispatcher.DispatchAsync(chargeCreatedEvent).ConfigureAwait(false);
         }
 
@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
         {
             // Todo: for now we will just log this
 
-            /*var chargeCreatedEvent = _chargeCreatedEventFactory.Create(chargeDto);
+            /*var chargeCreatedEvent = _chargeCreatedEventFactory.Create(chargeOperationDto);
             await _messageChargeDispatcher.DispatchAsync(chargeCreatedEvent).ConfigureAwait(false);*/
 
             return Task.CompletedTask;

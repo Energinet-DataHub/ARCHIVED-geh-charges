@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         {
             if (chargeCommandAcceptedEvent == null) throw new ArgumentNullException(nameof(chargeCommandAcceptedEvent));
 
-            foreach (var chargeDto in chargeCommandAcceptedEvent.Command.Charges)
+            foreach (var chargeOperationDto in chargeCommandAcceptedEvent.Command.Charges)
             {
                 // Todo:
                 /*if is update
@@ -45,12 +45,12 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 else
                     publish create*/
 
-                await _chargePublisher.PublishChargeCreatedAsync(chargeDto).ConfigureAwait(false);
+                await _chargePublisher.PublishChargeCreatedAsync(chargeOperationDto).ConfigureAwait(false);
 
-                if (chargeDto.ChargeOperation.Points.Any())
+                if (chargeOperationDto.Points.Any())
                 {
                     await _chargePricesUpdatedPublisher
-                        .PublishChargePricesAsync(chargeDto)
+                        .PublishChargePricesAsync(chargeOperationDto)
                         .ConfigureAwait(false);
                 }
             }

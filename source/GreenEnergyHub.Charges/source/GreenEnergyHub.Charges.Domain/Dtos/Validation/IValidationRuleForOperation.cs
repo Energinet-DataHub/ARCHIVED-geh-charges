@@ -12,18 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
-
-#pragma warning disable 8618
-
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
+namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 {
-    // TODO: ChargeCommandNullChecker renamed to ChargeCommandNullChecker and comment update?
-    // Non-nullable member is uninitialized is ignored
-    // Only properties which is allowed to be null is nullable
-    // ChargeCommand integrity is null checked by ChargeCommandNullChecker
-    public class ChargeDto
+    /// <summary>
+    /// Interface for validationrules for an operation
+    /// </summary>
+    public interface IValidationRuleForOperation : IValidationRule
     {
-        public ChargeOperationDto ChargeOperation { get; set; }
+        /// <summary>
+        /// Id of an operation that violated of a validation rule
+        /// </summary>
+        public string OperationId { get; }
     }
 }

@@ -20,47 +20,61 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.Factories
 {
-    public class ChargeCommandInputValidationRulesFactory : IInputValidationRulesFactory<ChargeCommand>
+    public class ChargeCommandInputValidationRulesFactory : IInputValidationRulesFactory<ChargeCommand, ChargeOperationDto>
     {
         public IValidationRuleSet CreateRulesForCommand(ChargeCommand chargeCommand)
         {
             if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
 
-            var rules = new List<IValidationRule>();
-            foreach (var chargeDto in chargeCommand.Charges)
-            {
-                rules = GetRules(chargeCommand.Document, chargeDto);
-            }
+            var rules = GetRulesForCommand(chargeCommand.Document);
 
             return ValidationRuleSet.FromRules(rules);
         }
 
-        private static List<IValidationRule> GetRules(DocumentDto documentDto, ChargeDto chargeDto)
+        public IValidationRuleSet CreateRulesForOperation(ChargeOperationDto chargeOperationDto)
+        {
+            if (chargeOperationDto == null) throw new ArgumentNullException(nameof(chargeOperationDto));
+
+            var rules = GetRulesForOperation(chargeOperationDto);
+
+            return ValidationRuleSet.FromRules(rules);
+        }
+
+        private static List<IValidationRule> GetRulesForCommand(DocumentDto documentDto)
         {
             var rules = new List<IValidationRule>
             {
                 new BusinessReasonCodeMustBeUpdateChargeInformationRule(documentDto),
-                new ChargeDescriptionHasMaximumLengthRule(chargeDto),
-                new ChargeIdLengthValidationRule(chargeDto),
-                new ChargeIdRequiredValidationRule(chargeDto),
-                new ChargeNameHasMaximumLengthRule(chargeDto),
-                new ChargeOperationIdRequiredRule(chargeDto),
-                new ChargeOwnerIsRequiredValidationRule(chargeDto),
-                new ChargePriceMaximumDigitsAndDecimalsRule(chargeDto),
-                new ChargeTypeIsKnownValidationRule(chargeDto),
-                new ChargeTypeTariffPriceCountRule(chargeDto),
                 new DocumentTypeMustBeRequestUpdateChargeInformationRule(documentDto),
-                new FeeMustHaveSinglePriceRule(chargeDto),
-                new MaximumPriceRule(chargeDto),
                 new RecipientIsMandatoryTypeValidationRule(documentDto),
-                new ResolutionFeeValidationRule(chargeDto),
-                new ResolutionSubscriptionValidationRule(chargeDto),
-                new ResolutionTariffValidationRule(chargeDto),
                 new SenderIsMandatoryTypeValidationRule(documentDto),
-                new StartDateTimeRequiredValidationRule(chargeDto),
-                new StopChargeNotYetSupportedValidationRule(chargeDto),
-                new SubscriptionMustHaveSinglePriceRule(chargeDto),
-                new VatClassificationValidationRule(chargeDto),
+            };
+
+            return rules;
+        }
+
+        private static List<IValidationRule> GetRulesForOperation(ChargeOperationDto chargeOperationDto)
+        {
+            var rules = new List<IValidationRule>
+            {
+                new ChargeDescriptionHasMaximumLengthRule(chargeOperationDto),
+                new ChargeIdLengthValidationRule(chargeOperationDto),
+                new ChargeIdRequiredValidationRule(chargeOperationDto),
+                new ChargeNameHasMaximumLengthRule(chargeOperationDto),
+                new ChargeOperationIdRequiredRule(chargeOperationDto),
+                new ChargeOwnerIsRequiredValidationRule(chargeOperationDto),
+                new ChargePriceMaximumDigitsAndDecimalsRule(chargeOperationDto),
+                new ChargeTypeIsKnownValidationRule(chargeOperationDto),
+                new ChargeTypeTariffPriceCountRule(chargeOperationDto),
+                new FeeMustHaveSinglePriceRule(chargeOperationDto),
+                new MaximumPriceRule(chargeOperationDto),
+                new ResolutionFeeValidationRule(chargeOperationDto),
+                new ResolutionSubscriptionValidationRule(chargeOperationDto),
+                new ResolutionTariffValidationRule(chargeOperationDto),
+                new StartDateTimeRequiredValidationRule(chargeOperationDto),
+                new StopChargeNotYetSupportedValidationRule(chargeOperationDto),
+                new SubscriptionMustHaveSinglePriceRule(chargeOperationDto),
+                new VatClassificationValidationRule(chargeOperationDto),
             };
 
             return rules;

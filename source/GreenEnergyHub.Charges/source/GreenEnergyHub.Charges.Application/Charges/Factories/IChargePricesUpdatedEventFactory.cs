@@ -19,6 +19,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Factories
 {
     public interface IChargePricesUpdatedEventFactory
     {
-        ChargePricesUpdatedEvent Create(ChargeDto chargeDto);
+        ChargePricesUpdatedEvent Create(ChargeOperationDto chargeOperationDto);
     }
 }

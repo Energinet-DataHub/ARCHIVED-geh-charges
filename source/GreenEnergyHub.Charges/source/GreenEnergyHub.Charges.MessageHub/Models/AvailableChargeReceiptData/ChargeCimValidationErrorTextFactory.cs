@@ -15,6 +15,7 @@
 using System;
 using System.Linq;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
@@ -38,20 +39,24 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 
         public string Create(ValidationError validationError, ChargeCommand chargeCommand)
         {
-            return GetMergedErrorMessage(validationError, chargeCommand);
+            //TODO provide chargeOperationDto
+            /*return GetMergedErrorMessage(validationError, chargeCommand.Document, chargeOperationDto);*/
+            return GetMergedErrorMessage(validationError, chargeCommand.Document, null!);
         }
 
-        private string GetMergedErrorMessage(ValidationError validationError, ChargeCommand chargeCommand)
+        private string GetMergedErrorMessage(
+            ValidationError validationError, DocumentDto documentDto, ChargeOperationDto chargeOperationDto)
         {
             var errorTextTemplate = _cimValidationErrorTextProvider
                 .GetCimValidationErrorText(validationError.ValidationRuleIdentifier);
 
-            return MergeErrorText(errorTextTemplate, chargeCommand, validationError.TriggeredBy);
+            return MergeErrorText(errorTextTemplate, documentDto, chargeOperationDto, validationError.TriggeredBy);
         }
 
         private string MergeErrorText(
             string errorTextTemplate,
-            ChargeCommand chargeCommand,
+            DocumentDto documentDto,
+            ChargeOperationDto chargeOperationDto,
             string? triggeredBy)
         {
             var tokens = CimValidationErrorTextTokenMatcher.GetTokens(errorTextTemplate);
@@ -60,7 +65,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 
             foreach (var token in tokens)
             {
-                var data = GetDataForToken(token, chargeCommand, triggeredBy);
+                var data = GetDataForToken(token, documentDto, chargeOperationDto, triggeredBy);
                 mergedErrorText = mergedErrorText.Replace("{{" + token + "}}", data);
             }
 
@@ -69,68 +74,69 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 
         private string GetDataForToken(
             CimValidationErrorTextToken token,
-            ChargeCommand chargeCommand,
+            DocumentDto documentDto,
+            ChargeOperationDto chargeOperationDto,
             string? triggeredBy)
         {
             // Please keep sorted by CimValidationErrorTextToken
             return token switch
             {
                 CimValidationErrorTextToken.ChargeDescription =>
-                    chargeCommand.ChargeOperation.ChargeDescription,
+                    chargeOperationDto.ChargeDescription,
                 CimValidationErrorTextToken.ChargeName =>
-                    chargeCommand.ChargeOperation.ChargeName,
+                    chargeOperationDto.ChargeName,
                 CimValidationErrorTextToken.ChargeOwner =>
-                    chargeCommand.ChargeOperation.ChargeOwner,
+                    chargeOperationDto.ChargeOwner,
                 CimValidationErrorTextToken.ChargePointPosition =>
-                    GetPosition(chargeCommand, triggeredBy),
+                    GetPosition(chargeOperationDto, triggeredBy),
                 CimValidationErrorTextToken.ChargePointPrice =>
-                    GetPriceFromPointByPosition(chargeCommand, triggeredBy),
+                    GetPriceFromPointByPosition(chargeOperationDto, triggeredBy),
                 CimValidationErrorTextToken.ChargePointsCount =>
-                    chargeCommand.ChargeOperation.Points.Count.ToString(),
+                    chargeOperationDto.Points.Count.ToString(),
                 CimValidationErrorTextToken.ChargeResolution =>
-                    chargeCommand.ChargeOperation.Resolution.ToString(),
+                    chargeOperationDto.Resolution.ToString(),
                 CimValidationErrorTextToken.ChargeStartDateTime =>
-                    chargeCommand.ChargeOperation.StartDateTime.ToString(),
+                    chargeOperationDto.StartDateTime.ToString(),
                 CimValidationErrorTextToken.ChargeTaxIndicator =>
-                    chargeCommand.ChargeOperation.TaxIndicator.ToString(),
+                    chargeOperationDto.TaxIndicator.ToString(),
                 CimValidationErrorTextToken.ChargeType =>
-                    chargeCommand.ChargeOperation.Type.ToString(),
+                    chargeOperationDto.Type.ToString(),
                 CimValidationErrorTextToken.ChargeVatClass =>
-                    chargeCommand.ChargeOperation.VatClassification.ToString(),
+                    chargeOperationDto.VatClassification.ToString(),
                 CimValidationErrorTextToken.DocumentBusinessReasonCode =>
-                    chargeCommand.Document.BusinessReasonCode.ToString(),
+                    documentDto.BusinessReasonCode.ToString(),
                 CimValidationErrorTextToken.DocumentId =>
-                    chargeCommand.Document.Id,
+                    documentDto.Id,
                 CimValidationErrorTextToken.DocumentSenderId =>
-                    chargeCommand.Document.Sender.Id,
+                    documentDto.Sender.Id,
                 CimValidationErrorTextToken.DocumentSenderProvidedChargeId =>
-                    chargeCommand.ChargeOperation.ChargeId,
+                    chargeOperationDto.ChargeId,
                 CimValidationErrorTextToken.DocumentType =>
-                    chargeCommand.Document.Type.ToString(),
+                    documentDto.Type.ToString(),
                 _ => CimValidationErrorTextTemplateMessages.Unknown,
             };
         }
 
-        private string GetPosition(ChargeCommand chargeCommand, string? triggeredBy)
+        private string GetPosition(ChargeOperationDto chargeOperationDto, string? triggeredBy)
         {
             var parsed = int.TryParse(triggeredBy, out var position);
             if (!string.IsNullOrWhiteSpace(triggeredBy) && parsed && position > 0)
                 return triggeredBy;
 
             var errorMessage = $"Invalid position ({triggeredBy}) for charge with " +
-                               $"id: {chargeCommand.ChargeOperation.ChargeId}," +
-                               $"type: {chargeCommand.ChargeOperation.Type}," +
-                               $"owner: {chargeCommand.ChargeOperation.ChargeOwner}";
+                               $"id: {chargeOperationDto.ChargeId}," +
+                               $"type: {chargeOperationDto.Type}," +
+                               $"owner: {chargeOperationDto.ChargeOwner}";
             _logger.LogError(errorMessage);
 
             return CimValidationErrorTextTemplateMessages.Unknown;
         }
 
-        private string GetPriceFromPointByPosition(ChargeCommand chargeCommand, string? triggeredBy)
+        private string GetPriceFromPointByPosition(ChargeOperationDto chargeOperationDto, string? triggeredBy)
         {
             try
             {
-                return chargeCommand.ChargeOperation.Points
+                return chargeOperationDto.Points
                         .Single(p => p.Position == int.Parse(triggeredBy!))
                         .Price.ToString("N");
             }

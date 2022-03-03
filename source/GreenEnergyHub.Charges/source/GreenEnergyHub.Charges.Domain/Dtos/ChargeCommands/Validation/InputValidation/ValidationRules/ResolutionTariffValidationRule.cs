@@ -19,29 +19,17 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 {
     public class ResolutionTariffValidationRule : IValidationRule
     {
-        private readonly ChargeDto _chargeDto;
+        private readonly ChargeOperationDto _chargeOperationDto;
 
-        public ResolutionTariffValidationRule(ChargeDto chargeDto)
+        public ResolutionTariffValidationRule(ChargeOperationDto chargeOperationDto)
         {
-            _chargeDto = chargeDto;
+            _chargeOperationDto = chargeOperationDto;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ResolutionTariffValidation;
 
-        public bool IsValid
-        {
-            get
-            {
-                if (_chargeDto.ChargeOperation.Type == ChargeType.Tariff)
-                {
-                    return _chargeDto.ChargeOperation.Resolution is
-                        Resolution.P1D or
-                        Resolution.PT1H or
-                        Resolution.PT15M;
-                }
-
-                return true;
-            }
-        }
+        public bool IsValid =>
+            _chargeOperationDto.Type != ChargeType.Tariff ||
+            _chargeOperationDto.Resolution is Resolution.P1D or Resolution.PT1H or Resolution.PT15M;
     }
 }

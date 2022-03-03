@@ -20,15 +20,15 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
     {
         private const int ValidLength = 10;
 
-        private readonly ChargeDto _chargeDto;
+        private readonly ChargeOperationDto _chargeOperationDto;
 
-        public ChargeIdLengthValidationRule(ChargeDto chargeDto)
+        public ChargeIdLengthValidationRule(ChargeOperationDto chargeOperationDto)
         {
-            _chargeDto = chargeDto;
+            _chargeOperationDto = chargeOperationDto;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeIdLengthValidation;
 
-        public bool IsValid => _chargeDto.ChargeOperation.ChargeId?.Length <= ValidLength;
+        public bool IsValid => _chargeOperationDto.ChargeId?.Length <= ValidLength;
     }
 }

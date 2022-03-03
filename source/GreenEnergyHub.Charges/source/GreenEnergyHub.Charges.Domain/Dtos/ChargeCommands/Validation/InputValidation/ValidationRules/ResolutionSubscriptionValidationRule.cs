@@ -19,27 +19,18 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 {
     public class ResolutionSubscriptionValidationRule : IValidationRule
     {
-        private readonly ChargeDto _chargeDto;
+        private readonly ChargeOperationDto _chargeOperationDto;
 
-        public ResolutionSubscriptionValidationRule(ChargeDto chargeDto)
+        public ResolutionSubscriptionValidationRule(ChargeOperationDto chargeOperationDto)
         {
-            _chargeDto = chargeDto;
+            _chargeOperationDto = chargeOperationDto;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.ResolutionSubscriptionValidation;
 
-        public bool IsValid
-        {
-            get
-            {
-                if (_chargeDto.ChargeOperation.Type == ChargeType.Subscription)
-                {
-                    return _chargeDto.ChargeOperation.Resolution is Resolution.P1M;
-                }
-
-                return true;
-            }
-        }
+        public bool IsValid =>
+            _chargeOperationDto.Type != ChargeType.Subscription ||
+            _chargeOperationDto.Resolution is Resolution.P1M;
     }
 }

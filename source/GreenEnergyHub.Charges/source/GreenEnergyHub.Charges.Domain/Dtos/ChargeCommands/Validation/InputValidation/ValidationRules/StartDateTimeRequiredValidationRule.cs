@@ -18,17 +18,17 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 {
     public class StartDateTimeRequiredValidationRule : IValidationRule
     {
-        private readonly ChargeDto _chargeDto;
+        private readonly ChargeOperationDto _chargeOperationDto;
 
-        public StartDateTimeRequiredValidationRule(ChargeDto chargeDto)
+        public StartDateTimeRequiredValidationRule(ChargeOperationDto chargeOperationDto)
         {
-            _chargeDto = chargeDto;
+            _chargeOperationDto = chargeOperationDto;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.StartDateTimeRequiredValidation;
 
         // Instant is a struct, so to ensure caller supplied it, we check if it has the default value.
-        public bool IsValid => _chargeDto.ChargeOperation.StartDateTime != default;
+        public bool IsValid => _chargeOperationDto.StartDateTime != default;
     }
 }

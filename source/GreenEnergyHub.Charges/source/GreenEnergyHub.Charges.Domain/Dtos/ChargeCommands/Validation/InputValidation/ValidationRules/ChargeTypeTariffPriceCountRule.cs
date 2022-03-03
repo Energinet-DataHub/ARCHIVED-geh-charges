@@ -23,11 +23,11 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
         private const int PricePointsRequiredInP1D = 1;
         private const int PricePointsRequiredInPt1H = 24;
         private const int PricePointsRequiredInPt15M = 96;
-        private readonly ChargeDto _chargeDto;
+        private readonly ChargeOperationDto _chargeOperationDto;
 
-        public ChargeTypeTariffPriceCountRule(ChargeDto chargeDto)
+        public ChargeTypeTariffPriceCountRule(ChargeOperationDto chargeOperationDto)
         {
-            _chargeDto = chargeDto;
+            _chargeOperationDto = chargeOperationDto;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeTypeTariffPriceCount;
@@ -36,14 +36,14 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 
         private bool Validate()
         {
-            if (_chargeDto.ChargeOperation.Type == ChargeType.Tariff)
+            if (_chargeOperationDto.Type == ChargeType.Tariff)
             {
-                return _chargeDto.ChargeOperation.Resolution switch
+                return _chargeOperationDto.Resolution switch
                 {
-                    Resolution.PT15M => _chargeDto.ChargeOperation.Points.Count == PricePointsRequiredInPt15M,
-                    Resolution.PT1H => _chargeDto.ChargeOperation.Points.Count == PricePointsRequiredInPt1H,
-                    Resolution.P1D => _chargeDto.ChargeOperation.Points.Count == PricePointsRequiredInP1D,
-                    _ => throw new ArgumentException(nameof(_chargeDto.ChargeOperation.Resolution)),
+                    Resolution.PT15M => _chargeOperationDto.Points.Count == PricePointsRequiredInPt15M,
+                    Resolution.PT1H => _chargeOperationDto.Points.Count == PricePointsRequiredInPt1H,
+                    Resolution.P1D => _chargeOperationDto.Points.Count == PricePointsRequiredInP1D,
+                    _ => throw new ArgumentException(nameof(_chargeOperationDto.Resolution)),
                 };
             }
 

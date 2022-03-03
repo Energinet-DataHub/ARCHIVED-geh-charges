@@ -18,20 +18,38 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.InputValidation.Factories
 {
-    public class ChargeLinksCommandInputValidationRulesFactory : IInputValidationRulesFactory<ChargeLinksCommand>
+    public class ChargeLinksCommandInputValidationRulesFactory
+        : IInputValidationRulesFactory<ChargeLinksCommand, ChargeLinkDto>
     {
         public IValidationRuleSet CreateRulesForCommand(ChargeLinksCommand chargeLinksCommand)
         {
             if (chargeLinksCommand == null) throw new ArgumentNullException(nameof(chargeLinksCommand));
 
-            var rules = GetRules();
+            var rules = GetRulesForCommand();
 
             return ValidationRuleSet.FromRules(rules);
         }
 
-        private static List<IValidationRule> GetRules()
+        public IValidationRuleSet CreateRulesForOperation(ChargeLinkDto chargeOperationDto)
         {
-            // No input validation active yet for Charge Links
+            if (chargeOperationDto == null) throw new ArgumentNullException(nameof(chargeOperationDto));
+
+            var rules = GetRulesForOperation();
+
+            return ValidationRuleSet.FromRules(rules);
+        }
+
+        private static List<IValidationRule> GetRulesForCommand()
+        {
+            // No input validation active yet for Charge Links Command
+            var rules = new List<IValidationRule>();
+
+            return rules;
+        }
+
+        private static List<IValidationRule> GetRulesForOperation()
+        {
+            // No input validation active yet for Charge Link Operation
             var rules = new List<IValidationRule>();
 
             return rules;
