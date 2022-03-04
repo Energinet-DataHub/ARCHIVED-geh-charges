@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Domain.Charges;
@@ -52,11 +53,14 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         {
             if (commandReceivedEvent == null) throw new ArgumentNullException(nameof(commandReceivedEvent));
 
+            var charge = await GetChargeAsync(commandReceivedEvent).ConfigureAwait(false);
+
             foreach (var chargeOperationDto in commandReceivedEvent.Command.Charges)
             {
                 var inputValidationResult = _validator.InputValidate(commandReceivedEvent.Command);
                 if (inputValidationResult.IsFailed)
                 {
+                    // Todo: Put rejected operations in a list to be handled/rejected later
                     await _chargeCommandReceiptService
                         .RejectAsync(commandReceivedEvent.Command, inputValidationResult).ConfigureAwait(false);
                     continue;
@@ -71,41 +75,35 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                     continue;
                 }
 
-                var charge = await GetChargeAsync(chargeOperationDto).ConfigureAwait(false);
                 var operationType = GetOperationType(chargeOperationDto, charge);
 
-                switch (operationType)
+                charge = operationType switch
                 {
-                    case OperationType.Create:
-                        await HandleCreateEventAsync(chargeOperationDto).ConfigureAwait(false);
-                        break;
-                    case OperationType.Update:
-                        HandleUpdateEvent(charge, chargeOperationDto);
-                        break;
-                    case OperationType.Stop:
-                        StopCharge(charge, chargeOperationDto);
-                        break;
-                    default:
-                        throw new InvalidOperationException("Could not handle charge dto");
-                }
-
-                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-
-                // Todo: Change to accept operation?
-                await _chargeCommandReceiptService.AcceptAsync(commandReceivedEvent.Command).ConfigureAwait(false);
+                    OperationType.Create => await HandleCreateEventAsync(chargeOperationDto).ConfigureAwait(false),
+                    OperationType.Update => HandleUpdateEvent(charge, chargeOperationDto),
+                    OperationType.Stop => StopCharge(charge, chargeOperationDto),
+                    _ => throw new InvalidOperationException("Could not handle charge dto"),
+                };
             }
+
+            await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+
+            // Todo: Change to accept operation? - and only for those not rejected
+            await _chargeCommandReceiptService.AcceptAsync(commandReceivedEvent.Command).ConfigureAwait(false);
         }
 
-        private async Task HandleCreateEventAsync(ChargeOperationDto chargeOperationDto)
+        private async Task<Charge> HandleCreateEventAsync(ChargeOperationDto chargeOperationDto)
         {
             var charge = await _chargeFactory
                 .CreateFromChargeOperationDtoAsync(chargeOperationDto)
                 .ConfigureAwait(false);
 
             await _chargeRepository.AddAsync(charge).ConfigureAwait(false);
+
+            return charge;
         }
 
-        private void HandleUpdateEvent(Charge? charge, ChargeOperationDto chargeOperationDto)
+        private Charge HandleUpdateEvent(Charge? charge, ChargeOperationDto chargeOperationDto)
         {
             if (charge == null)
                 throw new InvalidOperationException("Could not update charge. Charge not found.");
@@ -113,9 +111,11 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             var newChargePeriod = _chargePeriodFactory.CreateFromChargeOperationDto(chargeOperationDto);
             charge.UpdateCharge(newChargePeriod);
             _chargeRepository.Update(charge);
+
+            return charge;
         }
 
-        private void StopCharge(Charge? charge, ChargeOperationDto chargeOperationDto)
+        private Charge StopCharge(Charge? charge, ChargeOperationDto chargeOperationDto)
         {
             if (charge == null)
                 throw new InvalidOperationException("Could not stop charge. Charge not found.");
@@ -127,21 +127,24 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 
             charge.StopCharge(chargeOperationEndDateTime);
             _chargeRepository.Update(charge);
+
+            return charge;
         }
 
-        private static OperationType GetOperationType(ChargeOperationDto chargeOperationDto, Charge? charge)
+        private static OperationType GetOperationType(ChargeOperationDto chargeOperationDto, Charge? existingCharge)
         {
             if (chargeOperationDto.StartDateTime == chargeOperationDto.EndDateTime)
             {
                 return OperationType.Stop;
             }
 
-            // Todo: If not first in list then it is also an update!
-            return charge != null ? OperationType.Update : OperationType.Create;
+            return existingCharge != null ? OperationType.Update : OperationType.Create;
         }
 
-        private async Task<Charge?> GetChargeAsync(ChargeOperationDto chargeOperationDto)
+        private async Task<Charge?> GetChargeAsync(ChargeCommandReceivedEvent chargeCommandReceivedEvent)
         {
+            var chargeOperationDto = chargeCommandReceivedEvent.Command.Charges.First();
+
             var chargeIdentifier = new ChargeIdentifier(
                 chargeOperationDto.ChargeId,
                 chargeOperationDto.ChargeOwner,

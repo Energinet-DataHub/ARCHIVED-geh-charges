@@ -54,19 +54,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                         chargeOperationDtoGroup.AsEnumerable().Select(dto => dto).ToList()))
                 .ToList();
 
-            /*foreach (var chargeOperationDtoGroup in chargeOperationsAsync.GroupBy(x => new { x.ChargeId, x.ChargeOwner, x.Type }))
-            {
-                var firstOperationDto = chargeOperationDtoGroup.Select(x => x).First();
-
-                chargeCommands.Add(new ChargeCommand(
-                    chargeOperationDtoGroup.AsQueryable()
-                        .Select(dto => new ChargeDto { Document = document, ChargeOperation = dto }).ToList(),
-                    new ChargeIdentifier(
-                        firstOperationDto.ChargeId,
-                        firstOperationDto.ChargeOwner,
-                        firstOperationDto.Type)));
-            }*/
-
             return new ChargeCommandBundle(chargeCommands);
         }
 
