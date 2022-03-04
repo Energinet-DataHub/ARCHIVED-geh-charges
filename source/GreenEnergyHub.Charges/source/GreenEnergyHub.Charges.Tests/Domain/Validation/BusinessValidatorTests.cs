@@ -29,11 +29,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Validation
         [Theory]
         [InlineAutoMoqData]
         public async Task ValidateAsync_WhenCalled_UsesFactoryToFetchRulesAndUseRulesToGetResult(
-            [Frozen] Mock<IBusinessValidationRulesFactory<ChargeCommand>> factory,
+            [Frozen] Mock<IBusinessValidationRulesFactory<ChargeCommand, ChargeOperationDto>> factory,
             Mock<IValidationRuleSet> rules,
             ChargeCommand command,
             ValidationResult validationResult,
-            BusinessValidator<ChargeCommand> sut)
+            BusinessValidator<ChargeCommand, ChargeOperationDto> sut)
         {
             // Arrange
             factory.Setup(

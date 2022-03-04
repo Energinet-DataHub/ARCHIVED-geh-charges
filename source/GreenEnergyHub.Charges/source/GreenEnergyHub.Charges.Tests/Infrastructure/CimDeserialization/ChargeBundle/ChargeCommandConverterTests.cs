@@ -74,28 +74,29 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             actual.Document.CreatedDateTime.Should().Be(InstantPattern.ExtendedIso.Parse("2021-12-17T09:30:47Z").Value);
 
             // Charge operation
-            actual.ChargeOperation.Id.Should().Be("36251478");
-            actual.ChargeOperation.ChargeOwner.Should().Be("5799999925698");
-            actual.ChargeOperation.Type.Should().Be(ChargeType.Tariff);
-            actual.ChargeOperation.ChargeId.Should().Be("253C");
-            actual.ChargeOperation.ChargeName.Should().Be("Elafgift 2019");
-            actual.ChargeOperation.ChargeDescription.Should().Be("Dette er elafgiftssatsten for 2019");
-            actual.ChargeOperation.Resolution.Should().Be(Resolution.PT1H);
-            actual.ChargeOperation.StartDateTime.Should().Be(InstantPattern.ExtendedIso.Parse("2020-12-17T23:00:00Z").Value);
-            actual.ChargeOperation.EndDateTime.Should()
+            var actualChargeOperation = actual.Charges.First();
+            actualChargeOperation.Id.Should().Be("36251478");
+            actualChargeOperation.ChargeOwner.Should().Be("5799999925698");
+            actualChargeOperation.Type.Should().Be(ChargeType.Tariff);
+            actualChargeOperation.ChargeId.Should().Be("253C");
+            actualChargeOperation.ChargeName.Should().Be("Elafgift 2019");
+            actualChargeOperation.ChargeDescription.Should().Be("Dette er elafgiftssatsten for 2019");
+            actualChargeOperation.Resolution.Should().Be(Resolution.PT1H);
+            actualChargeOperation.StartDateTime.Should().Be(InstantPattern.ExtendedIso.Parse("2020-12-17T23:00:00Z").Value);
+            actualChargeOperation.EndDateTime.Should()
                 .Be(InstantPattern.ExtendedIso.Parse("2031-12-17T23:00:00Z").Value);
-            actual.ChargeOperation.VatClassification.Should().Be(VatClassification.Vat25);
-            actual.ChargeOperation.TransparentInvoicing.Should().BeTrue();
-            actual.ChargeOperation.TaxIndicator.Should().BeTrue();
+            actualChargeOperation.VatClassification.Should().Be(VatClassification.Vat25);
+            actualChargeOperation.TransparentInvoicing.Should().BeTrue();
+            actualChargeOperation.TaxIndicator.Should().BeTrue();
 
             // Points
-            actual.ChargeOperation.Points.Should().HaveCount(2);
-            actual.ChargeOperation.Points[0].Position.Should().Be(1);
-            actual.ChargeOperation.Points[0].Time.Should().Be(expectedTime);
-            actual.ChargeOperation.Points[0].Price.Should().Be(100m);
-            actual.ChargeOperation.Points[1].Position.Should().Be(2);
-            actual.ChargeOperation.Points[1].Time.Should().Be(expectedTime);
-            actual.ChargeOperation.Points[1].Price.Should().Be(200m);
+            actualChargeOperation.Points.Should().HaveCount(2);
+            actualChargeOperation.Points[0].Position.Should().Be(1);
+            actualChargeOperation.Points[0].Time.Should().Be(expectedTime);
+            actualChargeOperation.Points[0].Price.Should().Be(100m);
+            actualChargeOperation.Points[1].Position.Should().Be(2);
+            actualChargeOperation.Points[1].Time.Should().Be(expectedTime);
+            actualChargeOperation.Points[1].Price.Should().Be(200m);
 
             // Verify Iso8601Durations was used correctly
             iso8601Durations.Verify(
@@ -137,21 +138,22 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             var actual = actualBundle.ChargeCommands.Single();
 
             // Charge operation
-            actual.ChargeOperation.Id.Should().Be("36251479");
-            actual.ChargeOperation.ChargeOwner.Should().Be("5799999925699");
-            actual.ChargeOperation.Type.Should().Be(ChargeType.Fee);
-            actual.ChargeOperation.ChargeId.Should().Be("888");
-            actual.ChargeOperation.ChargeName.Should().Be("Test 888");
-            actual.ChargeOperation.ChargeDescription.Should().Be("Description 888");
-            actual.ChargeOperation.Resolution.Should().Be(Resolution.PT15M);
-            actual.ChargeOperation.StartDateTime.Should().Be(expectedTime);
-            actual.ChargeOperation.EndDateTime.Should().BeNull();
-            actual.ChargeOperation.VatClassification.Should().Be(VatClassification.NoVat);
-            actual.ChargeOperation.TransparentInvoicing.Should().BeFalse();
-            actual.ChargeOperation.TaxIndicator.Should().BeFalse();
+            var actualChargeOperation = actual.Charges.First();
+            actualChargeOperation.Id.Should().Be("36251479");
+            actualChargeOperation.ChargeOwner.Should().Be("5799999925699");
+            actualChargeOperation.Type.Should().Be(ChargeType.Fee);
+            actualChargeOperation.ChargeId.Should().Be("888");
+            actualChargeOperation.ChargeName.Should().Be("Test 888");
+            actualChargeOperation.ChargeDescription.Should().Be("Description 888");
+            actualChargeOperation.Resolution.Should().Be(Resolution.PT15M);
+            actualChargeOperation.StartDateTime.Should().Be(expectedTime);
+            actualChargeOperation.EndDateTime.Should().BeNull();
+            actualChargeOperation.VatClassification.Should().Be(VatClassification.NoVat);
+            actualChargeOperation.TransparentInvoicing.Should().BeFalse();
+            actualChargeOperation.TaxIndicator.Should().BeFalse();
 
             // Prices, should not be any
-            actual.ChargeOperation.Points.Should().BeEmpty();
+            actualChargeOperation.Points.Should().BeEmpty();
             iso8601Durations.Verify(
                 i => i.GetTimeFixedToDuration(
                     It.IsAny<Instant>(),
@@ -184,27 +186,28 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             var actual = actualBundle.ChargeCommands.Single();
 
             // Charge operation, should only be partially filled
-            actual.ChargeOperation.Id.Should().Be("36251480");
-            actual.ChargeOperation.ChargeOwner.Should().Be("5799999925600");
-            actual.ChargeOperation.Type.Should().Be(ChargeType.Subscription);
-            actual.ChargeOperation.ChargeId.Should().Be("444");
-            actual.ChargeOperation.ChargeName.Should().BeNullOrEmpty();
-            actual.ChargeOperation.ChargeDescription.Should().BeNullOrEmpty();
-            actual.ChargeOperation.Resolution.Should().Be(Resolution.P1M);
-            actual.ChargeOperation.StartDateTime.Should().Be(expectedTime);
-            actual.ChargeOperation.EndDateTime.Should().BeNull();
-            actual.ChargeOperation.VatClassification.Should().Be(VatClassification.Unknown);
-            actual.ChargeOperation.TransparentInvoicing.Should().BeFalse();
-            actual.ChargeOperation.TaxIndicator.Should().BeFalse();
+            var actualChargeOperation = actual.Charges.First();
+            actualChargeOperation.Id.Should().Be("36251480");
+            actualChargeOperation.ChargeOwner.Should().Be("5799999925600");
+            actualChargeOperation.Type.Should().Be(ChargeType.Subscription);
+            actualChargeOperation.ChargeId.Should().Be("444");
+            actualChargeOperation.ChargeName.Should().BeNullOrEmpty();
+            actualChargeOperation.ChargeDescription.Should().BeNullOrEmpty();
+            actualChargeOperation.Resolution.Should().Be(Resolution.P1M);
+            actualChargeOperation.StartDateTime.Should().Be(expectedTime);
+            actualChargeOperation.EndDateTime.Should().BeNull();
+            actualChargeOperation.VatClassification.Should().Be(VatClassification.Unknown);
+            actualChargeOperation.TransparentInvoicing.Should().BeFalse();
+            actualChargeOperation.TaxIndicator.Should().BeFalse();
 
             // Points
-            actual.ChargeOperation.Points.Should().HaveCount(2);
-            actual.ChargeOperation.Points[0].Position.Should().Be(1);
-            actual.ChargeOperation.Points[0].Time.Should().Be(expectedTime);
-            actual.ChargeOperation.Points[0].Price.Should().Be(0.536m);
-            actual.ChargeOperation.Points[1].Position.Should().Be(2);
-            actual.ChargeOperation.Points[1].Time.Should().Be(expectedTime);
-            actual.ChargeOperation.Points[1].Price.Should().Be(14.984m);
+            actualChargeOperation.Points.Should().HaveCount(2);
+            actualChargeOperation.Points[0].Position.Should().Be(1);
+            actualChargeOperation.Points[0].Time.Should().Be(expectedTime);
+            actualChargeOperation.Points[0].Price.Should().Be(0.536m);
+            actualChargeOperation.Points[1].Position.Should().Be(2);
+            actualChargeOperation.Points[1].Time.Should().Be(expectedTime);
+            actualChargeOperation.Points[1].Price.Should().Be(14.984m);
 
             // Verify Iso8601Durations was used correctly
             iso8601Durations.Verify(

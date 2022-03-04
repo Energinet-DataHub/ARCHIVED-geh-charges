@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
@@ -40,7 +41,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             ChargeCommandAcceptedEvent acceptedEvent,
             Instant now,
-            AvailableChargeConfirmationDataFactory sut)
+            AvailableChargeReceiptDataFactory sut)
         {
             // Arrange
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
@@ -60,7 +61,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
                     .Be(acceptedEvent.Command.Document.BusinessReasonCode);
             actualList[0].RequestDateTime.Should().Be(now);
             actualList[0].ReceiptStatus.Should().Be(ReceiptStatus.Confirmed);
-            actualList[0].OriginalOperationId.Should().Be(acceptedEvent.Command.ChargeOperation.Id);
+            actualList[0].OriginalOperationId.Should().Be(acceptedEvent.Command.Charges.First().Id); //TODO: or is that not right?
             actualList[0].ValidationErrors.Should().BeEmpty();
         }
     }
