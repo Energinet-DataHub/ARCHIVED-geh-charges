@@ -40,7 +40,7 @@ limitations under the License.
     <PackageReference Include="Energinet.DataHub.MessageHub.IntegrationTesting" Version="1.1.2" />
     <PackageReference Include="EntityFrameworkCore.SqlServer.NodaTime" Version="5.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="5.0.13" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.2" />
     <PackageReference Include="Microsoft.Azure.Management.ServiceBus" Version="3.0.0" />
     <PackageReference Include="Microsoft.Azure.WebJobs.Extensions" Version="4.0.1" />
     <PackageReference Include="Microsoft.Azure.WebJobs.Host.TestCommon" Version="3.0.30" />
