@@ -22,7 +22,6 @@ using System.Threading.Tasks;
 using Energinet.Charges.Contracts.ChargeLink;
 using FluentAssertions;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.WebApi;
-using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
@@ -39,8 +38,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V2
     {
         private const string BaseUrl = "/v2/ChargeLinks?meteringPointId=";
         private const string KnownMeteringPointId = SeededData.MeteringPoints.Mp571313180000000005.Id;
+
         private readonly HttpClient _client;
-        private readonly BackendAuthenticationClient _authenticationClient;
 
         public ChargeLinksControllerTests(
             ChargesWebApiFixture chargesWebApiFixture,
@@ -49,16 +48,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V2
             : base(chargesWebApiFixture, testOutputHelper)
         {
             _client = factory.CreateClient();
-            _authenticationClient = new BackendAuthenticationClient(
-                chargesWebApiFixture.AuthorizationConfiguration.BackendAppScope,
-                chargesWebApiFixture.AuthorizationConfiguration.ClientCredentialsSettings,
-                chargesWebApiFixture.AuthorizationConfiguration.B2cTenantId);
+            factory.ReconfigureJwtTokenValidatorMock(isValid: true);
         }
 
-        public async Task InitializeAsync()
+        public Task InitializeAsync()
         {
-            var authenticationResult = await _authenticationClient.GetAuthenticationTokenAsync();
-            _client.DefaultRequestHeaders.Add("Authorization", $"Bearer {authenticationResult.AccessToken}");
+            _client.DefaultRequestHeaders.Add("Authorization", $"Bearer xxx");
+            return Task.CompletedTask;
         }
 
         public Task DisposeAsync()
@@ -113,7 +109,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V2
         {
             var jsonSerializerOptions = new JsonSerializerOptions
             {
-                PropertyNameCaseInsensitive = true, Converters = { new JsonStringEnumConverter() },
+                PropertyNameCaseInsensitive = true,
+                Converters = { new JsonStringEnumConverter() },
             };
             return JsonSerializer.Deserialize<T>(jsonSerialized, jsonSerializerOptions)!;
         }
