@@ -4,38 +4,11 @@ As a developer, you can run all unit tests and integration tests locally.
 
 Integration tests require access to Azure and some local resources and setup.
 
-## Installing prerequisites
+## Install prerequisites
 
-### Install NVM for Windows
+Integration tests in Charges domain is build upon the TestCommon package in the [Energinet-DataHub/geh-core repository](https://github.com/Energinet-DataHub/geh-core).
 
-* Download latest version of [nvm-setup.zip](https://github.com/coreybutler/nvm-windows/releases)
-* Install as [documented here](https://github.com/coreybutler/nvm-windows)
-
-### Install Node and NPM using NVM
-
-If you have any version of Node installed, you should uninstall it before you proceed.
-
-Run Command Prompt as Administrator and run the following:
-
-```Prompt
-nvm install lts
-nvm use 14.18.1
-```
-
-Afterwards you can check your installation and versions
-
-```Prompt
-nvm -v
-node -v
-npm -v
-```
-
-### Install Azurite and Azure Functions Core Tools
-
-```Prompt
-npm install -g azurite@3.14.0
-npm install -g azure-functions-core-tools@3.0.3568
-```
+As a developer you will need to install the prerequisites mentioned in [this guide](https://github.com/Energinet-DataHub/geh-core/blob/main/source/TestCommon/documents/functionapp-testcommon.md).
 
 ### Set up local settings
 
