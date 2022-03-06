@@ -14,8 +14,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
@@ -41,6 +44,26 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             var recipient = input.Command.Document.Sender; // The original sender is the recipient of the receipt
             var sender = await GetSenderAsync().ConfigureAwait(false);
 
+            var availableChargeReceiptData = new List<AvailableChargeReceiptData>();
+
+            foreach (var chargeOperationDto in input.Command.Charges)
+            {
+                availableChargeReceiptData.AddRange(
+                    CreateAvailableChargeReceiptData(input, sender, recipient, chargeOperationDto));
+            }
+
+            /*availableChargeReceiptData = (IReadOnlyList<AvailableChargeReceiptData>)input.Command.Charges.SelectMany(x =>
+                CreateAvailableChargeReceiptData(input, sender, recipient, x));*/
+
+            return availableChargeReceiptData;
+        }
+
+        private IReadOnlyList<AvailableChargeReceiptData> CreateAvailableChargeReceiptData(
+            ChargeCommandAcceptedEvent input,
+            MarketParticipant sender,
+            MarketParticipantDto recipient,
+            ChargeOperationDto chargeOperationDto)
+        {
             return new List<AvailableChargeReceiptData>()
             {
                 new AvailableChargeReceiptData(
@@ -52,7 +75,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                     _messageMetaDataContext.RequestDataTime,
                     Guid.NewGuid(), // ID of each available piece of data must be unique
                     ReceiptStatus.Confirmed,
-                    "ChargeOperation.Id missing!", /* Todo: ChargeOperation.Id, */
+                    chargeOperationDto.Id,
                     new List<AvailableReceiptValidationError>()),
             };
         }

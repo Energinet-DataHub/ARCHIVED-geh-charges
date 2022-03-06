@@ -14,28 +14,21 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.Factories
 {
-    public class ChargeCommandInputValidationRulesFactory : IInputValidationRulesFactory<ChargeCommand, ChargeOperationDto>
+    public class ChargeCommandInputValidationRulesFactory : IInputValidationRulesFactory<ChargeCommand>
     {
         public IValidationRuleSet CreateRulesForCommand(ChargeCommand chargeCommand)
         {
             if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
 
             var rules = GetRulesForCommand(chargeCommand.Document);
-
-            return ValidationRuleSet.FromRules(rules);
-        }
-
-        public IValidationRuleSet CreateRulesForOperation(ChargeOperationDto chargeOperationDto)
-        {
-            if (chargeOperationDto == null) throw new ArgumentNullException(nameof(chargeOperationDto));
-
-            var rules = GetRulesForOperation(chargeOperationDto);
+            rules.AddRange(chargeCommand.Charges.SelectMany(GetRulesForOperation));
 
             return ValidationRuleSet.FromRules(rules);
         }

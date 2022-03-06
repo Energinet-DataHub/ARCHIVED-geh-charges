@@ -53,7 +53,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             var actualList = await sut.CreateAsync(acceptedEvent);
 
             // Assert
-            actualList.Should().ContainSingle();
+            actualList.Should().HaveCount(3);
             actualList[0].RecipientId.Should().Be(acceptedEvent.Command.Document.Sender.Id);
             actualList[0].RecipientRole.Should()
                     .Be(acceptedEvent.Command.Document.Sender.BusinessProcessRole);

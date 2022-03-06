@@ -14,7 +14,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
@@ -27,6 +26,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
 
             foreach (var chargeCommand in chargeCommands)
             {
+                if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
+
                 CheckDocument(chargeCommand.Document);
 
                 foreach (var chargeDto in chargeCommand.Charges)

@@ -17,16 +17,13 @@ using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 {
-    public class Validator<TCommand, TOperation> : IValidator<TCommand, TOperation>
+    public class Validator<TCommand> : IValidator<TCommand>
         where TCommand : CommandBase
-        where TOperation : OperationBase
     {
-        private readonly IBusinessValidator<TCommand, TOperation> _businessValidator;
-        private readonly IInputValidator<TCommand, TOperation> _inputValidator;
+        private readonly IBusinessValidator<TCommand> _businessValidator;
+        private readonly IInputValidator<TCommand> _inputValidator;
 
-        public Validator(
-            IInputValidator<TCommand, TOperation> inputValidator,
-            IBusinessValidator<TCommand, TOperation> businessValidator)
+        public Validator(IInputValidator<TCommand> inputValidator, IBusinessValidator<TCommand> businessValidator)
         {
             _inputValidator = inputValidator;
             _businessValidator = businessValidator;
@@ -41,18 +38,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
         public async Task<ValidationResult> BusinessValidateAsync(TCommand command)
         {
             var businessValidationResult = await _businessValidator.ValidateAsync(command).ConfigureAwait(false);
-            return businessValidationResult;
-        }
-
-        public ValidationResult InputValidate(TOperation operation)
-        {
-            var inputValidationResult = _inputValidator.Validate(operation);
-            return inputValidationResult;
-        }
-
-        public async Task<ValidationResult> BusinessValidateAsync(TOperation operation)
-        {
-            var businessValidationResult = await _businessValidator.ValidateAsync(operation).ConfigureAwait(false);
             return businessValidationResult;
         }
     }

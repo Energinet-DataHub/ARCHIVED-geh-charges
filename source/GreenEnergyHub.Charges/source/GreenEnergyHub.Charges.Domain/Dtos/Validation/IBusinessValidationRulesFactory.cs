@@ -17,12 +17,9 @@ using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 {
-    public interface IBusinessValidationRulesFactory<in TCommand, in TOperation>
+    public interface IBusinessValidationRulesFactory<in TCommand>
         where TCommand : CommandBase
-        where TOperation : OperationBase
     {
         Task<IValidationRuleSet> CreateRulesAsync(TCommand command);
-
-        Task<IValidationRuleSet> CreateRulesAsync(TOperation operation);
     }
 }

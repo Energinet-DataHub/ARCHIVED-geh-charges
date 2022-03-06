@@ -58,10 +58,11 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             var chargeOperationDto = rejectedEvent.Command.Charges.First();
             availableChargeReceiptValidationErrorFactory
                 .Setup(f => f.Create(It.IsAny<ValidationError>(), rejectedEvent.Command, chargeOperationDto))
-                .Returns<ValidationError, ChargeCommand>((identifier, _) =>
-                     new AvailableReceiptValidationError(ReasonCode.D01, identifier.ValidationRuleIdentifier.ToString()));
-            var expectedValidationErrors =
-                rejectedEvent.ValidationErrors.Select(x => x.ValidationRuleIdentifier.ToString()).ToList();
+                .Returns<ValidationError, ChargeCommand, ChargeOperationDto>((validationError, _, _) =>
+                    new AvailableReceiptValidationError(
+                        ReasonCode.D01, validationError.ValidationRuleIdentifier.ToString()));
+            var expectedValidationErrors = rejectedEvent.ValidationErrors
+                .Select(x => x.ValidationRuleIdentifier.ToString()).ToList();
 
             // Act
             var actualList = await sut.CreateAsync(rejectedEvent);

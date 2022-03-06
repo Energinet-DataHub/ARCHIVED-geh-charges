@@ -47,46 +47,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 new SenderIsMandatoryTypeValidationRule(chargeCommand.Document),
             };
 
+            expectedRules.AddRange(chargeCommand.Charges.SelectMany(GetExpectedRulesForChargeOperation));
+
             // Act
             var actualRuleTypes = sut.CreateRulesForCommand(chargeCommand).GetRules().Select(r => r.GetType()).ToList();
-            var expectedRuleTypes = expectedRules.Select(r => r.GetType()).ToList();
-
-            // Assert
-            Assert.True(actualRuleTypes.SequenceEqual(expectedRuleTypes));
-        }
-
-        [Fact]
-        public void CreateRulesForChargeOperation_ShouldContainRulesTest()
-        {
-            // Arrange
-            var sut = new ChargeCommandInputValidationRulesFactory();
-            var chargeCommand = new ChargeCommandBuilder().Build();
-            var chargeOperationDto = chargeCommand.Charges.First();
-            var expectedRules = new List<IValidationRule>
-            {
-                new ChargeDescriptionHasMaximumLengthRule(chargeOperationDto),
-                new ChargeIdLengthValidationRule(chargeOperationDto),
-                new ChargeIdRequiredValidationRule(chargeOperationDto),
-                new ChargeNameHasMaximumLengthRule(chargeOperationDto),
-                new ChargeOperationIdRequiredRule(chargeOperationDto),
-                new ChargeOwnerIsRequiredValidationRule(chargeOperationDto),
-                new ChargePriceMaximumDigitsAndDecimalsRule(chargeOperationDto),
-                new ChargeTypeIsKnownValidationRule(chargeOperationDto),
-                new ChargeTypeTariffPriceCountRule(chargeOperationDto),
-                new FeeMustHaveSinglePriceRule(chargeOperationDto),
-                new MaximumPriceRule(chargeOperationDto),
-                new ResolutionFeeValidationRule(chargeOperationDto),
-                new ResolutionSubscriptionValidationRule(chargeOperationDto),
-                new ResolutionTariffValidationRule(chargeOperationDto),
-                new StartDateTimeRequiredValidationRule(chargeOperationDto),
-                new StopChargeNotYetSupportedValidationRule(chargeOperationDto),
-                new SubscriptionMustHaveSinglePriceRule(chargeOperationDto),
-                new VatClassificationValidationRule(chargeOperationDto),
-            };
-
-            // Act
-            var actualRuleTypes = sut.CreateRulesForOperation(chargeOperationDto)
-                .GetRules().Select(r => r.GetType()).ToList();
             var expectedRuleTypes = expectedRules.Select(r => r.GetType()).ToList();
 
             // Assert
@@ -116,6 +80,40 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             var validationRules = sut.CreateRulesForCommand(chargeCommand).GetRules();
 
             // Assert
+            AssertAllRulesThatNeedTriggeredByForErrorMessageImplementsIValidationRuleWithExtendedData(
+                cimValidationErrorTextToken, validationRules);
+        }
+
+        private static List<IValidationRule> GetExpectedRulesForChargeOperation(ChargeOperationDto chargeOperationDto)
+        {
+            var expectedRules = new List<IValidationRule>
+            {
+                new ChargeDescriptionHasMaximumLengthRule(chargeOperationDto),
+                new ChargeIdLengthValidationRule(chargeOperationDto),
+                new ChargeIdRequiredValidationRule(chargeOperationDto),
+                new ChargeNameHasMaximumLengthRule(chargeOperationDto),
+                new ChargeOperationIdRequiredRule(chargeOperationDto),
+                new ChargeOwnerIsRequiredValidationRule(chargeOperationDto),
+                new ChargePriceMaximumDigitsAndDecimalsRule(chargeOperationDto),
+                new ChargeTypeIsKnownValidationRule(chargeOperationDto),
+                new ChargeTypeTariffPriceCountRule(chargeOperationDto),
+                new FeeMustHaveSinglePriceRule(chargeOperationDto),
+                new MaximumPriceRule(chargeOperationDto),
+                new ResolutionFeeValidationRule(chargeOperationDto),
+                new ResolutionSubscriptionValidationRule(chargeOperationDto),
+                new ResolutionTariffValidationRule(chargeOperationDto),
+                new StartDateTimeRequiredValidationRule(chargeOperationDto),
+                new StopChargeNotYetSupportedValidationRule(chargeOperationDto),
+                new SubscriptionMustHaveSinglePriceRule(chargeOperationDto),
+                new VatClassificationValidationRule(chargeOperationDto),
+            };
+            return expectedRules;
+        }
+
+        private static void AssertAllRulesThatNeedTriggeredByForErrorMessageImplementsIValidationRuleWithExtendedData(
+            CimValidationErrorTextToken cimValidationErrorTextToken,
+            IReadOnlyCollection<IValidationRule> validationRules)
+        {
             var type = typeof(CimValidationErrorTextTemplateMessages);
             foreach (var fieldInfo in type.GetFields(BindingFlags.Static | BindingFlags.Public))
             {
@@ -127,7 +125,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 var validationRuleIdentifier = errorMessageForAttribute.ValidationRuleIdentifier;
                 var errorText = fieldInfo.GetValue(null)!.ToString();
                 var validationErrorTextTokens = CimValidationErrorTextTokenMatcher.GetTokens(errorText!);
-                var validationRule = validationRules.SingleOrDefault(x => x.ValidationRuleIdentifier == validationRuleIdentifier);
+                var validationRule = validationRules
+                    .FirstOrDefault(x => x.ValidationRuleIdentifier == validationRuleIdentifier);
 
                 if (validationErrorTextTokens.Contains(cimValidationErrorTextToken) && validationRule != null)
                     Assert.True(validationRule is IValidationRuleWithExtendedData);

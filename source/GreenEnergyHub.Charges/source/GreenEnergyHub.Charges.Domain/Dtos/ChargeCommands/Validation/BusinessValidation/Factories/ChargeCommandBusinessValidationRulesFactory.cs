@@ -24,7 +24,7 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.Factories
 {
-    public class ChargeCommandBusinessValidationRulesFactory : IBusinessValidationRulesFactory<ChargeCommand, ChargeOperationDto>
+    public class ChargeCommandBusinessValidationRulesFactory : IBusinessValidationRulesFactory<ChargeCommand>
     {
         private readonly IRulesConfigurationRepository _rulesConfigurationRepository;
         private readonly IChargeRepository _chargeRepository;
@@ -54,13 +54,16 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
             var sender = await _marketParticipantRepository.GetOrNullAsync(senderId).ConfigureAwait(false);
             var rules = GetMandatoryRulesForCommand(sender);
 
+            foreach (var chargeOperationDto in chargeCommand.Charges)
+            {
+                rules.AddRange(await GetRulesForOperationAsync(chargeOperationDto).ConfigureAwait(false));
+            }
+
             return ValidationRuleSet.FromRules(rules);
         }
 
-        public async Task<IValidationRuleSet> CreateRulesAsync(ChargeOperationDto chargeOperationDto)
+        private async Task<List<IValidationRule>> GetRulesForOperationAsync(ChargeOperationDto chargeOperationDto)
         {
-            if (chargeOperationDto == null) throw new ArgumentNullException(nameof(chargeOperationDto));
-
             var configuration = await _rulesConfigurationRepository.GetConfigurationAsync().ConfigureAwait(false);
             var charge = await GetChargeOrNullAsync(chargeOperationDto).ConfigureAwait(false);
             var rules = GetMandatoryRulesForOperation(chargeOperationDto, configuration);
@@ -68,7 +71,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
             if (charge != null && chargeOperationDto.Type == ChargeType.Tariff)
                 rules.AddRange(AddTariffOnlyRules(chargeOperationDto, charge));
 
-            return ValidationRuleSet.FromRules(rules);
+            return rules;
         }
 
         private static IEnumerable<IValidationRule> AddTariffOnlyRules(

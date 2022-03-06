@@ -31,7 +31,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             ChargeCommand chargeCommand)
         {
             // Arrange
-            var sut = new InputValidator<ChargeCommand, ChargeOperationDto>(chargeCommandInputValidationRulesFactory);
+            var sut = new InputValidator<ChargeCommand>(chargeCommandInputValidationRulesFactory);
 
             // Act
             var result = sut.Validate(chargeCommand);

@@ -27,7 +27,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
     public class ChargeCommandReceivedEventHandler : IChargeCommandReceivedEventHandler
     {
         private readonly IChargeCommandReceiptService _chargeCommandReceiptService;
-        private readonly IValidator<ChargeCommand, ChargeOperationDto> _validator;
+        private readonly IValidator<ChargeCommand> _validator;
         private readonly IChargeRepository _chargeRepository;
         private readonly IChargeFactory _chargeFactory;
         private readonly IChargePeriodFactory _chargePeriodFactory;
@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 
         public ChargeCommandReceivedEventHandler(
             IChargeCommandReceiptService chargeCommandReceiptService,
-            IValidator<ChargeCommand, ChargeOperationDto> validator,
+            IValidator<ChargeCommand> validator,
             IChargeRepository chargeRepository,
             IChargeFactory chargeFactory,
             IChargePeriodFactory chargePeriodFactory,
@@ -53,29 +53,31 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         {
             if (commandReceivedEvent == null) throw new ArgumentNullException(nameof(commandReceivedEvent));
 
+            // Todo: Add rejected operations to a list to that can be handled/rejected later
+            var inputValidationResult = _validator.InputValidate(commandReceivedEvent.Command);
+            if (inputValidationResult.IsFailed)
+            {
+                // Todo: Put rejected operations in a list to be handled/rejected later
+                await _chargeCommandReceiptService
+                    .RejectAsync(commandReceivedEvent.Command, inputValidationResult).ConfigureAwait(false);
+                return;
+            }
+
+            var businessValidationResult = await _validator
+                .BusinessValidateAsync(commandReceivedEvent.Command).ConfigureAwait(false);
+            if (businessValidationResult.IsFailed)
+            {
+                // Todo: Add rejected operations to a list that can be handled/rejected later
+                await _chargeCommandReceiptService.RejectAsync(
+                    commandReceivedEvent.Command, businessValidationResult).ConfigureAwait(false);
+                return;
+            }
+
             var charge = await GetChargeAsync(commandReceivedEvent).ConfigureAwait(false);
 
+            // Todo: Only handle those that were not rejected!
             foreach (var chargeOperationDto in commandReceivedEvent.Command.Charges)
             {
-                var inputValidationResult = _validator.InputValidate(commandReceivedEvent.Command);
-                if (inputValidationResult.IsFailed)
-                {
-                    // Todo: Put rejected operations in a list to be handled/rejected later
-                    await _chargeCommandReceiptService
-                        .RejectAsync(commandReceivedEvent.Command, inputValidationResult).ConfigureAwait(false);
-                    continue;
-                }
-
-                var businessValidationResult = await _validator
-                    .BusinessValidateAsync(commandReceivedEvent.Command).ConfigureAwait(false);
-                if (businessValidationResult.IsFailed)
-                {
-                    // Todo: Add rejected operations to a list that can be handled/rejected later
-                    await _chargeCommandReceiptService.RejectAsync(
-                        commandReceivedEvent.Command, businessValidationResult).ConfigureAwait(false);
-                    continue;
-                }
-
                 var operationType = GetOperationType(chargeOperationDto, charge);
 
                 charge = operationType switch
@@ -89,7 +91,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
 
-            // Todo: Change to accept operation? - and only for those not rejected
+            // Todo: Change to a accept list of operations? - and only for those not rejected
             await _chargeCommandReceiptService.AcceptAsync(commandReceivedEvent.Command).ConfigureAwait(false);
         }
 

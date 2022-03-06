@@ -23,8 +23,7 @@ using GreenEnergyHub.Charges.Domain.MeteringPoints;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.BusinessValidation.Factories
 {
-    public class ChargeLinksCommandBusinessValidationRulesFactory
-        : IBusinessValidationRulesFactory<ChargeLinksCommand, ChargeLinkDto>
+    public class ChargeLinksCommandBusinessValidationRulesFactory : IBusinessValidationRulesFactory<ChargeLinksCommand>
     {
         private readonly IChargeRepository _chargeRepository;
         private readonly IMeteringPointRepository _meteringPointRepository;
@@ -51,25 +50,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
             if (meteringPoint == null)
                 return ValidationRuleSet.FromRules(rules);
 
-            rules.AddRange(
-                await GetTemporaryRulesForAllLinksAsync(chargeLinksCommand, meteringPoint).ConfigureAwait(false));
-
-            return ValidationRuleSet.FromRules(rules);
-        }
-
-        public async Task<IValidationRuleSet> CreateRulesAsync(ChargeLinkDto chargeLinkDto)
-        {
-            if (chargeLinkDto == null) throw new ArgumentNullException(nameof(chargeLinkDto));
-
-            var charge = await _chargeRepository
-                .GetOrNullAsync(new ChargeIdentifier(
-                    chargeLinkDto.SenderProvidedChargeId, chargeLinkDto.ChargeOwner, chargeLinkDto.ChargeType))
-                .ConfigureAwait(false);
-
-            var rules = new List<IValidationRule>
-            {
-                new ChargeMustExistRule(charge, chargeLinkDto),
-            };
+            rules.AddRange(await GetRulesForAllLinksAsync(chargeLinksCommand, meteringPoint).ConfigureAwait(false));
 
             return ValidationRuleSet.FromRules(rules);
         }
@@ -82,17 +63,19 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
             };
         }
 
-        private async Task<IEnumerable<IValidationRule>> GetTemporaryRulesForAllLinksAsync(
+        private async Task<IEnumerable<IValidationRule>> GetRulesForAllLinksAsync(
             ChargeLinksCommand chargeLinksCommand,
             MeteringPoint meteringPoint)
         {
             var rules = new List<IValidationRule>();
 
-            foreach (var link in chargeLinksCommand.ChargeLinks)
+            foreach (var chargeLinkDto in chargeLinksCommand.ChargeLinks)
             {
                 var charge = await _chargeRepository
-                    .GetOrNullAsync(new ChargeIdentifier(link.SenderProvidedChargeId, link.ChargeOwner, link.ChargeType))
+                    .GetOrNullAsync(new ChargeIdentifier(chargeLinkDto.SenderProvidedChargeId, chargeLinkDto.ChargeOwner, chargeLinkDto.ChargeType))
                     .ConfigureAwait(false);
+
+                rules.Add(new ChargeMustExistRule(charge, chargeLinkDto));
 
                 if (charge == null)
                     continue;

@@ -42,8 +42,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             await sut.PublishAsync(chargeCommandAcceptedEvent).ConfigureAwait(false);
 
             // Assert
-            chargeSender.Verify(x => x.PublishChargeCreatedAsync(It.IsAny<ChargeOperationDto>()), Times.Once); // TODO: right?
-            chargePricesUpdatedSender.Verify(x => x.PublishChargePricesAsync(It.IsAny<ChargeOperationDto>()), Times.Once); // TODO: right?
+            chargeSender.Verify(x => x.PublishChargeCreatedAsync(It.IsAny<ChargeOperationDto>()), Times.Exactly(3)); // TODO: right?
+            chargePricesUpdatedSender.Verify(x => x.PublishChargePricesAsync(It.IsAny<ChargeOperationDto>()), Times.Exactly(3)); // TODO: right?
         }
 
         [Theory]

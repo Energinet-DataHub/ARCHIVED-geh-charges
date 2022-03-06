@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using AutoFixture.Xunit2;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.InputValidation.Factories;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
@@ -32,7 +31,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
             ChargeLinksCommand chargeLinksCommand)
         {
             // Arrange
-            var sut = new InputValidator<ChargeLinksCommand, ChargeLinkDto>(chargeLinksCommandInputValidationRulesFactory);
+            var sut = new InputValidator<ChargeLinksCommand>(chargeLinksCommandInputValidationRulesFactory);
 
             // Act
             var result = sut.Validate(chargeLinksCommand);
