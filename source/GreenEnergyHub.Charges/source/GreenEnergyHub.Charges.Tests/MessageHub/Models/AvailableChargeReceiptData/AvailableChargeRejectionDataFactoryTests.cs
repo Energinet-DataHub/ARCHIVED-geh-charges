@@ -55,8 +55,9 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
                 .ReturnsAsync(meteringPointAdministrator);
 
             // fake error code and text
+            var chargeOperationDto = rejectedEvent.Command.Charges.First();
             availableChargeReceiptValidationErrorFactory
-                .Setup(f => f.Create(It.IsAny<ValidationError>(), rejectedEvent.Command))
+                .Setup(f => f.Create(It.IsAny<ValidationError>(), rejectedEvent.Command, chargeOperationDto))
                 .Returns<ValidationError, ChargeCommand>((identifier, _) =>
                      new AvailableReceiptValidationError(ReasonCode.D01, identifier.ValidationRuleIdentifier.ToString()));
             var expectedValidationErrors =
@@ -73,7 +74,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             actual.BusinessReasonCode.Should().Be(rejectedEvent.Command.Document.BusinessReasonCode);
             actual.RequestDateTime.Should().Be(now);
             actual.ReceiptStatus.Should().Be(ReceiptStatus.Rejected);
-            actual.OriginalOperationId.Should().Be(rejectedEvent.Command.ChargeOperation.Id);
+            actual.OriginalOperationId.Should().Be(chargeOperationDto.Id);
 
             var actualValidationErrors = actual.ValidationErrors.ToList();
             actual.ValidationErrors.Should().HaveSameCount(rejectedEvent.ValidationErrors);

@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
@@ -38,8 +39,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             bool expected,
             ChargeCommandBuilder chargeCommandBuilder)
         {
-            var command = chargeCommandBuilder.WithVatClassification(vatClassification).Build();
-            var sut = new VatClassificationValidationRule(command);
+            var chargeCommand = chargeCommandBuilder.WithVatClassification(vatClassification).Build();
+            var chargeOperationDto = chargeCommand.Charges.First();
+            var sut = new VatClassificationValidationRule(chargeOperationDto);
             sut.IsValid.Should().Be(expected);
         }
 
@@ -48,7 +50,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder builder)
         {
             var invalidCommand = CreateInvalidCommand(builder);
-            var sut = new VatClassificationValidationRule(invalidCommand);
+            var chargeOperationDto = invalidCommand.Charges.First();
+            var sut = new VatClassificationValidationRule(chargeOperationDto);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.VatClassificationValidation);
         }
 

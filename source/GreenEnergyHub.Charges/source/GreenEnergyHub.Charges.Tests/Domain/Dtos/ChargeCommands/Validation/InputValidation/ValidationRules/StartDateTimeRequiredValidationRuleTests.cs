@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules;
@@ -38,7 +39,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             ChargeCommandBuilder chargeCommandBuilder)
         {
             var chargeCommand = CreateCommand(chargeCommandBuilder, startDateTime);
-            var sut = new StartDateTimeRequiredValidationRule(chargeCommand);
+            var chargeOperationDto = chargeCommand.Charges.First();
+            var sut = new StartDateTimeRequiredValidationRule(chargeOperationDto);
             sut.IsValid.Should().Be(expected);
         }
 
@@ -46,8 +48,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         [InlineAutoDomainData]
         public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder chargeCommandBuilder)
         {
-            var command = CreateCommand(chargeCommandBuilder, "1970-01-01T00:00:00Z");
-            var sut = new StartDateTimeRequiredValidationRule(command);
+            var chargeCommand = CreateCommand(chargeCommandBuilder, "1970-01-01T00:00:00Z");
+            var chargeOperationDto = chargeCommand.Charges.First();
+            var sut = new StartDateTimeRequiredValidationRule(chargeOperationDto);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.StartDateTimeRequiredValidation);
         }
 

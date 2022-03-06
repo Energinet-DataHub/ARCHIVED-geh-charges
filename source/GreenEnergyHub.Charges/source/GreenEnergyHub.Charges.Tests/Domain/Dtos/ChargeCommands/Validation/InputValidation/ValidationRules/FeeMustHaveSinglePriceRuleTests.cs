@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules;
@@ -39,10 +40,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             ChargeCommandBuilder chargeCommandBuilder)
         {
             // Arrange
-            var command = CreateCommand(chargeCommandBuilder, ChargeType.Fee, priceCount);
+            var chargeCommand = CreateCommand(chargeCommandBuilder, ChargeType.Fee, priceCount);
+            var chargeOperationDto = chargeCommand.Charges.First();
 
             // Act
-            var sut = new FeeMustHaveSinglePriceRule(command);
+            var sut = new FeeMustHaveSinglePriceRule(chargeOperationDto);
 
             // Assert
             sut.IsValid.Should().Be(expected);
@@ -56,7 +58,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             ChargeCommandBuilder chargeCommandBuilder)
         {
             var chargeCommand = chargeCommandBuilder.WithChargeType(chargeType).Build();
-            var sut = new FeeMustHaveSinglePriceRule(chargeCommand);
+            var chargeOperationDto = chargeCommand.Charges.First();
+            var sut = new FeeMustHaveSinglePriceRule(chargeOperationDto);
             sut.IsValid.Should().BeTrue();
         }
 
@@ -65,7 +68,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder chargeCommandBuilder)
         {
             var chargeCommand = CreateCommand(chargeCommandBuilder, ChargeType.Fee, 0);
-            var sut = new FeeMustHaveSinglePriceRule(chargeCommand);
+            var chargeOperationDto = chargeCommand.Charges.First();
+            var sut = new FeeMustHaveSinglePriceRule(chargeOperationDto);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.FeeMustHaveSinglePrice);
         }
 

@@ -66,7 +66,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
             var actual = await sut.CreateAsync(acceptedEvent);
 
             // Assert
-            var operation = acceptedEvent.Command.ChargeOperation;
+            var operation = acceptedEvent.Command.Charges.First();
             actual.Should().HaveSameCount(gridAccessProvider);
             for (var i = 0; i < actual.Count; i++)
             {

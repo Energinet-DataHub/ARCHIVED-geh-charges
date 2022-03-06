@@ -38,8 +38,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             bool expected,
             ChargeCommandBuilder chargeCommandBuilder)
         {
-            var command = CreateCommand(chargeCommandBuilder, businessReasonCode);
-            var sut = new BusinessReasonCodeMustBeUpdateChargeInformationRule(command);
+            var chargeCommand = CreateCommand(chargeCommandBuilder, businessReasonCode);
+            var sut = new BusinessReasonCodeMustBeUpdateChargeInformationRule(chargeCommand.Document);
             sut.IsValid.Should().Be(expected);
         }
 
@@ -47,8 +47,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         [InlineAutoDomainData]
         public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder chargeCommandBuilder)
         {
-            var command = CreateCommand(chargeCommandBuilder, BusinessReasonCode.Unknown);
-            var sut = new BusinessReasonCodeMustBeUpdateChargeInformationRule(command);
+            var chargeCommand = CreateCommand(chargeCommandBuilder, BusinessReasonCode.Unknown);
+            var sut = new BusinessReasonCodeMustBeUpdateChargeInformationRule(chargeCommand.Document);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.BusinessReasonCodeMustBeUpdateChargeInformation);
         }
 

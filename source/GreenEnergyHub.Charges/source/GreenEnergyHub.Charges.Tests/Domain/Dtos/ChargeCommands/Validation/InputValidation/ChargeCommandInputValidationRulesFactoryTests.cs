@@ -41,34 +41,52 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             var chargeCommand = new ChargeCommandBuilder().Build();
             var expectedRules = new List<IValidationRule>
             {
-                new BusinessReasonCodeMustBeUpdateChargeInformationRule(chargeCommand),
-                new ChargeDescriptionHasMaximumLengthRule(chargeCommand),
-                new ChargeIdLengthValidationRule(chargeCommand),
-                new ChargeIdRequiredValidationRule(chargeCommand),
-                new ChargeNameHasMaximumLengthRule(chargeCommand),
-                new ChargeOperationIdRequiredRule(chargeCommand),
-                new ChargeOwnerIsRequiredValidationRule(chargeCommand),
-                new ChargePriceMaximumDigitsAndDecimalsRule(chargeCommand),
-                new ChargeTypeIsKnownValidationRule(chargeCommand),
-                new ChargeTypeTariffPriceCountRule(chargeCommand),
-                new DocumentTypeMustBeRequestUpdateChargeInformationRule(chargeCommand),
-                new FeeMustHaveSinglePriceRule(chargeCommand),
-                new MaximumPriceRule(chargeCommand),
-                new RecipientIsMandatoryTypeValidationRule(chargeCommand),
-                new ResolutionFeeValidationRule(chargeCommand),
-                new ResolutionSubscriptionValidationRule(chargeCommand),
-                new ResolutionTariffValidationRule(chargeCommand),
-                new SenderIsMandatoryTypeValidationRule(chargeCommand),
-                new StartDateTimeRequiredValidationRule(chargeCommand),
-                new StopChargeNotYetSupportedValidationRule(chargeCommand),
-                new SubscriptionMustHaveSinglePriceRule(chargeCommand),
-                new VatClassificationValidationRule(chargeCommand),
+                new BusinessReasonCodeMustBeUpdateChargeInformationRule(chargeCommand.Document),
+                new DocumentTypeMustBeRequestUpdateChargeInformationRule(chargeCommand.Document),
+                new RecipientIsMandatoryTypeValidationRule(chargeCommand.Document),
+                new SenderIsMandatoryTypeValidationRule(chargeCommand.Document),
             };
 
             // Act
-            var actualRuleTypes = sut.CreateRulesForCommand(chargeCommand).GetRules()
-                .Select(r => r.GetType()).ToList();
+            var actualRuleTypes = sut.CreateRulesForCommand(chargeCommand).GetRules().Select(r => r.GetType()).ToList();
+            var expectedRuleTypes = expectedRules.Select(r => r.GetType()).ToList();
 
+            // Assert
+            Assert.True(actualRuleTypes.SequenceEqual(expectedRuleTypes));
+        }
+
+        [Fact]
+        public void CreateRulesForChargeOperation_ShouldContainRulesTest()
+        {
+            // Arrange
+            var sut = new ChargeCommandInputValidationRulesFactory();
+            var chargeCommand = new ChargeCommandBuilder().Build();
+            var chargeOperationDto = chargeCommand.Charges.First();
+            var expectedRules = new List<IValidationRule>
+            {
+                new ChargeDescriptionHasMaximumLengthRule(chargeOperationDto),
+                new ChargeIdLengthValidationRule(chargeOperationDto),
+                new ChargeIdRequiredValidationRule(chargeOperationDto),
+                new ChargeNameHasMaximumLengthRule(chargeOperationDto),
+                new ChargeOperationIdRequiredRule(chargeOperationDto),
+                new ChargeOwnerIsRequiredValidationRule(chargeOperationDto),
+                new ChargePriceMaximumDigitsAndDecimalsRule(chargeOperationDto),
+                new ChargeTypeIsKnownValidationRule(chargeOperationDto),
+                new ChargeTypeTariffPriceCountRule(chargeOperationDto),
+                new FeeMustHaveSinglePriceRule(chargeOperationDto),
+                new MaximumPriceRule(chargeOperationDto),
+                new ResolutionFeeValidationRule(chargeOperationDto),
+                new ResolutionSubscriptionValidationRule(chargeOperationDto),
+                new ResolutionTariffValidationRule(chargeOperationDto),
+                new StartDateTimeRequiredValidationRule(chargeOperationDto),
+                new StopChargeNotYetSupportedValidationRule(chargeOperationDto),
+                new SubscriptionMustHaveSinglePriceRule(chargeOperationDto),
+                new VatClassificationValidationRule(chargeOperationDto),
+            };
+
+            // Act
+            var actualRuleTypes = sut.CreateRulesForOperation(chargeOperationDto)
+                .GetRules().Select(r => r.GetType()).ToList();
             var expectedRuleTypes = expectedRules.Select(r => r.GetType()).ToList();
 
             // Assert

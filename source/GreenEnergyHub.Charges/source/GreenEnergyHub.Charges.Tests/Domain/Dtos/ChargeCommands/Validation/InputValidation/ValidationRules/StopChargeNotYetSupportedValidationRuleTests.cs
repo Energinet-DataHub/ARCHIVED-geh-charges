@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules;
@@ -33,7 +34,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void IsValid_WhenNoEndDateTime_ReturnsTrue(ChargeCommandBuilder chargeCommandBuilder)
         {
             var chargeCommand = chargeCommandBuilder.WithEndDateTimeAsNull().Build();
-            var sut = new StopChargeNotYetSupportedValidationRule(chargeCommand);
+            var chargeOperationDto = chargeCommand.Charges.First();
+            var sut = new StopChargeNotYetSupportedValidationRule(chargeOperationDto);
             sut.IsValid.Should().BeTrue();
         }
 
@@ -42,7 +44,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void IsValid_WhenEndDateTimeSet_ReturnsFalse(ChargeCommandBuilder chargeCommandBuilder)
         {
             var chargeCommand = chargeCommandBuilder.Build();
-            var sut = new StopChargeNotYetSupportedValidationRule(chargeCommand);
+            var chargeOperationDto = chargeCommand.Charges.First();
+            var sut = new StopChargeNotYetSupportedValidationRule(chargeOperationDto);
             sut.IsValid.Should().BeFalse();
         }
 
@@ -50,7 +53,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         [InlineAutoDomainData]
         public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommand chargeCommand)
         {
-            var sut = new StopChargeNotYetSupportedValidationRule(chargeCommand);
+            var chargeOperationDto = chargeCommand.Charges.First();
+            var sut = new StopChargeNotYetSupportedValidationRule(chargeOperationDto);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.StopChargeNotYetSupported);
         }
     }

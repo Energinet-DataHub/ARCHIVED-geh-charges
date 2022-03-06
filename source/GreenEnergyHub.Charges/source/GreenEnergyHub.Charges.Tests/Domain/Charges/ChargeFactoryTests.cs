@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
@@ -40,16 +41,21 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             Mock<ChargePeriod> chargePeriod,
             ChargeFactory sut)
         {
+            // Arrange
+            var chargeOperationDto = chargeCommand.Charges.First();
+
             marketParticipantRepository
-                .Setup(repo => repo.GetOrNullAsync(chargeCommand.ChargeOperation.ChargeOwner))
+                .Setup(repo => repo.GetOrNullAsync(chargeOperationDto.ChargeOwner))
                 .ReturnsAsync(owner);
 
             chargePeriodFactory
                 .Setup(f => f.CreateFromChargeOperationDto(It.IsAny<ChargeOperationDto>()))
                 .Returns(chargePeriod.Object);
 
-            var actual = await sut.CreateFromCommandAsync(chargeCommand);
+            // Act
+            var actual = await sut.CreateFromChargeOperationDtoAsync(chargeOperationDto);
 
+            // Assert
             actual.Should().NotContainNullsOrEmptyEnumerables();
         }
     }

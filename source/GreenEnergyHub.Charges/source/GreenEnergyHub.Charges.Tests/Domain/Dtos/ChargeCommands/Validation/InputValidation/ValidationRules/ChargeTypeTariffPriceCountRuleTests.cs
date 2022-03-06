@@ -13,13 +13,13 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
@@ -43,10 +43,15 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             ChargeCommandBuilder builder)
         {
             // Arrange
-            var chargeCommand = builder.WithChargeType(ChargeType.Tariff).WithPointWithXNumberOfPrices(priceCount).Build();
+            var chargeCommand = builder
+                .WithChargeType(ChargeType.Tariff)
+                .WithPointWithXNumberOfPrices(priceCount)
+                .Build();
+
+            var chargeOperationDto = chargeCommand.Charges.First();
 
             // Act
-            var sut = new ChargeTypeTariffPriceCountRule(chargeCommand);
+            var sut = new ChargeTypeTariffPriceCountRule(chargeOperationDto);
 
             // Assert
             sut.IsValid.Should().Be(expected);
@@ -69,8 +74,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 .WithResolution(Resolution.P1D)
                 .WithPointWithXNumberOfPrices(priceCount).Build();
 
+            var chargeOperationDto = chargeCommand.Charges.First();
+
             // Act
-            var sut = new ChargeTypeTariffPriceCountRule(chargeCommand);
+            var sut = new ChargeTypeTariffPriceCountRule(chargeOperationDto);
 
             // Assert
             sut.IsValid.Should().Be(expected);
@@ -95,8 +102,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 .WithResolution(Resolution.PT15M)
                 .WithPointWithXNumberOfPrices(priceCount).Build();
 
+            var chargeOperationDto = chargeCommand.Charges.First();
+
             // Act
-            var sut = new ChargeTypeTariffPriceCountRule(chargeCommand);
+            var sut = new ChargeTypeTariffPriceCountRule(chargeOperationDto);
 
             // Assert
             sut.IsValid.Should().Be(expected);
@@ -111,7 +120,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             ChargeCommandBuilder builder)
         {
             var chargeCommand = builder.WithChargeType(chargeType).Build();
-            var sut = new ChargeTypeTariffPriceCountRule(chargeCommand);
+            var chargeOperationDto = chargeCommand.Charges.First();
+            var sut = new ChargeTypeTariffPriceCountRule(chargeOperationDto);
             sut.IsValid.Should().BeTrue();
         }
 
@@ -124,7 +134,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         {
             // Arrange
             var chargeCommand = builder.WithChargeType(ChargeType.Tariff).WithResolution(resolution).Build();
-            var chargeTypeTariffPriceCountRule = new ChargeTypeTariffPriceCountRule(chargeCommand);
+            var chargeOperationDto = chargeCommand.Charges.First();
+            var chargeTypeTariffPriceCountRule = new ChargeTypeTariffPriceCountRule(chargeOperationDto);
 
             // Act
             Action act = () => chargeTypeTariffPriceCountRule.IsValid.Should().BeTrue();
@@ -144,7 +155,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         private static ChargeTypeTariffPriceCountRule CreateInvalidRule(ChargeCommandBuilder builder)
         {
             var invalidCommand = CreateInvalidCommand(builder);
-            return new ChargeTypeTariffPriceCountRule(invalidCommand);
+            var chargeOperationDto = invalidCommand.Charges.First();
+            return new ChargeTypeTariffPriceCountRule(chargeOperationDto);
         }
 
         private static ChargeCommand CreateInvalidCommand(ChargeCommandBuilder builder)

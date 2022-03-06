@@ -70,6 +70,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                     .BusinessValidateAsync(commandReceivedEvent.Command).ConfigureAwait(false);
                 if (businessValidationResult.IsFailed)
                 {
+                    // Todo: Add rejected operations to a list that can be handled/rejected later
                     await _chargeCommandReceiptService.RejectAsync(
                         commandReceivedEvent.Command, businessValidationResult).ConfigureAwait(false);
                     continue;

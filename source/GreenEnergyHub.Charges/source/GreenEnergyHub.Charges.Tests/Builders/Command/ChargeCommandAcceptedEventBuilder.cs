@@ -14,6 +14,7 @@
 
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Tests.Builders.Command
@@ -26,7 +27,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         public ChargeCommandAcceptedEventBuilder()
         {
             _publishedTime = SystemClock.Instance.GetCurrentInstant();
-            _chargeCommand = new ChargeCommand();
+            _chargeCommand = null!; // Use ChargeCommandBuilder to build ChargeCommand and then WithChargeCommand?
         }
 
         public ChargeCommandAcceptedEventBuilder WithPublishedTime(Instant publishedTime)

@@ -248,39 +248,41 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             // Assert
 
             // Charge operation
-            var actualFirstChargeCommand = actual.ChargeCommands.Single(x => x.ChargeOperation.Id == "36251480");
-            actualFirstChargeCommand.ChargeOperation.ChargeOwner.Should().Be("8100000000030");
-            actualFirstChargeCommand.ChargeOperation.Type.Should().Be(ChargeType.Tariff);
-            actualFirstChargeCommand.ChargeOperation.ChargeId.Should().Be("ChId1234567890");
-            actualFirstChargeCommand.ChargeOperation.ChargeName.Should().Be("Charge Tariff day Name 1");
-            actualFirstChargeCommand.ChargeOperation.ChargeDescription.Should().Be("The charge description 1");
-            actualFirstChargeCommand.ChargeOperation.Resolution.Should().Be(Resolution.P1D);
-            actualFirstChargeCommand.ChargeOperation.StartDateTime.Should().Be(expectedTime);
-            actualFirstChargeCommand.ChargeOperation.EndDateTime.Should().BeNull();
-            actualFirstChargeCommand.ChargeOperation.VatClassification.Should().Be(VatClassification.NoVat);
-            actualFirstChargeCommand.ChargeOperation.TransparentInvoicing.Should().BeFalse();
-            actualFirstChargeCommand.ChargeOperation.TaxIndicator.Should().BeTrue();
+            var actualFirstChargeCommand = actual.ChargeCommands.Single(x => x.Charges.Any(y => y.Id == "36251480"));
+            var actualFirstChargeOperationDto = actualFirstChargeCommand.Charges.First();
+            actualFirstChargeOperationDto.ChargeOwner.Should().Be("8100000000030");
+            actualFirstChargeOperationDto.Type.Should().Be(ChargeType.Tariff);
+            actualFirstChargeOperationDto.ChargeId.Should().Be("ChId1234567890");
+            actualFirstChargeOperationDto.ChargeName.Should().Be("Charge Tariff day Name 1");
+            actualFirstChargeOperationDto.ChargeDescription.Should().Be("The charge description 1");
+            actualFirstChargeOperationDto.Resolution.Should().Be(Resolution.P1D);
+            actualFirstChargeOperationDto.StartDateTime.Should().Be(expectedTime);
+            actualFirstChargeOperationDto.EndDateTime.Should().BeNull();
+            actualFirstChargeOperationDto.VatClassification.Should().Be(VatClassification.NoVat);
+            actualFirstChargeOperationDto.TransparentInvoicing.Should().BeFalse();
+            actualFirstChargeOperationDto.TaxIndicator.Should().BeTrue();
 
             // Prices
-            actualFirstChargeCommand.ChargeOperation.Points.Should().HaveCount(1);
-            actualFirstChargeCommand.ChargeOperation.Points.First().Price.Should().Be(150.001m);
+            actualFirstChargeOperationDto.Points.Should().HaveCount(1);
+            actualFirstChargeOperationDto.Points.First().Price.Should().Be(150.001m);
 
-            var actualSecondChargeCommand = actual.ChargeCommands.Single(x => x.ChargeOperation.Id == "36251481");
-            actualSecondChargeCommand.ChargeOperation.ChargeOwner.Should().Be("8100000000030");
-            actualSecondChargeCommand.ChargeOperation.Type.Should().Be(ChargeType.Tariff);
-            actualSecondChargeCommand.ChargeOperation.ChargeId.Should().Be("ChId1234567891");
-            actualSecondChargeCommand.ChargeOperation.ChargeName.Should().Be("Charge Tariff day Name 2");
-            actualSecondChargeCommand.ChargeOperation.ChargeDescription.Should().Be("The charge description 2");
-            actualSecondChargeCommand.ChargeOperation.Resolution.Should().Be(Resolution.P1D);
-            actualSecondChargeCommand.ChargeOperation.StartDateTime.Should().Be(expectedTime);
-            actualSecondChargeCommand.ChargeOperation.EndDateTime.Should().BeNull();
-            actualSecondChargeCommand.ChargeOperation.VatClassification.Should().Be(VatClassification.Vat25);
-            actualSecondChargeCommand.ChargeOperation.TransparentInvoicing.Should().BeTrue();
-            actualSecondChargeCommand.ChargeOperation.TaxIndicator.Should().BeFalse();
+            var actualSecondChargeCommand = actual.ChargeCommands.Single(x => x.Charges.Any(y => y.Id == "36251481"));
+            var actualSecondChargeOperationDto = actualSecondChargeCommand.Charges.First();
+            actualSecondChargeOperationDto.ChargeOwner.Should().Be("8100000000030");
+            actualSecondChargeOperationDto.Type.Should().Be(ChargeType.Tariff);
+            actualSecondChargeOperationDto.ChargeId.Should().Be("ChId1234567891");
+            actualSecondChargeOperationDto.ChargeName.Should().Be("Charge Tariff day Name 2");
+            actualSecondChargeOperationDto.ChargeDescription.Should().Be("The charge description 2");
+            actualSecondChargeOperationDto.Resolution.Should().Be(Resolution.P1D);
+            actualSecondChargeOperationDto.StartDateTime.Should().Be(expectedTime);
+            actualSecondChargeOperationDto.EndDateTime.Should().BeNull();
+            actualSecondChargeOperationDto.VatClassification.Should().Be(VatClassification.Vat25);
+            actualSecondChargeOperationDto.TransparentInvoicing.Should().BeTrue();
+            actualSecondChargeOperationDto.TaxIndicator.Should().BeFalse();
 
             // Prices
-            actualSecondChargeCommand.ChargeOperation.Points.Should().HaveCount(1);
-            actualSecondChargeCommand.ChargeOperation.Points.First().Price.Should().Be(200.001m);
+            actualSecondChargeOperationDto.Points.Should().HaveCount(1);
+            actualSecondChargeOperationDto.Points.First().Price.Should().Be(200.001m);
         }
 
         private SchemaValidatingReader GetReaderAndArrangeTest(

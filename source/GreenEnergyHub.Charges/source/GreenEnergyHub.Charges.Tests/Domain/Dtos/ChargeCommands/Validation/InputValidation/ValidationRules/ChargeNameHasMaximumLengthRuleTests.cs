@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules;
@@ -39,8 +40,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             bool expected,
             ChargeCommandBuilder builder)
         {
-            var command = builder.WithChargeName(GenerateStringWithLength(chargeNameLength)).Build();
-            var sut = new ChargeNameHasMaximumLengthRule(command);
+            var chargeCommand = builder.WithChargeName(GenerateStringWithLength(chargeNameLength)).Build();
+            var chargeOperationDto = chargeCommand.Charges.First();
+            var sut = new ChargeNameHasMaximumLengthRule(chargeOperationDto);
             sut.IsValid.Should().Be(expected);
         }
 
@@ -49,7 +51,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder builder)
         {
             var invalidCommand = CreateInvalidCommand(builder);
-            var sut = new ChargeNameHasMaximumLengthRule(invalidCommand);
+            var chargeOperationDto = invalidCommand.Charges.First();
+            var sut = new ChargeNameHasMaximumLengthRule(chargeOperationDto);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChargeNameHasMaximumLength);
         }
 

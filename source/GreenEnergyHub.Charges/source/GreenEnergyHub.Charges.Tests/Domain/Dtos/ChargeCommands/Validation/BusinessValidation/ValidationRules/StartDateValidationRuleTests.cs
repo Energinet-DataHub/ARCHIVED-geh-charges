@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Linq;
 using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Core;
@@ -58,12 +59,13 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             var chargeCommand = builder
                 .WithStartDateTime(InstantPattern.General.Parse(effectuationDateIsoString).Value)
                 .Build();
+            var chargeOperationDto = chargeCommand.Charges.First();
             var configuration = CreateRuleConfiguration(startOfOccurrence, endOfOccurrence);
             var zonedDateTimeService = CreateLocalDateTimeService(timeZoneId);
             var clock = new FakeClock(InstantPattern.General.Parse(nowIsoString).Value);
 
             // Act (implicit)
-            var sut = new StartDateValidationRule(chargeCommand, configuration, zonedDateTimeService, clock);
+            var sut = new StartDateValidationRule(chargeOperationDto, configuration, zonedDateTimeService, clock);
 
             // Assert
             Assert.Equal(expected, sut.IsValid);
@@ -75,10 +77,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         {
             // Arrange
             var invalidCommand = CreateInvalidCommand(builder);
+            var chargeOperationDto = invalidCommand.Charges.First();
             var configuration = CreateRuleConfiguration(1, 3);
             var zonedDateTimeService = CreateLocalDateTimeService("Europe/Copenhagen");
 
-            var sut = new StartDateValidationRule(invalidCommand, configuration, zonedDateTimeService, clock);
+            var sut = new StartDateValidationRule(chargeOperationDto, configuration, zonedDateTimeService, clock);
 
             // Assert
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.StartDateValidation);

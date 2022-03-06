@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
@@ -41,10 +41,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             ChargeCommandBuilder chargeCommandBuilder)
         {
             // Arrange
-            var command = CreateCommand(chargeCommandBuilder, ChargeType.Tariff, resolution);
+            var chargeCommand = CreateCommand(chargeCommandBuilder, ChargeType.Tariff, resolution);
+            var chargeOperationDto = chargeCommand.Charges.First();
 
             // Act
-            var sut = new ResolutionSubscriptionValidationRule(command);
+            var sut = new ResolutionSubscriptionValidationRule(chargeOperationDto);
 
             // Assert
             sut.IsValid.Should().Be(expected);
@@ -62,10 +63,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             ChargeCommandBuilder chargeCommandBuilder)
         {
             // Arrange
-            var command = CreateCommand(chargeCommandBuilder, ChargeType.Subscription, resolution);
+            var chargeCommand = CreateCommand(chargeCommandBuilder, ChargeType.Subscription, resolution);
+            var chargeOperationDto = chargeCommand.Charges.First();
 
             // Act
-            var sut = new ResolutionSubscriptionValidationRule(command);
+            var sut = new ResolutionSubscriptionValidationRule(chargeOperationDto);
 
             // Assert
             sut.IsValid.Should().Be(expected);
@@ -83,10 +85,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             ChargeCommandBuilder chargeCommandBuilder)
         {
             // Assert
-            var command = CreateCommand(chargeCommandBuilder, ChargeType.Fee, resolution);
+            var chargeCommand = CreateCommand(chargeCommandBuilder, ChargeType.Fee, resolution);
+            var chargeOperationDto = chargeCommand.Charges.First();
 
             // Act
-            var sut = new ResolutionSubscriptionValidationRule(command);
+            var sut = new ResolutionSubscriptionValidationRule(chargeOperationDto);
 
             // Assert
             sut.IsValid.Should().Be(expected);
@@ -96,8 +99,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         [InlineAutoDomainData]
         public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder chargeCommandBuilder)
         {
-            var command = CreateCommand(chargeCommandBuilder, ChargeType.Subscription, Resolution.Unknown);
-            var sut = new ResolutionSubscriptionValidationRule(command);
+            var chargeCommand = CreateCommand(chargeCommandBuilder, ChargeType.Subscription, Resolution.Unknown);
+            var chargeOperationDto = chargeCommand.Charges.First();
+            var sut = new ResolutionSubscriptionValidationRule(chargeOperationDto);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ResolutionSubscriptionValidation);
         }
 

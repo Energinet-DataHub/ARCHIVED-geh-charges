@@ -183,24 +183,24 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
 
         public ChargeCommand Build()
         {
-            return new()
+            var documentDto = new DocumentDto
             {
-                Document = new DocumentDto
+                Id = _documentId,
+                Type = _documentType,
+                RequestDate = SystemClock.Instance.GetCurrentInstant(),
+                IndustryClassification = IndustryClassification.Electricity,
+                CreatedDateTime = SystemClock.Instance.GetCurrentInstant(),
+                Recipient = new MarketParticipantDto
                 {
-                    Id = _documentId,
-                    Type = _documentType,
-                    RequestDate = SystemClock.Instance.GetCurrentInstant(),
-                    IndustryClassification = IndustryClassification.Electricity,
-                    CreatedDateTime = SystemClock.Instance.GetCurrentInstant(),
-                    Recipient = new MarketParticipantDto
-                    {
-                        Id = "0",
-                        BusinessProcessRole = MarketParticipantRole.EnergySupplier,
-                    },
-                    Sender = _sender,
-                    BusinessReasonCode = _documentBusinessReasonCode,
+                    Id = "0", BusinessProcessRole = MarketParticipantRole.EnergySupplier,
                 },
-                ChargeOperation = new ChargeOperationDto(
+                Sender = _sender,
+                BusinessReasonCode = _documentBusinessReasonCode,
+            };
+
+            var chargeOperationDtos = new List<ChargeOperationDto>
+            {
+                new ChargeOperationDto(
                     _operationId,
                     _chargeType,
                     _chargeId,
@@ -215,6 +215,8 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
                     _endDateTime,
                     _points),
             };
+
+            return new ChargeCommand(documentDto, chargeOperationDtos);
         }
     }
 }

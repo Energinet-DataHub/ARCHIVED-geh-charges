@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
@@ -39,7 +40,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             ChargeCommandBuilder chargeCommandBuilder)
         {
             var chargeCommand = CreateCommand(chargeCommandBuilder, ChargeType.Subscription, priceCount);
-            var sut = new SubscriptionMustHaveSinglePriceRule(chargeCommand);
+            var chargeOperationDto = chargeCommand.Charges.First();
+            var sut = new SubscriptionMustHaveSinglePriceRule(chargeOperationDto);
             sut.IsValid.Should().Be(expected);
         }
 
@@ -51,7 +53,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             ChargeCommandBuilder chargeCommandBuilder)
         {
             var chargeCommand = chargeCommandBuilder.WithChargeType(chargeType).Build();
-            var sut = new SubscriptionMustHaveSinglePriceRule(chargeCommand);
+            var chargeOperationDto = chargeCommand.Charges.First();
+            var sut = new SubscriptionMustHaveSinglePriceRule(chargeOperationDto);
             sut.IsValid.Should().BeTrue();
         }
 
@@ -60,7 +63,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder chargeCommandBuilder)
         {
             var chargeCommand = CreateCommand(chargeCommandBuilder, ChargeType.Subscription, 0);
-            var sut = new SubscriptionMustHaveSinglePriceRule(chargeCommand);
+            var chargeOperationDto = chargeCommand.Charges.First();
+            var sut = new SubscriptionMustHaveSinglePriceRule(chargeOperationDto);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.SubscriptionMustHaveSinglePrice);
         }
 

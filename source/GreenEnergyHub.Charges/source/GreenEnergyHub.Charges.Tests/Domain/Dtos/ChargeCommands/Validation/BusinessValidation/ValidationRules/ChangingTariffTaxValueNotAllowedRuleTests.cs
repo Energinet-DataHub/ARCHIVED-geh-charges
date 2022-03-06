@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
@@ -35,7 +36,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             Charge charge)
         {
             var invalidCommand = CreateInvalidCommand(builder, charge);
-            var sut = new ChangingTariffTaxValueNotAllowedRule(invalidCommand, charge);
+            var chargeOperationDto = invalidCommand.Charges.First();
+            var sut = new ChangingTariffTaxValueNotAllowedRule(chargeOperationDto, charge);
             Assert.False(sut.IsValid);
         }
 
@@ -45,8 +47,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             ChargeCommandBuilder builder,
             Charge charge)
         {
-            var command = builder.WithTaxIndicator(charge.TaxIndicator).Build();
-            var sut = new ChangingTariffTaxValueNotAllowedRule(command, charge);
+            var chargeCommand = builder.WithTaxIndicator(charge.TaxIndicator).Build();
+            var chargeOperationDto = chargeCommand.Charges.First();
+            var sut = new ChangingTariffTaxValueNotAllowedRule(chargeOperationDto, charge);
             Assert.True(sut.IsValid);
         }
 
@@ -55,7 +58,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder builder, Charge charge)
         {
             var invalidCommand = CreateInvalidCommand(builder, charge);
-            var sut = new ChangingTariffTaxValueNotAllowedRule(invalidCommand, charge);
+            var chargeOperationDto = invalidCommand.Charges.First();
+            var sut = new ChangingTariffTaxValueNotAllowedRule(chargeOperationDto, charge);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChangingTariffTaxValueNotAllowed);
         }
 

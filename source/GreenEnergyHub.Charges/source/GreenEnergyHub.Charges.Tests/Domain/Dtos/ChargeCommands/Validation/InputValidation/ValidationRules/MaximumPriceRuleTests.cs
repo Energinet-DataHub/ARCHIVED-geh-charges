@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules;
@@ -45,7 +46,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             ChargeCommandBuilder builder)
         {
             var chargeCommand = CreateCommand(builder, price);
-            var sut = new MaximumPriceRule(chargeCommand);
+            var chargeOperationDto = chargeCommand.Charges.First();
+            var sut = new MaximumPriceRule(chargeOperationDto);
             sut.IsValid.Should().Be(expected);
         }
 
@@ -53,8 +55,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         [InlineAutoDomainData]
         public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder chargeCommandBuilder)
         {
-            var command = CreateCommand(chargeCommandBuilder, SmallestInvalidPrice);
-            var sut = new MaximumPriceRule(command);
+            var chargeCommand = CreateCommand(chargeCommandBuilder, SmallestInvalidPrice);
+            var chargeOperationDto = chargeCommand.Charges.First();
+            var sut = new MaximumPriceRule(chargeOperationDto);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.MaximumPrice);
         }
 
@@ -72,13 +75,17 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 .WithPoint(2, SmallestInvalidPrice)
                 .Build();
 
-            var expectedPoint = invalidCommand.ChargeOperation.Points[1];
+            var chargeOperationDto = invalidCommand.Charges.First();
+            var expectedPoint = chargeOperationDto.Points[1];
             var triggeredBy = expectedPoint.Position.ToString();
 
             // Act & arrange
-            var sutRule = new MaximumPriceRule(invalidCommand);
+            var sutRule = new MaximumPriceRule(chargeOperationDto);
             var sutFactory = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
-            var actual = sutFactory.Create(new ValidationError(validationRuleIdentifier, triggeredBy), invalidCommand);
+            var actual = sutFactory.Create(
+                new ValidationError(validationRuleIdentifier, chargeOperationDto.Id, triggeredBy),
+                invalidCommand,
+                chargeOperationDto);
 
             // Assert
             sutRule.IsValid.Should().BeFalse();
