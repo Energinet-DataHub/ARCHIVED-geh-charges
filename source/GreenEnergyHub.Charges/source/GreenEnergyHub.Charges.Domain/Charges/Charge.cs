@@ -85,11 +85,16 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 
         public IReadOnlyCollection<ChargePeriod> Periods => _periods;
 
-        public bool IsValid => Validate();
-
-        public void StopCharge(Instant endDate)
+        /// <summary>
+        /// Use this method to stop a charge upon receiving a stop charge request
+        /// </summary>
+        /// <param name="stopDate"></param>
+        /// <exception cref="InvalidOperationException">Throws when no charge periods found on charge.</exception>
+        public void StopCharge(Instant stopDate)
         {
-            throw new NotImplementedException();
+            RemoveAllSubsequentPeriods(stopDate);
+            StopExistingPeriod(stopDate);
+            Validate();
         }
 
         /// <summary>
@@ -103,37 +108,30 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         {
             if (newChargePeriod == null) throw new ArgumentNullException(nameof(newChargePeriod));
 
-            RemoveAllPeriodsFromNewPeriodStart(newChargePeriod);
-            HandleAnyOverlappingPeriod(newChargePeriod);
+            RemoveAllSubsequentPeriods(newChargePeriod.StartDateTime);
+            StopExistingPeriod(newChargePeriod.StartDateTime);
             _periods.Add(newChargePeriod);
             Validate();
         }
 
-        private void HandleAnyOverlappingPeriod(ChargePeriod newChargePeriod)
+        private void StopExistingPeriod(Instant dateTime)
         {
             var previousPeriod = _periods
                 .SingleOrDefault(p =>
-                p.EndDateTime > newChargePeriod.StartDateTime &&
-                p.StartDateTime < newChargePeriod.StartDateTime);
+                    p.EndDateTime > dateTime &&
+                    p.StartDateTime < dateTime);
 
             if (previousPeriod != null)
             {
-                var newPreviousPeriod = new ChargePeriod(
-                    previousPeriod.Id,
-                    previousPeriod.Name,
-                    previousPeriod.Description,
-                    previousPeriod.VatClassification,
-                    previousPeriod.TransparentInvoicing,
-                    previousPeriod.StartDateTime,
-                    newChargePeriod.StartDateTime);
+                var newPreviousPeriod = ChargePeriodFactory.CreateFromExistingPeriodWithNewEndDate(previousPeriod, dateTime);
                 _periods.Remove(previousPeriod);
                 _periods.Add(newPreviousPeriod);
             }
         }
 
-        private void RemoveAllPeriodsFromNewPeriodStart(ChargePeriod newChargePeriod)
+        private void RemoveAllSubsequentPeriods(Instant date)
         {
-            _periods.RemoveAll(p => p.StartDateTime >= newChargePeriod.StartDateTime);
+            _periods.RemoveAll(p => p.StartDateTime >= date);
         }
 
         private bool Validate()

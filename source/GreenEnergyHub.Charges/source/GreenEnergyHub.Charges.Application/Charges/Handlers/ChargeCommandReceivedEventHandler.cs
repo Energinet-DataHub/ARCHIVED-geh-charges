@@ -91,9 +91,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 case OperationType.Stop:
                     if (charge == null)
                         throw new InvalidOperationException("Could not stop charge. Charge not found.");
-                    if (commandReceivedEvent.Command.ChargeOperation.EndDateTime == null)
-                        throw new InvalidOperationException("Could not stop charge. Invalid end date.");
-                    StopCharge(charge, commandReceivedEvent.Command.ChargeOperation.EndDateTime.Value);
+                    HandleStopEvent(charge, commandReceivedEvent.Command);
                     break;
                 default:
                     throw new InvalidOperationException("Could not handle charge command.");
@@ -108,6 +106,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             var charge = await _chargeFactory
                 .CreateFromCommandAsync(chargeCommand)
                 .ConfigureAwait(false);
+
             await _chargeRepository.AddAsync(charge).ConfigureAwait(false);
         }
 
@@ -118,9 +117,14 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             _chargeRepository.Update(charge);
         }
 
-        private void StopCharge(Charge charge, Instant chargeOperationEndDateTime)
+        private void HandleStopEvent(Charge charge, ChargeCommand chargeCommand)
         {
-            charge.StopCharge(chargeOperationEndDateTime);
+            var endDateTime = chargeCommand.ChargeOperation.EndDateTime;
+
+            if (endDateTime == null)
+                throw new InvalidOperationException("Could not stop charge. Invalid end date.");
+
+            charge.StopCharge(endDateTime.Value);
             _chargeRepository.Update(charge);
         }
 
@@ -140,7 +144,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 command.ChargeOperation.ChargeId,
                 command.ChargeOperation.ChargeOwner,
                 command.ChargeOperation.Type);
-
             return await _chargeRepository.GetOrNullAsync(chargeIdentifier).ConfigureAwait(false);
         }
     }

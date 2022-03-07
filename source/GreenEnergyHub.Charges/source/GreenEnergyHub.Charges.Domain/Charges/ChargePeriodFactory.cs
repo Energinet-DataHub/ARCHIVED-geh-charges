@@ -15,6 +15,7 @@
 using System;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Charges
 {
@@ -22,7 +23,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
     {
         public ChargePeriod CreateFromChargeOperationDto(ChargeOperationDto chargeOperationDto)
         {
-            var period = new ChargePeriod(
+            return new ChargePeriod(
                 Guid.NewGuid(),
                 chargeOperationDto.ChargeName,
                 chargeOperationDto.ChargeDescription,
@@ -30,8 +31,18 @@ namespace GreenEnergyHub.Charges.Domain.Charges
                 chargeOperationDto.TransparentInvoicing,
                 chargeOperationDto.StartDateTime,
                 chargeOperationDto.EndDateTime.TimeOrEndDefault());
+        }
 
-            return period;
+        public static ChargePeriod CreateFromExistingPeriodWithNewEndDate(ChargePeriod other, Instant endDate)
+        {
+            return new ChargePeriod(
+                other.Id,
+                other.Name,
+                other.Description,
+                other.VatClassification,
+                other.TransparentInvoicing,
+                other.StartDateTime,
+                endDate);
         }
     }
 }
