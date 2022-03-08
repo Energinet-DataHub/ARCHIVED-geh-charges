@@ -92,8 +92,8 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         /// <exception cref="InvalidOperationException">Throws when no charge periods found on charge.</exception>
         public void StopCharge(Instant stopDate)
         {
-            RemoveAllSubsequentPeriods(stopDate);
             StopExistingPeriod(stopDate);
+            RemoveAllSubsequentPeriods(stopDate);
             Validate();
         }
 
@@ -108,25 +108,42 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         {
             if (newChargePeriod == null) throw new ArgumentNullException(nameof(newChargePeriod));
 
+            if (_periods.Exists(p => p.StartDateTime < newChargePeriod.StartDateTime))
+            {
+                StopExistingPeriod(newChargePeriod.StartDateTime);
+            }
+
             RemoveAllSubsequentPeriods(newChargePeriod.StartDateTime);
-            StopExistingPeriod(newChargePeriod.StartDateTime);
             _periods.Add(newChargePeriod);
             Validate();
         }
 
-        private void StopExistingPeriod(Instant dateTime)
+        private void StopExistingPeriod(Instant stopDate)
         {
             var previousPeriod = _periods
                 .SingleOrDefault(p =>
-                    p.EndDateTime > dateTime &&
-                    p.StartDateTime < dateTime);
+                    p.EndDateTime >= stopDate &&
+                    p.StartDateTime < stopDate);
 
-            if (previousPeriod != null)
+            if (previousPeriod == null)
             {
-                var newPreviousPeriod = ChargePeriodFactory.CreateFromExistingPeriodWithNewEndDate(previousPeriod, dateTime);
-                _periods.Remove(previousPeriod);
-                _periods.Add(newPreviousPeriod);
+                throw new InvalidOperationException("Cannot stop charge. No period exist on stop date.");
             }
+
+            if (stopDate == previousPeriod.EndDateTime)
+            {
+                // Charge already stopped
+                return;
+            }
+
+            if (stopDate > previousPeriod.EndDateTime)
+            {
+                throw new InvalidOperationException("Cannot stop charge. Charge already stopped on earlier date.");
+            }
+
+            var newPreviousPeriod = ChargePeriodFactory.CreateFromExistingPeriodWithNewEndDate(previousPeriod, stopDate);
+            _periods.Remove(previousPeriod);
+            _periods.Add(newPreviousPeriod);
         }
 
         private void RemoveAllSubsequentPeriods(Instant date)
