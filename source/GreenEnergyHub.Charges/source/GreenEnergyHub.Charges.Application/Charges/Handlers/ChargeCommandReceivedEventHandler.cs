@@ -54,6 +54,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             if (commandReceivedEvent == null) throw new ArgumentNullException(nameof(commandReceivedEvent));
 
             // Todo: Add rejected operations to a list to that can be handled/rejected later
+            // All operations after the first rejected should also be rejected
             var inputValidationResult = _validator.InputValidate(commandReceivedEvent.Command);
             if (inputValidationResult.IsFailed)
             {
@@ -141,7 +142,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 return OperationType.Stop;
             }
 
-            return existingCharge != null ? OperationType.Update : OperationType.Create;
+            return existingCharge == null ? OperationType.Create : OperationType.Update;
         }
 
         private async Task<Charge?> GetChargeAsync(ChargeCommandReceivedEvent chargeCommandReceivedEvent)

@@ -24,7 +24,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableData
     /// </summary>
     public abstract class AvailableDataBase
     {
-        protected AvailableDataBase(
+        protected AvailableDataBase(// TODO: Add order
             string senderId,
             MarketParticipantRole senderRole,
             string recipientId,

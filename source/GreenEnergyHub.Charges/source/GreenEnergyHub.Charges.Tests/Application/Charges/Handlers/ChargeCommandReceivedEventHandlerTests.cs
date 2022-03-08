@@ -42,7 +42,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             [Frozen] Mock<IValidator<ChargeCommand>> validator,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IChargeCommandReceiptService> receiptService,
-            [Frozen] Mock<Charge> charge,
+            ChargeBuilder chargeBuilder,
             [Frozen] Mock<IChargeFactory> chargeFactory,
             [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
             ChargeCommandReceivedEvent receivedEvent,
@@ -65,13 +65,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                 .Setup(s => s.AcceptAsync(It.IsAny<ChargeCommand>()))
                 .Callback<ChargeCommand>(_ => confirmed = true);
 
+            var charge = chargeBuilder.WithPeriods(new List<ChargePeriod> { CreateValidPeriod() }).Build();
             chargeFactory
                 .Setup(s => s.CreateFromChargeOperationDtoAsync(It.IsAny<ChargeOperationDto>()))
-                .ReturnsAsync(charge.Object);
+                .ReturnsAsync(charge);
 
             chargePeriodFactory
                 .Setup(s => s.CreateFromChargeOperationDto(It.IsAny<ChargeOperationDto>()))
-                .Returns(charge.Object.Periods.First());
+                .Returns(CreateValidPeriod(30));
 
             // Act
             await sut.HandleAsync(receivedEvent);
@@ -162,6 +163,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                     .WithEndDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(i + 1))
                     .Build();
             }
+        }
+
+        private static ChargePeriod CreateValidPeriod(int startDaysFromToday = 1)
+        {
+            return new ChargePeriodBuilder()
+                    .WithStartDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(startDaysFromToday))
+                    .WithEndDateTime(InstantHelper.GetEndDefault())
+                    .Build();
         }
 
         private static Charge CreateValidCharge(IEnumerable<ChargePeriod> periods)
