@@ -40,7 +40,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             [ServiceBusTrigger(
                 "%" + EnvironmentSettingNames.CommandReceivedTopicName + "%",
                 "%" + EnvironmentSettingNames.CommandReceivedSubscriptionName + "%",
-                Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
+                Connection = EnvironmentSettingNames.DomainEventListenerConnectionString,
+                IsSessionsEnabled = true)]
             byte[] message)
         {
             var receivedEvent = (ChargeCommandReceivedEvent)await _deserializer.FromBytesAsync(message).ConfigureAwait(false);

@@ -35,8 +35,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         [Theory]
         [InlineAutoDomainData]
         public async Task ChangeOfChargesTransactionHandler_WhenCalled_ShouldCallPublisher(
-            [NotNull] [Frozen] Mock<IMessageDispatcher<ChargeCommandReceivedEvent>> localEventPublisher,
-            [NotNull] ChargeCommandHandler sut)
+            [Frozen] Mock<IMessageDispatcher<ChargeCommandReceivedEvent>> localEventPublisher,
+            ChargeCommandHandler sut)
         {
             // Arrange
             var transaction = new ChargeCommandBuilder().Build();
@@ -45,10 +45,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             await sut.HandleAsync(transaction).ConfigureAwait(false);
 
             // Assert
-            localEventPublisher.Verify(
-                x => x.DispatchAsync(
-                    It.Is<ChargeCommandReceivedEvent>(
-                        localEvent => localEvent.Command == transaction),
+            localEventPublisher.Verify(x => x.DispatchAsync(
+                    It.Is<ChargeCommandReceivedEvent>(localEvent => localEvent.Command == transaction),
+                    It.IsAny<string>(),
                     It.IsAny<CancellationToken>()));
         }
     }

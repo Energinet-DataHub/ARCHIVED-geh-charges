@@ -42,9 +42,25 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.InternalMessaging
         public async Task DispatchAsync(TOutboundMessage message, CancellationToken cancellationToken = default)
         {
             if (message == null) throw new ArgumentNullException(nameof(message));
+
             var data = _jsonSerializer.Serialize(message);
             var serviceBusMessage = _serviceBusMessageFactory.CreateInternalMessage(data);
-            await _serviceBusSender.Instance.SendMessageAsync(serviceBusMessage, cancellationToken).ConfigureAwait(false);
+            await _serviceBusSender.Instance
+                .SendMessageAsync(serviceBusMessage, cancellationToken)
+                .ConfigureAwait(false);
+        }
+
+        public async Task DispatchAsync(
+            TOutboundMessage message, string sessionId, CancellationToken cancellationToken = default)
+        {
+            if (message == null) throw new ArgumentNullException(nameof(message));
+
+            var data = _jsonSerializer.Serialize(message);
+            var serviceBusMessage = _serviceBusMessageFactory.CreateInternalMessage(data, sessionId);
+
+            await _serviceBusSender.Instance
+                .SendMessageAsync(serviceBusMessage, cancellationToken)
+                .ConfigureAwait(false);
         }
     }
 }

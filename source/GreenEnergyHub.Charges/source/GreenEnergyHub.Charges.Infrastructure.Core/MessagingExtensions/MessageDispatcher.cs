@@ -31,5 +31,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions
         {
             await base.DispatchAsync(message, cancellationToken).ConfigureAwait(false);
         }
+
+        public async Task DispatchAsync(TOutboundMessage message, string sessionId, CancellationToken cancellationToken = default)
+        {
+            await base.DispatchAsync(message, cancellationToken).ConfigureAwait(false);
+        }
     }
 }

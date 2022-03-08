@@ -12,11 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Linq;
 using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factories;
+using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using Xunit;
@@ -54,6 +56,53 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions.F
 
             // Assert
             actual.ApplicationProperties.First(x => x.Key == "ReplyTo").Value.Should().Be(replyTo);
+        }
+
+        [Theory]
+        [InlineAutoMoqData("some-id", null!)]
+        [InlineAutoMoqData(null!, null!)]
+        [InlineAutoMoqData("some-id", "replyTo")]
+        [InlineAutoMoqData(null!, "replyTo")]
+        public void InternalMessage_SessionId_isSet(
+            string sessionId,
+            string replyTo,
+            [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
+            string data,
+            ServiceBusMessageFactory sut)
+        {
+            // Arrange
+            if (!string.IsNullOrWhiteSpace(replyTo))
+            {
+                messageMetaDataContext.Setup(m => m.ReplyTo).Returns(replyTo);
+                messageMetaDataContext.Setup(m => m.IsReplyToSet()).Returns(true);
+            }
+
+            // Act
+            var actual = sut.CreateInternalMessage(data, sessionId);
+
+            // Assert
+            actual.SessionId.Should().Be(sessionId);
+        }
+
+        [Theory]
+        [InlineAutoMoqData("", null!)]
+        [InlineAutoMoqData("", "replyTo")]
+        public void InternalMessage_WithEmptySessionId_shouldThrowException(
+            string sessionId,
+            string replyTo,
+            [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
+            string data,
+            ServiceBusMessageFactory sut)
+        {
+            // Arrange
+            if (!string.IsNullOrWhiteSpace(replyTo))
+            {
+                messageMetaDataContext.Setup(m => m.ReplyTo).Returns(replyTo);
+                messageMetaDataContext.Setup(m => m.IsReplyToSet()).Returns(true);
+            }
+
+            // Act / Assert
+            Assert.Throws<ArgumentException>(() => sut.CreateInternalMessage(data, sessionId));
         }
     }
 }

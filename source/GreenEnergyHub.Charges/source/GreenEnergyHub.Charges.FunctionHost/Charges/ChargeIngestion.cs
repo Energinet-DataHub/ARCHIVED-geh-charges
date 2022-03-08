@@ -64,8 +64,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
                 ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(chargeCommand);
             }
 
-            await _chargesMessageHandler.HandleAsync(message)
-                .ConfigureAwait(false);
+            await _chargesMessageHandler.HandleAsync(message).ConfigureAwait(false);
 
             return _httpResponseBuilder.CreateAcceptedResponse(req);
         }

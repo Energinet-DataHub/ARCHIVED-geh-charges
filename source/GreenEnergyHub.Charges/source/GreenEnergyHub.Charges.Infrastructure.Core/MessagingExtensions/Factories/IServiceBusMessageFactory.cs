@@ -18,7 +18,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factori
 {
     public interface IServiceBusMessageFactory
     {
-        ServiceBusMessage CreateInternalMessage(string data);
+        ServiceBusMessage CreateInternalMessage(string data, string? sessionId = null);
 
         ServiceBusMessage CreateExternalMessage(byte[] data);
     }

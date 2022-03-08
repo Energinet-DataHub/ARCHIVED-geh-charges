@@ -21,6 +21,21 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions
     public interface IMessageDispatcher<in TOutboundMessage>
         where TOutboundMessage : IOutboundMessage
     {
+        /// <summary>
+        /// Dispatch a <see cref="IOutboundMessage"/>
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
         public Task DispatchAsync(TOutboundMessage message, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Dispatch a <see cref="IOutboundMessage"/> with sessionId
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="sessionId"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
+        public Task DispatchAsync(TOutboundMessage message, string sessionId, CancellationToken cancellationToken = default);
     }
 }

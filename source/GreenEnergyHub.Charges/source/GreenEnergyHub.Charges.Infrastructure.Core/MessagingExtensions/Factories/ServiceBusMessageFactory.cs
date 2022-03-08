@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using Azure.Messaging.ServiceBus;
 using GreenEnergyHub.Charges.Infrastructure.Core.Correlation;
@@ -32,13 +33,17 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factori
             _messageMetaDataContext = messageMetaDataContext;
         }
 
-        public ServiceBusMessage CreateInternalMessage(string data)
+        public ServiceBusMessage CreateInternalMessage(string data, string? sessionId = null)
         {
+            if (sessionId == string.Empty)
+                throw new ArgumentException($"{nameof(sessionId)} must be set or null");
+
             if (_messageMetaDataContext.IsReplyToSet())
             {
                 return new ServiceBusMessage(data)
                 {
                     CorrelationId = _correlationContext.Id,
+                    SessionId = sessionId,
                     ApplicationProperties =
                     {
                         new KeyValuePair<string, object>("ReplyTo", _messageMetaDataContext.ReplyTo),
@@ -49,6 +54,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factori
             return new ServiceBusMessage(data)
             {
                 CorrelationId = _correlationContext.Id,
+                SessionId = sessionId,
             };
         }
 

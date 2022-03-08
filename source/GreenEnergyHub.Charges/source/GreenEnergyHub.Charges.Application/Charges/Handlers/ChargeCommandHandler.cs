@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
@@ -34,7 +35,23 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         public async Task HandleAsync(ChargeCommand command)
         {
             var receivedEvent = new ChargeCommandReceivedEvent(_clock.GetCurrentInstant(), command);
-            await _messageDispatcher.DispatchAsync(receivedEvent).ConfigureAwait(false);
+
+            var sessionId = CreateSessionId(command);
+
+            await _messageDispatcher.DispatchAsync(receivedEvent, sessionId).ConfigureAwait(false);
+        }
+
+        private static string CreateSessionId(ChargeCommand command)
+        {
+            var (senderProvidedChargeId, owner, chargeType) =
+                new ChargeIdentifier(
+                    command.ChargeOperation.ChargeId,
+                    command.ChargeOperation.ChargeOwner,
+                    command.ChargeOperation.Type);
+
+            var sessionId = $"{senderProvidedChargeId}-{owner}-{chargeType}";
+
+            return sessionId;
         }
     }
 }
