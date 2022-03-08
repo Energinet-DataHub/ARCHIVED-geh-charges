@@ -32,17 +32,5 @@ namespace GreenEnergyHub.Charges.Domain.Charges
                 chargeOperationDto.StartDateTime,
                 chargeOperationDto.EndDateTime.TimeOrEndDefault());
         }
-
-        public static ChargePeriod CreateFromExistingPeriodWithNewEndDate(ChargePeriod other, Instant endDate)
-        {
-            return new ChargePeriod(
-                other.Id,
-                other.Name,
-                other.Description,
-                other.VatClassification,
-                other.TransparentInvoicing,
-                other.StartDateTime,
-                endDate);
-        }
     }
 }

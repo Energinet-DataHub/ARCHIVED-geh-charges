@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
+using FluentAssertions.Equivalency.Steps;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
@@ -168,28 +169,6 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
         }
 
         [Fact]
-        public void Validate_WhenGapsInChargePeriodTimeline_ThrowsInvalidOperationException()
-        {
-            // Arrange
-            var firstChargePeriod = new ChargePeriodBuilder()
-                .WithStartDateTime(InstantHelper.GetYesterdayAtMidnightUtc())
-                .WithEndDateTime(InstantHelper.GetTodayAtMidnightUtc())
-                .Build();
-
-            var secondChargePeriod = new ChargePeriodBuilder()
-                .WithStartDateTime(InstantHelper.GetTomorrowAtMidnightUtc())
-                .WithEndDateTime(InstantHelper.GetEndDefault())
-                .Build();
-
-            var sut = new ChargeBuilder()
-                .WithPeriods(new List<ChargePeriod> { firstChargePeriod })
-                .Build();
-
-            // Act / Assert
-            Assert.Throws<InvalidOperationException>(() => sut.UpdateCharge(secondChargePeriod));
-        }
-
-        [Fact]
         public void StopCharge_WhenSingleExistingChargePeriod_SetNewEndDate()
         {
             // Arrange
@@ -283,6 +262,17 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             var periods = new List<ChargePeriod>() { period };
             var sut = new ChargeBuilder().WithPeriods(periods).Build();
             var stopDate = InstantHelper.GetTodayPlusDaysAtMidnightUtc(2);
+
+            // Act & Assert
+            Assert.Throws<InvalidOperationException>(() => sut.StopCharge(stopDate));
+        }
+
+        [Fact]
+        public void StopCharge_WhenNewEndDateIsNot_ThenThrowException()
+        {
+            // Arrange
+            var sut = new ChargeBuilder().Build();
+            Instant? stopDate = null!;
 
             // Act & Assert
             Assert.Throws<InvalidOperationException>(() => sut.StopCharge(stopDate));

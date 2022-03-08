@@ -62,6 +62,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
 
         public void Update(Charge charge)
         {
+            if (charge == null) throw new ArgumentNullException(nameof(charge));
             _chargesDatabaseContext.Charges.Update(charge);
         }
 

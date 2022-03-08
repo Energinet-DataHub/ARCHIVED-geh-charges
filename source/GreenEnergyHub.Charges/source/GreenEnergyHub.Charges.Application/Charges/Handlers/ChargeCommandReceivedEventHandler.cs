@@ -91,7 +91,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 case OperationType.Stop:
                     if (charge == null)
                         throw new InvalidOperationException("Could not stop charge. Charge not found.");
-                    HandleStopEvent(charge, commandReceivedEvent.Command);
+                    HandleStopEvent(charge, commandReceivedEvent.Command.ChargeOperation.EndDateTime);
                     break;
                 default:
                     throw new InvalidOperationException("Could not handle charge command.");
@@ -117,14 +117,9 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             _chargeRepository.Update(charge);
         }
 
-        private void HandleStopEvent(Charge charge, ChargeCommand chargeCommand)
+        private void HandleStopEvent(Charge charge, Instant? endDateTime)
         {
-            var endDateTime = chargeCommand.ChargeOperation.EndDateTime;
-
-            if (endDateTime == null)
-                throw new InvalidOperationException("Could not stop charge. Invalid end date.");
-
-            charge.StopCharge(endDateTime.Value);
+            charge.StopCharge(endDateTime);
             _chargeRepository.Update(charge);
         }
 

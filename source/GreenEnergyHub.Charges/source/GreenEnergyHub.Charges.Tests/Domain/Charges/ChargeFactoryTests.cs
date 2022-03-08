@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
@@ -51,6 +52,26 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             var actual = await sut.CreateFromCommandAsync(chargeCommand);
 
             actual.Should().NotContainNullsOrEmptyEnumerables();
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task CreateFromCommandAsync_WhenOwnerIsNull_ThrowsException(
+            ChargeCommand chargeCommand,
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
+            [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
+            Mock<ChargePeriod> chargePeriod,
+            ChargeFactory sut)
+        {
+            marketParticipantRepository
+                .Setup(repo => repo.GetOrNullAsync(It.IsAny<string>()))
+                .ReturnsAsync((MarketParticipant?)null);
+
+            chargePeriodFactory
+                .Setup(f => f.CreateFromChargeOperationDto(It.IsAny<ChargeOperationDto>()))
+                .Returns(chargePeriod.Object);
+
+            await Assert.ThrowsAsync<InvalidOperationException>(() => sut.CreateFromCommandAsync(chargeCommand));
         }
     }
 }

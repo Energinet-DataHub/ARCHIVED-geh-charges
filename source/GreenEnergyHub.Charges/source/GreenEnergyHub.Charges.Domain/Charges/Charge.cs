@@ -90,11 +90,15 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         /// </summary>
         /// <param name="stopDate"></param>
         /// <exception cref="InvalidOperationException">Throws when no charge periods found on charge.</exception>
-        public void StopCharge(Instant stopDate)
+        public void StopCharge(Instant? stopDate)
         {
-            StopExistingPeriod(stopDate);
-            RemoveAllSubsequentPeriods(stopDate);
-            Validate();
+            if (stopDate == null)
+            {
+                throw new InvalidOperationException("Could not stop charge. EndDate not set.");
+            }
+
+            StopExistingPeriod(stopDate.Value);
+            RemoveAllSubsequentPeriods(stopDate.Value);
         }
 
         /// <summary>
@@ -115,7 +119,6 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 
             RemoveAllSubsequentPeriods(newChargePeriod.StartDateTime);
             _periods.Add(newChargePeriod);
-            Validate();
         }
 
         private void StopExistingPeriod(Instant stopDate)
@@ -130,18 +133,10 @@ namespace GreenEnergyHub.Charges.Domain.Charges
                 throw new InvalidOperationException("Cannot stop charge. No period exist on stop date.");
             }
 
-            if (stopDate == previousPeriod.EndDateTime)
-            {
-                // Charge already stopped
-                return;
-            }
+            // Return if charge already has end date at given stop date
+            if (stopDate == previousPeriod.EndDateTime) return;
 
-            if (stopDate > previousPeriod.EndDateTime)
-            {
-                throw new InvalidOperationException("Cannot stop charge. Charge already stopped on earlier date.");
-            }
-
-            var newPreviousPeriod = ChargePeriodFactory.CreateFromExistingPeriodWithNewEndDate(previousPeriod, stopDate);
+            var newPreviousPeriod = previousPeriod.WithEndDate(stopDate);
             _periods.Remove(previousPeriod);
             _periods.Add(newPreviousPeriod);
         }
@@ -149,31 +144,6 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         private void RemoveAllSubsequentPeriods(Instant date)
         {
             _periods.RemoveAll(p => p.StartDateTime >= date);
-        }
-
-        private bool Validate()
-        {
-            var result = EnsureNoGapsInChargePeriodTimeline();
-            return result;
-        }
-
-        private bool EnsureNoGapsInChargePeriodTimeline()
-        {
-            var orderedPeriods = _periods.OrderBy(cp => cp.StartDateTime).ToList();
-            var pointInTimeline = orderedPeriods[0].StartDateTime;
-            foreach (var p in orderedPeriods)
-            {
-                if (p.StartDateTime == pointInTimeline)
-                {
-                    pointInTimeline = p.EndDateTime;
-                }
-                else
-                {
-                    throw new InvalidOperationException("Charge validation failed due to a gap in charge period timeline");
-                }
-            }
-
-            return true;
         }
     }
 }
