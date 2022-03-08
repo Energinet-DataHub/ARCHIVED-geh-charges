@@ -117,7 +117,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             _chargeRepository.Update(charge);
         }
 
-        private void HandleStopEvent(Charge charge, ChargeCommand chargeCommand)
+        private void HandleStopEvent(Charge charge, Instant? endDateTime)
         {
             var endDateTime = chargeCommand.ChargeOperation.EndDateTime;
 
