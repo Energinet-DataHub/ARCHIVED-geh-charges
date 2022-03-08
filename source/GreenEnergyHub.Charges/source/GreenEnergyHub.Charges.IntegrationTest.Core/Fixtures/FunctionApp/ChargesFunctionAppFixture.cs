@@ -160,7 +160,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             var commandReceivedTopic = await ServiceBusResourceProvider
                 .BuildTopic(ChargesServiceBusResourceNames.CommandReceivedTopicKey)
                 .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.CommandReceivedTopicName)
-                .AddSubscription(ChargesServiceBusResourceNames.CommandReceivedSubscriptionName)
+                .AddSubscription(ChargesServiceBusResourceNames.CommandReceivedSubscriptionName, requiresSession: true)
                 .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.CommandReceivedSubscriptionName)
                 .CreateAsync();
 
@@ -280,12 +280,12 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
                 .CreateAsync();
 
             var messageHubRequestQueue = await ServiceBusResourceProvider
-                .BuildQueue(ChargesServiceBusResourceNames.MessageHubRequestQueueKey, requireSession: true)
+                .BuildQueue(ChargesServiceBusResourceNames.MessageHubRequestQueueKey, requiresSession: true)
                 .SetEnvironmentVariableToQueueName(EnvironmentSettingNames.MessageHubRequestQueue)
                 .CreateAsync();
 
             var messageHubReplyQueue = await ServiceBusResourceProvider
-                .BuildQueue(ChargesServiceBusResourceNames.MessageHubReplyQueueKey, requireSession: true)
+                .BuildQueue(ChargesServiceBusResourceNames.MessageHubReplyQueueKey, requiresSession: true)
                 .SetEnvironmentVariableToQueueName(EnvironmentSettingNames.MessageHubReplyQueue)
                 .CreateAsync();
 
