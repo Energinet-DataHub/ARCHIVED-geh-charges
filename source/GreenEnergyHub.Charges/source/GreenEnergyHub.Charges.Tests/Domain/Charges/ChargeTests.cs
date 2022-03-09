@@ -52,7 +52,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
                 .Build();
 
             // Act
-            sut.UpdateCharge(newPeriod);
+            sut.Update(newPeriod);
 
             // Assert
             var actualTimeline = sut.Periods.OrderBy(p => p.StartDateTime).ToList();
@@ -82,7 +82,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
                 .Build();
 
             // Act
-            sut.UpdateCharge(newPeriod);
+            sut.Update(newPeriod);
 
             // Assert
             var actualTimeline = sut.Periods.OrderBy(p => p.StartDateTime).ToList();
@@ -112,7 +112,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
                 .Build();
 
             // Act
-            sut.UpdateCharge(newPeriod);
+            sut.Update(newPeriod);
 
             // Assert
             var actualTimeline = sut.Periods.OrderBy(p => p.StartDateTime).ToList();
@@ -147,7 +147,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
                 .Build();
 
             // Act
-            sut.UpdateCharge(newPeriod);
+            sut.Update(newPeriod);
 
             // Assert
             var actualTimeline = sut.Periods.OrderBy(p => p.StartDateTime).ToList();
@@ -165,7 +165,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
         {
             ChargePeriod? chargePeriod = null;
 
-            Assert.Throws<ArgumentNullException>(() => sut.UpdateCharge(chargePeriod!));
+            Assert.Throws<ArgumentNullException>(() => sut.Update(chargePeriod!));
         }
 
         [Fact]
@@ -182,7 +182,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             var sut = new ChargeBuilder().WithPeriods(new List<ChargePeriod> { existingPeriod }).Build();
 
             // Act
-            sut.StopCharge(dayAfterTomorrow);
+            sut.Stop(dayAfterTomorrow);
 
             // Assert
             var actual = sut.Periods.OrderByDescending(p => p.StartDateTime).First();
@@ -197,7 +197,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             var stopDate = InstantHelper.GetTomorrowAtMidnightUtc();
 
             // Act
-            sut.StopCharge(stopDate);
+            sut.Stop(stopDate);
 
             // Assert
             sut.Periods.Count.Should().Be(1);
@@ -212,7 +212,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             var stopDate = InstantHelper.GetTomorrowAtMidnightUtc();
 
             // Act & Assert
-            Assert.Throws<InvalidOperationException>(() => sut.StopCharge(stopDate));
+            Assert.Throws<InvalidOperationException>(() => sut.Stop(stopDate));
         }
 
         [Fact]
@@ -228,7 +228,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             var stopDate = InstantHelper.GetTomorrowAtMidnightUtc();
 
             // Act
-            sut.StopCharge(stopDate);
+            sut.Stop(stopDate);
 
             // Assert
             var actual = sut.Periods.OrderByDescending(p => p.StartDateTime).First();
@@ -248,7 +248,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             var stopDate = InstantHelper.GetTodayPlusDaysAtMidnightUtc(10);
 
             // Act & Assert
-            Assert.Throws<InvalidOperationException>(() => sut.StopCharge(stopDate));
+            Assert.Throws<InvalidOperationException>(() => sut.Stop(stopDate));
         }
 
         [Fact]
@@ -264,7 +264,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             var stopDate = InstantHelper.GetTodayPlusDaysAtMidnightUtc(2);
 
             // Act & Assert
-            Assert.Throws<InvalidOperationException>(() => sut.StopCharge(stopDate));
+            Assert.Throws<InvalidOperationException>(() => sut.Stop(stopDate));
         }
 
         [Fact]
@@ -275,7 +275,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             Instant? stopDate = null!;
 
             // Act & Assert
-            Assert.Throws<InvalidOperationException>(() => sut.StopCharge(stopDate));
+            Assert.Throws<InvalidOperationException>(() => sut.Stop(stopDate));
         }
 
         private static List<ChargePeriod> CreateThreeExistingPeriods()

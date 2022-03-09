@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using GreenEnergyHub.Charges.Core.DateTime;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Charges
@@ -86,31 +87,20 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         public IReadOnlyCollection<ChargePeriod> Periods => _periods;
 
         /// <summary>
-        /// Use this method to stop a charge upon receiving a stop charge request
-        /// </summary>
-        /// <param name="stopDate"></param>
-        /// <exception cref="InvalidOperationException">Throws when no charge periods found on charge.</exception>
-        public void StopCharge(Instant? stopDate)
-        {
-            if (stopDate == null)
-            {
-                throw new InvalidOperationException("Could not stop charge. EndDate not set.");
-            }
-
-            StopExistingPeriod(stopDate.Value);
-            RemoveAllSubsequentPeriods(stopDate.Value);
-        }
-
-        /// <summary>
         /// Use this method to update the charge periods timeline of a charge upon receiving a charge update request
         /// Please see the persist charge documentation where the update flow is covered:
         /// https://github.com/Energinet-DataHub/geh-charges/tree/main/docs/process-flows#persist-charge
         /// </summary>
         /// <param name="newChargePeriod">New Charge Period from update charge request</param>
         /// <exception cref="ArgumentNullException">Throws when <paramref name="newChargePeriod"/> is empty</exception>
-        public void UpdateCharge(ChargePeriod newChargePeriod)
+        public void Update(ChargePeriod newChargePeriod)
         {
             if (newChargePeriod == null) throw new ArgumentNullException(nameof(newChargePeriod));
+
+            if (newChargePeriod.EndDateTime != InstantExtensions.GetEndDefault())
+            {
+                throw new InvalidOperationException("Charge update must not have bound end date.");
+            }
 
             if (_periods.Exists(p => p.StartDateTime < newChargePeriod.StartDateTime))
             {
@@ -119,6 +109,22 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 
             RemoveAllSubsequentPeriods(newChargePeriod.StartDateTime);
             _periods.Add(newChargePeriod);
+        }
+
+        /// <summary>
+        /// Use this method to stop a charge upon receiving a stop charge request
+        /// </summary>
+        /// <param name="stopDate"></param>
+        /// <exception cref="InvalidOperationException">Throws when no charge periods found on charge.</exception>
+        public void Stop(Instant? stopDate)
+        {
+            if (stopDate == null)
+            {
+                throw new InvalidOperationException("Could not stop charge. EndDate not set.");
+            }
+
+            StopExistingPeriod(stopDate.Value);
+            RemoveAllSubsequentPeriods(stopDate.Value);
         }
 
         private void StopExistingPeriod(Instant stopDate)
