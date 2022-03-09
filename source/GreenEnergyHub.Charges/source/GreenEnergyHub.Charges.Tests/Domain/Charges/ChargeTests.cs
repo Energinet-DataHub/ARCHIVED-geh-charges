@@ -169,6 +169,28 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
         }
 
         [Fact]
+        public void UpdateCharge_WhenEndDateIsBound_ThenThrowException()
+        {
+            // Arrange
+            var existingPeriod = new ChargePeriodBuilder()
+                .WithName("ExistingPeriod")
+                .WithStartDateTime(InstantHelper.GetTodayAtMidnightUtc())
+                .Build();
+
+            var sut = new ChargeBuilder()
+                .WithPeriods(new List<ChargePeriod> { existingPeriod })
+                .Build();
+
+            var newPeriod = new ChargePeriodBuilder()
+                .WithStartDateTime(InstantHelper.GetYesterdayAtMidnightUtc())
+                .WithEndDateTime(InstantHelper.GetTomorrowAtMidnightUtc())
+                .Build();
+
+            // Act
+            Assert.Throws<InvalidOperationException>(() => sut.Update(newPeriod));
+        }
+
+        [Fact]
         public void StopCharge_WhenSingleExistingChargePeriod_SetNewEndDate()
         {
             // Arrange
@@ -275,7 +297,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             Instant? stopDate = null!;
 
             // Act & Assert
-            Assert.Throws<InvalidOperationException>(() => sut.Stop(stopDate));
+            Assert.Throws<ArgumentNullException>(() => sut.Stop(stopDate));
         }
 
         private static List<ChargePeriod> CreateThreeExistingPeriods()

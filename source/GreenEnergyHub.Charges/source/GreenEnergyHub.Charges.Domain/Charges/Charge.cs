@@ -115,12 +115,12 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         /// Use this method to stop a charge upon receiving a stop charge request
         /// </summary>
         /// <param name="stopDate"></param>
-        /// <exception cref="InvalidOperationException">Throws when no charge periods found on charge.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="stopDate"/> is <c>null</c></exception>
         public void Stop(Instant? stopDate)
         {
             if (stopDate == null)
             {
-                throw new InvalidOperationException("Could not stop charge. EndDate not set.");
+                throw new ArgumentNullException(nameof(stopDate));
             }
 
             StopExistingPeriod(stopDate.Value);
