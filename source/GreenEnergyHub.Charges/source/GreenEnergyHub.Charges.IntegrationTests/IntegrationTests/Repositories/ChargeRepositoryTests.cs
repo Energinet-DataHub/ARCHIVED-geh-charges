@@ -77,67 +77,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             actual.Periods.Should().NotBeNullOrEmpty();
         }
 
-        [Fact]
-        public async Task Update_WhenChargeIsValid_ThenChargeIsUpdated()
-        {
-            // Arrange
-            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-            var charge = await SetupValidCharge(chargesDatabaseWriteContext);
-
-            var firstPeriod = charge.Periods.First();
-
-            charge.Update(new ChargePeriod(
-                Guid.NewGuid(),
-                "new period name",
-                "new period description",
-                firstPeriod.VatClassification,
-                firstPeriod.TransparentInvoicing,
-                Instant.FromDateTimeUtc(DateTime.Now.AddDays(2).Date.ToUniversalTime()),
-                firstPeriod.EndDateTime));
-
-            var sut = new ChargeRepository(chargesDatabaseWriteContext);
-
-            // Act
-            sut.Update(charge);
-            await chargesDatabaseWriteContext.SaveChangesAsync();
-
-            // Assert
-            await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
-
-            var actual = await chargesDatabaseReadContext.Charges
-                .SingleOrDefaultAsync(x =>
-                    x.Id == charge.Id &&
-                    x.SenderProvidedChargeId == charge.SenderProvidedChargeId &&
-                    x.OwnerId == charge.OwnerId &&
-                    x.Type == charge.Type);
-
-            actual.Should().BeEquivalentTo(charge);
-            actual.Points.Should().NotBeNullOrEmpty();
-            actual.Periods.Should().NotBeNullOrEmpty();
-            actual.Periods.Count.Should().Be(2);
-        }
-
-        [Fact]
-        public async Task StopCharge_WhenChargeIsValid_ThenChargeIsStopped()
-        {
-            // Arrange
-            await using var writeContext = _databaseManager.CreateDbContext();
-            var charge = await SetupValidCharge(writeContext);
-            var sut = new ChargeRepository(writeContext);
-            var expected = InstantHelper.GetTodayPlusDaysAtMidnightUtc(3);
-            charge.Stop(expected);
-
-            // Act
-            sut.Update(charge);
-            await writeContext.SaveChangesAsync();
-
-            // Assert
-            var readContext = _databaseManager.CreateDbContext();
-            var charges = readContext.Charges.Single(c => c.Id == charge.Id);
-            var actualEndDate = charges.Periods.OrderByDescending(p => p.StartDateTime).First().EndDateTime;
-            actualEndDate.Should().Be(expected);
-        }
-
         [Theory]
         [InlineAutoMoqData]
         public async Task AddAsync_WhenChargeIsNull_ThrowsArgumentNullException(ChargeRepository sut)
