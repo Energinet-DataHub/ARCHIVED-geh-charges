@@ -15,7 +15,6 @@
 using System;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Charges
 {
