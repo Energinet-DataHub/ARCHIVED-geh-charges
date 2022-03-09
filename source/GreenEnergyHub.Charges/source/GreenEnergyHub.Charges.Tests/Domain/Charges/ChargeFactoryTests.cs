@@ -69,6 +69,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             Mock<ChargePeriod> chargePeriod,
             ChargeFactory sut)
         {
+            // Arrange
+            var chargeOperationDto = chargeCommand.Charges.First();
+
             marketParticipantRepository
                 .Setup(repo => repo.GetOrNullAsync(It.IsAny<string>()))
                 .ReturnsAsync((MarketParticipant?)null);
@@ -77,7 +80,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
                 .Setup(f => f.CreateFromChargeOperationDto(It.IsAny<ChargeOperationDto>()))
                 .Returns(chargePeriod.Object);
 
-            await Assert.ThrowsAsync<InvalidOperationException>(() => sut.CreateFromCommandAsync(chargeCommand));
+            // Act & Assert
+            await Assert.ThrowsAsync<InvalidOperationException>(() =>
+                sut.CreateFromChargeOperationDtoAsync(chargeOperationDto));
         }
     }
 }

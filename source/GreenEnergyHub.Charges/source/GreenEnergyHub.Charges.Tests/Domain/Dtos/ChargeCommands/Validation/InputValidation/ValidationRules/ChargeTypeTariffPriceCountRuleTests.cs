@@ -34,8 +34,14 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         [Fact]
         public void IsValid_WhenPointsCountIsZero_IsTrue()
         {
+            // Arrange
             var chargeCommand = new ChargeCommandBuilder().WithChargeType(ChargeType.Tariff).Build();
-            var sut = new ChargeTypeTariffPriceCountRule(chargeCommand);
+            var chargeOperationDto = chargeCommand.Charges.First();
+
+            // Act
+            var sut = new ChargeTypeTariffPriceCountRule(chargeOperationDto);
+
+            // Assert
             sut.IsValid.Should().BeTrue();
         }
 
@@ -103,9 +109,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 .WithChargeType(ChargeType.Tariff)
                 .WithResolution(Resolution.P1M)
                 .WithPointWithXNumberOfPrices(priceCount).Build();
+            var chargeOperationDto = chargeCommand.Charges.First();
 
             // Act
-            var sut = new ChargeTypeTariffPriceCountRule(chargeCommand);
+            var sut = new ChargeTypeTariffPriceCountRule(chargeOperationDto);
 
             // Assert
             sut.IsValid.Should().Be(expected);

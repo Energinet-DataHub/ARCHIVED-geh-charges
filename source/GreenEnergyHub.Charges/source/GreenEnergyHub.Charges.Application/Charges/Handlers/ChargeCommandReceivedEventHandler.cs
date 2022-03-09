@@ -81,55 +81,54 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             {
                 var operationType = GetOperationType(chargeOperationDto, charge);
 
-            switch (operationType)
-            {
-                case OperationType.Create:
-                    await HandleCreateEventAsync(commandReceivedEvent.Command).ConfigureAwait(false);
-                    break;
-                case OperationType.Update:
-                    if (charge == null)
-                        throw new InvalidOperationException("Could not update charge. Charge not found.");
-                    HandleUpdateEvent(charge, commandReceivedEvent.Command);
-                    break;
-                case OperationType.Stop:
-                    if (charge == null)
-                        throw new InvalidOperationException("Could not stop charge. Charge not found.");
-                    charge.Stop(commandReceivedEvent.Command.ChargeOperation.EndDateTime);
-                    break;
-                default:
-                    throw new InvalidOperationException("Could not handle charge command.");
+                switch (operationType)
+                {
+                    case OperationType.Create:
+                        await HandleCreateEventAsync(chargeOperationDto).ConfigureAwait(false);
+                        break;
+                    case OperationType.Update:
+                        if (charge == null)
+                            throw new InvalidOperationException("Could not update charge. Charge not found.");
+                        HandleUpdateEvent(charge, chargeOperationDto);
+                        break;
+                    case OperationType.Stop:
+                        if (charge == null)
+                            throw new InvalidOperationException("Could not stop charge. Charge not found.");
+                        charge.Stop(chargeOperationDto.EndDateTime);
+                        break;
+                    default:
+                        throw new InvalidOperationException("Could not handle charge command.");
+                }
+
+                /*
+                replace the above with something like:
+                charge = operationType switch
+                {
+                    OperationType.Create => await HandleCreateEventAsync(chargeOperationDto).ConfigureAwait(false),
+                    OperationType.Update => HandleUpdateEvent(charge, chargeOperationDto),
+                    OperationType.Stop => StopCharge(charge, chargeOperationDto),
+                    _ => throw new InvalidOperationException("Could not handle charge dto"),
+                };*/
+
+                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             }
-
-            /*
-            replace the above with something like:
-            charge = operationType switch
-            {
-                OperationType.Create => await HandleCreateEventAsync(chargeOperationDto).ConfigureAwait(false),
-                OperationType.Update => HandleUpdateEvent(charge, chargeOperationDto),
-                OperationType.Stop => StopCharge(charge, chargeOperationDto),
-                _ => throw new InvalidOperationException("Could not handle charge dto"),
-            };*/
-
-            await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
 
             // Todo: Change to a accept list of operations? - and only for those not rejected
             await _chargeCommandReceiptService.AcceptAsync(commandReceivedEvent.Command).ConfigureAwait(false);
         }
 
-        private async Task<Charge> HandleCreateEventAsync(ChargeOperationDto chargeOperationDto)
+        private async Task HandleCreateEventAsync(ChargeOperationDto chargeOperationDto)
         {
             var charge = await _chargeFactory
                 .CreateFromChargeOperationDtoAsync(chargeOperationDto)
                 .ConfigureAwait(false);
 
             await _chargeRepository.AddAsync(charge).ConfigureAwait(false);
-
-            return charge;
         }
 
-        private Charge HandleUpdateEvent(Charge? charge, ChargeOperationDto chargeOperationDto)
+        private void HandleUpdateEvent(Charge charge, ChargeOperationDto chargeOperationDto)
         {
-            var newChargePeriod = _chargePeriodFactory.CreateFromChargeOperationDto(chargeCommand.ChargeOperation);
+            var newChargePeriod = _chargePeriodFactory.CreateFromChargeOperationDto(chargeOperationDto);
             charge.Update(newChargePeriod);
         }
 
