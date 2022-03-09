@@ -15,6 +15,7 @@
 using Energinet.DataHub.Core.App.Common;
 using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
 using Energinet.DataHub.Core.App.Common.Abstractions.Identity;
+using Energinet.DataHub.Core.App.Common.Abstractions.Security;
 using Energinet.DataHub.Core.App.Common.Identity;
 using Energinet.DataHub.Core.App.Common.Security;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware;
@@ -40,6 +41,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
             serviceCollection.AddScoped<JwtTokenWrapperMiddleware>();
             serviceCollection.AddScoped<JwtTokenMiddleware>();
+            serviceCollection.AddScoped<IJwtTokenValidator, JwtTokenValidator>();
             serviceCollection.AddScoped<IClaimsPrincipalAccessor, ClaimsPrincipalAccessor>();
             serviceCollection.AddScoped<ClaimsPrincipalContext>();
             serviceCollection.AddScoped(_ => new OpenIdSettings(metadataAddress, audience));
