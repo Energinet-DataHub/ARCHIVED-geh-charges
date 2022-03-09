@@ -114,8 +114,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 
             var newChargePeriod = _chargePeriodFactory.CreateFromChargeOperationDto(chargeOperationDto);
             charge.UpdateCharge(newChargePeriod);
-            _chargeRepository.Update(charge);
-
+            // _chargeRepository.Update(charge);
             return charge;
         }
 
@@ -130,8 +129,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             var chargeOperationEndDateTime = chargeOperationDto.EndDateTime.Value;
 
             charge.StopCharge(chargeOperationEndDateTime);
-            _chargeRepository.Update(charge);
-
+            // _chargeRepository.Update(charge);
             return charge;
         }
 
