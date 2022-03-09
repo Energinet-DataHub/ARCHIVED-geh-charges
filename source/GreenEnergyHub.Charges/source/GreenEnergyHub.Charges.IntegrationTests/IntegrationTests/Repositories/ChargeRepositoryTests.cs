@@ -86,7 +86,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
             var firstPeriod = charge.Periods.First();
 
-            charge.UpdateCharge(new ChargePeriod(
+            charge.Update(new ChargePeriod(
                 Guid.NewGuid(),
                 "new period name",
                 "new period description",
@@ -125,7 +125,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             var charge = await SetupValidCharge(writeContext);
             var sut = new ChargeRepository(writeContext);
             var expected = InstantHelper.GetTodayPlusDaysAtMidnightUtc(3);
-            charge.StopCharge(expected);
+            charge.Stop(expected);
 
             // Act
             sut.Update(charge);
