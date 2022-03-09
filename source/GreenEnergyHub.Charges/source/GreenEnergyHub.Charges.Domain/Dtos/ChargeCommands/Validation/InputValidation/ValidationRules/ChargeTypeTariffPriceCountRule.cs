@@ -21,6 +21,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
     public class ChargeTypeTariffPriceCountRule : IValidationRule
     {
         private const int PricePointsRequiredInP1D = 1;
+        private const int PricePointsRequiredInP1M = 1;
         private const int PricePointsRequiredInPt1H = 24;
         private const int PricePointsRequiredInPt15M = 96;
         private readonly ChargeCommand _chargeCommand;
@@ -36,6 +37,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 
         private bool Validate()
         {
+            // Allow master data only requests.
+            if (_chargeCommand.ChargeOperation.Points.Count == 0) return true;
+
             if (_chargeCommand.ChargeOperation.Type == ChargeType.Tariff)
             {
                 return _chargeCommand.ChargeOperation.Resolution switch
@@ -43,6 +47,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
                     Resolution.PT15M => _chargeCommand.ChargeOperation.Points.Count == PricePointsRequiredInPt15M,
                     Resolution.PT1H => _chargeCommand.ChargeOperation.Points.Count == PricePointsRequiredInPt1H,
                     Resolution.P1D => _chargeCommand.ChargeOperation.Points.Count == PricePointsRequiredInP1D,
+                    Resolution.P1M => _chargeCommand.ChargeOperation.Points.Count == PricePointsRequiredInP1M,
                     _ => throw new ArgumentException(nameof(_chargeCommand.ChargeOperation.Resolution)),
                 };
             }
