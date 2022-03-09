@@ -18,7 +18,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using Energinet.Charges.Contracts;
-using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.ServiceBus;
+using Energinet.DataHub.Core.App.Common.Abstractions.ServiceBus;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using FluentAssertions;
 using Google.Protobuf;
@@ -29,7 +29,7 @@ using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
-using Actor = Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Actor.Actor;
+using Actor = Energinet.DataHub.Core.App.Common.Abstractions.Actor.Actor;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 {

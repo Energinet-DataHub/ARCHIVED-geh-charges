@@ -34,7 +34,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
     {
         private const string BaseUrl = "/odata";
         private readonly HttpClient _client;
-        private readonly BackendAuthenticationClient _authenticationClient;
 
         public ChargeLinksV1ControllerTests(
             ChargesWebApiFixture chargesWebApiFixture,
@@ -43,16 +42,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
             : base(chargesWebApiFixture, testOutputHelper)
         {
             _client = factory.CreateClient();
-            _authenticationClient = new BackendAuthenticationClient(
-                chargesWebApiFixture.AuthorizationConfiguration.BackendAppScope,
-                chargesWebApiFixture.AuthorizationConfiguration.ClientCredentialsSettings,
-                chargesWebApiFixture.AuthorizationConfiguration.B2cTenantId);
+            factory.ReconfigureJwtTokenValidatorMock(isValid: true);
         }
 
-        public async Task InitializeAsync()
+        public Task InitializeAsync()
         {
-            var authenticationResult = await _authenticationClient.GetAuthenticationTokenAsync();
-            _client.DefaultRequestHeaders.Add("Authorization", $"Bearer {authenticationResult.AccessToken}");
+            _client.DefaultRequestHeaders.Add("Authorization", $"Bearer xxx");
+            return Task.CompletedTask;
         }
 
         public Task DisposeAsync()

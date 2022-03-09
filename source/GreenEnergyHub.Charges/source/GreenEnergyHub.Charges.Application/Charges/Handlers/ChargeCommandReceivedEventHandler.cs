@@ -81,14 +81,34 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             {
                 var operationType = GetOperationType(chargeOperationDto, charge);
 
-                charge = operationType switch
-                {
-                    OperationType.Create => await HandleCreateEventAsync(chargeOperationDto).ConfigureAwait(false),
-                    OperationType.Update => HandleUpdateEvent(charge, chargeOperationDto),
-                    OperationType.Stop => StopCharge(charge, chargeOperationDto),
-                    _ => throw new InvalidOperationException("Could not handle charge dto"),
-                };
+            switch (operationType)
+            {
+                case OperationType.Create:
+                    await HandleCreateEventAsync(commandReceivedEvent.Command).ConfigureAwait(false);
+                    break;
+                case OperationType.Update:
+                    if (charge == null)
+                        throw new InvalidOperationException("Could not update charge. Charge not found.");
+                    HandleUpdateEvent(charge, commandReceivedEvent.Command);
+                    break;
+                case OperationType.Stop:
+                    if (charge == null)
+                        throw new InvalidOperationException("Could not stop charge. Charge not found.");
+                    charge.Stop(commandReceivedEvent.Command.ChargeOperation.EndDateTime);
+                    break;
+                default:
+                    throw new InvalidOperationException("Could not handle charge command.");
             }
+
+            /*
+            replace the above with something like:
+            charge = operationType switch
+            {
+                OperationType.Create => await HandleCreateEventAsync(chargeOperationDto).ConfigureAwait(false),
+                OperationType.Update => HandleUpdateEvent(charge, chargeOperationDto),
+                OperationType.Stop => StopCharge(charge, chargeOperationDto),
+                _ => throw new InvalidOperationException("Could not handle charge dto"),
+            };*/
 
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
 
@@ -109,28 +129,8 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 
         private Charge HandleUpdateEvent(Charge? charge, ChargeOperationDto chargeOperationDto)
         {
-            if (charge == null)
-                throw new InvalidOperationException("Could not update charge. Charge not found.");
-
-            var newChargePeriod = _chargePeriodFactory.CreateFromChargeOperationDto(chargeOperationDto);
-            charge.UpdateCharge(newChargePeriod);
-            // _chargeRepository.Update(charge);
-            return charge;
-        }
-
-        private Charge StopCharge(Charge? charge, ChargeOperationDto chargeOperationDto)
-        {
-            if (charge == null)
-                throw new InvalidOperationException("Could not stop charge. Charge not found.");
-
-            if (chargeOperationDto.EndDateTime == null)
-                throw new InvalidOperationException("Could not stop charge. Invalid end date.");
-
-            var chargeOperationEndDateTime = chargeOperationDto.EndDateTime.Value;
-
-            charge.StopCharge(chargeOperationEndDateTime);
-            // _chargeRepository.Update(charge);
-            return charge;
+            var newChargePeriod = _chargePeriodFactory.CreateFromChargeOperationDto(chargeCommand.ChargeOperation);
+            charge.Update(newChargePeriod);
         }
 
         private static OperationType GetOperationType(ChargeOperationDto chargeOperationDto, Charge? existingCharge)
@@ -151,7 +151,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 chargeOperationDto.ChargeId,
                 chargeOperationDto.ChargeOwner,
                 chargeOperationDto.Type);
-
             return await _chargeRepository.GetOrNullAsync(chargeIdentifier).ConfigureAwait(false);
         }
     }

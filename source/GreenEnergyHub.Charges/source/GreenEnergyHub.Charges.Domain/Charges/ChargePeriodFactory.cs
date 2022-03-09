@@ -22,7 +22,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
     {
         public ChargePeriod CreateFromChargeOperationDto(ChargeOperationDto chargeOperationDto)
         {
-            var period = new ChargePeriod(
+            return new ChargePeriod(
                 Guid.NewGuid(),
                 chargeOperationDto.ChargeName,
                 chargeOperationDto.ChargeDescription,
@@ -30,8 +30,6 @@ namespace GreenEnergyHub.Charges.Domain.Charges
                 chargeOperationDto.TransparentInvoicing,
                 chargeOperationDto.StartDateTime,
                 chargeOperationDto.EndDateTime.TimeOrEndDefault());
-
-            return period;
         }
     }
 }
