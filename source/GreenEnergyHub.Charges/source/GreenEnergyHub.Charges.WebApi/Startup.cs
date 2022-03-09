@@ -17,12 +17,14 @@ using System.Text.Json.Serialization;
 using Energinet.DataHub.Core.App.WebApp.Middleware;
 using GreenEnergyHub.Charges.WebApi.Configuration;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.OData;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 
@@ -83,6 +85,10 @@ namespace GreenEnergyHub.Charges.WebApi
             services.ConfigureOptions<ConfigureSwaggerOptions>();
             services.AddQueryApi(Configuration);
             services.AddJwtTokenSecurity();
+
+            services.AddHealthChecks()
+                .AddCheck("self", () => HealthCheckResult.Healthy())
+                .AddCheck("nemo", () => HealthCheckResult.Unhealthy(), tags: new[] { "dependencies" });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -101,7 +107,7 @@ namespace GreenEnergyHub.Charges.WebApi
                 });
             }
 
-            app.UseMiddleware<JwtTokenMiddleware>();
+            ////app.UseMiddleware<JwtTokenMiddleware>();
 
             app.UseHttpsRedirection();
 
@@ -111,6 +117,16 @@ namespace GreenEnergyHub.Charges.WebApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+
+            app.UseHealthChecks("/monitor/live", new HealthCheckOptions
+            {
+                Predicate = r => r.Name.Contains("self"),
+            });
+
+            app.UseHealthChecks("/monitor/ready", new HealthCheckOptions
+            {
+                Predicate = r => r.Tags.Contains("dependencies"),
             });
         }
     }
