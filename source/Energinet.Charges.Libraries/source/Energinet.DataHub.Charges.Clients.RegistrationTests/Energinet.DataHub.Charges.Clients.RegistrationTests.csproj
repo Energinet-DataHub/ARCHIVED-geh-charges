@@ -28,7 +28,7 @@ limitations under the License.
   <ItemGroup>
     <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.5.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.2" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
+    <PackageReference Include="v" Version="17.1.0" />
     <PackageReference Include="Moq" Version="4.17.1" />
     <PackageReference Include="SimpleInjector" Version="5.3.3" />
     <PackageReference Include="xunit" Version="2.4.1" />
