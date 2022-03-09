@@ -16,6 +16,7 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using Energinet.DataHub.Core.App.WebApp.Middleware;
 using GreenEnergyHub.Charges.WebApi.Configuration;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
@@ -107,26 +108,27 @@ namespace GreenEnergyHub.Charges.WebApi
                 });
             }
 
-            ////app.UseMiddleware<JwtTokenMiddleware>();
-
             app.UseHttpsRedirection();
 
             app.UseRouting();
             app.UseApiVersioning();
 
+            // This middleware has to be configured after 'UseRouting' for 'AllowAnonymousAttribute' to work.
+            app.UseMiddleware<JwtTokenMiddleware>();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-            });
 
-            app.UseHealthChecks("/monitor/live", new HealthCheckOptions
-            {
-                Predicate = r => r.Name.Contains("self"),
-            });
+                endpoints.MapHealthChecks("/monitor/live", new HealthCheckOptions
+                {
+                    Predicate = r => r.Name.Contains("self"),
+                }).WithMetadata(new AllowAnonymousAttribute());
 
-            app.UseHealthChecks("/monitor/ready", new HealthCheckOptions
-            {
-                Predicate = r => r.Tags.Contains("dependencies"),
+                endpoints.MapHealthChecks("/monitor/ready", new HealthCheckOptions
+                {
+                    Predicate = r => r.Tags.Contains("dependencies"),
+                }).WithMetadata(new AllowAnonymousAttribute());
             });
         }
     }

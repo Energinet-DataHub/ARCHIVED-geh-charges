@@ -46,7 +46,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
 
         public Task InitializeAsync()
         {
-            _client.DefaultRequestHeaders.Add("Authorization", $"Bearer xxx");
             return Task.CompletedTask;
         }
 
