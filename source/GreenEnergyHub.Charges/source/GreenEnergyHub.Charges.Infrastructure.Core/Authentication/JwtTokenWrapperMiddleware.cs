@@ -15,7 +15,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using Energinet.DataHub.Core.FunctionApp.Common.Middleware;
+using Energinet.DataHub.Core.App.FunctionApp.Middleware;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Middleware;
 

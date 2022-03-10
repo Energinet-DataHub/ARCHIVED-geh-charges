@@ -14,7 +14,7 @@
 
 using System;
 using System.Threading.Tasks;
-using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Actor;
+using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Infrastructure

@@ -12,11 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.Core.FunctionApp.Common;
-using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Actor;
-using Energinet.DataHub.Core.FunctionApp.Common.Abstractions.Identity;
-using Energinet.DataHub.Core.FunctionApp.Common.Identity;
-using Energinet.DataHub.Core.FunctionApp.Common.Middleware;
+using Energinet.DataHub.Core.App.Common;
+using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
+using Energinet.DataHub.Core.App.Common.Abstractions.Identity;
+using Energinet.DataHub.Core.App.Common.Abstractions.Security;
+using Energinet.DataHub.Core.App.Common.Identity;
+using Energinet.DataHub.Core.App.Common.Security;
+using Energinet.DataHub.Core.App.FunctionApp.Middleware;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure;
 using GreenEnergyHub.Charges.Infrastructure.Core.Authentication;
@@ -39,6 +41,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
             serviceCollection.AddScoped<JwtTokenWrapperMiddleware>();
             serviceCollection.AddScoped<JwtTokenMiddleware>();
+            serviceCollection.AddScoped<IJwtTokenValidator, JwtTokenValidator>();
             serviceCollection.AddScoped<IClaimsPrincipalAccessor, ClaimsPrincipalAccessor>();
             serviceCollection.AddScoped<ClaimsPrincipalContext>();
             serviceCollection.AddScoped(_ => new OpenIdSettings(metadataAddress, audience));

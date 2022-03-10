@@ -25,8 +25,6 @@ namespace GreenEnergyHub.Charges.Domain.Charges
     {
         Task AddAsync(Charge charge);
 
-        void Update(Charge charge);
-
         Task<Charge> GetAsync(ChargeIdentifier chargeIdentifier);
 
         Task<Charge> GetAsync(Guid id);
