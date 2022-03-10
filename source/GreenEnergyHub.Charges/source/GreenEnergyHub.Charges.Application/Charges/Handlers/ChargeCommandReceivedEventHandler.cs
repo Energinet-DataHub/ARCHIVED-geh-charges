@@ -135,12 +135,4 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             return await _chargeRepository.GetOrNullAsync(chargeIdentifier).ConfigureAwait(false);
         }
     }
-
-    // Internal, so far...
-    internal enum OperationType
-    {
-        Create = 0,
-        Update = 1,
-        Stop = 2,
-    }
 }
