@@ -67,7 +67,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
             actualContent.Should().Be("Healthy");
         }
 
-        [Fact]
+        [Fact(Skip = "Leaving this test here for now, as we might change it to be a negative test by e.g. not having the database")]
         public async Task When_RequestReadinessStatus_Then_ResponseIsServiceUnavailableAndUnhealthy()
         {
             var actualResponse = await _client.GetAsync("/monitor/ready");
@@ -77,6 +77,18 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
 
             var actualContent = await actualResponse.Content.ReadAsStringAsync();
             actualContent.Should().Be("Unhealthy");
+        }
+
+        [Fact]
+        public async Task When_RequestReadinessStatus_Then_ResponseIsOkAndHealthy()
+        {
+            var actualResponse = await _client.GetAsync("/monitor/ready");
+
+            // Assert
+            actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+            var actualContent = await actualResponse.Content.ReadAsStringAsync();
+            actualContent.Should().Be("Healthy");
         }
     }
 }
