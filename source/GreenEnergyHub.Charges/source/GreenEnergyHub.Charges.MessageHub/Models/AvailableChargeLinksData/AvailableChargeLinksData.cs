@@ -36,8 +36,17 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData
             string meteringPointId,
             int factor,
             Instant startDateTime,
-            Instant endDateTime)
-                : base(senderId, senderRole, recipientId, recipientRole, businessReasonCode, requestDateTime, availableDataReferenceId)
+            Instant endDateTime,
+            DocumentType documentType)
+                : base(
+                    senderId,
+                    senderRole,
+                    recipientId,
+                    recipientRole,
+                    businessReasonCode,
+                    requestDateTime,
+                    availableDataReferenceId,
+                    documentType)
         {
             ChargeId = chargeId;
             ChargeOwner = chargeOwner;

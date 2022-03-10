@@ -34,7 +34,8 @@ namespace GreenEnergyHub.Charges.MessageHub.MessageHub
                         new MessageTypeDto(bundleSpecification.GetMessageType(data.BusinessReasonCode)),
                         DomainOrigin.Charges,
                         true,
-                        bundleSpecification.GetMessageWeight(data)))
+                        bundleSpecification.GetMessageWeight(data),
+                        data.DocumentType.ToString()))
                 .ToList();
         }
     }

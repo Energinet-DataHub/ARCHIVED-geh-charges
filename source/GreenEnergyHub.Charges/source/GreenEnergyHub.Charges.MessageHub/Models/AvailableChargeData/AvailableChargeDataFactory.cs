@@ -76,6 +76,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
                         operation.TaxIndicator,
                         operation.TransparentInvoicing,
                         operation.Resolution,
+                        input.Command.Document.Type,
                         points));
                 }
             }

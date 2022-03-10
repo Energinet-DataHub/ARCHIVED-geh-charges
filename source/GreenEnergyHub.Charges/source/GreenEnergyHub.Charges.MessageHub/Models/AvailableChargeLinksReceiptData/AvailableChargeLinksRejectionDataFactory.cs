@@ -63,6 +63,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
                     ReceiptStatus.Rejected,
                     chargeLinkDto.OperationId,
                     input.ChargeLinksCommand.MeteringPointId,
+                    input.ChargeLinksCommand.Document.Type,
                     GetReasons(input));
             }).ToList();
         }
