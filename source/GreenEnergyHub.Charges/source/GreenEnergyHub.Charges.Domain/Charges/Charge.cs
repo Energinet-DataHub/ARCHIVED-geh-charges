@@ -131,7 +131,8 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         {
             var oldLatestPeriod = _periods.OrderByDescending(p => p.StartDateTime).First();
             var newLatestPeriod = oldLatestPeriod.WithEndDate(InstantExtensions.GetEndDefault());
-            _periods.Remove(newLatestPeriod);
+            _periods.Remove(oldLatestPeriod);
+            _periods.Add(newLatestPeriod);
         }
 
         private void StopExistingPeriod(Instant stopDate)
