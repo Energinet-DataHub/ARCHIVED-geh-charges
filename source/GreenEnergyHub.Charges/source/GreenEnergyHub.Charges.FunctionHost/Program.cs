@@ -55,14 +55,22 @@ namespace GreenEnergyHub.Charges.FunctionHost
             serviceCollection.AddHealthChecks()
                 .AddCheck("self", () => HealthCheckResult.Healthy())
                 .AddSqlServer(
-                    connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeDbConnectionString),
                     name: "chargeDb",
-                    failureStatus: Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Unhealthy,
+                    connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeDbConnectionString),
                     tags: new[] { "dependency" })
                 .AddSqlServer(
-                    connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.MarketParticipantRegistryDbConnectionString),
                     name: "marketParticipantRegistryDb",
-                    failureStatus: Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Unhealthy,
+                    connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.MarketParticipantRegistryDbConnectionString),
+                    tags: new[] { "dependency" })
+                .AddAzureServiceBusTopic(
+                    name: "ChargeCreatedTopicExists",
+                    connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubManagerConnectionString),
+                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeCreatedTopicName),
+                    tags: new[] { "dependency" })
+                .AddAzureServiceBusTopic(
+                    name: "DefaultChargeLinksDataAvailableNotifiedTopicExists",
+                    connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventManagerConnectionString),
+                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName),
                     tags: new[] { "dependency" });
 
             // Charges
