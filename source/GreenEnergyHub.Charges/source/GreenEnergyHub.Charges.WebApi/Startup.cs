@@ -90,8 +90,11 @@ namespace GreenEnergyHub.Charges.WebApi
             // Health check
             services.AddHealthChecks()
                 .AddCheck("self", () => HealthCheckResult.Healthy())
-                .AddCheck("database", () => HealthCheckResult.Unhealthy(), tags: new[] { "dependency" })
-                .AddCheck("eventchannel", () => HealthCheckResult.Unhealthy(), tags: new[] { "dependency" });
+                .AddSqlServer(
+                    connectionString: Configuration.GetConnectionString(EnvironmentSettingNames.ChargeDbConnectionString),
+                    name: "chargeDb",
+                    failureStatus: HealthStatus.Unhealthy,
+                    tags: new[] { "dependency" });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
