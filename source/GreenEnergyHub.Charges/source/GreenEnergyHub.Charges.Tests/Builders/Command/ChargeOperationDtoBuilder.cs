@@ -21,7 +21,7 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Tests.Builders.Command
 {
-   public class ChargeCommandBuilder
+   public class ChargeOperationDtoBuilder
     {
         private readonly List<Point> _points;
         private string _chargeId;
@@ -32,15 +32,12 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         private string _owner;
         private string _description;
         private string _chargeName;
-        private string _documentId;
-        private BusinessReasonCode _documentBusinessReasonCode;
-        private DocumentType _documentType;
         private MarketParticipantDto _sender;
         private ChargeType _chargeType;
         private Resolution _resolution;
         private string _operationId;
 
-        public ChargeCommandBuilder()
+        public ChargeOperationDtoBuilder()
         {
             _operationId = "id";
             _chargeId = "some charge id";
@@ -53,113 +50,85 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             _owner = "owner";
             _description = "some description";
             _chargeName = "some charge name";
-            _documentId = "some document id";
-            _documentBusinessReasonCode = BusinessReasonCode.UpdateChargeInformation;
-            _documentType = DocumentType.RequestUpdateChargeInformation;
             _sender = new MarketParticipantDto { Id = "0", BusinessProcessRole = MarketParticipantRole.EnergySupplier };
             _chargeType = ChargeType.Fee;
             _points = new List<Point>();
             _resolution = Resolution.PT1H;
         }
 
-        public ChargeCommandBuilder WithEndDateTimeAsNull()
+        public ChargeOperationDtoBuilder WithEndDateTimeAsNull()
         {
             _endDateTime = null;
             return this;
         }
 
-        public ChargeCommandBuilder WithDescription(string description)
+        public ChargeOperationDtoBuilder WithDescription(string description)
         {
             _description = description;
             return this;
         }
 
-        public ChargeCommandBuilder WithDocumentId(string documentId)
-        {
-            _documentId = documentId;
-            return this;
-        }
-
-        public ChargeCommandBuilder WithDocumentBusinessReasonCode(BusinessReasonCode businessReasonCode)
-        {
-            _documentBusinessReasonCode = businessReasonCode;
-            return this;
-        }
-
-        public ChargeCommandBuilder WithDocumentType(DocumentType documentType)
-        {
-            _documentType = documentType;
-            return this;
-        }
-
-        public ChargeCommandBuilder WithChargeName(string name)
+        public ChargeOperationDtoBuilder WithChargeName(string name)
         {
             _chargeName = name;
             return this;
         }
 
-        public ChargeCommandBuilder WithChargeId(string chargeId)
+        public ChargeOperationDtoBuilder WithChargeId(string chargeId)
         {
             _chargeId = chargeId;
             return this;
         }
 
-        public ChargeCommandBuilder WithOperationId(string id)
+        public ChargeOperationDtoBuilder WithOperationId(string id)
         {
             _operationId = id;
             return this;
         }
 
-        public ChargeCommandBuilder WithValidityStartDateDays(int days)
+        public ChargeOperationDtoBuilder WithValidityStartDateDays(int days)
         {
-            _startDateTime = SystemClock.Instance.GetCurrentInstant()
-                .Plus(Duration.FromDays(days));
+            _startDateTime = SystemClock.Instance.GetCurrentInstant().Plus(Duration.FromDays(days));
             return this;
         }
 
-        public ChargeCommandBuilder WithTaxIndicator(bool taxIndicator)
+        public ChargeOperationDtoBuilder WithTaxIndicator(bool taxIndicator)
         {
             _taxIndicator = taxIndicator;
             return this;
         }
 
-        public ChargeCommandBuilder WithOwner(string owner)
+        public ChargeOperationDtoBuilder WithOwner(string owner)
         {
             _owner = owner;
             return this;
         }
 
-        public ChargeCommandBuilder WithVatClassification(VatClassification vatClassification)
+        public ChargeOperationDtoBuilder WithVatClassification(VatClassification vatClassification)
         {
             _vatClassification = vatClassification;
             return this;
         }
 
-        public ChargeCommandBuilder WithChargeType(ChargeType type)
+        public ChargeOperationDtoBuilder WithChargeType(ChargeType type)
         {
             _chargeType = type;
             return this;
         }
 
-        public ChargeCommandBuilder WithSender(MarketParticipantDto sender)
-        {
-            _sender = sender;
-            return this;
-        }
-
-        public ChargeCommandBuilder WithStartDateTime(Instant startDateTime)
+        public ChargeOperationDtoBuilder WithStartDateTime(Instant startDateTime)
         {
             _startDateTime = startDateTime;
             return this;
         }
 
-        public ChargeCommandBuilder WithPoint(int position, decimal price)
+        public ChargeOperationDtoBuilder WithPoint(int position, decimal price)
         {
             _points.Add(new Point(position, price, SystemClock.Instance.GetCurrentInstant()));
             return this;
         }
 
-        public ChargeCommandBuilder WithPointWithXNumberOfPrices(int numberOfPrices)
+        public ChargeOperationDtoBuilder WithPointWithXNumberOfPrices(int numberOfPrices)
         {
             for (var i = 0; i < numberOfPrices; i++)
             {
@@ -170,48 +139,28 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             return this;
         }
 
-        public ChargeCommandBuilder WithResolution(Resolution resolution)
+        public ChargeOperationDtoBuilder WithResolution(Resolution resolution)
         {
             _resolution = resolution;
             return this;
         }
 
-        public ChargeCommand Build()
+        public ChargeOperationDto Build()
         {
-            var documentDto = new DocumentDto
-            {
-                Id = _documentId,
-                Type = _documentType,
-                RequestDate = SystemClock.Instance.GetCurrentInstant(),
-                IndustryClassification = IndustryClassification.Electricity,
-                CreatedDateTime = SystemClock.Instance.GetCurrentInstant(),
-                Recipient = new MarketParticipantDto
-                {
-                    Id = "0", BusinessProcessRole = MarketParticipantRole.EnergySupplier,
-                },
-                Sender = _sender,
-                BusinessReasonCode = _documentBusinessReasonCode,
-            };
-
-            var chargeOperationDtos = new List<ChargeOperationDto>
-            {
-                new ChargeOperationDto(
-                    _operationId,
-                    _chargeType,
-                    _chargeId,
-                    _chargeName,
-                    _description,
-                    _owner,
-                    _resolution,
-                    _taxIndicator,
-                    true,
-                    _vatClassification,
-                    _startDateTime,
-                    _endDateTime,
-                    _points),
-            };
-
-            return new ChargeCommand(documentDto, chargeOperationDtos);
+            return new ChargeOperationDto(
+                _operationId,
+                _chargeType,
+                _chargeId,
+                _chargeName,
+                _description,
+                _owner,
+                _resolution,
+                _taxIndicator,
+                true,
+                _vatClassification,
+                _startDateTime,
+                _endDateTime,
+                _points);
         }
     }
 }
