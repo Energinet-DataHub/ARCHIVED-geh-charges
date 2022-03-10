@@ -89,7 +89,8 @@ namespace GreenEnergyHub.Charges.WebApi
 
             services.AddHealthChecks()
                 .AddCheck("self", () => HealthCheckResult.Healthy())
-                .AddCheck("nemo", () => HealthCheckResult.Unhealthy(), tags: new[] { "dependencies" });
+                .AddCheck("database", () => HealthCheckResult.Unhealthy(), tags: new[] { "dependency" })
+                .AddCheck("eventchannel", () => HealthCheckResult.Unhealthy(), tags: new[] { "dependency" });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -127,7 +128,7 @@ namespace GreenEnergyHub.Charges.WebApi
 
                 endpoints.MapHealthChecks("/monitor/ready", new HealthCheckOptions
                 {
-                    Predicate = r => r.Tags.Contains("dependencies"),
+                    Predicate = r => r.Tags.Contains("dependency"),
                 }).WithMetadata(new AllowAnonymousAttribute());
             });
         }
