@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Domain.Charges;
@@ -20,7 +21,6 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Persistence;
-using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
@@ -53,7 +53,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         {
             if (commandReceivedEvent == null) throw new ArgumentNullException(nameof(commandReceivedEvent));
 
-            // input validation
             var inputValidationResult = _validator.InputValidate(commandReceivedEvent.Command);
             if (inputValidationResult.IsFailed)
             {
@@ -62,7 +61,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 return;
             }
 
-            // business validation
             var businessValidationResult = await _validator
                 .BusinessValidateAsync(commandReceivedEvent.Command).ConfigureAwait(false);
             if (businessValidationResult.IsFailed)
@@ -72,10 +70,8 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 return;
             }
 
-            // get existing charge
             var charge = await GetChargeAsync(commandReceivedEvent.Command).ConfigureAwait(false);
 
-            // is create, update or stop?
             var operationType = GetOperationType(commandReceivedEvent.Command, charge);
 
             switch (operationType)
@@ -84,14 +80,13 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                     await HandleCreateEventAsync(commandReceivedEvent.Command).ConfigureAwait(false);
                     break;
                 case OperationType.Update:
-                    if (charge == null)
-                        throw new InvalidOperationException("Could not update charge. Charge not found.");
                     HandleUpdateEvent(charge, commandReceivedEvent.Command);
                     break;
                 case OperationType.Stop:
-                    if (charge == null)
-                        throw new InvalidOperationException("Could not stop charge. Charge not found.");
-                    charge.Stop(commandReceivedEvent.Command.ChargeOperation.EndDateTime);
+                    charge?.Stop(commandReceivedEvent.Command.ChargeOperation.EndDateTime);
+                    break;
+                case OperationType.CancelStop:
+                    charge?.CancelStop();
                     break;
                 default:
                     throw new InvalidOperationException("Could not handle charge command.");
@@ -110,20 +105,27 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             await _chargeRepository.AddAsync(charge).ConfigureAwait(false);
         }
 
-        private void HandleUpdateEvent(Charge charge, ChargeCommand chargeCommand)
+        private void HandleUpdateEvent(Charge? charge, ChargeCommand chargeCommand)
         {
             var newChargePeriod = _chargePeriodFactory.CreateFromChargeOperationDto(chargeCommand.ChargeOperation);
-            charge.Update(newChargePeriod);
+            charge?.Update(newChargePeriod);
         }
 
         private static OperationType GetOperationType(ChargeCommand command, Charge? charge)
         {
+            if (charge == null)
+            {
+                return OperationType.Create;
+            }
+
             if (command.ChargeOperation.StartDateTime == command.ChargeOperation.EndDateTime)
             {
                 return OperationType.Stop;
             }
 
-            return charge != null ? OperationType.Update : OperationType.Create;
+            var latestChargePeriod = charge.Periods.OrderByDescending(p => p.StartDateTime).First();
+            return command.ChargeOperation.StartDateTime == latestChargePeriod.EndDateTime ?
+                OperationType.CancelStop : OperationType.Update;
         }
 
         private async Task<Charge?> GetChargeAsync(ChargeCommand command)
