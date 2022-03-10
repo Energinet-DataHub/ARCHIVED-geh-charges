@@ -12,15 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading;
 using System.Threading.Tasks;
-using Energinet.DataHub.Core.Messaging.Transport;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions
+namespace GreenEnergyHub.Charges.Application.Persistence
 {
-    public interface IMessageDispatcher<in TOutboundMessage>
-        where TOutboundMessage : IOutboundMessage
+    public interface IUnitOfWork
     {
-        public Task DispatchAsync(TOutboundMessage message, CancellationToken cancellationToken = default);
+        Task SaveChangesAsync();
     }
 }
