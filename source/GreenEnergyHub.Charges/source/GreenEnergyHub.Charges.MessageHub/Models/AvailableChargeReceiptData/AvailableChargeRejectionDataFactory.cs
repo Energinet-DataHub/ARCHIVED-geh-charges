@@ -57,6 +57,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                     Guid.NewGuid(), // ID of each available piece of data must be unique
                     ReceiptStatus.Rejected,
                     input.Command.ChargeOperation.Id,
+                    input.Command.Document.Type,
                     GetReasons(input)),
             };
         }
