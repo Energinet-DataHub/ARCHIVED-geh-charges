@@ -14,9 +14,9 @@
 
 using System;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application.Messaging;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Middleware;
-using TraceContext = GreenEnergyHub.Charges.Infrastructure.Core.Correlation.TraceContext;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.Correlation
 {
