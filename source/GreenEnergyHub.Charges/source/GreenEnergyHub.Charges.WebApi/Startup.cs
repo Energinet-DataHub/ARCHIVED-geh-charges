@@ -87,6 +87,7 @@ namespace GreenEnergyHub.Charges.WebApi
             services.AddQueryApi(Configuration);
             services.AddJwtTokenSecurity();
 
+            // Health check
             services.AddHealthChecks()
                 .AddCheck("self", () => HealthCheckResult.Healthy())
                 .AddCheck("database", () => HealthCheckResult.Unhealthy(), tags: new[] { "dependency" })
