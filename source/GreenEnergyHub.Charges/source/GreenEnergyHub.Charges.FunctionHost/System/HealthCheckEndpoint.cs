@@ -31,7 +31,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.System
         private HealthCheckService HealthCheck { get; }
 
         [Function("HealthCheck")]
-        public async Task<HttpResponseData> MonitorAsync(
+        public async Task<HttpResponseData> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "monitor/{endpoint}")]
             HttpRequestData httpRequest,
             string endpoint)
