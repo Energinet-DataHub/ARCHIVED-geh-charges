@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using GreenEnergyHub.Charges.Application.Messaging;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.Correlation
 {
