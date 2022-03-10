@@ -13,12 +13,14 @@
 // limitations under the License.
 
 using Energinet.DataHub.Core.Logging.RequestResponseMiddleware;
+using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.FunctionHost.Configuration;
 using GreenEnergyHub.Charges.FunctionHost.System;
 using GreenEnergyHub.Charges.Infrastructure.Core.Authentication;
 using GreenEnergyHub.Charges.Infrastructure.Core.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
+using GreenEnergyHub.Charges.Infrastructure.Core.Registration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
@@ -52,8 +54,16 @@ namespace GreenEnergyHub.Charges.FunctionHost
             // Health check
             serviceCollection.AddHealthChecks()
                 .AddCheck("self", () => HealthCheckResult.Healthy())
-                .AddCheck("database", () => HealthCheckResult.Unhealthy(), tags: new[] { "dependency" })
-                .AddCheck("eventchannel", () => HealthCheckResult.Unhealthy(), tags: new[] { "dependency" });
+                .AddSqlServer(
+                    connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeDbConnectionString),
+                    name: "chargeDb",
+                    failureStatus: Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Unhealthy,
+                    tags: new[] { "dependency" })
+                .AddSqlServer(
+                    connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.MarketParticipantRegistryDbConnectionString),
+                    name: "marketParticipantRegistryDb",
+                    failureStatus: Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Unhealthy,
+                    tags: new[] { "dependency" });
 
             // Charges
             ChargeIngestionConfiguration.ConfigureServices(serviceCollection);

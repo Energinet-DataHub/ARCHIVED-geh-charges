@@ -50,7 +50,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             actualContent.Should().Be("Healthy");
         }
 
-        [Fact]
+        [Fact(Skip = "Leaving this test here for now, as we might change it to be a negative test by e.g. not having a given database")]
         public async Task When_RequestReadinessStatus_Then_ResponseIsServiceUnavailableAndUnhealthy()
         {
             // Arrange
@@ -64,6 +64,22 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
             var actualContent = await actualResponse.Content.ReadAsStringAsync();
             actualContent.Should().Be("Unhealthy");
+        }
+
+        [Fact]
+        public async Task When_RequestReadinessStatus_Then_ResponseIsOkAndHealthy()
+        {
+            // Arrange
+            var requestMessage = HttpRequestGenerator.CreateHttpGetRequest("api/monitor/ready");
+
+            // Act
+            var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(requestMessage.Request);
+
+            // Assert
+            actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+            var actualContent = await actualResponse.Content.ReadAsStringAsync();
+            actualContent.Should().Be("Healthy");
         }
     }
 }
