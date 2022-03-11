@@ -17,9 +17,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
-using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.WebApi;
-using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Xunit;
 using Xunit.Abstractions;
@@ -70,6 +68,18 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
         }
 
         [Fact]
+        public async Task When_RequestReadinessStatus_Then_ResponseIsOkAndHealthy()
+        {
+            var actualResponse = await _client.GetAsync("/monitor/ready");
+
+            // Assert
+            actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+            var actualContent = await actualResponse.Content.ReadAsStringAsync();
+            actualContent.Should().Be(Enum.GetName(typeof(HealthStatus), HealthStatus.Healthy));
+        }
+
+        [Fact]
         public async Task When_ChargeDatabaseIsDeletedAndRequestReadinessStatus_Then_ResponseIsServiceUnavailableAndUnhealthy()
         {
             try
@@ -87,18 +97,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
             {
                 await Fixture.DatabaseManager.CreateDatabaseAsync();
             }
-        }
-
-        [Fact]
-        public async Task When_RequestReadinessStatus_Then_ResponseIsOkAndHealthy()
-        {
-            var actualResponse = await _client.GetAsync("/monitor/ready");
-
-            // Assert
-            actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-
-            var actualContent = await actualResponse.Content.ReadAsStringAsync();
-            actualContent.Should().Be(Enum.GetName(typeof(HealthStatus), HealthStatus.Healthy));
         }
     }
 }

@@ -53,6 +53,22 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
         }
 
         [Fact]
+        public async Task When_RequestReadinessStatus_Then_ResponseIsOkAndHealthy()
+        {
+            // Arrange
+            var requestMessage = HttpRequestGenerator.CreateHttpGetRequest("api/monitor/ready");
+
+            // Act
+            var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(requestMessage.Request);
+
+            // Assert
+            actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+            var actualContent = await actualResponse.Content.ReadAsStringAsync();
+            actualContent.Should().Be(Enum.GetName(typeof(HealthStatus), HealthStatus.Healthy));
+        }
+
+        [Fact]
         public async Task When_ChargeDatabaseIsDeletedAndRequestReadinessStatus_Then_ResponseIsServiceUnavailableAndUnhealthy()
         {
             try
@@ -79,22 +95,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // The only solution we can get to work, is to wait a certain amount of time.
                 await Task.Delay(TimeSpan.FromSeconds(5));
             }
-        }
-
-        [Fact]
-        public async Task When_RequestReadinessStatus_Then_ResponseIsOkAndHealthy()
-        {
-            // Arrange
-            var requestMessage = HttpRequestGenerator.CreateHttpGetRequest("api/monitor/ready");
-
-            // Act
-            var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(requestMessage.Request);
-
-            // Assert
-            actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-
-            var actualContent = await actualResponse.Content.ReadAsStringAsync();
-            actualContent.Should().Be(Enum.GetName(typeof(HealthStatus), HealthStatus.Healthy));
         }
     }
 }
