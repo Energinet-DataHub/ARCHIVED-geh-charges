@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Net;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
@@ -19,6 +20,7 @@ using FluentAssertions;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
@@ -47,23 +49,36 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
             var actualContent = await actualResponse.Content.ReadAsStringAsync();
-            actualContent.Should().Be("Healthy");
+            actualContent.Should().Be(Enum.GetName(typeof(HealthStatus), HealthStatus.Healthy));
         }
 
-        [Fact(Skip = "Leaving this test here for now, as we might change it to be a negative test by e.g. not having a given database")]
-        public async Task When_RequestReadinessStatus_Then_ResponseIsServiceUnavailableAndUnhealthy()
+        [Fact]
+        public async Task When_ChargeDatabaseIsDeletedAndRequestReadinessStatus_Then_ResponseIsServiceUnavailableAndUnhealthy()
         {
-            // Arrange
-            var requestMessage = HttpRequestGenerator.CreateHttpGetRequest("api/monitor/ready");
+            try
+            {
+                // Arrange
+                await Fixture.DatabaseManager.DeleteDatabaseAsync();
+                var requestMessage = HttpRequestGenerator.CreateHttpGetRequest("api/monitor/ready");
 
-            // Act
-            var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(requestMessage.Request);
+                // Act
+                var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(requestMessage.Request);
 
-            // Assert
-            actualResponse.StatusCode.Should().Be(HttpStatusCode.ServiceUnavailable);
+                // Assert
+                actualResponse.StatusCode.Should().Be(HttpStatusCode.ServiceUnavailable);
 
-            var actualContent = await actualResponse.Content.ReadAsStringAsync();
-            actualContent.Should().Be("Unhealthy");
+                var actualContent = await actualResponse.Content.ReadAsStringAsync();
+                actualContent.Should().Be(Enum.GetName(typeof(HealthStatus), HealthStatus.Unhealthy));
+            }
+            finally
+            {
+                await Fixture.DatabaseManager.CreateDatabaseAsync();
+
+                // Apparently we cannot connect just after we have created the database again.
+                // We have tried to wait here until we can connect, but still the health check fails.
+                // The only solution we can get to work, is to wait a certain amount of time.
+                await Task.Delay(TimeSpan.FromSeconds(5));
+            }
         }
 
         [Fact]
@@ -79,7 +94,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
             var actualContent = await actualResponse.Content.ReadAsStringAsync();
-            actualContent.Should().Be("Healthy");
+            actualContent.Should().Be(Enum.GetName(typeof(HealthStatus), HealthStatus.Healthy));
         }
     }
 }
