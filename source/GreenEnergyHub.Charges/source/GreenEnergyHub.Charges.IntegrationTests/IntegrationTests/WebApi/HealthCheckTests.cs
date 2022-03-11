@@ -16,6 +16,7 @@ using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.App.Common.HealthChecks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.WebApi;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -58,7 +59,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
         [Fact]
         public async Task When_RequestLivenessStatus_Then_ResponseIsOkAndHealthy()
         {
-            var actualResponse = await _client.GetAsync("/monitor/live");
+            var actualResponse = await _client.GetAsync(HealthChecksConstants.LiveHealthCheckEndpointRoute);
 
             // Assert
             actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -70,7 +71,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
         [Fact]
         public async Task When_RequestReadinessStatus_Then_ResponseIsOkAndHealthy()
         {
-            var actualResponse = await _client.GetAsync("/monitor/ready");
+            var actualResponse = await _client.GetAsync(HealthChecksConstants.ReadyHealthCheckEndpointRoute);
 
             // Assert
             actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -85,7 +86,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
             try
             {
                 await Fixture.DatabaseManager.DeleteDatabaseAsync();
-                var actualResponse = await _client.GetAsync("/monitor/ready");
+                var actualResponse = await _client.GetAsync(HealthChecksConstants.ReadyHealthCheckEndpointRoute);
 
                 // Assert
                 actualResponse.StatusCode.Should().Be(HttpStatusCode.ServiceUnavailable);

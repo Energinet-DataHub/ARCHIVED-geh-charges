@@ -15,6 +15,7 @@
 using System.Linq;
 using System.Text.Json.Serialization;
 using Energinet.DataHub.Core.App.Common.HealthChecks;
+using Energinet.DataHub.Core.App.WebApp.HealthChecks;
 using Energinet.DataHub.Core.App.WebApp.Middleware;
 using GreenEnergyHub.Charges.WebApi.Configuration;
 using Microsoft.AspNetCore.Authorization;
@@ -124,17 +125,8 @@ namespace GreenEnergyHub.Charges.WebApi
             {
                 endpoints.MapControllers();
 
-                // Health check endpoints must allow anonymous access so we can use them with Azure monitoring:
-                // https://docs.microsoft.com/en-us/azure/app-service/monitor-instances-health-check#authentication-and-security
-                endpoints.MapHealthChecks("/monitor/live", new HealthCheckOptions
-                {
-                    Predicate = r => r.Name.Equals("self"),
-                }).WithMetadata(new AllowAnonymousAttribute());
-
-                endpoints.MapHealthChecks("/monitor/ready", new HealthCheckOptions
-                {
-                    Predicate = r => !r.Name.Equals("self"),
-                }).WithMetadata(new AllowAnonymousAttribute());
+                endpoints.MapLiveHealthChecks();
+                endpoints.MapReadyHealthChecks();
             });
         }
     }
