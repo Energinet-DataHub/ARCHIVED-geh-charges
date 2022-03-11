@@ -44,7 +44,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.System
 
             if (string.Compare(endpoint, "ready", ignoreCase: true) == 0)
             {
-                predicate = r => r.Tags.Contains("dependency");
+                predicate = r => !r.Name.Contains("self");
             }
 
             var httpResponse = httpRequest.CreateResponse();

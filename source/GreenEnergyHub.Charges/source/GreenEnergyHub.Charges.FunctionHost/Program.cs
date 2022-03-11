@@ -56,22 +56,18 @@ namespace GreenEnergyHub.Charges.FunctionHost
                 .AddCheck("self", () => HealthCheckResult.Healthy())
                 .AddSqlServer(
                     name: "ChargeDb",
-                    connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeDbConnectionString),
-                    tags: new[] { "dependency" })
+                    connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeDbConnectionString))
                 .AddSqlServer(
                     name: "MarketParticipantRegistryDb",
-                    connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.MarketParticipantRegistryDbConnectionString),
-                    tags: new[] { "dependency" })
+                    connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.MarketParticipantRegistryDbConnectionString))
                 .AddAzureServiceBusTopic(
                     name: "ChargeCreatedTopicExists",
                     connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubManagerConnectionString),
-                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeCreatedTopicName),
-                    tags: new[] { "dependency" })
+                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeCreatedTopicName))
                 .AddAzureServiceBusTopic(
                     name: "DefaultChargeLinksDataAvailableNotifiedTopicExists",
                     connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventManagerConnectionString),
-                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName),
-                    tags: new[] { "dependency" });
+                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName));
 
             // Charges
             ChargeIngestionConfiguration.ConfigureServices(serviceCollection);
