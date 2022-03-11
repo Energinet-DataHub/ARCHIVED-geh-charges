@@ -66,7 +66,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
             actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
             var actualContent = await actualResponse.Content.ReadAsStringAsync();
-            actualContent.Should().Be("Healthy");
+            actualContent.Should().Be(Enum.GetName(typeof(HealthStatus), HealthStatus.Healthy));
         }
 
         [Fact]
@@ -81,7 +81,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
                 actualResponse.StatusCode.Should().Be(HttpStatusCode.ServiceUnavailable);
 
                 var actualContent = await actualResponse.Content.ReadAsStringAsync();
-                actualContent.Should().Be("Unhealthy");
+                actualContent.Should().Be(Enum.GetName(typeof(HealthStatus), HealthStatus.Unhealthy));
             }
             finally
             {
@@ -98,7 +98,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
             actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
             var actualContent = await actualResponse.Content.ReadAsStringAsync();
-            actualContent.Should().Be("Healthy");
+            actualContent.Should().Be(Enum.GetName(typeof(HealthStatus), HealthStatus.Healthy));
         }
     }
 }
