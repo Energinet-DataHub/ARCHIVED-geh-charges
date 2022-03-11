@@ -12,10 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
+using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.WebApi;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -67,20 +69,28 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
             actualContent.Should().Be("Healthy");
         }
 
-        [Fact(Skip = "Leaving this test here for now, as we might change it to be a negative test by e.g. not having the database")]
-        public async Task When_RequestReadinessStatus_Then_ResponseIsServiceUnavailableAndUnhealthy()
+        [Fact]
+        public async Task When_ChargeDatabaseIsDeletedAndRequestReadinessStatus_Then_ResponseIsServiceUnavailableAndUnhealthy()
         {
-            var actualResponse = await _client.GetAsync("/monitor/ready");
+            try
+            {
+                await Fixture.DatabaseManager.DeleteDatabaseAsync();
+                var actualResponse = await _client.GetAsync("/monitor/ready");
 
-            // Assert
-            actualResponse.StatusCode.Should().Be(HttpStatusCode.ServiceUnavailable);
+                // Assert
+                actualResponse.StatusCode.Should().Be(HttpStatusCode.ServiceUnavailable);
 
-            var actualContent = await actualResponse.Content.ReadAsStringAsync();
-            actualContent.Should().Be("Unhealthy");
+                var actualContent = await actualResponse.Content.ReadAsStringAsync();
+                actualContent.Should().Be("Unhealthy");
+            }
+            finally
+            {
+                await Fixture.DatabaseManager.CreateDatabaseAsync();
+            }
         }
 
         [Fact]
-        public async Task When_RequestReadinessStatus_Then_ResponseIsOkAndHealthy()
+        public async Task CWhen_RequestReadinessStatus_Then_ResponseIsOkAndHealthy()
         {
             var actualResponse = await _client.GetAsync("/monitor/ready");
 
