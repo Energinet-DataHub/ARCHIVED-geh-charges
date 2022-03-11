@@ -124,6 +124,8 @@ namespace GreenEnergyHub.Charges.WebApi
             {
                 endpoints.MapControllers();
 
+                // Health check endpoints must allow anonymous access so we can use them with Azure monitoring:
+                // https://docs.microsoft.com/en-us/azure/app-service/monitor-instances-health-check#authentication-and-security
                 endpoints.MapHealthChecks("/monitor/live", new HealthCheckOptions
                 {
                     Predicate = r => r.Name.Contains("self"),
