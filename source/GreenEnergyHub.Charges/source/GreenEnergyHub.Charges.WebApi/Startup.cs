@@ -92,8 +92,7 @@ namespace GreenEnergyHub.Charges.WebApi
                 .AddCheck("self", () => HealthCheckResult.Healthy())
                 .AddSqlServer(
                     name: "ChargeDb",
-                    connectionString: Configuration.GetConnectionString(EnvironmentSettingNames.ChargeDbConnectionString),
-                    tags: new[] { "dependency" });
+                    connectionString: Configuration.GetConnectionString(EnvironmentSettingNames.ChargeDbConnectionString));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -128,12 +127,12 @@ namespace GreenEnergyHub.Charges.WebApi
                 // https://docs.microsoft.com/en-us/azure/app-service/monitor-instances-health-check#authentication-and-security
                 endpoints.MapHealthChecks("/monitor/live", new HealthCheckOptions
                 {
-                    Predicate = r => r.Name.Contains("self"),
+                    Predicate = r => r.Name.Equals("self"),
                 }).WithMetadata(new AllowAnonymousAttribute());
 
                 endpoints.MapHealthChecks("/monitor/ready", new HealthCheckOptions
                 {
-                    Predicate = r => r.Tags.Contains("dependency"),
+                    Predicate = r => !r.Name.Equals("self"),
                 }).WithMetadata(new AllowAnonymousAttribute());
             });
         }
