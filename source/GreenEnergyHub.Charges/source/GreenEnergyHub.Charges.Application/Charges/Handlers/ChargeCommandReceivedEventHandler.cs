@@ -80,13 +80,13 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                     await HandleCreateEventAsync(commandReceivedEvent.Command).ConfigureAwait(false);
                     break;
                 case OperationType.Update:
-                    HandleUpdateEvent(charge, commandReceivedEvent.Command);
+                    HandleUpdateEvent(charge!, commandReceivedEvent.Command);
                     break;
                 case OperationType.Stop:
-                    charge?.Stop(commandReceivedEvent.Command.ChargeOperation.EndDateTime);
+                    charge!.Stop(commandReceivedEvent.Command.ChargeOperation.EndDateTime);
                     break;
                 case OperationType.CancelStop:
-                    charge?.CancelStop();
+                    charge!.CancelStop();
                     break;
                 default:
                     throw new InvalidOperationException("Could not handle charge command.");
@@ -105,10 +105,10 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             await _chargeRepository.AddAsync(charge).ConfigureAwait(false);
         }
 
-        private void HandleUpdateEvent(Charge? charge, ChargeCommand chargeCommand)
+        private void HandleUpdateEvent(Charge charge, ChargeCommand chargeCommand)
         {
             var newChargePeriod = _chargePeriodFactory.CreateFromChargeOperationDto(chargeCommand.ChargeOperation);
-            charge?.Update(newChargePeriod);
+            charge.Update(newChargePeriod);
         }
 
         private static OperationType GetOperationType(ChargeCommand command, Charge? charge)
