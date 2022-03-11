@@ -14,6 +14,7 @@
 
 using System.Linq;
 using System.Text.Json.Serialization;
+using Energinet.DataHub.Core.App.Common.HealthChecks;
 using Energinet.DataHub.Core.App.WebApp.Middleware;
 using GreenEnergyHub.Charges.WebApi.Configuration;
 using Microsoft.AspNetCore.Authorization;
@@ -89,7 +90,7 @@ namespace GreenEnergyHub.Charges.WebApi
 
             // Health check
             services.AddHealthChecks()
-                .AddCheck("self", () => HealthCheckResult.Healthy())
+                .AddLiveCheck()
                 .AddSqlServer(
                     name: "ChargeDb",
                     connectionString: Configuration.GetConnectionString(EnvironmentSettingNames.ChargeDbConnectionString));

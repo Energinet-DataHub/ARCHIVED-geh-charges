@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.Core.App.Common.HealthChecks;
 using Energinet.DataHub.Core.Logging.RequestResponseMiddleware;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.FunctionHost.Configuration;
@@ -53,7 +54,7 @@ namespace GreenEnergyHub.Charges.FunctionHost
 
             // Health check
             serviceCollection.AddHealthChecks()
-                .AddCheck("self", () => HealthCheckResult.Healthy())
+                .AddLiveCheck()
                 .AddSqlServer(
                     name: "ChargeDb",
                     connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeDbConnectionString))
