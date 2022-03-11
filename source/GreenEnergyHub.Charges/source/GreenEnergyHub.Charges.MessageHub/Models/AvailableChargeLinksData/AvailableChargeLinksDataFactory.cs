@@ -74,7 +74,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData
                         acceptedEvent.ChargeLinksCommand.MeteringPointId,
                         link.Factor,
                         link.StartDateTime,
-                        link.EndDateTime.GetValueOrDefault()));
+                        link.EndDateTime.GetValueOrDefault(),
+                        acceptedEvent.ChargeLinksCommand.Document.Type));
                 }
             }
 

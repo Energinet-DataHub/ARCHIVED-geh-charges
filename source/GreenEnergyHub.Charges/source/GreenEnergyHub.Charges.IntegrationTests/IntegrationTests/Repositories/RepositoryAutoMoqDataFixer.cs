@@ -58,6 +58,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 availableChargeData.TaxIndicator,
                 availableChargeData.TransparentInvoicing,
                 availableChargeData.Resolution,
+                availableChargeData.DocumentType,
                 availableChargeData.Points.ToList());
         }
 
@@ -74,6 +75,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 availableChargeReceiptData.AvailableDataReferenceId,
                 availableChargeReceiptData.ReceiptStatus,
                 availableChargeReceiptData.OriginalOperationId.Substring(0, 34),
+                availableChargeReceiptData.DocumentType,
                 availableChargeReceiptData.ValidationErrors.ToList());
         }
 
@@ -93,7 +95,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 availableChargeData.MeteringPointId.Substring(0, 49),
                 availableChargeData.Factor,
                 availableChargeData.StartDateTime,
-                availableChargeData.EndDateTime);
+                availableChargeData.EndDateTime,
+                availableChargeData.DocumentType);
         }
 
         private static AvailableChargeLinksReceiptData GetAvailableDataBasedOn(
@@ -110,6 +113,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 availableChargeLinksReceiptData.ReceiptStatus,
                 availableChargeLinksReceiptData.OriginalOperationId.Substring(0, 34),
                 availableChargeLinksReceiptData.MeteringPointId.Substring(0, 49),
+                availableChargeLinksReceiptData.DocumentType,
                 availableChargeLinksReceiptData.ValidationErrors.ToList());
         }
     }
