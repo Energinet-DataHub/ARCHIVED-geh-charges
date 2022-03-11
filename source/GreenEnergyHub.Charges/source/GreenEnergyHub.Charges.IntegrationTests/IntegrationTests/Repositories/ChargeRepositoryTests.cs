@@ -77,49 +77,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             actual.Periods.Should().NotBeNullOrEmpty();
         }
 
-        [Fact]
-        public async Task Update_WhenChargeIsValid_ThenChargeIsUpdated()
-        {
-            // Arrange
-            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-            await GetOrAddMarketParticipantAsync(chargesDatabaseWriteContext);
-            var charge = GetValidCharge();
-            chargesDatabaseWriteContext.Charges.Add(charge);
-            await chargesDatabaseWriteContext.SaveChangesAsync();
-
-            var firstPeriod = charge.Periods.First();
-
-            charge.UpdateCharge(new ChargePeriod(
-                Guid.NewGuid(),
-                "new period name",
-                "new period description",
-                firstPeriod.VatClassification,
-                firstPeriod.TransparentInvoicing,
-                Instant.FromDateTimeUtc(DateTime.Now.AddDays(2).Date.ToUniversalTime()),
-                firstPeriod.EndDateTime));
-
-            var sut = new ChargeRepository(chargesDatabaseWriteContext);
-
-            // Act
-            sut.Update(charge);
-            await chargesDatabaseWriteContext.SaveChangesAsync();
-
-            // Assert
-            await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
-
-            var actual = await chargesDatabaseReadContext.Charges
-                .SingleOrDefaultAsync(x =>
-                    x.Id == charge.Id &&
-                    x.SenderProvidedChargeId == charge.SenderProvidedChargeId &&
-                    x.OwnerId == charge.OwnerId &&
-                    x.Type == charge.Type);
-
-            actual.Should().BeEquivalentTo(charge);
-            actual.Points.Should().NotBeNullOrEmpty();
-            actual.Periods.Should().NotBeNullOrEmpty();
-            actual.Periods.Count.Should().Be(2);
-        }
-
         [Theory]
         [InlineAutoMoqData]
         public async Task AddAsync_WhenChargeIsNull_ThrowsArgumentNullException(ChargeRepository sut)
@@ -136,10 +93,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         {
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-            await GetOrAddMarketParticipantAsync(chargesDatabaseWriteContext);
-            var charge = GetValidCharge();
-            chargesDatabaseWriteContext.Charges.Add(charge);
-            await chargesDatabaseWriteContext.SaveChangesAsync();
+            var charge = await SetupValidCharge(chargesDatabaseWriteContext);
 
             await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
             var sut = new ChargeRepository(chargesDatabaseReadContext);
@@ -192,6 +146,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
             // Assert
             actual.Should().NotBeEmpty();
+        }
+
+        private static async Task<Charge> SetupValidCharge(ChargesDatabaseContext chargesDatabaseWriteContext)
+        {
+            await GetOrAddMarketParticipantAsync(chargesDatabaseWriteContext);
+            var charge = GetValidCharge();
+            chargesDatabaseWriteContext.Charges.Add(charge);
+            await chargesDatabaseWriteContext.SaveChangesAsync();
+            return charge;
         }
 
         private static Charge GetValidCharge()

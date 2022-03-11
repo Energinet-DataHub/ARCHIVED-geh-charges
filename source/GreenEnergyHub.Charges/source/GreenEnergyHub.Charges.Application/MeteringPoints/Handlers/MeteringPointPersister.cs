@@ -14,9 +14,9 @@
 
 using System;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.Dtos.MeteringPointCreatedEvents;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
-using GreenEnergyHub.Charges.Infrastructure.Core.Persistence;
 using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.Application.MeteringPoints.Handlers

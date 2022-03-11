@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Infrastructure.Core.Persistence;
+using GreenEnergyHub.Charges.Application.Persistence;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Persistence
 {
