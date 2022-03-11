@@ -57,9 +57,6 @@ namespace GreenEnergyHub.Charges.FunctionHost
                 .AddSqlServer(
                     name: "ChargeDb",
                     connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeDbConnectionString))
-                .AddSqlServer(
-                    name: "MarketParticipantRegistryDb",
-                    connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.MarketParticipantRegistryDbConnectionString))
                 .AddAzureServiceBusTopic(
                     name: "ChargeCreatedTopicExists",
                     connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubManagerConnectionString),
