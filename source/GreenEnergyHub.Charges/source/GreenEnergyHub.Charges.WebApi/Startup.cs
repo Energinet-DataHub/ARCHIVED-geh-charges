@@ -91,7 +91,7 @@ namespace GreenEnergyHub.Charges.WebApi
             services.AddHealthChecks()
                 .AddCheck("self", () => HealthCheckResult.Healthy())
                 .AddSqlServer(
-                    name: "chargeDb",
+                    name: "ChargeDb",
                     connectionString: Configuration.GetConnectionString(EnvironmentSettingNames.ChargeDbConnectionString),
                     tags: new[] { "dependency" });
         }

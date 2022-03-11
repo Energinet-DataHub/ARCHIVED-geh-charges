@@ -55,11 +55,11 @@ namespace GreenEnergyHub.Charges.FunctionHost
             serviceCollection.AddHealthChecks()
                 .AddCheck("self", () => HealthCheckResult.Healthy())
                 .AddSqlServer(
-                    name: "chargeDb",
+                    name: "ChargeDb",
                     connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeDbConnectionString),
                     tags: new[] { "dependency" })
                 .AddSqlServer(
-                    name: "marketParticipantRegistryDb",
+                    name: "MarketParticipantRegistryDb",
                     connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.MarketParticipantRegistryDbConnectionString),
                     tags: new[] { "dependency" })
                 .AddAzureServiceBusTopic(
