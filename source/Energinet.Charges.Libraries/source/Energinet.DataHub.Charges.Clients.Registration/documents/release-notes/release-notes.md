@@ -1,16 +1,20 @@
 # Energinet.DataHub.Charges.Clients.Registrations Release notes
 
+## Version 0.1.7
+
+Updated NuGet packages
+
 ## Version 0.1.6
 
 Adds `IHttpContextAccessor` injection to enable token forwarding
 
 ## Version 0.1.5
 
-Updated Nuget packages
+Updated NuGet packages
 
 ## Version 0.1.4
 
-Updated Nuget packages
+Updated NuGet packages
 
 ## Version 0.1.3
 
