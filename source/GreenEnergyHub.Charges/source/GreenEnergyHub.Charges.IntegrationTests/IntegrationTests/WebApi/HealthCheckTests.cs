@@ -90,7 +90,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
         }
 
         [Fact]
-        public async Task CWhen_RequestReadinessStatus_Then_ResponseIsOkAndHealthy()
+        public async Task When_RequestReadinessStatus_Then_ResponseIsOkAndHealthy()
         {
             var actualResponse = await _client.GetAsync("/monitor/ready");
 
