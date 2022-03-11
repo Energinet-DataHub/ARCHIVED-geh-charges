@@ -31,7 +31,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableData
             MarketParticipantRole recipientRole,
             BusinessReasonCode businessReasonCode,
             Instant requestDateTime,
-            Guid availableDataReferenceId)
+            Guid availableDataReferenceId,
+            DocumentType documentType)
         {
             Id = Guid.NewGuid();
             SenderId = senderId;
@@ -41,6 +42,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableData
             BusinessReasonCode = businessReasonCode;
             RequestDateTime = requestDateTime;
             AvailableDataReferenceId = availableDataReferenceId;
+            DocumentType = documentType;
         }
 
         // ReSharper disable once UnusedMember.Local - needed by persistence
@@ -79,5 +81,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableData
         /// The ID will later be used to fetch the data on a peek operation for the MessageHub
         /// </summary>
         public Guid AvailableDataReferenceId { get; }
+
+        public DocumentType DocumentType { get; }
     }
 }
