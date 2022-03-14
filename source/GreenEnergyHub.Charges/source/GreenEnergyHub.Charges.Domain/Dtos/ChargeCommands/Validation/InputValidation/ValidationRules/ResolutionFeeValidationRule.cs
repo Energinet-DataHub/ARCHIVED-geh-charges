@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
             {
                 if (_chargeCommand.ChargeOperation.Type == ChargeType.Fee)
                 {
-                    return _chargeCommand.ChargeOperation.Resolution is Resolution.P1D;
+                    return _chargeCommand.ChargeOperation.Resolution is Resolution.P1M;
                 }
 
                 return true;
