@@ -12,60 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Net;
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.App.FunctionApp.Diagnostics.HealthChecks;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace GreenEnergyHub.Charges.FunctionHost.System
 {
     public class HealthCheckEndpoint
     {
-        public HealthCheckEndpoint(HealthCheckService healthCheck)
+        public HealthCheckEndpoint(IHealthCheckEndpointHandler healthCheckEndpointHandler)
         {
-            HealthCheck = healthCheck;
+            EndpointHandler = healthCheckEndpointHandler;
         }
 
-        private HealthCheckService HealthCheck { get; }
+        private IHealthCheckEndpointHandler EndpointHandler { get; }
 
         [Function("HealthCheck")]
-        public async Task<HttpResponseData> RunAsync(
+        public Task<HttpResponseData> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "monitor/{endpoint}")]
             HttpRequestData httpRequest,
             string endpoint)
         {
-            Func<HealthCheckRegistration, bool>? predicate = null;
-            if (string.Compare(endpoint, "live", ignoreCase: true) == 0)
-            {
-                predicate = r => r.Name.Contains("self");
-            }
-
-            if (string.Compare(endpoint, "ready", ignoreCase: true) == 0)
-            {
-                predicate = r => !r.Name.Contains("self");
-            }
-
-            var httpResponse = httpRequest.CreateResponse();
-
-            if (predicate == null)
-            {
-                httpResponse.StatusCode = HttpStatusCode.NotFound;
-            }
-            else
-            {
-                var result = await HealthCheck.CheckHealthAsync(predicate).ConfigureAwait(false);
-
-                httpResponse.StatusCode = result.Status == Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Healthy
-                    ? HttpStatusCode.OK
-                    : HttpStatusCode.ServiceUnavailable;
-
-                var healthStatus = Enum.GetName(typeof(Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus), result.Status);
-                await httpResponse.WriteStringAsync(healthStatus!).ConfigureAwait(false);
-            }
-
-            return httpResponse;
+            return EndpointHandler.HandleAsync(httpRequest, endpoint);
         }
     }
 }

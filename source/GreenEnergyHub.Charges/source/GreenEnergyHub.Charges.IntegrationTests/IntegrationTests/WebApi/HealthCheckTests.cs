@@ -16,7 +16,7 @@ using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Energinet.DataHub.Core.App.Common.HealthChecks;
+using Energinet.DataHub.Core.App.Common.Diagnostics.HealthChecks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.WebApi;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
