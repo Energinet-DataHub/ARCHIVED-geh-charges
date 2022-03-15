@@ -17,9 +17,8 @@ using Energinet.DataHub.Core.App.FunctionApp.Diagnostics.HealthChecks;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 
-namespace GreenEnergyHub.Charges.FunctionHost.System
+namespace GreenEnergyHub.Charges.FunctionHost.Monitor
 {
-    // TODO: Maybe it would be better if this was located in a "Monitor" subfolder(?)
     public class HealthCheckEndpoint
     {
         public HealthCheckEndpoint(IHealthCheckEndpointHandler healthCheckEndpointHandler)

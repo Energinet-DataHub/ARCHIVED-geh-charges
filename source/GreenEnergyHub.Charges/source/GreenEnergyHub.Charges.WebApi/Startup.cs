@@ -122,6 +122,7 @@ namespace GreenEnergyHub.Charges.WebApi
             {
                 endpoints.MapControllers();
 
+                // Health check
                 endpoints.MapLiveHealthChecks();
                 endpoints.MapReadyHealthChecks();
             });
