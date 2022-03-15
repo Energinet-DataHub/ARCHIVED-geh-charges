@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
 
         public ChargeOperationDtoBuilder()
         {
-            _operationId = "id";
+            _operationId = "operationId";
             _chargeId = "some charge id";
             _startDateTime = SystemClock.Instance.GetCurrentInstant()
                 .Plus(Duration.FromDays(500));
@@ -50,7 +50,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             _owner = "owner";
             _description = "some description";
             _chargeName = "some charge name";
-            _sender = new MarketParticipantDto { Id = "0", BusinessProcessRole = MarketParticipantRole.EnergySupplier };
+            _sender = new MarketParticipantDto { Id = "2", BusinessProcessRole = MarketParticipantRole.GridAccessProvider };
             _chargeType = ChargeType.Fee;
             _points = new List<Point>();
             _resolution = Resolution.PT1H;
@@ -71,6 +71,12 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         public ChargeOperationDtoBuilder WithChargeName(string name)
         {
             _chargeName = name;
+            return this;
+        }
+
+        public ChargeOperationDtoBuilder WithChargeOperationId(string operationId)
+        {
+            _operationId = operationId;
             return this;
         }
 
