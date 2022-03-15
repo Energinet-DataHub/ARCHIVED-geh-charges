@@ -1,5 +1,9 @@
 # Energinet.DataHub.Charges.Clients Release notes
 
+## Version 2.0.4
+
+Updated Energinet.DataHub.Core NuGet packages
+
 ## Version 2.0.3
 
 Updated NuGet packages
