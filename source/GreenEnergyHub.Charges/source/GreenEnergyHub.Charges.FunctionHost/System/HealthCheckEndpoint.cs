@@ -19,6 +19,7 @@ using Microsoft.Azure.Functions.Worker.Http;
 
 namespace GreenEnergyHub.Charges.FunctionHost.System
 {
+    // TODO: Maybe it would be better if this was located in a "Monitor" subfolder(?)
     public class HealthCheckEndpoint
     {
         public HealthCheckEndpoint(IHealthCheckEndpointHandler healthCheckEndpointHandler)
