@@ -14,9 +14,9 @@
 
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Factories;
+using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
 {
@@ -33,6 +33,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
             _chargeCreatedEventFactory = chargeCreatedEventFactory;
         }
 
+        // Todo: Maybe "Create" and "Updated" is just a "Received" event?
         public async Task PublishChargeCreatedAsync(ChargeOperationDto chargeOperationDto)
         {
             var chargeCreatedEvent = _chargeCreatedEventFactory.Create(chargeOperationDto);

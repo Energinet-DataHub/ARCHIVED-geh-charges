@@ -29,7 +29,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
         public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ResolutionFeeValidation;
 
         public bool IsValid => _chargeOperationDto.Type != ChargeType.Fee ||
-                               _chargeOperationDto.Resolution is Resolution.P1D;
+                               _chargeOperationDto.Resolution is Resolution.P1M;
 
         public string OperationId => _chargeOperationDto.Id;
     }

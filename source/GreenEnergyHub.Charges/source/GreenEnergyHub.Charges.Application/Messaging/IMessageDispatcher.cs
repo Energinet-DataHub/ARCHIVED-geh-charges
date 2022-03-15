@@ -12,23 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Threading;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.Persistence;
+using Energinet.DataHub.Core.Messaging.Transport;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Persistence
+namespace GreenEnergyHub.Charges.Application.Messaging
 {
-    public class UnitOfWork : IUnitOfWork
+    public interface IMessageDispatcher<in TOutboundMessage>
+        where TOutboundMessage : IOutboundMessage
     {
-        private readonly IChargesDatabaseContext _chargesDatabaseContext;
-
-        public UnitOfWork(IChargesDatabaseContext chargesDatabaseContext)
-        {
-            _chargesDatabaseContext = chargesDatabaseContext;
-        }
-
-        public async Task SaveChangesAsync()
-        {
-            await _chargesDatabaseContext.SaveChangesAsync().ConfigureAwait(false);
-        }
+        public Task DispatchAsync(TOutboundMessage message, CancellationToken cancellationToken = default);
     }
 }

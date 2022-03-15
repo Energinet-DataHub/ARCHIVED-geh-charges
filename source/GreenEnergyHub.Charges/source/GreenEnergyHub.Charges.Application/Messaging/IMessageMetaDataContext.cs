@@ -14,7 +14,7 @@
 
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData
+namespace GreenEnergyHub.Charges.Application.Messaging
 {
     /// <summary>
     /// Meta data for messages sent and received by the components of the domain.

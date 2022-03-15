@@ -127,6 +127,14 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             RemoveAllSubsequentPeriods(stopDate.Value);
         }
 
+        public void CancelStop()
+        {
+            var oldLatestPeriod = _periods.OrderByDescending(p => p.StartDateTime).First();
+            var newLatestPeriod = oldLatestPeriod.WithEndDate(InstantExtensions.GetEndDefault());
+            _periods.Remove(oldLatestPeriod);
+            _periods.Add(newLatestPeriod);
+        }
+
         private void StopExistingPeriod(Instant stopDate)
         {
             var previousPeriod = _periods
