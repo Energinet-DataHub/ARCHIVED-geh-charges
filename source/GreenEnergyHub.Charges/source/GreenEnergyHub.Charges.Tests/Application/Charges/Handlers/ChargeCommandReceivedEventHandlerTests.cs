@@ -184,6 +184,46 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             actual.EndDateTime.Should().Be(stopDate);
         }
 
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task HandleAsync_WhenValidCancelStop_ThenStopCancelled(
+            [Frozen] Mock<IValidator<ChargeCommand>> validator,
+            [Frozen] Mock<IChargeRepository> chargeRepository,
+            [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
+            ChargeCommandReceivedEventHandler sut)
+        {
+            // Arrange
+            var validationResult = ValidationResult.CreateSuccess();
+            SetupValidator(validator, validationResult);
+            var chargeCommand = new ChargeCommandBuilder()
+                .WithStartDateTime(InstantHelper.GetTomorrowAtMidnightUtc())
+                .WithEndDateTime(InstantHelper.GetEndDefault())
+                .Build();
+            var receivedEvent = new ChargeCommandReceivedEvent(InstantHelper.GetTodayAtMidnightUtc(), chargeCommand);
+            var periods = new List<ChargePeriod>
+            {
+                new ChargePeriodBuilder().WithEndDateTime(InstantHelper.GetTomorrowAtMidnightUtc()).Build(),
+            };
+            var charge = new ChargeBuilder().WithPeriods(periods).Build();
+            var newPeriod = new ChargePeriodBuilder()
+                .WithStartDateTime(InstantHelper.GetTomorrowAtMidnightUtc())
+                .Build();
+            chargeRepository
+                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
+                .ReturnsAsync(charge);
+            chargePeriodFactory
+                .Setup(r => r.CreateFromChargeOperationDto(It.IsAny<ChargeOperationDto>()))
+                .Returns(newPeriod);
+
+            // Act
+            await sut.HandleAsync(receivedEvent);
+
+            // Assert
+            charge.Periods.Count.Should().Be(1);
+            var actual = charge.Periods.OrderByDescending(p => p.StartDateTime).First();
+            actual.EndDateTime.Should().Be(InstantHelper.GetEndDefault());
+        }
+
         private static IEnumerable<ChargePeriod> CreateValidPeriods(int numberOfPeriods = 1)
         {
             for (var i = 0; i < numberOfPeriods; i++)

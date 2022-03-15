@@ -40,8 +40,17 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
             ReceiptStatus receiptStatus,
             string originalOperationId,
             string meteringPointId,
+            DocumentType documentType,
             List<AvailableReceiptValidationError> validationErrors)
-            : base(senderId, senderRole, recipientId, recipientRole, businessReasonCode, requestDateTime, availableDataReferenceId)
+            : base(
+                senderId,
+                senderRole,
+                recipientId,
+                recipientRole,
+                businessReasonCode,
+                requestDateTime,
+                availableDataReferenceId,
+                documentType)
         {
             ReceiptStatus = receiptStatus;
             OriginalOperationId = originalOperationId;

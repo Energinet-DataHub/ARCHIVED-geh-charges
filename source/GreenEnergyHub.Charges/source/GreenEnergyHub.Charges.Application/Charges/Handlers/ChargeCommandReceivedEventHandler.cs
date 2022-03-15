@@ -16,11 +16,11 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
+using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
-using GreenEnergyHub.Charges.Infrastructure.Core.Persistence;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
@@ -87,28 +87,17 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                         await HandleCreateEventAsync(chargeOperationDto).ConfigureAwait(false);
                         break;
                     case OperationType.Update:
-                        if (charge == null)
-                            throw new InvalidOperationException("Could not update charge. Charge not found.");
-                        HandleUpdateEvent(charge, chargeOperationDto);
+                        HandleUpdateEvent(charge!, chargeOperationDto);
                         break;
                     case OperationType.Stop:
-                        if (charge == null)
-                            throw new InvalidOperationException("Could not stop charge. Charge not found.");
-                        charge.Stop(chargeOperationDto.EndDateTime);
+                        charge!.Stop(chargeOperationDto.EndDateTime);
+                        break;
+                    case OperationType.CancelStop:
+                        charge!.CancelStop();
                         break;
                     default:
                         throw new InvalidOperationException("Could not handle charge command.");
                 }
-
-                /*
-                replace the above with something like:
-                charge = operationType switch
-                {
-                    OperationType.Create => await HandleCreateEventAsync(chargeOperationDto).ConfigureAwait(false),
-                    OperationType.Update => HandleUpdateEvent(charge, chargeOperationDto),
-                    OperationType.Stop => StopCharge(charge, chargeOperationDto),
-                    _ => throw new InvalidOperationException("Could not handle charge dto"),
-                };*/
 
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             }
@@ -132,14 +121,21 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             charge.Update(newChargePeriod);
         }
 
-        private static OperationType GetOperationType(ChargeOperationDto chargeOperationDto, Charge? existingCharge)
+        private static OperationType GetOperationType(ChargeOperationDto chargeOperationDto, Charge? charge)
         {
+            if (charge == null)
+            {
+                return OperationType.Create;
+            }
+
             if (chargeOperationDto.StartDateTime == chargeOperationDto.EndDateTime)
             {
                 return OperationType.Stop;
             }
 
-            return existingCharge == null ? OperationType.Create : OperationType.Update;
+            var latestChargePeriod = charge.Periods.OrderByDescending(p => p.StartDateTime).First();
+            return chargeOperationDto.StartDateTime == latestChargePeriod.EndDateTime ?
+                OperationType.CancelStop : OperationType.Update;
         }
 
         private async Task<Charge?> GetChargeAsync(ChargeCommandReceivedEvent chargeCommandReceivedEvent)
@@ -152,13 +148,5 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 chargeOperationDto.Type);
             return await _chargeRepository.GetOrNullAsync(chargeIdentifier).ConfigureAwait(false);
         }
-    }
-
-    // Internal, so far...
-    internal enum OperationType
-    {
-        Create = 0,
-        Update = 1,
-        Stop = 2,
     }
 }

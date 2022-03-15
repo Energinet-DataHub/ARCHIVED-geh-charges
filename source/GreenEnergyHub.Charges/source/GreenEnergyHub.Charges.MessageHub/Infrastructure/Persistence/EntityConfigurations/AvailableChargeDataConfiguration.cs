@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Persistence.EntityCon
             builder.Property(x => x.Resolution);
             builder.Property(x => x.RequestDateTime);
             builder.Property(x => x.AvailableDataReferenceId);
-
+            builder.Property(x => x.DocumentType);
             builder.Ignore(c => c.Points);
             builder.OwnsMany<AvailableChargeDataPoint>("_points", ConfigurePoints);
         }

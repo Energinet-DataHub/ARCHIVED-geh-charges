@@ -153,6 +153,12 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             return this;
         }
 
+        public ChargeCommandBuilder WithEndDateTime(Instant endDateTime)
+        {
+            _endDateTime = endDateTime;
+            return this;
+        }
+
         public ChargeCommandBuilder WithPoint(int position, decimal price)
         {
             _points.Add(new Point(position, price, SystemClock.Instance.GetCurrentInstant()));
