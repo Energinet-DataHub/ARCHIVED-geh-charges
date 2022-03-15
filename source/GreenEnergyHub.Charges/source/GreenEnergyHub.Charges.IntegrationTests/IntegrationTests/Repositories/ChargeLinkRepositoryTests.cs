@@ -107,7 +107,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                         VatClassification.Vat25,
                         false,
                         SystemClock.Instance.GetCurrentInstant(),
-                        SystemClock.Instance.GetCurrentInstant()),
+                        true), // Really true?
                 });
             context.Charges.Add(charge);
 

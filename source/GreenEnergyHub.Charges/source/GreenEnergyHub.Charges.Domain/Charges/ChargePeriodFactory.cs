@@ -13,14 +13,23 @@
 // limitations under the License.
 
 using System;
-using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 
 namespace GreenEnergyHub.Charges.Domain.Charges
 {
     public class ChargePeriodFactory : IChargePeriodFactory
     {
-        public ChargePeriod CreateFromChargeOperationDto(ChargeOperationDto chargeOperationDto)
+        public ChargePeriod CreateUpdateFromChargeOperationDto(ChargeOperationDto chargeOperationDto)
+        {
+            return Create(chargeOperationDto, false);
+        }
+
+        public ChargePeriod CreateStopFromChargeOperationDto(ChargeOperationDto chargeOperationDto)
+        {
+            return Create(chargeOperationDto, true);
+        }
+
+        private static ChargePeriod Create(ChargeOperationDto chargeOperationDto, bool isStop)
         {
             return new ChargePeriod(
                 Guid.NewGuid(),
@@ -29,7 +38,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
                 chargeOperationDto.VatClassification,
                 chargeOperationDto.TransparentInvoicing,
                 chargeOperationDto.StartDateTime,
-                chargeOperationDto.EndDateTime.TimeOrEndDefault());
+                isStop);
         }
     }
 }

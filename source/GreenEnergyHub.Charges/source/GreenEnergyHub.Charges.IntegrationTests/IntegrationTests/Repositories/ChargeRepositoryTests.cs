@@ -176,7 +176,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                         VatClassification.Vat25,
                         true,
                         Instant.FromDateTimeUtc(DateTime.Now.Date.ToUniversalTime()),
-                        InstantHelper.GetEndDefault()),
+                        false),
                 });
 
             return charge;

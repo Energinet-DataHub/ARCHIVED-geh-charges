@@ -63,7 +63,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
             periods.Property(p => p.TransparentInvoicing);
             periods.Property(p => p.VatClassification);
             periods.Property(p => p.StartDateTime);
-            periods.Property(p => p.EndDateTime);
+            periods.Property(p => p.IsStop);
         }
 
         private static void ConfigurePoints(OwnedNavigationBuilder<Charge, Point> points)

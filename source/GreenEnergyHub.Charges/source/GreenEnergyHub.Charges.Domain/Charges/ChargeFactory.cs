@@ -42,7 +42,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             if (owner == null)
                 throw new InvalidOperationException($"Market participant '{command.ChargeOperation.ChargeOwner}' does not exist.");
 
-            var period = _chargePeriodFactory.CreateFromChargeOperationDto(command.ChargeOperation);
+            var period = _chargePeriodFactory.CreateUpdateFromChargeOperationDto(command.ChargeOperation);
 
             return new Charge(
                 Guid.NewGuid(),

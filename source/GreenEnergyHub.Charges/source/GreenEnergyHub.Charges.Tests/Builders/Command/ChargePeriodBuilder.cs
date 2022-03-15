@@ -25,7 +25,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         private const bool TransparentInvoicing = false;
         private string _name = "name";
         private Instant _startDateTime = Instant.MinValue;
-        private Instant _endDateTime = InstantHelper.GetEndDefault();
+        private bool _isStop;
 
         public ChargePeriodBuilder WithName(string name)
         {
@@ -39,9 +39,9 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             return this;
         }
 
-        public ChargePeriodBuilder WithEndDateTime(Instant endDateTime)
+        public ChargePeriodBuilder WithIsStop(bool isStop)
         {
-            _endDateTime = endDateTime;
+            _isStop = isStop;
             return this;
         }
 
@@ -54,7 +54,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
                 VatClassification.Vat25,
                 TransparentInvoicing,
                 _startDateTime,
-                _endDateTime);
+                _isStop);
         }
     }
 }

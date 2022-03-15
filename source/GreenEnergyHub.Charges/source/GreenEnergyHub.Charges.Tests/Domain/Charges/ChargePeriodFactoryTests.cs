@@ -31,7 +31,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             ChargeOperationDto chargeOperationDto,
             ChargePeriodFactory sut)
         {
-            var actual = sut.CreateFromChargeOperationDto(chargeOperationDto);
+            var actual = sut.CreateUpdateFromChargeOperationDto(chargeOperationDto);
 
             actual.Should().NotContainNullsOrEmptyEnumerables();
         }

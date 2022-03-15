@@ -29,7 +29,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             VatClassification vatClassification,
             bool transparentInvoicing,
             Instant startDateTime,
-            Instant endDateTime)
+            bool isStop)
         {
             Id = id;
             Name = name;
@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             VatClassification = vatClassification;
             TransparentInvoicing = transparentInvoicing;
             StartDateTime = startDateTime;
-            EndDateTime = endDateTime;
+            IsStop = isStop;
         }
 
         /// <summary>
@@ -72,22 +72,20 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         public Instant StartDateTime { get; }
 
         /// <summary>
-        /// Valid to, of a charge period.
+        /// Indicates a charge stop.
         /// </summary>
-        public Instant EndDateTime { get; }
+        public bool IsStop { get; }
 
         /// <summary>
-        /// Creates a new period with a fixed end date.
+        /// Creates a new charge stop period.
         /// </summary>
-        /// <param name="endDate"></param>
-        /// <returns>Copy of this charge period with new end date.</returns>
-        /// <exception cref="InvalidOperationException"><paramref name="endDate"/> is before <see cref="StartDateTime"/></exception>
-        public ChargePeriod WithEndDate(Instant endDate)
+        /// <returns>Copy of this charge period IsStop set to True.</returns>
+        public ChargePeriod AsChargeStop()
         {
-            if (endDate <= StartDateTime)
+            /*if (endDate <= StartDateTime)
             {
                 throw new InvalidOperationException("End date must be after start date.");
-            }
+            }*/
 
             return new ChargePeriod(
                 Id,
@@ -96,7 +94,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
                 VatClassification,
                 TransparentInvoicing,
                 StartDateTime,
-                endDate);
+                true);
         }
     }
 }

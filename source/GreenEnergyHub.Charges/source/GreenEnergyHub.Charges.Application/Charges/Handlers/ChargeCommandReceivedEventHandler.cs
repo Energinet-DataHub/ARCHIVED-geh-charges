@@ -107,7 +107,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 
         private void HandleUpdateEvent(Charge charge, ChargeCommand chargeCommand)
         {
-            var newChargePeriod = _chargePeriodFactory.CreateFromChargeOperationDto(chargeCommand.ChargeOperation);
+            var newChargePeriod = _chargePeriodFactory.CreateUpdateFromChargeOperationDto(chargeCommand.ChargeOperation);
             charge.Update(newChargePeriod);
         }
 
@@ -124,8 +124,11 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             }
 
             var latestChargePeriod = charge.Periods.OrderByDescending(p => p.StartDateTime).First();
-            return command.ChargeOperation.StartDateTime == latestChargePeriod.EndDateTime ?
+            var operationType =
+                command.ChargeOperation.StartDateTime == latestChargePeriod.StartDateTime && latestChargePeriod.IsStop ?
                 OperationType.CancelStop : OperationType.Update;
+
+            return operationType;
         }
 
         private async Task<Charge?> GetChargeAsync(ChargeCommand command)

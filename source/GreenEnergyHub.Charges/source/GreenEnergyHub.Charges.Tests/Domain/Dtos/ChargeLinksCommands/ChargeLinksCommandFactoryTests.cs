@@ -77,7 +77,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands
                         VatClassification.Unknown,
                         true,
                         SystemClock.Instance.GetCurrentInstant(),
-                        Instant.FromUtc(9999, 12, 31, 23, 59, 59)),
+                        false),
                 });
 
             chargeRepository

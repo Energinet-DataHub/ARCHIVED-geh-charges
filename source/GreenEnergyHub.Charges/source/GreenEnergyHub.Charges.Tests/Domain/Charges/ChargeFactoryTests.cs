@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
                 .ReturnsAsync(owner);
 
             chargePeriodFactory
-                .Setup(f => f.CreateFromChargeOperationDto(It.IsAny<ChargeOperationDto>()))
+                .Setup(f => f.CreateUpdateFromChargeOperationDto(It.IsAny<ChargeOperationDto>()))
                 .Returns(chargePeriod.Object);
 
             var actual = await sut.CreateFromCommandAsync(chargeCommand);
@@ -68,7 +68,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
                 .ReturnsAsync((MarketParticipant?)null);
 
             chargePeriodFactory
-                .Setup(f => f.CreateFromChargeOperationDto(It.IsAny<ChargeOperationDto>()))
+                .Setup(f => f.CreateUpdateFromChargeOperationDto(It.IsAny<ChargeOperationDto>()))
                 .Returns(chargePeriod.Object);
 
             await Assert.ThrowsAsync<InvalidOperationException>(() => sut.CreateFromCommandAsync(chargeCommand));
