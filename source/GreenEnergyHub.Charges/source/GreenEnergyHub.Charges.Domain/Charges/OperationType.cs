@@ -12,12 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-
-namespace GreenEnergyHub.Charges.Infrastructure.Core.Persistence
+namespace GreenEnergyHub.Charges.Domain.Charges
 {
-    public interface IUnitOfWork
+    public enum OperationType
     {
-        Task SaveChangesAsync();
+        Create = 0,
+        Update = 1,
+        Stop = 2,
+        CancelStop = 3,
     }
 }

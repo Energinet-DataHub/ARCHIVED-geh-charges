@@ -75,5 +75,28 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         /// Valid to, of a charge period.
         /// </summary>
         public Instant EndDateTime { get; }
+
+        /// <summary>
+        /// Creates a new period with a fixed end date.
+        /// </summary>
+        /// <param name="endDate"></param>
+        /// <returns>Copy of this charge period with new end date.</returns>
+        /// <exception cref="InvalidOperationException"><paramref name="endDate"/> is before <see cref="StartDateTime"/></exception>
+        public ChargePeriod WithEndDate(Instant endDate)
+        {
+            if (endDate <= StartDateTime)
+            {
+                throw new InvalidOperationException("End date must be after start date.");
+            }
+
+            return new ChargePeriod(
+                Id,
+                Name,
+                Description,
+                VatClassification,
+                TransparentInvoicing,
+                StartDateTime,
+                endDate);
+        }
     }
 }

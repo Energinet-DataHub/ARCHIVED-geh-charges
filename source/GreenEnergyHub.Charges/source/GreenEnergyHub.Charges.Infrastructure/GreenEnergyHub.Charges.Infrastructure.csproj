@@ -27,15 +27,20 @@ limitations under the License.
     <ItemGroup>
       <ProjectReference Include="..\GreenEnergyHub.Charges.Application\GreenEnergyHub.Charges.Application.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.Domain\GreenEnergyHub.Charges.Domain.csproj" />
+      <ProjectReference Include="..\GreenEnergyHub.Charges.Infrastructure.Core\GreenEnergyHub.Charges.Infrastructure.Core.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Energinet.DataHub.Core.Schemas" Version="1.0.8" />
+      <PackageReference Include="Energinet.DataHub.Core.Schemas" Version="1.0.9" />
       <PackageReference Include="Energinet.DataHub.Core.Messaging.Protobuf" Version="1.1.3" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.13" />
       <PackageReference Include="Google.Protobuf" Version="3.19.4" />
       <PackageReference Include="Grpc.Tools" Version="2.43.0" PrivateAssets="All" />
       <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.354">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+      <PackageReference Update="Microsoft.VisualStudio.Threading.Analyzers" Version="17.1.46">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>

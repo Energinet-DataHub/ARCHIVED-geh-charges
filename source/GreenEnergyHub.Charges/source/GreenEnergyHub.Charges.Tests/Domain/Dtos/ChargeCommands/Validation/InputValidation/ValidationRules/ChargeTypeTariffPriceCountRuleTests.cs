@@ -31,6 +31,14 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
     [UnitTest]
     public class ChargeTypeTariffPriceCountRuleTests
     {
+        [Fact]
+        public void IsValid_WhenPointsCountIsZero_IsTrue()
+        {
+            var chargeCommand = new ChargeCommandBuilder().WithChargeType(ChargeType.Tariff).Build();
+            var sut = new ChargeTypeTariffPriceCountRule(chargeCommand);
+            sut.IsValid.Should().BeTrue();
+        }
+
         [Theory]
         [InlineAutoMoqData(1, false)]
         [InlineAutoMoqData(23, false)]
@@ -53,7 +61,6 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         }
 
         [Theory]
-        [InlineAutoMoqData(0, false)]
         [InlineAutoMoqData(1, true)]
         [InlineAutoMoqData(2, false)]
         [InlineAutoMoqData(24, false)]
@@ -77,14 +84,34 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         }
 
         [Theory]
-        [InlineAutoMoqData(0, false)]
+        [InlineAutoMoqData(1, true)]
+        [InlineAutoMoqData(2, false)]
+        public void IsValid_WhenP1MAnd1PricePoint_IsTrue(
+            int priceCount,
+            bool expected,
+            ChargeCommandBuilder builder)
+        {
+            // Arrange
+            var chargeCommand = builder
+                .WithChargeType(ChargeType.Tariff)
+                .WithResolution(Resolution.P1M)
+                .WithPointWithXNumberOfPrices(priceCount).Build();
+
+            // Act
+            var sut = new ChargeTypeTariffPriceCountRule(chargeCommand);
+
+            // Assert
+            sut.IsValid.Should().Be(expected);
+        }
+
+        [Theory]
         [InlineAutoMoqData(1, false)]
         [InlineAutoMoqData(2, false)]
         [InlineAutoMoqData(24, false)]
         [InlineAutoMoqData(95, false)]
         [InlineAutoMoqData(96, true)]
         [InlineAutoMoqData(97, false)]
-        public void IsValid_WhenPT1HAnd96PricePoints_IsTrue(
+        public void IsValid_WhenPT15MAnd96PricePoints_IsTrue(
             int priceCount,
             bool expected,
             ChargeCommandBuilder builder)
@@ -117,13 +144,16 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [InlineAutoMoqData(Resolution.Unknown)]
-        [InlineAutoMoqData(Resolution.P1M)]
         public void IsValid_WhenTariffAndUnknownResolutionType_Throws(
             Resolution resolution,
             ChargeCommandBuilder builder)
         {
             // Arrange
-            var chargeCommand = builder.WithChargeType(ChargeType.Tariff).WithResolution(resolution).Build();
+            var chargeCommand = builder
+                .WithChargeType(ChargeType.Tariff)
+                .WithResolution(resolution)
+                .WithPointWithXNumberOfPrices(24)
+                .Build();
             var chargeTypeTariffPriceCountRule = new ChargeTypeTariffPriceCountRule(chargeCommand);
 
             // Act

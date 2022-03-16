@@ -14,6 +14,7 @@
 
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Core.Messaging.Transport;
+using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.Core.InternalMessaging;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using Microsoft.Extensions.DependencyInjection;
@@ -55,7 +56,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registr
         }
 
         /// <summary>
-        /// Register services required to resolve a <see cref="IMessageDispatcher{TInboundMessage}"/>.
+        /// Register services required to resolve a <see cref="IMessageDispatcher{TOutboundMessage}"/>.
         /// Which is used when sending messages out of the Charges domain.
         /// </summary>
         public MessagingRegistrator AddExternalMessageDispatcher<TOutboundMessage>(

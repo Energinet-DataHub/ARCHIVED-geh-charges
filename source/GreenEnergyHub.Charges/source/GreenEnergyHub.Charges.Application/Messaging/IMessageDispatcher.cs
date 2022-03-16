@@ -12,25 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.Messaging.Transport;
 
-namespace GreenEnergyHub.Charges.Domain.Charges
+namespace GreenEnergyHub.Charges.Application.Messaging
 {
-    /// <summary>
-    /// Contract defining the capabilities of the infrastructure component facilitating interaction with the charges data store.
-    /// </summary>
-    public interface IChargeRepository
+    public interface IMessageDispatcher<in TOutboundMessage>
+        where TOutboundMessage : IOutboundMessage
     {
-        Task AddAsync(Charge charge);
-
-        Task<Charge> GetAsync(ChargeIdentifier chargeIdentifier);
-
-        Task<Charge> GetAsync(Guid id);
-
-        Task<IReadOnlyCollection<Charge>> GetAsync(IReadOnlyCollection<Guid> ids);
-
-        Task<Charge?> GetOrNullAsync(ChargeIdentifier chargeIdentifier);
+        public Task DispatchAsync(TOutboundMessage message, CancellationToken cancellationToken = default);
     }
 }

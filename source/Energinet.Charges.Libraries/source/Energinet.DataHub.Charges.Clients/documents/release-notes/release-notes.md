@@ -1,5 +1,13 @@
 # Energinet.DataHub.Charges.Clients Release notes
 
+## Version 2.0.4
+
+Updated Energinet.DataHub.Core NuGet packages
+
+## Version 2.0.3
+
+Updated NuGet packages
+
 ## Version 2.0.2
 
 `IChargeLinksClient` Charges.Clients exposes `ChargeLinkV1Dto`
@@ -16,7 +24,7 @@ Other attributes of actors must be read from the actor register.
 
 ## Version 1.0.25
 
-Updated Nuget packages
+Updated NuGet packages
 
 ## Version 1.0.24
 
@@ -24,7 +32,7 @@ Removed local settings to the unused resources earlier used to request the creat
 
 ## Version 1.0.23
 
-Updated Nuget packages
+Updated NuGet packages
 
 ## Version 1.0.22
 
