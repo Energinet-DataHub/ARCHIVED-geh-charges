@@ -99,10 +99,11 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                         throw new InvalidOperationException("Could not handle charge command.");
                 }
 
+                // Todo: Can it be moved out of foreach?
+                //  - maybe if we are allowed to reject all operations when one operation doesn't pass validation?
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             }
 
-            // Todo: Change to a accept list of operations? - and only for those not rejected
             await _chargeCommandReceiptService.AcceptAsync(commandReceivedEvent.Command).ConfigureAwait(false);
         }
 
