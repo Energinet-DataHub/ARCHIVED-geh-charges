@@ -27,7 +27,6 @@ The following validation rules are currently implemented in the charge domain.
 |VR.509|The charge price must be plausible (i.e. value less than 1.000.000)|E90|All|N/A|
 |VR.531|The occurrence of a charge is mandatory|E0H|All|N/A|
 |VR.532|The owner of a charge is mandatory|E0H|All|N/A|
-|VR.630|The VAT entitlement for a charge cannot be updated|D14|Tariff|N/A|
 |VR.679*|Charge do not exist|E0I|N/A|X|
 |VR.902-1*|Stop charge is not yet implemented|D13|All|N/A|
 |VR.902-2*|Update and stop charge link is not yet implemented|D13|N/A|X|
