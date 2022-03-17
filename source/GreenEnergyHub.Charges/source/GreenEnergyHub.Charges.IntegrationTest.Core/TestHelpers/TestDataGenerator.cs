@@ -25,7 +25,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
 
         public static void GenerateDataForIntegrationTests(ChargesFunctionAppFixture fixture)
         {
-            var dbContext = fixture.DatabaseManager.CreateDbContext();
+            using var dbContext = fixture.DatabaseManager.CreateDbContext();
 
             var testActorId = new Guid(TestActorId);
             var marketParticipant = dbContext.MarketParticipants.FirstOrDefault(x => x.Id == testActorId);
