@@ -33,7 +33,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Authentication
     public class JwtTokenWrapperMiddleware : IFunctionsWorkerMiddleware
     {
         private readonly JwtTokenMiddleware _jwtTokenMiddleware;
-        private readonly List<string> _functionNamesToExclude = new() { "HealthStatus", "SynchronizeFromMarketParticipantRegistry" };
+
+        // Health check endpoints must allow anonymous access so we can use them with Azure monitoring:
+        // https://docs.microsoft.com/en-us/azure/app-service/monitor-instances-health-check#authentication-and-security
+        private readonly List<string> _functionNamesToExclude = new() { "HealthCheck", "HealthStatus", "SynchronizeFromMarketParticipantRegistry" };
 
         public JwtTokenWrapperMiddleware(JwtTokenMiddleware jwtTokenMiddleware)
         {
