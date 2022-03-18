@@ -25,6 +25,7 @@ module "func_functionhost" {
   always_on                                 = true
   health_check_path                         = "/api/monitor/ready"
   health_check_alert_action_group_id        = data.azurerm_key_vault_secret.primary_action_group_id.value
+  health_check_alert_enabled                = var.enable_health_check_alerts
   app_settings                              = {
     # Region: Default Values
     WEBSITE_ENABLE_SYNC_UPDATE_SITE                                 = true

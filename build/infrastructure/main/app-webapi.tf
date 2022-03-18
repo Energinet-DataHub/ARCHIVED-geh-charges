@@ -24,6 +24,7 @@ module "app_webapi" {
   application_insights_instrumentation_key  = data.azurerm_key_vault_secret.appi_shared_instrumentation_key.value
   health_check_path                         = "/monitor/ready"
   health_check_alert_action_group_id        = data.azurerm_key_vault_secret.primary_action_group_id.value
+  health_check_alert_enabled                = var.enable_health_check_alerts
 
   app_settings = {
     APPINSIGHTS_INSTRUMENTATIONKEY = "${data.azurerm_key_vault_secret.appi_shared_instrumentation_key.value}",
