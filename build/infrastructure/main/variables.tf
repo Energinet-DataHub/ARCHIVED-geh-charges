@@ -48,3 +48,8 @@ variable notification_email {
   type          = string
   description   = "Email address to send notifications to"
 }
+
+variable enable_health_check_alerts {
+  type          = bool
+  description   = "Specify if health check alerts for Azure Functions and App Services should be enabled."
+}
