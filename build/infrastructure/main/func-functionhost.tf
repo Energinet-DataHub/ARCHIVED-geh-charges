@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 module "func_functionhost" {
-  source                                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/function-app?ref=5.1.0"
+  source                                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/function-app?ref=5.8.0"
 
   name                                      = "functionhost"
   project_name                              = var.domain_name_short
@@ -23,6 +23,7 @@ module "func_functionhost" {
   app_service_plan_id                       = data.azurerm_key_vault_secret.plan_shared_id.value
   application_insights_instrumentation_key  = data.azurerm_key_vault_secret.appi_shared_instrumentation_key.value
   always_on                                 = true
+  health_check_path                         = "/api/monitor/ready"
   app_settings                              = {
     # Region: Default Values
     WEBSITE_ENABLE_SYNC_UPDATE_SITE                                 = true
@@ -83,6 +84,6 @@ module "func_functionhost" {
     B2C_TENANT_ID                                                   = data.azurerm_key_vault_secret.b2c_tenant_id.value
     BACKEND_SERVICE_APP_ID                                          = data.azurerm_key_vault_secret.backend_service_app_id.value
   }
-  
+
   tags                                      = azurerm_resource_group.this.tags
 }

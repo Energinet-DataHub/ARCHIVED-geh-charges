@@ -83,8 +83,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
             {
                 // Arrange
                 var meteringPointId = RandomString(20);
+                await using var chargeDbContext = Fixture.DatabaseManager.CreateDbContext();
                 var message = CreateServiceBusMessage(
-                    Fixture.DatabaseManager.CreateDbContext(),
+                    chargeDbContext,
                     meteringPointId,
                     meteringPointType,
                     settlementMethod,
