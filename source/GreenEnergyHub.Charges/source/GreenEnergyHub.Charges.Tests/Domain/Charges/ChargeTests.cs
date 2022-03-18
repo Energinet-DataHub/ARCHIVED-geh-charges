@@ -191,6 +191,91 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
         }
 
         [Fact]
+        public void UpdateCharge_NewPeriodStartsBeforeExistingStopDate_SetsNewEndDateForExistingPeriodAndInsertsNewPeriod()
+        {
+            // Arrange
+            var stopDate = InstantHelper.GetTodayPlusDaysAtMidnightUtc(4);
+            var existingPeriod = new ChargePeriodBuilder()
+                .WithName("ExistingPeriod")
+                .WithStartDateTime(InstantHelper.GetTodayAtMidnightUtc())
+                .WithEndDateTime(stopDate)
+                .Build();
+            var stopPeriod = new ChargePeriodBuilder()
+                .WithName("StopPeriod")
+                .WithStartDateTime(stopDate)
+                .WithEndDateTime(stopDate)
+                .Build();
+            var periods = new List<ChargePeriod>() { existingPeriod, stopPeriod };
+            var sut = new ChargeBuilder().WithPeriods(periods).Build();
+            var newPeriodStartDate = InstantHelper.GetTodayPlusDaysAtMidnightUtc(2);
+            var newPeriod = new ChargePeriodBuilder()
+                .WithName("NewPeriod")
+                .WithStartDateTime(newPeriodStartDate)
+                .WithEndDateTime(InstantHelper.GetEndDefault())
+                .Build();
+
+            // Act
+            sut.Update(newPeriod);
+
+            // Assert
+            var actualTimeline = sut.Periods.OrderBy(p => p.StartDateTime).ToList();
+            var actualFirstPeriod = actualTimeline[0];
+            var actualSecondPeriod = actualTimeline[1];
+            var actualStopPeriod = actualTimeline[2];
+            actualTimeline.Count.Should().Be(3);
+            actualFirstPeriod.Name.Should().Be("ExistingPeriod");
+            actualFirstPeriod.EndDateTime.Should().Be(newPeriodStartDate);
+            actualSecondPeriod.Name.Should().Be("NewPeriod");
+            actualSecondPeriod.StartDateTime.Should().Be(newPeriodStartDate);
+            actualSecondPeriod.EndDateTime.Should().Be(stopDate);
+            actualStopPeriod.StartDateTime.Should().Be(stopDate);
+            actualStopPeriod.EndDateTime.Should().Be(stopDate);
+        }
+
+        [Fact]
+        public void UpdateCharge_NewPeriodStartsBeforeExistingStopDate_OverwritesSubsequentsPeriodAndInsertsNewPeriod()
+        {
+            // Arrange
+            var stopDate = InstantHelper.GetTodayPlusDaysAtMidnightUtc(4);
+            var firstPeriod = new ChargePeriodBuilder()
+                .WithName("FirstPeriod")
+                .WithStartDateTime(InstantHelper.GetTodayAtMidnightUtc())
+                .WithEndDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(2))
+                .Build();
+            var secondPeriod = new ChargePeriodBuilder()
+                .WithName("SecondPeriod")
+                .WithStartDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(2))
+                .WithEndDateTime(stopDate)
+                .Build();
+            var stopPeriod = new ChargePeriodBuilder()
+                .WithName("StopPeriod")
+                .WithStartDateTime(stopDate)
+                .WithEndDateTime(stopDate)
+                .Build();
+            var periods = new List<ChargePeriod>() { firstPeriod, secondPeriod, stopPeriod };
+            var sut = new ChargeBuilder().WithPeriods(periods).Build();
+            var newPeriodStartDate = InstantHelper.GetTodayAtMidnightUtc();
+            var newPeriod = new ChargePeriodBuilder()
+                .WithName("NewPeriod")
+                .WithStartDateTime(newPeriodStartDate)
+                .WithEndDateTime(InstantHelper.GetEndDefault())
+                .Build();
+
+            // Act
+            sut.Update(newPeriod);
+
+            // Assert
+            var actualTimeline = sut.Periods.OrderBy(p => p.StartDateTime).ToList();
+            var actualFirstPeriod = actualTimeline[0];
+            var actualStopPeriod = actualTimeline[1];
+            actualTimeline.Count.Should().Be(2);
+            actualFirstPeriod.Name.Should().Be("NewPeriod");
+            actualFirstPeriod.EndDateTime.Should().Be(stopDate);
+            actualStopPeriod.StartDateTime.Should().Be(stopDate);
+            actualStopPeriod.EndDateTime.Should().Be(stopDate);
+        }
+
+        [Fact]
         public void StopCharge_WhenSingleExistingChargePeriod_SetNewEndDate()
         {
             // Arrange
