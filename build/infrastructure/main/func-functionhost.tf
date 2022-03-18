@@ -24,6 +24,7 @@ module "func_functionhost" {
   application_insights_instrumentation_key  = data.azurerm_key_vault_secret.appi_shared_instrumentation_key.value
   always_on                                 = true
   health_check_path                         = "/api/monitor/ready"
+  health_check_alert_action_group_id        = data.azurerm_key_vault_secret.primary_action_group_id.value
   app_settings                              = {
     # Region: Default Values
     WEBSITE_ENABLE_SYNC_UPDATE_SITE                                 = true
