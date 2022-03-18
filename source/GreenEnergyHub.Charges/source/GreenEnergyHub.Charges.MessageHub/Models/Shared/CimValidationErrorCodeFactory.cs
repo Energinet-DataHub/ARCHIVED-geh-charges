@@ -51,7 +51,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.Shared
                 ValidationRuleIdentifier.MeteringPointDoesNotExist => ReasonCode.E10,
                 ValidationRuleIdentifier.ChargeDoesNotExist => ReasonCode.E0I,
                 ValidationRuleIdentifier.ChargeLinkUpdateNotYetSupported => ReasonCode.D13,
-                ValidationRuleIdentifier.StopChargeNotYetSupported => ReasonCode.D13,
                 _ => throw new NotImplementedException(),
             };
         }
