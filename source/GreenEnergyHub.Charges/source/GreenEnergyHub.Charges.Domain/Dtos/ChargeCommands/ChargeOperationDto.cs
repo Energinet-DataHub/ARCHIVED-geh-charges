@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
                 bool transparentInvoicing,
                 VatClassification vatClassification,
                 Instant startDateTime,
-                Instant? endDateTime,
+                OperationType operationType,
                 List<Point> points)
         {
             Points = new List<Point>();
@@ -54,7 +54,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
             TransparentInvoicing = transparentInvoicing;
             VatClassification = vatClassification;
             StartDateTime = startDateTime;
-            EndDateTime = endDateTime;
+            OperationType = operationType;
             Points = points;
         }
 
@@ -83,10 +83,15 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
         /// </summary>
         public Instant StartDateTime { get; }
 
-        /// <summary>
+        /*/// <summary>
         /// Valid to, of a charge price list.
         /// </summary>
-        public Instant? EndDateTime { get; }
+        public Instant? EndDateTime { get; }*/
+
+        /// <summary>
+        /// Type of operation
+        /// </summary>
+        public OperationType OperationType { get; }
 
         public VatClassification VatClassification { get; }
 

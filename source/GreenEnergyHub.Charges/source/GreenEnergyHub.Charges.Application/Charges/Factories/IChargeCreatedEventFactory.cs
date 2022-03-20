@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 
@@ -20,6 +19,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Factories
 {
     public interface IChargeCreatedEventFactory
     {
-        ChargeCreatedEvent Create([NotNull] ChargeCommandAcceptedEvent chargeCommandAcceptedEvent);
+        ChargeCreatedEvent Create(ChargeCommandAcceptedEvent chargeCommandAcceptedEvent);
     }
 }

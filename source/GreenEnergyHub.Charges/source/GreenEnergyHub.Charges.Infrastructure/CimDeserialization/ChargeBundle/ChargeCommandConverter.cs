@@ -107,6 +107,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
             var vatClassification = VatClassification.Unknown;
             var transparentInvoicing = false;
             var taxIndicator = false;
+            var operationType = OperationType.Unknown;
             var points = new List<Point>();
 
             while (await reader.AdvanceAsync().ConfigureAwait(false))
@@ -164,6 +165,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                 {
                     taxIndicator = await reader.ReadValueAsBoolAsync().ConfigureAwait(false);
                 }
+                else if (reader.Is(CimChargeCommandConstants.OperationType))
+                {
+                    var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
+                    operationType = OperationTypeMapper.Map(content);
+                }
                 else if (reader.Is(CimChargeCommandConstants.SeriesPeriod))
                 {
                     var seriesPeriodIntoOperationAsync = await ParseSeriesPeriodIntoOperationAsync(reader, startDateTime, resolution).ConfigureAwait(false);
@@ -190,7 +196,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                 transparentInvoicing,
                 vatClassification,
                 startDateTime,
-                endDateTime,
+                operationType,
                 points);
         }
 

@@ -16,9 +16,10 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 {
     public enum OperationType
     {
-        Create = 0,
-        Update = 1,
-        Stop = 2,
-        CancelStop = 3,
+        Unknown = 0,
+        Create = 1,
+        Update = 2,
+        Stop = 3,
+        CancelStop = 4,
     }
 }

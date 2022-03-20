@@ -12,21 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
-using GreenEnergyHub.Charges.Application;
+using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
-using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using Xunit;
 using Xunit.Categories;
-using ChargeCommandHandler = GreenEnergyHub.Charges.Application.Charges.Handlers.ChargeCommandHandler;
 
 namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 {
@@ -35,9 +31,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
     {
         [Theory]
         [InlineAutoDomainData]
-        public async Task ChangeOfChargesTransactionHandler_WhenCalled_ShouldCallPublisher(
-            [NotNull] [Frozen] Mock<IMessageDispatcher<ChargeCommandReceivedEvent>> localEventPublisher,
-            [NotNull] ChargeCommandHandler sut)
+        public async Task ChargeCommandHandler_WhenCalled_ShouldCallPublisher(
+            [Frozen] Mock<IMessageDispatcher<ChargeCommandReceivedEvent>> localEventPublisher,
+            ChargeCommandHandler sut)
         {
             // Arrange
             var transaction = new ChargeCommandBuilder().Build();

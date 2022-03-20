@@ -151,10 +151,12 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
             [Frozen] Instant stopDate,
-            ChargeCommandReceivedEvent receivedEvent,
+            ChargeCommandBuilder chargeCommandBuilder,
             ChargeCommandReceivedEventHandler sut)
         {
             // Arrange
+            var chargeCommand = chargeCommandBuilder.WithOperationType(OperationType.Stop).Build();
+            var receivedEvent = new ChargeCommandReceivedEvent(InstantHelper.GetNowUtc(), chargeCommand);
             var validationResult = ValidationResult.CreateSuccess();
             SetupValidator(validator, validationResult);
             var periods = CreateValidPeriodsFromOffset(stopDate);

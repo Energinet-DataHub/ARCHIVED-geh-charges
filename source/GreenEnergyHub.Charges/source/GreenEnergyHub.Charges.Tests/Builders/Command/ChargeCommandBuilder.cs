@@ -39,6 +39,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         private ChargeType _chargeType;
         private Resolution _resolution;
         private string _operationId;
+        private OperationType _operationType;
 
         public ChargeCommandBuilder()
         {
@@ -58,6 +59,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             _documentType = DocumentType.RequestUpdateChargeInformation;
             _sender = new MarketParticipantDto { Id = "0", BusinessProcessRole = MarketParticipantRole.EnergySupplier };
             _chargeType = ChargeType.Fee;
+            _operationType = OperationType.Create;
             _points = new List<Point>();
             _resolution = Resolution.PT1H;
         }
@@ -170,6 +172,12 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             return this;
         }
 
+        public ChargeCommandBuilder WithOperationType(OperationType operationType)
+        {
+            _operationType = operationType;
+            return this;
+        }
+
         public ChargeCommandBuilder WithPointWithXNumberOfPrices(int numberOfPrices)
         {
             for (var i = 0; i < numberOfPrices; i++)
@@ -218,7 +226,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
                     true,
                     _vatClassification,
                     _startDateTime,
-                    _endDateTime,
+                    _operationType,
                     _points),
             };
         }

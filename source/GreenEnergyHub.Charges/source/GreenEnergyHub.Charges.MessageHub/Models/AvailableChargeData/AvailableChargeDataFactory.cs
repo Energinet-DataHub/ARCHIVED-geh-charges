@@ -21,6 +21,7 @@ using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
 {
@@ -57,6 +58,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
                             .ToList();
                     var sender = await GetSenderAsync().ConfigureAwait(false);
 
+                    Instant? nullInstant = null!; //TODO: Remove EndDateTime on AvailableChargeData
+
                     result.Add(new AvailableChargeData(
                         sender.MarketParticipantId,
                         sender.BusinessProcessRole,
@@ -71,7 +74,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
                         operation.ChargeName,
                         operation.ChargeDescription,
                         operation.StartDateTime,
-                        operation.EndDateTime.TimeOrEndDefault(),
+                        nullInstant.TimeOrEndDefault(), // TODO: Remove?
                         operation.VatClassification,
                         operation.TaxIndicator,
                         operation.TransparentInvoicing,

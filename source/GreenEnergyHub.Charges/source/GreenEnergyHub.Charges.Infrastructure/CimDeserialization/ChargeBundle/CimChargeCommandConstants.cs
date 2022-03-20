@@ -60,5 +60,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
         internal const string Position = "position";
 
         internal const string Price = "price.amount";
+
+        internal const string OperationType = "process.processOperationType"; // TODO this is just to show the concept, not a decided constant
     }
 }
