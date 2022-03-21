@@ -19,11 +19,6 @@ namespace GreenEnergyHub.Charges.TestCore
 {
     public static class InstantHelper
     {
-        public static Instant GetNowUtc()
-        {
-            return Instant.FromDateTimeUtc(DateTime.Now.ToUniversalTime());
-        }
-
         public static Instant GetEndDefault()
         {
             return Instant.FromUtc(9999, 12, 31, 23, 59, 59);

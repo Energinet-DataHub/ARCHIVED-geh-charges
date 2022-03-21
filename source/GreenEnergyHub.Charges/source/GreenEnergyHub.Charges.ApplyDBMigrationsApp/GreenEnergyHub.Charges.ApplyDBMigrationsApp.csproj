@@ -38,7 +38,7 @@ limitations under the License.
       <EmbeddedResource Include="Scripts\Model\202201281340 Increase OriginalOperationId length.sql" />
       <EmbeddedResource Include="Scripts\Model\202202151610 Move charge periods to ChargePeriod table.sql" />
       <EmbeddedResource Include="Scripts\Model\202203090952 Add DocumentType to AvailableData.sql" />
-      <EmbeddedResource Include="Scripts\Model\202203142145 ChargePeriod migrate EndDateTime to IsStop.sql" />
+      <EmbeddedResource Include="Scripts\Model\202203202145 Migrate ChargePeriods.sql" />
       <EmbeddedResource Include="Scripts\Seed\202201261740 Add default charges owner.sql" />
       <EmbeddedResource Include="Scripts\Seed\202201261741 Add default charges.sql" />
       <EmbeddedResource Include="Scripts\Seed\202201261742 Add default charge links.sql" />

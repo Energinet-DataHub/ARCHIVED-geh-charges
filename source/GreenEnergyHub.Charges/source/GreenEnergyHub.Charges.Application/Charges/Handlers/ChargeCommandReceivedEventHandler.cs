@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Application.Persistence;
@@ -109,7 +108,8 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 
         private void HandleUpdateEvent(Charge charge, ChargeCommand chargeCommand)
         {
-            var newChargePeriod = _chargePeriodFactory.CreateUpdateFromChargeOperationDto(chargeCommand.ChargeOperation);
+            var newChargePeriod = _chargePeriodFactory.CreateFromChargeOperationDto(
+                chargeCommand.ReceivedDateTime, chargeCommand.ChargeOperation);
             charge.Update(newChargePeriod);
         }
 

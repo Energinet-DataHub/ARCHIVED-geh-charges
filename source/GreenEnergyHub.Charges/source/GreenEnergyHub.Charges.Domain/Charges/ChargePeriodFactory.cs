@@ -14,23 +14,17 @@
 
 using System;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Charges
 {
     public class ChargePeriodFactory : IChargePeriodFactory
     {
-        public ChargePeriod CreateUpdateFromChargeOperationDto(ChargeOperationDto chargeOperationDto)
+        public ChargePeriod CreateFromChargeOperationDto(
+            Instant receivedDatetime, ChargeOperationDto chargeOperationDto)
         {
-            return Create(chargeOperationDto, false);
-        }
+            var isStop = chargeOperationDto.OperationType == OperationType.Stop;
 
-        public ChargePeriod CreateStopFromChargeOperationDto(ChargeOperationDto chargeOperationDto)
-        {
-            return Create(chargeOperationDto, true);
-        }
-
-        private static ChargePeriod Create(ChargeOperationDto chargeOperationDto, bool isStop)
-        {
             return new ChargePeriod(
                 Guid.NewGuid(),
                 chargeOperationDto.ChargeName,
@@ -38,6 +32,8 @@ namespace GreenEnergyHub.Charges.Domain.Charges
                 chargeOperationDto.VatClassification,
                 chargeOperationDto.TransparentInvoicing,
                 chargeOperationDto.StartDateTime,
+                receivedDatetime,
+                chargeOperationDto.ReceivedOrder,
                 isStop);
         }
     }

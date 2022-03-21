@@ -26,7 +26,8 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         private readonly List<Point> _points;
         private string _chargeId;
         private Instant _startDateTime;
-        private Instant? _endDateTime;
+        private Instant _receivedDateTime;
+        private int _receivedOrder;
         private VatClassification _vatClassification;
         private bool _taxIndicator;
         private string _owner;
@@ -45,10 +46,9 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         {
             _operationId = "id";
             _chargeId = "some charge id";
-            _startDateTime = SystemClock.Instance.GetCurrentInstant()
-                .Plus(Duration.FromDays(500));
-            _endDateTime = SystemClock.Instance.GetCurrentInstant()
-                .Plus(Duration.FromDays(1000));
+            _startDateTime = SystemClock.Instance.GetCurrentInstant().Plus(Duration.FromDays(500));
+            _receivedDateTime = SystemClock.Instance.GetCurrentInstant();
+            _receivedOrder = 0;
             _vatClassification = VatClassification.Vat25;
             _taxIndicator = false;
             _owner = "owner";
@@ -62,12 +62,6 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             _operationType = OperationType.Create;
             _points = new List<Point>();
             _resolution = Resolution.PT1H;
-        }
-
-        public ChargeCommandBuilder WithEndDateTimeAsNull()
-        {
-            _endDateTime = null;
-            return this;
         }
 
         public ChargeCommandBuilder WithDescription(string description)
@@ -160,9 +154,9 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             return this;
         }
 
-        public ChargeCommandBuilder WithEndDateTime(Instant endDateTime)
+        public ChargeCommandBuilder WithReceivedDateTime(Instant receivedDateTime)
         {
-            _endDateTime = endDateTime;
+            _receivedDateTime = receivedDateTime;
             return this;
         }
 
@@ -199,6 +193,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         {
             return new()
             {
+                ReceivedDateTime = _receivedDateTime,
                 Document = new DocumentDto
                 {
                     Id = _documentId,
@@ -226,6 +221,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
                     true,
                     _vatClassification,
                     _startDateTime,
+                    _receivedOrder,
                     _operationType,
                     _points),
             };

@@ -47,7 +47,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
         {
             var chargeOperationsAsync = await ParseChargeOperationsAsync(reader).ConfigureAwait(false);
             var chargeCommands = chargeOperationsAsync
-                .Select(chargeOperationDto => new ChargeCommand { Document = document, ChargeOperation = chargeOperationDto })
+                .Select(chargeOperationDto => new ChargeCommand
+                {
+                    ReceivedDateTime = SystemClock.Instance.GetCurrentInstant(),
+                    Document = document,
+                    ChargeOperation = chargeOperationDto,
+                })
                 .ToList();
 
             return new ChargeCommandBundle(chargeCommands);
@@ -108,10 +113,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
             var transparentInvoicing = false;
             var taxIndicator = false;
             var operationType = OperationType.Unknown;
+            var receivedOrder = 0;
             var points = new List<Point>();
 
             while (await reader.AdvanceAsync().ConfigureAwait(false))
             {
+                receivedOrder++;
+
                 if (reader.Is(CimChargeCommandConstants.ChargeOwner))
                 {
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
@@ -196,6 +204,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                 transparentInvoicing,
                 vatClassification,
                 startDateTime,
+                receivedOrder,
                 operationType,
                 points);
         }

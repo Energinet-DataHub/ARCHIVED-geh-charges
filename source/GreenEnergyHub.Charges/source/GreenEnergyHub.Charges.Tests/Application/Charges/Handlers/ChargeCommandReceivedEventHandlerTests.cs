@@ -134,7 +134,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                 .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(charge);
             chargePeriodFactory
-                .Setup(r => r.CreateUpdateFromChargeOperationDto(It.IsAny<ChargeOperationDto>()))
+                .Setup(r => r.CreateFromChargeOperationDto(It.IsAny<Instant>(), It.IsAny<ChargeOperationDto>()))
                 .Returns(newPeriod);
 
             // Act
@@ -156,7 +156,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         {
             // Arrange
             var chargeCommand = chargeCommandBuilder.WithOperationType(OperationType.Stop).Build();
-            var receivedEvent = new ChargeCommandReceivedEvent(InstantHelper.GetNowUtc(), chargeCommand);
+            var receivedEvent = new ChargeCommandReceivedEvent(SystemClock.Instance.GetCurrentInstant(), chargeCommand);
             var validationResult = ValidationResult.CreateSuccess();
             SetupValidator(validator, validationResult);
             var periods = CreateValidPeriodsFromOffset(stopDate);
@@ -167,15 +167,18 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                 .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(charge);
             chargePeriodFactory
-                .Setup(r => r.CreateUpdateFromChargeOperationDto(It.IsAny<ChargeOperationDto>()))
+                .Setup(r => r.CreateFromChargeOperationDto(It.IsAny<Instant>(), It.IsAny<ChargeOperationDto>()))
                 .Returns(newPeriod);
 
             // Act
             await sut.HandleAsync(receivedEvent);
 
             // Assert
-            charge.Periods.Count.Should().Be(2);
-            var actual = charge.Periods.OrderByDescending(p => p.StartDateTime).First();
+            charge.Periods.Count.Should().Be(4);
+            var actual = charge.Periods
+                .OrderByDescending(p => p.ReceivedDateTime)
+                .ThenByDescending(p => p.ReceivedOrder)
+                .First();
             // actual.EndDateTime.Should().Be(stopDate);
             actual.IsStop.Should().Be(true);
         }
@@ -193,7 +196,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             SetupValidator(validator, validationResult);
             var chargeCommand = new ChargeCommandBuilder()
                 .WithStartDateTime(InstantHelper.GetTomorrowAtMidnightUtc())
-                .WithEndDateTime(InstantHelper.GetEndDefault())
+                .WithOperationType(OperationType.CancelStop)
+                /*.WithEndDateTime(InstantHelper.GetEndDefault())*/
                 .Build();
             var receivedEvent = new ChargeCommandReceivedEvent(InstantHelper.GetTodayAtMidnightUtc(), chargeCommand);
             var periods = new List<ChargePeriod>
@@ -208,7 +212,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                 .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(charge);
             chargePeriodFactory
-                .Setup(r => r.CreateUpdateFromChargeOperationDto(It.IsAny<ChargeOperationDto>()))
+                .Setup(r => r.CreateFromChargeOperationDto(It.IsAny<Instant>(), It.IsAny<ChargeOperationDto>()))
                 .Returns(newPeriod);
 
             // Act
@@ -216,7 +220,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 
             // Assert
             charge.Periods.Count.Should().Be(1);
-            var actual = charge.Periods.OrderByDescending(p => p.StartDateTime).First();
+            var actual = charge.Periods
+                .OrderByDescending(p => p.ReceivedDateTime)
+                .ThenByDescending(p => p.ReceivedOrder)
+                .First();
             // actual.EndDateTime.Should().Be(InstantHelper.GetEndDefault());
             actual.IsStop.Should().Be(false);
         }

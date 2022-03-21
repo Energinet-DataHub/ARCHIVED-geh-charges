@@ -77,6 +77,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands
                         VatClassification.Unknown,
                         true,
                         SystemClock.Instance.GetCurrentInstant(),
+                        SystemClock.Instance.GetCurrentInstant(),
+                        0,
                         false),
                 });
 

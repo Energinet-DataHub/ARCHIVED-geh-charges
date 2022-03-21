@@ -23,6 +23,7 @@ using GreenEnergyHub.Charges.Tests.Builders.Testables;
 using GreenEnergyHub.TestHelpers;
 using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
 using Moq;
+using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
@@ -46,7 +47,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
                 .ReturnsAsync(owner);
 
             chargePeriodFactory
-                .Setup(f => f.CreateUpdateFromChargeOperationDto(It.IsAny<ChargeOperationDto>()))
+                .Setup(f => f.CreateFromChargeOperationDto(It.IsAny<Instant>(), It.IsAny<ChargeOperationDto>()))
                 .Returns(chargePeriod.Object);
 
             var actual = await sut.CreateFromCommandAsync(chargeCommand);
@@ -68,7 +69,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
                 .ReturnsAsync((MarketParticipant?)null);
 
             chargePeriodFactory
-                .Setup(f => f.CreateUpdateFromChargeOperationDto(It.IsAny<ChargeOperationDto>()))
+                .Setup(f => f.CreateFromChargeOperationDto(It.IsAny<Instant>(), It.IsAny<ChargeOperationDto>()))
                 .Returns(chargePeriod.Object);
 
             await Assert.ThrowsAsync<InvalidOperationException>(() => sut.CreateFromCommandAsync(chargeCommand));

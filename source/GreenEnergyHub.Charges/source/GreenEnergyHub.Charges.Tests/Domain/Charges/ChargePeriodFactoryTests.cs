@@ -15,8 +15,10 @@
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.TestHelpers;
 using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
+using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
@@ -31,7 +33,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             ChargeOperationDto chargeOperationDto,
             ChargePeriodFactory sut)
         {
-            var actual = sut.CreateUpdateFromChargeOperationDto(chargeOperationDto);
+            var actual = sut.CreateFromChargeOperationDto(SystemClock.Instance.GetCurrentInstant(), chargeOperationDto);
 
             actual.Should().NotContainNullsOrEmptyEnumerables();
         }

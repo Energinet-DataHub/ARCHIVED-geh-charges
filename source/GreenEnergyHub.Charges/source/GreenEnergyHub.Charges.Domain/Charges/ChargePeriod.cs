@@ -29,6 +29,8 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             VatClassification vatClassification,
             bool transparentInvoicing,
             Instant startDateTime,
+            Instant receivedDateTime,
+            int receivedOrder,
             bool isStop)
         {
             Id = id;
@@ -37,6 +39,8 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             VatClassification = vatClassification;
             TransparentInvoicing = transparentInvoicing;
             StartDateTime = startDateTime;
+            ReceivedDateTime = receivedDateTime;
+            ReceivedOrder = receivedOrder;
             IsStop = isStop;
         }
 
@@ -72,6 +76,16 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         public Instant StartDateTime { get; }
 
         /// <summary>
+        /// Received date and time, used for ordering periods together with ReceivedOrder
+        /// </summary>
+        public Instant ReceivedDateTime { get; }
+
+        /// <summary>
+        /// Order of period when received in bundle, used for ordering periods together with ReceivedDateTime
+        /// </summary>
+        public int ReceivedOrder { get; }
+
+        /// <summary>
         /// Indicates a charge stop.
         /// </summary>
         public bool IsStop { get; }
@@ -94,7 +108,27 @@ namespace GreenEnergyHub.Charges.Domain.Charges
                 VatClassification,
                 TransparentInvoicing,
                 StartDateTime,
+                ReceivedDateTime,
+                ReceivedOrder,
                 true);
+        }
+
+        /// <summary>
+        /// Creates a new charge period.
+        /// </summary>
+        /// <returns>Copy of this charge period with IsStop set to False.</returns>
+        public ChargePeriod AsNewPeriod()
+        {
+            return new ChargePeriod(
+                Id,
+                Name,
+                Description,
+                VatClassification,
+                TransparentInvoicing,
+                StartDateTime,
+                ReceivedDateTime,
+                ReceivedOrder,
+                false);
         }
     }
 }

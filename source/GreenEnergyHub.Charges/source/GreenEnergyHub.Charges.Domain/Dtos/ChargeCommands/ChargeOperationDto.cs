@@ -39,6 +39,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
                 bool transparentInvoicing,
                 VatClassification vatClassification,
                 Instant startDateTime,
+                int receivedOrder,
                 OperationType operationType,
                 List<Point> points)
         {
@@ -54,6 +55,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
             TransparentInvoicing = transparentInvoicing;
             VatClassification = vatClassification;
             StartDateTime = startDateTime;
+            ReceivedOrder = receivedOrder;
             OperationType = operationType;
             Points = points;
         }
@@ -82,6 +84,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
         /// Valid from, of a charge price list. Also known as Effective Date.
         /// </summary>
         public Instant StartDateTime { get; }
+
+        public int ReceivedOrder { get; }
 
         /*/// <summary>
         /// Valid to, of a charge price list.

@@ -15,7 +15,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using GreenEnergyHub.Charges.Core.DateTime;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Charges
@@ -125,10 +124,26 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 
         public void CancelStop()
         {
+            var stopPeriod = GetOrderedPeriods().SingleOrDefault(p => p.IsStop);
+
+            if (stopPeriod == null)
+            {
+                throw new InvalidOperationException("Cannot cancel charge stop. No stop period exists on charge.");
+            }
+
+            var newLatestPeriod = stopPeriod.AsNewPeriod();
+            _periods.Remove(stopPeriod);
+            _periods.Add(newLatestPeriod);
+
             /*var oldLatestPeriod = _periods.OrderByDescending(p => p.StartDateTime).First();
             var newLatestPeriod = oldLatestPeriod.AsChargeStop(InstantExtensions.GetEndDefault());
             _periods.Remove(oldLatestPeriod);
             _periods.Add(newLatestPeriod);*/
+        }
+
+        private IOrderedEnumerable<ChargePeriod> GetOrderedPeriods()
+        {
+            return _periods.OrderByDescending(p => p.ReceivedDateTime).ThenByDescending(p => p.ReceivedOrder);
         }
 
         /*private void StopExistingPeriod(Instant stopDate)

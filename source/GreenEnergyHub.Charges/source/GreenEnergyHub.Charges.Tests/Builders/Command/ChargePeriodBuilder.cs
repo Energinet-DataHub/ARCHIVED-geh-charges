@@ -24,6 +24,8 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         private const bool TransparentInvoicing = false;
         private string _name = "name";
         private Instant _startDateTime = Instant.MinValue;
+        private Instant _receivedDateTime = SystemClock.Instance.GetCurrentInstant();
+        private int _receivedOrder;
         private bool _isStop;
 
         public ChargePeriodBuilder WithName(string name)
@@ -35,6 +37,18 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         public ChargePeriodBuilder WithStartDateTime(Instant startDateTime)
         {
             _startDateTime = startDateTime;
+            return this;
+        }
+
+        public ChargePeriodBuilder WithReceivedDateTime(Instant receivedDateTime)
+        {
+            _receivedDateTime = receivedDateTime;
+            return this;
+        }
+
+        public ChargePeriodBuilder WithReceivedOrder(int receivedOrder)
+        {
+            _receivedOrder = receivedOrder;
             return this;
         }
 
@@ -53,6 +67,8 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
                 VatClassification.Vat25,
                 TransparentInvoicing,
                 _startDateTime,
+                _receivedDateTime,
+                _receivedOrder,
                 _isStop);
         }
     }

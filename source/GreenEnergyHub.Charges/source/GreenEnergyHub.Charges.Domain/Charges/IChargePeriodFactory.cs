@@ -13,13 +13,12 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Charges
 {
     public interface IChargePeriodFactory
     {
-        ChargePeriod CreateUpdateFromChargeOperationDto(ChargeOperationDto chargeOperationDto);
-
-        ChargePeriod CreateStopFromChargeOperationDto(ChargeOperationDto chargeOperationDto);
+        ChargePeriod CreateFromChargeOperationDto(Instant receivedDatetime, ChargeOperationDto chargeOperationDto);
     }
 }
