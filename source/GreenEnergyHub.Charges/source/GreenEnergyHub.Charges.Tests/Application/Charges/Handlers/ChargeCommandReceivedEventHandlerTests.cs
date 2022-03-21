@@ -45,12 +45,13 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             [Frozen] Mock<IChargeCommandReceiptService> receiptService,
             [Frozen] Mock<Charge> charge,
             [Frozen] Mock<IChargeFactory> chargeFactory,
-            ChargeCommandReceivedEvent receivedEvent,
+            ChargeCommandBuilder chargeCommandBuilder,
             ChargeCommandReceivedEventHandler sut)
         {
             // Arrange
-            var validationResult = ValidationResult.CreateSuccess();
-            SetupValidator(validator, validationResult);
+            var chargeCommand = chargeCommandBuilder.WithOperationType(OperationType.Create).Build();
+            var receivedEvent = new ChargeCommandReceivedEvent(SystemClock.Instance.GetCurrentInstant(), chargeCommand);
+            SetupValidator(validator, ValidationResult.CreateSuccess());
 
             var stored = false;
             chargeRepository
@@ -118,12 +119,13 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             [Frozen] Mock<IValidator<ChargeCommand>> validator,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
-            ChargeCommandReceivedEvent receivedEvent,
+            ChargeCommandBuilder chargeCommandBuilder,
             ChargeCommandReceivedEventHandler sut)
         {
             // Arrange
-            var validationResult = ValidationResult.CreateSuccess();
-            SetupValidator(validator, validationResult);
+            var chargeCommand = chargeCommandBuilder.WithOperationType(OperationType.Update).Build();
+            var receivedEvent = new ChargeCommandReceivedEvent(SystemClock.Instance.GetCurrentInstant(), chargeCommand);
+            SetupValidator(validator, ValidationResult.CreateSuccess());
             var periods = CreateValidPeriods(3);
             var charge = CreateValidCharge(periods);
             var newPeriod = new ChargePeriodBuilder()
@@ -141,7 +143,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             await sut.HandleAsync(receivedEvent);
 
             // Assert
-            charge.Periods.Count.Should().Be(2);
+            charge.Periods.Count.Should().Be(4);
         }
 
         [Theory]

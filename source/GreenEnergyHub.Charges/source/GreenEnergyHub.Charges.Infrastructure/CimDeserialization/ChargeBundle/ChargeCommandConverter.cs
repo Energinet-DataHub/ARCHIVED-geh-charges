@@ -108,7 +108,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
             var description = string.Empty;
             var resolution = Resolution.Unknown;
             Instant startDateTime = default;
-            Instant? endDateTime = null;
+            /*Instant? endDateTime = null;*/
             var vatClassification = VatClassification.Unknown;
             var transparentInvoicing = false;
             var taxIndicator = false;
@@ -156,10 +156,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                 {
                     startDateTime = await reader.ReadValueAsNodaTimeAsync().ConfigureAwait(false);
                 }
-                else if (reader.Is(CimChargeCommandConstants.EndDateTime))
+
+                /*else if (reader.Is(CimChargeCommandConstants.EndDateTime))
                 {
                     endDateTime = await reader.ReadValueAsNodaTimeAsync().ConfigureAwait(false);
-                }
+                }*/
                 else if (reader.Is(CimChargeCommandConstants.VatClassification))
                 {
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
