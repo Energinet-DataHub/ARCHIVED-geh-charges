@@ -102,11 +102,10 @@ namespace GreenEnergyHub.Charges.Domain.Charges
                 throw new InvalidOperationException("Charge update must not have bound end date.");
             }
 
-            var stopPeriod = _periods.FirstOrDefault(p => p.StartDateTime == p.EndDateTime
-                                                          && p.StartDateTime > newChargePeriod.StartDateTime);
-            if (stopPeriod != null)
+            var stopDate = _periods.Max(p => p.EndDateTime);
+            if (stopDate != InstantExtensions.GetEndDefault())
             {
-                newChargePeriod = newChargePeriod.WithEndDate(stopPeriod.StartDateTime);
+                newChargePeriod = newChargePeriod.WithEndDate(stopDate);
             }
 
             if (_periods.Exists(p => p.StartDateTime < newChargePeriod.StartDateTime))
@@ -114,7 +113,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
                 StopExistingPeriod(newChargePeriod.StartDateTime);
             }
 
-            RemoveAllSubsequentPeriodsExceptStop(newChargePeriod.StartDateTime);
+            RemoveAllSubsequentPeriods(newChargePeriod.StartDateTime);
             _periods.Add(newChargePeriod);
         }
 
@@ -131,7 +130,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             }
 
             StopExistingPeriod(stopDate.Value);
-            RemoveAllSubsequentPeriodsExceptStop(stopDate.Value);
+            RemoveAllSubsequentPeriods(stopDate.Value);
         }
 
         public void CancelStop()
@@ -162,9 +161,9 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             _periods.Add(newPreviousPeriod);
         }
 
-        private void RemoveAllSubsequentPeriodsExceptStop(Instant date)
+        private void RemoveAllSubsequentPeriods(Instant date)
         {
-            _periods.RemoveAll(p => p.StartDateTime >= date && p.StartDateTime != p.EndDateTime);
+            _periods.RemoveAll(p => p.StartDateTime >= date);
         }
     }
 }
