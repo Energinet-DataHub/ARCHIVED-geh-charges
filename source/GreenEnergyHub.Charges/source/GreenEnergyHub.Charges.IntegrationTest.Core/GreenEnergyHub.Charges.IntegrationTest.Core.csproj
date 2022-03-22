@@ -89,6 +89,18 @@ limitations under the License.
     <Content Include="TestFiles\Charges\TaxTariffWithPriceDocument.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Remove="TestFiles\Charges\FeeDailyPriceExample.xml" />
+    <Content Include="TestFiles\Charges\FeeMonthlyPriceExample.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Remove="TestFiles\Charges\SubscriptionMonthlyPriceExample.xml" />
+    <Content Include="TestFiles\Charges\SubscriptionMonthlyPriceExample.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Remove="TestFiles\Charges\TariffHourlyPricesExample.xml" />
+    <Content Include="TestFiles\Charges\TariffHourlyPricesExample.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
