@@ -27,10 +27,10 @@ namespace GreenEnergyHub.Charges.Domain.Charges
                 .ThenByDescending(p => p.ReceivedOrder);
         }
 
-        public static ChargePeriod GetValidChargePeriodAsOf(this IEnumerable<ChargePeriod> source, Instant instant)
+        public static ChargePeriod? GetValidChargePeriodAsOf(this IEnumerable<ChargePeriod> source, Instant instant)
         {
             var result = source.Where(charge => charge.StartDateTime <= instant).OrderedByReceivedDateTimeAndOrder();
-            return result.First();
+            return result.FirstOrDefault();
         }
     }
 }

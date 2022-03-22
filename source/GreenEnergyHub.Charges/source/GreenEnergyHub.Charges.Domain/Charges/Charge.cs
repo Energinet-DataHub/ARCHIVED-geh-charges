@@ -15,6 +15,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using GreenEnergyHub.Charges.Core.DateTime;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Charges
 {
@@ -112,6 +114,11 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         public void Stop(ChargePeriod stopChargePeriod)
         {
             if (stopChargePeriod == null) throw new ArgumentNullException(nameof(stopChargePeriod));
+
+            var dayBeforeAtMidnight = stopChargePeriod.StartDateTime.Minus(Duration.FromDays(1));
+            var validChargePeriodAtDayBefore = _periods.GetValidChargePeriodAsOf(dayBeforeAtMidnight);
+            if (validChargePeriodAtDayBefore?.IsStop == true)
+                throw new InvalidOperationException("Cannot stop charge. No period exist on stop date.");
 
             _periods.Add(stopChargePeriod);
             _points.RemoveAll(p => p.Time >= stopChargePeriod.StartDateTime);
