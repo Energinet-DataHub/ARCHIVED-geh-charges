@@ -56,12 +56,14 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
             });
 
             return mergedFile
+                .Replace("{{$senderMarketParticipant}}", "8100000000030")
+                .Replace("{{$receiverMarketParticipant}}", "5790001330552")
                 .Replace("{{$randomCharacters}}", Guid.NewGuid().ToString("n")[..10])
                 .Replace("{{$randomCharactersShort}}", Guid.NewGuid().ToString("n")[..5])
                 .Replace("{{$isoTimestamp}}", now)
                 .Replace("{{$isoTimestampPlusOneMonth}}", inThirtyoneDays.ToString())
                 .Replace("{{$YMDHM_TimestampPlusOneMonth}}", ymdhmTimeInterval)
-                .Replace("ISO8601Timestamp", ymdhmsTimeInterval);
+                .Replace("{{$ISO8601Timestamp}}", ymdhmsTimeInterval);
         }
     }
 }
