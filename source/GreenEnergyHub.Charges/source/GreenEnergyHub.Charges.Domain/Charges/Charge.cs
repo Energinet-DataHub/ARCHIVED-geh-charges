@@ -113,12 +113,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         /// <exception cref="ArgumentNullException"><paramref name="stopChargePeriod"/> is <c>null</c></exception>
         public void Stop(ChargePeriod stopChargePeriod)
         {
-            if (stopChargePeriod == null) throw new ArgumentNullException(nameof(stopChargePeriod));
-
-            var dayBeforeAtMidnight = stopChargePeriod.StartDateTime.Minus(Duration.FromDays(1));
-            var validChargePeriodAtDayBefore = _periods.GetValidChargePeriodAsOf(dayBeforeAtMidnight);
-            if (validChargePeriodAtDayBefore?.IsStop == true)
-                throw new InvalidOperationException("Cannot stop charge. No period exist on stop date.");
+            GuardForInvalidStop(stopChargePeriod);
 
             _periods.Add(stopChargePeriod);
             _points.RemoveAll(p => p.Time >= stopChargePeriod.StartDateTime);
@@ -145,6 +140,20 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             var newLatestPeriod = oldLatestPeriod.AsChargeStop(InstantExtensions.GetEndDefault());
             _periods.Remove(oldLatestPeriod);
             _periods.Add(newLatestPeriod);*/
+        }
+
+        private void GuardForInvalidStop(ChargePeriod stopChargePeriod)
+        {
+            if (stopChargePeriod == null) throw new ArgumentNullException(nameof(stopChargePeriod));
+            if (!_periods.Any()) throw new InvalidOperationException("Cannot stop charge. No periods exists.");
+
+            var previousPeriod = _periods.OrderBy(p => p.StartDateTime)
+                .FirstOrDefault(p => p.StartDateTime < stopChargePeriod.StartDateTime);
+            var dayBeforeAtMidnight = stopChargePeriod.StartDateTime.Minus(Duration.FromDays(1));
+            var validChargePeriodAtDayBefore = _periods.GetValidChargePeriodAsOf(dayBeforeAtMidnight);
+
+            if (!_periods.Any() || validChargePeriodAtDayBefore?.IsStop == true || previousPeriod == null)
+                throw new InvalidOperationException("Cannot stop charge. No period exist on stop date.");
         }
 
         /*private void StopExistingPeriod(Instant newChargePeriod)
