@@ -14,16 +14,23 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Charges
 {
-    public static class ChargePeriodsExtensions
+    public static class ChargePeriodCollectionExtensions
     {
         public static IEnumerable<ChargePeriod> OrderedByReceivedDateTimeAndOrder(this IEnumerable<ChargePeriod> source)
         {
             return source
                 .OrderByDescending(p => p.ReceivedDateTime)
                 .ThenByDescending(p => p.ReceivedOrder);
+        }
+
+        public static ChargePeriod GetValidChargePeriodAsOf(this IEnumerable<ChargePeriod> source, Instant instant)
+        {
+            var result = source.Where(charge => charge.StartDateTime <= instant).OrderedByReceivedDateTimeAndOrder();
+            return result.First();
         }
     }
 }

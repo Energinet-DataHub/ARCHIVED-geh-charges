@@ -114,6 +114,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             if (stopChargePeriod == null) throw new ArgumentNullException(nameof(stopChargePeriod));
 
             _periods.Add(stopChargePeriod);
+            _points.RemoveAll(p => p.Time >= stopChargePeriod.StartDateTime);
 
             /*StopExistingPeriod(newChargePeriod.Value);
             RemoveAllSubsequentPeriods(newChargePeriod.Value);

@@ -101,26 +101,29 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
                 .WithPeriods(CreateThreeExistingPeriods())
                 .Build();
 
-            var newPeriod = new ChargePeriodBuilder()
+            var tomorrowAtMidnightUtc = InstantHelper.GetTomorrowAtMidnightUtc();
+            var newChargePeriod = new ChargePeriodBuilder()
                 .WithName("NewPeriod")
-                .WithStartDateTime(InstantHelper.GetTomorrowAtMidnightUtc())
+                .WithStartDateTime(tomorrowAtMidnightUtc)
                 .Build();
 
             // Act
-            sut.Update(newPeriod);
+            sut.Update(newChargePeriod);
 
             // Assert
             var actualTimeline = sut.Periods.OrderBy(p => p.StartDateTime).ToList();
-            var actualFirstPeriod = actualTimeline[0];
-            var actualSecondPeriod = actualTimeline[1];
+            actualTimeline.Count.Should().Be(4);
 
-            actualTimeline.Count.Should().Be(2);
+            var actualFirstPeriod = actualTimeline[0];
+            /*var actualSecondPeriod = actualTimeline[1];*/
+
             actualFirstPeriod.Name.Should().Be("FirstPeriod");
             actualFirstPeriod.StartDateTime.Should().Be(InstantHelper.GetYesterdayAtMidnightUtc());
             // actualFirstPeriod.EndDateTime.Should().Be(InstantHelper.GetTomorrowAtMidnightUtc());
-            actualSecondPeriod.Name.Should().Be("NewPeriod");
+            /*actualSecondPeriod.Name.Should().Be("NewPeriod");
             actualSecondPeriod.StartDateTime.Should().Be(InstantHelper.GetTomorrowAtMidnightUtc());
-            // actualSecondPeriod.EndDateTime.Should().Be(InstantHelper.GetEndDefault());
+            // actualSecondPeriod.EndDateTime.Should().Be(InstantHelper.GetEndDefault());*/
+            sut.Periods.GetValidChargePeriodAsOf(tomorrowAtMidnightUtc).Name.Should().Be("NewPeriod");
         }
 
         [Fact]
@@ -132,9 +135,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
                 .WithStartDateTime(InstantHelper.GetTodayAtMidnightUtc())
                 .Build();
 
-            var sut = new ChargeBuilder()
-                .WithPeriods(new List<ChargePeriod> { existingPeriod })
-                .Build();
+            var sut = new ChargeBuilder().WithPeriods(new List<ChargePeriod> { existingPeriod }).Build();
 
             var newPeriod = new ChargePeriodBuilder()
                 .WithName("NewPeriod")
@@ -148,10 +149,12 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             var actualTimeline = sut.Periods.OrderBy(p => p.StartDateTime).ToList();
             var actualFirstPeriod = actualTimeline[0];
 
-            actualTimeline.Count.Should().Be(1);
+            actualTimeline.Count.Should().Be(2);
             actualFirstPeriod.Name.Should().Be("NewPeriod");
             actualFirstPeriod.StartDateTime.Should().Be(InstantHelper.GetYesterdayAtMidnightUtc());
             // actualFirstPeriod.EndDateTime.Should().Be(InstantHelper.GetEndDefault());
+            sut.Periods.GetValidChargePeriodAsOf(InstantHelper.GetTodayAtMidnightUtc()).Name.Should().Be("NewPeriod");
+            sut.Periods.GetValidChargePeriodAsOf(InstantHelper.GetYesterdayAtMidnightUtc()).Name.Should().Be("NewPeriod");
         }
 
         [Theory]
@@ -218,12 +221,12 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
         }
 
         [Fact]
-        public void UpdateCharge_NewPeriodStartsBeforeExistingStopDate_OverwritesSubsequentsPeriodAndInsertsNewPeriod()
+        public void UpdateCharge_NewPeriodStartsBeforeExistingStopDate_PreceedesSubsequentsPeriodAndInsertsNewPeriod()
         {
             // Arrange
             var sut = new ChargeBuilder().WithPeriods(BuildStoppedChargePeriods()).Build();
             var newPeriod = new ChargePeriodBuilder()
-                .WithName("New")
+                .WithName("NewPeriod")
                 .WithStartDateTime(InstantHelper.GetTodayAtMidnightUtc())
                 // .WithEndDateTime(InstantHelper.GetEndDefault())
                 .Build();
@@ -232,10 +235,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             sut.Update(newPeriod);
 
             // Assert
-            var actualTimeline = sut.Periods.OrderBy(p => p.StartDateTime).ToList();
-            actualTimeline.Count.Should().Be(1);
-            var actualFirstPeriod = actualTimeline.First();
-            actualFirstPeriod.Name.Should().Be("New");
+            var actualTimeline = sut.Periods.OrderedByReceivedDateTimeAndOrder().ToList();
+            actualTimeline.Count.Should().Be(3);
+            var actualFirstPeriod = sut.Periods.GetValidChargePeriodAsOf(InstantHelper.GetTodayAtMidnightUtc());
+            actualFirstPeriod.Name.Should().Be("NewPeriod");
             actualFirstPeriod.StartDateTime.Should().Be(InstantHelper.GetTodayAtMidnightUtc());
             // actualFirstPeriod.EndDateTime.Should().Be(InstantHelper.GetTodayPlusDaysAtMidnightUtc(4));
         }
@@ -444,6 +447,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
                     .WithName("Second")
                     .WithStartDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(2))
                     // .WithEndDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(4))
+                    .WithIsStop(true)
                     .Build(),
             };
         }
