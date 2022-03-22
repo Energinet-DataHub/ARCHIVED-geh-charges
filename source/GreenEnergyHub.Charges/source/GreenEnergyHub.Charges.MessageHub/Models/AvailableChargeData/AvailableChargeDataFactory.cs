@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Core.DateTime;
@@ -67,6 +68,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
                     .Select(x => new AvailableChargeDataPoint(x.Position, x.Price)).ToList();
 
                 var sender = await GetSenderAsync().ConfigureAwait(false);
+                var operationOrder = input.Command.Charges.ToList().IndexOf(operation);
 
                 result.Add(new AvailableChargeData(
                     sender.MarketParticipantId,
@@ -88,6 +90,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
                     operation.TransparentInvoicing,
                     operation.Resolution,
                     input.Command.Document.Type,
+                    operationOrder,
                     points));
             }
         }

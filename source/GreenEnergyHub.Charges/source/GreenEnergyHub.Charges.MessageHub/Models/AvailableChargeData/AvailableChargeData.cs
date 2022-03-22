@@ -43,6 +43,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
             bool transparentInvoicing,
             Resolution resolution,
             DocumentType documentType,
+            int operationOrder,
             List<AvailableChargeDataPoint> points)
             : base(
                 senderId,
@@ -65,6 +66,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
             TaxIndicator = taxIndicator;
             TransparentInvoicing = transparentInvoicing;
             Resolution = resolution;
+            OperationOrder = operationOrder;
             _points = points;
         }
 
@@ -99,6 +101,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
         public bool TransparentInvoicing { get; }
 
         public Resolution Resolution { get; }
+
+        public int OperationOrder { get; }
 
         private readonly List<AvailableChargeDataPoint> _points;
 

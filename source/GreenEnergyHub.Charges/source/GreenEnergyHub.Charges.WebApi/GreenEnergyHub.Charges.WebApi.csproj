@@ -22,6 +22,7 @@ limitations under the License.
 
   <ItemGroup>
     <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="5.0.1" />
+    <PackageReference Include="Energinet.DataHub.Core.App.Common" Version="2.1.0" />
     <PackageReference Include="Energinet.DataHub.Core.App.Common.Security" Version="2.1.0" />
     <PackageReference Include="Energinet.DataHub.Core.App.WebApp" Version="2.1.0" />
     <PackageReference Include="EntityFrameworkCore.SqlServer.NodaTime" Version="5.0.1" />
