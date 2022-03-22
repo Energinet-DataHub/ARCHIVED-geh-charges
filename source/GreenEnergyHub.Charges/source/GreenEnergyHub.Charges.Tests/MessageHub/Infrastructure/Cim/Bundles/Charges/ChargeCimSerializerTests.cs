@@ -139,9 +139,10 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
 
             for (var i = 1; i <= NoOfChargesInBundle; i++)
             {
+                var order = i - 1;
                 if (includeMasterData)
                 {
-                    charges.Add(GetChargeWithMasterData(i, clock, includePrices));
+                    charges.Add(GetChargeWithMasterData(i, clock, includePrices, order));
                 }
                 else
                 {
@@ -152,7 +153,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
             return charges;
         }
 
-        private AvailableChargeData GetChargeWithMasterData(int no, IClock clock, bool includePrices)
+        private AvailableChargeData GetChargeWithMasterData(int no, IClock clock, bool includePrices, int order)
         {
             var validTo = no % 2 == 0 ?
                 Instant.FromUtc(9999, 12, 31, 23, 59, 59) :
@@ -178,6 +179,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
                 false,
                 GetResolution(no),
                 DocumentType.NotifyPriceList,
+                order,
                 GetPoints(GetNoOfPoints(no, includePrices)));
         }
 
@@ -203,6 +205,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
                 false,
                 GetResolution(no),
                 DocumentType.NotifyPriceList,
+                0,
                 GetPoints(GetNoOfPoints(no, includePrices)));
         }
 

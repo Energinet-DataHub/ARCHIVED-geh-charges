@@ -59,6 +59,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 availableChargeData.TransparentInvoicing,
                 availableChargeData.Resolution,
                 availableChargeData.DocumentType,
+                availableChargeData.OperationOrder,
                 availableChargeData.Points.ToList());
         }
 
