@@ -20,8 +20,17 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
 {
     public interface IChargeLinksRepository
     {
-        Task StoreAsync(IReadOnlyCollection<ChargeLink> chargeLinks);
+        /// <summary>
+        /// Adds the supplied charge link to the context
+        /// </summary>
+        /// <param name="chargeLinks"></param>
+        Task AddRangeAsync(IReadOnlyCollection<ChargeLink> chargeLinks);
 
+        /// <summary>
+        /// Get charge links
+        /// </summary>
+        /// <param name="chargeId"></param>
+        /// <param name="meteringPointId"></param>
         Task<IReadOnlyCollection<ChargeLink>> GetAsync(Guid chargeId, Guid meteringPointId);
     }
 }

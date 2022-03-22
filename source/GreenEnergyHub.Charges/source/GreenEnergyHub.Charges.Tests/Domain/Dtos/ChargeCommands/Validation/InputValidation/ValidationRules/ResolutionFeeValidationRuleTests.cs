@@ -19,6 +19,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidati
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders;
+using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Categories;
@@ -72,8 +73,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [InlineAutoMoqData(Resolution.Unknown, false)]
-        [InlineAutoMoqData(Resolution.P1D, true)]
-        [InlineAutoMoqData(Resolution.P1M, false)]
+        [InlineAutoMoqData(Resolution.P1D, false)]
+        [InlineAutoMoqData(Resolution.P1M, true)]
         [InlineAutoMoqData(Resolution.PT1H, false)]
         [InlineAutoMoqData(Resolution.PT15M, false)]
         public void ResolutionFeeValidationRule_WithFeeType_EqualsExpectedResult(

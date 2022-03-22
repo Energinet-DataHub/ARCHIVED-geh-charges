@@ -177,6 +177,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
                 true,
                 false,
                 GetResolution(no),
+                DocumentType.NotifyPriceList,
                 GetPoints(GetNoOfPoints(no, includePrices)));
         }
 
@@ -201,6 +202,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
                 false,
                 false,
                 GetResolution(no),
+                DocumentType.NotifyPriceList,
                 GetPoints(GetNoOfPoints(no, includePrices)));
         }
 

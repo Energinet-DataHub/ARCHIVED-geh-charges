@@ -24,6 +24,7 @@ using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.MessageHub.Models.Shared;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders;
+using GreenEnergyHub.Charges.Tests.Builders.Command;
 using Xunit;
 using Xunit.Categories;
 
@@ -59,7 +60,6 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 new ResolutionTariffValidationRule(chargeCommand),
                 new SenderIsMandatoryTypeValidationRule(chargeCommand),
                 new StartDateTimeRequiredValidationRule(chargeCommand),
-                new StopChargeNotYetSupportedValidationRule(chargeCommand),
                 new SubscriptionMustHaveSinglePriceRule(chargeCommand),
                 new VatClassificationValidationRule(chargeCommand),
             };

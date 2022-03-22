@@ -22,6 +22,7 @@ using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
+using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
@@ -31,7 +32,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 {
     /// <summary>
-    /// Tests <see cref="ChargeRepository"/> using a database created with squadron.
+    /// Tests <see cref="ChargeRepository"/> using a database.
     /// </summary>
     [IntegrationTest]
     public class ChargeRepositoryTests : IClassFixture<ChargesDatabaseFixture>
@@ -49,16 +50,17 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         }
 
         [Fact]
-        public async Task GetChargeAsync_WhenChargeIsCreated_ThenChargeIsPersisted()
+        public async Task AddAsync_WhenChargeIsValid_ChargeIsAdded()
         {
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-            await SeedDatabaseAsync(chargesDatabaseWriteContext);
+            await GetOrAddMarketParticipantAsync(chargesDatabaseWriteContext);
             var charge = GetValidCharge();
             var sut = new ChargeRepository(chargesDatabaseWriteContext);
 
             // Act
-            await sut.StoreChargeAsync(charge);
+            await sut.AddAsync(charge);
+            await chargesDatabaseWriteContext.SaveChangesAsync();
 
             // Assert
             await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
@@ -75,64 +77,37 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             actual.Periods.Should().NotBeNullOrEmpty();
         }
 
-        [Fact]
-        public async Task CheckIfChargeExistsAsync_WhenChargeIsCreated_ThenChargeExists()
-        {
-            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-
-            // Arrange
-            await SeedDatabaseAsync(chargesDatabaseWriteContext);
-            var charge = GetValidCharge();
-            var sut = new ChargeRepository(chargesDatabaseWriteContext);
-
-            // Act
-            await sut.StoreChargeAsync(charge);
-
-            // Assert
-            await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
-            var actual = chargesDatabaseReadContext.Charges.Any(x =>
-                x.SenderProvidedChargeId == charge.SenderProvidedChargeId &&
-                x.OwnerId == charge.OwnerId &&
-                x.Type == charge.Type);
-
-            actual.Should().BeTrue();
-        }
-
         [Theory]
         [InlineAutoMoqData]
-        public async Task StoreChargeAsync_WhenChargeIsNull_ThrowsArgumentNullException(ChargeRepository sut)
+        public async Task AddAsync_WhenChargeIsNull_ThrowsArgumentNullException(ChargeRepository sut)
         {
             // Arrange
             Charge? charge = null;
 
             // Act / Assert
-            await Assert.ThrowsAsync<ArgumentNullException>(() => sut.StoreChargeAsync(charge!));
+            await Assert.ThrowsAsync<ArgumentNullException>(() => sut.AddAsync(charge!));
         }
 
         [Fact]
-        public async Task GetChargeAsync_WithId_ReturnsCharge()
+        public async Task GetAsync_WithId_ReturnsCharge()
         {
-            await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
-
             // Arrange
-            var sut = new ChargeRepository(chargesDatabaseContext);
-            var charge = GetValidCharge();
-            await sut.StoreChargeAsync(charge);
+            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
+            var charge = await SetupValidCharge(chargesDatabaseWriteContext);
+
             await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
-            var createdCharge = chargesDatabaseReadContext.Charges.First(x =>
-                    x.SenderProvidedChargeId == charge.SenderProvidedChargeId &&
-                    x.OwnerId == charge.OwnerId &&
-                    x.Type == charge.Type);
+            var sut = new ChargeRepository(chargesDatabaseReadContext);
 
             // Act
-            var actual = await sut.GetAsync(createdCharge.Id);
+            var actual = await sut.GetAsync(charge.Id);
 
             // Assert
             actual.Should().NotBeNull();
+            actual.Should().BeEquivalentTo(charge);
         }
 
         [Fact]
-        public async Task GetChargeAsync_ReturnsCharge()
+        public async Task GetAsync_WithChargeIdentifier_ReturnsCharge()
         {
             // Arrange
             await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
@@ -173,6 +148,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             actual.Should().NotBeEmpty();
         }
 
+        private static async Task<Charge> SetupValidCharge(ChargesDatabaseContext chargesDatabaseWriteContext)
+        {
+            await GetOrAddMarketParticipantAsync(chargesDatabaseWriteContext);
+            var charge = GetValidCharge();
+            chargesDatabaseWriteContext.Charges.Add(charge);
+            await chargesDatabaseWriteContext.SaveChangesAsync();
+            return charge;
+        }
+
         private static Charge GetValidCharge()
         {
             var charge = new Charge(
@@ -189,16 +173,16 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                         Guid.NewGuid(),
                         "Name",
                         "description",
-                        VatClassification.Unknown,
+                        VatClassification.Vat25,
                         true,
-                        SystemClock.Instance.GetCurrentInstant(),
-                        Instant.FromUtc(9999, 12, 31, 23, 59, 59)),
+                        Instant.FromDateTimeUtc(DateTime.Now.Date.ToUniversalTime()),
+                        InstantHelper.GetEndDefault()),
                 });
 
             return charge;
         }
 
-        private static async Task SeedDatabaseAsync(ChargesDatabaseContext context)
+        private static async Task GetOrAddMarketParticipantAsync(ChargesDatabaseContext context)
         {
             var marketParticipant = await context
                 .MarketParticipants

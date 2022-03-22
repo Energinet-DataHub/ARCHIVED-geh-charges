@@ -13,9 +13,9 @@
 // limitations under the License.
 
 using Energinet.DataHub.Core.Messaging.MessageTypes.Common;
-using GreenEnergyHub.Charges.Core;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
 {
@@ -28,7 +28,8 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
             string currency,
             Resolution resolution,
             bool taxIndicator,
-            Period chargePeriod)
+            Instant startDateTime,
+            Instant endDateTime)
         {
             ChargeId = chargeId;
             ChargeType = chargeType;
@@ -36,7 +37,8 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
             Currency = currency;
             Resolution = resolution;
             TaxIndicator = taxIndicator;
-            ChargePeriod = chargePeriod;
+            StartDateTime = startDateTime;
+            EndDateTime = endDateTime;
             Transaction = Transaction.NewTransaction();
         }
 
@@ -52,7 +54,9 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
 
         public bool TaxIndicator { get; }
 
-        public Period ChargePeriod { get; }
+        public Instant StartDateTime { get; }
+
+        public Instant EndDateTime { get; }
 
         public Transaction Transaction { get; set; }
     }

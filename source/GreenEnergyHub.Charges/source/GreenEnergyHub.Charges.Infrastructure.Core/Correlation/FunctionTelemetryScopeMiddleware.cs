@@ -14,6 +14,7 @@
 
 using System;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application.Messaging;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.Azure.Functions.Worker;

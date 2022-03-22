@@ -27,6 +27,7 @@ using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders;
+using GreenEnergyHub.Charges.Tests.Builders.Command;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
 using Xunit;
@@ -74,7 +75,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 ChargeLinkDtoBuilder chargeLinkDtoBuilder)
             {
                 // Arrange
-                var context = Fixture.DatabaseManager.CreateDbContext();
+                await using var context = Fixture.DatabaseManager.CreateDbContext();
                 var charge = await context.Charges.FirstAsync();
                 var marketParticipant = await context.MarketParticipants.SingleAsync(mp => mp.Id == charge.OwnerId);
 

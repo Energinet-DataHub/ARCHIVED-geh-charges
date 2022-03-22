@@ -12,20 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using NodaTime;
-
-namespace GreenEnergyHub.Charges.Core
+namespace GreenEnergyHub.Charges.Domain.Charges
 {
-    public class Period
+    public enum OperationType
     {
-        public Period(Instant startDateTime, Instant endDateTime)
-        {
-            StartDateTime = startDateTime;
-            EndDateTime = endDateTime;
-        }
-
-        public Instant StartDateTime { get; }
-
-        public Instant EndDateTime { get; }
+        Create = 0,
+        Update = 1,
+        Stop = 2,
+        CancelStop = 3,
     }
 }

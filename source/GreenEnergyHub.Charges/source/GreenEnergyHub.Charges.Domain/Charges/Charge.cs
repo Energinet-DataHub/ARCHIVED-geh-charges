@@ -14,6 +14,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using GreenEnergyHub.Charges.Core.DateTime;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Charges
 {
@@ -82,5 +85,86 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         public IReadOnlyCollection<Point> Points => _points;
 
         public IReadOnlyCollection<ChargePeriod> Periods => _periods;
+
+        /// <summary>
+        /// Use this method to update the charge periods timeline of a charge upon receiving a charge update request
+        /// Please see the persist charge documentation where the update flow is covered:
+        /// https://github.com/Energinet-DataHub/geh-charges/tree/main/docs/process-flows#persist-charge
+        /// </summary>
+        /// <param name="newChargePeriod">New Charge Period from update charge request</param>
+        /// <exception cref="ArgumentNullException">Throws when <paramref name="newChargePeriod"/> is empty</exception>
+        public void Update(ChargePeriod newChargePeriod)
+        {
+            if (newChargePeriod == null) throw new ArgumentNullException(nameof(newChargePeriod));
+
+            if (newChargePeriod.EndDateTime != InstantExtensions.GetEndDefault())
+            {
+                throw new InvalidOperationException("Charge update must not have bound end date.");
+            }
+
+            var stopDate = _periods.Max(p => p.EndDateTime);
+            if (stopDate != InstantExtensions.GetEndDefault())
+            {
+                newChargePeriod = newChargePeriod.WithEndDate(stopDate);
+            }
+
+            if (_periods.Exists(p => p.StartDateTime < newChargePeriod.StartDateTime))
+            {
+                StopExistingPeriod(newChargePeriod.StartDateTime);
+            }
+
+            RemoveAllSubsequentPeriods(newChargePeriod.StartDateTime);
+            _periods.Add(newChargePeriod);
+        }
+
+        /// <summary>
+        /// Use this method to stop a charge upon receiving a stop charge request
+        /// </summary>
+        /// <param name="stopDate"></param>
+        /// <exception cref="ArgumentNullException"><paramref name="stopDate"/> is <c>null</c></exception>
+        public void Stop(Instant? stopDate)
+        {
+            if (stopDate == null)
+            {
+                throw new ArgumentNullException(nameof(stopDate));
+            }
+
+            StopExistingPeriod(stopDate.Value);
+            RemoveAllSubsequentPeriods(stopDate.Value);
+            _points.RemoveAll(p => p.Time >= stopDate);
+        }
+
+        public void CancelStop()
+        {
+            var oldLatestPeriod = _periods.OrderByDescending(p => p.StartDateTime).First();
+            var newLatestPeriod = oldLatestPeriod.WithEndDate(InstantExtensions.GetEndDefault());
+            _periods.Remove(oldLatestPeriod);
+            _periods.Add(newLatestPeriod);
+        }
+
+        private void StopExistingPeriod(Instant stopDate)
+        {
+            var previousPeriod = _periods
+                .SingleOrDefault(p =>
+                    p.EndDateTime >= stopDate &&
+                    p.StartDateTime < stopDate);
+
+            if (previousPeriod == null)
+            {
+                throw new InvalidOperationException("Cannot stop charge. No period exist on stop date.");
+            }
+
+            // Return if charge already has end date at given stop date
+            if (stopDate == previousPeriod.EndDateTime) return;
+
+            var newPreviousPeriod = previousPeriod.WithEndDate(stopDate);
+            _periods.Remove(previousPeriod);
+            _periods.Add(newPreviousPeriod);
+        }
+
+        private void RemoveAllSubsequentPeriods(Instant date)
+        {
+            _periods.RemoveAll(p => p.StartDateTime >= date);
+        }
     }
 }

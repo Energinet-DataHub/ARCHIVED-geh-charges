@@ -148,7 +148,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
                 "MeteringPoint" + no,
                 no,
                 Instant.FromUtc(2020, 12, 31, 23, 0, 0),
-                validTo);
+                validTo,
+                DocumentType.NotifyBillingMasterData);
         }
     }
 }

@@ -14,6 +14,7 @@
 
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Services;
+using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
@@ -27,17 +28,20 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
         private readonly IChargeLinkFactory _chargeLinkFactory;
         private readonly IChargeLinksRepository _chargeLinksRepository;
         private readonly IValidator<ChargeLinksCommand> _validator;
+        private readonly IUnitOfWork _unitOfWork;
 
         public ChargeLinksReceivedEventHandler(
             IChargeLinksReceiptService chargeLinksReceiptService,
             IChargeLinkFactory chargeLinkFactory,
             IChargeLinksRepository chargeLinksRepository,
-            IValidator<ChargeLinksCommand> validator)
+            IValidator<ChargeLinksCommand> validator,
+            IUnitOfWork unitOfWork)
         {
             _chargeLinksReceiptService = chargeLinksReceiptService;
             _chargeLinkFactory = chargeLinkFactory;
             _chargeLinksRepository = chargeLinksRepository;
             _validator = validator;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task HandleAsync(ChargeLinksReceivedEvent chargeLinksReceivedEvent)
@@ -62,10 +66,12 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
             }
 
             var chargeLinks = await _chargeLinkFactory.CreateAsync(chargeLinksReceivedEvent).ConfigureAwait(false);
-            await _chargeLinksRepository.StoreAsync(chargeLinks).ConfigureAwait(false);
+            await _chargeLinksRepository.AddRangeAsync(chargeLinks).ConfigureAwait(false);
             await _chargeLinksReceiptService
                 .AcceptAsync(chargeLinksReceivedEvent.ChargeLinksCommand)
                 .ConfigureAwait(false);
+
+            await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
         }
     }
 }

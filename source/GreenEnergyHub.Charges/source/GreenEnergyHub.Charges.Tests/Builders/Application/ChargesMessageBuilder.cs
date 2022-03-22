@@ -16,7 +16,7 @@ using System.Collections.Generic;
 using GreenEnergyHub.Charges.Application.Charges.Handlers.Message;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 
-namespace GreenEnergyHub.Charges.Tests.Builders
+namespace GreenEnergyHub.Charges.Tests.Builders.Application
 {
     public class ChargesMessageBuilder
     {

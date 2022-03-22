@@ -17,15 +17,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkReplier;
+using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Contracts;
 using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.CreateDefaultChargeLinksRequests;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
-using GreenEnergyHub.Charges.Infrastructure.Core.Correlation;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
 using Microsoft.Extensions.Logging;
 using NodaTime;
 

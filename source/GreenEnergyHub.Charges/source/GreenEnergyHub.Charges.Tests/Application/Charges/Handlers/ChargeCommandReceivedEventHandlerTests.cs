@@ -14,16 +14,21 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
+using FluentAssertions;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.Tests.Builders.Command;
 using Moq;
+using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
@@ -49,7 +54,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 
             var stored = false;
             chargeRepository
-                .Setup(r => r.StoreChargeAsync(It.IsAny<Charge>()))
+                .Setup(r => r.AddAsync(It.IsAny<Charge>()))
                 .Callback<Charge>(_ => stored = true);
             chargeRepository
                 .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
@@ -105,6 +110,155 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 
             // Act / Assert
             await Assert.ThrowsAsync<ArgumentNullException>(() => sut.HandleAsync(receivedEvent!));
+        }
+
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task HandleAsync_IfValidUpdateEvent_ChargeUpdated(
+            [Frozen] Mock<IValidator<ChargeCommand>> validator,
+            [Frozen] Mock<IChargeRepository> chargeRepository,
+            [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
+            ChargeCommandReceivedEvent receivedEvent,
+            ChargeCommandReceivedEventHandler sut)
+        {
+            // Arrange
+            var validationResult = ValidationResult.CreateSuccess();
+            SetupValidator(validator, validationResult);
+            var periods = CreateValidPeriods(3);
+            var charge = CreateValidCharge(periods);
+            var newPeriod = new ChargePeriodBuilder()
+                .WithStartDateTime(InstantHelper.GetTomorrowAtMidnightUtc())
+                .WithEndDateTime(InstantHelper.GetEndDefault())
+                .Build();
+
+            chargeRepository
+                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
+                .ReturnsAsync(charge);
+            chargePeriodFactory
+                .Setup(r => r.CreateFromChargeOperationDto(It.IsAny<ChargeOperationDto>()))
+                .Returns(newPeriod);
+
+            // Act
+            await sut.HandleAsync(receivedEvent);
+
+            // Assert
+            charge.Periods.Count.Should().Be(2);
+        }
+
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task HandleAsync_IfValidStopEvent_ChargeStopped(
+            [Frozen] Mock<IValidator<ChargeCommand>> validator,
+            [Frozen] Mock<IChargeRepository> chargeRepository,
+            [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
+            [Frozen] Instant stopDate,
+            ChargeCommandReceivedEvent receivedEvent,
+            ChargeCommandReceivedEventHandler sut)
+        {
+            // Arrange
+            var validationResult = ValidationResult.CreateSuccess();
+            SetupValidator(validator, validationResult);
+            var periods = CreateValidPeriodsFromOffset(stopDate);
+            var charge = CreateValidCharge(periods);
+            var newPeriod = new ChargePeriodBuilder().WithStartDateTime(stopDate).WithEndDateTime(stopDate).Build();
+
+            chargeRepository
+                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
+                .ReturnsAsync(charge);
+            chargePeriodFactory
+                .Setup(r => r.CreateFromChargeOperationDto(It.IsAny<ChargeOperationDto>()))
+                .Returns(newPeriod);
+
+            // Act
+            await sut.HandleAsync(receivedEvent);
+
+            // Assert
+            charge.Periods.Count.Should().Be(2);
+            var actual = charge.Periods.OrderByDescending(p => p.StartDateTime).First();
+            actual.EndDateTime.Should().Be(stopDate);
+        }
+
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task HandleAsync_WhenValidCancelStop_ThenStopCancelled(
+            [Frozen] Mock<IValidator<ChargeCommand>> validator,
+            [Frozen] Mock<IChargeRepository> chargeRepository,
+            [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
+            ChargeCommandReceivedEventHandler sut)
+        {
+            // Arrange
+            var validationResult = ValidationResult.CreateSuccess();
+            SetupValidator(validator, validationResult);
+            var chargeCommand = new ChargeCommandBuilder()
+                .WithStartDateTime(InstantHelper.GetTomorrowAtMidnightUtc())
+                .WithEndDateTime(InstantHelper.GetEndDefault())
+                .Build();
+            var receivedEvent = new ChargeCommandReceivedEvent(InstantHelper.GetTodayAtMidnightUtc(), chargeCommand);
+            var periods = new List<ChargePeriod>
+            {
+                new ChargePeriodBuilder().WithEndDateTime(InstantHelper.GetTomorrowAtMidnightUtc()).Build(),
+            };
+            var charge = new ChargeBuilder().WithPeriods(periods).Build();
+            var newPeriod = new ChargePeriodBuilder()
+                .WithStartDateTime(InstantHelper.GetTomorrowAtMidnightUtc())
+                .Build();
+            chargeRepository
+                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
+                .ReturnsAsync(charge);
+            chargePeriodFactory
+                .Setup(r => r.CreateFromChargeOperationDto(It.IsAny<ChargeOperationDto>()))
+                .Returns(newPeriod);
+
+            // Act
+            await sut.HandleAsync(receivedEvent);
+
+            // Assert
+            charge.Periods.Count.Should().Be(1);
+            var actual = charge.Periods.OrderByDescending(p => p.StartDateTime).First();
+            actual.EndDateTime.Should().Be(InstantHelper.GetEndDefault());
+        }
+
+        private static IEnumerable<ChargePeriod> CreateValidPeriods(int numberOfPeriods = 1)
+        {
+            for (var i = 0; i < numberOfPeriods; i++)
+            {
+                var endDate = InstantHelper.GetTodayPlusDaysAtMidnightUtc(i + 1);
+                if (i == numberOfPeriods)
+                {
+                    endDate = InstantHelper.GetEndDefault();
+                }
+
+                yield return new ChargePeriodBuilder()
+                    .WithStartDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(i))
+                    .WithEndDateTime(endDate)
+                    .Build();
+            }
+        }
+
+        private static IEnumerable<ChargePeriod> CreateValidPeriodsFromOffset(Instant offsetDate)
+        {
+            return new List<ChargePeriod>
+            {
+                new ChargePeriodBuilder()
+                    .WithStartDateTime(offsetDate.Minus(Duration.FromDays(5)))
+                    .WithEndDateTime(offsetDate.Minus(Duration.FromDays(1)))
+                    .Build(),
+                new ChargePeriodBuilder()
+                    .WithStartDateTime(offsetDate.Minus(Duration.FromDays(1)))
+                    .WithEndDateTime(offsetDate.Plus(Duration.FromDays(5)))
+                    .Build(),
+                new ChargePeriodBuilder()
+                    .WithStartDateTime(offsetDate.Plus(Duration.FromDays(5)))
+                    .WithEndDateTime(InstantHelper.GetEndDefault())
+                    .Build(),
+            };
+        }
+
+        private static Charge CreateValidCharge(IEnumerable<ChargePeriod> periods)
+        {
+            return new ChargeBuilder()
+                .WithPeriods(periods)
+                .Build();
         }
 
         private static ValidationResult GetFailedValidationResult()

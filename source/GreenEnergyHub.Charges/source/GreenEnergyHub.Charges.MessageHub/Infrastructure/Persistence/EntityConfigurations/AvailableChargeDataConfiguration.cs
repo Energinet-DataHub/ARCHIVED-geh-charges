@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Infrastructure.Core.EntityFrameworkCore;
+using GreenEnergyHub.Charges.Infrastructure.Core.Persistence;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Persistence.EntityCon
             builder.Property(x => x.Resolution);
             builder.Property(x => x.RequestDateTime);
             builder.Property(x => x.AvailableDataReferenceId);
-
+            builder.Property(x => x.DocumentType);
             builder.Ignore(c => c.Points);
             builder.OwnsMany<AvailableChargeDataPoint>("_points", ConfigurePoints);
         }

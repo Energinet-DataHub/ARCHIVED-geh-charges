@@ -26,6 +26,7 @@ using Energinet.DataHub.MessageHub.Model.Dequeue;
 using Energinet.DataHub.MessageHub.Model.Peek;
 using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkReplier;
+using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
@@ -36,6 +37,7 @@ using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factories;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
+using GreenEnergyHub.Charges.Infrastructure.Core.Persistence;
 using GreenEnergyHub.Charges.Infrastructure.Core.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeCreated;
 using GreenEnergyHub.Charges.Infrastructure.Persistence;
@@ -111,24 +113,32 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                                    throw new ArgumentNullException(
                                        EnvironmentSettingNames.ChargeDbConnectionString,
                                        "does not exist in configuration settings");
+
             serviceCollection.AddDbContext<ChargesDatabaseContext>(
                 options => options.UseSqlServer(connectionString, o => o.UseNodaTime()));
+
             serviceCollection.AddScoped<IChargesDatabaseContext, ChargesDatabaseContext>();
+            serviceCollection.AddScoped<IUnitOfWork, UnitOfWork>();
 
             serviceCollection.AddDbContext<MessageHubDatabaseContext>(
                 options => options.UseSqlServer(connectionString, o => o.UseNodaTime()));
+
             serviceCollection.AddScoped<IMessageHubDatabaseContext, MessageHubDatabaseContext>();
 
             serviceCollection.AddScoped<IChargeRepository, ChargeRepository>();
             serviceCollection.AddScoped<IMeteringPointRepository, MeteringPointRepository>();
-            serviceCollection
-                .AddScoped<IAvailableDataRepository<AvailableChargeLinksData>, AvailableDataRepository<AvailableChargeLinksData>>();
-            serviceCollection
-                .AddScoped<IAvailableDataRepository<AvailableChargeData>, AvailableDataRepository<AvailableChargeData>>();
-            serviceCollection
-                .AddScoped<IAvailableDataRepository<AvailableChargeLinksReceiptData>, AvailableDataRepository<AvailableChargeLinksReceiptData>>();
-            serviceCollection
-                .AddScoped<IAvailableDataRepository<AvailableChargeReceiptData>, AvailableDataRepository<AvailableChargeReceiptData>>();
+            serviceCollection.AddScoped<
+                IAvailableDataRepository<AvailableChargeLinksData>,
+                AvailableDataRepository<AvailableChargeLinksData>>();
+            serviceCollection.AddScoped<
+                IAvailableDataRepository<AvailableChargeData>,
+                AvailableDataRepository<AvailableChargeData>>();
+            serviceCollection.AddScoped<
+                IAvailableDataRepository<AvailableChargeLinksReceiptData>,
+                AvailableDataRepository<AvailableChargeLinksReceiptData>>();
+            serviceCollection.AddScoped<
+                IAvailableDataRepository<AvailableChargeReceiptData>,
+                AvailableDataRepository<AvailableChargeReceiptData>>();
         }
 
         private static void ConfigureSharedMessaging(IServiceCollection serviceCollection)

@@ -14,6 +14,8 @@
 
 using System.Linq;
 using System.Text.Json.Serialization;
+using Energinet.DataHub.Core.App.Common.Diagnostics.HealthChecks;
+using Energinet.DataHub.Core.App.WebApp.Diagnostics.HealthChecks;
 using Energinet.DataHub.Core.App.WebApp.Middleware;
 using GreenEnergyHub.Charges.WebApi.Configuration;
 using Microsoft.AspNetCore.Builder;
@@ -83,6 +85,13 @@ namespace GreenEnergyHub.Charges.WebApi
             services.ConfigureOptions<ConfigureSwaggerOptions>();
             services.AddQueryApi(Configuration);
             services.AddJwtTokenSecurity();
+
+            // Health check
+            services.AddHealthChecks()
+                .AddLiveCheck()
+                .AddSqlServer(
+                    name: "ChargeDb",
+                    connectionString: Configuration.GetConnectionString(EnvironmentSettingNames.ChargeDbConnectionString));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -101,20 +110,21 @@ namespace GreenEnergyHub.Charges.WebApi
                 });
             }
 
-            if (!env.IsDevelopment())
-            {
-                // ATM. we only register this middleware when not in development. As we are unable to token auth a user.
-                app.UseMiddleware<JwtTokenMiddleware>();
-            }
-
             app.UseHttpsRedirection();
 
             app.UseRouting();
             app.UseApiVersioning();
 
+            // This middleware has to be configured after 'UseRouting' for 'AllowAnonymousAttribute' to work.
+            app.UseMiddleware<JwtTokenMiddleware>();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+
+                // Health check
+                endpoints.MapLiveHealthChecks();
+                endpoints.MapReadyHealthChecks();
             });
         }
     }

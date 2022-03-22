@@ -19,7 +19,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.Tests.Builders
+namespace GreenEnergyHub.Charges.Tests.Builders.Command
 {
    public class ChargeCommandBuilder
     {
@@ -155,6 +155,12 @@ namespace GreenEnergyHub.Charges.Tests.Builders
         public ChargeCommandBuilder WithStartDateTime(Instant startDateTime)
         {
             _startDateTime = startDateTime;
+            return this;
+        }
+
+        public ChargeCommandBuilder WithEndDateTime(Instant endDateTime)
+        {
+            _endDateTime = endDateTime;
             return this;
         }
 

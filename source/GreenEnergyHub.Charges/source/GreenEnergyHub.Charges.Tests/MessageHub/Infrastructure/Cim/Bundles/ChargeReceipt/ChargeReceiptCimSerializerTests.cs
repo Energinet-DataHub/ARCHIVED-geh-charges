@@ -149,6 +149,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
                 Guid.NewGuid(),
                 receiptStatus,
                 "OriginalOperationId" + no,
+                DocumentType.ChargeReceipt,
                 GetReasonCodes(no));
         }
 

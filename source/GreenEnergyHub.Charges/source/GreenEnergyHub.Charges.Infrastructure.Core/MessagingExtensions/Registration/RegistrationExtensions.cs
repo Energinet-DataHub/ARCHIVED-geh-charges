@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using Energinet.DataHub.Core.Messaging.Transport;
+using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.Core.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Json;

@@ -25,6 +25,9 @@ module "app_webapi" {
   private_dns_resource_group_name           = data.azurerm_key_vault_secret.pdns_resource_group_name.value
   app_service_plan_id                       = data.azurerm_key_vault_secret.plan_shared_id.value
   application_insights_instrumentation_key  = data.azurerm_key_vault_secret.appi_shared_instrumentation_key.value
+  health_check_path                         = "/monitor/ready"
+  health_check_alert_action_group_id        = data.azurerm_key_vault_secret.primary_action_group_id.value
+  health_check_alert_enabled                = var.enable_health_check_alerts
 
   app_settings = {
     APPINSIGHTS_INSTRUMENTATIONKEY = "${data.azurerm_key_vault_secret.appi_shared_instrumentation_key.value}",
@@ -39,6 +42,8 @@ module "app_webapi" {
       value = local.MS_CHARGE_DB_CONNECTION_STRING
     }
   ]
+
+  tags               = azurerm_resource_group.this.tags
 }
 
 module "kvs_app_charges_webapi_base_url" {

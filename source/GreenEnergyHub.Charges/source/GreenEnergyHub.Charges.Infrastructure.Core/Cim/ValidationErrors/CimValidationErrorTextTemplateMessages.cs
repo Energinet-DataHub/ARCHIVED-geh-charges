@@ -121,10 +121,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         public const string CommandSenderMustBeAnExistingMarketParticipantErrorText =
             "Sender {{DocumentSenderId}} for message {{DocumentId}} is currently not an existing market party (company) or not active";
 
-        [ErrorMessageFor(ValidationRuleIdentifier.ChargeUpdateNotYetSupported)]
-        public const string ChargeUpdateNotYetSupportedErrorText =
-            "Charge ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}} cannot yet be updated or stopped. The functionality is not implemented yet";
-
         [ErrorMessageFor(ValidationRuleIdentifier.MeteringPointDoesNotExist)]
         public const string MeteringPointDoesNotExistValidationErrorText =
             "GSRN-code {{MeteringPointId}} is unknown: The specified metering point has not been registered in the system on the charge link start date";
@@ -136,10 +132,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeLinkUpdateNotYetSupported)]
         public const string ChargeLinksUpdateNotYetSupportedErrorText =
             "Charge link for metering point ID {{MeteringPointId}} and Charge with ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}} cannot yet be updated or stopped. The functionality is not implemented yet";
-
-        [ErrorMessageFor(ValidationRuleIdentifier.StopChargeNotYetSupported)]
-        public const string StopChargeNotYetSupportedErrorText =
-            "Charge ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}} cannot be stopped. The functionality is not yet implemented";
 
         public const string Unknown = "unknown";
     }

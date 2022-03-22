@@ -16,6 +16,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;

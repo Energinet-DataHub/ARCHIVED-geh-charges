@@ -32,6 +32,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.MessageHub
             IReadOnlyList<AvailableDataBase> availableData,
             string messageType,
             int messageWeight,
+            string documentType,
             AvailableDataNotificationFactory<AvailableDataBase> sut)
         {
             // Arrange
@@ -58,6 +59,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.MessageHub
                 actualNotificationList[i].Origin.Should().Be(DomainOrigin.Charges);
                 actualNotificationList[i].SupportsBundling.Should().BeTrue();
                 actualNotificationList[i].RelativeWeight.Should().Be(messageWeight);
+                actualNotificationList[i].DocumentType.Should().Be(documentType);
             }
         }
     }

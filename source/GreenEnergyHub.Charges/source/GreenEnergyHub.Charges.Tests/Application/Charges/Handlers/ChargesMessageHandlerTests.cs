@@ -18,6 +18,8 @@ using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Tests.Builders;
+using GreenEnergyHub.Charges.Tests.Builders.Application;
+using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using Xunit;
