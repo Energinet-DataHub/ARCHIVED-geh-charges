@@ -14,7 +14,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<?xml version="1.0" encoding="UTF-8"?>
 <cim:RequestChangeOfPriceList_MarketDocument xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cim="urn:ediel.org:structure:requestchangeofpricelist:0:1" xsi:schemaLocation="urn:ediel.org:structure:requestchangeofpricelist:0:1 urn-ediel-org-structure-requestchangeofpricelist-0-1.xsd">
 	<cim:mRID>DocId00001</cim:mRID>
 	<cim:type>D10</cim:type>
@@ -31,7 +30,7 @@ limitations under the License.
 			<cim:ChargeType>
 				<cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">{{$senderMarketParticipant}}</cim:chargeTypeOwner_MarketParticipant.mRID>
 				<cim:type>D03</cim:type>
-				<cim:mRID>ChargeId01</cim:mRID>
+				<cim:mRID>TariffId01</cim:mRID>
 				<cim:name>Charge Tariff Hourly Name</cim:name>
 				<cim:description>Tariff description</cim:description>
 				<cim:priceTimeFrame_Period.resolution>PT1H</cim:priceTimeFrame_Period.resolution>
