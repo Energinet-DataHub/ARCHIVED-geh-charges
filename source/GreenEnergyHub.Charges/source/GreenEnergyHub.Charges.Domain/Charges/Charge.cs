@@ -108,23 +108,22 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         /// <summary>
         /// Use this method to stop a charge upon receiving a stop charge request
         /// </summary>
-        /// <param name="stopDate"></param>
-        /// <exception cref="ArgumentNullException"><paramref name="stopDate"/> is <c>null</c></exception>
-        public void Stop(Instant? stopDate)
+        /// <param name="stopChargePeriod"></param>
+        /// <exception cref="ArgumentNullException"><paramref name="stopChargePeriod"/> is <c>null</c></exception>
+        public void Stop(ChargePeriod stopChargePeriod)
         {
-            /*if (stopDate == null)
-            {
-                throw new ArgumentNullException(nameof(stopDate));
-            }
+            if (stopChargePeriod == null) throw new ArgumentNullException(nameof(stopChargePeriod));
 
-            StopExistingPeriod(stopDate.Value);
-            RemoveAllSubsequentPeriods(stopDate.Value);
-            _points.RemoveAll(p => p.Time >= stopDate);*/
+            _periods.Add(stopChargePeriod);
+
+            /*StopExistingPeriod(newChargePeriod.Value);
+            RemoveAllSubsequentPeriods(newChargePeriod.Value);
+            _points.RemoveAll(p => p.Time >= newChargePeriod);*/
         }
 
         public void CancelStop()
         {
-            var stopPeriod = GetOrderedPeriods().SingleOrDefault(p => p.IsStop);
+            var stopPeriod = _periods.OrderedByReceivedDateTimeAndOrder().SingleOrDefault(p => p.IsStop);
 
             if (stopPeriod == null)
             {
@@ -141,14 +140,9 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             _periods.Add(newLatestPeriod);*/
         }
 
-        private IOrderedEnumerable<ChargePeriod> GetOrderedPeriods()
+        /*private void StopExistingPeriod(Instant newChargePeriod)
         {
-            return _periods.OrderByDescending(p => p.ReceivedDateTime).ThenByDescending(p => p.ReceivedOrder);
-        }
-
-        /*private void StopExistingPeriod(Instant stopDate)
-        {
-            var previousPeriod = _periods.SingleOrDefault(p => p.EndDateTime >= stopDate && p.StartDateTime < stopDate);
+            var previousPeriod = _periods.SingleOrDefault(p => p.EndDateTime >= newChargePeriod && p.StartDateTime < newChargePeriod);
 
             if (previousPeriod == null)
             {
@@ -156,9 +150,9 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             }
 
             // Return if charge already has end date at given stop date
-            if (stopDate == previousPeriod.EndDateTime) return;
+            if (newChargePeriod == previousPeriod.EndDateTime) return;
 
-            var newPreviousPeriod = previousPeriod.AsChargeStop(stopDate);
+            var newPreviousPeriod = previousPeriod.AsChargeStop(newChargePeriod);
             _periods.Remove(previousPeriod);
             _periods.Add(newPreviousPeriod);
         }

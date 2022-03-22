@@ -16,15 +16,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using FluentAssertions.Equivalency.Steps;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
-using GreenEnergyHub.TestHelpers;
-using Microsoft.Identity.Client.Extensions.Msal;
-using NodaTime;
-using NuGet.Frameworks;
 using Xunit;
 using Xunit.Categories;
 
@@ -197,6 +192,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             // Arrange
             var today = InstantHelper.GetTodayAtMidnightUtc();
             var dayAfterTomorrow = InstantHelper.GetTodayPlusDaysAtMidnightUtc(2);
+            var stopChargePeriod = new ChargePeriodBuilder()
+                .WithStartDateTime(dayAfterTomorrow)
+                .WithIsStop(true)
+                .Build();
             var existingPeriod = new ChargePeriodBuilder()
                 .WithStartDateTime(today)
                 // .WithEndDateTime(InstantHelper.GetEndDefault())
@@ -205,7 +204,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             var sut = new ChargeBuilder().WithPeriods(new List<ChargePeriod> { existingPeriod }).Build();
 
             // Act
-            sut.Stop(dayAfterTomorrow);
+            sut.Stop(stopChargePeriod);
 
             // Assert
             var actual = sut.Periods.OrderByDescending(p => p.StartDateTime).First();
@@ -219,13 +218,17 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             // Arrange
             var sut = new ChargeBuilder().WithPeriods(CreateThreeExistingPeriods()).Build();
             var stopDate = InstantHelper.GetTomorrowAtMidnightUtc();
+            var stopChargePeriod = new ChargePeriodBuilder()
+                .WithStartDateTime(stopDate)
+                .WithIsStop(true)
+                .Build();
 
             // Act
-            sut.Stop(stopDate);
+            sut.Stop(stopChargePeriod);
 
             // Assert
-            sut.Periods.Count.Should().Be(1);
-            // sut.Periods.OrderByDescending(p => p.StartDateTime).First().EndDateTime.Should().Be(stopDate);
+            sut.Periods.Count.Should().Be(4);
+            sut.Periods.OrderedByReceivedDateTimeAndOrder().First().StartDateTime.Should().Be(stopDate);
         }
 
         [Fact]
@@ -233,10 +236,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
         {
             // Arrange
             var sut = new ChargeBuilder().Build();
-            var stopDate = InstantHelper.GetTomorrowAtMidnightUtc();
+            var stopChargePeriod = new ChargePeriodBuilder().WithIsStop(true).Build();
 
             // Act & Assert
-            Assert.Throws<InvalidOperationException>(() => sut.Stop(stopDate));
+            Assert.Throws<InvalidOperationException>(() => sut.Stop(stopChargePeriod));
         }
 
         [Fact]
@@ -249,9 +252,13 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             var periods = new List<ChargePeriod>() { period };
             var sut = new ChargeBuilder().WithPeriods(periods).Build();
             var stopDate = InstantHelper.GetTomorrowAtMidnightUtc();
+            var stopChargePeriod = new ChargePeriodBuilder()
+                .WithStartDateTime(stopDate)
+                .WithIsStop(true)
+                .Build();
 
             // Act
-            sut.Stop(stopDate);
+            sut.Stop(stopChargePeriod);
 
             // Assert
             var actual = sut.Periods.OrderByDescending(p => p.StartDateTime).First();
@@ -269,9 +276,13 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             var periods = new List<ChargePeriod>() { period };
             var sut = new ChargeBuilder().WithPeriods(periods).Build();
             var stopDate = InstantHelper.GetTodayPlusDaysAtMidnightUtc(10);
+            var stopChargePeriod = new ChargePeriodBuilder()
+                .WithStartDateTime(stopDate)
+                .WithIsStop(true)
+                .Build();
 
             // Act & Assert
-            Assert.Throws<InvalidOperationException>(() => sut.Stop(stopDate));
+            Assert.Throws<InvalidOperationException>(() => sut.Stop(stopChargePeriod));
         }
 
         [Fact]
@@ -284,9 +295,13 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             var periods = new List<ChargePeriod>() { period };
             var sut = new ChargeBuilder().WithPeriods(periods).Build();
             var stopDate = InstantHelper.GetTodayPlusDaysAtMidnightUtc(2);
+            var stopChargePeriod = new ChargePeriodBuilder()
+                .WithStartDateTime(stopDate)
+                .WithIsStop(true)
+                .Build();
 
             // Act & Assert
-            Assert.Throws<InvalidOperationException>(() => sut.Stop(stopDate));
+            Assert.Throws<InvalidOperationException>(() => sut.Stop(stopChargePeriod));
         }
 
         [Fact]
@@ -294,10 +309,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
         {
             // Arrange
             var sut = new ChargeBuilder().Build();
-            Instant? stopDate = null!;
+            ChargePeriod stopChargePeriod = null!;
 
             // Act & Assert
-            Assert.Throws<ArgumentNullException>(() => sut.Stop(stopDate));
+            Assert.Throws<ArgumentNullException>(() => sut.Stop(stopChargePeriod));
         }
 
         [Fact]
@@ -316,8 +331,13 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
                 .WithPeriods(new List<ChargePeriod> { new ChargePeriodBuilder().Build() })
                 .WithPoints(points).Build();
 
+            var stopChargePeriod = new ChargePeriodBuilder()
+                .WithStartDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(2))
+                .WithIsStop(true)
+                .Build();
+
             // Act
-            sut.Stop(InstantHelper.GetTodayPlusDaysAtMidnightUtc(2));
+            sut.Stop(stopChargePeriod);
 
             // Assert
             sut.Points.Count.Should().Be(2);
@@ -334,6 +354,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
                     .Build(),
                 new ChargePeriodBuilder()
                     .WithStartDateTime(InstantHelper.GetTodayAtMidnightUtc())
+                    .WithIsStop(true)
                     .Build(),
             }).Build();
 
@@ -341,7 +362,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             sut.CancelStop();
 
             // Assert
-            var actual = sut.Periods.OrderByDescending(p => p.StartDateTime).First();
+            var actual = sut.Periods.OrderedByReceivedDateTimeAndOrder().First();
+            actual.IsStop.Should().Be(false);
             // actual.EndDateTime.Should().BeEquivalentTo(InstantHelper.GetEndDefault());
         }
 

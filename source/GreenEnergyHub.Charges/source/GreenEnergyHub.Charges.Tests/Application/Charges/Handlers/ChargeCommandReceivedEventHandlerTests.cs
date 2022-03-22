@@ -177,10 +177,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 
             // Assert
             charge.Periods.Count.Should().Be(4);
-            var actual = charge.Periods
-                .OrderByDescending(p => p.ReceivedDateTime)
-                .ThenByDescending(p => p.ReceivedOrder)
-                .First();
+            var actual = charge.Periods.OrderedByReceivedDateTimeAndOrder().First();
             // actual.EndDateTime.Should().Be(stopDate);
             actual.IsStop.Should().Be(true);
         }
@@ -222,10 +219,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 
             // Assert
             charge.Periods.Count.Should().Be(1);
-            var actual = charge.Periods
-                .OrderByDescending(p => p.ReceivedDateTime)
-                .ThenByDescending(p => p.ReceivedOrder)
-                .First();
+            var actual = charge.Periods.OrderedByReceivedDateTimeAndOrder().First();
             // actual.EndDateTime.Should().Be(InstantHelper.GetEndDefault());
             actual.IsStop.Should().Be(false);
         }

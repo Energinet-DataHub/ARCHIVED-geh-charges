@@ -83,7 +83,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                     break;
                 case OperationType.Stop:
                     /*charge!.Stop(commandReceivedEvent.Command.ChargeOperation.EndDateTime);*/
-                    HandleUpdateEvent(charge!, commandReceivedEvent.Command);
+                    HandleStopEvent(charge!, commandReceivedEvent.Command);
                     break;
                 case OperationType.CancelStop:
                     charge!.CancelStop();
@@ -99,10 +99,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 
         private async Task HandleCreateEventAsync(ChargeCommand chargeCommand)
         {
-            var charge = await _chargeFactory
-                .CreateFromCommandAsync(chargeCommand)
-                .ConfigureAwait(false);
-
+            var charge = await _chargeFactory.CreateFromCommandAsync(chargeCommand).ConfigureAwait(false);
             await _chargeRepository.AddAsync(charge).ConfigureAwait(false);
         }
 
@@ -111,6 +108,13 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             var newChargePeriod = _chargePeriodFactory.CreateFromChargeOperationDto(
                 chargeCommand.ReceivedDateTime, chargeCommand.ChargeOperation);
             charge.Update(newChargePeriod);
+        }
+
+        private void HandleStopEvent(Charge charge, ChargeCommand chargeCommand)
+        {
+            var newChargePeriod = _chargePeriodFactory.CreateFromChargeOperationDto(
+                chargeCommand.ReceivedDateTime, chargeCommand.ChargeOperation);
+            charge.Stop(newChargePeriod);
         }
 
         /*private static OperationType GetOperationType(ChargeCommand command, Charge? charge)
