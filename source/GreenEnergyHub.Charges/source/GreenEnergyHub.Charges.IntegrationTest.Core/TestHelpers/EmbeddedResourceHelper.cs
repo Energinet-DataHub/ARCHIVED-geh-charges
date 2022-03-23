@@ -18,15 +18,13 @@ using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using GreenEnergyHub.Charges.Core.DateTime;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
 {
     public static class EmbeddedResourceHelper
     {
-        private const string TimeAndPriceSeriesDateTimeFormat = "yyyy-MM-dd\\THH:mm\\Z";
-        private const string CreatedDateTimeFormat = "yyyy-MM-dd\\THH:mm:ss\\Z";
-
         public static string GetEmbeddedFile(string filePath, [NotNull] IClock clock)
         {
             var basePath = Assembly.GetExecutingAssembly().Location;
@@ -42,11 +40,10 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
             var inThirtyoneDays = currentInstant.Plus(Duration.FromDays(31));
 
             // cim:timeInterval does not allow seconds.
-            var ymdhmTimeInterval = inThirtyoneDays
-                .ToString(TimeAndPriceSeriesDateTimeFormat, CultureInfo.InvariantCulture);
+            var ymdhmTimeInterval = inThirtyoneDays.GetTimeAndPriceSeriesDateTimeFormat();
 
             // cim:createdDateTime and effective date must have seconds
-            var ymdhmsTimeInterval = currentInstant.ToString(CreatedDateTimeFormat, CultureInfo.InvariantCulture);
+            var ymdhmsTimeInterval = currentInstant.GetCreatedDateTimeFormat();
 
             var replacementIndex = 0;
             var mergedFile = Regex.Replace(file, "[{][{][$]increment5digits[}][}]", _ =>
