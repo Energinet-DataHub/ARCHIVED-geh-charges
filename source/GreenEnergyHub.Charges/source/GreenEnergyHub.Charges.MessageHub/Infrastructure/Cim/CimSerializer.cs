@@ -81,21 +81,13 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim
             MarketParticipantRole recipientRole)
         {
             XNamespace cimNamespace = GetNamespace(records);
-            XNamespace xmlSchemaNamespace = CimMarketDocumentConstants.SchemaValidationNamespace;
-            XNamespace xmlSchemaLocation = GetSchemaLocation(records);
 
             return new XDocument(
                 new XElement(
                     cimNamespace + GetRootElementName(records),
                     new XAttribute(
-                        XNamespace.Xmlns + CimMarketDocumentConstants.SchemaNamespaceAbbreviation,
-                        xmlSchemaNamespace),
-                    new XAttribute(
                         XNamespace.Xmlns + CimMarketDocumentConstants.CimNamespaceAbbreviation,
                         cimNamespace),
-                    new XAttribute(
-                        xmlSchemaNamespace + CimMarketDocumentConstants.SchemaLocation,
-                        xmlSchemaLocation),
                     // Note: The list will always have same recipient, business reason code and receipt status,
                     // so we just take those values from the first element
                     MarketDocumentSerializationHelper.Serialize(
