@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:cim="urn:ediel.org:structure:requestchangeofpricelist:0:1" xmlns:ecl="urn:entsoe.eu:wgedi:codelists" xmlns:sawsdl="http://www.w3.org/ns/sawsdl" xmlns:cimp="http://www.iec.ch/cimprofile" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:ediel.org:structure:requestchangeofpricelist:0:1" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:import namespace="urn:entsoe.eu:wgedi:codelists" schemaLocation="urn-entsoe-eu-wgedi-codelists.xsd"/>
+	<xs:element name="RequestChangeOfPriceList_MarketDocument" type="cim:RequestChangeOfPriceList_MarketDocument"/>
+	<xs:complexType name="ChargeGroup" sawsdl:modelReference="http://iec.ch/TC57/CIM101#ChargeGroup">
+		<xs:sequence>
+			<xs:element name="ChargeType" type="cim:ChargeType" minOccurs="1" maxOccurs="unbounded" sawsdl:modelReference="http://iec.ch/TC57/CIM101#ChargeGroup.ChargeType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="PartyID_String-base" sawsdl:modelReference="http://iec.ch/TC57/CIM101#String">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="16"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="PartyID_String" sawsdl:modelReference="http://iec.ch/TC57/CIM101#String">
+		<xs:simpleContent>
+			<xs:extension base="cim:PartyID_String-base">
+				<xs:attribute name="codingScheme" type="ecl:CodingSchemeTypeList" use="required"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:simpleType name="ChargeKind_String" sawsdl:modelReference="http://iec.ch/TC57/CIM101#String">
+		<xs:restriction base="ecl:ChargeTypeList"/>
+	</xs:simpleType>
+	<xs:simpleType name="VATPayerKind_String" sawsdl:modelReference="http://iec.ch/TC57/CIM101#String">
+		<xs:restriction base="ecl:VATPayerTypeList"/>
+	</xs:simpleType>
+	<xs:complexType name="ChargeType" sawsdl:modelReference="http://iec.ch/TC57/CIM101#ChargeType">
+		<xs:sequence>
+			<xs:element name="chargeTypeOwner_MarketParticipant.mRID" type="cim:PartyID_String" minOccurs="1" maxOccurs="1" sawsdl:modelReference="http://iec.ch/TC57/CIM101#IdentifiedObject.mRID"/>
+			<xs:element name="type" type="cim:ChargeKind_String" minOccurs="0" maxOccurs="1" sawsdl:modelReference="http://iec.ch/TC57/CIM101#Document.type"/>
+            <xs:element name="process.processOperationType" type="cim:ChargeKind_String" minOccurs="1" maxOccurs="1" sawsdl:modelReference="http://iec.ch/TC57/CIM101#Document.type"/>
+            <xs:element name="mRID" type="xs:string" minOccurs="1" maxOccurs="1" sawsdl:modelReference="http://iec.ch/TC57/CIM101#IdentifiedObject.mRID"/>
+			<xs:element name="name" type="xs:string" minOccurs="0" maxOccurs="1" sawsdl:modelReference="http://iec.ch/TC57/CIM101#IdentifiedObject.name"/>
+			<xs:element name="description" type="xs:string" minOccurs="0" maxOccurs="1" sawsdl:modelReference="http://iec.ch/TC57/CIM101#IdentifiedObject.description"/>
+			<xs:element name="priceTimeFrame_Period.resolution" type="xs:duration" minOccurs="0" maxOccurs="1" sawsdl:modelReference="http://iec.ch/TC57/CIM101#Period.resolution"/>
+			<xs:element name="effectiveDate" type="xs:dateTime" minOccurs="1" maxOccurs="1" sawsdl:modelReference="http://iec.ch/TC57/CIM101#ChargeType.effectiveDate"/>
+			<xs:element name="terminationDate" type="xs:dateTime" minOccurs="0" maxOccurs="1" sawsdl:modelReference="http://iec.ch/TC57/CIM101#ChargeType.terminationDate"/>
+			<xs:element name="VATPayer" type="cim:VATPayerKind_String" minOccurs="0" maxOccurs="1" sawsdl:modelReference="http://iec.ch/TC57/CIM101#DK_ChargeType.VATPayer"/>
+			<xs:element name="transparentInvoicing" type="xs:boolean" minOccurs="0" maxOccurs="1" sawsdl:modelReference="http://iec.ch/TC57/CIM101#DK_ChargeType.transparentInvoicing"/>
+			<xs:element name="taxIndicator" type="xs:boolean" minOccurs="0" maxOccurs="1" sawsdl:modelReference="http://iec.ch/TC57/CIM101#DK_ChargeType.taxIndicator"/>
+			<xs:element name="Series_Period" type="cim:Series_Period" minOccurs="0" maxOccurs="unbounded" sawsdl:modelReference="http://iec.ch/TC57/CIM101#ChargeType.Series_Period"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="MktActivityRecord" sawsdl:modelReference="http://iec.ch/TC57/CIM101#MktActivityRecord">
+		<xs:sequence>
+			<xs:element name="mRID" type="xs:string" minOccurs="1" maxOccurs="1" sawsdl:modelReference="http://iec.ch/TC57/CIM101#IdentifiedObject.mRID"/>
+			<xs:element name="businessProcessReference_MktActivityRecord.mRID" type="xs:string" minOccurs="0" maxOccurs="1" sawsdl:modelReference="http://iec.ch/TC57/CIM101#IdentifiedObject.mRID"/>
+			<xs:element name="ChargeGroup" type="cim:ChargeGroup" minOccurs="1" maxOccurs="1" sawsdl:modelReference="http://iec.ch/TC57/CIM101#MktActivityRecord.ChargeGroup"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="Position_Integer" sawsdl:modelReference="http://iec.ch/TC57/CIM101#Integer">
+		<xs:restriction base="xs:integer">
+			<xs:maxInclusive value="999999"/>
+			<xs:minInclusive value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Amount_Decimal" sawsdl:modelReference="http://iec.ch/TC57/CIM101#Decimal">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="17"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Point" sawsdl:modelReference="http://iec.ch/TC57/CIM101#Point">
+		<xs:sequence>
+			<xs:element name="position" type="cim:Position_Integer" minOccurs="1" maxOccurs="1" sawsdl:modelReference="http://iec.ch/TC57/CIM101#Point.position"/>
+			<xs:element name="price.amount" type="cim:Amount_Decimal" minOccurs="1" maxOccurs="1" sawsdl:modelReference="http://iec.ch/TC57/CIM101#Price.amount"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="MessageKind_String" sawsdl:modelReference="http://iec.ch/TC57/CIM101#String">
+		<xs:restriction base="ecl:MessageTypeList"/>
+	</xs:simpleType>
+	<xs:simpleType name="ProcessKind_String" sawsdl:modelReference="http://iec.ch/TC57/CIM101#String">
+		<xs:restriction base="ecl:ProcessTypeList"/>
+	</xs:simpleType>
+	<xs:simpleType name="BusinessSectorKind_String" sawsdl:modelReference="http://iec.ch/TC57/CIM101#String">
+		<xs:restriction base="ecl:BusinessSectorTypeList"/>
+	</xs:simpleType>
+	<xs:simpleType name="MarketRoleKind_String" sawsdl:modelReference="http://iec.ch/TC57/CIM101#String">
+		<xs:restriction base="ecl:RoleTypeList"/>
+	</xs:simpleType>
+	<xs:simpleType name="ESMP_DateTime" sawsdl:modelReference="http://iec.ch/TC57/CIM101#DateTime">
+		<xs:restriction base="xs:dateTime">
+			<xs:pattern value="((([0-9]{4})[\-](0[13578]|1[02])[\-](0[1-9]|[12][0-9]|3[01])|([0-9]{4})[\-]((0[469])|(11))[\-](0[1-9]|[12][0-9]|30))T(([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9])Z)|(([13579][26][02468][048]|[13579][01345789](0)[48]|[13579][01345789][2468][048]|[02468][048][02468][048]|[02468][1235679](0)[48]|[02468][1235679][2468][048]|[0-9][0-9][13579][26])[\-](02)[\-](0[1-9]|1[0-9]|2[0-9])T(([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9])Z)|(([13579][26][02468][1235679]|[13579][01345789](0)[01235679]|[13579][01345789][2468][1235679]|[02468][048][02468][1235679]|[02468][1235679](0)[01235679]|[02468][1235679][2468][1235679]|[0-9][0-9][13579][01345789])[\-](02)[\-](0[1-9]|1[0-9]|2[0-8])T(([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9])Z)"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="RequestChangeOfPriceList_MarketDocument" sawsdl:modelReference="http://iec.ch/TC57/CIM101#MarketDocument">
+		<xs:sequence>
+			<xs:element name="mRID" type="xs:string" minOccurs="1" maxOccurs="1" sawsdl:modelReference="http://iec.ch/TC57/CIM101#IdentifiedObject.mRID"/>
+			<xs:element name="type" type="cim:MessageKind_String" default="D10" minOccurs="1" maxOccurs="1" sawsdl:modelReference="http://iec.ch/TC57/CIM101#Document.type"/>
+			<xs:element name="process.processType" type="cim:ProcessKind_String" minOccurs="1" maxOccurs="1" sawsdl:modelReference="http://iec.ch/TC57/CIM101#Process.processType"/>
+            <xs:element name="businessSector.type" type="cim:BusinessSectorKind_String" minOccurs="0" maxOccurs="1" sawsdl:modelReference="http://iec.ch/TC57/CIM101#BusinessSector.type"/>
+			<xs:element name="sender_MarketParticipant.mRID" type="cim:PartyID_String" minOccurs="1" maxOccurs="1" sawsdl:modelReference="http://iec.ch/TC57/CIM101#IdentifiedObject.mRID"/>
+			<xs:element name="sender_MarketParticipant.marketRole.type" type="cim:MarketRoleKind_String" minOccurs="1" maxOccurs="1" sawsdl:modelReference="http://iec.ch/TC57/CIM101#MarketRole.type"/>
+			<xs:element name="receiver_MarketParticipant.mRID" type="cim:PartyID_String" minOccurs="1" maxOccurs="1" sawsdl:modelReference="http://iec.ch/TC57/CIM101#IdentifiedObject.mRID"/>
+			<xs:element name="receiver_MarketParticipant.marketRole.type" type="cim:MarketRoleKind_String" minOccurs="1" maxOccurs="1" sawsdl:modelReference="http://iec.ch/TC57/CIM101#MarketRole.type"/>
+			<xs:element name="createdDateTime" type="cim:ESMP_DateTime" minOccurs="1" maxOccurs="1" sawsdl:modelReference="http://iec.ch/TC57/CIM101#Document.createdDateTime"/>
+			<xs:element name="MktActivityRecord" type="cim:MktActivityRecord" minOccurs="1" maxOccurs="unbounded" sawsdl:modelReference="http://iec.ch/TC57/CIM101#MarketDocument.MktActivityRecord"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="YMDHM_DateTime" sawsdl:modelReference="http://iec.ch/TC57/CIM101#DateTime">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="((([0-9]{4})[\-](0[13578]|1[02])[\-](0[1-9]|[12][0-9]|3[01])|([0-9]{4})[\-]((0[469])|(11))[\-](0[1-9]|[12][0-9]|30))T(([01][0-9]|2[0-3]):[0-5][0-9])Z)|(([13579][26][02468][048]|[13579][01345789](0)[48]|[13579][01345789][2468][048]|[02468][048][02468][048]|[02468][1235679](0)[48]|[02468][1235679][2468][048]|[0-9][0-9][13579][26])[\-](02)[\-](0[1-9]|1[0-9]|2[0-9])T(([01][0-9]|2[0-3]):[0-5][0-9])Z)|(([13579][26][02468][1235679]|[13579][01345789](0)[01235679]|[13579][01345789][2468][1235679]|[02468][048][02468][1235679]|[02468][1235679](0)[01235679]|[02468][1235679][2468][1235679]|[0-9][0-9][13579][01345789])[\-](02)[\-](0[1-9]|1[0-9]|2[0-8])T(([01][0-9]|2[0-3]):[0-5][0-9])Z)"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="ESMP_DateTimeInterval" sawsdl:modelReference="http://iec.ch/TC57/CIM101#DateTimeInterval">
+		<xs:sequence>
+			<xs:element name="start" type="cim:YMDHM_DateTime" minOccurs="1" maxOccurs="1" sawsdl:modelReference="http://iec.ch/TC57/CIM101#DateTimeInterval.start"/>
+			<xs:element name="end" type="cim:YMDHM_DateTime" minOccurs="1" maxOccurs="1" sawsdl:modelReference="http://iec.ch/TC57/CIM101#DateTimeInterval.end"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Series_Period" sawsdl:modelReference="http://iec.ch/TC57/CIM101#Period">
+		<xs:sequence>
+			<xs:element name="resolution" type="xs:duration" minOccurs="1" maxOccurs="1" sawsdl:modelReference="http://iec.ch/TC57/CIM101#Period.resolution"/>
+			<xs:element name="timeInterval" type="cim:ESMP_DateTimeInterval" minOccurs="0" maxOccurs="1" sawsdl:modelReference="http://iec.ch/TC57/CIM101#Period.timeInterval"/>
+			<xs:element name="Point" type="cim:Point" minOccurs="1" maxOccurs="unbounded" sawsdl:modelReference="http://iec.ch/TC57/CIM101#Period.Point"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

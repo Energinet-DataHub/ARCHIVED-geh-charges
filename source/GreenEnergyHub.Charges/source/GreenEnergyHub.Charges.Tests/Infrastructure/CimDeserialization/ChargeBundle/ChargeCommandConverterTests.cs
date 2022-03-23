@@ -26,7 +26,6 @@ using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle;
-using GreenEnergyHub.Charges.Infrastructure.Core.Correlation;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Iso8601;
@@ -57,6 +56,79 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
                 correlationId,
                 expectedTime,
                 "GreenEnergyHub.Charges.Tests.TestFiles.Syntax_Valid_CIM_Charge.xml");
+
+            // Act
+            var actualBundle = (ChargeCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
+
+            // Assert
+            var actual = actualBundle.ChargeCommands.Single();
+
+            // Document
+            actual.Document.Id.Should().Be("25369874");
+            actual.Document.Type.Should().Be(DocumentType.RequestUpdateChargeInformation);
+            actual.Document.BusinessReasonCode.Should().Be(BusinessReasonCode.UpdateChargeInformation);
+            actual.Document.Sender.Id.Should().Be("5799999925698");
+            actual.Document.Sender.BusinessProcessRole.Should().Be(MarketParticipantRole.GridAccessProvider);
+            actual.Document.Recipient.Id.Should().Be("5790001330552");
+            actual.Document.Recipient.BusinessProcessRole.Should().Be(MarketParticipantRole.MeteringPointAdministrator);
+            actual.Document.CreatedDateTime.Should().Be(InstantPattern.ExtendedIso.Parse("2021-12-17T09:30:47Z").Value);
+
+            // Charge operation
+            actual.ChargeOperation.Id.Should().Be("36251478");
+            actual.ChargeOperation.ChargeOwner.Should().Be("5799999925698");
+            actual.ChargeOperation.Type.Should().Be(ChargeType.Tariff);
+            actual.ChargeOperation.ChargeId.Should().Be("253C");
+            actual.ChargeOperation.ChargeName.Should().Be("Elafgift 2019");
+            actual.ChargeOperation.ChargeDescription.Should().Be("Dette er elafgiftssatsten for 2019");
+            actual.ChargeOperation.Resolution.Should().Be(Resolution.PT1H);
+            actual.ChargeOperation.StartDateTime.Should().Be(InstantPattern.ExtendedIso.Parse("2020-12-17T23:00:00Z").Value);
+            /*actual.ChargeOperation.EndDateTime.Should()
+                .Be(InstantPattern.ExtendedIso.Parse("2031-12-17T23:00:00Z").Value);*/
+            actual.ChargeOperation.VatClassification.Should().Be(VatClassification.Vat25);
+            actual.ChargeOperation.TransparentInvoicing.Should().BeTrue();
+            actual.ChargeOperation.TaxIndicator.Should().BeTrue();
+
+            // Points
+            actual.ChargeOperation.Points.Should().HaveCount(2);
+            actual.ChargeOperation.Points[0].Position.Should().Be(1);
+            actual.ChargeOperation.Points[0].Time.Should().Be(expectedTime);
+            actual.ChargeOperation.Points[0].Price.Should().Be(100m);
+            actual.ChargeOperation.Points[1].Position.Should().Be(2);
+            actual.ChargeOperation.Points[1].Time.Should().Be(expectedTime);
+            actual.ChargeOperation.Points[1].Price.Should().Be(200m);
+
+            // Verify Iso8601Durations was used correctly
+            iso8601Durations.Verify(
+                i => i.GetTimeFixedToDuration(
+                    expectedTime,
+                    "PT1H",
+                    0),
+                Times.Once);
+
+            iso8601Durations.Verify(
+                i => i.GetTimeFixedToDuration(
+                    expectedTime,
+                    "PT1H",
+                    1),
+                Times.Once);
+        }
+
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task Temp_ConvertAsync_WhenCalledWithValidCimMessage_ReturnsParsedObject(
+            [Frozen] Mock<ICorrelationContext> context,
+            [Frozen] Mock<IIso8601Durations> iso8601Durations,
+            ChargeCommandConverter sut)
+        {
+            // Arrange
+            var correlationId = Guid.NewGuid().ToString();
+            var expectedTime = InstantPattern.ExtendedIso.Parse("2021-01-01T23:00:00Z").Value;
+            var reader = GetTemporaryReaderAndArrangeTest(
+                context,
+                iso8601Durations,
+                correlationId,
+                expectedTime,
+                "GreenEnergyHub.Charges.Tests.TestFiles.Syntax_Valid_CIM_Charge_With_OperationType.xml");
 
             // Act
             var actualBundle = (ChargeCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
@@ -299,6 +371,30 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
 
             var stream = GetEmbeddedResource(embeddedFile);
             return new SchemaValidatingReader(stream, Schemas.CimXml.StructureRequestChangeOfPriceList);
+        }
+
+        private SchemaValidatingReader GetTemporaryReaderAndArrangeTest(
+            Mock<ICorrelationContext> context,
+            Mock<IIso8601Durations> iso8601Durations,
+            string correlationId,
+            Instant expectedTime,
+            string embeddedFile)
+        {
+            context.Setup(c => c.Id).Returns(correlationId);
+
+            iso8601Durations.Setup(
+                    i => i.GetTimeFixedToDuration(
+                        It.IsAny<Instant>(),
+                        It.IsAny<string>(),
+                        It.IsAny<int>()))
+                .Returns(expectedTime);
+
+            var stream = GetEmbeddedResource(embeddedFile);
+            return new SchemaValidatingReader(
+                stream,
+                TempCimXmlSchemaCollection.StructureRequestChangeOfPriceList);
+            /*TempCimXmlSchemaCollection.LocalExtensionTypes,*/
+            /*TempCimXmlSchemaCollection.WgediCodelists);*/
         }
 
         private static Stream GetEmbeddedResource(string path)

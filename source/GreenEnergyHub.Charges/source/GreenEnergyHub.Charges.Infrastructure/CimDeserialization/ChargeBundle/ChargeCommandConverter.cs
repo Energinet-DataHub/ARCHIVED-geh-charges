@@ -130,6 +130,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                     chargeType = ChargeTypeMapper.Map(content);
                 }
+                else if (reader.Is(CimChargeCommandConstants.OperationType))
+                {
+                    var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
+                    operationType = OperationTypeMapper.Map(content);
+                }
                 else if (reader.Is(CimChargeCommandConstants.ChargeId))
                 {
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
@@ -173,11 +178,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                 else if (reader.Is(CimChargeCommandConstants.TaxIndicator))
                 {
                     taxIndicator = await reader.ReadValueAsBoolAsync().ConfigureAwait(false);
-                }
-                else if (reader.Is(CimChargeCommandConstants.OperationType))
-                {
-                    var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
-                    operationType = OperationTypeMapper.Map(content);
                 }
                 else if (reader.Is(CimChargeCommandConstants.SeriesPeriod))
                 {

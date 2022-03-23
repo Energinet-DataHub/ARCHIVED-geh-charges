@@ -63,6 +63,7 @@ limitations under the License.
     </ItemGroup>
 
     <ItemGroup>
+      <EmbeddedResource Include="TestFiles\Syntax_Valid_CIM_Charge_With_OperationType.xml" />
       <EmbeddedResource Include="TestFiles\Valid_CIM_ChargeLink.xml" />
       <EmbeddedResource Include="TestFiles\Valid_CIM_ChargeLink_Bundle.xml" />
       <EmbeddedResource Include="TestFiles\Valid_CIM_ChargeLink_WithUnusedCimContent.xml" />

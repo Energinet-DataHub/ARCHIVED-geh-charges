@@ -97,4 +97,19 @@ limitations under the License.
         <Link>Contracts\Public\CreateDefaultChargeLinksReply\CreateDefaultChargeLinksReply.proto</Link>
       </Content>
     </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="CimDeserialization\Schemas\urn-ediel-org-structure-requestchangeofpricelist-0-1.xsd" />
+      <EmbeddedResource Include="CimDeserialization\Schemas\urn-ediel-org-structure-requestchangeofpricelist-0-1.xsd">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="CimDeserialization\Schemas\urn-entsoe-eu-local-extension-types.xsd" />
+      <EmbeddedResource Include="CimDeserialization\Schemas\urn-entsoe-eu-local-extension-types.xsd">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="CimDeserialization\Schemas\urn-entsoe-eu-wgedi-codelists.xsd" />
+      <EmbeddedResource Include="CimDeserialization\Schemas\urn-entsoe-eu-wgedi-codelists.xsd">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+    </ItemGroup>
 </Project>

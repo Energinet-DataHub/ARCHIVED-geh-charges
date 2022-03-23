@@ -19,10 +19,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.Charges
 {
     public static class OperationTypeMapper
     {
-        private const string CimCreate = "X01"; // TODO these are not decided constants, they are here to show the concept
-        private const string CimUpdate = "X02";
-        private const string CimStop = "X03";
-        private const string CimCancelStop = "X04";
+        private const string CimCreate = "D01"; // TODO these are not decided constants, they are here to show the concept
+        private const string CimUpdate = "D02";
+        private const string CimStop = "D03";
+        private const string CimCancelStop = "D04";
 
         public static OperationType Map(string value)
         {
