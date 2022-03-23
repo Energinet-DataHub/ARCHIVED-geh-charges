@@ -63,6 +63,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
             periods.Property(p => p.TransparentInvoicing);
             periods.Property(p => p.VatClassification);
             periods.Property(p => p.StartDateTime);
+            periods.Property(p => p.ReceivedDateTime);
+            periods.Property(p => p.ReceivedOrder);
             periods.Property(p => p.IsStop);
         }
 

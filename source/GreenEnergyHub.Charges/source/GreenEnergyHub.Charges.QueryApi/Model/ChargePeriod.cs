@@ -42,7 +42,9 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
 
         public DateTime StartDateTime { get; set; }
 
-        public DateTime EndDateTime { get; set; }
+        public DateTime ReceivedDateTime { get; set; }
+
+        public int ReceivedOrder { get; set; }
 
         [ForeignKey(nameof(ChargeId))]
         [InverseProperty("ChargePeriods")]

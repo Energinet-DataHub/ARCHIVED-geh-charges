@@ -20,8 +20,9 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Query
 {
     public class ChargePeriodBuilder
     {
+        private DateTime _receivedDateTime = DateTime.Now.AddDays(-1).Date.ToUniversalTime();
+        private int _receivedOrder = 0;
         private DateTime _startDateTime = DateTime.Now.Date.ToUniversalTime();
-        private DateTime _endDateTime = InstantExtensions.GetEndDefault().ToDateTimeUtc();
         private string _name = "Charge name";
         private bool _transparentInvoicing = false;
 
@@ -31,9 +32,15 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Query
             return this;
         }
 
-        public ChargePeriodBuilder WithEndDateTime(DateTime endDateTime)
+        public ChargePeriodBuilder WithReceivedDateTime(DateTime receivedDateTime)
         {
-            _endDateTime = endDateTime;
+            _receivedDateTime = receivedDateTime;
+            return this;
+        }
+
+        public ChargePeriodBuilder WithReceivedOrder(int receivedOrder)
+        {
+            _receivedOrder = receivedOrder;
             return this;
         }
 
@@ -61,7 +68,8 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Query
                 Name = _name,
                 VatClassification = 0,
                 StartDateTime = _startDateTime,
-                EndDateTime = _endDateTime,
+                ReceivedDateTime = _receivedDateTime,
+                ReceivedOrder = _receivedOrder,
             };
         }
     }

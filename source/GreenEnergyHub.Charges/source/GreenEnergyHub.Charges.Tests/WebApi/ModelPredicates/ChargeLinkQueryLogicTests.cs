@@ -243,10 +243,26 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
             {
                 var chargePeriods = new List<ChargePeriod>
                 {
-                    chargePeriodBuilder.WithName("FirstPeriodName").WithTransparentInvoicing(true).WithStartDateTime(today.AddDays(-2)).WithEndDateTime(today.AddDays(-1)).Build(charge),
-                    chargePeriodBuilder.WithName("SecondPeriodName").WithTransparentInvoicing(false).WithStartDateTime(today.AddDays(-1)).WithEndDateTime(today).Build(charge),
-                    chargePeriodBuilder.WithName("ThirdPeriodName").WithTransparentInvoicing(true).WithStartDateTime(today).WithEndDateTime(today.AddDays(1)).Build(charge),
-                    chargePeriodBuilder.WithName("FourthPeriodName").WithTransparentInvoicing(false).WithStartDateTime(today.AddDays(1)).WithEndDateTime(today.AddDays(2)).Build(charge),
+                    chargePeriodBuilder.WithName("FirstPeriodName")
+                        .WithTransparentInvoicing(true)
+                        .WithStartDateTime(today.AddDays(-2))
+                        //.WithEndDateTime(today.AddDays(-1))
+                        .Build(charge),
+                    chargePeriodBuilder.WithName("SecondPeriodName")
+                    .WithTransparentInvoicing(false)
+                    .WithStartDateTime(today.AddDays(-1))
+                    //.WithEndDateTime(today)
+                    .Build(charge),
+                    chargePeriodBuilder.WithName("ThirdPeriodName")
+                    .WithTransparentInvoicing(true)
+                    .WithStartDateTime(today)
+                    //.WithEndDateTime(today.AddDays(1))
+                    .Build(charge),
+                    chargePeriodBuilder.WithName("FourthPeriodName")
+                    .WithTransparentInvoicing(false)
+                    .WithStartDateTime(today.AddDays(1))
+                    //.WithEndDateTime(today.AddDays(2))
+                    .Build(charge),
                 };
                 return chargePeriods;
             }
@@ -254,9 +270,21 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
             {
                 var chargePeriods = new List<ChargePeriod>
                 {
-                    chargePeriodBuilder.WithName("FirstPeriodName").WithTransparentInvoicing(true).WithStartDateTime(today.AddDays(-2)).WithEndDateTime(today.AddDays(-1)).Build(charge),
-                    chargePeriodBuilder.WithName("SecondPeriodName").WithTransparentInvoicing(false).WithStartDateTime(today.AddDays(-1)).WithEndDateTime(today.AddDays(1)).Build(charge),
-                    chargePeriodBuilder.WithName("ThirdPeriodName").WithTransparentInvoicing(true).WithStartDateTime(today.AddDays(1)).WithEndDateTime(today.AddDays(2)).Build(charge),
+                    chargePeriodBuilder.WithName("FirstPeriodName")
+                    .WithTransparentInvoicing(true)
+                    .WithStartDateTime(today.AddDays(-2))
+                    //.WithEndDateTime(today.AddDays(-1))
+                    .Build(charge),
+                    chargePeriodBuilder.WithName("SecondPeriodName")
+                    .WithTransparentInvoicing(false)
+                    .WithStartDateTime(today.AddDays(-1))
+                    //.WithEndDateTime(today.AddDays(1))
+                    .Build(charge),
+                    chargePeriodBuilder.WithName("ThirdPeriodName")
+                    .WithTransparentInvoicing(true)
+                    .WithStartDateTime(today.AddDays(1))
+                    //.WithEndDateTime(today.AddDays(2))
+                    .Build(charge),
                 };
                 return chargePeriods;
             }
@@ -269,10 +297,26 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
 
             var chargePeriods = new List<ChargePeriod>
             {
-                chargePeriodBuilder.WithName("FirstPeriodName").WithTransparentInvoicing(true).WithStartDateTime(today.AddDays(2)).WithEndDateTime(today.AddDays(4)).Build(charge),
-                chargePeriodBuilder.WithName("SecondPeriodName").WithTransparentInvoicing(false).WithStartDateTime(today.AddDays(4)).WithEndDateTime(today.AddDays(6)).Build(charge),
-                chargePeriodBuilder.WithName("ThirdPeriodName").WithTransparentInvoicing(true).WithStartDateTime(today.AddDays(6)).WithEndDateTime(today.AddDays(8)).Build(charge),
-                chargePeriodBuilder.WithName("FourthPeriodName").WithTransparentInvoicing(false).WithStartDateTime(today.AddDays(8)).WithEndDateTime(today.AddDays(10)).Build(charge),
+                chargePeriodBuilder.WithName("FirstPeriodName")
+                .WithTransparentInvoicing(true)
+                .WithStartDateTime(today.AddDays(2))
+                //.WithEndDateTime(today.AddDays(4))
+                .Build(charge),
+                chargePeriodBuilder.WithName("SecondPeriodName")
+                .WithTransparentInvoicing(false)
+                .WithStartDateTime(today.AddDays(4))
+                //.WithEndDateTime(today.AddDays(6))
+                .Build(charge),
+                chargePeriodBuilder.WithName("ThirdPeriodName")
+                .WithTransparentInvoicing(true)
+                .WithStartDateTime(today.AddDays(6))
+                //.WithEndDateTime(today.AddDays(8))
+                .Build(charge),
+                chargePeriodBuilder.WithName("FourthPeriodName")
+                .WithTransparentInvoicing(false)
+                .WithStartDateTime(today.AddDays(8))
+                //.WithEndDateTime(today.AddDays(10))
+                .Build(charge),
             };
             return chargePeriods;
         }
