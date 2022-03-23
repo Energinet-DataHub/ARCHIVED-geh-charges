@@ -374,7 +374,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
         }
 
         [Fact]
-        public void CancelStop_WhenStopPeriodExists_ThenReplaceEndDateWithDefaultEndDate()
+        public void CancelStop_WhenStopPeriodExists_ThenAddNewLastPeriod()
         {
             // Arrange
             var stopDate = InstantHelper.GetTomorrowAtMidnightUtc();
