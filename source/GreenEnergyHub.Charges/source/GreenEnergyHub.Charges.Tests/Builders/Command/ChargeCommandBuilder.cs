@@ -24,6 +24,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
    public class ChargeCommandBuilder
     {
         private readonly List<Point> _points;
+        private readonly List<ChargeOperationDto> _chargeOperationDtos;
         private string _chargeId;
         private Instant _startDateTime;
         private Instant? _endDateTime;
@@ -60,6 +61,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             _chargeType = ChargeType.Fee;
             _points = new List<Point>();
             _resolution = Resolution.PT1H;
+            _chargeOperationDtos = new List<ChargeOperationDto>();
         }
 
         public ChargeCommandBuilder WithEndDateTimeAsNull()
@@ -182,6 +184,16 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             return this;
         }
 
+        public ChargeCommandBuilder WithNumberOfChargeOperations(int numberOfOperations)
+        {
+            for (var i = 1; i <= numberOfOperations; i++)
+            {
+                _chargeOperationDtos.Add(SetupChargeOperationDto());
+            }
+
+            return this;
+        }
+
         public ChargeCommand Build()
         {
             var documentDto = new DocumentDto
@@ -198,26 +210,30 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
                 Sender = _sender,
                 BusinessReasonCode = _documentBusinessReasonCode,
             };
-
-            var chargeOperationDtos = new List<ChargeOperationDto>
+            if (_chargeOperationDtos.Count == 0)
             {
-                new ChargeOperationDto(
-                    _operationId,
-                    _chargeType,
-                    _chargeId,
-                    _chargeName,
-                    _description,
-                    _owner,
-                    _resolution,
-                    _taxIndicator,
-                    true,
-                    _vatClassification,
-                    _startDateTime,
-                    _endDateTime,
-                    _points),
-            };
+                _chargeOperationDtos.Add(SetupChargeOperationDto());
+            }
 
-            return new ChargeCommand(documentDto, chargeOperationDtos);
+            return new ChargeCommand(documentDto, _chargeOperationDtos);
+        }
+
+        private ChargeOperationDto SetupChargeOperationDto()
+        {
+            return new ChargeOperationDto(
+                _operationId,
+                _chargeType,
+                _chargeId,
+                _chargeName,
+                _description,
+                _owner,
+                _resolution,
+                _taxIndicator,
+                true,
+                _vatClassification,
+                _startDateTime,
+                _endDateTime,
+                _points);
         }
     }
 }

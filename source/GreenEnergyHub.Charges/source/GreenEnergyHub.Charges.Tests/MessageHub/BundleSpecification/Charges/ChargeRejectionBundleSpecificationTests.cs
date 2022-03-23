@@ -112,6 +112,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.Charges
                 ReceiptStatus.Rejected,
                 MaxLengthId,
                 DocumentType.ChargeReceipt,
+                0,
                 GetReasons(noOfReasons));
         }
 

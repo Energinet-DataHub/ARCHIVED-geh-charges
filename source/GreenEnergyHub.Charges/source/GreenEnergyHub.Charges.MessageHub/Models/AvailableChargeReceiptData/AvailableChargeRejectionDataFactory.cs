@@ -59,6 +59,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                             ReceiptStatus.Rejected,
                             chargeOperationDto.Id,
                             input.Command.Document.Type,
+                            0,
                             GetReasons(input, chargeOperationDto)))
                 .ToList();
         }

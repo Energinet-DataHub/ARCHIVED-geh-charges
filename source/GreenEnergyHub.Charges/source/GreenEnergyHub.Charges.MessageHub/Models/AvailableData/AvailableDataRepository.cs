@@ -43,6 +43,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableData
                 .SetAsync<TAvailableData>()
                 .Where(x => dataReferenceIds.Contains(x.AvailableDataReferenceId))
                 .OrderBy(x => x.RequestDateTime)
+                .ThenBy(x => x.OperationOrder)
                 .ToListAsync()
                 .ConfigureAwait(false);
         }

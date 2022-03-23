@@ -76,6 +76,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                     ReceiptStatus.Confirmed,
                     chargeOperationDto.Id,
                     input.Command.Document.Type,
+                    0,
                     new List<AvailableReceiptValidationError>()),
             };
         }

@@ -57,7 +57,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData
                 var chargeIdentifier = new ChargeIdentifier(link.SenderProvidedChargeId, link.ChargeOwner, link.ChargeType);
                 var charge = await _chargeRepository.GetAsync(chargeIdentifier).ConfigureAwait(false);
                 var sender = await GetSenderAsync().ConfigureAwait(false);
-
                 if (ShouldMakeDataAvailableForGridOwnerOfMeteringPoint(charge))
                 {
                     result.Add(new AvailableChargeLinksData(
@@ -75,7 +74,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData
                         link.Factor,
                         link.StartDateTime,
                         link.EndDateTime.GetValueOrDefault(),
-                        acceptedEvent.ChargeLinksCommand.Document.Type));
+                        acceptedEvent.ChargeLinksCommand.Document.Type,
+                        0));
                 }
             }
 

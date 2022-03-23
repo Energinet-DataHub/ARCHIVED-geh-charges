@@ -21,6 +21,7 @@ using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
+using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.Charges.Tests.Builders.Testables;
@@ -108,6 +109,43 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
 
             // Assert
             actual.Should().BeEmpty();
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task CreateAsync_WhenSeveralOperationsInChargeCommand_ReturnOrderedListOfOperations(
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
+            ChargeCommandBuilder chargeCommandBuilder,
+            ChargeCommandAcceptedEventBuilder chargeCommandAcceptedEventBuilder,
+            List<TestGridAccessProvider> gridAccessProvider,
+            TestMeteringPointAdministrator meteringPointAdministrator,
+            AvailableChargeDataFactory sut)
+        {
+            // Arrange
+            marketParticipantRepository
+                .Setup(r => r.GetGridAccessProvidersAsync())
+                .ReturnsAsync(gridAccessProvider.Cast<MarketParticipant>().ToList);
+            marketParticipantRepository
+                .Setup(r => r.GetMeteringPointAdministratorAsync())
+                .ReturnsAsync(meteringPointAdministrator);
+            const int noOfOperations = 3;
+            var chargeCommand = chargeCommandBuilder
+                .WithTaxIndicator(true)
+                .WithNumberOfChargeOperations(noOfOperations)
+                .Build();
+            var acceptedEvent = chargeCommandAcceptedEventBuilder.WithChargeCommand(chargeCommand).Build();
+
+            // Act
+            var actual = await sut.CreateAsync(acceptedEvent);
+
+            // Assert
+            actual.Count.Should().Be(gridAccessProvider.Count * noOfOperations);
+            var operationOrder = actual.ElementAt(0).OperationOrder;
+            for (var i = 1; i < actual.Count; i++)
+            {
+                actual[i].OperationOrder.Should().BeGreaterOrEqualTo(operationOrder);
+                operationOrder = actual.ElementAt(i).OperationOrder;
+            }
         }
     }
 }
