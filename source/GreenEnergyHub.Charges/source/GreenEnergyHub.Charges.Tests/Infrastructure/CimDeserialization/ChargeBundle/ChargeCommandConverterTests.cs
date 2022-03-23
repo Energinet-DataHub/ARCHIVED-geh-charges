@@ -150,6 +150,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             actual.ChargeOperation.Id.Should().Be("36251478");
             actual.ChargeOperation.ChargeOwner.Should().Be("5799999925698");
             actual.ChargeOperation.Type.Should().Be(ChargeType.Tariff);
+            actual.ChargeOperation.OperationType.Should().Be(OperationType.Create);
             actual.ChargeOperation.ChargeId.Should().Be("253C");
             actual.ChargeOperation.ChargeName.Should().Be("Elafgift 2019");
             actual.ChargeOperation.ChargeDescription.Should().Be("Dette er elafgiftssatsten for 2019");
