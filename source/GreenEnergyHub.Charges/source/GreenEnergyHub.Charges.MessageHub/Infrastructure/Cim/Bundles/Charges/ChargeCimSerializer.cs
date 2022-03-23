@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Xml.Linq;
 using GreenEnergyHub.Charges.Core.DateTime;
@@ -165,13 +166,14 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.Charges
         {
             return new XElement(
                 cimNamespace + CimChargeConstants.TimeInterval,
-                new XElement(cimNamespace + CimChargeConstants.TimeIntervalStart, charge.StartDateTime),
+                new XElement(cimNamespace + CimChargeConstants.TimeIntervalStart, charge.StartDateTime.GetTimeAndPriceSeriesDateTimeFormat()),
                 new XElement(
                     cimNamespace + CimChargeConstants.TimeIntervalEnd,
                     _iso8601Durations.GetTimeFixedToDuration(
                         charge.StartDateTime,
                         ResolutionMapper.Map(charge.Resolution),
-                        charge.Points.Count)));
+                        charge.Points.Count)
+                        .GetTimeAndPriceSeriesDateTimeFormat()));
         }
 
         private static XElement GetPoint(XNamespace cimNamespace, AvailableChargeDataPoint point)
