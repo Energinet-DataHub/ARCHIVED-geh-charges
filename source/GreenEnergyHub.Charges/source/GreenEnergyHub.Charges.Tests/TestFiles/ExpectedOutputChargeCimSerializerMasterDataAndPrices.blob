@@ -27,8 +27,8 @@
         <cim:Series_Period>
           <cim:resolution>P1M</cim:resolution>
           <cim:timeInterval>
-            <cim:start>2020-12-31T23:00:00Z</cim:start>
-            <cim:end>2100-03-31T22:00:00Z</cim:end>
+            <cim:start>2020-12-31T23:00Z</cim:start>
+            <cim:end>2100-03-31T22:00Z</cim:end>
           </cim:timeInterval>
           <cim:Point>
             <cim:position>1</cim:position>
@@ -55,8 +55,8 @@
         <cim:Series_Period>
           <cim:resolution>PT1H</cim:resolution>
           <cim:timeInterval>
-            <cim:start>2020-12-31T23:00:00Z</cim:start>
-            <cim:end>2100-03-31T22:00:00Z</cim:end>
+            <cim:start>2020-12-31T23:00Z</cim:start>
+            <cim:end>2100-03-31T22:00Z</cim:end>
           </cim:timeInterval>
           <cim:Point>
             <cim:position>1</cim:position>
@@ -176,8 +176,8 @@
         <cim:Series_Period>
           <cim:resolution>P1M</cim:resolution>
           <cim:timeInterval>
-            <cim:start>2020-12-31T23:00:00Z</cim:start>
-            <cim:end>2100-03-31T22:00:00Z</cim:end>
+            <cim:start>2020-12-31T23:00Z</cim:start>
+            <cim:end>2100-03-31T22:00Z</cim:end>
           </cim:timeInterval>
           <cim:Point>
             <cim:position>1</cim:position>
@@ -204,8 +204,8 @@
         <cim:Series_Period>
           <cim:resolution>P1M</cim:resolution>
           <cim:timeInterval>
-            <cim:start>2020-12-31T23:00:00Z</cim:start>
-            <cim:end>2100-03-31T22:00:00Z</cim:end>
+            <cim:start>2020-12-31T23:00Z</cim:start>
+            <cim:end>2100-03-31T22:00Z</cim:end>
           </cim:timeInterval>
           <cim:Point>
             <cim:position>1</cim:position>
@@ -233,8 +233,8 @@
         <cim:Series_Period>
           <cim:resolution>PT1H</cim:resolution>
           <cim:timeInterval>
-            <cim:start>2020-12-31T23:00:00Z</cim:start>
-            <cim:end>2100-03-31T22:00:00Z</cim:end>
+            <cim:start>2020-12-31T23:00Z</cim:start>
+            <cim:end>2100-03-31T22:00Z</cim:end>
           </cim:timeInterval>
           <cim:Point>
             <cim:position>1</cim:position>
@@ -353,8 +353,8 @@
         <cim:Series_Period>
           <cim:resolution>P1M</cim:resolution>
           <cim:timeInterval>
-            <cim:start>2020-12-31T23:00:00Z</cim:start>
-            <cim:end>2100-03-31T22:00:00Z</cim:end>
+            <cim:start>2020-12-31T23:00Z</cim:start>
+            <cim:end>2100-03-31T22:00Z</cim:end>
           </cim:timeInterval>
           <cim:Point>
             <cim:position>1</cim:position>
@@ -382,8 +382,8 @@
         <cim:Series_Period>
           <cim:resolution>P1M</cim:resolution>
           <cim:timeInterval>
-            <cim:start>2020-12-31T23:00:00Z</cim:start>
-            <cim:end>2100-03-31T22:00:00Z</cim:end>
+            <cim:start>2020-12-31T23:00Z</cim:start>
+            <cim:end>2100-03-31T22:00Z</cim:end>
           </cim:timeInterval>
           <cim:Point>
             <cim:position>1</cim:position>
@@ -410,8 +410,8 @@
         <cim:Series_Period>
           <cim:resolution>PT1H</cim:resolution>
           <cim:timeInterval>
-            <cim:start>2020-12-31T23:00:00Z</cim:start>
-            <cim:end>2100-03-31T22:00:00Z</cim:end>
+            <cim:start>2020-12-31T23:00Z</cim:start>
+            <cim:end>2100-03-31T22:00Z</cim:end>
           </cim:timeInterval>
           <cim:Point>
             <cim:position>1</cim:position>
@@ -531,8 +531,8 @@
         <cim:Series_Period>
           <cim:resolution>P1M</cim:resolution>
           <cim:timeInterval>
-            <cim:start>2020-12-31T23:00:00Z</cim:start>
-            <cim:end>2100-03-31T22:00:00Z</cim:end>
+            <cim:start>2020-12-31T23:00Z</cim:start>
+            <cim:end>2100-03-31T22:00Z</cim:end>
           </cim:timeInterval>
           <cim:Point>
             <cim:position>1</cim:position>
@@ -559,8 +559,8 @@
         <cim:Series_Period>
           <cim:resolution>P1M</cim:resolution>
           <cim:timeInterval>
-            <cim:start>2020-12-31T23:00:00Z</cim:start>
-            <cim:end>2100-03-31T22:00:00Z</cim:end>
+            <cim:start>2020-12-31T23:00Z</cim:start>
+            <cim:end>2100-03-31T22:00Z</cim:end>
           </cim:timeInterval>
           <cim:Point>
             <cim:position>1</cim:position>
