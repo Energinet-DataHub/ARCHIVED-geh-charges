@@ -78,7 +78,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
             points.Property<Guid>("Id").ValueGeneratedOnAdd();
 
             points.Property(p => p.Position);
-            points.Property(p => p.Price);
+            points.Property(p => p.Price).HasPrecision(14, 6);
             points.Property(p => p.Time);
         }
     }
