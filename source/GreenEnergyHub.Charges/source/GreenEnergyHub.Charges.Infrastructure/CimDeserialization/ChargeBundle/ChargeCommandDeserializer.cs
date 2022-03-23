@@ -25,7 +25,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
         private readonly IChargeCommandConverter _chargeCommandConverter;
 
         public ChargeCommandDeserializer(IChargeCommandConverter chargeCommandConverter)
-            : base(Schemas.CimXml.StructureRequestChangeOfPriceList)
+            : base(TempCimXmlSchemaCollection.StructureRequestChangeOfPriceList)
         {
             _chargeCommandConverter = chargeCommandConverter;
         }
