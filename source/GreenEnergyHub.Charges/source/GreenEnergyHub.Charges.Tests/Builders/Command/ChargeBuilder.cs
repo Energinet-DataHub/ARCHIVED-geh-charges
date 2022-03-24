@@ -16,13 +16,40 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using GreenEnergyHub.Charges.Domain.Charges;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Tests.Builders.Command
 {
     public class ChargeBuilder
     {
+        private const string Description = "description";
+        private const bool TransparentInvoicing = false;
+        private string _name = "name";
+        private Instant _startDateTime = Instant.MinValue;
+        private Instant _receivedDateTime = SystemClock.Instance.GetCurrentInstant();
+        private int _receivedOrder = 0;
+        private bool _isStop;
         private List<Point> _points = new();
+
         /*private List<ChargePeriod> _periods = new();*/
+
+        public ChargeBuilder WithName(string name)
+        {
+            _name = name;
+            return this;
+        }
+
+        public ChargeBuilder WithStartDateTime(Instant startDateTime)
+        {
+            _startDateTime = startDateTime;
+            return this;
+        }
+
+        public ChargeBuilder WithIsStop(bool isStop)
+        {
+            _isStop = isStop;
+            return this;
+        }
 
         public ChargeBuilder WithPoints(IEnumerable<Point> points)
         {
@@ -45,6 +72,14 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
                 ChargeType.Tariff,
                 Resolution.PT1H,
                 true,
+                _name,
+                Description,
+                VatClassification.Vat25,
+                TransparentInvoicing,
+                _startDateTime,
+                _receivedDateTime,
+                _receivedOrder,
+                _isStop,
                 _points);
         }
     }

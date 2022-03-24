@@ -97,8 +97,16 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 ChargeType.Tariff,
                 Resolution.P1D,
                 false,
-                new List<Point>(),
-                new List<ChargePeriod>
+                "charge name",
+                "charge description",
+                VatClassification.Vat25,
+                false,
+                SystemClock.Instance.GetCurrentInstant(),
+                SystemClock.Instance.GetCurrentInstant(),
+                0,
+                true,
+                new List<Point>());
+                /*new List<ChargePeriod>
                 {
                     new ChargePeriod(
                         Guid.NewGuid(),
@@ -110,7 +118,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                         SystemClock.Instance.GetCurrentInstant(),
                         0,
                         true), // Really true?
-                });
+                });*/
             context.Charges.Add(charge);
 
             var gridAreaLinkId = context.GridAreaLinks.First().Id;

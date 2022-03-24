@@ -144,11 +144,11 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         /// Please see the persist charge documentation where the update flow is covered:
         /// https://github.com/Energinet-DataHub/geh-charges/tree/main/docs/process-flows#persist-charge
         /// </summary>
-        /// <param name="newChargePeriod">New Charge Period from update charge request</param>
-        /// <exception cref="ArgumentNullException">Throws when <paramref name="newChargePeriod"/> is empty</exception>
-        public void Update(Charge newChargePeriod)
+        /// <param name="newCharge">New Charge Period from update charge request</param>
+        /// <exception cref="ArgumentNullException">Throws when <paramref name="newCharge"/> is empty</exception>
+        public void Update(Charge newCharge)
         {
-            if (newChargePeriod == null) throw new ArgumentNullException(nameof(newChargePeriod));
+            if (newCharge == null) throw new ArgumentNullException(nameof(newCharge));
 
             /*if (_periods.Exists(p => p.StartDateTime < newChargePeriod.StartDateTime))
             {

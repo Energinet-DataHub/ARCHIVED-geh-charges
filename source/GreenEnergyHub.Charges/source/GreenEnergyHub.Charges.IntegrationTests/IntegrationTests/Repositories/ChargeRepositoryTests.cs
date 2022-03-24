@@ -74,7 +74,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
             actual.Should().BeEquivalentTo(charge);
             actual.Points.Should().NotBeNullOrEmpty();
-            actual.Periods.Should().NotBeNullOrEmpty();
+            /*actual.Periods.Should().NotBeNullOrEmpty();*/
             actual.Points.Single().Price.Should().Be(200.111111m);
         }
 
@@ -167,8 +167,16 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 ChargeType.Fee,
                 Resolution.P1D,
                 false,
-                new List<Point> { new(1, 200.111111m, SystemClock.Instance.GetCurrentInstant()) },
-                new List<ChargePeriod>
+                "Name",
+                "description",
+                VatClassification.Vat25,
+                true,
+                Instant.FromDateTimeUtc(DateTime.Now.Date.ToUniversalTime()),
+                SystemClock.Instance.GetCurrentInstant(),
+                0,
+                false,
+                new List<Point> { new(1, 200.111111m, SystemClock.Instance.GetCurrentInstant()) });
+                /*new List<ChargePeriod>
                 {
                     new(
                         Guid.NewGuid(),
@@ -180,7 +188,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                         SystemClock.Instance.GetCurrentInstant(),
                         0,
                         false),
-                });
+                });*/
 
             return charge;
         }

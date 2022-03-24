@@ -47,7 +47,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands
             TestMarketParticipant chargeOwner,
             Guid defaultChargeLinkId,
             Guid chargeId,
-            Guid chargePeriodId,
+            /*Guid chargePeriodId,*/
             MeteringPoint meteringPoint,
             CreateDefaultChargeLinksRequest createDefaultChargeLinksRequest,
             ChargeLinksCommandFactory sut)
@@ -67,8 +67,16 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands
                 ChargeType.Fee,
                 Resolution.P1D,
                 true,
-                new List<Point> { new(1, 200m, SystemClock.Instance.GetCurrentInstant()) },
-                new List<ChargePeriod>
+                "Name",
+                "Description",
+                VatClassification.Unknown,
+                true,
+                SystemClock.Instance.GetCurrentInstant(),
+                SystemClock.Instance.GetCurrentInstant(),
+                0,
+                false,
+                new List<Point> { new(1, 200m, SystemClock.Instance.GetCurrentInstant()) });
+                /*new List<ChargePeriod>
                 {
                     new ChargePeriod(
                         chargePeriodId,
@@ -80,7 +88,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands
                         SystemClock.Instance.GetCurrentInstant(),
                         0,
                         false),
-                });
+                });*/
 
             chargeRepository
                 .Setup(f => f.GetAsync(new List<Guid> { defaultChargeLink.ChargeId }))
