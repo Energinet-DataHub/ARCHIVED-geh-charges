@@ -213,8 +213,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             await sut.HandleAsync(receivedEvent);
 
             // Assert
-            charge.Periods.Count.Should().Be(1);
+            charge.Periods.Count.Should().Be(2);
             var actual = charge.Periods.OrderByDescending(p => p.StartDateTime).First();
+            actual.StartDateTime.Should().Be(InstantHelper.GetTomorrowAtMidnightUtc());
             actual.EndDateTime.Should().Be(InstantHelper.GetEndDefault());
         }
 
