@@ -192,10 +192,15 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             _periods.Add(newLatestPeriod);*/
 
             // Original implementation:
-            /*var oldLatestPeriod = _periods.OrderByDescending(p => p.StartDateTime).First();
-            var newLatestPeriod = oldLatestPeriod.AsChargeStop(InstantExtensions.GetEndDefault());
-            _periods.Remove(oldLatestPeriod);
-            _periods.Add(newLatestPeriod);*/
+            /*var existingLastPeriod = _periods.OrderByDescending(p => p.StartDateTime).First();
+
+            if (chargePeriod.StartDateTime != existingLastPeriod.EndDateTime)
+            {
+                throw new InvalidOperationException(
+                    "Cannot cancel stop when new start date is not equal to existing stop date.");
+            }
+
+            _periods.Add(chargePeriod);*/
         }
 
         private void GuardForInvalidStop(Charge stopCharge)
