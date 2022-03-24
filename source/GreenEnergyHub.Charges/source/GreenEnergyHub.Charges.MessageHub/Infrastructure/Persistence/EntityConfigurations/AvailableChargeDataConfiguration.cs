@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Infrastructure.Core.Persistence;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -59,7 +58,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Persistence.EntityCon
 
             points.Property(p => p.Id).ValueGeneratedNever();
             points.Property(d => d.Position);
-            points.Property(d => d.Price).HasColumnType(DbTypes.Price);
+            points.Property(d => d.Price).HasPrecision(14, 6);
         }
     }
 }
