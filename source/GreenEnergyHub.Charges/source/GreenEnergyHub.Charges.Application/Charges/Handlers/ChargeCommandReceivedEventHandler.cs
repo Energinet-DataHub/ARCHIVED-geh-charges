@@ -69,8 +69,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 return;
             }
 
-            var charge = await GetChargeAsync(commandReceivedEvent.Command).ConfigureAwait(false);
-
             /*var operationType = GetOperationType(commandReceivedEvent.Command, charge);*/
 
             switch (commandReceivedEvent.Command.ChargeOperation.OperationType)
@@ -79,14 +77,14 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                     await HandleCreateEventAsync(commandReceivedEvent.Command).ConfigureAwait(false);
                     break;
                 case OperationType.Update:
-                    HandleUpdateEvent(charge!, commandReceivedEvent.Command);
+                    await HandleUpdateEventAsync(commandReceivedEvent.Command).ConfigureAwait(false);
                     break;
                 case OperationType.Stop:
                     /*charge!.Stop(commandReceivedEvent.Command.ChargeOperation.EndDateTime);*/
-                    HandleStopEvent(charge!, commandReceivedEvent.Command);
+                    await HandleStopEventAsync(commandReceivedEvent.Command).ConfigureAwait(false);
                     break;
                 case OperationType.CancelStop:
-                    HandleCancelStopEvent(charge!, commandReceivedEvent.Command);
+                    await HandleCancelStopEventAsync(commandReceivedEvent.Command).ConfigureAwait(false);
                     break;
                 case OperationType.Unknown:
                 default:
@@ -103,24 +101,37 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             await _chargeRepository.AddAsync(charge).ConfigureAwait(false);
         }
 
-        private void HandleUpdateEvent(Charge charge, ChargeCommand chargeCommand)
+        private async Task HandleUpdateEventAsync(ChargeCommand chargeCommand)
         {
+            var charge = await _chargeFactory.CreateFromCommandAsync(chargeCommand).ConfigureAwait(false);
+            await _chargeRepository.AddAsync(charge).ConfigureAwait(false);
+
             /*var newChargePeriod = _chargePeriodFactory.CreateFromChargeOperationDto(
                 chargeCommand.ReceivedDateTime, chargeCommand.ChargeOperation);
             charge.Update(newChargePeriod);*/
         }
 
-        private void HandleStopEvent(Charge charge, ChargeCommand chargeCommand)
+        private async Task HandleStopEventAsync(ChargeCommand chargeCommand)
         {
+            var charge = await _chargeFactory.CreateFromCommandAsync(chargeCommand).ConfigureAwait(false);
+            await _chargeRepository.AddAsync(charge).ConfigureAwait(false);
+
             /*var newChargePeriod = _chargePeriodFactory.CreateFromChargeOperationDto(
                 chargeCommand.ReceivedDateTime, chargeCommand.ChargeOperation);
             charge.Stop(newChargePeriod);*/
         }
 
-        private void HandleCancelStopEvent(Charge charge, ChargeCommand chargeCommand)
+        private async Task HandleCancelStopEventAsync(ChargeCommand chargeCommand)
         {
-            /*var newChargePeriod = _chargePeriodFactory.CreateFromChargeOperationDto(chargeCommand.ChargeOperation);
-            charge.CancelStop(newChargePeriod);*/
+            var stopCharge = await GetStopChargeAsync(chargeCommand).ConfigureAwait(false);
+
+            if (stopCharge == null || stopCharge.IsStop == false)
+                throw new InvalidOperationException("Charge cannot be cancelled. Stop charge not found");
+
+            _chargeRepository.Remove(stopCharge);
+
+            var charge = await _chargeFactory.CreateFromCommandAsync(chargeCommand).ConfigureAwait(false);
+            await _chargeRepository.AddAsync(charge).ConfigureAwait(false);
         }
 
         /*private static OperationType GetOperationType(ChargeCommand command, Charge? charge)
@@ -150,6 +161,15 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 command.ChargeOperation.ChargeOwner,
                 command.ChargeOperation.Type);
             return await _chargeRepository.GetOrNullAsync(chargeIdentifier).ConfigureAwait(false);
+        }
+
+        private async Task<Charge?> GetStopChargeAsync(ChargeCommand command)
+        {
+            var chargeIdentifier = new ChargeIdentifier(
+                command.ChargeOperation.ChargeId,
+                command.ChargeOperation.ChargeOwner,
+                command.ChargeOperation.Type);
+            return await _chargeRepository.GetStopOrNullAsync(chargeIdentifier).ConfigureAwait(false);
         }
     }
 }

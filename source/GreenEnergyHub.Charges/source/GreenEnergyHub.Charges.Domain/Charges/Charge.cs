@@ -139,7 +139,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 
         public IReadOnlyCollection<Point> Points => _points;
 
-        /// <summary>
+        /*/// <summary>
         /// Use this method to update the charge periods timeline of a charge upon receiving a charge update request
         /// Please see the persist charge documentation where the update flow is covered:
         /// https://github.com/Energinet-DataHub/geh-charges/tree/main/docs/process-flows#persist-charge
@@ -155,12 +155,12 @@ namespace GreenEnergyHub.Charges.Domain.Charges
                 StopExistingPeriod(newChargePeriod.StartDateTime);
             }
 
-            RemoveAllSubsequentPeriods(newChargePeriod.StartDateTime);*/
+            RemoveAllSubsequentPeriods(newChargePeriod.StartDateTime);#1#
 
             //_periods.Add(newChargePeriod);
-        }
+        }*/
 
-        /// <summary>
+        /*/// <summary>
         /// Use this method to stop a charge upon receiving a stop charge request
         /// </summary>
         /// <param name="stopCharge"></param>
@@ -174,10 +174,10 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 
             /*StopExistingPeriod(newChargePeriod.Value);
             RemoveAllSubsequentPeriods(newChargePeriod.Value);
-            _points.RemoveAll(p => p.Time >= newChargePeriod);*/
-        }
+            _points.RemoveAll(p => p.Time >= newChargePeriod);#1#
+        }*/
 
-        public void CancelStop()
+        /*public void CancelStop()
         {
             // new implementation:
             /*var stopPeriod = _periods.OrderedByReceivedDateTimeAndOrder().SingleOrDefault(p => p.IsStop);
@@ -189,7 +189,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 
             var newLatestPeriod = stopPeriod.AsNewPeriod();
             _periods.Remove(stopPeriod);
-            _periods.Add(newLatestPeriod);*/
+            _periods.Add(newLatestPeriod);#1#
 
             // Original implementation:
             /*var existingLastPeriod = _periods.OrderByDescending(p => p.StartDateTime).First();
@@ -200,10 +200,10 @@ namespace GreenEnergyHub.Charges.Domain.Charges
                     "Cannot cancel stop when new start date is not equal to existing stop date.");
             }
 
-            _periods.Add(chargePeriod);*/
-        }
+            _periods.Add(chargePeriod);#1#
+        }*/
 
-        private void GuardForInvalidStop(Charge stopCharge)
+        /*private void GuardForInvalidStop(Charge stopCharge)
         {
             if (stopCharge == null) throw new ArgumentNullException(nameof(stopCharge));
             /*if (!_charge.Any()) throw new InvalidOperationException("Cannot stop charge. No periods exists.");
@@ -214,8 +214,8 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             var validChargePeriodAtDayBefore = _periods.GetValidChargePeriodAsOf(dayBeforeAtMidnight);
 
             if (!_periods.Any() || validChargePeriodAtDayBefore?.IsStop == true || previousPeriod == null)
-                throw new InvalidOperationException("Cannot stop charge. No period exist on stop date.");*/
-        }
+                throw new InvalidOperationException("Cannot stop charge. No period exist on stop date.");#1#
+        }*/
 
         /*private void StopExistingPeriod(Instant newChargePeriod)
         {

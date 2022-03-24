@@ -14,10 +14,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
-using FluentAssertions;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Domain.Charges;
@@ -118,7 +116,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         public async Task HandleAsync_IfValidUpdateEvent_ChargeUpdated(
             [Frozen] Mock<IValidator<ChargeCommand>> validator,
             [Frozen] Mock<IChargeRepository> chargeRepository,
-            /*[Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,*/
+            [Frozen] Mock<IChargeFactory> chargeFactory,
             ChargeCommandBuilder chargeCommandBuilder,
             ChargeCommandReceivedEventHandler sut)
         {
@@ -132,9 +130,12 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                 .WithStartDateTime(InstantHelper.GetTomorrowAtMidnightUtc())
                 .Build();
 
-            chargeRepository
+            chargeRepository.Setup(r => r.AddAsync(newPeriod));
+            chargeFactory.Setup(cf => cf.CreateFromCommandAsync(chargeCommand)).ReturnsAsync(newPeriod);
+
+            /*chargeRepository
                 .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
-                .ReturnsAsync(charge);
+                .ReturnsAsync(charge);*/
             /*chargePeriodFactory
                 .Setup(r => r.CreateFromChargeOperationDto(It.IsAny<Instant>(), It.IsAny<ChargeOperationDto>()))
                 .Returns(newPeriod);*/
@@ -143,6 +144,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             await sut.HandleAsync(receivedEvent);
 
             // Assert TODO
+            chargeRepository.Verify(x => x.AddAsync(It.IsAny<Charge>()), Times.Once);
             /*charge.Periods.Count.Should().Be(4);*/
         }
 
@@ -151,7 +153,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         public async Task HandleAsync_IfValidStopEvent_ChargeStopped(
             [Frozen] Mock<IValidator<ChargeCommand>> validator,
             [Frozen] Mock<IChargeRepository> chargeRepository,
-            /*[Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,*/
+            [Frozen] Mock<IChargeFactory> chargeFactory,
             [Frozen] Instant stopDate,
             ChargeCommandBuilder chargeCommandBuilder,
             ChargeCommandReceivedEventHandler sut)
@@ -161,13 +163,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             var receivedEvent = new ChargeCommandReceivedEvent(SystemClock.Instance.GetCurrentInstant(), chargeCommand);
             var validationResult = ValidationResult.CreateSuccess();
             SetupValidator(validator, validationResult);
-            var periods = CreateValidChargesFromOffset(stopDate);
-            var charge = CreateValidCharge(periods);
-            var newPeriod = new ChargeBuilder().WithStartDateTime(stopDate).WithIsStop(true).Build();
+            var existingCharges = CreateValidChargesFromOffset(stopDate);
+            var stopPeriod = new ChargeBuilder().WithStartDateTime(stopDate).WithIsStop(true).Build();
 
-            chargeRepository
+            chargeRepository.Setup(r => r.AddAsync(stopPeriod));
+            chargeFactory.Setup(cf => cf.CreateFromCommandAsync(chargeCommand)).ReturnsAsync(stopPeriod);
+            /*chargeRepository
                 .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
-                .ReturnsAsync(charge);
+                .ReturnsAsync(existingCharges.FirstOrDefault);*/
             /*chargePeriodFactory
                 .Setup(r => r.CreateFromChargeOperationDto(It.IsAny<Instant>(), It.IsAny<ChargeOperationDto>()))
                 .Returns(newPeriod);*/
@@ -176,6 +179,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             await sut.HandleAsync(receivedEvent);
 
             // Assert TODO
+            chargeRepository.Verify(x => x.AddAsync(It.IsAny<Charge>()), Times.Once);
             /*charge.Periods.Count.Should().Be(4);
             var actual = charge.Periods.OrderedByReceivedDateTimeAndOrder().First();
             // actual.EndDateTime.Should().Be(stopDate);
@@ -187,7 +191,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         public async Task HandleAsync_WhenValidCancelStop_ThenStopCancelled(
             [Frozen] Mock<IValidator<ChargeCommand>> validator,
             [Frozen] Mock<IChargeRepository> chargeRepository,
-            /*[Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,*/
+            [Frozen] Mock<IChargeFactory> chargeFactory,
             ChargeCommandReceivedEventHandler sut)
         {
             // Arrange
@@ -199,19 +203,21 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                 /*.WithEndDateTime(InstantHelper.GetEndDefault())*/
                 .Build();
             var receivedEvent = new ChargeCommandReceivedEvent(InstantHelper.GetTodayAtMidnightUtc(), chargeCommand);
-            var periods = new List<Charge>
+            /*var periods = new List<Charge>
             {
                 new ChargeBuilder().WithIsStop(true).Build(),
-            };
+            };*/
             var charge = new ChargeBuilder()
                 /*.WithPeriods(periods)*/
+                .WithIsStop(true)
                 .Build();
             var newPeriod = new ChargeBuilder()
                 .WithStartDateTime(InstantHelper.GetTomorrowAtMidnightUtc())
                 .Build();
-            chargeRepository
-                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
-                .ReturnsAsync(charge);
+
+            chargeRepository.Setup(r => r.AddAsync(newPeriod));
+            chargeFactory.Setup(cf => cf.CreateFromCommandAsync(chargeCommand)).ReturnsAsync(newPeriod);
+            chargeRepository.Setup(r => r.GetStopOrNullAsync(It.IsAny<ChargeIdentifier>())).ReturnsAsync(charge);
             /*chargePeriodFactory
                 .Setup(r => r.CreateFromChargeOperationDto(It.IsAny<Instant>(), It.IsAny<ChargeOperationDto>()))
                 .Returns(newPeriod);*/
@@ -220,6 +226,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             await sut.HandleAsync(receivedEvent);
 
             // Assert TODO
+            chargeRepository.Verify(x => x.Remove(It.IsAny<Charge>()), Times.Once);
+            chargeRepository.Verify(x => x.AddAsync(It.IsAny<Charge>()), Times.Once);
             /*charge.Periods.Count.Should().Be(2);
             var actual = charge.Periods.OrderedByReceivedDateTimeAndOrder().First();
             actual.StartDateTime.Should().Be(InstantHelper.GetTomorrowAtMidnightUtc());

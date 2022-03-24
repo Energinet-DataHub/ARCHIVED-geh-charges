@@ -25,6 +25,8 @@ namespace GreenEnergyHub.Charges.Domain.Charges
     {
         Task AddAsync(Charge charge);
 
+        void Remove(Charge stopCharge);
+
         Task<Charge> GetAsync(ChargeIdentifier chargeIdentifier);
 
         Task<Charge> GetAsync(Guid id);
@@ -32,5 +34,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         Task<IReadOnlyCollection<Charge>> GetAsync(IReadOnlyCollection<Guid> ids);
 
         Task<Charge?> GetOrNullAsync(ChargeIdentifier chargeIdentifier);
+
+        Task<Charge?> GetStopOrNullAsync(ChargeIdentifier chargeIdentifier);
     }
 }

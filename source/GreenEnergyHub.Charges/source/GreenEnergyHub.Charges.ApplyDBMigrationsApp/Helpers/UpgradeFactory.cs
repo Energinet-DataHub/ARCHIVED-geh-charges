@@ -28,7 +28,7 @@ namespace GreenEnergyHub.Charges.ApplyDBMigrationsApp.Helpers
                 throw new ArgumentException("Connection string must have a value");
             }
 
-            EnsureDatabase.For.SqlDatabase(connectionString);
+            EnsureDatabase.For.SqlDatabase(connectionString, collation: "danish_norwegian_ci_as");
 
             var builder = DeployChanges.To
                 .SqlDatabase(connectionString)
