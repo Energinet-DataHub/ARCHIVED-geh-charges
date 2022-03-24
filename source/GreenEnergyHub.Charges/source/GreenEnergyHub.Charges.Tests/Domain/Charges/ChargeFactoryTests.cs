@@ -38,17 +38,17 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             TestMarketParticipant owner,
             ChargeCommand chargeCommand,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
-            Mock<ChargePeriod> chargePeriod,
+            /*[Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
+            Mock<ChargePeriod> chargePeriod,*/
             ChargeFactory sut)
         {
             marketParticipantRepository
                 .Setup(repo => repo.GetOrNullAsync(chargeCommand.ChargeOperation.ChargeOwner))
                 .ReturnsAsync(owner);
 
-            chargePeriodFactory
+            /*chargePeriodFactory
                 .Setup(f => f.CreateFromChargeOperationDto(It.IsAny<Instant>(), It.IsAny<ChargeOperationDto>()))
-                .Returns(chargePeriod.Object);
+                .Returns(chargePeriod.Object);*/
 
             var actual = await sut.CreateFromCommandAsync(chargeCommand);
 
@@ -60,17 +60,17 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
         public async Task CreateFromCommandAsync_WhenOwnerIsNull_ThrowsException(
             ChargeCommand chargeCommand,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
-            Mock<ChargePeriod> chargePeriod,
+            /*[Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
+            Mock<ChargePeriod> chargePeriod,*/
             ChargeFactory sut)
         {
             marketParticipantRepository
                 .Setup(repo => repo.GetOrNullAsync(It.IsAny<string>()))
                 .ReturnsAsync((MarketParticipant?)null);
 
-            chargePeriodFactory
+            /*chargePeriodFactory
                 .Setup(f => f.CreateFromChargeOperationDto(It.IsAny<Instant>(), It.IsAny<ChargeOperationDto>()))
-                .Returns(chargePeriod.Object);
+                .Returns(chargePeriod.Object);*/
 
             await Assert.ThrowsAsync<InvalidOperationException>(() => sut.CreateFromCommandAsync(chargeCommand));
         }

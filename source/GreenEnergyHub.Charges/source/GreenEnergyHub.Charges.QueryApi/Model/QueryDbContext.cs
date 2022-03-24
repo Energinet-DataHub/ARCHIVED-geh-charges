@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
 
         public virtual DbSet<ChargeLink> ChargeLinks { get; set; }
 
-        public virtual DbSet<ChargePeriod> ChargePeriods { get; set; }
+        /*public virtual DbSet<ChargePeriod> ChargePeriods { get; set; }*/
 
         public virtual DbSet<ChargePoint> ChargePoints { get; set; }
 
@@ -85,7 +85,7 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
                     .HasConstraintName("FK_ChargeLink_MeteringPoint");
             });
 
-            modelBuilder.Entity<ChargePeriod>(entity =>
+            /*modelBuilder.Entity<ChargePeriod>(entity =>
             {
                 entity.HasKey(e => e.Id)
                     .IsClustered(false);
@@ -97,7 +97,7 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
                     .HasForeignKey(d => d.ChargeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ChargePeriod_Charge");
-            });
+            });*/
 
             modelBuilder.Entity<ChargePoint>(entity =>
             {

@@ -29,7 +29,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         private readonly IValidator<ChargeCommand> _validator;
         private readonly IChargeRepository _chargeRepository;
         private readonly IChargeFactory _chargeFactory;
-        private readonly IChargePeriodFactory _chargePeriodFactory;
+        /*private readonly IChargePeriodFactory _chargePeriodFactory;*/
         private readonly IUnitOfWork _unitOfWork;
 
         public ChargeCommandReceivedEventHandler(
@@ -37,14 +37,14 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             IValidator<ChargeCommand> validator,
             IChargeRepository chargeRepository,
             IChargeFactory chargeFactory,
-            IChargePeriodFactory chargePeriodFactory,
+            /*IChargePeriodFactory chargePeriodFactory,*/
             IUnitOfWork unitOfWork)
         {
             _chargeCommandReceiptService = chargeCommandReceiptService;
             _validator = validator;
             _chargeRepository = chargeRepository;
             _chargeFactory = chargeFactory;
-            _chargePeriodFactory = chargePeriodFactory;
+            /*_chargePeriodFactory = chargePeriodFactory;*/
             _unitOfWork = unitOfWork;
         }
 
@@ -105,16 +105,16 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 
         private void HandleUpdateEvent(Charge charge, ChargeCommand chargeCommand)
         {
-            var newChargePeriod = _chargePeriodFactory.CreateFromChargeOperationDto(
+            /*var newChargePeriod = _chargePeriodFactory.CreateFromChargeOperationDto(
                 chargeCommand.ReceivedDateTime, chargeCommand.ChargeOperation);
-            charge.Update(newChargePeriod);
+            charge.Update(newChargePeriod);*/
         }
 
         private void HandleStopEvent(Charge charge, ChargeCommand chargeCommand)
         {
-            var newChargePeriod = _chargePeriodFactory.CreateFromChargeOperationDto(
+            /*var newChargePeriod = _chargePeriodFactory.CreateFromChargeOperationDto(
                 chargeCommand.ReceivedDateTime, chargeCommand.ChargeOperation);
-            charge.Stop(newChargePeriod);
+            charge.Stop(newChargePeriod);*/
         }
 
         /*private static OperationType GetOperationType(ChargeCommand command, Charge? charge)

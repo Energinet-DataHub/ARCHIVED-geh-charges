@@ -20,7 +20,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GreenEnergyHub.Charges.QueryApi.Model
 {
-    [Table("ChargePeriod", Schema = "Charges")]
+    /*[Table("ChargePeriod", Schema = "Charges")]
     public partial class ChargePeriod
     {
         [Key]
@@ -49,5 +49,5 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
         [ForeignKey(nameof(ChargeId))]
         [InverseProperty("ChargePeriods")]
         public virtual Charge Charge { get; set; }
-    }
+    }*/
 }

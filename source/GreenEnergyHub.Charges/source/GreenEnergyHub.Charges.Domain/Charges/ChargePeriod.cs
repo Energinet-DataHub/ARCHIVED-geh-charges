@@ -17,7 +17,7 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Charges
 {
-    /// <summary>
+    /*/// <summary>
     /// Class is used for handling charge periods and corresponding charge master data in that period.
     /// </summary>
     public class ChargePeriod
@@ -99,7 +99,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             /*if (endDate <= StartDateTime)
             {
                 throw new InvalidOperationException("End date must be after start date.");
-            }*/
+            }#1#
 
             return new ChargePeriod(
                 Id,
@@ -130,5 +130,5 @@ namespace GreenEnergyHub.Charges.Domain.Charges
                 ReceivedOrder,
                 false);
         }
-    }
+    }*/
 }

@@ -18,7 +18,7 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Charges
 {
-    public class ChargePeriodFactory : IChargePeriodFactory
+    /*public class ChargePeriodFactory : IChargePeriodFactory
     {
         public ChargePeriod CreateFromChargeOperationDto(
             Instant receivedDatetime, ChargeOperationDto chargeOperationDto)
@@ -36,5 +36,5 @@ namespace GreenEnergyHub.Charges.Domain.Charges
                 chargeOperationDto.ReceivedOrder,
                 isStop);
         }
-    }
+    }*/
 }

@@ -29,7 +29,7 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
         public Charge()
         {
             ChargeLinks = new HashSet<ChargeLink>();
-            ChargePeriods = new HashSet<ChargePeriod>();
+            /*ChargePeriods = new HashSet<ChargePeriod>();*/
             ChargePoints = new HashSet<ChargePoint>();
             DefaultChargeLinks = new HashSet<DefaultChargeLink>();
         }
@@ -49,6 +49,24 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
 
         public int Resolution { get; set; }
 
+        public bool TransparentInvoicing { get; set; }
+
+        [Required]
+        [StringLength(2048)]
+        public string Description { get; set; }
+
+        [Required]
+        [StringLength(132)]
+        public string Name { get; set; }
+
+        public int VatClassification { get; set; }
+
+        public DateTime StartDateTime { get; set; }
+
+        public DateTime ReceivedDateTime { get; set; }
+
+        public int ReceivedOrder { get; set; }
+
         [ForeignKey(nameof(OwnerId))]
         [InverseProperty(nameof(MarketParticipant.Charges))]
         public virtual MarketParticipant Owner { get; set; }
@@ -56,8 +74,8 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
         [InverseProperty(nameof(ChargeLink.Charge))]
         public virtual ICollection<ChargeLink> ChargeLinks { get; set; }
 
-        [InverseProperty(nameof(ChargePeriod.Charge))]
-        public virtual ICollection<ChargePeriod> ChargePeriods { get; set; }
+        /*[InverseProperty(nameof(ChargePeriod.Charge))]
+        public virtual ICollection<ChargePeriod> ChargePeriods { get; set; }*/
 
         [InverseProperty(nameof(ChargePoint.Charge))]
         public virtual ICollection<ChargePoint> ChargePoints { get; set; }

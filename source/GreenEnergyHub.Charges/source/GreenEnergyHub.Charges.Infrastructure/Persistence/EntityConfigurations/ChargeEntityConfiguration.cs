@@ -33,8 +33,16 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
             builder.Property(c => c.SenderProvidedChargeId);
             builder.Property(c => c.Resolution);
             builder.Property(c => c.Type);
+            builder.Property(p => p.Name);
+            builder.Property(p => p.Description);
+            builder.Property(p => p.TransparentInvoicing);
+            builder.Property(p => p.VatClassification);
+            builder.Property(p => p.StartDateTime);
+            builder.Property(p => p.ReceivedDateTime);
+            builder.Property(p => p.ReceivedOrder);
+            builder.Property(p => p.IsStop);
             builder.OwnsMany(c => c.Points, ConfigurePoints);
-            builder.OwnsMany(c => c.Periods, ConfigurePeriods);
+            /*builder.OwnsMany(c => c.Periods, ConfigurePeriods);*/
 
             // Enable EF Core to hydrate the points
             builder.Metadata
@@ -42,12 +50,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
                 .SetPropertyAccessMode(PropertyAccessMode.Field);
 
             // Enable EF Core to hydrate the periods
-            builder.Metadata
+            /*builder.Metadata
                 .FindNavigation(nameof(Charge.Periods))
-                .SetPropertyAccessMode(PropertyAccessMode.Field);
+                .SetPropertyAccessMode(PropertyAccessMode.Field);*/
         }
 
-        private void ConfigurePeriods(OwnedNavigationBuilder<Charge, ChargePeriod> periods)
+        /*private void ConfigurePeriods(OwnedNavigationBuilder<Charge, ChargePeriod> periods)
         {
             // This field is defined in the SQL model (as a foreign key)
             periods.WithOwner().HasForeignKey($"{_aggregateTableName}Id");
@@ -66,7 +74,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
             periods.Property(p => p.ReceivedDateTime);
             periods.Property(p => p.ReceivedOrder);
             periods.Property(p => p.IsStop);
-        }
+        }*/
 
         private static void ConfigurePoints(OwnedNavigationBuilder<Charge, Point> points)
         {

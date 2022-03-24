@@ -118,7 +118,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         public async Task HandleAsync_IfValidUpdateEvent_ChargeUpdated(
             [Frozen] Mock<IValidator<ChargeCommand>> validator,
             [Frozen] Mock<IChargeRepository> chargeRepository,
-            [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
+            /*[Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,*/
             ChargeCommandBuilder chargeCommandBuilder,
             ChargeCommandReceivedEventHandler sut)
         {

@@ -13,12 +13,11 @@
 // limitations under the License.
 
 using System;
-using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.QueryApi.Model;
 
 namespace GreenEnergyHub.Charges.Tests.Builders.Query
 {
-    public class ChargePeriodBuilder
+    /*public class ChargePeriodBuilder
     {
         private DateTime _receivedDateTime = DateTime.Now.AddDays(-1).Date.ToUniversalTime();
         private int _receivedOrder = 0;
@@ -72,5 +71,5 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Query
                 ReceivedOrder = _receivedOrder,
             };
         }
-    }
+    }*/
 }

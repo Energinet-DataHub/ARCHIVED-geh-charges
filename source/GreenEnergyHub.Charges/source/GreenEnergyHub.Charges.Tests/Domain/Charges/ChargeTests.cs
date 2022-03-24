@@ -438,16 +438,16 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             Assert.Throws<InvalidOperationException>(sut.CancelStop);
         }
 
-        private static IEnumerable<ChargePeriod> BuildStoppedChargePeriods()
+        private static IEnumerable<Charge> BuildStoppedChargePeriods()
         {
-            return new List<ChargePeriod>
+            return new List<Charge>
             {
-                new ChargePeriodBuilder()
+                new ChargeBuilder()
                     .WithName("First")
                     .WithStartDateTime(InstantHelper.GetTodayAtMidnightUtc())
                     // .WithEndDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(2))
                     .Build(),
-                new ChargePeriodBuilder()
+                new ChargeBuilder()
                     .WithName("Second")
                     .WithStartDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(2))
                     // .WithEndDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(4))
@@ -456,7 +456,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             };
         }
 
-        private static List<ChargePeriod> CreateThreeExistingPeriods()
+        private static List<Charge> CreateThreeExistingPeriods()
         {
             return new List<ChargePeriod>
             {

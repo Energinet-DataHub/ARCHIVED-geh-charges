@@ -18,7 +18,7 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Tests.Builders.Command
 {
-    public class ChargePeriodBuilder
+    /*public class ChargePeriodBuilder
     {
         private const string Description = "description";
         private const bool TransparentInvoicing = false;
@@ -71,5 +71,5 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
                 _receivedOrder,
                 _isStop);
         }
-    }
+    }*/
 }

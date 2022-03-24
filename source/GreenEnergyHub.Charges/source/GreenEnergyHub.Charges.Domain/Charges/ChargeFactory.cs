@@ -23,14 +23,12 @@ namespace GreenEnergyHub.Charges.Domain.Charges
     public class ChargeFactory : IChargeFactory
     {
         private readonly IMarketParticipantRepository _marketParticipantRepository;
-        private readonly IChargePeriodFactory _chargePeriodFactory;
+        /*private readonly IChargePeriodFactory _chargePeriodFactory;*/
 
         public ChargeFactory(
-            IMarketParticipantRepository marketParticipantRepository,
-            IChargePeriodFactory chargePeriodFactory)
+            IMarketParticipantRepository marketParticipantRepository)
         {
             _marketParticipantRepository = marketParticipantRepository;
-            _chargePeriodFactory = chargePeriodFactory;
         }
 
         public async Task<Charge> CreateFromCommandAsync(ChargeCommand command)
@@ -42,8 +40,8 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             if (owner == null)
                 throw new InvalidOperationException($"Market participant '{command.ChargeOperation.ChargeOwner}' does not exist.");
 
-            var period = _chargePeriodFactory.CreateFromChargeOperationDto(
-                command.ReceivedDateTime, command.ChargeOperation);
+            /*var period = _chargePeriodFactory.CreateFromChargeOperationDto(
+                command.ReceivedDateTime, command.ChargeOperation);*/
 
             return new Charge(
                 Guid.NewGuid(),
@@ -52,8 +50,15 @@ namespace GreenEnergyHub.Charges.Domain.Charges
                 command.ChargeOperation.Type,
                 command.ChargeOperation.Resolution,
                 command.ChargeOperation.TaxIndicator,
-                command.ChargeOperation.Points,
-                new List<ChargePeriod> { period });
+                command.ChargeOperation.ChargeName,
+                command.ChargeOperation.ChargeDescription,
+                command.ChargeOperation.VatClassification,
+                command.ChargeOperation.TransparentInvoicing,
+                command.ChargeOperation.StartDateTime,
+                command.ReceivedDateTime,
+                command.ChargeOperation.ReceivedOrder,
+                command.ChargeOperation.OperationType == OperationType.Stop,
+                command.ChargeOperation.Points);
         }
     }
 }

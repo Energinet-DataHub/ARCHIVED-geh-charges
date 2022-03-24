@@ -23,7 +23,6 @@ namespace GreenEnergyHub.Charges.Domain.Charges
     public class Charge
     {
         private readonly List<Point> _points;
-        private readonly List<ChargePeriod> _periods;
 
         public Charge(
             Guid id,
@@ -32,17 +31,31 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             ChargeType type,
             Resolution resolution,
             bool taxIndicator,
-            List<Point> points,
-            List<ChargePeriod> periods)
+            string name,
+            string description,
+            VatClassification vatClassification,
+            bool transparentInvoicing,
+            Instant startDateTime,
+            Instant receivedDateTime,
+            int receivedOrder,
+            bool isStop,
+            List<Point> points)
         {
             Id = id;
             SenderProvidedChargeId = senderProvidedChargeId;
             OwnerId = ownerId;
             Type = type;
             Resolution = resolution;
-            _points = points;
-            _periods = periods;
             TaxIndicator = taxIndicator;
+            Name = name;
+            Description = description;
+            VatClassification = vatClassification;
+            TransparentInvoicing = transparentInvoicing;
+            StartDateTime = startDateTime;
+            ReceivedDateTime = receivedDateTime;
+            ReceivedOrder = receivedOrder;
+            IsStop = isStop;
+            _points = points;
         }
 
         /// <summary>
@@ -52,8 +65,9 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         private Charge()
         {
             SenderProvidedChargeId = null!;
+            Name = null!;
+            Description = null!;
             _points = new List<Point>();
-            _periods = new List<ChargePeriod>();
         }
 
         /// <summary>
@@ -82,9 +96,48 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Local - private setter used in unit test
         public bool TaxIndicator { get; private set;  }
 
-        public IReadOnlyCollection<Point> Points => _points;
+        /// <summary>
+        /// The charge name
+        /// </summary>
+        public string Name { get; }
 
-        public IReadOnlyCollection<ChargePeriod> Periods => _periods;
+        /// <summary>
+        /// The charge description
+        /// </summary>
+        public string Description { get; }
+
+        /// <summary>
+        /// VAT classification for charge
+        /// </summary>
+        public VatClassification VatClassification { get; }
+
+        /// <summary>
+        /// In Denmark the Energy Supplier invoices the customer, including the charges from the Grid Access Provider and the System Operator.
+        /// This boolean can be use to indicate that a charge must be visible on the invoice sent to the customer.
+        /// </summary>
+        public bool TransparentInvoicing { get; }
+
+        /// <summary>
+        /// Valid from, of a charge period. Also known as Effective Date.
+        /// </summary>
+        public Instant StartDateTime { get; }
+
+        /// <summary>
+        /// Received date and time, used for ordering periods together with ReceivedOrder
+        /// </summary>
+        public Instant ReceivedDateTime { get; }
+
+        /// <summary>
+        /// Order of period when received in bundle, used for ordering periods together with ReceivedDateTime
+        /// </summary>
+        public int ReceivedOrder { get; }
+
+        /// <summary>
+        /// Indicates a charge stop.
+        /// </summary>
+        public bool IsStop { get; }
+
+        public IReadOnlyCollection<Point> Points => _points;
 
         /// <summary>
         /// Use this method to update the charge periods timeline of a charge upon receiving a charge update request
@@ -93,7 +146,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         /// </summary>
         /// <param name="newChargePeriod">New Charge Period from update charge request</param>
         /// <exception cref="ArgumentNullException">Throws when <paramref name="newChargePeriod"/> is empty</exception>
-        public void Update(ChargePeriod newChargePeriod)
+        public void Update(Charge newChargePeriod)
         {
             if (newChargePeriod == null) throw new ArgumentNullException(nameof(newChargePeriod));
 
@@ -103,20 +156,21 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             }
 
             RemoveAllSubsequentPeriods(newChargePeriod.StartDateTime);*/
-            _periods.Add(newChargePeriod);
+
+            //_periods.Add(newChargePeriod);
         }
 
         /// <summary>
         /// Use this method to stop a charge upon receiving a stop charge request
         /// </summary>
-        /// <param name="stopChargePeriod"></param>
-        /// <exception cref="ArgumentNullException"><paramref name="stopChargePeriod"/> is <c>null</c></exception>
-        public void Stop(ChargePeriod stopChargePeriod)
+        /// <param name="stopCharge"></param>
+        /// <exception cref="ArgumentNullException"><paramref name="stopCharge"/> is <c>null</c></exception>
+        public void Stop(Charge stopCharge)
         {
-            GuardForInvalidStop(stopChargePeriod);
+            GuardForInvalidStop(stopCharge);
 
-            _periods.Add(stopChargePeriod);
-            _points.RemoveAll(p => p.Time >= stopChargePeriod.StartDateTime);
+            // _periods.Add(stopCharge);
+            _points.RemoveAll(p => p.Time >= stopCharge.StartDateTime);
 
             /*StopExistingPeriod(newChargePeriod.Value);
             RemoveAllSubsequentPeriods(newChargePeriod.Value);
@@ -125,7 +179,8 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 
         public void CancelStop()
         {
-            var stopPeriod = _periods.OrderedByReceivedDateTimeAndOrder().SingleOrDefault(p => p.IsStop);
+            // new implementation:
+            /*var stopPeriod = _periods.OrderedByReceivedDateTimeAndOrder().SingleOrDefault(p => p.IsStop);
 
             if (stopPeriod == null)
             {
@@ -134,26 +189,27 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 
             var newLatestPeriod = stopPeriod.AsNewPeriod();
             _periods.Remove(stopPeriod);
-            _periods.Add(newLatestPeriod);
+            _periods.Add(newLatestPeriod);*/
 
+            // Original implementation:
             /*var oldLatestPeriod = _periods.OrderByDescending(p => p.StartDateTime).First();
             var newLatestPeriod = oldLatestPeriod.AsChargeStop(InstantExtensions.GetEndDefault());
             _periods.Remove(oldLatestPeriod);
             _periods.Add(newLatestPeriod);*/
         }
 
-        private void GuardForInvalidStop(ChargePeriod stopChargePeriod)
+        private void GuardForInvalidStop(Charge stopCharge)
         {
-            if (stopChargePeriod == null) throw new ArgumentNullException(nameof(stopChargePeriod));
-            if (!_periods.Any()) throw new InvalidOperationException("Cannot stop charge. No periods exists.");
+            if (stopCharge == null) throw new ArgumentNullException(nameof(stopCharge));
+            /*if (!_charge.Any()) throw new InvalidOperationException("Cannot stop charge. No periods exists.");
 
             var previousPeriod = _periods.OrderBy(p => p.StartDateTime)
-                .FirstOrDefault(p => p.StartDateTime < stopChargePeriod.StartDateTime);
-            var dayBeforeAtMidnight = stopChargePeriod.StartDateTime.Minus(Duration.FromDays(1));
+                .FirstOrDefault(p => p.StartDateTime < stopCharge.StartDateTime);
+            var dayBeforeAtMidnight = stopCharge.StartDateTime.Minus(Duration.FromDays(1));
             var validChargePeriodAtDayBefore = _periods.GetValidChargePeriodAsOf(dayBeforeAtMidnight);
 
             if (!_periods.Any() || validChargePeriodAtDayBefore?.IsStop == true || previousPeriod == null)
-                throw new InvalidOperationException("Cannot stop charge. No period exist on stop date.");
+                throw new InvalidOperationException("Cannot stop charge. No period exist on stop date.");*/
         }
 
         /*private void StopExistingPeriod(Instant newChargePeriod)

@@ -17,8 +17,8 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Charges
 {
-    public interface IChargePeriodFactory
+    /*public interface IChargePeriodFactory
     {
         ChargePeriod CreateFromChargeOperationDto(Instant receivedDatetime, ChargeOperationDto chargeOperationDto);
-    }
+    }*/
 }

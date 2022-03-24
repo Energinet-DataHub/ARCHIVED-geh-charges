@@ -20,14 +20,14 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 {
     public static class ChargePeriodCollectionExtensions
     {
-        public static IEnumerable<ChargePeriod> OrderedByReceivedDateTimeAndOrder(this IEnumerable<ChargePeriod> source)
+        public static IEnumerable<Charge> OrderedByReceivedDateTimeAndOrder(this IEnumerable<Charge> source)
         {
             return source
                 .OrderByDescending(p => p.ReceivedDateTime)
                 .ThenByDescending(p => p.ReceivedOrder);
         }
 
-        public static ChargePeriod? GetValidChargePeriodAsOf(this IEnumerable<ChargePeriod> source, Instant instant)
+        public static Charge? GetValidChargePeriodAsOf(this IEnumerable<Charge> source, Instant instant)
         {
             var result = source.Where(charge => charge.StartDateTime <= instant).OrderedByReceivedDateTimeAndOrder();
             return result.FirstOrDefault();

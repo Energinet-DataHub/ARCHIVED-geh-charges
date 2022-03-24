@@ -24,7 +24,7 @@ using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.Domain.Charges
 {
-    [UnitTest]
+    /*[UnitTest]
     public class ChargePeriodFactoryTests
     {
         [Theory]
@@ -37,5 +37,5 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
 
             actual.Should().NotContainNullsOrEmptyEnumerables();
         }
-    }
+    }*/
 }
