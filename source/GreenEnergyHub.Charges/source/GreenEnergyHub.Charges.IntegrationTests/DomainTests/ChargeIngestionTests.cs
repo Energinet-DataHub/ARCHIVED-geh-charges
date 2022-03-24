@@ -148,6 +148,21 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId, 3);
             }
 
+            [Fact]
+            public async Task Given_NewTaxBundleTariffWithCreateAndTwoUpdates_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply()
+            {
+                // Arrange
+                var (request, correlationId) = await _authenticatedHttpRequestGenerator
+                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.TariffBundleWithCreateAndUpdates);
+
+                // Act
+                await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Act and assert
+                // We expect three peeks, one for the charge and one for the receipt and one rejection
+                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId, 3);
+            }
+
             [Theory]
             [InlineAutoMoqData(ChargeDocument.SubscriptionMonthlyPriceSample)]
             [InlineAutoMoqData(ChargeDocument.FeeMonthlyPriceSample)]
