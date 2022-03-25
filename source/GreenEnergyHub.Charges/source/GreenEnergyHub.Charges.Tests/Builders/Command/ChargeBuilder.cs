@@ -23,6 +23,10 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
     {
         private List<Point> _points = new();
         private List<ChargePeriod> _periods = new();
+        private string _senderProvidedChargeId = "senderProvidedChargeId";
+        private Guid _id = Guid.NewGuid();
+        private Guid _ownerId = Guid.NewGuid();
+        private ChargeType _chargeType = ChargeType.Tariff;
 
         public ChargeBuilder WithPoints(IEnumerable<Point> points)
         {
@@ -36,13 +40,37 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             return this;
         }
 
+        public ChargeBuilder WithSenderProvidedChargeId(string senderProvidedChargeId)
+        {
+            _senderProvidedChargeId = senderProvidedChargeId;
+            return this;
+        }
+
+        public ChargeBuilder WithId(Guid id)
+        {
+            _id = id;
+            return this;
+        }
+
+        public ChargeBuilder WithOwnerId(Guid ownerId)
+        {
+            _ownerId = ownerId;
+            return this;
+        }
+
+        public ChargeBuilder WithChargeType(ChargeType chargeType)
+        {
+            _chargeType = chargeType;
+            return this;
+        }
+
         public Charge Build()
         {
             return new Charge(
-                Guid.NewGuid(),
-                "senderProvidedChargeId",
-                Guid.NewGuid(),
-                ChargeType.Tariff,
+                _id,
+                _senderProvidedChargeId,
+                _ownerId,
+                _chargeType,
                 Resolution.PT1H,
                 true,
                 _points,

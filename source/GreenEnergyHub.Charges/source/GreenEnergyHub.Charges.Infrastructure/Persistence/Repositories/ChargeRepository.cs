@@ -54,6 +54,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
             return await GetChargeQueryable(chargeIdentifier).SingleOrDefaultAsync().ConfigureAwait(false);
         }
 
+        public Task UpdateAsync(Charge charge)
+        {
+            if (charge == null) throw new ArgumentNullException(nameof(charge));
+            _chargesDatabaseContext.Charges.Update(charge);
+            return Task.CompletedTask;
+        }
+
         public async Task AddAsync(Charge charge)
         {
             if (charge == null) throw new ArgumentNullException(nameof(charge));

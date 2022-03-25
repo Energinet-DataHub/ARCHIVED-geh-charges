@@ -24,9 +24,11 @@ using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.Tests.Builders.Command;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
 using Xunit;
+using Xunit.Abstractions;
 using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
@@ -38,14 +40,16 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
     public class ChargeRepositoryTests : IClassFixture<ChargesDatabaseFixture>
     {
         private const string MarketParticipantOwnerId = "MarketParticipantId";
+        private readonly ITestOutputHelper _testOutputHelper;
 
         // Is being set when executing the SeedDatabase method
         private static Guid _marketParticipantId;
 
         private readonly ChargesDatabaseManager _databaseManager;
 
-        public ChargeRepositoryTests(ChargesDatabaseFixture fixture)
+        public ChargeRepositoryTests(ChargesDatabaseFixture fixture, ITestOutputHelper testOutputHelper)
         {
+            _testOutputHelper = testOutputHelper;
             _databaseManager = fixture.DatabaseManager;
         }
 
@@ -147,6 +151,120 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
             // Assert
             actual.Should().NotBeEmpty();
+        }
+
+        [Fact]
+        public async Task WIP_AddAsync_WhenChargeWasJustInsertedByAnotherThread_Throws()
+        {
+            // Arrange
+            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
+            await GetOrAddMarketParticipantAsync(chargesDatabaseWriteContext);
+            var sut = new ChargeRepository(chargesDatabaseWriteContext);
+            var builder = new ChargeBuilder();
+
+            var charge = builder
+                .WithId(Guid.NewGuid())
+                .WithSenderProvidedChargeId("TariffId")
+                .WithOwnerId(_marketParticipantId)
+                .WithChargeType(ChargeType.Tariff)
+                .Build();
+
+            await sut.AddAsync(charge);
+
+            // Simulating a simultaneous insert action for the same unique charge caused by another operation or request
+            var sameChargeWithDiffId = builder
+                .WithId(Guid.NewGuid())
+                .WithSenderProvidedChargeId("TariffId")
+                .WithOwnerId(_marketParticipantId)
+                .WithChargeType(ChargeType.Tariff)
+                .Build();
+
+            await using var anotherChargesDatabaseContext = _databaseManager.CreateDbContext();
+            await anotherChargesDatabaseContext.Charges.AddAsync(sameChargeWithDiffId);
+            await anotherChargesDatabaseContext.SaveChangesAsync();
+
+            try
+            {
+                await chargesDatabaseWriteContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                _testOutputHelper.WriteLine(e.ToString());
+                throw;
+            }
+
+            // Act / Assert
+            // var ex = await Assert.ThrowsAsync<DbUpdateException>(() => chargesDatabaseWriteContext.SaveChangesAsync());
+            // ex.InnerException.Should().BeOfType<SqlException>().Which.Message.Should().Contain("Violation of UNIQUE KEY constraint 'UC_SenderProvidedChargeId_Type_OwnerId'. Cannot insert duplicate key in object 'Charges.Charge'");
+        }
+
+        [Fact]
+        public async Task WIP_AddAsync_WhenUpdatingChargeSimultaneously_Throws()
+        {
+            // Arrange
+            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
+            await GetOrAddMarketParticipantAsync(chargesDatabaseWriteContext);
+            var arrangeRepo = new ChargeRepository(chargesDatabaseWriteContext);
+            var period = new ChargePeriodBuilder()
+                .WithStartDateTime(InstantHelper.GetYesterdayAtMidnightUtc())
+                .Build();
+
+            var charge = new ChargeBuilder()
+                .WithId(Guid.NewGuid())
+                .WithSenderProvidedChargeId("TariffId")
+                .WithOwnerId(_marketParticipantId)
+                .WithChargeType(ChargeType.Tariff)
+                .WithPeriods(new List<ChargePeriod> { period })
+                .Build();
+
+            await arrangeRepo.AddAsync(charge);
+            await chargesDatabaseWriteContext.SaveChangesAsync();
+
+            // Thread one; doing an update doesnt SaveChanges before thread two
+            await using var threadOneChargesDbContext = _databaseManager.CreateDbContext();
+            var threadOneRepo = new ChargeRepository(threadOneChargesDbContext);
+            var existingCharge = await threadOneRepo.GetAsync(charge.Id);
+
+            var threadOneNewPeriod = new ChargePeriodBuilder()
+                .WithStartDateTime(InstantHelper.GetTodayAtMidnightUtc())
+                .Build();
+
+            existingCharge.Update(threadOneNewPeriod);
+            await threadOneRepo.UpdateAsync(existingCharge);
+
+            // Thread two doing an update - SaveChanges before thread one
+            await using var threadTwoChargesDbContext = _databaseManager.CreateDbContext();
+            var threadTwoRepo = new ChargeRepository(threadTwoChargesDbContext);
+            var threadTwoExistingCharge = await threadTwoRepo.GetAsync(charge.Id);
+
+            var threadTwoNewPeriod = new ChargePeriodBuilder()
+                .WithStartDateTime(InstantHelper.GetTomorrowAtMidnightUtc())
+                .Build();
+
+            threadTwoExistingCharge.Update(threadTwoNewPeriod);
+            await threadTwoRepo.UpdateAsync(threadTwoExistingCharge);
+            await threadTwoChargesDbContext.SaveChangesAsync();
+
+            try
+            {
+                await threadOneChargesDbContext.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                _testOutputHelper.WriteLine(ex.ToString());
+
+                // foreach (var entry in ex.Entries)
+                // {
+                //     var dbValues = await entry.GetDatabaseValuesAsync();
+                //     entry.OriginalValues.SetValues(dbValues);
+                // }
+                var threadTwoUpdatedCharge = await threadTwoRepo.GetAsync(charge.Id);
+                threadTwoUpdatedCharge.Update(threadTwoNewPeriod);
+                await threadTwoRepo.UpdateAsync(threadTwoUpdatedCharge);
+                await threadTwoChargesDbContext.SaveChangesAsync();
+            }
+
+            var resultingCharge = await threadOneRepo.GetAsync(charge.Id);
         }
 
         private static async Task<Charge> SetupValidCharge(ChargesDatabaseContext chargesDatabaseWriteContext)
