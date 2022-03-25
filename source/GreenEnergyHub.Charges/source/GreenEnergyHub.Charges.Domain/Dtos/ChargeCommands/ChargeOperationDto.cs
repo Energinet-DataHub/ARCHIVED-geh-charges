@@ -87,11 +87,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
 
         public int ReceivedOrder { get; }
 
-        /*/// <summary>
-        /// Valid to, of a charge price list.
-        /// </summary>
-        public Instant? EndDateTime { get; }*/
-
         /// <summary>
         /// Type of operation
         /// </summary>

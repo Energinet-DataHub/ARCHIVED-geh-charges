@@ -29,7 +29,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         private readonly IValidator<ChargeCommand> _validator;
         private readonly IChargeRepository _chargeRepository;
         private readonly IChargeFactory _chargeFactory;
-        /*private readonly IChargePeriodFactory _chargePeriodFactory;*/
         private readonly IUnitOfWork _unitOfWork;
 
         public ChargeCommandReceivedEventHandler(
@@ -37,14 +36,12 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             IValidator<ChargeCommand> validator,
             IChargeRepository chargeRepository,
             IChargeFactory chargeFactory,
-            /*IChargePeriodFactory chargePeriodFactory,*/
             IUnitOfWork unitOfWork)
         {
             _chargeCommandReceiptService = chargeCommandReceiptService;
             _validator = validator;
             _chargeRepository = chargeRepository;
             _chargeFactory = chargeFactory;
-            /*_chargePeriodFactory = chargePeriodFactory;*/
             _unitOfWork = unitOfWork;
         }
 
@@ -69,8 +66,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 return;
             }
 
-            /*var operationType = GetOperationType(commandReceivedEvent.Command, charge);*/
-
             switch (commandReceivedEvent.Command.ChargeOperation.OperationType)
             {
                 case OperationType.Create:
@@ -80,7 +75,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                     await HandleUpdateEventAsync(commandReceivedEvent.Command).ConfigureAwait(false);
                     break;
                 case OperationType.Stop:
-                    /*charge!.Stop(commandReceivedEvent.Command.ChargeOperation.EndDateTime);*/
                     await HandleStopEventAsync(commandReceivedEvent.Command).ConfigureAwait(false);
                     break;
                 case OperationType.CancelStop:
@@ -105,20 +99,12 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         {
             var charge = await _chargeFactory.CreateFromCommandAsync(chargeCommand).ConfigureAwait(false);
             await _chargeRepository.AddAsync(charge).ConfigureAwait(false);
-
-            /*var newChargePeriod = _chargePeriodFactory.CreateFromChargeOperationDto(
-                chargeCommand.ReceivedDateTime, chargeCommand.ChargeOperation);
-            charge.Update(newChargePeriod);*/
         }
 
         private async Task HandleStopEventAsync(ChargeCommand chargeCommand)
         {
             var charge = await _chargeFactory.CreateFromCommandAsync(chargeCommand).ConfigureAwait(false);
             await _chargeRepository.AddAsync(charge).ConfigureAwait(false);
-
-            /*var newChargePeriod = _chargePeriodFactory.CreateFromChargeOperationDto(
-                chargeCommand.ReceivedDateTime, chargeCommand.ChargeOperation);
-            charge.Stop(newChargePeriod);*/
         }
 
         private async Task HandleCancelStopEventAsync(ChargeCommand chargeCommand)
@@ -133,26 +119,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             var charge = await _chargeFactory.CreateFromCommandAsync(chargeCommand).ConfigureAwait(false);
             await _chargeRepository.AddAsync(charge).ConfigureAwait(false);
         }
-
-        /*private static OperationType GetOperationType(ChargeCommand command, Charge? charge)
-        {
-            if (charge == null)
-            {
-                return OperationType.Create;
-            }
-
-            if (command.ChargeOperation.StartDateTime == command.ChargeOperation.EndDateTime)
-            {
-                return OperationType.Stop;
-            }
-
-            var latestChargePeriod = charge.Periods.OrderByDescending(p => p.StartDateTime).First();
-            var operationType =
-                command.ChargeOperation.StartDateTime == latestChargePeriod.StartDateTime && latestChargePeriod.IsStop ?
-                OperationType.CancelStop : OperationType.Update;
-
-            return operationType;
-        }*/
 
         private async Task<Charge?> GetChargeAsync(ChargeCommand command)
         {

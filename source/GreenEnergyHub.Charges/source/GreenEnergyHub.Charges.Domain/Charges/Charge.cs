@@ -14,8 +14,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using GreenEnergyHub.Charges.Core.DateTime;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Charges
@@ -138,105 +136,5 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         public bool IsStop { get; }
 
         public IReadOnlyCollection<Point> Points => _points;
-
-        /*/// <summary>
-        /// Use this method to update the charge periods timeline of a charge upon receiving a charge update request
-        /// Please see the persist charge documentation where the update flow is covered:
-        /// https://github.com/Energinet-DataHub/geh-charges/tree/main/docs/process-flows#persist-charge
-        /// </summary>
-        /// <param name="newCharge">New Charge Period from update charge request</param>
-        /// <exception cref="ArgumentNullException">Throws when <paramref name="newCharge"/> is empty</exception>
-        public void Update(Charge newCharge)
-        {
-            if (newCharge == null) throw new ArgumentNullException(nameof(newCharge));
-
-            /*if (_periods.Exists(p => p.StartDateTime < newChargePeriod.StartDateTime))
-            {
-                StopExistingPeriod(newChargePeriod.StartDateTime);
-            }
-
-            RemoveAllSubsequentPeriods(newChargePeriod.StartDateTime);#1#
-
-            //_periods.Add(newChargePeriod);
-        }*/
-
-        /*/// <summary>
-        /// Use this method to stop a charge upon receiving a stop charge request
-        /// </summary>
-        /// <param name="stopCharge"></param>
-        /// <exception cref="ArgumentNullException"><paramref name="stopCharge"/> is <c>null</c></exception>
-        public void Stop(Charge stopCharge)
-        {
-            GuardForInvalidStop(stopCharge);
-
-            // _periods.Add(stopCharge);
-            _points.RemoveAll(p => p.Time >= stopCharge.StartDateTime);
-
-            /*StopExistingPeriod(newChargePeriod.Value);
-            RemoveAllSubsequentPeriods(newChargePeriod.Value);
-            _points.RemoveAll(p => p.Time >= newChargePeriod);#1#
-        }*/
-
-        /*public void CancelStop()
-        {
-            // new implementation:
-            /*var stopPeriod = _periods.OrderedByReceivedDateTimeAndOrder().SingleOrDefault(p => p.IsStop);
-
-            if (stopPeriod == null)
-            {
-                throw new InvalidOperationException("Cannot cancel charge stop. No stop period exists on charge.");
-            }
-
-            var newLatestPeriod = stopPeriod.AsNewPeriod();
-            _periods.Remove(stopPeriod);
-            _periods.Add(newLatestPeriod);#1#
-
-            // Original implementation:
-            /*var existingLastPeriod = _periods.OrderByDescending(p => p.StartDateTime).First();
-
-            if (chargePeriod.StartDateTime != existingLastPeriod.EndDateTime)
-            {
-                throw new InvalidOperationException(
-                    "Cannot cancel stop when new start date is not equal to existing stop date.");
-            }
-
-            _periods.Add(chargePeriod);#1#
-        }*/
-
-        /*private void GuardForInvalidStop(Charge stopCharge)
-        {
-            if (stopCharge == null) throw new ArgumentNullException(nameof(stopCharge));
-            /*if (!_charge.Any()) throw new InvalidOperationException("Cannot stop charge. No periods exists.");
-
-            var previousPeriod = _periods.OrderBy(p => p.StartDateTime)
-                .FirstOrDefault(p => p.StartDateTime < stopCharge.StartDateTime);
-            var dayBeforeAtMidnight = stopCharge.StartDateTime.Minus(Duration.FromDays(1));
-            var validChargePeriodAtDayBefore = _periods.GetValidChargePeriodAsOf(dayBeforeAtMidnight);
-
-            if (!_periods.Any() || validChargePeriodAtDayBefore?.IsStop == true || previousPeriod == null)
-                throw new InvalidOperationException("Cannot stop charge. No period exist on stop date.");#1#
-        }*/
-
-        /*private void StopExistingPeriod(Instant newChargePeriod)
-        {
-            var previousPeriod = _periods.SingleOrDefault(p => p.EndDateTime >= newChargePeriod && p.StartDateTime < newChargePeriod);
-
-            if (previousPeriod == null)
-            {
-                throw new InvalidOperationException("Cannot stop charge. No period exist on stop date.");
-            }
-
-            // Return if charge already has end date at given stop date
-            if (newChargePeriod == previousPeriod.EndDateTime) return;
-
-            var newPreviousPeriod = previousPeriod.AsChargeStop(newChargePeriod);
-            _periods.Remove(previousPeriod);
-            _periods.Add(newPreviousPeriod);
-        }
-
-        private void RemoveAllSubsequentPeriods(Instant date)
-        {
-            _periods.RemoveAll(p => p.StartDateTime >= date);
-        }*/
     }
 }

@@ -18,7 +18,7 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Charges
 {
-    public static class ChargePeriodCollectionExtensions
+    public static class ChargeCollectionExtensions
     {
         public static IEnumerable<Charge> OrderedByReceivedDateTimeAndOrder(this IEnumerable<Charge> source)
         {
