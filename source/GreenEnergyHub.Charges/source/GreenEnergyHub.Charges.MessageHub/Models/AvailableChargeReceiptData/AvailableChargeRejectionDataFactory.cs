@@ -46,22 +46,27 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             var recipient = input.Command.Document.Sender; // The original sender is the recipient of the receipt
             var sender = await GetSenderAsync().ConfigureAwait(false);
 
-            return input.Command.Charges.Select(
-                    chargeOperationDto =>
-                        new AvailableChargeReceiptData(
-                            sender.MarketParticipantId,
-                            sender.BusinessProcessRole,
-                            recipient.Id,
-                            recipient.BusinessProcessRole,
-                            input.Command.Document.BusinessReasonCode,
-                            _messageMetaDataContext.RequestDataTime,
-                            Guid.NewGuid(), // ID of each available piece of data must be unique
-                            ReceiptStatus.Rejected,
-                            chargeOperationDto.Id,
-                            input.Command.Document.Type,
-                            0,
-                            GetReasons(input, chargeOperationDto)))
-                .ToList();
+            var operationOrder = 0;
+            var result = new List<AvailableChargeReceiptData>();
+            foreach (var chargeOperationDto in input.Command.Charges)
+            {
+                result.Add(new AvailableChargeReceiptData(
+                        sender.MarketParticipantId,
+                        sender.BusinessProcessRole,
+                        recipient.Id,
+                        recipient.BusinessProcessRole,
+                        input.Command.Document.BusinessReasonCode,
+                        _messageMetaDataContext.RequestDataTime,
+                        Guid.NewGuid(), // ID of each available piece of data must be unique
+                        ReceiptStatus.Rejected,
+                        chargeOperationDto.Id,
+                        input.Command.Document.Type,
+                        operationOrder,
+                        GetReasons(input, chargeOperationDto)));
+                operationOrder++;
+            }
+
+            return result;
         }
 
         private List<AvailableReceiptValidationError> GetReasons(

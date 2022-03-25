@@ -109,5 +109,9 @@ limitations under the License.
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Builders\Command\ChargeCommandRejectedEventBuilder.cs" />
+    </ItemGroup>
   
 </Project>

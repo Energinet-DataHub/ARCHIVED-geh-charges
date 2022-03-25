@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
@@ -63,6 +64,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             MarketParticipantDto recipient,
             ChargeOperationDto chargeOperationDto)
         {
+            var operationOrder = input.Command.Charges.ToList().IndexOf(chargeOperationDto);
             return new List<AvailableChargeReceiptData>()
             {
                 new AvailableChargeReceiptData(
@@ -76,7 +78,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                     ReceiptStatus.Confirmed,
                     chargeOperationDto.Id,
                     input.Command.Document.Type,
-                    0,
+                    operationOrder,
                     new List<AvailableReceiptValidationError>()),
             };
         }

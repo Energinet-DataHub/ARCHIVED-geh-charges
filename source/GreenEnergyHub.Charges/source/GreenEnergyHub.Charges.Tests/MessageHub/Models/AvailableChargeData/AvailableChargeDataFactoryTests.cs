@@ -19,9 +19,8 @@ using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Core.DateTime;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
-using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.Charges.Tests.Builders.Testables;
@@ -140,11 +139,16 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
 
             // Assert
             actual.Count.Should().Be(gridAccessProvider.Count * noOfOperations);
-            var operationOrder = actual.ElementAt(0).OperationOrder;
-            for (var i = 1; i < actual.Count; i++)
+            foreach (var gap in gridAccessProvider)
             {
-                actual[i].OperationOrder.Should().BeGreaterOrEqualTo(operationOrder);
-                operationOrder = actual.ElementAt(i).OperationOrder;
+                var availableChargesForProvider = actual
+                    .Where(x => x.RecipientId == gap.MarketParticipantId).ToList();
+                var operationOrder = -1;
+                for (var i = 0; i < availableChargesForProvider.Count(); i++)
+                {
+                    availableChargesForProvider[i].OperationOrder.Should().BeGreaterThan(operationOrder);
+                    operationOrder = actual[i].OperationOrder;
+                }
             }
         }
     }

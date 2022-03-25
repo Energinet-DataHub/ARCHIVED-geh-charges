@@ -23,7 +23,6 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
@@ -71,6 +70,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
 
             // Assert
             actualList.Should().HaveCount(3);
+            var operationOrder = -1;
             for (var i1 = 0; i1 < actualList.Count; i1++)
             {
                 var actual = actualList[i1];
@@ -80,9 +80,10 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
                 actual.RequestDateTime.Should().Be(now);
                 actual.ReceiptStatus.Should().Be(ReceiptStatus.Rejected);
                 actual.OriginalOperationId.Should().Be(chargeCommand.Charges.ToArray()[i1].Id);
-
                 var actualValidationErrors = actual.ValidationErrors.ToList();
                 actual.ValidationErrors.Should().HaveSameCount(rejectedEvent.ValidationErrors);
+                actual.OperationOrder.Should().BeGreaterThan(operationOrder);
+                operationOrder = actual.OperationOrder;
 
                 for (var i2 = 0; i2 < actualValidationErrors.Count; i2++)
                 {

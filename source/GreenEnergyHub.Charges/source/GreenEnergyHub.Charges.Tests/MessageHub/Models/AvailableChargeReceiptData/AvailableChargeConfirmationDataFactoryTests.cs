@@ -20,7 +20,6 @@ using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Testables;
@@ -64,6 +63,12 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             actualList[0].ReceiptStatus.Should().Be(ReceiptStatus.Confirmed);
             actualList[0].OriginalOperationId.Should().Be(acceptedEvent.Command.Charges.First().Id); //TODO: or is that not right?
             actualList[0].ValidationErrors.Should().BeEmpty();
+            var operationOrder = -1;
+            for (var i = 0; i < actualList.Count; i++)
+            {
+                actualList[i].OperationOrder.Should().BeGreaterThan(operationOrder);
+                operationOrder = actualList.ElementAt(i).OperationOrder;
+            }
         }
     }
 }
