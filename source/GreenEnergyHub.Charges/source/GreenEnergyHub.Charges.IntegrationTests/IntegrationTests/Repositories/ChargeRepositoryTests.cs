@@ -252,19 +252,21 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             catch (DbUpdateException ex)
             {
                 _testOutputHelper.WriteLine(ex.ToString());
-
+                await ex.Entries.Single().ReloadAsync();
                 // foreach (var entry in ex.Entries)
                 // {
                 //     var dbValues = await entry.GetDatabaseValuesAsync();
                 //     entry.OriginalValues.SetValues(dbValues);
                 // }
-                var threadTwoUpdatedCharge = await threadTwoRepo.GetAsync(charge.Id);
-                threadTwoUpdatedCharge.Update(threadTwoNewPeriod);
-                await threadTwoRepo.UpdateAsync(threadTwoUpdatedCharge);
-                await threadTwoChargesDbContext.SaveChangesAsync();
+                existingCharge = await threadOneRepo.GetAsync(charge.Id);
+                existingCharge.Update(threadOneNewPeriod);
+                await threadOneRepo.UpdateAsync(existingCharge);
+                await threadOneChargesDbContext.SaveChangesAsync();
             }
 
-            var resultingCharge = await threadOneRepo.GetAsync(charge.Id);
+            await using var threadLastChargesDbContext = _databaseManager.CreateDbContext();
+            var threadLastRepo = new ChargeRepository(threadLastChargesDbContext);
+            var resultingCharge = await threadLastRepo.GetAsync(charge.Id);
         }
 
         private static async Task<Charge> SetupValidCharge(ChargesDatabaseContext chargesDatabaseWriteContext)
