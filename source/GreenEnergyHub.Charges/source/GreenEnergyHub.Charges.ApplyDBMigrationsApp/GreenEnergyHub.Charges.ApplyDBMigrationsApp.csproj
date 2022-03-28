@@ -41,6 +41,7 @@ limitations under the License.
       <EmbeddedResource Include="Scripts\Seed\202201261740 Add default charges owner.sql" />
       <EmbeddedResource Include="Scripts\Seed\202201261741 Add default charges.sql" />
       <EmbeddedResource Include="Scripts\Seed\202201261742 Add default charge links.sql" />
+      <EmbeddedResource Include="Scripts\Seed\202203251356 Alter default charges.sql" />
       <EmbeddedResource Include="Scripts\Test\202201261750 Add test data.sql" />
     </ItemGroup>
 
