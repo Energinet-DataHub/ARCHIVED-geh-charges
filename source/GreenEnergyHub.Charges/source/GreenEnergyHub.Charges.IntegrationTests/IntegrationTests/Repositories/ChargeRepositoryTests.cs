@@ -26,6 +26,7 @@ using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
 using Polly;
@@ -156,7 +157,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         }
 
         [Fact]
-        public async Task WIP_AddAsync_WhenChargeWasJustInsertedByAnotherThread_Throws()
+        public async Task POC_SaveChangesAsync_WhenChargeWasJustInsertedByAnotherThread_ThrowsSqlException()
         {
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
@@ -173,7 +174,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
             await sut.AddAsync(charge);
 
-            // Simulating a simultaneous insert action for the same unique charge caused by another operation or request
+            // Simulating a simultaneous insert action for the same unique charge composite key, but new ID, caused by another request
             var sameChargeWithDiffId = builder
                 .WithId(Guid.NewGuid())
                 .WithSenderProvidedChargeId("TariffId")
@@ -185,25 +186,16 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             await anotherChargesDatabaseContext.Charges.AddAsync(sameChargeWithDiffId);
             await anotherChargesDatabaseContext.SaveChangesAsync();
 
-            try
-            {
-                await chargesDatabaseWriteContext.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-                _testOutputHelper.WriteLine(e.ToString());
-                throw;
-            }
-
             // Act / Assert
-            // var ex = await Assert.ThrowsAsync<DbUpdateException>(() => chargesDatabaseWriteContext.SaveChangesAsync());
-            // ex.InnerException.Should().BeOfType<SqlException>().Which.Message.Should().Contain("Violation of UNIQUE KEY constraint 'UC_SenderProvidedChargeId_Type_OwnerId'. Cannot insert duplicate key in object 'Charges.Charge'");
+            var ex = await Assert.ThrowsAsync<DbUpdateException>(() => chargesDatabaseWriteContext.SaveChangesAsync());
+            ex.InnerException.Should().BeOfType<SqlException>().Which.Message.Should().Contain(
+                "Violation of UNIQUE KEY constraint 'UC_SenderProvidedChargeId_Type_OwnerId'. Cannot insert duplicate key in object 'Charges.Charge'");
         }
 
         [Fact]
         public async Task POC_UpdateAsync_WhenDbUpdateConcurrencyExceptionThrown_Handled()
         {
-            // Arrange
+            // Arrange - Insert charge in storage
             await using var arrangeDbContext = _databaseManager.CreateDbContext();
             await GetOrAddMarketParticipantAsync(arrangeDbContext);
             var arrangeRepo = new ChargeRepository(arrangeDbContext);
@@ -241,6 +233,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             arrangeDbContext.Database.ExecuteSqlRaw(
                 "UPDATE Charges.Charge SET SenderProvidedChargeId = 'yCharge' WHERE Id = '" + charge.Id + "';");
 
+            // Act / Assert - and handled
             try
             {
                 await testDbContext.SaveChangesAsync();
@@ -261,18 +254,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                         _testOutputHelper.WriteLine("database value: " + databaseValue);
                     }
 
-                    // entry.OriginalValues.SetValues(databaseValues);
-                    testDbContext.ChangeTracker.Clear();
-                    var updatedExistingCharge = await sut.GetAsync(charge.Id);
+                    testDbContext.ChangeTracker.Clear(); // Stop tracking entity
+                    var updatedExistingCharge = await sut.GetAsync(charge.Id); // track again
                     updatedExistingCharge.Update(newPeriod);
                     await sut.UpdateAsync(updatedExistingCharge);
                     await testDbContext.SaveChangesAsync();
-
-                    // var dbValues = await entry.GetDatabaseValuesAsync();
-                    // entry.OriginalValues.SetValues(dbValues);
                 }
-
-                // await ex.Entries.Single().ReloadAsync();
             }
         }
 
