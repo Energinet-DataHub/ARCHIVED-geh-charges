@@ -18,6 +18,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
@@ -27,6 +28,7 @@ using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
+using Polly;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
@@ -199,38 +201,34 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         }
 
         [Fact]
-        public async Task WIP_AddAsync_WhenUpdatingChargeSimultaneously_Throws()
+        public async Task POC_UpdateAsync_WhenDbUpdateConcurrencyExceptionThrown_Handled()
         {
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
             await GetOrAddMarketParticipantAsync(chargesDatabaseWriteContext);
             var arrangeRepo = new ChargeRepository(chargesDatabaseWriteContext);
-            var period = new ChargePeriodBuilder()
-                .WithStartDateTime(InstantHelper.GetYesterdayAtMidnightUtc())
-                .Build();
 
             var charge = new ChargeBuilder()
                 .WithId(Guid.NewGuid())
-                .WithSenderProvidedChargeId("TariffId")
+                .WithSenderProvidedChargeId("xCharge")
                 .WithOwnerId(_marketParticipantId)
                 .WithChargeType(ChargeType.Tariff)
-                .WithPeriods(new List<ChargePeriod> { period })
+                .WithPeriods(new List<ChargePeriod>
+                {
+                    new ChargePeriodBuilder()
+                    .WithStartDateTime(InstantHelper.GetYesterdayAtMidnightUtc())
+                    .Build(),
+                })
                 .Build();
 
             await arrangeRepo.AddAsync(charge);
             await chargesDatabaseWriteContext.SaveChangesAsync();
 
-            // Thread one; doing an update doesnt SaveChanges before thread two
-            await using var threadOneChargesDbContext = _databaseManager.CreateDbContext();
-            var threadOneRepo = new ChargeRepository(threadOneChargesDbContext);
-            var existingCharge = await threadOneRepo.GetAsync(charge.Id);
-
-            var threadOneNewPeriod = new ChargePeriodBuilder()
-                .WithStartDateTime(InstantHelper.GetTodayAtMidnightUtc())
-                .Build();
-
-            existingCharge.Update(threadOneNewPeriod);
-            await threadOneRepo.UpdateAsync(existingCharge);
+            // Simulating a concurrency conflict
+            var chargeId = charge.Id.ToString();
+            var cmd = "UPDATE Charges.Charge SET SenderProvidedChargeId = 'yCharge' WHERE Id = '" + chargeId + "';";
+            _testOutputHelper.WriteLine(cmd);
+            chargesDatabaseWriteContext.Database.ExecuteSqlRaw(cmd);
 
             // Thread two doing an update - SaveChanges before thread one
             await using var threadTwoChargesDbContext = _databaseManager.CreateDbContext();
@@ -247,26 +245,99 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
             try
             {
-                await threadOneChargesDbContext.SaveChangesAsync();
+                // TODO
             }
             catch (DbUpdateException ex)
             {
                 _testOutputHelper.WriteLine(ex.ToString());
-                await ex.Entries.Single().ReloadAsync();
+
+                // await ex.Entries.Single().ReloadAsync();
                 // foreach (var entry in ex.Entries)
                 // {
                 //     var dbValues = await entry.GetDatabaseValuesAsync();
                 //     entry.OriginalValues.SetValues(dbValues);
                 // }
-                existingCharge = await threadOneRepo.GetAsync(charge.Id);
-                existingCharge.Update(threadOneNewPeriod);
-                await threadOneRepo.UpdateAsync(existingCharge);
-                await threadOneChargesDbContext.SaveChangesAsync();
             }
 
             await using var threadLastChargesDbContext = _databaseManager.CreateDbContext();
             var threadLastRepo = new ChargeRepository(threadLastChargesDbContext);
             var resultingCharge = await threadLastRepo.GetAsync(charge.Id);
+        }
+
+        [Fact]
+        public async Task SaveChanges_WhenDbUpdateConcurrencyExceptionThrown_HandledInSameDbContext()
+        {
+            // Arrange
+            await using var arrangeDbContext = _databaseManager.CreateDbContext();
+            await GetOrAddMarketParticipantAsync(arrangeDbContext);
+            var arrangeRepo = new ChargeRepository(arrangeDbContext);
+            var period = new ChargePeriodBuilder()
+                .WithStartDateTime(InstantHelper.GetYesterdayAtMidnightUtc())
+                .Build();
+
+            var charge = new ChargeBuilder()
+                .WithId(Guid.NewGuid())
+                .WithSenderProvidedChargeId("TariffId3")
+                .WithOwnerId(_marketParticipantId)
+                .WithChargeType(ChargeType.Tariff)
+                .WithPeriods(new List<ChargePeriod> { period })
+                .Build();
+
+            await arrangeRepo.AddAsync(charge);
+            await arrangeDbContext.SaveChangesAsync();
+
+            // Arrange SUT setup - Does not save changes immediately
+            await using var testDbContext = _databaseManager.CreateDbContext();
+            var sut = new ChargeRepository(testDbContext);
+            var existingCharge =
+                await testDbContext.Charges.FindAsync(charge.Id);
+
+            var newPeriod = new ChargePeriodBuilder()
+                .WithStartDateTime(InstantHelper.GetTodayAtMidnightUtc())
+                .Build();
+
+            existingCharge.Update(newPeriod);
+            await sut.UpdateAsync(existingCharge);
+
+            // Doing a simultaneous update of the same charge - to cause DbUpdateConcurrencyException on SUT.
+            await using var anotherDbContext = _databaseManager.CreateDbContext();
+            var anotherExistingCharge = await anotherDbContext.FindAsync<Charge>(charge.Id);
+
+            var anotherNewPeriod = new ChargePeriodBuilder()
+                .WithStartDateTime(InstantHelper.GetTomorrowAtMidnightUtc())
+                .Build();
+            anotherExistingCharge.Update(anotherNewPeriod);
+            anotherDbContext.Update(charge);
+            await anotherDbContext.SaveChangesAsync();
+
+            try
+            {
+                await testDbContext.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                var entry = ex.Entries.Single();
+                var clientValues = (Charge)entry.Entity;
+
+                var dbEntry = await entry.GetDatabaseValuesAsync();
+                var dbValues = (Charge)dbEntry.ToObject();
+                // await testDbContext.Entry(existingCharge).ReloadAsync();
+                // existingCharge.Update(newPeriod);
+                // await sut.UpdateAsync(existingCharge);
+                // await testDbContext.SaveChangesAsync();
+            }
+
+            // Assert
+            await using var assertDbContext = _databaseManager.CreateDbContext();
+            var assertRepo = new ChargeRepository(assertDbContext);
+            var actual = await assertRepo.GetAsync(charge.Id);
+            actual.Periods.Should().HaveCount(2);
+            var firstPeriod = actual.Periods.OrderBy(p => p.StartDateTime).First();
+            var lastPeriod = actual.Periods.OrderByDescending(p => p.StartDateTime).First();
+            firstPeriod.StartDateTime.Should().Be(InstantHelper.GetYesterdayAtMidnightUtc());
+            firstPeriod.EndDateTime.Should().Be(InstantHelper.GetTodayAtMidnightUtc());
+            lastPeriod.StartDateTime.Should().Be(InstantHelper.GetTodayAtMidnightUtc());
+            lastPeriod.EndDateTime.Should().Be(InstantHelper.GetEndDefault());
         }
 
         private static async Task<Charge> SetupValidCharge(ChargesDatabaseContext chargesDatabaseWriteContext)

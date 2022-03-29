@@ -16,6 +16,6 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 {
     public class Entity
     {
-        public byte[]? Timestamp { get; }
+        public byte[]? Timestamp { get; set; }
     }
 }
