@@ -25,7 +25,9 @@ using GreenEnergyHub.Charges.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 using NodaTime;
 using Xunit;
 using Xunit.Categories;
@@ -73,26 +75,35 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         [InlineAutoMoqData]
         public async Task AddAsync_WhenIdenticalChargeLinksAreReceived_ThrowsUniqueConstraintException(ChargeLink chargeLink)
         {
-            // Arrange
-            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-            var sut = new ChargeLinksRepository(chargesDatabaseWriteContext);
+            // Seed Arrange
+            await using var firstChargesContext = _databaseManager.CreateDbContext();
+            var setupRepo = new ChargeLinksRepository(firstChargesContext);
 
-            var ids = SeedDatabase(chargesDatabaseWriteContext);
-            var modifiedChargeLink = CreateExpectedChargeLink(chargeLink, ids);
+            var ids = SeedDatabase(firstChargesContext);
+            var seededChargeLink = CreateExpectedChargeLink(chargeLink, ids);
 
-            var chargeLinkList = new List<ChargeLink> { modifiedChargeLink };
-            await sut.AddRangeAsync(chargeLinkList);
-            await chargesDatabaseWriteContext.SaveChangesAsync();
+            var chargeLinkList = new List<ChargeLink> { seededChargeLink };
+            await setupRepo.AddRangeAsync(chargeLinkList);
+            await firstChargesContext.SaveChangesAsync();
+
+            // Arrange copy
+            await using var secondChargesContext = _databaseManager.CreateDbContext();
+            var sut = new ChargeLinksRepository(secondChargesContext);
+            var copyChargeLink = CreateExpectedChargeLink(chargeLink, ids);
+            var copyLinkList = new List<ChargeLink> { copyChargeLink };
 
             // Act
             Func<Task> act = async () =>
             {
-                await sut.AddRangeAsync(chargeLinkList);
-                await chargesDatabaseWriteContext.SaveChangesAsync();
+                await sut.AddRangeAsync(copyLinkList);
+                await secondChargesContext.SaveChangesAsync();
             };
 
             // Assert
-            await act.Should().ThrowAsync<Exception>();
+            await act.Should()
+                .ThrowAsync<DbUpdateException>()
+                .WithInnerException(typeof(SqlException))
+                .WithMessage("Violation of UNIQUE KEY constraint 'UQ_DefaultOverlap_StartDateTime'*");
         }
 
         private ChargeLink CreateExpectedChargeLink(ChargeLink chargeLink, (Guid ChargeId, Guid MeteringPointId) ids)
