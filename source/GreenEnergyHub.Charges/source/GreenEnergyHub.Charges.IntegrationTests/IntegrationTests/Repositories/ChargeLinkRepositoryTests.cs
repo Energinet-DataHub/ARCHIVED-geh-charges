@@ -27,7 +27,6 @@ using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Moq;
 using NodaTime;
 using Xunit;
 using Xunit.Categories;
