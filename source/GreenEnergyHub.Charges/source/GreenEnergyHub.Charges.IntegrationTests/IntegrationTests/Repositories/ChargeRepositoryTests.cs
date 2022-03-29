@@ -208,8 +208,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 .WithPeriods(new List<ChargePeriod>
                 {
                     new ChargePeriodBuilder()
-                    .WithStartDateTime(InstantHelper.GetYesterdayAtMidnightUtc())
-                    .Build(),
+                        .WithStartDateTime(InstantHelper.GetYesterdayAtMidnightUtc())
+                        .WithName("InitialName")
+                        .Build(),
                 })
                 .Build();
 
@@ -233,7 +234,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             arrangeDbContext.Database.ExecuteSqlRaw(
                 "UPDATE Charges.Charge SET SenderProvidedChargeId = 'yCharge' WHERE Id = '" + charge.Id + "';");
 
-            // Act / Assert - and handled
+            // Act and handled
             try
             {
                 await testDbContext.SaveChangesAsync();
@@ -261,6 +262,16 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                     await testDbContext.SaveChangesAsync();
                 }
             }
+
+            // Assert
+            await using var chargesReadDbContext = _databaseManager.CreateDbContext();
+            var readRepo = new ChargeRepository(chargesReadDbContext);
+            var actual = await readRepo.GetAsync(charge.Id);
+
+            actual.Periods.Should().HaveCount(2);
+            var actualOrderedList = actual.Periods.OrderBy(p => p.StartDateTime).ToList();
+            actualOrderedList.First().Name.Should().Be("InitialName");
+            actualOrderedList.Last().Name.Should().Be("ResolvedConflictName");
         }
 
         private static async Task<Charge> SetupValidCharge(ChargesDatabaseContext chargesDatabaseWriteContext)
