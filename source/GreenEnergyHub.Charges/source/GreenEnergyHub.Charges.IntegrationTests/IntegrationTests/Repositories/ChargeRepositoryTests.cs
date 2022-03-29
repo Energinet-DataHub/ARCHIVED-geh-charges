@@ -231,6 +231,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
             var newPeriod = new ChargePeriodBuilder()
                 .WithStartDateTime(InstantHelper.GetTomorrowAtMidnightUtc())
+                .WithName("ResolvedConflictName")
                 .Build();
 
             existingCharge.Update(newPeriod);
@@ -259,6 +260,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                         var databaseValue = databaseValues[property];
                         _testOutputHelper.WriteLine("database value: " + databaseValue);
                     }
+
+                    // entry.OriginalValues.SetValues(databaseValues);
+                    testDbContext.ChangeTracker.Clear();
+                    var updatedExistingCharge = await sut.GetAsync(charge.Id);
+                    updatedExistingCharge.Update(newPeriod);
+                    await sut.UpdateAsync(updatedExistingCharge);
+                    await testDbContext.SaveChangesAsync();
 
                     // var dbValues = await entry.GetDatabaseValuesAsync();
                     // entry.OriginalValues.SetValues(dbValues);
