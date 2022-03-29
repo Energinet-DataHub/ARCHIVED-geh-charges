@@ -237,10 +237,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             await sut.UpdateAsync(existingCharge);
 
             // Simulating a concurrency conflict
-            var chargeId = charge.Id.ToString();
-            var cmd = "UPDATE Charges.Charge SET SenderProvidedChargeId = 'yCharge' WHERE Id = '" + chargeId + "';";
-            _testOutputHelper.WriteLine(cmd);
-            arrangeDbContext.Database.ExecuteSqlRaw(cmd);
+            arrangeDbContext.Database.ExecuteSqlRaw(
+                "UPDATE Charges.Charge SET SenderProvidedChargeId = 'yCharge' WHERE Id = '" + charge.Id + "';");
 
             try
             {
@@ -249,13 +247,24 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             catch (DbUpdateException ex)
             {
                 _testOutputHelper.WriteLine(ex.ToString());
+                foreach (var entry in ex.Entries)
+                {
+                    var proposedValues = entry.CurrentValues;
+                    var databaseValues = await entry.GetDatabaseValuesAsync();
+
+                    foreach (var property in proposedValues.Properties)
+                    {
+                        var proposedValue = proposedValues[property];
+                        _testOutputHelper.WriteLine("proposed value: " + proposedValue);
+                        var databaseValue = databaseValues[property];
+                        _testOutputHelper.WriteLine("database value: " + databaseValue);
+                    }
+
+                    // var dbValues = await entry.GetDatabaseValuesAsync();
+                    // entry.OriginalValues.SetValues(dbValues);
+                }
 
                 // await ex.Entries.Single().ReloadAsync();
-                // foreach (var entry in ex.Entries)
-                // {
-                //     var dbValues = await entry.GetDatabaseValuesAsync();
-                //     entry.OriginalValues.SetValues(dbValues);
-                // }
             }
         }
 
