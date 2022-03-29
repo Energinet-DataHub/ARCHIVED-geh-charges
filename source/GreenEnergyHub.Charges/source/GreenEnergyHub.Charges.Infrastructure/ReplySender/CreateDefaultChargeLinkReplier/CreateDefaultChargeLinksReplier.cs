@@ -30,17 +30,17 @@ namespace GreenEnergyHub.Charges.Infrastructure.ReplySender.CreateDefaultChargeL
         private readonly IServiceBusReplySenderProvider _serviceBusReplySenderProvider;
 
         public CreateDefaultChargeLinksReplier(
-            [NotNull] ICorrelationContext correlationContext,
-            [NotNull] IServiceBusReplySenderProvider serviceBusReplySenderProvider)
+            ICorrelationContext correlationContext,
+            IServiceBusReplySenderProvider serviceBusReplySenderProvider)
         {
             _correlationContext = correlationContext;
             _serviceBusReplySenderProvider = serviceBusReplySenderProvider;
         }
 
         public Task ReplyWithSucceededAsync(
-            [NotNull] string meteringPointId,
+            string meteringPointId,
             bool didCreateChargeLinks,
-            [NotNull] string replyTo)
+            string replyTo)
         {
             ValidateParametersOrThrow(meteringPointId, replyTo, _correlationContext.Id);
 
@@ -58,9 +58,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.ReplySender.CreateDefaultChargeL
         }
 
         public Task ReplyWithFailedAsync(
-            [NotNull] string meteringPointId,
+            string meteringPointId,
             ErrorCode errorCode,
-            [NotNull] string replyTo)
+            string replyTo)
         {
             ValidateParametersOrThrow(meteringPointId, replyTo, _correlationContext.Id);
 
