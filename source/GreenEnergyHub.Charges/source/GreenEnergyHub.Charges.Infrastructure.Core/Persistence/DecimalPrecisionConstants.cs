@@ -14,8 +14,9 @@
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.Persistence
 {
-    public static class DbTypes
+    public static class DecimalPrecisionConstants
     {
-        public const string Price = "decimal(14,6)";
+        public const int Precision = 14;
+        public const int Scale = 6;
     }
 }
