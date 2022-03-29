@@ -21,6 +21,7 @@ using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.Charges;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
+using GreenEnergyHub.Charges.TestCore.Attributes;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
@@ -145,6 +146,24 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // Act and assert
                 // We expect three peeks, one for the charge and one for the receipt and one rejection
                 await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId, 3);
+            }
+
+            [Theory]
+            [InlineAutoMoqData(ChargeDocument.SubscriptionMonthlyPriceSample)]
+            [InlineAutoMoqData(ChargeDocument.FeeMonthlyPriceSample)]
+            [InlineAutoMoqData(ChargeDocument.TariffHourlyPricesSample)]
+            public async Task Given_ChargeExampleFileWithPrices_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply(
+                string testFilePath)
+            {
+                // Arrange
+                var (request, correlationId) = await _authenticatedHttpRequestGenerator
+                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, testFilePath);
+
+                // Act
+                await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Act and assert
+                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId, 1);
             }
         }
     }

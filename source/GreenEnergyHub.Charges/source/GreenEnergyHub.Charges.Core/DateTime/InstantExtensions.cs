@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Globalization;
 using Google.Protobuf.WellKnownTypes;
 using NodaTime;
 
@@ -19,6 +20,9 @@ namespace GreenEnergyHub.Charges.Core.DateTime
 {
     public static class InstantExtensions
     {
+        private const string TimeAndPriceSeriesDateTimeFormat = "yyyy-MM-dd\\THH:mm\\Z";
+        private const string CreatedDateTimeFormat = "yyyy-MM-dd\\THH:mm:ss\\Z";
+
         public static Instant GetEndDefault()
         {
             return Instant.FromUtc(9999, 12, 31, 23, 59, 59);
@@ -39,6 +43,16 @@ namespace GreenEnergyHub.Charges.Core.DateTime
         public static bool IsEndDefault(this Instant instant)
         {
             return instant == GetEndDefault();
+        }
+
+        public static string GetCreatedDateTimeFormat(this Instant instant)
+        {
+            return instant.ToString(CreatedDateTimeFormat, CultureInfo.InvariantCulture);
+        }
+
+        public static string GetTimeAndPriceSeriesDateTimeFormat(this Instant instant)
+        {
+            return instant.ToString(TimeAndPriceSeriesDateTimeFormat, CultureInfo.InvariantCulture);
         }
     }
 }

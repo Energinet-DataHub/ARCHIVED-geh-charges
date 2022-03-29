@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<cim:ConfirmRequestChangeOfPriceList_MarketDocument xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cim="urn:ediel.org:structure:confirmrequestchangeofpricelist:0:1" xsi:schemaLocation="urn:ediel.org:structure:confirmrequestchangeofpricelist:0:1 urn-ediel-org-structure-confirmrequestchangeofpricelist-0-1.xsd">
+<cim:ConfirmRequestChangeOfPriceList_MarketDocument xmlns:cim="urn:ediel.org:structure:confirmrequestchangeofpricelist:0:1">
   <cim:mRID>00000000000000000000000000000000</cim:mRID>
   <cim:type>D11</cim:type>
   <cim:process.processType>D18</cim:process.processType>
