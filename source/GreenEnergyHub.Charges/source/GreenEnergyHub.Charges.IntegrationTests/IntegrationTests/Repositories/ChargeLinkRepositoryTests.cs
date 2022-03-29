@@ -85,7 +85,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             await chargesDatabaseWriteContext.SaveChangesAsync();
 
             // Act
-            // Func<Task> act = async () => await sut.AddRangeAsync(chargeLinkList);
             Func<Task> act = async () =>
             {
                 await sut.AddRangeAsync(chargeLinkList);
