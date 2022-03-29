@@ -69,6 +69,33 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             actual.Should().BeEquivalentTo(expected);
         }
 
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task AddAsync_WhenIdenticalChargeLinksAreReceived_ThrowsUniqueConstraintException(ChargeLink chargeLink)
+        {
+            // Arrange
+            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
+            var sut = new ChargeLinksRepository(chargesDatabaseWriteContext);
+
+            var ids = SeedDatabase(chargesDatabaseWriteContext);
+            var modifiedChargeLink = CreateExpectedChargeLink(chargeLink, ids);
+
+            var chargeLinkList = new List<ChargeLink> { modifiedChargeLink };
+            await sut.AddRangeAsync(chargeLinkList);
+            await chargesDatabaseWriteContext.SaveChangesAsync();
+
+            // Act
+            // Func<Task> act = async () => await sut.AddRangeAsync(chargeLinkList);
+            Func<Task> act = async () =>
+            {
+                await sut.AddRangeAsync(chargeLinkList);
+                await chargesDatabaseWriteContext.SaveChangesAsync();
+            };
+
+            // Assert
+            await act.Should().ThrowAsync<Exception>();
+        }
+
         private ChargeLink CreateExpectedChargeLink(ChargeLink chargeLink, (Guid ChargeId, Guid MeteringPointId) ids)
         {
             return new ChargeLink(
