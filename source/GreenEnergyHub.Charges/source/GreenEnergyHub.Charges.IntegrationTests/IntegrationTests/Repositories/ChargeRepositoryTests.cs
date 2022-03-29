@@ -204,9 +204,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         public async Task POC_UpdateAsync_WhenDbUpdateConcurrencyExceptionThrown_Handled()
         {
             // Arrange
-            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-            await GetOrAddMarketParticipantAsync(chargesDatabaseWriteContext);
-            var arrangeRepo = new ChargeRepository(chargesDatabaseWriteContext);
+            await using var arrangeDbContext = _databaseManager.CreateDbContext();
+            await GetOrAddMarketParticipantAsync(arrangeDbContext);
+            var arrangeRepo = new ChargeRepository(arrangeDbContext);
 
             var charge = new ChargeBuilder()
                 .WithId(Guid.NewGuid())
@@ -222,30 +222,29 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 .Build();
 
             await arrangeRepo.AddAsync(charge);
-            await chargesDatabaseWriteContext.SaveChangesAsync();
+            await arrangeDbContext.SaveChangesAsync();
+
+            // Set up SUT repo with new db context
+            await using var testDbContext = _databaseManager.CreateDbContext();
+            var sut = new ChargeRepository(testDbContext);
+            var existingCharge = await sut.GetAsync(charge.Id);
+
+            var newPeriod = new ChargePeriodBuilder()
+                .WithStartDateTime(InstantHelper.GetTomorrowAtMidnightUtc())
+                .Build();
+
+            existingCharge.Update(newPeriod);
+            await sut.UpdateAsync(existingCharge);
 
             // Simulating a concurrency conflict
             var chargeId = charge.Id.ToString();
             var cmd = "UPDATE Charges.Charge SET SenderProvidedChargeId = 'yCharge' WHERE Id = '" + chargeId + "';";
             _testOutputHelper.WriteLine(cmd);
-            chargesDatabaseWriteContext.Database.ExecuteSqlRaw(cmd);
-
-            // Thread two doing an update - SaveChanges before thread one
-            await using var threadTwoChargesDbContext = _databaseManager.CreateDbContext();
-            var threadTwoRepo = new ChargeRepository(threadTwoChargesDbContext);
-            var threadTwoExistingCharge = await threadTwoRepo.GetAsync(charge.Id);
-
-            var threadTwoNewPeriod = new ChargePeriodBuilder()
-                .WithStartDateTime(InstantHelper.GetTomorrowAtMidnightUtc())
-                .Build();
-
-            threadTwoExistingCharge.Update(threadTwoNewPeriod);
-            await threadTwoRepo.UpdateAsync(threadTwoExistingCharge);
-            await threadTwoChargesDbContext.SaveChangesAsync();
+            arrangeDbContext.Database.ExecuteSqlRaw(cmd);
 
             try
             {
-                // TODO
+                await testDbContext.SaveChangesAsync();
             }
             catch (DbUpdateException ex)
             {
@@ -258,10 +257,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 //     entry.OriginalValues.SetValues(dbValues);
                 // }
             }
-
-            await using var threadLastChargesDbContext = _databaseManager.CreateDbContext();
-            var threadLastRepo = new ChargeRepository(threadLastChargesDbContext);
-            var resultingCharge = await threadLastRepo.GetAsync(charge.Id);
         }
 
         [Fact]
