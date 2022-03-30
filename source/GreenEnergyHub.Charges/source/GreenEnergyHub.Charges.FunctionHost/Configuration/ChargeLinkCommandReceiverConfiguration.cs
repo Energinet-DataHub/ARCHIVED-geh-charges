@@ -40,19 +40,19 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IChargeLinkFactory, ChargeLinkFactory>();
             serviceCollection.AddSingleton<IChargeLinksAcceptedEventFactory, ChargeLinksAcceptedEventFactory>();
             serviceCollection.AddScoped<IChargeLinksRepository, ChargeLinksRepository>();
-            serviceCollection.AddScoped<IBusinessValidationRulesFactory<ChargeLinksCommand>,
+            serviceCollection.AddScoped<IBusinessValidationRulesFactory<ChargeLinksCommand, ChargeLinkDto>,
                 ChargeLinksCommandBusinessValidationRulesFactory>();
-            serviceCollection.AddScoped<IBusinessValidator<ChargeLinksCommand>,
-                BusinessValidator<ChargeLinksCommand>>();
+            serviceCollection.AddScoped<IBusinessValidator<ChargeLinksCommand, ChargeLinkDto>,
+                BusinessValidator<ChargeLinksCommand, ChargeLinkDto>>();
             serviceCollection.AddScoped<IChargeLinksReceiptService, ChargeLinksReceiptService>();
             serviceCollection.AddScoped<IChargeLinksRejectedEventFactory, ChargeLinksRejectedEventFactory>();
-            serviceCollection.AddScoped<IBusinessValidator<ChargeLinksCommand>,
-                BusinessValidator<ChargeLinksCommand>>();
-            serviceCollection.AddScoped<IBusinessValidationRulesFactory<ChargeLinksCommand>,
+            serviceCollection.AddScoped<IBusinessValidator<ChargeLinksCommand, ChargeLinkDto>,
+                BusinessValidator<ChargeLinksCommand, ChargeLinkDto>>();
+            serviceCollection.AddScoped<IBusinessValidationRulesFactory<ChargeLinksCommand, ChargeLinkDto>,
                 ChargeLinksCommandBusinessValidationRulesFactory>();
             serviceCollection.AddScoped<IInputValidationRulesFactory<ChargeLinksCommand>,
                 ChargeLinksCommandInputValidationRulesFactory>();
-            serviceCollection.AddScoped<IValidator<ChargeLinksCommand>, Validator<ChargeLinksCommand>>();
+            serviceCollection.AddScoped<IValidator<ChargeLinksCommand, ChargeLinkDto>, Validator<ChargeLinksCommand, ChargeLinkDto>>();
             serviceCollection.AddScoped<IInputValidator<ChargeLinksCommand>, InputValidator<ChargeLinksCommand>>();
             serviceCollection.AddScoped<IAvailableChargeLinksReceiptValidationErrorFactory,
                 AvailableChargeLinksReceiptValidationErrorFactory>();

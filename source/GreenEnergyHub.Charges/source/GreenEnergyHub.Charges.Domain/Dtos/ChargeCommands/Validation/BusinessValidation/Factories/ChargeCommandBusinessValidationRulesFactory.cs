@@ -24,7 +24,7 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.Factories
 {
-    public class ChargeCommandBusinessValidationRulesFactory : IBusinessValidationRulesFactory<ChargeCommand>
+    public class ChargeCommandBusinessValidationRulesFactory : IBusinessValidationRulesFactory<ChargeCommand, ChargeOperationComposite>
     {
         private readonly IRulesConfigurationRepository _rulesConfigurationRepository;
         private readonly IChargeRepository _chargeRepository;
@@ -46,18 +46,19 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
             _clock = clock;
         }
 
-        public async Task<IValidationRuleSet> CreateRulesAsync(ChargeCommand chargeCommand)
+        public Task<IValidationRuleSet> CreateRulesAsync(ChargeCommand chargeCommand)
         {
-            if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
+            throw new NotImplementedException();
+        }
 
-            var senderId = chargeCommand.Document.Sender.Id;
-            var sender = await _marketParticipantRepository.GetOrNullAsync(senderId).ConfigureAwait(false);
+        public async Task<IValidationRuleSet> CreateRulesAsync(ChargeOperationComposite chargeOperation)
+        {
+            if (chargeOperation == null) throw new ArgumentNullException(nameof(chargeOperation));
+
+            var sender = await _marketParticipantRepository
+                .GetOrNullAsync(chargeOperation.ChargeCommand.Document.Sender.Id).ConfigureAwait(false);
             var rules = GetMandatoryRulesForCommand(sender);
-
-            foreach (var chargeOperationDto in chargeCommand.Charges)
-            {
-                rules.AddRange(await GetRulesForOperationAsync(chargeOperationDto).ConfigureAwait(false));
-            }
+            rules.AddRange(await GetRulesForOperationAsync(chargeOperation.ChargeOperationDto).ConfigureAwait(false));
 
             return ValidationRuleSet.FromRules(rules);
         }
@@ -70,7 +71,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
 
             if (charge != null && chargeOperationDto.Type == ChargeType.Tariff)
                 rules.AddRange(AddTariffOnlyRules(chargeOperationDto, charge));
-
             return rules;
         }
 

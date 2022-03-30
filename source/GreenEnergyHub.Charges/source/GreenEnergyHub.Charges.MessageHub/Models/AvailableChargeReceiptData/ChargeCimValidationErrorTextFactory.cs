@@ -114,7 +114,10 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                     chargeOperationDto.ChargeId,
                 CimValidationErrorTextToken.DocumentType =>
                     documentDto.Type.ToString(),
+                CimValidationErrorTextToken.TriggeredBySenderProvidedChargeId =>
+                    triggeredBy ?? string.Empty,
                 _ => CimValidationErrorTextTemplateMessages.Unknown,
+
             };
         }
 

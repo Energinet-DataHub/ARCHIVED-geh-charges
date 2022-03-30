@@ -12,19 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
+namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
 {
-    public interface IValidator<in TCommand, in TOperation>
-        where TCommand : CommandBase
-        where TOperation : OperationBase
+    public class ChargeOperationComposite : OperationBase
     {
-        ValidationResult InputValidate(TCommand command);
+        public ChargeOperationComposite(ChargeCommand chargeCommand, ChargeOperationDto chargeOperationDto)
+        {
+            ChargeCommand = chargeCommand;
+            ChargeOperationDto = chargeOperationDto;
+        }
 
-        Task<ValidationResult> BusinessValidateAsync(TCommand command);
+        public ChargeCommand ChargeCommand { get; }
 
-        Task<ValidationResult> BusinessValidateAsync(TOperation operation);
+        public ChargeOperationDto ChargeOperationDto { get; }
     }
 }

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
@@ -20,6 +21,7 @@ using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
@@ -27,7 +29,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
     public class ChargeCommandReceivedEventHandler : IChargeCommandReceivedEventHandler
     {
         private readonly IChargeCommandReceiptService _chargeCommandReceiptService;
-        private readonly IValidator<ChargeCommand> _validator;
+        private readonly IValidator<ChargeCommand, ChargeOperationComposite> _validator;
         private readonly IChargeRepository _chargeRepository;
         private readonly IChargeFactory _chargeFactory;
         private readonly IChargePeriodFactory _chargePeriodFactory;
@@ -35,7 +37,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 
         public ChargeCommandReceivedEventHandler(
             IChargeCommandReceiptService chargeCommandReceiptService,
-            IValidator<ChargeCommand> validator,
+            IValidator<ChargeCommand, ChargeOperationComposite> validator,
             IChargeRepository chargeRepository,
             IChargeFactory chargeFactory,
             IChargePeriodFactory chargePeriodFactory,
@@ -53,32 +55,25 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         {
             if (commandReceivedEvent == null) throw new ArgumentNullException(nameof(commandReceivedEvent));
 
-            // Todo: Add rejected operations to a list to that can be handled/rejected later
-            // All operations after the first rejected should also be rejected
             var inputValidationResult = _validator.InputValidate(commandReceivedEvent.Command);
+
             if (inputValidationResult.IsFailed)
             {
-                // Todo: Put rejected operations in a list to be handled/rejected later
                 await _chargeCommandReceiptService
                     .RejectAsync(commandReceivedEvent.Command, inputValidationResult).ConfigureAwait(false);
                 return;
             }
 
-            var businessValidationResult = await _validator
-                .BusinessValidateAsync(commandReceivedEvent.Command).ConfigureAwait(false);
-            if (businessValidationResult.IsFailed)
-            {
-                // Todo: Add rejected operations to a list that can be handled/rejected later
-                await _chargeCommandReceiptService.RejectAsync(
-                    commandReceivedEvent.Command, businessValidationResult).ConfigureAwait(false);
-                return;
-            }
-
+            var triggeredBy = string.Empty;
             var charge = await GetChargeAsync(commandReceivedEvent).ConfigureAwait(false);
-
-            // Todo: Only handle those that were not rejected!
             foreach (var chargeOperationDto in commandReceivedEvent.Command.Charges)
             {
+                triggeredBy = await HandleInvalidBusinessRulesAsync(
+                    commandReceivedEvent,
+                    chargeOperationDto,
+                    triggeredBy).ConfigureAwait(false);
+                if (!string.IsNullOrEmpty(triggeredBy)) continue;
+
                 var operationType = GetOperationType(chargeOperationDto, charge);
 
                 switch (operationType)
@@ -99,12 +94,46 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                         throw new InvalidOperationException("Could not handle charge command.");
                 }
 
-                // Todo: Can it be moved out of foreach?
-                //  - maybe if we are allowed to reject all operations when one operation doesn't pass validation?
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+                await _chargeCommandReceiptService.AcceptAsync(commandReceivedEvent.Command).ConfigureAwait(false);
+            }
+        }
+
+        private async Task<string> HandleInvalidBusinessRulesAsync(
+            ChargeCommandReceivedEvent commandReceivedEvent,
+            ChargeOperationDto chargeOperationDto,
+            string triggeredBy)
+        {
+            switch (string.IsNullOrEmpty(triggeredBy))
+            {
+                case true:
+                    var chargeOperationComposite =
+                        new ChargeOperationComposite(commandReceivedEvent.Command, chargeOperationDto);
+                    var businessValidationResult =
+                        await _validator.BusinessValidateAsync(chargeOperationComposite).ConfigureAwait(false);
+                    if (businessValidationResult.IsFailed)
+                    {
+                        // First error found in bundle, we reject with the original validation error
+                        triggeredBy = chargeOperationDto.Id;
+                        await _chargeCommandReceiptService
+                            .RejectAsync(commandReceivedEvent.Command, businessValidationResult)
+                            .ConfigureAwait(false);
+                    }
+
+                    break;
+                case false:
+                    // A previous error has occured, we reject all subsequent operations in bundle with special validation error
+                    var rejectionValidationResult = ValidationResult.CreateFailure(new List<IValidationRule>()
+                    {
+                        new PreviousOperationRulesMustBeValid(triggeredBy, chargeOperationDto),
+                    });
+                    await _chargeCommandReceiptService
+                        .RejectAsync(commandReceivedEvent.Command, rejectionValidationResult)
+                        .ConfigureAwait(false);
+                    break;
             }
 
-            await _chargeCommandReceiptService.AcceptAsync(commandReceivedEvent.Command).ConfigureAwait(false);
+            return triggeredBy;
         }
 
         private async Task HandleCreateEventAsync(ChargeOperationDto chargeOperationDto)
@@ -135,8 +164,9 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             }
 
             var latestChargePeriod = charge.Periods.OrderByDescending(p => p.StartDateTime).First();
-            return chargeOperationDto.StartDateTime == latestChargePeriod.EndDateTime ?
-                OperationType.CancelStop : OperationType.Update;
+            return chargeOperationDto.StartDateTime == latestChargePeriod.EndDateTime
+                ? OperationType.CancelStop
+                : OperationType.Update;
         }
 
         private async Task<Charge?> GetChargeAsync(ChargeCommandReceivedEvent chargeCommandReceivedEvent)
