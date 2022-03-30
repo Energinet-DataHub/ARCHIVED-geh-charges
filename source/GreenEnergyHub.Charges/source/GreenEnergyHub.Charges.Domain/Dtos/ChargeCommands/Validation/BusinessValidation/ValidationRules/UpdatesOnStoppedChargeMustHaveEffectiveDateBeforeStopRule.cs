@@ -30,7 +30,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
             Charge existingCharge,
             ChargeCommand chargeCommand)
         {
-            _lastPeriodEndDateOnExistingCharge = existingCharge.Periods.OrderByDescending(x => x.EndDateTime).Last().EndDateTime;
+            _lastPeriodEndDateOnExistingCharge = existingCharge.Periods.OrderBy(x => x.EndDateTime).Last().EndDateTime;
             _incomingEffectiveDate = chargeCommand.ChargeOperation.StartDateTime;
             _chargeDoesNotHaveEndDate = _lastPeriodEndDateOnExistingCharge == InstantExtensions.GetEndDefault();
         }
