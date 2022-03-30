@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Validation
         [InlineAutoDomainData]
         public void ValidateAsync_WhenInputValidationFails_ReturnsInvalid(
             [Frozen] Mock<IInputValidator<ChargeCommand>> inputValidator,
-            Validator<ChargeCommand> sut,
+            Validator<ChargeCommand, ChargeOperationComposite> sut,
             ChargeCommand anyCommand)
         {
             ConfigureValidatorToReturnInvalidResult(inputValidator, anyCommand);
@@ -43,12 +43,12 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Validation
         [Theory]
         [InlineAutoDomainData]
         public async Task ValidateAsync_WhenBusinessValidationFails_ReturnsInvalid(
-            [Frozen] Mock<IBusinessValidator<ChargeCommand>> businessValidator,
-            Validator<ChargeCommand> sut,
-            ChargeCommand anyCommand)
+            [Frozen] Mock<IBusinessValidator<ChargeCommand, ChargeOperationComposite>> businessValidator,
+            Validator<ChargeCommand, ChargeOperationComposite> sut,
+            ChargeOperationComposite anyComposite)
         {
-            ConfigureValidatorToReturnInvalidResult(businessValidator, anyCommand);
-            var actual = await sut.BusinessValidateAsync(anyCommand).ConfigureAwait(false);
+            ConfigureValidatorToReturnInvalidResult(businessValidator, anyComposite);
+            var actual = await sut.BusinessValidateAsync(anyComposite).ConfigureAwait(false);
             Assert.True(actual.IsFailed);
         }
 
@@ -56,7 +56,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Validation
         [InlineAutoDomainData]
         public void ValidateAsync_WhenInputValidationSucceeds_ReturnsValid(
             [Frozen] Mock<IInputValidator<ChargeCommand>> inputValidator,
-            Validator<ChargeCommand> sut,
+            Validator<ChargeCommand, ChargeOperationComposite> sut,
             ChargeCommand anyCommand)
         {
             ConfigureValidatorToReturnValidResult(inputValidator, anyCommand);
@@ -67,12 +67,12 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Validation
         [Theory]
         [InlineAutoDomainData]
         public async Task ValidateAsync_WhenBusinessValidationSucceeds_ReturnsValid(
-            [Frozen] Mock<IBusinessValidator<ChargeCommand>> businessValidator,
-            Validator<ChargeCommand> sut,
-            ChargeCommand anyCommand)
+            [Frozen] Mock<IBusinessValidator<ChargeCommand, ChargeOperationComposite>> businessValidator,
+            Validator<ChargeCommand, ChargeOperationComposite> sut,
+            ChargeOperationComposite anyComposite)
         {
-            ConfigureValidatorToReturnValidResult(businessValidator, anyCommand);
-            var actual = await sut.BusinessValidateAsync(anyCommand).ConfigureAwait(false);
+            ConfigureValidatorToReturnValidResult(businessValidator, anyComposite);
+            var actual = await sut.BusinessValidateAsync(anyComposite).ConfigureAwait(false);
             Assert.False(actual.IsFailed);
         }
 
@@ -91,20 +91,20 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Validation
         }
 
         private static void ConfigureValidatorToReturnValidResult(
-            Mock<IBusinessValidator<ChargeCommand>> businessValidator, ChargeCommand anyCommand)
+            Mock<IBusinessValidator<ChargeCommand, ChargeOperationComposite>> businessValidator, ChargeOperationComposite anyComposite)
         {
             var validResult = ValidationResult.CreateSuccess();
             businessValidator
-                .Setup(v => v.ValidateAsync(anyCommand))
+                .Setup(v => v.ValidateAsync(anyComposite))
                 .Returns(Task.FromResult(validResult));
         }
 
         private static void ConfigureValidatorToReturnInvalidResult(
-            Mock<IBusinessValidator<ChargeCommand>> businessValidator, ChargeCommand anyCommand)
+            Mock<IBusinessValidator<ChargeCommand, ChargeOperationComposite>> businessValidator, ChargeOperationComposite anyComposite)
         {
             var invalidResult = CreateInvalidValidationResult();
             businessValidator
-                .Setup(v => v.ValidateAsync(anyCommand))
+                .Setup(v => v.ValidateAsync(anyComposite))
                 .Returns(Task.FromResult(invalidResult));
         }
 

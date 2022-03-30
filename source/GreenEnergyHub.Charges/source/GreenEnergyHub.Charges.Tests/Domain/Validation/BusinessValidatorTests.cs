@@ -28,12 +28,12 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Validation
     {
         [Theory]
         [InlineAutoMoqData]
-        public async Task ValidateAsync_WhenCalled_UsesFactoryToFetchRulesAndUseRulesToGetResult(
-            [Frozen] Mock<IBusinessValidationRulesFactory<ChargeCommand>> factory,
+        public async Task ValidateAsync_WhenCalled_WithCommand_UsesFactoryToFetchRulesAndUseRulesToGetResult(
+            [Frozen] Mock<IBusinessValidationRulesFactory<ChargeCommand, ChargeOperationComposite>> factory,
             Mock<IValidationRuleSet> rules,
             ChargeCommand command,
             ValidationResult validationResult,
-            BusinessValidator<ChargeCommand> sut)
+            BusinessValidator<ChargeCommand, ChargeOperationComposite> sut)
         {
             // Arrange
             factory.Setup(
@@ -47,6 +47,33 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Validation
 
             // Act
             var result = await sut.ValidateAsync(command).ConfigureAwait(false);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(validationResult, result);
+        }
+
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task ValidateAsync_WhenCalled_WithOperation_UsesFactoryToFetchRulesAndUseRulesToGetResult(
+            [Frozen] Mock<IBusinessValidationRulesFactory<ChargeCommand, ChargeOperationComposite>> factory,
+            Mock<IValidationRuleSet> rules,
+            ChargeOperationComposite operationComposite,
+            ValidationResult validationResult,
+            BusinessValidator<ChargeCommand, ChargeOperationComposite> sut)
+        {
+            // Arrange
+            factory.Setup(
+                    f => f.CreateRulesAsync(operationComposite))
+                .Returns(
+                    Task.FromResult(rules.Object));
+
+            rules.Setup(
+                    r => r.Validate())
+                .Returns(validationResult);
+
+            // Act
+            var result = await sut.ValidateAsync(operationComposite).ConfigureAwait(false);
 
             // Assert
             Assert.NotNull(result);
