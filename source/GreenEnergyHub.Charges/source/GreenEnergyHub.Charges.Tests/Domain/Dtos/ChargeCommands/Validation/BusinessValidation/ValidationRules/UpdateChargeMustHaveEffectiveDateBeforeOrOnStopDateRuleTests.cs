@@ -28,24 +28,24 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
     {
         [Theory]
         // Valid earlier than stop
-        [InlineAutoMoqData("2020-10-10T22:00:00Z", "2020-05-05T22:00:00Z", true)]
+        [InlineAutoMoqData("2020-10-10T22:00:00Z", "2020-10-09T22:00:00Z", true)]
         // Valid same as stop
         [InlineAutoMoqData("2020-10-10T22:00:00Z", "2020-10-10T22:00:00Z", true)]
         // Valid same as stop where stop is infinite
         [InlineAutoMoqData("9999-12-31T23:59:59Z", "9999-12-31T23:59:59Z", true)]
         // InValid later than stop date
-        [InlineAutoMoqData("2020-05-05T22:00:00Z", "2020-10-10T22:00:00Z", false)]
+        [InlineAutoMoqData("2020-05-05T22:00:00Z", "2020-05-06T22:00:00Z", false)]
         public void IsValid_WhenExpectedDateIsWithinInterval_IsTrue(
             string existingChargeEndDateIsoString,
-            string incomingCommandEndDateIsoString,
+            string incomingCommandStartDateIsoString,
             bool expectedIsValid)
         {
             // Arrange
             var existingStopDate = InstantPattern.General.Parse(existingChargeEndDateIsoString).Value;
-            var incomingCommandEndDate = InstantPattern.General.Parse(incomingCommandEndDateIsoString).Value;
+            var incomingCommandStartDate = InstantPattern.General.Parse(incomingCommandStartDateIsoString).Value;
 
             var existingCharge = new ChargeBuilder().WithPeriods(CreateExistingChargePeriods(existingStopDate)).Build();
-            var chargeCommand = new ChargeCommandBuilder().WithEndDateTime(incomingCommandEndDate).Build();
+            var chargeCommand = new ChargeCommandBuilder().WithStartDateTime(incomingCommandStartDate).Build();
 
             var sut = new UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateRule(
                 existingCharge,
