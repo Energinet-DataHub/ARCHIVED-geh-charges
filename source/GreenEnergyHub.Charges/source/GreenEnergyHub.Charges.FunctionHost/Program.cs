@@ -51,22 +51,7 @@ namespace GreenEnergyHub.Charges.FunctionHost
         private static void ConfigureServices(HostBuilderContext hostBuilderContext, IServiceCollection serviceCollection)
         {
             SharedConfiguration.ConfigureServices(serviceCollection);
-
-            // Health check
-            serviceCollection.AddScoped<IHealthCheckEndpointHandler, HealthCheckEndpointHandler>();
-            serviceCollection.AddHealthChecks()
-                .AddLiveCheck()
-                .AddSqlServer(
-                    name: "ChargeDb",
-                    connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeDbConnectionString))
-                .AddAzureServiceBusTopic(
-                    name: "ChargeCreatedTopicExists",
-                    connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubManagerConnectionString),
-                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeCreatedTopicName))
-                .AddAzureServiceBusTopic(
-                    name: "DefaultChargeLinksDataAvailableNotifiedTopicExists",
-                    connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventManagerConnectionString),
-                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName));
+            HealthCheckConfiguration.ConfigureServices(serviceCollection);
 
             // Charges
             ChargeIngestionConfiguration.ConfigureServices(serviceCollection);
