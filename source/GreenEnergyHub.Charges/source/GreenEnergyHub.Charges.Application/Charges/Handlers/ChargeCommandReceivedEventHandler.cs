@@ -88,7 +88,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                         charge!.Stop(chargeOperationDto.EndDateTime);
                         break;
                     case OperationType.CancelStop:
-                        HandleCancelStopEvent(charge!, commandReceivedEvent.Command);                        
+                        HandleCancelStopEvent(charge!, chargeOperationDto);
                         break;
                     default:
                         throw new InvalidOperationException("Could not handle charge command.");
@@ -151,9 +151,9 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             charge.Update(newChargePeriod);
         }
 
-        private void HandleCancelStopEvent(Charge charge, ChargeCommand chargeCommand)
+        private void HandleCancelStopEvent(Charge charge, ChargeOperationDto chargeOperationDto)
         {
-            var newChargePeriod = _chargePeriodFactory.CreateFromChargeOperationDto(chargeCommand.ChargeOperation);
+            var newChargePeriod = _chargePeriodFactory.CreateFromChargeOperationDto(chargeOperationDto);
             charge.CancelStop(newChargePeriod);
         }
 

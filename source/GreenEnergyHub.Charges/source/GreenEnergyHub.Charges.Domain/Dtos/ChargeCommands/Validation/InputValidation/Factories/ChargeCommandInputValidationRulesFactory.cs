@@ -65,7 +65,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
                 new ResolutionSubscriptionValidationRule(chargeOperationDto),
                 new ResolutionTariffValidationRule(chargeOperationDto),
                 new StartDateTimeRequiredValidationRule(chargeOperationDto),
-                new StopChargeNotYetSupportedValidationRule(chargeOperationDto),
                 new SubscriptionMustHaveSinglePriceRule(chargeOperationDto),
                 new VatClassificationValidationRule(chargeOperationDto),
             };
