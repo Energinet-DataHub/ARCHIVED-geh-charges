@@ -26,11 +26,10 @@ namespace GreenEnergyHub.Charges.SystemTests.Fixtures
     {
         public BusinessProcessConfiguration()
         {
-            ChargeIngestionEndpoint = Root.GetValue<string>("CHARGE_INGESTION_ENDPOINT");
-            PeekEndpoint = Root.GetValue<string>("PEEK_ENDPOINT");
-            DequeueEndpoint = Root.GetValue<string>("DEQUEUE_ENDPOINT");
+            ChargeIngestionEndpoint = "/v1.0/cim/requestchangepricelist";
+            PeekEndpoint = "/v1.0/cim/masterdata?bundleId=";
+            DequeueEndpoint = "/v1.0/cim/dequeue/";
             GridAccessProvider = Root.GetValue<string>("GRID_ACCESS_PROVIDER");
-            MarketParticipant = Root.GetValue<string>("MARKET_PARTICIPANT");
         }
 
         /// <summary>
@@ -52,10 +51,5 @@ namespace GreenEnergyHub.Charges.SystemTests.Fixtures
         /// Grid access provider for submitted charges
         /// </summary>
         public string GridAccessProvider { get; }
-
-        /// <summary>
-        /// Market participant id for submitted charges
-        /// </summary>
-        public string MarketParticipant { get; }
     }
 }

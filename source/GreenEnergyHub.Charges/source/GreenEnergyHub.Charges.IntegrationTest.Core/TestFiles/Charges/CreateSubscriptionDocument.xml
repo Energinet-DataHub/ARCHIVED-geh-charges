@@ -21,11 +21,11 @@ limitations under the License.
     <cim:businessSector.type>23</cim:businessSector.type>
     <cim:sender_MarketParticipant.mRID codingScheme="A10">{{GridAccessProvider}}</cim:sender_MarketParticipant.mRID>
     <cim:sender_MarketParticipant.marketRole.type>DDM</cim:sender_MarketParticipant.marketRole.type>
-    <cim:receiver_MarketParticipant.mRID codingScheme="A10">{{MarketParticipant}}</cim:receiver_MarketParticipant.mRID>
+    <cim:receiver_MarketParticipant.mRID codingScheme="A10">5790001330552</cim:receiver_MarketParticipant.mRID>
     <cim:receiver_MarketParticipant.marketRole.type>DDZ</cim:receiver_MarketParticipant.marketRole.type>
     <cim:createdDateTime>{{$isoTimestamp}}</cim:createdDateTime>
     <cim:MktActivityRecord>
-        <cim:mRID>OpId{{$isoTimestamp}}</cim:mRID>
+        <cim:mRID>SysTestOpId{{$isoTimestamp}}</cim:mRID>
         <cim:ChargeGroup>
             <cim:ChargeType>
                 <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">{{GridAccessProvider}}</cim:chargeTypeOwner_MarketParticipant.mRID>

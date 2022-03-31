@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.SystemTests
     /// However, with the technique displayed here we perform these tests in a live environment.
     /// Maybe we should only use this for testing domain health checks.
     /// </summary>
-    public class BusinessProcessTests : IClassFixture<BusinessProcessConfiguration>, IAsyncLifetime
+    public class BusinessProcessTests : IClassFixture<BusinessProcessConfiguration>
     {
         private readonly BackendAuthenticationClient _authenticationClient;
 
@@ -52,16 +52,18 @@ namespace GreenEnergyHub.Charges.SystemTests
         [SystemFact]
         public async Task When_SubmittingCreateSubscriptionDocument_Then_PeekReturnsCorrespondingConfirmation()
         {
+            // Setup
+            await FlushPostOfficeQueueAsync();
+
             // Arrange
             using var httpClient = await CreateConfidentialHttpClientAsync();
             var currentInstant = SystemClock.Instance.GetCurrentInstant();
-            var expectedOpId = $"<cim:originalTransactionIDReference_MktActivityRecord.mRID>OpId{currentInstant}</cim:originalTransactionIDReference_MktActivityRecord.mRID>";
+            var expectedOpId = $"<cim:originalTransactionIDReference_MktActivityRecord.mRID>SysTestOpId{currentInstant}</cim:originalTransactionIDReference_MktActivityRecord.mRID>";
             var bundleId = Guid.NewGuid().ToString();
 
             var body = EmbeddedResourceHelper
                 .GetEmbeddedFile(ChargeDocument.CreateSubscription, currentInstant)
-                .Replace("{{GridAccessProvider}}", Configuration.GridAccessProvider)
-                .Replace("{{MarketParticipant}}", Configuration.MarketParticipant);
+                .Replace("{{GridAccessProvider}}", Configuration.GridAccessProvider);
 
             var submitRequest = new HttpRequestMessage(HttpMethod.Post, Configuration.ChargeIngestionEndpoint)
             {
@@ -96,16 +98,6 @@ namespace GreenEnergyHub.Charges.SystemTests
                 },
                 TimeSpan.FromMinutes(1),
                 TimeSpan.FromSeconds(1));
-        }
-
-        public async Task InitializeAsync()
-        {
-            await FlushPostOfficeQueueAsync();
-        }
-
-        public async Task DisposeAsync()
-        {
-            await FlushPostOfficeQueueAsync();
         }
 
         private async Task FlushPostOfficeQueueAsync()
