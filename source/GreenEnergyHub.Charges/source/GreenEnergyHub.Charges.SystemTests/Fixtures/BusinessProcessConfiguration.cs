@@ -17,13 +17,10 @@ using Microsoft.Extensions.Configuration;
 namespace GreenEnergyHub.Charges.SystemTests.Fixtures
 {
     /// <summary>
-    /// Responsible for extracting secrets necessary for performing system tests of API Management.
+    /// Responsible for retrieving settings necessary for performing system tests of business processes in charges domain.
     ///
     /// On developer machines we use the 'systemtest.local.settings.json' to set values.
     /// On hosted agents we must set these using environment variables.
-    ///
-    /// Developers, and the service principal under which the tests are executed, must have access to the Key Vault
-    /// so secrets can be extracted.
     /// </summary>
     public class BusinessProcessConfiguration : ApiManagementConfiguration
     {
