@@ -184,6 +184,12 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             return this;
         }
 
+        public ChargeCommandBuilder WithChargeOperation(ChargeOperationDto chargeOperationDto)
+        {
+            _chargeOperationDtos.Add(chargeOperationDto);
+            return this;
+        }
+
         public ChargeCommandBuilder WithNumberOfChargeOperations(int numberOfOperations)
         {
             for (var i = 1; i <= numberOfOperations; i++)

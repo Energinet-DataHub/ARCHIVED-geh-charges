@@ -139,7 +139,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.SubsequentBundleOperationsFail)]
         public const string SubsequentBundleOperationsFail =
-            "Transaction for Charge ID {{DocumentSenderProvidedChargeId}} is not completed, because a previous transaction for Charge ID {{TriggeredBySenderProvidedChargeId}} failed it's validation";
+            "Transaction for Charge ID {{DocumentSenderProvidedChargeId}} is not completed, because a previous transaction for Charge ID {{TriggeredBySenderProvidedId}}, failed its validation";
 
         public const string Unknown = "unknown";
     }
