@@ -61,4 +61,10 @@ limitations under the License.
     <ProjectReference Include="..\GreenEnergyHub.Charges.IntegrationTest.Core\GreenEnergyHub.Charges.IntegrationTest.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Fixtures\SystemFactAttribute.cs">
+      <DependentUpon>SystemTestConfiguration.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
 </Project>

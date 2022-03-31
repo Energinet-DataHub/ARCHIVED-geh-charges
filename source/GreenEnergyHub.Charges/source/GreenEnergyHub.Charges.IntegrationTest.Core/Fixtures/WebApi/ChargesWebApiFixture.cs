@@ -27,6 +27,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.WebApi
         {
             DatabaseManager = new ChargesDatabaseManager();
             AuthorizationConfiguration = new AuthorizationConfiguration(
+                "endk-ddm4",
                 "u002",
                 "integrationtest.local.settings.json",
                 "AZURE_SECRETS_KEYVAULT_URL");
