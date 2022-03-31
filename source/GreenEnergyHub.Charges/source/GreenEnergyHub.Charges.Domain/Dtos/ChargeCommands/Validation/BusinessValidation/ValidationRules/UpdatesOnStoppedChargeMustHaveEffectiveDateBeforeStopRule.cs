@@ -35,7 +35,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
             _chargeDoesNotHaveEndDate = _lastPeriodEndDateOnExistingCharge == InstantExtensions.GetEndDefault();
         }
 
-        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.StartDateValidation;
+        public ValidationRuleIdentifier ValidationRuleIdentifier =>
+            ValidationRuleIdentifier.UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDate;
 
         public bool IsValid => _chargeDoesNotHaveEndDate || _incomingEffectiveDate <= _lastPeriodEndDateOnExistingCharge;
     }

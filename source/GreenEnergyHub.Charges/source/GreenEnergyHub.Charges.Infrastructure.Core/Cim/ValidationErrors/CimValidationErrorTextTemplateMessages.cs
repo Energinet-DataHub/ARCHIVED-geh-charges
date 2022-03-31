@@ -111,7 +111,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.FeeMustHaveSinglePrice)]
         public const string FeeMustHaveSinglePriceErrorText =
-            "The number of prices {{ChargePointsCount}} for charge {{DocumentSenderProvidedChargeId}} doesn't match period type {{ChargeResolution}}";
+            "The number of prices {{ChargePointsCount}}z for charge {{DocumentSenderProvidedChargeId}} doesn't match period type {{ChargeResolution}}";
 
         [ErrorMessageFor(ValidationRuleIdentifier.SubscriptionMustHaveSinglePrice)]
         public const string SubscriptionMustHaveSinglePriceErrorText =
@@ -132,6 +132,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeLinkUpdateNotYetSupported)]
         public const string ChargeLinksUpdateNotYetSupportedErrorText =
             "Charge link for metering point ID {{MeteringPointId}} and Charge with ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}} cannot yet be updated or stopped. The functionality is not implemented yet";
+
+        [ErrorMessageFor(ValidationRuleIdentifier.UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDate)]
+        public const string UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateErrorText =
+            "Charge ID {{DocumentSenderProvidedChargeId}} has been stopped and thus cannot be updated as per {{ChargeStartDateTime}}.";
 
         public const string Unknown = "unknown";
     }
