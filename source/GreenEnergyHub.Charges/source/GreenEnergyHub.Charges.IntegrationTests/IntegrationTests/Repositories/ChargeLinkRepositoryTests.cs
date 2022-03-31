@@ -40,14 +40,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
     public class ChargeLinkRepositoryTests : IClassFixture<ChargesDatabaseFixture>
     {
         private readonly ChargesDatabaseManager _databaseManager;
-        private readonly (Guid ChargeId, Guid MeteringPointId) _ids;
 
         public ChargeLinkRepositoryTests(ChargesDatabaseFixture fixture)
         {
             _databaseManager = fixture.DatabaseManager;
-
-            using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-            _ids = SeedDatabase(chargesDatabaseWriteContext);
         }
 
         [Theory]
@@ -56,8 +52,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         {
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-
-            var expected = CreateExpectedChargeLink(chargeLink, _ids);
+            var ids = SeedDatabase(chargesDatabaseWriteContext);
+            var expected = CreateExpectedChargeLink(chargeLink, ids);
             var sut = new ChargeLinksRepository(chargesDatabaseWriteContext);
 
             // Act
@@ -68,7 +64,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
 
             var actual = await chargesDatabaseReadContext.ChargeLinks.SingleAsync(
-                    c => c.ChargeId == _ids.ChargeId && c.MeteringPointId == _ids.MeteringPointId)
+                    c => c.ChargeId == ids.ChargeId && c.MeteringPointId == ids.MeteringPointId)
                 .ConfigureAwait(false);
             actual.Should().BeEquivalentTo(expected);
         }
@@ -79,9 +75,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         {
             // Seed Arrange
             await using var firstChargesContext = _databaseManager.CreateDbContext();
+            var ids = SeedDatabase(firstChargesContext);
             var setupRepo = new ChargeLinksRepository(firstChargesContext);
 
-            var seededChargeLink = CreateExpectedChargeLink(chargeLink, _ids);
+            var seededChargeLink = CreateExpectedChargeLink(chargeLink, ids);
 
             var chargeLinkList = new List<ChargeLink> { seededChargeLink };
             await setupRepo.AddRangeAsync(chargeLinkList);
@@ -90,7 +87,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             // Arrange copy
             await using var secondChargesContext = _databaseManager.CreateDbContext();
             var sut = new ChargeLinksRepository(secondChargesContext);
-            var copyChargeLink = CreateExpectedChargeLink(chargeLink, _ids);
+            var copyChargeLink = CreateExpectedChargeLink(chargeLink, ids);
             var copyLinkList = new List<ChargeLink> { copyChargeLink };
 
             // Act
@@ -119,9 +116,16 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
         private static (Guid ChargeId, Guid MeteringPointId) SeedDatabase(ChargesDatabaseContext context)
         {
+            var marketParticipantId = "MarketParticipantId";
+            var existingMeteringPoint = context.MeteringPoints.FirstOrDefault();
+            var existingCharge = context.Charges.FirstOrDefault();
+
+            if (existingMeteringPoint is not null && existingCharge is not null)
+                return (existingCharge.Id, existingMeteringPoint.Id);
+
             var marketParticipant = new MarketParticipant(
                 Guid.NewGuid(),
-                "MarketParticipantId",
+                marketParticipantId,
                 true,
                 MarketParticipantRole.EnergySupplier);
 
