@@ -14,6 +14,7 @@
 
 using System;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Infrastructure.Core.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -78,7 +79,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
             points.Property<Guid>("Id").ValueGeneratedOnAdd();
 
             points.Property(p => p.Position);
-            points.Property(p => p.Price);
+            points.Property(p => p.Price)
+                .HasPrecision(DecimalPrecisionConstants.Precision, DecimalPrecisionConstants.Scale);
             points.Property(p => p.Time);
         }
     }

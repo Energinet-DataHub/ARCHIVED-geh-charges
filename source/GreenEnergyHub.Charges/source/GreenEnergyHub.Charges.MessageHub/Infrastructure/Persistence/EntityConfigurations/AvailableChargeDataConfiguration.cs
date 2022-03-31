@@ -60,7 +60,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Persistence.EntityCon
 
             points.Property(p => p.Id).ValueGeneratedNever();
             points.Property(d => d.Position);
-            points.Property(d => d.Price).HasColumnType(DbTypes.Price);
+            points.Property(d => d.Price)
+                .HasPrecision(DecimalPrecisionConstants.Precision, DecimalPrecisionConstants.Scale);
         }
     }
 }
