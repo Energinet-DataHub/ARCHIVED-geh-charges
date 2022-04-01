@@ -27,7 +27,7 @@ namespace GreenEnergyHub.Charges.SystemTests.Fixtures
     {
         public MyDomainConfiguration()
         {
-            BaseAddress = new Uri(Root.GetValue<string>("MYDOMAIN_BASEADDRESS"));
+            BaseAddress = new Uri(Root.GetValue<string>("CHARGES_DOMAIN_BASEADDRESS"));
         }
 
         /// <summary>
