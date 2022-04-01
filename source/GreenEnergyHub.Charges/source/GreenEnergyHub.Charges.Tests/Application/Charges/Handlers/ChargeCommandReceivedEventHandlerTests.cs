@@ -237,10 +237,18 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
              ChargeCommandReceivedEventHandler sut)
          {
              // Arrange
-             var validChargeOperationDto = new ChargeOperationDtoBuilder().WithDescription("valid").Build();
-             var invalidChargeOperationDto = new ChargeOperationDtoBuilder().WithDescription("invalid").Build();
-             var failedChargeOperationDto = new ChargeOperationDtoBuilder().WithDescription("failed").Build();
+             var validChargeOperationDto = new ChargeOperationDtoBuilder()
+                 .WithDescription("valid")
+                 .Build();
+             var invalidChargeOperationDto = new ChargeOperationDtoBuilder()
+                 .WithDescription("invalid")
+                 .Build();
+             var failedChargeOperationDto = new ChargeOperationDtoBuilder()
+                 .WithDescription("failed")
+                 .Build();
              var chargeCommand = new ChargeCommandBuilder()
+                 .WithStartDateTime(InstantHelper.GetYesterdayAtMidnightUtc())
+                 .WithEndDateTime(InstantHelper.GetEndDefault())
                  .WithChargeOperation(validChargeOperationDto)
                  .WithChargeOperation(invalidChargeOperationDto)
                  .WithChargeOperation(failedChargeOperationDto)
@@ -248,7 +256,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                  .Build();
              var periods = new List<ChargePeriod>
              {
-                 new ChargePeriodBuilder().WithEndDateTime(InstantHelper.GetTomorrowAtMidnightUtc()).Build(),
+                 new ChargePeriodBuilder()
+                     .WithStartDateTime(InstantHelper.GetYesterdayAtMidnightUtc())
+                     .Build(),
              };
              var charge = new ChargeBuilder().WithPeriods(periods).Build();
              var newPeriod = new ChargePeriodBuilder()
