@@ -162,8 +162,11 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             // Return if charge already has end date at given stop date
             if (stopDate == previousPeriod.EndDateTime) return;
 
-            var newPreviousPeriod = previousPeriod.WithEndDate(stopDate);
             _periods.Remove(previousPeriod);
+
+            if (stopDate == previousPeriod.StartDateTime) return;
+
+            var newPreviousPeriod = previousPeriod.WithEndDate(stopDate);
             _periods.Add(newPreviousPeriod);
         }
 
