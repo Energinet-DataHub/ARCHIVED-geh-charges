@@ -84,7 +84,7 @@ namespace GreenEnergyHub.Charges.SystemTests
 
             // Assert
             var content = await peekResponse!.Content.ReadAsStringAsync();
-            content.Should().Contain("ConfirmRequestChangeOfPriceList_MarketDocument");
+            content.Should().Contain("INTENDED_SYSTEM_TEST_FAILURE_IN_CD_PIPELINE");
             content.Should().Contain(expectedOpId);
 
             // Dequeue - throws XUnitException if dequeue not succeeding
