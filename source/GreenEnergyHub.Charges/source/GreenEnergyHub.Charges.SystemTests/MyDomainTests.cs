@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.SystemTests
         // If needed, this test can be removed when the actual system test has been implemented.
         // Or it can be used to actually verify the HealthStatus after deployment.
         [SystemFact]
-        public async Task When_RequestHealthStatus_Then_ResponseIsOKAndDoesNotContainFalse()
+        public async Task When_RequestReadinessStatus_Then_ResponseIsOkAndHealthy()
         {
             // Arrange
             using var httpClient = new HttpClient
@@ -49,13 +49,13 @@ namespace GreenEnergyHub.Charges.SystemTests
             };
 
             // Act
-            using var actualResponse = await httpClient.GetAsync("api/HealthStatus");
+            using var actualResponse = await httpClient.GetAsync("api/monitor/ready");
 
             // Assert
             actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
             var content = await actualResponse.Content.ReadAsStringAsync();
-            content.Should().NotContain("false");
+            content.Should().Contain("Healthy");
         }
     }
 }
