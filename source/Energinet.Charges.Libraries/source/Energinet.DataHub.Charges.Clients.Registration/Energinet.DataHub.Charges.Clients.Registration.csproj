@@ -83,7 +83,7 @@ limitations under the License.
     <ProjectReference Include="..\Energinet.DataHub.Charges.Clients\Energinet.DataHub.Charges.Clients.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.354">
+    <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.406">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
