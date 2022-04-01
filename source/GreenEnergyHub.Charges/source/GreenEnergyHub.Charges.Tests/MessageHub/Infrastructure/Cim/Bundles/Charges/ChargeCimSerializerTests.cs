@@ -133,7 +133,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
             cimIdProvider.Setup(c => c.GetUniqueId()).Returns(CimTestId);
         }
 
-        private List<AvailableChargeData> GetCharges(IClock clock, bool includeMasterData, bool includePrices)
+        private static List<AvailableChargeData> GetCharges(IClock clock, bool includeMasterData, bool includePrices)
         {
             var charges = new List<AvailableChargeData>();
 

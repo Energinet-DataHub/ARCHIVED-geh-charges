@@ -83,7 +83,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
             };
         }
 
-        private List<IValidationRule> GetMandatoryRulesForCommand(MarketParticipant? sender)
+        private static List<IValidationRule> GetMandatoryRulesForCommand(MarketParticipant? sender)
         {
             var rules = new List<IValidationRule>
             {

@@ -63,7 +63,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
             return mergedErrorText;
         }
 
-        private string GetDataForToken(
+        private static string GetDataForToken(
             CimValidationErrorTextToken token,
             ChargeLinksCommand chargeLinksCommand,
             ChargeLinkDto chargeLinkDto)
