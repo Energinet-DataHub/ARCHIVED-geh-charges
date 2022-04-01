@@ -9,7 +9,6 @@
   // The following settings are used to determine the secrets names needed for the API Management tests.
   "ENVIRONMENT_SHORT": "<short name of environment; e.g. 'u'>",
   "ENVIRONMENT_INSTANCE": "<instance number of environment; e.g. '001'>",
-
-  // Hi Peter, update the property name to match the name of the domain for which we need the baseaddress.
-  "MYDOMAIN_BASEADDRESS": "<Base address of the domain in Azure environment>"
+  "CLIENT_NAME": "<client name part of the kv secret in u-002, e.g. 'endk-ddm4' for 'B2C-u001-endk-ddm4-client-id'>'",
+  "GRID_ACCESS_PROVIDER": "<valid grid access provider id, **OBS!** must match client name>"
 }

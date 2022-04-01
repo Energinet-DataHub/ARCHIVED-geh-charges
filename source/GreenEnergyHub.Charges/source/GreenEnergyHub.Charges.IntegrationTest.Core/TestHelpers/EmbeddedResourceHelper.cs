@@ -25,17 +25,16 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
 {
     public static class EmbeddedResourceHelper
     {
-        public static string GetEmbeddedFile(string filePath, [NotNull] IClock clock)
+        public static string GetEmbeddedFile(string filePath, [NotNull] Instant currentInstant)
         {
             var basePath = Assembly.GetExecutingAssembly().Location;
             var path = Path.Combine(Directory.GetParent(basePath)!.FullName, filePath);
             var fileText = File.ReadAllText(path);
-            return ReplaceMergeFields(clock, fileText);
+            return ReplaceMergeFields(currentInstant, fileText);
         }
 
-        private static string ReplaceMergeFields(IClock clock, string file)
+        private static string ReplaceMergeFields(Instant currentInstant, string file)
         {
-            var currentInstant = clock.GetCurrentInstant();
             var now = currentInstant.ToString();
             var inThirtyoneDays = currentInstant.Plus(Duration.FromDays(31));
 
