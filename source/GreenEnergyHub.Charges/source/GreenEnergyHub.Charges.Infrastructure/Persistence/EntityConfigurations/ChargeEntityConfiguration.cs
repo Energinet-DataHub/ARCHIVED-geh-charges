@@ -38,14 +38,24 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
             builder.OwnsMany(c => c.Periods, ConfigurePeriods);
 
             // Enable EF Core to hydrate the points
-            builder.Metadata
-                .FindNavigation(nameof(Charge.Points))
-                .SetPropertyAccessMode(PropertyAccessMode.Field);
+            var points = builder.Metadata
+                .FindNavigation(nameof(Charge.Points));
+
+            // TODO: Jonas
+            if (points == null)
+                throw new InvalidOperationException("Unexpected navigation");
+
+            points.SetPropertyAccessMode(PropertyAccessMode.Field);
 
             // Enable EF Core to hydrate the periods
-            builder.Metadata
-                .FindNavigation(nameof(Charge.Periods))
-                .SetPropertyAccessMode(PropertyAccessMode.Field);
+            var periods = builder.Metadata
+                .FindNavigation(nameof(Charge.Periods));
+
+            // TODO: Jonas
+            if (periods == null)
+                throw new InvalidOperationException("Unexpected navigation");
+
+            periods.SetPropertyAccessMode(PropertyAccessMode.Field);
         }
 
         private void ConfigurePeriods(OwnedNavigationBuilder<Charge, ChargePeriod> periods)

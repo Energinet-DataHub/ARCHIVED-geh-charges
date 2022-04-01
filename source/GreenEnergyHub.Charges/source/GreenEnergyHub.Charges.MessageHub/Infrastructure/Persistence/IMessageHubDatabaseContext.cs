@@ -27,7 +27,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Persistence
     /// </summary>
     public interface IMessageHubDatabaseContext
     {
-        DbSet<TAvailableData> SetAsync<TAvailableData>()
+        DbSet<TAvailableData> Set<TAvailableData>()
             where TAvailableData : AvailableDataBase;
 
         /// <summary>

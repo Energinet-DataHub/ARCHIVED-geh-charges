@@ -41,6 +41,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             IntegrationTestConfiguration = new IntegrationTestConfiguration();
             DatabaseManager = new ChargesDatabaseManager();
             AuthorizationConfiguration = new AuthorizationConfiguration(
+                "volt",
                 "u002",
                 "integrationtest.local.settings.json",
                 "AZURE_SECRETS_KEYVAULT_URL");
@@ -92,7 +93,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
                 return;
 
             var buildConfiguration = GetBuildConfiguration();
-            hostSettings.FunctionApplicationPath = $"..\\..\\..\\..\\GreenEnergyHub.Charges.FunctionHost\\bin\\{buildConfiguration}\\net5.0";
+            hostSettings.FunctionApplicationPath = $"..\\..\\..\\..\\GreenEnergyHub.Charges.FunctionHost\\bin\\{buildConfiguration}\\net6.0";
         }
 
         /// <inheritdoc/>
@@ -280,12 +281,12 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
                 .CreateAsync();
 
             var messageHubRequestQueue = await ServiceBusResourceProvider
-                .BuildQueue(ChargesServiceBusResourceNames.MessageHubRequestQueueKey, requireSession: true)
+                .BuildQueue(ChargesServiceBusResourceNames.MessageHubRequestQueueKey, requiresSession: true)
                 .SetEnvironmentVariableToQueueName(EnvironmentSettingNames.MessageHubRequestQueue)
                 .CreateAsync();
 
             var messageHubReplyQueue = await ServiceBusResourceProvider
-                .BuildQueue(ChargesServiceBusResourceNames.MessageHubReplyQueueKey, requireSession: true)
+                .BuildQueue(ChargesServiceBusResourceNames.MessageHubReplyQueueKey, requiresSession: true)
                 .SetEnvironmentVariableToQueueName(EnvironmentSettingNames.MessageHubReplyQueue)
                 .CreateAsync();
 
