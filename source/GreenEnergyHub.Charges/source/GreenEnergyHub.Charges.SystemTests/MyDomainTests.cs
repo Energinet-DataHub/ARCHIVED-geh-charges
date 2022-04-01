@@ -36,41 +36,11 @@ namespace GreenEnergyHub.Charges.SystemTests
 
         private MyDomainConfiguration Configuration { get; }
 
-        [SystemFact(Skip = "This test will be refactored as part of story #951 in the Charges repo")]
-        public async Task When_TriggeringAction_Then_PeekReturnsExpectedContent()
-        {
-            // Arrange
-            using var httpClient = new HttpClient
-            {
-                BaseAddress = Configuration.BaseAddress,
-            };
-
-            // Flow
-            // => Trigger action
-            using var actionResponse = await httpClient.PostAsync("api/myActionEndpoint", new StringContent("myActionBody"));
-            actionResponse.StatusCode.Should().Be(HttpStatusCode.Accepted);
-
-            // => Peek
-            HttpResponseMessage? expectedResponse = null;
-            await Awaiter.WaitUntilConditionAsync(
-                async () =>
-                {
-                    expectedResponse = await httpClient.GetAsync("api/myPeekEndpoint");
-                    return expectedResponse.StatusCode == HttpStatusCode.Accepted;
-                },
-                timeLimit: TimeSpan.FromMinutes(1),
-                delay: TimeSpan.FromSeconds(2));
-
-            // Assert
-            var content = await expectedResponse!.Content.ReadAsStringAsync();
-            content.Should().Contain("myExpectedContent");
-        }
-
         // This is just to be able to verify everything works with regards to settings and executing the tests after deployment.
         // If needed, this test can be removed when the actual system test has been implemented.
         // Or it can be used to actually verify the HealthStatus after deployment.
         [SystemFact]
-        public async Task When_RequestHealthStatus_Then_ResponseIsOKAndDoesNotContainFalse()
+        public async Task When_RequestReadinessStatus_Then_ResponseIsOkAndHealthy()
         {
             // Arrange
             using var httpClient = new HttpClient
@@ -79,13 +49,13 @@ namespace GreenEnergyHub.Charges.SystemTests
             };
 
             // Act
-            using var actualResponse = await httpClient.GetAsync("api/HealthStatus");
+            using var actualResponse = await httpClient.GetAsync("api/monitor/ready");
 
             // Assert
             actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
             var content = await actualResponse.Content.ReadAsStringAsync();
-            content.Should().NotContain("false");
+            content.Should().Contain("Healthy");
         }
     }
 }

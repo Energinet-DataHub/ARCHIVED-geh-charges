@@ -41,6 +41,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             IntegrationTestConfiguration = new IntegrationTestConfiguration();
             DatabaseManager = new ChargesDatabaseManager();
             AuthorizationConfiguration = new AuthorizationConfiguration(
+                "volt",
                 "u002",
                 "integrationtest.local.settings.json",
                 "AZURE_SECRETS_KEYVAULT_URL");

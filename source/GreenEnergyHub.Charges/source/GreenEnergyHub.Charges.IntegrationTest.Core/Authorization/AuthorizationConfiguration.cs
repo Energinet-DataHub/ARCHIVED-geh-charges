@@ -31,12 +31,12 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Authorization
     public class AuthorizationConfiguration
     {
         public AuthorizationConfiguration(
+            string clientName,
             string environment,
             string localSettingsJsonFilename,
             string azureSecretsKeyVaultUrlKey)
         {
             // Team name and environment is required to get client-id and client-secret for integration tests
-            const string teamName = "volt";
             Environment = environment;
             RootConfiguration = BuildKeyVaultConfigurationRoot(localSettingsJsonFilename);
             SecretsConfiguration = BuildSecretsKeyVaultConfiguration(RootConfiguration.GetValue<string>(azureSecretsKeyVaultUrlKey));
@@ -48,10 +48,10 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Authorization
 
             BackendAppId = SecretsConfiguration.GetValue<string>(BuildB2CBackendAppId(Environment));
             FrontendAppId = SecretsConfiguration.GetValue<string>(BuildB2CFrontendAppId(Environment));
-            var teamClientId = SecretsConfiguration.GetValue<string>(BuildB2CTeamSecretName(Environment, teamName, "client-id"));
-            var teamClientSecret = SecretsConfiguration.GetValue<string>(BuildB2CTeamSecretName(Environment, teamName, "client-secret"));
+            var teamClientId = SecretsConfiguration.GetValue<string>(BuildB2CTeamSecretName(Environment, clientName, "client-id"));
+            var teamClientSecret = SecretsConfiguration.GetValue<string>(BuildB2CTeamSecretName(Environment, clientName, "client-secret"));
 
-            ClientCredentialsSettings = RetrieveB2CTeamClientSettings(teamName, teamClientId, teamClientSecret);
+            ClientCredentialsSettings = RetrieveB2CTeamClientSettings(clientName, teamClientId, teamClientSecret);
 
             ApiManagementBaseAddress = SecretsConfiguration.GetValue<Uri>(BuildApiManagementEnvironmentSecretName(Environment, "host-url"));
             FrontendOpenIdUrl = SecretsConfiguration.GetValue<string>(BuildB2CFrontendOpenIdUrl(Environment));
