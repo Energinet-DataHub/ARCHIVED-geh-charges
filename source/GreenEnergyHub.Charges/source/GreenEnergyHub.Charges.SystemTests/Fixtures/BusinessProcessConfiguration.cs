@@ -38,12 +38,12 @@ namespace GreenEnergyHub.Charges.SystemTests.Fixtures
         public string ChargeIngestionEndpoint { get; }
 
         /// <summary>
-        /// Endpoint for peeking messages from Post Office
+        /// Endpoint for peeking messages from MessageHub
         /// </summary>
         public string PeekEndpoint { get; }
 
         /// <summary>
-        /// Endpoint for dequeuing messages from Post Office
+        /// Endpoint for dequeuing messages from MessageHub
         /// </summary>
         public string DequeueEndpoint { get; }
 
