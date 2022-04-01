@@ -33,7 +33,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
             _chargeCreatedEventFactory = chargeCreatedEventFactory;
         }
 
-        // Todo: Maybe "Create" and "Updated" is just a "Received" event?
         public async Task PublishChargeCreatedAsync(ChargeOperationDto chargeOperationDto)
         {
             var chargeCreatedEvent = _chargeCreatedEventFactory.Create(chargeOperationDto);
@@ -42,8 +41,8 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
 
         public Task PublishChargeUpdatedAsync(ChargeCommandAcceptedEvent chargeCommandAcceptedEvent)
         {
-            // Todo: for now we will just log this
-
+            // Todo: Maybe "Create" and "Updated" is just a "Received" event?
+            // for now we will just log this
             /*var chargeCreatedEvent = _chargeCreatedEventFactory.Create(chargeOperationDto);
             await _messageChargeDispatcher.DispatchAsync(chargeCreatedEvent).ConfigureAwait(false);*/
 

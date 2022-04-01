@@ -153,7 +153,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
             return charges;
         }
 
-        private AvailableChargeData GetChargeWithMasterData(int no, IClock clock, bool includePrices, int order)
+        private static AvailableChargeData GetChargeWithMasterData(int no, IClock clock, bool includePrices, int order)
         {
             var validTo = no % 2 == 0 ?
                 Instant.FromUtc(9999, 12, 31, 23, 59, 59) :
@@ -183,7 +183,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
                 GetPoints(GetNoOfPoints(no, includePrices)));
         }
 
-        private AvailableChargeData GetChargeWithoutMasterData(int no, IClock clock, bool includePrices)
+        private static AvailableChargeData GetChargeWithoutMasterData(int no, IClock clock, bool includePrices)
         {
             return new AvailableChargeData(
                 "5790001330552",

@@ -28,6 +28,11 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
         /// <returns>The validation result.</returns>
         Task<ValidationResult> ValidateAsync(TCommand command);
 
+        /// <summary>
+        /// Business validation of operation/>.
+        /// </summary>
+        /// <param name="operation">The operation to validate.</param>
+        /// <returns>The validation result.</returns>
         Task<ValidationResult> ValidateAsync(TOperation operation);
     }
 }

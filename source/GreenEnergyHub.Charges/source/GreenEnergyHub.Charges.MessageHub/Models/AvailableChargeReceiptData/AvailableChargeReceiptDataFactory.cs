@@ -52,9 +52,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                     CreateAvailableChargeReceiptData(input, sender, recipient, chargeOperationDto));
             }
 
-            /*availableChargeReceiptData = (IReadOnlyList<AvailableChargeReceiptData>)input.Command.Charges.SelectMany(x =>
-                CreateAvailableChargeReceiptData(input, sender, recipient, x));*/
-
             return availableChargeReceiptData;
         }
 
