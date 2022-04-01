@@ -10,5 +10,6 @@
   "ENVIRONMENT_SHORT": "<short name of environment; e.g. 'u'>",
   "ENVIRONMENT_INSTANCE": "<instance number of environment; e.g. '001'>",
   "CLIENT_NAME": "<client name part of the kv secret in u-002, e.g. 'endk-ddm4' for 'B2C-u001-endk-ddm4-client-id'>'",
-  "GRID_ACCESS_PROVIDER": "<valid grid access provider id, **OBS!** must match client name>"
+  "GRID_ACCESS_PROVIDER": "<valid grid access provider id, **OBS!** must match client name>",
+  "CHARGES_DOMAIN_BASEADDRESS": "<Charges domain baseaddress - used by e.g. health check in system test>"
 }
