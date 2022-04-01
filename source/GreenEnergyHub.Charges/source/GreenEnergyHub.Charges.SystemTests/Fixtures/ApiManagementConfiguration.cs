@@ -38,6 +38,8 @@ namespace GreenEnergyHub.Charges.SystemTests.Fixtures
             Environment = Root.GetValue<string>("ENVIRONMENT_SHORT") +
                           Root.GetValue<string>("ENVIRONMENT_INSTANCE");
 
+            var clientName = Root.GetValue<string>("CLIENT_NAME");
+
             var keyVaultUrl = Root.GetValue<string>(azureSecretsKeyVaultUrlKey);
             KeyVaultConfiguration = BuildKeyVaultConfigurationRoot(keyVaultUrl);
 
@@ -45,7 +47,7 @@ namespace GreenEnergyHub.Charges.SystemTests.Fixtures
                 BuildApiManagementEnvironmentSecretName(Environment, "host-url"));
 
             AuthorizationConfiguration = new AuthorizationConfiguration(
-                Environment, systemtestLocalSettingsJson, azureSecretsKeyVaultUrlKey);
+                clientName, Environment, systemtestLocalSettingsJson, azureSecretsKeyVaultUrlKey);
         }
 
         /// <summary>

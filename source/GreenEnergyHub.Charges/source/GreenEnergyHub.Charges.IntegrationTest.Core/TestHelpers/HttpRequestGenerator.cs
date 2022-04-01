@@ -25,8 +25,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
         {
             var (request, correlationId) = CreateHttpRequest(HttpMethod.Post, endpointUrl);
 
-            var clock = SystemClock.Instance;
-            var chargeXml = EmbeddedResourceHelper.GetEmbeddedFile(testFilePath, clock);
+            var currentInstant = SystemClock.Instance.GetCurrentInstant();
+            var chargeXml = EmbeddedResourceHelper.GetEmbeddedFile(testFilePath, currentInstant);
             request.Content = new StringContent(chargeXml, Encoding.UTF8, "application/xml");
 
             return (request, correlationId);

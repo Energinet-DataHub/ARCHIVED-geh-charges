@@ -52,7 +52,6 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 new ChargeTypeIsKnownValidationRule(chargeCommand),
                 new ChargeTypeTariffPriceCountRule(chargeCommand),
                 new DocumentTypeMustBeRequestUpdateChargeInformationRule(chargeCommand),
-                new FeeMustHaveSinglePriceRule(chargeCommand),
                 new MaximumPriceRule(chargeCommand),
                 new RecipientIsMandatoryTypeValidationRule(chargeCommand),
                 new ResolutionFeeValidationRule(chargeCommand),
@@ -60,7 +59,6 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 new ResolutionTariffValidationRule(chargeCommand),
                 new SenderIsMandatoryTypeValidationRule(chargeCommand),
                 new StartDateTimeRequiredValidationRule(chargeCommand),
-                new SubscriptionMustHaveSinglePriceRule(chargeCommand),
                 new VatClassificationValidationRule(chargeCommand),
             };
 
