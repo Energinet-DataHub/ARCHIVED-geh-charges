@@ -59,13 +59,11 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
                 new ChargePriceMaximumDigitsAndDecimalsRule(chargeOperationDto),
                 new ChargeTypeIsKnownValidationRule(chargeOperationDto),
                 new ChargeTypeTariffPriceCountRule(chargeOperationDto),
-                new FeeMustHaveSinglePriceRule(chargeOperationDto),
                 new MaximumPriceRule(chargeOperationDto),
                 new ResolutionFeeValidationRule(chargeOperationDto),
                 new ResolutionSubscriptionValidationRule(chargeOperationDto),
                 new ResolutionTariffValidationRule(chargeOperationDto),
                 new StartDateTimeRequiredValidationRule(chargeOperationDto),
-                new SubscriptionMustHaveSinglePriceRule(chargeOperationDto),
                 new VatClassificationValidationRule(chargeOperationDto),
             };
 
