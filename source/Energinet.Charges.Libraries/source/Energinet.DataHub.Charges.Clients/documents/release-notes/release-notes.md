@@ -1,5 +1,9 @@
 # Energinet.DataHub.Charges.Clients Release notes
 
+## Version 3.0.0
+
+.NET 6 and Azure Function v4 upgrades
+
 ## Version 2.0.4
 
 Updated Energinet.DataHub.Core NuGet packages

@@ -21,7 +21,7 @@ on:
 
 jobs:
   pre_job:
-    runs-on: windows-latest
+    runs-on: windows-2022
     outputs:
       should_skip: ${{ steps.skip_check.outputs.should_skip }}
     steps:
@@ -39,12 +39,11 @@ jobs:
     needs: pre_job
     if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
     name: Validate build Clients Registration CI
-    uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci.yml@4.0.0
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci.yml@6.1.0
     with:
       SOLUTION_FILE_PATH: 'source/Energinet.Charges.Libraries/Energinet.DataHub.Charges.Libraries.sln'
-      DOTNET_VERSION: '5.0.404'
-      USE_AZURITE: true
-      USE_AZURE_FUNCTIONS_CORE_TOOLS: true
+      DOTNET_VERSION: '6.0.201'
+      USE_AZURE_FUNCTIONS_TOOLS: true
     secrets:
       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
       AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
