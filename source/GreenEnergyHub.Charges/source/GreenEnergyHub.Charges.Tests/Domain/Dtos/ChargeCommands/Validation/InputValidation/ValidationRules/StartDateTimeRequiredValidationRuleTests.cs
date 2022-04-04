@@ -14,6 +14,7 @@
 
 using System.Linq;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
@@ -30,32 +31,27 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
     public class StartDateTimeRequiredValidationRuleTests
     {
         [Theory]
-        [InlineAutoMoqData("2020-05-10T13:00:00Z", true)]
+        [InlineAutoMoqData("2020-05-10T22:00:00Z", true)]
         [InlineAutoMoqData("1970-01-01T00:00:00Z", false)]
-        public void StartDateTimeRequiredValidationRule_NegativeTest(
+        public void StartDateTimeRequiredValidationRule_Test(
             string startDateTime,
             bool expected,
-            ChargeCommandBuilder chargeCommandBuilder)
+            ChargeOperationDtoBuilder chargeOperationDtoBuilder)
         {
-            var chargeCommand = CreateCommand(chargeCommandBuilder, startDateTime);
-            var chargeOperationDto = chargeCommand.Charges.First();
+            var chargeOperationDto = chargeOperationDtoBuilder
+                .WithStartDateTime(InstantPattern.General.Parse(startDateTime).Value)
+                .Build();
             var sut = new StartDateTimeRequiredValidationRule(chargeOperationDto);
             sut.IsValid.Should().Be(expected);
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder chargeCommandBuilder)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeOperationDtoBuilder chargeOperationDtoBuilder)
         {
-            var chargeCommand = CreateCommand(chargeCommandBuilder, "1970-01-01T00:00:00Z");
-            var chargeOperationDto = chargeCommand.Charges.First();
+            var chargeOperationDto = chargeOperationDtoBuilder.Build();
             var sut = new StartDateTimeRequiredValidationRule(chargeOperationDto);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.StartDateTimeRequiredValidation);
-        }
-
-        private static ChargeCommand CreateCommand(ChargeCommandBuilder builder, string startDateTime)
-        {
-            return builder.WithStartDateTime(InstantPattern.General.Parse(startDateTime).Value).Build();
         }
     }
 }
