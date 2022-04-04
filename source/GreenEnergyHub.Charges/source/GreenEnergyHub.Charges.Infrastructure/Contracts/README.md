@@ -13,7 +13,7 @@ as implemented in the metering point domain.
       <Access>Public</Access>
       <ProtoCompile>True</ProtoCompile>
       <CompileOutputs>True</CompileOutputs>
-      <OutputDir>obj\Debug\net5.0\</OutputDir>
+      <OutputDir>obj\Debug\net6.0\</OutputDir>
       <Generator>MSBuild:Compile</Generator>
     </Protobuf>
   </ItemGroup>

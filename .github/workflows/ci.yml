@@ -27,10 +27,10 @@ jobs:
 
   # Build and test solution, and publish coverage report
   dotnet_solution_ci:
-    uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci.yml@6.0.0
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci.yml@6.1.0
     with:
       SOLUTION_FILE_PATH: 'source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln'
-      DOTNET_VERSION: '5.0.404'
+      DOTNET_VERSION: '6.0.201'
       USE_AZURE_FUNCTIONS_TOOLS: true
     secrets:
       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
@@ -51,10 +51,10 @@ jobs:
     # Depend on these validating jobs in order to avoid potentially creating artifacts that should never be used if this job fails
     # dotnet_solution_ci is no longer included as dependency due to its long running behavior
     needs: [ci_base, terraform_validate]
-    uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@6.0.0
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@6.1.0
     with:
       CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.FunctionHost/GreenEnergyHub.Charges.FunctionHost.csproj'
-      DOTNET_VERSION: '5.0.404'
+      DOTNET_VERSION: '6.0.201'
       ARTIFACT_NAME: functionhost
 
   # Create web API artifact for deployment
@@ -62,10 +62,10 @@ jobs:
     # Depend on these validating jobs in order to avoid potentially creating artifacts that should never be used if this job fails
     # dotnet_solution_ci is no longer included as dependency due to its long running behavior
     needs: [ci_base, terraform_validate]
-    uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-webapi-artifact.yml@6.0.0
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-webapi-artifact.yml@6.1.0
     with:
       CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.WebApi/GreenEnergyHub.Charges.WebApi.csproj'
-      DOTNET_VERSION: '5.0.404'
+      DOTNET_VERSION: '6.0.201'
       ARTIFACT_NAME: webapi
 
   # Create DbUp artifact for deployment
@@ -73,10 +73,10 @@ jobs:
     # Depend on these validating jobs in order to avoid potentially creating artifacts that should never be used if this job fails
     # dotnet_solution_ci is no longer included as dependency due to its long running behavior
     needs: [ci_base, terraform_validate]
-    uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@6.0.0
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@6.1.0
     with:
       CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ApplyDBMigrationsApp/GreenEnergyHub.Charges.ApplyDBMigrationsApp.csproj'
-      DOTNET_VERSION: '5.0.404'
+      DOTNET_VERSION: '6.0.201'
       ARTIFACT_NAME: databasemigration
 
   # Create system tests artifact for testing after deployment
@@ -84,10 +84,10 @@ jobs:
     # Depend on these validating jobs in order to avoid potentially creating artifacts that should never be used if this job fails
     # dotnet_solution_ci is no longer included as dependency due to its long running behavior
     needs: [ci_base, terraform_validate]
-    uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@6.0.0
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-create-function-artifact.yml@6.1.0
     with:
       CSPROJ_FILE_PATH: 'source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.SystemTests/GreenEnergyHub.Charges.SystemTests.csproj'
-      DOTNET_VERSION: '5.0.404'
+      DOTNET_VERSION: '6.0.201'
       ARTIFACT_NAME: systemtests
 
   # Create pre-release that might eventually be deployed in CD pipeline

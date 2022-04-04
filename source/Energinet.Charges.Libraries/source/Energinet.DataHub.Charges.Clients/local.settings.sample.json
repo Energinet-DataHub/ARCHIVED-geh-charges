@@ -1,10 +1,9 @@
 {
   "IsEncrypted": false,
   "Values": {
-    "AzureWebJobsDashboard": "UseDevelopmentStorage=true",
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
-    
+
     "APPINSIGHTS_INSTRUMENTATIONKEY": "<App insights instrumentation key>",
     "LOCAL_TIMEZONENAME": "<Your time zone ID, e.g.Europe/Copenhagen, see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones for others>",
     "CURRENCY": "<Your system currency e.g. DKK, see https://en.wikipedia.org/wiki/ISO_4217>",
