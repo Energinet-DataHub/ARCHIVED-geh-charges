@@ -20,6 +20,7 @@ using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.Iso8601;
@@ -52,13 +53,12 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             int startOfOccurrence,
             int endOfOccurrence,
             bool expected,
-            [Frozen] ChargeCommandBuilder builder)
+            [Frozen] ChargeOperationDtoBuilder builder)
         {
             // Arrange
-            var chargeCommand = builder
+            var chargeOperationDto = builder
                 .WithStartDateTime(InstantPattern.General.Parse(effectuationDateIsoString).Value)
                 .Build();
-            var chargeOperationDto = chargeCommand.Charges.First();
             var configuration = CreateRuleConfiguration(startOfOccurrence, endOfOccurrence);
             var zonedDateTimeService = CreateLocalDateTimeService(timeZoneId);
             var clock = new FakeClock(InstantPattern.General.Parse(nowIsoString).Value);
@@ -72,11 +72,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder builder, IClock clock)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeOperationDtoBuilder builder, IClock clock)
         {
             // Arrange
-            var invalidCommand = CreateInvalidCommand(builder);
-            var chargeOperationDto = invalidCommand.Charges.First();
+            var chargeOperationDto = builder.WithStartDateTime(InstantHelper.GetEndDefault()).Build();
             var configuration = CreateRuleConfiguration(1, 3);
             var zonedDateTimeService = CreateLocalDateTimeService("Europe/Copenhagen");
 
@@ -100,11 +99,6 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
                 new Interval<int>(startOfOccurrence, endOfOccurrence));
 
             return configuration;
-        }
-
-        private static ChargeCommand CreateInvalidCommand(ChargeCommandBuilder builder)
-        {
-            return builder.WithStartDateTime(Instant.MaxValue).Build();
         }
     }
 }
