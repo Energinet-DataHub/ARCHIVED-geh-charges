@@ -31,11 +31,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         [Theory]
         [InlineAutoDomainData]
         public void IsValid_WhenTaxIndicatorInCommandDoesNotMatchCharge_IsFalse(
-            ChargeCommandBuilder builder,
+            ChargeOperationDtoBuilder builder,
             Charge charge)
         {
-            var invalidCommand = CreateInvalidCommand(builder, charge);
-            var chargeOperationDto = invalidCommand.Charges.First();
+            var chargeOperationDto = builder.WithTaxIndicator(!charge.TaxIndicator).Build();
             var sut = new ChangingTariffTaxValueNotAllowedRule(chargeOperationDto, charge);
             Assert.False(sut.IsValid);
         }
@@ -43,28 +42,21 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         [Theory]
         [InlineAutoDomainData]
         public void IsValid_WhenTaxIndicatorInCommandMatches_IsTrue(
-            ChargeCommandBuilder builder,
+            ChargeOperationDtoBuilder builder,
             Charge charge)
         {
-            var chargeCommand = builder.WithTaxIndicator(charge.TaxIndicator).Build();
-            var chargeOperationDto = chargeCommand.Charges.First();
+            var chargeOperationDto = builder.WithTaxIndicator(charge.TaxIndicator).Build();
             var sut = new ChangingTariffTaxValueNotAllowedRule(chargeOperationDto, charge);
             Assert.True(sut.IsValid);
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder builder, Charge charge)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeOperationDtoBuilder builder, Charge charge)
         {
-            var invalidCommand = CreateInvalidCommand(builder, charge);
-            var chargeOperationDto = invalidCommand.Charges.First();
+            var chargeOperationDto = builder.WithTaxIndicator(!charge.TaxIndicator).Build();
             var sut = new ChangingTariffTaxValueNotAllowedRule(chargeOperationDto, charge);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChangingTariffTaxValueNotAllowed);
-        }
-
-        private static ChargeCommand CreateInvalidCommand(ChargeCommandBuilder builder, Charge charge)
-        {
-            return builder.WithTaxIndicator(!charge.TaxIndicator).Build();
         }
     }
 }
