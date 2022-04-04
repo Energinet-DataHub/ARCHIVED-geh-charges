@@ -27,17 +27,14 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
     public class UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateRuleTests
     {
         [Theory]
-        // Valid earlier than stop
-        [InlineAutoMoqData("2020-10-10T22:00:00Z", "2020-10-09T22:00:00Z", true)]
-        // Valid same as stop
-        [InlineAutoMoqData("2020-10-10T22:00:00Z", "2020-10-10T22:00:00Z", true)]
-        // Valid same as stop where stop is infinite
-        [InlineAutoMoqData("9999-12-31T23:59:59Z", "9999-12-31T23:59:59Z", true)]
-        // InValid later than stop date
-        [InlineAutoMoqData("2020-05-05T22:00:00Z", "2020-05-06T22:00:00Z", false)]
+        [InlineAutoMoqData("2020-10-10T22:00:00Z", "2020-10-09T22:00:00Z", "it is valid as update is earlier than stop", true)]
+        [InlineAutoMoqData("2020-10-10T22:00:00Z", "2020-10-10T22:00:00Z", "it is valid as update is the same as existing stop date", true)]
+        [InlineAutoMoqData("9999-12-31T23:59:59Z", "9999-12-31T23:59:59Z", "it is valid as update and existing stop date is infinite", true)]
+        [InlineAutoMoqData("2020-05-05T22:00:00Z", "2020-05-06T22:00:00Z", "it is invalid as the update is after existing stop date", false)]
         public void IsValid_WhenExpectedDateIsWithinInterval_IsTrue(
             string existingChargeEndDateIsoString,
             string incomingCommandStartDateIsoString,
+            string reason,
             bool expectedIsValid)
         {
             // Arrange
@@ -55,7 +52,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             var isValid = sut.IsValid;
 
             // Assert
-            isValid.Should().Be(expectedIsValid);
+            isValid.Should().Be(expectedIsValid, reason);
         }
 
         private List<ChargePeriod> CreateExistingChargePeriods(Instant existingStopDate)
