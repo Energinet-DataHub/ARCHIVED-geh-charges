@@ -111,7 +111,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.FeeMustHaveSinglePrice)]
         public const string FeeMustHaveSinglePriceErrorText =
-            "The number of prices {{ChargePointsCount}}z for charge {{DocumentSenderProvidedChargeId}} doesn't match period type {{ChargeResolution}}";
+            "The number of prices {{ChargePointsCount}} for charge {{DocumentSenderProvidedChargeId}} doesn't match period type {{ChargeResolution}}";
 
         [ErrorMessageFor(ValidationRuleIdentifier.SubscriptionMustHaveSinglePrice)]
         public const string SubscriptionMustHaveSinglePriceErrorText =
