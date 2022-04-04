@@ -41,9 +41,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
             var points = builder.Metadata
                 .FindNavigation(nameof(Charge.Points));
 
-            // TODO: Jonas
             if (points == null)
-                throw new InvalidOperationException("Unexpected navigation");
+            {
+                throw new InvalidOperationException(
+                    $"Could not configure ChargeEntityConfiguration entity. Navigation property {nameof(Charge.Points)} was not found.");
+            }
 
             points.SetPropertyAccessMode(PropertyAccessMode.Field);
 
@@ -51,9 +53,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
             var periods = builder.Metadata
                 .FindNavigation(nameof(Charge.Periods));
 
-            // TODO: Jonas
             if (periods == null)
-                throw new InvalidOperationException("Unexpected navigation");
+            {
+                throw new InvalidOperationException(
+                    $"Could not configure ChargeEntityConfiguration entity. Navigation property {nameof(Charge.Periods)} was not found.");
+            }
 
             periods.SetPropertyAccessMode(PropertyAccessMode.Field);
         }
