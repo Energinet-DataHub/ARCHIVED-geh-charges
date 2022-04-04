@@ -39,12 +39,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 
             foreach (var chargeOperationDto in chargeCommandAcceptedEvent.Command.Charges)
             {
-                // Todo:
-                /*if is update
-                    then publish update
-                else
-                    publish create*/
-
                 await _chargePublisher.PublishChargeCreatedAsync(chargeOperationDto).ConfigureAwait(false);
 
                 if (chargeOperationDto.Points.Any())
