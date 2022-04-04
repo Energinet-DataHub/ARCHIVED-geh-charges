@@ -144,7 +144,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
                 var availableChargesForProvider = actual
                     .Where(x => x.RecipientId == gap.MarketParticipantId).ToList();
                 var operationOrder = -1;
-                for (var i = 0; i < availableChargesForProvider.Count(); i++)
+                for (var i = 0; i < availableChargesForProvider.Count; i++)
                 {
                     availableChargesForProvider[i].OperationOrder.Should().BeGreaterThan(operationOrder);
                     operationOrder = actual[i].OperationOrder;
