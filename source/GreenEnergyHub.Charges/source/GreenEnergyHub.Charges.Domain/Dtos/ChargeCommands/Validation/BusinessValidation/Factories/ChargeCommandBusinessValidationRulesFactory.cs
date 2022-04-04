@@ -54,14 +54,16 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
             var sender = await _marketParticipantRepository.GetOrNullAsync(senderId).ConfigureAwait(false);
             var configuration = await _rulesConfigurationRepository.GetConfigurationAsync().ConfigureAwait(false);
 
-            var charge = await GetChargeOrNullAsync(chargeCommand).ConfigureAwait(false);
+            var existingCharge = await GetChargeOrNullAsync(chargeCommand).ConfigureAwait(false);
             var rules = GetMandatoryRules(chargeCommand, configuration, sender);
 
-            if (charge == null)
+            if (existingCharge == null)
                 return ValidationRuleSet.FromRules(rules);
 
             if (chargeCommand.ChargeOperation.Type == ChargeType.Tariff)
-                AddTariffOnlyRules(rules, chargeCommand, charge);
+                AddTariffOnlyRules(rules, chargeCommand, existingCharge);
+
+            AddUpdateRules(rules, chargeCommand, existingCharge);
 
             return ValidationRuleSet.FromRules(rules);
         }
@@ -69,9 +71,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
         private static void AddTariffOnlyRules(
             List<IValidationRule> rules,
             ChargeCommand command,
-            Charge charge)
+            Charge existingCharge)
         {
-            rules.Add(new ChangingTariffTaxValueNotAllowedRule(command, charge));
+            rules.Add(new ChangingTariffTaxValueNotAllowedRule(command, existingCharge));
         }
 
         private List<IValidationRule> GetMandatoryRules(
@@ -90,6 +92,16 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
             };
 
             return rules;
+        }
+
+        private void AddUpdateRules(List<IValidationRule> rules, ChargeCommand chargeCommand, Charge existingCharge)
+        {
+            var updateRules = new List<IValidationRule>
+            {
+                new UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateRule(existingCharge, chargeCommand),
+            };
+
+            rules.AddRange(updateRules);
         }
 
         private Task<Charge?> GetChargeOrNullAsync(ChargeCommand command)

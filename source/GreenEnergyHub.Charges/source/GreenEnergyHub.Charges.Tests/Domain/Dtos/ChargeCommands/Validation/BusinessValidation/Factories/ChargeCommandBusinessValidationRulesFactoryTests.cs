@@ -77,6 +77,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         [Theory]
         [InlineAutoMoqData(typeof(StartDateValidationRule))]
         [InlineAutoMoqData(typeof(CommandSenderMustBeAnExistingMarketParticipantRule))]
+        [InlineAutoMoqData(typeof(UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateRule))]
         public async Task CreateRulesForChargeCommandAsync_WhenCalledWithExistingChargeNotTariff_ReturnsExpectedRules(
             Type expectedRule,
             TestMarketParticipant sender,
@@ -98,7 +99,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             var actualRules = actual.GetRules().Select(r => r.GetType());
 
             // Assert
-            Assert.Equal(2, actual.GetRules().Count); // This assert is added to ensure that when the rule set is expanded, the test gets attention as well.
+            Assert.Equal(3, actual.GetRules().Count); // This assert is added to ensure that when the rule set is expanded, the test gets attention as well.
             Assert.Contains(expectedRule, actualRules);
         }
 
@@ -106,6 +107,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         [InlineAutoMoqData(typeof(StartDateValidationRule))]
         [InlineAutoMoqData(typeof(CommandSenderMustBeAnExistingMarketParticipantRule))]
         [InlineAutoMoqData(typeof(ChangingTariffTaxValueNotAllowedRule))]
+        [InlineAutoMoqData(typeof(UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateRule))]
         public async Task CreateRulesForChargeCommandAsync_WhenCalledWithExistingTariff_ReturnsExpectedRules(
             Type expectedRule,
             TestMarketParticipant sender,
@@ -127,7 +129,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
 
             // Assert
             var actualRules = actual.GetRules().Select(r => r.GetType());
-            Assert.Equal(3, actual.GetRules().Count); // This assert is added to ensure that when the rule set is expanded, the test gets attention as well.
+            Assert.Equal(4, actual.GetRules().Count); // This assert is added to ensure that when the rule set is expanded, the test gets attention as well.
             Assert.Contains(expectedRule, actualRules);
         }
 
