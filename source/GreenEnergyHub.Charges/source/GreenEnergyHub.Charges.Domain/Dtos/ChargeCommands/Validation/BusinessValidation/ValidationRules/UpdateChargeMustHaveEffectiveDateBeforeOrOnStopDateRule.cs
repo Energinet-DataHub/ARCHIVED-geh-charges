@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System.Linq;
-using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using NodaTime;
@@ -24,7 +23,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
     {
         private readonly Instant _lastPeriodEndDateOnExistingCharge;
         private readonly Instant _incomingEffectiveDate;
-        private readonly bool _chargeDoesNotHaveEndDate;
 
         public UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateRule(
             Charge existingCharge,
@@ -32,12 +30,11 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
         {
             _lastPeriodEndDateOnExistingCharge = existingCharge.Periods.OrderBy(x => x.EndDateTime).Last().EndDateTime;
             _incomingEffectiveDate = chargeCommand.ChargeOperation.StartDateTime;
-            _chargeDoesNotHaveEndDate = _lastPeriodEndDateOnExistingCharge == InstantExtensions.GetEndDefault();
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDate;
 
-        public bool IsValid => _chargeDoesNotHaveEndDate || _incomingEffectiveDate <= _lastPeriodEndDateOnExistingCharge;
+        public bool IsValid => _incomingEffectiveDate <= _lastPeriodEndDateOnExistingCharge;
     }
 }
