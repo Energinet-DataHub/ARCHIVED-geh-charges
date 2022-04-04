@@ -241,6 +241,25 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
         }
 
         [Fact]
+        public void StopCharge_WhenStopDateEqualsSingleExistingChargePeriodStartDate_RemovePeriod()
+        {
+            // Arrange
+            var dayAfterTomorrow = InstantHelper.GetTodayPlusDaysAtMidnightUtc(2);
+            var existingPeriod = new ChargePeriodBuilder()
+                .WithStartDateTime(dayAfterTomorrow)
+                .WithEndDateTime(InstantHelper.GetEndDefault())
+                .Build();
+
+            var sut = new ChargeBuilder().WithPeriods(new List<ChargePeriod> { existingPeriod }).Build();
+
+            // Act
+            sut.Stop(dayAfterTomorrow);
+
+            // Assert
+            sut.Periods.Count.Should().Be(0);
+        }
+
+        [Fact]
         public void StopCharge_WhenSingleExistingChargePeriod_SetNewEndDate()
         {
             // Arrange

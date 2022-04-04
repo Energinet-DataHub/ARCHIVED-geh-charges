@@ -20,10 +20,9 @@ The following validation rules are currently implemented in the charge domain.
 |VR.457|The energy price of a charge consists of maximal 14 digits with format 99999999.999999|E86|All|N/A|
 |VR.488|The VAT class of a charge has domain values D01 (No VAT), D02 (VAT)|E86|All|N/A|
 |VR.505-1|The Tariff to which the charge information applies must have period type Day, Hour or Quarter of Hour|D23|Tariff|N/A|
-|VR.505-2|The Fee to which the charge information applies must have period type Day|D23|Fee|N/A|
+|VR.505-2|The Fee to which the charge information applies must have period type Month|D23|Fee|N/A|
 |VR.505-3|The Subscription to which the charge information applies must have period type Month|D23|Subscription|N/A|
 |VR.507-1|The Tariff to which the charge information applies must have 1 price for period type Day, 24 prices for period type Hour or 96 prices for period type Quarter of Hour|E87|Tariff|N/A|
-|VR.507-2|The Fee/Subscription to which the charge information applies must have 1 price|E87|Fee, Subscription|N/A|
 |VR.509|The charge price must be plausible (i.e. value less than 1.000.000)|E90|All|N/A|
 |VR.531|The occurrence of a charge is mandatory|E0H|All|N/A|
 |VR.532|The owner of a charge is mandatory|E0H|All|N/A|

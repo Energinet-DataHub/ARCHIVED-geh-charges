@@ -60,8 +60,8 @@ namespace GreenEnergyHub.Charges.SystemTests
             // Arrange
             using var httpClient = await CreateHttpClientAsync(_authenticationClient);
 
-            var clock = SystemClock.Instance;
-            var xml = EmbeddedResourceHelper.GetEmbeddedFile(ChargeLinkDocument.AnyValid, clock);
+            var currentInstant = SystemClock.Instance.GetCurrentInstant();
+            var xml = EmbeddedResourceHelper.GetEmbeddedFile(ChargeLinkDocument.AnyValid, currentInstant);
 
             var request = new HttpRequestMessage(HttpMethod.Post, "v1.0/cim/requestchangebillingmasterdata")
             {
@@ -82,8 +82,8 @@ namespace GreenEnergyHub.Charges.SystemTests
             // Arrange
             using var httpClient = await CreateHttpClientAsync();
 
-            var clock = SystemClock.Instance;
-            var xml = EmbeddedResourceHelper.GetEmbeddedFile(ChargeLinkDocument.AnyValid, clock);
+            var currentInstant = SystemClock.Instance.GetCurrentInstant();
+            var xml = EmbeddedResourceHelper.GetEmbeddedFile(ChargeLinkDocument.AnyValid, currentInstant);
 
             var request = new HttpRequestMessage(HttpMethod.Post, "v1.0/cim/requestchangebillingmasterdata")
             {

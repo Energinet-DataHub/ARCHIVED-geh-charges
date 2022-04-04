@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Authentication
 
         // Health check endpoints must allow anonymous access so we can use them with Azure monitoring:
         // https://docs.microsoft.com/en-us/azure/app-service/monitor-instances-health-check#authentication-and-security
-        private readonly List<string> _functionNamesToExclude = new() { "HealthCheck", "HealthStatus", "SynchronizeFromMarketParticipantRegistry" };
+        private readonly List<string> _functionNamesToExclude = new() { "HealthCheck", "SynchronizeFromMarketParticipantRegistry" };
 
         public JwtTokenWrapperMiddleware(JwtTokenMiddleware jwtTokenMiddleware)
         {

@@ -84,9 +84,9 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         /// <exception cref="InvalidOperationException"><paramref name="endDate"/> is before <see cref="StartDateTime"/></exception>
         public ChargePeriod WithEndDate(Instant endDate)
         {
-            if (endDate <= StartDateTime)
+            if (endDate < StartDateTime)
             {
-                throw new InvalidOperationException("End date must be after start date.");
+                throw new InvalidOperationException("End date must be after or equal to start date.");
             }
 
             return new ChargePeriod(
