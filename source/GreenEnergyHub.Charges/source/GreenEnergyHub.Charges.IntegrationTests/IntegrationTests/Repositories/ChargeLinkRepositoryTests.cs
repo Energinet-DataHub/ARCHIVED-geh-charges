@@ -25,6 +25,7 @@ using GreenEnergyHub.Charges.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
 using Xunit;
@@ -47,11 +48,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task StoreAsync_StoresChargeLink(ChargeLink chargeLink)
+        public async Task AddRangeAsync_StoresChargeLink(ChargeLink chargeLink)
         {
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-
             var ids = SeedDatabase(chargesDatabaseWriteContext);
             var expected = CreateExpectedChargeLink(chargeLink, ids);
             var sut = new ChargeLinksRepository(chargesDatabaseWriteContext);
@@ -69,6 +69,41 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             actual.Should().BeEquivalentTo(expected);
         }
 
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task AddRangeAsync_WhenIdenticalChargeLinksAreReceived_ThrowsUniqueConstraintException(ChargeLink chargeLink)
+        {
+            // Seed Arrange
+            await using var firstChargesContext = _databaseManager.CreateDbContext();
+            var ids = SeedDatabase(firstChargesContext);
+            var setupRepo = new ChargeLinksRepository(firstChargesContext);
+
+            var seededChargeLink = CreateExpectedChargeLink(chargeLink, ids);
+
+            var chargeLinkList = new List<ChargeLink> { seededChargeLink };
+            await setupRepo.AddRangeAsync(chargeLinkList);
+            await firstChargesContext.SaveChangesAsync();
+
+            // Arrange copy
+            await using var secondChargesContext = _databaseManager.CreateDbContext();
+            var sut = new ChargeLinksRepository(secondChargesContext);
+            var copyChargeLink = CreateExpectedChargeLink(chargeLink, ids);
+            var copyLinkList = new List<ChargeLink> { copyChargeLink };
+
+            // Act
+            Func<Task> act = async () =>
+            {
+                await sut.AddRangeAsync(copyLinkList);
+                await secondChargesContext.SaveChangesAsync();
+            };
+
+            // Assert
+            await act.Should()
+                .ThrowAsync<DbUpdateException>()
+                .WithInnerException(typeof(SqlException))
+                .WithMessage("Violation of UNIQUE KEY constraint 'UQ_DefaultOverlap_StartDateTime'*");
+        }
+
         private ChargeLink CreateExpectedChargeLink(ChargeLink chargeLink, (Guid ChargeId, Guid MeteringPointId) ids)
         {
             return new ChargeLink(
@@ -81,9 +116,16 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
         private static (Guid ChargeId, Guid MeteringPointId) SeedDatabase(ChargesDatabaseContext context)
         {
+            var marketParticipantId = "MarketParticipantId";
+            var existingMeteringPoint = context.MeteringPoints.FirstOrDefault();
+            var existingCharge = context.Charges.FirstOrDefault();
+
+            if (existingMeteringPoint is not null && existingCharge is not null)
+                return (existingCharge.Id, existingMeteringPoint.Id);
+
             var marketParticipant = new MarketParticipant(
                 Guid.NewGuid(),
-                "MarketParticipantId",
+                marketParticipantId,
                 true,
                 MarketParticipantRole.EnergySupplier);
 
