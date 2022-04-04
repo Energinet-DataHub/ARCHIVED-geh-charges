@@ -75,7 +75,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.ResolutionFeeValidation)]
         public const string ResolutionFeeValidationErrorText =
-            "Period type {{ChargeResolution}} not allowed: The specified resolution for charge {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} must be Day";
+            "Period type {{ChargeResolution}} not allowed: The specified resolution for charge {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} must be Month";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ResolutionSubscriptionValidation)]
         public const string ResolutionSubscriptionValidationErrorText =
