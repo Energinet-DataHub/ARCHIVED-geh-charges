@@ -42,7 +42,7 @@ limitations under the License.
 					<cim:resolution>PT1H</cim:resolution>
 					<cim:timeInterval>
 						<cim:start>2022-07-31T22:00Z</cim:start>
-						<cim:end>2022-08-31T22:00Z</cim:end>
+						<cim:end>2022-08-01T22:00Z</cim:end>
 					</cim:timeInterval>
 					<cim:Point>
 						<cim:position>1</cim:position>
