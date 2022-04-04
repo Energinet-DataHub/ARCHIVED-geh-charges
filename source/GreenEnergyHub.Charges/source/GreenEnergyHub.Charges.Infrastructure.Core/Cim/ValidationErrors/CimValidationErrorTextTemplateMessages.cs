@@ -133,6 +133,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         public const string ChargeLinksUpdateNotYetSupportedErrorText =
             "Charge link for metering point ID {{MeteringPointId}} and Charge with ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}} cannot yet be updated or stopped. The functionality is not implemented yet";
 
+        [ErrorMessageFor(ValidationRuleIdentifier.UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDate)]
+        public const string UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateErrorText =
+            "Charge ID {{DocumentSenderProvidedChargeId}} has been stopped and thus cannot be updated as per {{ChargeStartDateTime}}.";
+
         public const string Unknown = "unknown";
     }
 }
