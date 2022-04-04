@@ -38,11 +38,13 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void ResolutionFeeValidationRule_WithTariffType_EqualsExpectedResult(
             Resolution resolution,
             bool expected,
-            ChargeCommandBuilder chargeCommandBuilder)
+            ChargeOperationDtoBuilder chargeOperationDtoBuilder)
         {
             // Arrange
-            var chargeCommand = CreateCommand(chargeCommandBuilder, ChargeType.Tariff, resolution);
-            var chargeOperationDto = chargeCommand.Charges.First();
+            var chargeOperationDto = chargeOperationDtoBuilder
+                .WithChargeType(ChargeType.Tariff)
+                .WithResolution(resolution)
+                .Build();
 
             // Act
             var sut = new ResolutionFeeValidationRule(chargeOperationDto);
@@ -60,11 +62,13 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void ResolutionFeeValidationRule_WithSubscriptionType_EqualsExpectedResult(
             Resolution resolution,
             bool expected,
-            ChargeCommandBuilder chargeCommandBuilder)
+            ChargeOperationDtoBuilder chargeOperationDtoBuilder)
         {
             // Arrange
-            var chargeCommand = CreateCommand(chargeCommandBuilder, ChargeType.Subscription, resolution);
-            var chargeOperationDto = chargeCommand.Charges.First();
+            var chargeOperationDto = chargeOperationDtoBuilder
+                .WithChargeType(ChargeType.Subscription)
+                .WithResolution(resolution)
+                .Build();
 
             // Act
             var sut = new ResolutionFeeValidationRule(chargeOperationDto);
@@ -82,11 +86,13 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void ResolutionFeeValidationRule_WithFeeType_EqualsExpectedResult(
             Resolution resolution,
             bool expected,
-            ChargeCommandBuilder chargeCommandBuilder)
+            ChargeOperationDtoBuilder chargeOperationDtoBuilder)
         {
             // Arrange
-            var chargeCommand = CreateCommand(chargeCommandBuilder, ChargeType.Fee, resolution);
-            var chargeOperationDto = chargeCommand.Charges.First();
+            var chargeOperationDto = chargeOperationDtoBuilder
+                    .WithChargeType(ChargeType.Fee)
+                    .WithResolution(resolution)
+                    .Build();
 
             // Act
             var sut = new ResolutionFeeValidationRule(chargeOperationDto);
@@ -97,17 +103,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder chargeCommandBuilder)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeOperationDtoBuilder chargeOperationDtoBuilder)
         {
-            var chargeCommand = CreateCommand(chargeCommandBuilder, ChargeType.Fee, Resolution.Unknown);
-            var chargeOperationDto = chargeCommand.Charges.First();
+            var chargeOperationDto = chargeOperationDtoBuilder.Build();
             var sut = new ResolutionFeeValidationRule(chargeOperationDto);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ResolutionFeeValidation);
-        }
-
-        private static ChargeCommand CreateCommand(ChargeCommandBuilder builder, ChargeType chargeType, Resolution resolution)
-        {
-            return builder.WithChargeType(chargeType).WithResolution(resolution).Build();
         }
     }
 }
