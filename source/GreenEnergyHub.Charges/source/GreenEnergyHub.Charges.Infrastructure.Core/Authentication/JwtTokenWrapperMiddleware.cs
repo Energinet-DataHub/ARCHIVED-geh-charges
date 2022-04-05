@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware;
 using Microsoft.Azure.Functions.Worker;
@@ -43,7 +42,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Authentication
             _jwtTokenMiddleware = jwtTokenMiddleware;
         }
 
-        public async Task Invoke(FunctionContext context, [NotNull] FunctionExecutionDelegate next)
+        public async Task Invoke(FunctionContext context, FunctionExecutionDelegate next)
         {
             var allowAnonymous = _functionNamesToExclude.Contains(context.FunctionDefinition.Name);
             if (allowAnonymous)

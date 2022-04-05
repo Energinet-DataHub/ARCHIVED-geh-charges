@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
@@ -30,9 +29,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommandAcceptedEvents
         [Theory]
         [InlineAutoMoqData]
         public void CreateEvent_WhenCalled_CreatesEventWithCorrectTime(
-            [Frozen] [NotNull] Mock<IClock> clock,
-            [NotNull] ChargeCommand command,
-            [NotNull] ChargeCommandAcceptedEventFactory sut)
+            [Frozen] Mock<IClock> clock,
+            ChargeCommand command,
+            ChargeCommandAcceptedEventFactory sut)
         {
             // Arrange
             var currentTime = Instant.FromUtc(2021, 7, 7, 7, 50, 49);
