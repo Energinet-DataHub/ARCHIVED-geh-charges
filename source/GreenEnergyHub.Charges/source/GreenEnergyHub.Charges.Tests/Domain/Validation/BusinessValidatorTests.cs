@@ -29,11 +29,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Validation
         [Theory]
         [InlineAutoMoqData]
         public async Task ValidateAsync_WhenCalled_WithCommand_UsesFactoryToFetchRulesAndUseRulesToGetResult(
-            [Frozen] Mock<IBusinessValidationRulesFactory<ChargeCommand, ChargeOperationComposite>> factory,
+            [Frozen] Mock<IBusinessValidationRulesFactory<ChargeCommand>> factory,
             Mock<IValidationRuleSet> rules,
             ChargeCommand command,
             ValidationResult validationResult,
-            BusinessValidator<ChargeCommand, ChargeOperationComposite> sut)
+            BusinessValidator<ChargeCommand> sut)
         {
             // Arrange
             factory.Setup(
@@ -56,15 +56,15 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Validation
         [Theory]
         [InlineAutoMoqData]
         public async Task ValidateAsync_WhenCalled_WithOperation_UsesFactoryToFetchRulesAndUseRulesToGetResult(
-            [Frozen] Mock<IBusinessValidationRulesFactory<ChargeCommand, ChargeOperationComposite>> factory,
+            [Frozen] Mock<IBusinessValidationRulesFactory<ChargeCommand>> factory,
             Mock<IValidationRuleSet> rules,
-            ChargeOperationComposite operationComposite,
+            ChargeCommand chargeCommand,
             ValidationResult validationResult,
-            BusinessValidator<ChargeCommand, ChargeOperationComposite> sut)
+            BusinessValidator<ChargeCommand> sut)
         {
             // Arrange
             factory.Setup(
-                    f => f.CreateRulesAsync(operationComposite))
+                    f => f.CreateRulesAsync(chargeCommand))
                 .Returns(
                     Task.FromResult(rules.Object));
 
@@ -73,7 +73,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Validation
                 .Returns(validationResult);
 
             // Act
-            var result = await sut.ValidateAsync(operationComposite).ConfigureAwait(false);
+            var result = await sut.ValidateAsync(chargeCommand).ConfigureAwait(false);
 
             // Assert
             Assert.NotNull(result);

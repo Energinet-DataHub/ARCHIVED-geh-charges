@@ -28,14 +28,14 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
         private readonly IChargeLinksReceiptService _chargeLinksReceiptService;
         private readonly IChargeLinkFactory _chargeLinkFactory;
         private readonly IChargeLinksRepository _chargeLinksRepository;
-        private readonly IValidator<ChargeLinksCommand, ChargeLinkDto> _validator;
+        private readonly IValidator<ChargeLinksCommand> _validator;
         private readonly IUnitOfWork _unitOfWork;
 
         public ChargeLinksReceivedEventHandler(
             IChargeLinksReceiptService chargeLinksReceiptService,
             IChargeLinkFactory chargeLinkFactory,
             IChargeLinksRepository chargeLinksRepository,
-            IValidator<ChargeLinksCommand, ChargeLinkDto> validator,
+            IValidator<ChargeLinksCommand> validator,
             IUnitOfWork unitOfWork)
         {
             _chargeLinksReceiptService = chargeLinksReceiptService;

@@ -16,11 +16,11 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules
 {
-    public class PreviousOperationRulesMustBeValid : IValidationRuleWithExtendedData
+    public class PreviousOperationsMustBeValidRule : IValidationRuleWithExtendedData
     {
         private readonly ChargeOperationDto _chargeOperationDto;
 
-        public PreviousOperationRulesMustBeValid(string triggeredBy, ChargeOperationDto chargeOperationDto)
+        public PreviousOperationsMustBeValidRule(string triggeredBy, ChargeOperationDto chargeOperationDto)
         {
             _chargeOperationDto = chargeOperationDto;
             TriggeredBy = triggeredBy;

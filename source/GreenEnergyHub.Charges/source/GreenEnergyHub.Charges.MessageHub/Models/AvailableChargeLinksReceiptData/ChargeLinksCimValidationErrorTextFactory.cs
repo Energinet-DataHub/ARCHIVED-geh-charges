@@ -12,43 +12,47 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Linq;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using GreenEnergyHub.Charges.MessageHub.Models.Shared;
+using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData
 {
-    public class ChargeLinksCimValidationErrorTextFactory : ICimValidationErrorTextFactory<ChargeLinksCommand, ChargeLinkDto>
+    public class ChargeLinksCimValidationErrorTextFactory : ICimValidationErrorTextFactory<ChargeLinksCommand>
     {
         private readonly ICimValidationErrorTextProvider _cimValidationErrorTextProvider;
+        private readonly ILogger _logger;
 
-        public ChargeLinksCimValidationErrorTextFactory(ICimValidationErrorTextProvider cimValidationErrorTextProvider)
+        public ChargeLinksCimValidationErrorTextFactory(
+            ICimValidationErrorTextProvider cimValidationErrorTextProvider,
+            ILoggerFactory loggerFactory)
         {
             _cimValidationErrorTextProvider = cimValidationErrorTextProvider;
+            _logger = loggerFactory.CreateLogger(nameof(ChargeLinksCimValidationErrorTextFactory));
         }
 
-        public string Create(ValidationError validationError, ChargeLinksCommand command, ChargeLinkDto chargeOperationDto)
+        public string Create(ValidationError validationError, ChargeLinksCommand command)
         {
-            return GetMergedErrorMessage(validationError, command, chargeOperationDto);
+            return GetMergedErrorMessage(validationError, command);
         }
 
-        private string GetMergedErrorMessage(
-            ValidationError validationError,
-            ChargeLinksCommand chargeLinksCommand,
-            ChargeLinkDto chargeLinkDto)
+        private string GetMergedErrorMessage(ValidationError validationError, ChargeLinksCommand chargeLinksCommand)
         {
             var errorTextTemplate = _cimValidationErrorTextProvider
                 .GetCimValidationErrorText(validationError.ValidationRuleIdentifier);
 
-            return MergeErrorText(errorTextTemplate, chargeLinksCommand, chargeLinkDto);
+            return MergeErrorText(errorTextTemplate, chargeLinksCommand, validationError.TriggeredBy);
         }
 
         private string MergeErrorText(
             string errorTextTemplate,
             ChargeLinksCommand chargeLinksCommand,
-            ChargeLinkDto chargeLinkDto)
+            string? triggeredBy)
         {
             var tokens = CimValidationErrorTextTokenMatcher.GetTokens(errorTextTemplate);
 
@@ -56,35 +60,89 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
 
             foreach (var token in tokens)
             {
-                var data = GetDataForToken(token, chargeLinksCommand, chargeLinkDto);
+                var data = GetDataForToken(token, chargeLinksCommand, triggeredBy);
                 mergedErrorText = mergedErrorText.Replace("{{" + token + "}}", data);
             }
 
             return mergedErrorText;
         }
 
-        private static string GetDataForToken(
+        private string GetDataForToken(
             CimValidationErrorTextToken token,
             ChargeLinksCommand chargeLinksCommand,
-            ChargeLinkDto chargeLinkDto)
+            string? triggeredBy)
         {
             // Please keep sorted by CimValidationErrorTextToken
             return token switch
             {
                 CimValidationErrorTextToken.ChargeLinkStartDate =>
-                    chargeLinkDto.StartDateTime.ToString(),
+                    GetChargeLinkStartDate(chargeLinksCommand, triggeredBy),
                 CimValidationErrorTextToken.ChargeOwner =>
-                    chargeLinkDto.ChargeOwner,
+                    GetChargeOwner(chargeLinksCommand, triggeredBy),
                 CimValidationErrorTextToken.ChargeStartDateTime =>
-                    chargeLinkDto.StartDateTime.ToString(),
+                    GetChargeLinkStartDate(chargeLinksCommand, triggeredBy),
                 CimValidationErrorTextToken.ChargeType =>
-                    chargeLinkDto.ChargeType.ToString(),
+                    GetChargeType(chargeLinksCommand, triggeredBy),
                 CimValidationErrorTextToken.DocumentSenderProvidedChargeId =>
-                    chargeLinkDto.SenderProvidedChargeId,
+                    GetDocumentSenderProvidedChargeId(chargeLinksCommand, triggeredBy),
                 CimValidationErrorTextToken.MeteringPointId =>
                     chargeLinksCommand.MeteringPointId,
                 _ => CimValidationErrorTextTemplateMessages.Unknown,
             };
+        }
+
+        private string GetChargeOwner(ChargeLinksCommand chargeLinksCommand, string? triggeredBy)
+        {
+            var chargeLinkDto = GetChargeLinkDto(chargeLinksCommand, triggeredBy);
+            return chargeLinkDto != null ? chargeLinkDto.ChargeOwner : CimValidationErrorTextTemplateMessages.Unknown;
+        }
+
+        private string GetChargeLinkStartDate(ChargeLinksCommand chargeLinksCommand, string? triggeredBy)
+        {
+            var chargeLinkDto = GetChargeLinkDto(chargeLinksCommand, triggeredBy);
+
+            return chargeLinkDto != null ?
+                chargeLinkDto.StartDateTime.ToString() :
+                CimValidationErrorTextTemplateMessages.Unknown;
+        }
+
+        private string GetChargeType(ChargeLinksCommand chargeLinksCommand, string? triggeredBy)
+        {
+            var chargeLinkDto = GetChargeLinkDto(chargeLinksCommand, triggeredBy);
+
+            return chargeLinkDto != null ?
+                chargeLinkDto.ChargeType.ToString() :
+                CimValidationErrorTextTemplateMessages.Unknown;
+        }
+
+        private string GetDocumentSenderProvidedChargeId(ChargeLinksCommand chargeLinksCommand, string? triggeredBy)
+        {
+            var chargeLinkDto = GetChargeLinkDto(chargeLinksCommand, triggeredBy);
+
+            return chargeLinkDto != null ?
+                chargeLinkDto.SenderProvidedChargeId :
+                CimValidationErrorTextTemplateMessages.Unknown;
+        }
+
+        private ChargeLinkDto? GetChargeLinkDto(ChargeLinksCommand chargeLinksCommand, string? triggeredBy)
+        {
+            ChargeLinkDto? chargeLinkDto = null;
+            try
+            {
+                chargeLinkDto = chargeLinksCommand.ChargeLinks.Single(p => p.SenderProvidedChargeId == triggeredBy);
+            }
+            catch (Exception e)
+            {
+                LogError(triggeredBy, nameof(ChargeLinkDto.SenderProvidedChargeId), e);
+            }
+
+            return chargeLinkDto;
+        }
+
+        private void LogError(string? triggeredBy, string elementNotFound, Exception e)
+        {
+            var errorMessage = $"{elementNotFound} not found by senderProvidedChargeId: {triggeredBy}";
+            _logger.LogError(e, errorMessage);
         }
     }
 }

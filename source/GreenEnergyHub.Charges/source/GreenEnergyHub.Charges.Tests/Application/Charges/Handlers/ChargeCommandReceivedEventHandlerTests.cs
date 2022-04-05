@@ -42,7 +42,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         [Theory]
         [InlineAutoMoqData]
         public async Task HandleAsync_WhenValidationSucceed_StoreAndConfirmCommand(
-            [Frozen] Mock<IValidator<ChargeCommand, ChargeOperationComposite>> validator,
+            [Frozen] Mock<IValidator<ChargeCommand>> validator,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IChargeCommandReceiptService> receiptService,
             ChargeBuilder chargeBuilder,
@@ -88,7 +88,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         [Theory]
         [InlineAutoMoqData]
         public async Task HandleAsync_WhenValidationFails_RejectsEvent(
-            [Frozen] Mock<IValidator<ChargeCommand, ChargeOperationComposite>> validator,
+            [Frozen] Mock<IValidator<ChargeCommand>> validator,
             [Frozen] Mock<IChargeCommandReceiptService> receiptService,
             ChargeCommandReceivedEvent receivedEvent,
             ChargeCommandReceivedEventHandler sut)
@@ -123,7 +123,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         [Theory]
         [InlineAutoMoqData]
         public async Task HandleAsync_IfValidUpdateEvent_ChargeUpdated(
-            [Frozen] Mock<IValidator<ChargeCommand, ChargeOperationComposite>> validator,
+            [Frozen] Mock<IValidator<ChargeCommand>> validator,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
             ChargeCommandReceivedEvent receivedEvent,
@@ -156,7 +156,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         [Theory]
         [InlineAutoMoqData]
         public async Task HandleAsync_IfValidStopEvent_ChargeStopped(
-            [Frozen] Mock<IValidator<ChargeCommand, ChargeOperationComposite>> validator,
+            [Frozen] Mock<IValidator<ChargeCommand>> validator,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
             [Frozen] Instant stopDate,
@@ -189,7 +189,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         [Theory]
         [InlineAutoMoqData]
         public async Task HandleAsync_WhenValidCancelStop_ThenStopCancelled(
-            [Frozen] Mock<IValidator<ChargeCommand, ChargeOperationComposite>> validator,
+            [Frozen] Mock<IValidator<ChargeCommand>> validator,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
             ChargeCommandReceivedEventHandler sut)
@@ -232,7 +232,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         public async Task HandleAsync_WhenValidationFailsInBundleOperation_RejectEventForAllSubsequentOperations(
              [Frozen] Mock<IChargeRepository> chargeRepository,
              [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
-             [Frozen] Mock<IValidator<ChargeCommand, ChargeOperationComposite>> validator,
+             [Frozen] Mock<IValidator<ChargeCommand>> validator,
              [Frozen] Mock<IChargeCommandReceiptService> receiptService,
              ChargeCommandReceivedEventHandler sut)
          {
@@ -305,20 +305,20 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         }
 
         private static void SetupValidatorForOperation(
-            Mock<IValidator<ChargeCommand, ChargeOperationComposite>> validator,
+            Mock<IValidator<ChargeCommand>> validator,
             ValidationResult invalidValidationResult)
         {
             validator.Setup(v =>
                 v.InputValidate(It.IsAny<ChargeCommand>())).Returns(ValidationResult.CreateSuccess());
 
             validator.Setup(v =>
-                    v.BusinessValidateAsync(It.Is<ChargeOperationComposite>(x =>
-                        x.ChargeOperationDto.ChargeDescription == "valid")))
+                    v.BusinessValidateAsync(It.Is<ChargeCommand>(x =>
+                        x.Charges.Single().ChargeDescription == "valid")))
                 .Returns(Task.FromResult(ValidationResult.CreateSuccess()));
 
             validator.Setup(v =>
-                    v.BusinessValidateAsync(It.Is<ChargeOperationComposite>(x =>
-                        x.ChargeOperationDto.ChargeDescription == "invalid")))
+                    v.BusinessValidateAsync(It.Is<ChargeCommand>(x =>
+                        x.Charges.Single().ChargeDescription == "invalid")))
                 .Returns(Task.FromResult(invalidValidationResult));
         }
 
@@ -382,10 +382,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         }
 
         private static void SetupValidator(
-            Mock<IValidator<ChargeCommand, ChargeOperationComposite>> validator, ValidationResult validationResult)
+            Mock<IValidator<ChargeCommand>> validator, ValidationResult validationResult)
         {
             validator.Setup(v => v.InputValidate(It.IsAny<ChargeCommand>())).Returns(validationResult);
-            validator.Setup(v => v.BusinessValidateAsync(It.IsAny<ChargeOperationComposite>()))
+            validator.Setup(v => v.BusinessValidateAsync(It.IsAny<ChargeCommand>()))
                 .Returns(Task.FromResult(validationResult));
         }
     }

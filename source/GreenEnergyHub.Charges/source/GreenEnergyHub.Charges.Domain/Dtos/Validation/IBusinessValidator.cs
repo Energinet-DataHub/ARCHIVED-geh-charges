@@ -17,22 +17,14 @@ using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 {
-    public interface IBusinessValidator<in TCommand, in TOperation>
+    public interface IBusinessValidator<in TCommand>
         where TCommand : CommandBase
-        where TOperation : OperationBase
     {
         /// <summary>
-        /// Business validation of command/>.
+        /// Business validation of command or operation/>.
         /// </summary>
-        /// <param name="command">The message to validate.</param>
+        /// <param name="command">The command to validate.</param>
         /// <returns>The validation result.</returns>
         Task<ValidationResult> ValidateAsync(TCommand command);
-
-        /// <summary>
-        /// Business validation of operation/>.
-        /// </summary>
-        /// <param name="operation">The operation to validate.</param>
-        /// <returns>The validation result.</returns>
-        Task<ValidationResult> ValidateAsync(TOperation operation);
     }
 }

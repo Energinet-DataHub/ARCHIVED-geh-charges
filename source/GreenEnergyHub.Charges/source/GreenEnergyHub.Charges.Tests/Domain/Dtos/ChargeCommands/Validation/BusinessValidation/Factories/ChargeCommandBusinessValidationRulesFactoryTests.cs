@@ -54,7 +54,6 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         {
             // Arrange
             var chargeCommand = builder.Build();
-            var operationComposite = new ChargeOperationComposite(chargeCommand, chargeCommand.Charges.Single());
             SetupConfigureRepositoryMock(rulesConfigurationRepository);
 
             Charge? charge = null;
@@ -67,7 +66,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
                 .ReturnsAsync(sender);
 
             // Act
-            var actual = await sut.CreateRulesAsync(operationComposite).ConfigureAwait(false);
+            var actual = await sut.CreateRulesAsync(chargeCommand).ConfigureAwait(false);
             var actualRules = actual.GetRules().Select(r => r.GetType());
 
             // Assert
@@ -90,13 +89,12 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         {
             // Arrange
             var chargeCommand = builder.WithChargeType(ChargeType.Fee).Build();
-            var operationComposite = new ChargeOperationComposite(chargeCommand, chargeCommand.Charges.Single());
             SetupConfigureRepositoryMock(rulesConfigurationRepository);
             SetupChargeRepositoryMock(chargeRepository, charge);
             SetupMarketParticipantMock(sender, marketParticipantRepository);
 
             // Act
-            var actual = await sut.CreateRulesAsync(operationComposite).ConfigureAwait(false);
+            var actual = await sut.CreateRulesAsync(chargeCommand).ConfigureAwait(false);
             var actualRules = actual.GetRules().Select(r => r.GetType());
 
             // Assert
@@ -120,13 +118,12 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         {
             // Arrange
             var chargeCommand = builder.WithChargeType(ChargeType.Tariff).Build();
-            var operationComposite = new ChargeOperationComposite(chargeCommand, chargeCommand.Charges.Single());
             SetupConfigureRepositoryMock(rulesConfigurationRepository);
             SetupChargeRepositoryMock(chargeRepository, charge);
             SetupMarketParticipantMock(sender, marketParticipantRepository);
 
             // Act
-            var actual = await sut.CreateRulesAsync(operationComposite).ConfigureAwait(false);
+            var actual = await sut.CreateRulesAsync(chargeCommand).ConfigureAwait(false);
 
             // Assert
             var actualRules = actual.GetRules().Select(r => r.GetType());
@@ -140,11 +137,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             ChargeCommandBusinessValidationRulesFactory sut)
         {
             // Arrange
-            ChargeOperationComposite? chargeOperationComposite = null;
+            ChargeCommand? chargeCommand = null;
 
             // Act / Assert
             await Assert
-                .ThrowsAsync<ArgumentNullException>(() => sut.CreateRulesAsync(chargeOperationComposite!))
+                .ThrowsAsync<ArgumentNullException>(() => sut.CreateRulesAsync(chargeCommand!))
                 .ConfigureAwait(false);
         }
 
@@ -158,7 +155,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
             ChargeCommandBusinessValidationRulesFactory sut,
             TestMarketParticipant sender,
-            ChargeOperationComposite chargeOperationComposite,
+            ChargeCommand chargeCommand,
             Charge charge)
         {
             // Arrange
@@ -167,7 +164,12 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             SetupMarketParticipantMock(sender, marketParticipantRepository);
 
             // Act
-            var validationRules = (await sut.CreateRulesAsync(chargeOperationComposite)).GetRules();
+            var validationRules = new List<IValidationRule>();
+            foreach (var operation in chargeCommand.Charges)
+            {
+                var commandWithOperation = new ChargeCommand(chargeCommand.Document, new List<ChargeOperationDto>() { operation });
+                validationRules.AddRange((await sut.CreateRulesAsync(commandWithOperation)).GetRules().ToList());
+            }
 
             // Assert
             AssertAllRulesThatNeedTriggeredByForErrorMessageImplementsIValidationRuleWithExtendedData(

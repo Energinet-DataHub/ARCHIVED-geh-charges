@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IChargePeriodFactory, ChargePeriodFactory>();
             serviceCollection.AddScoped<IChargeCommandAcceptedEventFactory, ChargeCommandAcceptedEventFactory>();
             serviceCollection.AddScoped<IChargeCommandRejectedEventFactory, ChargeCommandRejectedEventFactory>();
-            serviceCollection.AddScoped<ICimValidationErrorTextFactory<ChargeCommand, ChargeOperationDto>,
+            serviceCollection.AddScoped<ICimValidationErrorTextFactory<ChargeCommand>,
                 ChargeCimValidationErrorTextFactory>();
             serviceCollection.AddScoped<ICimValidationErrorCodeFactory, CimValidationErrorCodeFactory>();
             serviceCollection.AddScoped<IAvailableChargeReceiptValidationErrorFactory,
@@ -68,14 +68,14 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
         private static void ConfigureValidation(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<IBusinessValidationRulesFactory<ChargeCommand, ChargeOperationComposite>,
+            serviceCollection.AddScoped<IBusinessValidationRulesFactory<ChargeCommand>,
                 ChargeCommandBusinessValidationRulesFactory>();
             serviceCollection.AddScoped<IInputValidationRulesFactory<ChargeCommand>,
                 ChargeCommandInputValidationRulesFactory>();
             serviceCollection.AddScoped<IRulesConfigurationRepository, RulesConfigurationRepository>();
             serviceCollection.AddScoped<IInputValidator<ChargeCommand>, InputValidator<ChargeCommand>>();
-            serviceCollection.AddScoped<IBusinessValidator<ChargeCommand, ChargeOperationComposite>, BusinessValidator<ChargeCommand, ChargeOperationComposite>>();
-            serviceCollection.AddScoped<IValidator<ChargeCommand, ChargeOperationComposite>, Validator<ChargeCommand, ChargeOperationComposite>>();
+            serviceCollection.AddScoped<IBusinessValidator<ChargeCommand>, BusinessValidator<ChargeCommand>>();
+            serviceCollection.AddScoped<IValidator<ChargeCommand>, Validator<ChargeCommand>>();
         }
 
         private static void ConfigureIso8601Timezones(IServiceCollection serviceCollection)

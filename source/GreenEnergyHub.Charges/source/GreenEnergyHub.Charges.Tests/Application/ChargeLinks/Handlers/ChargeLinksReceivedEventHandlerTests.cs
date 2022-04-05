@@ -41,7 +41,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             [Frozen] Mock<IChargeLinksReceiptService> chargeLinksReceiptService,
             [Frozen] Mock<IChargeLinkFactory> chargeLinkFactory,
             [Frozen] Mock<IChargeLinksAcceptedEventFactory> chargeLinkCommandAcceptedEventFactory,
-            [Frozen] Mock<IValidator<ChargeLinksCommand, ChargeLinkDto>> validator,
+            [Frozen] Mock<IValidator<ChargeLinksCommand>> validator,
             ChargeLinksReceivedEvent chargeLinksReceivedEvent,
             ChargeLinksAcceptedEvent chargeLinksAcceptedEvent,
             ChargeLinksReceivedEventHandler sut)
@@ -61,7 +61,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             chargeLinksReceiptService.Verify(x => x.AcceptAsync(It.IsAny<ChargeLinksCommand>()));
         }
 
-        private static void SetupValidator(Mock<IValidator<ChargeLinksCommand, ChargeLinkDto>> validator)
+        private static void SetupValidator(Mock<IValidator<ChargeLinksCommand>> validator)
         {
             validator.Setup(x => x.InputValidate(It.IsAny<ChargeLinksCommand>()))
                 .Returns(ValidationResult.CreateSuccess());
