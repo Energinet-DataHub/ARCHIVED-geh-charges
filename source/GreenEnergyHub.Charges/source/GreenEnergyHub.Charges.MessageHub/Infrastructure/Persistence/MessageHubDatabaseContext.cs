@@ -34,10 +34,10 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Persistence
         {
         }
 
-        public DbSet<TAvailableData> SetAsync<TAvailableData>()
+        public new DbSet<TAvailableData> Set<TAvailableData>()
             where TAvailableData : AvailableDataBase
         {
-            return Set<TAvailableData>();
+            return base.Set<TAvailableData>();
         }
 
         public DbSet<AvailableChargeData> AvailableChargeData { get; private set; }

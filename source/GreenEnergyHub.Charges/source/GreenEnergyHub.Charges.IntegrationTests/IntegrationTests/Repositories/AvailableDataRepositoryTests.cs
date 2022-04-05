@@ -57,7 +57,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             foreach (var expected in expectedList)
             {
                 var actual = chargesDatabaseReadContext
-                    .SetAsync<TAvailableData>()
+                    .Set<TAvailableData>()
                     .Single(x => x.AvailableDataReferenceId == expected.AvailableDataReferenceId);
                 actual.Should().BeEquivalentTo(expected);
             }
@@ -70,7 +70,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             // Arrange
             expected = (TAvailableData)RepositoryAutoMoqDataFixer.GetAvailableDataBasedOn(expected);
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-            await chargesDatabaseWriteContext.SetAsync<TAvailableData>().AddAsync(expected).ConfigureAwait(false);
+            await chargesDatabaseWriteContext.Set<TAvailableData>().AddAsync(expected).ConfigureAwait(false);
             await chargesDatabaseWriteContext.SaveChangesAsync().ConfigureAwait(false);
 
             await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();

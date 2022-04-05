@@ -57,6 +57,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
                 .GetOrNullAsync(chargeCommand.Document.Sender.Id).ConfigureAwait(false);
             var rules = GetMandatoryRulesForCommand(sender);
             rules.AddRange(await GetRulesForOperationAsync(chargeOperation).ConfigureAwait(false));
+            var senderId = chargeCommand.Document.Sender.Id;
+
+            rules.AddRange(await GetRulesForOperationAsync(chargeOperation).ConfigureAwait(false));
 
             return ValidationRuleSet.FromRules(rules);
         }
@@ -66,9 +69,11 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
             var configuration = await _rulesConfigurationRepository.GetConfigurationAsync().ConfigureAwait(false);
             var charge = await GetChargeOrNullAsync(chargeOperationDto).ConfigureAwait(false);
             var rules = GetMandatoryRulesForOperation(chargeOperationDto, configuration);
-
-            if (charge != null && chargeOperationDto.Type == ChargeType.Tariff)
+            if (charge == null)
+                return rules;
+            if (chargeOperationDto.Type == ChargeType.Tariff)
                 rules.AddRange(AddTariffOnlyRules(chargeOperationDto, charge));
+            AddUpdateRules(rules, chargeOperationDto, charge);
             return rules;
         }
 
@@ -79,6 +84,16 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
             {
                 new ChangingTariffTaxValueNotAllowedRule(chargeOperationDto, charge),
             };
+        }
+
+        private void AddUpdateRules(List<IValidationRule> rules, ChargeOperationDto chargeOperationDto, Charge existingCharge)
+        {
+            var updateRules = new List<IValidationRule>
+            {
+                new UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateRule(existingCharge, chargeOperationDto),
+            };
+
+            rules.AddRange(updateRules);
         }
 
         private static List<IValidationRule> GetMandatoryRulesForCommand(MarketParticipant? sender)
