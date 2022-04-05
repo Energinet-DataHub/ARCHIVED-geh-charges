@@ -95,32 +95,30 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands
                 ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(chargeCommands));
         }
 
-        /*[Theory]
+        [Theory]
         [InlineAutoDomainData]
         public void ChargeCommandDocumentIsNullThrowsException(ChargeCommandBuilder builder)
         {
             // Arrange
-            var chargeCommand = builder.Build();
-            chargeCommand.Document = null!;
+            var chargeCommand = builder.WithDocumentDto(null!).Build();
             var chargeCommands = new List<ChargeCommand> { chargeCommand };
 
             // Act & Assert
             Assert.Throws<ArgumentNullException>(() =>
                 ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(chargeCommands));
-        }*/
+        }
 
-        /*[Fact]
+        [Fact]
         public void ChargeCommandChargeOperationIsNullThrowsException()
         {
             // Arrange
             var testBuilder = new ChargeCommandBuilder();
-            var chargeCommand = testBuilder.Build();
-            chargeCommand.Charges = null!;
+            var chargeCommand = testBuilder.WithChargeOperation(null!).Build();
             var chargeCommands = new List<ChargeCommand> { chargeCommand };
 
             // Act & Assert
             Assert.Throws<ArgumentNullException>(() =>
                 ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(chargeCommands));
-        }*/
+        }
     }
 }

@@ -31,6 +31,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         [Theory]
         [InlineAutoMoqData(DocumentType.Unknown, false)]
         [InlineAutoMoqData(DocumentType.RequestUpdateChargeInformation, true)]
+        [InlineAutoMoqData(-1, false)]
         public void DocumentTypeMustBeRequestUpdateChargeInformation_Test(
             DocumentType documentType,
             bool expected,

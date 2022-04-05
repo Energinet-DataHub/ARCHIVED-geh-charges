@@ -25,6 +25,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
     {
         private readonly List<Point> _points;
         private readonly List<ChargeOperationDto> _chargeOperationDtos;
+        private DocumentDto _documentDto;
         private string _chargeId;
         private Instant _startDateTime;
         private Instant? _endDateTime;
@@ -62,6 +63,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             _points = new List<Point>();
             _resolution = Resolution.PT1H;
             _chargeOperationDtos = new List<ChargeOperationDto>();
+            _documentDto = BuildDocumentDto();
         }
 
         public ChargeCommandBuilder WithEndDateTimeAsNull()
@@ -79,6 +81,12 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         public ChargeCommandBuilder WithDocumentId(string documentId)
         {
             _documentId = documentId;
+            return this;
+        }
+
+        public ChargeCommandBuilder WithDocumentDto(DocumentDto documentDto)
+        {
+            _documentDto = documentDto;
             return this;
         }
 
@@ -194,7 +202,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         {
             for (var i = 1; i <= numberOfOperations; i++)
             {
-                _chargeOperationDtos.Add(SetupChargeOperationDto());
+                _chargeOperationDtos.Add(BuildChargeOperationDto());
             }
 
             return this;
@@ -202,29 +210,16 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
 
         public ChargeCommand Build()
         {
-            var documentDto = new DocumentDto
-            {
-                Id = _documentId,
-                Type = _documentType,
-                RequestDate = SystemClock.Instance.GetCurrentInstant(),
-                IndustryClassification = IndustryClassification.Electricity,
-                CreatedDateTime = SystemClock.Instance.GetCurrentInstant(),
-                Recipient = new MarketParticipantDto
-                {
-                    Id = "0", BusinessProcessRole = MarketParticipantRole.GridAccessProvider,
-                },
-                Sender = _sender,
-                BusinessReasonCode = _documentBusinessReasonCode,
-            };
+            var documentDto = _documentDto == null! ? _documentDto : BuildDocumentDto();
             if (_chargeOperationDtos.Count == 0)
             {
-                _chargeOperationDtos.Add(SetupChargeOperationDto());
+                _chargeOperationDtos.Add(BuildChargeOperationDto());
             }
 
-            return new ChargeCommand(documentDto, _chargeOperationDtos);
+            return new ChargeCommand(documentDto!, _chargeOperationDtos);
         }
 
-        private ChargeOperationDto SetupChargeOperationDto()
+        private ChargeOperationDto BuildChargeOperationDto()
         {
             return new ChargeOperationDto(
                 _operationId,
@@ -240,6 +235,24 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
                 _startDateTime,
                 _endDateTime,
                 _points);
+        }
+
+        private DocumentDto BuildDocumentDto()
+        {
+            return new DocumentDto
+            {
+                Id = _documentId,
+                Type = _documentType,
+                RequestDate = SystemClock.Instance.GetCurrentInstant(),
+                IndustryClassification = IndustryClassification.Electricity,
+                CreatedDateTime = SystemClock.Instance.GetCurrentInstant(),
+                Recipient = new MarketParticipantDto
+                {
+                    Id = "0", BusinessProcessRole = MarketParticipantRole.GridAccessProvider,
+                },
+                Sender = _sender,
+                BusinessReasonCode = _documentBusinessReasonCode,
+            };
         }
     }
 }
