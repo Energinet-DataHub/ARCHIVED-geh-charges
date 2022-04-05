@@ -40,11 +40,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void IsValid_WhenLessThan8DigitsAnd6Decimals_IsValid(
             decimal price,
             bool expected,
-            ChargeCommandBuilder builder)
+            ChargeOperationDtoBuilder builder)
         {
             // Arrange
-            var chargeCommand = builder.WithPoint(1, price).Build();
-            var chargeOperationDto = chargeCommand.Charges.First();
+            var chargeOperationDto = builder.WithPoint(1, price).Build();
 
             // Act
             var sut = new ChargePriceMaximumDigitsAndDecimalsRule(chargeOperationDto);
@@ -55,11 +54,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder builder)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeOperationDtoBuilder builder)
         {
-            var invalidCommand = CreateInvalidCommand(builder);
-            var chargeOperationDto = invalidCommand.Charges.First();
-            var sut = new ChargePriceMaximumDigitsAndDecimalsRule(chargeOperationDto);
+            var invalidChargeOperationDto = builder.WithPoint(1, 123456789m).Build();
+            var sut = new ChargePriceMaximumDigitsAndDecimalsRule(invalidChargeOperationDto);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChargePriceMaximumDigitsAndDecimals);
         }
 
@@ -72,7 +70,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             CimValidationErrorTextProvider cimValidationErrorTextProvider)
         {
             // Arrange
-            var invalidCommand = CreateInvalidCommand(builder);
+            var invalidCommand = builder.WithPoint(1, 123456789m).Build();
             var chargeOperationDto = invalidCommand.Charges.First();
             var expectedPoint = chargeOperationDto.Points[0];
             var triggeredBy = expectedPoint.Position.ToString();
@@ -92,11 +90,6 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                             .Replace("{{ChargePointPrice}}", expectedPoint.Price.ToString("N"))
                             .Replace("{{DocumentSenderProvidedChargeId}}", chargeOperationDto.ChargeId);
             actual.Should().Be(expected);
-        }
-
-        private static ChargeCommand CreateInvalidCommand(ChargeCommandBuilder builder)
-        {
-            return builder.WithPoint(1, 123456789m).Build();
         }
     }
 }

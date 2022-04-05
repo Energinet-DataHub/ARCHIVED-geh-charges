@@ -36,27 +36,20 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void ChargeIdRequiredValidationRule_Test(
             string chargeId,
             bool expected,
-            ChargeCommandBuilder builder)
+            ChargeOperationDtoBuilder builder)
         {
-            var command = builder.WithChargeId(chargeId).Build();
-            var chargeOperationDto = command.Charges.First();
+            var chargeOperationDto = builder.WithChargeId(chargeId).Build();
             var sut = new ChargeIdRequiredValidationRule(chargeOperationDto);
             Assert.Equal(expected, sut.IsValid);
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder builder)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeOperationDtoBuilder builder)
         {
-            var invalidCommand = CreateInvalidCommand(builder);
-            var invalidChargeOperationDto = invalidCommand.Charges.First();
+            var invalidChargeOperationDto = builder.WithChargeId(string.Empty).Build();
             var sut = new ChargeIdRequiredValidationRule(invalidChargeOperationDto);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChargeIdRequiredValidation);
-        }
-
-        private static ChargeCommand CreateInvalidCommand(ChargeCommandBuilder builder)
-        {
-            return builder.WithChargeId(string.Empty).Build();
         }
     }
 }
