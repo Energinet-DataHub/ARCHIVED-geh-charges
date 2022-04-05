@@ -14,10 +14,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 
@@ -41,48 +43,54 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData
             _messageMetaDataContext = messageMetaDataContext;
         }
 
-        public override async Task<IReadOnlyList<AvailableChargeLinksData>> CreateAsync(
-            ChargeLinksAcceptedEvent acceptedEvent)
+        public override async Task<IReadOnlyList<AvailableChargeLinksData>> CreateAsync(ChargeLinksAcceptedEvent input)
         {
-            // It is the responsibility of the Charge Domain to find the recipient and
-            // not considered part of the Create Metering Point orchestration.
-            // We select the first as all bundled messages will have the same recipient
-            var recipient = await _marketParticipantRepository
-                .GetGridAccessProviderAsync(acceptedEvent.ChargeLinksCommand.MeteringPointId).ConfigureAwait(false);
-
             var result = new List<AvailableChargeLinksData>();
 
-            foreach (var link in acceptedEvent.ChargeLinksCommand.ChargeLinks)
+            foreach (var chargeLinksOperation in input.ChargeLinksCommand.ChargeLinksOperations)
             {
-                var chargeIdentifier = new ChargeIdentifier(link.SenderProvidedChargeId, link.ChargeOwner, link.ChargeType);
-                var charge = await _chargeRepository.GetAsync(chargeIdentifier).ConfigureAwait(false);
-                var sender = await GetSenderAsync().ConfigureAwait(false);
-                if (ShouldMakeDataAvailableForGridOwnerOfMeteringPoint(charge))
-                {
-                    result.Add(new AvailableChargeLinksData(
-                        sender.MarketParticipantId,
-                        sender.BusinessProcessRole,
-                        recipient.MarketParticipantId,
-                        recipient.BusinessProcessRole,
-                        acceptedEvent.ChargeLinksCommand.Document.BusinessReasonCode,
-                        _messageMetaDataContext.RequestDataTime,
-                        Guid.NewGuid(), // ID of each available piece of data must be unique
-                        link.SenderProvidedChargeId,
-                        link.ChargeOwner,
-                        link.ChargeType,
-                        acceptedEvent.ChargeLinksCommand.MeteringPointId,
-                        link.Factor,
-                        link.StartDateTime,
-                        link.EndDateTime.GetValueOrDefault(),
-                        acceptedEvent.ChargeLinksCommand.Document.Type,
-                        0));
-                }
+                await CreateForOperationsAsync(input, chargeLinksOperation, result).ConfigureAwait(false);
             }
 
             return result;
         }
 
-        private bool ShouldMakeDataAvailableForGridOwnerOfMeteringPoint(Charge charge)
+        private async Task CreateForOperationsAsync(
+            ChargeLinksAcceptedEvent input,
+            ChargeLinkDto operation,
+            ICollection<AvailableChargeLinksData> result)
+        {
+            // It is the responsibility of the Charge Domain to find the recipient and
+            // not considered part of the Create Metering Point orchestration.
+            // We select the first as all bundled messages will have the same recipient
+            var recipient = await _marketParticipantRepository
+                .GetGridAccessProviderAsync(input.ChargeLinksCommand.MeteringPointId).ConfigureAwait(false);
+
+            var chargeIdentifier = new ChargeIdentifier(operation.SenderProvidedChargeId, operation.ChargeOwner, operation.ChargeType);
+            var charge = await _chargeRepository.GetAsync(chargeIdentifier).ConfigureAwait(false);
+            var sender = await GetSenderAsync().ConfigureAwait(false);
+            if (!ShouldMakeDataAvailableForGridOwnerOfMeteringPoint(charge)) return;
+            var operationOrder = input.ChargeLinksCommand.ChargeLinksOperations.ToList().IndexOf(operation);
+            result.Add(new AvailableChargeLinksData(
+                sender.MarketParticipantId,
+                sender.BusinessProcessRole,
+                recipient.MarketParticipantId,
+                recipient.BusinessProcessRole,
+                input.ChargeLinksCommand.Document.BusinessReasonCode,
+                _messageMetaDataContext.RequestDataTime,
+                Guid.NewGuid(), // ID of each available piece of data must be unique
+                operation.SenderProvidedChargeId,
+                operation.ChargeOwner,
+                operation.ChargeType,
+                input.ChargeLinksCommand.MeteringPointId,
+                operation.Factor,
+                operation.StartDateTime,
+                operation.EndDateTime.GetValueOrDefault(),
+                input.ChargeLinksCommand.Document.Type,
+                operationOrder));
+        }
+
+        private static bool ShouldMakeDataAvailableForGridOwnerOfMeteringPoint(Charge charge)
         {
             // We only need to notify the grid provider owning the metering point if
             // the link is about a tax charge; the rest they maintain themselves

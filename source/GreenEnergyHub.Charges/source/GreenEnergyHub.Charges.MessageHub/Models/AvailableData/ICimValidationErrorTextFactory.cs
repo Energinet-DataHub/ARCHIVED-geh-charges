@@ -25,7 +25,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableData
     {
         /// <summary>
         /// Creates an error text by replacing occurrences of the
-        /// placeholder texts with values from the TCommand and/or TOperation/>.
+        /// placeholder texts with values from the TCommand/>.
         /// </summary>
         string Create(ValidationError validationError, TCommand command);
     }

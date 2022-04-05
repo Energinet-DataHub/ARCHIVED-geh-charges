@@ -129,7 +129,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
             ChargeLinkDto? chargeLinkDto = null;
             try
             {
-                chargeLinkDto = chargeLinksCommand.ChargeLinks.Single(p => p.SenderProvidedChargeId == triggeredBy);
+                chargeLinkDto = chargeLinksCommand.ChargeLinksOperations.Single(p => p.SenderProvidedChargeId == triggeredBy);
             }
             catch (Exception e)
             {

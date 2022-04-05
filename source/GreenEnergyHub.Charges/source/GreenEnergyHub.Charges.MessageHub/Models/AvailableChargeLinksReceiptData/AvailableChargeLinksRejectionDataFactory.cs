@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
         {
             var sender = await GetSenderAsync().ConfigureAwait(false);
 
-            return input.ChargeLinksCommand.ChargeLinks.Select(chargeLinkDto =>
+            return input.ChargeLinksCommand.ChargeLinksOperations.Select(chargeLinkDto =>
             {
                 // The original sender is the recipient of the receipt
                 var recipient = input.ChargeLinksCommand.Document.Sender;

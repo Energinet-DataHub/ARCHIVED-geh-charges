@@ -113,7 +113,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                 CimValidationErrorTextToken.DocumentType =>
                     chargeCommand.Document.Type.ToString(),
                 CimValidationErrorTextToken.TriggeredByOperationId =>
-                    triggeredBy ?? "0",
+                    GetOperationIdFromTriggeredBy(triggeredBy),
                 CimValidationErrorTextToken.ChargeOperationId =>
                     chargeOperationDto.Id,
                 _ => CimValidationErrorTextTemplateMessages.Unknown,
@@ -150,6 +150,16 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 
                 return CimValidationErrorTextTemplateMessages.Unknown;
             }
+        }
+
+        private string GetOperationIdFromTriggeredBy(string? triggeredBy)
+        {
+            if (!string.IsNullOrWhiteSpace(triggeredBy))
+                return triggeredBy;
+            var errorMessage = $":Id for failed operation is null";
+            _logger.LogError(errorMessage);
+
+            return CimValidationErrorTextTemplateMessages.Unknown;
         }
     }
 }
