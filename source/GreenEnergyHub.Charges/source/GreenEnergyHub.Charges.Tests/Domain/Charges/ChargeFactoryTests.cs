@@ -36,15 +36,13 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
         [InlineAutoDomainData]
         public async Task CreateFromCommandAsync_Charge_HasNoNullsOrEmptyCollections(
             TestMarketParticipant owner,
-            ChargeCommand chargeCommand,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
             Mock<ChargePeriod> chargePeriod,
+            ChargeOperationDto chargeOperationDto,
             ChargeFactory sut)
         {
             // Arrange
-            var chargeOperationDto = chargeCommand.ChargeOperations.First();
-
             marketParticipantRepository
                 .Setup(repo => repo.GetOrNullAsync(chargeOperationDto.ChargeOwner))
                 .ReturnsAsync(owner);
@@ -63,15 +61,13 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
         [Theory]
         [InlineAutoDomainData]
         public async Task CreateFromCommandAsync_WhenOwnerIsNull_ThrowsException(
-            ChargeCommand chargeCommand,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
             Mock<ChargePeriod> chargePeriod,
+            ChargeOperationDto chargeOperationDto,
             ChargeFactory sut)
         {
             // Arrange
-            var chargeOperationDto = chargeCommand.ChargeOperations.First();
-
             marketParticipantRepository
                 .Setup(repo => repo.GetOrNullAsync(It.IsAny<string>()))
                 .ReturnsAsync((MarketParticipant?)null);
