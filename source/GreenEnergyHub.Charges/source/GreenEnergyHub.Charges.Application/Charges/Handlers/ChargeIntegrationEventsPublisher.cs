@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         {
             if (chargeCommandAcceptedEvent == null) throw new ArgumentNullException(nameof(chargeCommandAcceptedEvent));
 
-            foreach (var chargeOperationDto in chargeCommandAcceptedEvent.Command.Charges)
+            foreach (var chargeOperationDto in chargeCommandAcceptedEvent.Command.ChargeOperations)
             {
                 await _chargePublisher.PublishChargeCreatedAsync(chargeOperationDto).ConfigureAwait(false);
 

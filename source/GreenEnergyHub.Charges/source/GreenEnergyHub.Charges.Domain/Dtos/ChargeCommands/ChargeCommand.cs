@@ -23,14 +23,14 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
     // ChargeCommand integrity is null checked by ChargeCommandNullChecker
     public class ChargeCommand : CommandBase
     {
-        public ChargeCommand(DocumentDto document, IReadOnlyCollection<ChargeOperationDto> charges)
+        public ChargeCommand(DocumentDto document, IReadOnlyCollection<ChargeOperationDto> chargeOperations)
         {
             Document = document;
-            Charges = charges;
+            ChargeOperations = chargeOperations;
         }
 
         public DocumentDto Document { get; }
 
-        public IReadOnlyCollection<ChargeOperationDto> Charges { get; }
+        public IReadOnlyCollection<ChargeOperationDto> ChargeOperations { get; }
     }
 }

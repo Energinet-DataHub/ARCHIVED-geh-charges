@@ -20,7 +20,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
     public interface IValidationRuleForOperation : IValidationRule
     {
         /// <summary>
-        /// Id of an operation that violated of a validation rule
+        /// Id of an operation that violated a validation rule
         /// </summary>
         public string OperationId { get; }
     }

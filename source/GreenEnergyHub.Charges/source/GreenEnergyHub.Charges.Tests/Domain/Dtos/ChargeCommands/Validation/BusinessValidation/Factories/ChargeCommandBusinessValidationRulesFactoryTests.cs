@@ -167,7 +167,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
 
             // Act
             var validationRules = new List<IValidationRule>();
-            foreach (var operation in chargeCommand.Charges)
+            foreach (var operation in chargeCommand.ChargeOperations)
             {
                 var commandWithOperation = new ChargeCommand(chargeCommand.Document, new List<ChargeOperationDto>() { operation });
                 validationRules.AddRange((await sut.CreateRulesAsync(commandWithOperation)).GetRules().ToList());

@@ -76,7 +76,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             ChargeCommand chargeCommand,
             string? triggeredBy)
         {
-            var chargeOperationDto = chargeCommand.Charges.Single();
+            var chargeOperationDto = chargeCommand.ChargeOperations.Single();
             // Please keep sorted by CimValidationErrorTextToken
             return token switch
             {
@@ -113,7 +113,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                 CimValidationErrorTextToken.DocumentType =>
                     chargeCommand.Document.Type.ToString(),
                 CimValidationErrorTextToken.TriggeredBySenderProvidedId =>
-                    triggeredBy ?? string.Empty,
+                    triggeredBy ?? "0",
                 _ => CimValidationErrorTextTemplateMessages.Unknown,
 
             };

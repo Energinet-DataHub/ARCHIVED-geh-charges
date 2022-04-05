@@ -66,7 +66,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 
             var triggeredBy = string.Empty;
             var charge = await GetChargeAsync(commandReceivedEvent).ConfigureAwait(false);
-            foreach (var chargeOperationDto in commandReceivedEvent.Command.Charges)
+            foreach (var chargeOperationDto in commandReceivedEvent.Command.ChargeOperations)
             {
                 var chargeCommandWithOperation = new ChargeCommand(
                 commandReceivedEvent.Command.Document,
@@ -113,7 +113,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                     if (businessValidationResult.IsFailed)
                     {
                         // First error found in bundle, we reject with the original validation error
-                        triggeredBy = chargeCommandWithOperation.Charges.Single().Id;
+                        triggeredBy = chargeCommandWithOperation.ChargeOperations.Single().Id;
                         await _chargeCommandReceiptService
                             .RejectAsync(chargeCommandWithOperation, businessValidationResult)
                             .ConfigureAwait(false);
@@ -124,7 +124,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                     // A previous error has occured, we reject all subsequent operations in bundle with special validation error
                     var rejectionValidationResult = ValidationResult.CreateFailure(new List<IValidationRule>()
                     {
-                        new PreviousOperationsMustBeValidRule(triggeredBy, chargeCommandWithOperation.Charges.Single()),
+                        new PreviousOperationsMustBeValidRule(triggeredBy, chargeCommandWithOperation.ChargeOperations.Single()),
                     });
                     await _chargeCommandReceiptService
                         .RejectAsync(chargeCommandWithOperation, rejectionValidationResult)
@@ -176,7 +176,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 
         private async Task<Charge?> GetChargeAsync(ChargeCommandReceivedEvent chargeCommandReceivedEvent)
         {
-            var chargeOperationDto = chargeCommandReceivedEvent.Command.Charges.First();
+            var chargeOperationDto = chargeCommandReceivedEvent.Command.ChargeOperations.First();
 
             var chargeIdentifier = new ChargeIdentifier(
                 chargeOperationDto.ChargeId,

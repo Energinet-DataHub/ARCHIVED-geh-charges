@@ -72,7 +72,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 .WithPoint(2, SmallestInvalidPrice)
                 .Build();
 
-            var chargeOperationDto = invalidCommand.Charges.First();
+            var chargeOperationDto = invalidCommand.ChargeOperations.First();
             var expectedPoint = chargeOperationDto.Points[1];
             var triggeredBy = expectedPoint.Position.ToString();
 

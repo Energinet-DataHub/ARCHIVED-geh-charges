@@ -30,7 +30,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
 
                 CheckDocument(chargeCommand.Document);
 
-                foreach (var chargeDto in chargeCommand.Charges)
+                foreach (var chargeDto in chargeCommand.ChargeOperations)
                 {
                     CheckChargeOperation(chargeDto);
                 }

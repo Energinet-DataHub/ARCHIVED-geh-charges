@@ -136,10 +136,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         [ErrorMessageFor(ValidationRuleIdentifier.UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDate)]
         public const string UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateErrorText =
             "Charge ID {{DocumentSenderProvidedChargeId}} has been stopped and thus cannot be updated as per {{ChargeStartDateTime}}.";
-            
+
         [ErrorMessageFor(ValidationRuleIdentifier.SubsequentBundleOperationsFail)]
         public const string SubsequentBundleOperationsFail =
-            "Transaction for Charge ID {{DocumentSenderProvidedChargeId}} is not completed, because a previous transaction for Charge ID {{TriggeredBySenderProvidedId}}, failed its validation";
+            "Transaction for Charge ID {{DocumentSenderProvidedChargeId}} is not completed: The request received contained multiple transactions for the same charge, and one of the previous transactions with ID {{TriggeredBySenderProvidedId}} failed validation why this transaction is also rejected";
 
         public const string Unknown = "unknown";
     }

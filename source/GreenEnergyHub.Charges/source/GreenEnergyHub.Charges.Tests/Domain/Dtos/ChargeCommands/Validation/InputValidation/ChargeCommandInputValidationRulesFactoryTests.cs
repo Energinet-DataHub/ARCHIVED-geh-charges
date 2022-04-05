@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 new SenderIsMandatoryTypeValidationRule(chargeCommand.Document),
             };
 
-            expectedRules.AddRange(chargeCommand.Charges.SelectMany(GetExpectedRulesForChargeOperation));
+            expectedRules.AddRange(chargeCommand.ChargeOperations.SelectMany(GetExpectedRulesForChargeOperation));
 
             // Act
             var actualRuleTypes = sut.CreateRulesForCommand(chargeCommand).GetRules().Select(r => r.GetType()).ToList();

@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 
             var operationOrder = 0;
             var result = new List<AvailableChargeReceiptData>();
-            foreach (var chargeOperationDto in input.Command.Charges)
+            foreach (var chargeOperationDto in input.Command.ChargeOperations)
             {
                 result.Add(new AvailableChargeReceiptData(
                         sender.MarketParticipantId,

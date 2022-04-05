@@ -313,12 +313,12 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 
             validator.Setup(v =>
                     v.BusinessValidateAsync(It.Is<ChargeCommand>(x =>
-                        x.Charges.Single().ChargeDescription == "valid")))
+                        x.ChargeOperations.Single().ChargeDescription == "valid")))
                 .Returns(Task.FromResult(ValidationResult.CreateSuccess()));
 
             validator.Setup(v =>
                     v.BusinessValidateAsync(It.Is<ChargeCommand>(x =>
-                        x.Charges.Single().ChargeDescription == "invalid")))
+                        x.ChargeOperations.Single().ChargeDescription == "invalid")))
                 .Returns(Task.FromResult(invalidValidationResult));
         }
 

@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 
             var availableChargeReceiptData = new List<AvailableChargeReceiptData>();
 
-            foreach (var chargeOperationDto in input.Command.Charges)
+            foreach (var chargeOperationDto in input.Command.ChargeOperations)
             {
                 availableChargeReceiptData.AddRange(
                     CreateAvailableChargeReceiptData(input, sender, recipient, chargeOperationDto));
@@ -61,7 +61,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             MarketParticipantDto recipient,
             ChargeOperationDto chargeOperationDto)
         {
-            var operationOrder = input.Command.Charges.ToList().IndexOf(chargeOperationDto);
+            var operationOrder = input.Command.ChargeOperations.ToList().IndexOf(chargeOperationDto);
             return new List<AvailableChargeReceiptData>()
             {
                 new AvailableChargeReceiptData(

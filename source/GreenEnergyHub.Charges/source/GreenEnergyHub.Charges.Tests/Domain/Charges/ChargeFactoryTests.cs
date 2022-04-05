@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             ChargeFactory sut)
         {
             // Arrange
-            var chargeOperationDto = chargeCommand.Charges.First();
+            var chargeOperationDto = chargeCommand.ChargeOperations.First();
 
             marketParticipantRepository
                 .Setup(repo => repo.GetOrNullAsync(chargeOperationDto.ChargeOwner))
@@ -70,7 +70,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             ChargeFactory sut)
         {
             // Arrange
-            var chargeOperationDto = chargeCommand.Charges.First();
+            var chargeOperationDto = chargeCommand.ChargeOperations.First();
 
             marketParticipantRepository
                 .Setup(repo => repo.GetOrNullAsync(It.IsAny<string>()))

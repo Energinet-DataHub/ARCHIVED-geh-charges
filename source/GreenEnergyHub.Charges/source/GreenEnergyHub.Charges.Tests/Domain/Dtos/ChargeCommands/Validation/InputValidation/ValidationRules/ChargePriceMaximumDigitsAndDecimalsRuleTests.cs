@@ -71,7 +71,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         {
             // Arrange
             var invalidCommand = builder.WithPoint(1, 123456789m).Build();
-            var chargeOperationDto = invalidCommand.Charges.First();
+            var chargeOperationDto = invalidCommand.ChargeOperations.First();
             var expectedPoint = chargeOperationDto.Points[0];
             var triggeredBy = expectedPoint.Position.ToString();
 
