@@ -70,7 +70,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
         {
             var rules = new List<IValidationRule>();
 
-            foreach (var chargeLinkDto in chargeLinksCommand.ChargeLinks)
+            foreach (var chargeLinkDto in chargeLinksCommand.ChargeLinksOperations)
             {
                 var charge = await _chargeRepository
                     .GetOrNullAsync(new ChargeIdentifier(chargeLinkDto.SenderProvidedChargeId, chargeLinkDto.ChargeOwner, chargeLinkDto.ChargeType))

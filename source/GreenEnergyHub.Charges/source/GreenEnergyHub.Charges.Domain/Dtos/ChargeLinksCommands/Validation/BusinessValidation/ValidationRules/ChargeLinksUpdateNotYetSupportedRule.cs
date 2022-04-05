@@ -37,13 +37,13 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
 
         public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeLinkUpdateNotYetSupported;
 
-        public bool IsValid => _chargeLinksCommand.ChargeLinks.All(ChargeLinkDateRangeIsNotOverlapping);
+        public bool IsValid => _chargeLinksCommand.ChargeLinksOperations.All(ChargeLinkDateRangeIsNotOverlapping);
 
         /// <summary>
         /// This validation rule validates each ChargeLink in a list of ChargeLink(s). This property will
         /// tell which ChargeLink triggered the rule. The ChargeLink is identified by OperationId.
         /// </summary>
-        public string OperationId => _chargeLinksCommand.ChargeLinks
+        public string OperationId => _chargeLinksCommand.ChargeLinksOperations
             .First(link => !ChargeLinkDateRangeIsNotOverlapping(link)).OperationId;
 
         private bool ChargeLinkDateRangeIsNotOverlapping(ChargeLinkDto newLink)

@@ -57,8 +57,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
 
             // fake error code and text
             availableChargeReceiptValidationErrorFactory
-                .Setup(f => f.Create(It.IsAny<ValidationError>(), chargeCommand, It.IsAny<ChargeOperationDto>()))
-                .Returns<ValidationError, ChargeCommand, ChargeOperationDto>((validationError, _, _) =>
+                .Setup(f => f.Create(It.IsAny<ValidationError>(), chargeCommand))
+                .Returns<ValidationError, ChargeCommand>((validationError, _) =>
                     new AvailableReceiptValidationError(
                         ReasonCode.D01, validationError.ValidationRuleIdentifier.ToString()));
 
