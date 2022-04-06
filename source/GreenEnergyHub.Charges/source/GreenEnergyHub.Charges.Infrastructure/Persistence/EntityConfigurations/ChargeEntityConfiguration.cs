@@ -34,6 +34,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
             builder.Property(c => c.SenderProvidedChargeId);
             builder.Property(c => c.Resolution);
             builder.Property(c => c.Type);
+            builder.Property(c => c.Timestamp).IsRowVersion();
             builder.OwnsMany(c => c.Points, ConfigurePoints);
             builder.OwnsMany(c => c.Periods, ConfigurePeriods);
 

@@ -51,7 +51,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
 
             var actual = await sut.CreateFromCommandAsync(chargeCommand);
 
-            actual.Should().NotContainNullsOrEmptyEnumerables();
+            actual.Periods.Should().NotBeNullOrEmpty();
+            actual.Points.Should().NotBeNullOrEmpty();
         }
 
         [Theory]

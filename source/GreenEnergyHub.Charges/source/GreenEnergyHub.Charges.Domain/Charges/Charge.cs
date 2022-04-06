@@ -20,7 +20,7 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Charges
 {
-    public class Charge
+    public class Charge : Entity
     {
         private readonly List<Point> _points;
         private readonly List<ChargePeriod> _periods;

@@ -18,15 +18,20 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.Tests.Builders.Command;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
+using Polly;
 using Xunit;
+using Xunit.Abstractions;
 using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
@@ -38,14 +43,16 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
     public class ChargeRepositoryTests : IClassFixture<ChargesDatabaseFixture>
     {
         private const string MarketParticipantOwnerId = "MarketParticipantId";
+        private readonly ITestOutputHelper _testOutputHelper;
 
         // Is being set when executing the SeedDatabase method
         private static Guid _marketParticipantId;
 
         private readonly ChargesDatabaseManager _databaseManager;
 
-        public ChargeRepositoryTests(ChargesDatabaseFixture fixture)
+        public ChargeRepositoryTests(ChargesDatabaseFixture fixture, ITestOutputHelper testOutputHelper)
         {
+            _testOutputHelper = testOutputHelper;
             _databaseManager = fixture.DatabaseManager;
         }
 
@@ -55,7 +62,19 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
             await GetOrAddMarketParticipantAsync(chargesDatabaseWriteContext);
-            var charge = GetValidCharge();
+            var charge = new ChargeBuilder()
+                .WithId(Guid.NewGuid())
+                .WithSenderProvidedChargeId("Charge1")
+                .WithOwnerId(_marketParticipantId)
+                .WithChargeType(ChargeType.Tariff)
+                .WithPeriods(new List<ChargePeriod>
+                {
+                    new ChargePeriodBuilder()
+                        .WithStartDateTime(InstantHelper.GetYesterdayAtMidnightUtc())
+                        .Build(),
+                })
+                .WithPoints(new List<Point> { new(1, 200.111111m, SystemClock.Instance.GetCurrentInstant()) })
+                .Build();
             var sut = new ChargeRepository(chargesDatabaseWriteContext);
 
             // Act
@@ -147,6 +166,126 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
             // Assert
             actual.Should().NotBeEmpty();
+        }
+
+        [Fact]
+        public async Task POC_SaveChangesAsync_WhenChargeWasJustInsertedByAnotherThread_ThrowsSqlException()
+        {
+            // Arrange
+            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
+            await GetOrAddMarketParticipantAsync(chargesDatabaseWriteContext);
+            var sut = new ChargeRepository(chargesDatabaseWriteContext);
+            var builder = new ChargeBuilder();
+
+            var charge = builder
+                .WithId(Guid.NewGuid())
+                .WithSenderProvidedChargeId("TariffId")
+                .WithOwnerId(_marketParticipantId)
+                .WithChargeType(ChargeType.Tariff)
+                .Build();
+
+            await sut.AddAsync(charge);
+
+            // Simulating a simultaneous insert action for the same unique charge composite key, but new ID, caused by another request
+            var sameChargeWithDiffId = builder
+                .WithId(Guid.NewGuid())
+                .WithSenderProvidedChargeId("TariffId")
+                .WithOwnerId(_marketParticipantId)
+                .WithChargeType(ChargeType.Tariff)
+                .Build();
+
+            await using var anotherChargesDatabaseContext = _databaseManager.CreateDbContext();
+            await anotherChargesDatabaseContext.Charges.AddAsync(sameChargeWithDiffId);
+            await anotherChargesDatabaseContext.SaveChangesAsync();
+
+            // Act / Assert
+            var ex = await Assert.ThrowsAsync<DbUpdateException>(() => chargesDatabaseWriteContext.SaveChangesAsync());
+            ex.InnerException.Should().BeOfType<SqlException>().Which.Message.Should().Contain(
+                "Violation of UNIQUE KEY constraint 'UC_SenderProvidedChargeId_Type_OwnerId'. Cannot insert duplicate key in object 'Charges.Charge'");
+        }
+
+        [Fact]
+        public async Task POC_UpdateAsync_WhenDbUpdateConcurrencyExceptionThrown_Handled()
+        {
+            // Arrange - Insert charge in storage
+            await using var arrangeDbContext = _databaseManager.CreateDbContext();
+            await GetOrAddMarketParticipantAsync(arrangeDbContext);
+            var arrangeRepo = new ChargeRepository(arrangeDbContext);
+
+            var charge = new ChargeBuilder()
+                .WithId(Guid.NewGuid())
+                .WithSenderProvidedChargeId("xCharge")
+                .WithOwnerId(_marketParticipantId)
+                .WithChargeType(ChargeType.Tariff)
+                .WithPeriods(new List<ChargePeriod>
+                {
+                    new ChargePeriodBuilder()
+                        .WithStartDateTime(InstantHelper.GetYesterdayAtMidnightUtc())
+                        .WithName("InitialName")
+                        .Build(),
+                })
+                .Build();
+
+            await arrangeRepo.AddAsync(charge);
+            await arrangeDbContext.SaveChangesAsync();
+
+            // Set up SUT repo with new db context
+            await using var testDbContext = _databaseManager.CreateDbContext();
+            var sut = new ChargeRepository(testDbContext);
+            var existingCharge = await sut.GetAsync(charge.Id);
+
+            var newPeriod = new ChargePeriodBuilder()
+                .WithStartDateTime(InstantHelper.GetTomorrowAtMidnightUtc())
+                .WithName("ResolvedConflictName")
+                .Build();
+
+            existingCharge.Update(newPeriod);
+            await sut.UpdateAsync(existingCharge);
+
+            // Simulating a concurrency conflict
+            arrangeDbContext.Database.ExecuteSqlRaw(
+                "UPDATE Charges.Charge SET SenderProvidedChargeId = 'yCharge' WHERE Id = '" + charge.Id + "';");
+
+            // Act and handled
+            try
+            {
+                await testDbContext.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                _testOutputHelper.WriteLine(ex.ToString());
+                foreach (var entry in ex.Entries)
+                {
+                    var proposedValues = entry.CurrentValues;
+                    var databaseValues = await entry.GetDatabaseValuesAsync();
+
+                    /*
+                    foreach (var property in proposedValues.Properties)
+                    {
+                        var proposedValue = proposedValues[property];
+                        _testOutputHelper.WriteLine("proposed value: " + proposedValue);
+                        var databaseValue = databaseValues[property];
+                        _testOutputHelper.WriteLine("database value: " + databaseValue);
+                    }
+                    */
+
+                    testDbContext.ChangeTracker.Clear(); // Stop tracking entity
+                    var updatedExistingCharge = await sut.GetAsync(charge.Id); // track again
+                    updatedExistingCharge.Update(newPeriod);
+                    await sut.UpdateAsync(updatedExistingCharge);
+                    await testDbContext.SaveChangesAsync();
+                }
+            }
+
+            // Assert
+            await using var chargesReadDbContext = _databaseManager.CreateDbContext();
+            var readRepo = new ChargeRepository(chargesReadDbContext);
+            var actual = await readRepo.GetAsync(charge.Id);
+
+            actual.Periods.Should().HaveCount(2);
+            var actualOrderedList = actual.Periods.OrderBy(p => p.StartDateTime).ToList();
+            actualOrderedList.First().Name.Should().Be("InitialName");
+            actualOrderedList.Last().Name.Should().Be("ResolvedConflictName");
         }
 
         private static async Task<Charge> SetupValidCharge(ChargesDatabaseContext chargesDatabaseWriteContext)
