@@ -22,11 +22,11 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
     {
         public static void ThrowExceptionIfRequiredPropertyIsNull(List<ChargeCommand> chargeCommands)
         {
-            if (chargeCommands == null) throw new ArgumentNullException(nameof(chargeCommands));
+            CheckListOfChargeCommands(chargeCommands);
 
             foreach (var chargeCommand in chargeCommands)
             {
-                if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
+                CheckChargeCommand(chargeCommand);
 
                 CheckDocument(chargeCommand.Document);
 
@@ -35,6 +35,16 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
                     CheckChargeOperation(chargeDto);
                 }
             }
+        }
+
+        private static void CheckListOfChargeCommands(List<ChargeCommand> chargeCommands)
+        {
+            if (chargeCommands == null) throw new ArgumentNullException(nameof(chargeCommands));
+        }
+
+        private static void CheckChargeCommand(ChargeCommand chargeCommand)
+        {
+            if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
         }
 
         private static void CheckChargeOperation(ChargeOperationDto chargeOperationDto)
