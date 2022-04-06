@@ -65,7 +65,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
                     chargeLinkDto.OperationId,
                     input.ChargeLinksCommand.MeteringPointId,
                     input.ChargeLinksCommand.Document.Type,
-                    0,
+                    input.ChargeLinksCommand.ChargeLinksOperations.ToList().IndexOf(chargeLinkDto),
                     GetReasons(input, chargeLinkDto));
             }).ToList();
         }

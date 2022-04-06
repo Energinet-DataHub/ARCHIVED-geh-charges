@@ -60,7 +60,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
                         link.OperationId,
                         acceptedEvent.ChargeLinksCommand.MeteringPointId,
                         acceptedEvent.ChargeLinksCommand.Document.Type,
-                        0,
+                        acceptedEvent.ChargeLinksCommand.ChargeLinksOperations.ToList().IndexOf(link),
                         new List<AvailableReceiptValidationError>()))
                 .ToList();
         }

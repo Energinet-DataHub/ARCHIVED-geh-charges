@@ -46,22 +46,23 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 
             var availableChargeReceiptData = new List<AvailableChargeReceiptData>();
 
+            var operationOrder = 0;
             foreach (var chargeOperationDto in input.Command.ChargeOperations)
             {
-                availableChargeReceiptData.AddRange(
-                    CreateAvailableChargeReceiptData(input, sender, recipient, chargeOperationDto));
+                availableChargeReceiptData.AddRange(CreateAvailableChargeReceiptData(
+                    input.Command.Document, chargeOperationDto, sender, recipient, operationOrder++));
             }
 
             return availableChargeReceiptData;
         }
 
         private IReadOnlyList<AvailableChargeReceiptData> CreateAvailableChargeReceiptData(
-            ChargeCommandAcceptedEvent input,
+            DocumentDto documentDto,
+            ChargeOperationDto chargeOperationDto,
             MarketParticipant sender,
             MarketParticipantDto recipient,
-            ChargeOperationDto chargeOperationDto)
+            int operationOrder)
         {
-            var operationOrder = input.Command.ChargeOperations.ToList().IndexOf(chargeOperationDto);
             return new List<AvailableChargeReceiptData>()
             {
                 new AvailableChargeReceiptData(
@@ -69,12 +70,12 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                     sender.BusinessProcessRole,
                     recipient.Id,
                     recipient.BusinessProcessRole,
-                    input.Command.Document.BusinessReasonCode,
+                    documentDto.BusinessReasonCode,
                     _messageMetaDataContext.RequestDataTime,
                     Guid.NewGuid(), // ID of each available piece of data must be unique
                     ReceiptStatus.Confirmed,
                     chargeOperationDto.Id,
-                    input.Command.Document.Type,
+                    documentDto.Type,
                     operationOrder,
                     new List<AvailableReceiptValidationError>()),
             };
