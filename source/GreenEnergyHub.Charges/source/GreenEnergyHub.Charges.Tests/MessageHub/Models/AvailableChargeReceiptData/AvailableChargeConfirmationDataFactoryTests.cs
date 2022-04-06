@@ -63,7 +63,6 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             actualList[0].ReceiptStatus.Should().Be(ReceiptStatus.Confirmed);
             actualList[0].OriginalOperationId.Should().Be(acceptedEvent.Command.ChargeOperations.First().Id);
             actualList[0].ValidationErrors.Should().BeEmpty();
-            var operationOrder = -1;
             var expectedList = actualList.OrderBy(x => x.OperationOrder);
             actualList.SequenceEqual(expectedList).Should().BeTrue();
         }
