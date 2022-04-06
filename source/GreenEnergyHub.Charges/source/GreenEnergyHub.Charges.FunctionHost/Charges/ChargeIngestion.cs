@@ -49,11 +49,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
         [Function(IngestionFunctionNames.ChargeIngestion)]
         public async Task<HttpResponseData> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]
-            HttpRequestData req,
-            ClaimsPrincipal claimsPrincipal)
+            HttpRequestData req)
         {
-            var actorId = GetClaimValueFrom(claimsPrincipal, "actorid");
-
             var inboundMessage = await ValidateMessageAsync(req).ConfigureAwait(false);
             if (inboundMessage.HasErrors)
             {
@@ -87,12 +84,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             var message = new ChargesMessage();
             message.ChargeCommands.AddRange(chargeCommandBundle.ChargeCommands);
             return message;
-        }
-
-        private static string? GetClaimValueFrom(ClaimsPrincipal claimsPrincipal, string claimName)
-        {
-            return claimsPrincipal.FindFirst(claim => claim.Type.Equals(claimName, StringComparison.OrdinalIgnoreCase))?
-                .Value;
         }
     }
 }

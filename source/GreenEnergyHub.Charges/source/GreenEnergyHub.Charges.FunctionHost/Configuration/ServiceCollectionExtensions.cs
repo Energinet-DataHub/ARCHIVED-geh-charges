@@ -45,6 +45,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IClaimsPrincipalAccessor, ClaimsPrincipalAccessor>();
             serviceCollection.AddScoped<ClaimsPrincipalContext>();
             serviceCollection.AddScoped(_ => new OpenIdSettings(metadataAddress, audience));
+            AddActorContext(serviceCollection);
         }
 
         /// <summary>

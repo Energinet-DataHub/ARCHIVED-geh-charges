@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
@@ -31,19 +32,22 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
         private readonly IMarketParticipantRepository _marketParticipantRepository;
         private readonly IZonedDateTimeService _zonedDateTimeService;
         private readonly IClock _clock;
+        private readonly IActorContext _actorContext;
 
         public ChargeCommandBusinessValidationRulesFactory(
             IRulesConfigurationRepository rulesConfigurationRepository,
             IChargeRepository chargeRepository,
             IMarketParticipantRepository marketParticipantRepository,
             IZonedDateTimeService zonedDateTimeService,
-            IClock clock)
+            IClock clock,
+            IActorContext actorContext)
         {
             _rulesConfigurationRepository = rulesConfigurationRepository;
             _chargeRepository = chargeRepository;
             _marketParticipantRepository = marketParticipantRepository;
             _zonedDateTimeService = zonedDateTimeService;
             _clock = clock;
+            _actorContext = actorContext;
         }
 
         public async Task<IValidationRuleSet> CreateRulesAsync(ChargeCommand chargeCommand)
@@ -89,6 +93,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
                     _zonedDateTimeService,
                     _clock),
                 new CommandSenderMustBeAnExistingMarketParticipantRule(sender),
+                new AuthenticatedUserMustMatchMarketParticipantSenderIdRule(
+                    _actorContext.CurrentActor?.Identifier,
+                    chargeCommand.Document.Sender.Id),
             };
 
             return rules;
