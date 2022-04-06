@@ -64,11 +64,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             actualList[0].OriginalOperationId.Should().Be(acceptedEvent.Command.ChargeOperations.First().Id);
             actualList[0].ValidationErrors.Should().BeEmpty();
             var operationOrder = -1;
-            for (var i = 0; i < actualList.Count; i++)
-            {
-                actualList[i].OperationOrder.Should().BeGreaterThan(operationOrder);
-                operationOrder = actualList.ElementAt(i).OperationOrder;
-            }
+            var expectedList = actualList.OrderBy(x => x.OperationOrder);
+            actualList.SequenceEqual(expectedList).Should().BeTrue();
         }
     }
 }

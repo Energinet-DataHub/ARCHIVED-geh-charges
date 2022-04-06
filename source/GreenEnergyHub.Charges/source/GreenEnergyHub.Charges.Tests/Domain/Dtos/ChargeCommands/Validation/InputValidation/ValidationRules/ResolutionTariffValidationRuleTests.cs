@@ -95,7 +95,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 .WithResolution(resolution)
                 .Build();
 
-                // Act
+            // Act
             var sut = new ResolutionTariffValidationRule(chargeOperationDto);
 
             // Assert
