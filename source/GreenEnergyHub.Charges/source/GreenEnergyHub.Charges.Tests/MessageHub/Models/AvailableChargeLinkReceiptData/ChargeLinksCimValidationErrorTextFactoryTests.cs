@@ -34,10 +34,10 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
         public void Create_WhenTwoMergeFields_ReturnsExpectedDescription(
             ChargeLinksCommand chargeLinksCommand,
             CimValidationErrorTextProvider cimValidationErrorTextProvider,
-            ILoggerFactory loggerFactor)
+            ILoggerFactory loggerFactory)
         {
             // Arrange
-            var sut = new ChargeLinksCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactor);
+            var sut = new ChargeLinksCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
             var chargeLinkDto = chargeLinksCommand.ChargeLinksOperations.First();
             var expected = CimValidationErrorTextTemplateMessages.MeteringPointDoesNotExistValidationErrorText
                 .Replace("{{MeteringPointId}}", chargeLinksCommand.MeteringPointId)
@@ -60,13 +60,13 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
         public void Create_MergesAllMergeFields(
             ChargeLinksCommand chargeLinksCommand,
             CimValidationErrorTextProvider cimValidationErrorTextProvider,
-            ILoggerFactory loggerFactor)
+            ILoggerFactory loggerFactory)
         {
             // Arrange
             var chargeLinkDto = chargeLinksCommand.ChargeLinksOperations.First();
             var validationRuleIdentifiers =
                 (ValidationRuleIdentifier[])Enum.GetValues(typeof(ValidationRuleIdentifier));
-            var sut = new ChargeLinksCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactor);
+            var sut = new ChargeLinksCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
 
             // Act
             // Assert
