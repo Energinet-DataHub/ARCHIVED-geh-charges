@@ -56,12 +56,6 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             _resolution = Resolution.PT1H;
         }
 
-        public ChargeOperationDtoBuilder WithEndDateTimeAsNull()
-        {
-            _endDateTime = null;
-            return this;
-        }
-
         public ChargeOperationDtoBuilder WithDescription(string description)
         {
             _description = description;
@@ -83,18 +77,6 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         public ChargeOperationDtoBuilder WithChargeId(string chargeId)
         {
             _chargeId = chargeId;
-            return this;
-        }
-
-        public ChargeOperationDtoBuilder WithOperationId(string id)
-        {
-            _operationId = id;
-            return this;
-        }
-
-        public ChargeOperationDtoBuilder WithValidityStartDateDays(int days)
-        {
-            _startDateTime = SystemClock.Instance.GetCurrentInstant().Plus(Duration.FromDays(days));
             return this;
         }
 
