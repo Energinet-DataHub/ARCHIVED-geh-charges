@@ -62,7 +62,19 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
             await GetOrAddMarketParticipantAsync(chargesDatabaseWriteContext);
-            var charge = GetValidCharge();
+            var charge = new ChargeBuilder()
+                .WithId(Guid.NewGuid())
+                .WithSenderProvidedChargeId("Charge1")
+                .WithOwnerId(_marketParticipantId)
+                .WithChargeType(ChargeType.Tariff)
+                .WithPeriods(new List<ChargePeriod>
+                {
+                    new ChargePeriodBuilder()
+                        .WithStartDateTime(InstantHelper.GetYesterdayAtMidnightUtc())
+                        .Build(),
+                })
+                .WithPoints(new List<Point> { new(1, 200.111111m, SystemClock.Instance.GetCurrentInstant()) })
+                .Build();
             var sut = new ChargeRepository(chargesDatabaseWriteContext);
 
             // Act
@@ -247,6 +259,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                     var proposedValues = entry.CurrentValues;
                     var databaseValues = await entry.GetDatabaseValuesAsync();
 
+                    /*
                     foreach (var property in proposedValues.Properties)
                     {
                         var proposedValue = proposedValues[property];
@@ -254,6 +267,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                         var databaseValue = databaseValues[property];
                         _testOutputHelper.WriteLine("database value: " + databaseValue);
                     }
+                    */
 
                     testDbContext.ChangeTracker.Clear(); // Stop tracking entity
                     var updatedExistingCharge = await sut.GetAsync(charge.Id); // track again
