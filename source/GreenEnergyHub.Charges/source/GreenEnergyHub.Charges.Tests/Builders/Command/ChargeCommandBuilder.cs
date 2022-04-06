@@ -31,6 +31,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         private Instant? _endDateTime;
         private VatClassification _vatClassification;
         private bool _taxIndicator;
+        private bool _transparentInvoicing;
         private string _owner;
         private string _description;
         private string _chargeName;
@@ -38,6 +39,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         private BusinessReasonCode _documentBusinessReasonCode;
         private DocumentType _documentType;
         private MarketParticipantDto _sender;
+        private MarketParticipantDto _receiver;
         private ChargeType _chargeType;
         private Resolution _resolution;
         private string _operationId;
@@ -52,6 +54,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
                 .Plus(Duration.FromDays(1000));
             _vatClassification = VatClassification.Vat25;
             _taxIndicator = false;
+            _transparentInvoicing = false;
             _owner = "owner";
             _description = "some description";
             _chargeName = "some charge name";
@@ -59,6 +62,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             _documentBusinessReasonCode = BusinessReasonCode.UpdateChargeInformation;
             _documentType = DocumentType.RequestUpdateChargeInformation;
             _sender = new MarketParticipantDto { Id = "0", BusinessProcessRole = MarketParticipantRole.GridAccessProvider };
+            _receiver = new MarketParticipantDto { Id = "5790001330552", BusinessProcessRole = MarketParticipantRole.MeteringPointAdministrator };
             _chargeType = ChargeType.Fee;
             _points = new List<Point>();
             _resolution = Resolution.PT1H;
@@ -142,6 +146,12 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         public ChargeCommandBuilder WithVatClassification(VatClassification vatClassification)
         {
             _vatClassification = vatClassification;
+            return this;
+        }
+
+        public ChargeCommandBuilder WithTransparentInvoicing(bool transparentInvoicing)
+        {
+            _transparentInvoicing = transparentInvoicing;
             return this;
         }
 
@@ -230,7 +240,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
                 _owner,
                 _resolution,
                 _taxIndicator,
-                true,
+                _transparentInvoicing,
                 _vatClassification,
                 _startDateTime,
                 _endDateTime,
@@ -246,10 +256,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
                 RequestDate = SystemClock.Instance.GetCurrentInstant(),
                 IndustryClassification = IndustryClassification.Electricity,
                 CreatedDateTime = SystemClock.Instance.GetCurrentInstant(),
-                Recipient = new MarketParticipantDto
-                {
-                    Id = "0", BusinessProcessRole = MarketParticipantRole.GridAccessProvider,
-                },
+                Recipient = _receiver,
                 Sender = _sender,
                 BusinessReasonCode = _documentBusinessReasonCode,
             };
