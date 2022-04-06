@@ -47,25 +47,21 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             var sender = await GetSenderAsync().ConfigureAwait(false);
 
             var operationOrder = 0;
-            var result = new List<AvailableChargeReceiptData>();
-            foreach (var chargeOperationDto in input.Command.ChargeOperations)
-            {
-                result.Add(new AvailableChargeReceiptData(
-                        sender.MarketParticipantId,
-                        sender.BusinessProcessRole,
-                        recipient.Id,
-                        recipient.BusinessProcessRole,
-                        input.Command.Document.BusinessReasonCode,
-                        _messageMetaDataContext.RequestDataTime,
-                        Guid.NewGuid(), // ID of each available piece of data must be unique
-                        ReceiptStatus.Rejected,
-                        chargeOperationDto.Id,
-                        input.Command.Document.Type,
-                        operationOrder++,
-                        GetReasons(input)));
-            }
 
-            return result;
+            return input.Command.ChargeOperations.Select(chargeOperationDto => new AvailableChargeReceiptData(
+                    sender.MarketParticipantId,
+                    sender.BusinessProcessRole,
+                    recipient.Id,
+                    recipient.BusinessProcessRole,
+                    input.Command.Document.BusinessReasonCode,
+                    _messageMetaDataContext.RequestDataTime,
+                    Guid.NewGuid(), // ID of each available piece of data must be unique
+                    ReceiptStatus.Rejected,
+                    chargeOperationDto.Id,
+                    input.Command.Document.Type,
+                    operationOrder++,
+                    GetReasons(input)))
+                .ToList();
         }
 
         private List<AvailableReceiptValidationError> GetReasons(
