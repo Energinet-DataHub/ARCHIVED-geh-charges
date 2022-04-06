@@ -79,6 +79,7 @@ limitations under the License.
       <EmbeddedResource Include="TestFiles\ExpectedOutputChargeReceiptCimSerializerConfirmation.blob" />
       <EmbeddedResource Include="TestFiles\ExpectedOutputChargeReceiptCimSerializerRejection.blob" />
       <EmbeddedResource Include="TestFiles\CreateTariffsBundle.xml" />
+      <EmbeddedResource Include="TestFiles\BundleMixOfChargeMasterDataOperations.xml" />
     </ItemGroup>
 
     <ItemGroup>

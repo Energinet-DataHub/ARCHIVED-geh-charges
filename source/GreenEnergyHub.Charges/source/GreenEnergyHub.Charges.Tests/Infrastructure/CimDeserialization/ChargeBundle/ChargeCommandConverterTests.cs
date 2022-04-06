@@ -286,6 +286,34 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             actualSecondChargeOperationDto.Points.First().Price.Should().Be(200.001m);
         }
 
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task ConvertAsync_WhenCalledWithMixedChargeBundle_ReturnsGroupedChargeCommands(
+            [Frozen] Mock<ICorrelationContext> context,
+            [Frozen] Mock<IIso8601Durations> iso8601Durations,
+            ChargeCommandConverter sut)
+        {
+            // Arrange
+            var correlationId = Guid.NewGuid().ToString();
+            var expectedTime = InstantPattern.ExtendedIso.Parse("2022-10-31T23:00:00Z").Value;
+            var reader = GetReaderAndArrangeTest(
+                context,
+                iso8601Durations,
+                correlationId,
+                expectedTime,
+                "GreenEnergyHub.Charges.Tests.TestFiles.BundleMixOfChargeMasterDataOperations.xml");
+
+            // Act
+            var actual = (ChargeCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
+
+            // Assert - Grouping of operations for same unique charge is correctly done
+            actual.ChargeCommands.Should().HaveCount(3);
+            var chargeCommandWithTwoOperations = actual.ChargeCommands.Single(x => x.ChargeOperations.Any(y => y.Id == "Operation1"));
+            chargeCommandWithTwoOperations.ChargeOperations.Should().HaveCount(2);
+            chargeCommandWithTwoOperations.ChargeOperations.Should().Contain(x => x.Id == "Operation1");
+            chargeCommandWithTwoOperations.ChargeOperations.Should().Contain(x => x.Id == "Operation4");
+        }
+
         private SchemaValidatingReader GetReaderAndArrangeTest(
             Mock<ICorrelationContext> context,
             Mock<IIso8601Durations> iso8601Durations,
