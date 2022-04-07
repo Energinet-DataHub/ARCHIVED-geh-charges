@@ -47,7 +47,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
             var recipient = acceptedEvent.ChargeLinksCommand.Document.Sender;
             var sender = await GetSenderAsync().ConfigureAwait(false);
 
-            return acceptedEvent.ChargeLinksCommand.ChargeLinks.Select(link =>
+            return acceptedEvent.ChargeLinksCommand.ChargeLinksOperations.Select(link =>
                     new AvailableChargeLinksReceiptData(
                         sender.MarketParticipantId,
                         sender.BusinessProcessRole,
@@ -60,6 +60,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
                         link.OperationId,
                         acceptedEvent.ChargeLinksCommand.MeteringPointId,
                         acceptedEvent.ChargeLinksCommand.Document.Type,
+                        acceptedEvent.ChargeLinksCommand.ChargeLinksOperations.ToList().IndexOf(link),
                         new List<AvailableReceiptValidationError>()))
                 .ToList();
         }

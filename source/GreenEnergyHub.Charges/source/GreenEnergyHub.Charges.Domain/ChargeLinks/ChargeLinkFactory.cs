@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
 
             var chargeLinksCreated = new List<ChargeLink>();
 
-            foreach (var chargeLink in chargeLinksEvent.ChargeLinksCommand.ChargeLinks)
+            foreach (var chargeLink in chargeLinksEvent.ChargeLinksCommand.ChargeLinksOperations)
             {
                 var chargeIdentifier = new ChargeIdentifier(chargeLink.SenderProvidedChargeId, chargeLink.ChargeOwner, chargeLink.ChargeType);
                 var charge = await _chargeRepository.GetAsync(chargeIdentifier).ConfigureAwait(false);

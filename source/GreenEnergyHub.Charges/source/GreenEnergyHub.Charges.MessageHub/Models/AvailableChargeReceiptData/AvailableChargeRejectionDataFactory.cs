@@ -18,6 +18,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
@@ -45,9 +46,9 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             var recipient = input.Command.Document.Sender; // The original sender is the recipient of the receipt
             var sender = await GetSenderAsync().ConfigureAwait(false);
 
-            return new List<AvailableChargeReceiptData>()
-            {
-                new AvailableChargeReceiptData(
+            var operationOrder = 0;
+
+            return input.Command.ChargeOperations.Select(chargeOperationDto => new AvailableChargeReceiptData(
                     sender.MarketParticipantId,
                     sender.BusinessProcessRole,
                     recipient.Id,
@@ -56,19 +57,21 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                     _messageMetaDataContext.RequestDataTime,
                     Guid.NewGuid(), // ID of each available piece of data must be unique
                     ReceiptStatus.Rejected,
-                    input.Command.ChargeOperation.Id,
+                    chargeOperationDto.Id,
                     input.Command.Document.Type,
-                    GetReasons(input)),
-            };
+                    operationOrder++,
+                    GetReasons(input, chargeOperationDto)))
+                .ToList();
         }
 
-        private List<AvailableReceiptValidationError> GetReasons(ChargeCommandRejectedEvent input)
+        private List<AvailableReceiptValidationError> GetReasons(
+            ChargeCommandRejectedEvent input,
+            ChargeOperationDto chargeOperationDto)
         {
             return input
                 .ValidationErrors
-                .Select(
-                    validationError => _availableChargeReceiptValidationErrorFactory
-                        .Create(validationError, input.Command))
+                .Select(validationError => _availableChargeReceiptValidationErrorFactory
+                    .Create(validationError, input.Command, chargeOperationDto))
                 .ToList();
         }
     }

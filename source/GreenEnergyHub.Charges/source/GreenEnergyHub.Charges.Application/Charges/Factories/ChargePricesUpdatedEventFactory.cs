@@ -12,23 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Factories
 {
     public class ChargePricesUpdatedEventFactory : IChargePricesUpdatedEventFactory
     {
-        public ChargePricesUpdatedEvent Create([NotNull] ChargeCommandAcceptedEvent chargeCommandAcceptedEvent)
+        public ChargePricesUpdatedEvent Create(ChargeOperationDto chargeOperationDto)
         {
             return new ChargePricesUpdatedEvent(
-                chargeCommandAcceptedEvent.Command.ChargeOperation.ChargeId,
-                chargeCommandAcceptedEvent.Command.ChargeOperation.Type,
-                chargeCommandAcceptedEvent.Command.ChargeOperation.ChargeOwner,
-                chargeCommandAcceptedEvent.Command.ChargeOperation.StartDateTime,
-                chargeCommandAcceptedEvent.Command.ChargeOperation.EndDateTime.GetValueOrDefault(),
-                chargeCommandAcceptedEvent.Command.ChargeOperation.Points);
+                chargeOperationDto.ChargeId,
+                chargeOperationDto.Type,
+                chargeOperationDto.ChargeOwner,
+                chargeOperationDto.StartDateTime,
+                chargeOperationDto.EndDateTime.GetValueOrDefault(),
+                chargeOperationDto.Points);
         }
     }
 }

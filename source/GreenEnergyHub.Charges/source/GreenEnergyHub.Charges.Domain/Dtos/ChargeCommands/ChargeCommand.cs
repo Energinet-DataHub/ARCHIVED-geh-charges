@@ -12,10 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
-
-#pragma warning disable 8618
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
 {
@@ -24,8 +23,14 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
     // ChargeCommand integrity is null checked by ChargeCommandNullChecker
     public class ChargeCommand : CommandBase
     {
-        public DocumentDto Document { get; set; }
+        public ChargeCommand(DocumentDto document, IReadOnlyCollection<ChargeOperationDto> chargeOperations)
+        {
+            Document = document;
+            ChargeOperations = chargeOperations;
+        }
 
-        public ChargeOperationDto ChargeOperation { get; set; }
+        public DocumentDto Document { get; }
+
+        public IReadOnlyCollection<ChargeOperationDto> ChargeOperations { get; }
     }
 }

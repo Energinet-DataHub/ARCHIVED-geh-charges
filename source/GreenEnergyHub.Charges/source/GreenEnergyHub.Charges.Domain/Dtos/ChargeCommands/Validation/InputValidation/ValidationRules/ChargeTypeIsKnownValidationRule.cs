@@ -17,20 +17,21 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
 {
-    public class ChargeTypeIsKnownValidationRule : IValidationRule
+    public class ChargeTypeIsKnownValidationRule : IValidationRuleForOperation
     {
-        private readonly ChargeCommand _chargeCommand;
+        private readonly ChargeOperationDto _chargeOperationDto;
 
-        public ChargeTypeIsKnownValidationRule(ChargeCommand chargeCommand)
+        public ChargeTypeIsKnownValidationRule(ChargeOperationDto chargeOperationDto)
         {
-            _chargeCommand = chargeCommand;
+            _chargeOperationDto = chargeOperationDto;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.ChargeTypeIsKnownValidation;
 
-        public bool IsValid => _chargeCommand.ChargeOperation.Type == ChargeType.Fee ||
-                               _chargeCommand.ChargeOperation.Type == ChargeType.Subscription ||
-                               _chargeCommand.ChargeOperation.Type == ChargeType.Tariff;
+        public bool IsValid => _chargeOperationDto.Type
+            is ChargeType.Fee or ChargeType.Subscription or ChargeType.Tariff;
+
+        public string OperationId => _chargeOperationDto.Id;
     }
 }

@@ -24,11 +24,14 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
    public class ChargeCommandBuilder
     {
         private readonly List<Point> _points;
+        private readonly List<ChargeOperationDto> _chargeOperationDtos;
+        private DocumentDto _documentDto;
         private string _chargeId;
         private Instant _startDateTime;
         private Instant? _endDateTime;
         private VatClassification _vatClassification;
         private bool _taxIndicator;
+        private bool _transparentInvoicing;
         private string _owner;
         private string _description;
         private string _chargeName;
@@ -36,6 +39,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         private BusinessReasonCode _documentBusinessReasonCode;
         private DocumentType _documentType;
         private MarketParticipantDto _sender;
+        private MarketParticipantDto _receiver;
         private ChargeType _chargeType;
         private Resolution _resolution;
         private string _operationId;
@@ -50,16 +54,20 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
                 .Plus(Duration.FromDays(1000));
             _vatClassification = VatClassification.Vat25;
             _taxIndicator = false;
+            _transparentInvoicing = false;
             _owner = "owner";
             _description = "some description";
             _chargeName = "some charge name";
             _documentId = "some document id";
             _documentBusinessReasonCode = BusinessReasonCode.UpdateChargeInformation;
             _documentType = DocumentType.RequestUpdateChargeInformation;
-            _sender = new MarketParticipantDto { Id = "0", BusinessProcessRole = MarketParticipantRole.EnergySupplier };
+            _sender = new MarketParticipantDto { Id = "0", BusinessProcessRole = MarketParticipantRole.GridAccessProvider };
+            _receiver = new MarketParticipantDto { Id = "5790001330552", BusinessProcessRole = MarketParticipantRole.MeteringPointAdministrator };
             _chargeType = ChargeType.Fee;
             _points = new List<Point>();
             _resolution = Resolution.PT1H;
+            _chargeOperationDtos = new List<ChargeOperationDto>();
+            _documentDto = BuildDocumentDto();
         }
 
         public ChargeCommandBuilder WithEndDateTimeAsNull()
@@ -77,6 +85,12 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         public ChargeCommandBuilder WithDocumentId(string documentId)
         {
             _documentId = documentId;
+            return this;
+        }
+
+        public ChargeCommandBuilder WithDocumentDto(DocumentDto documentDto)
+        {
+            _documentDto = documentDto;
             return this;
         }
 
@@ -135,8 +149,9 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             return this;
         }
 
-        public ChargeCommandBuilder WithStatus(int status)
+        public ChargeCommandBuilder WithTransparentInvoicing(bool transparentInvoicing)
         {
+            _transparentInvoicing = transparentInvoicing;
             return this;
         }
 
@@ -187,39 +202,63 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             return this;
         }
 
+        public ChargeCommandBuilder WithChargeOperation(ChargeOperationDto chargeOperationDto)
+        {
+            _chargeOperationDtos.Add(chargeOperationDto);
+            return this;
+        }
+
+        public ChargeCommandBuilder WithNumberOfChargeOperations(int numberOfOperations)
+        {
+            for (var i = 1; i <= numberOfOperations; i++)
+            {
+                _chargeOperationDtos.Add(BuildChargeOperationDto());
+            }
+
+            return this;
+        }
+
         public ChargeCommand Build()
         {
-            return new()
+            var documentDto = _documentDto == null! ? _documentDto : BuildDocumentDto();
+            if (_chargeOperationDtos.Count == 0)
             {
-                Document = new DocumentDto
-                {
-                    Id = _documentId,
-                    Type = _documentType,
-                    RequestDate = SystemClock.Instance.GetCurrentInstant(),
-                    IndustryClassification = IndustryClassification.Electricity,
-                    CreatedDateTime = SystemClock.Instance.GetCurrentInstant(),
-                    Recipient = new MarketParticipantDto
-                    {
-                        Id = "0",
-                        BusinessProcessRole = MarketParticipantRole.EnergySupplier,
-                    },
-                    Sender = _sender,
-                    BusinessReasonCode = _documentBusinessReasonCode,
-                },
-                ChargeOperation = new ChargeOperationDto(
-                    _operationId,
-                    _chargeType,
-                    _chargeId,
-                    _chargeName,
-                    _description,
-                    _owner,
-                    _resolution,
-                    _taxIndicator,
-                    true,
-                    _vatClassification,
-                    _startDateTime,
-                    _endDateTime,
-                    _points),
+                _chargeOperationDtos.Add(BuildChargeOperationDto());
+            }
+
+            return new ChargeCommand(documentDto!, _chargeOperationDtos);
+        }
+
+        private ChargeOperationDto BuildChargeOperationDto()
+        {
+            return new ChargeOperationDto(
+                _operationId,
+                _chargeType,
+                _chargeId,
+                _chargeName,
+                _description,
+                _owner,
+                _resolution,
+                _taxIndicator,
+                _transparentInvoicing,
+                _vatClassification,
+                _startDateTime,
+                _endDateTime,
+                _points);
+        }
+
+        private DocumentDto BuildDocumentDto()
+        {
+            return new DocumentDto
+            {
+                Id = _documentId,
+                Type = _documentType,
+                RequestDate = SystemClock.Instance.GetCurrentInstant(),
+                IndustryClassification = IndustryClassification.Electricity,
+                CreatedDateTime = SystemClock.Instance.GetCurrentInstant(),
+                Recipient = _receiver,
+                Sender = _sender,
+                BusinessReasonCode = _documentBusinessReasonCode,
             };
         }
     }

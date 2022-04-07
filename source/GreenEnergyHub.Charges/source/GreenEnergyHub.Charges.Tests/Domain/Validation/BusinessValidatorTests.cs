@@ -28,7 +28,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Validation
     {
         [Theory]
         [InlineAutoMoqData]
-        public async Task ValidateAsync_WhenCalled_UsesFactoryToFetchRulesAndUseRulesToGetResult(
+        public async Task ValidateAsync_WhenCalled_WithCommand_UsesFactoryToFetchRulesAndUseRulesToGetResult(
             [Frozen] Mock<IBusinessValidationRulesFactory<ChargeCommand>> factory,
             Mock<IValidationRuleSet> rules,
             ChargeCommand command,
@@ -47,6 +47,33 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Validation
 
             // Act
             var result = await sut.ValidateAsync(command).ConfigureAwait(false);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(validationResult, result);
+        }
+
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task ValidateAsync_WhenCalled_WithOperation_UsesFactoryToFetchRulesAndUseRulesToGetResult(
+            [Frozen] Mock<IBusinessValidationRulesFactory<ChargeCommand>> factory,
+            Mock<IValidationRuleSet> rules,
+            ChargeCommand chargeCommand,
+            ValidationResult validationResult,
+            BusinessValidator<ChargeCommand> sut)
+        {
+            // Arrange
+            factory.Setup(
+                    f => f.CreateRulesAsync(chargeCommand))
+                .Returns(
+                    Task.FromResult(rules.Object));
+
+            rules.Setup(
+                    r => r.Validate())
+                .Returns(validationResult);
+
+            // Act
+            var result = await sut.ValidateAsync(chargeCommand).ConfigureAwait(false);
 
             // Assert
             Assert.NotNull(result);

@@ -13,11 +13,9 @@
 // limitations under the License.
 
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
@@ -37,30 +35,22 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void ChargeNameLengthValidationRule_WhenCalledWithChargeNameLength_EqualsExpectedResult(
             int chargeNameLength,
             bool expected,
-            ChargeCommandBuilder builder)
+            ChargeOperationDtoBuilder builder)
         {
-            var command = builder.WithChargeName(GenerateStringWithLength(chargeNameLength)).Build();
-            var sut = new ChargeNameHasMaximumLengthRule(command);
+            var chargeOperationDto = builder.WithChargeName(new string('x', chargeNameLength)).Build();
+            var sut = new ChargeNameHasMaximumLengthRule(chargeOperationDto);
             sut.IsValid.Should().Be(expected);
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder builder)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeOperationDtoBuilder builder)
         {
-            var invalidCommand = CreateInvalidCommand(builder);
-            var sut = new ChargeNameHasMaximumLengthRule(invalidCommand);
+            var chargeOperationDto = builder
+                .WithChargeName(new string('x', ChargeNameMaximumLength + 1))
+                .Build();
+            var sut = new ChargeNameHasMaximumLengthRule(chargeOperationDto);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChargeNameHasMaximumLength);
-        }
-
-        private static string GenerateStringWithLength(int stringLength)
-        {
-            return new string('a', stringLength);
-        }
-
-        private static ChargeCommand CreateInvalidCommand(ChargeCommandBuilder builder)
-        {
-            return builder.WithChargeName(new string('x', ChargeNameMaximumLength + 1)).Build();
         }
     }
 }

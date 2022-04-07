@@ -85,6 +85,9 @@ limitations under the License.
     <Content Include="TestFiles\Charges\InvalidTariffDocument.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="TestFiles\Charges\TariffBundleWithCreateAndUpdate.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestFiles\Charges\Samples\FeeMonthlyPriceSample.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

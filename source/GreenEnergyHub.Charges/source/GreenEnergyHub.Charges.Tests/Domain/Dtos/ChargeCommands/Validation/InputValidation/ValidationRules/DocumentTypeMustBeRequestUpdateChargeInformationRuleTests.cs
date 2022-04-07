@@ -18,7 +18,6 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidati
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
@@ -32,13 +31,14 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         [Theory]
         [InlineAutoMoqData(DocumentType.Unknown, false)]
         [InlineAutoMoqData(DocumentType.RequestUpdateChargeInformation, true)]
+        [InlineAutoMoqData(-1, false)]
         public void DocumentTypeMustBeRequestUpdateChargeInformation_Test(
             DocumentType documentType,
             bool expected,
             ChargeCommandBuilder chargeCommandBuilder)
         {
-            var command = CreateCommand(chargeCommandBuilder, documentType);
-            var sut = new DocumentTypeMustBeRequestUpdateChargeInformationRule(command);
+            var chargeCommand = CreateCommand(chargeCommandBuilder, documentType);
+            var sut = new DocumentTypeMustBeRequestUpdateChargeInformationRule(chargeCommand.Document);
             sut.IsValid.Should().Be(expected);
         }
 
@@ -46,8 +46,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         [InlineAutoDomainData]
         public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder chargeCommandBuilder)
         {
-            var command = CreateCommand(chargeCommandBuilder, DocumentType.Unknown);
-            var sut = new DocumentTypeMustBeRequestUpdateChargeInformationRule(command);
+            var chargeCommand = CreateCommand(chargeCommandBuilder, DocumentType.Unknown);
+            var sut = new DocumentTypeMustBeRequestUpdateChargeInformationRule(chargeCommand.Document);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.DocumentTypeMustBeRequestUpdateChargeInformation);
         }
 

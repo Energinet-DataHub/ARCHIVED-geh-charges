@@ -17,7 +17,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 {
-    public interface IValidator<TCommand>
+    public interface IValidator<in TCommand>
         where TCommand : CommandBase
     {
         ValidationResult InputValidate(TCommand command);
