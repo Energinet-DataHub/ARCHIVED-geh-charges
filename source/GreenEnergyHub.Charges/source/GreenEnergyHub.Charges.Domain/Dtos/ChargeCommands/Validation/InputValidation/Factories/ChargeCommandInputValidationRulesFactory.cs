@@ -27,13 +27,13 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
         {
             if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
 
-            var rules = GetRulesForCommand(chargeCommand.Document);
+            var rules = GetRulesForDocument(chargeCommand.Document);
             rules.AddRange(chargeCommand.ChargeOperations.SelectMany(GetRulesForOperation));
 
             return ValidationRuleSet.FromRules(rules);
         }
 
-        private static List<IValidationRule> GetRulesForCommand(DocumentDto documentDto)
+        private static List<IValidationRule> GetRulesForDocument(DocumentDto documentDto)
         {
             var rules = new List<IValidationRule>
             {
