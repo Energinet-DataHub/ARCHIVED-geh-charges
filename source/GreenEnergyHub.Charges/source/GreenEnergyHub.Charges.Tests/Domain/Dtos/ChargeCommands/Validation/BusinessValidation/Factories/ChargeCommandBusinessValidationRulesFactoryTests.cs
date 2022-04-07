@@ -85,11 +85,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
             ChargeCommandBusinessValidationRulesFactory sut,
-            ChargeCommandBuilder builder,
             Charge charge)
         {
             // Arrange
-            var chargeCommand = builder.WithChargeType(ChargeType.Fee).Build();
+            var chargeOperationDto = new ChargeOperationDtoBuilder().WithChargeType(ChargeType.Fee).Build();
+            var chargeCommand = new ChargeCommandBuilder().WithChargeOperation(chargeOperationDto).Build();
             SetupConfigureRepositoryMock(rulesConfigurationRepository);
             SetupChargeRepositoryMock(chargeRepository, charge);
             SetupMarketParticipantMock(sender, marketParticipantRepository);
@@ -115,11 +115,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
             ChargeCommandBusinessValidationRulesFactory sut,
-            ChargeCommandBuilder builder,
             Charge charge)
         {
             // Arrange
-            var chargeCommand = builder.WithChargeType(ChargeType.Tariff).Build();
+            var chargeOperationDto = new ChargeOperationDtoBuilder().WithChargeType(ChargeType.Tariff).Build();
+            var chargeCommand = new ChargeCommandBuilder().WithChargeOperation(chargeOperationDto).Build();
             SetupConfigureRepositoryMock(rulesConfigurationRepository);
             SetupChargeRepositoryMock(chargeRepository, charge);
             SetupMarketParticipantMock(sender, marketParticipantRepository);

@@ -15,15 +15,13 @@
 using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Tests.Builders.Command
 {
    public class ChargeOperationDtoBuilder
     {
-        private readonly List<Point> _points;
+        private List<Point> _points;
         private string _chargeId;
         private Instant _startDateTime;
         private Instant? _endDateTime;
@@ -32,7 +30,6 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         private string _owner;
         private string _description;
         private string _chargeName;
-        private MarketParticipantDto _sender;
         private ChargeType _chargeType;
         private Resolution _resolution;
         private string _operationId;
@@ -50,7 +47,6 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             _owner = "owner";
             _description = "some description";
             _chargeName = "some charge name";
-            _sender = new MarketParticipantDto { Id = "2", BusinessProcessRole = MarketParticipantRole.GridAccessProvider };
             _chargeType = ChargeType.Fee;
             _points = new List<Point>();
             _resolution = Resolution.PT1H;
@@ -107,6 +103,18 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         public ChargeOperationDtoBuilder WithStartDateTime(Instant startDateTime)
         {
             _startDateTime = startDateTime;
+            return this;
+        }
+
+        public ChargeOperationDtoBuilder WithEndDateTime(Instant endDateTime)
+        {
+            _endDateTime = endDateTime;
+            return this;
+        }
+
+        public ChargeOperationDtoBuilder WithPoints(List<Point> points)
+        {
+            _points = points;
             return this;
         }
 

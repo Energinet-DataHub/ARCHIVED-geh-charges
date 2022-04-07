@@ -49,7 +49,11 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
             AvailableChargeDataFactory sut)
         {
             // Arrange
-            var chargeCommand = chargeCommandBuilder.WithPoint(1, 1).WithTaxIndicator(true).Build();
+            var chargeOperationDto = new ChargeOperationDtoBuilder()
+                .WithPoint(1, 1)
+                .WithTaxIndicator(true)
+                .Build();
+            var chargeCommand = chargeCommandBuilder.WithChargeOperation(chargeOperationDto).Build();
             var acceptedEvent = chargeCommandAcceptedEventBuilder.WithChargeCommand(chargeCommand).Build();
 
             marketParticipantRepository
@@ -100,7 +104,11 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
             AvailableChargeDataFactory sut)
         {
             // Arrange
-            var chargeCommand = chargeCommandBuilder.WithTaxIndicator(false).Build();
+            var chargeOperationDto = new ChargeOperationDtoBuilder()
+                .WithPoint(1, 1)
+                .WithTaxIndicator(true)
+                .Build();
+            var chargeCommand = chargeCommandBuilder.WithChargeOperation(chargeOperationDto).Build();
             var acceptedEvent = chargeCommandAcceptedEventBuilder.WithChargeCommand(chargeCommand).Build();
 
             // Act
@@ -127,10 +135,14 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
             marketParticipantRepository
                 .Setup(r => r.GetMeteringPointAdministratorAsync())
                 .ReturnsAsync(meteringPointAdministrator);
-            const int noOfOperations = 3;
             var chargeCommand = chargeCommandBuilder
-                .WithTaxIndicator(true)
-                .WithNumberOfChargeOperations(noOfOperations)
+                .WithChargeOperations(
+                    new List<ChargeOperationDto>
+                    {
+                        new ChargeOperationDtoBuilder().WithTaxIndicator(true).Build(),
+                        new ChargeOperationDtoBuilder().WithTaxIndicator(true).Build(),
+                        new ChargeOperationDtoBuilder().WithTaxIndicator(true).Build(),
+                    })
                 .Build();
             var acceptedEvent = chargeCommandAcceptedEventBuilder.WithChargeCommand(chargeCommand).Build();
 
@@ -138,7 +150,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
             var actual = await sut.CreateAsync(acceptedEvent);
 
             // Assert
-            actual.Count.Should().Be(gridAccessProvider.Count * noOfOperations);
+            actual.Count.Should().Be(gridAccessProvider.Count * 3);
             foreach (var gap in gridAccessProvider)
             {
                 var availableChargesForProvider = actual
