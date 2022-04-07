@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Messaging;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksRejectionEvents;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
@@ -47,7 +48,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
         {
             var sender = await GetSenderAsync().ConfigureAwait(false);
 
-            return input.ChargeLinksCommand.ChargeLinks.Select(chargeLinkDto =>
+            return input.ChargeLinksCommand.ChargeLinksOperations.Select(chargeLinkDto =>
             {
                 // The original sender is the recipient of the receipt
                 var recipient = input.ChargeLinksCommand.Document.Sender;
@@ -64,17 +65,19 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
                     chargeLinkDto.OperationId,
                     input.ChargeLinksCommand.MeteringPointId,
                     input.ChargeLinksCommand.Document.Type,
-                    GetReasons(input));
+                    input.ChargeLinksCommand.ChargeLinksOperations.ToList().IndexOf(chargeLinkDto),
+                    GetReasons(input, chargeLinkDto));
             }).ToList();
         }
 
-        private List<AvailableReceiptValidationError> GetReasons(ChargeLinksRejectedEvent input)
+        private List<AvailableReceiptValidationError> GetReasons(
+            ChargeLinksRejectedEvent input,
+            ChargeLinkDto chargeLinkDto)
         {
             return input
                 .ValidationErrors
-                .Select(
-                    validationError => _availableChargeLinksReceiptValidationErrorFactory
-                        .Create(validationError, input.ChargeLinksCommand))
+                .Select(validationError => _availableChargeLinksReceiptValidationErrorFactory
+                    .Create(validationError, input.ChargeLinksCommand, chargeLinkDto))
                 .ToList();
         }
     }

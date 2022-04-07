@@ -151,6 +151,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
                 "OriginalOperationId" + no,
                 "MeteringPoint" + no,
                 DocumentType.ChargeLinkReceipt,
+                0,
                 GetReasonCodes(no));
         }
 

@@ -17,19 +17,22 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules
 {
-    public class ChangingTariffTaxValueNotAllowedRule : IValidationRule
+    public class ChangingTariffTaxValueNotAllowedRule : IValidationRuleForOperation
     {
-        private readonly ChargeCommand _command;
+        private readonly ChargeOperationDto _chargeOperationDto;
         private readonly Charge _charge;
 
-        public ChangingTariffTaxValueNotAllowedRule(ChargeCommand command, Charge charge)
+        public ChangingTariffTaxValueNotAllowedRule(ChargeOperationDto chargeOperationDto, Charge charge)
         {
-            _command = command;
+            _chargeOperationDto = chargeOperationDto;
             _charge = charge;
         }
 
-        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChangingTariffTaxValueNotAllowed;
+        public ValidationRuleIdentifier ValidationRuleIdentifier =>
+            ValidationRuleIdentifier.ChangingTariffTaxValueNotAllowed;
 
-        public bool IsValid => _command.ChargeOperation.TaxIndicator == _charge.TaxIndicator;
+        public bool IsValid => _chargeOperationDto.TaxIndicator == _charge.TaxIndicator;
+
+        public string OperationId => _chargeOperationDto.Id;
     }
 }

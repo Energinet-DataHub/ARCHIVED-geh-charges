@@ -14,7 +14,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.Factories
@@ -25,34 +27,44 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
         {
             if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
 
-            var rules = GetRules(chargeCommand);
+            var rules = GetRulesForDocument(chargeCommand.Document);
+            rules.AddRange(chargeCommand.ChargeOperations.SelectMany(GetRulesForOperation));
 
             return ValidationRuleSet.FromRules(rules);
         }
 
-        private static List<IValidationRule> GetRules(ChargeCommand chargeCommand)
+        private static List<IValidationRule> GetRulesForDocument(DocumentDto documentDto)
         {
             var rules = new List<IValidationRule>
             {
-                new BusinessReasonCodeMustBeUpdateChargeInformationRule(chargeCommand),
-                new ChargeDescriptionHasMaximumLengthRule(chargeCommand),
-                new ChargeIdLengthValidationRule(chargeCommand),
-                new ChargeIdRequiredValidationRule(chargeCommand),
-                new ChargeNameHasMaximumLengthRule(chargeCommand),
-                new ChargeOperationIdRequiredRule(chargeCommand),
-                new ChargeOwnerIsRequiredValidationRule(chargeCommand),
-                new ChargePriceMaximumDigitsAndDecimalsRule(chargeCommand),
-                new ChargeTypeIsKnownValidationRule(chargeCommand),
-                new ChargeTypeTariffPriceCountRule(chargeCommand),
-                new DocumentTypeMustBeRequestUpdateChargeInformationRule(chargeCommand),
-                new MaximumPriceRule(chargeCommand),
-                new RecipientIsMandatoryTypeValidationRule(chargeCommand),
-                new ResolutionFeeValidationRule(chargeCommand),
-                new ResolutionSubscriptionValidationRule(chargeCommand),
-                new ResolutionTariffValidationRule(chargeCommand),
-                new SenderIsMandatoryTypeValidationRule(chargeCommand),
-                new StartDateTimeRequiredValidationRule(chargeCommand),
-                new VatClassificationValidationRule(chargeCommand),
+                new BusinessReasonCodeMustBeUpdateChargeInformationRule(documentDto),
+                new DocumentTypeMustBeRequestUpdateChargeInformationRule(documentDto),
+                new RecipientIsMandatoryTypeValidationRule(documentDto),
+                new SenderIsMandatoryTypeValidationRule(documentDto),
+            };
+
+            return rules;
+        }
+
+        private static List<IValidationRule> GetRulesForOperation(ChargeOperationDto chargeOperationDto)
+        {
+            var rules = new List<IValidationRule>
+            {
+                new ChargeDescriptionHasMaximumLengthRule(chargeOperationDto),
+                new ChargeIdLengthValidationRule(chargeOperationDto),
+                new ChargeIdRequiredValidationRule(chargeOperationDto),
+                new ChargeNameHasMaximumLengthRule(chargeOperationDto),
+                new ChargeOperationIdRequiredRule(chargeOperationDto),
+                new ChargeOwnerIsRequiredValidationRule(chargeOperationDto),
+                new ChargePriceMaximumDigitsAndDecimalsRule(chargeOperationDto),
+                new ChargeTypeIsKnownValidationRule(chargeOperationDto),
+                new ChargeTypeTariffPriceCountRule(chargeOperationDto),
+                new MaximumPriceRule(chargeOperationDto),
+                new ResolutionFeeValidationRule(chargeOperationDto),
+                new ResolutionSubscriptionValidationRule(chargeOperationDto),
+                new ResolutionTariffValidationRule(chargeOperationDto),
+                new StartDateTimeRequiredValidationRule(chargeOperationDto),
+                new VatClassificationValidationRule(chargeOperationDto),
             };
 
             return rules;

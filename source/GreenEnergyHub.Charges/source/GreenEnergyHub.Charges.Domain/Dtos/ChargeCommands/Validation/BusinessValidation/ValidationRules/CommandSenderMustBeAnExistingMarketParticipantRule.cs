@@ -21,8 +21,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
     {
         private readonly MarketParticipant? _sender;
 
-        public CommandSenderMustBeAnExistingMarketParticipantRule(
-            MarketParticipant? sender)
+        public CommandSenderMustBeAnExistingMarketParticipantRule(MarketParticipant? sender)
         {
             _sender = sender;
         }

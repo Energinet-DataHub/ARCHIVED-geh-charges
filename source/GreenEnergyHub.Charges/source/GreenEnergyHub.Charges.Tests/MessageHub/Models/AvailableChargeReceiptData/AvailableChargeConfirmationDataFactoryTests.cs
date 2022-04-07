@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
@@ -19,7 +20,6 @@ using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Testables;
@@ -41,7 +41,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             ChargeCommandAcceptedEvent acceptedEvent,
             Instant now,
-            AvailableChargeConfirmationDataFactory sut)
+            AvailableChargeReceiptDataFactory sut)
         {
             // Arrange
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
@@ -53,7 +53,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             var actualList = await sut.CreateAsync(acceptedEvent);
 
             // Assert
-            actualList.Should().ContainSingle();
+            actualList.Should().HaveCount(3);
             actualList[0].RecipientId.Should().Be(acceptedEvent.Command.Document.Sender.Id);
             actualList[0].RecipientRole.Should()
                     .Be(acceptedEvent.Command.Document.Sender.BusinessProcessRole);
@@ -61,8 +61,10 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
                     .Be(acceptedEvent.Command.Document.BusinessReasonCode);
             actualList[0].RequestDateTime.Should().Be(now);
             actualList[0].ReceiptStatus.Should().Be(ReceiptStatus.Confirmed);
-            actualList[0].OriginalOperationId.Should().Be(acceptedEvent.Command.ChargeOperation.Id);
+            actualList[0].OriginalOperationId.Should().Be(acceptedEvent.Command.ChargeOperations.First().Id);
             actualList[0].ValidationErrors.Should().BeEmpty();
+            var expectedList = actualList.OrderBy(x => x.OperationOrder);
+            actualList.SequenceEqual(expectedList).Should().BeTrue();
         }
     }
 }

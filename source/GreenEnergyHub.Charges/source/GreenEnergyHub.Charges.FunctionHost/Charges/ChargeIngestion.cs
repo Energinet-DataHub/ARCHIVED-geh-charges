@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.Messaging.Transport.SchemaValidation;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
@@ -59,13 +60,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
 
             var message = GetChargesMessage(inboundMessage.ValidatedMessage);
 
-            foreach (var chargeCommand in message.ChargeCommands)
-            {
-                ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(chargeCommand);
-            }
+            ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(message.ChargeCommands);
 
-            await _chargesMessageHandler.HandleAsync(message)
-                .ConfigureAwait(false);
+            await _chargesMessageHandler.HandleAsync(message).ConfigureAwait(false);
 
             return _httpResponseBuilder.CreateAcceptedResponse(req);
         }

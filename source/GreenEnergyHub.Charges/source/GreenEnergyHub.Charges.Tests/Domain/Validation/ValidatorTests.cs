@@ -76,19 +76,22 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Validation
             Assert.False(actual.IsFailed);
         }
 
-        private static void ConfigureValidatorToReturnValidResult(Mock<IInputValidator<ChargeCommand>> inputValidator, ChargeCommand anyCommand)
+        private static void ConfigureValidatorToReturnValidResult(
+            Mock<IInputValidator<ChargeCommand>> inputValidator, ChargeCommand anyCommand)
         {
             var validResult = ValidationResult.CreateSuccess();
             inputValidator.Setup(v => v.Validate(anyCommand)).Returns(validResult);
         }
 
-        private static void ConfigureValidatorToReturnInvalidResult(Mock<IInputValidator<ChargeCommand>> inputValidator, ChargeCommand anyCommand)
+        private static void ConfigureValidatorToReturnInvalidResult(
+            Mock<IInputValidator<ChargeCommand>> inputValidator, ChargeCommand anyCommand)
         {
             var invalidResult = CreateInvalidValidationResult();
             inputValidator.Setup(v => v.Validate(anyCommand)).Returns(invalidResult);
         }
 
-        private static void ConfigureValidatorToReturnValidResult(Mock<IBusinessValidator<ChargeCommand>> businessValidator, ChargeCommand anyCommand)
+        private static void ConfigureValidatorToReturnValidResult(
+            Mock<IBusinessValidator<ChargeCommand>> businessValidator, ChargeCommand anyCommand)
         {
             var validResult = ValidationResult.CreateSuccess();
             businessValidator
@@ -96,7 +99,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Validation
                 .Returns(Task.FromResult(validResult));
         }
 
-        private static void ConfigureValidatorToReturnInvalidResult(Mock<IBusinessValidator<ChargeCommand>> businessValidator, ChargeCommand anyCommand)
+        private static void ConfigureValidatorToReturnInvalidResult(
+            Mock<IBusinessValidator<ChargeCommand>> businessValidator, ChargeCommand anyCommand)
         {
             var invalidResult = CreateInvalidValidationResult();
             businessValidator

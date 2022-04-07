@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -28,7 +29,6 @@ using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.MessageHub.Models.Shared;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.Charges.Tests.Builders.Testables;
 using Moq;
@@ -105,8 +105,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
 
         [Theory]
         [InlineAutoMoqData(typeof(StartDateValidationRule))]
-        [InlineAutoMoqData(typeof(CommandSenderMustBeAnExistingMarketParticipantRule))]
         [InlineAutoMoqData(typeof(ChangingTariffTaxValueNotAllowedRule))]
+        [InlineAutoMoqData(typeof(CommandSenderMustBeAnExistingMarketParticipantRule))]
         [InlineAutoMoqData(typeof(UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateRule))]
         public async Task CreateRulesForChargeCommandAsync_WhenCalledWithExistingTariff_ReturnsExpectedRules(
             Type expectedRule,
@@ -135,22 +135,22 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
 
         [Theory]
         [InlineAutoMoqData]
-        public static async Task CreateRulesForChargeCommandAsync_WhenCalledWithNull_ThrowsArgumentNullException(
+        public static async Task CreateRulesAsync_WhenCalledWithNull_ThrowsArgumentNullException(
             ChargeCommandBusinessValidationRulesFactory sut)
         {
             // Arrange
-            ChargeCommand? command = null;
+            ChargeCommand? chargeCommand = null;
 
             // Act / Assert
             await Assert
-                .ThrowsAsync<ArgumentNullException>(() => sut.CreateRulesAsync(command!))
+                .ThrowsAsync<ArgumentNullException>(() => sut.CreateRulesAsync(chargeCommand!))
                 .ConfigureAwait(false);
         }
 
         [Theory]
         [InlineAutoMoqData(CimValidationErrorTextToken.ChargePointPosition)]
         [InlineAutoMoqData(CimValidationErrorTextToken.ChargePointPrice)]
-        public async Task CreateRulesAsync_AllRulesThatNeedTriggeredByForErrorMessage_MustImplementIValidationRuleWithExtendedData(
+        public async Task CreateRulesAsync_WithChargeCommandAllRulesThatNeedTriggeredByForErrorMessage_MustImplementIValidationRuleWithExtendedData(
             CimValidationErrorTextToken cimValidationErrorTextToken,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IChargeRepository> chargeRepository,
@@ -166,9 +166,22 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             SetupMarketParticipantMock(sender, marketParticipantRepository);
 
             // Act
-            var validationRules = (await sut.CreateRulesAsync(chargeCommand)).GetRules();
+            var validationRules = new List<IValidationRule>();
+            foreach (var operation in chargeCommand.ChargeOperations)
+            {
+                var commandWithOperation = new ChargeCommand(chargeCommand.Document, new List<ChargeOperationDto>() { operation });
+                validationRules.AddRange((await sut.CreateRulesAsync(commandWithOperation)).GetRules().ToList());
+            }
 
             // Assert
+            AssertAllRulesThatNeedTriggeredByForErrorMessageImplementsIValidationRuleWithExtendedData(
+                cimValidationErrorTextToken, validationRules);
+        }
+
+        private static void AssertAllRulesThatNeedTriggeredByForErrorMessageImplementsIValidationRuleWithExtendedData(
+            CimValidationErrorTextToken cimValidationErrorTextToken,
+            IReadOnlyCollection<IValidationRule> validationRules)
+        {
             var type = typeof(CimValidationErrorTextTemplateMessages);
             foreach (var fieldInfo in type.GetFields(BindingFlags.Static | BindingFlags.Public))
             {
@@ -180,7 +193,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
                 var validationRuleIdentifier = errorMessageForAttribute.ValidationRuleIdentifier;
                 var errorText = fieldInfo.GetValue(null)!.ToString();
                 var validationErrorTextTokens = CimValidationErrorTextTokenMatcher.GetTokens(errorText!);
-                var validationRule = validationRules.SingleOrDefault(x => x.ValidationRuleIdentifier == validationRuleIdentifier);
+                var validationRule = validationRules
+                    .FirstOrDefault(x => x.ValidationRuleIdentifier == validationRuleIdentifier);
 
                 if (validationErrorTextTokens.Contains(cimValidationErrorTextToken) && validationRule != null)
                     Assert.True(validationRule is IValidationRuleWithExtendedData);

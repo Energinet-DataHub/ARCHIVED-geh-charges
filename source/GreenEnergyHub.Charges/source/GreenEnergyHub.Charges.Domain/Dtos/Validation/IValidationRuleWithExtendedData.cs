@@ -17,7 +17,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
     /// <summary>
     /// Interface for validationrules with extended data for rejection messages
     /// </summary>
-    public interface IValidationRuleWithExtendedData : IValidationRule
+    public interface IValidationRuleWithExtendedData : IValidationRuleForOperation
     {
         /// <summary>
         /// Violation of some validation rules are triggered by an element in a list.

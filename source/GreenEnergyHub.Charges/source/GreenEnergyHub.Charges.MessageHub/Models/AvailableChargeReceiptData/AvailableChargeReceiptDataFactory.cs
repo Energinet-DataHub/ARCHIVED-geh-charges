@@ -14,21 +14,24 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 {
-    public class AvailableChargeConfirmationDataFactory
+    public class AvailableChargeReceiptDataFactory
         : AvailableDataFactoryBase<AvailableChargeReceiptData, ChargeCommandAcceptedEvent>
     {
         private readonly IMessageMetaDataContext _messageMetaDataContext;
 
-        public AvailableChargeConfirmationDataFactory(
+        public AvailableChargeReceiptDataFactory(
             IMessageMetaDataContext messageMetaDataContext,
             IMarketParticipantRepository marketParticipantRepository)
             : base(marketParticipantRepository)
@@ -41,6 +44,25 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             var recipient = input.Command.Document.Sender; // The original sender is the recipient of the receipt
             var sender = await GetSenderAsync().ConfigureAwait(false);
 
+            var availableChargeReceiptData = new List<AvailableChargeReceiptData>();
+
+            var operationOrder = 0;
+            foreach (var chargeOperationDto in input.Command.ChargeOperations)
+            {
+                availableChargeReceiptData.AddRange(CreateAvailableChargeReceiptData(
+                    input.Command.Document, chargeOperationDto, sender, recipient, operationOrder++));
+            }
+
+            return availableChargeReceiptData;
+        }
+
+        private IReadOnlyList<AvailableChargeReceiptData> CreateAvailableChargeReceiptData(
+            DocumentDto documentDto,
+            ChargeOperationDto chargeOperationDto,
+            MarketParticipant sender,
+            MarketParticipantDto recipient,
+            int operationOrder)
+        {
             return new List<AvailableChargeReceiptData>()
             {
                 new AvailableChargeReceiptData(
@@ -48,12 +70,13 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                     sender.BusinessProcessRole,
                     recipient.Id,
                     recipient.BusinessProcessRole,
-                    input.Command.Document.BusinessReasonCode,
+                    documentDto.BusinessReasonCode,
                     _messageMetaDataContext.RequestDataTime,
                     Guid.NewGuid(), // ID of each available piece of data must be unique
                     ReceiptStatus.Confirmed,
-                    input.Command.ChargeOperation.Id,
-                    input.Command.Document.Type,
+                    chargeOperationDto.Id,
+                    documentDto.Type,
+                    operationOrder,
                     new List<AvailableReceiptValidationError>()),
             };
         }

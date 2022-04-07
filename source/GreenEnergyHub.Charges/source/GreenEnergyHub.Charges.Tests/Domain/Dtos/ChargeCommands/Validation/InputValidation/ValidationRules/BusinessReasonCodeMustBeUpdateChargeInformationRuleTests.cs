@@ -18,7 +18,6 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidati
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
@@ -38,8 +37,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             bool expected,
             ChargeCommandBuilder chargeCommandBuilder)
         {
-            var command = CreateCommand(chargeCommandBuilder, businessReasonCode);
-            var sut = new BusinessReasonCodeMustBeUpdateChargeInformationRule(command);
+            var chargeCommand = CreateCommand(chargeCommandBuilder, businessReasonCode);
+            var sut = new BusinessReasonCodeMustBeUpdateChargeInformationRule(chargeCommand.Document);
             sut.IsValid.Should().Be(expected);
         }
 
@@ -47,8 +46,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         [InlineAutoDomainData]
         public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder chargeCommandBuilder)
         {
-            var command = CreateCommand(chargeCommandBuilder, BusinessReasonCode.Unknown);
-            var sut = new BusinessReasonCodeMustBeUpdateChargeInformationRule(command);
+            var chargeCommand = CreateCommand(chargeCommandBuilder, BusinessReasonCode.Unknown);
+            var sut = new BusinessReasonCodeMustBeUpdateChargeInformationRule(chargeCommand.Document);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.BusinessReasonCodeMustBeUpdateChargeInformation);
         }
 

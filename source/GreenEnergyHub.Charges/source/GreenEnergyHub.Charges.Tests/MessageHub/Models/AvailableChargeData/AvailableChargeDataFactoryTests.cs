@@ -19,10 +19,9 @@ using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Core.DateTime;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
-using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.Charges.Tests.Builders.Testables;
 using GreenEnergyHub.TestHelpers;
@@ -67,7 +66,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
             var actual = await sut.CreateAsync(acceptedEvent);
 
             // Assert
-            var operation = acceptedEvent.Command.ChargeOperation;
+            var operation = acceptedEvent.Command.ChargeOperations.First();
             actual.Should().HaveSameCount(gridAccessProvider);
             for (var i = 0; i < actual.Count; i++)
             {
@@ -109,6 +108,48 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
 
             // Assert
             actual.Should().BeEmpty();
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task CreateAsync_WhenSeveralOperationsInChargeCommand_ReturnOrderedListOfOperations(
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
+            ChargeCommandBuilder chargeCommandBuilder,
+            ChargeCommandAcceptedEventBuilder chargeCommandAcceptedEventBuilder,
+            List<TestGridAccessProvider> gridAccessProvider,
+            TestMeteringPointAdministrator meteringPointAdministrator,
+            AvailableChargeDataFactory sut)
+        {
+            // Arrange
+            marketParticipantRepository
+                .Setup(r => r.GetGridAccessProvidersAsync())
+                .ReturnsAsync(gridAccessProvider.Cast<MarketParticipant>().ToList);
+            marketParticipantRepository
+                .Setup(r => r.GetMeteringPointAdministratorAsync())
+                .ReturnsAsync(meteringPointAdministrator);
+            const int noOfOperations = 3;
+            var chargeCommand = chargeCommandBuilder
+                .WithTaxIndicator(true)
+                .WithNumberOfChargeOperations(noOfOperations)
+                .Build();
+            var acceptedEvent = chargeCommandAcceptedEventBuilder.WithChargeCommand(chargeCommand).Build();
+
+            // Act
+            var actual = await sut.CreateAsync(acceptedEvent);
+
+            // Assert
+            actual.Count.Should().Be(gridAccessProvider.Count * noOfOperations);
+            foreach (var gap in gridAccessProvider)
+            {
+                var availableChargesForProvider = actual
+                    .Where(x => x.RecipientId == gap.MarketParticipantId).ToList();
+                var operationOrder = -1;
+                for (var i = 0; i < availableChargesForProvider.Count; i++)
+                {
+                    availableChargesForProvider[i].OperationOrder.Should().BeGreaterThan(operationOrder);
+                    operationOrder = actual[i].OperationOrder;
+                }
+            }
         }
     }
 }
