@@ -63,7 +63,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         {
             serviceCollection.AddScoped(typeof(IClock), _ => SystemClock.Instance);
             serviceCollection.AddLogging();
-            serviceCollection.AddJwtTokenSecurity();
+            serviceCollection.AddActorContext();
             serviceCollection.AddScoped<CorrelationIdMiddleware>();
             serviceCollection.AddScoped<FunctionTelemetryScopeMiddleware>();
             serviceCollection.AddScoped<MessageMetaDataMiddleware>();
