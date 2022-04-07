@@ -81,7 +81,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
             var actual = sutFactory.Create(
                 new ValidationError(validationRuleIdentifier, chargeOperationDto.Id, triggeredBy),
-                invalidCommand);
+                invalidCommand,
+                chargeOperationDto);
 
             // Assert
             sutRule.IsValid.Should().BeFalse();

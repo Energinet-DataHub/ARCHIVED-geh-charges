@@ -23,7 +23,7 @@ using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 {
-    public class ChargeCimValidationErrorTextFactory : ICimValidationErrorTextFactory<ChargeCommand>
+    public class ChargeCimValidationErrorTextFactory : ICimValidationErrorTextFactory<ChargeCommand, ChargeOperationDto>
     {
         private readonly ICimValidationErrorTextProvider _cimValidationErrorTextProvider;
         private readonly ILogger _logger;
@@ -38,24 +38,27 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 
         public string Create(
             ValidationError validationError,
-            ChargeCommand command)
+            ChargeCommand command,
+            ChargeOperationDto chargeOperationDto)
         {
-            return GetMergedErrorMessage(validationError, command);
+            return GetMergedErrorMessage(validationError, command, chargeOperationDto);
         }
 
         private string GetMergedErrorMessage(
             ValidationError validationError,
-            ChargeCommand chargeCommand)
+            ChargeCommand chargeCommand,
+            ChargeOperationDto chargeOperationDto)
         {
             var errorTextTemplate = _cimValidationErrorTextProvider
                 .GetCimValidationErrorText(validationError.ValidationRuleIdentifier);
 
-            return MergeErrorText(errorTextTemplate, chargeCommand, validationError.TriggeredBy);
+            return MergeErrorText(errorTextTemplate, chargeCommand, chargeOperationDto, validationError.TriggeredBy);
         }
 
         private string MergeErrorText(
             string errorTextTemplate,
             ChargeCommand chargeCommand,
+            ChargeOperationDto chargeOperationDto,
             string? triggeredBy)
         {
             var tokens = CimValidationErrorTextTokenMatcher.GetTokens(errorTextTemplate);
@@ -64,7 +67,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 
             foreach (var token in tokens)
             {
-                var data = GetDataForToken(token, chargeCommand, triggeredBy);
+                var data = GetDataForToken(token, chargeCommand, chargeOperationDto, triggeredBy);
                 mergedErrorText = mergedErrorText.Replace("{{" + token + "}}", data);
             }
 
@@ -74,9 +77,9 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
         private string GetDataForToken(
             CimValidationErrorTextToken token,
             ChargeCommand chargeCommand,
+            ChargeOperationDto chargeOperationDto,
             string? triggeredBy)
         {
-            var chargeOperationDto = chargeCommand.ChargeOperations.Single();
             // Please keep sorted by CimValidationErrorTextToken
             return token switch
             {

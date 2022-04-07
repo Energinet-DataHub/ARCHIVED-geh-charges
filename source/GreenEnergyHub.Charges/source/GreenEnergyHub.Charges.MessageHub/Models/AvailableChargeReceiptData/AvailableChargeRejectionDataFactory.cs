@@ -60,17 +60,18 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                     chargeOperationDto.Id,
                     input.Command.Document.Type,
                     operationOrder++,
-                    GetReasons(input)))
+                    GetReasons(input, chargeOperationDto)))
                 .ToList();
         }
 
         private List<AvailableReceiptValidationError> GetReasons(
-            ChargeCommandRejectedEvent input)
+            ChargeCommandRejectedEvent input,
+            ChargeOperationDto chargeOperationDto)
         {
             return input
                 .ValidationErrors
                 .Select(validationError => _availableChargeReceiptValidationErrorFactory
-                    .Create(validationError, input.Command))
+                    .Create(validationError, input.Command, chargeOperationDto))
                 .ToList();
         }
     }

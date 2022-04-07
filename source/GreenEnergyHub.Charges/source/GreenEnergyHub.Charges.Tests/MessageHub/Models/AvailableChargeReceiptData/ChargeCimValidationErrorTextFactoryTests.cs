@@ -52,7 +52,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             // Act
             var actual = sut.Create(
                 new ValidationError(ValidationRuleIdentifier.ResolutionTariffValidation, chargeOperationDto.Id, null),
-                chargeCommand);
+                chargeCommand,
+                chargeOperationDto);
 
             // Assert
             actual.Should().Be(expected);
@@ -81,7 +82,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
                     ValidationRuleIdentifier.MaximumPrice,
                     chargeOperationDto.Id,
                     chargeOperationDto.Points[1].Position.ToString()),
-                chargeCommand);
+                chargeCommand,
+                chargeOperationDto);
 
             // Assert
             actual.Should().Be(expected);
@@ -108,7 +110,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             // Act
             var actual = sut.Create(
                 new ValidationError(validationRuleIdentifier, chargeOperationDto.Id, triggeredBy),
-                chargeCommand);
+                chargeCommand,
+                chargeOperationDto);
 
             // Assert
             actual.ToLower().Should().Contain($"price {CimValidationErrorTextTemplateMessages.Unknown}");
@@ -141,7 +144,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             // Act
             var actual = sut.Create(
                 new ValidationError(validationRuleIdentifier, chargeOperationDto.Id, triggeredBy),
-                chargeCommand);
+                chargeCommand,
+                chargeOperationDto);
 
             // Assert
             actual.Should().Contain(expected);
@@ -169,7 +173,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
                     var triggeredBy = SetTriggeredByWithValidationError(operation, validationRuleIdentifier);
                     var actual = sut.Create(
                         new ValidationError(validationRuleIdentifier, operation.Id, triggeredBy),
-                        commandWithOperation);
+                        commandWithOperation,
+                        operation);
 
                     actual.Should().NotBeNullOrWhiteSpace();
                     actual.Should().NotContain("{");
