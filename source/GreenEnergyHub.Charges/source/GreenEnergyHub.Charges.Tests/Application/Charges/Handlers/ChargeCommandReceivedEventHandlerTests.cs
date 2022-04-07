@@ -316,10 +316,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                 .WithEndDateTime(InstantHelper.GetEndDefault())
                 .Build();
             var chargeCommand = new ChargeCommandBuilder()
-                .WithChargeOperation(validChargeOperationDto)
-                .WithChargeOperation(invalidChargeOperationDto)
-                .WithChargeOperation(failedChargeOperationDto)
-                .WithChargeOperation(failedChargeOperationDto)
+                .WithChargeOperations(
+                    new List<ChargeOperationDto>
+                    {
+                        validChargeOperationDto,
+                        invalidChargeOperationDto,
+                        failedChargeOperationDto,
+                        failedChargeOperationDto,
+                    })
                 .Build();
             var receivedEvent = new ChargeCommandReceivedEvent(
                 InstantHelper.GetTodayAtMidnightUtc(),
