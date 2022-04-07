@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
 
             // Act
             var actual = sut.Create(
-                new ValidationError(ValidationRuleIdentifier.ResolutionTariffValidation, chargeOperationDto.Id, null),
+                new ValidationError(ValidationRuleIdentifier.ResolutionTariffValidation, null),
                 chargeCommand,
                 chargeOperationDto);
 
@@ -80,7 +80,6 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             var actual = sut.Create(
                 new ValidationError(
                     ValidationRuleIdentifier.MaximumPrice,
-                    chargeOperationDto.Id,
                     chargeOperationDto.Points[1].Position.ToString()),
                 chargeCommand,
                 chargeOperationDto);
@@ -109,7 +108,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
 
             // Act
             var actual = sut.Create(
-                new ValidationError(validationRuleIdentifier, chargeOperationDto.Id, triggeredBy),
+                new ValidationError(validationRuleIdentifier, triggeredBy),
                 chargeCommand,
                 chargeOperationDto);
 
@@ -143,7 +142,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
 
             // Act
             var actual = sut.Create(
-                new ValidationError(validationRuleIdentifier, chargeOperationDto.Id, triggeredBy),
+                new ValidationError(validationRuleIdentifier, triggeredBy),
                 chargeCommand,
                 chargeOperationDto);
 
@@ -172,7 +171,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
                 {
                     var triggeredBy = SetTriggeredByWithValidationError(operation, validationRuleIdentifier);
                     var actual = sut.Create(
-                        new ValidationError(validationRuleIdentifier, operation.Id, triggeredBy),
+                        new ValidationError(validationRuleIdentifier, triggeredBy),
                         commandWithOperation,
                         operation);
 

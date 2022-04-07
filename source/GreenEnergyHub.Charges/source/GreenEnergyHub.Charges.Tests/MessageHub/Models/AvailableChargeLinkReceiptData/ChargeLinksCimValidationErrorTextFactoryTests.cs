@@ -46,7 +46,6 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
             var actual = sut.Create(
                 new ValidationError(
                     ValidationRuleIdentifier.MeteringPointDoesNotExist,
-                    chargeLinkDto.OperationId,
                     chargeLinkDto.SenderProvidedChargeId),
                 chargeLinksCommand,
                 chargeLinkDto);
@@ -73,7 +72,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
             {
                 var triggeredBy = SetTriggeredByWithValidationError(chargeLinksCommand, validationRuleIdentifier);
                 var actual = sut.Create(
-                    new ValidationError(validationRuleIdentifier, chargeLinkDto.OperationId, triggeredBy),
+                    new ValidationError(validationRuleIdentifier, triggeredBy),
                     chargeLinksCommand,
                     chargeLinkDto);
 

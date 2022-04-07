@@ -18,11 +18,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
     {
         public ValidationError(
             ValidationRuleIdentifier validationRuleIdentifier,
-            string? operationId,
             string? triggeredBy)
         {
             ValidationRuleIdentifier = validationRuleIdentifier;
-            OperationId = operationId;
             TriggeredBy = triggeredBy;
         }
 
@@ -30,13 +28,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
         /// Identifier of the violated rule
         /// </summary>
         public ValidationRuleIdentifier ValidationRuleIdentifier { get; }
-
-        /// <summary>
-        /// Violation of some validation rules are triggered by an operation.
-        /// In these cases this property will tell which operation triggered the rule
-        /// identified by <see cref="ValidationRuleIdentifier"/> to be violated.
-        /// </summary>
-        public string? OperationId { get; }
 
         /// <summary>
         /// Violation of some validation rules are triggered by an element in a list.

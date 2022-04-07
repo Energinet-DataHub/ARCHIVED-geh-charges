@@ -26,7 +26,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
                 {
                     return new ValidationError(
                         rule.ValidationRuleIdentifier,
-                        validationRuleForOperation.OperationId,
                         null);
                 }
 
@@ -34,11 +33,10 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
                 {
                     return new ValidationError(
                         rule.ValidationRuleIdentifier,
-                        validationRuleWithExtendedData.OperationId,
                         validationRuleWithExtendedData.TriggeredBy);
                 }
 
-                return new ValidationError(rule.ValidationRuleIdentifier, null, null);
+                return new ValidationError(rule.ValidationRuleIdentifier, null);
             };
         }
     }
