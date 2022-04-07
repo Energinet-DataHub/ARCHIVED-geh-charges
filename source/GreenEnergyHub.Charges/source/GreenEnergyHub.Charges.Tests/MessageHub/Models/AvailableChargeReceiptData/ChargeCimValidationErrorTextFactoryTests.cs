@@ -51,8 +51,9 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
 
             // Act
             var actual = sut.Create(
-                new ValidationError(ValidationRuleIdentifier.ResolutionTariffValidation, chargeOperationDto.Id, null),
-                chargeCommand);
+                new ValidationError(ValidationRuleIdentifier.ResolutionTariffValidation, null),
+                chargeCommand,
+                chargeOperationDto);
 
             // Assert
             actual.Should().Be(expected);
@@ -79,9 +80,9 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             var actual = sut.Create(
                 new ValidationError(
                     ValidationRuleIdentifier.MaximumPrice,
-                    chargeOperationDto.Id,
                     chargeOperationDto.Points[1].Position.ToString()),
-                chargeCommand);
+                chargeCommand,
+                chargeOperationDto);
 
             // Assert
             actual.Should().Be(expected);
@@ -107,8 +108,9 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
 
             // Act
             var actual = sut.Create(
-                new ValidationError(validationRuleIdentifier, chargeOperationDto.Id, triggeredBy),
-                chargeCommand);
+                new ValidationError(validationRuleIdentifier, triggeredBy),
+                chargeCommand,
+                chargeOperationDto);
 
             // Assert
             actual.ToLower().Should().Contain($"price {CimValidationErrorTextTemplateMessages.Unknown}");
@@ -140,8 +142,9 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
 
             // Act
             var actual = sut.Create(
-                new ValidationError(validationRuleIdentifier, chargeOperationDto.Id, triggeredBy),
-                chargeCommand);
+                new ValidationError(validationRuleIdentifier, triggeredBy),
+                chargeCommand,
+                chargeOperationDto);
 
             // Assert
             actual.Should().Contain(expected);
@@ -168,8 +171,9 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
                 {
                     var triggeredBy = SetTriggeredByWithValidationError(operation, validationRuleIdentifier);
                     var actual = sut.Create(
-                        new ValidationError(validationRuleIdentifier, operation.Id, triggeredBy),
-                        commandWithOperation);
+                        new ValidationError(validationRuleIdentifier, triggeredBy),
+                        commandWithOperation,
+                        operation);
 
                     actual.Should().NotBeNullOrWhiteSpace();
                     actual.Should().NotContain("{");

@@ -33,11 +33,10 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
         [InlineAutoMoqData]
         public void Create_WhenTwoMergeFields_ReturnsExpectedDescription(
             ChargeLinksCommand chargeLinksCommand,
-            CimValidationErrorTextProvider cimValidationErrorTextProvider,
-            ILoggerFactory loggerFactory)
+            CimValidationErrorTextProvider cimValidationErrorTextProvider)
         {
             // Arrange
-            var sut = new ChargeLinksCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
+            var sut = new ChargeLinksCimValidationErrorTextFactory(cimValidationErrorTextProvider);
             var chargeLinkDto = chargeLinksCommand.ChargeLinksOperations.First();
             var expected = CimValidationErrorTextTemplateMessages.MeteringPointDoesNotExistValidationErrorText
                 .Replace("{{MeteringPointId}}", chargeLinksCommand.MeteringPointId)
@@ -47,9 +46,9 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
             var actual = sut.Create(
                 new ValidationError(
                     ValidationRuleIdentifier.MeteringPointDoesNotExist,
-                    chargeLinkDto.OperationId,
                     chargeLinkDto.SenderProvidedChargeId),
-                chargeLinksCommand);
+                chargeLinksCommand,
+                chargeLinkDto);
 
             // Assert
             actual.Should().Be(expected);
@@ -59,14 +58,13 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
         [InlineAutoMoqData]
         public void Create_MergesAllMergeFields(
             ChargeLinksCommand chargeLinksCommand,
-            CimValidationErrorTextProvider cimValidationErrorTextProvider,
-            ILoggerFactory loggerFactory)
+            CimValidationErrorTextProvider cimValidationErrorTextProvider)
         {
             // Arrange
             var chargeLinkDto = chargeLinksCommand.ChargeLinksOperations.First();
             var validationRuleIdentifiers =
                 (ValidationRuleIdentifier[])Enum.GetValues(typeof(ValidationRuleIdentifier));
-            var sut = new ChargeLinksCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
+            var sut = new ChargeLinksCimValidationErrorTextFactory(cimValidationErrorTextProvider);
 
             // Act
             // Assert
@@ -74,8 +72,9 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
             {
                 var triggeredBy = SetTriggeredByWithValidationError(chargeLinksCommand, validationRuleIdentifier);
                 var actual = sut.Create(
-                    new ValidationError(validationRuleIdentifier, chargeLinkDto.OperationId, triggeredBy),
-                    chargeLinksCommand);
+                    new ValidationError(validationRuleIdentifier, triggeredBy),
+                    chargeLinksCommand,
+                    chargeLinkDto);
 
                 actual.Should().NotBeNullOrWhiteSpace();
                 actual.Should().NotContain("{");
