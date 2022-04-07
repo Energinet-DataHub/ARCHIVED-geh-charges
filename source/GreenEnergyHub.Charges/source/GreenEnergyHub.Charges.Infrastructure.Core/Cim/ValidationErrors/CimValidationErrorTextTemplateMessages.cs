@@ -139,7 +139,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.AuthenticatedUserMustMatchMarketParticipantSenderIdRule)]
         public const string AuthenticatedUserMustMatchMarketParticipantSenderIdRuleErrorText =
-            "GLN code {{DocumentSenderId}} not allowed: The specified grid operator is not the owner and therefore not authorized to update or stop the charge {{ChargeType}}.";
+            "GLN code {{DocumentSenderId}} not allowed: The specified grid operator is not the owner and therefore not authorized to create, update, stop or cancel a stop for the charge {{ChargeType}}.";
 
         public const string Unknown = "unknown";
     }
