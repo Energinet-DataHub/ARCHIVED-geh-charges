@@ -12,25 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
 {
-    public class ResolutionFeeValidationRule : IValidationRuleForOperation
+    public class ResolutionFeeValidationRule : ResolutionValidationRule
     {
-        private readonly ChargeOperationDto _chargeOperationDto;
-
         public ResolutionFeeValidationRule(ChargeOperationDto chargeOperationDto)
+            : base(
+                chargeOperationDto,
+                ChargeType.Fee,
+                new List<Resolution> { Resolution.P1M },
+                ValidationRuleIdentifier.ResolutionFeeValidation)
         {
-            _chargeOperationDto = chargeOperationDto;
         }
-
-        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ResolutionFeeValidation;
-
-        public bool IsValid => _chargeOperationDto.Type != ChargeType.Fee ||
-                               _chargeOperationDto.Resolution is Resolution.P1M;
-
-        public string OperationId => _chargeOperationDto.Id;
     }
 }
