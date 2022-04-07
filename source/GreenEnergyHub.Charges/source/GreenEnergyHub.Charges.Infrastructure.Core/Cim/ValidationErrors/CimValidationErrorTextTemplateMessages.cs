@@ -137,6 +137,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         public const string UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateErrorText =
             "Charge ID {{DocumentSenderProvidedChargeId}} has been stopped and thus cannot be updated as per {{ChargeStartDateTime}}.";
 
+        [ErrorMessageFor(ValidationRuleIdentifier.AuthenticatedUserMustMatchMarketParticipantSenderIdRule)]
+        public const string AuthenticatedUserMustMatchMarketParticipantSenderIdRuleErrorText =
+            "GLN code {{DocumentSenderId}} not allowed: The specified grid operator is not the owner and therefore not authorized to update or stop the charge {{ChargeType}}.";
+
         public const string Unknown = "unknown";
     }
 }
