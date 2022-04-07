@@ -17,6 +17,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
+using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
 using GreenEnergyHub.Charges.Core;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
@@ -28,7 +29,6 @@ using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.MessageHub.Models.Shared;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.Charges.Tests.Builders.Testables;
 using Moq;
@@ -43,56 +43,23 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         [Theory]
         [InlineAutoMoqData(typeof(StartDateValidationRule))]
         [InlineAutoMoqData(typeof(CommandSenderMustBeAnExistingMarketParticipantRule))]
+        [InlineAutoMoqData(typeof(AuthenticatedUserMustMatchMarketParticipantSenderIdRule))]
         public async Task CreateRulesForChargeCommandAsync_WhenCalledWithNewCharge_ReturnsExpectedMandatoryRules(
             Type expectedRule,
             TestMarketParticipant sender,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IChargeRepository> repository,
             [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
+            [Frozen] Mock<IActorContext> actorContext,
             ChargeCommandBusinessValidationRulesFactory sut,
             ChargeCommandBuilder builder)
         {
             // Arrange
             var chargeCommand = builder.Build();
             SetupConfigureRepositoryMock(rulesConfigurationRepository);
-
-            Charge? charge = null;
-            repository
-                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
-                .ReturnsAsync(charge);
-
-            marketParticipantRepository
-                .Setup(repo => repo.GetOrNullAsync(It.IsAny<string>()))
-                .ReturnsAsync(sender);
-
-            // Act
-            var actual = await sut.CreateRulesAsync(chargeCommand).ConfigureAwait(false);
-            var actualRules = actual.GetRules().Select(r => r.GetType());
-
-            // Assert
-            Assert.Equal(2, actual.GetRules().Count); // This assert is added to ensure that when the rule set is expanded, the test gets attention as well.
-            Assert.Contains(expectedRule, actualRules);
-        }
-
-        [Theory]
-        [InlineAutoMoqData(typeof(StartDateValidationRule))]
-        [InlineAutoMoqData(typeof(CommandSenderMustBeAnExistingMarketParticipantRule))]
-        [InlineAutoMoqData(typeof(UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateRule))]
-        public async Task CreateRulesForChargeCommandAsync_WhenCalledWithExistingChargeNotTariff_ReturnsExpectedRules(
-            Type expectedRule,
-            TestMarketParticipant sender,
-            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            [Frozen] Mock<IChargeRepository> chargeRepository,
-            [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
-            ChargeCommandBusinessValidationRulesFactory sut,
-            ChargeCommandBuilder builder,
-            Charge charge)
-        {
-            // Arrange
-            var chargeCommand = builder.WithChargeType(ChargeType.Fee).Build();
-            SetupConfigureRepositoryMock(rulesConfigurationRepository);
-            SetupChargeRepositoryMock(chargeRepository, charge);
+            SetupChargeRepositoryMock(repository, null!);
             SetupMarketParticipantMock(sender, marketParticipantRepository);
+            SetupActorContext(actorContext);
 
             // Act
             var actual = await sut.CreateRulesAsync(chargeCommand).ConfigureAwait(false);
@@ -106,14 +73,48 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         [Theory]
         [InlineAutoMoqData(typeof(StartDateValidationRule))]
         [InlineAutoMoqData(typeof(CommandSenderMustBeAnExistingMarketParticipantRule))]
+        [InlineAutoMoqData(typeof(UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateRule))]
+        [InlineAutoMoqData(typeof(AuthenticatedUserMustMatchMarketParticipantSenderIdRule))]
+        public async Task CreateRulesForChargeCommandAsync_WhenCalledWithExistingChargeNotTariff_ReturnsExpectedRules(
+            Type expectedRule,
+            TestMarketParticipant sender,
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
+            [Frozen] Mock<IChargeRepository> chargeRepository,
+            [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
+            [Frozen] Mock<IActorContext> actorContext,
+            ChargeCommandBusinessValidationRulesFactory sut,
+            ChargeCommandBuilder builder,
+            Charge charge)
+        {
+            // Arrange
+            var chargeCommand = builder.WithChargeType(ChargeType.Fee).Build();
+            SetupConfigureRepositoryMock(rulesConfigurationRepository);
+            SetupChargeRepositoryMock(chargeRepository, charge);
+            SetupMarketParticipantMock(sender, marketParticipantRepository);
+            SetupActorContext(actorContext);
+
+            // Act
+            var actual = await sut.CreateRulesAsync(chargeCommand).ConfigureAwait(false);
+            var actualRules = actual.GetRules().Select(r => r.GetType());
+
+            // Assert
+            Assert.Equal(4, actual.GetRules().Count); // This assert is added to ensure that when the rule set is expanded, the test gets attention as well.
+            Assert.Contains(expectedRule, actualRules);
+        }
+
+        [Theory]
+        [InlineAutoMoqData(typeof(StartDateValidationRule))]
+        [InlineAutoMoqData(typeof(CommandSenderMustBeAnExistingMarketParticipantRule))]
         [InlineAutoMoqData(typeof(ChangingTariffTaxValueNotAllowedRule))]
         [InlineAutoMoqData(typeof(UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateRule))]
+        [InlineAutoMoqData(typeof(AuthenticatedUserMustMatchMarketParticipantSenderIdRule))]
         public async Task CreateRulesForChargeCommandAsync_WhenCalledWithExistingTariff_ReturnsExpectedRules(
             Type expectedRule,
             TestMarketParticipant sender,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
+            [Frozen] Mock<IActorContext> actorContext,
             ChargeCommandBusinessValidationRulesFactory sut,
             ChargeCommandBuilder builder,
             Charge charge)
@@ -123,13 +124,14 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             SetupConfigureRepositoryMock(rulesConfigurationRepository);
             SetupChargeRepositoryMock(chargeRepository, charge);
             SetupMarketParticipantMock(sender, marketParticipantRepository);
+            SetupActorContext(actorContext);
 
             // Act
             var actual = await sut.CreateRulesAsync(chargeCommand).ConfigureAwait(false);
 
             // Assert
             var actualRules = actual.GetRules().Select(r => r.GetType());
-            Assert.Equal(4, actual.GetRules().Count); // This assert is added to ensure that when the rule set is expanded, the test gets attention as well.
+            Assert.Equal(5, actual.GetRules().Count); // This assert is added to ensure that when the rule set is expanded, the test gets attention as well.
             Assert.Contains(expectedRule, actualRules);
         }
 
@@ -155,6 +157,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
+            [Frozen] Mock<IActorContext> actorContext,
             ChargeCommandBusinessValidationRulesFactory sut,
             TestMarketParticipant sender,
             ChargeCommand chargeCommand,
@@ -164,6 +167,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             SetupConfigureRepositoryMock(rulesConfigurationRepository);
             SetupChargeRepositoryMock(chargeRepository, charge);
             SetupMarketParticipantMock(sender, marketParticipantRepository);
+            SetupActorContext(actorContext);
 
             // Act
             var validationRules = (await sut.CreateRulesAsync(chargeCommand)).GetRules();
@@ -210,6 +214,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             marketParticipantRepository
                 .Setup(repo => repo.GetOrNullAsync(It.IsAny<string>()))
                 .ReturnsAsync(sender);
+        }
+
+        private static void SetupActorContext(Mock<IActorContext> actorContext)
+        {
+            actorContext.Setup(x => x.CurrentActor).Returns(new Actor(Guid.NewGuid(), "id type", "id", "roles"));
         }
 
         private static void SetupChargeRepositoryMock(Mock<IChargeRepository> chargeRepository, Charge charge)
