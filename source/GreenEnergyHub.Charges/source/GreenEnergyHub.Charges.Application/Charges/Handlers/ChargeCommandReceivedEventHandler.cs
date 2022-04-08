@@ -65,6 +65,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             }
 
             var triggeredBy = string.Empty;
+            var acceptedChargeCommands = new List<ChargeCommand>();
             var charge = await GetChargeAsync(commandReceivedEvent).ConfigureAwait(false);
             foreach (var chargeOperationDto in commandReceivedEvent.Command.ChargeOperations)
             {
@@ -81,10 +82,10 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 switch (operationType)
                 {
                     case OperationType.Create:
-                        await HandleCreateEventAsync(chargeOperationDto).ConfigureAwait(false);
+                        charge = await HandleCreateEventAsync(chargeOperationDto).ConfigureAwait(false);
                         break;
                     case OperationType.Update:
-                        HandleUpdateEvent(charge!, chargeOperationDto);
+                        charge = HandleUpdateEvent(charge!, chargeOperationDto);
                         break;
                     case OperationType.Stop:
                         charge!.Stop(chargeOperationDto.EndDateTime);
@@ -96,8 +97,14 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                         throw new InvalidOperationException("Could not handle charge command.");
                 }
 
-                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-                await _chargeCommandReceiptService.AcceptAsync(chargeCommandWithOperation).ConfigureAwait(false);
+                acceptedChargeCommands.Add(chargeCommandWithOperation);
+            }
+
+            await _chargeRepository.AddAsync(charge!).ConfigureAwait(false);
+            await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+            foreach (var command in acceptedChargeCommands)
+            {
+                await _chargeCommandReceiptService.AcceptAsync(command).ConfigureAwait(false);
             }
         }
 
@@ -135,19 +142,21 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             return triggeredBy;
         }
 
-        private async Task HandleCreateEventAsync(ChargeOperationDto chargeOperationDto)
+        private async Task<Charge> HandleCreateEventAsync(ChargeOperationDto chargeOperationDto)
         {
             var charge = await _chargeFactory
                 .CreateFromChargeOperationDtoAsync(chargeOperationDto)
                 .ConfigureAwait(false);
 
-            await _chargeRepository.AddAsync(charge).ConfigureAwait(false);
+            return charge;
         }
 
-        private void HandleUpdateEvent(Charge charge, ChargeOperationDto chargeOperationDto)
+        private Charge HandleUpdateEvent(Charge charge, ChargeOperationDto chargeOperationDto)
         {
             var newChargePeriod = _chargePeriodFactory.CreateFromChargeOperationDto(chargeOperationDto);
             charge.Update(newChargePeriod);
+
+            return charge;
         }
 
         private void HandleCancelStopEvent(Charge charge, ChargeOperationDto chargeOperationDto)
