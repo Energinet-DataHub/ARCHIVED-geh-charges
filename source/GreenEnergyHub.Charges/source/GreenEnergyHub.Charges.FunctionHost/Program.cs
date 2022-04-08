@@ -22,7 +22,6 @@ using GreenEnergyHub.Charges.Infrastructure.Core.Authentication;
 using GreenEnergyHub.Charges.Infrastructure.Core.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
-using GreenEnergyHub.Charges.Infrastructure.Core.Registration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
