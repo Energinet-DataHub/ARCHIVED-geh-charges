@@ -93,6 +93,14 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             actual.Should().Be(expected);
         }
 
+        [Theory]
+        [InlineAutoDomainData]
+        public void OperationId_ShouldBe_EqualTo(ChargeOperationDto chargeOperationDto)
+        {
+            var sut = new MaximumPriceRule(chargeOperationDto);
+            sut.OperationId.Should().Be(chargeOperationDto.Id);
+        }
+
         private static ChargeOperationDto CreateChargeOperationDto(ChargeOperationDtoBuilder builder, decimal price)
         {
             return builder.WithPoint(1, price).Build();
