@@ -97,8 +97,11 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
         }
 
         [Theory]
-        [InlineAutoDomainData]
+        [InlineAutoDomainData(false, 0)]
+        [InlineAutoDomainData(true, 1)]
         public async Task CreateAsync_WhenNotTaxCharge_ReturnsEmptyList(
+            bool taxIndicator,
+            int availableChargeDataCount,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             ChargeCommandBuilder chargeCommandBuilder,
             ChargeCommandAcceptedEventBuilder chargeCommandAcceptedEventBuilder,
@@ -119,7 +122,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
                 .ReturnsAsync(new MarketParticipantBuilder().Build());
             var chargeOperationDto = new ChargeOperationDtoBuilder()
                 .WithPoint(1, 1)
-                .WithTaxIndicator(false)
+                .WithTaxIndicator(taxIndicator)
                 .Build();
             var chargeCommand = chargeCommandBuilder.WithChargeOperation(chargeOperationDto).Build();
             var acceptedEvent = chargeCommandAcceptedEventBuilder.WithChargeCommand(chargeCommand).Build();
@@ -128,7 +131,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
             var actual = await sut.CreateAsync(acceptedEvent);
 
             // Assert
-            actual.Should().BeEmpty();
+            actual.Count.Should().Be(availableChargeDataCount);
         }
 
         [Theory]
