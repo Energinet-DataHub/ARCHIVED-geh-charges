@@ -170,6 +170,25 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // Act and assert
                 await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId, 1);
             }
+
+            [Fact]
+            public async Task Given_BundleWithMultipleOperationsForSameCharge_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply()
+            {
+                // Arrange
+                var (request, correlationId) = await _authenticatedHttpRequestGenerator
+                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.BundleWithMultipleOperationsForSameTaxTariff);
+                var content = await request.Content!.ReadAsStringAsync();
+                // Act
+                var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
+
+                // We expect three peeks:
+                // * one for the charge
+                // * one receipt
+                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId, 2);
+            }
         }
     }
 }

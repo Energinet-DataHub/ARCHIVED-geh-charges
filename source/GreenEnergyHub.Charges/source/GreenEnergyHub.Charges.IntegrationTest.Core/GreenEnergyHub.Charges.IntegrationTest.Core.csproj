@@ -76,6 +76,9 @@ limitations under the License.
     <Content Include="TestFiles\ChargeLinks\FixedPeriodTaxTariffChargeLinkDocument.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="TestFiles\Charges\BundleWithMultipleOperationsForSameTaxTariff.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestFiles\Charges\CreateSubscriptionDocument.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
