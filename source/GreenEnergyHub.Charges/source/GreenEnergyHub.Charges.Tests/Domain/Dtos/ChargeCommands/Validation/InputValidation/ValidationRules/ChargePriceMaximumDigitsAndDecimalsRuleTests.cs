@@ -86,6 +86,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
             // Assert
             sutRule.IsValid.Should().BeFalse();
+            sutRule.TriggeredBy.Should().Be(triggeredBy);
 
             var expected = CimValidationErrorTextTemplateMessages.ChargePriceMaximumDigitsAndDecimalsErrorText
                             .Replace("{{ChargePointPrice}}", expectedPoint.Price.ToString("N"))
