@@ -99,14 +99,27 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
         [Theory]
         [InlineAutoDomainData]
         public async Task CreateAsync_WhenNotTaxCharge_ReturnsEmptyList(
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             ChargeCommandBuilder chargeCommandBuilder,
             ChargeCommandAcceptedEventBuilder chargeCommandAcceptedEventBuilder,
             AvailableChargeDataFactory sut)
         {
             // Arrange
+            var marketParticipants = new List<MarketParticipant>()
+            {
+                new MarketParticipantBuilder()
+                    .WithRole(MarketParticipantRole.GridAccessProvider)
+                    .Build(),
+            };
+            marketParticipantRepository
+                .Setup(m => m.GetGridAccessProvidersAsync())
+                .ReturnsAsync(marketParticipants);
+            marketParticipantRepository
+                .Setup(m => m.GetMeteringPointAdministratorAsync())
+                .ReturnsAsync(new MarketParticipantBuilder().Build());
             var chargeOperationDto = new ChargeOperationDtoBuilder()
                 .WithPoint(1, 1)
-                .WithTaxIndicator(true)
+                .WithTaxIndicator(false)
                 .Build();
             var chargeCommand = chargeCommandBuilder.WithChargeOperation(chargeOperationDto).Build();
             var acceptedEvent = chargeCommandAcceptedEventBuilder.WithChargeCommand(chargeCommand).Build();
