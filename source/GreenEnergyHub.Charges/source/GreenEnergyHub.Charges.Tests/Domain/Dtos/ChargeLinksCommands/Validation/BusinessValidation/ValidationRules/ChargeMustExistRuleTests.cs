@@ -17,6 +17,7 @@ using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Categories;
 
@@ -39,6 +40,14 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
         {
             var sut = new ChargeMustExistRule(null, chargeLinkDto);
             sut.IsValid.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public void OperationId_ShouldBe_EqualTo(Charge charge, ChargeLinkDto chargeLinkDto)
+        {
+            var sut = new ChargeMustExistRule(charge, chargeLinkDto);
+            sut.OperationId.Should().Be(chargeLinkDto.OperationId);
         }
     }
 }

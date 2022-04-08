@@ -138,8 +138,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
             "Charge ID {{DocumentSenderProvidedChargeId}} has been stopped and thus cannot be updated as per {{ChargeStartDateTime}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.SubsequentBundleOperationsFail)]
-        public const string ValidationOfPriorOperationInBundleFailedErrorTex =
+        public const string ValidationOfPriorOperationInBundleFailedErrorText =
             "Transaction for Charge ID {{DocumentSenderProvidedChargeId}} is not completed: The request received contained multiple transactions for the same charge, and one of the previous transactions with ID {{TriggeredByOperationId}} failed validation why this transaction with ID {{ChargeOperationId}} is also rejected";
+
+        [ErrorMessageFor(ValidationRuleIdentifier.TransparentInvoicingIsNotAllowedForFee)]
+        public const string TransparentInvoicingIsNotAllowedForFeeErrorText =
+            "Transparent Invoicing for Charge ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}} cannot be set to true.";
 
         public const string Unknown = "unknown";
     }

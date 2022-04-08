@@ -26,6 +26,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         private Instant _startDateTime;
         private Instant? _endDateTime;
         private VatClassification _vatClassification;
+        private bool _transparentInvoicing;
         private bool _taxIndicator;
         private string _owner;
         private string _description;
@@ -94,6 +95,12 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             return this;
         }
 
+        public ChargeOperationDtoBuilder WithTransparentInvoicing(bool transparentInvoicing)
+        {
+            _transparentInvoicing = transparentInvoicing;
+            return this;
+        }
+
         public ChargeOperationDtoBuilder WithChargeType(ChargeType type)
         {
             _chargeType = type;
@@ -152,7 +159,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
                 _owner,
                 _resolution,
                 _taxIndicator,
-                true,
+                _transparentInvoicing,
                 _vatClassification,
                 _startDateTime,
                 _endDateTime,

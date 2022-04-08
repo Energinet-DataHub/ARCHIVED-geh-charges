@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using FluentAssertions;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.TestCore.Attributes;
@@ -38,7 +39,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         {
             var chargeOperationDto = builder.WithChargeOperationId(chargeOperationId).Build();
             var sut = new ChargeOperationIdRequiredRule(chargeOperationDto);
-            Assert.Equal(expected, sut.IsValid);
+            sut.IsValid.Should().Be(expected);
         }
 
         [Theory]
@@ -49,6 +50,14 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             var sut = new ChargeOperationIdRequiredRule(invalidChargeOperationDto);
             sut.ValidationRuleIdentifier.Should()
                 .Be(ValidationRuleIdentifier.ChargeOperationIdRequired);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public void OperationId_ShouldBe_EqualTo(ChargeOperationDto chargeOperationDto)
+        {
+            var sut = new ChargeOperationIdRequiredRule(chargeOperationDto);
+            sut.OperationId.Should().Be(chargeOperationDto.Id);
         }
     }
 }
