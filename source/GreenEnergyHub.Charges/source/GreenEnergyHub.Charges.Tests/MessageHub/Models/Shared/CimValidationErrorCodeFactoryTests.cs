@@ -73,5 +73,14 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared
                 sut.Create(value);
             }
         }
+
+        [Theory]
+        [InlineAutoMoqData(-1)]
+        public void Create_AnUnknownValidationRuleIdentifierIsProvided_throwsNotImplementedException(
+            ValidationRuleIdentifier identifier,
+            CimValidationErrorCodeFactory sut)
+        {
+            Assert.Throws<NotImplementedException>(() => sut.Create(identifier));
+        }
     }
 }
