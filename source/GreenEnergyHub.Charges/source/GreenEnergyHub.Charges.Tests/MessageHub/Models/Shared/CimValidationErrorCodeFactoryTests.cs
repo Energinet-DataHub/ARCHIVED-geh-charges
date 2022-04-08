@@ -53,6 +53,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared
         [InlineAutoMoqData(ValidationRuleIdentifier.ChargeDoesNotExist, ReasonCode.E0I)]
         [InlineAutoMoqData(ValidationRuleIdentifier.ChargeLinkUpdateNotYetSupported, ReasonCode.D13)]
         [InlineAutoMoqData(ValidationRuleIdentifier.SubsequentBundleOperationsFail, ReasonCode.D14)]
+        [InlineAutoMoqData(ValidationRuleIdentifier.TransparentInvoicingIsNotAllowedForFee, ReasonCode.D67)]
         public void Create_ReturnsExpectedCode(
             ValidationRuleIdentifier identifier,
             ReasonCode expected,
