@@ -39,10 +39,16 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands
             string documentId)
         {
             // Arrange
-            var chargeCommand = new ChargeCommandBuilder()
+            var chargeOperationDto = new ChargeOperationDtoBuilder()
                 .WithDescription(description)
                 .WithChargeName(chargeName)
+                .Build();
+            var documentDto = new DocumentDtoBuilder()
                 .WithDocumentId(documentId)
+                .Build();
+            var chargeCommand = new ChargeCommandBuilder()
+                .WithDocumentDto(documentDto)
+                .WithChargeOperation(chargeOperationDto)
                 .Build();
 
             var chargeCommands = new List<ChargeCommand> { chargeCommand };
@@ -87,7 +93,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands
         {
             // Arrange
             MarketParticipantDto? marketParticipant = null;
-            var chargeCommand = builder.WithSender(marketParticipant!).Build();
+            var documentDto = new DocumentDtoBuilder()
+                .WithSender(marketParticipant!)
+                .Build();
+            var chargeCommand = builder.WithDocumentDto(documentDto).Build();
             var chargeCommands = new List<ChargeCommand> { chargeCommand };
 
             // Act & Assert
@@ -112,8 +121,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands
         public void ChargeCommandChargeOperationIsNullThrowsException()
         {
             // Arrange
-            var testBuilder = new ChargeCommandBuilder();
-            var chargeCommand = testBuilder.WithChargeOperation(null!).Build();
+            var chargeCommand = new ChargeCommandBuilder().WithChargeOperation(null!).Build();
             var chargeCommands = new List<ChargeCommand> { chargeCommand };
 
             // Act & Assert

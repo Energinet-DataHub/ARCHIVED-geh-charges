@@ -34,26 +34,21 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         [InlineAutoMoqData(-1, false)]
         public void BusinessReasonCodeMustBeUpdateChargeInformation_Test(
             BusinessReasonCode businessReasonCode,
-            bool expected,
-            ChargeCommandBuilder chargeCommandBuilder)
+            bool expected)
         {
-            var chargeCommand = CreateCommand(chargeCommandBuilder, businessReasonCode);
+            var documentDto = new DocumentDtoBuilder().WithBusinessReasonCode(businessReasonCode).Build();
+            var chargeCommand = new ChargeCommandBuilder().WithDocumentDto(documentDto).Build();
             var sut = new BusinessReasonCodeMustBeUpdateChargeInformationRule(chargeCommand.Document);
             sut.IsValid.Should().Be(expected);
         }
 
-        [Theory]
-        [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder chargeCommandBuilder)
+        [Fact]
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo()
         {
-            var chargeCommand = CreateCommand(chargeCommandBuilder, BusinessReasonCode.Unknown);
+            var documentDto = new DocumentDtoBuilder().WithBusinessReasonCode(BusinessReasonCode.Unknown).Build();
+            var chargeCommand = new ChargeCommandBuilder().WithDocumentDto(documentDto).Build();
             var sut = new BusinessReasonCodeMustBeUpdateChargeInformationRule(chargeCommand.Document);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.BusinessReasonCodeMustBeUpdateChargeInformation);
-        }
-
-        private static ChargeCommand CreateCommand(ChargeCommandBuilder builder, BusinessReasonCode businessReasonCode)
-        {
-            return builder.WithDocumentBusinessReasonCode(businessReasonCode).Build();
         }
     }
 }

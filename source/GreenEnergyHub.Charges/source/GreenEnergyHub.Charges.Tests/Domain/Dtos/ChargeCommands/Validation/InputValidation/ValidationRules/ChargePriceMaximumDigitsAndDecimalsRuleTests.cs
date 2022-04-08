@@ -65,13 +65,16 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         [InlineAutoDomainData(ValidationRuleIdentifier.ChargePriceMaximumDigitsAndDecimals)]
         public void TriggeredBy_ShouldCauseCompleteErrorMessages_ToMarketParticipant(
             ValidationRuleIdentifier validationRuleIdentifier,
-            ChargeCommandBuilder builder,
             ILoggerFactory loggerFactory,
             CimValidationErrorTextProvider cimValidationErrorTextProvider)
         {
             // Arrange
-            var invalidCommand = builder.WithPoint(1, 123456789m).Build();
-            var chargeOperationDto = invalidCommand.ChargeOperations.First();
+            var chargeOperationDto = new ChargeOperationDtoBuilder()
+                .WithPoint(1, 123456789m)
+                .Build();
+            var invalidCommand = new ChargeCommandBuilder()
+                .WithChargeOperation(chargeOperationDto)
+                .Build();
             var expectedPoint = chargeOperationDto.Points[0];
             var triggeredBy = expectedPoint.Position.ToString();
 
