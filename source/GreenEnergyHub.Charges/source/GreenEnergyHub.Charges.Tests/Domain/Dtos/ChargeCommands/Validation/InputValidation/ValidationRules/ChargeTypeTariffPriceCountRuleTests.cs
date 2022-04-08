@@ -174,6 +174,14 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChargeTypeTariffPriceCount);
         }
 
+        [Theory]
+        [InlineAutoDomainData]
+        public void OperationId_ShouldBe_EqualTo(ChargeOperationDto chargeOperationDto)
+        {
+            var sut = new ChargeTypeTariffPriceCountRule(chargeOperationDto);
+            sut.OperationId.Should().Be(chargeOperationDto.Id);
+        }
+
         private static ChargeTypeTariffPriceCountRule CreateInvalidRule(ChargeOperationDtoBuilder chargeOperationDtoBuilder)
         {
             var invalidChargeOperationDto = CreateInvalidChargeOperationDto(chargeOperationDtoBuilder);

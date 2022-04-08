@@ -44,9 +44,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             var existingCharge = new ChargeBuilder().WithPeriods(CreateExistingChargePeriods(existingStopDate)).Build();
             var chargeOperation = new ChargeOperationDtoBuilder().WithStartDateTime(incomingCommandStartDate).Build();
 
-            var sut = new UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateRule(
-                existingCharge,
-                chargeOperation);
+            var sut = new UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateRule(existingCharge, chargeOperation);
 
             // Act
             var isValid = sut.IsValid;

@@ -102,6 +102,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 new ResolutionTariffValidationRule(chargeOperationDto),
                 new StartDateTimeRequiredValidationRule(chargeOperationDto),
                 new VatClassificationValidationRule(chargeOperationDto),
+                new TransparentInvoicingIsNotAllowedForFeeValidationRule(chargeOperationDto),
             };
             return expectedRules;
         }
