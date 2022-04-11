@@ -64,9 +64,10 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 return;
             }
 
-            var triggeredBy = string.Empty;
-            var acceptedChargeCommands = new List<ChargeCommand>();
             var charge = await GetChargeAsync(commandReceivedEvent).ConfigureAwait(false);
+            var acceptedChargeCommands = new List<ChargeCommand>();
+            var triggeredBy = string.Empty;
+
             foreach (var chargeOperationDto in commandReceivedEvent.Command.ChargeOperations)
             {
                 var chargeCommandWithOperation = new ChargeCommand(
