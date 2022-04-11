@@ -156,10 +156,17 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             [Fact]
             public async Task Given_NewMessage_When_SenderIdDoesNotMatchAuthenticatedId_Then_ShouldReturnErrorMessage()
             {
+                // Arrange
                 var (request, correlationId) = await _authenticatedHttpRequestGenerator
-                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.TaxTariffWithPriceWrongSenderId);
+                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.ChargeDocumentWithWhereSenderIdDoNotMatchAuthorizedActorId);
+
+                // Act
                 var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
                 actual.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+                var errorMessage = await actual.Content.ReadAsStringAsync();
+                errorMessage.Should().Be("Sender id does not match id of current authenticated user.");
             }
 
             [Theory]

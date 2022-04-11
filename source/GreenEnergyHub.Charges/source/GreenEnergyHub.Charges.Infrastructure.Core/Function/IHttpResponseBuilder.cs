@@ -25,5 +25,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
         Task<HttpResponseData> CreateBadRequestResponseAsync(
             HttpRequestData request,
             ErrorResponse response);
+
+        HttpResponseData CreateBadRequestWithErrorText(HttpRequestData request, string errorText);
     }
 }

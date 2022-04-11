@@ -33,5 +33,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
             await response.WriteAsXmlAsync(httpResponse.Body).ConfigureAwait(false);
             return httpResponse;
         }
+
+        public HttpResponseData CreateBadRequestWithErrorText(HttpRequestData request, string errorText)
+        {
+            var httpResponse = request.CreateResponse(HttpStatusCode.BadRequest);
+            httpResponse.WriteString(errorText);
+            return httpResponse;
+        }
     }
 }

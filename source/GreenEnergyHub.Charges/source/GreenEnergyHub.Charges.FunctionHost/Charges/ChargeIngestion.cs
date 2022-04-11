@@ -14,6 +14,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
 using Energinet.DataHub.Core.Messaging.Transport.SchemaValidation;
@@ -24,6 +25,7 @@ using GreenEnergyHub.Charges.Application.Charges.Handlers.Message;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 
@@ -59,13 +61,11 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
         {
             var inboundMessage = await ValidateMessageAsync(req).ConfigureAwait(false);
 
-            var validateAuthenticatedUserAgainstSenderIdErrorResponse =
-                AuthenticatedUserDoesNotMatchSenderId(inboundMessage);
-            if (validateAuthenticatedUserAgainstSenderIdErrorResponse is not null)
+            if (AuthenticatedMatchesSenderId(inboundMessage) == false)
             {
-                return await _httpResponseBuilder
-                    .CreateBadRequestResponseAsync(req, validateAuthenticatedUserAgainstSenderIdErrorResponse.Value)
-                    .ConfigureAwait(false);
+                return _httpResponseBuilder.CreateBadRequestWithErrorText(
+                    req,
+                    "Sender id does not match id of current authenticated user.");
             }
 
             if (inboundMessage.HasErrors)
@@ -84,24 +84,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             return _httpResponseBuilder.CreateAcceptedResponse(req);
         }
 
-        private ErrorResponse? AuthenticatedUserDoesNotMatchSenderId(SchemaValidatedInboundMessage<ChargeCommandBundle> inboundMessage)
+        private bool AuthenticatedMatchesSenderId(SchemaValidatedInboundMessage<ChargeCommandBundle> inboundMessage)
         {
             var authorizedActor = _actorContext.CurrentActor;
-            var senderIds = inboundMessage.ValidatedMessage?.ChargeCommands.Select(x => x.Document.Sender.Id);
+            var senderId = inboundMessage.ValidatedMessage?.ChargeCommands.First().Document.Sender.Id;
 
-            if (senderIds is null)
-                return null;
-
-            if (authorizedActor is null)
-                return null;
-
-            foreach (var senderId in senderIds)
-            {
-                if (senderId != authorizedActor.Identifier)
-                    return new ErrorResponse(new List<SchemaValidationError> { new(0, 0, "Sender id does not match id of current authenticated user.") });
-            }
-
-            return null;
+            return authorizedActor is null || senderId == authorizedActor.Identifier;
         }
 
         private async Task<SchemaValidatedInboundMessage<ChargeCommandBundle>> ValidateMessageAsync(HttpRequestData req)
