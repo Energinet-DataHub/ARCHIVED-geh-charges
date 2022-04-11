@@ -166,7 +166,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // Assert
                 actual.StatusCode.Should().Be(HttpStatusCode.BadRequest);
                 var errorMessage = await actual.Content.ReadAsStringAsync();
-                errorMessage.Should().Be("Sender id does not match id of current authenticated user.");
+                errorMessage.Should().Be("The sender organisation provided in the request body does not match the organisation in the bearer token.");
             }
 
             [Theory]

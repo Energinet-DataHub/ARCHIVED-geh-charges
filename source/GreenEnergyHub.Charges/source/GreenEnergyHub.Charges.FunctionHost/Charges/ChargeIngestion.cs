@@ -65,7 +65,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             {
                 return _httpResponseBuilder.CreateBadRequestWithErrorText(
                     req,
-                    "Sender id does not match id of current authenticated user.");
+                    "The sender organisation provided in the request body does not match the organisation in the bearer token.");
             }
 
             if (inboundMessage.HasErrors)
