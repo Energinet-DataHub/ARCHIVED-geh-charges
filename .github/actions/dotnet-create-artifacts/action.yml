@@ -16,11 +16,12 @@ name: Create artifacts
 
 runs:
   using: composite
-
-  env:
-    OUTPUT_PATH: '${{ github.workspace }}/output'
-
   steps:
+    - name: Set Environment Variables
+      shell: bash
+      run: |
+        echo "OUTPUT_PATH='${{ github.workspace }}/output'" >> $GITHUB_ENV
+
     - name: Publish Functionhost
       run: dotnet publish './source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.FunctionHost/GreenEnergyHub.Charges.FunctionHost.csproj' --no-build --no-restore --configuration Release --output ${{ env.OUTPUT_PATH }}/funtionhost
 
