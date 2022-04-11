@@ -15,7 +15,6 @@
 # Continuous Integration of domain except for own NuGet packages
 name: CI
 
-
 on:
   pull_request:
     branches:
