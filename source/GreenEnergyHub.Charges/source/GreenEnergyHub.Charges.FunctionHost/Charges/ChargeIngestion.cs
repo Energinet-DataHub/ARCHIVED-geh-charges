@@ -12,9 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
 using Energinet.DataHub.Core.Messaging.Transport.SchemaValidation;
+using Energinet.DataHub.Core.SchemaValidation;
+using Energinet.DataHub.Core.SchemaValidation.Errors;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Application.Charges.Handlers.Message;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
@@ -34,15 +38,18 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
         private readonly IChargesMessageHandler _chargesMessageHandler;
         private readonly IHttpResponseBuilder _httpResponseBuilder;
         private readonly ValidatingMessageExtractor<ChargeCommandBundle> _messageExtractor;
+        private readonly IActorContext _actorContext;
 
         public ChargeIngestion(
             IChargesMessageHandler chargesMessageHandler,
             IHttpResponseBuilder httpResponseBuilder,
-            ValidatingMessageExtractor<ChargeCommandBundle> messageExtractor)
+            ValidatingMessageExtractor<ChargeCommandBundle> messageExtractor,
+            IActorContext actorContext)
         {
             _chargesMessageHandler = chargesMessageHandler;
             _httpResponseBuilder = httpResponseBuilder;
             _messageExtractor = messageExtractor;
+            _actorContext = actorContext;
         }
 
         [Function(IngestionFunctionNames.ChargeIngestion)]
@@ -51,6 +58,16 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             HttpRequestData req)
         {
             var inboundMessage = await ValidateMessageAsync(req).ConfigureAwait(false);
+
+            var validateAuthenticatedUserAgainstSenderIdErrorResponse =
+                AuthenticatedUserDoesNotMatchSenderId(inboundMessage);
+            if (validateAuthenticatedUserAgainstSenderIdErrorResponse is not null)
+            {
+                return await _httpResponseBuilder
+                    .CreateBadRequestResponseAsync(req, validateAuthenticatedUserAgainstSenderIdErrorResponse.Value)
+                    .ConfigureAwait(false);
+            }
+
             if (inboundMessage.HasErrors)
             {
                 return await _httpResponseBuilder
@@ -65,6 +82,26 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             await _chargesMessageHandler.HandleAsync(message).ConfigureAwait(false);
 
             return _httpResponseBuilder.CreateAcceptedResponse(req);
+        }
+
+        private ErrorResponse? AuthenticatedUserDoesNotMatchSenderId(SchemaValidatedInboundMessage<ChargeCommandBundle> inboundMessage)
+        {
+            var authorizedActor = _actorContext.CurrentActor;
+            var senderIds = inboundMessage.ValidatedMessage?.ChargeCommands.Select(x => x.Document.Sender.Id);
+
+            if (senderIds is null)
+                return null;
+
+            if (authorizedActor is null)
+                return new ErrorResponse(new List<SchemaValidationError> { new(0, 0, "fail auth") });
+
+            foreach (var senderId in senderIds)
+            {
+                if (senderId != authorizedActor.Identifier)
+                    return new ErrorResponse(new List<SchemaValidationError> { new(0, 0, "fail auth") });
+            }
+
+            return null;
         }
 
         private async Task<SchemaValidatedInboundMessage<ChargeCommandBundle>> ValidateMessageAsync(HttpRequestData req)
