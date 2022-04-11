@@ -25,13 +25,13 @@ runs:
     - name: Publish Functionhost
       shell: bash
       run: |
-        dotnet publish '.\source\GreenEnergyHub.Charges\source\GreenEnergyHub.Charges.FunctionHost\GreenEnergyHub.Charges.FunctionHost.csproj' --no-build --no-restore --configuration Release --output ${{ env.OUTPUT_PATH }}\funtionhost
+        dotnet publish '.\source\GreenEnergyHub.Charges\source\GreenEnergyHub.Charges.FunctionHost\GreenEnergyHub.Charges.FunctionHost.csproj' --no-build --no-restore --configuration Release --output '${{ env.OUTPUT_PATH }}\funtionhost'
 
     - name: Upload Functionhost artifact
       uses: actions/upload-artifact@v3
       with:
         name: functionhost
-        path: ${{ env.OUTPUT_PATH }}\funtionhost
+        path: '${{ env.OUTPUT_PATH }}\funtionhost'
         if-no-files-found: error
 
     # - name: Publish Web API
