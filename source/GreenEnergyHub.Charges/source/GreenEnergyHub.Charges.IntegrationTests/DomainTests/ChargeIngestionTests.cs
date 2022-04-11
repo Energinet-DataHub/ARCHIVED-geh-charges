@@ -147,9 +147,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
 
                 // We expect three peeks:
-                // * one for the charge
-                // * one receipt
-                // * one rejection (ChargeIdLengthValidation)
+                // * one for the two confirmations
+                // * one for the notification (tax)
+                // * one for the rejection (ChargeIdLengthValidation)
                 await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId, 3);
             }
 
@@ -176,17 +176,17 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             {
                 // Arrange
                 var (request, correlationId) = await _authenticatedHttpRequestGenerator
-                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.BundleWithMultipleOperationsForSameTaxTariff);
-                var content = await request.Content!.ReadAsStringAsync();
+                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.BundleWithMultipleOperationsForSameTariff);
+
                 // Act
                 var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Assert
                 actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
 
-                // We expect three peeks:
-                // * one for the charge
-                // * one receipt
+                // We expect two peeks:
+                // * one for the create confirmation
+                // * one for the remaining confirmations (update, stop and cancel stop)
                 await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId, 2);
             }
 
@@ -196,14 +196,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // Arrange
                 var (request, correlationId) = await _authenticatedHttpRequestGenerator
                     .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.BundleWithTwoOperationsForSameTariffSecondOpViolatingVr903);
-                var content = await request.Content!.ReadAsStringAsync();
+
                 // Act
                 var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Assert
                 actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
 
-                // We expect three peeks:
+                // We expect two peeks:
                 // * one for the confirmation (first operation)
                 // * one for the rejection (second operation violating VR.903)
                 await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId, 2);

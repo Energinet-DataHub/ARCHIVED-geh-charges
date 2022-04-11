@@ -32,32 +32,32 @@ limitations under the License.
                 <cim:type>D03</cim:type>
                 <cim:mRID>{{$chargeIdForMultipleOperations}}</cim:mRID>
                 <cim:name>Charge tariff day Name1</cim:name>
-                <cim:description>The charge description</cim:description>
+                <cim:description>CREATE</cim:description>
                 <cim:priceTimeFrame_Period.resolution>P1D</cim:priceTimeFrame_Period.resolution>
                 <cim:effectiveDate>{{$isoTimestampPlusOneMonth}}</cim:effectiveDate>
                 <cim:VATPayer>D02</cim:VATPayer>
                 <cim:transparentInvoicing>false</cim:transparentInvoicing>
-                <cim:taxIndicator>true</cim:taxIndicator>
+                <cim:taxIndicator>false</cim:taxIndicator>
             </cim:ChargeType>
         </cim:ChargeGroup>
     </cim:MktActivityRecord>
     <cim:MktActivityRecord>
-        <cim:mRID>OpId2_{{$isoTimestamp}}</cim:mRID>
-        <cim:ChargeGroup>
-            <cim:ChargeType>
-                <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">8100000000030</cim:chargeTypeOwner_MarketParticipant.mRID>
-                <cim:type>D03</cim:type>
-                <cim:mRID>{{$chargeIdForMultipleOperations}}</cim:mRID>
-                <cim:name>Charge tariff day Name2</cim:name>
-                <cim:description>The charge description</cim:description>
-                <cim:priceTimeFrame_Period.resolution>P1D</cim:priceTimeFrame_Period.resolution>
-                <cim:effectiveDate>{{$isoTimestampPlusOneMonthAndOneDay}}</cim:effectiveDate>
-                <cim:VATPayer>D02</cim:VATPayer>
-                <cim:transparentInvoicing>false</cim:transparentInvoicing>
-                <cim:taxIndicator>true</cim:taxIndicator>
-            </cim:ChargeType>
-        </cim:ChargeGroup>
-    </cim:MktActivityRecord>
+    <cim:mRID>OpId2_{{$isoTimestamp}}</cim:mRID>
+    <cim:ChargeGroup>
+        <cim:ChargeType>
+            <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">8100000000030</cim:chargeTypeOwner_MarketParticipant.mRID>
+            <cim:type>D03</cim:type>
+            <cim:mRID>{{$chargeIdForMultipleOperations}}</cim:mRID>
+            <cim:name>Charge tariff day Name2</cim:name>
+            <cim:description>UPDATE</cim:description>
+            <cim:priceTimeFrame_Period.resolution>P1D</cim:priceTimeFrame_Period.resolution>
+            <cim:effectiveDate>{{$isoTimestampPlusOneMonthAndOneDay}}</cim:effectiveDate>
+            <cim:VATPayer>D02</cim:VATPayer>
+            <cim:transparentInvoicing>false</cim:transparentInvoicing>
+            <cim:taxIndicator>false</cim:taxIndicator>
+        </cim:ChargeType>
+    </cim:ChargeGroup>
+</cim:MktActivityRecord>
     <cim:MktActivityRecord>
         <cim:mRID>OpId3_{{$isoTimestamp}}</cim:mRID>
         <cim:ChargeGroup>
@@ -65,15 +65,32 @@ limitations under the License.
                 <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">8100000000030</cim:chargeTypeOwner_MarketParticipant.mRID>
                 <cim:type>D03</cim:type>
                 <cim:mRID>{{$chargeIdForMultipleOperations}}</cim:mRID>
-                <cim:name>Charge tariff day Name4</cim:name>
-                <cim:description>The charge description</cim:description>
+                <cim:name>Charge tariff day Name3</cim:name>
+                <cim:description>STOP</cim:description>
                 <cim:priceTimeFrame_Period.resolution>P1D</cim:priceTimeFrame_Period.resolution>
                 <cim:effectiveDate>{{$isoTimestampPlusOneMonthAndTwoDays}}</cim:effectiveDate>
                 <cim:terminationDate>{{$isoTimestampPlusOneMonthAndTwoDays}}</cim:terminationDate>
                 <cim:VATPayer>D02</cim:VATPayer>
                 <cim:transparentInvoicing>false</cim:transparentInvoicing>
-                <cim:taxIndicator>true</cim:taxIndicator>
+                <cim:taxIndicator>false</cim:taxIndicator>
             </cim:ChargeType>
         </cim:ChargeGroup>
     </cim:MktActivityRecord>
+    <cim:MktActivityRecord>
+    <cim:mRID>OpId2_{{$isoTimestamp}}</cim:mRID>
+    <cim:ChargeGroup>
+        <cim:ChargeType>
+            <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">8100000000030</cim:chargeTypeOwner_MarketParticipant.mRID>
+            <cim:type>D03</cim:type>
+            <cim:mRID>{{$chargeIdForMultipleOperations}}</cim:mRID>
+            <cim:name>Charge tariff day Name4</cim:name>
+            <cim:description>CANCEL STOP</cim:description>
+            <cim:priceTimeFrame_Period.resolution>P1D</cim:priceTimeFrame_Period.resolution>
+            <cim:effectiveDate>{{$isoTimestampPlusOneMonthAndTwoDays}}</cim:effectiveDate>
+            <cim:VATPayer>D02</cim:VATPayer>
+            <cim:transparentInvoicing>false</cim:transparentInvoicing>
+            <cim:taxIndicator>false</cim:taxIndicator>
+        </cim:ChargeType>
+    </cim:ChargeGroup>
+</cim:MktActivityRecord>
 </cim:RequestChangeOfPriceList_MarketDocument>
