@@ -168,7 +168,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Act and assert
-                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId, 1);
+                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId);
             }
 
             [Fact]
@@ -207,6 +207,30 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // * one for the confirmation (first operation)
                 // * one for the rejection (second operation violating VR.903)
                 await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId, 2);
+            }
+
+            [Fact(Skip = "Used for debugging ChargeCommandReceivedEventHandler")]
+            public async Task Given_UpdateRequest_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply()
+            {
+                // Arrange - Create
+                var (createReq, correlationId) = await _authenticatedHttpRequestGenerator
+                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.CreateTariff);
+                var response = await Fixture.HostManager.HttpClient.SendAsync(createReq);
+                response.StatusCode.Should().Be(HttpStatusCode.Accepted);
+                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId);
+
+                // Arrange - Update
+                var (updateReq, updateCorrelationId) = await _authenticatedHttpRequestGenerator
+                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.UpdateTariff);
+
+                // Act
+                var actual = await Fixture.HostManager.HttpClient.SendAsync(updateReq);
+
+                // Assert
+                actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
+
+                // * Expect one for the confirmation (update)
+                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(updateCorrelationId);
             }
         }
     }
