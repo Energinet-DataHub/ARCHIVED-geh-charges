@@ -65,13 +65,16 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         [InlineAutoDomainData(ValidationRuleIdentifier.ChargePriceMaximumDigitsAndDecimals)]
         public void TriggeredBy_ShouldCauseCompleteErrorMessages_ToMarketParticipant(
             ValidationRuleIdentifier validationRuleIdentifier,
-            ChargeCommandBuilder builder,
             ILoggerFactory loggerFactory,
             CimValidationErrorTextProvider cimValidationErrorTextProvider)
         {
             // Arrange
-            var invalidCommand = builder.WithPoint(1, 123456789m).Build();
-            var chargeOperationDto = invalidCommand.ChargeOperations.First();
+            var chargeOperationDto = new ChargeOperationDtoBuilder()
+                .WithPoint(1, 123456789m)
+                .Build();
+            var invalidCommand = new ChargeCommandBuilder()
+                .WithChargeOperation(chargeOperationDto)
+                .Build();
             var expectedPoint = chargeOperationDto.Points[0];
             var triggeredBy = expectedPoint.Position.ToString();
 
@@ -86,11 +89,20 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
             // Assert
             sutRule.IsValid.Should().BeFalse();
+            sutRule.TriggeredBy.Should().Be(triggeredBy);
 
             var expected = CimValidationErrorTextTemplateMessages.ChargePriceMaximumDigitsAndDecimalsErrorText
                             .Replace("{{ChargePointPrice}}", expectedPoint.Price.ToString("N"))
                             .Replace("{{DocumentSenderProvidedChargeId}}", chargeOperationDto.ChargeId);
             actual.Should().Be(expected);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public void OperationId_ShouldBe_EqualTo(ChargeOperationDto chargeOperationDto)
+        {
+            var sut = new ChargePriceMaximumDigitsAndDecimalsRule(chargeOperationDto);
+            sut.OperationId.Should().Be(chargeOperationDto.Id);
         }
     }
 }

@@ -197,9 +197,12 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             // Arrange
             var validationResult = ValidationResult.CreateSuccess();
             SetupValidator(validator, validationResult);
-            var chargeCommand = new ChargeCommandBuilder()
+            var chargeOperationDto = new ChargeOperationDtoBuilder()
                 .WithStartDateTime(InstantHelper.GetTomorrowAtMidnightUtc())
                 .WithEndDateTime(InstantHelper.GetEndDefault())
+                .Build();
+            var chargeCommand = new ChargeCommandBuilder()
+                .WithChargeOperation(chargeOperationDto)
                 .Build();
             var receivedEvent = new ChargeCommandReceivedEvent(InstantHelper.GetTodayAtMidnightUtc(), chargeCommand);
             var periods = new List<ChargePeriod>
@@ -299,20 +302,28 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         {
             var validChargeOperationDto = new ChargeOperationDtoBuilder()
                 .WithDescription("valid")
+                .WithStartDateTime(InstantHelper.GetYesterdayAtMidnightUtc())
+                .WithEndDateTime(InstantHelper.GetEndDefault())
                 .Build();
             var invalidChargeOperationDto = new ChargeOperationDtoBuilder()
                 .WithDescription("invalid")
+                .WithStartDateTime(InstantHelper.GetYesterdayAtMidnightUtc())
+                .WithEndDateTime(InstantHelper.GetEndDefault())
                 .Build();
             var failedChargeOperationDto = new ChargeOperationDtoBuilder()
                 .WithDescription("failed")
-                .Build();
-            var chargeCommand = new ChargeCommandBuilder()
                 .WithStartDateTime(InstantHelper.GetYesterdayAtMidnightUtc())
                 .WithEndDateTime(InstantHelper.GetEndDefault())
-                .WithChargeOperation(validChargeOperationDto)
-                .WithChargeOperation(invalidChargeOperationDto)
-                .WithChargeOperation(failedChargeOperationDto)
-                .WithChargeOperation(failedChargeOperationDto)
+                .Build();
+            var chargeCommand = new ChargeCommandBuilder()
+                .WithChargeOperations(
+                    new List<ChargeOperationDto>
+                    {
+                        validChargeOperationDto,
+                        invalidChargeOperationDto,
+                        failedChargeOperationDto,
+                        failedChargeOperationDto,
+                    })
                 .Build();
             var receivedEvent = new ChargeCommandReceivedEvent(
                 InstantHelper.GetTodayAtMidnightUtc(),

@@ -30,6 +30,7 @@ The following validation rules are currently implemented in the charge domain.
 |VR.902-1*|Stop charge is not yet implemented|D13|All|N/A|
 |VR.902-2*|Update and stop charge link is not yet implemented|D13|N/A|X|
 |VR.903|The Tax indicator for a charge cannot be updated|D14|Tariff|N/A|
+|VR.904|TransparentInvoicing must be false for charges of type Fee (D02).|D67|Fee|N/A|
 |VR.905|As gaps are not allowed in a Charge timeline, e.g. when a charge is stopped, any attempts to update it with an effective date after the stop date, must be rejected.|D14|All|N/A|
 |VR.906|Transaction not completed: The request received contained multiple transactions for the same charge, and one of the previous transactions failed validation why this transaction is also rejected|D14|All|N/A|
 

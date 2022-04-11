@@ -15,24 +15,22 @@
 using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Tests.Builders.Command
 {
    public class ChargeOperationDtoBuilder
     {
-        private readonly List<Point> _points;
+        private List<Point> _points;
         private string _chargeId;
         private Instant _startDateTime;
         private Instant? _endDateTime;
         private VatClassification _vatClassification;
+        private bool _transparentInvoicing;
         private bool _taxIndicator;
         private string _owner;
         private string _description;
         private string _chargeName;
-        private MarketParticipantDto _sender;
         private ChargeType _chargeType;
         private Resolution _resolution;
         private string _operationId;
@@ -50,7 +48,6 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             _owner = "owner";
             _description = "some description";
             _chargeName = "some charge name";
-            _sender = new MarketParticipantDto { Id = "2", BusinessProcessRole = MarketParticipantRole.GridAccessProvider };
             _chargeType = ChargeType.Fee;
             _points = new List<Point>();
             _resolution = Resolution.PT1H;
@@ -98,6 +95,12 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             return this;
         }
 
+        public ChargeOperationDtoBuilder WithTransparentInvoicing(bool transparentInvoicing)
+        {
+            _transparentInvoicing = transparentInvoicing;
+            return this;
+        }
+
         public ChargeOperationDtoBuilder WithChargeType(ChargeType type)
         {
             _chargeType = type;
@@ -107,6 +110,18 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         public ChargeOperationDtoBuilder WithStartDateTime(Instant startDateTime)
         {
             _startDateTime = startDateTime;
+            return this;
+        }
+
+        public ChargeOperationDtoBuilder WithEndDateTime(Instant endDateTime)
+        {
+            _endDateTime = endDateTime;
+            return this;
+        }
+
+        public ChargeOperationDtoBuilder WithPoints(List<Point> points)
+        {
+            _points = points;
             return this;
         }
 
@@ -144,7 +159,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
                 _owner,
                 _resolution,
                 _taxIndicator,
-                true,
+                _transparentInvoicing,
                 _vatClassification,
                 _startDateTime,
                 _endDateTime,

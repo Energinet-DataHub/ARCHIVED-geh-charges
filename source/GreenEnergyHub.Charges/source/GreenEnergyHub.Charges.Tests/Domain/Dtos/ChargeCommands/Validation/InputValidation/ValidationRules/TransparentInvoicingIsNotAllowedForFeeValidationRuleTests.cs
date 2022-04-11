@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using FluentAssertions;
+using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
@@ -25,42 +26,46 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
 {
     [UnitTest]
-    public class ChargeIdLengthValidationRuleTests
+    public class TransparentInvoicingIsNotAllowedForFeeValidationRuleTests
     {
         [Theory]
-        [InlineAutoMoqData("1234567891", true)]
-        [InlineAutoMoqData("12345678912", false)]
-        [InlineAutoMoqData(null!, false)]
-        public void ChargeIdLengthValidationRule_Test(
-            string chargeId,
+        [InlineAutoMoqData(ChargeType.Fee, true, false)]
+        [InlineAutoMoqData(ChargeType.Fee, false, true)]
+        [InlineAutoMoqData(ChargeType.Subscription, true, true)]
+        [InlineAutoMoqData(ChargeType.Subscription, false, true)]
+        [InlineAutoMoqData(ChargeType.Tariff, true, true)]
+        [InlineAutoMoqData(ChargeType.Tariff, false, true)]
+        [InlineAutoMoqData(ChargeType.Unknown, false, true)]
+        [InlineAutoMoqData(ChargeType.Unknown, false, true)]
+        public void IsValid_Test(
+            ChargeType chargeType,
+            bool transparentInvoicing,
             bool expected,
             ChargeOperationDtoBuilder chargeOperationDtoBuilder)
         {
-            var chargeOperationDto = chargeOperationDtoBuilder.WithChargeId(chargeId).Build();
-            var sut = new ChargeIdLengthValidationRule(chargeOperationDto);
+            var chargeOperationDto = chargeOperationDtoBuilder
+                .WithChargeType(chargeType)
+                .WithTransparentInvoicing(transparentInvoicing).Build();
+
+            var sut = new TransparentInvoicingIsNotAllowedForFeeValidationRule(chargeOperationDto);
             sut.IsValid.Should().Be(expected);
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeOperationDtoBuilder chargeOperationDtoBuilder)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeOperationDtoBuilder builder)
         {
-            var invalidChargeOperationDto = CreateInvalidChargeOperationDto(chargeOperationDtoBuilder);
-            var sut = new ChargeIdLengthValidationRule(invalidChargeOperationDto);
-            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChargeIdLengthValidation);
+            var chargeOperationDto = builder.WithTransparentInvoicing(true).Build();
+            var sut = new TransparentInvoicingIsNotAllowedForFeeValidationRule(chargeOperationDto);
+            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.TransparentInvoicingIsNotAllowedForFee);
         }
 
         [Theory]
         [InlineAutoDomainData]
         public void OperationId_ShouldBe_EqualTo(ChargeOperationDto chargeOperationDto)
         {
-            var sut = new ChargeIdLengthValidationRule(chargeOperationDto);
+            var sut = new TransparentInvoicingIsNotAllowedForFeeValidationRule(chargeOperationDto);
             sut.OperationId.Should().Be(chargeOperationDto.Id);
-        }
-
-        private static ChargeOperationDto CreateInvalidChargeOperationDto(ChargeOperationDtoBuilder chargeOperationDtoBuilder)
-        {
-            return chargeOperationDtoBuilder.WithChargeId("this charge id is to long").Build();
         }
     }
 }

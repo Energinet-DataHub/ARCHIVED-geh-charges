@@ -14,6 +14,7 @@
 
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
@@ -34,7 +35,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         {
             var chargeOperationDto = builder.WithTaxIndicator(!charge.TaxIndicator).Build();
             var sut = new ChangingTariffTaxValueNotAllowedRule(chargeOperationDto, charge);
-            Assert.False(sut.IsValid);
+            sut.IsValid.Should().BeFalse();
         }
 
         [Theory]
@@ -45,7 +46,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         {
             var chargeOperationDto = builder.WithTaxIndicator(charge.TaxIndicator).Build();
             var sut = new ChangingTariffTaxValueNotAllowedRule(chargeOperationDto, charge);
-            Assert.True(sut.IsValid);
+            sut.IsValid.Should().BeTrue();
         }
 
         [Theory]
@@ -55,6 +56,14 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             var chargeOperationDto = builder.WithTaxIndicator(!charge.TaxIndicator).Build();
             var sut = new ChangingTariffTaxValueNotAllowedRule(chargeOperationDto, charge);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChangingTariffTaxValueNotAllowed);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public void OperationId_ShouldBe_EqualTo(ChargeOperationDto chargeOperationDto, Charge charge)
+        {
+            var sut = new ChangingTariffTaxValueNotAllowedRule(chargeOperationDto, charge);
+            sut.OperationId.Should().Be(chargeOperationDto.Id);
         }
     }
 }

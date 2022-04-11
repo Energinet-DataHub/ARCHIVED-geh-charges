@@ -62,17 +62,15 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         [InlineAutoDomainData(ValidationRuleIdentifier.MaximumPrice)]
         public void TriggeredBy_ShouldCauseCompleteErrorMessages_ToMarketParticipant(
             ValidationRuleIdentifier validationRuleIdentifier,
-            ChargeCommandBuilder chargeCommandBuilder,
             ILoggerFactory loggerFactory,
             CimValidationErrorTextProvider cimValidationErrorTextProvider)
         {
             // Arrange
-            var invalidCommand = chargeCommandBuilder
+            var chargeOperationDto = new ChargeOperationDtoBuilder()
                 .WithPoint(1, LargestValidPrice)
                 .WithPoint(2, SmallestInvalidPrice)
                 .Build();
-
-            var chargeOperationDto = invalidCommand.ChargeOperations.First();
+            var invalidCommand = new ChargeCommandBuilder().WithChargeOperation(chargeOperationDto).Build();
             var expectedPoint = chargeOperationDto.Points[1];
             var triggeredBy = expectedPoint.Position.ToString();
 
@@ -86,11 +84,20 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
             // Assert
             sutRule.IsValid.Should().BeFalse();
+            sutRule.TriggeredBy.Should().Be(triggeredBy);
 
             var expected = CimValidationErrorTextTemplateMessages.MaximumPriceErrorText
                 .Replace("{{ChargePointPrice}}", expectedPoint.Price.ToString("N"))
                 .Replace("{{ChargePointPosition}}", triggeredBy);
             actual.Should().Be(expected);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public void OperationId_ShouldBe_EqualTo(ChargeOperationDto chargeOperationDto)
+        {
+            var sut = new MaximumPriceRule(chargeOperationDto);
+            sut.OperationId.Should().Be(chargeOperationDto.Id);
         }
 
         private static ChargeOperationDto CreateChargeOperationDto(ChargeOperationDtoBuilder builder, decimal price)
