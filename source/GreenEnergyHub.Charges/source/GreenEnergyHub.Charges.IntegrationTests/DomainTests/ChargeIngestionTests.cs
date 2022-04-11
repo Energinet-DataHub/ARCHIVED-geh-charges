@@ -153,6 +153,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId, 3);
             }
 
+            [Fact]
+            public async Task Given_NewMessage_When_SenderIdDoesNotMatchAuthenticatedId_Then_ShouldReturnErrorMessage()
+            {
+                var (request, correlationId) = await _authenticatedHttpRequestGenerator
+                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.TaxTariffWithPriceWrongSenderId);
+                var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
+                actual.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            }
+
             [Theory]
             [InlineAutoMoqData(ChargeDocument.SubscriptionMonthlyPriceSample)]
             [InlineAutoMoqData(ChargeDocument.FeeMonthlyPriceSample)]
