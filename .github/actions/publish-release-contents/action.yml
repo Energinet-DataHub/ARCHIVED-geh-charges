@@ -31,25 +31,25 @@ runs:
         cp -fR ${{ inputs.REPO_FOLDER_PATH }}/build/infrastructure/modules ${{ inputs.RELEASE_FOLDER_PATH }}/infrastructure/modules 2>/dev/null || :
 
     - name: Publish Functionhost to release folder
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
         name: functionhost
         path: ${{ inputs.RELEASE_FOLDER_PATH }}/functions/functionhost
 
     - name: Publish Web API to release folder
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
         name: webapi
         path: ${{ inputs.RELEASE_FOLDER_PATH }}/functions/webapi
 
     - name: Publish Database Migration to release folder
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
         name: databasemigration
         path: ${{ inputs.RELEASE_FOLDER_PATH }}/migration/databasemigration
 
     - name: Publish SystemTests to release folder
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
         name: systemtests
         path: ${{ inputs.RELEASE_FOLDER_PATH }}/systemtests
