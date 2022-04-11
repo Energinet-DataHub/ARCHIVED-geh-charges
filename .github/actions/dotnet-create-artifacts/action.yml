@@ -16,31 +16,47 @@ name: Create artifacts
 
 runs:
   using: composite
+
+  env:
+    OUTPUT_PATH: '${{ github.workspace }}/output'
+
   steps:
-    - name: Publish Functionhost artifact
+    - name: Publish Functionhost
+      run: dotnet publish './source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.FunctionHost/GreenEnergyHub.Charges.FunctionHost.csproj' --no-build --no-restore --configuration Release --output ${{ env.OUTPUT_PATH }}/funtionhost
+
+    - name: Upload Functionhost artifact
       uses: actions/upload-artifact@v3
       with:
         name: functionhost
-        path: '${{ github.workspace }}/source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.FunctionHost/bin/Release/net6.0'
+        path: ${{ env.OUTPUT_PATH }}/funtionhost
         if-no-files-found: error
 
-    - name: Publish Web API artifact
+    - name: Publish Web API
+      run: dotnet publish './source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.WebApi/GreenEnergyHub.Charges.WebApi.csproj' --no-build --no-restore --configuration Release --output ${{ env.OUTPUT_PATH }}/webapi
+
+    - name: Upload Web API artifact
       uses: actions/upload-artifact@v3
       with:
         name: webapi
-        path: '${{ github.workspace }}/source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.WebApi/bin/Release/net6.0'
+        path: ${{ env.OUTPUT_PATH }}/webapi
         if-no-files-found: error
 
-    - name: Publish Database Migration artifact
+    - name: Publish Database Migration
+      run: dotnet publish './source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ApplyDBMigrationsApp/GreenEnergyHub.Charges.ApplyDBMigrationsApp.csproj' --no-build --no-restore --configuration Release --output ${{ env.OUTPUT_PATH }}/databasemigration
+
+    - name: Upload Database Migration artifact
       uses: actions/upload-artifact@v3
       with:
         name: databasemigration
-        path: '${{ github.workspace }}/source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.ApplyDBMigrationsApp/bin/Release/net6.0'
+        path: ${{ env.OUTPUT_PATH }}/databasemigration
         if-no-files-found: error
 
-    - name: Publish SystemTests artifact
+    - name: Publish System Tests
+      run: dotnet publish './source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.SystemTests/GreenEnergyHub.Charges.SystemTests.csproj' --no-build --no-restore --configuration Release --output ${{ env.OUTPUT_PATH }}/systemtests
+
+    - name: Upload System Tests artifact
       uses: actions/upload-artifact@v3
       with:
         name: systemtests
-        path: '${{ github.workspace }}/source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.SystemTests/bin/Release/net6.0'
+        path: ${{ env.OUTPUT_PATH }}/systemtests
         if-no-files-found: error
