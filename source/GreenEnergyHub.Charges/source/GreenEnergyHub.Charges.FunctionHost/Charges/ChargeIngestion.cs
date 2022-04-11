@@ -93,12 +93,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
                 return null;
 
             if (authorizedActor is null)
-                return new ErrorResponse(new List<SchemaValidationError> { new(0, 0, "fail auth") });
+                return null;
 
             foreach (var senderId in senderIds)
             {
                 if (senderId != authorizedActor.Identifier)
-                    return new ErrorResponse(new List<SchemaValidationError> { new(0, 0, "fail auth") });
+                    return new ErrorResponse(new List<SchemaValidationError> { new(0, 0, "Sender id does not match id of current authenticated user.") });
             }
 
             return null;
