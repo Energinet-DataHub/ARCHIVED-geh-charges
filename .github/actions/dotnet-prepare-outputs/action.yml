@@ -38,7 +38,7 @@ runs:
           --no-build \
           --no-restore \
           --configuration Release \
-          --output '${{ inputs.OUTPUT_PATH }}\functions\funtionhost'
+          --output '${{ inputs.OUTPUT_PATH }}\functions\functionhost'
 
     - name: Publish Web API
       shell: bash
@@ -50,20 +50,20 @@ runs:
           --configuration Release \
           --output '${{ inputs.OUTPUT_PATH }}\functions\webapi'
 
-    - name: Publish Database Migration
+    - name: Copy Database Migration to output
       shell: bash
       run: |
-        dotnet publish \
+        dotnet build \
           '.\source\GreenEnergyHub.Charges\source\GreenEnergyHub.Charges.ApplyDBMigrationsApp\GreenEnergyHub.Charges.ApplyDBMigrationsApp.csproj' \
           --no-build \
           --no-restore \
           --configuration Release \
           --output '${{ inputs.OUTPUT_PATH }}\migration\databasemigration'
 
-    - name: Publish System Tests
+    - name: Copy System Tests to output
       shell: bash
       run: |
-        dotnet publish \
+        dotnet build \
           '.\source\GreenEnergyHub.Charges\source\GreenEnergyHub.Charges.SystemTests\GreenEnergyHub.Charges.SystemTests.csproj' \
           --no-build \
           --no-restore \
