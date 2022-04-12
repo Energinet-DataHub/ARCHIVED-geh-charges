@@ -15,7 +15,8 @@
 name: Prepare dotnet outputs
 
 #
-# This action is called from the 'dotnet-solution-ci.yml' file.
+# This action is called from the 'dotnet-solution-ci.yml' file if the
+# workflow parameter PREPARE_OUTPUTS is set to 'true'.
 #
 # Prepared outputs will be uploaded as the 'dotnet' artifact.
 #
