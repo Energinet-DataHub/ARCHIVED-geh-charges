@@ -30,7 +30,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Publish Functionhost
+    - name: Publish Functionhost to output
       shell: bash
       run: |
         dotnet publish \
@@ -40,7 +40,7 @@ runs:
           --configuration Release \
           --output '${{ inputs.OUTPUT_PATH }}\functions\functionhost'
 
-    - name: Publish Web API
+    - name: Publish Web API to output
       shell: bash
       run: |
         dotnet publish \
