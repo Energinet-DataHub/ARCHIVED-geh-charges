@@ -30,7 +30,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Publish Functionhost to output
+    - name: Publish Functionhost
       shell: bash
       run: |
         dotnet publish \
@@ -40,7 +40,7 @@ runs:
           --configuration Release \
           --output '${{ inputs.OUTPUT_PATH }}\functions\functionhost'
 
-    - name: Publish Web API to output
+    - name: Publish Web API
       shell: bash
       run: |
         dotnet publish \
@@ -50,20 +50,20 @@ runs:
           --configuration Release \
           --output '${{ inputs.OUTPUT_PATH }}\functions\webapi'
 
-    - name: Copy Database Migration to output
+    - name: Publish Database Migration
       shell: bash
       run: |
-        dotnet build \
+        dotnet publish \
           '.\source\GreenEnergyHub.Charges\source\GreenEnergyHub.Charges.ApplyDBMigrationsApp\GreenEnergyHub.Charges.ApplyDBMigrationsApp.csproj' \
           --no-build \
           --no-restore \
           --configuration Release \
           --output '${{ inputs.OUTPUT_PATH }}\migration\databasemigration'
 
-    - name: Copy System Tests to output
+    - name: Publish System Tests
       shell: bash
       run: |
-        dotnet build \
+        dotnet publish \
           '.\source\GreenEnergyHub.Charges\source\GreenEnergyHub.Charges.SystemTests\GreenEnergyHub.Charges.SystemTests.csproj' \
           --no-build \
           --no-restore \
