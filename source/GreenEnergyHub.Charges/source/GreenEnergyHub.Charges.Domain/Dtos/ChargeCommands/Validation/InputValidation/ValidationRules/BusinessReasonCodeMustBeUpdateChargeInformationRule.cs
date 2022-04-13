@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
@@ -19,17 +20,16 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 {
     public class BusinessReasonCodeMustBeUpdateChargeInformationRule : IValidationRule
     {
-        private readonly ChargeCommand _chargeCommand;
+        private readonly DocumentDto _documentDto;
 
-        public BusinessReasonCodeMustBeUpdateChargeInformationRule(ChargeCommand chargeCommand)
+        public BusinessReasonCodeMustBeUpdateChargeInformationRule(DocumentDto documentDto)
         {
-            _chargeCommand = chargeCommand;
+            _documentDto = documentDto;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.BusinessReasonCodeMustBeUpdateChargeInformation;
 
-        public bool IsValid => _chargeCommand.Document.BusinessReasonCode ==
-                               BusinessReasonCode.UpdateChargeInformation;
+        public bool IsValid => _documentDto.BusinessReasonCode == BusinessReasonCode.UpdateChargeInformation;
     }
 }

@@ -14,6 +14,7 @@
 
 using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
@@ -25,7 +26,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
     /// <summary>
     /// The ChargeOperationDto class contains the intend of the charge command, e.g. updating an existing charge.
     /// </summary>
-    public class ChargeOperationDto
+    public class ChargeOperationDto : OperationBase
     {
         public ChargeOperationDto(
                 string id,

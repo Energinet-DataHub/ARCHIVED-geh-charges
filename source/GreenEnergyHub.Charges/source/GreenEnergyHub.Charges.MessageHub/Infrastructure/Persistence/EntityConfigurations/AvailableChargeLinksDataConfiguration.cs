@@ -41,6 +41,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Persistence.EntityCon
             builder.Property(x => x.EndDateTime);
             builder.Property(x => x.RequestDateTime);
             builder.Property(x => x.AvailableDataReferenceId);
+            builder.Property(x => x.OperationOrder);
             builder.Property(x => x.DocumentType);
         }
     }

@@ -30,20 +30,20 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         [InlineAutoMoqData(null!, false)]
         [InlineAutoMoqData("", false)]
         [InlineAutoMoqData("content", true)]
-        public void SenderIsMandatoryValidationRule_Test(string id, bool expected, ChargeCommand command)
+        public void SenderIsMandatoryValidationRule_Test(string id, bool expected, ChargeCommand chargeCommand)
         {
-            command.Document.Sender.Id = id;
-            var sut = new SenderIsMandatoryTypeValidationRule(command);
+            chargeCommand.Document.Sender.Id = id;
+            var sut = new SenderIsMandatoryTypeValidationRule(chargeCommand.Document);
             Assert.Equal(expected, sut.IsValid);
             sut.IsValid.Should().Be(expected);
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommand command)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommand chargeCommand)
         {
-            command.Document.Sender.Id = null!;
-            var sut = new SenderIsMandatoryTypeValidationRule(command);
+            chargeCommand.Document.Sender.Id = null!;
+            var sut = new SenderIsMandatoryTypeValidationRule(chargeCommand.Document);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.SenderIsMandatoryTypeValidation);
         }
     }

@@ -53,7 +53,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.ChargeLink
             int noOfReasons,
             TestMeteringPointAdministrator hubSender,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            [Frozen] Mock<ICimIdProvider> cimIDProvider,
+            [Frozen] Mock<ICimIdProvider> cimIdProvider,
             ChargeLinksReceiptCimSerializer serializer,
             ChargeLinksRejectionBundleSpecification sut)
         {
@@ -64,7 +64,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.ChargeLink
                 .Setup(r => r.GetMeteringPointAdministratorAsync())
                 .ReturnsAsync(hubSender);
 
-            cimIDProvider.Setup(
+            cimIdProvider.Setup(
                     c => c.GetUniqueId())
                 .Returns(MaxLengthId);
 
@@ -86,7 +86,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.ChargeLink
         }
 
         [Fact]
-        public void SizeOfMaximumDocumentWithuotReasons_ShouldNotExceedDefinedWeight()
+        public void SizeOfMaximumDocumentWithoutReasons_ShouldNotExceedDefinedWeight()
         {
             // Arrange
             var confirmationMessageWeightInBytes = (long)ChargeLinksRejectionBundleSpecification.RejectionWeight * 1000;
@@ -112,6 +112,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.ChargeLink
                 string.Empty,
                 MaxLengthId,
                 DocumentType.ChargeLinkReceipt,
+                0,
                 GetReasons(noOfReasons));
         }
 

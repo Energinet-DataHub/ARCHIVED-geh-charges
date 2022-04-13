@@ -41,6 +41,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
             string originalOperationId,
             string meteringPointId,
             DocumentType documentType,
+            int operationOrder,
             List<AvailableReceiptValidationError> validationErrors)
             : base(
                 senderId,
@@ -50,7 +51,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
                 businessReasonCode,
                 requestDateTime,
                 availableDataReferenceId,
-                documentType)
+                documentType,
+                operationOrder)
         {
             ReceiptStatus = receiptStatus;
             OriginalOperationId = originalOperationId;

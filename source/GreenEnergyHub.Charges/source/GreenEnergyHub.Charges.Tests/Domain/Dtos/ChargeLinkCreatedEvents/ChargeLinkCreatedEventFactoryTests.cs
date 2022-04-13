@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinkCreatedEvents
             // Act
             var result = sut.CreateEvents(command);
             var chargeLinkCreatedEvents =
-                command.ChargeLinks
+                command.ChargeLinksOperations
                     .ToDictionary(chargeLinkDto => chargeLinkDto, chargeLinkDto => result
                         .Single(x => x.ChargeId == chargeLinkDto.SenderProvidedChargeId));
 

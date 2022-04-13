@@ -66,6 +66,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.MessageHub
                 true,
                 Resolution.PT15M,
                 DocumentType.NotifyPriceList,
+                0,
                 new List<AvailableChargeDataPoint>());
         }
     }
