@@ -65,6 +65,8 @@ module "func_functionhost" {
     CREATE_LINKS_REQUEST_QUEUE_NAME                                 = data.azurerm_key_vault_secret.sbq_create_link_request_name.value
     METERING_POINT_CREATED_TOPIC_NAME                               = data.azurerm_key_vault_secret.sbt_metering_point_created_name.value
     METERING_POINT_CREATED_SUBSCRIPTION_NAME                        = data.azurerm_key_vault_secret.sbs_metering_point_created_sub_charges_name.value
+    MARKET_PARTICIPANT_CHANGED_TOPIC_NAME                           = data.azurerm_key_vault_secret.sbt_market_participant_changed_name.value,
+    MARKET_PARTICIPANT_CHANGED_SUBSCRIPTION_NAME                    = data.azurerm_key_vault_secret.sbs_market_participant_changed_to_charges_name.value,
 
     # Shared resources
     INTEGRATIONEVENT_SENDER_CONNECTION_STRING                       = data.azurerm_key_vault_secret.sb_domain_relay_send_connection_string.value
