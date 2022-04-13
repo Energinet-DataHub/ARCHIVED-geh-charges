@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         public async Task<Charge> CreateFromCommandAsync(ChargeCommand command)
         {
             var owner = await _marketParticipantRepository
-                .GetOrNullAsync(command.ChargeOperation.ChargeOwner)
+                .GetOrNullAsync(command.ChargeOperation.ChargeOwner, command.Document.Sender.BusinessProcessRole)
                 .ConfigureAwait(false);
 
             if (owner == null)

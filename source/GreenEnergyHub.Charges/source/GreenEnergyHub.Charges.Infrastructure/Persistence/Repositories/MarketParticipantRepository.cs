@@ -31,6 +31,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
             _chargesDatabaseContext = chargesDatabaseContext;
         }
 
+        public async Task AddAsync(MarketParticipant marketParticipant)
+        {
+            if (marketParticipant == null) throw new ArgumentNullException(nameof(marketParticipant));
+            await _chargesDatabaseContext.MarketParticipants.AddAsync(marketParticipant).ConfigureAwait(false);
+        }
+
         public async Task<MarketParticipant?> GetOrNullAsync(Guid id)
         {
             return await _chargesDatabaseContext
@@ -38,11 +44,14 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
                 .SingleOrDefaultAsync(mp => mp.Id == id).ConfigureAwait(false);
         }
 
-        public async Task<MarketParticipant?> GetOrNullAsync(string marketParticipantId)
+        public async Task<MarketParticipant?> GetOrNullAsync(
+            string marketParticipantId,
+            MarketParticipantRole businessProcessRole)
         {
             return await _chargesDatabaseContext
                 .MarketParticipants
-                .SingleOrDefaultAsync(mp => mp.MarketParticipantId == marketParticipantId).ConfigureAwait(false);
+                .SingleOrDefaultAsync(mp => mp.MarketParticipantId == marketParticipantId
+                                            && mp.BusinessProcessRole == businessProcessRole).ConfigureAwait(false);
         }
 
         public Task<List<MarketParticipant>> GetGridAccessProvidersAsync()

@@ -62,7 +62,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
                 .ReturnsAsync(charge);
 
             marketParticipantRepository
-                .Setup(repo => repo.GetOrNullAsync(It.IsAny<string>()))
+                .Setup(repo => repo.GetOrNullAsync(
+                    It.IsAny<string>(),
+                    It.IsAny<MarketParticipantRole>()))
                 .ReturnsAsync(sender);
 
             // Act
@@ -208,7 +210,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         private static void SetupMarketParticipantMock(TestMarketParticipant sender, Mock<IMarketParticipantRepository> marketParticipantRepository)
         {
             marketParticipantRepository
-                .Setup(repo => repo.GetOrNullAsync(It.IsAny<string>()))
+                .Setup(repo => repo.GetOrNullAsync(It.IsAny<string>(), It.IsAny<MarketParticipantRole>()))
                 .ReturnsAsync(sender);
         }
 

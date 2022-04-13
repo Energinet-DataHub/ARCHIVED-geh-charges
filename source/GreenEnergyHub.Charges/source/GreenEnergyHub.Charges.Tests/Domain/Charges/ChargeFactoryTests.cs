@@ -42,7 +42,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             ChargeFactory sut)
         {
             marketParticipantRepository
-                .Setup(repo => repo.GetOrNullAsync(chargeCommand.ChargeOperation.ChargeOwner))
+                .Setup(repo => repo.GetOrNullAsync(
+                    chargeCommand.ChargeOperation.ChargeOwner,
+                    chargeCommand.Document.Sender.BusinessProcessRole))
                 .ReturnsAsync(owner);
 
             chargePeriodFactory
@@ -64,7 +66,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             ChargeFactory sut)
         {
             marketParticipantRepository
-                .Setup(repo => repo.GetOrNullAsync(It.IsAny<string>()))
+                .Setup(repo => repo.GetOrNullAsync(
+                    It.IsAny<string>(),
+                    It.IsAny<MarketParticipantRole>()))
                 .ReturnsAsync((MarketParticipant?)null);
 
             chargePeriodFactory
