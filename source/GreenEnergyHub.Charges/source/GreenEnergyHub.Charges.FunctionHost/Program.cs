@@ -17,7 +17,6 @@ using Energinet.DataHub.Core.App.FunctionApp.Diagnostics.HealthChecks;
 using Energinet.DataHub.Core.Logging.RequestResponseMiddleware;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.FunctionHost.Configuration;
-using GreenEnergyHub.Charges.FunctionHost.System;
 using GreenEnergyHub.Charges.Infrastructure.Core.Authentication;
 using GreenEnergyHub.Charges.Infrastructure.Core.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
@@ -78,7 +77,7 @@ namespace GreenEnergyHub.Charges.FunctionHost
             BundleSenderEndpointConfiguration.ConfigureServices(serviceCollection);
 
             // Market participant registry
-            MarketParticipantRegistryEndpointConfiguration.ConfigureServices(serviceCollection);
+            MarketParticipantPersisterConfiguration.ConfigureServices(serviceCollection);
         }
     }
 }
