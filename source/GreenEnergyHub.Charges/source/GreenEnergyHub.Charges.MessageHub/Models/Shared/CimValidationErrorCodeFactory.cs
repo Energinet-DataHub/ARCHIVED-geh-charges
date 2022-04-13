@@ -52,6 +52,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.Shared
                 ValidationRuleIdentifier.ChargeDoesNotExist => ReasonCode.E0I,
                 ValidationRuleIdentifier.ChargeLinkUpdateNotYetSupported => ReasonCode.D13,
                 ValidationRuleIdentifier.UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDate => ReasonCode.D14,
+                ValidationRuleIdentifier.SubsequentBundleOperationsFail => ReasonCode.D14,
+                ValidationRuleIdentifier.TransparentInvoicingIsNotAllowedForFee => ReasonCode.D67,
                 _ => throw new NotImplementedException(),
             };
         }

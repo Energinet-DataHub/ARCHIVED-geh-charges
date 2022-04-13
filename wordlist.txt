@@ -72,6 +72,7 @@ SimpleInjector
 StartDateTime
 Terraform
 TODO
+TransparentInvoicing
 TSO
 UpdatedPeriodEndDateTime
 UpdatedPeriodStartDateTime

@@ -57,7 +57,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.ChargeLinks
 
             // Assert
             var actualFirst = actual.First();
-            var firstExpectedLink = expectedEvent.ChargeLinksCommand.ChargeLinks.First();
+            var firstExpectedLink = expectedEvent.ChargeLinksCommand.ChargeLinksOperations.First();
 
             actualFirst.ChargeId.Should().Be(expectedCharge.Id);
             actualFirst.MeteringPointId.Should().Be(expectedMeteringPoint.Id);

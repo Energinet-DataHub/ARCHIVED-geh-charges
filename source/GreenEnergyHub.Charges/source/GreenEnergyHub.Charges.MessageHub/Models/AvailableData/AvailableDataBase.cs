@@ -32,7 +32,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableData
             BusinessReasonCode businessReasonCode,
             Instant requestDateTime,
             Guid availableDataReferenceId,
-            DocumentType documentType)
+            DocumentType documentType,
+            int operationOrder)
         {
             Id = Guid.NewGuid();
             SenderId = senderId;
@@ -43,6 +44,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableData
             RequestDateTime = requestDateTime;
             AvailableDataReferenceId = availableDataReferenceId;
             DocumentType = documentType;
+            OperationOrder = operationOrder;
         }
 
         // ReSharper disable once UnusedMember.Local - needed by persistence
@@ -83,5 +85,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableData
         public Guid AvailableDataReferenceId { get; }
 
         public DocumentType DocumentType { get; }
+
+        public int OperationOrder { get; }
     }
 }

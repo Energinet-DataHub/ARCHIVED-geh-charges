@@ -17,7 +17,6 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
@@ -36,26 +35,29 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void ChargeOperationIdRequiredRule_Test(
             string chargeOperationId,
             bool expected,
-            ChargeCommandBuilder builder)
+            ChargeOperationDtoBuilder builder)
         {
-            var command = builder.WithOperationId(chargeOperationId).Build();
-            var sut = new ChargeOperationIdRequiredRule(command);
-            Assert.Equal(expected, sut.IsValid);
+            var chargeOperationDto = builder.WithChargeOperationId(chargeOperationId).Build();
+            var sut = new ChargeOperationIdRequiredRule(chargeOperationDto);
+            sut.IsValid.Should().Be(expected);
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder builder)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeOperationDtoBuilder builder)
         {
-            var invalidCommand = CreateInvalidCommand(builder);
-            var sut = new ChargeOperationIdRequiredRule(invalidCommand);
+            var invalidChargeOperationDto = builder.WithChargeOperationId(string.Empty).Build();
+            var sut = new ChargeOperationIdRequiredRule(invalidChargeOperationDto);
             sut.ValidationRuleIdentifier.Should()
                 .Be(ValidationRuleIdentifier.ChargeOperationIdRequired);
         }
 
-        private static ChargeCommand CreateInvalidCommand(ChargeCommandBuilder builder)
+        [Theory]
+        [InlineAutoDomainData]
+        public void OperationId_ShouldBe_EqualTo(ChargeOperationDto chargeOperationDto)
         {
-            return builder.WithOperationId(string.Empty).Build();
+            var sut = new ChargeOperationIdRequiredRule(chargeOperationDto);
+            sut.OperationId.Should().Be(chargeOperationDto.Id);
         }
     }
 }

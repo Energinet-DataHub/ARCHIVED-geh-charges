@@ -24,7 +24,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCreatedEvents
     {
         public IReadOnlyCollection<ChargeLinkCreatedEvent> CreateEvents([NotNull] ChargeLinksCommand command)
         {
-            return command.ChargeLinks.Select(
+            return command.ChargeLinksOperations.Select(
                 chargeLinkDto => ChargeLinkCreatedEvent(command, chargeLinkDto)).ToList();
         }
 

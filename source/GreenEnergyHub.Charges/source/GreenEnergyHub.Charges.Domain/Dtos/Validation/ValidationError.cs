@@ -16,7 +16,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 {
     public class ValidationError
     {
-        public ValidationError(ValidationRuleIdentifier validationRuleIdentifier, string? triggeredBy)
+        public ValidationError(
+            ValidationRuleIdentifier validationRuleIdentifier,
+            string? triggeredBy)
         {
             ValidationRuleIdentifier = validationRuleIdentifier;
             TriggeredBy = triggeredBy;
