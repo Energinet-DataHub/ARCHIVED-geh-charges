@@ -13,13 +13,11 @@
 // limitations under the License.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
+using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Contracts;
-using GreenEnergyHub.Charges.Infrastructure.Core.Correlation;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.Infrastructure.ReplySender;
 using GreenEnergyHub.Charges.Infrastructure.ReplySender.CreateDefaultChargeLinkReplier;
 using GreenEnergyHub.Charges.TestCore.Attributes;
@@ -45,8 +43,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ReplySender.CreateDefaultC
             string meteringPointId,
             string replyQueue,
             string correlationId,
-            [NotNull] [Frozen] Mock<ICorrelationContext> correlationContext,
-            [NotNull] [Frozen] Mock<IServiceBusReplySenderProvider> serviceBusReplySenderProviderMock)
+            [Frozen] Mock<ICorrelationContext> correlationContext,
+            [Frozen] Mock<IServiceBusReplySenderProvider> serviceBusReplySenderProviderMock)
         {
             // Arrange
             var sut = new CreateDefaultChargeLinksReplier(
@@ -65,10 +63,10 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ReplySender.CreateDefaultC
         [Theory]
         [InlineAutoDomainData]
         public async Task ReplyWithSucceededAsync_WhenInputIsValid_SendsMessage(
-            [NotNull] [Frozen] Mock<IServiceBusReplySenderProvider> serviceBusReplySenderProviderMock,
-            [NotNull] [Frozen] Mock<IServiceBusReplySender> serviceBusRequestSenderMock,
-            [NotNull] [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContextMock,
-            [NotNull] [Frozen] Mock<ICorrelationContext> correlationContext,
+            [Frozen] Mock<IServiceBusReplySenderProvider> serviceBusReplySenderProviderMock,
+            [Frozen] Mock<IServiceBusReplySender> serviceBusRequestSenderMock,
+            [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContextMock,
+            [Frozen] Mock<ICorrelationContext> correlationContext,
             string correlationId,
             string anyMeteringPointId,
             string replyTo,
@@ -109,8 +107,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ReplySender.CreateDefaultC
             string replyQueue,
             string correlationId,
             ErrorCode errorCode,
-            [NotNull] [Frozen] Mock<ICorrelationContext> correlationContext,
-            [NotNull] [Frozen] Mock<IServiceBusReplySenderProvider> serviceBusRequestSenderProviderMock)
+            [Frozen] Mock<ICorrelationContext> correlationContext,
+            [Frozen] Mock<IServiceBusReplySenderProvider> serviceBusRequestSenderProviderMock)
         {
             // Arrange
             var sut = new CreateDefaultChargeLinksReplier(
@@ -129,9 +127,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ReplySender.CreateDefaultC
         [Theory]
         [InlineAutoDomainData]
         public async Task ReplyWithFailedAsync_WhenInputIsValid_SendsMessage(
-            [NotNull] [Frozen] Mock<IServiceBusReplySenderProvider> serviceBusReplySenderProviderMock,
-            [NotNull] [Frozen] Mock<IServiceBusReplySender> serviceBusReplySenderMock,
-            [NotNull] [Frozen] Mock<ICorrelationContext> correlationContext,
+            [Frozen] Mock<IServiceBusReplySenderProvider> serviceBusReplySenderProviderMock,
+            [Frozen] Mock<IServiceBusReplySender> serviceBusReplySenderMock,
+            [Frozen] Mock<ICorrelationContext> correlationContext,
             string correlationId,
             string meteringPointId,
             ErrorCode errorCode)
