@@ -14,7 +14,6 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -44,6 +43,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
             // cim:createdDateTime and effective date must have seconds
             var ymdhmsTimeInterval = currentInstant.GetCreatedDateTimeFormat();
 
+            var chargeIdForMultipleOperations = $"ChgId{Guid.NewGuid().ToString("n")[..5]}";
+
             var replacementIndex = 0;
             var mergedFile = Regex.Replace(file, "[{][{][$]increment5digits[}][}]", _ =>
             {
@@ -56,9 +57,12 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
                 .Replace("{{$receiverMarketParticipant}}", "5790001330552")
                 .Replace("{{$randomCharacters}}", Guid.NewGuid().ToString("n")[..10])
                 .Replace("{{$randomCharactersShort}}", Guid.NewGuid().ToString("n")[..5])
+                .Replace("{{$chargeIdForMultipleOperations}}", chargeIdForMultipleOperations)
                 .Replace("{{$isoTimestamp}}", now)
                 .Replace("{{$isoTimestampPlusOneMonth}}", inThirtyoneDays.ToString())
                 .Replace("{{$YMDHM_TimestampPlusOneMonth}}", ymdhmTimeInterval)
+                .Replace("{{$isoTimestampPlusOneMonthAndOneDay}}", inThirtyoneDays.Plus(Duration.FromDays(1)).ToString())
+                .Replace("{{$isoTimestampPlusOneMonthAndTwoDays}}", inThirtyoneDays.Plus(Duration.FromDays(2)).ToString())
                 .Replace("{{$ISO8601Timestamp}}", ymdhmsTimeInterval);
         }
     }

@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright 2020 Energinet DataHub A/S
+
+Licensed under the Apache License, Version 2.0 (the "License2");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<cim:RequestChangeOfPriceList_MarketDocument xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cim="urn:ediel.org:structure:requestchangeofpricelist:0:1" xsi:schemaLocation="urn:ediel.org:structure:requestchangeofpricelist:0:1 urn-ediel-org-structure-requestchangeofpricelist-0-1.xsd">
+    <cim:mRID>DocId{{$isoTimestamp}}</cim:mRID>
+    <cim:type>D10</cim:type>
+    <cim:process.processType>D18</cim:process.processType>
+    <cim:businessSector.type>23</cim:businessSector.type>
+    <cim:sender_MarketParticipant.mRID codingScheme="A10">8100000000030</cim:sender_MarketParticipant.mRID>
+    <cim:sender_MarketParticipant.marketRole.type>DDM</cim:sender_MarketParticipant.marketRole.type>
+    <cim:receiver_MarketParticipant.mRID codingScheme="A10">5790001330552</cim:receiver_MarketParticipant.mRID>
+    <cim:receiver_MarketParticipant.marketRole.type>DDZ</cim:receiver_MarketParticipant.marketRole.type>
+    <cim:createdDateTime>{{$isoTimestamp}}</cim:createdDateTime>
+    <cim:MktActivityRecord>
+        <cim:mRID>OpId1_{{$isoTimestamp}}</cim:mRID>
+        <cim:ChargeGroup>
+            <cim:ChargeType>
+                <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">8100000000030</cim:chargeTypeOwner_MarketParticipant.mRID>
+                <cim:type>D03</cim:type>
+                <cim:mRID>{{$chargeIdForMultipleOperations}}</cim:mRID>
+                <cim:name>Charge tariff day Name1</cim:name>
+                <cim:description>Created as NOT TAX tariff</cim:description>
+                <cim:priceTimeFrame_Period.resolution>P1D</cim:priceTimeFrame_Period.resolution>
+                <cim:effectiveDate>{{$isoTimestampPlusOneMonth}}</cim:effectiveDate>
+                <cim:VATPayer>D02</cim:VATPayer>
+                <cim:transparentInvoicing>false</cim:transparentInvoicing>
+                <cim:taxIndicator>false</cim:taxIndicator>
+            </cim:ChargeType>
+        </cim:ChargeGroup>
+    </cim:MktActivityRecord>
+    <cim:MktActivityRecord>
+        <cim:mRID>OpId2_{{$isoTimestamp}}</cim:mRID>
+        <cim:ChargeGroup>
+            <cim:ChargeType>
+                <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">8100000000030</cim:chargeTypeOwner_MarketParticipant.mRID>
+                <cim:type>D03</cim:type>
+                <cim:mRID>{{$chargeIdForMultipleOperations}}</cim:mRID>
+                <cim:name>Charge tariff day Name2</cim:name>
+                <cim:description>Attempting to change to TAX</cim:description>
+                <cim:priceTimeFrame_Period.resolution>P1D</cim:priceTimeFrame_Period.resolution>
+                <cim:effectiveDate>{{$isoTimestampPlusOneMonthAndOneDay}}</cim:effectiveDate>
+                <cim:VATPayer>D02</cim:VATPayer>
+                <cim:transparentInvoicing>false</cim:transparentInvoicing>
+                <cim:taxIndicator>true</cim:taxIndicator>
+            </cim:ChargeType>
+        </cim:ChargeGroup>
+    </cim:MktActivityRecord>
+</cim:RequestChangeOfPriceList_MarketDocument>
