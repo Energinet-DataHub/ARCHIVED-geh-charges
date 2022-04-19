@@ -13,11 +13,11 @@
 // limitations under the License.
 
 using Energinet.DataHub.Core.App.FunctionApp.Middleware;
+using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using Energinet.DataHub.Core.Logging.RequestResponseMiddleware;
 using GreenEnergyHub.Charges.FunctionHost.Configuration;
 using GreenEnergyHub.Charges.FunctionHost.System;
 using GreenEnergyHub.Charges.Infrastructure.Core.Authentication;
-using GreenEnergyHub.Charges.Infrastructure.Core.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using Microsoft.Extensions.DependencyInjection;

@@ -64,10 +64,12 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 return;
             }
 
+            var acceptedChargeCommands = new List<ChargeCommand>();
             var triggeredBy = string.Empty;
-            var charge = await GetChargeAsync(commandReceivedEvent).ConfigureAwait(false);
+
             foreach (var chargeOperationDto in commandReceivedEvent.Command.ChargeOperations)
             {
+                var charge = await GetChargeAsync(commandReceivedEvent).ConfigureAwait(false);
                 var chargeCommandWithOperation = new ChargeCommand(
                 commandReceivedEvent.Command.Document,
                 new List<ChargeOperationDto> { chargeOperationDto });
@@ -80,8 +82,17 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 
                 switch (operationType)
                 {
+                    /*
+                     * In order to fix issue 1276, the create operation is allowed to violate the unit of work pattern.
+                     * This is done to ensure the next operations in the bundle will be processed correctly.
+                     * Do note that the ChargeCommandReceivedEventHandler is currently being refactored. So this is
+                     * considered a short-sighted solution.
+                     */
                     case OperationType.Create:
                         await HandleCreateEventAsync(chargeOperationDto).ConfigureAwait(false);
+                        await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+                        await _chargeCommandReceiptService.AcceptAsync(chargeCommandWithOperation)
+                            .ConfigureAwait(false);
                         break;
                     case OperationType.Update:
                         HandleUpdateEvent(charge!, chargeOperationDto);
@@ -96,8 +107,14 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                         throw new InvalidOperationException("Could not handle charge command.");
                 }
 
-                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-                await _chargeCommandReceiptService.AcceptAsync(chargeCommandWithOperation).ConfigureAwait(false);
+                if (operationType != OperationType.Create)
+                    acceptedChargeCommands.Add(chargeCommandWithOperation);
+            }
+
+            await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+            foreach (var command in acceptedChargeCommands)
+            {
+                await _chargeCommandReceiptService.AcceptAsync(command).ConfigureAwait(false);
             }
         }
 

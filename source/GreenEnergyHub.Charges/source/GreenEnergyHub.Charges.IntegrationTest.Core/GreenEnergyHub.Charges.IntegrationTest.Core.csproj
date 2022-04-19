@@ -35,7 +35,7 @@ limitations under the License.
     <PackageReference Include="AutoFixture" Version="4.17.0" />
     <PackageReference Include="AutoFixture.AutoMoq" Version="4.17.0" />
     <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.7.0" />
-    <PackageReference Include="Energinet.DataHub.Core.FunctionApp.TestCommon" Version="2.1.0" />
+    <PackageReference Include="Energinet.DataHub.Core.FunctionApp.TestCommon" Version="2.2.0" />
     <PackageReference Include="Energinet.DataHub.MessageHub.Client" Version="1.9.1" />
     <PackageReference Include="Energinet.DataHub.MessageHub.IntegrationTesting" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
@@ -76,7 +76,16 @@ limitations under the License.
     <Content Include="TestFiles\ChargeLinks\FixedPeriodTaxTariffChargeLinkDocument.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="TestFiles\Charges\BundleWithMultipleOperationsForSameTariff.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Charges\BundleWithTwoOperationsForSameTariffSecondOpViolatingVr903.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestFiles\Charges\CreateSubscriptionDocument.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Charges\CreateTariffDocument.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestFiles\Charges\InvalidSchemaTariffDocument.xml">
@@ -104,6 +113,9 @@ limitations under the License.
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestFiles\Charges\TaxTariffWithPriceDocument.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Charges\UpdateTariffDocument.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

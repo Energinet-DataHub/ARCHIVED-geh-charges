@@ -14,6 +14,8 @@
 
 using System;
 using Azure.Messaging.ServiceBus;
+using Energinet.DataHub.Core.App.FunctionApp.Middleware;
+using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using Energinet.DataHub.Core.Logging.RequestResponseMiddleware.Storage;
 using Energinet.DataHub.Core.Messaging.Protobuf;
 using Energinet.DataHub.Core.Messaging.Transport;
@@ -31,7 +33,6 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.FunctionHost.Common;
-using GreenEnergyHub.Charges.Infrastructure.Core.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factories;
