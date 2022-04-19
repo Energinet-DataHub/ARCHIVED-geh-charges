@@ -27,11 +27,11 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
 {
     public class ChargeCommandBusinessValidationRulesFactory : IBusinessValidationRulesFactory<ChargeCommand>
     {
-        private readonly IRulesConfigurationRepository _rulesConfigurationRepository;
         private readonly IChargeRepository _chargeRepository;
-        private readonly IMarketParticipantRepository _marketParticipantRepository;
-        private readonly IZonedDateTimeService _zonedDateTimeService;
         private readonly IClock _clock;
+        private readonly IMarketParticipantRepository _marketParticipantRepository;
+        private readonly IRulesConfigurationRepository _rulesConfigurationRepository;
+        private readonly IZonedDateTimeService _zonedDateTimeService;
 
         public ChargeCommandBusinessValidationRulesFactory(
             IRulesConfigurationRepository rulesConfigurationRepository,
@@ -66,9 +66,15 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
             var charge = await GetChargeOrNullAsync(chargeOperationDto).ConfigureAwait(false);
             var rules = GetMandatoryRulesForOperation(chargeOperationDto, configuration);
             if (charge == null)
+            {
                 return rules;
+            }
+
             if (chargeOperationDto.Type == ChargeType.Tariff)
+            {
                 rules.AddRange(AddTariffOnlyRules(chargeOperationDto, charge));
+            }
+
             AddUpdateRules(rules, chargeOperationDto, charge);
             return rules;
         }
@@ -76,17 +82,18 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
         private static IEnumerable<IValidationRule> AddTariffOnlyRules(
             ChargeOperationDto chargeOperationDto, Charge charge)
         {
-            return new List<IValidationRule>
-            {
-                new ChangingTariffTaxValueNotAllowedRule(chargeOperationDto, charge),
-            };
+            return new List<IValidationRule> { new ChangingTariffTaxValueNotAllowedRule(chargeOperationDto, charge) };
         }
 
-        private void AddUpdateRules(List<IValidationRule> rules, ChargeOperationDto chargeOperationDto, Charge existingCharge)
+        private void AddUpdateRules(
+            List<IValidationRule> rules,
+            ChargeOperationDto chargeOperationDto,
+            Charge existingCharge)
         {
             var updateRules = new List<IValidationRule>
             {
                 new UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateRule(existingCharge, chargeOperationDto),
+                new ChargeResolutionCanNotBeUpdatedRule(existingCharge, chargeOperationDto),
             };
 
             rules.AddRange(updateRules);
@@ -94,10 +101,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
 
         private static List<IValidationRule> GetMandatoryRulesForCommand(MarketParticipant? sender)
         {
-            var rules = new List<IValidationRule>
-            {
-                new CommandSenderMustBeAnExistingMarketParticipantRule(sender),
-            };
+            var rules = new List<IValidationRule> { new CommandSenderMustBeAnExistingMarketParticipantRule(sender) };
 
             return rules;
         }
