@@ -14,6 +14,7 @@
 
 using System.Collections.Generic;
 using Azure.Messaging.ServiceBus;
+using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using GreenEnergyHub.Charges.Application.Messaging;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factories
