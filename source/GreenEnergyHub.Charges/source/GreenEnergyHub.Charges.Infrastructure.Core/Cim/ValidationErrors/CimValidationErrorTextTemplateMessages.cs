@@ -145,6 +145,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         public const string TransparentInvoicingIsNotAllowedForFeeErrorText =
             "Transparent Invoicing for Charge ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}} cannot be set to true.";
 
+        [ErrorMessageFor(ValidationRuleIdentifier.ChargeResolutionCanNotBeUpdated)]
+        public const string ChargeResolutionCanNotBeUpdatedErrorText =
+            "Period type {{ChargeResolution}} not allowed: The specified resolution for chargetype {{ChargeType}} charge ID {{DocumentSenderProvidedChargeId}} may not be changed. It must have the same period type as when created.";
+
         public const string Unknown = "unknown";
     }
 }
