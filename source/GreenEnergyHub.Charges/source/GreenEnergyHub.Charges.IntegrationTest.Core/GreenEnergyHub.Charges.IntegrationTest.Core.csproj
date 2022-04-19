@@ -76,7 +76,16 @@ limitations under the License.
     <Content Include="TestFiles\ChargeLinks\FixedPeriodTaxTariffChargeLinkDocument.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="TestFiles\Charges\BundleWithMultipleOperationsForSameTariff.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Charges\BundleWithTwoOperationsForSameTariffSecondOpViolatingVr903.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestFiles\Charges\CreateSubscriptionDocument.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Charges\CreateTariffDocument.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestFiles\Charges\InvalidSchemaTariffDocument.xml">
@@ -101,6 +110,9 @@ limitations under the License.
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestFiles\Charges\TaxTariffWithPriceDocument.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Charges\UpdateTariffDocument.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
