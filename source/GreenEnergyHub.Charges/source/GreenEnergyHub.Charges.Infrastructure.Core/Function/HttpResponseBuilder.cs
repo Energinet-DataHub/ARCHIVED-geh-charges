@@ -14,6 +14,7 @@
 
 using System.Net;
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using Energinet.DataHub.Core.SchemaValidation.Errors;
 using Energinet.DataHub.Core.SchemaValidation.Extensions;
 using Microsoft.Azure.Functions.Worker.Http;
@@ -22,16 +23,32 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
 {
     public sealed class HttpResponseBuilder : IHttpResponseBuilder
     {
-        public HttpResponseData CreateAcceptedResponse(HttpRequestData request)
+        private readonly ICorrelationContext _correlationContext;
+
+        public HttpResponseBuilder(ICorrelationContext correlationContext)
         {
-            return request.CreateResponse(HttpStatusCode.Accepted);
+            _correlationContext = correlationContext;
         }
 
-        public async Task<HttpResponseData> CreateBadRequestResponseAsync(HttpRequestData request, ErrorResponse response)
+        public HttpResponseData CreateAcceptedResponse(HttpRequestData request)
+        {
+            var httpResponseData = request.CreateResponse(HttpStatusCode.Accepted);
+            AddHeaders(httpResponseData);
+            return httpResponseData;
+        }
+
+        public async Task<HttpResponseData> CreateBadRequestResponseAsync(
+            HttpRequestData request, ErrorResponse errorResponse)
         {
             var httpResponse = request.CreateResponse(HttpStatusCode.BadRequest);
-            await response.WriteAsXmlAsync(httpResponse.Body).ConfigureAwait(false);
+            AddHeaders(httpResponse);
+            await errorResponse.WriteAsXmlAsync(httpResponse.Body).ConfigureAwait(false);
             return httpResponse;
+        }
+
+        private void AddHeaders(HttpResponseData httpResponseData)
+        {
+            httpResponseData.Headers.Add("CorrelationId", _correlationContext.Id);
         }
     }
 }
