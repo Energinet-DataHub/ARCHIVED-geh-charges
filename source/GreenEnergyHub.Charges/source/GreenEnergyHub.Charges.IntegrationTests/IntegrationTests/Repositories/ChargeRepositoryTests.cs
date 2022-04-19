@@ -162,7 +162,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         {
             var charge = new Charge(
                 Guid.NewGuid(),
-                "SenderProvidedId",
+                $"ChgId{Guid.NewGuid().ToString("n")[..5]}",
                 _marketParticipantId,
                 ChargeType.Fee,
                 Resolution.P1D,
