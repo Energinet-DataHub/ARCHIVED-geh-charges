@@ -184,10 +184,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // Assert
                 actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
 
-                // We expect two peeks:
-                // * one for the create confirmation
-                // * one for the remaining confirmations (update, stop and cancel stop)
-                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId, 2);
+                // We expect four peeks:
+                // * one for the create confirmation (create)
+                // * one for the create confirmation (update)
+                // * one for the create confirmation (stop)
+                // * one for the create confirmation (cancel stop)
+                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId, 4);
             }
 
             [Fact]
