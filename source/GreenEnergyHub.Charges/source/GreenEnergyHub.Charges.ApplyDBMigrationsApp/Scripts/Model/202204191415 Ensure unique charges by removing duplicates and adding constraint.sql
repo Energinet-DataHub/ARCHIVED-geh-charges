@@ -28,7 +28,7 @@ from Charges.Charge
         on dpl.Id = cp.ChargeId
     where dpl.rownumber > 1
 
-	delete cpd
+    delete cpd
     from Charges.ChargePeriod as cpd
         inner join #Duplicates as dpl
         on dpl.Id = cpd.ChargeId
