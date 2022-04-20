@@ -29,6 +29,8 @@ using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
+using GreenEnergyHub.Charges.Domain.GridAreas;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.Correlation;
@@ -68,7 +70,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<MessageMetaDataMiddleware>();
             serviceCollection.AddScoped<FunctionInvocationLoggingMiddleware>();
             serviceCollection.AddJwtTokenSecurity();
-            //serviceCollection.AddActorContext();
             serviceCollection.AddApplicationInsightsTelemetryWorkerService(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.AppInsightsInstrumentationKey));
 
@@ -137,6 +138,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<
                 IAvailableDataRepository<AvailableChargeReceiptData>,
                 AvailableDataRepository<AvailableChargeReceiptData>>();
+            serviceCollection.AddScoped<IMarketParticipantRepository, MarketParticipantRepository>();
+            serviceCollection.AddScoped<IGridAreaRepository, GridAreaRepository>();
         }
 
         private static void ConfigureSharedMessaging(IServiceCollection serviceCollection)

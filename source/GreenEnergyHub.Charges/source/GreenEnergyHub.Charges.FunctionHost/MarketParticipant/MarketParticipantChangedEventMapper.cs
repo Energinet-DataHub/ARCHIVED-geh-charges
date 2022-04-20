@@ -34,10 +34,10 @@ namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
                 isActive);
         }
 
-        public static MarketParticipantChangedEvent MapFromGridArea(GridAreaUpdatedIntegrationEvent gridUpdatedIntegrationEvent)
+        public static GridAreaChangedEvent MapFromGridArea(
+            GridAreaUpdatedIntegrationEvent gridUpdatedIntegrationEvent)
         {
-            // Todo: Implement GridArea
-            return null!;
+            return new GridAreaChangedEvent(gridUpdatedIntegrationEvent.Id, gridUpdatedIntegrationEvent.GridAreaId);
         }
     }
 }

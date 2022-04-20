@@ -29,47 +29,66 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 
         public MarketParticipantPersister(
             IMarketParticipantRepository marketParticipantRepository,
-            IUnitOfWork unitOfWork,
-            ILoggerFactory loggerFactory)
+            ILoggerFactory loggerFactory,
+            IUnitOfWork unitOfWork)
         {
             _marketParticipantRepository = marketParticipantRepository;
-            _unitOfWork = unitOfWork;
             _logger = loggerFactory.CreateLogger(nameof(MarketParticipantPersister));
+            _unitOfWork = unitOfWork;
         }
 
         public async Task PersistAsync(MarketParticipantChangedEvent marketParticipantChangedEvent)
         {
-            if (marketParticipantChangedEvent == null)
+            if (marketParticipantChangedEvent is null)
                 throw new ArgumentNullException(nameof(marketParticipantChangedEvent));
             foreach (var businessProcessRole in marketParticipantChangedEvent.BusinessProcessRoles)
             {
                 var existingMarketParticipant = await _marketParticipantRepository.GetOrNullAsync(
                     marketParticipantChangedEvent.MarketParticipantId, businessProcessRole).ConfigureAwait(false);
 
-                if (existingMarketParticipant == null)
+                if (existingMarketParticipant is null)
                 {
-                    // Todo : Create MarketParticipantFactory instead
-                    var marketParticipant = new MarketParticipant(
-                        Guid.NewGuid(),
-                        marketParticipantChangedEvent.MarketParticipantId,
-                        marketParticipantChangedEvent.IsActive,
-                        businessProcessRole);
-
-                    await _marketParticipantRepository.AddAsync(marketParticipant).ConfigureAwait(false);
-                    _logger.LogInformation(
-                        $"Marketparticipant ID '{marketParticipant.MarketParticipantId}' " +
-                        $"with role '{businessProcessRole}' has been persisted");
+                    await AddMarketParticipantAsync(
+                        marketParticipantChangedEvent,
+                        businessProcessRole).ConfigureAwait(false);
                 }
                 else
                 {
-                    existingMarketParticipant.IsActive = marketParticipantChangedEvent.IsActive;
-                    _logger.LogInformation(
-                        $"Marketparticipant ID '{existingMarketParticipant.MarketParticipantId}' " +
-                        $"with role '{businessProcessRole}' has changed state");
+                    UpdateMarketParticipant(
+                        marketParticipantChangedEvent,
+                        existingMarketParticipant,
+                        businessProcessRole);
                 }
             }
 
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+        }
+
+        private void UpdateMarketParticipant(
+            MarketParticipantChangedEvent marketParticipantChangedEvent,
+            MarketParticipant existingMarketParticipant,
+            MarketParticipantRole businessProcessRole)
+        {
+            existingMarketParticipant.IsActive = marketParticipantChangedEvent.IsActive;
+            _logger.LogInformation(
+                $"Marketparticipant ID '{existingMarketParticipant.MarketParticipantId}' " +
+                $"with role '{businessProcessRole}' has changed state");
+        }
+
+        private async Task AddMarketParticipantAsync(
+            MarketParticipantChangedEvent marketParticipantChangedEvent,
+            MarketParticipantRole businessProcessRole)
+        {
+            var marketParticipant = new MarketParticipant(
+                Guid.NewGuid(),
+                marketParticipantChangedEvent.MarketParticipantId,
+                marketParticipantChangedEvent.IsActive,
+                businessProcessRole);
+
+            await _marketParticipantRepository.AddAsync(marketParticipant).ConfigureAwait(false);
+            _logger.LogInformation(
+                $"Marketparticipant ID '{marketParticipant.MarketParticipantId}' " +
+                $"with role '{businessProcessRole}' has been persisted");
         }
     }
 }

@@ -12,16 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Threading.Tasks;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Exceptions;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Parsers;
+using GreenEnergyHub.Charges.Application.GridAreas.Handlers;
 using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers;
-using GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsChangedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using JetBrains.Annotations;
 using Microsoft.Azure.Functions.Worker;
-using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
 {
@@ -31,15 +29,18 @@ namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
         private readonly IActorUpdatedIntegrationEventParser _actorUpdatedIntegrationEventParser;
         private readonly IGridAreaUpdatedIntegrationEventParser _gridAreaUpdatedIntegrationEventParser;
         private readonly IMarketParticipantPersister _marketParticipantPersister;
+        private readonly IGridAreaPersister _gridAreaPersister;
 
         public MarketParticipantEndpoint(
             IActorUpdatedIntegrationEventParser actorUpdatedIntegrationEventParser,
             IGridAreaUpdatedIntegrationEventParser gridAreaUpdatedIntegrationEventParser,
-            IMarketParticipantPersister marketParticipantPersister)
+            IMarketParticipantPersister marketParticipantPersister,
+            IGridAreaPersister gridAreaPersister)
         {
             _actorUpdatedIntegrationEventParser = actorUpdatedIntegrationEventParser;
             _gridAreaUpdatedIntegrationEventParser = gridAreaUpdatedIntegrationEventParser;
             _marketParticipantPersister = marketParticipantPersister;
+            _gridAreaPersister = gridAreaPersister;
         }
 
         [Function(FunctionName)]
@@ -54,23 +55,26 @@ namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
             // We don't now which event is thrown, nothing in the message indicates which type of parser to use.
             // Titans is looking into that problem, for now we try to parse the message with all parsers that apply
             // to this domain until we succeed or all has failed.
-            MarketParticipantChangedEvent marketParticipantChangedEvent;
-            try
-            {
+             try
+             {
+                // MarketParticipant
                 var actorUpdatedIntegrationEvent = _actorUpdatedIntegrationEventParser.Parse(message);
-                marketParticipantChangedEvent =
+                var marketParticipantChangedEvent =
                     MarketParticipantChangedEventMapper.MapFromActor(actorUpdatedIntegrationEvent);
-            }
-            catch (MarketParticipantException)
-            {
-                var gridUpdatedIntegrationEvent = _gridAreaUpdatedIntegrationEventParser.Parse(message);
-                marketParticipantChangedEvent =
-                    MarketParticipantChangedEventMapper.MapFromGridArea(gridUpdatedIntegrationEvent);
-            }
-
-            await _marketParticipantPersister
-                .PersistAsync(marketParticipantChangedEvent)
-                .ConfigureAwait(false);
+                await _marketParticipantPersister
+                    .PersistAsync(marketParticipantChangedEvent)
+                    .ConfigureAwait(false);
+             }
+             catch (MarketParticipantException)
+             {
+                 // GridArea
+                 var gridAreaUpdatedIntegrationEvent = _gridAreaUpdatedIntegrationEventParser.Parse(message);
+                 var gridAreaChangedEvent =
+                     MarketParticipantChangedEventMapper.MapFromGridArea(gridAreaUpdatedIntegrationEvent);
+                 await _gridAreaPersister
+                     .PersistAsync(gridAreaChangedEvent)
+                     .ConfigureAwait(false);
+             }
         }
     }
 }

@@ -12,21 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.GridAreas;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
+using System.Threading.Tasks;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
+namespace GreenEnergyHub.Charges.Domain.GridAreas
 {
-    public class GridAreaEntityConfiguration : IEntityTypeConfiguration<GridArea>
+    /// <summary>
+    /// Repository for managing grid areas.
+    /// </summary>
+    public interface IGridAreaRepository
     {
-        public void Configure(EntityTypeBuilder<GridArea> builder)
-        {
-            builder.ToTable(nameof(GridArea));
+        Task AddAsync(GridArea gridArea);
 
-            builder.HasKey(a => a.Id);
-            builder.Property(a => a.Id).ValueGeneratedNever();
-            builder.Property(a => a.GridAccessProviderId);
-        }
+        Task<GridArea?> GetOrNullAsync(Guid id);
     }
 }

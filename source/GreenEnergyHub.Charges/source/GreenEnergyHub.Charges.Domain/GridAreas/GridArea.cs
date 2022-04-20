@@ -12,18 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MarketParticipant.Integration.Model.Parsers;
-using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers;
-using Microsoft.Extensions.DependencyInjection;
+using System;
 
-namespace GreenEnergyHub.Charges.FunctionHost.Configuration
+namespace GreenEnergyHub.Charges.Domain.GridAreas
 {
-    internal static class MarketParticipantPersisterConfiguration
+    public class GridArea
     {
-        internal static void ConfigureServices(IServiceCollection serviceCollection)
+        public GridArea(Guid id, Guid? gridAccessProviderId)
         {
-            serviceCollection.AddScoped<IMarketParticipantPersister, MarketParticipantPersister>();
-            serviceCollection.AddScoped<IActorUpdatedIntegrationEventParser, ActorUpdatedIntegrationEventParser>();
+            Id = id;
+            GridAccessProviderId = gridAccessProviderId;
         }
+
+        public Guid Id { get; }
+
+        public Guid? GridAccessProviderId { get; set; }
     }
 }

@@ -12,14 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Infrastructure.MarketParticipantRegistry.Persistence
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsChangedEvents;
+
+namespace GreenEnergyHub.Charges.Application.GridAreas.Handlers
 {
-    /// <summary>
-    /// Identification type of the actor identification number.
-    /// </summary>
-    public enum IdentificationType
+    public interface IGridAreaPersister
     {
-        Gln = 1,
-        Eic = 2,
+        Task PersistAsync(GridAreaChangedEvent gridAreaChangedEvent);
     }
 }

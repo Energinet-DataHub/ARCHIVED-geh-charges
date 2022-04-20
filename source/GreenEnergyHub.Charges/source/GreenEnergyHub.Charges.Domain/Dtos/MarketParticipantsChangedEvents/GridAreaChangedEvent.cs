@@ -12,18 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.MarketParticipant.Integration.Model.Parsers;
-using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers;
-using Microsoft.Extensions.DependencyInjection;
+using System;
+using Energinet.DataHub.Core.Messaging.MessageTypes.Common;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 
-namespace GreenEnergyHub.Charges.FunctionHost.Configuration
+namespace GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsChangedEvents
 {
-    internal static class MarketParticipantPersisterConfiguration
+    public class GridAreaChangedEvent : InboundIntegrationEvent
     {
-        internal static void ConfigureServices(IServiceCollection serviceCollection)
+        public GridAreaChangedEvent(
+            Guid id,
+            Guid gridAreaId)
+            : base(Transaction.NewTransaction())
         {
-            serviceCollection.AddScoped<IMarketParticipantPersister, MarketParticipantPersister>();
-            serviceCollection.AddScoped<IActorUpdatedIntegrationEventParser, ActorUpdatedIntegrationEventParser>();
+            Id = id;
+            GridAreaId = gridAreaId;
         }
+
+        public Guid Id { get; }
+
+        public Guid GridAreaId { get; }
     }
 }

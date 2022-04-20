@@ -25,6 +25,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValid
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.Factories;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.Factories;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Domain.GridAreas;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
@@ -55,16 +56,10 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 .AddScoped<IAvailableChargeReceiptValidationErrorFactory,
                     AvailableChargeReceiptValidationErrorFactory>();
 
-            ConfigureDatabase(serviceCollection);
             ConfigureValidation(serviceCollection);
             ConfigureIso8601Timezones(serviceCollection);
             ConfigureIso4217Currency(serviceCollection);
             ConfigureMessaging(serviceCollection);
-        }
-
-        private static void ConfigureDatabase(IServiceCollection serviceCollection)
-        {
-            serviceCollection.AddScoped<IMarketParticipantRepository, MarketParticipantRepository>();
         }
 
         private static void ConfigureValidation(IServiceCollection serviceCollection)
