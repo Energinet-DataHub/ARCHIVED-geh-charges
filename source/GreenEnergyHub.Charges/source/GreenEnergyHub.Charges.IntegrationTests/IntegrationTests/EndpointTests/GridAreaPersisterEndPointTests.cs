@@ -21,11 +21,17 @@ using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Parsers;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.FunctionHost.MarketParticipant;
+using GreenEnergyHub.Charges.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
+using GreenEnergyHub.Charges.Tests.Builders.Command;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
+using Nito.Disposables.Internals;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
@@ -58,8 +64,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
             public async Task When_ReceivingGridAreaIntegrationUpdatedMessage_GridAreaIsSavedToDatabase()
             {
                 // Arrange
+                await using var context = Fixture.DatabaseManager.CreateDbContext();
                 var id = Guid.NewGuid();
-                var gridAccessProviderId = Guid.NewGuid();
+                var gridAccessProviderId = await CreateMarketParticipantInRepository(context);
                 var message = CreateServiceBusMessage(
                     id,
                     gridAccessProviderId,
@@ -72,13 +79,20 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
                 // Assert
                 await FunctionAsserts.AssertHasExecutedAsync(Fixture.HostManager, nameof(MarketParticipantEndpoint)).ConfigureAwait(false);
-                await using var context = Fixture.DatabaseManager.CreateDbContext();
                 var gridArea = context.GridAreas.SingleOrDefault(x =>
                     x.Id == id && x.GridAccessProviderId == gridAccessProviderId);
                 gridArea.Should().NotBeNull();
 
                 // We need to clear host log after each test is done to ensure that we can assert on function executed on each test run because we only check on function name.
                 Fixture.HostManager.ClearHostLog();
+            }
+
+            private async Task<Guid> CreateMarketParticipantInRepository(ChargesDatabaseContext context)
+            {
+                var markedParticipant = new MarketParticipantBuilder().Build();
+                context.MarketParticipants.Add(markedParticipant);
+                await context.SaveChangesAsync().ConfigureAwait(false);
+                return markedParticipant.Id;
             }
 
             private static ServiceBusMessage CreateServiceBusMessage(
