@@ -53,7 +53,13 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         /// <param name="serviceCollection">ServiceCollection container</param>
         public static void AddActorContext(this IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<ActorMiddleware>();
+            //serviceCollection.AddScoped<ActorMiddleware>();
+            serviceCollection.AddScoped(_ => new ActorMiddleware(
+                _.GetRequiredService<IClaimsPrincipalAccessor>(),
+                _.GetRequiredService<IActorProvider>(),
+                _.GetRequiredService<IActorContext>(),
+                new[] { "HealthCheck", "SynchronizeFromMarketParticipantRegistry" }));
+
             serviceCollection.AddScoped<IActorContext, ActorContext>();
             serviceCollection.AddScoped<IActorProvider, ActorProvider>();
         }
