@@ -13,14 +13,12 @@
 // limitations under the License.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Energinet.Charges.Contracts;
+using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using Google.Protobuf;
 using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkReplier;
-using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Contracts;
-using GreenEnergyHub.Charges.Infrastructure.Core.Correlation;
 
 namespace GreenEnergyHub.Charges.Infrastructure.ReplySender.CreateDefaultChargeLinkReplier
 {

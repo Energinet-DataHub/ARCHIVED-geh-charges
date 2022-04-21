@@ -22,7 +22,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
     /// <summary>
     /// Temporary rule that stops both update and stops from taking place to charge links until that is implemented
     /// </summary>
-    public class ChargeLinksUpdateNotYetSupportedRule : IValidationRuleWithExtendedData
+    public class ChargeLinksUpdateNotYetSupportedRule : IValidationRuleForOperation
     {
         private readonly ChargeLinksCommand _chargeLinksCommand;
         private readonly IReadOnlyCollection<ChargeLink> _existingChargeLinks;
@@ -37,7 +37,14 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
 
         public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeLinkUpdateNotYetSupported;
 
-        public bool IsValid => _chargeLinksCommand.ChargeLinks.All(ChargeLinkDateRangeIsNotOverlapping);
+        public bool IsValid => _chargeLinksCommand.ChargeLinksOperations.All(ChargeLinkDateRangeIsNotOverlapping);
+
+        /// <summary>
+        /// This validation rule validates each ChargeLink in a list of ChargeLink(s). This property will
+        /// tell which ChargeLink triggered the rule. The ChargeLink is identified by OperationId.
+        /// </summary>
+        public string OperationId => _chargeLinksCommand.ChargeLinksOperations
+            .First(link => !ChargeLinkDateRangeIsNotOverlapping(link)).OperationId;
 
         private bool ChargeLinkDateRangeIsNotOverlapping(ChargeLinkDto newLink)
         {
@@ -52,12 +59,5 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
 
             return isOverlapping;
         }
-
-        /// <summary>
-        /// This validation rule validates each ChargeLink in a list of ChargeLink(s). This property will
-        /// tell which ChargeLink triggered the rule. The ChargeLink is identified by SenderProvidedChargeId.
-        /// </summary>
-        public string TriggeredBy => _chargeLinksCommand.ChargeLinks
-            .First(link => !ChargeLinkDateRangeIsNotOverlapping(link)).SenderProvidedChargeId;
     }
 }

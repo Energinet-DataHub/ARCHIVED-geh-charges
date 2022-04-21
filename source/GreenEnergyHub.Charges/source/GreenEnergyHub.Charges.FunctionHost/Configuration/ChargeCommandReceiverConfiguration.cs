@@ -49,12 +49,11 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IChargePeriodFactory, ChargePeriodFactory>();
             serviceCollection.AddScoped<IChargeCommandAcceptedEventFactory, ChargeCommandAcceptedEventFactory>();
             serviceCollection.AddScoped<IChargeCommandRejectedEventFactory, ChargeCommandRejectedEventFactory>();
-            serviceCollection.AddScoped<ICimValidationErrorTextFactory<ChargeCommand>, ChargeCimValidationErrorTextFactory>();
+            serviceCollection.AddScoped<ICimValidationErrorTextFactory<ChargeCommand, ChargeOperationDto>,
+                ChargeCimValidationErrorTextFactory>();
             serviceCollection.AddScoped<ICimValidationErrorCodeFactory, CimValidationErrorCodeFactory>();
-
-            serviceCollection
-                .AddScoped<IAvailableChargeReceiptValidationErrorFactory,
-                    AvailableChargeReceiptValidationErrorFactory>();
+            serviceCollection.AddScoped<IAvailableChargeReceiptValidationErrorFactory,
+                AvailableChargeReceiptValidationErrorFactory>();
 
             ConfigureValidation(serviceCollection);
             ConfigureIso8601Timezones(serviceCollection);
@@ -64,8 +63,10 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
         private static void ConfigureValidation(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<IBusinessValidationRulesFactory<ChargeCommand>, ChargeCommandBusinessValidationRulesFactory>();
-            serviceCollection.AddScoped<IInputValidationRulesFactory<ChargeCommand>, ChargeCommandInputValidationRulesFactory>();
+            serviceCollection.AddScoped<IBusinessValidationRulesFactory<ChargeCommand>,
+                ChargeCommandBusinessValidationRulesFactory>();
+            serviceCollection.AddScoped<IInputValidationRulesFactory<ChargeCommand>,
+                ChargeCommandInputValidationRulesFactory>();
             serviceCollection.AddScoped<IRulesConfigurationRepository, RulesConfigurationRepository>();
             serviceCollection.AddScoped<IInputValidator<ChargeCommand>, InputValidator<ChargeCommand>>();
             serviceCollection.AddScoped<IBusinessValidator<ChargeCommand>, BusinessValidator<ChargeCommand>>();

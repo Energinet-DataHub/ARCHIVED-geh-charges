@@ -13,11 +13,13 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Tests.Builders.Testables;
 using GreenEnergyHub.TestHelpers;
@@ -34,37 +36,42 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
         [Theory]
         [InlineAutoDomainData]
         public async Task CreateFromCommandAsync_Charge_HasNoNullsOrEmptyCollections(
-            TestMarketParticipant owner,
-            ChargeCommand chargeCommand,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
             Mock<ChargePeriod> chargePeriod,
+            TestMarketParticipant owner,
+            ChargeOperationDto chargeOperationDto,
+            DocumentDto documentDto,
             ChargeFactory sut)
         {
+            // Arrange
             marketParticipantRepository
                 .Setup(repo => repo.GetOrNullAsync(
-                    chargeCommand.ChargeOperation.ChargeOwner,
-                    chargeCommand.Document.Sender.BusinessProcessRole))
+                    chargeOperationDto.ChargeOwner,
+                    documentDto.Sender.BusinessProcessRole))
                 .ReturnsAsync(owner);
 
             chargePeriodFactory
                 .Setup(f => f.CreateFromChargeOperationDto(It.IsAny<ChargeOperationDto>()))
                 .Returns(chargePeriod.Object);
 
-            var actual = await sut.CreateFromCommandAsync(chargeCommand);
+            // Act
+            var actual = await sut.CreateFromChargeOperationDtoAsync(chargeOperationDto);
 
+            // Assert
             actual.Should().NotContainNullsOrEmptyEnumerables();
         }
 
         [Theory]
         [InlineAutoDomainData]
         public async Task CreateFromCommandAsync_WhenOwnerIsNull_ThrowsException(
-            ChargeCommand chargeCommand,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
             Mock<ChargePeriod> chargePeriod,
+            ChargeOperationDto chargeOperationDto,
             ChargeFactory sut)
         {
+            // Arrange
             marketParticipantRepository
                 .Setup(repo => repo.GetOrNullAsync(
                     It.IsAny<string>(),
@@ -75,7 +82,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
                 .Setup(f => f.CreateFromChargeOperationDto(It.IsAny<ChargeOperationDto>()))
                 .Returns(chargePeriod.Object);
 
-            await Assert.ThrowsAsync<InvalidOperationException>(() => sut.CreateFromCommandAsync(chargeCommand));
+            // Act & Assert
+            await Assert.ThrowsAsync<InvalidOperationException>(() =>
+                sut.CreateFromChargeOperationDtoAsync(chargeOperationDto));
         }
     }
 }

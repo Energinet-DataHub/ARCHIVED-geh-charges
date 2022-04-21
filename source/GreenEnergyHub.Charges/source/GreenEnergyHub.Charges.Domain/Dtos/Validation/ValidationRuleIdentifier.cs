@@ -44,5 +44,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
         ChargeDoesNotExist = 30, // VR679 / E0I
         ChargeLinkUpdateNotYetSupported = 31, // VR902 / D13
         UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDate = 32, // VR905 / D14
+        SubsequentBundleOperationsFail = 33, // VR906 / D14
+        TransparentInvoicingIsNotAllowedForFee = 34, // VR904 / D67
+        ChargeResolutionCanNotBeUpdated = 35, // VR907 / D23
     }
 }

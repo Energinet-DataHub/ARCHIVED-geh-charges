@@ -23,9 +23,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
         private readonly IBusinessValidator<TCommand> _businessValidator;
         private readonly IInputValidator<TCommand> _inputValidator;
 
-        public Validator(
-            IInputValidator<TCommand> inputValidator,
-            IBusinessValidator<TCommand> businessValidator)
+        public Validator(IInputValidator<TCommand> inputValidator, IBusinessValidator<TCommand> businessValidator)
         {
             _inputValidator = inputValidator;
             _businessValidator = businessValidator;
@@ -33,15 +31,12 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 
         public ValidationResult InputValidate(TCommand command)
         {
-            var inputValidationResult = _inputValidator.Validate(command);
-            return inputValidationResult;
+            return _inputValidator.Validate(command);
         }
 
         public async Task<ValidationResult> BusinessValidateAsync(TCommand command)
         {
-            var businessValidationResult = await _businessValidator
-                .ValidateAsync(command).ConfigureAwait(false);
-            return businessValidationResult;
+            return await _businessValidator.ValidateAsync(command).ConfigureAwait(false);
         }
     }
 }

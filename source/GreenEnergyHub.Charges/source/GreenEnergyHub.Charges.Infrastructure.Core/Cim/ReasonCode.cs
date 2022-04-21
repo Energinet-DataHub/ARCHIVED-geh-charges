@@ -84,6 +84,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim
         D61 = 61,
         D62 = 62,
         D63 = 63,
+        D67 = 67,
         E09 = 109,
         E0H = 1000,
         E0I = 1001,

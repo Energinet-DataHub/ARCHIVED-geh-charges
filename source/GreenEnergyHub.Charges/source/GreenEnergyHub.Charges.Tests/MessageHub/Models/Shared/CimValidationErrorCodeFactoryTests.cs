@@ -52,6 +52,9 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared
         [InlineAutoMoqData(ValidationRuleIdentifier.MeteringPointDoesNotExist, ReasonCode.E10)]
         [InlineAutoMoqData(ValidationRuleIdentifier.ChargeDoesNotExist, ReasonCode.E0I)]
         [InlineAutoMoqData(ValidationRuleIdentifier.ChargeLinkUpdateNotYetSupported, ReasonCode.D13)]
+        [InlineAutoMoqData(ValidationRuleIdentifier.SubsequentBundleOperationsFail, ReasonCode.D14)]
+        [InlineAutoMoqData(ValidationRuleIdentifier.TransparentInvoicingIsNotAllowedForFee, ReasonCode.D67)]
+        [InlineAutoMoqData(ValidationRuleIdentifier.ChargeResolutionCanNotBeUpdated, ReasonCode.D23)]
         public void Create_ReturnsExpectedCode(
             ValidationRuleIdentifier identifier,
             ReasonCode expected,
@@ -70,6 +73,15 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared
                 // Assert that create does not throw (ensures that we are mapping all enum values)
                 sut.Create(value);
             }
+        }
+
+        [Theory]
+        [InlineAutoMoqData(-1)]
+        public void Create_AnUnknownValidationRuleIdentifierIsProvided_throwsNotImplementedException(
+            ValidationRuleIdentifier identifier,
+            CimValidationErrorCodeFactory sut)
+        {
+            Assert.Throws<NotImplementedException>(() => sut.Create(identifier));
         }
     }
 }

@@ -149,7 +149,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
                 no,
                 Instant.FromUtc(2020, 12, 31, 23, 0, 0),
                 validTo,
-                DocumentType.NotifyBillingMasterData);
+                DocumentType.NotifyBillingMasterData,
+                0);
         }
     }
 }

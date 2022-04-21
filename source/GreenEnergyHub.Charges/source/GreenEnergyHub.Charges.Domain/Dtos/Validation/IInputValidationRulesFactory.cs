@@ -19,6 +19,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
     public interface IInputValidationRulesFactory<in TCommand>
         where TCommand : CommandBase
     {
-    IValidationRuleSet CreateRulesForCommand(TCommand command);
+        IValidationRuleSet CreateRulesForCommand(TCommand command);
     }
 }

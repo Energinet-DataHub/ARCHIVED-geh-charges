@@ -19,10 +19,9 @@ using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Core.DateTime;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
-using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.Charges.Tests.Builders.Testables;
 using GreenEnergyHub.TestHelpers;
@@ -50,7 +49,11 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
             AvailableChargeDataFactory sut)
         {
             // Arrange
-            var chargeCommand = chargeCommandBuilder.WithPoint(1, 1).WithTaxIndicator(true).Build();
+            var chargeOperationDto = new ChargeOperationDtoBuilder()
+                .WithPoint(1, 1)
+                .WithTaxIndicator(true)
+                .Build();
+            var chargeCommand = chargeCommandBuilder.WithChargeOperation(chargeOperationDto).Build();
             var acceptedEvent = chargeCommandAcceptedEventBuilder.WithChargeCommand(chargeCommand).Build();
 
             marketParticipantRepository
@@ -67,7 +70,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
             var actual = await sut.CreateAsync(acceptedEvent);
 
             // Assert
-            var operation = acceptedEvent.Command.ChargeOperation;
+            var operation = acceptedEvent.Command.ChargeOperations.First();
             actual.Should().HaveSameCount(gridAccessProvider);
             for (var i = 0; i < actual.Count; i++)
             {
@@ -94,21 +97,87 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
         }
 
         [Theory]
-        [InlineAutoDomainData]
+        [InlineAutoDomainData(false, 0)]
+        [InlineAutoDomainData(true, 1)]
         public async Task CreateAsync_WhenNotTaxCharge_ReturnsEmptyList(
+            bool taxIndicator,
+            int availableChargeDataCount,
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             ChargeCommandBuilder chargeCommandBuilder,
             ChargeCommandAcceptedEventBuilder chargeCommandAcceptedEventBuilder,
             AvailableChargeDataFactory sut)
         {
             // Arrange
-            var chargeCommand = chargeCommandBuilder.WithTaxIndicator(false).Build();
+            var marketParticipants = new List<MarketParticipant>()
+            {
+                new MarketParticipantBuilder()
+                    .WithRole(MarketParticipantRole.GridAccessProvider)
+                    .Build(),
+            };
+            marketParticipantRepository
+                .Setup(m => m.GetGridAccessProvidersAsync())
+                .ReturnsAsync(marketParticipants);
+            marketParticipantRepository
+                .Setup(m => m.GetMeteringPointAdministratorAsync())
+                .ReturnsAsync(new MarketParticipantBuilder().Build());
+            var chargeOperationDto = new ChargeOperationDtoBuilder()
+                .WithPoint(1, 1)
+                .WithTaxIndicator(taxIndicator)
+                .Build();
+            var chargeCommand = chargeCommandBuilder.WithChargeOperation(chargeOperationDto).Build();
             var acceptedEvent = chargeCommandAcceptedEventBuilder.WithChargeCommand(chargeCommand).Build();
 
             // Act
             var actual = await sut.CreateAsync(acceptedEvent);
 
             // Assert
-            actual.Should().BeEmpty();
+            actual.Count.Should().Be(availableChargeDataCount);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task CreateAsync_WhenSeveralOperationsInChargeCommand_ReturnOrderedListOfOperations(
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
+            ChargeCommandBuilder chargeCommandBuilder,
+            ChargeCommandAcceptedEventBuilder chargeCommandAcceptedEventBuilder,
+            List<TestGridAccessProvider> gridAccessProvider,
+            TestMeteringPointAdministrator meteringPointAdministrator,
+            AvailableChargeDataFactory sut)
+        {
+            // Arrange
+            marketParticipantRepository
+                .Setup(r => r.GetGridAccessProvidersAsync())
+                .ReturnsAsync(gridAccessProvider.Cast<MarketParticipant>().ToList);
+            marketParticipantRepository
+                .Setup(r => r.GetMeteringPointAdministratorAsync())
+                .ReturnsAsync(meteringPointAdministrator);
+            var chargeCommand = chargeCommandBuilder
+                .WithChargeOperations(
+                    new List<ChargeOperationDto>
+                    {
+                        new ChargeOperationDtoBuilder().WithTaxIndicator(true).Build(),
+                        new ChargeOperationDtoBuilder().WithTaxIndicator(true).Build(),
+                        new ChargeOperationDtoBuilder().WithTaxIndicator(true).Build(),
+                    })
+                .Build();
+            var acceptedEvent = chargeCommandAcceptedEventBuilder.WithChargeCommand(chargeCommand).Build();
+
+            // Act
+            var actual = await sut.CreateAsync(acceptedEvent);
+
+            // Assert
+            actual.Count.Should().Be(gridAccessProvider.Count * 3);
+            foreach (var gap in gridAccessProvider)
+            {
+                var availableChargesForProvider = actual
+                    .Where(x => x.RecipientId == gap.MarketParticipantId).ToList();
+                var operationOrder = -1;
+                for (var i = 0; i < availableChargesForProvider.Count; i++)
+                {
+                    availableChargesForProvider[i].OperationOrder.Should().BeGreaterThan(operationOrder);
+                    operationOrder = actual[i].OperationOrder;
+                }
+            }
         }
     }
 }

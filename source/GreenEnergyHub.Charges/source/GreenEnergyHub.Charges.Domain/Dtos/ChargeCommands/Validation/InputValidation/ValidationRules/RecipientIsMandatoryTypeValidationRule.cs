@@ -12,22 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
 {
     public class RecipientIsMandatoryTypeValidationRule : IValidationRule
     {
-        private readonly ChargeCommand _chargeCommand;
+        private readonly DocumentDto _documentDto;
 
-        public RecipientIsMandatoryTypeValidationRule(ChargeCommand chargeCommand)
+        public RecipientIsMandatoryTypeValidationRule(DocumentDto documentDto)
         {
-            _chargeCommand = chargeCommand;
+            _documentDto = documentDto;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.RecipientIsMandatoryTypeValidation;
 
-        public bool IsValid => MarketParticipantMrIdValidator.IsValid(_chargeCommand.Document.Recipient.Id);
+        public bool IsValid => MarketParticipantMrIdValidator.IsValid(_documentDto.Recipient.Id);
     }
 }

@@ -17,19 +17,22 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
 {
-    public class VatClassificationValidationRule : IValidationRule
+    public class VatClassificationValidationRule : IValidationRuleForOperation
     {
-        private readonly ChargeCommand _chargeCommand;
+        private readonly ChargeOperationDto _chargeOperationDto;
 
-        public VatClassificationValidationRule(ChargeCommand chargeCommand)
+        public VatClassificationValidationRule(ChargeOperationDto chargeOperationDto)
         {
-            _chargeCommand = chargeCommand;
+            _chargeOperationDto = chargeOperationDto;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.VatClassificationValidation;
 
-        public bool IsValid => _chargeCommand.ChargeOperation.VatClassification
-            is VatClassification.NoVat or VatClassification.Vat25;
+        public bool IsValid => _chargeOperationDto.VatClassification
+            is VatClassification.NoVat
+            or VatClassification.Vat25;
+
+        public string OperationId => _chargeOperationDto.Id;
     }
 }

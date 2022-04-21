@@ -16,6 +16,7 @@ using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Services;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.BusinessValidation.Factories;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.InputValidation.Factories;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
@@ -28,7 +29,6 @@ using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using Microsoft.Extensions.DependencyInjection;
-using ChargeLinksCommand = GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.ChargeLinksCommand;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
@@ -40,17 +40,24 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IChargeLinkFactory, ChargeLinkFactory>();
             serviceCollection.AddSingleton<IChargeLinksAcceptedEventFactory, ChargeLinksAcceptedEventFactory>();
             serviceCollection.AddScoped<IChargeLinksRepository, ChargeLinksRepository>();
-            serviceCollection.AddScoped<IBusinessValidationRulesFactory<ChargeLinksCommand>, ChargeLinksCommandBusinessValidationRulesFactory>();
-            serviceCollection.AddScoped<IBusinessValidator<ChargeLinksCommand>, BusinessValidator<ChargeLinksCommand>>();
+            serviceCollection.AddScoped<IBusinessValidationRulesFactory<ChargeLinksCommand>,
+                ChargeLinksCommandBusinessValidationRulesFactory>();
+            serviceCollection.AddScoped<IBusinessValidator<ChargeLinksCommand>,
+                BusinessValidator<ChargeLinksCommand>>();
             serviceCollection.AddScoped<IChargeLinksReceiptService, ChargeLinksReceiptService>();
             serviceCollection.AddScoped<IChargeLinksRejectedEventFactory, ChargeLinksRejectedEventFactory>();
-            serviceCollection.AddScoped<IBusinessValidator<ChargeLinksCommand>, BusinessValidator<ChargeLinksCommand>>();
-            serviceCollection.AddScoped<IBusinessValidationRulesFactory<ChargeLinksCommand>, ChargeLinksCommandBusinessValidationRulesFactory>();
-            serviceCollection.AddScoped<IInputValidationRulesFactory<ChargeLinksCommand>, ChargeLinksCommandInputValidationRulesFactory>();
+            serviceCollection.AddScoped<IBusinessValidator<ChargeLinksCommand>,
+                BusinessValidator<ChargeLinksCommand>>();
+            serviceCollection.AddScoped<IBusinessValidationRulesFactory<ChargeLinksCommand>,
+                ChargeLinksCommandBusinessValidationRulesFactory>();
+            serviceCollection.AddScoped<IInputValidationRulesFactory<ChargeLinksCommand>,
+                ChargeLinksCommandInputValidationRulesFactory>();
             serviceCollection.AddScoped<IValidator<ChargeLinksCommand>, Validator<ChargeLinksCommand>>();
             serviceCollection.AddScoped<IInputValidator<ChargeLinksCommand>, InputValidator<ChargeLinksCommand>>();
-            serviceCollection.AddScoped<IAvailableChargeLinksReceiptValidationErrorFactory, AvailableChargeLinksReceiptValidationErrorFactory>();
-            serviceCollection.AddScoped<ICimValidationErrorTextFactory<ChargeLinksCommand>, ChargeLinksCimValidationErrorTextFactory>();
+            serviceCollection.AddScoped<IAvailableChargeLinksReceiptValidationErrorFactory,
+                AvailableChargeLinksReceiptValidationErrorFactory>();
+            serviceCollection.AddScoped<ICimValidationErrorTextFactory<ChargeLinksCommand, ChargeLinkDto>,
+                ChargeLinksCimValidationErrorTextFactory>();
 
             serviceCollection.AddMessaging()
                 .AddInternalMessageExtractor<ChargeLinksReceivedEvent>()

@@ -17,7 +17,6 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
@@ -37,31 +36,30 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void ChargeDescriptionHasMaximumLengthRule_WhenDescriptionTooLong_IsFalse(
             int chargeDescriptionLength,
             bool expected,
-            ChargeCommandBuilder builder)
+            ChargeOperationDtoBuilder builder)
         {
-            var command = builder.WithDescription(GenerateStringWithLength(chargeDescriptionLength)).Build();
-            var sut = new ChargeDescriptionHasMaximumLengthRule(command);
+            var chargeOperationDto = builder.WithDescription(new string('x', chargeDescriptionLength)).Build();
+            var sut = new ChargeDescriptionHasMaximumLengthRule(chargeOperationDto);
             sut.IsValid.Should().Be(expected);
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder builder)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeOperationDtoBuilder builder)
         {
-            var invalidCommand = CreateInvalidCommand(builder);
-            var sut = new ChargeDescriptionHasMaximumLengthRule(invalidCommand);
+            var chargeOperationDto =
+                builder.WithDescription(new string('x', ChargeDescriptionMaximumLength + 1))
+                    .Build();
+            var sut = new ChargeDescriptionHasMaximumLengthRule(chargeOperationDto);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChargeDescriptionHasMaximumLength);
         }
 
-        private static string GenerateStringWithLength(int stringLength)
+        [Theory]
+        [InlineAutoDomainData]
+        public void OperationId_ShouldBe_EqualTo(ChargeOperationDto chargeOperationDto)
         {
-            return new string('a', stringLength);
-        }
-
-        private static ChargeCommand CreateInvalidCommand(ChargeCommandBuilder builder)
-        {
-            var toLongDescription = new string('x', ChargeDescriptionMaximumLength + 1);
-            return builder.WithDescription(toLongDescription).Build();
+            var sut = new ChargeDescriptionHasMaximumLengthRule(chargeOperationDto);
+            sut.OperationId.Should().Be(chargeOperationDto.Id);
         }
     }
 }

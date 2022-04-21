@@ -30,27 +30,20 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection
-                .AddScoped<IAvailableDataNotifier<AvailableChargeReceiptData, ChargeCommandRejectedEvent>,
-                    AvailableDataNotifier<AvailableChargeReceiptData, ChargeCommandRejectedEvent>>();
-            serviceCollection
-                .AddScoped<AvailableChargeReceiptValidationErrorFactory,
-                    AvailableChargeReceiptValidationErrorFactory>();
-            serviceCollection
-                .AddScoped<ICimValidationErrorTextProvider, CimValidationErrorTextProvider>();
-            serviceCollection
-                .AddScoped<ICimValidationErrorCodeFactory, CimValidationErrorCodeFactory>();
-            serviceCollection
-                .AddScoped<ICimValidationErrorTextFactory<ChargeCommand>, ChargeCimValidationErrorTextFactory>();
-            serviceCollection
-                .AddScoped<IAvailableDataFactory<AvailableChargeReceiptData, ChargeCommandRejectedEvent>,
-                    AvailableChargeRejectionDataFactory>();
-            serviceCollection
-                .AddScoped<IAvailableDataNotificationFactory<AvailableChargeReceiptData>,
-                    AvailableDataNotificationFactory<AvailableChargeReceiptData>>();
-            serviceCollection
-                .AddScoped<BundleSpecification<AvailableChargeReceiptData, ChargeCommandRejectedEvent>,
-                    ChargeRejectionBundleSpecification>();
+            serviceCollection.AddScoped<IAvailableDataNotifier<AvailableChargeReceiptData, ChargeCommandRejectedEvent>,
+                AvailableDataNotifier<AvailableChargeReceiptData, ChargeCommandRejectedEvent>>();
+            serviceCollection.AddScoped<AvailableChargeReceiptValidationErrorFactory,
+                AvailableChargeReceiptValidationErrorFactory>();
+            serviceCollection.AddScoped<ICimValidationErrorTextProvider, CimValidationErrorTextProvider>();
+            serviceCollection.AddScoped<ICimValidationErrorCodeFactory, CimValidationErrorCodeFactory>();
+            serviceCollection.AddScoped<ICimValidationErrorTextFactory<ChargeCommand, ChargeOperationDto>,
+                ChargeCimValidationErrorTextFactory>();
+            serviceCollection.AddScoped<IAvailableDataFactory<AvailableChargeReceiptData, ChargeCommandRejectedEvent>,
+                AvailableChargeRejectionDataFactory>();
+            serviceCollection.AddScoped<IAvailableDataNotificationFactory<AvailableChargeReceiptData>,
+                AvailableDataNotificationFactory<AvailableChargeReceiptData>>();
+            serviceCollection.AddScoped<BundleSpecification<AvailableChargeReceiptData, ChargeCommandRejectedEvent>,
+                ChargeRejectionBundleSpecification>();
 
             serviceCollection
                 .AddMessaging()

@@ -19,10 +19,17 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.Charges
         public const string AnyValid = "TestFiles/Charges/TaxTariffWithPriceDocument.xml";
         public const string AnyWithPrice = "TestFiles/Charges/TaxTariffWithPriceDocument.xml";
         public const string CreateSubscription = "TestFiles/Charges/CreateSubscriptionDocument.xml";
+        public const string CreateTariff = "TestFiles/Charges/CreateTariffDocument.xml";
+        public const string UpdateTariff = "TestFiles/Charges/UpdateTariffDocument.xml";
         public const string TaxTariffWithPrice = "TestFiles/Charges/TaxTariffWithPriceDocument.xml";
         public const string AnyInvalid = "TestFiles/Charges/InvalidTariffDocument.xml";
         public const string TariffInvalidSchema = "TestFiles/Charges/InvalidSchemaTariffDocument.xml";
         public const string TariffBundleWithValidAndInvalid = "TestFiles/Charges/TariffBundleWithValidAndInvalid.xml";
+        public const string TariffBundleWithCreateAndUpdate = "TestFiles/Charges/TariffBundleWithCreateAndUpdate.xml";
+        public const string BundleWithMultipleOperationsForSameTariff = "TestFiles/Charges/BundleWithMultipleOperationsForSameTariff.xml";
+        public const string BundleWithTwoOperationsForSameTariffSecondOpViolatingVr903
+            = "TestFiles/Charges/BundleWithTwoOperationsForSameTariffSecondOpViolatingVr903.xml";
+
         public const string TariffHourlyPricesSample = "TestFiles/Charges/Samples/TariffHourlyPricesSample.xml";
         public const string FeeMonthlyPriceSample = "TestFiles/Charges/Samples/FeeMonthlyPriceSample.xml";
         public const string SubscriptionMonthlyPriceSample = "TestFiles/Charges/Samples/SubscriptionMonthlyPriceSample.xml";

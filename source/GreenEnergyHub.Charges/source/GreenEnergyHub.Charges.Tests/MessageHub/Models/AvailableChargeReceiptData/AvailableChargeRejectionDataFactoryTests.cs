@@ -23,7 +23,6 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
@@ -50,6 +49,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             AvailableChargeRejectionDataFactory sut)
         {
             // Arrange
+            var chargeCommand = rejectedEvent.Command;
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
             marketParticipantRepository
                 .Setup(r => r.GetMeteringPointAdministratorAsync())
@@ -57,32 +57,39 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
 
             // fake error code and text
             availableChargeReceiptValidationErrorFactory
-                .Setup(f => f.Create(It.IsAny<ValidationError>(), rejectedEvent.Command))
-                .Returns<ValidationError, ChargeCommand>((identifier, _) =>
-                     new AvailableReceiptValidationError(ReasonCode.D01, identifier.ValidationRuleIdentifier.ToString()));
-            var expectedValidationErrors =
-                rejectedEvent.ValidationErrors.Select(x => x.ValidationRuleIdentifier.ToString()).ToList();
+                .Setup(f => f.Create(It.IsAny<ValidationError>(), rejectedEvent.Command, It.IsAny<ChargeOperationDto>()))
+                .Returns<ValidationError, ChargeCommand, ChargeOperationDto>((validationError, _, _) =>
+                    new AvailableReceiptValidationError(
+                        ReasonCode.D01, validationError.ValidationRuleIdentifier.ToString()));
+
+            var expectedValidationErrors = rejectedEvent.ValidationErrors
+                .Select(x => x.ValidationRuleIdentifier.ToString()).ToList();
 
             // Act
             var actualList = await sut.CreateAsync(rejectedEvent);
 
             // Assert
-            actualList.Should().ContainSingle();
-            var actual = actualList.Single();
-            actual.RecipientId.Should().Be(rejectedEvent.Command.Document.Sender.Id);
-            actual.RecipientRole.Should().Be(rejectedEvent.Command.Document.Sender.BusinessProcessRole);
-            actual.BusinessReasonCode.Should().Be(rejectedEvent.Command.Document.BusinessReasonCode);
-            actual.RequestDateTime.Should().Be(now);
-            actual.ReceiptStatus.Should().Be(ReceiptStatus.Rejected);
-            actual.OriginalOperationId.Should().Be(rejectedEvent.Command.ChargeOperation.Id);
-
-            var actualValidationErrors = actual.ValidationErrors.ToList();
-            actual.ValidationErrors.Should().HaveSameCount(rejectedEvent.ValidationErrors);
-
-            for (var i = 0; i < actualValidationErrors.Count; i++)
+            actualList.Should().HaveCount(3);
+            var operationOrder = -1;
+            for (var i1 = 0; i1 < actualList.Count; i1++)
             {
-                actualValidationErrors[i].ReasonCode.ToString().Should().NotBeNullOrWhiteSpace();
-                actualValidationErrors[i].Text.Should().Be(expectedValidationErrors[i]);
+                var actual = actualList[i1];
+                actual.RecipientId.Should().Be(chargeCommand.Document.Sender.Id);
+                actual.RecipientRole.Should().Be(chargeCommand.Document.Sender.BusinessProcessRole);
+                actual.BusinessReasonCode.Should().Be(chargeCommand.Document.BusinessReasonCode);
+                actual.RequestDateTime.Should().Be(now);
+                actual.ReceiptStatus.Should().Be(ReceiptStatus.Rejected);
+                actual.OriginalOperationId.Should().Be(chargeCommand.ChargeOperations.ToArray()[i1].Id);
+                var actualValidationErrors = actual.ValidationErrors.ToList();
+                actual.ValidationErrors.Should().HaveSameCount(rejectedEvent.ValidationErrors);
+                actual.OperationOrder.Should().BeGreaterThan(operationOrder);
+                operationOrder = actual.OperationOrder;
+
+                for (var i2 = 0; i2 < actualValidationErrors.Count; i2++)
+                {
+                    actualValidationErrors[i2].ReasonCode.ToString().Should().NotBeNullOrWhiteSpace();
+                    actualValidationErrors[i2].Text.Should().Be(expectedValidationErrors[i2]);
+                }
             }
         }
     }

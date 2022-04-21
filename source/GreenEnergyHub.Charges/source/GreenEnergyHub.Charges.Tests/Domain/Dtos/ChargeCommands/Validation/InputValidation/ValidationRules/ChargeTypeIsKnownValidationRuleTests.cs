@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
@@ -38,25 +38,28 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void ChargeTypeIsKnownValidationRuleTest(
             ChargeType chargeType,
             bool expected,
-            ChargeCommandBuilder builder)
+            ChargeOperationDtoBuilder builder)
         {
-            var command = builder.WithChargeType(chargeType).Build();
-            var sut = new ChargeTypeIsKnownValidationRule(command);
+            var chargeOperationDto = builder.WithChargeType(chargeType).Build();
+            var sut = new ChargeTypeIsKnownValidationRule(chargeOperationDto);
             Assert.Equal(expected, sut.IsValid);
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder builder)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeOperationDtoBuilder builder)
         {
-            var invalidCommand = CreateInvalidCommand(builder);
-            var sut = new ChargeTypeIsKnownValidationRule(invalidCommand);
+            var invalidChargeOperationDto = builder.WithChargeType(ChargeType.Unknown).Build();
+            var sut = new ChargeTypeIsKnownValidationRule(invalidChargeOperationDto);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChargeTypeIsKnownValidation);
         }
 
-        private static ChargeCommand CreateInvalidCommand(ChargeCommandBuilder builder)
+        [Theory]
+        [InlineAutoDomainData]
+        public void OperationId_ShouldBe_EqualTo(ChargeOperationDto chargeOperationDto)
         {
-            return builder.WithChargeType(ChargeType.Unknown).Build();
+            var sut = new ChargeTypeIsKnownValidationRule(chargeOperationDto);
+            sut.OperationId.Should().Be(chargeOperationDto.Id);
         }
     }
 }

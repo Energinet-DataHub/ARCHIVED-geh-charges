@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
             // Arrange
             acceptedEvent.ChargeLinksCommand.Document.Sender.BusinessProcessRole = marketParticipantRole;
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
-            var expectedLinks = acceptedEvent.ChargeLinksCommand.ChargeLinks.ToList();
+            var expectedLinks = acceptedEvent.ChargeLinksCommand.ChargeLinksOperations.ToList();
             marketParticipantRepository
                 .Setup(r => r.GetMeteringPointAdministratorAsync())
                 .ReturnsAsync(meteringPointAdministrator);

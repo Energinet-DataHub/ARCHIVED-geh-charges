@@ -16,18 +16,20 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
 {
-    public class ChargeOwnerIsRequiredValidationRule : IValidationRule
+    public class ChargeOwnerIsRequiredValidationRule : IValidationRuleForOperation
     {
-        private readonly ChargeCommand _chargeCommand;
+        private readonly ChargeOperationDto _chargeOperationDto;
 
-        public ChargeOwnerIsRequiredValidationRule(ChargeCommand chargeCommand)
+        public ChargeOwnerIsRequiredValidationRule(ChargeOperationDto chargeOperationDto)
         {
-            _chargeCommand = chargeCommand;
+            _chargeOperationDto = chargeOperationDto;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.ChargeOwnerIsRequiredValidation;
 
-        public bool IsValid => !string.IsNullOrWhiteSpace(_chargeCommand.ChargeOperation.ChargeOwner);
+        public bool IsValid => !string.IsNullOrWhiteSpace(_chargeOperationDto.ChargeOwner);
+
+        public string OperationId => _chargeOperationDto.Id;
     }
 }
