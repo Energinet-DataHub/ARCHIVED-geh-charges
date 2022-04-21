@@ -12,20 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
 using Energinet.DataHub.Core.Messaging.Transport.SchemaValidation;
-using Energinet.DataHub.Core.SchemaValidation;
-using Energinet.DataHub.Core.SchemaValidation.Errors;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Application.Charges.Handlers.Message;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 
@@ -89,7 +84,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             var authorizedActor = _actorContext.CurrentActor;
             var senderId = inboundMessage.ValidatedMessage?.ChargeCommands.First().Document.Sender.Id;
 
-            return authorizedActor is null || senderId == authorizedActor.Identifier;
+            return authorizedActor != null && senderId == authorizedActor.Identifier;
         }
 
         private async Task<SchemaValidatedInboundMessage<ChargeCommandBundle>> ValidateMessageAsync(HttpRequestData req)
