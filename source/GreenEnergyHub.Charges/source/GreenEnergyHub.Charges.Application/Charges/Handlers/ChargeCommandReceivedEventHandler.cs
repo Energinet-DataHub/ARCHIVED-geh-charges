@@ -23,6 +23,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
@@ -79,7 +80,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 if (!string.IsNullOrEmpty(triggeredBy)) continue;
 
                 var operationType = GetOperationType(chargeOperationDto, charge);
-
+                var marketParticipantRole = commandReceivedEvent.Command.Document.Sender.BusinessProcessRole;
                 switch (operationType)
                 {
                     /*
@@ -89,7 +90,8 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                      * considered a short-sighted solution.
                      */
                     case OperationType.Create:
-                        await HandleCreateEventAsync(chargeOperationDto).ConfigureAwait(false);
+                        await HandleCreateEventAsync(marketParticipantRole, chargeOperationDto)
+                            .ConfigureAwait(false);
                         await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                         await _chargeCommandReceiptService.AcceptAsync(chargeCommandWithOperation)
                             .ConfigureAwait(false);
@@ -152,18 +154,21 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             return triggeredBy;
         }
 
-        private async Task HandleCreateEventAsync(ChargeOperationDto chargeOperationDto)
+        private async Task HandleCreateEventAsync(MarketParticipantRole marketParticipantRole, ChargeOperationDto chargeOperationDto)
         {
             var charge = await _chargeFactory
-                .CreateFromChargeOperationDtoAsync(chargeOperationDto)
+                .CreateFromChargeOperationDtoAsync(marketParticipantRole, chargeOperationDto)
                 .ConfigureAwait(false);
 
             await _chargeRepository.AddAsync(charge).ConfigureAwait(false);
         }
 
-        private void HandleUpdateEvent(Charge charge, ChargeOperationDto chargeOperationDto)
+        private void HandleUpdateEvent(
+            Charge charge,
+            ChargeOperationDto chargeOperationDto)
         {
-            var newChargePeriod = _chargePeriodFactory.CreateFromChargeOperationDto(chargeOperationDto);
+            var newChargePeriod = _chargePeriodFactory.CreateFromChargeOperationDto(
+                chargeOperationDto);
             charge.Update(newChargePeriod);
         }
 

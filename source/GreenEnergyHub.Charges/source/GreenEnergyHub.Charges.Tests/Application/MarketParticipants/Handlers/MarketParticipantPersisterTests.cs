@@ -47,7 +47,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
                 { MarketParticipantRole.EnergySupplier, MarketParticipantRole.GridAccessProvider });
 
             marketParticipantRepository.Setup(x =>
-                x.GetOrNullAsync(It.IsAny<string>(), It.IsAny<MarketParticipantRole>()))
+                x.GetOrNullAsync(It.IsAny<MarketParticipantRole>(), It.IsAny<string>()))
                 .ReturnsAsync(() => null);
             var sut = new MarketParticipantPersister(marketParticipantRepository.Object, loggerFactory.Object, unitOfWork.Object);
 
@@ -82,7 +82,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             var existingMarketParticipant = GetMarketParticipant(marketParticipantChangedEvent);
 
             marketParticipantRepository.Setup(x => x.GetOrNullAsync(
-                It.IsAny<string>(), It.IsAny<MarketParticipantRole>()))
+                    It.IsAny<MarketParticipantRole>(), It.IsAny<string>()))
                 .ReturnsAsync(existingMarketParticipant);
 
             var sut = new MarketParticipantPersister(marketParticipantRepository.Object, loggerFactory.Object, unitOfWork.Object);

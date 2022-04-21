@@ -54,7 +54,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
             if (chargeOperation == null) throw new ArgumentNullException(nameof(chargeOperation));
 
             var sender = await _marketParticipantRepository
-                .GetOrNullAsync(chargeCommand.Document.Sender.Id, chargeCommand.Document.Sender.BusinessProcessRole)
+                .GetOrNullAsync(chargeCommand.Document.Sender.BusinessProcessRole, chargeCommand.Document.Sender.Id)
                 .ConfigureAwait(false);
             var rules = GetMandatoryRulesForCommand(sender);
             rules.AddRange(await GetRulesForOperationAsync(chargeOperation).ConfigureAwait(false));

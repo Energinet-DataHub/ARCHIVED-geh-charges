@@ -45,8 +45,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
         }
 
         public async Task<MarketParticipant?> GetOrNullAsync(
-            string marketParticipantId,
-            MarketParticipantRole businessProcessRole)
+            MarketParticipantRole businessProcessRole,
+            string marketParticipantId)
         {
             return await _chargesDatabaseContext
                 .MarketParticipants

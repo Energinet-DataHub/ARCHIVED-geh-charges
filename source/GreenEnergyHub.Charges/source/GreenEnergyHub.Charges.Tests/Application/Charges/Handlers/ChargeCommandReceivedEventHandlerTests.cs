@@ -25,6 +25,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
@@ -70,7 +71,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 
             var charge = chargeBuilder.WithPeriods(new List<ChargePeriod> { CreateValidPeriod() }).Build();
             chargeFactory
-                .Setup(s => s.CreateFromChargeOperationDtoAsync(It.IsAny<ChargeOperationDto>()))
+                .Setup(s => s.CreateFromChargeOperationDtoAsync(
+                    It.IsAny<MarketParticipantRole>(),
+                    It.IsAny<ChargeOperationDto>()))
                 .ReturnsAsync(charge);
 
             chargePeriodFactory

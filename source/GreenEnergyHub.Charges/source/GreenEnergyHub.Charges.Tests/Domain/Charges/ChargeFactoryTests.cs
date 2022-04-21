@@ -41,14 +41,14 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             Mock<ChargePeriod> chargePeriod,
             TestMarketParticipant owner,
             ChargeOperationDto chargeOperationDto,
-            DocumentDto documentDto,
+            MarketParticipantDto marketParticipantDto,
             ChargeFactory sut)
         {
             // Arrange
             marketParticipantRepository
                 .Setup(repo => repo.GetOrNullAsync(
-                    chargeOperationDto.ChargeOwner,
-                    documentDto.Sender.BusinessProcessRole))
+                    marketParticipantDto.BusinessProcessRole,
+                    chargeOperationDto.ChargeOwner))
                 .ReturnsAsync(owner);
 
             chargePeriodFactory
@@ -56,7 +56,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
                 .Returns(chargePeriod.Object);
 
             // Act
-            var actual = await sut.CreateFromChargeOperationDtoAsync(chargeOperationDto);
+            var actual = await sut.CreateFromChargeOperationDtoAsync(
+                marketParticipantDto.BusinessProcessRole,
+                chargeOperationDto);
 
             // Assert
             actual.Should().NotContainNullsOrEmptyEnumerables();
@@ -69,13 +71,14 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
             Mock<ChargePeriod> chargePeriod,
             ChargeOperationDto chargeOperationDto,
+            MarketParticipantDto marketParticipantDto,
             ChargeFactory sut)
         {
             // Arrange
             marketParticipantRepository
                 .Setup(repo => repo.GetOrNullAsync(
-                    It.IsAny<string>(),
-                    It.IsAny<MarketParticipantRole>()))
+                    It.IsAny<MarketParticipantRole>(),
+                    It.IsAny<string>()))
                 .ReturnsAsync((MarketParticipant?)null);
 
             chargePeriodFactory
@@ -84,7 +87,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
 
             // Act & Assert
             await Assert.ThrowsAsync<InvalidOperationException>(() =>
-                sut.CreateFromChargeOperationDtoAsync(chargeOperationDto));
+                sut.CreateFromChargeOperationDtoAsync(marketParticipantDto.BusinessProcessRole, chargeOperationDto));
         }
     }
 }

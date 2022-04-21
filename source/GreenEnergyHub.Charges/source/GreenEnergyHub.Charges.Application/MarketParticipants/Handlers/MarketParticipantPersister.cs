@@ -44,7 +44,8 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
             foreach (var businessProcessRole in marketParticipantChangedEvent.BusinessProcessRoles)
             {
                 var existingMarketParticipant = await _marketParticipantRepository.GetOrNullAsync(
-                    marketParticipantChangedEvent.MarketParticipantId, businessProcessRole).ConfigureAwait(false);
+                    businessProcessRole,
+                    marketParticipantChangedEvent.MarketParticipantId).ConfigureAwait(false);
 
                 if (existingMarketParticipant is null)
                 {

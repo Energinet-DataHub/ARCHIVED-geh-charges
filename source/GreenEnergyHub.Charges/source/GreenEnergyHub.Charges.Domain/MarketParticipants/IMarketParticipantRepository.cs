@@ -29,7 +29,7 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
 
         Task<MarketParticipant?> GetOrNullAsync(Guid id);
 
-        Task<MarketParticipant?> GetOrNullAsync(string marketParticipantId, MarketParticipantRole businessProcessRole);
+        Task<MarketParticipant?> GetOrNullAsync(MarketParticipantRole businessProcessRole, string marketParticipantId);
 
         /// <summary>
         /// Get the grid access provider of the grid area that the metering point belongs to.

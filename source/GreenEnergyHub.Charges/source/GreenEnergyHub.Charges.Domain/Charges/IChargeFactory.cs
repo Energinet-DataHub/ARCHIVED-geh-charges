@@ -14,11 +14,13 @@
 
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Domain.Charges
 {
     public interface IChargeFactory
     {
-        Task<Charge> CreateFromChargeOperationDtoAsync(ChargeOperationDto chargeOperationDto);
+        Task<Charge> CreateFromChargeOperationDtoAsync(
+            MarketParticipantRole marketParticipantRole, ChargeOperationDto chargeOperationDto);
     }
 }
