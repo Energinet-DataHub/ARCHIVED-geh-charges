@@ -165,7 +165,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // Assert
                 actual.StatusCode.Should().Be(HttpStatusCode.BadRequest);
                 var errorMessage = await actual.Content.ReadAsStringAsync();
-                errorMessage.Should().Be("The sender organisation provided in the request body does not match the organisation in the bearer token.");
+                errorMessage.Should().Be("The sender organization provided in the request body does not match the organization in the bearer token.");
             }
 
             [Theory]
