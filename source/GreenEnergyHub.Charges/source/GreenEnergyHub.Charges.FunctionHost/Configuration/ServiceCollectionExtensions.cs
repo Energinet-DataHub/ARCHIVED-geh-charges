@@ -65,7 +65,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 _.GetRequiredService<IActorProvider>(),
                 _.GetRequiredService<IActorContext>(),
                 _functionNamesToExclude));
-
             serviceCollection.AddScoped<IActorContext, ActorContext>();
             serviceCollection.AddScoped<IActorProvider, ActorProvider>();
         }
