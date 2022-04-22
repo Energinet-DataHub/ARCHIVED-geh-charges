@@ -21,6 +21,7 @@ These are the business processes maintained by this domain.
 | [Change of Tariff price list](docs/business-processes/change-of-tariff.md) |
 | [Request for Prices](docs/business-processes/request-for-prices.md) |
 | [Settlement master data for metering point - fee, subscription and tariff links](docs/business-processes/settlement-master-data.md)
+| [Settlement master data for market participants - market participant and grid area](docs/business-processes/settlement-master-data-marketparticipants.md)
 
 For more information on the system flows supporting the above-mentioned business processes, please see the [process-flows](docs/process-flows/README.md) folder.
 
@@ -34,7 +35,7 @@ Learn how to get a development environment up and running for development, debug
 
 The architecture diagrams below illustrate both current state of the Charges domain as well as future work, last-mentioned being illustrated by grey arrows and components with lowered opacity.
 
-The diagrams depict the architecture of `Charge and Charge Prices` and `Charge Links`, respectively.
+The diagrams depict the architecture of `Charge and Charge Prices`, `Charge Links` and `Market Participants`, respectively.
 
 Please note, all the azure functions displayed in the architecture diagrams are hosted in the same function host.
 Also, some components have singular names while others have plural names. This is intended. The components using plural may need to process a bundle of e.g. charge links to determine whether an operation, e.g. validation, was successful.
@@ -46,6 +47,13 @@ Also, some components have singular names while others have plural names. This i
 ### Charge links architecture
 
 ![Charge Links](ARCHITECTURE-ChargeLinks.png)
+
+### Supporting architecture
+
+Below depicts architectural components which supports the Charges domain in fulfilling its business purpose. 
+One such example is consuming market participant integration events published by the Market Partipant domain. Market partipant data is required to authenticate and authorize the sender of incoming requests.
+
+![Market Participants](ARCHITECTURE-MarketParticipants.png)
 
 ## Context Streams
 
