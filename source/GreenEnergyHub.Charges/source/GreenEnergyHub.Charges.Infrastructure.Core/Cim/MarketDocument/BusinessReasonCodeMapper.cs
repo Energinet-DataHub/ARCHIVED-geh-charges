@@ -19,6 +19,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument
 {
     public static class BusinessReasonCodeMapper
     {
+        private const string CimUpdatePriceInformation = "D08";
         private const string CimUpdateMasterDataSettlement = "D17";
         private const string CimUpdateChargeInformation = "D18";
 
@@ -26,6 +27,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument
         {
             return value switch
             {
+                CimUpdatePriceInformation => BusinessReasonCode.UpdatePriceInformation,
                 CimUpdateMasterDataSettlement => BusinessReasonCode.UpdateMasterDataSettlement,
                 CimUpdateChargeInformation => BusinessReasonCode.UpdateChargeInformation,
                 _ => BusinessReasonCode.Unknown,
@@ -36,6 +38,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument
         {
             return businessReasonCode switch
             {
+                BusinessReasonCode.UpdatePriceInformation => CimUpdatePriceInformation,
                 BusinessReasonCode.UpdateChargeInformation => CimUpdateChargeInformation,
                 BusinessReasonCode.UpdateMasterDataSettlement => CimUpdateMasterDataSettlement,
                 _ => throw new InvalidEnumArgumentException(

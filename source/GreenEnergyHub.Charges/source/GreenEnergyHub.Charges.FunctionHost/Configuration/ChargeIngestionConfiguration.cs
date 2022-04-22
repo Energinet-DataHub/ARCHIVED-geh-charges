@@ -16,6 +16,7 @@ using Energinet.DataHub.Core.Messaging.Transport.SchemaValidation;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.PriceCommandReceivedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
@@ -43,6 +44,11 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 .AddInternalMessageDispatcher<ChargeCommandReceivedEvent>(
                     EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
                     EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandReceivedTopicName));
+
+            serviceCollection.AddMessaging()
+                .AddInternalMessageDispatcher<PriceCommandReceivedEvent>(
+                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
+                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.PriceCommandReceivedTopicName));
         }
     }
 }

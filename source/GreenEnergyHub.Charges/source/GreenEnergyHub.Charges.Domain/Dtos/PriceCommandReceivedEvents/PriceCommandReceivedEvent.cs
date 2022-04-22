@@ -12,16 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.MarketParticipants
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
+using NodaTime;
+
+namespace GreenEnergyHub.Charges.Domain.Dtos.PriceCommandReceivedEvents
 {
-    /// <summary>
-    /// BusinessReasonCode indicates the intended business context.
-    /// </summary>
-    public enum BusinessReasonCode
+    public class PriceCommandReceivedEvent : InternalEventBase
     {
-        Unknown = 0,
-        UpdateMasterDataSettlement = 1,
-        UpdateChargeInformation = 2,
-        UpdatePriceInformation = 3,
+        public PriceCommandReceivedEvent(
+            Instant publishedTime,
+            ChargeCommand command)
+            : base(publishedTime)
+        {
+            Command = command;
+        }
+
+        public ChargeCommand Command { get; }
     }
 }
