@@ -39,7 +39,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 {
     [IntegrationTest]
-    public class GridAreaPersisterEndPoint
+    public class GridAreaPersisterEndPointTests
     {
         [Collection(nameof(ChargesFunctionAppCollectionFixture))]
         public class RunAsync : FunctionAppTestBase<ChargesFunctionAppFixture>, IAsyncLifetime
@@ -87,7 +87,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 Fixture.HostManager.ClearHostLog();
             }
 
-            private async Task<Guid> CreateMarketParticipantInRepository(ChargesDatabaseContext context)
+            private static async Task<Guid> CreateMarketParticipantInRepository(ChargesDatabaseContext context)
             {
                 var markedParticipant = new MarketParticipantBuilder().Build();
                 context.MarketParticipants.Add(markedParticipant);

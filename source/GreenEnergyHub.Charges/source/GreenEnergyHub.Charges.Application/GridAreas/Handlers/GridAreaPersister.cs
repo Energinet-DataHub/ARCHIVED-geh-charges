@@ -49,15 +49,15 @@ namespace GreenEnergyHub.Charges.Application.GridAreas.Handlers
                     gridAreaChangedEvent.Id,
                     gridAreaChangedEvent.GridAreaId);
                 await _gridAreaRepository.AddAsync(gridArea).ConfigureAwait(false);
-                _logger.LogInformation(
-                    $"GridArea ID {gridArea.Id} has been persisted");
+                _logger.LogInformation("GridArea ID {GridAreaId} has been persisted", gridArea.Id);
             }
             else
             {
                 existingGridArea.GridAccessProviderId = gridAreaChangedEvent.GridAreaId;
                 _logger.LogInformation(
-                    $"GridArea ID '{existingGridArea.Id}' has changed AreaAccessProviderId to " +
-                $"'{existingGridArea.GridAccessProviderId}'");
+                    "GridArea ID '{GridAreaId}' has changed AreaAccessProviderId to '{GridAccessProviderId}'",
+                    existingGridArea.Id,
+                    existingGridArea.GridAccessProviderId);
             }
 
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);

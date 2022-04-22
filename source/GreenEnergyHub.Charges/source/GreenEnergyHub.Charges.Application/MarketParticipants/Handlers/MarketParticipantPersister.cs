@@ -72,8 +72,9 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
         {
             existingMarketParticipant.IsActive = marketParticipantChangedEvent.IsActive;
             _logger.LogInformation(
-                $"Marketparticipant ID '{existingMarketParticipant.MarketParticipantId}' " +
-                $"with role '{businessProcessRole}' has changed state");
+                "Marketparticipant ID '{MarketParticipantId}' with role '{BusinessProcessRole}' has changed state",
+                existingMarketParticipant.MarketParticipantId,
+                businessProcessRole);
         }
 
         private async Task AddMarketParticipantAsync(
@@ -87,9 +88,11 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
                 businessProcessRole);
 
             await _marketParticipantRepository.AddAsync(marketParticipant).ConfigureAwait(false);
+            var marketParticipantId = marketParticipant.MarketParticipantId;
             _logger.LogInformation(
-                $"Marketparticipant ID '{marketParticipant.MarketParticipantId}' " +
-                $"with role '{businessProcessRole}' has been persisted");
+                "Marketparticipant ID '{MarketParticipantId}' with role '{BusinessProcessRole}' has been persisted",
+                marketParticipant.MarketParticipantId,
+                businessProcessRole);
         }
     }
 }
