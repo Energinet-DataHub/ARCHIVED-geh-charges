@@ -20,7 +20,7 @@ These are the business processes maintained by this domain.
 | [Change of Fee price list](docs/business-processes/change-of-fee.md) |
 | [Change of Tariff price list](docs/business-processes/change-of-tariff.md) |
 | [Request for Prices](docs/business-processes/request-for-prices.md) |
-| [Settlement master data for metering point - fee, subscription and tariff links](docs/business-processes/settlement-master-data.md)
+| [Settlement master data for metering point - fee, subscription and tariff links](docs/business-processes/settlement-master-data.md) |
 
 For more information on the system flows supporting the above-mentioned business processes, please see the [process-flows](docs/process-flows/README.md) folder.
 
@@ -49,8 +49,8 @@ Also, some components have singular names while others have plural names. This i
 
 ### Supporting architecture
 
-Below depicts architectural components which supports the Charges domain in fulfilling its business purpose. 
-One such example is consuming market participant integration events published by the Market Partipant domain. Market partipant data is required to authenticate and authorize the sender of incoming requests.
+Below depicts architectural components which supports the Charges domain in fulfilling its business purpose.
+One such example is consuming market participant integration events published by the Market Participant domain. Market participant data is required to authenticate and authorize the sender of incoming requests.
 
 ![Market Participants](ARCHITECTURE-MarketParticipants.png)
 
