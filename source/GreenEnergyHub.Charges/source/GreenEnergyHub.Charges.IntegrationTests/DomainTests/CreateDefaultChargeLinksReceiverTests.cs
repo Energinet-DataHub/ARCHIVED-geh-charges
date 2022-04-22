@@ -105,9 +105,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 var message = new CreateDefaultChargeLinks { MeteringPointId = meteringPointId };
                 parentId = $"00-{correlationId}-b7ad6b7169203331-01";
 
-                var actorId = new Guid(TestDataGenerator.TestActorId);
                 var actor = JsonSerializer.Serialize(
-                        new Actor(actorId, "???", "???", MarketParticipantRole.GridAccessProvider.ToString()));
+                        new Actor(new Guid("ed6c94f3-24a8-43b3-913d-bf7513390a32"), "???", "???", MarketParticipantRole.GridAccessProvider.ToString()));
 
                 var byteArray = message.ToByteArray();
                 var serviceBusMessage = new ServiceBusMessage(byteArray)

@@ -34,7 +34,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public Run(ChargesFunctionAppFixture fixture, ITestOutputHelper testOutputHelper)
                 : base(fixture, testOutputHelper)
             {
-                TestDataGenerator.GenerateDataForIntegrationTests(fixture);
             }
 
             [Fact]
