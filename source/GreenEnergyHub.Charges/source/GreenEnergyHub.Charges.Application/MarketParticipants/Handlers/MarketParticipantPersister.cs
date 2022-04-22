@@ -88,7 +88,6 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
                 businessProcessRole);
 
             await _marketParticipantRepository.AddAsync(marketParticipant).ConfigureAwait(false);
-            var marketParticipantId = marketParticipant.MarketParticipantId;
             _logger.LogInformation(
                 "Marketparticipant ID '{MarketParticipantId}' with role '{BusinessProcessRole}' has been persisted",
                 marketParticipant.MarketParticipantId,
