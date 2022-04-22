@@ -21,7 +21,6 @@ These are the business processes maintained by this domain.
 | [Change of Tariff price list](docs/business-processes/change-of-tariff.md) |
 | [Request for Prices](docs/business-processes/request-for-prices.md) |
 | [Settlement master data for metering point - fee, subscription and tariff links](docs/business-processes/settlement-master-data.md)
-| [Settlement master data for market participants - market participant and grid area](docs/business-processes/settlement-master-data-marketparticipants.md)
 
 For more information on the system flows supporting the above-mentioned business processes, please see the [process-flows](docs/process-flows/README.md) folder.
 
