@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using Azure.Messaging.ServiceBus;
 
 namespace GreenEnergyHub.Charges.Infrastructure.ReplySender
@@ -20,12 +20,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.ReplySender
     public class ServiceBusReplySenderProvider : IServiceBusReplySenderProvider
     {
         private readonly ServiceBusClient _serviceBusClient;
-        private readonly Dictionary<string, ServiceBusReplySender?> _senders;
+        private readonly ConcurrentDictionary<string, ServiceBusReplySender?> _senders;
 
         public ServiceBusReplySenderProvider(ServiceBusClient serviceBusClient)
         {
             _serviceBusClient = serviceBusClient;
-            _senders = new Dictionary<string, ServiceBusReplySender?>();
+            _senders = new ConcurrentDictionary<string, ServiceBusReplySender?>();
         }
 
         public IServiceBusReplySender GetInstance(string replyTo)
@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ReplySender
 
             serviceBusReplySender = new ServiceBusReplySender(_serviceBusClient.CreateSender(replyTo));
 
-            _senders.Add(replyTo, serviceBusReplySender);
+            _senders.TryAdd(replyTo, serviceBusReplySender);
 
             return serviceBusReplySender;
         }
