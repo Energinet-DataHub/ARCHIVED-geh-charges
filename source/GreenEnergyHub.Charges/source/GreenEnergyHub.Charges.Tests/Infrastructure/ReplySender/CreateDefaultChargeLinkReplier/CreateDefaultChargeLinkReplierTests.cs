@@ -55,9 +55,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ReplySender.CreateDefaultC
 
             // Act + Assert
             await Assert.ThrowsAsync<ArgumentNullException>(() => sut
-                    .ReplyWithSucceededAsync(
-                        meteringPointId!, false, replyQueue!))
-                .ConfigureAwait(false);
+                    .ReplyWithSucceededAsync(meteringPointId, false, replyQueue)).ConfigureAwait(false);
         }
 
         [Theory]
@@ -77,8 +75,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ReplySender.CreateDefaultC
             correlationContext.Setup(x => x.Id).Returns(correlationId);
 
             serviceBusReplySenderProviderMock.Setup(x => x
-                    .GetInstance(replyTo))
-                .Returns(serviceBusRequestSenderMock.Object);
+                    .GetInstance(replyTo)).Returns(serviceBusRequestSenderMock.Object);
 
             var sut = new CreateDefaultChargeLinksReplier(
                 correlationContext.Object,
@@ -92,9 +89,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ReplySender.CreateDefaultC
 
             // Assert
             serviceBusRequestSenderMock.Verify(
-                x => x.SendReplyAsync(
-                    It.IsAny<byte[]>(),
-                    correlationContext.Object.Id),
+                x => x.SendReplyAsync(It.IsAny<byte[]>(), correlationContext.Object.Id),
                 Times.Once);
         }
 
@@ -119,9 +114,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ReplySender.CreateDefaultC
 
             // Act + Assert
             await Assert.ThrowsAsync<ArgumentNullException>(() => sut
-                    .ReplyWithFailedAsync(
-                        meteringPointId!, errorCode, replyQueue!))
-                .ConfigureAwait(false);
+                    .ReplyWithFailedAsync(meteringPointId, errorCode, replyQueue)).ConfigureAwait(false);
         }
 
         [Theory]
@@ -154,9 +147,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.ReplySender.CreateDefaultC
 
             // Assert
             serviceBusReplySenderMock.Verify(
-                x => x.SendReplyAsync(
-                    It.IsAny<byte[]>(),
-                    correlationContext.Object.Id),
+                x => x.SendReplyAsync(It.IsAny<byte[]>(), correlationContext.Object.Id),
                 Times.Once);
         }
     }

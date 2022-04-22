@@ -1,6 +1,6 @@
-# Charges validations
+# Charges asynchronous validations
 
-The following validation rules are currently implemented in the charge domain.
+The following asynchronous validation rules are currently implemented in the charge domain.
 
 |**Rule number**|**Description**|**Rejection code**|**Charge Types**|**Charge Links**|
 |:-|:-|:-|:-|:-|
