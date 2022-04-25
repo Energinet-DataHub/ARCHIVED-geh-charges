@@ -19,9 +19,9 @@ limitations under the License.
     <cim:type>D10</cim:type>
     <cim:process.processType>D08</cim:process.processType>
     <cim:businessSector.type>23</cim:businessSector.type>
-    <cim:sender_MarketParticipant.mRID codingScheme="A10">8100000000030</cim:sender_MarketParticipant.mRID>
+    <cim:sender_MarketParticipant.mRID codingScheme="A10">{{$senderMarketParticipant}}</cim:sender_MarketParticipant.mRID>
     <cim:sender_MarketParticipant.marketRole.type>DDM</cim:sender_MarketParticipant.marketRole.type>
-    <cim:receiver_MarketParticipant.mRID codingScheme="A10">5790001330552</cim:receiver_MarketParticipant.mRID>
+    <cim:receiver_MarketParticipant.mRID codingScheme="A10">{{$receiverMarketParticipant}}</cim:receiver_MarketParticipant.mRID>
     <cim:receiver_MarketParticipant.marketRole.type>DDZ</cim:receiver_MarketParticipant.marketRole.type>
     <cim:createdDateTime>{{$isoTimestamp}}</cim:createdDateTime>
     <cim:MktActivityRecord>
@@ -31,13 +31,8 @@ limitations under the License.
                 <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">8100000000030</cim:chargeTypeOwner_MarketParticipant.mRID>
                 <cim:type>D03</cim:type>
                 <cim:mRID>Chg-{{$randomCharactersShort}}</cim:mRID>
-                <cim:name/>
-                <cim:description/>
                 <cim:priceTimeFrame_Period.resolution>PT1H</cim:priceTimeFrame_Period.resolution>
                 <cim:effectiveDate>{{$isoTimestampPlusOneMonth}}</cim:effectiveDate>
-                <cim:VATPayer/>
-                <cim:transparentInvoicing/>
-                <cim:taxIndicator/>
                 <cim:Series_Period>
                     <cim:resolution>PT1H</cim:resolution>
                     <cim:timeInterval>
