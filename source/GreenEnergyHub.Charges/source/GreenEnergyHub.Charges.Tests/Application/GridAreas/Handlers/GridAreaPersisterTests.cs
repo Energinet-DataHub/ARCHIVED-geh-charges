@@ -87,7 +87,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.GridAreas.Handlers
             // Assert
             gridAreaRepository.Verify(v => v.AddAsync(It.IsAny<GridArea>()), Times.Never);
             logger.VerifyLoggerWasCalled(
-                $"GridArea ID '{existingGridArea.Id}' has changed AreaAccessProviderId to " +
+                $"GridArea ID '{existingGridArea.Id}' has changed GridAccessProviderId to " +
                 $"'{existingGridArea.GridAccessProviderId}'",
                 LogLevel.Information);
         }
