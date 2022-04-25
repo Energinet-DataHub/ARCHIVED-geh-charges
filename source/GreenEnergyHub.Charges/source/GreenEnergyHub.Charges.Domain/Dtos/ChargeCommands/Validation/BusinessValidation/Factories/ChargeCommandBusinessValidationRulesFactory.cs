@@ -49,9 +49,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
 
         public async Task<IValidationRuleSet> CreateRulesAsync(ChargeCommand chargeCommand)
         {
-            if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
-            var chargeOperation = chargeCommand.ChargeOperations.SingleOrDefault();
-            if (chargeOperation == null) throw new ArgumentNullException(nameof(chargeOperation));
+            var chargeOperation = CheckChargeCommandArgument(chargeCommand);
 
             var sender = await _marketParticipantRepository
                 .GetOrNullAsync(chargeCommand.Document.Sender.BusinessProcessRole, chargeCommand.Document.Sender.Id)
@@ -59,6 +57,16 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
             var rules = GetMandatoryRulesForCommand(sender);
             rules.AddRange(await GetRulesForOperationAsync(chargeOperation).ConfigureAwait(false));
             return ValidationRuleSet.FromRules(rules);
+        }
+
+        private static ChargeOperationDto CheckChargeCommandArgument(ChargeCommand chargeCommand)
+        {
+            if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
+            ArgumentNullException.ThrowIfNull(chargeCommand);
+
+            var chargeOperation = chargeCommand.ChargeOperations.SingleOrDefault();
+            ArgumentNullException.ThrowIfNull(chargeOperation);
+            return chargeOperation;
         }
 
         private async Task<List<IValidationRule>> GetRulesForOperationAsync(ChargeOperationDto chargeOperationDto)
