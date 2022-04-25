@@ -61,9 +61,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
 
         private static ChargeOperationDto CheckChargeCommandArgument(ChargeCommand chargeCommand)
         {
-            if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
             ArgumentNullException.ThrowIfNull(chargeCommand);
-
             var chargeOperation = chargeCommand.ChargeOperations.SingleOrDefault();
             ArgumentNullException.ThrowIfNull(chargeOperation);
             return chargeOperation;
