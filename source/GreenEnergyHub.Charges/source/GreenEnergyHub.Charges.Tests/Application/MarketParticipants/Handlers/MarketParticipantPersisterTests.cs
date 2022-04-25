@@ -57,12 +57,12 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             // Assert
             marketParticipantRepository.Verify(v => v.AddAsync(It.IsAny<MarketParticipant>()), Times.Exactly(2));
             logger.VerifyLoggerWasCalled(
-                $"Marketparticipant ID '{marketParticipantChangedEvent.MarketParticipantId}' " +
-                $"with role '{MarketParticipantRole.EnergySupplier}' has been persisted",
+                $"Market participant with ID '{marketParticipantChangedEvent.MarketParticipantId}' " +
+                $"and role '{MarketParticipantRole.EnergySupplier}' has been persisted",
                 LogLevel.Information);
             logger.VerifyLoggerWasCalled(
-                $"Marketparticipant ID '{marketParticipantChangedEvent.MarketParticipantId}' " +
-                $"with role '{MarketParticipantRole.GridAccessProvider}' has been persisted",
+                $"Market participant with ID '{marketParticipantChangedEvent.MarketParticipantId}' " +
+                $"and role '{MarketParticipantRole.GridAccessProvider}' has been persisted",
                 LogLevel.Information);
         }
 
