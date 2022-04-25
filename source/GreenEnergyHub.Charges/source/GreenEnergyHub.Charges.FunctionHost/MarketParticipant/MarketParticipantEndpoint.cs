@@ -52,7 +52,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
             [NotNull] byte[] message)
         {
             // Todo: Refactor this when Titans have found a solution
-            // We don't now which event is thrown, nothing in the message indicates which type of parser to use.
+            // We don't know which event is thrown, nothing in the message indicates which type of parser to use.
             // Titans is looking into that problem, for now we try to parse the message with all parsers that apply
             // to this domain until we succeed or all has failed.
              try
