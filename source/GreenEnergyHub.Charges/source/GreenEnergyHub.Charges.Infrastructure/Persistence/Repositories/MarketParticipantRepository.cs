@@ -111,7 +111,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
                 .SingleAsync();
         }
 
-        private MarketParticipant CheckMarketParticipantArguments(MarketParticipant marketParticipant)
+        private static MarketParticipant CheckMarketParticipantArguments(MarketParticipant marketParticipant)
         {
             ArgumentNullException.ThrowIfNull(marketParticipant);
             return marketParticipant;

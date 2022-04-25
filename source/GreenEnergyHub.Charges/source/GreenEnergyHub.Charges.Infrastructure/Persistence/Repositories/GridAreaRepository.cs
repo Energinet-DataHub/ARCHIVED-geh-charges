@@ -41,7 +41,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
                 SingleOrDefaultAsync(ga => ga.Id == id).ConfigureAwait(false);
         }
 
-        private GridArea CheckGridAreaArgument(GridArea gridArea)
+        private static GridArea CheckGridAreaArgument(GridArea gridArea)
         {
             ArgumentNullException.ThrowIfNull(gridArea);
             return gridArea;
