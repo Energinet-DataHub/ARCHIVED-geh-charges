@@ -39,8 +39,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 
         public async Task PersistAsync(MarketParticipantChangedEvent marketParticipantChangedEvent)
         {
-            if (marketParticipantChangedEvent is null)
-                throw new ArgumentNullException(nameof(marketParticipantChangedEvent));
+            marketParticipantChangedEvent = CheckMarketParticipantChangedEventArgument(marketParticipantChangedEvent);
             foreach (var businessProcessRole in marketParticipantChangedEvent.BusinessProcessRoles)
             {
                 var existingMarketParticipant = await _marketParticipantRepository.GetOrNullAsync(
@@ -65,6 +64,12 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
         }
 
+        private static MarketParticipantChangedEvent CheckMarketParticipantChangedEventArgument(MarketParticipantChangedEvent marketParticipantChangedEvent)
+        {
+            ArgumentNullException.ThrowIfNull(marketParticipantChangedEvent);
+            return marketParticipantChangedEvent;
+        }
+
         private void UpdateMarketParticipant(
             MarketParticipantChangedEvent marketParticipantChangedEvent,
             MarketParticipant existingMarketParticipant,
@@ -72,7 +77,8 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
         {
             existingMarketParticipant.IsActive = marketParticipantChangedEvent.IsActive;
             _logger.LogInformation(
-                "Marketparticipant ID '{MarketParticipantId}' with role '{BusinessProcessRole}' has changed state",
+                "Market participant with ID '{MarketParticipantId}' and role '{BusinessProcessRole}' " +
+                "has changed state",
                 existingMarketParticipant.MarketParticipantId,
                 businessProcessRole);
         }
@@ -89,7 +95,8 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 
             await _marketParticipantRepository.AddAsync(marketParticipant).ConfigureAwait(false);
             _logger.LogInformation(
-                "Marketparticipant ID '{MarketParticipantId}' with role '{BusinessProcessRole}' has been persisted",
+                "Market participant with ID '{MarketParticipantId}' and role '{BusinessProcessRole}' " +
+                "has been persisted",
                 marketParticipant.MarketParticipantId,
                 businessProcessRole);
         }

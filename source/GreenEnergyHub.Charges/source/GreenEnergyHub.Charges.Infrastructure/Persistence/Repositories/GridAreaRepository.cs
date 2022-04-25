@@ -30,7 +30,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
 
         public async Task AddAsync(GridArea gridArea)
         {
-            if (gridArea is null) throw new ArgumentNullException(nameof(gridArea));
+            gridArea = CheckGridAreaArgument(gridArea);
             await _chargesDatabaseContext.GridAreas.AddAsync(gridArea).ConfigureAwait(false);
         }
 
@@ -39,6 +39,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
             return await _chargesDatabaseContext
                 .GridAreas.
                 SingleOrDefaultAsync(ga => ga.Id == id).ConfigureAwait(false);
+        }
+
+        private GridArea CheckGridAreaArgument(GridArea gridArea)
+        {
+            ArgumentNullException.ThrowIfNull(gridArea);
+            return gridArea;
         }
     }
 }

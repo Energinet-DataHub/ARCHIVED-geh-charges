@@ -39,15 +39,12 @@ namespace GreenEnergyHub.Charges.Application.GridAreas.Handlers
 
         public async Task PersistAsync(GridAreaChangedEvent gridAreaChangedEvent)
         {
-            if (gridAreaChangedEvent is null)
-                throw new ArgumentNullException(nameof(gridAreaChangedEvent));
+            gridAreaChangedEvent = CheckGridAreaChangedEventArgument(gridAreaChangedEvent);
             var existingGridArea = await _gridAreaRepository.GetOrNullAsync(
                 gridAreaChangedEvent.Id).ConfigureAwait(false);
             if (existingGridArea is null)
             {
-                var gridArea = new GridArea(
-                    gridAreaChangedEvent.Id,
-                    gridAreaChangedEvent.GridAreaId);
+                var gridArea = new GridArea(gridAreaChangedEvent.Id, gridAreaChangedEvent.GridAreaId);
                 await _gridAreaRepository.AddAsync(gridArea).ConfigureAwait(false);
                 _logger.LogInformation("GridArea ID {GridAreaId} has been persisted", gridArea.Id);
             }
@@ -55,12 +52,18 @@ namespace GreenEnergyHub.Charges.Application.GridAreas.Handlers
             {
                 existingGridArea.GridAccessProviderId = gridAreaChangedEvent.GridAreaId;
                 _logger.LogInformation(
-                    "GridArea ID '{GridAreaId}' has changed AreaAccessProviderId to '{GridAccessProviderId}'",
+                    "GridArea ID '{GridAreaId}' has changed GridAccessProviderId to '{GridAccessProviderId}'",
                     existingGridArea.Id,
                     existingGridArea.GridAccessProviderId);
             }
 
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+        }
+
+        private static GridAreaChangedEvent CheckGridAreaChangedEventArgument(GridAreaChangedEvent gridAreaChangedEvent)
+        {
+            ArgumentNullException.ThrowIfNull(gridAreaChangedEvent);
+            return gridAreaChangedEvent;
         }
     }
 }

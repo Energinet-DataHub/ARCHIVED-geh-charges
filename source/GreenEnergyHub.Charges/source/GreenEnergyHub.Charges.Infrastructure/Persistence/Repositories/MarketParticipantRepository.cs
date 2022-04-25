@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
 
         public async Task AddAsync(MarketParticipant marketParticipant)
         {
-            if (marketParticipant == null) throw new ArgumentNullException(nameof(marketParticipant));
+            marketParticipant = CheckMarketParticipantArguments(marketParticipant);
             await _chargesDatabaseContext.MarketParticipants.AddAsync(marketParticipant).ConfigureAwait(false);
         }
 
@@ -109,6 +109,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
                 .Where(mp => mp.BusinessProcessRole == marketParticipantRole)
                 .Where(mp => mp.IsActive)
                 .SingleAsync();
+        }
+
+        private MarketParticipant CheckMarketParticipantArguments(MarketParticipant marketParticipant)
+        {
+            ArgumentNullException.ThrowIfNull(marketParticipant);
+            return marketParticipant;
         }
     }
 }
