@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.TestHelpers;
 using Moq;
@@ -36,7 +37,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             ChargeCommandHandler sut)
         {
             // Arrange
-            var transaction = new ChargeCommandBuilder().Build();
+            var document = new DocumentDtoBuilder()
+                .WithBusinessReasonCode(BusinessReasonCode.UpdateChargeInformation)
+                .Build();
+            var transaction = new ChargeCommandBuilder().WithDocumentDto(document).Build();
 
             // Act
             await sut.HandleAsync(transaction).ConfigureAwait(false);

@@ -13,11 +13,12 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.PriceCommandReceivedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
+using GreenEnergyHub.Charges.MessageHub.MessageHub;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
 using Microsoft.Azure.Functions.Worker;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Charges
@@ -25,14 +26,14 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
     public class PriceCommandReceiverEndpoint
     {
         public const string FunctionName = nameof(PriceCommandReceiverEndpoint);
-        private readonly IChargeCommandReceiptService _chargeCommandReceiptService;
+        private readonly IAvailableDataNotifier<AvailableChargeData, ChargeCommandAcceptedEvent> _availableDataNotifier;
         private readonly JsonMessageDeserializer<PriceCommandReceivedEvent> _deserializer;
 
         public PriceCommandReceiverEndpoint(
-            IChargeCommandReceiptService chargeCommandReceiptService,
+            IAvailableDataNotifier<AvailableChargeData, ChargeCommandAcceptedEvent> availableDataNotifier,
             JsonMessageDeserializer<PriceCommandReceivedEvent> deserializer)
         {
-            _chargeCommandReceiptService = chargeCommandReceiptService;
+            _availableDataNotifier = availableDataNotifier;
             _deserializer = deserializer;
         }
 
@@ -44,8 +45,10 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             byte[] message)
         {
-            var receivedEvent = (ChargeCommandReceivedEvent)await _deserializer.FromBytesAsync(message).ConfigureAwait(false);
-            await _chargeCommandReceiptService.AcceptAsync(receivedEvent.Command)
+            var receivedEvent = (PriceCommandReceivedEvent)await _deserializer.FromBytesAsync(message).ConfigureAwait(false);
+            await _availableDataNotifier.NotifyAsync(new ChargeCommandAcceptedEvent(
+                    receivedEvent.PublishedTime,
+                    receivedEvent.Command))
                 .ConfigureAwait(false);
         }
     }

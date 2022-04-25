@@ -58,6 +58,10 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
         public const string CommandRejectedTopicKey = "command-rejected";
         public const string CommandRejectedSubscriptionName = "command-rejected";
 
+        // Internal, price command, received
+        public const string PriceCommandReceivedTopicKey = "price-command-received";
+        public const string PriceCommandReceivedSubscriptionName = "price-command-received";
+
         // Internal, charge links, received
         public const string ChargeLinksReceivedTopicKey = "links-command-received";
         public const string ChargeLinksReceivedSubscriptionName = "links-command-received-receiver";
