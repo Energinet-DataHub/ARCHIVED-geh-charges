@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.DocumentValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using NodaTime;
@@ -51,12 +52,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
         {
             if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
             var chargeOperation = chargeCommand.ChargeOperations.SingleOrDefault();
-            if (chargeOperation == null) throw new ArgumentNullException(nameof(chargeOperation));
+            if (chargeOperation == null) throw new NullReferenceException(nameof(chargeOperation));
 
-            var sender = await _marketParticipantRepository
-                .GetOrNullAsync(chargeCommand.Document.Sender.Id).ConfigureAwait(false);
-            var rules = GetMandatoryRulesForCommand(sender);
-            rules.AddRange(await GetRulesForOperationAsync(chargeOperation).ConfigureAwait(false));
+            var rules = await GetRulesForOperationAsync(chargeOperation).ConfigureAwait(false);
             return ValidationRuleSet.FromRules(rules);
         }
 
@@ -97,13 +95,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
             };
 
             rules.AddRange(updateRules);
-        }
-
-        private static List<IValidationRule> GetMandatoryRulesForCommand(MarketParticipant? sender)
-        {
-            var rules = new List<IValidationRule> { new CommandSenderMustBeAnExistingMarketParticipantRule(sender) };
-
-            return rules;
         }
 
         private List<IValidationRule> GetMandatoryRulesForOperation(

@@ -122,31 +122,29 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             ChargeCommand chargeCommandWithOperation,
             string triggeredBy)
         {
-            switch (string.IsNullOrEmpty(triggeredBy))
+            if (string.IsNullOrEmpty(triggeredBy))
             {
-                case true:
-                    var businessValidationResult =
-                        await _validator.BusinessValidateAsync(chargeCommandWithOperation).ConfigureAwait(false);
-                    if (businessValidationResult.IsFailed)
-                    {
-                        // First error found in bundle, we reject with the original validation error
-                        triggeredBy = chargeCommandWithOperation.ChargeOperations.Single().Id;
-                        await _chargeCommandReceiptService
-                            .RejectAsync(chargeCommandWithOperation, businessValidationResult)
-                            .ConfigureAwait(false);
-                    }
-
-                    break;
-                case false:
-                    // A previous error has occured, we reject all subsequent operations in bundle with special validation error
-                    var rejectionValidationResult = ValidationResult.CreateFailure(new List<IValidationRule>()
-                    {
-                        new PreviousOperationsMustBeValidRule(triggeredBy, chargeCommandWithOperation.ChargeOperations.Single()),
-                    });
+                var businessValidationResult =
+                    await _validator.BusinessValidateAsync(chargeCommandWithOperation).ConfigureAwait(false);
+                if (businessValidationResult.IsFailed)
+                {
+                    // First error found in bundle, we reject with the original validation error
+                    triggeredBy = chargeCommandWithOperation.ChargeOperations.Single().Id;
                     await _chargeCommandReceiptService
-                        .RejectAsync(chargeCommandWithOperation, rejectionValidationResult)
+                        .RejectAsync(chargeCommandWithOperation, businessValidationResult)
                         .ConfigureAwait(false);
-                    break;
+                }
+            }
+            else
+            {
+                // A previous error has occured, we reject all subsequent operations in bundle with special validation error
+                var rejectionValidationResult = ValidationResult.CreateFailure(new List<IValidationRule>()
+                {
+                    new PreviousOperationsMustBeValidRule(triggeredBy, chargeCommandWithOperation.ChargeOperations.Single()),
+                });
+                await _chargeCommandReceiptService
+                    .RejectAsync(chargeCommandWithOperation, rejectionValidationResult)
+                    .ConfigureAwait(false);
             }
 
             return triggeredBy;

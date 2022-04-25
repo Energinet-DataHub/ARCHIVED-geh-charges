@@ -16,7 +16,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules;
-using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.Factories
@@ -27,23 +26,11 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
         {
             if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
 
-            var rules = GetRulesForDocument(chargeCommand.Document);
-            rules.AddRange(chargeCommand.ChargeOperations.SelectMany(GetRulesForOperation));
+            var rules = chargeCommand.ChargeOperations
+                .SelectMany(GetRulesForOperation)
+                .ToList();
 
             return ValidationRuleSet.FromRules(rules);
-        }
-
-        private static List<IValidationRule> GetRulesForDocument(DocumentDto documentDto)
-        {
-            var rules = new List<IValidationRule>
-            {
-                new BusinessReasonCodeMustBeUpdateChargeInformationRule(documentDto),
-                new DocumentTypeMustBeRequestUpdateChargeInformationRule(documentDto),
-                new RecipientIsMandatoryTypeValidationRule(documentDto),
-                new SenderIsMandatoryTypeValidationRule(documentDto),
-            };
-
-            return rules;
         }
 
         private static List<IValidationRule> GetRulesForOperation(ChargeOperationDto chargeOperationDto)
