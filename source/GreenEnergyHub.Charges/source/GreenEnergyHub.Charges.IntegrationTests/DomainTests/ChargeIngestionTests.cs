@@ -42,7 +42,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public RunAsync(ChargesFunctionAppFixture fixture, ITestOutputHelper testOutputHelper)
                 : base(fixture, testOutputHelper)
             {
-                TestDataGenerator.GenerateDataForIntegrationTests(fixture);
                 _authenticatedHttpRequestGenerator = new AuthenticatedHttpRequestGenerator(fixture.AuthorizationConfiguration);
             }
 
@@ -151,6 +150,22 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // * one for the notification (tax)
                 // * one for the rejection (ChargeIdLengthValidation)
                 await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId, 3);
+            }
+
+            [Fact]
+            public async Task Given_NewMessage_When_SenderIdDoesNotMatchAuthenticatedId_Then_ShouldReturnErrorMessage()
+            {
+                // Arrange
+                var (request, correlationId) = await _authenticatedHttpRequestGenerator
+                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.ChargeDocumentWithWhereSenderIdDoNotMatchAuthorizedActorId);
+
+                // Act
+                var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                actual.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+                var errorMessage = await actual.Content.ReadAsStringAsync();
+                errorMessage.Should().Be("The sender organization provided in the request body does not match the organization in the bearer token.");
             }
 
             [Theory]

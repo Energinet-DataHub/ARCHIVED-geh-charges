@@ -46,6 +46,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
             return httpResponse;
         }
 
+        public HttpResponseData CreateBadRequestWithErrorText(HttpRequestData request, string errorText)
+        {
+            var httpResponse = request.CreateResponse(HttpStatusCode.BadRequest);
+            httpResponse.WriteString(errorText);
+            return httpResponse;
+        }
+
         private void AddHeaders(HttpResponseData httpResponseData)
         {
             httpResponseData.Headers.Add("CorrelationId", _correlationContext.Id);
