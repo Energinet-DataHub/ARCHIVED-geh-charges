@@ -19,6 +19,10 @@ namespace GreenEnergyHub.Charges.Application.GridAreas.Handlers
 {
     public interface IGridAreaPersister
     {
+        /// <summary>
+        /// Adds or update a grid area from an integrationevent
+        /// </summary>
+        /// <param name="gridAreaChangedEvent"></param>
         Task PersistAsync(GridAreaChangedEvent gridAreaChangedEvent);
     }
 }

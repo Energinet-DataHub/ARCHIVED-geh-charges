@@ -19,6 +19,10 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 {
     public interface IMarketParticipantPersister
     {
+        /// <summary>
+        /// Adds or update a market participant from an integrationevent
+        /// </summary>
+        /// <param name="marketParticipantChangedEvent"></param>
         Task PersistAsync(MarketParticipantChangedEvent marketParticipantChangedEvent);
     }
 }
