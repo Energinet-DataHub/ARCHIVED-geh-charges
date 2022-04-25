@@ -50,7 +50,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
             public Task DisposeAsync()
             {
-                Fixture.MessageHubMock.Clear();
                 return Task.CompletedTask;
             }
 
@@ -62,20 +61,18 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 // Arrange
                 const string gln = "1234567890123";
                 var role = MarketParticipantRoleMapper.Map(businessRoleCode);
-                var message = CreateServiceBusMessage(
+                var (message, parentId) = CreateServiceBusMessage(
                     gln,
                     actorStatus,
-                    new List<BusinessRoleCode>() { businessRoleCode },
-                    out var correlationId,
-                    out var parentId);
+                    new List<BusinessRoleCode>() { businessRoleCode });
+                await using var context = Fixture.DatabaseManager.CreateDbContext();
 
                 // Act
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
-                    () => Fixture.MarketParticipantChangedTopic.SenderClient.SendMessageAsync(message), correlationId, parentId);
+                    () => Fixture.MarketParticipantChangedTopic.SenderClient.SendMessageAsync(message), message.CorrelationId, parentId);
 
                 // Assert
                 await FunctionAsserts.AssertHasExecutedAsync(Fixture.HostManager, nameof(MarketParticipantEndpoint)).ConfigureAwait(false);
-                await using var context = Fixture.DatabaseManager.CreateDbContext();
                 var marketParticipant = context.MarketParticipants.SingleOrDefault(x =>
                     x.MarketParticipantId == gln && x.BusinessProcessRole == role);
                 marketParticipant.Should().NotBeNull();
@@ -84,15 +81,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 Fixture.HostManager.ClearHostLog();
             }
 
-            private static ServiceBusMessage CreateServiceBusMessage(
+            private static (ServiceBusMessage ServiceBusMessage, string ParentId) CreateServiceBusMessage(
                 string gln,
                 ActorStatus status,
-                List<BusinessRoleCode> businessRoles,
-                out string correlationId,
-                out string parentId)
+                List<BusinessRoleCode> businessRoles)
             {
-                correlationId = CorrelationIdGenerator.Create();
-                parentId = $"00-{correlationId}-b7ad6b7169203332-01";
                 var actorUpdatedIntegrationEvent = new ActorUpdatedIntegrationEvent(
                     Guid.NewGuid(),
                     Guid.NewGuid(),
@@ -106,11 +99,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 var actorUpdatedIntegrationEventParser = new ActorUpdatedIntegrationEventParser();
                 var message = actorUpdatedIntegrationEventParser.Parse(actorUpdatedIntegrationEvent);
 
+                var correlationId = CorrelationIdGenerator.Create();
+                var parentId = $"00-{correlationId}-b7ad6b7169203332-01";
                 var serviceBusMessage = new ServiceBusMessage(message)
                 {
                     CorrelationId = correlationId,
                 };
-                return serviceBusMessage;
+                return (serviceBusMessage, parentId);
             }
         }
     }

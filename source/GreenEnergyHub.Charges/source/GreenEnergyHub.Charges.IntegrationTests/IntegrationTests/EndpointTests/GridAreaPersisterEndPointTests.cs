@@ -56,7 +56,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
             public Task DisposeAsync()
             {
-                Fixture.MessageHubMock.Clear();
                 return Task.CompletedTask;
             }
 
@@ -67,15 +66,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 await using var context = Fixture.DatabaseManager.CreateDbContext();
                 var id = Guid.NewGuid();
                 var gridAccessProviderId = await CreateMarketParticipantInRepository(context);
-                var message = CreateServiceBusMessage(
-                    id,
-                    gridAccessProviderId,
-                    out var correlationId,
-                    out var parentId);
+                var (message, parentId) = CreateServiceBusMessage(id, gridAccessProviderId);
 
                 // Act
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
-                    () => Fixture.MarketParticipantChangedTopic.SenderClient.SendMessageAsync(message), correlationId, parentId);
+                    () => Fixture.MarketParticipantChangedTopic.SenderClient.SendMessageAsync(message), message.CorrelationId, parentId);
 
                 // Assert
                 await FunctionAsserts.AssertHasExecutedAsync(Fixture.HostManager, nameof(MarketParticipantEndpoint)).ConfigureAwait(false);
@@ -95,14 +90,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 return markedParticipant.Id;
             }
 
-            private static ServiceBusMessage CreateServiceBusMessage(
-                Guid id,
-                Guid gridAreaId,
-                out string correlationId,
-                out string parentId)
+            private static (ServiceBusMessage ServiceBusMessage, string ParentId)
+                CreateServiceBusMessage(Guid id, Guid gridAreaId)
             {
-                correlationId = CorrelationIdGenerator.Create();
-                parentId = $"00-{correlationId}-b7ad6b7169203333-01";
                 var gridAreaIntegrationEvent = new GridAreaUpdatedIntegrationEvent(
                     id,
                     gridAreaId,
@@ -112,11 +102,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 var gridAreaUpdatedIntegrationEventParser = new GridAreaUpdatedIntegrationEventParser();
                 var message = gridAreaUpdatedIntegrationEventParser.Parse(gridAreaIntegrationEvent);
 
+                var correlationId = CorrelationIdGenerator.Create();
                 var serviceBusMessage = new ServiceBusMessage(message)
                 {
                     CorrelationId = correlationId,
                 };
-                return serviceBusMessage;
+                var parentId = $"00-{correlationId}-b7ad6b7169203333-01";
+                return (serviceBusMessage, parentId);
             }
         }
     }

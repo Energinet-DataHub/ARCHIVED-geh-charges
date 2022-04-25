@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Application.GridAreas.Handlers
 
         public async Task PersistAsync(GridAreaChangedEvent gridAreaChangedEvent)
         {
-            gridAreaChangedEvent = CheckGridAreaChangedEventArgument(gridAreaChangedEvent);
+            ArgumentNullException.ThrowIfNull(gridAreaChangedEvent);
             var existingGridArea = await _gridAreaRepository.GetOrNullAsync(
                 gridAreaChangedEvent.Id).ConfigureAwait(false);
             if (existingGridArea is null)
@@ -58,12 +58,6 @@ namespace GreenEnergyHub.Charges.Application.GridAreas.Handlers
             }
 
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-        }
-
-        private static GridAreaChangedEvent CheckGridAreaChangedEventArgument(GridAreaChangedEvent gridAreaChangedEvent)
-        {
-            ArgumentNullException.ThrowIfNull(gridAreaChangedEvent);
-            return gridAreaChangedEvent;
         }
     }
 }

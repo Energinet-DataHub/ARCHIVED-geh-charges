@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 
         public async Task PersistAsync(MarketParticipantChangedEvent marketParticipantChangedEvent)
         {
-            marketParticipantChangedEvent = CheckMarketParticipantChangedEventArgument(marketParticipantChangedEvent);
+            ArgumentNullException.ThrowIfNull(marketParticipantChangedEvent);
             foreach (var businessProcessRole in marketParticipantChangedEvent.BusinessProcessRoles)
             {
                 var existingMarketParticipant = await _marketParticipantRepository.GetOrNullAsync(
@@ -62,12 +62,6 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
             }
 
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-        }
-
-        private static MarketParticipantChangedEvent CheckMarketParticipantChangedEventArgument(MarketParticipantChangedEvent marketParticipantChangedEvent)
-        {
-            ArgumentNullException.ThrowIfNull(marketParticipantChangedEvent);
-            return marketParticipantChangedEvent;
         }
 
         private void UpdateMarketParticipant(
