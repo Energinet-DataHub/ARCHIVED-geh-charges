@@ -64,15 +64,15 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 return;
             }
 
-            var acceptedChargeCommands = new List<ChargeCommand>();
+            var acceptedOperations = new List<ChargeOperationDto>();
             var triggeredBy = string.Empty;
 
             foreach (var chargeOperationDto in commandReceivedEvent.Command.ChargeOperations)
             {
                 var charge = await GetChargeAsync(commandReceivedEvent).ConfigureAwait(false);
                 var chargeCommandWithOperation = new ChargeCommand(
-                commandReceivedEvent.Command.Document,
-                new List<ChargeOperationDto> { chargeOperationDto });
+                    commandReceivedEvent.Command.Document,
+                    new List<ChargeOperationDto> { chargeOperationDto });
                 triggeredBy = await HandleInvalidBusinessRulesAsync(
                     chargeCommandWithOperation,
                     triggeredBy).ConfigureAwait(false);
@@ -91,8 +91,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                     case OperationType.Create:
                         await HandleCreateEventAsync(chargeOperationDto).ConfigureAwait(false);
                         await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-                        await _chargeCommandReceiptService.AcceptAsync(chargeCommandWithOperation)
-                            .ConfigureAwait(false);
                         break;
                     case OperationType.Update:
                         HandleUpdateEvent(charge!, chargeOperationDto);
@@ -107,15 +105,14 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                         throw new InvalidOperationException("Could not handle charge command.");
                 }
 
-                if (operationType != OperationType.Create)
-                    acceptedChargeCommands.Add(chargeCommandWithOperation);
+                acceptedOperations.Add(chargeOperationDto);
             }
 
+            var acceptedChargeCommand = new ChargeCommand(
+                commandReceivedEvent.Command.Document,
+                acceptedOperations);
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-            foreach (var command in acceptedChargeCommands)
-            {
-                await _chargeCommandReceiptService.AcceptAsync(command).ConfigureAwait(false);
-            }
+            await _chargeCommandReceiptService.AcceptAsync(acceptedChargeCommand).ConfigureAwait(false);
         }
 
         private async Task<string> HandleInvalidBusinessRulesAsync(
