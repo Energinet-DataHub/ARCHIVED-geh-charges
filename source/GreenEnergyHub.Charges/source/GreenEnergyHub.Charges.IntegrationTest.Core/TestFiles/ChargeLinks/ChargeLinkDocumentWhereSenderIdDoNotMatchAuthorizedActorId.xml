@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright 2020 Energinet DataHub A/S
+
+Licensed under the Apache License, Version 2.0 (the "License2");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<cim:RequestChangeBillingMasterData_MarketDocument
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:cim="urn:ediel.org:structure:requestchangebillingmasterdata:0:1"
+        xsi:schemaLocation="urn:ediel.org:structure:requestchangebillingmasterdata:0:1 urn-ediel-org-structure-requestchangebillingmasterdata-0-1.xsd">
+    <cim:mRID>DocId{{$isoTimestamp}}</cim:mRID>
+    <cim:type>D05</cim:type>
+    <cim:process.processType>D17</cim:process.processType>
+    <cim:businessSector.type>23</cim:businessSector.type>
+    <cim:sender_MarketParticipant.mRID codingScheme="A10">8100000011111</cim:sender_MarketParticipant.mRID>
+    <cim:sender_MarketParticipant.marketRole.type>DDM</cim:sender_MarketParticipant.marketRole.type>
+    <cim:receiver_MarketParticipant.mRID codingScheme="A10">5790001330552</cim:receiver_MarketParticipant.mRID>
+    <cim:receiver_MarketParticipant.marketRole.type>EZ</cim:receiver_MarketParticipant.marketRole.type>
+    <cim:createdDateTime>{{$isoTimestamp}}</cim:createdDateTime>
+    <cim:MktActivityRecord>
+        <cim:mRID>clId{{$isoTimestamp}}</cim:mRID>
+        <cim:marketEvaluationPoint.mRID codingScheme="A10">571313180000000005</cim:marketEvaluationPoint.mRID>
+        <cim:start_DateAndOrTime.dateTime>2020-09-27T22:00:00Z</cim:start_DateAndOrTime.dateTime>
+        <cim:end_DateAndOrTime.dateTime>2020-10-05T23:00:00Z</cim:end_DateAndOrTime.dateTime>
+        <cim:chargeGroup.chargeType.chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">5790000432752</cim:chargeGroup.chargeType.chargeTypeOwner_MarketParticipant.mRID>
+        <cim:chargeGroup.chargeType.type>D03</cim:chargeGroup.chargeType.type>
+        <cim:chargeGroup.chargeType.mRID>EA-001</cim:chargeGroup.chargeType.mRID>
+        <cim:chargeGroup.chargeType.factor>1</cim:chargeGroup.chargeType.factor>
+    </cim:MktActivityRecord>
+    <cim:MktActivityRecord>
+        <cim:mRID>clId{{$isoTimestamp}}</cim:mRID>
+        <cim:marketEvaluationPoint.mRID codingScheme="A10">571313180000000005</cim:marketEvaluationPoint.mRID>
+        <cim:start_DateAndOrTime.dateTime>2020-10-27T22:00:00Z</cim:start_DateAndOrTime.dateTime>
+        <cim:end_DateAndOrTime.dateTime>2020-11-05T23:00:00Z</cim:end_DateAndOrTime.dateTime>
+        <cim:chargeGroup.chargeType.chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">5790000432752</cim:chargeGroup.chargeType.chargeTypeOwner_MarketParticipant.mRID>
+        <cim:chargeGroup.chargeType.type>D03</cim:chargeGroup.chargeType.type>
+        <cim:chargeGroup.chargeType.mRID>EA-001</cim:chargeGroup.chargeType.mRID>
+        <cim:chargeGroup.chargeType.factor>1</cim:chargeGroup.chargeType.factor>
+    </cim:MktActivityRecord>
+</cim:RequestChangeBillingMasterData_MarketDocument>
