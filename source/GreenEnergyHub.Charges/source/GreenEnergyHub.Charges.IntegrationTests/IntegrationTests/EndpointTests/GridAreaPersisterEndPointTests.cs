@@ -98,7 +98,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     gridAreaId,
                     "name",
                     "code",
-                    PriceAreaCode.DK1);
+                    PriceAreaCode.DK1,
+                    Guid.NewGuid());
                 var gridAreaUpdatedIntegrationEventParser = new GridAreaUpdatedIntegrationEventParser();
                 var message = gridAreaUpdatedIntegrationEventParser.Parse(gridAreaIntegrationEvent);
 

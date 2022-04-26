@@ -12,8 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading.Tasks;
-using Energinet.DataHub.MarketParticipant.Integration.Model.Exceptions;
+using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Parsers;
 using GreenEnergyHub.Charges.Application.GridAreas.Handlers;
 using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers;
@@ -26,19 +27,16 @@ namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
     public class MarketParticipantEndpoint
     {
         public const string FunctionName = nameof(MarketParticipantEndpoint);
-        private readonly IActorUpdatedIntegrationEventParser _actorUpdatedIntegrationEventParser;
-        private readonly IGridAreaUpdatedIntegrationEventParser _gridAreaUpdatedIntegrationEventParser;
+        private readonly ISharedIntegrationEventParser _sharedIntegrationEventParser;
         private readonly IMarketParticipantPersister _marketParticipantPersister;
         private readonly IGridAreaPersister _gridAreaPersister;
 
         public MarketParticipantEndpoint(
-            IActorUpdatedIntegrationEventParser actorUpdatedIntegrationEventParser,
-            IGridAreaUpdatedIntegrationEventParser gridAreaUpdatedIntegrationEventParser,
+            ISharedIntegrationEventParser sharedIntegrationEventParser,
             IMarketParticipantPersister marketParticipantPersister,
             IGridAreaPersister gridAreaPersister)
         {
-            _actorUpdatedIntegrationEventParser = actorUpdatedIntegrationEventParser;
-            _gridAreaUpdatedIntegrationEventParser = gridAreaUpdatedIntegrationEventParser;
+            _sharedIntegrationEventParser = sharedIntegrationEventParser;
             _marketParticipantPersister = marketParticipantPersister;
             _gridAreaPersister = gridAreaPersister;
         }
@@ -51,25 +49,22 @@ namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
                 Connection = EnvironmentSettingNames.DataHubListenerConnectionString)]
             [NotNull] byte[] message)
         {
-            // We don't know which event is thrown, nothing in the message indicates which type of parser to use.
-            // Titans is looking into that problem, for now we try to parse the message with all parsers that apply
-            // to this domain until we succeed or all has failed.
-             try
+             var messageEvent = _sharedIntegrationEventParser.Parse(message);
+             ArgumentNullException.ThrowIfNull(messageEvent);
+             if (messageEvent.GetType().IsAssignableFrom(typeof(IActorUpdatedIntegrationEventParser)))
              {
-                // MarketParticipant
-                var actorUpdatedIntegrationEvent = _actorUpdatedIntegrationEventParser.Parse(message);
-                var marketParticipantChangedEvent =
-                    MarketParticipantChangedEventMapper.MapFromActor(actorUpdatedIntegrationEvent);
-                await _marketParticipantPersister
-                    .PersistAsync(marketParticipantChangedEvent)
-                    .ConfigureAwait(false);
+                 var marketParticipantChangedEvent =
+                     MarketParticipantChangedEventMapper.MapFromActor((ActorUpdatedIntegrationEvent)messageEvent);
+                 await _marketParticipantPersister
+                     .PersistAsync(marketParticipantChangedEvent)
+                     .ConfigureAwait(false);
              }
-             catch (MarketParticipantException)
+
+             if (messageEvent.GetType() == typeof(IGridAreaUpdatedIntegrationEventParser))
              {
                  // GridArea
-                 var gridAreaUpdatedIntegrationEvent = _gridAreaUpdatedIntegrationEventParser.Parse(message);
                  var gridAreaChangedEvent =
-                     MarketParticipantChangedEventMapper.MapFromGridArea(gridAreaUpdatedIntegrationEvent);
+                     MarketParticipantChangedEventMapper.MapFromGridArea((GridAreaUpdatedIntegrationEvent)messageEvent);
                  await _gridAreaPersister
                      .PersistAsync(gridAreaChangedEvent)
                      .ConfigureAwait(false);

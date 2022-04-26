@@ -23,7 +23,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<IMarketParticipantPersister, MarketParticipantPersister>();
-            serviceCollection.AddScoped<IActorUpdatedIntegrationEventParser, ActorUpdatedIntegrationEventParser>();
+            serviceCollection.AddScoped<ISharedIntegrationEventParser, SharedIntegrationEventParser>();
         }
     }
 }

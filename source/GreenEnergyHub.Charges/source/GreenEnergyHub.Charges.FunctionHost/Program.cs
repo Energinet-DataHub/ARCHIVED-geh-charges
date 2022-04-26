@@ -75,9 +75,6 @@ namespace GreenEnergyHub.Charges.FunctionHost
 
             // Market participant registry
             MarketParticipantPersisterConfiguration.ConfigureServices(serviceCollection);
-
-            // Grid Area
-            GridAreaPersisterConfiguration.ConfigureServices(serviceCollection);
         }
     }
 }
