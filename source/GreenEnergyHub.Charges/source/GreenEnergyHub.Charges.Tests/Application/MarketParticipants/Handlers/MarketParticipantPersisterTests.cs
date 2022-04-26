@@ -94,8 +94,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             marketParticipantRepository
                 .Verify(v => v.AddAsync(It.IsAny<MarketParticipant>()), Times.Never());
             logger.VerifyLoggerWasCalled(
-                $"Marketparticipant ID '{existingMarketParticipant.MarketParticipantId}' " +
-                $"with role '{existingMarketParticipant.BusinessProcessRole}' has changed state",
+                $"Market participant with ID '{existingMarketParticipant.MarketParticipantId}' " +
+                $"and role '{existingMarketParticipant.BusinessProcessRole}' has changed state",
                 LogLevel.Information);
         }
 
