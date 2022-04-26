@@ -60,7 +60,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
                      .ConfigureAwait(false);
              }
 
-             if (messageEvent.GetType() == typeof(IGridAreaUpdatedIntegrationEventParser))
+             if (messageEvent.GetType().IsAssignableFrom(typeof(IGridAreaUpdatedIntegrationEventParser)))
              {
                  // GridArea
                  var gridAreaChangedEvent =
