@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 
         public async Task PublishAsync(ChargeCommandAcceptedEvent chargeCommandAcceptedEvent)
         {
-            if (chargeCommandAcceptedEvent == null) throw new ArgumentNullException(nameof(chargeCommandAcceptedEvent));
+            ArgumentNullException.ThrowIfNull(chargeCommandAcceptedEvent);
 
             foreach (var chargeOperationDto in chargeCommandAcceptedEvent.Command.ChargeOperations)
             {
