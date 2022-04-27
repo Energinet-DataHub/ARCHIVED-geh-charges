@@ -12,11 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Threading.Tasks;
-using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Parsers;
-using GreenEnergyHub.Charges.Application.GridAreas.Handlers;
 using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using JetBrains.Annotations;
@@ -28,17 +25,14 @@ namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
     {
         public const string FunctionName = nameof(MarketParticipantEndpoint);
         private readonly ISharedIntegrationEventParser _sharedIntegrationEventParser;
-        private readonly IMarketParticipantPersister _marketParticipantPersister;
-        private readonly IGridAreaPersister _gridAreaPersister;
+        private readonly IMarketParticipantEventHandler _marketParticipantEventHandler;
 
         public MarketParticipantEndpoint(
             ISharedIntegrationEventParser sharedIntegrationEventParser,
-            IMarketParticipantPersister marketParticipantPersister,
-            IGridAreaPersister gridAreaPersister)
+            IMarketParticipantEventHandler marketParticipantEventHandler)
         {
             _sharedIntegrationEventParser = sharedIntegrationEventParser;
-            _marketParticipantPersister = marketParticipantPersister;
-            _gridAreaPersister = gridAreaPersister;
+            _marketParticipantEventHandler = marketParticipantEventHandler;
         }
 
         [Function(FunctionName)]
@@ -49,30 +43,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
                 Connection = EnvironmentSettingNames.DataHubListenerConnectionString)]
             [NotNull] byte[] message)
         {
-             var messageEvent = _sharedIntegrationEventParser.Parse(message);
-             ArgumentNullException.ThrowIfNull(messageEvent);
-             switch (messageEvent)
-             {
-                 case ActorUpdatedIntegrationEvent actorEvent:
-                     {
-                         var marketParticipantChangedEvent =
-                             MarketParticipantChangedEventMapper.MapFromActor(actorEvent);
-                         await _marketParticipantPersister
-                             .PersistAsync(marketParticipantChangedEvent)
-                             .ConfigureAwait(false);
-                         break;
-                     }
-
-                 case GridAreaUpdatedIntegrationEvent gridAreaEvent:
-                     {
-                         var gridAreaChangedEvent =
-                             MarketParticipantChangedEventMapper.MapFromGridArea(gridAreaEvent);
-                         await _gridAreaPersister
-                             .PersistAsync(gridAreaChangedEvent)
-                             .ConfigureAwait(false);
-                         break;
-                     }
-             }
+            var messageEvent = _sharedIntegrationEventParser.Parse(message);
+            await _marketParticipantEventHandler.HandleAsync(messageEvent).ConfigureAwait(false);
         }
     }
 }

@@ -16,7 +16,7 @@ using System.Linq;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
 using GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsChangedEvents;
 
-namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
+namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 {
     public static class MarketParticipantChangedEventMapper
     {

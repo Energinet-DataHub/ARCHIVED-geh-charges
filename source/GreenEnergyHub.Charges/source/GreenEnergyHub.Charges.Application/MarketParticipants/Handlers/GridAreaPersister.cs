@@ -19,7 +19,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsChangedEvents;
 using GreenEnergyHub.Charges.Domain.GridAreas;
 using Microsoft.Extensions.Logging;
 
-namespace GreenEnergyHub.Charges.Application.GridAreas.Handlers
+namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 {
     public class GridAreaPersister : IGridAreaPersister
     {
