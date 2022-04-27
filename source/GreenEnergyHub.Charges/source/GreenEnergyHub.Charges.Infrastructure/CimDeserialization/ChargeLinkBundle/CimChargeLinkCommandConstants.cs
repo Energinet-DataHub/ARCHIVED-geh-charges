@@ -27,22 +27,26 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeLinkBun
         /// </summary>
         internal const string Namespace = "urn:ediel.org:structure:requestchangebillingmasterdata:0:1";
 
+        internal const string MktActivityRecord = "MktActivityRecord";
+
         internal const string Id = "mRID";
 
         internal const string MeteringPointId = "marketEvaluationPoint.mRID";
 
-        internal const string StartDateTime = "start_DateAndOrTime.dateTime";
+        internal const string ChargeGroup = "chargeGroup";
 
-        internal const string EndDateTime = "end_DateAndOrTime.dateTime";
+        internal const string ChargeType = "chargeType";
 
-        internal const string ChargeId = "chargeGroup.chargeType.mRID";
+        internal const string Type = "type";
 
-        internal const string Factor = "chargeGroup.chargeType.factor";
+        internal const string ChargeId = "mRID";
 
-        internal const string ChargeOwner = "chargeGroup.chargeType.chargeTypeOwner_MarketParticipant.mRID";
+        internal const string Factor = "factor";
 
-        internal const string ChargeType = "chargeGroup.chargeType.type";
+        internal const string ChargeOwner = "chargeTypeOwner_MarketParticipant.mRID";
 
-        internal const string MktActivityRecord = "MktActivityRecord";
+        internal const string EffectiveDate = "effectiveDate";
+
+        internal const string TerminationDate = "terminationDate";
     }
 }

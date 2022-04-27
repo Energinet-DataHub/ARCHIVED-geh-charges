@@ -14,7 +14,6 @@
 
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.Messaging.Transport;
 using Energinet.DataHub.Core.SchemaValidation;
@@ -66,7 +65,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeLinkBun
 
             do
             {
-                if (reader.Is(CimChargeLinkCommandConstants.Id))
+                if (reader.Is(CimChargeLinkCommandConstants.Id) && string.IsNullOrWhiteSpace(link.OperationId))
                 {
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                     link.OperationId = content;
@@ -76,11 +75,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeLinkBun
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                     meteringPointId = content;
                 }
-                else if (reader.Is(CimChargeLinkCommandConstants.StartDateTime))
+                else if (reader.Is(CimChargeLinkCommandConstants.EffectiveDate))
                 {
                     link.StartDateTime = await reader.ReadValueAsNodaTimeAsync().ConfigureAwait(false);
                 }
-                else if (reader.Is(CimChargeLinkCommandConstants.EndDateTime))
+                else if (reader.Is(CimChargeLinkCommandConstants.TerminationDate))
                 {
                     link.EndDateTime = await reader.ReadValueAsNodaTimeAsync().ConfigureAwait(false);
                 }
@@ -99,14 +98,20 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeLinkBun
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                     link.ChargeOwner = content;
                 }
-                else if (reader.Is(CimChargeLinkCommandConstants.ChargeType))
+                else if (reader.Is(CimChargeLinkCommandConstants.Type))
                 {
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                     link.ChargeType = ChargeTypeMapper.Map(content);
                 }
-                else if (reader.Is(
-                             CimChargeLinkCommandConstants.MktActivityRecord,
-                             NodeType.EndElement))
+                else if (reader.Is(CimChargeLinkCommandConstants.MktActivityRecord, NodeType.EndElement))
+                {
+                    break;
+                }
+                else if (reader.Is(CimChargeLinkCommandConstants.ChargeGroup, NodeType.EndElement))
+                {
+                    break;
+                }
+                else if (reader.Is(CimChargeLinkCommandConstants.ChargeType, NodeType.EndElement))
                 {
                     break;
                 }
