@@ -15,10 +15,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Core.DateTime;
+using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
@@ -99,7 +99,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
         {
             // We only need to notify grid providers if the charge includes tax which are the
             // only charges they do not maintain themselves
-            return TaxIndicatorMapper.Map(chargeOperationDto.TaxIndicator);
+            return chargeOperationDto.TaxIndicator == TaxIndicator.Tax;
         }
     }
 }
