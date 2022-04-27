@@ -13,12 +13,11 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.PriceCommandReceivedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
-using GreenEnergyHub.Charges.MessageHub.MessageHub;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
 using Microsoft.Azure.Functions.Worker;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Charges
@@ -26,14 +25,15 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
     public class PriceCommandReceiverEndpoint
     {
         public const string FunctionName = nameof(PriceCommandReceiverEndpoint);
-        private readonly IAvailableDataNotifier<AvailableChargeData, ChargeCommandAcceptedEvent> _availableDataNotifier;
+
+        private readonly IMessageDispatcher<ChargeCommandAcceptedEvent> _messageDispatcher;
         private readonly JsonMessageDeserializer<PriceCommandReceivedEvent> _deserializer;
 
         public PriceCommandReceiverEndpoint(
-            IAvailableDataNotifier<AvailableChargeData, ChargeCommandAcceptedEvent> availableDataNotifier,
+            IMessageDispatcher<ChargeCommandAcceptedEvent> messageDispatcher,
             JsonMessageDeserializer<PriceCommandReceivedEvent> deserializer)
         {
-            _availableDataNotifier = availableDataNotifier;
+            _messageDispatcher = messageDispatcher;
             _deserializer = deserializer;
         }
 
@@ -46,9 +46,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             byte[] message)
         {
             var receivedEvent = (PriceCommandReceivedEvent)await _deserializer.FromBytesAsync(message).ConfigureAwait(false);
-            await _availableDataNotifier.NotifyAsync(new ChargeCommandAcceptedEvent(
-                    receivedEvent.PublishedTime,
-                    receivedEvent.Command))
+            await _messageDispatcher.DispatchAsync(new ChargeCommandAcceptedEvent(
+                receivedEvent.PublishedTime,
+                receivedEvent.Command))
                 .ConfigureAwait(false);
         }
     }
