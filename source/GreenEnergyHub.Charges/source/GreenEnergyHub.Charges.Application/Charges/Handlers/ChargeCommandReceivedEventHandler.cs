@@ -53,7 +53,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 
         public async Task HandleAsync(ChargeCommandReceivedEvent commandReceivedEvent)
         {
-            if (commandReceivedEvent == null) throw new ArgumentNullException(nameof(commandReceivedEvent));
+            ArgumentNullException.ThrowIfNull(commandReceivedEvent);
 
             var inputValidationResult = _validator.InputValidate(commandReceivedEvent.Command);
 
