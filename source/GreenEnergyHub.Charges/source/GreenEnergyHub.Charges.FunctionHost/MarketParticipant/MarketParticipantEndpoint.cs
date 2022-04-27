@@ -51,23 +51,27 @@ namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
         {
              var messageEvent = _sharedIntegrationEventParser.Parse(message);
              ArgumentNullException.ThrowIfNull(messageEvent);
-             if (messageEvent.GetType().IsAssignableFrom(typeof(IActorUpdatedIntegrationEventParser)))
+             switch (messageEvent)
              {
-                 var marketParticipantChangedEvent =
-                     MarketParticipantChangedEventMapper.MapFromActor((ActorUpdatedIntegrationEvent)messageEvent);
-                 await _marketParticipantPersister
-                     .PersistAsync(marketParticipantChangedEvent)
-                     .ConfigureAwait(false);
-             }
+                 case ActorUpdatedIntegrationEvent actorEvent:
+                     {
+                         var marketParticipantChangedEvent =
+                             MarketParticipantChangedEventMapper.MapFromActor(actorEvent);
+                         await _marketParticipantPersister
+                             .PersistAsync(marketParticipantChangedEvent)
+                             .ConfigureAwait(false);
+                         break;
+                     }
 
-             if (messageEvent.GetType().IsAssignableFrom(typeof(IGridAreaUpdatedIntegrationEventParser)))
-             {
-                 // GridArea
-                 var gridAreaChangedEvent =
-                     MarketParticipantChangedEventMapper.MapFromGridArea((GridAreaUpdatedIntegrationEvent)messageEvent);
-                 await _gridAreaPersister
-                     .PersistAsync(gridAreaChangedEvent)
-                     .ConfigureAwait(false);
+                 case GridAreaUpdatedIntegrationEvent gridAreaEvent:
+                     {
+                         var gridAreaChangedEvent =
+                             MarketParticipantChangedEventMapper.MapFromGridArea(gridAreaEvent);
+                         await _gridAreaPersister
+                             .PersistAsync(gridAreaChangedEvent)
+                             .ConfigureAwait(false);
+                         break;
+                     }
              }
         }
     }

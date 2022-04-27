@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using Energinet.DataHub.MarketParticipant.Integration.Model.Parsers;
+using GreenEnergyHub.Charges.Application.GridAreas.Handlers;
 using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -23,6 +24,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<IMarketParticipantPersister, MarketParticipantPersister>();
+            serviceCollection.AddScoped<IGridAreaPersister, GridAreaPersister>();
             serviceCollection.AddScoped<ISharedIntegrationEventParser, SharedIntegrationEventParser>();
         }
     }
