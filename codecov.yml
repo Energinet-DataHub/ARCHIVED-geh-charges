@@ -1,0 +1,8 @@
+# https://docs.codecov.com/docs/ignoring-paths
+ignore:
+  - "source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.IntegrationTests"
+  - "source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.SystemTests"
+  - "source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Tests"
+  - "source/Energinet.Charges.Libraries/source/Energinet.Charges.Libraries.Clients.Tests"
+  - "source/Energinet.Charges.Libraries/source/Energinet.Charges.Libraries.Clients.IntegrationTests"
+  - "source/Energinet.Charges.Libraries/source/Energinet.Charges.Libraries.Clients.RegistrationTests"
