@@ -41,6 +41,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Inpu
 
         private IEnumerable<IValidationRule> GetRulesForAllLinks(ChargeLinksCommand chargeLinksCommand)
         {
+            var intentionallyNotInUse = chargeLinksCommand;
+
             // No input validation active yet for Charge Links Operations
             var rules = new List<IValidationRule>();
 
