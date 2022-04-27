@@ -36,8 +36,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
                 string chargeDescription,
                 string chargeOwner,
                 Resolution resolution,
-                bool taxIndicator,
-                bool transparentInvoicing,
+                TaxIndicator taxIndicator,
+                TransparentInvoicing transparentInvoicing,
                 VatClassification vatClassification,
                 Instant startDateTime,
                 Instant? endDateTime,
@@ -95,12 +95,12 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
         /// In Denmark the Energy Supplier invoices the customer, including the charges from the Grid Access Provider and the System Operator.
         /// This boolean can be use to indicate that a charge must be visible on the invoice sent to the customer.
         /// </summary>
-        public bool TransparentInvoicing { get; }
+        public TransparentInvoicing TransparentInvoicing { get; }
 
         /// <summary>
         /// Indicates whether the Charge is tax or not.
         /// </summary>
-        public bool TaxIndicator { get; }
+        public TaxIndicator TaxIndicator { get; }
 
         /// <summary>
         ///  Charge Owner, e.g. the GLN or EIC identification number.

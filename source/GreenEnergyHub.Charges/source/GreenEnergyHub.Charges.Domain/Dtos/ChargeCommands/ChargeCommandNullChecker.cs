@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
 {
@@ -32,7 +33,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
 
                 foreach (var chargeDto in chargeCommand.ChargeOperations)
                 {
-                    CheckChargeOperation(chargeDto);
+                    CheckChargeOperation(chargeDto, chargeCommand.Document.BusinessReasonCode);
                 }
             }
         }
@@ -47,9 +48,13 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
             if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
         }
 
-        private static void CheckChargeOperation(ChargeOperationDto chargeOperationDto)
+        private static void CheckChargeOperation(ChargeOperationDto chargeOperationDto, BusinessReasonCode businessReasonCode)
         {
             if (chargeOperationDto == null) throw new ArgumentNullException(nameof(chargeOperationDto));
+
+            if (businessReasonCode == BusinessReasonCode.UpdatePriceInformation)
+                return;
+
             if (string.IsNullOrWhiteSpace(chargeOperationDto.ChargeName)) throw new ArgumentException(chargeOperationDto.ChargeName);
             if (string.IsNullOrWhiteSpace(chargeOperationDto.ChargeDescription)) throw new ArgumentException(chargeOperationDto.ChargeDescription);
         }

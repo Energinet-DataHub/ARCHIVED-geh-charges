@@ -169,9 +169,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             }
 
             [Theory]
-            [InlineAutoMoqData(ChargeDocument.SubscriptionMonthlyPriceSample)]
-            [InlineAutoMoqData(ChargeDocument.FeeMonthlyPriceSample)]
-            [InlineAutoMoqData(ChargeDocument.TariffHourlyPricesSample)]
+            //[InlineAutoMoqData(ChargeDocument.SubscriptionMonthlyPriceSample)]
+            //[InlineAutoMoqData(ChargeDocument.FeeMonthlyPriceSample)]
+            //[InlineAutoMoqData(ChargeDocument.TariffHourlyPricesSample)]
             [InlineAutoMoqData(ChargeDocument.TariffPriceSeries)]
             public async Task Given_ChargeExampleFileWithPrices_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply(
                 string testFilePath)

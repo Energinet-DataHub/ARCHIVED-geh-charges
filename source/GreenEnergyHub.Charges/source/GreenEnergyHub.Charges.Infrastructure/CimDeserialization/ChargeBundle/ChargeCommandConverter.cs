@@ -109,8 +109,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
             Instant startDateTime = default;
             Instant? endDateTime = null;
             var vatClassification = VatClassification.Unknown;
-            var transparentInvoicing = false;
-            var taxIndicator = false;
+            var transparentInvoicing = TransparentInvoicing.Unknown;
+            var taxIndicator = TaxIndicator.Unknown;
             var points = new List<Point>();
 
             while (await reader.AdvanceAsync().ConfigureAwait(false))
@@ -132,11 +132,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                 }
                 else if (reader.Is(CimChargeCommandConstants.ChargeName))
                 {
+                    if (!reader.CanReadValue) continue;
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                     chargeName = content;
                 }
                 else if (reader.Is(CimChargeCommandConstants.ChargeDescription))
                 {
+                    if (!reader.CanReadValue) continue;
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                     description = content;
                 }
@@ -157,16 +159,39 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                 }
                 else if (reader.Is(CimChargeCommandConstants.VatClassification))
                 {
-                    var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
-                    vatClassification = VatClassificationMapper.Map(content);
+                    if (!reader.CanReadValue)
+                    {
+                        vatClassification = VatClassification.Unknown;
+                    }
+                    else
+                    {
+                        var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
+                        vatClassification = VatClassificationMapper.Map(content);
+                    }
                 }
                 else if (reader.Is(CimChargeCommandConstants.TransparentInvoicing))
                 {
-                    transparentInvoicing = await reader.ReadValueAsBoolAsync().ConfigureAwait(false);
+                    if (!reader.CanReadValue)
+                    {
+                        transparentInvoicing = TransparentInvoicing.Unknown;
+                    }
+                    else
+                    {
+                        var content = await reader.ReadValueAsBoolAsync().ConfigureAwait(false);
+                        transparentInvoicing = TransparentInvoicingMapper.Map(content);
+                    }
                 }
                 else if (reader.Is(CimChargeCommandConstants.TaxIndicator))
                 {
-                    taxIndicator = await reader.ReadValueAsBoolAsync().ConfigureAwait(false);
+                    if (!reader.CanReadValue)
+                    {
+                        taxIndicator = TaxIndicator.Unknown;
+                    }
+                    else
+                    {
+                        var content = await reader.ReadValueAsBoolAsync().ConfigureAwait(false);
+                        taxIndicator = TaxIndicatorMapper.Map(content);
+                    }
                 }
                 else if (reader.Is(CimChargeCommandConstants.SeriesPeriod))
                 {
