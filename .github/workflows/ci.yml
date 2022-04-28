@@ -21,7 +21,7 @@ on:
       - main
 
 jobs:
-  # Markdown, links and spell checks
+  # Markdown, links and spell checking
   ci_base:
     uses: Energinet-DataHub/.github/.github/workflows/ci-base.yml@6.2.0
 
