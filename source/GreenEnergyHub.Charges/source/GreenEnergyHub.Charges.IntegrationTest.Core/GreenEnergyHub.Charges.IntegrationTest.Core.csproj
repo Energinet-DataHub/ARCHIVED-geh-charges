@@ -67,6 +67,9 @@ limitations under the License.
   </ItemGroup>
   
   <ItemGroup>
+    <Content Include="TestFiles\ChargeLinks\ChargeLinkDocumentWhereSenderIdDoNotMatchAuthorizedActorId.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestFiles\ChargeLinks\TaxTariffWithCreateAndUpdateDueToOverLappingPeriodChargeLinkDocument.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -112,7 +115,7 @@ limitations under the License.
     <Content Include="TestFiles\Charges\TariffBundleWithValidAndInvalid.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestFiles\Charges\ChargeDocumentWithWhereSenderIdDoNotMatchAuthorizedActorId.xml">
+    <Content Include="TestFiles\Charges\ChargeDocumentWhereSenderIdDoNotMatchAuthorizedActorId.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestFiles\Charges\TaxTariffWithPriceDocument.xml">

@@ -22,7 +22,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.Charges
         public const string CreateTariff = "TestFiles/Charges/CreateTariffDocument.xml";
         public const string UpdateTariff = "TestFiles/Charges/UpdateTariffDocument.xml";
         public const string TaxTariffWithPrice = "TestFiles/Charges/TaxTariffWithPriceDocument.xml";
-        public const string ChargeDocumentWithWhereSenderIdDoNotMatchAuthorizedActorId = "TestFiles/Charges/ChargeDocumentWithWhereSenderIdDoNotMatchAuthorizedActorId.xml";
+        public const string ChargeDocumentWhereSenderIdDoNotMatchAuthorizedActorId = "TestFiles/Charges/ChargeDocumentWhereSenderIdDoNotMatchAuthorizedActorId.xml";
         public const string AnyInvalid = "TestFiles/Charges/InvalidTariffDocument.xml";
         public const string TariffInvalidSchema = "TestFiles/Charges/InvalidSchemaTariffDocument.xml";
         public const string TariffBundleWithValidAndInvalid = "TestFiles/Charges/TariffBundleWithValidAndInvalid.xml";

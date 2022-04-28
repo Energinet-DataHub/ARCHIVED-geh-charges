@@ -17,6 +17,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.ChargeLinks
     public static class ChargeLinkDocument
     {
         public const string AnyValid = "TestFiles/ChargeLinks/FixedPeriodTaxTariffChargeLinkDocument.xml";
+        public const string ChargeLinkDocumentWhereSenderIdDoNotMatchAuthorizedActorId = "TestFiles/ChargeLinks/ChargeLinkDocumentWhereSenderIdDoNotMatchAuthorizedActorId.xml";
         public const string TaxWithCreateAndUpdateDueToOverLappingPeriod = "TestFiles/ChargeLinks/TaxTariffWithCreateAndUpdateDueToOverLappingPeriodChargeLinkDocument.xml";
         public const string InvalidSchema = "TestFiles/ChargeLinks/InvalidSchemaChargeLinkDocument.xml";
     }
