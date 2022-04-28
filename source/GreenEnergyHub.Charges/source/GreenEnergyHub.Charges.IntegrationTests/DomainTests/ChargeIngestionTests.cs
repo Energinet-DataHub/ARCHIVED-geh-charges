@@ -61,11 +61,29 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             [Fact]
             public async Task When_RequestIsUnauthenticated_Then_AHttp401UnauthorizedIsReturned()
             {
-                var (request, _) = HttpRequestGenerator.CreateHttpPostRequest(EndpointUrl, ChargeDocument.TariffBundleWithValidAndInvalid);
+                var (request, _) = HttpRequestGenerator.CreateHttpPostRequest(
+                    EndpointUrl, ChargeDocument.TariffBundleWithValidAndInvalid);
 
                 var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 actual.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+            }
+
+            [Fact]
+            public async Task Given_NewMessage_When_SenderIdDoesNotMatchAuthenticatedId_Then_ShouldReturnErrorMessage()
+            {
+                // Arrange
+                var (request, _) = await _authenticatedHttpRequestGenerator
+                    .CreateAuthenticatedHttpPostRequestAsync(
+                        EndpointUrl, ChargeDocument.ChargeDocumentWhereSenderIdDoNotMatchAuthorizedActorId);
+
+                // Act
+                var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                actual.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+                var errorMessage = await actual.Content.ReadAsStringAsync();
+                errorMessage.Should().Be(ErrorMessageConstants.ActorIsNotWhoTheyClaimToBeErrorMessage);
             }
 
             [Fact]
@@ -150,22 +168,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // * one for the notification (tax)
                 // * one for the rejection (ChargeIdLengthValidation)
                 await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId, 3);
-            }
-
-            [Fact]
-            public async Task Given_NewMessage_When_SenderIdDoesNotMatchAuthenticatedId_Then_ShouldReturnErrorMessage()
-            {
-                // Arrange
-                var (request, correlationId) = await _authenticatedHttpRequestGenerator
-                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.ChargeDocumentWithWhereSenderIdDoNotMatchAuthorizedActorId);
-
-                // Act
-                var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
-
-                // Assert
-                actual.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-                var errorMessage = await actual.Content.ReadAsStringAsync();
-                errorMessage.Should().Be("The sender organization provided in the request body does not match the organization in the bearer token.");
             }
 
             [Theory]
