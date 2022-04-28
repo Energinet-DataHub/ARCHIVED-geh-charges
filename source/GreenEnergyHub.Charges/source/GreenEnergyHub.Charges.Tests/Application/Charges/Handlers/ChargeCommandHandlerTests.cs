@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.PriceCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.TestHelpers;
@@ -32,8 +33,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
     {
         [Theory]
         [InlineAutoDomainData]
-        public async Task ChangeOfChargesTransactionHandler_WhenCalled_ShouldCallPublisher(
-            [Frozen] Mock<IMessageDispatcher<ChargeCommandReceivedEvent>> localEventPublisher,
+        public async Task ChangeOfChargesTransactionHandler_WhenCalledWithCharge_ShouldCallChargePublisher(
+            [Frozen] Mock<IMessageDispatcher<ChargeCommandReceivedEvent>> chargeEventPublisher,
+            [Frozen] Mock<IMessageDispatcher<PriceCommandReceivedEvent>> priceEventPublisher,
             ChargeCommandHandler sut)
         {
             // Arrange
@@ -46,11 +48,49 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             await sut.HandleAsync(transaction).ConfigureAwait(false);
 
             // Assert
-            localEventPublisher.Verify(
+            chargeEventPublisher.Verify(
                 x => x.DispatchAsync(
                     It.Is<ChargeCommandReceivedEvent>(
                         localEvent => localEvent.Command == transaction),
-                    It.IsAny<CancellationToken>()));
+                    It.IsAny<CancellationToken>()),
+                Times.Once);
+            priceEventPublisher.Verify(
+                x => x.DispatchAsync(
+                    It.Is<PriceCommandReceivedEvent>(
+                        localEvent => localEvent.Command == transaction),
+                    It.IsAny<CancellationToken>()),
+                Times.Never);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task ChangeOfChargesTransactionHandler_WhenCalledWithPrice_ShouldCallPricePublisher(
+            [Frozen] Mock<IMessageDispatcher<ChargeCommandReceivedEvent>> chargeEventPublisher,
+            [Frozen] Mock<IMessageDispatcher<PriceCommandReceivedEvent>> priceEventPublisher,
+            ChargeCommandHandler sut)
+        {
+            // Arrange
+            var document = new DocumentDtoBuilder()
+                .WithBusinessReasonCode(BusinessReasonCode.UpdatePriceInformation)
+                .Build();
+            var transaction = new ChargeCommandBuilder().WithDocumentDto(document).Build();
+
+            // Act
+            await sut.HandleAsync(transaction).ConfigureAwait(false);
+
+            // Assert
+            chargeEventPublisher.Verify(
+                x => x.DispatchAsync(
+                    It.Is<ChargeCommandReceivedEvent>(
+                        localEvent => localEvent.Command == transaction),
+                    It.IsAny<CancellationToken>()),
+                Times.Never());
+            priceEventPublisher.Verify(
+                x => x.DispatchAsync(
+                    It.Is<PriceCommandReceivedEvent>(
+                        localEvent => localEvent.Command == transaction),
+                    It.IsAny<CancellationToken>()),
+                Times.Once);
         }
     }
 }
