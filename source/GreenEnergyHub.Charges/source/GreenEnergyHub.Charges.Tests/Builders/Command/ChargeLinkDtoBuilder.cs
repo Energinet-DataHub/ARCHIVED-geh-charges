@@ -42,16 +42,14 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
 
         public ChargeLinkDto Build()
         {
-            return new ChargeLinkDto() // TODO use constructor
-            {
-                StartDateTime = _startDate,
-                EndDateTime = _endDate,
-                ChargeType = _chargeType,
-                ChargeOwner = _chargeOwner,
-                SenderProvidedChargeId = _senderProvidedChargeId,
-                Factor = _factor,
-                OperationId = Guid.NewGuid().ToString("N"),
-            };
+            return new ChargeLinkDto(
+                Guid.NewGuid().ToString("N"),
+                _startDate,
+                _endDate,
+                _senderProvidedChargeId,
+                _factor,
+                _chargeOwner,
+                _chargeType);
         }
 
         public ChargeLinkDtoBuilder WithCharge(string senderProvidedChargeId, ChargeType chargeType, string chargeOwner)
