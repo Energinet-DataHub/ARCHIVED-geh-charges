@@ -18,8 +18,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.Tests.Builders.MessageHub;
+using NodaTime;
 using Xunit;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
@@ -85,6 +88,49 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             Assert.NotNull(actual);
             actual.Should().ContainSingle();
             actual[0].Should().BeEquivalentTo(expected);
+        }
+
+        [Fact]
+        public async Task GetAsync_WhenChargeDataAvailableIsOperationOrdered_ReturnsOrderedData()
+        {
+            // Arrange
+            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
+            var availableChargeDataList = GenerateListOfAvailableChargeDataForSameCharge(3);
+            await chargesDatabaseWriteContext.AddRangeAsync(availableChargeDataList);
+            await chargesDatabaseWriteContext.SaveChangesAsync();
+
+            await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
+            var sut = new AvailableDataRepository<AvailableChargeData>(chargesDatabaseReadContext);
+
+            // Act
+            var actual =
+                await sut.GetAsync(new List<Guid>
+                    {
+                        availableChargeDataList[2].AvailableDataReferenceId,
+                        availableChargeDataList[0].AvailableDataReferenceId,
+                        availableChargeDataList[1].AvailableDataReferenceId,
+                    })
+                .ConfigureAwait(false);
+
+            // Assert
+            Assert.NotNull(actual);
+            actual.Should().BeInAscendingOrder(a => a.RequestDateTime)
+                .And.ThenBeInAscendingOrder(a => a.OperationOrder);
+        }
+
+        private static List<AvailableChargeData> GenerateListOfAvailableChargeDataForSameCharge(int numberOfAvailableChargeData)
+        {
+            var builder = new AvailableChargeDataBuilder();
+            var now = Instant.FromDateTimeUtc(DateTime.UtcNow);
+            var availableChargeDataList = new List<AvailableChargeData>();
+
+            for (var i = 0; i < numberOfAvailableChargeData; i++)
+            {
+                var data = builder.WithRequestDateTime(now).WithOperationOrder(i).Build();
+                availableChargeDataList.Add(data);
+            }
+
+            return availableChargeDataList;
         }
     }
 }
