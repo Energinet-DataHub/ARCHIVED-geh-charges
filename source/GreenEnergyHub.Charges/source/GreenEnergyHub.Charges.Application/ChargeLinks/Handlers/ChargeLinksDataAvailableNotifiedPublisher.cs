@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 
         public async Task PublishAsync(ChargeLinksAcceptedEvent chargeLinksAcceptedEvent)
         {
-            if (chargeLinksAcceptedEvent == null) throw new ArgumentNullException(nameof(chargeLinksAcceptedEvent));
+            ArgumentNullException.ThrowIfNull(chargeLinksAcceptedEvent);
 
             var chargeLinksDataAvailableNotifiedEvent =
                 _chargeLinksDataAvailableNotifiedEventFactory.Create(chargeLinksAcceptedEvent);

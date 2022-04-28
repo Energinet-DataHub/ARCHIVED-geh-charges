@@ -75,16 +75,14 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
                         defaultChargeLink => defaultChargeLink,
                         defaultChargeLink => charges.Single(c => defaultChargeLink.ChargeId == c.Id));
 
-            var chargeLinks = defChargeAndCharge.Select(pair => new ChargeLinkDto
-                {
-                    ChargeType = pair.Value.Type,
-                    SenderProvidedChargeId = pair.Value.SenderProvidedChargeId,
-                    ChargeOwner = GetChargeOwner(pair.Value, owners),
-                    StartDateTime = pair.Key.GetStartDateTime(meteringPoint.EffectiveDate),
-                    EndDateTime = pair.Key.EndDateTime,
-                    OperationId = Guid.NewGuid().ToString(), // When creating default charge links, the TSO starts a new operation, which is why a new OperationId is provided.
-                    Factor = DefaultChargeLink.Factor,
-                })
+            var chargeLinks = defChargeAndCharge.Select(pair => new ChargeLinkDto(
+                    Guid.NewGuid().ToString(), // When creating default charge links, the TSO starts a new operation, which is why a new OperationId is provided.
+                    pair.Key.GetStartDateTime(meteringPoint.EffectiveDate),
+                    pair.Key.EndDateTime,
+                    pair.Value.SenderProvidedChargeId,
+                    DefaultChargeLink.Factor,
+                    GetChargeOwner(pair.Value, owners),
+                    pair.Value.Type))
                 .ToList();
 
             return await CreateChargeLinksCommandAsync(createDefaultChargeLinksRequest, systemOperator, chargeLinks)
