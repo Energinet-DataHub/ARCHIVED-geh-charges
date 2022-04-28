@@ -12,22 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
-using NodaTime;
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.PriceCommandReceivedEvents
+namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
-    public class PriceCommandReceivedEvent : InternalEventBase
+    public interface IChargeAndPriceHandler
     {
-        public PriceCommandReceivedEvent(
-            Instant publishedTime,
-            ChargeCommand command)
-            : base(publishedTime)
-        {
-            Command = command;
-        }
-
-        public ChargeCommand Command { get; }
+        Task HandleAsync(ChargeCommandReceivedEvent commandReceivedEvent);
     }
 }

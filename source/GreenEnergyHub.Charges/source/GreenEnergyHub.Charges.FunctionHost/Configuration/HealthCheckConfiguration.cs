@@ -17,7 +17,6 @@ using Energinet.DataHub.Core.App.FunctionApp.Diagnostics.HealthChecks;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.Registration;
 using Microsoft.Extensions.DependencyInjection;
-using NotImplementedException = System.NotImplementedException;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
@@ -41,7 +40,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
             // Domain events
             ConfigureDomainEventsCharges(serviceCollection);
-            ConfigureDomainEventsPrices(serviceCollection);
             ConfigureDomainEventsChargeLinks(serviceCollection);
             ConfigureDomainEventsDefaultChargeLinks(serviceCollection);
         }
@@ -158,22 +156,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                     topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandAcceptedTopicName),
                     subscriptionName: EnvironmentHelper.GetEnv(EnvironmentSettingNames
                         .CommandAcceptedReceiverSubscriptionName));
-        }
-
-        private static void ConfigureDomainEventsPrices(IServiceCollection serviceCollection)
-        {
-            serviceCollection.AddHealthChecks()
-                .AddAzureServiceBusTopic(
-                    name: "PriceCommandReceivedTopicExists",
-                    connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames
-                        .DomainEventManagerConnectionString),
-                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.PriceCommandReceivedTopicName))
-                .AddAzureServiceBusSubscription(
-                    name: "PriceCommandReceivedSubscriptionExists",
-                    connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames
-                        .DomainEventManagerConnectionString),
-                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.PriceCommandReceivedTopicName),
-                    subscriptionName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.PriceCommandReceivedSubscriptionName));
         }
 
         private static void ConfigureDomainEventsChargeLinks(IServiceCollection serviceCollection)
