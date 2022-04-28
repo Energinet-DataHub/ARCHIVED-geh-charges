@@ -22,6 +22,28 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
 {
     public class ChargeLinkDto : OperationBase
     {
+        public ChargeLinkDto()
+        {
+        }
+
+        public ChargeLinkDto(
+            string operationId,
+            Instant startDateTime,
+            Instant? endDateTime,
+            string senderProvidedChargeId,
+            int factor,
+            string chargeOwner,
+            ChargeType chargeType)
+        {
+            OperationId = operationId;
+            StartDateTime = startDateTime;
+            EndDateTime = endDateTime;
+            SenderProvidedChargeId = senderProvidedChargeId;
+            Factor = factor;
+            ChargeOwner = chargeOwner;
+            ChargeType = chargeType;
+        }
+
         /// <summary>
         /// Contains a ID for the specific link, provided by the sender (or TSO when creating default charge link).
         /// Combined with sender.id it becomes unique.

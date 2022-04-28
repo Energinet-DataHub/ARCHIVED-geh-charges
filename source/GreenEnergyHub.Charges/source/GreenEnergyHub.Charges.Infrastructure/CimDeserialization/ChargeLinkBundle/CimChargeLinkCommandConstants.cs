@@ -33,9 +33,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeLinkBun
 
         internal const string MeteringPointId = "marketEvaluationPoint.mRID";
 
-        internal const string ChargeGroup = "chargeGroup";
+        internal const string ChargeGroup = "ChargeGroup";
 
-        internal const string ChargeType = "chargeType";
+        internal const string ChargeType = "ChargeType";
 
         internal const string Type = "type";
 

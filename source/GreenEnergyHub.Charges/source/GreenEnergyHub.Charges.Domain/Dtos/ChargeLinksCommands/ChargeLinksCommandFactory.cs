@@ -75,7 +75,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
                         defaultChargeLink => defaultChargeLink,
                         defaultChargeLink => charges.Single(c => defaultChargeLink.ChargeId == c.Id));
 
-            var chargeLinks = defChargeAndCharge.Select(pair => new ChargeLinkDto
+            var chargeLinks = defChargeAndCharge.Select(pair => new ChargeLinkDto //TODO use constructor
                 {
                     ChargeType = pair.Value.Type,
                     SenderProvidedChargeId = pair.Value.SenderProvidedChargeId,

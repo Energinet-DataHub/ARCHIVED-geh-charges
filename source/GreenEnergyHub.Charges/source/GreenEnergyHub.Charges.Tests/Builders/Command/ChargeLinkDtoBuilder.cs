@@ -42,7 +42,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
 
         public ChargeLinkDto Build()
         {
-            return new ChargeLinkDto
+            return new ChargeLinkDto() // TODO use constructor
             {
                 StartDateTime = _startDate,
                 EndDateTime = _endDate,
