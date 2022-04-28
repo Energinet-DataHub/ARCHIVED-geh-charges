@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
 
         public async Task<IReadOnlyCollection<ChargeLink>> CreateAsync(ChargeLinksReceivedEvent chargeLinksEvent)
         {
-            if (chargeLinksEvent == null) throw new ArgumentNullException(nameof(chargeLinksEvent));
+            ArgumentNullException.ThrowIfNull(chargeLinksEvent);
 
             var chargeLinksCreated = new List<ChargeLink>();
 
