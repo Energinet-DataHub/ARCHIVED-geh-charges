@@ -14,7 +14,7 @@
 
 using System;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Persistence
+namespace GreenEnergyHub.Charges.Domain.GridAreas
 {
     public class GridAreaLink
     {
