@@ -60,8 +60,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 // Arrange
                 await using var context = Fixture.DatabaseManager.CreateDbContext();
                 var id = Guid.NewGuid();
-                var gridAccessProviderId = await CreateMarketParticipantInRepository(context);
-                var (message, parentId) = CreateServiceBusMessage(id, gridAccessProviderId);
+//                var gridAccessProviderId = await CreateMarketParticipantInRepository(context);
+                var (message, parentId) = CreateServiceBusMessage(id);
 
                 // Act
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
@@ -69,8 +69,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
                 // Assert
                 await FunctionAsserts.AssertHasExecutedAsync(Fixture.HostManager, nameof(MarketParticipantEndpoint)).ConfigureAwait(false);
-                var gridArea = context.GridAreas.SingleOrDefault(x =>
-                    x.Id == id && x.GridAccessProviderId == gridAccessProviderId);
+                var gridArea = context.GridAreas.SingleOrDefault(x => x.Id == id);
                 gridArea.Should().NotBeNull();
 
                 // We need to clear host log after each test is done to ensure that we can assert on function executed on each test run because we only check on function name.
@@ -86,11 +85,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
             }
 
             private static (ServiceBusMessage ServiceBusMessage, string ParentId)
-                CreateServiceBusMessage(Guid id, Guid gridAreaId)
+                CreateServiceBusMessage(Guid id)
             {
                 var gridAreaIntegrationEvent = new GridAreaUpdatedIntegrationEvent(
+                    Guid.NewGuid(),
                     id,
-                    gridAreaId,
                     "name",
                     "code",
                     PriceAreaCode.DK1,

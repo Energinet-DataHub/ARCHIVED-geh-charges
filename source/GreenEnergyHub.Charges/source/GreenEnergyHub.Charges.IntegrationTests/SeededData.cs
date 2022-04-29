@@ -47,6 +47,19 @@ namespace GreenEnergyHub.Charges.IntegrationTests
                 public const string MarketParticipantId = "8100000000030";
                 public static readonly Guid Id = new("ed6c94f3-24a8-43b3-913d-bf7513390a32");
             }
+
+            public static class Provider8500000000013
+            {
+                public static readonly Guid Id = new("c13d70cb-8a0e-480e-bd05-3b28b9e3b104");
+            }
+        }
+
+        public static class GridAreaLink
+        {
+            public static class Provider8500000000013
+            {
+                public static readonly Guid Id = new("a37aca18-51e1-4978-a52b-28ac165f801b");
+            }
         }
     }
 }
