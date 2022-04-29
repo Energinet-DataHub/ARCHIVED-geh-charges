@@ -18,6 +18,7 @@ using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
+using Microsoft.EntityFrameworkCore;
 using Xunit;
 using Xunit.Categories;
 
@@ -34,6 +35,22 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         public MarketParticipantRepositoryTests(ChargesDatabaseFixture fixture)
         {
             _databaseManager = fixture.DatabaseManager;
+        }
+
+        [Fact]
+        public async Task GetOrNullAsync_WhenGuidEqualsExistingMarketParticipant_ReturnsMarketParticipant()
+        {
+            // Arrange
+            await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
+            var sut = new MarketParticipantRepository(chargesDatabaseContext);
+            var existingMarketParticipant = await chargesDatabaseContext.MarketParticipants
+                .SingleAsync(mp => mp.MarketParticipantId == SeededData.MarketParticipant.Inactive8900000000005);
+
+            // Act
+            var actual = await sut.GetOrNullAsync(existingMarketParticipant.Id);
+
+            // Assert
+            actual!.MarketParticipantId.Should().Be(SeededData.MarketParticipant.Inactive8900000000005);
         }
 
         [Fact]
