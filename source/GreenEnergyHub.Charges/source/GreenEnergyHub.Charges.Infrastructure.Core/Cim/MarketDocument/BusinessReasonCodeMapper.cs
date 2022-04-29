@@ -27,7 +27,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument
         {
             return value switch
             {
-                CimUpdatePriceInformation => BusinessReasonCode.UpdatePriceInformation,
+                CimUpdatePriceInformation => BusinessReasonCode.UpdateChargePrices,
                 CimUpdateMasterDataSettlement => BusinessReasonCode.UpdateMasterDataSettlement,
                 CimUpdateChargeInformation => BusinessReasonCode.UpdateChargeInformation,
                 _ => BusinessReasonCode.Unknown,
@@ -38,7 +38,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument
         {
             return businessReasonCode switch
             {
-                BusinessReasonCode.UpdatePriceInformation => CimUpdatePriceInformation,
+                BusinessReasonCode.UpdateChargePrices => CimUpdatePriceInformation,
                 BusinessReasonCode.UpdateChargeInformation => CimUpdateChargeInformation,
                 BusinessReasonCode.UpdateMasterDataSettlement => CimUpdateMasterDataSettlement,
                 _ => throw new InvalidEnumArgumentException(

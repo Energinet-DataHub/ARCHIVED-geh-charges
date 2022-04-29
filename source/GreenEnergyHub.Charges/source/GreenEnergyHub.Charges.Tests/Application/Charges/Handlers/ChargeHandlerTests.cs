@@ -28,7 +28,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 {
     [UnitTest]
-    public class ChargeAndPriceHandlerTests
+    public class ChargeHandlerTests
     {
         [Theory]
         [InlineAutoDomainData]
@@ -37,10 +37,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             ChargeCommandAcceptedEvent chargeCommandAcceptedEvent,
             [Frozen] Mock<IMessageDispatcher<ChargeCommandAcceptedEvent>> messageDispatcherMock,
             [Frozen] Mock<IChargeCommandAcceptedEventFactory> chargeCommandAcceptedEventFactoryMock,
-            ChargeAndPriceHandler sut)
+            ChargeHandler sut)
         {
             // Arrange
-            chargeCommandReceivedEvent.Command.Document.BusinessReasonCode = BusinessReasonCode.UpdatePriceInformation;
+            chargeCommandReceivedEvent.Command.Document.BusinessReasonCode = BusinessReasonCode.UpdateChargePrices;
             chargeCommandAcceptedEventFactoryMock
                 .Setup(x => x.CreateEvent(chargeCommandReceivedEvent.Command))
                 .Returns(chargeCommandAcceptedEvent);
@@ -61,7 +61,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         public async Task HandleAsync_WhenBusinessReasonCodeIsUpdateChargeInformation_ActivateHandler(
             ChargeCommandReceivedEvent chargeCommandReceivedEvent,
             [Frozen] Mock<IChargeCommandReceivedEventHandler> chargeCommandReceivedEventHandlerMock,
-            ChargeAndPriceHandler sut)
+            ChargeHandler sut)
         {
             // Arrange
             chargeCommandReceivedEvent.Command.Document.BusinessReasonCode = BusinessReasonCode.UpdateChargeInformation;

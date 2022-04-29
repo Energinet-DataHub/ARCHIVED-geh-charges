@@ -17,23 +17,25 @@ using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksRejectionEvents;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
-    public class ChargeAndPriceHandler : IChargeAndPriceHandler
+    public class ChargeHandler : IChargeHandler
     {
         private readonly IChargeCommandReceivedEventHandler _chargeCommandReceivedEventHandler;
-        private readonly IMessageDispatcher<ChargeCommandAcceptedEvent> _messageDispatcher;
+        private readonly IMessageDispatcher<ChargeCommandAcceptedEvent> _acceptedMessageDispatcher;
         private readonly IChargeCommandAcceptedEventFactory _chargeCommandAcceptedEventFactory;
 
-        public ChargeAndPriceHandler(
+        public ChargeHandler(
             IChargeCommandReceivedEventHandler chargeCommandReceivedEventHandler,
-            IMessageDispatcher<ChargeCommandAcceptedEvent> messageDispatcher,
+            IMessageDispatcher<ChargeCommandAcceptedEvent> acceptedMessageDispatcher,
             IChargeCommandAcceptedEventFactory chargeCommandAcceptedEventFactory)
         {
             _chargeCommandReceivedEventHandler = chargeCommandReceivedEventHandler;
-            _messageDispatcher = messageDispatcher;
+            _acceptedMessageDispatcher = acceptedMessageDispatcher;
             _chargeCommandAcceptedEventFactory = chargeCommandAcceptedEventFactory;
         }
 
@@ -41,10 +43,10 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         {
             switch (commandReceivedEvent.Command.Document.BusinessReasonCode)
             {
-                case BusinessReasonCode.UpdatePriceInformation:
+                case BusinessReasonCode.UpdateChargePrices:
                     var chargeCommandAcceptedEvent =
                         _chargeCommandAcceptedEventFactory.CreateEvent(commandReceivedEvent.Command);
-                    await _messageDispatcher.DispatchAsync(chargeCommandAcceptedEvent)
+                    await _acceptedMessageDispatcher.DispatchAsync(chargeCommandAcceptedEvent)
                         .ConfigureAwait(false);
                     break;
                 case BusinessReasonCode.UpdateChargeInformation:

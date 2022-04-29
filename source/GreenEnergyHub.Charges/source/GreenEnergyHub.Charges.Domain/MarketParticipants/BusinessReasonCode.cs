@@ -22,6 +22,6 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
         Unknown = 0,
         UpdateMasterDataSettlement = 1,
         UpdateChargeInformation = 2,
-        UpdatePriceInformation = 3,
+        UpdateChargePrices = 3,
     }
 }

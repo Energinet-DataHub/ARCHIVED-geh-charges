@@ -14,7 +14,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -84,11 +83,11 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
         [Theory(Skip = "Manually run test to save the generated file to disk")]
         [InlineAutoDomainData]
         public async Task SerializeAsync_WhenCalled_SaveSerializedStream(
-            [NotNull] [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            [NotNull] [Frozen] Mock<IClock> clock,
-            [NotNull] [Frozen] Mock<IIso8601Durations> iso8601Durations,
-            [NotNull] [Frozen] Mock<ICimIdProvider> cimIdProvider,
-            [NotNull] ChargeCimSerializer sut)
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
+            [Frozen] Mock<IClock> clock,
+            [Frozen] Mock<IIso8601Durations> iso8601Durations,
+            [Frozen] Mock<ICimIdProvider> cimIdProvider,
+            ChargeCimSerializer sut)
         {
             SetupMocks(marketParticipantRepository, clock, iso8601Durations, cimIdProvider);
 
@@ -175,8 +174,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
                 Instant.FromUtc(2020, 12, 31, 23, 0, 0),
                 validTo,
                 VatClassification.NoVat,
-                true,
-                false,
+                TaxIndicator.Tax,
+                TransparentInvoicing.NonTransparent,
                 GetResolution(no),
                 DocumentType.NotifyPriceList,
                 order,
@@ -201,8 +200,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
                 Instant.FromUtc(2020, 12, 31, 23, 0, 0),
                 Instant.FromUtc(9999, 12, 31, 23, 59, 59),
                 VatClassification.Unknown,
-                false,
-                false,
+                TaxIndicator.NoTax,
+                TransparentInvoicing.NonTransparent,
                 GetResolution(no),
                 DocumentType.NotifyPriceList,
                 0,
