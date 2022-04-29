@@ -142,6 +142,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 AvailableDataRepository<AvailableChargeReceiptData>>();
             serviceCollection.AddScoped<IMarketParticipantRepository, MarketParticipantRepository>();
             serviceCollection.AddScoped<IGridAreaRepository, GridAreaRepository>();
+            serviceCollection.AddScoped<IGridAreaLinkRepository, GridAreaLinkRepository>();
         }
 
         private static void ConfigureSharedMessaging(IServiceCollection serviceCollection)
