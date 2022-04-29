@@ -17,7 +17,7 @@ data "template_file" "workbook_charges_template" {
     subscription_id          = data.azurerm_subscription.this.subscription_id
     resouce_group_name       = azurerm_resource_group.this.name
     application_insight_name = data.azurerm_key_vault_secret.appi_shared_name.value
-    shared_resouce_group_name = data.azurerm_key_vault_secret.shared_resources_resource_group_name.value
+    shared_resouce_group_name = var.shared_resources_resource_group_name
 
   }
 }
