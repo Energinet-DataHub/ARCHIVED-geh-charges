@@ -12,10 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Linq;
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
 using Energinet.DataHub.Core.Messaging.Transport.SchemaValidation;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
+using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
 using Microsoft.Azure.Functions.Worker;
@@ -34,14 +37,18 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         /// </summary>
         private readonly ValidatingMessageExtractor<ChargeLinksCommandBundle> _messageExtractor;
 
+        private readonly IActorContext _actorContext;
+
         public ChargeLinksIngestion(
             IChargeLinksCommandBundleHandler chargeLinksCommandBundleHandler,
             IHttpResponseBuilder httpResponseBuilder,
-            ValidatingMessageExtractor<ChargeLinksCommandBundle> messageExtractor)
+            ValidatingMessageExtractor<ChargeLinksCommandBundle> messageExtractor,
+            IActorContext actorContext)
         {
             _chargeLinksCommandBundleHandler = chargeLinksCommandBundleHandler;
             _httpResponseBuilder = httpResponseBuilder;
             _messageExtractor = messageExtractor;
+            _actorContext = actorContext;
         }
 
         [Function(IngestionFunctionNames.ChargeLinksIngestion)]
@@ -57,6 +64,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
                     .ConfigureAwait(false);
             }
 
+            if (AuthenticatedMatchesSenderId(inboundMessage) == false)
+            {
+                return _httpResponseBuilder.CreateBadRequestWithErrorText(
+                    req, SynchronousErrorMessageConstants.ActorIsNotWhoTheyClaimToBeErrorMessage);
+            }
+
             await _chargeLinksCommandBundleHandler
                 .HandleAsync(inboundMessage.ValidatedMessage)
                 .ConfigureAwait(false);
@@ -69,6 +82,14 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
             return (SchemaValidatedInboundMessage<ChargeLinksCommandBundle>)await _messageExtractor
                 .ExtractAsync(req.Body)
                 .ConfigureAwait(false);
+        }
+
+        private bool AuthenticatedMatchesSenderId(SchemaValidatedInboundMessage<ChargeLinksCommandBundle> inboundMessage)
+        {
+            var authorizedActor = _actorContext.CurrentActor;
+            var senderId = inboundMessage.ValidatedMessage?.ChargeLinksCommands.First().Document.Sender.Id;
+
+            return authorizedActor != null && senderId == authorizedActor.Identifier;
         }
     }
 }

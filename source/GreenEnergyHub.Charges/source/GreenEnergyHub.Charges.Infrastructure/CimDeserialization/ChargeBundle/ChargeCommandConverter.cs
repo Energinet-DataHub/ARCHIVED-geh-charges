@@ -174,9 +174,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                     points.AddRange(seriesPeriodIntoOperationAsync.Points);
                     resolution = seriesPeriodIntoOperationAsync.Resolution;
                 }
-                else if (reader.Is(
-                    CimChargeCommandConstants.ChargeTypeElement,
-                    NodeType.EndElement))
+                else if (reader.Is(CimChargeCommandConstants.ChargeTypeElement, NodeType.EndElement))
                 {
                     break;
                 }
