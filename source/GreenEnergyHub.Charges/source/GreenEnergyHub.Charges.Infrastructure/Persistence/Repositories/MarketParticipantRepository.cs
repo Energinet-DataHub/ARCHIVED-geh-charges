@@ -92,6 +92,16 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
                 .SingleAsync();
         }
 
+        public Task<MarketParticipant?> GetGridAccessProviderAsync(Guid gridAreaId)
+        {
+            return (from gridArea in _chargesDatabaseContext.GridAreas
+                    from marketParticipant in _chargesDatabaseContext.MarketParticipants
+                    where gridArea.GridAccessProviderId == marketParticipant.Id
+                    where gridArea.GridAccessProviderId == gridAreaId
+                    select marketParticipant)
+                .SingleOrDefaultAsync();
+        }
+
         public Task<MarketParticipant> GetMeteringPointAdministratorAsync()
         {
             return GetAsync(MarketParticipantRole.MeteringPointAdministrator);

@@ -137,5 +137,20 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             actual.Should().NotBeNull();
             actual.IsActive.Should().BeTrue();
         }
+
+        [Fact]
+        public async Task GetGridAccessProviderAsync_ReturnsGridAccessProviderFromGridAreaId()
+        {
+            // Arrange
+            await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
+            var sut = new MarketParticipantRepository(chargesDatabaseContext);
+
+            // Act
+            var actual = await sut.GetGridAccessProviderAsync(SeededData.GridArea.Provider8100000000030.Id);
+
+            // Assert
+            actual.Should().NotBeNull();
+            actual?.MarketParticipantId.Should().Be(SeededData.GridArea.Provider8100000000030.MarketParticipantId);
+        }
     }
 }
