@@ -63,6 +63,23 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             }
 
             [Fact]
+            public async Task Given_NewMessage_When_SenderIdDoesNotMatchAuthenticatedId_Then_ShouldReturnErrorMessage()
+            {
+                // Arrange
+                var (request, _) = await _authenticatedHttpRequestGenerator
+                    .CreateAuthenticatedHttpPostRequestAsync(
+                        EndpointUrl, ChargeLinkDocument.ChargeLinkDocumentWhereSenderIdDoNotMatchAuthorizedActorId);
+
+                // Act
+                var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                actual.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+                var errorMessage = await actual.Content.ReadAsStringAsync();
+                errorMessage.Should().Be(ErrorMessageConstants.ActorIsNotWhoTheyClaimToBeErrorMessage);
+            }
+
+            [Fact]
             public async Task When_ChargeLinkIsReceived_Then_AHttp202ResponseWithEmptyBodyIsReturned()
             {
                 var result = await _authenticatedHttpRequestGenerator.CreateAuthenticatedHttpPostRequestAsync(

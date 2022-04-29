@@ -146,8 +146,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeL
 
             // Assert
             // Document
-            var document =
-                result.ChargeLinksCommands.First().Document;
+            var document = result.ChargeLinksCommands.First().Document;
             document.Id.Should().Be("DocId_Valid_001");
             document.Type.Should().Be(DocumentType.RequestChangeBillingMasterData);
             document.BusinessReasonCode.Should().Be(BusinessReasonCode.UpdateMasterDataSettlement);
@@ -158,9 +157,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeL
             document.CreatedDateTime.Should().Be(InstantPattern.ExtendedIso.Parse("2021-07-05T13:20:02.387Z").Value);
 
             // ChargeLink 1
-            var chargeLink1 =
-                result.ChargeLinksCommands.Single(x => x.ChargeLinksOperations.First().OperationId == "rId_Valid_001").ChargeLinksOperations
-                    .First();
+            var chargeLink1 = result.ChargeLinksCommands
+                .Single(x => x.ChargeLinksOperations.First().OperationId == "rId_Valid_001")
+                .ChargeLinksOperations.First();
             chargeLink1.StartDateTime.Should().Be(InstantPattern.ExtendedIso.Parse("2021-09-27T22:00:00Z").Value);
             chargeLink1.EndDateTime.Should().Be(InstantPattern.ExtendedIso.Parse("2021-11-05T23:00:00Z").Value);
             chargeLink1.SenderProvidedChargeId.Should().Be("ChargeId01");
@@ -169,9 +168,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeL
             chargeLink1.ChargeType.Should().Be(ChargeType.Tariff);
 
             // ChargeLink 2
-            var chargeLink2 =
-                result.ChargeLinksCommands.Single(x => x.ChargeLinksOperations.First().OperationId == "rId_Valid_002").ChargeLinksOperations
-                    .First();
+            var chargeLink2 = result.ChargeLinksCommands
+                .Single(x => x.ChargeLinksOperations.First().OperationId == "rId_Valid_002")
+                .ChargeLinksOperations.First();
             chargeLink2.StartDateTime.Should().Be(InstantPattern.ExtendedIso.Parse("2021-11-27T22:00:00Z").Value);
             chargeLink2.EndDateTime.Should().Be(InstantPattern.ExtendedIso.Parse("2021-12-05T23:00:00Z").Value);
             chargeLink2.SenderProvidedChargeId.Should().Be("ChargeId01");

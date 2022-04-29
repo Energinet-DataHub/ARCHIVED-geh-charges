@@ -14,10 +14,10 @@
 
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.Messaging.Transport;
 using Energinet.DataHub.Core.SchemaValidation;
+using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocument;
@@ -59,9 +59,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeLinkBun
             return chargeLinks;
         }
 
-        private static async Task<ChargeLinksCommand> ParseChargeLinkCommandAsync(SchemaValidatingReader reader, DocumentDto document)
+        private static async Task<ChargeLinksCommand> ParseChargeLinkCommandAsync(
+            SchemaValidatingReader reader, DocumentDto document)
         {
-            var link = new ChargeLinkDto();
+            var chargeLinkDto = new List<ChargeLinkDto>();
+            var operationId = string.Empty;
             string meteringPointId = null!;
 
             do
@@ -69,51 +71,105 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeLinkBun
                 if (reader.Is(CimChargeLinkCommandConstants.Id))
                 {
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
-                    link.OperationId = content;
+                    operationId = content;
                 }
                 else if (reader.Is(CimChargeLinkCommandConstants.MeteringPointId))
                 {
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                     meteringPointId = content;
                 }
-                else if (reader.Is(CimChargeLinkCommandConstants.StartDateTime))
+                else if (reader.Is(CimChargeLinkCommandConstants.ChargeGroup))
                 {
-                    link.StartDateTime = await reader.ReadValueAsNodaTimeAsync().ConfigureAwait(false);
+                    chargeLinkDto.Add(await ParseChargeGroupIntoChargeLinkDtoAsync(reader, operationId)
+                        .ConfigureAwait(false));
                 }
-                else if (reader.Is(CimChargeLinkCommandConstants.EndDateTime))
+                else if (reader.Is(CimChargeLinkCommandConstants.MktActivityRecord, NodeType.EndElement))
                 {
-                    link.EndDateTime = await reader.ReadValueAsNodaTimeAsync().ConfigureAwait(false);
+                    // For now we break on MktActivityRecord to only have one ChargeLinkDto for each ChargeLinksCommand
+                    break;
                 }
-                else if (reader.Is(CimChargeLinkCommandConstants.ChargeId))
+            }
+            while (await reader.AdvanceAsync().ConfigureAwait(false));
+
+            return new ChargeLinksCommand(meteringPointId, document, chargeLinkDto);
+        }
+
+        private static async Task<ChargeLinkDto> ParseChargeGroupIntoChargeLinkDtoAsync(
+            SchemaValidatingReader reader, string operationId)
+        {
+            ChargeLinkDto? chargeLinkDto = null;
+            do
+            {
+                if (reader.Is(CimChargeLinkCommandConstants.ChargeType))
                 {
-                    var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
-                    link.SenderProvidedChargeId = content;
+                    chargeLinkDto = await ParseChargeTypeElementIntoChargeLinkDtoAsync(reader, operationId)
+                        .ConfigureAwait(false);
                 }
-                else if (reader.Is(CimChargeLinkCommandConstants.Factor))
-                {
-                    var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
-                    link.Factor = int.Parse(content, CultureInfo.InvariantCulture);
-                }
-                else if (reader.Is(CimChargeLinkCommandConstants.ChargeOwner))
-                {
-                    var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
-                    link.ChargeOwner = content;
-                }
-                else if (reader.Is(CimChargeLinkCommandConstants.ChargeType))
-                {
-                    var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
-                    link.ChargeType = ChargeTypeMapper.Map(content);
-                }
-                else if (reader.Is(
-                             CimChargeLinkCommandConstants.MktActivityRecord,
-                             NodeType.EndElement))
+                else if (reader.Is(CimChargeLinkCommandConstants.ChargeGroup, NodeType.EndElement))
                 {
                     break;
                 }
             }
             while (await reader.AdvanceAsync().ConfigureAwait(false));
 
-            return new ChargeLinksCommand(meteringPointId, document, new List<ChargeLinkDto> { link });
+            return chargeLinkDto!;
+        }
+
+        private static async Task<ChargeLinkDto> ParseChargeTypeElementIntoChargeLinkDtoAsync(
+            SchemaValidatingReader reader, string operationId)
+        {
+            Instant startDateTime = default;
+            Instant? endDateTime = null;
+            string senderProvidedChargeId = null!;
+            var factor = 0;
+            string chargeOwner = null!;
+            var chargeType = ChargeType.Unknown;
+
+            do
+            {
+                if (reader.Is(CimChargeLinkCommandConstants.EffectiveDate))
+                {
+                    startDateTime = await reader.ReadValueAsNodaTimeAsync().ConfigureAwait(false);
+                }
+                else if (reader.Is(CimChargeLinkCommandConstants.TerminationDate))
+                {
+                    endDateTime = await reader.ReadValueAsNodaTimeAsync().ConfigureAwait(false);
+                }
+                else if (reader.Is(CimChargeLinkCommandConstants.ChargeId))
+                {
+                    var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
+                    senderProvidedChargeId = content;
+                }
+                else if (reader.Is(CimChargeLinkCommandConstants.Factor))
+                {
+                    var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
+                    factor = int.Parse(content, CultureInfo.InvariantCulture);
+                }
+                else if (reader.Is(CimChargeLinkCommandConstants.ChargeOwner))
+                {
+                    var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
+                    chargeOwner = content;
+                }
+                else if (reader.Is(CimChargeLinkCommandConstants.Type))
+                {
+                    var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
+                    chargeType = ChargeTypeMapper.Map(content);
+                }
+                else if (reader.Is(CimChargeLinkCommandConstants.ChargeType, NodeType.EndElement))
+                {
+                    break;
+                }
+            }
+            while (await reader.AdvanceAsync().ConfigureAwait(false));
+
+            return new ChargeLinkDto(
+                operationId,
+                startDateTime,
+                endDateTime,
+                senderProvidedChargeId,
+                factor,
+                chargeOwner,
+                chargeType);
         }
     }
 }
