@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Security.Cryptography.X509Certificates;
+
 namespace GreenEnergyHub.Charges.IntegrationTests
 {
     /// <summary>
@@ -35,6 +38,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests
         {
             public const string GridAccessProviderOfMeteringPoint571313180000000005 = "8100000000016";
             public const string Inactive8900000000005 = "8900000000005";
+        }
+
+        public static class GridArea
+        {
+            public static class Provider8100000000030
+            {
+                public const string MarketParticipantId = "8100000000030";
+                public static readonly Guid Id = new("ed6c94f3-24a8-43b3-913d-bf7513390a32");
+            }
         }
     }
 }
