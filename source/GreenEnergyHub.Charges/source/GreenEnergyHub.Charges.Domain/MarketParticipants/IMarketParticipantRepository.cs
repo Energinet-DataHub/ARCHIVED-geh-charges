@@ -41,5 +41,7 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
         Task<MarketParticipant> GetMeteringPointAdministratorAsync();
 
         Task<MarketParticipant> GetSystemOperatorAsync();
+
+        Task<MarketParticipant?> GetGridAccessProviderAsync(Guid gridAreaId);
     }
 }
