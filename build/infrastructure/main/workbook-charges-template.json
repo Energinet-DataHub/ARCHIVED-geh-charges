@@ -172,7 +172,7 @@
   },
   "resources": [
     {
-      "name": "[parameters('workbookDisplayName')]",
+      "name": "[parameters('workbookId')]",
       "type": "microsoft.insights/workbooks",
       "location": "[resourceGroup().location]",
       "apiVersion": "2021-03-08",
