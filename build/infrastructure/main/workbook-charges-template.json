@@ -17,7 +17,7 @@
     },
     "workbookSourceId": {
       "type": "string",
-      "defaultValue": "/subscriptions/${subscription_id}/resourceGroups/${application_insight_resouce_group_name}/providers/Microsoft.Insights/components/${application_insight_name}",
+      "defaultValue": "/subscriptions/${subscription_id}/resourceGroups/${shared_resouce_group_name}/providers/Microsoft.Insights/components/${application_insight_name}",
       "metadata": {
         "description": "The id of resource instance to which the workbook will be associated"
       }
