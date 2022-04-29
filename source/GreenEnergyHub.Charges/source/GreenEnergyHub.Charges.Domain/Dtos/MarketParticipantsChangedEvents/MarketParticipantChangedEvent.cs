@@ -25,12 +25,14 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsChangedEvents
         public MarketParticipantChangedEvent(
             string marketParticipantId,
             List<MarketParticipantRole> businessProcessRole,
-            bool isActive)
+            bool isActive,
+            IEnumerable<Guid> gridAreas)
             : base(Transaction.NewTransaction())
         {
             MarketParticipantId = marketParticipantId;
             BusinessProcessRoles = businessProcessRole;
             IsActive = isActive;
+            GridAreas = gridAreas;
         }
 
         public string MarketParticipantId { get; }
@@ -38,5 +40,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsChangedEvents
         public List<MarketParticipantRole> BusinessProcessRoles { get; }
 
         public bool IsActive { get; }
+
+        public IEnumerable<Guid> GridAreas { get; }
     }
 }

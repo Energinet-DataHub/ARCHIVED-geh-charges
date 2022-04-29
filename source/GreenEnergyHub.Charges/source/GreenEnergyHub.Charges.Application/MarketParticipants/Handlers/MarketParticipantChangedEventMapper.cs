@@ -31,7 +31,8 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
             return new MarketParticipantChangedEvent(
                 actorUpdatedIntegrationEvent.Gln,
                 rolesUsedInChargesDomain,
-                isActive);
+                isActive,
+                actorUpdatedIntegrationEvent.GridAreas);
         }
 
         public static GridAreaChangedEvent MapFromGridArea(
