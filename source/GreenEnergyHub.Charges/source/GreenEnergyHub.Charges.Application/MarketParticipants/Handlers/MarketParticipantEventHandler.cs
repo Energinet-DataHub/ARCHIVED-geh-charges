@@ -24,7 +24,6 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
         private readonly IGridAreaPersister _gridAreaPersister;
 
         public MarketParticipantEventHandler(
-            ISharedIntegrationEventParser sharedIntegrationEventParser,
             IMarketParticipantPersister marketParticipantPersister,
             IGridAreaPersister gridAreaPersister)
         {
