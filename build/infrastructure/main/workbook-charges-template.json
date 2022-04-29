@@ -15,13 +15,6 @@
         "description": ""
       }
     },
-    "workbookSourceId": {
-      "type": "string",
-      "defaultValue": "/subscriptions/${subscription_id}/resourceGroups/${shared_resouce_group_name}/providers/Microsoft.Insights/components/${application_insight_name}",
-      "metadata": {
-        "description": "The id of resource instance to which the workbook will be associated"
-      }
-    },
     "workbookId": {
       "type": "string",
       "defaultValue": "67d32b14-3f26-4840-a1cc-c47ca4d052de",
@@ -182,7 +175,7 @@
         "displayName": "[parameters('workbookDisplayName')]",
         "serializedData": "[string(variables('workbookContent'))]",
         "version": "1.0",
-        "sourceId": "[parameters('workbookSourceId')]",
+        "sourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('sharedResourceGroup')]/providers/Microsoft.Insights/components/[parameters('application_insight_name')]",
         "category": "[parameters('workbookType')]"
       }
     }
