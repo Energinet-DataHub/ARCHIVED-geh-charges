@@ -66,13 +66,6 @@
       "version": "Notebook/1.0",
       "items": [
         {
-          "type": 1,
-          "content": {
-            "json": "## VOLT Service Level Indicators (SLI)\n---\n\nTeam SRE har lavet et udkast til den første sli\n\n"
-          },
-          "name": "text - 2"
-        },
-        {
           "type": 9,
           "content": {
             "version": "KqlParameterItem/1.0",
@@ -80,35 +73,17 @@
               {
                 "id": "4efc49f2-303a-4950-b368-afdcb1a41692",
                 "version": "KqlParameterItem/1.0",
-                "name": "jmk_date_param",
-                "label": "Input",
+                "name": "period_dropdown",
+                "label": "period",
                 "type": 4,
                 "isRequired": true,
+                "value": {
+                  "durationMs": 604800000
+                },
                 "typeSettings": {
                   "selectableValues": [
                     {
-                      "durationMs": 300000
-                    },
-                    {
-                      "durationMs": 900000
-                    },
-                    {
-                      "durationMs": 1800000
-                    },
-                    {
-                      "durationMs": 3600000
-                    },
-                    {
                       "durationMs": 14400000
-                    },
-                    {
-                      "durationMs": 43200000
-                    },
-                    {
-                      "durationMs": 86400000
-                    },
-                    {
-                      "durationMs": 172800000
                     },
                     {
                       "durationMs": 259200000
@@ -120,25 +95,16 @@
                       "durationMs": 1209600000
                     },
                     {
-                      "durationMs": 2419200000
-                    },
-                    {
                       "durationMs": 2592000000
                     },
                     {
                       "durationMs": 5184000000
-                    },
-                    {
-                      "durationMs": 7776000000
                     }
                   ],
                   "allowCustom": true
                 },
                 "timeContext": {
                   "durationMs": 86400000
-                },
-                "value": {
-                  "durationMs": 259200000
                 }
               }
             ],
@@ -152,59 +118,56 @@
           "type": 3,
           "content": {
             "version": "KqlItem/1.0",
-            "query": "let base = requests\r\n| where cloud_RoleName startswith(\"func-functionhost-charges-\")\r\n| where operation_Name != \"HealthCheck\"\r\n| summarize \r\n    time_taken = max(timestamp) - min(timestamp),\r\n    operations = make_set(operation_Name, 10),\r\n    _time = min(timestamp)\r\n    by operation_Id\r\n| where (operations contains \"ChargeIngestion\" \r\n    and operations contains \"ChargeRejectionDataAvailableNotifierEndpoint\")\r\n    or\r\n    (operations contains \"ChargeIngestion\"\r\n    and operations contains \"ChargeConfirmationDataAvailableNotifierEndpoint\" \r\n    and operations contains \"ChargeIntegrationEventsPublisherEndpoint\" \r\n    and operations contains \"ChargeDataAvailableNotifierEndpoint\");\r\nlet history = base\r\n| make-series   sliTrend = todecimal(count()) / countif(time_taken < timespan(300s))\r\n                      on _time \r\n                from {jmk_date_param:start} \r\n                to {jmk_date_param:end} \r\n                step {jmk_date_param:grain} \r\n| extend key=\"jens\";\r\nbase\r\n| summarize \r\n    total_count = count(),\r\n    count_ok = countif(time_taken < timespan(300s))\r\n| extend sli = round(todecimal(count_ok) / total_count * 100, 2)\r\n| extend details = strcat(\"Total: \", tostring(total_count), \" OK: \", tostring(count_ok))\r\n| extend header = \"Latency\"\r\n| extend key = \"jens\"\r\n| join (history) on key\r\n| project-away key1, key\r\n",
+            "query": "let base = requests\r\n| where cloud_RoleName startswith(\"func-functionhost-charges-\")\r\n| where operation_Name != \"HealthCheck\"\r\n| summarize \r\n    time_taken = max(timestamp) - min(timestamp),\r\n    operations = make_set(operation_Name, 10),\r\n    _time = min(timestamp)\r\n    by operation_Id\r\n| where (operations contains \"ChargeIngestion\" \r\n    and operations contains \"ChargeRejectionDataAvailableNotifierEndpoint\")\r\n    or\r\n    (operations contains \"ChargeIngestion\"\r\n    and operations contains \"ChargeConfirmationDataAvailableNotifierEndpoint\" \r\n    and operations contains \"ChargeIntegrationEventsPublisherEndpoint\" \r\n    and operations contains \"ChargeDataAvailableNotifierEndpoint\");\r\nlet history = base\r\n| make-series   sliTrend = todecimal(count()) / countif(time_taken < timespan(300s))\r\n                      on _time \r\n                from {period_dropdown:start} \r\n                to {period_dropdown:end} \r\n                step {period_dropdown:grain} \r\n| extend key=\"joinQuery\";\r\nbase\r\n| summarize \r\n    total_count = count(),\r\n    count_ok = countif(time_taken < timespan(300s))\r\n| extend sli = round(todecimal(count_ok) / total_count * 100, 2)\r\n| extend details = strcat(\"Total: \", tostring(total_count), \" OK: \", tostring(count_ok))\r\n| extend header = \"Latency\"\r\n| extend key = \"joinQuery\"\r\n| join (history) on key\r\n| project-away key1, key\r\n",
             "size": 3,
             "title": "Indsendte Stamdataopdatering bliver taget imod, behandlet og tilgængelig for afhentning med enten godkendelse eller afvisning ind for 5 minutter for 99% af beskederne",
             "noDataMessageStyle": 4,
-            "timeContextFromParameter": "jmk_date_param",
+            "timeContextFromParameter": "period_dropdown",
             "queryType": 0,
             "resourceType": "microsoft.insights/components",
             "visualization": "tiles",
             "tileSettings": {
-              "titleContent": {
-                "columnMatch": "header",
-                "formatter": 1
-              },
               "leftContent": {
                 "columnMatch": "sli",
-                "formatter": 12,
                 "formatOptions": {
-                  "min": 0,
                   "max": 100,
+                  "min": 0,
                   "palette": "redGreen"
                 },
+                "formatter": 12,
                 "numberFormat": {
-                  "unit": 1,
                   "options": {
-                    "style": "decimal",
                     "maximumFractionDigits": 2,
-                    "maximumSignificantDigits": 3
-                  }
+                    "maximumSignificantDigits": 3,
+                    "style": "decimal"
+                  },
+                  "unit": 1
                 }
               },
               "rightContent": {
                 "columnMatch": "sliTrend",
-                "formatter": 21,
                 "formatOptions": {
                   "min": 0,
                   "palette": "redGreen"
-                }
+                },
+                "formatter": 21
               },
               "secondaryContent": {
                 "columnMatch": "details",
                 "formatter": 1
               },
               "showBorder": false,
-              "size": "full"
+              "size": "full",
+              "titleContent": {
+                "columnMatch": "header",
+                "formatter": 1
+              }
             }
           },
           "name": "query - 4"
         }
       ],
-      "isLocked": false,
-      "fallbackResourceIds": [
-        "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('sharedResourceGroup')]/providers/microsoft.insights/components/[parameters('applicationInsightName')]"
-      ]
+      "isLocked": false
     }
   },
   "resources": [
