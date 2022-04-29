@@ -48,7 +48,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
                     ActorStatus.New,
                     new List<BusinessRoleCode>() { BusinessRoleCode.Ddm },
                     new List<EicFunction>(),
-                    new List<Guid>());
+                    new List<Guid>(),
+                    new List<string>());
 
                 // Act
                 await sut.HandleAsync(actorUpdatedIntegrationEvent);

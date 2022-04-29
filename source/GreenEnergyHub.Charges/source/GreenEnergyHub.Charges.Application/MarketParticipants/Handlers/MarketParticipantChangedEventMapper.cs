@@ -37,7 +37,10 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
         public static GridAreaChangedEvent MapFromGridArea(
             GridAreaUpdatedIntegrationEvent gridUpdatedIntegrationEvent)
         {
-            return new GridAreaChangedEvent(gridUpdatedIntegrationEvent.Id, gridUpdatedIntegrationEvent.GridAreaId);
+            return new GridAreaChangedEvent(
+                gridUpdatedIntegrationEvent.Id,
+                gridUpdatedIntegrationEvent.GridAreaId,
+                gridUpdatedIntegrationEvent.GridAreaLinkId);
         }
     }
 }

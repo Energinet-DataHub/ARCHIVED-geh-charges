@@ -96,7 +96,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     status,
                     businessRoles,
                     new List<EicFunction>(),
-                    new List<Guid>());
+                    new List<Guid>(),
+                    new List<string>());
                 var actorUpdatedIntegrationEventParser = new ActorUpdatedIntegrationEventParser();
                 var message = actorUpdatedIntegrationEventParser.Parse(actorUpdatedIntegrationEvent);
 
