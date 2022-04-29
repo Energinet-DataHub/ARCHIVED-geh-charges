@@ -3,7 +3,7 @@
   "parameters": {
     "workbookDisplayName": {
       "type": "string",
-      "defaultValue": "Auto deployed workbook",
+      "defaultValue": "Charges - Stamdataopdatering SLI",
       "metadata": {
         "description": ""
       }
