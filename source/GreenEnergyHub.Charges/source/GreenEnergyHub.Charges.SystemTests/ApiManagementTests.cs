@@ -29,6 +29,7 @@ namespace GreenEnergyHub.Charges.SystemTests
     /// <summary>
     /// Contains system tests where we operate at the level of the API Management.
     /// </summary>
+    [Collection("SystemTest")]
     public class ApiManagementTests : IClassFixture<ApiManagementConfiguration>
     {
         private readonly BackendAuthenticationClient _authenticationClient;

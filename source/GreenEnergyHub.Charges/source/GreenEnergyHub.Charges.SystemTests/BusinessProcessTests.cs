@@ -31,6 +31,7 @@ namespace GreenEnergyHub.Charges.SystemTests
     /// <summary>
     /// Contains business process tests at a system level through API Management
     /// </summary>
+    [Collection("SystemTest")]
     public class BusinessProcessTests : IClassFixture<BusinessProcessConfiguration>
     {
         private readonly BackendAuthenticationClient _authenticationClient;
