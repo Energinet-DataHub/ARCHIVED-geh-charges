@@ -25,13 +25,16 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
     {
         private readonly IChargeCommandReceivedEventHandler _chargeCommandReceivedEventHandler;
         private readonly IMessageDispatcher<ChargeCommandAcceptedEvent> _messageDispatcher;
+        private readonly IChargeCommandAcceptedEventFactory _chargeCommandAcceptedEventFactory;
 
         public ChargeAndPriceHandler(
             IChargeCommandReceivedEventHandler chargeCommandReceivedEventHandler,
-            IMessageDispatcher<ChargeCommandAcceptedEvent> messageDispatcher)
+            IMessageDispatcher<ChargeCommandAcceptedEvent> messageDispatcher,
+            IChargeCommandAcceptedEventFactory chargeCommandAcceptedEventFactory)
         {
             _chargeCommandReceivedEventHandler = chargeCommandReceivedEventHandler;
             _messageDispatcher = messageDispatcher;
+            _chargeCommandAcceptedEventFactory = chargeCommandAcceptedEventFactory;
         }
 
         public async Task HandleAsync(ChargeCommandReceivedEvent commandReceivedEvent)
@@ -39,9 +42,9 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             switch (commandReceivedEvent.Command.Document.BusinessReasonCode)
             {
                 case BusinessReasonCode.UpdatePriceInformation:
-                    await _messageDispatcher.DispatchAsync(new ChargeCommandAcceptedEvent(
-                            commandReceivedEvent.PublishedTime,
-                            commandReceivedEvent.Command))
+                    var chargeCommandAcceptedEvent =
+                        _chargeCommandAcceptedEventFactory.CreateEvent(commandReceivedEvent.Command);
+                    await _messageDispatcher.DispatchAsync(chargeCommandAcceptedEvent)
                         .ConfigureAwait(false);
                     break;
                 case BusinessReasonCode.UpdateChargeInformation:
