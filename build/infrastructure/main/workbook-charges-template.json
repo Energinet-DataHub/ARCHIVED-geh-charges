@@ -168,7 +168,7 @@
         "displayName": "[parameters('workbookDisplayName')]",
         "serializedData": "[string(variables('workbookContent'))]",
         "version": "1.0",
-        "sourceId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', parameters('sharedResourceGroup'), '/providers/Microsoft.Insights/components/', parameters('application_insight_name')",
+        "sourceId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', parameters('sharedResourceGroup'), '/providers/Microsoft.Insights/components/', parameters('applicationInsightName'))]",
         "category": "workbook"
       }
     }
