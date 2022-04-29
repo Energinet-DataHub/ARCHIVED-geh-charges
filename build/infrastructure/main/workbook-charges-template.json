@@ -44,6 +44,22 @@
         "description": ""
       }
     }
+    ,
+    "sharedResourceGroup": {
+      "type": "string",
+      "defaultValue": "${shared_resouce_group_name}",
+      "metadata": {
+        "description": ""
+      }
+    }
+    ,
+    "applicationInsightName": {
+      "type": "string",
+      "defaultValue": "${application_insight_name}",
+      "metadata": {
+        "description": ""
+      }
+    }
   }, 
   "variables": {
     "workbookContent": {
@@ -187,7 +203,7 @@
       ],
       "isLocked": false,
       "fallbackResourceIds": [
-        "/subscriptions/7b7ffd68-d27e-4c75-936a-2653ecc36450/resourcegroups/rg-datahub-sharedresouces-t-001/providers/microsoft.insights/components/appi-shared-sharedres-t-001"
+        "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('sharedResourceGroup')]/providers/microsoft.insights/components/[parameters('applicationInsightName')]"
       ]
     }
   },
