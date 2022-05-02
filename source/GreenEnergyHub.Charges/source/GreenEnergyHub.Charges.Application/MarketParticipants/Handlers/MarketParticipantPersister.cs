@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsChangedEvents;
@@ -98,22 +97,25 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
                 "has been persisted",
                 marketParticipant.MarketParticipantId,
                 businessProcessRole);
-            await ConnectToGridAreaAsync(marketParticipantChangedEvent, marketParticipant).ConfigureAwait(false);
+            if (businessProcessRole.Equals(MarketParticipantRole.GridAccessProvider))
+              await ConnectToGridAreaAsync(marketParticipantChangedEvent, marketParticipant).ConfigureAwait(false);
         }
 
         private async Task ConnectToGridAreaAsync(
             MarketParticipantChangedEvent marketParticipantChangedEvent,
             MarketParticipant marketParticipant)
         {
-            var gridAreaId = marketParticipantChangedEvent.GridAreas.FirstOrDefault();
-            var existingGridArea = await _gridAreaRepository.GetOrNullAsync(gridAreaId).ConfigureAwait(false);
-            if (existingGridArea is not null && existingGridArea.GridAccessProviderId != marketParticipant.Id)
+            foreach (var gridAreaId in marketParticipantChangedEvent.GridAreas)
             {
-                existingGridArea.GridAccessProviderId = marketParticipant.Id;
-                _logger.LogInformation(
-                    "GridArea ID '{GridAreaId}' has changed GridAccessProvider ID to '{GridAccessProviderId}'",
-                    existingGridArea.Id,
-                    existingGridArea.GridAccessProviderId);
+                var existingGridArea = await _gridAreaRepository.GetOrNullAsync(gridAreaId).ConfigureAwait(false);
+                if (existingGridArea is not null)
+                {
+                    existingGridArea.GridAccessProviderId = marketParticipant.Id;
+                    _logger.LogInformation(
+                        "GridArea ID '{GridAreaId}' has changed GridAccessProvider ID to '{GridAccessProviderId}'",
+                        existingGridArea.Id,
+                        existingGridArea.GridAccessProviderId);
+                }
             }
         }
     }

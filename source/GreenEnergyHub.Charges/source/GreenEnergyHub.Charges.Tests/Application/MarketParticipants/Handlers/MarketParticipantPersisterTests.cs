@@ -70,6 +70,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
                 $"Market participant with ID '{marketParticipantChangedEvent.MarketParticipantId}' " +
                 $"and role '{MarketParticipantRole.GridAccessProvider}' has been persisted",
                 LogLevel.Information);
+            logger.VerifyNoOtherCalls();
         }
 
         [Theory]
@@ -84,7 +85,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             // Arrange
             loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
             var marketParticipantChangedEvent = GetMarketParticipantChangedEvent(
-                new List<MarketParticipantRole> { MarketParticipantRole.EnergySupplier },
+                new List<MarketParticipantRole> { MarketParticipantRole.GridAccessProvider },
                 new List<Guid>());
 
             var existingMarketParticipant = GetMarketParticipant(marketParticipantChangedEvent);
@@ -107,6 +108,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
                 $"Market participant with ID '{existingMarketParticipant.MarketParticipantId}' " +
                 $"and role '{existingMarketParticipant.BusinessProcessRole}' has changed state",
                 LogLevel.Information);
+            logger.VerifyNoOtherCalls();
         }
 
         [Theory]
@@ -119,14 +121,15 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             Mock<ILogger> logger)
         {
             // Arrange
-            var gridArea = new GridArea(Guid.NewGuid(), Guid.NewGuid());
-
             var gridAreaId = Guid.NewGuid();
+            var gridArea = new GridArea(gridAreaId, Guid.NewGuid());
+
             loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
             var marketParticipantChangedEvent = GetMarketParticipantChangedEvent(
                 new List<MarketParticipantRole>
                 {
                     MarketParticipantRole.GridAccessProvider,
+                    MarketParticipantRole.SystemOperator,
                 },
                 new List<Guid> { gridArea.Id });
 
@@ -142,14 +145,70 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             await sut.PersistAsync(marketParticipantChangedEvent).ConfigureAwait(false);
 
             // Assert
-            marketParticipantRepository.Verify(v => v.AddAsync(It.IsAny<MarketParticipant>()), Times.Exactly(1));
+            marketParticipantRepository.Verify(v => v.AddAsync(It.IsAny<MarketParticipant>()), Times.Exactly(2));
+            gridAreaRepository.Verify(v => v.GetOrNullAsync(It.IsAny<Guid>()), Times.Exactly(1));
             logger.VerifyLoggerWasCalled(
                 $"Market participant with ID '{marketParticipantChangedEvent.MarketParticipantId}' " +
                 $"and role '{MarketParticipantRole.GridAccessProvider}' has been persisted",
                 LogLevel.Information);
             logger.VerifyLoggerWasCalled(
+                $"Market participant with ID '{marketParticipantChangedEvent.MarketParticipantId}' " +
+                $"and role '{MarketParticipantRole.SystemOperator}' has been persisted",
+                LogLevel.Information);
+            logger.VerifyLoggerWasCalled(
                 $"GridArea ID '{gridArea.Id}' has changed GridAccessProvider ID to '{gridArea.GridAccessProviderId}'",
                 LogLevel.Information);
+            logger.VerifyNoOtherCalls();
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task PersistAsync_WhenCalledWithExistentMarketParticipantAndMultipleExistentGridAreas_ShouldPersist(
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
+            [Frozen] Mock<IGridAreaRepository> gridAreaRepository,
+            [Frozen] Mock<ILoggerFactory> loggerFactory,
+            [Frozen] Mock<IUnitOfWork> unitOfWork,
+            Mock<ILogger> logger)
+        {
+            // Arrange
+            var gridArea = new GridArea(Guid.NewGuid(), Guid.NewGuid());
+            var gridAreas = new List<Guid>() { Guid.NewGuid(), Guid.NewGuid() };
+
+            loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
+            var marketParticipantChangedEvent = GetMarketParticipantChangedEvent(
+                new List<MarketParticipantRole>
+                {
+                    MarketParticipantRole.GridAccessProvider,
+                    MarketParticipantRole.SystemOperator,
+                },
+                gridAreas);
+
+            SetupRepositories(marketParticipantRepository, null!, gridAreaRepository, gridArea);
+
+            var sut = new MarketParticipantPersister(
+                marketParticipantRepository.Object,
+                gridAreaRepository.Object,
+                loggerFactory.Object,
+                unitOfWork.Object);
+
+            // Act
+            await sut.PersistAsync(marketParticipantChangedEvent).ConfigureAwait(false);
+
+            // Assert
+            marketParticipantRepository.Verify(v => v.AddAsync(It.IsAny<MarketParticipant>()), Times.Exactly(2));
+            gridAreaRepository.Verify(v => v.GetOrNullAsync(It.IsAny<Guid>()), Times.Exactly(2));
+            logger.VerifyLoggerWasCalled(
+                $"Market participant with ID '{marketParticipantChangedEvent.MarketParticipantId}' " +
+                $"and role '{MarketParticipantRole.GridAccessProvider}' has been persisted",
+                LogLevel.Information);
+            logger.VerifyLoggerWasCalled(
+                $"Market participant with ID '{marketParticipantChangedEvent.MarketParticipantId}' " +
+                $"and role '{MarketParticipantRole.SystemOperator}' has been persisted",
+                LogLevel.Information);
+            logger.VerifyLoggerWasCalled(
+                $"GridArea ID '{gridArea.Id}' has changed GridAccessProvider ID to '{gridArea.GridAccessProviderId}'",
+                LogLevel.Information);
+            logger.VerifyNoOtherCalls();
         }
 
         [Theory]
