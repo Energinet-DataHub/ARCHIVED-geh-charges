@@ -59,12 +59,16 @@
         "${workbook_query}",
         "${workbook_parameters}"
       ]
+    },
+    "workbookComponents": {
+      "type": "array",
+      "defaultValue": "${workbook_charges_components}"
     }
   }, 
   "variables": {
     "workbookContent": {
       "version": "Notebook/1.0",
-      "items": "[parameters(workbookQuery)]",
+      "items": "[parameters(workbookComponents)]",
       "isLocked": false
     }
   },
