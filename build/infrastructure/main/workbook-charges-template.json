@@ -3,14 +3,14 @@
   "parameters": {
     "workbookDisplayName": {
       "type": "string",
-      "defaultValue": "Charges - Stamdataopdatering SLI",
+      "defaultValue": "${workbook_display_name}",
       "metadata": {
         "description": ""
       }
     },
     "workbookId": {
       "type": "string",
-      "defaultValue": "67d32b14-3f26-4840-a1cc-c47ca4d052de",
+      "defaultValue": "${workbook_id}",
       "metadata": {
         "description": "The unique guid for this workbook instance"
       }
@@ -42,6 +42,13 @@
     "applicationInsightName": {
       "type": "string",
       "defaultValue": "${application_insight_name}",
+      "metadata": {
+        "description": ""
+      }
+    },
+    "sourceId": {
+      "type": "string",
+      "defaultValue": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', parameters('sharedResourceGroup'), '/providers/Microsoft.Insights/components/', parameters('applicationInsightName'))]",
       "metadata": {
         "description": ""
       }
@@ -150,7 +157,7 @@
               }
             }
           },
-          "name": "query - 4"
+          "name": "query - 5" 
         }
       ],
       "isLocked": false
@@ -168,7 +175,7 @@
         "displayName": "[parameters('workbookDisplayName')]",
         "serializedData": "[string(variables('workbookContent'))]",
         "version": "1.0",
-        "sourceId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', parameters('sharedResourceGroup'), '/providers/Microsoft.Insights/components/', parameters('applicationInsightName'))]",
+        "sourceId": "[parameters('sourceId')]",
         "category": "workbook"
       }
     }
