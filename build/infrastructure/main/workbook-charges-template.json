@@ -53,13 +53,6 @@
         "description": ""
       }
     },
-    "workbookQuery": {
-      "type": "array",
-      "defaultValue": [
-        "${workbook_query}",
-        "${workbook_parameters}"
-      ]
-    },
     "workbookComponents": {
       "type": "string",
       "defaultValue": "${workbook_components}"
