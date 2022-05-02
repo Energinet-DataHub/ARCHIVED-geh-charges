@@ -27,7 +27,7 @@ using Moq;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Application.GridAreas.Handlers
+namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
 {
     [UnitTest]
     public class GridAreaPersisterTests
@@ -77,7 +77,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.GridAreas.Handlers
 
         [Theory]
         [InlineAutoDomainData]
-        public async Task PersistAsync_WhenCalledWithExistingGridArea_ShouldUpdateExistingGridAreaProviderId(
+        public async Task PersistAsync_WhenCalledWithExistingGridArea_ShouldUpdateGridAreaLink(
             [Frozen] Mock<IGridAreaRepository> gridAreaRepository,
             [Frozen] Mock<IGridAreaLinkRepository> gridAreaLinkRepository,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
@@ -89,22 +89,15 @@ namespace GreenEnergyHub.Charges.Tests.Application.GridAreas.Handlers
             loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
             var gridAreaChangedEvent = new GridAreaChangedEvent(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
 
-            var existingGridArea = new GridArea(gridAreaChangedEvent.GridAreaId, Guid.NewGuid());
+            var existingGridArea = new GridArea(gridAreaChangedEvent.GridAreaId, null);
             var existingGridAreaLink = new GridAreaLink(gridAreaChangedEvent.GridAreaLinkId, existingGridArea.Id);
-            var marketParticipantId = existingGridArea.GridAccessProviderId.ToString() ?? string.Empty;
-            var existingMarketParticipant = new MarketParticipant(
-                Guid.NewGuid(),
-                marketParticipantId,
-                true,
-                MarketParticipantRole.GridAccessProvider);
-
             SetupGridAreaRepositories(
                 gridAreaRepository,
                 gridAreaLinkRepository,
                 marketParticipantRepository,
                 existingGridArea,
                 existingGridAreaLink,
-                existingMarketParticipant);
+                null);
             var sut = new GridAreaPersister(
                 gridAreaRepository.Object,
                 gridAreaLinkRepository.Object,
@@ -119,8 +112,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.GridAreas.Handlers
             gridAreaRepository.Verify(v => v.AddAsync(It.IsAny<GridArea>()), Times.Never);
             gridAreaLinkRepository.Verify(v => v.AddAsync(It.IsAny<GridAreaLink>()), Times.Never);
             logger.VerifyLoggerWasCalled(
-                $"GridArea ID '{existingGridArea.Id}' has changed GridAccessProvider ID to " +
-                $"'{existingGridArea.GridAccessProviderId}'",
+                $"GridAreaLink ID {gridAreaChangedEvent.GridAreaLinkId} has changed GridArea ID to {gridAreaChangedEvent.GridAreaId}",
                 LogLevel.Information);
             logger.VerifyNoOtherCalls();
         }

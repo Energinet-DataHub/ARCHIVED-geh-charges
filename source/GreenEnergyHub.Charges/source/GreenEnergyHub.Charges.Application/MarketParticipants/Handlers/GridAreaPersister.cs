@@ -58,8 +58,6 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
         {
             var existingGridAreaLink =
                 await _gridAreaLinkRepository.GetOrNullAsync(gridAreaChangedEvent.GridAreaLinkId).ConfigureAwait(false);
-            var existingGridArea = await _gridAreaRepository.GetOrNullAsync(
-                gridAreaChangedEvent.GridAreaId).ConfigureAwait(false);
             if (existingGridAreaLink is null)
             {
                 var gridAreaLink = new GridAreaLink(gridAreaChangedEvent.GridAreaLinkId, gridAreaChangedEvent.GridAreaId);
@@ -67,19 +65,21 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
                 await _gridAreaLinkRepository.AddAsync(gridAreaLink).ConfigureAwait(false);
                 _logger.LogInformation(
                     "GridAreaLink ID {GridAreaLink} for GridArea ID {GridAreaId} has been persisted",
-                    gridAreaChangedEvent.GridAreaLinkId,
-                    gridAreaChangedEvent.GridAreaId);
+                    gridAreaLink.Id,
+                    gridAreaLink.GridAreaId);
             }
             else
             {
-                if (existingGridAreaLink.GridAreaId.Equals(existingGridArea?.Id))
-                    return;
-
-                existingGridAreaLink.GridAreaId = gridAreaChangedEvent.GridAreaId;
-                _logger.LogInformation(
-                    "GridAreaLink ID {GridAreaLink} has changed GridArea ID to {GridAreaId}",
-                    gridAreaChangedEvent.GridAreaLinkId,
-                    gridAreaChangedEvent.GridAreaId);
+                var existingGridArea = await _gridAreaRepository.GetOrNullAsync(
+                    gridAreaChangedEvent.GridAreaId).ConfigureAwait(false);
+                if (existingGridArea is not null)
+                {
+                    existingGridAreaLink.GridAreaId = existingGridArea.Id;
+                    _logger.LogInformation(
+                        "GridAreaLink ID {GridAreaLink} has changed GridArea ID to {GridAreaId}",
+                        existingGridAreaLink.Id,
+                        existingGridAreaLink.GridAreaId);
+                }
             }
         }
 
@@ -87,24 +87,11 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
         {
             var existingGridArea = await _gridAreaRepository.GetOrNullAsync(
                 gridAreaChangedEvent.GridAreaId).ConfigureAwait(false);
-            var existingMarketParticipant = await _marketParticipantRepository
-                .GetGridAccessProviderAsync(gridAreaChangedEvent.GridAreaId).ConfigureAwait(false);
             if (existingGridArea is null)
             {
-                var gridArea = new GridArea(gridAreaChangedEvent.GridAreaId, existingMarketParticipant?.Id);
+                var gridArea = new GridArea(gridAreaChangedEvent.GridAreaId, null!);
                 await _gridAreaRepository.AddAsync(gridArea).ConfigureAwait(false);
                 _logger.LogInformation("GridArea ID {GridAreaId} has been persisted", gridArea.Id);
-            }
-            else
-            {
-                if (existingGridArea.GridAccessProviderId.Equals(existingMarketParticipant?.Id))
-                    return;
-
-                existingGridArea.GridAccessProviderId = existingMarketParticipant?.Id;
-                _logger.LogInformation(
-                    "GridArea ID '{GridAreaId}' has changed GridAccessProvider ID to '{GridAccessProviderId}'",
-                    existingGridArea.Id,
-                    existingGridArea.GridAccessProviderId);
             }
         }
     }

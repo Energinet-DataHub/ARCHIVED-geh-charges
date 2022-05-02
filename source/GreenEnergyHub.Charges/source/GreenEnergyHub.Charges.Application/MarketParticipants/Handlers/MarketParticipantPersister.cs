@@ -78,7 +78,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
                 "Market participant with ID '{MarketParticipantId}' and role '{BusinessProcessRole}' " +
                 "has changed state",
                 existingMarketParticipant.MarketParticipantId,
-                businessProcessRole);
+                existingMarketParticipant.BusinessProcessRole);
         }
 
         private async Task AddMarketParticipantAsync(
@@ -96,8 +96,8 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
                 "Market participant with ID '{MarketParticipantId}' and role '{BusinessProcessRole}' " +
                 "has been persisted",
                 marketParticipant.MarketParticipantId,
-                businessProcessRole);
-            if (businessProcessRole.Equals(MarketParticipantRole.GridAccessProvider))
+                marketParticipant.BusinessProcessRole);
+            if (marketParticipant.BusinessProcessRole.Equals(MarketParticipantRole.GridAccessProvider))
               await ConnectToGridAreaAsync(marketParticipantChangedEvent, marketParticipant).ConfigureAwait(false);
         }
 
