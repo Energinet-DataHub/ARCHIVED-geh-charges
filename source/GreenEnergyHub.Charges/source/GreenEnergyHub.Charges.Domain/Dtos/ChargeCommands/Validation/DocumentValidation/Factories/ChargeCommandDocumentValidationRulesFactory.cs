@@ -22,7 +22,7 @@ using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.DocumentValidation.Factories
 {
-    public class ChargeCommandDocumentValidationRulesFactory : IValidationRulesFactory<ChargeCommand>
+    public class ChargeCommandDocumentValidationRulesFactory : IDocumentValidationRulesFactory<ChargeCommand>
     {
         private readonly IMarketParticipantRepository _marketParticipantRepository;
 

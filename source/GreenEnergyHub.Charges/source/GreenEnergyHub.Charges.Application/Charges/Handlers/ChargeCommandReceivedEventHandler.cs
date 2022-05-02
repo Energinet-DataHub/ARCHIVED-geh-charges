@@ -29,7 +29,9 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
     public class ChargeCommandReceivedEventHandler : IChargeCommandReceivedEventHandler
     {
         private readonly IChargeCommandReceiptService _chargeCommandReceiptService;
-        private readonly IValidator<ChargeCommand> _validator;
+        private readonly IDocumentValidator<ChargeCommand> _documentValidator;
+        private readonly IInputValidator<ChargeCommand> _inputValidator;
+        private readonly IBusinessValidator<ChargeCommand> _businessValidator;
         private readonly IChargeRepository _chargeRepository;
         private readonly IChargeFactory _chargeFactory;
         private readonly IChargePeriodFactory _chargePeriodFactory;
@@ -37,14 +39,18 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 
         public ChargeCommandReceivedEventHandler(
             IChargeCommandReceiptService chargeCommandReceiptService,
-            IValidator<ChargeCommand> validator,
+            IDocumentValidator<ChargeCommand> documentValidator,
+            IInputValidator<ChargeCommand> inputValidator,
+            IBusinessValidator<ChargeCommand> businessValidator,
             IChargeRepository chargeRepository,
             IChargeFactory chargeFactory,
             IChargePeriodFactory chargePeriodFactory,
             IUnitOfWork unitOfWork)
         {
             _chargeCommandReceiptService = chargeCommandReceiptService;
-            _validator = validator;
+            _documentValidator = documentValidator;
+            _inputValidator = inputValidator;
+            _businessValidator = businessValidator;
             _chargeRepository = chargeRepository;
             _chargeFactory = chargeFactory;
             _chargePeriodFactory = chargePeriodFactory;
@@ -55,7 +61,16 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         {
             ArgumentNullException.ThrowIfNull(commandReceivedEvent);
 
-            var inputValidationResult = _validator.InputValidate(commandReceivedEvent.Command);
+            var documentValidationResult = await _documentValidator.ValidateAsync(commandReceivedEvent.Command).ConfigureAwait(false);
+
+            if (documentValidationResult.IsFailed)
+            {
+                await _chargeCommandReceiptService
+                    .RejectAsync(commandReceivedEvent.Command, documentValidationResult).ConfigureAwait(false);
+                return;
+            }
+
+            var inputValidationResult = _inputValidator.Validate(commandReceivedEvent.Command);
 
             if (inputValidationResult.IsFailed)
             {
@@ -122,7 +137,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             if (string.IsNullOrEmpty(triggeredBy))
             {
                 var businessValidationResult =
-                    await _validator.BusinessValidateAsync(chargeCommandWithOperation).ConfigureAwait(false);
+                    await _businessValidator.ValidateAsync(chargeCommandWithOperation).ConfigureAwait(false);
                 if (businessValidationResult.IsFailed)
                 {
                     // First error found in bundle, we reject with the original validation error
