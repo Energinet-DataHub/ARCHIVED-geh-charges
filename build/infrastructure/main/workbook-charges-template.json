@@ -61,7 +61,7 @@
       ]
     },
     "workbookComponents": {
-      "type": "array",
+      "type": "string",
       "defaultValue": "${workbook_components}"
     }
   }, 
