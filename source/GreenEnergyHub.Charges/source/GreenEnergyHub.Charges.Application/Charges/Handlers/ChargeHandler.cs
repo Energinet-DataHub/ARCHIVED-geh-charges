@@ -17,8 +17,6 @@ using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksRejectionEvents;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
