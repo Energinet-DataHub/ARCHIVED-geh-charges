@@ -36,14 +36,13 @@ using Moq;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.Factories
+namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.BusinessValidation
 {
     [UnitTest]
     public class ChargeCommandBusinessValidationRulesFactoryTests
     {
         [Theory]
         [InlineAutoMoqData(typeof(StartDateValidationRule))]
-        [InlineAutoMoqData(typeof(CommandSenderMustBeAnExistingMarketParticipantRule))]
         public async Task CreateRulesForChargeCommandAsync_WhenCalledWithNewCharge_ReturnsExpectedMandatoryRules(
             Type expectedRule,
             TestMarketParticipant sender,
@@ -71,13 +70,12 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             var actualRules = actual.GetRules().Select(r => r.GetType());
 
             // Assert
-            Assert.Equal(2, actual.GetRules().Count); // This assert is added to ensure that when the rule set is expanded, the test gets attention as well.
+            Assert.Equal(1, actual.GetRules().Count); // This assert is added to ensure that when the rule set is expanded, the test gets attention as well.
             Assert.Contains(expectedRule, actualRules);
         }
 
         [Theory]
         [InlineAutoMoqData(typeof(StartDateValidationRule))]
-        [InlineAutoMoqData(typeof(CommandSenderMustBeAnExistingMarketParticipantRule))]
         [InlineAutoMoqData(typeof(UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateRule))]
         [InlineAutoMoqData(typeof(ChargeResolutionCanNotBeUpdatedRule))]
         public async Task CreateRulesForChargeCommandAsync_WhenCalledWithExistingChargeNotTariff_ReturnsExpectedRules(
@@ -101,14 +99,13 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             var actualRules = actual.GetRules().Select(r => r.GetType());
 
             // Assert
-            Assert.Equal(4, actual.GetRules().Count); // This assert is added to ensure that when the rule set is expanded, the test gets attention as well.
+            Assert.Equal(3, actual.GetRules().Count); // This assert is added to ensure that when the rule set is expanded, the test gets attention as well.
             Assert.Contains(expectedRule, actualRules);
         }
 
         [Theory]
         [InlineAutoMoqData(typeof(StartDateValidationRule))]
         [InlineAutoMoqData(typeof(ChangingTariffTaxValueNotAllowedRule))]
-        [InlineAutoMoqData(typeof(CommandSenderMustBeAnExistingMarketParticipantRule))]
         [InlineAutoMoqData(typeof(UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateRule))]
         [InlineAutoMoqData(typeof(ChargeResolutionCanNotBeUpdatedRule))]
         public async Task CreateRulesForChargeCommandAsync_WhenCalledWithExistingTariff_ReturnsExpectedRules(
@@ -132,7 +129,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
 
             // Assert
             var actualRules = actual.GetRules().Select(r => r.GetType());
-            Assert.Equal(5, actual.GetRules().Count); // This assert is added to ensure that when the rule set is expanded, the test gets attention as well.
+            Assert.Equal(4, actual.GetRules().Count); // This assert is added to ensure that when the rule set is expanded, the test gets attention as well.
             Assert.Contains(expectedRule, actualRules);
         }
 
