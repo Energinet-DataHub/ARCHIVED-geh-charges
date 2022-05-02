@@ -93,7 +93,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
 
         /// <summary>
         /// In Denmark the Energy Supplier invoices the customer, including the charges from the Grid Access Provider and the System Operator.
-        /// This boolean can be use to indicate that a charge must be visible on the invoice sent to the customer.
+        /// This enum can be use to indicate that a charge must be visible on the invoice sent to the customer.
         /// </summary>
         public TransparentInvoicing TransparentInvoicing { get; }
 
