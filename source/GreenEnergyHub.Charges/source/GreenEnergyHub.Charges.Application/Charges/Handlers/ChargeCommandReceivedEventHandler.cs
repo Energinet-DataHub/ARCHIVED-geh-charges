@@ -62,7 +62,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             ArgumentNullException.ThrowIfNull(commandReceivedEvent);
 
             var documentValidationResult = await _documentValidator.ValidateAsync(commandReceivedEvent.Command).ConfigureAwait(false);
-
             if (documentValidationResult.IsFailed)
             {
                 await _chargeCommandReceiptService

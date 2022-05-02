@@ -27,6 +27,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
         private readonly IChargeLinksReceiptService _chargeLinksReceiptService;
         private readonly IChargeLinkFactory _chargeLinkFactory;
         private readonly IChargeLinksRepository _chargeLinksRepository;
+        private readonly IDocumentValidator<ChargeLinksCommand> _documentValidator;
         private readonly IInputValidator<ChargeLinksCommand> _inputValidator;
         private readonly IBusinessValidator<ChargeLinksCommand> _businessValidator;
         private readonly IUnitOfWork _unitOfWork;
@@ -35,6 +36,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
             IChargeLinksReceiptService chargeLinksReceiptService,
             IChargeLinkFactory chargeLinkFactory,
             IChargeLinksRepository chargeLinksRepository,
+            IDocumentValidator<ChargeLinksCommand> documentValidator,
             IInputValidator<ChargeLinksCommand> inputValidator,
             IBusinessValidator<ChargeLinksCommand> businessValidator,
             IUnitOfWork unitOfWork)
@@ -42,6 +44,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
             _chargeLinksReceiptService = chargeLinksReceiptService;
             _chargeLinkFactory = chargeLinkFactory;
             _chargeLinksRepository = chargeLinksRepository;
+            _documentValidator = documentValidator;
             _inputValidator = inputValidator;
             _businessValidator = businessValidator;
             _unitOfWork = unitOfWork;
@@ -49,6 +52,14 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 
         public async Task HandleAsync(ChargeLinksReceivedEvent chargeLinksReceivedEvent)
         {
+            var documentValidationResult = await _documentValidator.ValidateAsync(chargeLinksReceivedEvent.ChargeLinksCommand).ConfigureAwait(false);
+            if (documentValidationResult.IsFailed)
+            {
+                await _chargeLinksReceiptService
+                    .RejectAsync(chargeLinksReceivedEvent.ChargeLinksCommand, documentValidationResult).ConfigureAwait(false);
+                return;
+            }
+
             var inputValidationResult = _inputValidator.Validate(chargeLinksReceivedEvent.ChargeLinksCommand);
             if (inputValidationResult.IsFailed)
             {
