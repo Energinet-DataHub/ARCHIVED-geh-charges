@@ -14,11 +14,6 @@
 
 data "template_file" "workbook_charges_template" {
   template = file("${path.module}/workbook-charges-template.json")
-  
-  variable "workbook_charges_components" {
-    type    = list(string)
-    default = [ file("${path.module}/workbook-query-query4.json"), file("${path.module}/workbook-parameters-period.json") ]
-}
 
   vars = {
     workbook_display_name       = "Charges - Stamdataopdatering SLI"
@@ -29,7 +24,7 @@ data "template_file" "workbook_charges_template" {
     shared_resouce_group_name   = var.shared_resources_resource_group_name
     workbook_query              = file("${path.module}/workbook-query-query4.json")
     workbook_parameters         = file("${path.module}/workbook-parameters-period.json")
-    workbook_components         = jsonencode(var.workbook_charges_components)
+    workbook_components         = jsonencode( [ file("${path.module}/workbook-query-query4.json"), file("${path.module}/workbook-parameters-period.json") ] )
   }
 }
 
