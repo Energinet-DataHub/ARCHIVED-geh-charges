@@ -26,7 +26,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Inpu
 
             var rules = GetRulesForCommand();
 
-            rules.AddRange(GetRulesForAllLinks(chargeLinksCommand));
+            rules.AddRange(GetRulesForAllLinks());
 
             return ValidationRuleSet.FromRules(rules);
         }
@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Inpu
             return rules;
         }
 
-        private IEnumerable<IValidationRule> GetRulesForAllLinks(ChargeLinksCommand chargeLinksCommand)
+        private IEnumerable<IValidationRule> GetRulesForAllLinks()
         {
             // No input validation active yet for Charge Links Operations
             var rules = new List<IValidationRule>();
