@@ -14,12 +14,13 @@
 data "template_file" "workbook_charges_template" {
   template = file("${path.module}/workbook-charges-template.json")
   vars = {
-    workbook_display_name    = "Charges - Stamdataopdatering SLI"
-    workbook_id              = "67d32b14-3f26-4840-a1cc-c47ca4d052de"
-    subscription_id          = data.azurerm_subscription.this.subscription_id
-    resouce_group_name       = azurerm_resource_group.this.name
-    application_insight_name = data.azurerm_key_vault_secret.appi_shared_name.value
+    workbook_display_name     = "Charges - Stamdataopdatering SLI"
+    workbook_id               = "67d32b14-3f26-4840-a1cc-c47ca4d052de"
+    subscription_id           = data.azurerm_subscription.this.subscription_id
+    resouce_group_name        = azurerm_resource_group.this.name
+    application_insight_name  = data.azurerm_key_vault_secret.appi_shared_name.value
     shared_resouce_group_name = var.shared_resources_resource_group_name
+    workbook_query            = file("${path.module}/workbook-query-qyery4.json")
 
   }
 }
