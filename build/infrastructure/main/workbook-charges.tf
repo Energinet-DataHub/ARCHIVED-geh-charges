@@ -11,6 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+variable "workbook_charges_components" {
+  type    = list(string)
+  default = [ file("${path.module}/workbook-query-query4.json"), file("${path.module}/workbook-parameters-period.json") ]
+
+}
 data "template_file" "workbook_charges_template" {
   template = file("${path.module}/workbook-charges-template.json")
   vars = {
@@ -20,10 +25,9 @@ data "template_file" "workbook_charges_template" {
     resouce_group_name          = azurerm_resource_group.this.name
     application_insight_name    = data.azurerm_key_vault_secret.appi_shared_name.value
     shared_resouce_group_name   = var.shared_resources_resource_group_name
-    workbook_charges_components = [ file("${path.module}/workbook-query-query4.json"), file("${path.module}/workbook-parameters-period.json") ]
     workbook_query              = file("${path.module}/workbook-query-query4.json")
     workbook_parameters         = file("${path.module}/workbook-parameters-period.json")
-
+    workbook_components = var.workbook_charges_components
   }
 }
 

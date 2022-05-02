@@ -62,7 +62,7 @@
     },
     "workbookComponents": {
       "type": "array",
-      "defaultValue": "${workbook_charges_components}"
+      "defaultValue": "${workbook_components}"
     }
   }, 
   "variables": {
