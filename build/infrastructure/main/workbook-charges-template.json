@@ -52,6 +52,13 @@
       "metadata": {
         "description": ""
       }
+    },
+    "workbookQuery": {
+      "type": "string",
+      "defaultValue": "${workbook_query}",
+      "metadata": {
+        "description": ""
+      }
     }
   }, 
   "variables": {
@@ -107,7 +114,7 @@
           },
           "name": "parameters - 2"
         },
-        "[parameters(workbook_query)]"
+        "[parameters(workbookQuery)]"
       ],
       "isLocked": false
     }
