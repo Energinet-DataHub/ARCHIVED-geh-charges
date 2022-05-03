@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
 
         public async Task<IValidationRuleSet> CreateRulesAsync(ChargeCommand chargeCommand)
         {
-            if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
+            ArgumentNullException.ThrowIfNull(chargeCommand);
             var chargeOperation = chargeCommand.ChargeOperations.SingleOrDefault();
             if (chargeOperation == null) throw new NullReferenceException(nameof(chargeOperation));
 
