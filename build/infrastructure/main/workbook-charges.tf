@@ -14,7 +14,7 @@
 data "template_file" "workbook_charges_template" {
   template = file("${path.module}/workbook-charges-template.json")
   vars = {
-    workbook_display_name    = "Charges - Stamdataopdatering SLI"
+    workbook_display_name    = "Charges - Stamdataopdatering SLI demo"
     workbook_id              = "67d32b14-3f26-4840-a1cc-c47ca4d052de"
     subscription_id          = data.azurerm_subscription.this.subscription_id
     resouce_group_name       = azurerm_resource_group.this.name
