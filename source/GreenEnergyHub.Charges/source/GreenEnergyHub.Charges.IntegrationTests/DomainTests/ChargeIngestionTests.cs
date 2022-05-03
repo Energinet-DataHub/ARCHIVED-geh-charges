@@ -14,7 +14,9 @@
 
 using System;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using FluentAssertions;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
@@ -163,9 +165,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Assert
+                var errorMessage = await actual.Content.ReadAsStreamAsync();
+                var document = await XElement.LoadAsync(errorMessage, LoadOptions.None, CancellationToken.None);
                 actual.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-                var errorMessage = await actual.Content.ReadAsStringAsync();
-                errorMessage.Should().Be("The sender organization provided in the request body does not match the organization in the bearer token.");
+                document.Element("code")?.Value.Should().Be("BadRequest");
+                document.Element("message")?.Value.Should().Be("The sender organization provided in the request body does not match the organization in the bearer token.");
             }
 
             [Theory]

@@ -13,7 +13,9 @@
 // limitations under the License.
 
 using System.Net;
+using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using Energinet.DataHub.Core.SchemaValidation.Errors;
 using Energinet.DataHub.Core.SchemaValidation.Extensions;
@@ -46,11 +48,26 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
             return httpResponse;
         }
 
-        public HttpResponseData CreateBadRequestWithErrorText(HttpRequestData request, string errorText)
+        public HttpResponseData CreateBadRequestResponseWithText(HttpRequestData request, string errorText)
         {
             var httpResponse = request.CreateResponse(HttpStatusCode.BadRequest);
-            httpResponse.WriteString(errorText);
+            var unauthorizedRequest = CreateErrorMessageAsXml(httpResponse, "BadRequest", errorText);
+            httpResponse.WriteString(unauthorizedRequest, Encoding.UTF8);
             return httpResponse;
+        }
+
+        private string CreateErrorMessageAsXml(HttpResponseData httpResponse, string code, string errorText)
+        {
+            AddHeaders(httpResponse);
+            var messageBody = new StringBuilder();
+            var settings = new XmlWriterSettings() { OmitXmlDeclaration = true, Indent = true, };
+            using var writer = XmlWriter.Create(messageBody, settings);
+            writer.WriteStartElement("Error");
+            writer.WriteElementString("Code", code);
+            writer.WriteElementString("Message", errorText);
+            writer.WriteEndElement();
+            writer.Close();
+            return messageBody.ToString();
         }
 
         private void AddHeaders(HttpResponseData httpResponseData)

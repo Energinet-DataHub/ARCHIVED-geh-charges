@@ -58,7 +58,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
 
             if (AuthenticatedMatchesSenderId(inboundMessage) == false)
             {
-                return _httpResponseBuilder.CreateBadRequestWithErrorText(
+                return _httpResponseBuilder.CreateBadRequestResponseWithText(
                     req,
                     "The sender organization provided in the request body does not match the organization in the bearer token.");
             }

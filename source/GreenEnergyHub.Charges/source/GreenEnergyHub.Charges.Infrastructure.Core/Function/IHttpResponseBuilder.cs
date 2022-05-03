@@ -26,6 +26,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
             HttpRequestData request,
             ErrorResponse errorResponse);
 
-        HttpResponseData CreateBadRequestWithErrorText(HttpRequestData request, string errorText);
+        HttpResponseData CreateBadRequestResponseWithText(HttpRequestData request, string errorText);
     }
 }
