@@ -68,7 +68,7 @@
   "variables": {
     "workbookContent": {
       "version": "Notebook/1.0",
-      "items": "[parameters(workbookComponents)]",
+      "items": "[parameters(workbookQuery)]",
       "isLocked": false
     }
   },
