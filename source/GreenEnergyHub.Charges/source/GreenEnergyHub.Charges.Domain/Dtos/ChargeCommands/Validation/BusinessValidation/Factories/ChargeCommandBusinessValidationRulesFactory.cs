@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
         {
             ArgumentNullException.ThrowIfNull(chargeCommand);
             var chargeOperation = chargeCommand.ChargeOperations.SingleOrDefault();
-            if (chargeOperation == null) throw new NullReferenceException(nameof(chargeOperation));
+            ArgumentNullException.ThrowIfNull(chargeOperation);
 
             var rules = await GetRulesForOperationAsync(chargeOperation).ConfigureAwait(false);
             return ValidationRuleSet.FromRules(rules);
