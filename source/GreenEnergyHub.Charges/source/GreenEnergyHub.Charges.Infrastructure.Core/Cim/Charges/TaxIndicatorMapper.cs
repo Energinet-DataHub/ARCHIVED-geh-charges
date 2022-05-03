@@ -17,7 +17,7 @@ using GreenEnergyHub.Charges.Domain.Charges;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.Charges
 {
-    public class TaxIndicatorMapper
+    public static class TaxIndicatorMapper
     {
         public static TaxIndicator Map(bool value)
         {

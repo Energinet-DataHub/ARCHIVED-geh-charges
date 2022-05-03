@@ -17,7 +17,7 @@ using GreenEnergyHub.Charges.Domain.Charges;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.Charges
 {
-    public class TransparentInvoicingMapper
+    public static class TransparentInvoicingMapper
     {
         public static TransparentInvoicing Map(bool value)
         {
