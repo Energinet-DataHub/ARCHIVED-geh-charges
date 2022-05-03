@@ -43,13 +43,13 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             var command = new ChargeCommandBuilder().WithDocumentDto(document).Build();
 
             // Act
-            await sut.HandleAsync(transaction).ConfigureAwait(false);
+            await sut.HandleAsync(command).ConfigureAwait(false);
 
             // Assert
             chargeEventPublisher.Verify(
                 x => x.DispatchAsync(
                     It.Is<ChargeCommandReceivedEvent>(
-                        localEvent => localEvent.Command == transaction),
+                        localEvent => localEvent.Command == command),
                     It.IsAny<CancellationToken>()),
                 Times.Once);
         }
