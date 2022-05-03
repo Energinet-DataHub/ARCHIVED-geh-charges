@@ -55,7 +55,7 @@ namespace GreenEnergyHub.Charges.SystemTests
         }
 
         // This shows how we can call API Management using a valid access token
-        [SystemFact(Skip = "Implicitly covered by the BusinessProcessTests.cs. " +
+        [SystemFact(Skip = "Implicitly covered by BusinessProcessTests.cs. " +
                            "Kept for now as it might serve a local development test purpose.")]
         public async Task When_RequestApiManagementWithAccessToken_Then_ResponseIsAccepted()
         {
