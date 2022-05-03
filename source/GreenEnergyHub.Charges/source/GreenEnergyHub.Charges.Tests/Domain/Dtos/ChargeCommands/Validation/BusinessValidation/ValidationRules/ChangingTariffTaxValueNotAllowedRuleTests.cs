@@ -17,6 +17,7 @@ using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Infrastructure.Core.Cim.Charges;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
@@ -33,7 +34,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             ChargeOperationDtoBuilder builder,
             Charge charge)
         {
-            var chargeOperationDto = builder.WithTaxIndicator(!charge.TaxIndicator).Build();
+            var chargeOperationDto = builder.WithTaxIndicator(TaxIndicatorMapper.Map(!charge.TaxIndicator)).Build();
             var sut = new ChangingTariffTaxValueNotAllowedRule(chargeOperationDto, charge);
             sut.IsValid.Should().BeFalse();
         }
@@ -44,7 +45,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             ChargeOperationDtoBuilder builder,
             Charge charge)
         {
-            var chargeOperationDto = builder.WithTaxIndicator(charge.TaxIndicator).Build();
+            var chargeOperationDto = builder.WithTaxIndicator(TaxIndicatorMapper.Map(charge.TaxIndicator)).Build();
             var sut = new ChangingTariffTaxValueNotAllowedRule(chargeOperationDto, charge);
             sut.IsValid.Should().BeTrue();
         }
@@ -53,7 +54,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         [InlineAutoDomainData]
         public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeOperationDtoBuilder builder, Charge charge)
         {
-            var chargeOperationDto = builder.WithTaxIndicator(!charge.TaxIndicator).Build();
+            var chargeOperationDto = builder.WithTaxIndicator(TaxIndicatorMapper.Map(!charge.TaxIndicator)).Build();
             var sut = new ChangingTariffTaxValueNotAllowedRule(chargeOperationDto, charge);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChangingTariffTaxValueNotAllowed);
         }

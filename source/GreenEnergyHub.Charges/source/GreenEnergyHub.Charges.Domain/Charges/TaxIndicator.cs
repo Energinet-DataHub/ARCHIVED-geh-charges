@@ -12,20 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.Charges.Handlers.Message;
-
-namespace GreenEnergyHub.Charges.Application.Charges.Handlers
+namespace GreenEnergyHub.Charges.Domain.Charges
 {
-    /// <summary>
-    /// Contract for handling a change of charges message.
-    /// </summary>
-    public interface IChargesMessageHandler
+    public enum TaxIndicator
     {
-        /// <summary>
-        /// Synchronously handle the message.
-        /// </summary>
-        /// <param name="message">ChargesMessage</param>
-        Task HandleAsync(ChargesMessage message);
+        Unknown = 0,
+        NoTax = 1,
+        Tax = 2,
     }
 }

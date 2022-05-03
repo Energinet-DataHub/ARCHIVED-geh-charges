@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.TestHelpers;
 using Moq;
@@ -31,22 +32,26 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
     {
         [Theory]
         [InlineAutoDomainData]
-        public async Task ChangeOfChargesTransactionHandler_WhenCalled_ShouldCallPublisher(
-            [Frozen] Mock<IMessageDispatcher<ChargeCommandReceivedEvent>> localEventPublisher,
+        public async Task HandleAsync_WhenCalledWithChargeCommand_ShouldDispatchReceivedEvent(
+            [Frozen] Mock<IMessageDispatcher<ChargeCommandReceivedEvent>> chargeEventPublisher,
             ChargeCommandHandler sut)
         {
             // Arrange
-            var transaction = new ChargeCommandBuilder().Build();
+            var document = new DocumentDtoBuilder()
+                .WithBusinessReasonCode(BusinessReasonCode.UpdateChargeInformation)
+                .Build();
+            var command = new ChargeCommandBuilder().WithDocumentDto(document).Build();
 
             // Act
-            await sut.HandleAsync(transaction).ConfigureAwait(false);
+            await sut.HandleAsync(command).ConfigureAwait(false);
 
             // Assert
-            localEventPublisher.Verify(
+            chargeEventPublisher.Verify(
                 x => x.DispatchAsync(
                     It.Is<ChargeCommandReceivedEvent>(
-                        localEvent => localEvent.Command == transaction),
-                    It.IsAny<CancellationToken>()));
+                        localEvent => localEvent.Command == command),
+                    It.IsAny<CancellationToken>()),
+                Times.Once);
         }
     }
 }

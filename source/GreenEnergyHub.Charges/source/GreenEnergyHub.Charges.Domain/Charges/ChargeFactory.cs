@@ -50,7 +50,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
                 owner.Id,
                 chargeOperationDto.Type,
                 chargeOperationDto.Resolution,
-                chargeOperationDto.TaxIndicator,
+                chargeOperationDto.TaxIndicator == TaxIndicator.Tax,
                 chargeOperationDto.Points,
                 new List<ChargePeriod> { period });
         }
