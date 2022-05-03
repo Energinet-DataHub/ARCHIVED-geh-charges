@@ -33,11 +33,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.DocumentV
 
         public async Task<IValidationRuleSet> CreateRulesAsync(ChargeCommand chargeCommand)
         {
-            if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
-
+            ArgumentNullException.ThrowIfNull(chargeCommand);
             var document = chargeCommand.Document;
-
-            if (document == null) throw new NullReferenceException(nameof(document));
+            ArgumentNullException.ThrowIfNull(document);
 
             var rules = await GetRulesForDocumentAsync(document).ConfigureAwait(false);
 
