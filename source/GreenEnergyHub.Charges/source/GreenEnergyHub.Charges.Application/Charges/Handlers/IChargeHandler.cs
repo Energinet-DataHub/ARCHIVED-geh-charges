@@ -13,19 +13,19 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.Charges.Handlers.Message;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
     /// <summary>
-    /// Contract for handling a change of charges message.
+    /// Delegates a charge depending on if it contains
+    /// Charge Prices or Charge information.
     /// </summary>
-    public interface IChargesMessageHandler
+    public interface IChargeHandler
     {
         /// <summary>
-        /// Synchronously handle the message.
+        /// Asynchronously handle the event.
         /// </summary>
-        /// <param name="message">ChargesMessage</param>
-        Task HandleAsync(ChargesMessage message);
+        Task HandleAsync(ChargeCommandReceivedEvent commandReceivedEvent);
     }
 }
