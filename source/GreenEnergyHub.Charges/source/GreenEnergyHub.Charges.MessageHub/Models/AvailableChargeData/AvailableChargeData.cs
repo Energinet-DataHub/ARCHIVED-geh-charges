@@ -39,8 +39,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
             Instant startDateTime,
             Instant endDateTime,
             VatClassification vatClassification,
-            TaxIndicator taxIndicator,
-            TransparentInvoicing transparentInvoicing,
+            bool taxIndicator,
+            bool transparentInvoicing,
             Resolution resolution,
             DocumentType documentType,
             int operationOrder,
@@ -96,9 +96,9 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
 
         public VatClassification VatClassification { get; }
 
-        public TaxIndicator TaxIndicator { get; }
+        public bool TaxIndicator { get; }
 
-        public TransparentInvoicing TransparentInvoicing { get; }
+        public bool TransparentInvoicing { get; }
 
         public Resolution Resolution { get; }
 

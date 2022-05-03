@@ -22,10 +22,6 @@ limitations under the License.
     </PropertyGroup>
 
     <ItemGroup>
-      <None Remove="Scripts\Model\202205021037 Change tax and transparency types.sql" />
-    </ItemGroup>
-
-    <ItemGroup>
       <PackageReference Include="dbup-sqlserver" Version="4.5.0" />
       <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.354">
         <PrivateAssets>all</PrivateAssets>
@@ -44,7 +40,6 @@ limitations under the License.
       <EmbeddedResource Include="Scripts\Model\202203090952 Add DocumentType to AvailableData.sql" />
       <EmbeddedResource Include="Scripts\Model\202203231212 Add OperationOrder to AvailableData.sql" />
       <EmbeddedResource Include="Scripts\Model\202204191415 Ensure unique charges by removing duplicates and adding constraint.sql" />
-      <EmbeddedResource Include="Scripts\Model\202205021037 Change tax and transparency types.sql" />
       <EmbeddedResource Include="Scripts\Seed\202201261740 Add default charges owner.sql" />
       <EmbeddedResource Include="Scripts\Seed\202201261741 Add default charges.sql" />
       <EmbeddedResource Include="Scripts\Seed\202201261742 Add default charge links.sql" />

@@ -132,14 +132,14 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.Charges
                     // Right now, charge name is our best bet of determining whether to include transparent invoicing
                     string.IsNullOrEmpty(charge.ChargeName),
                     CimChargeConstants.TransparentInvoicing,
-                    () => TransparentInvoicingMapper.Map(charge.TransparentInvoicing)),
+                    () => charge.TransparentInvoicing),
                 // TaxIndicator
                 CimHelper.GetElementIfNeeded(
                     cimNamespace,
                     // Right now, charge name is our best bet of determining whether to include tax indicator
                     string.IsNullOrEmpty(charge.ChargeName),
                     CimChargeConstants.TaxIndicator,
-                    () => TaxIndicatorMapper.Map(charge.TaxIndicator)),
+                    () => charge.TaxIndicator),
                 GetSeriesPeriod(cimNamespace, charge));
         }
 
