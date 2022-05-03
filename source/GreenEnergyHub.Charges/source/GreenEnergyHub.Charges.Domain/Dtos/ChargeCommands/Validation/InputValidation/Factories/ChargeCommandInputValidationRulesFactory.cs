@@ -24,7 +24,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
     {
         public IValidationRuleSet CreateRulesForCommand(ChargeCommand chargeCommand)
         {
-            if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
+            ArgumentNullException.ThrowIfNull(chargeCommand);
 
             var rules = chargeCommand.ChargeOperations
                 .SelectMany(GetRulesForOperation)
