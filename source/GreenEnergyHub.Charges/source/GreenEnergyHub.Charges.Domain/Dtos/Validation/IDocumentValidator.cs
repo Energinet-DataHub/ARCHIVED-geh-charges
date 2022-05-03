@@ -21,7 +21,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
         where TCommand : CommandBase
     {
         /// <summary>
-        /// Business validation of command or operation/>.
+        /// Business validation of command/>.
         /// </summary>
         /// <param name="command">The command to validate.</param>
         /// <returns>The validation result.</returns>
