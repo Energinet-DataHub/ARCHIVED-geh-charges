@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
     {
         [Theory]
         [InlineAutoDomainData]
-        public async Task ChangeOfChargesTransactionHandler_WhenCalledWithCharge_ShouldCallChargePublisher(
+        public async Task HandleAsync_WhenCalledWithChargeCommand_ShouldDispatchReceivedEvent(
             [Frozen] Mock<IMessageDispatcher<ChargeCommandReceivedEvent>> chargeEventPublisher,
             ChargeCommandHandler sut)
         {
