@@ -24,7 +24,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
     public interface IChargeHandler
     {
         /// <summary>
-        /// Synchronously handle the event.
+        /// Asynchronously handle the event.
         /// </summary>
         Task HandleAsync(ChargeCommandReceivedEvent commandReceivedEvent);
     }
