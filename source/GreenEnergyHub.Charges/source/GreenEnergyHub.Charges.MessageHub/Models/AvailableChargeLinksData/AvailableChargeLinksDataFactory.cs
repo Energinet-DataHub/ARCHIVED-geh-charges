@@ -86,7 +86,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData
                 operation.Factor,
                 operation.StartDateTime,
                 operation.EndDateTime.GetValueOrDefault(),
-                input.ChargeLinksCommand.Document.Type,
+                DocumentType.NotifyBillingMasterData, // Will be added to the HTTP MessageType header
                 operationOrder));
         }
 
