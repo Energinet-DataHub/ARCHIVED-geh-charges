@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -20,9 +21,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.TestCommon;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.Charges;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.SystemTests.Fixtures;
+using Microsoft.Rest;
 using NodaTime;
 using Xunit;
 
@@ -84,6 +87,8 @@ namespace GreenEnergyHub.Charges.SystemTests
                 TimeSpan.FromSeconds(1));
 
             // Assert
+            var messageType = peekResponse!.Headers.GetValues("MessageType").FirstOrDefault();
+            messageType!.Should().Be("NotifyPriceList");
             var content = await peekResponse!.Content.ReadAsStringAsync();
             content.Should().Contain("ConfirmRequestChangeOfPriceList_MarketDocument");
             content.Should().Contain(expectedOpId);
