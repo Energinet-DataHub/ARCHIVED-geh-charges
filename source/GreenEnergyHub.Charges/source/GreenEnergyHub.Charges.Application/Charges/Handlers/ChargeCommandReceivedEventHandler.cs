@@ -61,32 +61,46 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         {
             ArgumentNullException.ThrowIfNull(commandReceivedEvent);
 
+            var operationsToBeRejected = new List<ChargeOperationDto>();
+            var operationsToBeConfirmed = new List<ChargeOperationDto>();
+
             var documentValidationResult = await _documentValidator
                 .ValidateAsync(commandReceivedEvent.Command).ConfigureAwait(false);
             if (documentValidationResult.IsFailed)
             {
-                await _chargeCommandReceiptService
-                    .RejectAsync(commandReceivedEvent.Command, documentValidationResult).ConfigureAwait(false);
+                operationsToBeRejected.AddRange(commandReceivedEvent.Command.ChargeOperations);
+                /*await _chargeCommandReceiptService
+                    .RejectAsync(commandReceivedEvent.Command, documentValidationResult).ConfigureAwait(false);*/
                 return;
             }
 
-            var toBeRejected = new List<ChargeOperationDto>();
-            var toBeConfirmed = new List<ChargeOperationDto>();
-            var operations = commandReceivedEvent.Command.ChargeOperations.ToList();
+            var operations = commandReceivedEvent.Command.ChargeOperations.ToArray();
 
-            for (var i = 0; i < operations.Count; i++)
+            for (var i = 0; i < operations.Length; i++)
             {
                 var operation = operations[i];
                 var inputValidationResult = _inputValidator.Validate(operation);
 
                 if (inputValidationResult.IsFailed)
                 {
-                    await _chargeCommandReceiptService
-                        .RejectAsync(commandReceivedEvent.Command, inputValidationResult).ConfigureAwait(false);
-                    return;
+                    operationsToBeRejected = operations[i..].ToList();
+                    /*await _chargeCommandReceiptService
+                        .RejectAsync(commandReceivedEvent.Command, inputValidationResult).ConfigureAwait(false);*/
+                    break;
                 }
+
+                operationsToBeConfirmed.Add(operation);
             }
 
+            /* TODO:
+             *  - businessValidation (and add to reject and confirm lists)
+             *  - move functionality from "switch (operationType)" to individual handlers?
+             *  - reject all operations in operationsToBeRejected
+             *  - test confirm all operations in operationsToBeConfirmed
+             *  - unitOfWork.SaveChanges();
+            */
+
+            // TODO: Delete the following when refactoring is done
             var acceptedOperations = new List<ChargeOperationDto>();
 
             var triggeredBy = string.Empty;
@@ -132,9 +146,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 acceptedOperations.Add(chargeOperationDto);
             }
 
-            var acceptedChargeCommand = new ChargeCommand(
-                commandReceivedEvent.Command.Document,
-                acceptedOperations);
+            var acceptedChargeCommand = new ChargeCommand(commandReceivedEvent.Command.Document, acceptedOperations);
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             await _chargeCommandReceiptService.AcceptAsync(acceptedChargeCommand).ConfigureAwait(false);
         }

@@ -30,6 +30,11 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
             ChargeLinksOperations = chargeLinksOperations;
         }
 
+        /* TODO: Move meteringPointId to ChargeLinkDto to enable a split of
+         * documentValidation and businessValidation in style with the way
+         * we do it for Charges?
+         */
+
         public string MeteringPointId { get; }
 
         public DocumentDto Document { get; }
