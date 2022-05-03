@@ -12,16 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
-
-namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
+namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.DocumentValidation.ValidationRules
 {
-    public interface IValidator<in TCommand>
-        where TCommand : CommandBase
+    public static class MarketParticipantMrIdValidator
     {
-        ValidationResult InputValidate(TCommand command);
-
-        Task<ValidationResult> BusinessValidateAsync(TCommand command);
+        public static bool IsValid(string? marketParticipantMrId)
+        {
+            return !string.IsNullOrWhiteSpace(marketParticipantMrId);
+        }
     }
 }

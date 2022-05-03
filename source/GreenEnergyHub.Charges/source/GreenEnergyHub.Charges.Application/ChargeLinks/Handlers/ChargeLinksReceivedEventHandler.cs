@@ -27,26 +27,29 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
         private readonly IChargeLinksReceiptService _chargeLinksReceiptService;
         private readonly IChargeLinkFactory _chargeLinkFactory;
         private readonly IChargeLinksRepository _chargeLinksRepository;
-        private readonly IValidator<ChargeLinksCommand> _validator;
+        private readonly IInputValidator<ChargeLinksCommand> _inputValidator;
+        private readonly IBusinessValidator<ChargeLinksCommand> _businessValidator;
         private readonly IUnitOfWork _unitOfWork;
 
         public ChargeLinksReceivedEventHandler(
             IChargeLinksReceiptService chargeLinksReceiptService,
             IChargeLinkFactory chargeLinkFactory,
             IChargeLinksRepository chargeLinksRepository,
-            IValidator<ChargeLinksCommand> validator,
+            IInputValidator<ChargeLinksCommand> inputValidator,
+            IBusinessValidator<ChargeLinksCommand> businessValidator,
             IUnitOfWork unitOfWork)
         {
             _chargeLinksReceiptService = chargeLinksReceiptService;
             _chargeLinkFactory = chargeLinkFactory;
             _chargeLinksRepository = chargeLinksRepository;
-            _validator = validator;
+            _inputValidator = inputValidator;
+            _businessValidator = businessValidator;
             _unitOfWork = unitOfWork;
         }
 
         public async Task HandleAsync(ChargeLinksReceivedEvent chargeLinksReceivedEvent)
         {
-            var inputValidationResult = _validator.InputValidate(chargeLinksReceivedEvent.ChargeLinksCommand);
+            var inputValidationResult = _inputValidator.Validate(chargeLinksReceivedEvent.ChargeLinksCommand);
             if (inputValidationResult.IsFailed)
             {
                 await _chargeLinksReceiptService
@@ -55,8 +58,8 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
                 return;
             }
 
-            var businessValidationResult = await _validator
-                .BusinessValidateAsync(chargeLinksReceivedEvent.ChargeLinksCommand).ConfigureAwait(false);
+            var businessValidationResult = await _businessValidator
+                .ValidateAsync(chargeLinksReceivedEvent.ChargeLinksCommand).ConfigureAwait(false);
             if (businessValidationResult.IsFailed)
             {
                 await _chargeLinksReceiptService
