@@ -19,14 +19,14 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
     /// <summary>
     /// Contract defining the input validator for change of charges messages.
     /// </summary>
-    public interface IInputValidator<in TCommand>
-        where TCommand : CommandBase
+    public interface IInputValidator<in TOperation>
+        where TOperation : OperationBase
     {
         /// <summary>
         /// Input validation of command/>.
         /// </summary>
         /// <param name="command">The message to validate.</param>
         /// <returns>The validation result.</returns>
-        ValidationResult Validate(TCommand command);
+        ValidationResult Validate(TOperation command);
     }
 }

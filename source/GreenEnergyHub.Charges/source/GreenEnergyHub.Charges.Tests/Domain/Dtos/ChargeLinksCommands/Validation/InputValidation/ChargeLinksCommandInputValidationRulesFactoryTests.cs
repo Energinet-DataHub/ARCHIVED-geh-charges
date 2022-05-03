@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
             var chargeLinksCommand = new ChargeLinksCommandBuilder().Build();
 
             // Act
-            var actualRuleTypes = sut.CreateRulesForCommand(chargeLinksCommand)
+            var actualRuleTypes = sut.CreateRulesForOperation(chargeLinksCommand)
                 .GetRules().Select(r => r.GetType()).ToList();
 
             // Assert
@@ -47,7 +47,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
             var sut = new ChargeLinksCommandInputValidationRulesFactory();
 
             // Act & Assert
-            Assert.Throws<ArgumentNullException>(() => sut.CreateRulesForCommand(null!));
+            Assert.Throws<ArgumentNullException>(() => sut.CreateRulesForOperation(null!));
         }
     }
 }

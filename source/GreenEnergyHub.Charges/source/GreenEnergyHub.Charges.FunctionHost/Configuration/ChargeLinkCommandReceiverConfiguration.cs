@@ -18,7 +18,6 @@ using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.BusinessValidation.Factories;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.InputValidation.Factories;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksRejectionEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
@@ -50,9 +49,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 BusinessValidator<ChargeLinksCommand>>();
             serviceCollection.AddScoped<IBusinessValidationRulesFactory<ChargeLinksCommand>,
                 ChargeLinksCommandBusinessValidationRulesFactory>();
-            serviceCollection.AddScoped<IInputValidationRulesFactory<ChargeLinksCommand>,
-                ChargeLinksCommandInputValidationRulesFactory>();
-            serviceCollection.AddScoped<IInputValidator<ChargeLinksCommand>, InputValidator<ChargeLinksCommand>>();
             serviceCollection.AddScoped<IAvailableChargeLinksReceiptValidationErrorFactory,
                 AvailableChargeLinksReceiptValidationErrorFactory>();
             serviceCollection.AddScoped<ICimValidationErrorTextFactory<ChargeLinksCommand, ChargeLinkDto>,

@@ -30,7 +30,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
     {
         private readonly IChargeCommandReceiptService _chargeCommandReceiptService;
         private readonly IDocumentValidator<ChargeCommand> _documentValidator;
-        private readonly IInputValidator<ChargeCommand> _inputValidator;
+        private readonly IInputValidator<ChargeOperationDto> _inputValidator;
         private readonly IBusinessValidator<ChargeCommand> _businessValidator;
         private readonly IChargeRepository _chargeRepository;
         private readonly IChargeFactory _chargeFactory;
@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         public ChargeCommandReceivedEventHandler(
             IChargeCommandReceiptService chargeCommandReceiptService,
             IDocumentValidator<ChargeCommand> documentValidator,
-            IInputValidator<ChargeCommand> inputValidator,
+            IInputValidator<ChargeOperationDto> inputValidator,
             IBusinessValidator<ChargeCommand> businessValidator,
             IChargeRepository chargeRepository,
             IChargeFactory chargeFactory,
@@ -61,7 +61,8 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         {
             ArgumentNullException.ThrowIfNull(commandReceivedEvent);
 
-            var documentValidationResult = await _documentValidator.ValidateAsync(commandReceivedEvent.Command).ConfigureAwait(false);
+            var documentValidationResult = await _documentValidator
+                .ValidateAsync(commandReceivedEvent.Command).ConfigureAwait(false);
             if (documentValidationResult.IsFailed)
             {
                 await _chargeCommandReceiptService
@@ -69,16 +70,25 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 return;
             }
 
-            var inputValidationResult = _inputValidator.Validate(commandReceivedEvent.Command);
+            var toBeRejected = new List<ChargeOperationDto>();
+            var toBeConfirmed = new List<ChargeOperationDto>();
+            var operations = commandReceivedEvent.Command.ChargeOperations.ToList();
 
-            if (inputValidationResult.IsFailed)
+            for (var i = 0; i < operations.Count; i++)
             {
-                await _chargeCommandReceiptService
-                    .RejectAsync(commandReceivedEvent.Command, inputValidationResult).ConfigureAwait(false);
-                return;
+                var operation = operations[i];
+                var inputValidationResult = _inputValidator.Validate(operation);
+
+                if (inputValidationResult.IsFailed)
+                {
+                    await _chargeCommandReceiptService
+                        .RejectAsync(commandReceivedEvent.Command, inputValidationResult).ConfigureAwait(false);
+                    return;
+                }
             }
 
             var acceptedOperations = new List<ChargeOperationDto>();
+
             var triggeredBy = string.Empty;
 
             foreach (var chargeOperationDto in commandReceivedEvent.Command.ChargeOperations)

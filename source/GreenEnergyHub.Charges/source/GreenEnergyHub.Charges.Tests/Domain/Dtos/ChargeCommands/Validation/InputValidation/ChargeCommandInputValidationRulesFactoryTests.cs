@@ -38,7 +38,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             var sut = new ChargeCommandInputValidationRulesFactory();
 
             // Act & Assert
-            Assert.Throws<ArgumentNullException>(() => sut.CreateRulesForCommand(null!));
+            Assert.Throws<ArgumentNullException>(() => sut.CreateRulesForOperation(null!));
         }
 
         [Theory]
@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         {
             // Arrange
             // Act
-            var validationRules = sut.CreateRulesForCommand(chargeCommand).GetRules();
+            var validationRules = sut.CreateRulesForOperation(chargeCommand).GetRules();
 
             // Assert
             AssertAllRulesThatNeedTriggeredByForErrorMessageImplementsIValidationRuleWithExtendedData(
