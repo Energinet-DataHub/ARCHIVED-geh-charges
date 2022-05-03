@@ -89,7 +89,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
                     operation.TaxIndicator == TaxIndicator.Tax,
                     operation.TransparentInvoicing == TransparentInvoicing.Transparent,
                     operation.Resolution,
-                    input.Command.Document.Type,
+                    DocumentType.NotifyPriceList, // Will be added to the HTTP MessageType header
                     operationOrder,
                     points));
             }
