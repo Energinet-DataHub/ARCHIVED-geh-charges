@@ -33,6 +33,25 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
     public class ChargeOperationInputValidationRulesFactoryTests
     {
         [Fact]
+        public void CreateRulesForChargeCommand_ShouldContainRulesTest()
+        {
+            // Arrange
+            var sut = new ChargeOperationInputValidationRulesFactory();
+            var chargeOperationDto = new ChargeOperationDtoBuilder().Build();
+            var expectedRules = new List<IValidationRule>();
+
+            expectedRules.AddRange(GetExpectedRulesForChargeOperation(chargeOperationDto));
+
+            // Act
+            var actualRuleTypes = sut.CreateRules(chargeOperationDto)
+                .GetRules().Select(r => r.GetType()).ToList();
+            var expectedRuleTypes = expectedRules.Select(r => r.GetType()).ToList();
+
+            // Assert
+            Assert.True(actualRuleTypes.SequenceEqual(expectedRuleTypes));
+        }
+
+        [Fact]
         public void CreateRules_ShouldContainRulesTest()
         {
             // Arrange
