@@ -12,20 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.Charges.Handlers.Message;
-
-namespace GreenEnergyHub.Charges.Application.Charges.Handlers
+namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.DocumentValidation.ValidationRules
 {
-    /// <summary>
-    /// Contract for handling a change of charges message.
-    /// </summary>
-    public interface IChargesMessageHandler
+    public static class MarketParticipantMrIdValidator
     {
-        /// <summary>
-        /// Synchronously handle the message.
-        /// </summary>
-        /// <param name="message">ChargesMessage</param>
-        Task HandleAsync(ChargesMessage message);
+        public static bool IsValid(string? marketParticipantMrId)
+        {
+            return !string.IsNullOrWhiteSpace(marketParticipantMrId);
+        }
     }
 }

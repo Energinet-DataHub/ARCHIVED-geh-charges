@@ -61,6 +61,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
                 .Replace("{{$isoTimestamp}}", now)
                 .Replace("{{$isoTimestampPlusOneMonth}}", inThirtyoneDays.ToString())
                 .Replace("{{$YMDHM_TimestampPlusOneMonth}}", ymdhmTimeInterval)
+                .Replace("{{$YMDHM_TimestampPlusOneMonthAndOneDay}}", inThirtyoneDays.Plus(Duration.FromDays(1)).GetTimeAndPriceSeriesDateTimeFormat())
                 .Replace("{{$isoTimestampPlusOneMonthAndOneDay}}", inThirtyoneDays.Plus(Duration.FromDays(1)).ToString())
                 .Replace("{{$isoTimestampPlusOneMonthAndTwoDays}}", inThirtyoneDays.Plus(Duration.FromDays(2)).ToString())
                 .Replace("{{$ISO8601Timestamp}}", ymdhmsTimeInterval);

@@ -12,13 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
+
+namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
-    public static class MarketParticipantMrIdValidator
+    /// <summary>
+    /// Delegates a charge depending on if it contains
+    /// Charge Prices or Charge information.
+    /// </summary>
+    public interface IChargeHandler
     {
-        public static bool IsValid(string? marketParticipantMrId)
-        {
-            return !string.IsNullOrWhiteSpace(marketParticipantMrId);
-        }
+        /// <summary>
+        /// Asynchronously handle the event.
+        /// </summary>
+        Task HandleAsync(ChargeCommandReceivedEvent commandReceivedEvent);
     }
 }

@@ -86,8 +86,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             actualChargeOperation.EndDateTime.Should()
                 .Be(InstantPattern.ExtendedIso.Parse("2031-12-17T23:00:00Z").Value);
             actualChargeOperation.VatClassification.Should().Be(VatClassification.Vat25);
-            actualChargeOperation.TransparentInvoicing.Should().BeTrue();
-            actualChargeOperation.TaxIndicator.Should().BeTrue();
+            actualChargeOperation.TransparentInvoicing.Should().Be(TransparentInvoicing.Transparent);
+            actualChargeOperation.TaxIndicator.Should().Be(TaxIndicator.Tax);
 
             // Points
             actualChargeOperation.Points.Should().HaveCount(2);
@@ -149,8 +149,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             actualChargeOperation.StartDateTime.Should().Be(expectedTime);
             actualChargeOperation.EndDateTime.Should().BeNull();
             actualChargeOperation.VatClassification.Should().Be(VatClassification.NoVat);
-            actualChargeOperation.TransparentInvoicing.Should().BeFalse();
-            actualChargeOperation.TaxIndicator.Should().BeFalse();
+            actualChargeOperation.TransparentInvoicing.Should().Be(TransparentInvoicing.NonTransparent);
+            actualChargeOperation.TaxIndicator.Should().Be(TaxIndicator.NoTax);
 
             // Prices, should not be any
             actualChargeOperation.Points.Should().BeEmpty();
@@ -197,8 +197,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             actualChargeOperation.StartDateTime.Should().Be(expectedTime);
             actualChargeOperation.EndDateTime.Should().BeNull();
             actualChargeOperation.VatClassification.Should().Be(VatClassification.Unknown);
-            actualChargeOperation.TransparentInvoicing.Should().BeFalse();
-            actualChargeOperation.TaxIndicator.Should().BeFalse();
+            actualChargeOperation.TransparentInvoicing.Should().Be(TransparentInvoicing.Unknown);
+            actualChargeOperation.TaxIndicator.Should().Be(TaxIndicator.Unknown);
 
             // Points
             actualChargeOperation.Points.Should().HaveCount(2);
@@ -259,8 +259,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             actualFirstChargeOperationDto.StartDateTime.Should().Be(expectedTime);
             actualFirstChargeOperationDto.EndDateTime.Should().BeNull();
             actualFirstChargeOperationDto.VatClassification.Should().Be(VatClassification.NoVat);
-            actualFirstChargeOperationDto.TransparentInvoicing.Should().BeFalse();
-            actualFirstChargeOperationDto.TaxIndicator.Should().BeTrue();
+            actualFirstChargeOperationDto.TransparentInvoicing.Should().Be(TransparentInvoicing.NonTransparent);
+            actualFirstChargeOperationDto.TaxIndicator.Should().Be(TaxIndicator.Tax);
 
             // Prices
             actualFirstChargeOperationDto.Points.Should().HaveCount(1);
@@ -277,8 +277,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             actualSecondChargeOperationDto.StartDateTime.Should().Be(expectedTime);
             actualSecondChargeOperationDto.EndDateTime.Should().BeNull();
             actualSecondChargeOperationDto.VatClassification.Should().Be(VatClassification.Vat25);
-            actualSecondChargeOperationDto.TransparentInvoicing.Should().BeTrue();
-            actualSecondChargeOperationDto.TaxIndicator.Should().BeFalse();
+            actualSecondChargeOperationDto.TransparentInvoicing.Should().Be(TransparentInvoicing.Transparent);
+            actualSecondChargeOperationDto.TaxIndicator.Should().Be(TaxIndicator.NoTax);
 
             // Prices
             actualSecondChargeOperationDto.Points.Should().HaveCount(1);

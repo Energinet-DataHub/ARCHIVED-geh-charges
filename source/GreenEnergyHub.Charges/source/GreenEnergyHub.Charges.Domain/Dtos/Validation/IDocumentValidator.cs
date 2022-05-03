@@ -13,19 +13,18 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.Charges.Handlers.Message;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 
-namespace GreenEnergyHub.Charges.Application.Charges.Handlers
+namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 {
-    /// <summary>
-    /// Contract for handling a change of charges message.
-    /// </summary>
-    public interface IChargesMessageHandler
+    public interface IDocumentValidator<in TCommand>
+        where TCommand : CommandBase
     {
         /// <summary>
-        /// Synchronously handle the message.
+        /// Business validation of command/>.
         /// </summary>
-        /// <param name="message">ChargesMessage</param>
-        Task HandleAsync(ChargesMessage message);
+        /// <param name="command">The command to validate.</param>
+        /// <returns>The validation result.</returns>
+        Task<ValidationResult> ValidateAsync(TCommand command);
     }
 }
