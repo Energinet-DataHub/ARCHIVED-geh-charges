@@ -88,7 +88,7 @@ namespace GreenEnergyHub.Charges.SystemTests
 
             // Assert
             var messageType = peekResponse!.Headers.GetValues("MessageType").FirstOrDefault();
-            messageType!.Should().Be("NotifyPriceList");
+            messageType!.Should().Be("RequestUpdateChargeInformation");
             var content = await peekResponse!.Content.ReadAsStringAsync();
             content.Should().Contain("ConfirmRequestChangeOfPriceList_MarketDocument");
             content.Should().Contain(expectedOpId);
