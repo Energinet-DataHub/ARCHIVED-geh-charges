@@ -66,7 +66,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
 
             if (AuthenticatedMatchesSenderId(inboundMessage) == false)
             {
-                return _httpResponseBuilder.CreateBadRequestWithErrorText(
+                return _httpResponseBuilder.CreateBadRequestResponseWithText(
                     req, SynchronousErrorMessageConstants.ActorIsNotWhoTheyClaimToBeErrorMessage);
             }
 
