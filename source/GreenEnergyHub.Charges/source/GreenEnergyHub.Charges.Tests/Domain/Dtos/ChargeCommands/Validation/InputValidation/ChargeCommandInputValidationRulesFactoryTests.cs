@@ -47,11 +47,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void CreateRulesForChargeCommand_AllRulesThatNeedTriggeredByForErrorMessage_MustImplementIValidationRuleWithExtendedData(
             CimValidationErrorTextToken cimValidationErrorTextToken,
             ChargeCommandInputValidationRulesFactory sut,
-            ChargeCommand chargeCommand)
+            ChargeOperationDto chargeOperationDto)
         {
             // Arrange
             // Act
-            var validationRules = sut.CreateRulesForOperation(chargeCommand).GetRules();
+            var validationRules = sut.CreateRulesForOperation(chargeOperationDto).GetRules();
 
             // Assert
             AssertAllRulesThatNeedTriggeredByForErrorMessageImplementsIValidationRuleWithExtendedData(
