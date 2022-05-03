@@ -71,7 +71,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             }
 
             var message = GetChargesMessage(inboundMessage.ValidatedMessage);
-
             ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(message.ChargeCommands);
 
             await _chargesMessageHandler.HandleAsync(message).ConfigureAwait(false);

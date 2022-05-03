@@ -29,17 +29,17 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
     public class TransparentInvoicingIsNotAllowedForFeeValidationRuleTests
     {
         [Theory]
-        [InlineAutoMoqData(ChargeType.Fee, true, false)]
-        [InlineAutoMoqData(ChargeType.Fee, false, true)]
-        [InlineAutoMoqData(ChargeType.Subscription, true, true)]
-        [InlineAutoMoqData(ChargeType.Subscription, false, true)]
-        [InlineAutoMoqData(ChargeType.Tariff, true, true)]
-        [InlineAutoMoqData(ChargeType.Tariff, false, true)]
-        [InlineAutoMoqData(ChargeType.Unknown, false, true)]
-        [InlineAutoMoqData(ChargeType.Unknown, false, true)]
+        [InlineAutoMoqData(ChargeType.Fee, TransparentInvoicing.Transparent, false)]
+        [InlineAutoMoqData(ChargeType.Fee, TransparentInvoicing.NonTransparent, true)]
+        [InlineAutoMoqData(ChargeType.Subscription, TransparentInvoicing.Transparent, true)]
+        [InlineAutoMoqData(ChargeType.Subscription, TransparentInvoicing.NonTransparent, true)]
+        [InlineAutoMoqData(ChargeType.Tariff, TransparentInvoicing.Transparent, true)]
+        [InlineAutoMoqData(ChargeType.Tariff, TransparentInvoicing.NonTransparent, true)]
+        [InlineAutoMoqData(ChargeType.Unknown, TransparentInvoicing.NonTransparent, true)]
+        [InlineAutoMoqData(ChargeType.Unknown, TransparentInvoicing.NonTransparent, true)]
         public void IsValid_Test(
             ChargeType chargeType,
-            bool transparentInvoicing,
+            TransparentInvoicing transparentInvoicing,
             bool expected,
             ChargeOperationDtoBuilder chargeOperationDtoBuilder)
         {
@@ -55,7 +55,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         [InlineAutoDomainData]
         public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeOperationDtoBuilder builder)
         {
-            var chargeOperationDto = builder.WithTransparentInvoicing(true).Build();
+            var chargeOperationDto = builder.WithTransparentInvoicing(TransparentInvoicing.Transparent).Build();
             var sut = new TransparentInvoicingIsNotAllowedForFeeValidationRule(chargeOperationDto);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.TransparentInvoicingIsNotAllowedForFee);
         }
