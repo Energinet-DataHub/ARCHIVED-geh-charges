@@ -14,6 +14,7 @@
 
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Core.Currency;
+using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Factories
@@ -35,7 +36,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Factories
                 chargeOperationDto.ChargeOwner,
                 _currencyConfigurationIso4217.Currency,
                 chargeOperationDto.Resolution,
-                chargeOperationDto.TaxIndicator,
+                chargeOperationDto.TaxIndicator == TaxIndicator.Tax,
                 chargeOperationDto.StartDateTime,
                 chargeOperationDto.EndDateTime.GetValueOrDefault());
         }

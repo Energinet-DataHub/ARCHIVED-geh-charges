@@ -70,7 +70,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             }
 
             var bundle = inboundMessage.ValidatedMessage;
-
             ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(bundle.ChargeCommands);
 
             await _chargesBundleHandler.HandleAsync(bundle).ConfigureAwait(false);

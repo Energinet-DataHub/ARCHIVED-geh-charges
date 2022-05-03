@@ -14,7 +14,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -84,11 +83,11 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
         [Theory(Skip = "Manually run test to save the generated file to disk")]
         [InlineAutoDomainData]
         public async Task SerializeAsync_WhenCalled_SaveSerializedStream(
-            [NotNull] [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            [NotNull] [Frozen] Mock<IClock> clock,
-            [NotNull] [Frozen] Mock<IIso8601Durations> iso8601Durations,
-            [NotNull] [Frozen] Mock<ICimIdProvider> cimIdProvider,
-            [NotNull] ChargeCimSerializer sut)
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
+            [Frozen] Mock<IClock> clock,
+            [Frozen] Mock<IIso8601Durations> iso8601Durations,
+            [Frozen] Mock<ICimIdProvider> cimIdProvider,
+            ChargeCimSerializer sut)
         {
             SetupMocks(marketParticipantRepository, clock, iso8601Durations, cimIdProvider);
 

@@ -12,16 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.MarketParticipants
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
+
+namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
     /// <summary>
-    /// BusinessReasonCode indicates the intended business context.
+    /// Delegates a charge depending on if it contains
+    /// Charge Prices or Charge information.
     /// </summary>
-    public enum BusinessReasonCode
+    public interface IChargeHandler
     {
-        Unknown = 0,
-        UpdateMasterDataSettlement = 1,
-        UpdateChargeInformation = 2,
-        UpdateChargePrices = 3,
+        /// <summary>
+        /// Asynchronously handle the event.
+        /// </summary>
+        Task HandleAsync(ChargeCommandReceivedEvent commandReceivedEvent);
     }
 }

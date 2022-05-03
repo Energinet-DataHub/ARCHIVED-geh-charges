@@ -19,6 +19,7 @@ using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Core.DateTime;
+using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
@@ -51,7 +52,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
             // Arrange
             var chargeOperationDto = new ChargeOperationDtoBuilder()
                 .WithPoint(1, 1)
-                .WithTaxIndicator(true)
+                .WithTaxIndicator(TaxIndicator.Tax)
+                .WithTransparentInvoicing(TransparentInvoicing.Transparent)
                 .Build();
             var chargeCommand = chargeCommandBuilder.WithChargeOperation(chargeOperationDto).Build();
             var acceptedEvent = chargeCommandAcceptedEventBuilder.WithChargeCommand(chargeCommand).Build();
@@ -87,8 +89,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
                 actual[i].StartDateTime.Should().Be(operation.StartDateTime);
                 actual[i].EndDateTime.Should().Be(operation.EndDateTime.TimeOrEndDefault());
                 actual[i].VatClassification.Should().Be(operation.VatClassification);
-                actual[i].TaxIndicator.Should().Be(operation.TaxIndicator);
-                actual[i].TransparentInvoicing.Should().Be(operation.TransparentInvoicing);
+                actual[i].TaxIndicator.Should().Be(true);
+                actual[i].TransparentInvoicing.Should().Be(true);
                 actual[i].Resolution.Should().Be(operation.Resolution);
                 actual[i].Points.Should().BeEquivalentTo(
                     operation.Points,
@@ -97,10 +99,10 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
         }
 
         [Theory]
-        [InlineAutoDomainData(false, 0)]
-        [InlineAutoDomainData(true, 1)]
+        [InlineAutoDomainData(TaxIndicator.NoTax, 0)]
+        [InlineAutoDomainData(TaxIndicator.Tax, 1)]
         public async Task CreateAsync_WhenNotTaxCharge_ReturnsEmptyList(
-            bool taxIndicator,
+            TaxIndicator taxIndicator,
             int availableChargeDataCount,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             ChargeCommandBuilder chargeCommandBuilder,
@@ -123,6 +125,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
             var chargeOperationDto = new ChargeOperationDtoBuilder()
                 .WithPoint(1, 1)
                 .WithTaxIndicator(taxIndicator)
+                .WithTransparentInvoicing(TransparentInvoicing.Transparent)
                 .Build();
             var chargeCommand = chargeCommandBuilder.WithChargeOperation(chargeOperationDto).Build();
             var acceptedEvent = chargeCommandAcceptedEventBuilder.WithChargeCommand(chargeCommand).Build();
@@ -155,9 +158,12 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
                 .WithChargeOperations(
                     new List<ChargeOperationDto>
                     {
-                        new ChargeOperationDtoBuilder().WithTaxIndicator(true).Build(),
-                        new ChargeOperationDtoBuilder().WithTaxIndicator(true).Build(),
-                        new ChargeOperationDtoBuilder().WithTaxIndicator(true).Build(),
+                        new ChargeOperationDtoBuilder().WithTaxIndicator(TaxIndicator.Tax)
+                            .WithTransparentInvoicing(TransparentInvoicing.Transparent).Build(),
+                        new ChargeOperationDtoBuilder().WithTaxIndicator(TaxIndicator.Tax)
+                            .WithTransparentInvoicing(TransparentInvoicing.Transparent).Build(),
+                        new ChargeOperationDtoBuilder().WithTaxIndicator(TaxIndicator.Tax)
+                            .WithTransparentInvoicing(TransparentInvoicing.Transparent).Build(),
                     })
                 .Build();
             var acceptedEvent = chargeCommandAcceptedEventBuilder.WithChargeCommand(chargeCommand).Build();

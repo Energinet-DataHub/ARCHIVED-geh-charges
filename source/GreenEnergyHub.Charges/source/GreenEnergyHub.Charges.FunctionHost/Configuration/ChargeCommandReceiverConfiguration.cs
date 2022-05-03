@@ -54,6 +54,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<ICimValidationErrorCodeFactory, CimValidationErrorCodeFactory>();
             serviceCollection.AddScoped<IAvailableChargeReceiptValidationErrorFactory,
                 AvailableChargeReceiptValidationErrorFactory>();
+            serviceCollection.AddScoped<IChargeHandler, ChargeHandler>();
 
             ConfigureDatabase(serviceCollection);
             ConfigureValidation(serviceCollection);

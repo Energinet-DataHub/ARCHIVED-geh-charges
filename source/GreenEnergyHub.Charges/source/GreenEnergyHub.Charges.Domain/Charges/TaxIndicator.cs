@@ -12,16 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.MarketParticipants
+namespace GreenEnergyHub.Charges.Domain.Charges
 {
-    /// <summary>
-    /// BusinessReasonCode indicates the intended business context.
-    /// </summary>
-    public enum BusinessReasonCode
+    public enum TaxIndicator
     {
         Unknown = 0,
-        UpdateMasterDataSettlement = 1,
-        UpdateChargeInformation = 2,
-        UpdateChargePrices = 3,
+        NoTax = 1,
+        Tax = 2,
     }
 }
