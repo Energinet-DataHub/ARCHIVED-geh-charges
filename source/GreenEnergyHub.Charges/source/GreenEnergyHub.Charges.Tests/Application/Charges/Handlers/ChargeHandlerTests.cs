@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
     {
         [Theory]
         [InlineAutoDomainData]
-        public async Task HandleAsync_WhenBusinessReasonCodeIsUpdatePriceInformation_SendConfirmation(
+        public async Task HandleAsync_WhenBusinessReasonCodeIsUpdateChargePrices_SendConfirmation(
             ChargeCommandReceivedEvent chargeCommandReceivedEvent,
             ChargeCommandAcceptedEvent chargeCommandAcceptedEvent,
             [Frozen] Mock<IMessageDispatcher<ChargeCommandAcceptedEvent>> messageDispatcherMock,

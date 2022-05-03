@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
     {
         [Theory]
         [InlineAutoDomainData]
-        public async Task ChangeOfChargesTransactionHandler_WhenCalledWithCharge_ShouldCallChargePublisher(
+        public async Task HandleAsync_WhenCalledWithChargeCommand_ShouldDispatchReceivedEvent(
             [Frozen] Mock<IMessageDispatcher<ChargeCommandReceivedEvent>> chargeEventPublisher,
             ChargeCommandHandler sut)
         {
@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             var document = new DocumentDtoBuilder()
                 .WithBusinessReasonCode(BusinessReasonCode.UpdateChargeInformation)
                 .Build();
-            var transaction = new ChargeCommandBuilder().WithDocumentDto(document).Build();
+            var command = new ChargeCommandBuilder().WithDocumentDto(document).Build();
 
             // Act
             await sut.HandleAsync(transaction).ConfigureAwait(false);
