@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Cim.Charges
         [Theory]
         [InlineData(TaxIndicator.NoTax, false)]
         [InlineData(TaxIndicator.Tax, true)]
-        public void Map_WhenGivenKnownInput_MapsToCorrectString(TaxIndicator taxIndicator, bool expected)
+        public void Map_WhenGivenKnownInput_MapsToCorrectBoolean(TaxIndicator taxIndicator, bool expected)
         {
             var actual = TaxIndicatorMapper.Map(taxIndicator);
             actual.Should().Be(expected);

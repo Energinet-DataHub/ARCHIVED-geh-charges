@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Cim.Charges
         [Theory]
         [InlineData(TransparentInvoicing.NonTransparent, false)]
         [InlineData(TransparentInvoicing.Transparent, true)]
-        public void Map_WhenGivenKnownInput_MapsToCorrectString(TransparentInvoicing transparentInvoicing, bool expected)
+        public void Map_WhenGivenKnownInput_MapsToCorrectBoolean(TransparentInvoicing transparentInvoicing, bool expected)
         {
             var actual = TransparentInvoicingMapper.Map(transparentInvoicing);
             actual.Should().Be(expected);
