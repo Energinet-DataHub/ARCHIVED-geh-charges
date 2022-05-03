@@ -12,24 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
+namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.DocumentValidation.ValidationRules
 {
-    public class DocumentTypeMustBeRequestUpdateChargeInformationRule : IValidationRule
+    public class CommandSenderMustBeAnExistingMarketParticipantRule : IValidationRule
     {
-        private readonly DocumentDto _documentDto;
+        private readonly MarketParticipant? _sender;
 
-        public DocumentTypeMustBeRequestUpdateChargeInformationRule(DocumentDto documentDto)
+        public CommandSenderMustBeAnExistingMarketParticipantRule(MarketParticipant? sender)
         {
-            _documentDto = documentDto;
+            _sender = sender;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
-            ValidationRuleIdentifier.DocumentTypeMustBeRequestUpdateChargeInformation;
+            ValidationRuleIdentifier.CommandSenderMustBeAnExistingMarketParticipant;
 
-        public bool IsValid => _documentDto.Type == DocumentType.RequestUpdateChargeInformation;
+        public bool IsValid => _sender != null;
     }
 }

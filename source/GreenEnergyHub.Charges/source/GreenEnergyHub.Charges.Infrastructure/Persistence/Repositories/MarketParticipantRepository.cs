@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
         {
             return await _chargesDatabaseContext
                 .MarketParticipants
-                .SingleOrDefaultAsync(mp => mp.Id == id).ConfigureAwait(false);
+                .FindAsync(id).ConfigureAwait(false);
         }
 
         public async Task<MarketParticipant?> GetOrNullAsync(string marketParticipantId)

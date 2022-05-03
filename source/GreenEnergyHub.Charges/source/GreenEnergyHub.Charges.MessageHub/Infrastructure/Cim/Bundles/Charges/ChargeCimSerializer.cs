@@ -113,12 +113,13 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.Charges
                     charge.Points.Count > 0,
                     CimChargeConstants.ChargeResolution,
                     () => ResolutionMapper.Map(charge.Resolution)),
-                new XElement(cimNamespace + CimChargeConstants.StartDateTime, charge.StartDateTime.ToString()),
-                // EndDateTime
+                // EffectiveDate
+                new XElement(cimNamespace + CimChargeConstants.EffectiveDate, charge.StartDateTime.ToString()),
+                // TerminationDate
                 CimHelper.GetElementIfNeeded(
                     cimNamespace,
                     charge.EndDateTime.IsEndDefault(),
-                    CimChargeConstants.EndDateTime,
+                    CimChargeConstants.TerminationDate,
                     () => charge.EndDateTime.ToString()),
                 // VatClassification
                 CimHelper.GetElementIfNeeded(

@@ -50,19 +50,22 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeLin
         protected override XNamespace GetNamespace(IEnumerable<AvailableChargeLinksReceiptData> records)
         {
             return IsConfirmation(records) ?
-                CimChargeLinkReceiptConstants.ConfirmNamespace : CimChargeLinkReceiptConstants.RejectNamespace;
+                CimChargeLinkReceiptConstants.ConfirmNamespace :
+                CimChargeLinkReceiptConstants.RejectNamespace;
         }
 
         protected override XNamespace GetSchemaLocation(IEnumerable<AvailableChargeLinksReceiptData> records)
         {
             return IsConfirmation(records) ?
-                CimChargeLinkReceiptConstants.ConfirmSchemaLocation : CimChargeLinkReceiptConstants.RejectSchemaLocation;
+                CimChargeLinkReceiptConstants.ConfirmSchemaLocation :
+                CimChargeLinkReceiptConstants.RejectSchemaLocation;
         }
 
         protected override string GetRootElementName(IEnumerable<AvailableChargeLinksReceiptData> records)
         {
             return IsConfirmation(records) ?
-                CimChargeLinkReceiptConstants.ConfirmRootElement : CimChargeLinkReceiptConstants.RejectRootElement;
+                CimChargeLinkReceiptConstants.ConfirmRootElement :
+                CimChargeLinkReceiptConstants.RejectRootElement;
         }
 
         protected override DocumentType GetDocumentType(IEnumerable<AvailableChargeLinksReceiptData> records)
@@ -70,18 +73,14 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeLin
             return DocumentType.ChargeLinkReceipt;
         }
 
-        protected override XElement GetActivityRecord(
-            XNamespace cimNamespace,
-            AvailableChargeLinksReceiptData receipt)
+        protected override XElement GetActivityRecord(XNamespace cimNamespace, AvailableChargeLinksReceiptData receipt)
         {
             return new XElement(
                 cimNamespace + CimMarketDocumentConstants.MarketActivityRecord,
                 new XElement(
-                    cimNamespace + CimChargeLinkReceiptConstants.MarketActivityRecordId,
-                    CimIdProvider.GetUniqueId()),
+                    cimNamespace + CimChargeLinkReceiptConstants.MarketActivityRecordId, CimIdProvider.GetUniqueId()),
                 new XElement(
-                    cimNamespace + CimChargeLinkReceiptConstants.OriginalOperationId,
-                    receipt.OriginalOperationId),
+                    cimNamespace + CimChargeLinkReceiptConstants.OriginalOperationId, receipt.OriginalOperationId),
                 new XElement(
                     cimNamespace + CimChargeLinkReceiptConstants.MeteringPointId,
                     new XAttribute(

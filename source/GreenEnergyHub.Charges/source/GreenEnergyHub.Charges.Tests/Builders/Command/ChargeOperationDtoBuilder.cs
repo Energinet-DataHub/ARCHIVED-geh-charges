@@ -26,8 +26,8 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         private Instant _startDateTime;
         private Instant? _endDateTime;
         private VatClassification _vatClassification;
-        private bool _transparentInvoicing;
-        private bool _taxIndicator;
+        private TransparentInvoicing _transparentInvoicing;
+        private TaxIndicator _taxIndicator;
         private string _owner;
         private string _description;
         private string _chargeName;
@@ -44,7 +44,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             _endDateTime = SystemClock.Instance.GetCurrentInstant()
                 .Plus(Duration.FromDays(1000));
             _vatClassification = VatClassification.Vat25;
-            _taxIndicator = false;
+            _taxIndicator = TaxIndicator.Tax;
             _owner = "owner";
             _description = "some description";
             _chargeName = "some charge name";
@@ -77,7 +77,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             return this;
         }
 
-        public ChargeOperationDtoBuilder WithTaxIndicator(bool taxIndicator)
+        public ChargeOperationDtoBuilder WithTaxIndicator(TaxIndicator taxIndicator)
         {
             _taxIndicator = taxIndicator;
             return this;
@@ -95,7 +95,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             return this;
         }
 
-        public ChargeOperationDtoBuilder WithTransparentInvoicing(bool transparentInvoicing)
+        public ChargeOperationDtoBuilder WithTransparentInvoicing(TransparentInvoicing transparentInvoicing)
         {
             _transparentInvoicing = transparentInvoicing;
             return this;

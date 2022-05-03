@@ -19,6 +19,7 @@ using Energinet.DataHub.Core.Messaging.Transport.SchemaValidation;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Application.Charges.Handlers.Message;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
 using Microsoft.Azure.Functions.Worker;
@@ -58,9 +59,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
 
             if (AuthenticatedMatchesSenderId(inboundMessage) == false)
             {
-                return _httpResponseBuilder.CreateBadRequestResponseWithText(
-                    req,
-                    "The sender organization provided in the request body does not match the organization in the bearer token.");
+                return _httpResponseBuilder.CreateBadRequestWithErrorText(
+                    req, SynchronousErrorMessageConstants.ActorIsNotWhoTheyClaimToBeErrorMessage);
             }
 
             if (inboundMessage.HasErrors)
@@ -71,7 +71,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             }
 
             var message = GetChargesMessage(inboundMessage.ValidatedMessage);
-
             ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(message.ChargeCommands);
 
             await _chargesMessageHandler.HandleAsync(message).ConfigureAwait(false);

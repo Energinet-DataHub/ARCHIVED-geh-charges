@@ -14,9 +14,7 @@
 
 using System;
 using System.Net;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using FluentAssertions;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
@@ -63,11 +61,29 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             [Fact]
             public async Task When_RequestIsUnauthenticated_Then_AHttp401UnauthorizedIsReturned()
             {
-                var (request, _) = HttpRequestGenerator.CreateHttpPostRequest(EndpointUrl, ChargeDocument.TariffBundleWithValidAndInvalid);
+                var (request, _) = HttpRequestGenerator.CreateHttpPostRequest(
+                    EndpointUrl, ChargeDocument.TariffBundleWithValidAndInvalid);
 
                 var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 actual.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+            }
+
+            [Fact]
+            public async Task Given_NewMessage_When_SenderIdDoesNotMatchAuthenticatedId_Then_ShouldReturnErrorMessage()
+            {
+                // Arrange
+                var (request, _) = await _authenticatedHttpRequestGenerator
+                    .CreateAuthenticatedHttpPostRequestAsync(
+                        EndpointUrl, ChargeDocument.ChargeDocumentWhereSenderIdDoNotMatchAuthorizedActorId);
+
+                // Act
+                var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                actual.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+                var errorMessage = await actual.Content.ReadAsStringAsync();
+                errorMessage.Should().Be(ErrorMessageConstants.ActorIsNotWhoTheyClaimToBeErrorMessage);
             }
 
             [Fact]
@@ -154,28 +170,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId, 3);
             }
 
-            [Fact]
-            public async Task Given_NewMessage_When_SenderIdDoesNotMatchAuthenticatedId_Then_ShouldReturnErrorMessage()
-            {
-                // Arrange
-                var (request, correlationId) = await _authenticatedHttpRequestGenerator
-                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.ChargeDocumentWithWhereSenderIdDoNotMatchAuthorizedActorId);
-
-                // Act
-                var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
-
-                // Assert
-                var errorMessage = await actual.Content.ReadAsStreamAsync();
-                var document = await XElement.LoadAsync(errorMessage, LoadOptions.None, CancellationToken.None);
-                actual.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-                document.Element("code")?.Value.Should().Be("BadRequest");
-                document.Element("message")?.Value.Should().Be("The sender organization provided in the request body does not match the organization in the bearer token.");
-            }
-
             [Theory]
             [InlineAutoMoqData(ChargeDocument.SubscriptionMonthlyPriceSample)]
             [InlineAutoMoqData(ChargeDocument.FeeMonthlyPriceSample)]
             [InlineAutoMoqData(ChargeDocument.TariffHourlyPricesSample)]
+            [InlineAutoMoqData(ChargeDocument.TariffPriceSeries)]
             public async Task Given_ChargeExampleFileWithPrices_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply(
                 string testFilePath)
             {
