@@ -15,7 +15,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Core.DateTime;
@@ -88,7 +87,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
                     operation.TaxIndicator,
                     operation.TransparentInvoicing,
                     operation.Resolution,
-                    input.Command.Document.Type,
+                    DocumentType.NotifyPriceList, // Will be added to the HTTP MessageType header
                     operationOrder,
                     points));
             }
