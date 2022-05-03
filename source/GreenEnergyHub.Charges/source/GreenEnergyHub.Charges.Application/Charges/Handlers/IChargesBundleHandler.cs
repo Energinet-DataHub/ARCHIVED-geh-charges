@@ -12,21 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.Charges.Handlers.Message;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
     /// <summary>
     /// Contract for handling a change of charges message.
     /// </summary>
-    public interface IChargesMessageHandler
+    public interface IChargesBundleHandler
     {
         /// <summary>
         /// Synchronously handle the message.
         /// </summary>
         /// <param name="message">ChargesMessage</param>
-        Task HandleAsync(ChargesMessage message);
+        Task HandleAsync(ChargeCommandBundle message);
     }
 }

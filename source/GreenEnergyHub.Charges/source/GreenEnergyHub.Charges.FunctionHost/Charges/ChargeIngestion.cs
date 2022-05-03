@@ -17,7 +17,6 @@ using System.Threading.Tasks;
 using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
 using Energinet.DataHub.Core.Messaging.Transport.SchemaValidation;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
-using GreenEnergyHub.Charges.Application.Charges.Handlers.Message;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
@@ -33,18 +32,18 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
         /// The name of the function.
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
-        private readonly IChargesMessageHandler _chargesMessageHandler;
+        private readonly IChargesBundleHandler _chargesBundleHandler;
         private readonly IHttpResponseBuilder _httpResponseBuilder;
         private readonly ValidatingMessageExtractor<ChargeCommandBundle> _messageExtractor;
         private readonly IActorContext _actorContext;
 
         public ChargeIngestion(
-            IChargesMessageHandler chargesMessageHandler,
+            IChargesBundleHandler chargesBundleHandler,
             IHttpResponseBuilder httpResponseBuilder,
             ValidatingMessageExtractor<ChargeCommandBundle> messageExtractor,
             IActorContext actorContext)
         {
-            _chargesMessageHandler = chargesMessageHandler;
+            _chargesBundleHandler = chargesBundleHandler;
             _httpResponseBuilder = httpResponseBuilder;
             _messageExtractor = messageExtractor;
             _actorContext = actorContext;
@@ -70,11 +69,11 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
                     .ConfigureAwait(false);
             }
 
-            var message = GetChargesMessage(inboundMessage.ValidatedMessage);
+            var bundle = inboundMessage.ValidatedMessage;
 
-            ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(message.ChargeCommands);
+            ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(bundle.ChargeCommands);
 
-            await _chargesMessageHandler.HandleAsync(message).ConfigureAwait(false);
+            await _chargesBundleHandler.HandleAsync(bundle).ConfigureAwait(false);
 
             return _httpResponseBuilder.CreateAcceptedResponse(req);
         }
@@ -92,13 +91,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             return (SchemaValidatedInboundMessage<ChargeCommandBundle>)await _messageExtractor
                 .ExtractAsync(req.Body)
                 .ConfigureAwait(false);
-        }
-
-        private ChargesMessage GetChargesMessage(ChargeCommandBundle chargeCommandBundle)
-        {
-            var message = new ChargesMessage();
-            message.ChargeCommands.AddRange(chargeCommandBundle.ChargeCommands);
-            return message;
         }
     }
 }
