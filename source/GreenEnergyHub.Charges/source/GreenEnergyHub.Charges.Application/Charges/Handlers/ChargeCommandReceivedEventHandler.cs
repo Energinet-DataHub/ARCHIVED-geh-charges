@@ -77,6 +77,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 for (var i = 0; i < operations.Length; i++)
                 {
                     var operation = operations[i];
+                    var charge = await GetChargeAsync(operation).ConfigureAwait(false);
 
                     var inputValidationResult = _inputValidator.Validate(operation);
                     if (inputValidationResult.IsFailed)
@@ -94,9 +95,33 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                         break;
                     }
 
-                    operationsToBeConfirmed.Add(operation);
+                    var operationType = GetOperationType(operation, charge);
+                    switch (operationType)
+                    {
+                        /*
+                         * In order to fix issue 1276, the create operation is allowed to violate the unit of work pattern.
+                         * This is done to ensure the next operations in the bundle will be processed correctly.
+                         * Do note that the ChargeCommandReceivedEventHandler is currently being refactored. So this is
+                         * considered a short-sighted solution.
+                         */
+                        case OperationType.Create:
+                            await HandleCreateEventAsync(operation).ConfigureAwait(false);
+                            await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+                            break;
+                        case OperationType.Update:
+                            HandleUpdateEvent(charge!, operation);
+                            break;
+                        case OperationType.Stop:
+                            charge!.Stop(operation.EndDateTime);
+                            break;
+                        case OperationType.CancelStop:
+                            HandleCancelStopEvent(charge!, operation);
+                            break;
+                        default:
+                            throw new InvalidOperationException("Could not handle charge command.");
+                    }
 
-                    // TODO: Business validation and handle operation update
+                    operationsToBeConfirmed.Add(operation);
                 }
 
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
@@ -234,10 +259,8 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 : OperationType.Update;
         }
 
-        private async Task<Charge?> GetChargeAsync(ChargeCommandReceivedEvent chargeCommandReceivedEvent)
+        private async Task<Charge?> GetChargeAsync(ChargeOperationDto chargeOperationDto)
         {
-            var chargeOperationDto = chargeCommandReceivedEvent.Command.ChargeOperations.First();
-
             var chargeIdentifier = new ChargeIdentifier(
                 chargeOperationDto.ChargeId,
                 chargeOperationDto.ChargeOwner,
