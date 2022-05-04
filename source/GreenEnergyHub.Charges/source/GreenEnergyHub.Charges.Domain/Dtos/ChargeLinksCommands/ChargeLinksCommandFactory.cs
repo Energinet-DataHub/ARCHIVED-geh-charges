@@ -77,6 +77,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
 
             var chargeLinks = defChargeAndCharge.Select(pair => new ChargeLinkDto(
                     Guid.NewGuid().ToString(), // When creating default charge links, the TSO starts a new operation, which is why a new OperationId is provided.
+                    meteringPoint.MeteringPointId,
                     pair.Key.GetStartDateTime(meteringPoint.EffectiveDate),
                     pair.Key.EndDateTime,
                     pair.Value.SenderProvidedChargeId,
@@ -105,7 +106,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
                 .ConfigureAwait(false);
 
             return new ChargeLinksCommand(
-                createDefaultChargeLinksRequest.MeteringPointId,
                 new DocumentDto
                 {
                     Id = Guid.NewGuid().ToString(),

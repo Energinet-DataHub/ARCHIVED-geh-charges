@@ -58,7 +58,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
                         Guid.NewGuid(), // ID of each available piece of data must be unique
                         ReceiptStatus.Confirmed,
                         link.OperationId,
-                        acceptedEvent.ChargeLinksCommand.MeteringPointId,
+                        link.MeteringPointId,
                         acceptedEvent.ChargeLinksCommand.Document.Type,
                         acceptedEvent.ChargeLinksCommand.ChargeLinksOperations.ToList().IndexOf(link),
                         new List<AvailableReceiptValidationError>()))

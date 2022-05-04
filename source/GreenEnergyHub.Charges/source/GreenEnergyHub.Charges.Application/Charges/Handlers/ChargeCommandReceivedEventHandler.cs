@@ -31,7 +31,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         private readonly IChargeCommandReceiptService _chargeCommandReceiptService;
         private readonly IDocumentValidator<ChargeCommand> _documentValidator;
         private readonly IInputValidator<ChargeOperationDto> _inputValidator;
-        private readonly IBusinessValidator<ChargeCommand> _businessValidator;
+        private readonly IBusinessValidator<ChargeOperationDto> _businessValidator;
         private readonly IChargeRepository _chargeRepository;
         private readonly IChargeFactory _chargeFactory;
         private readonly IChargePeriodFactory _chargePeriodFactory;
@@ -41,7 +41,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             IChargeCommandReceiptService chargeCommandReceiptService,
             IDocumentValidator<ChargeCommand> documentValidator,
             IInputValidator<ChargeOperationDto> inputValidator,
-            IBusinessValidator<ChargeCommand> businessValidator,
+            IBusinessValidator<ChargeOperationDto> businessValidator,
             IChargeRepository chargeRepository,
             IChargeFactory chargeFactory,
             IChargePeriodFactory chargePeriodFactory,
@@ -69,28 +69,41 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             if (documentValidationResult.IsFailed)
             {
                 operationsToBeRejected.AddRange(commandReceivedEvent.Command.ChargeOperations);
-                /*await _chargeCommandReceiptService
-                    .RejectAsync(commandReceivedEvent.Command, documentValidationResult).ConfigureAwait(false);*/
-                return;
             }
-
-            var operations = commandReceivedEvent.Command.ChargeOperations.ToArray();
-
-            for (var i = 0; i < operations.Length; i++)
+            else
             {
-                var operation = operations[i];
-                var inputValidationResult = _inputValidator.Validate(operation);
+                var operations = commandReceivedEvent.Command.ChargeOperations.ToArray();
 
-                if (inputValidationResult.IsFailed)
+                for (var i = 0; i < operations.Length; i++)
                 {
-                    operationsToBeRejected = operations[i..].ToList();
-                    /*await _chargeCommandReceiptService
-                        .RejectAsync(commandReceivedEvent.Command, inputValidationResult).ConfigureAwait(false);*/
-                    break;
+                    var operation = operations[i];
+
+                    var inputValidationResult = _inputValidator.Validate(operation);
+                    if (inputValidationResult.IsFailed)
+                    {
+                        // TODO: All rejections should point to operation failed validation
+                        operationsToBeRejected = operations[i..].ToList();
+                        break;
+                    }
+
+                    var businessValidationResult = await _businessValidator.ValidateAsync(operation).ConfigureAwait(false);
+                    if (inputValidationResult.IsFailed)
+                    {
+                        // TODO: All rejections should point to operation failed validation
+                        operationsToBeRejected = operations[i..].ToList();
+                        break;
+                    }
+
+                    operationsToBeConfirmed.Add(operation);
+
+                    // TODO: Business validation and handle operation update
                 }
 
-                operationsToBeConfirmed.Add(operation);
+                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             }
+
+            // TODO: Send rejections
+            // TODO: Send confirmations
 
             /* TODO:
              *  - businessValidation (and add to reject and confirm lists)
@@ -101,88 +114,87 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             */
 
             // TODO: Delete the following when refactoring is done
-            var acceptedOperations = new List<ChargeOperationDto>();
-
-            var triggeredBy = string.Empty;
-
-            foreach (var chargeOperationDto in commandReceivedEvent.Command.ChargeOperations)
-            {
-                var charge = await GetChargeAsync(commandReceivedEvent).ConfigureAwait(false);
-                var chargeCommandWithOperation = new ChargeCommand(
-                    commandReceivedEvent.Command.Document,
-                    new List<ChargeOperationDto> { chargeOperationDto });
-                triggeredBy = await HandleInvalidBusinessRulesAsync(
-                    chargeCommandWithOperation,
-                    triggeredBy).ConfigureAwait(false);
-                if (!string.IsNullOrEmpty(triggeredBy)) continue;
-
-                var operationType = GetOperationType(chargeOperationDto, charge);
-
-                switch (operationType)
-                {
-                    /*
-                     * In order to fix issue 1276, the create operation is allowed to violate the unit of work pattern.
-                     * This is done to ensure the next operations in the bundle will be processed correctly.
-                     * Do note that the ChargeCommandReceivedEventHandler is currently being refactored. So this is
-                     * considered a short-sighted solution.
-                     */
-                    case OperationType.Create:
-                        await HandleCreateEventAsync(chargeOperationDto).ConfigureAwait(false);
-                        await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-                        break;
-                    case OperationType.Update:
-                        HandleUpdateEvent(charge!, chargeOperationDto);
-                        break;
-                    case OperationType.Stop:
-                        charge!.Stop(chargeOperationDto.EndDateTime);
-                        break;
-                    case OperationType.CancelStop:
-                        HandleCancelStopEvent(charge!, chargeOperationDto);
-                        break;
-                    default:
-                        throw new InvalidOperationException("Could not handle charge command.");
-                }
-
-                acceptedOperations.Add(chargeOperationDto);
-            }
-
-            var acceptedChargeCommand = new ChargeCommand(commandReceivedEvent.Command.Document, acceptedOperations);
-            await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-            await _chargeCommandReceiptService.AcceptAsync(acceptedChargeCommand).ConfigureAwait(false);
+            // var acceptedOperations = new List<ChargeOperationDto>();
+            //
+            // var triggeredBy = string.Empty;
+            //
+            // foreach (var chargeOperationDto in commandReceivedEvent.Command.ChargeOperations)
+            // {
+            //     var charge = await GetChargeAsync(commandReceivedEvent).ConfigureAwait(false);
+            //     var chargeCommandWithOperation = new ChargeCommand(
+            //         commandReceivedEvent.Command.Document,
+            //         new List<ChargeOperationDto> { chargeOperationDto });
+            //     triggeredBy = await HandleInvalidBusinessRulesAsync(
+            //         chargeCommandWithOperation,
+            //         triggeredBy).ConfigureAwait(false);
+            //     if (!string.IsNullOrEmpty(triggeredBy)) continue;
+            //
+            //     var operationType = GetOperationType(chargeOperationDto, charge);
+            //
+            //     switch (operationType)
+            //     {
+            //         /*
+            //          * In order to fix issue 1276, the create operation is allowed to violate the unit of work pattern.
+            //          * This is done to ensure the next operations in the bundle will be processed correctly.
+            //          * Do note that the ChargeCommandReceivedEventHandler is currently being refactored. So this is
+            //          * considered a short-sighted solution.
+            //          */
+            //         case OperationType.Create:
+            //             await HandleCreateEventAsync(chargeOperationDto).ConfigureAwait(false);
+            //             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+            //             break;
+            //         case OperationType.Update:
+            //             HandleUpdateEvent(charge!, chargeOperationDto);
+            //             break;
+            //         case OperationType.Stop:
+            //             charge!.Stop(chargeOperationDto.EndDateTime);
+            //             break;
+            //         case OperationType.CancelStop:
+            //             HandleCancelStopEvent(charge!, chargeOperationDto);
+            //             break;
+            //         default:
+            //             throw new InvalidOperationException("Could not handle charge command.");
+            //     }
+            //
+            //     acceptedOperations.Add(chargeOperationDto);
+            // }
+            //
+            // var acceptedChargeCommand = new ChargeCommand(commandReceivedEvent.Command.Document, acceptedOperations);
+            // await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+            // await _chargeCommandReceiptService.AcceptAsync(acceptedChargeCommand).ConfigureAwait(false);
         }
 
-        private async Task<string> HandleInvalidBusinessRulesAsync(
-            ChargeCommand chargeCommandWithOperation,
-            string triggeredBy)
-        {
-            if (string.IsNullOrEmpty(triggeredBy))
-            {
-                var businessValidationResult =
-                    await _businessValidator.ValidateAsync(chargeCommandWithOperation).ConfigureAwait(false);
-                if (businessValidationResult.IsFailed)
-                {
-                    // First error found in bundle, we reject with the original validation error
-                    triggeredBy = chargeCommandWithOperation.ChargeOperations.Single().Id;
-                    await _chargeCommandReceiptService
-                        .RejectAsync(chargeCommandWithOperation, businessValidationResult)
-                        .ConfigureAwait(false);
-                }
-            }
-            else
-            {
-                // A previous error has occured, we reject all subsequent operations in bundle with special validation error
-                var rejectionValidationResult = ValidationResult.CreateFailure(new List<IValidationRule>()
-                {
-                    new PreviousOperationsMustBeValidRule(triggeredBy, chargeCommandWithOperation.ChargeOperations.Single()),
-                });
-                await _chargeCommandReceiptService
-                    .RejectAsync(chargeCommandWithOperation, rejectionValidationResult)
-                    .ConfigureAwait(false);
-            }
-
-            return triggeredBy;
-        }
-
+        // private async Task<string> HandleInvalidBusinessRulesAsync(
+        //     ChargeCommand chargeCommandWithOperation,
+        //     string triggeredBy)
+        // {
+        //     if (string.IsNullOrEmpty(triggeredBy))
+        //     {
+        //         var businessValidationResult =
+        //             await _businessValidator.ValidateAsync(chargeCommandWithOperation).ConfigureAwait(false);
+        //         if (businessValidationResult.IsFailed)
+        //         {
+        //             // First error found in bundle, we reject with the original validation error
+        //             triggeredBy = chargeCommandWithOperation.ChargeOperations.Single().Id;
+        //             await _chargeCommandReceiptService
+        //                 .RejectAsync(chargeCommandWithOperation, businessValidationResult)
+        //                 .ConfigureAwait(false);
+        //         }
+        //     }
+        //     else
+        //     {
+        //         // A previous error has occured, we reject all subsequent operations in bundle with special validation error
+        //         var rejectionValidationResult = ValidationResult.CreateFailure(new List<IValidationRule>()
+        //         {
+        //             new PreviousOperationsMustBeValidRule(triggeredBy, chargeCommandWithOperation.ChargeOperations.Single()),
+        //         });
+        //         await _chargeCommandReceiptService
+        //             .RejectAsync(chargeCommandWithOperation, rejectionValidationResult)
+        //             .ConfigureAwait(false);
+        //     }
+        //
+        //     return triggeredBy;
+        // }
         private async Task HandleCreateEventAsync(ChargeOperationDto chargeOperationDto)
         {
             var charge = await _chargeFactory

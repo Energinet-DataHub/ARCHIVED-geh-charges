@@ -63,7 +63,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
                     Guid.NewGuid(), // ID of each available piece of data must be unique
                     ReceiptStatus.Rejected,
                     chargeLinkDto.OperationId,
-                    input.ChargeLinksCommand.MeteringPointId,
+                    chargeLinkDto.MeteringPointId,
                     input.ChargeLinksCommand.Document.Type,
                     input.ChargeLinksCommand.ChargeLinksOperations.ToList().IndexOf(chargeLinkDto),
                     GetReasons(input, chargeLinkDto));

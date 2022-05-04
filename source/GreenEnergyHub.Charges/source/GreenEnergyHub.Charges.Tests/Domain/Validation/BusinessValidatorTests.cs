@@ -14,6 +14,7 @@
 
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
+using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.TestCore.Attributes;
@@ -29,15 +30,15 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Validation
         [Theory]
         [InlineAutoMoqData]
         public async Task ValidateAsync_WhenCalled_WithCommand_UsesFactoryToFetchRulesAndUseRulesToGetResult(
-            [Frozen] Mock<IBusinessValidationRulesFactory<ChargeCommand>> factory,
+            [Frozen] Mock<IBusinessValidationRulesFactory<ChargeOperationDto>> factory,
             Mock<IValidationRuleSet> rules,
-            ChargeCommand command,
+            ChargeOperationDto operation,
             ValidationResult validationResult,
-            BusinessValidator<ChargeCommand> sut)
+            BusinessValidator<ChargeOperationDto> sut)
         {
             // Arrange
             factory.Setup(
-                    f => f.CreateRulesAsync(command))
+                    f => f.CreateRulesAsync(operation))
                 .Returns(
                     Task.FromResult(rules.Object));
 
@@ -46,7 +47,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Validation
                 .Returns(validationResult);
 
             // Act
-            var result = await sut.ValidateAsync(command).ConfigureAwait(false);
+            var result = await sut.ValidateAsync(operation).ConfigureAwait(false);
 
             // Assert
             Assert.NotNull(result);
@@ -56,15 +57,15 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Validation
         [Theory]
         [InlineAutoMoqData]
         public async Task ValidateAsync_WhenCalled_WithOperation_UsesFactoryToFetchRulesAndUseRulesToGetResult(
-            [Frozen] Mock<IBusinessValidationRulesFactory<ChargeCommand>> factory,
+            [Frozen] Mock<IBusinessValidationRulesFactory<ChargeOperationDto>> factory,
             Mock<IValidationRuleSet> rules,
-            ChargeCommand chargeCommand,
+            ChargeOperationDto operation,
             ValidationResult validationResult,
-            BusinessValidator<ChargeCommand> sut)
+            BusinessValidator<ChargeOperationDto> sut)
         {
             // Arrange
             factory.Setup(
-                    f => f.CreateRulesAsync(chargeCommand))
+                    f => f.CreateRulesAsync(operation))
                 .Returns(
                     Task.FromResult(rules.Object));
 
@@ -73,7 +74,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Validation
                 .Returns(validationResult);
 
             // Act
-            var result = await sut.ValidateAsync(chargeCommand).ConfigureAwait(false);
+            var result = await sut.ValidateAsync(operation).ConfigureAwait(false);
 
             // Assert
             Assert.NotNull(result);

@@ -68,7 +68,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
                 actualList[i].RequestDateTime.Should().Be(now);
                 actualList[i].ReceiptStatus.Should().Be(ReceiptStatus.Confirmed);
                 actualList[i].OriginalOperationId.Should().Be(expectedLinks[i].OperationId);
-                actualList[i].MeteringPointId.Should().Be(acceptedEvent.ChargeLinksCommand.MeteringPointId);
+                actualList[i].MeteringPointId.Should().Be(expectedLinks[i].MeteringPointId);
                 actualList[i].ValidationErrors.Should().BeEmpty();
             }
         }

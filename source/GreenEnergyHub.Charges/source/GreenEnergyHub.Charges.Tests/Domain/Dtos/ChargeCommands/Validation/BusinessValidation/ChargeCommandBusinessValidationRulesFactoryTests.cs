@@ -50,7 +50,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             [Frozen] Mock<IChargeRepository> repository,
             [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
             ChargeCommandBusinessValidationRulesFactory sut,
-            ChargeCommandBuilder builder)
+            ChargeOperationDtoBuilder builder)
         {
             // Arrange
             var chargeCommand = builder.Build();
@@ -89,13 +89,12 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         {
             // Arrange
             var chargeOperationDto = new ChargeOperationDtoBuilder().WithChargeType(ChargeType.Fee).Build();
-            var chargeCommand = new ChargeCommandBuilder().WithChargeOperation(chargeOperationDto).Build();
             SetupConfigureRepositoryMock(rulesConfigurationRepository);
             SetupChargeRepositoryMock(chargeRepository, charge);
             SetupMarketParticipantMock(sender, marketParticipantRepository);
 
             // Act
-            var actual = await sut.CreateRulesAsync(chargeCommand).ConfigureAwait(false);
+            var actual = await sut.CreateRulesAsync(chargeOperationDto).ConfigureAwait(false);
             var actualRules = actual.GetRules().Select(r => r.GetType());
 
             // Assert
@@ -119,13 +118,12 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         {
             // Arrange
             var chargeOperationDto = new ChargeOperationDtoBuilder().WithChargeType(ChargeType.Tariff).Build();
-            var chargeCommand = new ChargeCommandBuilder().WithChargeOperation(chargeOperationDto).Build();
             SetupConfigureRepositoryMock(rulesConfigurationRepository);
             SetupChargeRepositoryMock(chargeRepository, charge);
             SetupMarketParticipantMock(sender, marketParticipantRepository);
 
             // Act
-            var actual = await sut.CreateRulesAsync(chargeCommand).ConfigureAwait(false);
+            var actual = await sut.CreateRulesAsync(chargeOperationDto).ConfigureAwait(false);
 
             // Assert
             var actualRules = actual.GetRules().Select(r => r.GetType());
@@ -139,11 +137,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             ChargeCommandBusinessValidationRulesFactory sut)
         {
             // Arrange
-            ChargeCommand? chargeCommand = null;
+            ChargeOperationDto? chargeOperationDto = null;
 
             // Act / Assert
             await Assert
-                .ThrowsAsync<ArgumentNullException>(() => sut.CreateRulesAsync(chargeCommand!))
+                .ThrowsAsync<ArgumentNullException>(() => sut.CreateRulesAsync(chargeOperationDto!))
                 .ConfigureAwait(false);
         }
 
@@ -169,8 +167,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             var validationRules = new List<IValidationRule>();
             foreach (var operation in chargeCommand.ChargeOperations)
             {
-                var commandWithOperation = new ChargeCommand(chargeCommand.Document, new List<ChargeOperationDto>() { operation });
-                validationRules.AddRange((await sut.CreateRulesAsync(commandWithOperation)).GetRules().ToList());
+                validationRules.AddRange((await sut.CreateRulesAsync(operation)).GetRules().ToList());
             }
 
             // Assert

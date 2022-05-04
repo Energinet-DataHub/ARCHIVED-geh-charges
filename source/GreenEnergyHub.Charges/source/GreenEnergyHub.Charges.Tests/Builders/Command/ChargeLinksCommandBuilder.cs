@@ -23,7 +23,6 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
 {
     public class ChargeLinksCommandBuilder
     {
-        private readonly string _meteringPointId = Guid.NewGuid().ToString();
         private readonly DocumentDto _document = new DocumentDto
         {
             Id = Guid.NewGuid().ToString(),
@@ -36,7 +35,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             Type = DocumentType.ChargeLinkReceipt,
         };
 
-        private List<ChargeLinkDto> _links = new List<ChargeLinkDto>();
+        private List<ChargeLinkDto> _links = new();
 
         public ChargeLinksCommandBuilder WithChargeLinks(List<ChargeLinkDto> links)
         {
@@ -46,12 +45,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
 
         public ChargeLinksCommand Build()
         {
-            return new ChargeLinksCommand(_meteringPointId, _document, _links);
-        }
-
-        public ChargeLinksCommand Build(string meteringPointId)
-        {
-            return new ChargeLinksCommand(meteringPointId, _document, _links);
+            return new ChargeLinksCommand(_document, _links);
         }
     }
 }

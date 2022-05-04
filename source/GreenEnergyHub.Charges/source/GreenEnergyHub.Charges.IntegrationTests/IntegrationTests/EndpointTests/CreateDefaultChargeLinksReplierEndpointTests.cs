@@ -57,7 +57,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
             public async Task When_ChargeLinksAcceptedEvent_Then_CreateLinkReply()
             {
                 // Arrange
-                var command = new ChargeLinksCommandBuilder().Build("571313180000000005");
+                var links = new List<ChargeLinkDto>
+                {
+                    new ChargeLinkDtoBuilder().WithMeteringPointId("571313180000000005").Build(),
+                };
+                var command = new ChargeLinksCommandBuilder().WithChargeLinks(links).Build();
                 var correlationId = CorrelationIdGenerator.Create();
                 var parentId = $"00-{correlationId}-b7ad6b7169203331-02";
                 var message = CreateServiceBusMessage(command, correlationId);

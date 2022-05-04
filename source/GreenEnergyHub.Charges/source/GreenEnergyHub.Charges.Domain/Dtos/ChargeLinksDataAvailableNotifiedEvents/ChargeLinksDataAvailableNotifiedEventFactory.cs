@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Linq;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksDataAvailableNotifiedEvents
@@ -20,9 +21,13 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksDataAvailableNotifiedEve
     {
         public ChargeLinksDataAvailableNotifiedEvent Create(ChargeLinksAcceptedEvent chargeLinksAcceptedEvent)
         {
+            var meteringPointId = chargeLinksAcceptedEvent.ChargeLinksCommand.ChargeLinksOperations
+                .Single()
+                .MeteringPointId;
+
             return new ChargeLinksDataAvailableNotifiedEvent(
                 chargeLinksAcceptedEvent.PublishedTime,
-                chargeLinksAcceptedEvent.ChargeLinksCommand.MeteringPointId);
+                meteringPointId);
         }
     }
 }

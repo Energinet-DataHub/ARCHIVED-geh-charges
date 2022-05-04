@@ -25,8 +25,10 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.TestHelpers;
 using Moq;
+using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
@@ -41,8 +43,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             [Frozen] Mock<IChargeLinksReceiptService> chargeLinksReceiptService,
             [Frozen] Mock<IChargeLinkFactory> chargeLinkFactory,
             [Frozen] Mock<IChargeLinksAcceptedEventFactory> chargeLinkCommandAcceptedEventFactory,
-            [Frozen] Mock<IBusinessValidator<ChargeLinksCommand>> businessValidator,
-            ChargeLinksReceivedEvent chargeLinksReceivedEvent,
+            [Frozen] Mock<IBusinessValidator<ChargeLinkDto>> businessValidator,
+            ChargeLinkDtoBuilder linksDtoBuilder,
+            ChargeLinksCommandBuilder linksCommandBuilder,
             ChargeLinksAcceptedEvent chargeLinksAcceptedEvent,
             ChargeLinksReceivedEventHandler sut)
         {
@@ -50,6 +53,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             var fixture = new Fixture().Customize(new AutoMoqCustomization());
             fixture.Customizations.Add(new StringGenerator(() => Guid.NewGuid().ToString()[..16]));
             var chargeLink = fixture.Create<ChargeLink>();
+            var links = new List<ChargeLinkDto> { linksDtoBuilder.Build() };
+            var chargeLinksCommand = linksCommandBuilder.WithChargeLinks(links).Build();
+            var chargeLinksReceivedEvent = new ChargeLinksReceivedEvent(Instant.MinValue, chargeLinksCommand);
 
             SetupValidator(businessValidator);
             SetupFactories(chargeLinkFactory, chargeLinkCommandAcceptedEventFactory, chargeLinksAcceptedEvent, chargeLink);
@@ -61,9 +67,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             chargeLinksReceiptService.Verify(x => x.AcceptAsync(It.IsAny<ChargeLinksCommand>()));
         }
 
-        private static void SetupValidator(Mock<IBusinessValidator<ChargeLinksCommand>> businessValidator)
+        private static void SetupValidator(Mock<IBusinessValidator<ChargeLinkDto>> businessValidator)
         {
-            businessValidator.Setup(x => x.ValidateAsync(It.IsAny<ChargeLinksCommand>()))
+            businessValidator.Setup(x => x.ValidateAsync(It.IsAny<ChargeLinkDto>()))
                 .ReturnsAsync(ValidationResult.CreateSuccess());
         }
 

@@ -21,21 +21,12 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
     public class ChargeLinksCommand : CommandBase
     {
         public ChargeLinksCommand(
-            string meteringPointId,
             DocumentDto document,
             IReadOnlyCollection<ChargeLinkDto> chargeLinksOperations)
         {
-            MeteringPointId = meteringPointId;
             Document = document;
             ChargeLinksOperations = chargeLinksOperations;
         }
-
-        /* TODO: Move meteringPointId to ChargeLinkDto to enable a split of
-         * documentValidation and businessValidation in style with the way
-         * we do it for Charges?
-         */
-
-        public string MeteringPointId { get; }
 
         public DocumentDto Document { get; }
 

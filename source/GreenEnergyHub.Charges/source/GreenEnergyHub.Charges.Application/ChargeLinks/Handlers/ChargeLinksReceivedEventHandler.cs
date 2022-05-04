@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Services;
 using GreenEnergyHub.Charges.Application.Persistence;
@@ -27,14 +29,14 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
         private readonly IChargeLinksReceiptService _chargeLinksReceiptService;
         private readonly IChargeLinkFactory _chargeLinkFactory;
         private readonly IChargeLinksRepository _chargeLinksRepository;
-        private readonly IBusinessValidator<ChargeLinksCommand> _businessValidator;
+        private readonly IBusinessValidator<ChargeLinkDto> _businessValidator;
         private readonly IUnitOfWork _unitOfWork;
 
         public ChargeLinksReceivedEventHandler(
             IChargeLinksReceiptService chargeLinksReceiptService,
             IChargeLinkFactory chargeLinkFactory,
             IChargeLinksRepository chargeLinksRepository,
-            IBusinessValidator<ChargeLinksCommand> businessValidator,
+            IBusinessValidator<ChargeLinkDto> businessValidator,
             IUnitOfWork unitOfWork)
         {
             _chargeLinksReceiptService = chargeLinksReceiptService;
@@ -46,8 +48,12 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 
         public async Task HandleAsync(ChargeLinksReceivedEvent chargeLinksReceivedEvent)
         {
+            ArgumentNullException.ThrowIfNull(chargeLinksReceivedEvent);
+
+            var chargeLink = chargeLinksReceivedEvent.ChargeLinksCommand.ChargeLinksOperations.Single();
+
             var businessValidationResult = await _businessValidator
-                .ValidateAsync(chargeLinksReceivedEvent.ChargeLinksCommand).ConfigureAwait(false);
+                .ValidateAsync(chargeLink).ConfigureAwait(false);
             if (businessValidationResult.IsFailed)
             {
                 await _chargeLinksReceiptService

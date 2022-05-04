@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         public async Task HandleAsync_WhenValidationSucceed_StoreAndConfirmCommand(
             [Frozen] Mock<IDocumentValidator<ChargeCommand>> documentValidator,
             [Frozen] Mock<IInputValidator<ChargeOperationDto>> inputValidator,
-            [Frozen] Mock<IBusinessValidator<ChargeCommand>> businessValidator,
+            [Frozen] Mock<IBusinessValidator<ChargeOperationDto>> businessValidator,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IChargeCommandReceiptService> receiptService,
             ChargeBuilder chargeBuilder,
@@ -91,7 +91,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         public async Task HandleAsync_WhenValidationFails_RejectsEvent(
             [Frozen] Mock<IDocumentValidator<ChargeCommand>> documentValidator,
             [Frozen] Mock<IInputValidator<ChargeOperationDto>> inputValidator,
-            [Frozen] Mock<IBusinessValidator<ChargeCommand>> businessValidator,
+            [Frozen] Mock<IBusinessValidator<ChargeOperationDto>> businessValidator,
             [Frozen] Mock<IChargeCommandReceiptService> receiptService,
             ChargeCommandReceivedEvent receivedEvent,
             ChargeCommandReceivedEventHandler sut)
@@ -128,7 +128,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         public async Task HandleAsync_IfValidUpdateEvent_ChargeUpdated(
             [Frozen] Mock<IDocumentValidator<ChargeCommand>> documentValidator,
             [Frozen] Mock<IInputValidator<ChargeOperationDto>> inputValidator,
-            [Frozen] Mock<IBusinessValidator<ChargeCommand>> businessValidator,
+            [Frozen] Mock<IBusinessValidator<ChargeOperationDto>> businessValidator,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
             ChargeCommandReceivedEvent receivedEvent,
@@ -163,7 +163,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         public async Task HandleAsync_IfValidStopEvent_ChargeStopped(
             [Frozen] Mock<IDocumentValidator<ChargeCommand>> documentValidator,
             [Frozen] Mock<IInputValidator<ChargeOperationDto>> inputValidator,
-            [Frozen] Mock<IBusinessValidator<ChargeCommand>> businessValidator,
+            [Frozen] Mock<IBusinessValidator<ChargeOperationDto>> businessValidator,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
             [Frozen] Instant stopDate,
@@ -198,7 +198,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         public async Task HandleAsync_WhenValidCancelStop_ThenStopCancelled(
             [Frozen] Mock<IDocumentValidator<ChargeCommand>> documentValidator,
             [Frozen] Mock<IInputValidator<ChargeOperationDto>> inputValidator,
-            [Frozen] Mock<IBusinessValidator<ChargeCommand>> businessValidator,
+            [Frozen] Mock<IBusinessValidator<ChargeOperationDto>> businessValidator,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
             ChargeCommandReceivedEventHandler sut)
@@ -246,7 +246,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
              [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
              [Frozen] Mock<IDocumentValidator<ChargeCommand>> documentValidator,
              [Frozen] Mock<IInputValidator<ChargeOperationDto>> inputValidator,
-             [Frozen] Mock<IBusinessValidator<ChargeCommand>> businessValidator,
+             [Frozen] Mock<IBusinessValidator<ChargeOperationDto>> businessValidator,
              [Frozen] Mock<IChargeCommandReceiptService> receiptService,
              ChargeCommandReceivedEventHandler sut)
          {
@@ -345,7 +345,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         private static void SetupValidatorsForOperation(
             Mock<IDocumentValidator<ChargeCommand>> documentValidator,
             Mock<IInputValidator<ChargeOperationDto>> inputValidator,
-            Mock<IBusinessValidator<ChargeCommand>> businessValidator,
+            Mock<IBusinessValidator<ChargeOperationDto>> businessValidator,
             ValidationResult invalidValidationResult)
         {
             inputValidator.Setup(v =>
@@ -354,13 +354,13 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                 v.ValidateAsync(It.IsAny<ChargeCommand>())).ReturnsAsync(ValidationResult.CreateSuccess());
 
             businessValidator.Setup(v =>
-                    v.ValidateAsync(It.Is<ChargeCommand>(x =>
-                        x.ChargeOperations.Single().ChargeDescription == "valid")))
+                    v.ValidateAsync(It.Is<ChargeOperationDto>(x =>
+                        x.ChargeDescription == "valid")))
                 .Returns(Task.FromResult(ValidationResult.CreateSuccess()));
 
             businessValidator.Setup(v =>
-                    v.ValidateAsync(It.Is<ChargeCommand>(x =>
-                        x.ChargeOperations.Single().ChargeDescription == "invalid")))
+                    v.ValidateAsync(It.Is<ChargeOperationDto>(x =>
+                        x.ChargeDescription == "invalid")))
                 .Returns(Task.FromResult(invalidValidationResult));
         }
 
@@ -426,14 +426,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         private static void SetupValidators(
             Mock<IDocumentValidator<ChargeCommand>> documentValidator,
             Mock<IInputValidator<ChargeOperationDto>> inputValidator,
-            Mock<IBusinessValidator<ChargeCommand>> businessValidator,
+            Mock<IBusinessValidator<ChargeOperationDto>> businessValidator,
             ValidationResult validationResult)
         {
             documentValidator.Setup(v => v.ValidateAsync(It.IsAny<ChargeCommand>()))
                 .Returns(Task.FromResult(validationResult));
             inputValidator.Setup(v => v.Validate(It.IsAny<ChargeOperationDto>()))
                 .Returns(validationResult);
-            businessValidator.Setup(v => v.ValidateAsync(It.IsAny<ChargeCommand>()))
+            businessValidator.Setup(v => v.ValidateAsync(It.IsAny<ChargeOperationDto>()))
                 .Returns(Task.FromResult(validationResult));
         }
     }
