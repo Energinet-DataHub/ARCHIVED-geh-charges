@@ -17,7 +17,6 @@ using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 {
-    // TODO: If possible, change to handle TOperation : OperationBase
     public interface IBusinessValidator<in TOperation>
         where TOperation : OperationBase
     {

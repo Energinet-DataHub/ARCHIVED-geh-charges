@@ -68,6 +68,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             var links = new List<ChargeLinkDto> { linksDtoBuilder.Build() };
             var chargeLinksCommand = linksCommandBuilder.WithChargeLinks(links).Build();
             var chargeLinksReceivedEvent = new ChargeLinksReceivedEvent(Instant.MinValue, chargeLinksCommand);
+            var links = new List<ChargeLinkDto> { linksDtoBuilder.Build() };
+            var chargeLinksCommand = linksCommandBuilder.WithChargeLinks(links).Build();
+            var chargeLinksReceivedEvent = new ChargeLinksReceivedEvent(Instant.MinValue, chargeLinksCommand);
 
             SetupSuccessfulValidator(businessValidator);
             SetupFactories(chargeLinkFactory, chargeLinkCommandAcceptedEventFactory, chargeLinksAcceptedEvent, chargeLink);
