@@ -19,6 +19,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using Energinet.DataHub.Core.SchemaValidation;
 using Energinet.DataHub.Core.SchemaValidation.Errors;
@@ -75,6 +76,32 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Function
             responseData.Headers.Should().ContainKey(correlationIdKey);
             responseData.Headers.First(x => x.Key == correlationIdKey).Value.First().Should().Be(correlationContext.Id);
             responseData.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
+
+        [Theory]
+        [InlineAutoMoqData]
+        public void CreateBadRequestResponseWithText_Creates_Response_With_Text_In_Xml_Body(
+            FunctionContext executionContext)
+        {
+            // Arrange
+            const string expectedCode = "BadRequest";
+            const string expectedMessage = "Response errormessage.";
+            var correlationContext = CreateCorrelationContext();
+            var sut = new HttpResponseBuilder(correlationContext);
+            var httpRequestData = CreateHttpRequestData(executionContext, "POST", "test", "http://localhost?Id=3");
+
+            // Act
+            var responseData = sut.CreateBadRequestResponseWithText(httpRequestData, "Response errormessage.");
+
+            // Assert
+            const string correlationIdKey = "CorrelationId";
+            responseData.Headers.Should().ContainKey(correlationIdKey);
+            responseData.Headers.First(x => x.Key == correlationIdKey).Value.First().Should().Be(correlationContext.Id);
+            responseData.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            responseData.Body.Position = 0;
+            var xmlMessage = XDocument.Load(responseData.Body);
+            xmlMessage.Element("Code")?.Value.Should().Be(expectedCode);
+            xmlMessage.Element("Message")?.Value.Should().Be(expectedMessage);
         }
 
         private static ICorrelationContext CreateCorrelationContext()
