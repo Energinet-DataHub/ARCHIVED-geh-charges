@@ -12,17 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.Core.App.Common.Diagnostics.HealthChecks;
-using Energinet.DataHub.Core.App.FunctionApp.Diagnostics.HealthChecks;
+using Energinet.DataHub.Core.App.FunctionApp.Middleware;
+using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using Energinet.DataHub.Core.Logging.RequestResponseMiddleware;
-using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.FunctionHost.Configuration;
 using GreenEnergyHub.Charges.FunctionHost.System;
-using GreenEnergyHub.Charges.Infrastructure.Core.Authentication;
-using GreenEnergyHub.Charges.Infrastructure.Core.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
-using GreenEnergyHub.Charges.Infrastructure.Core.Registration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -40,7 +36,8 @@ namespace GreenEnergyHub.Charges.FunctionHost
                     builder.UseMiddleware<MessageMetaDataMiddleware>();
                     builder.UseMiddleware<FunctionInvocationLoggingMiddleware>();
                     builder.UseMiddleware<RequestResponseLoggingMiddleware>();
-                    builder.UseMiddleware<JwtTokenWrapperMiddleware>();
+                    builder.UseMiddleware<JwtTokenMiddleware>();
+                    builder.UseMiddleware<ActorMiddleware>();
                 })
                 .ConfigureServices(ConfigureServices)
                 .Build();
@@ -51,22 +48,7 @@ namespace GreenEnergyHub.Charges.FunctionHost
         private static void ConfigureServices(HostBuilderContext hostBuilderContext, IServiceCollection serviceCollection)
         {
             SharedConfiguration.ConfigureServices(serviceCollection);
-
-            // Health check
-            serviceCollection.AddScoped<IHealthCheckEndpointHandler, HealthCheckEndpointHandler>();
-            serviceCollection.AddHealthChecks()
-                .AddLiveCheck()
-                .AddSqlServer(
-                    name: "ChargeDb",
-                    connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeDbConnectionString))
-                .AddAzureServiceBusTopic(
-                    name: "ChargeCreatedTopicExists",
-                    connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubManagerConnectionString),
-                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeCreatedTopicName))
-                .AddAzureServiceBusTopic(
-                    name: "DefaultChargeLinksDataAvailableNotifiedTopicExists",
-                    connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventManagerConnectionString),
-                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName));
+            HealthCheckConfiguration.ConfigureServices(serviceCollection);
 
             // Charges
             ChargeIngestionConfiguration.ConfigureServices(serviceCollection);

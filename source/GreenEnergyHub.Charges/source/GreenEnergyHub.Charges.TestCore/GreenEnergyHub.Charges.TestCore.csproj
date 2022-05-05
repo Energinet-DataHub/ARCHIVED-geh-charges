@@ -16,7 +16,7 @@ limitations under the License.
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
         <IsPackable>false</IsPackable>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -30,17 +30,16 @@ limitations under the License.
       <PackageReference Include="AutoFixture" Version="4.17.0" />
       <PackageReference Include="AutoFixture.AutoMoq" Version="4.17.0" />
       <PackageReference Include="AutoFixture.Xunit2" Version="4.17.0" />
-      <PackageReference Include="Energinet.DataHub.Core.FunctionApp.TestCommon" Version="1.4.1" />
-      <PackageReference Include="EntityFrameworkCore.SqlServer.NodaTime" Version="5.0.1" />
-      <PackageReference Include="FluentAssertions" Version="6.5.1" />
+      <PackageReference Include="Energinet.DataHub.Core.FunctionApp.TestCommon" Version="2.2.0" />
+      <PackageReference Include="FluentAssertions" Version="6.6.0" />
       <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
       <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
-      <PackageReference Include="NodaTime" Version="3.0.9" />
+      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.1" />
+      <PackageReference Include="NodaTime" Version="3.1.0" />
       <PackageReference Include="MicroElements.AutoFixture.NodaTime" Version="1.0.0" />
       <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
       <PackageReference Include="xunit.extensibility.core" Version="2.4.1" />
-      <PackageReference Include="Google.Protobuf" Version="3.19.4" />
+      <PackageReference Include="Google.Protobuf" Version="3.20.1" />
       <PackageReference Include="xunit" Version="2.4.1" />
       <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.354">
         <PrivateAssets>all</PrivateAssets>

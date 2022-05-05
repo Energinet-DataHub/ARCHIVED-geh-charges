@@ -39,8 +39,7 @@ namespace GreenEnergyHub.Charges.Application.MeteringPoints.Handlers
 
         public async Task PersistAsync(MeteringPointCreatedEvent meteringPointCreatedEvent)
         {
-            if (meteringPointCreatedEvent == null)
-                throw new ArgumentNullException(nameof(meteringPointCreatedEvent));
+            ArgumentNullException.ThrowIfNull(meteringPointCreatedEvent);
 
             var meteringPoint = MeteringPointFactory.Create(meteringPointCreatedEvent);
 

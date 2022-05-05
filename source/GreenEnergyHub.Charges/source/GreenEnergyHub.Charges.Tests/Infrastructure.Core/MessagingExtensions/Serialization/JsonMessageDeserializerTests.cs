@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -45,7 +44,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions.S
         /// </summary>
         [Theory]
         [MemberData(nameof(Messages))]
-        public async Task FromBytesAsync_CreatesMessage([NotNull] IInboundMessage expected)
+        public async Task FromBytesAsync_CreatesMessage(IInboundMessage expected)
         {
             // Arrange
             var jsonSerializer = GetMessagingDeserializer();

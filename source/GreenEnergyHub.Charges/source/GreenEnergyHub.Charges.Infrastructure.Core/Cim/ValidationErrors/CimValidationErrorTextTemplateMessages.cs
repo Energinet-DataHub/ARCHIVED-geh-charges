@@ -75,7 +75,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.ResolutionFeeValidation)]
         public const string ResolutionFeeValidationErrorText =
-            "Period type {{ChargeResolution}} not allowed: The specified resolution for charge {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} must be Day";
+            "Period type {{ChargeResolution}} not allowed: The specified resolution for charge {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} must be Month";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ResolutionSubscriptionValidation)]
         public const string ResolutionSubscriptionValidationErrorText =
@@ -132,6 +132,22 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeLinkUpdateNotYetSupported)]
         public const string ChargeLinksUpdateNotYetSupportedErrorText =
             "Charge link for metering point ID {{MeteringPointId}} and Charge with ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}} cannot yet be updated or stopped. The functionality is not implemented yet";
+
+        [ErrorMessageFor(ValidationRuleIdentifier.UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDate)]
+        public const string UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateErrorText =
+            "Charge ID {{DocumentSenderProvidedChargeId}} has been stopped and thus cannot be updated as per {{ChargeStartDateTime}}.";
+
+        [ErrorMessageFor(ValidationRuleIdentifier.SubsequentBundleOperationsFail)]
+        public const string ValidationOfPriorOperationInBundleFailedErrorText =
+            "Transaction for Charge ID {{DocumentSenderProvidedChargeId}} is not completed: The request received contained multiple transactions for the same charge, and one of the previous transactions with ID {{TriggeredByOperationId}} failed validation why this transaction with ID {{ChargeOperationId}} is also rejected";
+
+        [ErrorMessageFor(ValidationRuleIdentifier.TransparentInvoicingIsNotAllowedForFee)]
+        public const string TransparentInvoicingIsNotAllowedForFeeErrorText =
+            "Transparent Invoicing for Charge ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}} cannot be set to true.";
+
+        [ErrorMessageFor(ValidationRuleIdentifier.ChargeResolutionCanNotBeUpdated)]
+        public const string ChargeResolutionCanNotBeUpdatedErrorText =
+            "Period type {{ChargeResolution}} not allowed: The specified resolution for chargetype {{ChargeType}} charge ID {{DocumentSenderProvidedChargeId}} may not be changed. It must have the same period type as when created.";
 
         public const string Unknown = "unknown";
     }

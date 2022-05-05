@@ -14,6 +14,7 @@
 
 using System;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Infrastructure.Core.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -37,14 +38,28 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
             builder.OwnsMany(c => c.Periods, ConfigurePeriods);
 
             // Enable EF Core to hydrate the points
-            builder.Metadata
-                .FindNavigation(nameof(Charge.Points))
-                .SetPropertyAccessMode(PropertyAccessMode.Field);
+            var points = builder.Metadata
+                .FindNavigation(nameof(Charge.Points));
+
+            if (points == null)
+            {
+                throw new InvalidOperationException(
+                    $"Could not configure ChargeEntityConfiguration entity. Navigation property {nameof(Charge.Points)} was not found.");
+            }
+
+            points.SetPropertyAccessMode(PropertyAccessMode.Field);
 
             // Enable EF Core to hydrate the periods
-            builder.Metadata
-                .FindNavigation(nameof(Charge.Periods))
-                .SetPropertyAccessMode(PropertyAccessMode.Field);
+            var periods = builder.Metadata
+                .FindNavigation(nameof(Charge.Periods));
+
+            if (periods == null)
+            {
+                throw new InvalidOperationException(
+                    $"Could not configure ChargeEntityConfiguration entity. Navigation property {nameof(Charge.Periods)} was not found.");
+            }
+
+            periods.SetPropertyAccessMode(PropertyAccessMode.Field);
         }
 
         private void ConfigurePeriods(OwnedNavigationBuilder<Charge, ChargePeriod> periods)
@@ -78,7 +93,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
             points.Property<Guid>("Id").ValueGeneratedOnAdd();
 
             points.Property(p => p.Position);
-            points.Property(p => p.Price);
+            points.Property(p => p.Price)
+                .HasPrecision(DecimalPrecisionConstants.Precision, DecimalPrecisionConstants.Scale);
             points.Property(p => p.Time);
         }
     }

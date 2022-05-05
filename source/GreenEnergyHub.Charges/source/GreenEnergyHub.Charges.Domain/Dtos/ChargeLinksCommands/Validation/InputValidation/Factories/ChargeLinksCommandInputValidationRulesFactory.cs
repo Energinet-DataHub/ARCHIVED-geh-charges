@@ -24,14 +24,24 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Inpu
         {
             if (chargeLinksCommand == null) throw new ArgumentNullException(nameof(chargeLinksCommand));
 
-            var rules = GetRules();
+            var rules = GetRulesForCommand();
+
+            rules.AddRange(GetRulesForAllLinks());
 
             return ValidationRuleSet.FromRules(rules);
         }
 
-        private static List<IValidationRule> GetRules()
+        private static List<IValidationRule> GetRulesForCommand()
         {
-            // No input validation active yet for Charge Links
+            // No input validation active yet for Charge Links Command
+            var rules = new List<IValidationRule>();
+
+            return rules;
+        }
+
+        private IEnumerable<IValidationRule> GetRulesForAllLinks()
+        {
+            // No input validation active yet for Charge Links Operations
             var rules = new List<IValidationRule>();
 
             return rules;

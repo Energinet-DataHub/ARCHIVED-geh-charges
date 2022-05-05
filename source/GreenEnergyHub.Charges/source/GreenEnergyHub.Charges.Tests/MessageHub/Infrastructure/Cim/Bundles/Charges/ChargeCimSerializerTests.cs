@@ -14,7 +14,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -84,11 +83,11 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
         [Theory(Skip = "Manually run test to save the generated file to disk")]
         [InlineAutoDomainData]
         public async Task SerializeAsync_WhenCalled_SaveSerializedStream(
-            [NotNull] [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            [NotNull] [Frozen] Mock<IClock> clock,
-            [NotNull] [Frozen] Mock<IIso8601Durations> iso8601Durations,
-            [NotNull] [Frozen] Mock<ICimIdProvider> cimIdProvider,
-            [NotNull] ChargeCimSerializer sut)
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
+            [Frozen] Mock<IClock> clock,
+            [Frozen] Mock<IIso8601Durations> iso8601Durations,
+            [Frozen] Mock<ICimIdProvider> cimIdProvider,
+            ChargeCimSerializer sut)
         {
             SetupMocks(marketParticipantRepository, clock, iso8601Durations, cimIdProvider);
 
@@ -133,15 +132,16 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
             cimIdProvider.Setup(c => c.GetUniqueId()).Returns(CimTestId);
         }
 
-        private List<AvailableChargeData> GetCharges(IClock clock, bool includeMasterData, bool includePrices)
+        private static List<AvailableChargeData> GetCharges(IClock clock, bool includeMasterData, bool includePrices)
         {
             var charges = new List<AvailableChargeData>();
 
             for (var i = 1; i <= NoOfChargesInBundle; i++)
             {
+                var order = i - 1;
                 if (includeMasterData)
                 {
-                    charges.Add(GetChargeWithMasterData(i, clock, includePrices));
+                    charges.Add(GetChargeWithMasterData(i, clock, includePrices, order));
                 }
                 else
                 {
@@ -152,7 +152,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
             return charges;
         }
 
-        private AvailableChargeData GetChargeWithMasterData(int no, IClock clock, bool includePrices)
+        private static AvailableChargeData GetChargeWithMasterData(int no, IClock clock, bool includePrices, int order)
         {
             var validTo = no % 2 == 0 ?
                 Instant.FromUtc(9999, 12, 31, 23, 59, 59) :
@@ -178,10 +178,11 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
                 false,
                 GetResolution(no),
                 DocumentType.NotifyPriceList,
+                order,
                 GetPoints(GetNoOfPoints(no, includePrices)));
         }
 
-        private AvailableChargeData GetChargeWithoutMasterData(int no, IClock clock, bool includePrices)
+        private static AvailableChargeData GetChargeWithoutMasterData(int no, IClock clock, bool includePrices)
         {
             return new AvailableChargeData(
                 "5790001330552",
@@ -203,6 +204,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
                 false,
                 GetResolution(no),
                 DocumentType.NotifyPriceList,
+                0,
                 GetPoints(GetNoOfPoints(no, includePrices)));
         }
 

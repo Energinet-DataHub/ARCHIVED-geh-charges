@@ -34,5 +34,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         DocumentSenderProvidedChargeId,
         DocumentType,
         MeteringPointId,
+        TriggeredByOperationId,
+        ChargeOperationId,
     }
 }

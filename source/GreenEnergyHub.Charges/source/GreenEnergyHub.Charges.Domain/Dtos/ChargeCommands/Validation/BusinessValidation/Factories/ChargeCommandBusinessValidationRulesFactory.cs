@@ -14,90 +14,106 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.Factories
 {
     public class ChargeCommandBusinessValidationRulesFactory : IBusinessValidationRulesFactory<ChargeCommand>
     {
-        private readonly IRulesConfigurationRepository _rulesConfigurationRepository;
         private readonly IChargeRepository _chargeRepository;
-        private readonly IMarketParticipantRepository _marketParticipantRepository;
-        private readonly IZonedDateTimeService _zonedDateTimeService;
         private readonly IClock _clock;
+        private readonly IRulesConfigurationRepository _rulesConfigurationRepository;
+        private readonly IZonedDateTimeService _zonedDateTimeService;
 
         public ChargeCommandBusinessValidationRulesFactory(
             IRulesConfigurationRepository rulesConfigurationRepository,
             IChargeRepository chargeRepository,
-            IMarketParticipantRepository marketParticipantRepository,
             IZonedDateTimeService zonedDateTimeService,
             IClock clock)
         {
             _rulesConfigurationRepository = rulesConfigurationRepository;
             _chargeRepository = chargeRepository;
-            _marketParticipantRepository = marketParticipantRepository;
             _zonedDateTimeService = zonedDateTimeService;
             _clock = clock;
         }
 
         public async Task<IValidationRuleSet> CreateRulesAsync(ChargeCommand chargeCommand)
         {
-            if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
+            ArgumentNullException.ThrowIfNull(chargeCommand);
+            var chargeOperation = chargeCommand.ChargeOperations.SingleOrDefault();
+            ArgumentNullException.ThrowIfNull(chargeOperation);
 
-            var senderId = chargeCommand.Document.Sender.Id;
-            var sender = await _marketParticipantRepository.GetOrNullAsync(senderId).ConfigureAwait(false);
-            var configuration = await _rulesConfigurationRepository.GetConfigurationAsync().ConfigureAwait(false);
-
-            var charge = await GetChargeOrNullAsync(chargeCommand).ConfigureAwait(false);
-            var rules = GetMandatoryRules(chargeCommand, configuration, sender);
-
-            if (charge == null)
-                return ValidationRuleSet.FromRules(rules);
-
-            if (chargeCommand.ChargeOperation.Type == ChargeType.Tariff)
-                AddTariffOnlyRules(rules, chargeCommand, charge);
-
+            var rules = await GetRulesForOperationAsync(chargeOperation).ConfigureAwait(false);
             return ValidationRuleSet.FromRules(rules);
         }
 
-        private static void AddTariffOnlyRules(
-            List<IValidationRule> rules,
-            ChargeCommand command,
-            Charge charge)
+        private async Task<List<IValidationRule>> GetRulesForOperationAsync(ChargeOperationDto chargeOperationDto)
         {
-            rules.Add(new ChangingTariffTaxValueNotAllowedRule(command, charge));
+            var configuration = await _rulesConfigurationRepository.GetConfigurationAsync().ConfigureAwait(false);
+            var charge = await GetChargeOrNullAsync(chargeOperationDto).ConfigureAwait(false);
+            var rules = GetMandatoryRulesForOperation(chargeOperationDto, configuration);
+            if (charge == null)
+            {
+                return rules;
+            }
+
+            if (chargeOperationDto.Type == ChargeType.Tariff)
+            {
+                rules.AddRange(AddTariffOnlyRules(chargeOperationDto, charge));
+            }
+
+            AddUpdateRules(rules, chargeOperationDto, charge);
+            return rules;
         }
 
-        private List<IValidationRule> GetMandatoryRules(
-            ChargeCommand chargeCommand,
-            RulesConfiguration configuration,
-            MarketParticipant? sender)
+        private static IEnumerable<IValidationRule> AddTariffOnlyRules(
+            ChargeOperationDto chargeOperationDto, Charge charge)
+        {
+            return new List<IValidationRule> { new ChangingTariffTaxValueNotAllowedRule(chargeOperationDto, charge) };
+        }
+
+        private void AddUpdateRules(
+            List<IValidationRule> rules,
+            ChargeOperationDto chargeOperationDto,
+            Charge existingCharge)
+        {
+            var updateRules = new List<IValidationRule>
+            {
+                new UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateRule(existingCharge, chargeOperationDto),
+                new ChargeResolutionCanNotBeUpdatedRule(existingCharge, chargeOperationDto),
+            };
+
+            rules.AddRange(updateRules);
+        }
+
+        private List<IValidationRule> GetMandatoryRulesForOperation(
+            ChargeOperationDto chargeOperationDto,
+            RulesConfiguration configuration)
         {
             var rules = new List<IValidationRule>
             {
                 new StartDateValidationRule(
-                    chargeCommand,
+                    chargeOperationDto,
                     configuration.StartDateValidationRuleConfiguration,
                     _zonedDateTimeService,
                     _clock),
-                new CommandSenderMustBeAnExistingMarketParticipantRule(sender),
             };
 
             return rules;
         }
 
-        private Task<Charge?> GetChargeOrNullAsync(ChargeCommand command)
+        private Task<Charge?> GetChargeOrNullAsync(ChargeOperationDto chargeOperationDto)
         {
             var chargeIdentifier = new ChargeIdentifier(
-                command.ChargeOperation.ChargeId,
-                command.ChargeOperation.ChargeOwner,
-                command.ChargeOperation.Type);
+                chargeOperationDto.ChargeId,
+                chargeOperationDto.ChargeOwner,
+                chargeOperationDto.Type);
 
             return _chargeRepository.GetOrNullAsync(chargeIdentifier);
         }

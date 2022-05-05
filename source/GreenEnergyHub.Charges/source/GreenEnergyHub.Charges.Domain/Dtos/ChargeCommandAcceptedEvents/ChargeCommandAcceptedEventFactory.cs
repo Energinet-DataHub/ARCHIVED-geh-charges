@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using NodaTime;
 
@@ -27,11 +26,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents
             _clock = clock;
         }
 
-        public ChargeCommandAcceptedEvent CreateEvent([NotNull] ChargeCommand command)
+        public ChargeCommandAcceptedEvent CreateEvent(ChargeCommand command)
         {
-            return new ChargeCommandAcceptedEvent(
-                _clock.GetCurrentInstant(),
-                command);
+            return new ChargeCommandAcceptedEvent(_clock.GetCurrentInstant(), command);
         }
     }
 }

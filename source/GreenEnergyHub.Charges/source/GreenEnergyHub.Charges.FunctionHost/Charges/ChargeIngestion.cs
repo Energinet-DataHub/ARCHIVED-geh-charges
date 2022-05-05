@@ -12,11 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Linq;
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
 using Energinet.DataHub.Core.Messaging.Transport.SchemaValidation;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Application.Charges.Handlers.Message;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
 using Microsoft.Azure.Functions.Worker;
@@ -33,15 +36,18 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
         private readonly IChargesMessageHandler _chargesMessageHandler;
         private readonly IHttpResponseBuilder _httpResponseBuilder;
         private readonly ValidatingMessageExtractor<ChargeCommandBundle> _messageExtractor;
+        private readonly IActorContext _actorContext;
 
         public ChargeIngestion(
             IChargesMessageHandler chargesMessageHandler,
             IHttpResponseBuilder httpResponseBuilder,
-            ValidatingMessageExtractor<ChargeCommandBundle> messageExtractor)
+            ValidatingMessageExtractor<ChargeCommandBundle> messageExtractor,
+            IActorContext actorContext)
         {
             _chargesMessageHandler = chargesMessageHandler;
             _httpResponseBuilder = httpResponseBuilder;
             _messageExtractor = messageExtractor;
+            _actorContext = actorContext;
         }
 
         [Function(IngestionFunctionNames.ChargeIngestion)]
@@ -50,6 +56,13 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             HttpRequestData req)
         {
             var inboundMessage = await ValidateMessageAsync(req).ConfigureAwait(false);
+
+            if (AuthenticatedMatchesSenderId(inboundMessage) == false)
+            {
+                return _httpResponseBuilder.CreateBadRequestWithErrorText(
+                    req, SynchronousErrorMessageConstants.ActorIsNotWhoTheyClaimToBeErrorMessage);
+            }
+
             if (inboundMessage.HasErrors)
             {
                 return await _httpResponseBuilder
@@ -58,16 +71,19 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             }
 
             var message = GetChargesMessage(inboundMessage.ValidatedMessage);
+            ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(message.ChargeCommands);
 
-            foreach (var chargeCommand in message.ChargeCommands)
-            {
-                ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(chargeCommand);
-            }
-
-            await _chargesMessageHandler.HandleAsync(message)
-                .ConfigureAwait(false);
+            await _chargesMessageHandler.HandleAsync(message).ConfigureAwait(false);
 
             return _httpResponseBuilder.CreateAcceptedResponse(req);
+        }
+
+        private bool AuthenticatedMatchesSenderId(SchemaValidatedInboundMessage<ChargeCommandBundle> inboundMessage)
+        {
+            var authorizedActor = _actorContext.CurrentActor;
+            var senderId = inboundMessage.ValidatedMessage?.ChargeCommands.First().Document.Sender.Id;
+
+            return authorizedActor != null && senderId == authorizedActor.Identifier;
         }
 
         private async Task<SchemaValidatedInboundMessage<ChargeCommandBundle>> ValidateMessageAsync(HttpRequestData req)

@@ -66,7 +66,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
 
             var actual = await chargesDatabaseReadContext.Charges
-                .SingleOrDefaultAsync(x =>
+                .SingleAsync(x =>
                     x.Id == charge.Id &&
                     x.SenderProvidedChargeId == charge.SenderProvidedChargeId &&
                     x.OwnerId == charge.OwnerId &&
@@ -75,6 +75,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             actual.Should().BeEquivalentTo(charge);
             actual.Points.Should().NotBeNullOrEmpty();
             actual.Periods.Should().NotBeNullOrEmpty();
+            actual.Points.Single().Price.Should().Be(200.111111m);
         }
 
         [Theory]
@@ -161,12 +162,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         {
             var charge = new Charge(
                 Guid.NewGuid(),
-                "SenderProvidedId",
+                $"ChgId{Guid.NewGuid().ToString("n")[..5]}",
                 _marketParticipantId,
                 ChargeType.Fee,
                 Resolution.P1D,
                 false,
-                new List<Point> { new(1, 200m, SystemClock.Instance.GetCurrentInstant()) },
+                new List<Point> { new(1, 200.111111m, SystemClock.Instance.GetCurrentInstant()) },
                 new List<ChargePeriod>
                 {
                     new(

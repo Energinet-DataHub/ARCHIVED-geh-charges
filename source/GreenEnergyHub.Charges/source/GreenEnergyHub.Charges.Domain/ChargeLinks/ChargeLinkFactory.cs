@@ -35,11 +35,11 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
 
         public async Task<IReadOnlyCollection<ChargeLink>> CreateAsync(ChargeLinksReceivedEvent chargeLinksEvent)
         {
-            if (chargeLinksEvent == null) throw new ArgumentNullException(nameof(chargeLinksEvent));
+            ArgumentNullException.ThrowIfNull(chargeLinksEvent);
 
             var chargeLinksCreated = new List<ChargeLink>();
 
-            foreach (var chargeLink in chargeLinksEvent.ChargeLinksCommand.ChargeLinks)
+            foreach (var chargeLink in chargeLinksEvent.ChargeLinksCommand.ChargeLinksOperations)
             {
                 var chargeIdentifier = new ChargeIdentifier(chargeLink.SenderProvidedChargeId, chargeLink.ChargeOwner, chargeLink.ChargeType);
                 var charge = await _chargeRepository.GetAsync(chargeIdentifier).ConfigureAwait(false);

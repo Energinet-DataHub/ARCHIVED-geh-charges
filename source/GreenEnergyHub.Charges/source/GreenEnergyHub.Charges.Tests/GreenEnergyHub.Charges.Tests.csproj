@@ -16,7 +16,7 @@ limitations under the License.
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
         <IsPackable>false</IsPackable>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -40,18 +40,18 @@ limitations under the License.
         <PackageReference Include="AutoFixture" Version="4.17.0" />
         <PackageReference Include="AutoFixture.AutoMoq" Version="4.17.0" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-        <PackageReference Include="NodaTime.Testing" Version="3.0.9" />
+        <PackageReference Include="NodaTime.Testing" Version="3.0.10" />
         <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
         <PackageReference Include="xunit" Version="2.4.1" />
-        <PackageReference Include="FluentAssertions" Version="6.5.1" />
+        <PackageReference Include="FluentAssertions" Version="6.6.0" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
         <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" />
-        <PackageReference Include="coverlet.collector" Version="3.1.1">
+        <PackageReference Include="coverlet.collector" Version="3.1.2">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Google.Protobuf" Version="3.19.4" />
-        <PackageReference Include="Grpc.Tools" Version="2.43.0" PrivateAssets="All" />
+        <PackageReference Include="Google.Protobuf" Version="3.20.1" />
+        <PackageReference Include="Grpc.Tools" Version="2.45.0" PrivateAssets="All" />
         <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.354">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -78,7 +78,8 @@ limitations under the License.
       <EmbeddedResource Include="TestFiles\ExpectedOutputChargeLinkReceiptCimSerializerRejection.blob" />
       <EmbeddedResource Include="TestFiles\ExpectedOutputChargeReceiptCimSerializerConfirmation.blob" />
       <EmbeddedResource Include="TestFiles\ExpectedOutputChargeReceiptCimSerializerRejection.blob" />
-      <EmbeddedResource Include="TestFiles\CreateTariffsBundle.xml" />      
+      <EmbeddedResource Include="TestFiles\CreateTariffsBundle.xml" />
+      <EmbeddedResource Include="TestFiles\BundleMixOfChargeMasterDataOperations.xml" />
     </ItemGroup>
 
     <ItemGroup>
@@ -87,7 +88,7 @@ limitations under the License.
         <Access>Public</Access>
         <ProtoCompile>True</ProtoCompile>
         <CompileOutputs>True</CompileOutputs>
-        <OutputDir>obj\Debug\net5.0\</OutputDir>
+        <OutputDir>obj\Debug\net6.0\</OutputDir>
         <Generator>MSBuild:Compile</Generator>
       </Protobuf>
     </ItemGroup>
@@ -109,5 +110,4 @@ limitations under the License.
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>
-  
 </Project>

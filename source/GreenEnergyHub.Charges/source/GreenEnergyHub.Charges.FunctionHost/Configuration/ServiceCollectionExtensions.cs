@@ -21,7 +21,6 @@ using Energinet.DataHub.Core.App.Common.Security;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure;
-using GreenEnergyHub.Charges.Infrastructure.Core.Authentication;
 using GreenEnergyHub.Charges.Infrastructure.Core.Registration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -29,6 +28,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
     internal static class ServiceCollectionExtensions
     {
+        private static readonly string[] _functionNamesToExclude =
+        {
+            "HealthCheck",
+            "SynchronizeFromMarketParticipantRegistry",
+        };
+
         /// <summary>
         /// Adds registrations of JwtTokenMiddleware and corresponding dependencies.
         /// </summary>
@@ -39,8 +44,10 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             var audience = EnvironmentHelper.GetEnv(EnvironmentSettingNames.BackendServiceAppId);
             var metadataAddress = $"https://login.microsoftonline.com/{tenantId}/v2.0/.well-known/openid-configuration";
 
-            serviceCollection.AddScoped<JwtTokenWrapperMiddleware>();
-            serviceCollection.AddScoped<JwtTokenMiddleware>();
+            serviceCollection.AddScoped<JwtTokenMiddleware>(_ => new JwtTokenMiddleware(
+                _.GetRequiredService<ClaimsPrincipalContext>(),
+                _.GetRequiredService<IJwtTokenValidator>(),
+                _functionNamesToExclude));
             serviceCollection.AddScoped<IJwtTokenValidator, JwtTokenValidator>();
             serviceCollection.AddScoped<IClaimsPrincipalAccessor, ClaimsPrincipalAccessor>();
             serviceCollection.AddScoped<ClaimsPrincipalContext>();
@@ -53,7 +60,11 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         /// <param name="serviceCollection">ServiceCollection container</param>
         public static void AddActorContext(this IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<ActorMiddleware>();
+            serviceCollection.AddScoped(_ => new ActorMiddleware(
+                _.GetRequiredService<IClaimsPrincipalAccessor>(),
+                _.GetRequiredService<IActorProvider>(),
+                _.GetRequiredService<IActorContext>(),
+                _functionNamesToExclude));
             serviceCollection.AddScoped<IActorContext, ActorContext>();
             serviceCollection.AddScoped<IActorProvider, ActorProvider>();
         }

@@ -41,7 +41,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
 
         public async Task<IValidationRuleSet> CreateRulesAsync(ChargeLinksCommand chargeLinksCommand)
         {
-            if (chargeLinksCommand == null) throw new ArgumentNullException(nameof(chargeLinksCommand));
+            ArgumentNullException.ThrowIfNull(chargeLinksCommand);
+
             var meteringPoint = await _meteringPointRepository
                 .GetOrNullAsync(chargeLinksCommand.MeteringPointId)
                 .ConfigureAwait(false);
@@ -50,22 +51,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
             if (meteringPoint == null)
                 return ValidationRuleSet.FromRules(rules);
 
-            foreach (var link in chargeLinksCommand.ChargeLinks)
-            {
-                var charge = await _chargeRepository
-                    .GetOrNullAsync(new ChargeIdentifier(link.SenderProvidedChargeId, link.ChargeOwner, link.ChargeType))
-                    .ConfigureAwait(false);
-
-                rules.Add(new ChargeMustExistRule(charge, link));
-                if (charge == null)
-                    continue;
-
-                var existingChargeLinks = await _chargeLinksRepository
-                    .GetAsync(charge.Id, meteringPoint.Id)
-                    .ConfigureAwait(false);
-
-                rules.AddRange(GetMandatoryRulesForSingleLinks(chargeLinksCommand, existingChargeLinks));
-            }
+            rules.AddRange(await GetRulesForAllLinksAsync(chargeLinksCommand, meteringPoint).ConfigureAwait(false));
 
             return ValidationRuleSet.FromRules(rules);
         }
@@ -78,14 +64,31 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
             };
         }
 
-        private List<IValidationRule> GetMandatoryRulesForSingleLinks(
+        private async Task<IEnumerable<IValidationRule>> GetRulesForAllLinksAsync(
             ChargeLinksCommand chargeLinksCommand,
-            IReadOnlyCollection<ChargeLink> existingChargeLinks)
+            MeteringPoint meteringPoint)
         {
-            return new List<IValidationRule>
+            var rules = new List<IValidationRule>();
+
+            foreach (var chargeLinkDto in chargeLinksCommand.ChargeLinksOperations)
             {
-                new ChargeLinksUpdateNotYetSupportedRule(chargeLinksCommand, existingChargeLinks),
-            };
+                var charge = await _chargeRepository
+                    .GetOrNullAsync(new ChargeIdentifier(chargeLinkDto.SenderProvidedChargeId, chargeLinkDto.ChargeOwner, chargeLinkDto.ChargeType))
+                    .ConfigureAwait(false);
+
+                rules.Add(new ChargeMustExistRule(charge, chargeLinkDto));
+
+                if (charge == null)
+                    continue;
+
+                var existingChargeLinks = await _chargeLinksRepository
+                    .GetAsync(charge.Id, meteringPoint.Id)
+                    .ConfigureAwait(false);
+
+                rules.Add(new ChargeLinksUpdateNotYetSupportedRule(chargeLinksCommand, existingChargeLinks));
+            }
+
+            return rules;
         }
     }
 }

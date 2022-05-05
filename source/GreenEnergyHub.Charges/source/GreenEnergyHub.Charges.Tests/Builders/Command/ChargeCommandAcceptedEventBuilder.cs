@@ -26,7 +26,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         public ChargeCommandAcceptedEventBuilder()
         {
             _publishedTime = SystemClock.Instance.GetCurrentInstant();
-            _chargeCommand = new ChargeCommand();
+            _chargeCommand = new ChargeCommandBuilder().Build();
         }
 
         public ChargeCommandAcceptedEventBuilder WithPublishedTime(Instant publishedTime)

@@ -28,9 +28,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim
     public abstract class CimSerializer<T> : ICimSerializer<T>
         where T : AvailableDataBase
     {
-        public CimSerializer(
-            IClock clock,
-            ICimIdProvider cimIdProvider)
+        public CimSerializer(IClock clock, ICimIdProvider cimIdProvider)
         {
             Clock = clock;
             CimIdProvider = cimIdProvider;
@@ -81,21 +79,12 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim
             MarketParticipantRole recipientRole)
         {
             XNamespace cimNamespace = GetNamespace(records);
-            XNamespace xmlSchemaNamespace = CimMarketDocumentConstants.SchemaValidationNamespace;
-            XNamespace xmlSchemaLocation = GetSchemaLocation(records);
 
             return new XDocument(
                 new XElement(
                     cimNamespace + GetRootElementName(records),
                     new XAttribute(
-                        XNamespace.Xmlns + CimMarketDocumentConstants.SchemaNamespaceAbbreviation,
-                        xmlSchemaNamespace),
-                    new XAttribute(
-                        XNamespace.Xmlns + CimMarketDocumentConstants.CimNamespaceAbbreviation,
-                        cimNamespace),
-                    new XAttribute(
-                        xmlSchemaNamespace + CimMarketDocumentConstants.SchemaLocation,
-                        xmlSchemaLocation),
+                        XNamespace.Xmlns + CimMarketDocumentConstants.CimNamespaceAbbreviation, cimNamespace),
                     // Note: The list will always have same recipient, business reason code and receipt status,
                     // so we just take those values from the first element
                     MarketDocumentSerializationHelper.Serialize(
@@ -112,9 +101,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim
                     GetActivityRecords(cimNamespace, records)));
         }
 
-        private IEnumerable<XElement> GetActivityRecords(
-            XNamespace cimNamespace,
-            IEnumerable<T> records)
+        private IEnumerable<XElement> GetActivityRecords(XNamespace cimNamespace, IEnumerable<T> records)
         {
             return records.Select(record => GetActivityRecord(cimNamespace, record));
         }

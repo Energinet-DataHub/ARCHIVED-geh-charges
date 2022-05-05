@@ -35,17 +35,18 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 
         public async Task PublishAsync(ChargeCommandAcceptedEvent chargeCommandAcceptedEvent)
         {
-            if (chargeCommandAcceptedEvent == null) throw new ArgumentNullException(nameof(chargeCommandAcceptedEvent));
+            ArgumentNullException.ThrowIfNull(chargeCommandAcceptedEvent);
 
-            await _chargePublisher
-                .PublishChargeCreatedAsync(chargeCommandAcceptedEvent)
-                .ConfigureAwait(false);
-
-            if (chargeCommandAcceptedEvent.Command.ChargeOperation.Points.Any())
+            foreach (var chargeOperationDto in chargeCommandAcceptedEvent.Command.ChargeOperations)
             {
-                await _chargePricesUpdatedPublisher
-                    .PublishChargePricesAsync(chargeCommandAcceptedEvent)
-                    .ConfigureAwait(false);
+                await _chargePublisher.PublishChargeCreatedAsync(chargeOperationDto).ConfigureAwait(false);
+
+                if (chargeOperationDto.Points.Any())
+                {
+                    await _chargePricesUpdatedPublisher
+                        .PublishChargePricesAsync(chargeOperationDto)
+                        .ConfigureAwait(false);
+                }
             }
         }
     }

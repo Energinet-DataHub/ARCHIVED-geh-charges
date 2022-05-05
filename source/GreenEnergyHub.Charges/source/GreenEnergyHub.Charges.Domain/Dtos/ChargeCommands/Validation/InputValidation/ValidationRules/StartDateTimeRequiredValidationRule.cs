@@ -16,19 +16,21 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
 {
-    public class StartDateTimeRequiredValidationRule : IValidationRule
+    public class StartDateTimeRequiredValidationRule : IValidationRuleForOperation
     {
-        private readonly ChargeCommand _chargeCommand;
+        private readonly ChargeOperationDto _chargeOperationDto;
 
-        public StartDateTimeRequiredValidationRule(ChargeCommand chargeCommand)
+        public StartDateTimeRequiredValidationRule(ChargeOperationDto chargeOperationDto)
         {
-            _chargeCommand = chargeCommand;
+            _chargeOperationDto = chargeOperationDto;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.StartDateTimeRequiredValidation;
 
         // Instant is a struct, so to ensure caller supplied it, we check if it has the default value.
-        public bool IsValid => _chargeCommand.ChargeOperation.StartDateTime != default;
+        public bool IsValid => _chargeOperationDto.StartDateTime != default;
+
+        public string OperationId => _chargeOperationDto.Id;
     }
 }

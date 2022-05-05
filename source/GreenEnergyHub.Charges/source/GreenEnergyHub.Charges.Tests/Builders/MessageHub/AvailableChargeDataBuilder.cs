@@ -25,6 +25,8 @@ namespace GreenEnergyHub.Charges.Tests.Builders.MessageHub
     {
         private BusinessReasonCode _businessReasonCode;
         private Guid _availableDataReferenceId;
+        private int _operationOrder = 0;
+        private Instant _requestDateTime = SystemClock.Instance.GetCurrentInstant();
 
         public AvailableChargeDataBuilder()
         {
@@ -44,6 +46,18 @@ namespace GreenEnergyHub.Charges.Tests.Builders.MessageHub
             return this;
         }
 
+        public AvailableChargeDataBuilder WithOperationOrder(int operationOrder)
+        {
+            _operationOrder = operationOrder;
+            return this;
+        }
+
+        public AvailableChargeDataBuilder WithRequestDateTime(Instant requestDateTime)
+        {
+            _requestDateTime = requestDateTime;
+            return this;
+        }
+
         public AvailableChargeData Build()
         {
             return new AvailableChargeData(
@@ -52,7 +66,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.MessageHub
                 "recipientId",
                 MarketParticipantRole.GridAccessProvider,
                 _businessReasonCode,
-                SystemClock.Instance.GetCurrentInstant(),
+                _requestDateTime,
                 _availableDataReferenceId,
                 "chargeId",
                 "chargeOwner",
@@ -66,6 +80,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.MessageHub
                 true,
                 Resolution.PT15M,
                 DocumentType.NotifyPriceList,
+                _operationOrder,
                 new List<AvailableChargeDataPoint>());
         }
     }

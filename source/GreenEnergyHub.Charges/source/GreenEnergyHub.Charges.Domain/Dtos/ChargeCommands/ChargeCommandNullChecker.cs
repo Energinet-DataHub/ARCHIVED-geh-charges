@@ -13,23 +13,48 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
 {
     public static class ChargeCommandNullChecker
     {
-        public static void ThrowExceptionIfRequiredPropertyIsNull(ChargeCommand chargeCommand)
+        public static void ThrowExceptionIfRequiredPropertyIsNull(List<ChargeCommand> chargeCommands)
         {
-            if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
+            CheckListOfChargeCommands(chargeCommands);
 
-            CheckDocument(chargeCommand.Document);
-            CheckChargeOperation(chargeCommand.ChargeOperation);
+            foreach (var chargeCommand in chargeCommands)
+            {
+                CheckChargeCommand(chargeCommand);
+
+                CheckDocument(chargeCommand.Document);
+
+                foreach (var chargeDto in chargeCommand.ChargeOperations)
+                {
+                    CheckChargeOperation(chargeDto, chargeCommand.Document.BusinessReasonCode);
+                }
+            }
         }
 
-        private static void CheckChargeOperation(ChargeOperationDto chargeOperationDto)
+        private static void CheckListOfChargeCommands(List<ChargeCommand> chargeCommands)
+        {
+            if (chargeCommands == null) throw new ArgumentNullException(nameof(chargeCommands));
+        }
+
+        private static void CheckChargeCommand(ChargeCommand chargeCommand)
+        {
+            if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
+        }
+
+        private static void CheckChargeOperation(ChargeOperationDto chargeOperationDto, BusinessReasonCode businessReasonCode)
         {
             if (chargeOperationDto == null) throw new ArgumentNullException(nameof(chargeOperationDto));
+
+            if (businessReasonCode == BusinessReasonCode.UpdateChargePrices)
+                return;
+
             if (string.IsNullOrWhiteSpace(chargeOperationDto.ChargeName)) throw new ArgumentException(chargeOperationDto.ChargeName);
             if (string.IsNullOrWhiteSpace(chargeOperationDto.ChargeDescription)) throw new ArgumentException(chargeOperationDto.ChargeDescription);
         }

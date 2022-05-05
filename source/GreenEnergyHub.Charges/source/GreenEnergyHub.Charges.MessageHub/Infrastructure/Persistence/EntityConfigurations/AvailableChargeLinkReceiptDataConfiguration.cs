@@ -39,7 +39,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Persistence.EntityCon
             builder.Property(x => x.RequestDateTime);
             builder.Property(x => x.AvailableDataReferenceId);
             builder.Property(x => x.DocumentType);
-            builder.Ignore(c => c.ValidationErrors);
+            builder.Property(x => x.OperationOrder);
+            builder.Ignore(x => x.ValidationErrors);
             builder.OwnsMany<AvailableReceiptValidationError>("_validationErrors", ConfigureReasonCodes);
         }
 

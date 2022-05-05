@@ -28,6 +28,7 @@ module "app_webapi" {
   health_check_path                         = "/monitor/ready"
   health_check_alert_action_group_id        = data.azurerm_key_vault_secret.primary_action_group_id.value
   health_check_alert_enabled                = var.enable_health_check_alerts
+  dotnet_framework_version                  = "v6.0"
 
   app_settings = {
     APPINSIGHTS_INSTRUMENTATIONKEY = "${data.azurerm_key_vault_secret.appi_shared_instrumentation_key.value}",

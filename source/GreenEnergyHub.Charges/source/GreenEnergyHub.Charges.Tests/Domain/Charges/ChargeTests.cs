@@ -241,6 +241,25 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
         }
 
         [Fact]
+        public void StopCharge_WhenStopDateEqualsSingleExistingChargePeriodStartDate_RemovePeriod()
+        {
+            // Arrange
+            var dayAfterTomorrow = InstantHelper.GetTodayPlusDaysAtMidnightUtc(2);
+            var existingPeriod = new ChargePeriodBuilder()
+                .WithStartDateTime(dayAfterTomorrow)
+                .WithEndDateTime(InstantHelper.GetEndDefault())
+                .Build();
+
+            var sut = new ChargeBuilder().WithPeriods(new List<ChargePeriod> { existingPeriod }).Build();
+
+            // Act
+            sut.Stop(dayAfterTomorrow);
+
+            // Assert
+            sut.Periods.Count.Should().Be(0);
+        }
+
+        [Fact]
         public void StopCharge_WhenSingleExistingChargePeriod_SetNewEndDate()
         {
             // Arrange
@@ -374,38 +393,60 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
         }
 
         [Fact]
-        public void CancelStop_WhenStopPeriodExists_ThenReplaceEndDateWithDefaultEndDate()
+        public void CancelStop_WhenStopPeriodExists_ThenAddNewLastPeriod()
         {
             // Arrange
-            var sut = new ChargeBuilder().WithPeriods(new List<ChargePeriod>
-            {
-                new ChargePeriodBuilder()
-                    .WithStartDateTime(InstantHelper.GetYesterdayAtMidnightUtc())
-                    .WithEndDateTime(InstantHelper.GetTodayAtMidnightUtc())
-                    .Build(),
-                new ChargePeriodBuilder()
-                    .WithStartDateTime(InstantHelper.GetTodayAtMidnightUtc())
-                    .WithEndDateTime(InstantHelper.GetTomorrowAtMidnightUtc())
-                    .Build(),
-            }).Build();
+            var stopDate = InstantHelper.GetTomorrowAtMidnightUtc();
+            var period = new ChargePeriodBuilder()
+                .WithName("newName")
+                .WithStartDateTime(stopDate)
+                .Build();
+
+            var sut = new ChargeBuilder().WithPeriods(
+                new List<ChargePeriod>
+                {
+                    new ChargePeriodBuilder()
+                        .WithName("oldName")
+                        .WithEndDateTime(stopDate)
+                        .Build(),
+                }).Build();
 
             // Act
-            sut.CancelStop();
+            sut.CancelStop(period);
 
             // Assert
-            var actual = sut.Periods.OrderByDescending(p => p.StartDateTime).First();
+            var orderedPeriods = sut.Periods.OrderBy(p => p.StartDateTime).ToList();
+            var actualFirst = orderedPeriods.First();
+            var actualLast = orderedPeriods.Last();
+            actualFirst.Name.Should().Be("oldName");
+            actualFirst.StartDateTime.Should().BeEquivalentTo(InstantHelper.GetStartDefault());
+            actualFirst.EndDateTime.Should().BeEquivalentTo(stopDate);
+            actualLast.Name.Should().Be("newName");
+            actualLast.StartDateTime.Should().BeEquivalentTo(stopDate);
+            actualLast.EndDateTime.Should().BeEquivalentTo(InstantHelper.GetEndDefault());
+        }
 
-            actual.EndDateTime.Should().BeEquivalentTo(InstantHelper.GetEndDefault());
+        [Fact]
+        public void CancelStop_WhenChargeNotStopped_ThenThrowException()
+        {
+            // Arrange
+            var periods = new List<ChargePeriod> { new ChargePeriodBuilder().Build() };
+            var sut = new ChargeBuilder().WithPeriods(periods).Build();
+            var cancelPeriod = new ChargePeriodBuilder().WithStartDateTime(InstantHelper.GetTodayAtMidnightUtc()).Build();
+
+            // Act & Assert
+            Assert.Throws<InvalidOperationException>(() => sut.CancelStop(cancelPeriod));
         }
 
         [Fact]
         public void CancelStop_WhenNoExistingPeriods_ThenThrowException()
         {
             // Arrange
+            var chargePeriod = new ChargePeriodBuilder().Build();
             var sut = new ChargeBuilder().Build();
 
             // Act & Assert
-            Assert.Throws<InvalidOperationException>(sut.CancelStop);
+            Assert.Throws<InvalidOperationException>(() => sut.CancelStop(chargePeriod));
         }
 
         private static IEnumerable<ChargePeriod> BuildStoppedChargePeriods()

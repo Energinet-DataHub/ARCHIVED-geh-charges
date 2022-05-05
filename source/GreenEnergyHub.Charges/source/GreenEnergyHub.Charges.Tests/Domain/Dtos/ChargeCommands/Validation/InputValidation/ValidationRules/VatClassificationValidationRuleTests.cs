@@ -18,7 +18,6 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
@@ -36,25 +35,28 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void VatClassificationValidationRule_Test(
             VatClassification vatClassification,
             bool expected,
-            ChargeCommandBuilder chargeCommandBuilder)
+            ChargeOperationDtoBuilder chargeOperationDtoBuilder)
         {
-            var command = chargeCommandBuilder.WithVatClassification(vatClassification).Build();
-            var sut = new VatClassificationValidationRule(command);
+            var chargeOperationDto = chargeOperationDtoBuilder.WithVatClassification(vatClassification).Build();
+            var sut = new VatClassificationValidationRule(chargeOperationDto);
             sut.IsValid.Should().Be(expected);
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder builder)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeOperationDtoBuilder builder)
         {
-            var invalidCommand = CreateInvalidCommand(builder);
-            var sut = new VatClassificationValidationRule(invalidCommand);
+            var chargeOperationDto = builder.WithVatClassification(VatClassification.Vat25).Build();
+            var sut = new VatClassificationValidationRule(chargeOperationDto);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.VatClassificationValidation);
         }
 
-        private static ChargeCommand CreateInvalidCommand(ChargeCommandBuilder builder)
+        [Theory]
+        [InlineAutoDomainData]
+        public void OperationId_ShouldBe_EqualTo(ChargeOperationDto chargeOperationDto)
         {
-            return builder.WithVatClassification(VatClassification.Unknown).Build();
+            var sut = new VatClassificationValidationRule(chargeOperationDto);
+            sut.OperationId.Should().Be(chargeOperationDto.Id);
         }
     }
 }

@@ -23,6 +23,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.Factories;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.DocumentValidation.Factories;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.Factories;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
@@ -48,12 +49,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IChargePeriodFactory, ChargePeriodFactory>();
             serviceCollection.AddScoped<IChargeCommandAcceptedEventFactory, ChargeCommandAcceptedEventFactory>();
             serviceCollection.AddScoped<IChargeCommandRejectedEventFactory, ChargeCommandRejectedEventFactory>();
-            serviceCollection.AddScoped<ICimValidationErrorTextFactory<ChargeCommand>, ChargeCimValidationErrorTextFactory>();
+            serviceCollection.AddScoped<ICimValidationErrorTextFactory<ChargeCommand, ChargeOperationDto>,
+                ChargeCimValidationErrorTextFactory>();
             serviceCollection.AddScoped<ICimValidationErrorCodeFactory, CimValidationErrorCodeFactory>();
-
-            serviceCollection
-                .AddScoped<IAvailableChargeReceiptValidationErrorFactory,
-                    AvailableChargeReceiptValidationErrorFactory>();
+            serviceCollection.AddScoped<IAvailableChargeReceiptValidationErrorFactory,
+                AvailableChargeReceiptValidationErrorFactory>();
+            serviceCollection.AddScoped<IChargeHandler, ChargeHandler>();
 
             ConfigureDatabase(serviceCollection);
             ConfigureValidation(serviceCollection);
@@ -69,12 +70,16 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
         private static void ConfigureValidation(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<IBusinessValidationRulesFactory<ChargeCommand>, ChargeCommandBusinessValidationRulesFactory>();
-            serviceCollection.AddScoped<IInputValidationRulesFactory<ChargeCommand>, ChargeCommandInputValidationRulesFactory>();
+            serviceCollection.AddScoped<IDocumentValidationRulesFactory<ChargeCommand>,
+                ChargeCommandDocumentValidationRulesFactory>();
+            serviceCollection.AddScoped<IBusinessValidationRulesFactory<ChargeCommand>,
+                ChargeCommandBusinessValidationRulesFactory>();
+            serviceCollection.AddScoped<IInputValidationRulesFactory<ChargeCommand>,
+                ChargeCommandInputValidationRulesFactory>();
             serviceCollection.AddScoped<IRulesConfigurationRepository, RulesConfigurationRepository>();
+            serviceCollection.AddScoped<IDocumentValidator<ChargeCommand>, DocumentValidator<ChargeCommand>>();
             serviceCollection.AddScoped<IInputValidator<ChargeCommand>, InputValidator<ChargeCommand>>();
             serviceCollection.AddScoped<IBusinessValidator<ChargeCommand>, BusinessValidator<ChargeCommand>>();
-            serviceCollection.AddScoped<IValidator<ChargeCommand>, Validator<ChargeCommand>>();
         }
 
         private static void ConfigureIso8601Timezones(IServiceCollection serviceCollection)

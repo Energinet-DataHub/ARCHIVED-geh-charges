@@ -43,6 +43,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
             bool transparentInvoicing,
             Resolution resolution,
             DocumentType documentType,
+            int operationOrder,
             List<AvailableChargeDataPoint> points)
             : base(
                 senderId,
@@ -52,7 +53,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
                 businessReasonCode,
                 requestDateTime,
                 availableDataReferenceId,
-                documentType)
+                documentType,
+                operationOrder)
         {
             ChargeId = chargeId;
             ChargeOwner = chargeOwner;

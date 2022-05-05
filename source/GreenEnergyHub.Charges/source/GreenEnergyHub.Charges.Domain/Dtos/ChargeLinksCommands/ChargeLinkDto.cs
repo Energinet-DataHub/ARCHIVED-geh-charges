@@ -13,29 +13,49 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 using NodaTime;
 
 #pragma warning disable 8618
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
 {
-    public class ChargeLinkDto
+    public class ChargeLinkDto : OperationBase
     {
-        /// <summary>
-        /// Contains a ID for the specific link, provided by the sender (or TSO when creating default charge link). Combined with sender.id it becomes unique.
-        /// </summary>
-        public string OperationId { get; set; }
+        public ChargeLinkDto(
+            string operationId,
+            Instant startDateTime,
+            Instant? endDateTime,
+            string senderProvidedChargeId,
+            int factor,
+            string chargeOwner,
+            ChargeType chargeType)
+        {
+            OperationId = operationId;
+            StartDateTime = startDateTime;
+            EndDateTime = endDateTime;
+            SenderProvidedChargeId = senderProvidedChargeId;
+            Factor = factor;
+            ChargeOwner = chargeOwner;
+            ChargeType = chargeType;
+        }
 
-        public Instant StartDateTime { get; set; }
+        /// <summary>
+        /// Contains a ID for the specific link, provided by the sender (or TSO when creating default charge link).
+        /// Combined with sender.id it becomes unique.
+        /// </summary>
+        public string OperationId { get; }
+
+        public Instant StartDateTime { get; }
 
         public Instant? EndDateTime { get; set; }
 
-        public string SenderProvidedChargeId { get; set; }
+        public string SenderProvidedChargeId { get; }
 
-        public int Factor { get; set; }
+        public int Factor { get; }
 
-        public string ChargeOwner { get; set; }
+        public string ChargeOwner { get; }
 
-        public ChargeType ChargeType { get; set; }
+        public ChargeType ChargeType { get; }
     }
 }

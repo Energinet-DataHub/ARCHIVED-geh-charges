@@ -29,6 +29,7 @@ namespace GreenEnergyHub.Charges.SystemTests
     /// <summary>
     /// Contains system tests where we operate at the level of the API Management.
     /// </summary>
+    [Collection(nameof(SystemTestCollectionFixture))]
     public class ApiManagementTests : IClassFixture<ApiManagementConfiguration>
     {
         private readonly BackendAuthenticationClient _authenticationClient;
@@ -54,14 +55,15 @@ namespace GreenEnergyHub.Charges.SystemTests
         }
 
         // This shows how we can call API Management using a valid access token
-        [SystemFact]
+        [SystemFact(Skip = "Implicitly covered by BusinessProcessTests.cs. " +
+                           "Kept for now as it might serve a local development test purpose.")]
         public async Task When_RequestApiManagementWithAccessToken_Then_ResponseIsAccepted()
         {
             // Arrange
             using var httpClient = await CreateHttpClientAsync(_authenticationClient);
 
-            var clock = SystemClock.Instance;
-            var xml = EmbeddedResourceHelper.GetEmbeddedFile(ChargeLinkDocument.AnyValid, clock);
+            var currentInstant = SystemClock.Instance.GetCurrentInstant();
+            var xml = EmbeddedResourceHelper.GetEmbeddedFile(ChargeLinkDocument.AnyValid, currentInstant);
 
             var request = new HttpRequestMessage(HttpMethod.Post, "v1.0/cim/requestchangebillingmasterdata")
             {
@@ -82,8 +84,8 @@ namespace GreenEnergyHub.Charges.SystemTests
             // Arrange
             using var httpClient = await CreateHttpClientAsync();
 
-            var clock = SystemClock.Instance;
-            var xml = EmbeddedResourceHelper.GetEmbeddedFile(ChargeLinkDocument.AnyValid, clock);
+            var currentInstant = SystemClock.Instance.GetCurrentInstant();
+            var xml = EmbeddedResourceHelper.GetEmbeddedFile(ChargeLinkDocument.AnyValid, currentInstant);
 
             var request = new HttpRequestMessage(HttpMethod.Post, "v1.0/cim/requestchangebillingmasterdata")
             {

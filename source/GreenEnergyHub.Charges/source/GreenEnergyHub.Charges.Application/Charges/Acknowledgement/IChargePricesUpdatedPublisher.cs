@@ -13,12 +13,12 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
 {
     public interface IChargePricesUpdatedPublisher
     {
-        Task PublishChargePricesAsync(ChargeCommandAcceptedEvent chargeCommandAcceptedEvent);
+        Task PublishChargePricesAsync(ChargeOperationDto chargeOperationDto);
     }
 }

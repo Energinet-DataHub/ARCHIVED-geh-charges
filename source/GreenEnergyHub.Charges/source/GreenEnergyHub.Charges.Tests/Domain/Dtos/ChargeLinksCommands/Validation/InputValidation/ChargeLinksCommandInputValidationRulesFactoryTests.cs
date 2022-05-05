@@ -14,15 +14,8 @@
 
 using System;
 using System.Linq;
-using System.Reflection;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.InputValidation.Factories;
-using GreenEnergyHub.Charges.Domain.Dtos.Validation;
-using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
-using GreenEnergyHub.Charges.MessageHub.Models.Shared;
-using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Charges.Tests.Builders;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using Xunit;
 using Xunit.Categories;
@@ -37,11 +30,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
         {
             // Arrange
             var sut = new ChargeLinksCommandInputValidationRulesFactory();
-            var chargeCommand = new ChargeLinksCommandBuilder().Build();
+            var chargeLinksCommand = new ChargeLinksCommandBuilder().Build();
 
             // Act
-            var actualRuleTypes = sut.CreateRulesForCommand(chargeCommand).GetRules()
-                .Select(r => r.GetType()).ToList();
+            var actualRuleTypes = sut.CreateRulesForCommand(chargeLinksCommand)
+                .GetRules().Select(r => r.GetType()).ToList();
 
             // Assert
             actualRuleTypes.Count.Should().Be(0);
@@ -55,37 +48,6 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
 
             // Act & Assert
             Assert.Throws<ArgumentNullException>(() => sut.CreateRulesForCommand(null!));
-        }
-
-        [Theory]
-        [InlineAutoMoqData(CimValidationErrorTextToken.ChargeLinkStartDate)]
-        [InlineAutoMoqData(CimValidationErrorTextToken.DocumentSenderProvidedChargeId)]
-        public void CreateRulesForChargeCommand_AllRulesThatNeedTriggeredByForErrorMessage_MustImplementIValidationRuleWithExtendedData(
-            CimValidationErrorTextToken cimValidationErrorTextToken,
-            ChargeLinksCommandInputValidationRulesFactory sut,
-            ChargeLinksCommand chargeLinksCommand)
-        {
-            // Arrange
-            // Act
-            var validationRules = sut.CreateRulesForCommand(chargeLinksCommand).GetRules();
-
-            // Assert
-            var type = typeof(CimValidationErrorTextTemplateMessages);
-            foreach (var fieldInfo in type.GetFields(BindingFlags.Static | BindingFlags.Public))
-            {
-                if (!fieldInfo.GetCustomAttributes().Any()) continue;
-
-                var errorMessageForAttribute = (ErrorMessageForAttribute)fieldInfo.GetCustomAttributes()
-                    .Single(x => x.GetType() == typeof(ErrorMessageForAttribute));
-
-                var validationRuleIdentifier = errorMessageForAttribute.ValidationRuleIdentifier;
-                var errorText = fieldInfo.GetValue(null)!.ToString();
-                var validationErrorTextTokens = CimValidationErrorTextTokenMatcher.GetTokens(errorText!);
-                var validationRule = validationRules.SingleOrDefault(x => x.ValidationRuleIdentifier == validationRuleIdentifier);
-
-                if (validationErrorTextTokens.Contains(cimValidationErrorTextToken) && validationRule != null)
-                    Assert.True(validationRule is IValidationRuleWithExtendedData);
-            }
         }
     }
 }

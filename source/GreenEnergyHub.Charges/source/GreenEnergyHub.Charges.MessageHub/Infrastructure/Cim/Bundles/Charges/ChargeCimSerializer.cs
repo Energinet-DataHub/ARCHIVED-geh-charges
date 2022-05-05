@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Xml.Linq;
 using GreenEnergyHub.Charges.Core.DateTime;
@@ -112,12 +113,13 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.Charges
                     charge.Points.Count > 0,
                     CimChargeConstants.ChargeResolution,
                     () => ResolutionMapper.Map(charge.Resolution)),
-                new XElement(cimNamespace + CimChargeConstants.StartDateTime, charge.StartDateTime.ToString()),
-                // EndDateTime
+                // EffectiveDate
+                new XElement(cimNamespace + CimChargeConstants.EffectiveDate, charge.StartDateTime.ToString()),
+                // TerminationDate
                 CimHelper.GetElementIfNeeded(
                     cimNamespace,
                     charge.EndDateTime.IsEndDefault(),
-                    CimChargeConstants.EndDateTime,
+                    CimChargeConstants.TerminationDate,
                     () => charge.EndDateTime.ToString()),
                 // VatClassification
                 CimHelper.GetElementIfNeeded(
@@ -165,13 +167,14 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.Charges
         {
             return new XElement(
                 cimNamespace + CimChargeConstants.TimeInterval,
-                new XElement(cimNamespace + CimChargeConstants.TimeIntervalStart, charge.StartDateTime),
+                new XElement(cimNamespace + CimChargeConstants.TimeIntervalStart, charge.StartDateTime.GetTimeAndPriceSeriesDateTimeFormat()),
                 new XElement(
                     cimNamespace + CimChargeConstants.TimeIntervalEnd,
                     _iso8601Durations.GetTimeFixedToDuration(
                         charge.StartDateTime,
                         ResolutionMapper.Map(charge.Resolution),
-                        charge.Points.Count)));
+                        charge.Points.Count)
+                        .GetTimeAndPriceSeriesDateTimeFormat()));
         }
 
         private static XElement GetPoint(XNamespace cimNamespace, AvailableChargeDataPoint point)

@@ -17,7 +17,7 @@ limitations under the License.
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     </PropertyGroup>
 
@@ -38,10 +38,14 @@ limitations under the License.
       <EmbeddedResource Include="Scripts\Model\202201281340 Increase OriginalOperationId length.sql" />
       <EmbeddedResource Include="Scripts\Model\202202151610 Move charge periods to ChargePeriod table.sql" />
       <EmbeddedResource Include="Scripts\Model\202203090952 Add DocumentType to AvailableData.sql" />
+      <EmbeddedResource Include="Scripts\Model\202203231212 Add OperationOrder to AvailableData.sql" />
+      <EmbeddedResource Include="Scripts\Model\202204191415 Ensure unique charges by removing duplicates and adding constraint.sql" />
       <EmbeddedResource Include="Scripts\Seed\202201261740 Add default charges owner.sql" />
       <EmbeddedResource Include="Scripts\Seed\202201261741 Add default charges.sql" />
       <EmbeddedResource Include="Scripts\Seed\202201261742 Add default charge links.sql" />
+      <EmbeddedResource Include="Scripts\Seed\202203251356 Alter default charges.sql" />
       <EmbeddedResource Include="Scripts\Test\202201261750 Add test data.sql" />
+      <EmbeddedResource Include="Scripts\Model\280320221347 Add unique constraint on Charge Link.sql" />
     </ItemGroup>
 
 </Project>

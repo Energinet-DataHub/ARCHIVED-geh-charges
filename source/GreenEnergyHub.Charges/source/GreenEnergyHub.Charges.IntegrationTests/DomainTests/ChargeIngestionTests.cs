@@ -21,6 +21,7 @@ using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.Charges;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
+using GreenEnergyHub.Charges.TestCore.Attributes;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
@@ -41,7 +42,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public RunAsync(ChargesFunctionAppFixture fixture, ITestOutputHelper testOutputHelper)
                 : base(fixture, testOutputHelper)
             {
-                TestDataGenerator.GenerateDataForIntegrationTests(fixture);
                 _authenticatedHttpRequestGenerator = new AuthenticatedHttpRequestGenerator(fixture.AuthorizationConfiguration);
             }
 
@@ -61,11 +61,29 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             [Fact]
             public async Task When_RequestIsUnauthenticated_Then_AHttp401UnauthorizedIsReturned()
             {
-                var (request, _) = HttpRequestGenerator.CreateHttpPostRequest(EndpointUrl, ChargeDocument.TariffBundleWithValidAndInvalid);
+                var (request, _) = HttpRequestGenerator.CreateHttpPostRequest(
+                    EndpointUrl, ChargeDocument.TariffBundleWithValidAndInvalid);
 
                 var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 actual.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+            }
+
+            [Fact]
+            public async Task Given_NewMessage_When_SenderIdDoesNotMatchAuthenticatedId_Then_ShouldReturnErrorMessage()
+            {
+                // Arrange
+                var (request, _) = await _authenticatedHttpRequestGenerator
+                    .CreateAuthenticatedHttpPostRequestAsync(
+                        EndpointUrl, ChargeDocument.ChargeDocumentWhereSenderIdDoNotMatchAuthorizedActorId);
+
+                // Act
+                var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                actual.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+                var errorMessage = await actual.Content.ReadAsStringAsync();
+                errorMessage.Should().Be(ErrorMessageConstants.ActorIsNotWhoTheyClaimToBeErrorMessage);
             }
 
             [Fact]
@@ -95,7 +113,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             {
                 // Arrange
                 var (request, correlationId) = await _authenticatedHttpRequestGenerator
-                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.AnyValid);
+                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.TariffBundleWithCreateAndUpdate);
                 using var eventualChargeCreatedEvent = await Fixture
                     .ChargeCreatedListener
                     .ListenForMessageAsync(correlationId)
@@ -140,11 +158,99 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                     .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.TariffBundleWithValidAndInvalid);
 
                 // Act
+                var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
+
+                // We expect three peeks:
+                // * one for the two confirmations
+                // * one for the notification (tax)
+                // * one for the rejection (ChargeIdLengthValidation)
+                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId, 3);
+            }
+
+            [Theory]
+            [InlineAutoMoqData(ChargeDocument.SubscriptionMonthlyPriceSample)]
+            [InlineAutoMoqData(ChargeDocument.FeeMonthlyPriceSample)]
+            [InlineAutoMoqData(ChargeDocument.TariffHourlyPricesSample)]
+            [InlineAutoMoqData(ChargeDocument.TariffPriceSeries)]
+            public async Task Given_ChargeExampleFileWithPrices_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply(
+                string testFilePath)
+            {
+                // Arrange
+                var (request, correlationId) = await _authenticatedHttpRequestGenerator
+                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, testFilePath);
+
+                // Act
                 await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Act and assert
-                // We expect three peeks, one for the charge and one for the receipt and one rejection
-                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId, 3);
+                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId);
+            }
+
+            [Fact]
+            public async Task Given_BundleWithMultipleOperationsForSameCharge_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply()
+            {
+                // Arrange
+                var (request, correlationId) = await _authenticatedHttpRequestGenerator
+                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.BundleWithMultipleOperationsForSameTariff);
+
+                // Act
+                var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
+
+                // We expect four peeks:
+                // * one for the create confirmation (create)
+                // * one for the create confirmation (update)
+                // * one for the create confirmation (stop)
+                // * one for the create confirmation (cancel stop)
+                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId, 4);
+            }
+
+            [Fact]
+            public async Task Given_BundleWithTwoOperationsForSameTariffSecondOpViolatingVR903_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply()
+            {
+                // Arrange
+                var (request, correlationId) = await _authenticatedHttpRequestGenerator
+                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.BundleWithTwoOperationsForSameTariffSecondOpViolatingVr903);
+
+                // Act
+                var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
+
+                // We expect two peeks:
+                // * one for the confirmation (first operation)
+                // * one for the rejection (second operation violating VR.903)
+                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId, 2);
+            }
+
+            [Fact(Skip = "Used for debugging ChargeCommandReceivedEventHandler")]
+            public async Task Given_UpdateRequest_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply()
+            {
+                // Arrange - Create
+                var (createReq, correlationId) = await _authenticatedHttpRequestGenerator
+                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.CreateTariff);
+                var response = await Fixture.HostManager.HttpClient.SendAsync(createReq);
+                response.StatusCode.Should().Be(HttpStatusCode.Accepted);
+                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId);
+
+                // Arrange - Update
+                var (updateReq, updateCorrelationId) = await _authenticatedHttpRequestGenerator
+                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.UpdateTariff);
+
+                // Act
+                var actual = await Fixture.HostManager.HttpClient.SendAsync(updateReq);
+
+                // Assert
+                actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
+
+                // * Expect one for the confirmation (update)
+                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(updateCorrelationId);
             }
         }
     }
