@@ -22,11 +22,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
         {
             return rule =>
             {
-                if (rule.ValidationRule is IValidationRuleForOperation)
-                {
-                    return new ValidationError(rule.ValidationRule.ValidationRuleIdentifier, null);
-                }
-
                 if (rule.ValidationRule is IValidationRuleWithExtendedData validationRuleWithExtendedData)
                 {
                     return new ValidationError(

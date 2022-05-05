@@ -17,7 +17,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.BusinessValidation.ValidationRules
 {
-    public class ChargeMustExistRule : IValidationRuleForOperation
+    public class ChargeMustExistRule : IValidationRule
     {
         private readonly Charge? _existingCharge;
         private readonly ChargeLinkDto _chargeLinkDto;
@@ -31,11 +31,5 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
         public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeDoesNotExist;
 
         public bool IsValid => _existingCharge is not null;
-
-        /// <summary>
-        /// This validation rule validates each ChargeLink in a list of ChargeLink(s). This property will
-        /// tell which ChargeLink triggered the rule. The ChargeLink is identified by OperationId.
-        /// </summary>
-        public string OperationId => _chargeLinkDto.OperationId;
     }
 }

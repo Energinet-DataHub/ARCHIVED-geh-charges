@@ -17,7 +17,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
 {
-    public class TransparentInvoicingIsNotAllowedForFeeValidationRule : IValidationRuleForOperation
+    public class TransparentInvoicingIsNotAllowedForFeeValidationRule : IValidationRule
     {
         private readonly ChargeOperationDto _chargeOperationDto;
 
@@ -30,7 +30,5 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
             ValidationRuleIdentifier.TransparentInvoicingIsNotAllowedForFee;
 
         public bool IsValid => _chargeOperationDto.Type != ChargeType.Fee || _chargeOperationDto.TransparentInvoicing == TransparentInvoicing.NonTransparent;
-
-        public string OperationId => _chargeOperationDto.Id;
     }
 }
