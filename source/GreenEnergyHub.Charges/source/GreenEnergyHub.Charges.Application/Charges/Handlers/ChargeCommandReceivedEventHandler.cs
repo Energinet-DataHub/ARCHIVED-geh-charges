@@ -29,7 +29,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
     public class ChargeCommandReceivedEventHandler : IChargeCommandReceivedEventHandler
     {
         private readonly IChargeCommandReceiptService _chargeCommandReceiptService;
-        private readonly IDocumentValidator<ChargeCommand> _documentValidator;
         private readonly IInputValidator<ChargeCommand> _inputValidator;
         private readonly IBusinessValidator<ChargeCommand> _businessValidator;
         private readonly IChargeRepository _chargeRepository;
@@ -39,7 +38,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 
         public ChargeCommandReceivedEventHandler(
             IChargeCommandReceiptService chargeCommandReceiptService,
-            IDocumentValidator<ChargeCommand> documentValidator,
             IInputValidator<ChargeCommand> inputValidator,
             IBusinessValidator<ChargeCommand> businessValidator,
             IChargeRepository chargeRepository,
@@ -48,7 +46,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             IUnitOfWork unitOfWork)
         {
             _chargeCommandReceiptService = chargeCommandReceiptService;
-            _documentValidator = documentValidator;
             _inputValidator = inputValidator;
             _businessValidator = businessValidator;
             _chargeRepository = chargeRepository;
@@ -60,14 +57,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         public async Task HandleAsync(ChargeCommandReceivedEvent commandReceivedEvent)
         {
             ArgumentNullException.ThrowIfNull(commandReceivedEvent);
-
-            var documentValidationResult = await _documentValidator.ValidateAsync(commandReceivedEvent.Command).ConfigureAwait(false);
-            if (documentValidationResult.IsFailed)
-            {
-                await _chargeCommandReceiptService
-                    .RejectAsync(commandReceivedEvent.Command, documentValidationResult).ConfigureAwait(false);
-                return;
-            }
 
             var inputValidationResult = _inputValidator.Validate(commandReceivedEvent.Command);
 
