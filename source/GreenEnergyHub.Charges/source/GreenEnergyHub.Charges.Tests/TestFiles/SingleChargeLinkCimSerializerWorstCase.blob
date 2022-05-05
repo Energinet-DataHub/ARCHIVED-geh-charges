@@ -12,14 +12,14 @@
   <cim:MktActivityRecord>
     <cim:mRID>000000000000000000000000000000000</cim:mRID>
     <cim:marketEvaluationPoint.mRID codingScheme="A10">this field has a maximum size of 35</cim:marketEvaluationPoint.mRID>
-    <cim:start_DateAndOrTime.dateTime>2020-12-31T23:00:00Z</cim:start_DateAndOrTime.dateTime>
-    <cim:end_DateAndOrTime.dateTime>2021-04-30T22:00:00Z</cim:end_DateAndOrTime.dateTime>
     <cim:ChargeGroup>
       <cim:ChargeType>
         <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">this field has a maximum size of 35</cim:chargeTypeOwner_MarketParticipant.mRID>
         <cim:type>D03</cim:type>
         <cim:mRID>this field has a maximum size of 100 field has a maximum size of 100 field has a maximum size of 100</cim:mRID>
         <cim:factor>9999</cim:factor>
+        <cim:effectiveDate>2020-12-31T23:00:00Z</cim:effectiveDate>
+        <cim:terminationDate>2021-04-30T22:00:00Z</cim:terminationDate>
       </cim:ChargeType>
     </cim:ChargeGroup>
   </cim:MktActivityRecord>

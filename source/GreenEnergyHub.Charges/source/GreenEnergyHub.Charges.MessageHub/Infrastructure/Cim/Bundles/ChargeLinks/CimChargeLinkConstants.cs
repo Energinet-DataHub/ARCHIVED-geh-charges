@@ -34,9 +34,9 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeLin
 
         internal const string MeteringPointId = "marketEvaluationPoint.mRID";
 
-        internal const string StartDateTime = "start_DateAndOrTime.dateTime";
+        internal const string EffectiveDate = "effectiveDate";
 
-        internal const string EndDateTime = "end_DateAndOrTime.dateTime";
+        internal const string TerminationDate = "terminationDate";
 
         internal const string ChargeGroup = "ChargeGroup";
 
