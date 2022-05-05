@@ -80,7 +80,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Function
 
         [Theory]
         [InlineAutoMoqData]
-        public void CreateBadRequestResponseWithText_Creates_Response_With_Text_In_Xml_Body(
+        public void CreateBadRequestResponseWithText_WhenBadRequest_CreatesResponseWithTextInXmlBody(
             FunctionContext executionContext)
         {
             // Arrange
