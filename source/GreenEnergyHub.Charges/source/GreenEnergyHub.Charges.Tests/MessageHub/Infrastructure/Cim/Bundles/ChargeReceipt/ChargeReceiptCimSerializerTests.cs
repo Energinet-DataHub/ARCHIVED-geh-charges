@@ -149,9 +149,16 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
                 Guid.NewGuid(),
                 receiptStatus,
                 "OriginalOperationId" + no,
-                DocumentType.ChargeReceipt,
+                GetDocumentType(receiptStatus),
                 0,
                 GetReasonCodes(no));
+        }
+
+        private DocumentType GetDocumentType(ReceiptStatus receiptStatus)
+        {
+            return receiptStatus == ReceiptStatus.Confirmed
+                ? DocumentType.ConfirmRequestChangeOfPriceList
+                : DocumentType.RejectRequestChangeOfPriceList;
         }
 
         private List<AvailableReceiptValidationError> GetReasonCodes(int no)

@@ -14,7 +14,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
@@ -75,7 +74,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                     Guid.NewGuid(), // ID of each available piece of data must be unique
                     ReceiptStatus.Confirmed,
                     chargeOperationDto.Id,
-                    documentDto.Type,
+                    DocumentType.ConfirmRequestChangeOfPriceList, // Will be added to the HTTP MessageType header
                     operationOrder,
                     new List<AvailableReceiptValidationError>()),
             };

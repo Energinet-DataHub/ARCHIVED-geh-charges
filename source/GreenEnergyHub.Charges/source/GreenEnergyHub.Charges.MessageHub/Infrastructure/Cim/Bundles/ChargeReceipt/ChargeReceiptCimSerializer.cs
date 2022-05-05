@@ -67,7 +67,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeRec
 
         protected override DocumentType GetDocumentType(IEnumerable<AvailableChargeReceiptData> records)
         {
-            return DocumentType.ChargeReceipt;
+            return IsConfirmation(records) ?
+                DocumentType.ConfirmRequestChangeOfPriceList : DocumentType.RejectRequestChangeOfPriceList;
         }
 
         protected override XElement GetActivityRecord(XNamespace cimNamespace, AvailableChargeReceiptData receipt)
