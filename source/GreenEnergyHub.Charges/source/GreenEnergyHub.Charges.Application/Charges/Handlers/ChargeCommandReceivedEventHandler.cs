@@ -62,11 +62,12 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             ArgumentNullException.ThrowIfNull(commandReceivedEvent);
 
             var operationsToBeRejected = new List<ChargeOperationDto>();
+            var rejectionRules = new List<IValidationRule>();
             var operationsToBeConfirmed = new List<ChargeOperationDto>();
 
-            var documentValidationResult = await _documentValidator
+            var validationResult = await _documentValidator
                 .ValidateAsync(commandReceivedEvent.Command).ConfigureAwait(false);
-            if (documentValidationResult.IsFailed)
+            if (validationResult.IsFailed)
             {
                 operationsToBeRejected.AddRange(commandReceivedEvent.Command.ChargeOperations);
             }
@@ -79,19 +80,31 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                     var operation = operations[i];
                     var charge = await GetChargeAsync(operation).ConfigureAwait(false);
 
-                    var inputValidationResult = _inputValidator.Validate(operation);
-                    if (inputValidationResult.IsFailed)
+                    validationResult = _inputValidator.Validate(operation);
+                    if (validationResult.IsFailed)
                     {
-                        // TODO: All rejections should point to operation failed validation
                         operationsToBeRejected = operations[i..].ToList();
+                        rejectionRules.AddRange(validationResult.InvalidRules);
+                        foreach (var toBeRejected in operationsToBeRejected.Skip(1))
+                        {
+                            var rejectionRule = new PreviousOperationsMustBeValidRule(operation.Id, toBeRejected);
+                            rejectionRules.Add(rejectionRule);
+                        }
+
                         break;
                     }
 
-                    var businessValidationResult = await _businessValidator.ValidateAsync(operation).ConfigureAwait(false);
-                    if (inputValidationResult.IsFailed)
+                    validationResult = await _businessValidator.ValidateAsync(operation).ConfigureAwait(false);
+                    if (validationResult.IsFailed)
                     {
-                        // TODO: All rejections should point to operation failed validation
                         operationsToBeRejected = operations[i..].ToList();
+                        rejectionRules.AddRange(validationResult.InvalidRules);
+                        foreach (var toBeRejected in operationsToBeRejected.Skip(1))
+                        {
+                            var rejectionRule = new PreviousOperationsMustBeValidRule(operation.Id, toBeRejected);
+                            rejectionRules.Add(rejectionRule);
+                        }
+
                         break;
                     }
 
@@ -127,99 +140,20 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             }
 
-            // TODO: Send rejections
-            // TODO: Send confirmations
+            var document = commandReceivedEvent.Command.Document;
+            if (operationsToBeRejected.Any())
+            {
+                await _chargeCommandReceiptService.RejectAsync(
+                    new ChargeCommand(document, operationsToBeRejected), ValidationResult.CreateFailure(rejectionRules)).ConfigureAwait(false);
+            }
 
-            /* TODO:
-             *  - businessValidation (and add to reject and confirm lists)
-             *  - move functionality from "switch (operationType)" to individual handlers?
-             *  - reject all operations in operationsToBeRejected
-             *  - test confirm all operations in operationsToBeConfirmed
-             *  - unitOfWork.SaveChanges();
-            */
-
-            // TODO: Delete the following when refactoring is done
-            // var acceptedOperations = new List<ChargeOperationDto>();
-            //
-            // var triggeredBy = string.Empty;
-            //
-            // foreach (var chargeOperationDto in commandReceivedEvent.Command.ChargeOperations)
-            // {
-            //     var charge = await GetChargeAsync(commandReceivedEvent).ConfigureAwait(false);
-            //     var chargeCommandWithOperation = new ChargeCommand(
-            //         commandReceivedEvent.Command.Document,
-            //         new List<ChargeOperationDto> { chargeOperationDto });
-            //     triggeredBy = await HandleInvalidBusinessRulesAsync(
-            //         chargeCommandWithOperation,
-            //         triggeredBy).ConfigureAwait(false);
-            //     if (!string.IsNullOrEmpty(triggeredBy)) continue;
-            //
-            //     var operationType = GetOperationType(chargeOperationDto, charge);
-            //
-            //     switch (operationType)
-            //     {
-            //         /*
-            //          * In order to fix issue 1276, the create operation is allowed to violate the unit of work pattern.
-            //          * This is done to ensure the next operations in the bundle will be processed correctly.
-            //          * Do note that the ChargeCommandReceivedEventHandler is currently being refactored. So this is
-            //          * considered a short-sighted solution.
-            //          */
-            //         case OperationType.Create:
-            //             await HandleCreateEventAsync(chargeOperationDto).ConfigureAwait(false);
-            //             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-            //             break;
-            //         case OperationType.Update:
-            //             HandleUpdateEvent(charge!, chargeOperationDto);
-            //             break;
-            //         case OperationType.Stop:
-            //             charge!.Stop(chargeOperationDto.EndDateTime);
-            //             break;
-            //         case OperationType.CancelStop:
-            //             HandleCancelStopEvent(charge!, chargeOperationDto);
-            //             break;
-            //         default:
-            //             throw new InvalidOperationException("Could not handle charge command.");
-            //     }
-            //
-            //     acceptedOperations.Add(chargeOperationDto);
-            // }
-            //
-            // var acceptedChargeCommand = new ChargeCommand(commandReceivedEvent.Command.Document, acceptedOperations);
-            // await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-            // await _chargeCommandReceiptService.AcceptAsync(acceptedChargeCommand).ConfigureAwait(false);
+            if (operationsToBeConfirmed.Any())
+            {
+                await _chargeCommandReceiptService.AcceptAsync(
+                    new ChargeCommand(document, operationsToBeConfirmed)).ConfigureAwait(false);
+            }
         }
 
-        // private async Task<string> HandleInvalidBusinessRulesAsync(
-        //     ChargeCommand chargeCommandWithOperation,
-        //     string triggeredBy)
-        // {
-        //     if (string.IsNullOrEmpty(triggeredBy))
-        //     {
-        //         var businessValidationResult =
-        //             await _businessValidator.ValidateAsync(chargeCommandWithOperation).ConfigureAwait(false);
-        //         if (businessValidationResult.IsFailed)
-        //         {
-        //             // First error found in bundle, we reject with the original validation error
-        //             triggeredBy = chargeCommandWithOperation.ChargeOperations.Single().Id;
-        //             await _chargeCommandReceiptService
-        //                 .RejectAsync(chargeCommandWithOperation, businessValidationResult)
-        //                 .ConfigureAwait(false);
-        //         }
-        //     }
-        //     else
-        //     {
-        //         // A previous error has occured, we reject all subsequent operations in bundle with special validation error
-        //         var rejectionValidationResult = ValidationResult.CreateFailure(new List<IValidationRule>()
-        //         {
-        //             new PreviousOperationsMustBeValidRule(triggeredBy, chargeCommandWithOperation.ChargeOperations.Single()),
-        //         });
-        //         await _chargeCommandReceiptService
-        //             .RejectAsync(chargeCommandWithOperation, rejectionValidationResult)
-        //             .ConfigureAwait(false);
-        //     }
-        //
-        //     return triggeredBy;
-        // }
         private async Task HandleCreateEventAsync(ChargeOperationDto chargeOperationDto)
         {
             var charge = await _chargeFactory
