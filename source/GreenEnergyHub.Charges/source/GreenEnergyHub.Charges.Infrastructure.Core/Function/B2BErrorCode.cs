@@ -12,11 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.FunctionHost.Common
+namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
 {
-    public static class SynchronousErrorMessageConstants
+    public enum B2BErrorCode
     {
-        public static string ActorIsNotWhoTheyClaimToBeErrorMessage =>
-            "The sender organization provided in the request body does not match the organization in the bearer token.";
+        ActorIsNotWhoTheyClaimToBeErrorMessage,
     }
 }
