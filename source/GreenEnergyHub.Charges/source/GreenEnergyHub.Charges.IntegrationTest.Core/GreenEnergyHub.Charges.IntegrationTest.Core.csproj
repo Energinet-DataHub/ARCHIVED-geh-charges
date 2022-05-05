@@ -24,10 +24,6 @@ limitations under the License.
     <LangVersion>9</LangVersion>
     <OutputType>Library</OutputType>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="TestFiles\Charges\PriceSeries\TariffPriceSeriesWithInvalidBusinessReasonCode.xml" />
-  </ItemGroup>
   
   <ItemGroup>
     <ProjectReference Include="..\GreenEnergyHub.Charges.ApplyDBMigrationsApp\GreenEnergyHub.Charges.ApplyDBMigrationsApp.csproj" />
