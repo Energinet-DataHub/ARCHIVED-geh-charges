@@ -19,19 +19,19 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 {
     public class ValidationRuleSet : IValidationRuleSet
     {
-        private readonly List<ValidationRuleWithOperation> _rules;
+        private readonly List<IValidationRuleWithOperation> _rules;
 
-        private ValidationRuleSet(List<ValidationRuleWithOperation> rules)
+        private ValidationRuleSet(List<IValidationRuleWithOperation> rules)
         {
             _rules = rules;
         }
 
-        public static IValidationRuleSet FromRules(List<ValidationRuleWithOperation> rules)
+        public static IValidationRuleSet FromRules(List<IValidationRuleWithOperation> rules)
         {
             return new ValidationRuleSet(rules);
         }
 
-        public IReadOnlyCollection<ValidationRuleWithOperation> GetRules() => _rules.AsReadOnly();
+        public IReadOnlyCollection<IValidationRuleWithOperation> GetRules() => _rules.AsReadOnly();
 
         public ValidationResult Validate()
         {

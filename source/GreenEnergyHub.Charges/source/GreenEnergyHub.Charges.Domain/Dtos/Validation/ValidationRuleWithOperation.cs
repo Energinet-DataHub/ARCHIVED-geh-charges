@@ -14,10 +14,7 @@
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 {
-    /// <summary>
-    /// Container for validationrules with operationId in the Charges domain
-    /// </summary>
-    public class ValidationRuleWithOperation
+    public class ValidationRuleWithOperation : IValidationRuleWithOperation
     {
         public ValidationRuleWithOperation(string operationId, IValidationRule validationRule)
         {
@@ -25,14 +22,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
             ValidationRule = validationRule;
         }
 
-        /// <summary>
-        /// OperationId for which the validationRule is applicable
-        /// </summary>
         public string OperationId { get; }
 
-        /// <summary>
-        /// ValidationRule that applies to the OperationId
-        /// </summary>
         public IValidationRule ValidationRule { get; }
     }
 }

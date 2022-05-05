@@ -12,14 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-
 namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 {
-    public interface IValidationRuleSet
+    /// <summary>
+    /// Container for validationrules with operationId in the Charges domain
+    /// </summary>
+    public interface IValidationRuleWithOperation
     {
-        IReadOnlyCollection<IValidationRuleWithOperation> GetRules();
+        /// <summary>
+        /// OperationId for which the validationRule is applicable
+        /// </summary>
+        string OperationId { get; }
 
-        ValidationResult Validate();
+        /// <summary>
+        /// ValidationRule that applies to the OperationId
+        /// </summary>
+        IValidationRule ValidationRule { get; }
     }
 }

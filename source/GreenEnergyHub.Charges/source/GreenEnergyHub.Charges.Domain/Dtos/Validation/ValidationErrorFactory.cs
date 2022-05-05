@@ -18,7 +18,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 {
     public static class ValidationErrorFactory
     {
-        public static Func<ValidationRuleWithOperation, ValidationError> Create()
+        public static Func<IValidationRuleWithOperation, ValidationError> Create()
         {
             return rule =>
             {

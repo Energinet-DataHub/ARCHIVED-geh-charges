@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommandRejectedEvents
         public void CreateEvent_WhenCalledWithValidationResult_CreatesEventWithCorrectFailures(
             [Frozen] Mock<IClock> clock,
             ChargeCommand command,
-            IList<ValidationRuleWithOperation> failedRules,
+            IList<IValidationRuleWithOperation> failedRules,
             ChargeCommandRejectedEventFactory sut)
         {
             // Arrange
