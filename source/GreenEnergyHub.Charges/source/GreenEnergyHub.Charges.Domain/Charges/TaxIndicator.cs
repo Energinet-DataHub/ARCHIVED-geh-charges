@@ -12,16 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
-
-namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
+namespace GreenEnergyHub.Charges.Domain.Charges
 {
-    public interface IValidator<in TCommand>
-        where TCommand : CommandBase
+    public enum TaxIndicator
     {
-        ValidationResult InputValidate(TCommand command);
-
-        Task<ValidationResult> BusinessValidateAsync(TCommand command);
+        Unknown = 0,
+        NoTax = 1,
+        Tax = 2,
     }
 }

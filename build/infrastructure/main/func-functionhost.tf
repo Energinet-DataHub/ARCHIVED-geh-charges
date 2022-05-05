@@ -60,8 +60,6 @@ module "func_functionhost" {
     COMMAND_RECEIVED_SUBSCRIPTION_NAME                              = "command-received"
     COMMAND_REJECTED_TOPIC_NAME                                     = module.sbt_command_rejected.name
     COMMAND_REJECTED_SUBSCRIPTION_NAME                              = "command-rejected"
-    PRICE_COMMAND_RECEIVED_TOPIC_NAME                               = module.sbt_price_command_received.name
-    PRICE_COMMAND_RECEIVED_SUBSCRIPTION_NAME                        = "price-command-received"
     DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_TOPIC_NAME         = module.sbt_default_charge_links_available_notified.name
     DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_SUBSCRIPTION_NAME  = "default-charge-links-available-notified"
     CREATE_LINKS_REQUEST_QUEUE_NAME                                 = data.azurerm_key_vault_secret.sbq_create_link_request_name.value

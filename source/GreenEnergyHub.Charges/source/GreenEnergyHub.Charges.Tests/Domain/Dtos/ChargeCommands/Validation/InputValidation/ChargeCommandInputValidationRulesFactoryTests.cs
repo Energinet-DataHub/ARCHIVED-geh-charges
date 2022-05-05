@@ -23,7 +23,6 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.MessageHub.Models.Shared;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Charges.Tests.Builders.Command;
 using Xunit;
 using Xunit.Categories;
 
@@ -32,30 +31,6 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
     [UnitTest]
     public class ChargeCommandInputValidationRulesFactoryTests
     {
-        [Fact]
-        public void CreateRulesForChargeCommand_ShouldContainRulesTest()
-        {
-            // Arrange
-            var sut = new ChargeCommandInputValidationRulesFactory();
-            var chargeCommand = new ChargeCommandBuilder().Build();
-            var expectedRules = new List<IValidationRule>
-            {
-                new BusinessReasonCodeMustBeUpdateChargeInformationRule(chargeCommand.Document),
-                new DocumentTypeMustBeRequestUpdateChargeInformationRule(chargeCommand.Document),
-                new RecipientIsMandatoryTypeValidationRule(chargeCommand.Document),
-                new SenderIsMandatoryTypeValidationRule(chargeCommand.Document),
-            };
-
-            expectedRules.AddRange(chargeCommand.ChargeOperations.SelectMany(GetExpectedRulesForChargeOperation));
-
-            // Act
-            var actualRuleTypes = sut.CreateRulesForCommand(chargeCommand).GetRules().Select(r => r.GetType()).ToList();
-            var expectedRuleTypes = expectedRules.Select(r => r.GetType()).ToList();
-
-            // Assert
-            Assert.True(actualRuleTypes.SequenceEqual(expectedRuleTypes));
-        }
-
         [Fact]
         public void CreateRulesForChargeCommand_ShouldThrowArgumentNullException_WhenCalledWithNull()
         {

@@ -20,7 +20,6 @@ using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.Factories
@@ -29,33 +28,29 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
     {
         private readonly IChargeRepository _chargeRepository;
         private readonly IClock _clock;
-        private readonly IMarketParticipantRepository _marketParticipantRepository;
         private readonly IRulesConfigurationRepository _rulesConfigurationRepository;
         private readonly IZonedDateTimeService _zonedDateTimeService;
 
         public ChargeCommandBusinessValidationRulesFactory(
             IRulesConfigurationRepository rulesConfigurationRepository,
             IChargeRepository chargeRepository,
-            IMarketParticipantRepository marketParticipantRepository,
             IZonedDateTimeService zonedDateTimeService,
             IClock clock)
         {
             _rulesConfigurationRepository = rulesConfigurationRepository;
             _chargeRepository = chargeRepository;
-            _marketParticipantRepository = marketParticipantRepository;
             _zonedDateTimeService = zonedDateTimeService;
             _clock = clock;
         }
 
         public async Task<IValidationRuleSet> CreateRulesAsync(ChargeCommand chargeCommand)
         {
-            var chargeOperation = CheckChargeCommandArgument(chargeCommand);
 
-            var sender = await _marketParticipantRepository
-                .GetOrNullAsync(chargeCommand.Document.Sender.BusinessProcessRole, chargeCommand.Document.Sender.Id)
-                .ConfigureAwait(false);
-            var rules = GetMandatoryRulesForCommand(sender);
-            rules.AddRange(await GetRulesForOperationAsync(chargeOperation).ConfigureAwait(false));
+            ArgumentNullException.ThrowIfNull(chargeCommand);
+            var chargeOperation = chargeCommand.ChargeOperations.SingleOrDefault();
+            ArgumentNullException.ThrowIfNull(chargeOperation);
+
+            var rules = await GetRulesForOperationAsync(chargeOperation).ConfigureAwait(false);
             return ValidationRuleSet.FromRules(rules);
         }
 
@@ -104,13 +99,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
             };
 
             rules.AddRange(updateRules);
-        }
-
-        private static List<IValidationRule> GetMandatoryRulesForCommand(MarketParticipant? sender)
-        {
-            var rules = new List<IValidationRule> { new CommandSenderMustBeAnExistingMarketParticipantRule(sender) };
-
-            return rules;
         }
 
         private List<IValidationRule> GetMandatoryRulesForOperation(
