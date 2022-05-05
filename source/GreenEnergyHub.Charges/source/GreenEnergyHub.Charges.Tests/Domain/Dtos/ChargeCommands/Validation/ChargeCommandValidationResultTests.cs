@@ -59,14 +59,20 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation
             Assert.Throws<ArgumentException>(() => ValidationResult.CreateFailure(allRules));
         }
 
-        private static List<IValidationRule> CreateValidRules()
+        private static List<ValidationRuleWithOperation> CreateValidRules()
         {
-            return new List<IValidationRule> { new TestValidationRule(true, ValidationRuleIdentifier.StartDateValidation) };
+            return new List<ValidationRuleWithOperation>
+            {
+                new(string.Empty, new TestValidationRule(true, ValidationRuleIdentifier.StartDateValidation)),
+            };
         }
 
-        private static List<IValidationRule> CreateInvalidRules()
+        private static List<ValidationRuleWithOperation> CreateInvalidRules()
         {
-            return new List<IValidationRule> { new TestValidationRule(false, ValidationRuleIdentifier.StartDateValidation) };
+            return new List<ValidationRuleWithOperation>
+            {
+                new(string.Empty, new TestValidationRule(false, ValidationRuleIdentifier.StartDateValidation)),
+            };
         }
     }
 }
