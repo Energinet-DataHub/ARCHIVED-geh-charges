@@ -45,7 +45,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
 
         public async Task<IValidationRuleSet> CreateRulesAsync(ChargeCommand chargeCommand)
         {
-
             ArgumentNullException.ThrowIfNull(chargeCommand);
             var chargeOperation = chargeCommand.ChargeOperations.SingleOrDefault();
             ArgumentNullException.ThrowIfNull(chargeOperation);
