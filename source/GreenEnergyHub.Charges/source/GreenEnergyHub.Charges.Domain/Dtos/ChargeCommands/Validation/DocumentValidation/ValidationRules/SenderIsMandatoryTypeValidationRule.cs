@@ -14,22 +14,21 @@
 
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
+namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.DocumentValidation.ValidationRules
 {
-    public class BusinessReasonCodeMustBeUpdateChargeInformationRule : IValidationRule
+    public class SenderIsMandatoryTypeValidationRule : IValidationRule
     {
         private readonly DocumentDto _documentDto;
 
-        public BusinessReasonCodeMustBeUpdateChargeInformationRule(DocumentDto documentDto)
+        public SenderIsMandatoryTypeValidationRule(DocumentDto documentDto)
         {
             _documentDto = documentDto;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
-            ValidationRuleIdentifier.BusinessReasonCodeMustBeUpdateChargeInformation;
+            ValidationRuleIdentifier.SenderIsMandatoryTypeValidation;
 
-        public bool IsValid => _documentDto.BusinessReasonCode == BusinessReasonCode.UpdateChargeInformation;
+        public bool IsValid => MarketParticipantMrIdValidator.IsValid(_documentDto.Sender.Id);
     }
 }

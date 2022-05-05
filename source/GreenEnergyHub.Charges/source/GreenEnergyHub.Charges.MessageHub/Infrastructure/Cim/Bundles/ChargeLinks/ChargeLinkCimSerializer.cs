@@ -52,52 +52,42 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeLin
             return DocumentType.NotifyBillingMasterData;
         }
 
-        protected override XElement GetActivityRecord(
-            XNamespace cimNamespace,
-            AvailableChargeLinksData chargeLink)
+        protected override XElement GetActivityRecord(XNamespace cimNamespace, AvailableChargeLinksData chargeLink)
         {
             return new XElement(
                 cimNamespace + CimMarketDocumentConstants.MarketActivityRecord,
                 new XElement(cimNamespace + CimChargeLinkConstants.MarketActivityRecordId, CimIdProvider.GetUniqueId()),
                 new XElement(
                     cimNamespace + CimChargeLinkConstants.MeteringPointId,
-                    new XAttribute(
-                        CimMarketDocumentConstants.CodingScheme,
-                        CodingSchemeMapper.Map(CodingScheme.GS1)),
+                    new XAttribute(CimMarketDocumentConstants.CodingScheme, CodingSchemeMapper.Map(CodingScheme.GS1)),
                     chargeLink.MeteringPointId),
-                new XElement(cimNamespace + CimChargeLinkConstants.StartDateTime, chargeLink.StartDateTime.ToString()),
-                CimHelper.GetElementIfNeeded(
-                    cimNamespace,
-                    chargeLink.EndDateTime.IsEndDefault(),
-                    CimChargeLinkConstants.EndDateTime,
-                    () => chargeLink.EndDateTime.ToString()),
                 GetChargeGroupElement(cimNamespace, chargeLink));
         }
 
-        private static XElement GetChargeGroupElement(
-            XNamespace cimNamespace,
-            AvailableChargeLinksData chargeLink)
+        private static XElement GetChargeGroupElement(XNamespace cimNamespace, AvailableChargeLinksData chargeLink)
         {
             return new XElement(
                 cimNamespace + CimChargeLinkConstants.ChargeGroup,
                 GetChargeTypeElement(cimNamespace, chargeLink));
         }
 
-        private static XElement GetChargeTypeElement(
-            XNamespace cimNamespace,
-            AvailableChargeLinksData chargeLink)
+        private static XElement GetChargeTypeElement(XNamespace cimNamespace, AvailableChargeLinksData chargeLink)
         {
             return new XElement(
                 cimNamespace + CimChargeLinkConstants.ChargeTypeElement,
                 new XElement(
                     cimNamespace + CimChargeLinkConstants.Owner,
-                    new XAttribute(
-                        CimMarketDocumentConstants.CodingScheme,
-                        CodingSchemeMapper.Map(CodingScheme.GS1)),
+                    new XAttribute(CimMarketDocumentConstants.CodingScheme, CodingSchemeMapper.Map(CodingScheme.GS1)),
                     chargeLink.ChargeOwner),
                 new XElement(cimNamespace + CimChargeLinkConstants.ChargeType, ChargeTypeMapper.Map(chargeLink.ChargeType)),
                 new XElement(cimNamespace + CimChargeLinkConstants.ChargeId, chargeLink.ChargeId),
-                new XElement(cimNamespace + CimChargeLinkConstants.Factor, chargeLink.Factor));
+                new XElement(cimNamespace + CimChargeLinkConstants.Factor, chargeLink.Factor),
+                new XElement(cimNamespace + CimChargeLinkConstants.EffectiveDate, chargeLink.StartDateTime.ToString()),
+                CimHelper.GetElementIfNeeded(
+                    cimNamespace,
+                    chargeLink.EndDateTime.IsEndDefault(),
+                    CimChargeLinkConstants.TerminationDate,
+                    () => chargeLink.EndDateTime.ToString()));
         }
     }
 }

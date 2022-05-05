@@ -41,7 +41,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             [Frozen] Mock<IChargeLinksReceiptService> chargeLinksReceiptService,
             [Frozen] Mock<IChargeLinkFactory> chargeLinkFactory,
             [Frozen] Mock<IChargeLinksAcceptedEventFactory> chargeLinkCommandAcceptedEventFactory,
-            [Frozen] Mock<IValidator<ChargeLinksCommand>> validator,
+            [Frozen] Mock<IInputValidator<ChargeLinksCommand>> inputValidator,
+            [Frozen] Mock<IBusinessValidator<ChargeLinksCommand>> businessValidator,
             ChargeLinksReceivedEvent chargeLinksReceivedEvent,
             ChargeLinksAcceptedEvent chargeLinksAcceptedEvent,
             ChargeLinksReceivedEventHandler sut)
@@ -51,7 +52,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             fixture.Customizations.Add(new StringGenerator(() => Guid.NewGuid().ToString()[..16]));
             var chargeLink = fixture.Create<ChargeLink>();
 
-            SetupValidator(validator);
+            SetupValidators(inputValidator, businessValidator);
             SetupFactories(chargeLinkFactory, chargeLinkCommandAcceptedEventFactory, chargeLinksAcceptedEvent, chargeLink);
 
             // Act
@@ -61,12 +62,12 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             chargeLinksReceiptService.Verify(x => x.AcceptAsync(It.IsAny<ChargeLinksCommand>()));
         }
 
-        private static void SetupValidator(Mock<IValidator<ChargeLinksCommand>> validator)
+        private static void SetupValidators(Mock<IInputValidator<ChargeLinksCommand>> inputValidator, Mock<IBusinessValidator<ChargeLinksCommand>> businessValidator)
         {
-            validator.Setup(x => x.InputValidate(It.IsAny<ChargeLinksCommand>()))
+            inputValidator.Setup(x => x.Validate(It.IsAny<ChargeLinksCommand>()))
                 .Returns(ValidationResult.CreateSuccess());
 
-            validator.Setup(x => x.BusinessValidateAsync(It.IsAny<ChargeLinksCommand>()))
+            businessValidator.Setup(x => x.ValidateAsync(It.IsAny<ChargeLinksCommand>()))
                 .ReturnsAsync(ValidationResult.CreateSuccess());
         }
 

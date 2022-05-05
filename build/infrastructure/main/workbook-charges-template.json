@@ -141,7 +141,7 @@
             | join (history) on key\r\n
             | project-away key1, key\r\n",
             "size": 3,
-            "title": "Indsendte Stamdataopdatering bliver taget imod, behandlet og tilgængelig for afhentning med enten godkendelse eller afvisning ind for 5 minutter for 99% af beskederne",
+            "title": "Indsendte Stamdataopdatering bliver taget imod, behandlet og tilgængelig for afhentning med enten godkendelse eller afvisning inden for 5 minutter for 99% af beskederne",
             "noDataMessageStyle": 4,
             "timeContextFromParameter": "period_dropdown",
             "queryType": 0,
