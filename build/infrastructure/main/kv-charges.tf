@@ -23,6 +23,7 @@ module "kv_charges" {
   enabled_for_template_deployment = true
   sku_name                        = "standard"
   private_endpoint_subnet_id      = data.azurerm_key_vault_secret.snet_private_endpoints_id.value
+  log_analytics_workspace_id      = data.azurerm_key_vault_secret.log_shared_id.value
   
   tags                            = azurerm_resource_group.this.tags
 }
