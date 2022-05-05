@@ -21,11 +21,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.TestCommon;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.Charges;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.SystemTests.Fixtures;
-using Microsoft.Rest;
 using NodaTime;
 using Xunit;
 
