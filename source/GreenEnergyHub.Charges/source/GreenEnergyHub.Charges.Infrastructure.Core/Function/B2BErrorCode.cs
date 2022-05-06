@@ -16,6 +16,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
 {
     public enum B2BErrorCode
     {
-        ActorIsNotWhoTheyClaimToBeErrorMessage,
+        ActorIsNotWhoTheyClaimToBeErrorMessage = 1,
     }
 }

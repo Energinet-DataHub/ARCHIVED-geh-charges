@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.ComponentModel;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using Xunit;
@@ -35,6 +36,16 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Function
             // Assert
             sut.Code.Should().Be(expectedCode);
             sut.Message.Should().Be(expectedMessage);
+        }
+
+        [Fact]
+        public void Create_WhenFactoryCreateWithInvalidB2BCode_ThrowsException()
+        {
+            // Arrange
+            var invalidB2BCode = (B2BErrorCode)0;
+
+            // Assert
+            Assert.Throws<InvalidEnumArgumentException>(() => B2BErrorMessageFactory.Create(invalidB2BCode));
         }
     }
 }
