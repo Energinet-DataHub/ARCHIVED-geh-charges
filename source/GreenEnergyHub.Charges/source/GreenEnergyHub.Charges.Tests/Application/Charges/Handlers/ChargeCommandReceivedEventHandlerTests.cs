@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             [Frozen] Mock<IChargeFactory> chargeFactory,
             [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
             ChargeCommandReceivedEvent receivedEvent,
-            ChargeCommandReceivedEventHandler sut)
+            ChargeInformationHandler sut)
         {
             // Arrange
             var validationResult = ValidationResult.CreateSuccess();
@@ -92,7 +92,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             [Frozen] Mock<IBusinessValidator<ChargeCommand>> businessValidator,
             [Frozen] Mock<IChargeCommandReceiptService> receiptService,
             ChargeCommandReceivedEvent receivedEvent,
-            ChargeCommandReceivedEventHandler sut)
+            ChargeInformationHandler sut)
         {
             // Arrange
             var validationResult = GetFailedValidationResult();
@@ -112,7 +112,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         [Theory]
         [InlineAutoMoqData]
         public async Task HandleAsync_IfEventIsNull_ThrowsArgumentNullException(
-            ChargeCommandReceivedEventHandler sut)
+            ChargeInformationHandler sut)
         {
             // Arrange
             ChargeCommandReceivedEvent? receivedEvent = null;
@@ -129,7 +129,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
             ChargeCommandReceivedEvent receivedEvent,
-            ChargeCommandReceivedEventHandler sut)
+            ChargeInformationHandler sut)
         {
             // Arrange
             var validationResult = ValidationResult.CreateSuccess();
@@ -164,7 +164,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
             [Frozen] Instant stopDate,
             ChargeCommandReceivedEvent receivedEvent,
-            ChargeCommandReceivedEventHandler sut)
+            ChargeInformationHandler sut)
         {
             // Arrange
             var validationResult = ValidationResult.CreateSuccess();
@@ -196,7 +196,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             [Frozen] Mock<IBusinessValidator<ChargeCommand>> businessValidator,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
-            ChargeCommandReceivedEventHandler sut)
+            ChargeInformationHandler sut)
         {
             // Arrange
             var validationResult = ValidationResult.CreateSuccess();
@@ -243,7 +243,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
              [Frozen] Mock<IInputValidator<ChargeCommand>> inputValidator,
              [Frozen] Mock<IBusinessValidator<ChargeCommand>> businessValidator,
              [Frozen] Mock<IChargeCommandReceiptService> receiptService,
-             ChargeCommandReceivedEventHandler sut)
+             ChargeInformationHandler sut)
          {
              // Arrange
              var receivedEvent = CreateReceivedEventWithChargeOperations();
