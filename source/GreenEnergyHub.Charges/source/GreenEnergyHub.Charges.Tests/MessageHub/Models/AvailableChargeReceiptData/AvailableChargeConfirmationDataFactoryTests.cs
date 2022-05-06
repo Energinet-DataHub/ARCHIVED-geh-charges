@@ -23,7 +23,6 @@ using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Testables;
-using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using NodaTime;
 using Xunit;
