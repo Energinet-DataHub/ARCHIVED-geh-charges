@@ -125,7 +125,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
             cimIdProvider.Setup(c => c.GetUniqueId()).Returns(CimTestId);
         }
 
-        private List<AvailableChargeLinksReceiptData> GetReceipts(ReceiptStatus receiptStatus, IClock clock)
+        private static List<AvailableChargeLinksReceiptData> GetReceipts(ReceiptStatus receiptStatus, IClock clock)
         {
             var chargeLinks = new List<AvailableChargeLinksReceiptData>();
 
