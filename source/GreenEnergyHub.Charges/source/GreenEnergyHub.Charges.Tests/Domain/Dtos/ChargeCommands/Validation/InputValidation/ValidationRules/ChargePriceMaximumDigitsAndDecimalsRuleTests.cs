@@ -62,9 +62,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         }
 
         [Theory]
-        [InlineAutoDomainData(ValidationRuleIdentifier.ChargePriceMaximumDigitsAndDecimals)]
+        [InlineAutoDomainData]
         public void TriggeredBy_ShouldCauseCompleteErrorMessages_ToMarketParticipant(
-            ValidationRuleIdentifier validationRuleIdentifier,
             ILoggerFactory loggerFactory,
             CimValidationErrorTextProvider cimValidationErrorTextProvider)
         {
@@ -78,14 +77,13 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             var expectedPoint = chargeOperationDto.Points[0];
             var triggeredBy = expectedPoint.Position.ToString();
 
-            // Act & arrange
             var sutRule = new ChargePriceMaximumDigitsAndDecimalsRule(chargeOperationDto);
+            var sutValidationRuleWithOperation =
+                new ValidationError(sutRule, chargeOperationDto.Id, triggeredBy);
             var sutFactory = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
 
-            var actual = sutFactory.Create(
-                new ValidationError(validationRuleIdentifier, triggeredBy),
-                invalidCommand,
-                chargeOperationDto);
+            // Act
+            var actual = sutFactory.Create(sutValidationRuleWithOperation, invalidCommand, chargeOperationDto);
 
             // Assert
             sutRule.IsValid.Should().BeFalse();

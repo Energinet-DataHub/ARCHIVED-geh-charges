@@ -39,10 +39,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Validation
         {
             // Arrange
             var testValidationRule = new TestValidationRule(isValid, ValidationRuleIdentifier.StartDateValidation);
-            var rules = new List<IValidationRuleWithOperation>
+            var rules = new List<IValidationError>
             {
-                new ValidationRuleWithOperation(string.Empty, testValidationRule),
-                new ValidationRuleWithOperation(string.Empty, testValidationRule),
+                new ValidationError(testValidationRule, string.Empty),
+                new ValidationError(testValidationRule, string.Empty),
             };
             var validationRuleSet = ValidationRuleSet.FromRules(rules);
             documentValidationRulesFactory

@@ -14,26 +14,19 @@
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 {
-    public class ValidationError
+    public class ValidationError : IValidationError
     {
-        public ValidationError(
-            ValidationRuleIdentifier validationRuleIdentifier,
-            string? triggeredBy)
+        public ValidationError(IValidationRule validationRule, string operationId, string triggeredBy = null!)
         {
-            ValidationRuleIdentifier = validationRuleIdentifier;
+            ValidationRule = validationRule;
+            OperationId = operationId;
             TriggeredBy = triggeredBy;
         }
 
-        /// <summary>
-        /// Identifier of the violated rule
-        /// </summary>
-        public ValidationRuleIdentifier ValidationRuleIdentifier { get; }
+        public IValidationRule ValidationRule { get; }
 
-        /// <summary>
-        /// Violation of some validation rules are triggered by an element in a list.
-        /// In these cases this property will tell which element triggered the rule
-        /// identified by <see cref="ValidationRuleIdentifier"/> to be violated.
-        /// </summary>
+        public string OperationId { get; }
+
         public string? TriggeredBy { get; }
     }
 }

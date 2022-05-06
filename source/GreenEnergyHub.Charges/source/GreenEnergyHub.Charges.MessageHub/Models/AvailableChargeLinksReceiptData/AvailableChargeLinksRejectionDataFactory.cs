@@ -95,6 +95,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
         {
             return input
                 .ValidationErrors
+                .Where(ve => ve.OperationId == chargeLinkDto.OperationId || string.IsNullOrWhiteSpace(ve.OperationId)) // TODO Can we avoid the null-check for validationrules without operation?
                 .Select(validationError => _availableChargeLinksReceiptValidationErrorFactory
                     .Create(validationError, input.ChargeLinksCommand, chargeLinkDto))
                 .ToList();

@@ -85,7 +85,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.StartDateValidation);
         }
 
-        [Theory]
+        /*[Theory]
         [InlineAutoDomainData]
         public void OperationId_ShouldBe_EqualTo(ChargeOperationDto chargeOperationDto, IClock clock)
         {
@@ -98,7 +98,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
 
             // Assert
             sut.OperationId.Should().Be(chargeOperationDto.Id);
-        }
+        }*/
 
         private static ZonedDateTimeService CreateLocalDateTimeService(string timeZoneId)
         {

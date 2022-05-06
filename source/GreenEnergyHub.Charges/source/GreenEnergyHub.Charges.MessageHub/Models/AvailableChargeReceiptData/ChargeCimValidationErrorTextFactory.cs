@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
         }
 
         public string Create(
-            ValidationError validationError,
+            IValidationError validationError,
             ChargeCommand command,
             ChargeOperationDto chargeOperationDto)
         {
@@ -45,14 +45,15 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
         }
 
         private string GetMergedErrorMessage(
-            ValidationError validationError,
+            IValidationError validationError,
             ChargeCommand chargeCommand,
             ChargeOperationDto chargeOperationDto)
         {
             var errorTextTemplate = _cimValidationErrorTextProvider
-                .GetCimValidationErrorText(validationError.ValidationRuleIdentifier);
+                .GetCimValidationErrorText(validationError.ValidationRule.ValidationRuleIdentifier);
 
-            return MergeErrorText(errorTextTemplate, chargeCommand, chargeOperationDto, validationError.TriggeredBy);
+            return MergeErrorText(
+                errorTextTemplate, chargeCommand, chargeOperationDto, validationError.TriggeredBy);
         }
 
         private string MergeErrorText(

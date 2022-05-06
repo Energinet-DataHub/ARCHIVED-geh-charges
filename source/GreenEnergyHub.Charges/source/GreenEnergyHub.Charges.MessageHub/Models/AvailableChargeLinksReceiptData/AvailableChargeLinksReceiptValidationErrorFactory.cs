@@ -34,10 +34,12 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
         }
 
         public AvailableReceiptValidationError Create(
-            ValidationError ruleIdentifier, ChargeLinksCommand command, ChargeLinkDto chargeLinkDto)
+            IValidationError validationError,
+            ChargeLinksCommand command,
+            ChargeLinkDto chargeLinkDto)
         {
-            var reasonCode = _cimValidationErrorCodeFactory.Create(ruleIdentifier.ValidationRuleIdentifier);
-            var reasonText = _cimValidationErrorTextFactory.Create(ruleIdentifier, command, chargeLinkDto);
+            var reasonCode = _cimValidationErrorCodeFactory.Create(validationError.ValidationRule.ValidationRuleIdentifier);
+            var reasonText = _cimValidationErrorTextFactory.Create(validationError, command, chargeLinkDto);
 
             return new AvailableReceiptValidationError(reasonCode, reasonText);
         }

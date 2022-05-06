@@ -58,7 +58,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.MaximumPrice);
         }
 
-        [Theory]
+        /*[Theory]
         [InlineAutoDomainData(ValidationRuleIdentifier.MaximumPrice)]
         public void TriggeredBy_ShouldCauseCompleteErrorMessages_ToMarketParticipant(
             ValidationRuleIdentifier validationRuleIdentifier,
@@ -90,7 +90,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 .Replace("{{ChargePointPrice}}", expectedPoint.Price.ToString("N"))
                 .Replace("{{ChargePointPosition}}", triggeredBy);
             actual.Should().Be(expected);
-        }
+        }*/
 
         [Theory]
         [InlineAutoDomainData]

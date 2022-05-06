@@ -29,17 +29,20 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
             _cimValidationErrorTextProvider = cimValidationErrorTextProvider;
         }
 
-        public string Create(ValidationError validationError, ChargeLinksCommand command, ChargeLinkDto chargeLinkDto)
+        public string Create(
+            IValidationError validationError,
+            ChargeLinksCommand command,
+            ChargeLinkDto chargeLinkDto)
         {
             return GetMergedErrorMessage(validationError, chargeLinkDto);
         }
 
         private string GetMergedErrorMessage(
-            ValidationError validationError,
+            IValidationError validationError,
             ChargeLinkDto chargeLinkDto)
         {
             var errorTextTemplate = _cimValidationErrorTextProvider
-                .GetCimValidationErrorText(validationError.ValidationRuleIdentifier);
+                .GetCimValidationErrorText(validationError.ValidationRule.ValidationRuleIdentifier);
 
             return MergeErrorText(errorTextTemplate, chargeLinkDto);
         }
