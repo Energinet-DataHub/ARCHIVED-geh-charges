@@ -46,6 +46,9 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
         public override async Task<IReadOnlyList<AvailableChargeLinksReceiptData>> CreateAsync(
             ChargeLinksRejectedEvent input)
         {
+            if (ShouldSkipAvailableData(input))
+                return new List<AvailableChargeLinksReceiptData>();
+
             var sender = await GetSenderAsync().ConfigureAwait(false);
 
             return input.ChargeLinksCommand.ChargeLinksOperations.Select(chargeLinkDto =>
@@ -68,6 +71,13 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
                     input.ChargeLinksCommand.ChargeLinksOperations.ToList().IndexOf(chargeLinkDto),
                     GetReasons(input, chargeLinkDto));
             }).ToList();
+        }
+
+        private static bool ShouldSkipAvailableData(ChargeLinksRejectedEvent input)
+        {
+            // We do not need to make data available for system operators
+            return input.ChargeLinksCommand.Document.Sender.BusinessProcessRole ==
+                   MarketParticipantRole.SystemOperator;
         }
 
         private List<AvailableReceiptValidationError> GetReasons(

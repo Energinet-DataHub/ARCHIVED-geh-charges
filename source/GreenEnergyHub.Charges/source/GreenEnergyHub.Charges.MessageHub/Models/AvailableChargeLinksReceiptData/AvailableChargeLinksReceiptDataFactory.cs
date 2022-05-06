@@ -65,7 +65,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
                 .ToList();
         }
 
-        private bool ShouldSkipAvailableData(ChargeLinksAcceptedEvent acceptedEvent)
+        private static bool ShouldSkipAvailableData(ChargeLinksAcceptedEvent acceptedEvent)
         {
             // We do not need to make data available for system operators
             return acceptedEvent.ChargeLinksCommand.Document.Sender.BusinessProcessRole ==
