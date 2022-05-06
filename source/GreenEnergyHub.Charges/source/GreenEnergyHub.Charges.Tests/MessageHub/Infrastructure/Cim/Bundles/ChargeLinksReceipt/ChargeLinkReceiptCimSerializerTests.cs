@@ -150,12 +150,12 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
                 receiptStatus,
                 "OriginalOperationId" + no,
                 "MeteringPoint" + no,
-                DocumentType.ChargeLinkReceipt,
+                GetDocumentType(receiptStatus),
                 0,
                 GetReasonCodes(no));
         }
 
-        private List<AvailableReceiptValidationError> GetReasonCodes(int no)
+        private static List<AvailableReceiptValidationError> GetReasonCodes(int no)
         {
             var reasonCodes = new List<AvailableReceiptValidationError>();
             var noOfReasons = (no % 3) + 1;
@@ -170,6 +170,13 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
             }
 
             return reasonCodes;
+        }
+
+        private static DocumentType GetDocumentType(ReceiptStatus receiptStatus)
+        {
+            return receiptStatus == ReceiptStatus.Confirmed
+                ? DocumentType.ConfirmRequestChangeBillingMasterData
+                : DocumentType.RejectRequestChangeBillingMasterData;
         }
     }
 }
