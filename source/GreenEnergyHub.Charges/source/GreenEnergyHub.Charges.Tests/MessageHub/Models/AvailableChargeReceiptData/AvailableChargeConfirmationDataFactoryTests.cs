@@ -23,6 +23,7 @@ using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Testables;
+using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using NodaTime;
 using Xunit;
@@ -61,6 +62,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
                     .Be(acceptedEvent.Command.Document.BusinessReasonCode);
             actualList[0].RequestDateTime.Should().Be(now);
             actualList[0].ReceiptStatus.Should().Be(ReceiptStatus.Confirmed);
+            actualList[0].DocumentType.Should().Be(DocumentType.ConfirmRequestChangeOfPriceList);
             actualList[0].OriginalOperationId.Should().Be(acceptedEvent.Command.ChargeOperations.First().Id);
             actualList[0].ValidationErrors.Should().BeEmpty();
             var expectedList = actualList.OrderBy(x => x.OperationOrder);
