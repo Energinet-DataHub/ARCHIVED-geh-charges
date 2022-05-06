@@ -23,7 +23,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
         ChargeOperationIdRequired = 7, // VR223 / E0H
         ChargeIdLengthValidation = 9, // VR441 / E86
         ChargeIdRequiredValidation = 10, // VR440 / E0H
-        DocumentTypeMustBeRequestUpdateChargeInformation = 11, // VR404 / D02
+        DocumentTypeMustBeRequestChangeOfPriceList = 11, // VR404 / D02
         BusinessReasonCodeMustBeUpdateChargeInformation = 12, // VR424 / D02
         ChargeTypeIsKnownValidation = 13, // VR449 / E86
         VatClassificationValidation = 14, // VR488 / E86
