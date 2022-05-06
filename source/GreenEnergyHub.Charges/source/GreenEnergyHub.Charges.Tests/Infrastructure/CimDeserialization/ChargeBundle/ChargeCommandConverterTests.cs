@@ -65,7 +65,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
 
             // Document
             actual.Document.Id.Should().Be("25369874");
-            actual.Document.Type.Should().Be(DocumentType.RequestUpdateChargeInformation);
+            actual.Document.Type.Should().Be(DocumentType.RequestChangeOfPriceList);
             actual.Document.BusinessReasonCode.Should().Be(BusinessReasonCode.UpdateChargeInformation);
             actual.Document.Sender.Id.Should().Be("5799999925698");
             actual.Document.Sender.BusinessProcessRole.Should().Be(MarketParticipantRole.GridAccessProvider);

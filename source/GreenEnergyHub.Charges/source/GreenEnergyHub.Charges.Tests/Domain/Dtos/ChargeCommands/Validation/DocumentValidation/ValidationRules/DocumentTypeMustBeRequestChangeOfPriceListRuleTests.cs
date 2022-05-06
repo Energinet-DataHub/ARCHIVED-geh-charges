@@ -24,16 +24,16 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.DocumentValidation.ValidationRules
 {
     [UnitTest]
-    public class DocumentTypeMustBeRequestUpdateChargeInformationRuleTests
+    public class DocumentTypeMustBeRequestChangeOfPriceListRuleTests
     {
         [Theory]
         [InlineAutoMoqData(DocumentType.Unknown, false)]
-        [InlineAutoMoqData(DocumentType.RequestUpdateChargeInformation, true)]
+        [InlineAutoMoqData(DocumentType.RequestChangeOfPriceList, true)]
         [InlineAutoMoqData(-1, false)]
         public void DocumentTypeMustBeRequestUpdateChargeInformation_Test(DocumentType documentType, bool expected)
         {
             var documentDto = new DocumentDtoBuilder().WithDocumentType(documentType).Build();
-            var sut = new DocumentTypeMustBeRequestUpdateChargeInformationRule(documentDto);
+            var sut = new DocumentTypeMustBeRequestChangeOfPriceListRule(documentDto);
             sut.IsValid.Should().Be(expected);
         }
 
@@ -41,8 +41,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Doc
         public void ValidationRuleIdentifier_ShouldBe_EqualTo()
         {
             var documentDto = new DocumentDtoBuilder().WithDocumentType(DocumentType.Unknown).Build();
-            var sut = new DocumentTypeMustBeRequestUpdateChargeInformationRule(documentDto);
-            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.DocumentTypeMustBeRequestUpdateChargeInformation);
+            var sut = new DocumentTypeMustBeRequestChangeOfPriceListRule(documentDto);
+            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.DocumentTypeMustBeRequestChangeOfPriceList);
         }
     }
 }
