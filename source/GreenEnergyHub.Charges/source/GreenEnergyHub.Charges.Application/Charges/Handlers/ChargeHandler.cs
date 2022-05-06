@@ -14,9 +14,12 @@
 
 using System;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
@@ -26,19 +29,33 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         private readonly IChargeCommandReceivedEventHandler _chargeCommandReceivedEventHandler;
         private readonly IMessageDispatcher<ChargeCommandAcceptedEvent> _acceptedMessageDispatcher;
         private readonly IChargeCommandAcceptedEventFactory _chargeCommandAcceptedEventFactory;
+        private readonly IDocumentValidator<ChargeCommand> _documentValidator;
+        private readonly IChargeCommandReceiptService _chargeCommandReceiptService;
 
         public ChargeHandler(
             IChargeCommandReceivedEventHandler chargeCommandReceivedEventHandler,
             IMessageDispatcher<ChargeCommandAcceptedEvent> acceptedMessageDispatcher,
-            IChargeCommandAcceptedEventFactory chargeCommandAcceptedEventFactory)
+            IChargeCommandAcceptedEventFactory chargeCommandAcceptedEventFactory,
+            IDocumentValidator<ChargeCommand> documentValidator,
+            IChargeCommandReceiptService chargeCommandReceiptService)
         {
             _chargeCommandReceivedEventHandler = chargeCommandReceivedEventHandler;
             _acceptedMessageDispatcher = acceptedMessageDispatcher;
             _chargeCommandAcceptedEventFactory = chargeCommandAcceptedEventFactory;
+            _documentValidator = documentValidator;
+            _chargeCommandReceiptService = chargeCommandReceiptService;
         }
 
         public async Task HandleAsync(ChargeCommandReceivedEvent commandReceivedEvent)
         {
+            var documentValidationResult = await _documentValidator.ValidateAsync(commandReceivedEvent.Command).ConfigureAwait(false);
+            if (documentValidationResult.IsFailed)
+            {
+                await _chargeCommandReceiptService
+                    .RejectAsync(commandReceivedEvent.Command, documentValidationResult).ConfigureAwait(false);
+                return;
+            }
+
             switch (commandReceivedEvent.Command.Document.BusinessReasonCode)
             {
                 case BusinessReasonCode.UpdateChargePrices:

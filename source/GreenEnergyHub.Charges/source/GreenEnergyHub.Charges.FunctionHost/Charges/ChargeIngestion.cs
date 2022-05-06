@@ -19,6 +19,7 @@ using Energinet.DataHub.Core.Messaging.Transport.SchemaValidation;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Application.Charges.Handlers.Message;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
 using Microsoft.Azure.Functions.Worker;
@@ -56,16 +57,17 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
         {
             var inboundMessage = await ValidateMessageAsync(req).ConfigureAwait(false);
 
-            if (AuthenticatedMatchesSenderId(inboundMessage) == false)
-            {
-                return _httpResponseBuilder.CreateBadRequestB2BResponse(req, B2BErrorCode.ActorIsNotWhoTheyClaimToBeErrorMessage);
-            }
-
             if (inboundMessage.HasErrors)
             {
                 return await _httpResponseBuilder
                     .CreateBadRequestResponseAsync(req, inboundMessage.SchemaValidationError)
                     .ConfigureAwait(false);
+            }
+
+            if (AuthenticatedMatchesSenderId(inboundMessage) == false)
+            {
+                return _httpResponseBuilder.CreateBadRequestB2BResponse(
+                    req, B2BErrorCode.ActorIsNotWhoTheyClaimToBeErrorMessage);
             }
 
             var message = GetChargesMessage(inboundMessage.ValidatedMessage);
