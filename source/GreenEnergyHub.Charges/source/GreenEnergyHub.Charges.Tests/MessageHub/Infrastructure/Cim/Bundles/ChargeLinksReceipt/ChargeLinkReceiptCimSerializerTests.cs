@@ -137,7 +137,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
             return chargeLinks;
         }
 
-        private AvailableChargeLinksReceiptData GetReceipt(int no, ReceiptStatus receiptStatus, IClock clock)
+        private static AvailableChargeLinksReceiptData GetReceipt(int no, ReceiptStatus receiptStatus, IClock clock)
         {
             return new AvailableChargeLinksReceiptData(
                 "senderId",
