@@ -74,12 +74,8 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 {
                     operationsToBeRejected = operations[i..].ToList();
                     rejectionRules.AddRange(validationResult.InvalidRules);
-                    foreach (var toBeRejected in operationsToBeRejected.Skip(1))
-                    {
-                        var rejectionRule = new PreviousOperationsMustBeValidRule(operation.Id, toBeRejected);
-                        rejectionRules.Add(rejectionRule);
-                    }
-
+                    rejectionRules.AddRange(operationsToBeRejected.Skip(1)
+                        .Select(toBeRejected => new PreviousOperationsMustBeValidRule(operation.Id, toBeRejected)));
                     break;
                 }
 
@@ -88,12 +84,8 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 {
                     operationsToBeRejected = operations[i..].ToList();
                     rejectionRules.AddRange(validationResult.InvalidRules);
-                    foreach (var toBeRejected in operationsToBeRejected.Skip(1))
-                    {
-                        var rejectionRule = new PreviousOperationsMustBeValidRule(operation.Id, toBeRejected);
-                        rejectionRules.Add(rejectionRule);
-                    }
-
+                    rejectionRules.AddRange(operationsToBeRejected.Skip(1)
+                        .Select(toBeRejected => new PreviousOperationsMustBeValidRule(operation.Id, toBeRejected)));
                     break;
                 }
 
@@ -132,7 +124,8 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             if (operationsToBeRejected.Any())
             {
                 await _chargeCommandReceiptService.RejectAsync(
-                    new ChargeCommand(document, operationsToBeRejected), ValidationResult.CreateFailure(rejectionRules)).ConfigureAwait(false);
+                    new ChargeCommand(document, operationsToBeRejected), ValidationResult.CreateFailure(rejectionRules))
+                    .ConfigureAwait(false);
             }
 
             if (operationsToBeConfirmed.Any())

@@ -263,33 +263,28 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 
              var accepted = 0;
              receiptService.Setup(s => s.AcceptAsync(It.IsAny<ChargeCommand>()))
-                 .Callback<ChargeCommand>((_) => accepted++);
+                 .Callback<ChargeCommand>(_ => accepted++);
 
-             var invalidRules = new List<IValidationRule>();
-             receiptService.Setup(s =>
-                      s.RejectAsync(
-                              It.IsAny<ChargeCommand>(), It.IsAny<ValidationResult>()))
-                  .Callback<ChargeCommand, ValidationResult>((_, result) =>
-                  {
-                      invalidRules.AddRange(result.InvalidRules.ToList());
-                  });
-
-             var autoRejected = 0;
-             receiptService.Setup(s => s.RejectAsync(
-                     It.IsAny<ChargeCommand>(), It.Is<ValidationResult>(x =>
-                         x.InvalidRules.Any(z =>
-                             z.ValidationRuleIdentifier == ValidationRuleIdentifier.SubsequentBundleOperationsFail))))
-                 .Callback<ChargeCommand, ValidationResult>((_, _) => autoRejected++);
+             var validationResultsArgs = new List<ValidationResult>();
+             receiptService.Setup(s => s.RejectAsync(It.IsAny<ChargeCommand>(), It.IsAny<ValidationResult>()))
+                 .Callback<ChargeCommand, ValidationResult>((_, s) => validationResultsArgs.Add(s));
 
              // Act
              await sut.HandleAsync(receivedEvent);
 
              // Assert
-             Assert.Equal(1, accepted);
-             Assert.Equal(3, invalidRules.Count);
-             // Assert.Equal(1, rejected);
-             // Assert.Equal(2, autoRejected);
-        }
+             accepted.Should().Be(1);
+
+             var validationRules = validationResultsArgs.Single().InvalidRules.ToList();
+             var invalid = validationRules.Where(vr =>
+                 vr.ValidationRuleIdentifier == ValidationRuleIdentifier.StartDateValidation);
+             var subsequent = validationRules.Where(vr =>
+                 vr.ValidationRuleIdentifier == ValidationRuleIdentifier.SubsequentBundleOperationsFail);
+
+             validationRules.Count.Should().Be(3);
+             invalid.Count().Should().Be(1);
+             subsequent.Count().Should().Be(2);
+         }
 
         private static void SetupChargePeriodFactory(Mock<IChargePeriodFactory> chargePeriodFactory)
         {
