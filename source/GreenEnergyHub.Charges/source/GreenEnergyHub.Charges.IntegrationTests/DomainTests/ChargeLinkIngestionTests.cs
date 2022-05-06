@@ -104,6 +104,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
                 // Assert
                 actualResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+                var responseAsString = await actualResponse.Content.ReadAsStringAsync();
+                responseAsString.Should().Contain("type' element is invalid - The value 'InvalidType' is invalid according to its datatype");
             }
 
             [Fact]

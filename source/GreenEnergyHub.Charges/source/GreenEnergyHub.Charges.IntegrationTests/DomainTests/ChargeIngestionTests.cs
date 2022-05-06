@@ -100,15 +100,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             }
 
             [Fact]
-            public async Task When_InvalidChargeIsReceived_Then_AHttp400ResponseIsReturned()
-            {
-                var request = await _authenticatedHttpRequestGenerator
-                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.TariffInvalidSchema);
-                var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request.Request);
-                actualResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            }
-
-            [Fact]
             public async Task When_ChargeIsReceived_Then_ChargeCreatedIntegrationEventIsPublished()
             {
                 // Arrange
@@ -227,6 +218,23 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // * one for the confirmation (first operation)
                 // * one for the rejection (second operation violating VR.903)
                 await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId, 2);
+            }
+
+            [Fact]
+            public async Task Given_ChargeExampleFileWithInvalidBusinessReasonCode_When_GridAccessProviderSendsMessage_Then_CorrectSyncronousErrorIsReturned()
+            {
+                // Arrange
+                var testFilePath = ChargeDocument.TariffPriceSeriesWithInvalidBusinessReasonCode;
+                var (request, _) = await _authenticatedHttpRequestGenerator
+                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, testFilePath);
+
+                // Act
+                var response = await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Act and assert
+                response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+                var responseAsString = await response.Content.ReadAsStringAsync();
+                responseAsString.Should().Contain("process.processType' element is invalid - The value 'A99' is invalid according to its datatype");
             }
 
             [Fact(Skip = "Used for debugging ChargeCommandReceivedEventHandler")]

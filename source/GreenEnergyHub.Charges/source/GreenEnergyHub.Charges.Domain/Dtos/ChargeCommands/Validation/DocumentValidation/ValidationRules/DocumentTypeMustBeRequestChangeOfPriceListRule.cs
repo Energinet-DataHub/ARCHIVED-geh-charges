@@ -18,18 +18,18 @@ using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.DocumentValidation.ValidationRules
 {
-    public class DocumentTypeMustBeRequestUpdateChargeInformationRule : IValidationRule
+    public class DocumentTypeMustBeRequestChangeOfPriceListRule : IValidationRule
     {
         private readonly DocumentDto _documentDto;
 
-        public DocumentTypeMustBeRequestUpdateChargeInformationRule(DocumentDto documentDto)
+        public DocumentTypeMustBeRequestChangeOfPriceListRule(DocumentDto documentDto)
         {
             _documentDto = documentDto;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
-            ValidationRuleIdentifier.DocumentTypeMustBeRequestUpdateChargeInformation;
+            ValidationRuleIdentifier.DocumentTypeMustBeRequestChangeOfPriceList;
 
-        public bool IsValid => _documentDto.Type == DocumentType.RequestUpdateChargeInformation;
+        public bool IsValid => _documentDto.Type == DocumentType.RequestChangeOfPriceList;
     }
 }

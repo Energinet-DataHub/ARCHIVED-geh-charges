@@ -29,7 +29,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
     public class ChargeCommandReceivedEventHandler : IChargeCommandReceivedEventHandler
     {
         private readonly IChargeCommandReceiptService _chargeCommandReceiptService;
-        private readonly IDocumentValidator<ChargeCommand> _documentValidator;
         private readonly IInputValidator<ChargeOperationDto> _inputValidator;
         private readonly IBusinessValidator<ChargeOperationDto> _businessValidator;
         private readonly IChargeRepository _chargeRepository;
@@ -39,7 +38,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 
         public ChargeCommandReceivedEventHandler(
             IChargeCommandReceiptService chargeCommandReceiptService,
-            IDocumentValidator<ChargeCommand> documentValidator,
             IInputValidator<ChargeOperationDto> inputValidator,
             IBusinessValidator<ChargeOperationDto> businessValidator,
             IChargeRepository chargeRepository,
@@ -48,7 +46,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             IUnitOfWork unitOfWork)
         {
             _chargeCommandReceiptService = chargeCommandReceiptService;
-            _documentValidator = documentValidator;
             _inputValidator = inputValidator;
             _businessValidator = businessValidator;
             _chargeRepository = chargeRepository;
