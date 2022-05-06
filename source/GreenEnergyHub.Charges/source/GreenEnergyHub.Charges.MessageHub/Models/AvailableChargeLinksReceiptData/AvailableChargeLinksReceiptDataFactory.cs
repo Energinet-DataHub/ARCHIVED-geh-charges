@@ -59,7 +59,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
                         ReceiptStatus.Confirmed,
                         link.OperationId,
                         acceptedEvent.ChargeLinksCommand.MeteringPointId,
-                        acceptedEvent.ChargeLinksCommand.Document.Type,
+                        DocumentType.ConfirmRequestChangeBillingMasterData, // Will be added to the HTTP MessageType header
                         acceptedEvent.ChargeLinksCommand.ChargeLinksOperations.ToList().IndexOf(link),
                         new List<AvailableReceiptValidationError>()))
                 .ToList();
