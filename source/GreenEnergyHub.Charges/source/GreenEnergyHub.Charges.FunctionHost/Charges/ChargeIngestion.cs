@@ -66,8 +66,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
 
             if (AuthenticatedMatchesSenderId(inboundMessage) == false)
             {
-                return _httpResponseBuilder.CreateBadRequestWithErrorText(
-                    req, SynchronousErrorMessageConstants.ActorIsNotWhoTheyClaimToBeErrorMessage);
+                return _httpResponseBuilder.CreateBadRequestB2BResponse(
+                    req, B2BErrorCode.ActorIsNotWhoTheyClaimToBeErrorMessage);
             }
 
             var message = GetChargesMessage(inboundMessage.ValidatedMessage);
