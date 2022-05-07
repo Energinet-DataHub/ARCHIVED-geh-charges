@@ -50,7 +50,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
         {
             ArgumentNullException.ThrowIfNull(chargeLinksReceivedEvent);
 
-            var chargeLink = chargeLinksReceivedEvent.ChargeLinksCommand.ChargeLinksOperations.Single();
+            var chargeLink = chargeLinksReceivedEvent.ChargeLinksCommand.ChargeLinksOperations.First();
 
             var businessValidationResult = await _businessValidator
                 .ValidateAsync(chargeLink).ConfigureAwait(false);

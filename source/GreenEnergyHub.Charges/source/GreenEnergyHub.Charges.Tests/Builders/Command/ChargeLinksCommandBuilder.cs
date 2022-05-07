@@ -23,15 +23,23 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
 {
     public class ChargeLinksCommandBuilder
     {
-        private readonly DocumentDto _document = new DocumentDto
+        private readonly DocumentDto _document = new()
         {
             Id = Guid.NewGuid().ToString(),
             CreatedDateTime = SystemClock.Instance.GetCurrentInstant(),
             BusinessReasonCode = BusinessReasonCode.UpdateMasterDataSettlement,
             IndustryClassification = IndustryClassification.Electricity,
             RequestDate = SystemClock.Instance.GetCurrentInstant(),
-            Recipient = new MarketParticipantDto { Id = Guid.NewGuid().ToString(), BusinessProcessRole = MarketParticipantRole.EnergyAgency },
-            Sender = new MarketParticipantDto { Id = Guid.NewGuid().ToString(), BusinessProcessRole = MarketParticipantRole.EnergyAgency },
+            Recipient = new MarketParticipantDto
+            {
+                Id = Guid.NewGuid().ToString("N"),
+                BusinessProcessRole = MarketParticipantRole.EnergyAgency,
+            },
+            Sender = new MarketParticipantDto
+            {
+                Id = Guid.NewGuid().ToString("N"),
+                BusinessProcessRole = MarketParticipantRole.SystemOperator,
+            },
             Type = DocumentType.ChargeLinkReceipt,
         };
 

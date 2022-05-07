@@ -14,7 +14,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Charges;
@@ -47,8 +46,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
         }
 
         public async Task<ChargeLinksCommand> CreateAsync(
-            [NotNull] CreateDefaultChargeLinksRequest createDefaultChargeLinksRequest,
-            [NotNull] IReadOnlyCollection<DefaultChargeLink> defaultChargeLinks)
+            CreateDefaultChargeLinksRequest createDefaultChargeLinksRequest,
+            IReadOnlyCollection<DefaultChargeLink> defaultChargeLinks)
         {
             var chargeIds = defaultChargeLinks.Select(x => x.ChargeId).ToList();
 
