@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
             if (meteringPoint == null)
                 return ValidationRuleSet.FromRules(rules);
 
-            rules.AddRange(await GetRulesForAllLinksAsync(chargeLinkDto, meteringPoint).ConfigureAwait(false));
+            rules.AddRange(await GetRulesForChargeLinkDtoAsync(chargeLinkDto, meteringPoint).ConfigureAwait(false));
 
             return ValidationRuleSet.FromRules(rules);
         }
@@ -64,7 +64,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
             };
         }
 
-        private async Task<IEnumerable<IValidationRule>> GetRulesForAllLinksAsync(
+        private async Task<IEnumerable<IValidationRule>> GetRulesForChargeLinkDtoAsync(
             ChargeLinkDto chargeLinkDto,
             MeteringPoint meteringPoint)
         {

@@ -22,6 +22,7 @@ using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
@@ -121,13 +122,28 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
 
             var document = commandReceivedEvent.Command.Document;
+            await RejectInvalidOperationsAsync(operationsToBeRejected, document, rejectionRules).ConfigureAwait(false);
+            await AcceptValidOperationsAsync(operationsToBeConfirmed, document).ConfigureAwait(false);
+        }
+
+        private async Task RejectInvalidOperationsAsync(
+            IReadOnlyCollection<ChargeOperationDto> operationsToBeRejected,
+            DocumentDto document,
+            IList<IValidationRule> rejectionRules)
+        {
             if (operationsToBeRejected.Any())
             {
                 await _chargeCommandReceiptService.RejectAsync(
-                    new ChargeCommand(document, operationsToBeRejected), ValidationResult.CreateFailure(rejectionRules))
+                        new ChargeCommand(document, operationsToBeRejected),
+                        ValidationResult.CreateFailure(rejectionRules))
                     .ConfigureAwait(false);
             }
+        }
 
+        private async Task AcceptValidOperationsAsync(
+            IReadOnlyCollection<ChargeOperationDto> operationsToBeConfirmed,
+            DocumentDto document)
+        {
             if (operationsToBeConfirmed.Any())
             {
                 await _chargeCommandReceiptService.AcceptAsync(

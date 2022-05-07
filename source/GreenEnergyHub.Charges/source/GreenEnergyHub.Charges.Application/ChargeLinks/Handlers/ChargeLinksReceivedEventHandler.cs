@@ -13,13 +13,16 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Services;
 using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
@@ -50,25 +53,68 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
         {
             ArgumentNullException.ThrowIfNull(chargeLinksReceivedEvent);
 
-            var chargeLink = chargeLinksReceivedEvent.ChargeLinksCommand.ChargeLinksOperations.First();
+            var operationsToBeRejected = new List<ChargeLinkDto>();
+            var rejectionRules = new List<IValidationRule>();
+            var operationsToBeConfirmed = new List<ChargeLinkDto>();
 
-            var businessValidationResult = await _businessValidator
-                .ValidateAsync(chargeLink).ConfigureAwait(false);
-            if (businessValidationResult.IsFailed)
+            var operations = chargeLinksReceivedEvent.ChargeLinksCommand.ChargeLinksOperations.ToArray();
+
+            for (var i = 0; i < operations.Length; i++)
             {
-                await _chargeLinksReceiptService
-                    .RejectAsync(chargeLinksReceivedEvent.ChargeLinksCommand, businessValidationResult)
-                    .ConfigureAwait(false);
-                return;
+                var operation = operations[i];
+
+                var validationResult = await _businessValidator.ValidateAsync(operation).ConfigureAwait(false);
+                if (validationResult.IsFailed)
+                {
+                    operationsToBeRejected = operations[i..].ToList();
+                    rejectionRules.AddRange(validationResult.InvalidRules);
+                    rejectionRules.AddRange(operationsToBeRejected.Skip(1)
+                        .Select(toBeRejected => new PreviousChargeLinkOperationsMustBeValidRule(
+                            operation.OperationId, toBeRejected)));
+                    break;
+                }
+
+                await HandleCreateEventAsync(operation).ConfigureAwait(false);
+                operationsToBeConfirmed.Add(operation);
             }
 
-            var chargeLinks = await _chargeLinkFactory.CreateAsync(chargeLinksReceivedEvent).ConfigureAwait(false);
-            await _chargeLinksRepository.AddRangeAsync(chargeLinks).ConfigureAwait(false);
-            await _chargeLinksReceiptService
-                .AcceptAsync(chargeLinksReceivedEvent.ChargeLinksCommand)
-                .ConfigureAwait(false);
-
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+
+            var document = chargeLinksReceivedEvent.ChargeLinksCommand.Document;
+            await RejectInvalidOperationsAsync(operationsToBeRejected, document, rejectionRules).ConfigureAwait(false);
+            await AcceptValidOperationsAsync(operationsToBeConfirmed, document).ConfigureAwait(false);
+        }
+
+        private async Task HandleCreateEventAsync(ChargeLinkDto chargeLinkDto)
+        {
+            var chargeLinks = await _chargeLinkFactory.CreateAsync(chargeLinkDto).ConfigureAwait(false);
+            await _chargeLinksRepository.AddAsync(chargeLinks).ConfigureAwait(false);
+        }
+
+        private async Task RejectInvalidOperationsAsync(
+            IReadOnlyCollection<ChargeLinkDto> operationsToBeRejected,
+            DocumentDto document,
+            IList<IValidationRule> rejectionRules)
+        {
+            if (operationsToBeRejected.Any())
+            {
+                await _chargeLinksReceiptService.RejectAsync(
+                        new ChargeLinksCommand(document, operationsToBeRejected),
+                        ValidationResult.CreateFailure(rejectionRules))
+                    .ConfigureAwait(false);
+            }
+        }
+
+        private async Task AcceptValidOperationsAsync(
+            IReadOnlyCollection<ChargeLinkDto> operationsToBeConfirmed,
+            DocumentDto document)
+        {
+            if (operationsToBeConfirmed.Any())
+            {
+                await _chargeLinksReceiptService.AcceptAsync(
+                        new ChargeLinksCommand(document, operationsToBeConfirmed))
+                    .ConfigureAwait(false);
+            }
         }
     }
 }
