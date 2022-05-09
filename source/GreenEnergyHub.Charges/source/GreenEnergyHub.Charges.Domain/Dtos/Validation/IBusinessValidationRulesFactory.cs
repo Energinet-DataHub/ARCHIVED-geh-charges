@@ -20,6 +20,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
     public interface IBusinessValidationRulesFactory<in TOperation>
         where TOperation : OperationBase
     {
-        Task<IValidationRuleSet> CreateRulesAsync(TOperation command);
+        Task<IValidationRuleSet> CreateRulesAsync(TOperation operation);
     }
 }

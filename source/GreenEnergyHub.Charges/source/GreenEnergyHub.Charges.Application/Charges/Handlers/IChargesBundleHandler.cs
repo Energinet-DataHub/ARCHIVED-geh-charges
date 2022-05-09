@@ -18,7 +18,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
     /// <summary>
-    /// Contract for handling a change of charges bundle.
+    /// Contract for handling a charge bundle.
     /// </summary>
     public interface IChargesBundleHandler
     {

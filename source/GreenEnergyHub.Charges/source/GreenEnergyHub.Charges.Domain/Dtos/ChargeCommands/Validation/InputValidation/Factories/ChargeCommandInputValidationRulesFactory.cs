@@ -22,11 +22,11 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 {
     public class ChargeCommandInputValidationRulesFactory : IInputValidationRulesFactory<ChargeOperationDto>
     {
-        public IValidationRuleSet CreateRulesForOperation(ChargeOperationDto chargeOperation)
+        public IValidationRuleSet CreateRulesForOperation(ChargeOperationDto operation)
         {
-            ArgumentNullException.ThrowIfNull(chargeOperation);
+            ArgumentNullException.ThrowIfNull(operation);
 
-            var rules = GetRulesForOperation(chargeOperation).ToList();
+            var rules = GetRulesForOperation(operation).ToList();
 
             return ValidationRuleSet.FromRules(rules);
         }

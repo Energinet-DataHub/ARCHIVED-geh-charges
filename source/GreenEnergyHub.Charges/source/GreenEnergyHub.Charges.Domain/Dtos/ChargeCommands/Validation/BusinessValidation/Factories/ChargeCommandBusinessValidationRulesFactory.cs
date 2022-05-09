@@ -42,11 +42,11 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
             _clock = clock;
         }
 
-        public async Task<IValidationRuleSet> CreateRulesAsync(ChargeOperationDto chargeOperation)
+        public async Task<IValidationRuleSet> CreateRulesAsync(ChargeOperationDto operation)
         {
-            ArgumentNullException.ThrowIfNull(chargeOperation);
+            ArgumentNullException.ThrowIfNull(operation);
 
-            var rules = await GetRulesForOperationAsync(chargeOperation).ConfigureAwait(false);
+            var rules = await GetRulesForOperationAsync(operation).ConfigureAwait(false);
             return ValidationRuleSet.FromRules(rules);
         }
 

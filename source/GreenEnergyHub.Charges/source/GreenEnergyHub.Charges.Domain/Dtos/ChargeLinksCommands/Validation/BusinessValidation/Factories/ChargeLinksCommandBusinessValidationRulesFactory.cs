@@ -39,19 +39,19 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
             _chargeLinksRepository = chargeLinksRepository;
         }
 
-        public async Task<IValidationRuleSet> CreateRulesAsync(ChargeLinkDto chargeLinkDto)
+        public async Task<IValidationRuleSet> CreateRulesAsync(ChargeLinkDto operation)
         {
-            ArgumentNullException.ThrowIfNull(chargeLinkDto);
+            ArgumentNullException.ThrowIfNull(operation);
 
             var meteringPoint = await _meteringPointRepository
-                .GetOrNullAsync(chargeLinkDto.MeteringPointId)
+                .GetOrNullAsync(operation.MeteringPointId)
                 .ConfigureAwait(false);
 
             var rules = GetMandatoryRulesForCommand(meteringPoint);
             if (meteringPoint == null)
                 return ValidationRuleSet.FromRules(rules);
 
-            rules.AddRange(await GetRulesForChargeLinkDtoAsync(chargeLinkDto, meteringPoint).ConfigureAwait(false));
+            rules.AddRange(await GetRulesForChargeLinkDtoAsync(operation, meteringPoint).ConfigureAwait(false));
 
             return ValidationRuleSet.FromRules(rules);
         }
