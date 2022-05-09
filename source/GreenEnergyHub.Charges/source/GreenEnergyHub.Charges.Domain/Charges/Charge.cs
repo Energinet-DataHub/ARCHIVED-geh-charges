@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using GreenEnergyHub.Charges.Core.DateTime;
+using GreenEnergyHub.Charges.Domain.Common;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Charges

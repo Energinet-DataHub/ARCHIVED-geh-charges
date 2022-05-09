@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.Charges
+namespace GreenEnergyHub.Charges.Domain.Common
 {
     /// <summary>
     /// This enum is used to indicate the resolution of a charge price list.

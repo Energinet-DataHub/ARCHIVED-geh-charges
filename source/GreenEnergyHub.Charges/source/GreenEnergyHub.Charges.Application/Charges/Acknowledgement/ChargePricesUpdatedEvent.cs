@@ -15,6 +15,7 @@
 using System.Collections.Generic;
 using Energinet.DataHub.Core.Messaging.MessageTypes.Common;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Common;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages;
 using NodaTime;
 

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.Charges
+namespace GreenEnergyHub.Charges.Domain.Common
 {
     /// <summary>
     /// The kind of charge: Subscription ("D01") | Fee ("D02") | Tariff ("D03").

@@ -86,13 +86,13 @@ namespace GreenEnergyHub.Charges.WebApi.ModelPredicates
 #pragma warning restore SA1118
         }
 
-        private static ChargeType Map(Domain.Charges.ChargeType chargeType) => chargeType switch
+        private static ChargeType Map(Domain.Common.ChargeType chargeType) => chargeType switch
         {
-            Domain.Charges.ChargeType.Fee => ChargeType.D02,
-            Domain.Charges.ChargeType.Subscription => ChargeType.D01,
-            Domain.Charges.ChargeType.Tariff => ChargeType.D03,
-            Domain.Charges.ChargeType.Unknown =>
-                throw new NotSupportedException($"Charge type '{Domain.Charges.ChargeType.Unknown}' is not supported"),
+            Domain.Common.ChargeType.Fee => ChargeType.D02,
+            Domain.Common.ChargeType.Subscription => ChargeType.D01,
+            Domain.Common.ChargeType.Tariff => ChargeType.D03,
+            Domain.Common.ChargeType.Unknown =>
+                throw new NotSupportedException($"Charge type '{Domain.Common.ChargeType.Unknown}' is not supported"),
             _ =>
                 throw new ArgumentOutOfRangeException(nameof(chargeType)),
         };
