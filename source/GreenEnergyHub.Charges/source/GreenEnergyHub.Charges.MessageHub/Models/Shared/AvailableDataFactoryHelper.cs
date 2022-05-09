@@ -12,17 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.Core.Messaging.Protobuf;
-using Energinet.DataHub.Core.Messaging.Transport;
-using GreenEnergyHub.Charges.Domain.Dtos.CreateDefaultChargeLinksRequests;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Contracts.Public.CreateDefaultChargeLinks
+namespace GreenEnergyHub.Charges.MessageHub.Models.Shared
 {
-    public class CreateDefaultChargeLinksInboundMapper : ProtobufInboundMapper<Energinet.Charges.Contracts.CreateDefaultChargeLinks>
+    public static class AvailableDataFactoryHelper
     {
-        protected override IInboundMessage Convert(Energinet.Charges.Contracts.CreateDefaultChargeLinks command)
+        public static bool ShouldSkipAvailableData(ChargeLinksCommand command)
         {
-            return new CreateDefaultChargeLinksRequest(command.MeteringPointId);
+            // We do not need to make data available for system operators
+            return command.Document.Sender.BusinessProcessRole ==
+                   MarketParticipantRole.SystemOperator;
         }
     }
 }

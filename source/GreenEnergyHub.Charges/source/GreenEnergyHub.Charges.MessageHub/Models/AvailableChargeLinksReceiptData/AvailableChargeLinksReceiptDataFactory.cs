@@ -21,6 +21,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
+using GreenEnergyHub.Charges.MessageHub.Models.Shared;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData
 {
@@ -40,7 +41,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
         public override async Task<IReadOnlyList<AvailableChargeLinksReceiptData>> CreateAsync(
             ChargeLinksAcceptedEvent acceptedEvent)
         {
-            if (ShouldSkipAvailableData(acceptedEvent))
+            if (AvailableDataFactoryHelper.ShouldSkipAvailableData(acceptedEvent.ChargeLinksCommand))
                 return new List<AvailableChargeLinksReceiptData>();
 
             // The sender is now the recipient of the receipt
@@ -59,17 +60,10 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
                         ReceiptStatus.Confirmed,
                         link.OperationId,
                         link.MeteringPointId,
-                        acceptedEvent.ChargeLinksCommand.Document.Type,
+                        DocumentType.ConfirmRequestChangeBillingMasterData, // Will be added to the HTTP MessageType header
                         acceptedEvent.ChargeLinksCommand.ChargeLinksOperations.ToList().IndexOf(link),
                         new List<AvailableReceiptValidationError>()))
                 .ToList();
-        }
-
-        private bool ShouldSkipAvailableData(ChargeLinksAcceptedEvent acceptedEvent)
-        {
-            // We do not need to make data available for system operators
-            return acceptedEvent.ChargeLinksCommand.Document.Sender.BusinessProcessRole ==
-                   MarketParticipantRole.SystemOperator;
         }
     }
 }

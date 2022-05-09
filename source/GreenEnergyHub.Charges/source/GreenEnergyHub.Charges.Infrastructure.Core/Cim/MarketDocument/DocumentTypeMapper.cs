@@ -20,7 +20,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument
     public static class DocumentTypeMapper
     {
         // These values are ebix values which are used temporarily until CIM code lists are available
-        private const string CimChargeLinkReceipt = "D06";
+        private const string CimChargeLinkReceipt = "D06";  // Only relevant for outbound messaging
         private const string CimNotifyBillingMasterData = "D07";
         private const string CimChargeReceipt = "D11"; // Only relevant for outbound messaging
         private const string CimNotifyPriceList = "D12";
@@ -31,7 +31,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument
         {
             return value switch
             {
-                CimChargeLinkReceipt => DocumentType.ChargeLinkReceipt,
                 CimNotifyBillingMasterData => DocumentType.NotifyBillingMasterData,
                 CimNotifyPriceList => DocumentType.NotifyPriceList,
                 CimRequestChangeOfPriceList => DocumentType.RequestChangeOfPriceList,
@@ -44,13 +43,14 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument
         {
             return documentType switch
             {
-                DocumentType.ChargeLinkReceipt => CimChargeLinkReceipt,
-                DocumentType.NotifyBillingMasterData => CimNotifyBillingMasterData,
+                DocumentType.RequestChangeOfPriceList => CimRequestChangeOfPriceList,
                 DocumentType.ConfirmRequestChangeOfPriceList => CimChargeReceipt,
                 DocumentType.RejectRequestChangeOfPriceList => CimChargeReceipt,
                 DocumentType.NotifyPriceList => CimNotifyPriceList,
-                DocumentType.RequestChangeOfPriceList => CimRequestChangeOfPriceList,
                 DocumentType.RequestChangeBillingMasterData => CimRequestChangeBillingMasterData,
+                DocumentType.ConfirmRequestChangeBillingMasterData => CimChargeLinkReceipt,
+                DocumentType.RejectRequestChangeBillingMasterData => CimChargeLinkReceipt,
+                DocumentType.NotifyBillingMasterData => CimNotifyBillingMasterData,
                 _ => throw new InvalidEnumArgumentException($"Provided DocumentType value '{documentType}' is invalid and cannot be mapped."),
             };
         }

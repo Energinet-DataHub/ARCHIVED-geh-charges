@@ -70,7 +70,9 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeLin
 
         protected override DocumentType GetDocumentType(IEnumerable<AvailableChargeLinksReceiptData> records)
         {
-            return DocumentType.ChargeLinkReceipt;
+            return IsConfirmation(records)
+                ? DocumentType.ConfirmRequestChangeBillingMasterData
+                : DocumentType.RejectRequestChangeBillingMasterData;
         }
 
         protected override XElement GetActivityRecord(XNamespace cimNamespace, AvailableChargeLinksReceiptData receipt)

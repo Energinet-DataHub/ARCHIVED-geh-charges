@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
                 Id = Guid.NewGuid().ToString("N"),
                 BusinessProcessRole = MarketParticipantRole.SystemOperator,
             },
-            Type = DocumentType.ChargeLinkReceipt,
+            Type = DocumentType.RequestChangeBillingMasterData,
         };
 
         private List<ChargeLinkDto> _links = new();
