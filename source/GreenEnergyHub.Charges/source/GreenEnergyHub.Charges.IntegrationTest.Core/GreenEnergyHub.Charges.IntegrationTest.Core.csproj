@@ -127,6 +127,9 @@ limitations under the License.
     <Content Include="TestFiles\Charges\UpdateTariffDocument.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="TestFiles\Charges\PriceSeries\TariffPriceSeriesWithInvalidBusinessReasonCode.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

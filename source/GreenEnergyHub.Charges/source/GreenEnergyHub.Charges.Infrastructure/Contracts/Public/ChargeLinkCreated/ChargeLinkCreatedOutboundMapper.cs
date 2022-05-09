@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using Energinet.DataHub.Core.Messaging.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCreatedEvents;
@@ -22,7 +21,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Contracts.Public.ChargeLinkCreat
 {
     public class ChargeLinkCreatedOutboundMapper : ProtobufOutboundMapper<ChargeLinkCreatedEvent>
     {
-        protected override Google.Protobuf.IMessage Convert([NotNull]ChargeLinkCreatedEvent obj)
+        protected override Google.Protobuf.IMessage Convert(ChargeLinkCreatedEvent obj)
         {
             return new ChargeLinkCreatedContract
             {

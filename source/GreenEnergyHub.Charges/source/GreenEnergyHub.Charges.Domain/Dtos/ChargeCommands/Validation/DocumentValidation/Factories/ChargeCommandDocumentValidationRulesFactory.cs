@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.DocumentV
             var rules = new List<IValidationRule>
             {
                 new CommandSenderMustBeAnExistingMarketParticipantRule(sender),
-                new BusinessReasonCodeMustBeUpdateChargeInformationRule(documentDto),
+                new BusinessReasonCodeMustBeUpdateChargeInformationOrChargePricesRule(documentDto),
                 new DocumentTypeMustBeRequestChangeOfPriceListRule(documentDto),
                 new RecipientIsMandatoryTypeValidationRule(documentDto),
                 new SenderIsMandatoryTypeValidationRule(documentDto),

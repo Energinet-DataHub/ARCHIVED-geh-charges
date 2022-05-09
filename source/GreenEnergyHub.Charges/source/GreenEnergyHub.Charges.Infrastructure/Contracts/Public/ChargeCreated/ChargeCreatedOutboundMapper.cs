@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using Energinet.DataHub.Core.Messaging.Protobuf;
 using Google.Protobuf;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
@@ -23,7 +22,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Contracts.Public.ChargeCreated
 {
     public class ChargeCreatedOutboundMapper : ProtobufOutboundMapper<ChargeCreatedEvent>
     {
-        protected override IMessage Convert([NotNull] ChargeCreatedEvent chargeCreatedEvent)
+        protected override IMessage Convert(ChargeCreatedEvent chargeCreatedEvent)
         {
             return new Infrastructure.Integration.ChargeCreated.ChargeCreated
             {

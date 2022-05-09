@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Doc
             var expectedRules = new List<IValidationRule>
             {
                 new CommandSenderMustBeAnExistingMarketParticipantRule(sender),
-                new BusinessReasonCodeMustBeUpdateChargeInformationRule(chargeCommand.Document),
+                new BusinessReasonCodeMustBeUpdateChargeInformationOrChargePricesRule(chargeCommand.Document),
                 new DocumentTypeMustBeRequestChangeOfPriceListRule(chargeCommand.Document),
                 new RecipientIsMandatoryTypeValidationRule(chargeCommand.Document),
                 new SenderIsMandatoryTypeValidationRule(chargeCommand.Document),
@@ -92,7 +92,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Doc
             // Assert
             Assert.Equal(5, actual.GetRules().Count); // This assert is added to ensure that when the rule set is expanded, the test gets attention as well.
             Assert.Contains(typeof(CommandSenderMustBeAnExistingMarketParticipantRule), actualRules);
-            Assert.Contains(typeof(BusinessReasonCodeMustBeUpdateChargeInformationRule), actualRules);
+            Assert.Contains(typeof(BusinessReasonCodeMustBeUpdateChargeInformationOrChargePricesRule), actualRules);
             Assert.Contains(typeof(DocumentTypeMustBeRequestChangeOfPriceListRule), actualRules);
             Assert.Contains(typeof(RecipientIsMandatoryTypeValidationRule), actualRules);
             Assert.Contains(typeof(SenderIsMandatoryTypeValidationRule), actualRules);
