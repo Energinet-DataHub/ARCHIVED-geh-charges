@@ -18,14 +18,14 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
     /// <summary>
-    /// Contract for handling a change of charges message.
+    /// Contract for handling a change of charges bundle.
     /// </summary>
     public interface IChargesBundleHandler
     {
         /// <summary>
-        /// Synchronously handle the message.
+        /// Synchronously handle the bundle.
         /// </summary>
-        /// <param name="message">ChargesMessage</param>
-        Task HandleAsync(ChargeCommandBundle message);
+        /// <param name="bundle">ChargesMessage</param>
+        Task HandleAsync(ChargeCommandBundle bundle);
     }
 }
