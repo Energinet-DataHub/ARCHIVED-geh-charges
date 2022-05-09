@@ -23,10 +23,10 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
         where TOperation : OperationBase
     {
         /// <summary>
-        /// Input validation of command/>.
+        /// Input validation of operation/>.
         /// </summary>
-        /// <param name="command">The message to validate.</param>
+        /// <param name="operation">The message to validate.</param>
         /// <returns>The validation result.</returns>
-        ValidationResult Validate(TOperation command);
+        ValidationResult Validate(TOperation operation);
     }
 }
