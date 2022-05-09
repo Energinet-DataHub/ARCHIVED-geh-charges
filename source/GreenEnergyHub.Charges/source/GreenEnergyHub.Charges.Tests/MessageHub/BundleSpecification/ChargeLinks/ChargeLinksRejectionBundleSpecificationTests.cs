@@ -111,7 +111,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.ChargeLink
                 ReceiptStatus.Rejected,
                 string.Empty,
                 MaxLengthId,
-                DocumentType.ChargeLinkReceipt,
+                DocumentType.RejectRequestChangeBillingMasterData,
                 0,
                 GetReasons(noOfReasons));
         }
