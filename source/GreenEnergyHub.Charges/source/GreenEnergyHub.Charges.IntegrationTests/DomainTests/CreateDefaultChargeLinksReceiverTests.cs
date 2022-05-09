@@ -65,7 +65,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
             [Theory]
             [InlineData("571313180000000012")]
-            [InlineData("571313180000000005")]
+            [InlineData("571313180000000045")]
             public async Task When_ReceivingCreateDefaultChargeLinksRequest_MeteringPointDomainIsNotifiedThatDefaultChargeLinksAreCreated(
                 string meteringPointId)
             {
