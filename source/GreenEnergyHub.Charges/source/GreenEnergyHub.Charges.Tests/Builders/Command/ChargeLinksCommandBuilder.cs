@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             RequestDate = SystemClock.Instance.GetCurrentInstant(),
             Recipient = new MarketParticipantDto { Id = Guid.NewGuid().ToString(), BusinessProcessRole = MarketParticipantRole.EnergyAgency },
             Sender = new MarketParticipantDto { Id = Guid.NewGuid().ToString(), BusinessProcessRole = MarketParticipantRole.EnergyAgency },
-            Type = DocumentType.ChargeLinkReceipt,
+            Type = DocumentType.RequestChangeBillingMasterData,
         };
 
         private List<ChargeLinkDto> _links = new List<ChargeLinkDto>();

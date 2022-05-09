@@ -25,7 +25,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Cim.MarketDocument
     {
         [Theory]
         [InlineData("D05", DocumentType.RequestChangeBillingMasterData)]
-        [InlineData("D06", DocumentType.ChargeLinkReceipt)]
+        [InlineData("D06", DocumentType.Unknown)]
         [InlineData("D07", DocumentType.NotifyBillingMasterData)]
         [InlineData("D10", DocumentType.RequestChangeOfPriceList)]
         [InlineData("D11", DocumentType.Unknown)]
@@ -41,7 +41,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Cim.MarketDocument
 
         [Theory]
         [InlineData(DocumentType.RequestChangeBillingMasterData, "D05")]
-        [InlineData(DocumentType.ChargeLinkReceipt, "D06")]
+        [InlineData(DocumentType.ConfirmRequestChangeBillingMasterData, "D06")]
+        [InlineData(DocumentType.RejectRequestChangeBillingMasterData, "D06")]
         [InlineData(DocumentType.NotifyBillingMasterData, "D07")]
         [InlineData(DocumentType.RequestChangeOfPriceList, "D10")]
         [InlineData(DocumentType.ConfirmRequestChangeOfPriceList, "D11")]
