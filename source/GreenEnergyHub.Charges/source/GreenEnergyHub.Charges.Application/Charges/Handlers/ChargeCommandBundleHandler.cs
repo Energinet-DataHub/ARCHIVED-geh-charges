@@ -31,9 +31,9 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             return HandleChargeCommandsAsync(bundle);
         }
 
-        private async Task HandleChargeCommandsAsync(ChargeCommandBundle message)
+        private async Task HandleChargeCommandsAsync(ChargeCommandBundle bundle)
         {
-            foreach (var chargeCommand in message.ChargeCommands)
+            foreach (var chargeCommand in bundle.ChargeCommands)
             {
                 await _chargeCommandHandler.HandleAsync(chargeCommand).ConfigureAwait(false);
             }
