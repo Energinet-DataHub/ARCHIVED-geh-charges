@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 
@@ -23,7 +22,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.ReplySender
     {
         private readonly ServiceBusSender _serviceBusSender;
 
-        public ServiceBusReplySender([NotNull] ServiceBusSender serviceBusSender)
+        public ServiceBusReplySender(ServiceBusSender serviceBusSender)
         {
             _serviceBusSender = serviceBusSender;
         }

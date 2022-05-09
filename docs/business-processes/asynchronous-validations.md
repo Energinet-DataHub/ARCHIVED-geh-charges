@@ -11,7 +11,7 @@ The following asynchronous validation rules are currently implemented in the cha
 |VR.209|The data information must be received within the correct time period|E17|All|N/A|
 |VR.223|The identification of a transaction is mandatory|E0H|All|N/A|
 |VR.404|The document type of a message must be D10 (Request update charge information)|D02|All|N/A|
-|VR.424|The energy business process of a message must be D18 (Update charge information)|D02|All|N/A|
+|VR.424|The energy business process of a message must be D08 (Update Charge Prices) or D18 (Update charge information)|D02|All|N/A|
 |VR.440|The identification of a charge is mandatory|E0H|All|N/A|
 |VR.441|The identification of a charge consists of maximal 10 characters|E86|All|N/A|
 |VR.446|The name of a charge consists of maximal 50 characters|E86|All|N/A|

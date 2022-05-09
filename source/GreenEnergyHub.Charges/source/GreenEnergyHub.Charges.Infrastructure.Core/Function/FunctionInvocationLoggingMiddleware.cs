@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Middleware;
@@ -24,7 +23,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
     {
         private readonly ILoggerFactory _loggerFactory;
 
-        public FunctionInvocationLoggingMiddleware([NotNull] ILoggerFactory loggerFactory)
+        public FunctionInvocationLoggingMiddleware(ILoggerFactory loggerFactory)
         {
             _loggerFactory = loggerFactory;
         }
