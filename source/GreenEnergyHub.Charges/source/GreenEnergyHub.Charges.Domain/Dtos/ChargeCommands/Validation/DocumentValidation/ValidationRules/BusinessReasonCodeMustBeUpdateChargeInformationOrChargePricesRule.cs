@@ -18,18 +18,20 @@ using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.DocumentValidation.ValidationRules
 {
-    public class BusinessReasonCodeMustBeUpdateChargeInformationRule : IValidationRule
+    public class BusinessReasonCodeMustBeUpdateChargeInformationOrChargePricesRule : IValidationRule
     {
         private readonly DocumentDto _documentDto;
 
-        public BusinessReasonCodeMustBeUpdateChargeInformationRule(DocumentDto documentDto)
+        public BusinessReasonCodeMustBeUpdateChargeInformationOrChargePricesRule(DocumentDto documentDto)
         {
             _documentDto = documentDto;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
-            ValidationRuleIdentifier.BusinessReasonCodeMustBeUpdateChargeInformation;
+            ValidationRuleIdentifier.BusinessReasonCodeMustBeUpdateChargeInformationOrChargePrices;
 
-        public bool IsValid => _documentDto.BusinessReasonCode == BusinessReasonCode.UpdateChargeInformation;
+        public bool IsValid =>
+            _documentDto.BusinessReasonCode is BusinessReasonCode.UpdateChargeInformation
+                or BusinessReasonCode.UpdateChargePrices;
     }
 }

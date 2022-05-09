@@ -57,7 +57,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         public const string DocumentTypeMustBeRequestUpdateChargeInformationErrorText =
             "Document type {{DocumentType}} not allowed together with energy business process {{DocumentBusinessReasonCode}}";
 
-        [ErrorMessageFor(ValidationRuleIdentifier.BusinessReasonCodeMustBeUpdateChargeInformation)]
+        [ErrorMessageFor(ValidationRuleIdentifier.BusinessReasonCodeMustBeUpdateChargeInformationOrChargePrices)]
         public const string BusinessReasonCodeMustBeUpdateChargeInformationErrorText =
             "Energy business process {{DocumentBusinessReasonCode}} not allowed together with document type {{DocumentType}}";
 

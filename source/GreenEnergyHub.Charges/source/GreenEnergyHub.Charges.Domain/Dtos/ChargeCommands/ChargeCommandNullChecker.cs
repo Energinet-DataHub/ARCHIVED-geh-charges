@@ -52,7 +52,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
         {
             if (chargeOperationDto == null) throw new ArgumentNullException(nameof(chargeOperationDto));
 
-            if (businessReasonCode == BusinessReasonCode.UpdateChargePrices)
+            if (businessReasonCode != BusinessReasonCode.UpdateChargeInformation)
                 return;
 
             if (string.IsNullOrWhiteSpace(chargeOperationDto.ChargeName)) throw new ArgumentException(chargeOperationDto.ChargeName);

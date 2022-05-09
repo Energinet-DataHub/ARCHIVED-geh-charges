@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
@@ -45,6 +46,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands
                 .Build();
             var documentDto = new DocumentDtoBuilder()
                 .WithDocumentId(documentId)
+                .WithBusinessReasonCode(BusinessReasonCode.UpdateChargeInformation)
                 .Build();
             var chargeCommand = new ChargeCommandBuilder()
                 .WithDocumentDto(documentDto)
