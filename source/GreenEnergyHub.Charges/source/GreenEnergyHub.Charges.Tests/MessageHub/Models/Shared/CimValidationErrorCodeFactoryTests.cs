@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared
         [InlineAutoMoqData(ValidationRuleIdentifier.ChargePriceMaximumDigitsAndDecimals, ReasonCode.E86)]
         [InlineAutoMoqData(ValidationRuleIdentifier.BusinessReasonCodeMustBeUpdateChargeInformationOrChargePrices, ReasonCode.D02)]
         [InlineAutoMoqData(ValidationRuleIdentifier.CommandSenderMustBeAnExistingMarketParticipant, ReasonCode.D02)]
-        [InlineAutoMoqData(ValidationRuleIdentifier.DocumentTypeMustBeRequestUpdateChargeInformation, ReasonCode.D02)]
+        [InlineAutoMoqData(ValidationRuleIdentifier.DocumentTypeMustBeRequestChangeOfPriceList, ReasonCode.D02)]
         [InlineAutoMoqData(ValidationRuleIdentifier.MeteringPointDoesNotExist, ReasonCode.E10)]
         [InlineAutoMoqData(ValidationRuleIdentifier.ChargeDoesNotExist, ReasonCode.E0I)]
         [InlineAutoMoqData(ValidationRuleIdentifier.ChargeLinkUpdateNotYetSupported, ReasonCode.D13)]
