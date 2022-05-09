@@ -63,11 +63,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId);
             }
 
-            [Fact]
-            public async Task When_ReceivingCreateDefaultChargeLinksRequest_MeteringPointDomainIsNotifiedThatDefaultChargeLinksAreCreated()
+            [Theory]
+            [InlineData("571313180000000012")]
+            [InlineData("571313180000000005")]
+            public async Task When_ReceivingCreateDefaultChargeLinksRequest_MeteringPointDomainIsNotifiedThatDefaultChargeLinksAreCreated(
+                string meteringPointId)
             {
                 // Arrange
-                var meteringPointId = "571313180000000012";
                 var request = CreateServiceBusMessage(
                     meteringPointId,
                     Fixture.CreateLinkReplyQueue.Name,
@@ -83,7 +85,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                     () => Fixture.CreateLinkRequestQueue.SenderClient.SendMessageAsync(request), correlationId, parentId);
 
                 // Assert
-                var isMessageReceivedByQueue = isMessageReceived.MessageAwaiter!.Wait(TimeSpan.FromSeconds(10));
+                var isMessageReceivedByQueue = isMessageReceived.MessageAwaiter!.Wait(TimeSpan.FromSeconds(30));
                 isMessageReceivedByQueue.Should().BeTrue();
             }
 
