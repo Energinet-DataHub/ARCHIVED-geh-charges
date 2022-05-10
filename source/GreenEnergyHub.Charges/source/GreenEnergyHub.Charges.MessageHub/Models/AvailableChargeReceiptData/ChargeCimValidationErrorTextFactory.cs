@@ -119,6 +119,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                     GetOperationIdFromTriggeredBy(triggeredBy),
                 CimValidationErrorTextToken.ChargeOperationId =>
                     chargeOperationDto.Id,
+                CimValidationErrorTextToken.DocumentRecipientBusinessProcessRole =>
+                    chargeCommand.Document.Recipient.BusinessProcessRole.ToString(),
                 _ => CimValidationErrorTextTemplateMessages.Unknown,
 
             };
