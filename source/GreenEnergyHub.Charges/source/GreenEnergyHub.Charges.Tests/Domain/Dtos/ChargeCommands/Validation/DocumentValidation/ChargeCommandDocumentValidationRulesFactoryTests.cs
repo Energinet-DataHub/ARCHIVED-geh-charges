@@ -16,10 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
-using GreenEnergyHub.Charges.Core;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.DocumentValidation.Factories;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.DocumentValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
@@ -51,8 +48,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Doc
             var expectedRules = new List<IValidationRule>
             {
                 new CommandSenderMustBeAnExistingMarketParticipantRule(sender),
-                new BusinessReasonCodeMustBeUpdateChargeInformationRule(chargeCommand.Document),
-                new DocumentTypeMustBeRequestUpdateChargeInformationRule(chargeCommand.Document),
+                new BusinessReasonCodeMustBeUpdateChargeInformationOrChargePricesRule(chargeCommand.Document),
+                new DocumentTypeMustBeRequestChangeOfPriceListRule(chargeCommand.Document),
                 new RecipientIsMandatoryTypeValidationRule(chargeCommand.Document),
                 new SenderIsMandatoryTypeValidationRule(chargeCommand.Document),
             };
@@ -95,8 +92,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Doc
             // Assert
             Assert.Equal(5, actual.GetRules().Count); // This assert is added to ensure that when the rule set is expanded, the test gets attention as well.
             Assert.Contains(typeof(CommandSenderMustBeAnExistingMarketParticipantRule), actualRules);
-            Assert.Contains(typeof(BusinessReasonCodeMustBeUpdateChargeInformationRule), actualRules);
-            Assert.Contains(typeof(DocumentTypeMustBeRequestUpdateChargeInformationRule), actualRules);
+            Assert.Contains(typeof(BusinessReasonCodeMustBeUpdateChargeInformationOrChargePricesRule), actualRules);
+            Assert.Contains(typeof(DocumentTypeMustBeRequestChangeOfPriceListRule), actualRules);
             Assert.Contains(typeof(RecipientIsMandatoryTypeValidationRule), actualRules);
             Assert.Contains(typeof(SenderIsMandatoryTypeValidationRule), actualRules);
         }

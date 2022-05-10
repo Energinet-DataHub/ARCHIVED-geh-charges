@@ -22,6 +22,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksRejectionEvents;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
+using GreenEnergyHub.Charges.MessageHub.Models.Shared;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData
 {
@@ -46,6 +47,9 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
         public override async Task<IReadOnlyList<AvailableChargeLinksReceiptData>> CreateAsync(
             ChargeLinksRejectedEvent input)
         {
+            if (AvailableDataFactoryHelper.ShouldSkipAvailableData(input.ChargeLinksCommand))
+                return new List<AvailableChargeLinksReceiptData>();
+
             var sender = await GetSenderAsync().ConfigureAwait(false);
 
             return input.ChargeLinksCommand.ChargeLinksOperations.Select(chargeLinkDto =>
@@ -64,7 +68,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
                     ReceiptStatus.Rejected,
                     chargeLinkDto.OperationId,
                     input.ChargeLinksCommand.MeteringPointId,
-                    input.ChargeLinksCommand.Document.Type,
+                    DocumentType.RejectRequestChangeBillingMasterData, // Will be added to the HTTP MessageType header
                     input.ChargeLinksCommand.ChargeLinksOperations.ToList().IndexOf(chargeLinkDto),
                     GetReasons(input, chargeLinkDto));
             }).ToList();

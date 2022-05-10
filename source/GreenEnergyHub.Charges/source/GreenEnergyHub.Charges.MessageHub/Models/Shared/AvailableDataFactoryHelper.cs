@@ -12,20 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using Energinet.DataHub.Core.SchemaValidation.Errors;
-using Microsoft.Azure.Functions.Worker.Http;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
+namespace GreenEnergyHub.Charges.MessageHub.Models.Shared
 {
-    public interface IHttpResponseBuilder
+    public static class AvailableDataFactoryHelper
     {
-        HttpResponseData CreateAcceptedResponse(HttpRequestData request);
-
-        Task<HttpResponseData> CreateBadRequestResponseAsync(
-            HttpRequestData request,
-            ErrorResponse errorResponse);
-
-        HttpResponseData CreateBadRequestB2BResponse(HttpRequestData request, B2BErrorCode code);
+        public static bool ShouldSkipAvailableData(ChargeLinksCommand command)
+        {
+            // We do not need to make data available for system operators
+            return command.Document.Sender.BusinessProcessRole ==
+                   MarketParticipantRole.SystemOperator;
+        }
     }
 }

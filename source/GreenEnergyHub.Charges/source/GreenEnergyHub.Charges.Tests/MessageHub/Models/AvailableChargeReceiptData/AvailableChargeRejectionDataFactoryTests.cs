@@ -79,6 +79,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
                 actual.BusinessReasonCode.Should().Be(chargeCommand.Document.BusinessReasonCode);
                 actual.RequestDateTime.Should().Be(now);
                 actual.ReceiptStatus.Should().Be(ReceiptStatus.Rejected);
+                actual.DocumentType.Should().Be(DocumentType.RejectRequestChangeOfPriceList);
                 actual.OriginalOperationId.Should().Be(chargeCommand.ChargeOperations.ToArray()[i1].Id);
                 var actualValidationErrors = actual.ValidationErrors.ToList();
                 actual.ValidationErrors.Should().HaveSameCount(rejectedEvent.ValidationErrors);

@@ -57,17 +57,17 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
         {
             var inboundMessage = await ValidateMessageAsync(req).ConfigureAwait(false);
 
-            if (AuthenticatedMatchesSenderId(inboundMessage) == false)
-            {
-                return _httpResponseBuilder.CreateBadRequestWithErrorText(
-                    req, SynchronousErrorMessageConstants.ActorIsNotWhoTheyClaimToBeErrorMessage);
-            }
-
             if (inboundMessage.HasErrors)
             {
                 return await _httpResponseBuilder
                     .CreateBadRequestResponseAsync(req, inboundMessage.SchemaValidationError)
                     .ConfigureAwait(false);
+            }
+
+            if (AuthenticatedMatchesSenderId(inboundMessage) == false)
+            {
+                return _httpResponseBuilder.CreateBadRequestB2BResponse(
+                    req, B2BErrorCode.ActorIsNotWhoTheyClaimToBeErrorMessage);
             }
 
             var message = GetChargesMessage(inboundMessage.ValidatedMessage);
