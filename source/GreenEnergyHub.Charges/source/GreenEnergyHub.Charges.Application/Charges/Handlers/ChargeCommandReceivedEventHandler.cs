@@ -15,8 +15,6 @@
 using System;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
-using GreenEnergyHub.Charges.Application.Messaging;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
@@ -27,21 +25,18 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
     public class ChargeCommandReceivedEventHandler : IChargeCommandReceivedEventHandler
     {
         private readonly IChargeInformationHandler _chargeInformationHandler;
-        private readonly IMessageDispatcher<ChargeCommandAcceptedEvent> _acceptedMessageDispatcher;
-        private readonly IChargeCommandAcceptedEventFactory _chargeCommandAcceptedEventFactory;
+        private readonly IChargePricesHandler _chargePricesHandler;
         private readonly IDocumentValidator<ChargeCommand> _documentValidator;
         private readonly IChargeCommandReceiptService _chargeCommandReceiptService;
 
         public ChargeCommandReceivedEventHandler(
             IChargeInformationHandler chargeInformationHandler,
-            IMessageDispatcher<ChargeCommandAcceptedEvent> acceptedMessageDispatcher,
-            IChargeCommandAcceptedEventFactory chargeCommandAcceptedEventFactory,
+            IChargePricesHandler chargePricesHandler,
             IDocumentValidator<ChargeCommand> documentValidator,
             IChargeCommandReceiptService chargeCommandReceiptService)
         {
             _chargeInformationHandler = chargeInformationHandler;
-            _acceptedMessageDispatcher = acceptedMessageDispatcher;
-            _chargeCommandAcceptedEventFactory = chargeCommandAcceptedEventFactory;
+            _chargePricesHandler = chargePricesHandler;
             _documentValidator = documentValidator;
             _chargeCommandReceiptService = chargeCommandReceiptService;
         }
@@ -59,10 +54,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             switch (commandReceivedEvent.Command.Document.BusinessReasonCode)
             {
                 case BusinessReasonCode.UpdateChargePrices:
-                    var chargeCommandAcceptedEvent =
-                        _chargeCommandAcceptedEventFactory.CreateEvent(commandReceivedEvent.Command);
-                    await _acceptedMessageDispatcher.DispatchAsync(chargeCommandAcceptedEvent)
-                        .ConfigureAwait(false);
+                    await _chargePricesHandler.HandleAsync(commandReceivedEvent).ConfigureAwait(false);
                     break;
                 case BusinessReasonCode.UpdateChargeInformation:
                     await _chargeInformationHandler.HandleAsync(commandReceivedEvent).ConfigureAwait(false);

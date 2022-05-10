@@ -28,6 +28,7 @@ using Energinet.DataHub.MessageHub.Model.Dequeue;
 using Energinet.DataHub.MessageHub.Model.Peek;
 using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkReplier;
 using GreenEnergyHub.Charges.Application.Persistence;
+using GreenEnergyHub.Charges.Domain.ChargePrices;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
@@ -125,6 +126,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IMessageHubDatabaseContext, MessageHubDatabaseContext>();
 
             serviceCollection.AddScoped<IChargeRepository, ChargeRepository>();
+            serviceCollection.AddScoped<IChargePriceRepository, ChargePriceRepository>();
             serviceCollection.AddScoped<IMeteringPointRepository, MeteringPointRepository>();
             serviceCollection.AddScoped<
                 IAvailableDataRepository<AvailableChargeLinksData>,

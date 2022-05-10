@@ -14,6 +14,7 @@
 
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
+using GreenEnergyHub.Charges.Domain.ChargePrices;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
@@ -25,6 +26,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence
     public interface IChargesDatabaseContext
     {
         DbSet<Charge> Charges { get; }
+
+        DbSet<ChargePrice> ChargePrices { get; }
 
         DbSet<MarketParticipant> MarketParticipants { get; }
 
