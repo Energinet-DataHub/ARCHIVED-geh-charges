@@ -14,7 +14,6 @@
 
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
-using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.TestCore.Attributes;
@@ -27,33 +26,6 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Validation
     [UnitTest]
     public class BusinessValidatorTests
     {
-        [Theory]
-        [InlineAutoMoqData]
-        public async Task ValidateAsync_WhenCalled_WithOperation_UsesFactoryToFetchRulesAndUseRulesToGetResult(
-            [Frozen] Mock<IBusinessValidationRulesFactory<ChargeOperationDto>> factory,
-            Mock<IValidationRuleSet> rules,
-            ChargeOperationDto operation,
-            ValidationResult validationResult,
-            BusinessValidator<ChargeOperationDto> sut)
-        {
-            // Arrange
-            factory.Setup(
-                    f => f.CreateRulesAsync(operation))
-                .Returns(
-                    Task.FromResult(rules.Object));
-
-            rules.Setup(
-                    r => r.Validate())
-                .Returns(validationResult);
-
-            // Act
-            var result = await sut.ValidateAsync(operation).ConfigureAwait(false);
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.Equal(validationResult, result);
-        }
-
         [Theory]
         [InlineAutoMoqData]
         public async Task ValidateAsync_WhenCalled_WithOperation_UsesFactoryToFetchRulesAndUseRulesToGetResult(
