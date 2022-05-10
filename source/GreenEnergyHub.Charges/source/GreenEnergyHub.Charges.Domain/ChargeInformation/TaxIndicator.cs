@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.Charges
+namespace GreenEnergyHub.Charges.Domain.ChargeInformation
 {
-    public enum TransparentInvoicing
+    public enum TaxIndicator
     {
         Unknown = 0,
-        NonTransparent = 1,
-        Transparent = 2,
+        NoTax = 1,
+        Tax = 2,
     }
 }

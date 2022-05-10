@@ -12,13 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 
-namespace GreenEnergyHub.Charges.Application.Charges.Factories
+namespace GreenEnergyHub.Charges.Domain.ChargeInformation
 {
-    public interface IChargeCreatedEventFactory
+    public interface IChargePeriodFactory
     {
-        ChargeCreatedEvent Create(ChargeOperationDto chargeOperationDto);
+        ChargePeriod CreateFromChargeOperationDto(ChargeOperationDto chargeOperationDto);
     }
 }

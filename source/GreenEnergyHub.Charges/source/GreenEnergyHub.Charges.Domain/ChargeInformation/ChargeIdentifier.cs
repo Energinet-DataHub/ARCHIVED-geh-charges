@@ -14,7 +14,7 @@
 
 using GreenEnergyHub.Charges.Domain.Common;
 
-namespace GreenEnergyHub.Charges.Domain.Charges
+namespace GreenEnergyHub.Charges.Domain.ChargeInformation
 {
     public record ChargeIdentifier(string SenderProvidedChargeId, string Owner, ChargeType ChargeType);
 }

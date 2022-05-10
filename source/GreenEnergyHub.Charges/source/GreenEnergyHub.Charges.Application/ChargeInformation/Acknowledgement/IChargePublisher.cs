@@ -12,12 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.Charges
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+
+namespace GreenEnergyHub.Charges.Application.ChargeInformation.Acknowledgement
 {
-    public enum TaxIndicator
+    public interface IChargePublisher
     {
-        Unknown = 0,
-        NoTax = 1,
-        Tax = 2,
+        Task PublishChargeCreatedAsync(ChargeOperationDto chargeOperationDto);
+
+        Task PublishChargeUpdatedAsync(ChargeCommandAcceptedEvent chargeCommandAcceptedEvent);
     }
 }

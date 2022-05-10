@@ -16,7 +16,7 @@ using System;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 
-namespace GreenEnergyHub.Charges.Domain.Charges
+namespace GreenEnergyHub.Charges.Domain.ChargeInformation
 {
     public class ChargePeriodFactory : IChargePeriodFactory
     {

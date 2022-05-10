@@ -17,7 +17,7 @@ using GreenEnergyHub.Charges.Domain.Common;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
+namespace GreenEnergyHub.Charges.Application.ChargeInformation.Acknowledgement
 {
     public class ChargeCreatedEvent : IMessage
     {

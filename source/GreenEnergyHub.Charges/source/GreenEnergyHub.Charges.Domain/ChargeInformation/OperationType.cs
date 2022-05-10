@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
-
-namespace GreenEnergyHub.Charges.Application.Charges.Handlers
+namespace GreenEnergyHub.Charges.Domain.ChargeInformation
 {
-    public interface IChargeInformationHandler
+    public enum OperationType
     {
-        Task HandleAsync(ChargeCommandReceivedEvent commandReceivedEvent);
+        Create = 0,
+        Update = 1,
+        Stop = 2,
+        CancelStop = 3,
     }
 }

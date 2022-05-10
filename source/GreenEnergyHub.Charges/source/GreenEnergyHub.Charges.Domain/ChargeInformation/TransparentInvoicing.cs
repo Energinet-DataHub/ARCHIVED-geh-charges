@@ -12,13 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.Charges
+namespace GreenEnergyHub.Charges.Domain.ChargeInformation
 {
-    public enum OperationType
+    public enum TransparentInvoicing
     {
-        Create = 0,
-        Update = 1,
-        Stop = 2,
-        CancelStop = 3,
+        Unknown = 0,
+        NonTransparent = 1,
+        Transparent = 2,
     }
 }

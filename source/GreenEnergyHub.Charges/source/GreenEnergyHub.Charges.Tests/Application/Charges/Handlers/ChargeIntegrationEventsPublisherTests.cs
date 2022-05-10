@@ -14,6 +14,7 @@
 
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
+using GreenEnergyHub.Charges.Application.ChargeInformation.Acknowledgement;
 using GreenEnergyHub.Charges.Application.ChargePrices;
 using GreenEnergyHub.Charges.Application.ChargePrices.Acknowledgement;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;

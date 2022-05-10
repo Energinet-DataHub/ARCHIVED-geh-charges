@@ -12,16 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 
-namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
+namespace GreenEnergyHub.Charges.Domain.ChargeInformation
 {
-    public interface IChargePublisher
+    /// <summary>
+    /// Contract defining the capabilities of the infrastructure component facilitating interaction with the charges data store.
+    /// </summary>
+    public interface IChargeRepository
     {
-        Task PublishChargeCreatedAsync(ChargeOperationDto chargeOperationDto);
+        Task AddAsync(Charge charge);
 
-        Task PublishChargeUpdatedAsync(ChargeCommandAcceptedEvent chargeCommandAcceptedEvent);
+        Task<Charge> GetAsync(ChargeIdentifier chargeIdentifier);
+
+        Task<Charge> GetAsync(Guid id);
+
+        Task<IReadOnlyCollection<Charge>> GetAsync(IReadOnlyCollection<Guid> ids);
+
+        Task<Charge?> GetOrNullAsync(ChargeIdentifier chargeIdentifier);
     }
 }

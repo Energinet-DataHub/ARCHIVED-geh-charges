@@ -15,7 +15,7 @@
 using System;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.Domain.Charges
+namespace GreenEnergyHub.Charges.Domain.ChargeInformation
 {
     /// <summary>
     /// Class is used for handling charge periods and corresponding charge master data in that period.

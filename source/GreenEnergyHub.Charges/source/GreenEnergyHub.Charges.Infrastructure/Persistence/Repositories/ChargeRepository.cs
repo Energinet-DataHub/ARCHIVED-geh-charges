@@ -16,9 +16,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.ChargeInformation;
 using Microsoft.EntityFrameworkCore;
-using Charge = GreenEnergyHub.Charges.Domain.Charges.Charge;
+using Charge = GreenEnergyHub.Charges.Domain.ChargeInformation.Charge;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
 {
