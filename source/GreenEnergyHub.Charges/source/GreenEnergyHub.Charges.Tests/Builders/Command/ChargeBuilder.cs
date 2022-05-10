@@ -22,14 +22,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
 {
     public class ChargeBuilder
     {
-        private List<Point> _points = new();
         private List<ChargePeriod> _periods = new();
-
-        public ChargeBuilder WithPoints(IEnumerable<Point> points)
-        {
-            _points = points.ToList();
-            return this;
-        }
 
         public ChargeBuilder WithPeriods(IEnumerable<ChargePeriod> periods)
         {
@@ -46,7 +39,6 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
                 ChargeType.Tariff,
                 Resolution.PT1H,
                 true,
-                _points,
                 _periods);
         }
     }

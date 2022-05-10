@@ -34,20 +34,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
             builder.Property(c => c.SenderProvidedChargeId);
             builder.Property(c => c.Resolution);
             builder.Property(c => c.Type);
-            builder.OwnsMany(c => c.Points, ConfigurePoints);
             builder.OwnsMany(c => c.Periods, ConfigurePeriods);
-
-            // Enable EF Core to hydrate the points
-            var points = builder.Metadata
-                .FindNavigation(nameof(Charge.Points));
-
-            if (points == null)
-            {
-                throw new InvalidOperationException(
-                    $"Could not configure ChargeEntityConfiguration entity. Navigation property {nameof(Charge.Points)} was not found.");
-            }
-
-            points.SetPropertyAccessMode(PropertyAccessMode.Field);
 
             // Enable EF Core to hydrate the periods
             var periods = builder.Metadata
@@ -79,23 +66,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
             periods.Property(p => p.VatClassification);
             periods.Property(p => p.StartDateTime);
             periods.Property(p => p.EndDateTime);
-        }
-
-        private static void ConfigurePoints(OwnedNavigationBuilder<Charge, Point> points)
-        {
-            // This field is defined in the SQL model (as a foreign key)
-            points.WithOwner().HasForeignKey($"{_aggregateTableName}Id");
-
-            var tableName = $"{_aggregateTableName}{nameof(Point)}";
-            points.ToTable(tableName);
-
-            // This is a database-only column - doesn't exist in domain model as point is not an aggregate
-            points.Property<Guid>("Id").ValueGeneratedOnAdd();
-
-            points.Property(p => p.Position);
-            points.Property(p => p.Price)
-                .HasPrecision(DecimalPrecisionConstants.Precision, DecimalPrecisionConstants.Scale);
-            points.Property(p => p.Time);
         }
     }
 }

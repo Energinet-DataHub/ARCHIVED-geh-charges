@@ -23,7 +23,6 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 {
     public class Charge
     {
-        private readonly List<Point> _points;
         private readonly List<ChargePeriod> _periods;
 
         public Charge(
@@ -33,7 +32,6 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             ChargeType type,
             Resolution resolution,
             bool taxIndicator,
-            List<Point> points,
             List<ChargePeriod> periods)
         {
             Id = id;
@@ -41,7 +39,6 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             OwnerId = ownerId;
             Type = type;
             Resolution = resolution;
-            _points = points;
             _periods = periods;
             TaxIndicator = taxIndicator;
         }
@@ -53,7 +50,6 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         private Charge()
         {
             SenderProvidedChargeId = null!;
-            _points = new List<Point>();
             _periods = new List<ChargePeriod>();
         }
 
@@ -82,8 +78,6 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         /// </summary>
         // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Local - private setter used in unit test
         public bool TaxIndicator { get; private set;  }
-
-        public IReadOnlyCollection<Point> Points => _points;
 
         public IReadOnlyCollection<ChargePeriod> Periods => _periods;
 
@@ -132,7 +126,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 
             StopExistingPeriod(stopDate.Value);
             RemoveAllSubsequentPeriods(stopDate.Value);
-            _points.RemoveAll(p => p.Time >= stopDate);
+            //_Todo_: _points.RemoveAll(p => p.Time >= stopDate); this should be done elsewhere
         }
 
         public void CancelStop(ChargePeriod chargePeriod)

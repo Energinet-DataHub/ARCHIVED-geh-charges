@@ -62,9 +62,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
 
         private IQueryable<Charge> GetChargesAsQueryable()
         {
-            return _chargesDatabaseContext.Charges
-                .Include(x => x.Points)
-                .AsQueryable();
+            return _chargesDatabaseContext.Charges.AsQueryable();
         }
 
         private IQueryable<Charge> GetChargeQueryable(ChargeIdentifier chargeIdentifier)

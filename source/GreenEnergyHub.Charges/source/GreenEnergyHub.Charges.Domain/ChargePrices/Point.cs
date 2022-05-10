@@ -14,7 +14,7 @@
 
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.Domain.Charges
+namespace GreenEnergyHub.Charges.Domain.ChargePrices
 {
     /// <summary>
     /// This Point class is used for handling each individual price of charge price list.

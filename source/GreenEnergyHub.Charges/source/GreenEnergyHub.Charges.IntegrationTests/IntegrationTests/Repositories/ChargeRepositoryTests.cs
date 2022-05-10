@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Domain.ChargePrices;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Common;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
@@ -74,9 +75,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                     x.Type == charge.Type);
 
             actual.Should().BeEquivalentTo(charge);
-            actual.Points.Should().NotBeNullOrEmpty();
             actual.Periods.Should().NotBeNullOrEmpty();
-            actual.Points.Single().Price.Should().Be(200.111111m);
         }
 
         [Theory]
@@ -168,7 +167,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 ChargeType.Fee,
                 Resolution.P1D,
                 false,
-                new List<Point> { new(1, 200.111111m, SystemClock.Instance.GetCurrentInstant()) },
                 new List<ChargePeriod>
                 {
                     new(
