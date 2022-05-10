@@ -33,12 +33,12 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             Recipient = new MarketParticipantDto
             {
                 Id = Guid.NewGuid().ToString("N"),
-                BusinessProcessRole = MarketParticipantRole.EnergyAgency,
+                BusinessProcessRole = MarketParticipantRole.GridAccessProvider,
             },
             Sender = new MarketParticipantDto
             {
                 Id = Guid.NewGuid().ToString("N"),
-                BusinessProcessRole = MarketParticipantRole.SystemOperator,
+                BusinessProcessRole = MarketParticipantRole.MeteringPointAdministrator,
             },
             Type = DocumentType.RequestChangeBillingMasterData,
         };
