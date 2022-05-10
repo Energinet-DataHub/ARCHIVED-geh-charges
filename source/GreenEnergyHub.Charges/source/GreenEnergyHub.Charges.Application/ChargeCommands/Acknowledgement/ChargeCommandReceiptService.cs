@@ -19,7 +19,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
-namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
+namespace GreenEnergyHub.Charges.Application.ChargeCommands.Acknowledgement
 {
     public class ChargeCommandReceiptService : IChargeCommandReceiptService
     {

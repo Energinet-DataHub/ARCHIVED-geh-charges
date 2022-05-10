@@ -14,15 +14,15 @@
 
 using System;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application.ChargeCommands.Acknowledgement;
 using GreenEnergyHub.Charges.Application.ChargeInformation.Handlers;
 using GreenEnergyHub.Charges.Application.ChargePrices.Handlers;
-using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
-namespace GreenEnergyHub.Charges.Application.Charges.Handlers
+namespace GreenEnergyHub.Charges.Application.ChargeCommands.Handlers
 {
     public class ChargeCommandReceivedEventHandler : IChargeCommandReceivedEventHandler
     {

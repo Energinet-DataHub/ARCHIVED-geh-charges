@@ -12,15 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Application.Charges.Handlers.Message
-{
-    public class ChargesMessageResult
-    {
-        public bool IsSucceeded { get; set; }
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application.ChargeCommands.Handlers.Message;
 
-        public static ChargesMessageResult CreateSuccess()
-        {
-            return new ChargesMessageResult { IsSucceeded = true };
-        }
+namespace GreenEnergyHub.Charges.Application.ChargeCommands.Handlers
+{
+    /// <summary>
+    /// Contract for handling a change of charges message.
+    /// </summary>
+    public interface IChargesMessageHandler
+    {
+        /// <summary>
+        /// Synchronously handle the message.
+        /// </summary>
+        /// <param name="message">ChargesMessage</param>
+        Task HandleAsync(ChargesMessage message);
     }
 }

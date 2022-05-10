@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using GreenEnergyHub.Charges.Application.Charges.Handlers.Message;
+using GreenEnergyHub.Charges.Application.ChargeCommands.Handlers.Message;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 
 namespace GreenEnergyHub.Charges.Tests.Builders.Application

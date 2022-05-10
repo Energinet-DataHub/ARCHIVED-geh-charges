@@ -14,11 +14,10 @@
 
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
+using GreenEnergyHub.Charges.Application.ChargeCommands.Handlers;
 using GreenEnergyHub.Charges.Application.ChargeInformation.Acknowledgement;
 using GreenEnergyHub.Charges.Application.ChargePrices;
 using GreenEnergyHub.Charges.Application.ChargePrices.Acknowledgement;
-using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
-using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Tests.Builders.Command;

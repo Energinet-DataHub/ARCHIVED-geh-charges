@@ -13,19 +13,15 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
-namespace GreenEnergyHub.Charges.Application.Charges.Handlers
+namespace GreenEnergyHub.Charges.Application.ChargeCommands.Acknowledgement
 {
-    /// <summary>
-    /// Delegates a charge depending on if it contains
-    /// Charge Prices or Charge information.
-    /// </summary>
-    public interface IChargeCommandReceivedEventHandler
+    public interface IChargeCommandReceiptService
     {
-        /// <summary>
-        /// Asynchronously handle the event.
-        /// </summary>
-        Task HandleAsync(ChargeCommandReceivedEvent commandReceivedEvent);
+        Task RejectAsync(ChargeCommand command, ValidationResult validationResult);
+
+        Task AcceptAsync(ChargeCommand command);
     }
 }

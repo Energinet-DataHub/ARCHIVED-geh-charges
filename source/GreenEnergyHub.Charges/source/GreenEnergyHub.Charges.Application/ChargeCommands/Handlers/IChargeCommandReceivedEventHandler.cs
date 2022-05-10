@@ -13,21 +13,19 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using System.Transactions;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 
-namespace GreenEnergyHub.Charges.Application.Charges.Handlers
+namespace GreenEnergyHub.Charges.Application.ChargeCommands.Handlers
 {
     /// <summary>
-    /// Contract for handling a change of charges message.
+    /// Delegates a charge depending on if it contains
+    /// Charge Prices or Charge information.
     /// </summary>
-    public interface IChargeCommandHandler
+    public interface IChargeCommandReceivedEventHandler
     {
         /// <summary>
-        /// Synchronously handle the message.
-        /// Supports <see cref="TransactionScope"/>.
+        /// Asynchronously handle the event.
         /// </summary>
-        /// <param name="command">ChargeCommand</param>
-        Task HandleAsync(ChargeCommand command);
+        Task HandleAsync(ChargeCommandReceivedEvent commandReceivedEvent);
     }
 }

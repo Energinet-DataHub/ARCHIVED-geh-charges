@@ -13,9 +13,9 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.Charges.Handlers.Message;
+using GreenEnergyHub.Charges.Application.ChargeCommands.Handlers.Message;
 
-namespace GreenEnergyHub.Charges.Application.Charges.Handlers
+namespace GreenEnergyHub.Charges.Application.ChargeCommands.Handlers
 {
     public class ChargesMessageHandler : IChargesMessageHandler
     {

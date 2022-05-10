@@ -12,13 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-
-namespace GreenEnergyHub.Charges.Application.Charges.Handlers.Message
+namespace GreenEnergyHub.Charges.Application.ChargeCommands.Handlers.Message
 {
-    public class ChargesMessage
+    public class ChargesMessageResult
     {
-        public List<ChargeCommand> ChargeCommands { get; } = new();
+        public bool IsSucceeded { get; set; }
+
+        public static ChargesMessageResult CreateSuccess()
+        {
+            return new ChargesMessageResult { IsSucceeded = true };
+        }
     }
 }
