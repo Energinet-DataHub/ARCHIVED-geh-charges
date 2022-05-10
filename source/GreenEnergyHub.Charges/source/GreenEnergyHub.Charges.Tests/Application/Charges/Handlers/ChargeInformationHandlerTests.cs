@@ -24,10 +24,12 @@ using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation;
+using GreenEnergyHub.TestHelpers;
 using Moq;
 using NodaTime;
 using Xunit;
@@ -36,7 +38,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 {
     [UnitTest]
-    public class ChargeCommandReceivedEventHandlerTests
+    public class ChargeInformationHandlerTests
     {
         [Theory]
         [InlineAutoMoqData]
@@ -278,6 +280,84 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
              Assert.Equal(1, accepted);
              Assert.Equal(1, rejected);
              Assert.Equal(2, autoRejected);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task HandleAsync_WhenBusinessReasonCodeIsUpdateChargeInformation_ActivateHandler(
+            ChargeCommandReceivedEvent chargeCommandReceivedEvent,
+            [Frozen] Mock<IChargeInformationHandler> chargeCommandReceivedEventHandlerMock,
+            [Frozen] Mock<IDocumentValidator<ChargeCommand>> documentValidator,
+            ChargeCommandReceivedEventHandler sut)
+        {
+            // Arrange
+            documentValidator.Setup(v =>
+                v.ValidateAsync(It.IsAny<ChargeCommand>())).ReturnsAsync(ValidationResult.CreateSuccess());
+            chargeCommandReceivedEvent.Command.Document.BusinessReasonCode = BusinessReasonCode.UpdateChargeInformation;
+
+            // Act
+            await sut.HandleAsync(chargeCommandReceivedEvent);
+
+            // Assert
+            chargeCommandReceivedEventHandlerMock.Verify(
+                x => x.HandleAsync(
+                    chargeCommandReceivedEvent),
+                Times.Once);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task HandleAsync_WhenBusinessReasonCodeIsUpdateChargePrice_ActivateHandler(
+            ChargeCommandReceivedEvent chargeCommandReceivedEvent,
+            [Frozen] Mock<IChargePricesHandler> chargeCommandReceivedEventHandlerMock,
+            [Frozen] Mock<IDocumentValidator<ChargeCommand>> documentValidator,
+            ChargeCommandReceivedEventHandler sut)
+        {
+            // Arrange
+            documentValidator.Setup(v =>
+                v.ValidateAsync(It.IsAny<ChargeCommand>())).ReturnsAsync(ValidationResult.CreateSuccess());
+            chargeCommandReceivedEvent.Command.Document.BusinessReasonCode = BusinessReasonCode.UpdateChargePrices;
+
+            // Act
+            await sut.HandleAsync(chargeCommandReceivedEvent);
+
+            // Assert
+            chargeCommandReceivedEventHandlerMock.Verify(
+                x => x.HandleAsync(
+                    chargeCommandReceivedEvent),
+                Times.Once);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task HandleAsync_WhenDocumentValidationFails_ShouldCallReject(
+            ChargeCommandReceivedEvent chargeCommandReceivedEvent,
+            [Frozen] Mock<IDocumentValidator<ChargeCommand>> documentValidator,
+            [Frozen] Mock<IChargeCommandReceiptService> chargeCommandReceiptService,
+            ChargeCommandReceivedEventHandler sut)
+        {
+            // Arrange
+            documentValidator.Setup(v =>
+                    v.ValidateAsync(It.IsAny<ChargeCommand>()))
+                .ReturnsAsync(ValidationResult.CreateFailure(GetFailedDocumentValidationResult()));
+            chargeCommandReceivedEvent.Command.Document.BusinessReasonCode = BusinessReasonCode.UpdateChargeInformation;
+
+            // Act
+            await sut.HandleAsync(chargeCommandReceivedEvent);
+
+            // Assert
+            chargeCommandReceiptService.Verify(
+                x =>
+                    x.RejectAsync(chargeCommandReceivedEvent.Command, It.IsAny<ValidationResult>()),
+                Times.Once);
+        }
+
+        private static List<IValidationRule> GetFailedDocumentValidationResult()
+        {
+            var failedRule = new Mock<IValidationRule>();
+            failedRule.Setup(r => r.IsValid).Returns(false);
+
+            return new List<IValidationRule> { failedRule.Object };
         }
 
         private static void SetupChargePeriodFactory(Mock<IChargePeriodFactory> chargePeriodFactory)
