@@ -224,7 +224,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             }
 
             [Fact]
-            public async Task Given_ChargeExampleFileWithInvalidBusinessReasonCode_When_GridAccessProviderSendsMessage_Then_CorrectSyncronousErrorIsReturned()
+            public async Task Given_ChargeExampleFileWithInvalidBusinessReasonCode_When_GridAccessProviderSendsMessage_Then_CorrectSynchronousErrorIsReturned()
             {
                 // Arrange
                 var testFilePath = ChargeDocument.TariffPriceSeriesWithInvalidBusinessReasonCode;
@@ -237,6 +237,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // Act and assert
                 response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
                 var responseAsString = await response.Content.ReadAsStringAsync();
+                responseAsString.Should().Contain("<Code>B2B-005</Code>");
                 responseAsString.Should().Contain("process.processType' element is invalid - The value 'A99' is invalid according to its datatype");
             }
 
