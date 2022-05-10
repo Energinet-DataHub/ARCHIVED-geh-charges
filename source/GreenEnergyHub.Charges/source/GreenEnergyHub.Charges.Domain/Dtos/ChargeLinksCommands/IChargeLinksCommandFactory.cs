@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
 using GreenEnergyHub.Charges.Domain.Dtos.CreateDefaultChargeLinksRequests;
@@ -23,7 +22,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
     public interface IChargeLinksCommandFactory
     {
         Task<ChargeLinksCommand> CreateAsync(
-            [NotNull] CreateDefaultChargeLinksRequest createDefaultChargeLinksRequest,
-            [NotNull] IReadOnlyCollection<DefaultChargeLink> defaultChargeLinks);
+            CreateDefaultChargeLinksRequest createDefaultChargeLinksRequest,
+            IReadOnlyCollection<DefaultChargeLink> defaultChargeLinks);
     }
 }

@@ -31,23 +31,21 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
 
         public string Create(ValidationError validationError, ChargeLinksCommand command, ChargeLinkDto chargeLinkDto)
         {
-            return GetMergedErrorMessage(validationError, command, chargeLinkDto);
+            return GetMergedErrorMessage(validationError, chargeLinkDto);
         }
 
         private string GetMergedErrorMessage(
             ValidationError validationError,
-            ChargeLinksCommand chargeLinksCommand,
             ChargeLinkDto chargeLinkDto)
         {
             var errorTextTemplate = _cimValidationErrorTextProvider
                 .GetCimValidationErrorText(validationError.ValidationRuleIdentifier);
 
-            return MergeErrorText(errorTextTemplate, chargeLinksCommand, chargeLinkDto);
+            return MergeErrorText(errorTextTemplate, chargeLinkDto);
         }
 
         private string MergeErrorText(
             string errorTextTemplate,
-            ChargeLinksCommand chargeLinksCommand,
             ChargeLinkDto chargeLinkDto)
         {
             var tokens = CimValidationErrorTextTokenMatcher.GetTokens(errorTextTemplate);
@@ -56,7 +54,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
 
             foreach (var token in tokens)
             {
-                var data = GetDataForToken(token, chargeLinksCommand, chargeLinkDto);
+                var data = GetDataForToken(token, chargeLinkDto);
                 mergedErrorText = mergedErrorText.Replace("{{" + token + "}}", data);
             }
 
@@ -65,7 +63,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
 
         private string GetDataForToken(
             CimValidationErrorTextToken token,
-            ChargeLinksCommand chargeLinksCommand,
             ChargeLinkDto chargeLinkDto)
         {
             // Please keep sorted by CimValidationErrorTextToken
@@ -82,7 +79,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
                 CimValidationErrorTextToken.DocumentSenderProvidedChargeId =>
                     chargeLinkDto.SenderProvidedChargeId,
                 CimValidationErrorTextToken.MeteringPointId =>
-                    chargeLinksCommand.MeteringPointId,
+                    chargeLinkDto.MeteringPointId,
                 _ => CimValidationErrorTextTemplateMessages.Unknown,
             };
         }

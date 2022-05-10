@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
@@ -27,27 +26,27 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 {
     [UnitTest]
-    public class ChargesMessageHandlerTests
+    public class ChargeCommandBundleHandlerTests
     {
         [Theory]
         [InlineAutoDomainData]
-        public async Task HandleAsync_WhenCalledWithMultipleTransactions_ShouldCallMultipleTimes(
-            [NotNull] [Frozen] Mock<IChargeCommandHandler> changeOfChargesTransactionHandler,
-            [NotNull] ChargesMessageHandler sut)
+        public async Task HandleAsync_WhenCalledWithMultipleChargeCommands_ShouldCallMultipleTimes(
+            [Frozen] Mock<IChargeCommandHandler> chargeCommandBundleHandler,
+            ChargeCommandBundleHandler sut)
         {
             // Arrange
-            var transactionBuilder = new ChargeCommandBuilder();
-            var changeOfChargesMessage = new ChargesMessageBuilder()
-                .WithTransaction(transactionBuilder.Build())
-                .WithTransaction(transactionBuilder.Build())
-                .WithTransaction(transactionBuilder.Build())
+            var commandBuilder = new ChargeCommandBuilder();
+            var bundle = new ChargeCommandBundleBuilder()
+                .WithChargeCommand(commandBuilder.Build())
+                .WithChargeCommand(commandBuilder.Build())
+                .WithChargeCommand(commandBuilder.Build())
                 .Build();
 
             // Act
-            await sut.HandleAsync(changeOfChargesMessage).ConfigureAwait(false);
+            await sut.HandleAsync(bundle).ConfigureAwait(false);
 
             // Assert
-            changeOfChargesTransactionHandler
+            chargeCommandBundleHandler
                 .Verify(v => v.HandleAsync(It.IsAny<ChargeCommand>()), Times.Exactly(3));
         }
     }
