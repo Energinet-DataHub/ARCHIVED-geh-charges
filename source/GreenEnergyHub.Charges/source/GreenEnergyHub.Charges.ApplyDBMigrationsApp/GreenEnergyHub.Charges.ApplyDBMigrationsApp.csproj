@@ -34,6 +34,7 @@ limitations under the License.
     </ItemGroup>
 
     <ItemGroup>
+      <EmbeddedResource Include="Scripts\Model\100520220830 Remove position from chargepoint.sql" />
       <EmbeddedResource Include="Scripts\Model\202201261730 Create tables.sql" />
       <EmbeddedResource Include="Scripts\Model\202201281340 Increase OriginalOperationId length.sql" />
       <EmbeddedResource Include="Scripts\Model\202202151610 Move charge periods to ChargePeriod table.sql" />
