@@ -33,7 +33,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 {
     [UnitTest]
-    public class ChargePriceHandlerTest
+    public class ChargePricesHandlerTests
     {
         private static bool _stored = false;
 
@@ -74,6 +74,42 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             Assert.True(confirmed);
         }
 
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task HandleAsync_WhenValidationFails_RejectsEvent(
+            [Frozen] Mock<IInputValidator<ChargeCommand>> inputValidator,
+            [Frozen] Mock<IBusinessValidator<ChargeCommand>> businessValidator,
+            [Frozen] Mock<IChargeCommandReceiptService> receiptService,
+            ChargeCommandReceivedEvent receivedEvent,
+            ChargePricesHandler sut)
+        {
+            // Arrange
+            var validationResult = GetFailedValidationResult();
+            SetupValidators(inputValidator, businessValidator, validationResult);
+
+            var rejected = false;
+            receiptService.Setup(s => s.RejectAsync(It.IsAny<ChargeCommand>(), validationResult))
+                .Callback<ChargeCommand, ValidationResult>((_, _) => rejected = true);
+
+            // Act
+            await sut.HandleAsync(receivedEvent);
+
+            // Assert
+            Assert.True(rejected);
+        }
+
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task HandleAsync_IfEventIsNull_ThrowsArgumentNullException(
+            ChargePricesHandler sut)
+        {
+            // Arrange
+            ChargeCommandReceivedEvent? receivedEvent = null;
+
+            // Act / Assert
+            await Assert.ThrowsAsync<ArgumentNullException>(() => sut.HandleAsync(receivedEvent!));
+        }
+
         private static void SetupRepositories(
             [Frozen] Mock<IChargePriceRepository> chargePriceRepository,
             [Frozen] Mock<IChargeRepository> chargeRepository,
@@ -99,6 +135,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             inputValidator.Setup(v => v.Validate(It.IsAny<ChargeCommand>())).Returns(validationResult);
             businessValidator.Setup(v => v.ValidateAsync(It.IsAny<ChargeCommand>()))
                 .Returns(Task.FromResult(validationResult));
+        }
+
+        private static ValidationResult GetFailedValidationResult()
+        {
+            var failedRule = new Mock<IValidationRule>();
+            failedRule.Setup(r => r.IsValid).Returns(false);
+
+            return ValidationResult.CreateFailure(new List<IValidationRule> { failedRule.Object });
         }
     }
 }
