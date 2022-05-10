@@ -83,7 +83,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
                 actualList[i1].ReceiptStatus.Should().Be(ReceiptStatus.Rejected);
                 actualList[i1].DocumentType.Should().Be(DocumentType.RejectRequestChangeBillingMasterData);
                 actualList[i1].OriginalOperationId.Should().Be(expectedLinks[i1].OperationId);
-                actualList[i1].MeteringPointId.Should().Be(rejectedEvent.ChargeLinksCommand.MeteringPointId);
+                actualList[i1].MeteringPointId.Should().Be(expectedLinks[i1].MeteringPointId);
                 var actualValidationErrors = actualList[i1].ValidationErrors.ToList();
 
                 for (var i2 = 0; i2 < actualValidationErrors.Count; i2++)

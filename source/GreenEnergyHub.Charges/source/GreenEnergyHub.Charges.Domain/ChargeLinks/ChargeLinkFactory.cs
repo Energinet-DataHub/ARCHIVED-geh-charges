@@ -13,11 +13,10 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 
 namespace GreenEnergyHub.Charges.Domain.ChargeLinks
@@ -33,30 +32,25 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
             _meteringPointRepository = meteringPointRepository;
         }
 
-        public async Task<IReadOnlyCollection<ChargeLink>> CreateAsync(ChargeLinksReceivedEvent chargeLinksEvent)
+        public async Task<ChargeLink> CreateAsync(ChargeLinkDto dto)
         {
-            ArgumentNullException.ThrowIfNull(chargeLinksEvent);
+            ArgumentNullException.ThrowIfNull(dto);
 
-            var chargeLinksCreated = new List<ChargeLink>();
+            var chargeIdentifier = new ChargeIdentifier(dto.SenderProvidedChargeId, dto.ChargeOwner, dto.ChargeType);
+            var charge = await _chargeRepository.GetAsync(chargeIdentifier).ConfigureAwait(false);
 
-            foreach (var chargeLink in chargeLinksEvent.ChargeLinksCommand.ChargeLinksOperations)
-            {
-                var chargeIdentifier = new ChargeIdentifier(chargeLink.SenderProvidedChargeId, chargeLink.ChargeOwner, chargeLink.ChargeType);
-                var charge = await _chargeRepository.GetAsync(chargeIdentifier).ConfigureAwait(false);
+            var meteringPoint = await _meteringPointRepository
+                .GetMeteringPointAsync(dto.MeteringPointId)
+                .ConfigureAwait(false);
 
-                var meteringPoint = await _meteringPointRepository
-                    .GetMeteringPointAsync(chargeLinksEvent.ChargeLinksCommand.MeteringPointId)
-                    .ConfigureAwait(false);
+            var chargeLink = new ChargeLink(
+                charge.Id,
+                meteringPoint.Id,
+                dto.StartDateTime,
+                dto.EndDateTime.TimeOrEndDefault(),
+                dto.Factor);
 
-                chargeLinksCreated.Add(new ChargeLink(
-                    charge.Id,
-                    meteringPoint.Id,
-                    chargeLink.StartDateTime,
-                    chargeLink.EndDateTime.TimeOrEndDefault(),
-                    chargeLink.Factor));
-            }
-
-            return chargeLinksCreated;
+            return chargeLink;
         }
     }
 }

@@ -13,27 +13,27 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.Charges.Handlers.Message;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
-    public class ChargesMessageHandler : IChargesMessageHandler
+    public class ChargeCommandBundleHandler : IChargesBundleHandler
     {
         private readonly IChargeCommandHandler _chargeCommandHandler;
 
-        public ChargesMessageHandler(IChargeCommandHandler chargeCommandHandler)
+        public ChargeCommandBundleHandler(IChargeCommandHandler chargeCommandHandler)
         {
             _chargeCommandHandler = chargeCommandHandler;
         }
 
-        public Task HandleAsync(ChargesMessage message)
+        public Task HandleAsync(ChargeCommandBundle bundle)
         {
-            return HandleChargeCommandsAsync(message);
+            return HandleChargeCommandsAsync(bundle);
         }
 
-        private async Task HandleChargeCommandsAsync(ChargesMessage message)
+        private async Task HandleChargeCommandsAsync(ChargeCommandBundle bundle)
         {
-            foreach (var chargeCommand in message.ChargeCommands)
+            foreach (var chargeCommand in bundle.ChargeCommands)
             {
                 await _chargeCommandHandler.HandleAsync(chargeCommand).ConfigureAwait(false);
             }

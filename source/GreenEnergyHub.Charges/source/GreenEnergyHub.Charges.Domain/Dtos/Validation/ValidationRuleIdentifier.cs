@@ -47,5 +47,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
         SubsequentBundleOperationsFail = 33, // VR906 / D14
         TransparentInvoicingIsNotAllowedForFee = 34, // VR904 / D67
         ChargeResolutionCanNotBeUpdated = 35, // VR907 / D23
+        RecipientRoleMustBeDdz = 36, // VR165 / E55
     }
 }

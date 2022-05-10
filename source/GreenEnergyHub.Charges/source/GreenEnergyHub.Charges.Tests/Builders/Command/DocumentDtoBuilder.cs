@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using NodaTime;
@@ -21,10 +20,10 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
 {
     public class DocumentDtoBuilder
     {
+        private readonly IndustryClassification _industryClassification = IndustryClassification.Unknown;
         private string _id;
         private DocumentType _type = DocumentType.Unknown;
         private Instant _requestDate = SystemClock.Instance.GetCurrentInstant();
-        private IndustryClassification _industryClassification = IndustryClassification.Unknown;
         private Instant _createdDateTime = SystemClock.Instance.GetCurrentInstant();
         private MarketParticipantDto _recipient;
         private MarketParticipantDto _sender;
@@ -46,6 +45,12 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         public DocumentDtoBuilder WithSender(MarketParticipantDto sender)
         {
             _sender = sender;
+            return this;
+        }
+
+        public DocumentDtoBuilder WithRecipient(MarketParticipantDto recipient)
+        {
+            _recipient = recipient;
             return this;
         }
 

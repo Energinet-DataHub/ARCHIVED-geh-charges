@@ -15,10 +15,21 @@
 using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 
-namespace GreenEnergyHub.Charges.Application.Charges.Handlers.Message
+namespace GreenEnergyHub.Charges.Tests.Builders.Application
 {
-    public class ChargesMessage
+    public class ChargeCommandBundleBuilder
     {
-        public List<ChargeCommand> ChargeCommands { get; } = new();
+        private readonly List<ChargeCommand> _chargeCommands = new();
+
+        public ChargeCommandBundleBuilder WithChargeCommand(ChargeCommand command)
+        {
+            _chargeCommands.Add(command);
+            return this;
+        }
+
+        public ChargeCommandBundle Build()
+        {
+            return new ChargeCommandBundle(_chargeCommands);
+        }
     }
 }

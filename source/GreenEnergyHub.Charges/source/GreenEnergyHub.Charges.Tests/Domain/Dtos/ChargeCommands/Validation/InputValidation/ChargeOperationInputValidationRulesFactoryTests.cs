@@ -23,22 +23,42 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.MessageHub.Models.Shared;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.Tests.Builders.Command;
 using Xunit;
 using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.InputValidation
 {
     [UnitTest]
-    public class ChargeCommandInputValidationRulesFactoryTests
+    public class ChargeOperationInputValidationRulesFactoryTests
     {
         [Fact]
-        public void CreateRulesForChargeCommand_ShouldThrowArgumentNullException_WhenCalledWithNull()
+        public void CreateRules_ShouldContainRulesTest()
         {
             // Arrange
-            var sut = new ChargeCommandInputValidationRulesFactory();
+            var sut = new ChargeOperationInputValidationRulesFactory();
+            var chargeOperationDto = new ChargeOperationDtoBuilder().Build();
+            var expectedRules = new List<IValidationRule>();
+
+            expectedRules.AddRange(GetExpectedRulesForChargeOperation(chargeOperationDto));
+
+            // Act
+            var actualRuleTypes = sut.CreateRules(chargeOperationDto)
+                .GetRules().Select(r => r.GetType()).ToList();
+            var expectedRuleTypes = expectedRules.Select(r => r.GetType()).ToList();
+
+            // Assert
+            Assert.True(actualRuleTypes.SequenceEqual(expectedRuleTypes));
+        }
+
+        [Fact]
+        public void CreateRules_ShouldThrowArgumentNullException_WhenCalledWithNull()
+        {
+            // Arrange
+            var sut = new ChargeOperationInputValidationRulesFactory();
 
             // Act & Assert
-            Assert.Throws<ArgumentNullException>(() => sut.CreateRulesForCommand(null!));
+            Assert.Throws<ArgumentNullException>(() => sut.CreateRules(null!));
         }
 
         [Theory]
@@ -46,12 +66,12 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         [InlineAutoMoqData(CimValidationErrorTextToken.ChargePointPrice)]
         public void CreateRulesForChargeCommand_AllRulesThatNeedTriggeredByForErrorMessage_MustImplementIValidationRuleWithExtendedData(
             CimValidationErrorTextToken cimValidationErrorTextToken,
-            ChargeCommandInputValidationRulesFactory sut,
-            ChargeCommand chargeCommand)
+            ChargeOperationInputValidationRulesFactory sut,
+            ChargeOperationDto chargeOperationDto)
         {
             // Arrange
             // Act
-            var validationRules = sut.CreateRulesForCommand(chargeCommand).GetRules();
+            var validationRules = sut.CreateRules(chargeOperationDto).GetRules();
 
             // Assert
             AssertAllRulesThatNeedTriggeredByForErrorMessageImplementsIValidationRuleWithExtendedData(

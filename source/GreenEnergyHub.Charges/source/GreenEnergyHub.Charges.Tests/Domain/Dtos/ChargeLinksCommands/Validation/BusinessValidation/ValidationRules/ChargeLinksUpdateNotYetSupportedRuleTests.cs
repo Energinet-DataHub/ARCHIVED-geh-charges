@@ -36,15 +36,14 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
         [InlineAutoMoqData("2022-01-21T23:00:00Z", "9999-12-31T23:59:59Z", "2022-01-11T23:00:00Z", "2022-01-21T23:00:00Z")] // After with EndDate is DateTime.Max
         [InlineAutoMoqData("2022-01-21T23:00:00Z", null!, "2022-01-11T23:00:00Z", "2022-01-21T23:00:00Z")] // After with EndDate is null!
         public void IsValid_WhenCalledWithValidChargeLinks_ReturnsTrue(
-            string newStartDate, string? newEndDate, string existingStartDate, string existingEndDate, string meteringPointId, DocumentDto document)
+            string newStartDate, string? newEndDate, string existingStartDate, string existingEndDate, string meteringPointId)
         {
             // Arrange
-            var newChargeLinks = new List<ChargeLinkDto> { CreateChargeLinkDto(newStartDate, newEndDate) };
-            var chargeLinkCommand = new ChargeLinksCommand(meteringPointId, document, newChargeLinks);
+            var chargeLinkDto = CreateChargeLinkDto(meteringPointId, newStartDate, newEndDate);
 
             var existingChargeLinks = GetExistingChargeLinks(existingStartDate, existingEndDate);
 
-            var sut = new ChargeLinksUpdateNotYetSupportedRule(chargeLinkCommand, existingChargeLinks);
+            var sut = new ChargeLinksUpdateNotYetSupportedRule(chargeLinkDto, existingChargeLinks);
 
             // Act & Assert
             sut.IsValid.Should().BeTrue();
@@ -61,14 +60,13 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
         [InlineAutoMoqData("2022-01-11T23:00:00Z", null!, "2022-01-11T23:00:00Z", "9999-12-31T23:59:59Z")] // StartDate equal to existing, EndDate is null!
         [InlineAutoMoqData("2022-01-12T23:00:00Z", null!, "2022-01-11T23:00:00Z", "9999-12-31T23:59:59Z")] // StartDate later than existing, EndDate is null!
         public void IsValid_WhenCalledWithOverlappingChargeLinks_ReturnsFalse(
-            string newStartDate, string? newEndDate, string existingStartDate, string existingEndDate, string meteringPointId, DocumentDto document)
+            string newStartDate, string? newEndDate, string existingStartDate, string existingEndDate, string meteringPointId)
         {
             // Arrange
-            var newChargeLinks = new List<ChargeLinkDto> { CreateChargeLinkDto(newStartDate, newEndDate) };
-            var chargeLinkCommand = new ChargeLinksCommand(meteringPointId, document, newChargeLinks);
+            var chargeLinkDto = CreateChargeLinkDto(meteringPointId, newStartDate, newEndDate);
             var existingChargeLinks = GetExistingChargeLinks(existingStartDate, existingEndDate);
 
-            var sut = new ChargeLinksUpdateNotYetSupportedRule(chargeLinkCommand, existingChargeLinks);
+            var sut = new ChargeLinksUpdateNotYetSupportedRule(chargeLinkDto, existingChargeLinks);
 
             // Act & Assert
             sut.IsValid.Should().BeFalse();
@@ -76,24 +74,23 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
 
         [Theory]
         [InlineAutoMoqData("2022-01-01T23:00:00Z", "2022-01-12T23:00:00Z")]
-        public void IsValid_WhenExistingChargeLinksListIsEmpty_ReturnsTrue(
-            string newStartDate, string? newEndDate, string meteringPointId, DocumentDto document)
+        public void IsValid_WhenExistingChargeLinkIsEmpty_ReturnsTrue(
+            string newStartDate, string? newEndDate, string meteringPointId)
         {
             // Arrange
-            var newChargeLinks = new List<ChargeLinkDto> { CreateChargeLinkDto(newStartDate, newEndDate) };
-            var chargeLinkCommand = new ChargeLinksCommand(meteringPointId, document, newChargeLinks);
+            var chargeLinkDto = CreateChargeLinkDto(meteringPointId, newStartDate, newEndDate);
 
-            var sut = new ChargeLinksUpdateNotYetSupportedRule(chargeLinkCommand, new List<ChargeLink>());
+            var sut = new ChargeLinksUpdateNotYetSupportedRule(chargeLinkDto, new List<ChargeLink>());
 
             // Act & Assert
             sut.IsValid.Should().BeTrue();
         }
 
-        private static ChargeLinkDto CreateChargeLinkDto(string newStartDate, string? newEndDate)
+        private static ChargeLinkDto CreateChargeLinkDto(string meteringPointId, string newStartDate, string? newEndDate)
         {
             var startDate = InstantPattern.General.Parse(newStartDate).Value;
             Instant? endDateTime = newEndDate == null ? null : InstantPattern.General.Parse(newEndDate).Value;
-            return new ChargeLinkDtoBuilder().WithStartDate(startDate).WithEndDate(endDateTime).Build();
+            return new ChargeLinkDtoBuilder().WithMeteringPointId(meteringPointId).WithStartDate(startDate).WithEndDate(endDateTime).Build();
         }
 
         private static IReadOnlyCollection<ChargeLink> GetExistingChargeLinks(
