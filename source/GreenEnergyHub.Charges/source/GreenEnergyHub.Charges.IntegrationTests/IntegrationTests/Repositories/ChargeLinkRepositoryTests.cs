@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task AddAsync_StoresChargeLink(ChargeLink chargeLink)
+        public async Task AddRangeAsync_StoresChargeLink(ChargeLink chargeLink)
         {
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
