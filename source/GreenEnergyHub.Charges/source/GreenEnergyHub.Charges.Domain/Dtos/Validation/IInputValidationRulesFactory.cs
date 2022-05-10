@@ -19,6 +19,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
     public interface IInputValidationRulesFactory<in TOperation>
         where TOperation : OperationBase
     {
-        IValidationRuleSet CreateRulesForOperation(TOperation operation);
+        IValidationRuleSet CreateRules(TOperation operation);
     }
 }

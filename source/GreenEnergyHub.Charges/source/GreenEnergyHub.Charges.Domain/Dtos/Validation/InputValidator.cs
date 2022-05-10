@@ -28,7 +28,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 
         public ValidationResult Validate(TOperation operation)
         {
-            IValidationRuleSet ruleSet = _inputValidationRulesFactory.CreateRulesForOperation(operation);
+            var ruleSet = _inputValidationRulesFactory.CreateRules(operation);
             return ruleSet.Validate();
         }
     }

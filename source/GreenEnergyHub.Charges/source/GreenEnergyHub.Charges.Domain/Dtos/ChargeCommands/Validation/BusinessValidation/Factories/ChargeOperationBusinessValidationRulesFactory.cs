@@ -23,14 +23,14 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.Factories
 {
-    public class ChargeCommandBusinessValidationRulesFactory : IBusinessValidationRulesFactory<ChargeOperationDto>
+    public class ChargeOperationBusinessValidationRulesFactory : IBusinessValidationRulesFactory<ChargeOperationDto>
     {
         private readonly IChargeRepository _chargeRepository;
         private readonly IClock _clock;
         private readonly IRulesConfigurationRepository _rulesConfigurationRepository;
         private readonly IZonedDateTimeService _zonedDateTimeService;
 
-        public ChargeCommandBusinessValidationRulesFactory(
+        public ChargeOperationBusinessValidationRulesFactory(
             IRulesConfigurationRepository rulesConfigurationRepository,
             IChargeRepository chargeRepository,
             IZonedDateTimeService zonedDateTimeService,

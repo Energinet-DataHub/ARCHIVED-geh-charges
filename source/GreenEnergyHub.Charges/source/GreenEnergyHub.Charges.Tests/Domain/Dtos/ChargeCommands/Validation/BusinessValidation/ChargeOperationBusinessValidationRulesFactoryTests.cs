@@ -24,7 +24,6 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.Factories;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.DocumentValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
@@ -39,21 +38,21 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.BusinessValidation
 {
     [UnitTest]
-    public class ChargeCommandBusinessValidationRulesFactoryTests
+    public class ChargeOperationBusinessValidationRulesFactoryTests
     {
         [Theory]
         [InlineAutoMoqData(typeof(StartDateValidationRule))]
-        public async Task CreateRulesForChargeCommandAsync_WhenCalledWithNewCharge_ReturnsExpectedMandatoryRules(
+        public async Task CreateRulesAsync_WhenCalledWithNewCharge_ReturnsExpectedMandatoryRules(
             Type expectedRule,
             TestMarketParticipant sender,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IChargeRepository> repository,
             [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
-            ChargeCommandBusinessValidationRulesFactory sut,
+            ChargeOperationBusinessValidationRulesFactory sut,
             ChargeOperationDtoBuilder builder)
         {
             // Arrange
-            var chargeCommand = builder.Build();
+            var operation = builder.Build();
             SetupConfigureRepositoryMock(rulesConfigurationRepository);
 
             Charge? charge = null;
@@ -66,7 +65,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
                 .ReturnsAsync(sender);
 
             // Act
-            var actual = await sut.CreateRulesAsync(chargeCommand).ConfigureAwait(false);
+            var actual = await sut.CreateRulesAsync(operation).ConfigureAwait(false);
             var actualRules = actual.GetRules().Select(r => r.GetType());
 
             // Assert
@@ -78,13 +77,13 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         [InlineAutoMoqData(typeof(StartDateValidationRule))]
         [InlineAutoMoqData(typeof(UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateRule))]
         [InlineAutoMoqData(typeof(ChargeResolutionCanNotBeUpdatedRule))]
-        public async Task CreateRulesForChargeCommandAsync_WhenCalledWithExistingChargeNotTariff_ReturnsExpectedRules(
+        public async Task CreateRulesAsync_WhenCalledWithExistingChargeNotTariff_ReturnsExpectedRules(
             Type expectedRule,
             TestMarketParticipant sender,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
-            ChargeCommandBusinessValidationRulesFactory sut,
+            ChargeOperationBusinessValidationRulesFactory sut,
             Charge charge)
         {
             // Arrange
@@ -107,13 +106,13 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         [InlineAutoMoqData(typeof(ChangingTariffTaxValueNotAllowedRule))]
         [InlineAutoMoqData(typeof(UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateRule))]
         [InlineAutoMoqData(typeof(ChargeResolutionCanNotBeUpdatedRule))]
-        public async Task CreateRulesForChargeCommandAsync_WhenCalledWithExistingTariff_ReturnsExpectedRules(
+        public async Task CreateRulesAsync_WhenCalledWithExistingTariff_ReturnsExpectedRules(
             Type expectedRule,
             TestMarketParticipant sender,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
-            ChargeCommandBusinessValidationRulesFactory sut,
+            ChargeOperationBusinessValidationRulesFactory sut,
             Charge charge)
         {
             // Arrange
@@ -134,7 +133,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         [Theory]
         [InlineAutoMoqData]
         public static async Task CreateRulesAsync_WhenCalledWithNull_ThrowsArgumentNullException(
-            ChargeCommandBusinessValidationRulesFactory sut)
+            ChargeOperationBusinessValidationRulesFactory sut)
         {
             // Arrange
             ChargeOperationDto? chargeOperationDto = null;
@@ -153,7 +152,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
-            ChargeCommandBusinessValidationRulesFactory sut,
+            ChargeOperationBusinessValidationRulesFactory sut,
             TestMarketParticipant sender,
             ChargeCommand chargeCommand,
             Charge charge)

@@ -41,7 +41,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Validation
             var rules = new List<IValidationRule> { testValidationRule, testValidationRule };
             var validationRuleSet = ValidationRuleSet.FromRules(rules);
             inputValidationRulesFactory
-                .Setup(f => f.CreateRulesForOperation(It.IsAny<ChargeOperationDto>()))
+                .Setup(f => f.CreateRules(It.IsAny<ChargeOperationDto>()))
                 .Returns(validationRuleSet);
 
             // Act
