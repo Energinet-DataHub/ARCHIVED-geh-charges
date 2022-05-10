@@ -56,6 +56,7 @@ INSERT INTO [Charges].[GridAreaLink] VALUES (@areaLinkIdOfProvider8900000000005,
 INSERT INTO [Charges].[MeteringPoint] VALUES (NEWID(), '571313180000000005', 1, @areaLinkIdOfProvider8100000000016, '2020-12-31T23:00:00', 2, 3)
 INSERT INTO [Charges].[MeteringPoint] VALUES (NEWID(), '571313180000000012', 3, @areaLinkIdOfProvider8100000000023, '2020-12-31T23:00:00', 1, 3)
 INSERT INTO [Charges].[MeteringPoint] VALUES (NEWID(), '571313180000000029', 1, @areaLinkIdOfProvider8100000000030, '2020-12-31T23:00:00', 1, 3)
+INSERT INTO [Charges].[MeteringPoint] VALUES (NEWID(), '571313180000000045', 1, @areaLinkIdOfProvider8900000000005, '2020-12-31T23:00:00', 1, 3)
 
 ------------------------------------------------------------------------------------------------------------------------
 -- Add charges
