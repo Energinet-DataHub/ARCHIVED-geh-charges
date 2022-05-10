@@ -30,7 +30,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.InputValidation
 {
     [UnitTest]
-    public class ChargeCommandInputValidationRulesFactoryTests
+    public class ChargeOperationInputValidationRulesFactoryTests
     {
         [Fact]
         public void CreateRules_ShouldContainRulesTest()
