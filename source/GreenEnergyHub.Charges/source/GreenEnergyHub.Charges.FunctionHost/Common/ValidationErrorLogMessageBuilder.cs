@@ -19,7 +19,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Common
 {
-    public class ValidationErrorLogMessageBuilder
+    public static class ValidationErrorLogMessageBuilder
     {
         public static string BuildErrorMessage(
             DocumentDto documentDto,
