@@ -72,8 +72,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             ChargeHandler sut)
         {
             // Arrange
-            documentValidator.Setup(v =>
-                v.ValidateAsync(It.IsAny<ChargeCommand>())).ReturnsAsync(ValidationResult.CreateSuccess());
+            documentValidator
+                .Setup(v => v.ValidateAsync(It.IsAny<ChargeCommand>()))
+                .ReturnsAsync(ValidationResult.CreateSuccess());
             chargeCommandReceivedEvent.Command.Document.BusinessReasonCode = BusinessReasonCode.UpdateChargeInformation;
 
             // Act
@@ -81,8 +82,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 
             // Assert
             chargeCommandReceivedEventHandlerMock.Verify(
-                x => x.HandleAsync(
-                    chargeCommandReceivedEvent),
+                x => x.HandleAsync(chargeCommandReceivedEvent),
                 Times.Once);
         }
 
@@ -105,8 +105,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 
             // Assert
             chargeCommandReceiptService.Verify(
-                x =>
-                    x.RejectAsync(chargeCommandReceivedEvent.Command, It.IsAny<ValidationResult>()),
+                x => x.RejectAsync(chargeCommandReceivedEvent.Command, It.IsAny<ValidationResult>()),
                 Times.Once);
         }
 

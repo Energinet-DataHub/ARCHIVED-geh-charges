@@ -20,7 +20,6 @@ using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.TestCore.Reflection;
 using GreenEnergyHub.Charges.Tests.Builders.Testables;
@@ -52,7 +51,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinksDat
             // Arrange
             marketParticipantRepository.Setup(r => r.GetMeteringPointAdministratorAsync()).ReturnsAsync(meteringPointAdministrator);
             marketParticipantRepository
-                .Setup(m => m.GetGridAccessProviderAsync(acceptedEvent.ChargeLinksCommand.MeteringPointId))
+                .Setup(m => m.GetGridAccessProviderAsync(It.IsAny<string>()))
                 .ReturnsAsync(gridAccessProvider);
 
             charge.SetPrivateProperty(c => c.TaxIndicator, true);
@@ -74,13 +73,12 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinksDat
                 actual[i].Should().NotContainNullsOrEmptyEnumerables();
                 actual[i].RecipientId.Should().Be(gridAccessProvider.MarketParticipantId);
                 actual[i].RecipientRole.Should().Be(gridAccessProvider.BusinessProcessRole);
-                actual[i].BusinessReasonCode.Should()
-                    .Be(acceptedEvent.ChargeLinksCommand.Document.BusinessReasonCode);
+                actual[i].BusinessReasonCode.Should().Be(acceptedEvent.ChargeLinksCommand.Document.BusinessReasonCode);
                 actual[i].RequestDateTime.Should().Be(now);
                 actual[i].ChargeId.Should().Be(expectedLinks[i].SenderProvidedChargeId);
                 actual[i].ChargeOwner.Should().Be(expectedLinks[i].ChargeOwner);
                 actual[i].ChargeType.Should().Be(expectedLinks[i].ChargeType);
-                actual[i].MeteringPointId.Should().Be(acceptedEvent.ChargeLinksCommand.MeteringPointId);
+                actual[i].MeteringPointId.Should().Be(expectedLinks[i].MeteringPointId);
                 actual[i].Factor.Should().Be(expectedLinks[i].Factor);
                 actual[i].StartDateTime.Should().Be(expectedLinks[i].StartDateTime);
                 actual[i].EndDateTime.Should().Be(expectedLinks[i].EndDateTime.GetValueOrDefault());
@@ -103,7 +101,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinksDat
                 .Setup(r => r.GetMeteringPointAdministratorAsync())
                 .ReturnsAsync(meteringPointAdministrator);
             marketParticipantRepository
-                .Setup(m => m.GetGridAccessProviderAsync(acceptedEvent.ChargeLinksCommand.MeteringPointId))
+                .Setup(m => m.GetGridAccessProviderAsync(It.IsAny<string>()))
                 .ReturnsAsync(gridAccessProvider);
 
             charge.SetPrivateProperty(c => c.TaxIndicator, false);

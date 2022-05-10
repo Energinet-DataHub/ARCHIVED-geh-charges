@@ -27,6 +27,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         private string _senderProvidedChargeId = string.Empty;
         private ChargeType _chargeType;
         private string _chargeOwner = string.Empty;
+        private string _meteringPointId = string.Empty;
 
         public ChargeLinkDtoBuilder WithStartDate(Instant startDate)
         {
@@ -44,12 +45,19 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         {
             return new ChargeLinkDto(
                 Guid.NewGuid().ToString("N"),
+                _meteringPointId,
                 _startDate,
                 _endDate,
                 _senderProvidedChargeId,
                 _factor,
                 _chargeOwner,
                 _chargeType);
+        }
+
+        public ChargeLinkDtoBuilder WithMeteringPointId(string meteringPointId)
+        {
+            _meteringPointId = meteringPointId;
+            return this;
         }
 
         public ChargeLinkDtoBuilder WithCharge(string senderProvidedChargeId, ChargeType chargeType, string chargeOwner)

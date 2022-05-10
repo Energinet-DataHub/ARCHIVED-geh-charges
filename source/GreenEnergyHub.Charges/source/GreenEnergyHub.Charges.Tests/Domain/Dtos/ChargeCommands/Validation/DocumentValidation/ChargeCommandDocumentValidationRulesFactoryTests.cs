@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Doc
     {
         [Theory]
         [InlineAutoMoqData]
-        public async Task CreateRulesForChargeCommand_ShouldContainRulesTest(
+        public async Task CreateRulesAsync_ShouldContainRulesTest(
             TestMarketParticipant sender,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             ChargeCommandDocumentValidationRulesFactory sut)
@@ -66,7 +66,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Doc
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task CreateRulesForChargeCommandAsync_WhenCalledWithExistingChargeNotTariff_ReturnsExpectedRules(
+        public async Task CreateRulesAsync_WhenCalledWithExistingChargeNotTariff_ReturnsExpectedRules(
             TestMarketParticipant sender,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IChargeRepository> chargeRepository,
