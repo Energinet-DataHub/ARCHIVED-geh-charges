@@ -17,13 +17,11 @@ using System.Text;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
-namespace GreenEnergyHub.Charges.FunctionHost.Common
+namespace GreenEnergyHub.Charges.MessageHub.Models.Shared
 {
     public static class ValidationErrorLogMessageBuilder
     {
-        public static string BuildErrorMessage(
-            DocumentDto documentDto,
-            IEnumerable<ValidationError> validationErrors)
+        public static string BuildErrorMessage(DocumentDto documentDto, IEnumerable<ValidationError> validationErrors)
         {
             var sb = new StringBuilder();
             sb.Append($"ValidationErrors for document Id {documentDto.Id} " +

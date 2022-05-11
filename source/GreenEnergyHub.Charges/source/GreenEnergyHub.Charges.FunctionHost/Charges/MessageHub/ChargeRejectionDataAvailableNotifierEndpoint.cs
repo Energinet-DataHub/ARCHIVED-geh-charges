@@ -19,7 +19,6 @@ using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serializati
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using Microsoft.Azure.Functions.Worker;
-using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
 {
@@ -28,16 +27,13 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
         public const string FunctionName = nameof(ChargeRejectionDataAvailableNotifierEndpoint);
         private readonly IAvailableDataNotifier<AvailableChargeReceiptData, ChargeCommandRejectedEvent> _availableDataNotifier;
         private readonly JsonMessageDeserializer<ChargeCommandRejectedEvent> _deserializer;
-        private readonly ILogger _logger;
 
         public ChargeRejectionDataAvailableNotifierEndpoint(
             IAvailableDataNotifier<AvailableChargeReceiptData, ChargeCommandRejectedEvent> availableDataNotifier,
-            JsonMessageDeserializer<ChargeCommandRejectedEvent> deserializer,
-            ILoggerFactory loggerFactory)
+            JsonMessageDeserializer<ChargeCommandRejectedEvent> deserializer)
         {
             _availableDataNotifier = availableDataNotifier;
             _deserializer = deserializer;
-            _logger = loggerFactory.CreateLogger(nameof(ChargeRejectionDataAvailableNotifierEndpoint));
         }
 
         [Function(FunctionName)]
@@ -49,17 +45,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
             byte[] message)
         {
             var rejectedEvent = (ChargeCommandRejectedEvent)await _deserializer.FromBytesAsync(message).ConfigureAwait(false);
-            LogValidationErrors(rejectedEvent);
             await _availableDataNotifier.NotifyAsync(rejectedEvent).ConfigureAwait(false);
-        }
-
-        private void LogValidationErrors(ChargeCommandRejectedEvent rejectedEvent)
-        {
-            var errorMessage = ValidationErrorLogMessageBuilder.BuildErrorMessage(
-                rejectedEvent.Command.Document,
-                rejectedEvent.ValidationErrors);
-
-            _logger.LogError(errorMessage);
         }
     }
 }

@@ -19,7 +19,6 @@ using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serializati
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData;
 using Microsoft.Azure.Functions.Worker;
-using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
 {
@@ -28,16 +27,13 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
         private const string FunctionName = nameof(ChargeLinksRejectionDataAvailableNotifierEndpoint);
         private readonly IAvailableDataNotifier<AvailableChargeLinksReceiptData, ChargeLinksRejectedEvent> _availableDataNotifier;
         private readonly JsonMessageDeserializer<ChargeLinksRejectedEvent> _deserializer;
-        private readonly ILogger _logger;
 
         public ChargeLinksRejectionDataAvailableNotifierEndpoint(
             IAvailableDataNotifier<AvailableChargeLinksReceiptData, ChargeLinksRejectedEvent> availableDataNotifier,
-            JsonMessageDeserializer<ChargeLinksRejectedEvent> deserializer,
-            ILoggerFactory loggerFactory)
+            JsonMessageDeserializer<ChargeLinksRejectedEvent> deserializer)
         {
             _availableDataNotifier = availableDataNotifier;
             _deserializer = deserializer;
-            _logger = loggerFactory.CreateLogger(nameof(ChargeLinksRejectionDataAvailableNotifierEndpoint));
         }
 
         [Function(FunctionName)]
@@ -49,17 +45,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
             byte[] message)
         {
             var rejectedEvent = (ChargeLinksRejectedEvent)await _deserializer.FromBytesAsync(message).ConfigureAwait(false);
-            LogValidationErrors(rejectedEvent);
             await _availableDataNotifier.NotifyAsync(rejectedEvent).ConfigureAwait(false);
-        }
-
-        private void LogValidationErrors(ChargeLinksRejectedEvent rejectedEvent)
-        {
-            var errorMessage = ValidationErrorLogMessageBuilder.BuildErrorMessage(
-                rejectedEvent.ChargeLinksCommand.Document,
-                rejectedEvent.ValidationErrors);
-
-            _logger.LogError(errorMessage);
         }
     }
 }
