@@ -22,17 +22,16 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCreatedEvents
 {
     public class ChargeLinkCreatedEventFactory : IChargeLinkCreatedEventFactory
     {
-        public IReadOnlyCollection<ChargeLinkCreatedEvent> CreateEvents([NotNull] ChargeLinksCommand command)
+        public IReadOnlyCollection<ChargeLinkCreatedEvent> CreateEvents(ChargeLinksCommand command)
         {
-            return command.ChargeLinksOperations.Select(
-                chargeLinkDto => ChargeLinkCreatedEvent(command, chargeLinkDto)).ToList();
+            return command.ChargeLinksOperations.Select(ChargeLinkCreatedEvent).ToList();
         }
 
-        private static ChargeLinkCreatedEvent ChargeLinkCreatedEvent(ChargeLinksCommand command, ChargeLinkDto chargeLinkDto)
+        private static ChargeLinkCreatedEvent ChargeLinkCreatedEvent(ChargeLinkDto chargeLinkDto)
         {
             return new ChargeLinkCreatedEvent(
                 chargeLinkDto.OperationId,
-                command.MeteringPointId,
+                chargeLinkDto.MeteringPointId,
                 chargeLinkDto.SenderProvidedChargeId,
                 chargeLinkDto.ChargeType,
                 chargeLinkDto.ChargeOwner,

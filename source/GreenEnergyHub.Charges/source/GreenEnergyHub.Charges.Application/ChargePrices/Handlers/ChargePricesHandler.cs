@@ -22,29 +22,34 @@ using GreenEnergyHub.Charges.Domain.ChargeInformation;
 using GreenEnergyHub.Charges.Domain.ChargePrices;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Application.ChargePrices.Handlers
 {
     public class ChargePricesHandler : IChargePricesHandler
     {
-        private readonly IChargeCommandReceiptService _chargePriceReceiptService;
-        private readonly IInputValidator<ChargeCommand> _inputValidator;
+        private readonly IChargeCommandReceiptService _chargeCommandReceiptService;
+        private readonly IInputValidator<ChargeOperationDto> _inputValidator;
+        private readonly IBusinessValidator<ChargeOperationDto> _businessValidator;
         private readonly IChargeRepository _chargeInformationRepository;
         private readonly IChargePriceRepository _chargePriceRepository;
         private readonly IChargePriceFactory _chargePriceFactory;
         private readonly IUnitOfWork _unitOfWork;
 
         public ChargePricesHandler(
-            IChargeCommandReceiptService chargePriceReceiptService,
-            IInputValidator<ChargeCommand> inputValidator,
+            IChargeCommandReceiptService chargeCommandReceiptService,
+            IInputValidator<ChargeOperationDto> inputValidator,
+            IBusinessValidator<ChargeOperationDto> businessValidator,
             IChargeRepository chargeInformationRepository,
             IChargePriceRepository chargePriceRepository,
             IChargePriceFactory chargePriceFactory,
             IUnitOfWork unitOfWork)
         {
-            _chargePriceReceiptService = chargePriceReceiptService;
+            _chargeCommandReceiptService = chargeCommandReceiptService;
             _inputValidator = inputValidator;
+            _businessValidator = businessValidator;
             _chargeInformationRepository = chargeInformationRepository;
             _chargePriceRepository = chargePriceRepository;
             _chargePriceFactory = chargePriceFactory;
@@ -56,36 +61,78 @@ namespace GreenEnergyHub.Charges.Application.ChargePrices.Handlers
         {
             ArgumentNullException.ThrowIfNull(commandReceivedEvent);
 
-            var inputValidationResult = _inputValidator.Validate(commandReceivedEvent.Command);
+            var operationsToBeRejected = new List<ChargeOperationDto>();
+            var rejectionRules = new List<IValidationRule>();
+            var operationsToBeConfirmed = new List<ChargeOperationDto>();
 
-            if (inputValidationResult.IsFailed)
+            var operations = commandReceivedEvent.Command.ChargeOperations.ToArray();
+
+            for (var i = 0; i < operations.Length; i++)
             {
-                await _chargePriceReceiptService
-                    .RejectAsync(commandReceivedEvent.Command, inputValidationResult).ConfigureAwait(false);
-                return;
-            }
-
-            var acceptedOperations = new List<ChargeOperationDto>();
-
-            foreach (var operation in commandReceivedEvent.Command.ChargeOperations)
-            {
-                var chargeIdentifier = new ChargeIdentifier(operation.ChargeId, operation.ChargeOwner, operation.Type);
-                var chargeInformation = await _chargeInformationRepository.GetOrNullAsync(chargeIdentifier).ConfigureAwait(false);
+                var operation = operations[i];
+                var chargeInformation = await GetChargeAsync(operation).ConfigureAwait(false);
                 ArgumentNullException.ThrowIfNull(chargeInformation);
-                await HandlePricesFromChargePriceOperationAsync(chargeInformation.Id, operation).ConfigureAwait(false);
-                acceptedOperations.Add(operation);
+
+                var validationResult = _inputValidator.Validate(operation);
+                if (validationResult.IsFailed)
+                {
+                    operationsToBeRejected = operations[i..].ToList();
+                    rejectionRules.AddRange(validationResult.InvalidRules);
+                    rejectionRules.AddRange(operationsToBeRejected.Skip(1)
+                        .Select(toBeRejected => new PreviousOperationsMustBeValidRule(operation.Id, toBeRejected)));
+                    break;
+                }
+
+                validationResult = await _businessValidator.ValidateAsync(operation).ConfigureAwait(false);
+                if (validationResult.IsFailed)
+                {
+                    operationsToBeRejected = operations[i..].ToList();
+                    rejectionRules.AddRange(validationResult.InvalidRules);
+                    rejectionRules.AddRange(operationsToBeRejected.Skip(1)
+                        .Select(toBeRejected => new PreviousOperationsMustBeValidRule(operation.Id, toBeRejected)));
+                    break;
+                }
+
+                await HandlePricesFromChargePriceOperationAsync(chargeInformation.Id, operation)
+                    .ConfigureAwait(false);
+
+                operationsToBeConfirmed.Add(operation);
             }
 
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-
-            var acceptedChargeCommand = new ChargeCommand(
-                commandReceivedEvent.Command.Document,
-                acceptedOperations);
-            await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-            await _chargePriceReceiptService.AcceptAsync(acceptedChargeCommand).ConfigureAwait(false);
+            var document = commandReceivedEvent.Command.Document;
+            await RejectInvalidOperationsAsync(operationsToBeRejected, document, rejectionRules).ConfigureAwait(false);
+            await AcceptValidOperationsAsync(operationsToBeConfirmed, document).ConfigureAwait(false);
         }
 
-        private async Task HandlePricesFromChargePriceOperationAsync(Guid chargeInformationId, ChargeOperationDto operation)
+        private async Task RejectInvalidOperationsAsync(
+            IReadOnlyCollection<ChargeOperationDto> operationsToBeRejected,
+            DocumentDto document,
+            IList<IValidationRule> rejectionRules)
+        {
+            if (operationsToBeRejected.Any())
+            {
+                await _chargeCommandReceiptService.RejectAsync(
+                        new ChargeCommand(document, operationsToBeRejected),
+                        ValidationResult.CreateFailure(rejectionRules))
+                    .ConfigureAwait(false);
+            }
+        }
+
+        private async Task AcceptValidOperationsAsync(
+            IReadOnlyCollection<ChargeOperationDto> operationsToBeConfirmed,
+            DocumentDto document)
+        {
+            if (operationsToBeConfirmed.Any())
+            {
+                await _chargeCommandReceiptService.AcceptAsync(
+                    new ChargeCommand(document, operationsToBeConfirmed)).ConfigureAwait(false);
+            }
+        }
+
+        private async Task HandlePricesFromChargePriceOperationAsync(
+            Guid chargeInformationId,
+            ChargeOperationDto operation)
         {
             var chargePrices = await GetChargePriceAsync(chargeInformationId, operation).ConfigureAwait(false);
             _chargePriceRepository.RemoveRange(chargePrices);
@@ -109,6 +156,15 @@ namespace GreenEnergyHub.Charges.Application.ChargePrices.Handlers
                         chargeId,
                         startDate,
                         endDate).ConfigureAwait(false);
+        }
+
+        private async Task<Charge?> GetChargeAsync(ChargeOperationDto chargeOperationDto)
+        {
+            var chargeIdentifier = new ChargeIdentifier(
+                chargeOperationDto.ChargeId,
+                chargeOperationDto.ChargeOwner,
+                chargeOperationDto.Type);
+            return await _chargeInformationRepository.GetOrNullAsync(chargeIdentifier).ConfigureAwait(false);
         }
     }
 }

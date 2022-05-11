@@ -19,8 +19,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.CreateDefaultChargeLinksRequests
 {
     public class CreateDefaultChargeLinksRequest : IInboundMessage
     {
-        public CreateDefaultChargeLinksRequest(
-            string meteringPointId)
+        public CreateDefaultChargeLinksRequest(string meteringPointId)
         {
             MeteringPointId = meteringPointId;
             Transaction = Transaction.NewTransaction();

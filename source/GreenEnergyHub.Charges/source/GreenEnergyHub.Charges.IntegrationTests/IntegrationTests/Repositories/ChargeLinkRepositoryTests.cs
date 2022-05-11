@@ -59,7 +59,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             var sut = new ChargeLinksRepository(chargesDatabaseWriteContext);
 
             // Act
-            await sut.AddRangeAsync(new List<ChargeLink> { expected }).ConfigureAwait(false);
+            await sut.AddAsync(expected).ConfigureAwait(false);
             await chargesDatabaseWriteContext.SaveChangesAsync();
 
             // Assert
@@ -82,20 +82,18 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
             var seededChargeLink = CreateExpectedChargeLink(chargeLink, ids);
 
-            var chargeLinkList = new List<ChargeLink> { seededChargeLink };
-            await setupRepo.AddRangeAsync(chargeLinkList);
+            await setupRepo.AddAsync(seededChargeLink);
             await firstChargesContext.SaveChangesAsync();
 
             // Arrange copy
             await using var secondChargesContext = _databaseManager.CreateDbContext();
             var sut = new ChargeLinksRepository(secondChargesContext);
             var copyChargeLink = CreateExpectedChargeLink(chargeLink, ids);
-            var copyLinkList = new List<ChargeLink> { copyChargeLink };
 
             // Act
             Func<Task> act = async () =>
             {
-                await sut.AddRangeAsync(copyLinkList);
+                await sut.AddAsync(copyChargeLink);
                 await secondChargesContext.SaveChangesAsync();
             };
 

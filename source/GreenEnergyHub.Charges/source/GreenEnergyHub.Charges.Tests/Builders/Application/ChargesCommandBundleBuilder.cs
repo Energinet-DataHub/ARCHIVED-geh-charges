@@ -12,15 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Application.ChargeCommands.Handlers.Message
-{
-    public class ChargesMessageResult
-    {
-        public bool IsSucceeded { get; set; }
+using System.Collections.Generic;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 
-        public static ChargesMessageResult CreateSuccess()
+namespace GreenEnergyHub.Charges.Tests.Builders.Application
+{
+    public class ChargeCommandBundleBuilder
+    {
+        private readonly List<ChargeCommand> _chargeCommands = new();
+
+        public ChargeCommandBundleBuilder WithChargeCommand(ChargeCommand command)
         {
-            return new ChargesMessageResult { IsSucceeded = true };
+            _chargeCommands.Add(command);
+            return this;
+        }
+
+        public ChargeCommandBundle Build()
+        {
+            return new ChargeCommandBundle(_chargeCommands);
         }
     }
 }

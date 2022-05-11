@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using Energinet.DataHub.Core.SchemaValidation.Errors;
@@ -46,10 +47,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
             return httpResponse;
         }
 
-        public HttpResponseData CreateBadRequestWithErrorText(HttpRequestData request, string errorText)
+        public HttpResponseData CreateBadRequestB2BResponse(HttpRequestData request, B2BErrorCode code)
         {
             var httpResponse = request.CreateResponse(HttpStatusCode.BadRequest);
-            httpResponse.WriteString(errorText);
+            AddHeaders(httpResponse);
+            var errorMessage = B2BErrorMessageFactory.Create(code);
+            var unauthorizedRequest = errorMessage.WriteAsXmlString();
+            httpResponse.WriteString(unauthorizedRequest, Encoding.UTF8);
             return httpResponse;
         }
 

@@ -45,6 +45,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocumen
         {
             var hasReadRoot = false;
 
+            document.Sender.Id = string.Empty;
+            document.Recipient.Id = string.Empty;
+
             while (await reader.AdvanceAsync().ConfigureAwait(false))
             {
                 if (!hasReadRoot)
@@ -73,6 +76,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocumen
                 }
                 else if (reader.Is(CimMarketDocumentConstants.SenderId))
                 {
+                    if (!reader.CanReadValue) continue;
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                     document.Sender.Id = content;
                 }
@@ -83,6 +87,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocumen
                 }
                 else if (reader.Is(CimMarketDocumentConstants.RecipientId))
                 {
+                    if (!reader.CanReadValue) continue;
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                     document.Recipient.Id = content;
                 }

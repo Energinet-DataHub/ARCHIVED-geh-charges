@@ -20,7 +20,6 @@ using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData;
 using GreenEnergyHub.TestHelpers;
 using Moq;
@@ -67,8 +66,9 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
                     .Be(acceptedEvent.ChargeLinksCommand.Document.BusinessReasonCode);
                 actualList[i].RequestDateTime.Should().Be(now);
                 actualList[i].ReceiptStatus.Should().Be(ReceiptStatus.Confirmed);
+                actualList[i].DocumentType.Should().Be(DocumentType.ConfirmRequestChangeBillingMasterData);
                 actualList[i].OriginalOperationId.Should().Be(expectedLinks[i].OperationId);
-                actualList[i].MeteringPointId.Should().Be(acceptedEvent.ChargeLinksCommand.MeteringPointId);
+                actualList[i].MeteringPointId.Should().Be(expectedLinks[i].MeteringPointId);
                 actualList[i].ValidationErrors.Should().BeEmpty();
             }
         }

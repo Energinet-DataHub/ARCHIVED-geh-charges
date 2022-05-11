@@ -39,16 +39,16 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
             Type expectedRule,
             [Frozen] Mock<IMeteringPointRepository> repository,
             ChargeLinksCommandBusinessValidationRulesFactory sut,
-            ChargeLinksCommandBuilder builder)
+            ChargeLinkDtoBuilder builder)
         {
             // Arrange
-            var chargeLinksCommand = builder.Build();
+            var chargeLinkDto = builder.Build();
 
             MeteringPoint? meteringPoint = null;
-            SetupMeteringPointRepositoryMock(repository, chargeLinksCommand, meteringPoint);
+            SetupMeteringPointRepositoryMock(repository, chargeLinkDto, meteringPoint);
 
             // Act
-            var actual = await sut.CreateRulesAsync(chargeLinksCommand).ConfigureAwait(false);
+            var actual = await sut.CreateRulesAsync(chargeLinkDto).ConfigureAwait(false);
             var actualRules = actual.GetRules().Select(r => r.GetType());
 
             // Assert
@@ -64,20 +64,17 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
             [Frozen] Mock<IChargeRepository> chargeRepository,
             MeteringPoint meteringPoint,
             ChargeLinksCommandBusinessValidationRulesFactory sut,
-            ChargeLinksCommandBuilder linksCommandBuilder,
             ChargeLinkDtoBuilder linksBuilder)
         {
             // Arrange
             var link = linksBuilder.Build();
-            var links = new List<ChargeLinkDto> { link };
-            var chargeLinksCommand = linksCommandBuilder.WithChargeLinks(links).Build();
 
             Charge? charge = null;
             SetupChargeRepositoryMock(chargeRepository, charge);
-            SetupMeteringPointRepositoryMock(meteringPointRepository, chargeLinksCommand, meteringPoint);
+            SetupMeteringPointRepositoryMock(meteringPointRepository, link, meteringPoint);
 
             // Act
-            var actual = await sut.CreateRulesAsync(chargeLinksCommand).ConfigureAwait(false);
+            var actual = await sut.CreateRulesAsync(link).ConfigureAwait(false);
             var actualRules = actual.GetRules().Select(r => r.GetType());
 
             // Assert
@@ -95,19 +92,16 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
             MeteringPoint meteringPoint,
             Charge charge,
             ChargeLinksCommandBusinessValidationRulesFactory sut,
-            ChargeLinksCommandBuilder linksCommandBuilder,
             ChargeLinkDtoBuilder linksBuilder)
         {
             // Arrange
             var link = linksBuilder.Build();
-            var links = new List<ChargeLinkDto> { link };
-            var chargeLinksCommand = linksCommandBuilder.WithChargeLinks(links).Build();
 
             SetupChargeRepositoryMock(chargeRepository, charge);
-            SetupMeteringPointRepositoryMock(meteringPointRepository, chargeLinksCommand, meteringPoint);
+            SetupMeteringPointRepositoryMock(meteringPointRepository, link, meteringPoint);
 
             // Act
-            var actual = await sut.CreateRulesAsync(chargeLinksCommand).ConfigureAwait(false);
+            var actual = await sut.CreateRulesAsync(link).ConfigureAwait(false);
             var actualRules = actual.GetRules().Select(r => r.GetType());
 
             // Assert
@@ -121,11 +115,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
             ChargeLinksCommandBusinessValidationRulesFactory sut)
         {
             // Arrange
-            ChargeLinksCommand? command = null;
+            ChargeLinkDto? chargeLinkDto = null;
 
             // Act / Assert
             await Assert.ThrowsAsync<ArgumentNullException>(
-                    () => sut.CreateRulesAsync(command!))
+                    () => sut.CreateRulesAsync(chargeLinkDto!))
                 .ConfigureAwait(false);
         }
 
@@ -136,10 +130,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
 
         private static void SetupMeteringPointRepositoryMock(
             Mock<IMeteringPointRepository> repository,
-            ChargeLinksCommand chargeLinksCommand,
+            ChargeLinkDto chargeLinkDto,
             MeteringPoint? meteringPoint)
         {
-            repository.Setup(r => r.GetOrNullAsync(chargeLinksCommand.MeteringPointId)).ReturnsAsync(meteringPoint);
+            repository.Setup(r => r.GetOrNullAsync(chargeLinkDto.MeteringPointId)).ReturnsAsync(meteringPoint);
         }
     }
 }

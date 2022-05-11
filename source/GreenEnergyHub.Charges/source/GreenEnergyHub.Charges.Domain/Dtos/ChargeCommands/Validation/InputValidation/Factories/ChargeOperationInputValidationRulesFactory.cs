@@ -20,16 +20,12 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.Factories
 {
-    public class ChargeCommandInputValidationRulesFactory : IInputValidationRulesFactory<ChargeCommand>
+    public class ChargeOperationInputValidationRulesFactory : IInputValidationRulesFactory<ChargeOperationDto>
     {
-        public IValidationRuleSet CreateRulesForCommand(ChargeCommand chargeCommand)
+        public IValidationRuleSet CreateRules(ChargeOperationDto operation)
         {
-            ArgumentNullException.ThrowIfNull(chargeCommand);
-
-            var rules = chargeCommand.ChargeOperations
-                .SelectMany(GetRulesForOperation)
-                .ToList();
-
+            ArgumentNullException.ThrowIfNull(operation);
+            var rules = GetRulesForOperation(operation).ToList();
             return ValidationRuleSet.FromRules(rules);
         }
 

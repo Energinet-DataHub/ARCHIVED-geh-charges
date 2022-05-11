@@ -14,6 +14,7 @@
 
 using Energinet.DataHub.Core.Messaging.Transport.SchemaValidation;
 using GreenEnergyHub.Charges.Application.ChargeCommands.Handlers;
+using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.FunctionHost.Common;
@@ -36,7 +37,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IChargeCommandConverter, ChargeCommandConverter>();
             serviceCollection.AddScoped<SchemaValidatingMessageDeserializer<ChargeCommandBundle>, ChargeCommandDeserializer>();
 
-            serviceCollection.AddScoped<IChargesMessageHandler, ChargesMessageHandler>();
+            serviceCollection.AddScoped<IChargesBundleHandler, ChargeCommandBundleHandler>();
             serviceCollection.AddScoped<IChargeCommandHandler, ChargeCommandHandler>();
 
             serviceCollection.AddMessaging()

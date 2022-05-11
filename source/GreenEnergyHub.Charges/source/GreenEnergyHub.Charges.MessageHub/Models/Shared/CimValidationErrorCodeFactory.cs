@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.Shared
                 ValidationRuleIdentifier.ChargeIdLengthValidation => ReasonCode.E86,
                 ValidationRuleIdentifier.ChargeIdRequiredValidation => ReasonCode.E0H,
                 ValidationRuleIdentifier.DocumentTypeMustBeRequestChangeOfPriceList => ReasonCode.D02,
-                ValidationRuleIdentifier.BusinessReasonCodeMustBeUpdateChargeInformation => ReasonCode.D02,
+                ValidationRuleIdentifier.BusinessReasonCodeMustBeUpdateChargeInformationOrChargePrices => ReasonCode.D02,
                 ValidationRuleIdentifier.ChargeTypeIsKnownValidation => ReasonCode.E86,
                 ValidationRuleIdentifier.VatClassificationValidation => ReasonCode.E86,
                 ValidationRuleIdentifier.ResolutionTariffValidation => ReasonCode.D23,

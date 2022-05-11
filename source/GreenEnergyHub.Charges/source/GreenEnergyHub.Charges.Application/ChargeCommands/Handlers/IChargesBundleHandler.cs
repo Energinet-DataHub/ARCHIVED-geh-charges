@@ -12,27 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using GreenEnergyHub.Charges.Application.ChargeCommands.Handlers.Message;
+using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 
-namespace GreenEnergyHub.Charges.Tests.Builders.Application
+namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
-    public class ChargesMessageBuilder
+    /// <summary>
+    /// Contract for handling a charge bundle.
+    /// </summary>
+    public interface IChargesBundleHandler
     {
-        private readonly List<ChargeCommand> _transactions = new();
-
-        public ChargesMessageBuilder WithTransaction(ChargeCommand command)
-        {
-            _transactions.Add(command);
-            return this;
-        }
-
-        public ChargesMessage Build()
-        {
-            var changeOfChargesMessage = new ChargesMessage();
-            changeOfChargesMessage.ChargeCommands.AddRange(_transactions);
-            return changeOfChargesMessage;
-        }
+        /// <summary>
+        /// Synchronously handle the bundle.
+        /// </summary>
+        /// <param name="bundle">Charges bundle</param>
+        Task HandleAsync(ChargeCommandBundle bundle);
     }
 }

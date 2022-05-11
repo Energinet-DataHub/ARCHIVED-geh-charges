@@ -57,7 +57,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeL
             // Assert
             var result = resultBundle.ChargeLinksCommands.Single();
             var chargeLink = result.ChargeLinksOperations.First();
-            result.MeteringPointId.Should().Be("578032999778756222");
+            chargeLink.MeteringPointId.Should().Be("578032999778756222");
 
             // Document
             result.Document.Id.Should().Be("DocId_Valid_001");

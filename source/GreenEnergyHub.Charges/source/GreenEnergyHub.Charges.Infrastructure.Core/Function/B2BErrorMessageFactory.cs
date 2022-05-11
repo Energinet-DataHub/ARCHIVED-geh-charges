@@ -12,20 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using Energinet.DataHub.Core.SchemaValidation.Errors;
-using Microsoft.Azure.Functions.Worker.Http;
+using System.ComponentModel;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
 {
-    public interface IHttpResponseBuilder
+    public static class B2BErrorMessageFactory
     {
-        HttpResponseData CreateAcceptedResponse(HttpRequestData request);
+        public static B2BErrorMessage Create(B2BErrorCode code)
+        {
+            return code switch
+            {
+                B2BErrorCode.ActorIsNotWhoTheyClaimToBeErrorMessage =>
+                    new B2BErrorMessage(
+                        "B2B-008",
+                        "The sender organization provided in the request body does not match the organization in the bearer token."),
 
-        Task<HttpResponseData> CreateBadRequestResponseAsync(
-            HttpRequestData request,
-            ErrorResponse errorResponse);
-
-        HttpResponseData CreateBadRequestB2BResponse(HttpRequestData request, B2BErrorCode code);
+                _ =>
+                    throw new InvalidEnumArgumentException($"Provided B2B error code '{code}' is invalid and cannot be mapped."),
+            };
+        }
     }
 }

@@ -24,29 +24,40 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.DocumentValidation.ValidationRules
 {
     [UnitTest]
-    public class BusinessReasonCodeMustBeUpdateChargeInformationRuleTests
+    public class BusinessReasonCodeMustBeUpdateChargeInformationOrChargePricesRuleTests
     {
         [Theory]
         [InlineAutoMoqData(BusinessReasonCode.Unknown, false)]
         [InlineAutoMoqData(BusinessReasonCode.UpdateChargeInformation, true)]
+        [InlineAutoMoqData(BusinessReasonCode.UpdateChargePrices, true)]
         [InlineAutoMoqData(-1, false)]
         public void BusinessReasonCodeMustBeUpdateChargeInformation_Test(
             BusinessReasonCode businessReasonCode,
             bool expected)
         {
+            // Arrange
             var documentDto = new DocumentDtoBuilder().WithBusinessReasonCode(businessReasonCode).Build();
             var chargeCommand = new ChargeCommandBuilder().WithDocumentDto(documentDto).Build();
-            var sut = new BusinessReasonCodeMustBeUpdateChargeInformationRule(chargeCommand.Document);
+
+            // Act
+            var sut = new BusinessReasonCodeMustBeUpdateChargeInformationOrChargePricesRule(chargeCommand.Document);
+
+            // Assert
             sut.IsValid.Should().Be(expected);
         }
 
         [Fact]
         public void ValidationRuleIdentifier_ShouldBe_EqualTo()
         {
+            // Arrange
             var documentDto = new DocumentDtoBuilder().WithBusinessReasonCode(BusinessReasonCode.Unknown).Build();
             var chargeCommand = new ChargeCommandBuilder().WithDocumentDto(documentDto).Build();
-            var sut = new BusinessReasonCodeMustBeUpdateChargeInformationRule(chargeCommand.Document);
-            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.BusinessReasonCodeMustBeUpdateChargeInformation);
+
+            // Act
+            var sut = new BusinessReasonCodeMustBeUpdateChargeInformationOrChargePricesRule(chargeCommand.Document);
+
+            // Assert
+            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.BusinessReasonCodeMustBeUpdateChargeInformationOrChargePrices);
         }
     }
 }

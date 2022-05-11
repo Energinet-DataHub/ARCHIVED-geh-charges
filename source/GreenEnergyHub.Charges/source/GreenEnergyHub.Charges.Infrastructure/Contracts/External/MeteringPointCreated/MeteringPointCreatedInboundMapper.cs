@@ -14,7 +14,6 @@
 
 using System;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using Energinet.DataHub.Core.Messaging.Protobuf;
 using Energinet.DataHub.Core.Messaging.Transport;
 using GreenEnergyHub.Charges.Core.DateTime;
@@ -72,7 +71,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Contracts.External.MeteringPoint
                     $"Provided MeteringPointType value '{meteringPointType}' is invalid and cannot be mapped."),
         };
 
-        protected override IInboundMessage Convert([NotNull] Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated meteringPointCreated)
+        protected override IInboundMessage Convert(Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated meteringPointCreated)
         {
             var settlementMethod = MapSettlementMethod(meteringPointCreated.SettlementMethod);
             var connectionState = MapConnectionState(meteringPointCreated.ConnectionState);

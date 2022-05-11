@@ -31,6 +31,15 @@ namespace GreenEnergyHub.Charges.Domain.ChargePrices
             Price = price;
         }
 
+        /// <summary>
+        /// Minimal ctor to support EF Core.
+        /// </summary>
+        // ReSharper disable once UnusedMember.Local - used by EF Core
+        private ChargePrice()
+        {
+            ChargeId = Guid.Empty;
+        }
+
         public Guid Id { get; }
 
         public Guid ChargeId { get; }

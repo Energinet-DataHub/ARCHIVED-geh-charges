@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Linq;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksDataAvailableNotifiedEvents
 {
@@ -20,9 +22,19 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksDataAvailableNotifiedEve
     {
         public ChargeLinksDataAvailableNotifiedEvent Create(ChargeLinksAcceptedEvent chargeLinksAcceptedEvent)
         {
-            return new ChargeLinksDataAvailableNotifiedEvent(
-                chargeLinksAcceptedEvent.PublishedTime,
-                chargeLinksAcceptedEvent.ChargeLinksCommand.MeteringPointId);
+            var meteringPointId = GetMeteringPointIdFromFirstChargeLinkDto(chargeLinksAcceptedEvent);
+            return new ChargeLinksDataAvailableNotifiedEvent(chargeLinksAcceptedEvent.PublishedTime, meteringPointId);
+        }
+
+        /// <summary>
+        /// Charge links received through ChargeLinksIngestion will only contain a single
+        /// <see cref="ChargeLinkDto"/> and for charge links created from default charge links we only
+        /// notify once, hence we can get meteringPointId from the first <see cref="ChargeLinkDto"/>.
+        /// </summary>
+        /// <param name="chargeLinksAcceptedEvent"></param>
+        private static string GetMeteringPointIdFromFirstChargeLinkDto(ChargeLinksAcceptedEvent chargeLinksAcceptedEvent)
+        {
+            return chargeLinksAcceptedEvent.ChargeLinksCommand.ChargeLinksOperations.First().MeteringPointId;
         }
     }
 }

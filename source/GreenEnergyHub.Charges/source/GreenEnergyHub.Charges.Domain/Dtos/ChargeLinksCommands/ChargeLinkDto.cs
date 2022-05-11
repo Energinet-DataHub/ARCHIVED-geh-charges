@@ -24,6 +24,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
     {
         public ChargeLinkDto(
             string operationId,
+            string meteringPointId,
             Instant startDateTime,
             Instant? endDateTime,
             string senderProvidedChargeId,
@@ -32,6 +33,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
             ChargeType chargeType)
         {
             OperationId = operationId;
+            MeteringPointId = meteringPointId;
             StartDateTime = startDateTime;
             EndDateTime = endDateTime;
             SenderProvidedChargeId = senderProvidedChargeId;
@@ -45,6 +47,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
         /// Combined with sender.id it becomes unique.
         /// </summary>
         public string OperationId { get; }
+
+        public string MeteringPointId { get; }
 
         public Instant StartDateTime { get; }
 
