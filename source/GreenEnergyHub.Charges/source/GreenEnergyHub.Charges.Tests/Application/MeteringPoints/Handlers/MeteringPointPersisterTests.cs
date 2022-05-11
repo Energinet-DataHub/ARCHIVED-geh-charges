@@ -54,7 +54,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
             // Assert
             meteringPointRepository.Verify(v => v.AddAsync(It.IsAny<MeteringPoint>()), Times.Exactly(1));
             logger.VerifyLoggerWasCalled(
-                $"Metering Point ID '{meteringPointCreatedEvent.MeteringPointId}' has been persisted",
+                $"Metering point persisted: Metering Point ID '{meteringPointCreatedEvent.MeteringPointId}' has been persisted",
                 LogLevel.Information);
         }
 
@@ -84,7 +84,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
             meteringPointRepository
                 .Verify(v => v.AddAsync(It.IsAny<MeteringPoint>()), Times.Never());
             logger.VerifyLoggerWasCalled(
-                $"Metering Point ID '{meteringPointCreatedEvent.MeteringPointId}' already exists in storage",
+                $"Metering point already exists: Metering Point ID '{meteringPointCreatedEvent.MeteringPointId}' already exists in storage",
                 LogLevel.Information);
         }
 
@@ -119,16 +119,19 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
 
             // Assert
             logger.VerifyLoggerWasCalled(
+                $"MeteringPointType cannot be changed: " +
                 $"Received 'metering point type' event data '{meteringPoint.MeteringPointType}' was not equal to " +
                 $"the already persisted value '{existingMeteringPoint.MeteringPointType}' for Metering Point ID " +
                 $"'{meteringPoint.MeteringPointId}'",
                 LogLevel.Error);
             logger.VerifyLoggerWasCalled(
+                $"Settlement method cannot be changed: " +
                 $"Received 'settlement method' event data '{meteringPoint.SettlementMethod}' was not equal to the " +
                 $"already persisted value '{existingMeteringPoint.SettlementMethod}' for Metering Point ID " +
                 $"'{meteringPoint.MeteringPointId}'",
                 LogLevel.Error);
             logger.VerifyLoggerWasCalled(
+                $"GridAreaLinkId cannot be changed: " +
                 $"Received 'grid area link id' event data '{meteringPoint.GridAreaLinkId}' was not equal to the " +
                 $"already persisted value '{existingMeteringPoint.GridAreaLinkId}' for Metering Point ID " +
                 $"'{meteringPoint.MeteringPointId}'",
