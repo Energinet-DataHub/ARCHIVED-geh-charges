@@ -24,7 +24,7 @@ using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.FunctionHost.Common
+namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared
 {
     [UnitTest]
     public class ValidationErrorLogMessageBuilderTests
