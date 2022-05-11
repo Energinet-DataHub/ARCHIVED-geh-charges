@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
 
         public virtual DbSet<ChargePeriod> ChargePeriods { get; set; }
 
-        public virtual DbSet<ChargePrice> ChargePoints { get; set; }
+        public virtual DbSet<ChargePrice> ChargePrices { get; set; }
 
         public virtual DbSet<DefaultChargeLink> DefaultChargeLinks { get; set; }
 

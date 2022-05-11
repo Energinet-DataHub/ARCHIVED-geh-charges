@@ -86,7 +86,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V2
             var actual = Deserialize<List<ChargeLinkV2Dto>>(jsonString);
 
             actual.Should().BeInAscendingOrder(c => c.ChargeType)
-                .And.ThenBeInAscendingOrder(c => c.ChargeInformationId)
+                .And.ThenBeInAscendingOrder(c => c.ChargeId)
                 .And.ThenBeInDescendingOrder(c => c.StartDate);
         }
 

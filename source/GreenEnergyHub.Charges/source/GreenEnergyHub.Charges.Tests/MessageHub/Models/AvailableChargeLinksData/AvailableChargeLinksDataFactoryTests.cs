@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinksDat
         public async Task CreateAsync_WhenTaxCharges_ReturnsAvailableData(
             TestMeteringPointAdministrator meteringPointAdministrator,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            [Frozen] Mock<IChargeRepository> chargeRepository,
+            [Frozen] Mock<IChargeInformationRepository> chargeRepository,
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             ChargeLinksAcceptedEvent acceptedEvent,
             ChargeInformation chargeInformation,
@@ -90,7 +90,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinksDat
         public async Task CreateAsync_WhenNotTaxCharges_ReturnsEmptyList(
             TestMeteringPointAdministrator meteringPointAdministrator,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            [Frozen] Mock<IChargeRepository> chargeRepository,
+            [Frozen] Mock<IChargeInformationRepository> chargeRepository,
             ChargeLinksAcceptedEvent acceptedEvent,
             ChargeInformation chargeInformation,
             TestGridAccessProvider gridAccessProvider,

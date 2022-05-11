@@ -24,14 +24,14 @@ namespace GreenEnergyHub.Charges.Application.ChargePrices.Acknowledgement
     public class ChargePricesUpdatedEvent : IMessage
     {
         public ChargePricesUpdatedEvent(
-            string chargeInformationId,
+            string chargeId,
             ChargeType chargeType,
             string chargeOwner,
             Instant updatePeriodStartDate,
             Instant updatePeriodEndDate,
             List<Point> points)
         {
-            ChargeInformationId = chargeInformationId;
+            ChargeId = chargeId;
             ChargeType = chargeType;
             ChargeOwner = chargeOwner;
             UpdatePeriodStartDate = updatePeriodStartDate;
@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.Application.ChargePrices.Acknowledgement
             Transaction = Transaction.NewTransaction();
         }
 
-        public string ChargeInformationId { get; }
+        public string ChargeId { get; }
 
         public ChargeType ChargeType { get; }
 

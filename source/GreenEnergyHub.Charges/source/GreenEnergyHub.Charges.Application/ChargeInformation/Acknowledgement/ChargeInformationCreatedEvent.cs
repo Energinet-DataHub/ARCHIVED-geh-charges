@@ -22,7 +22,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeInformation.Acknowledgement
     public class ChargeInformationCreatedEvent : IMessage
     {
         public ChargeInformationCreatedEvent(
-            string chargeInformationId,
+            string chargeId,
             ChargeType chargeType,
             string chargeOwner,
             string currency,
@@ -31,7 +31,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeInformation.Acknowledgement
             Instant startDateTime,
             Instant endDateTime)
         {
-            ChargeInformationId = chargeInformationId;
+            ChargeId = chargeId;
             ChargeType = chargeType;
             ChargeOwner = chargeOwner;
             Currency = currency;
@@ -42,7 +42,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeInformation.Acknowledgement
             Transaction = Transaction.NewTransaction();
         }
 
-        public string ChargeInformationId { get; }
+        public string ChargeId { get; }
 
         public ChargeType ChargeType { get; }
 

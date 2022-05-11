@@ -21,7 +21,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
 {
-    public class ChargeInformationRepository : IChargeRepository
+    public class ChargeInformationRepository : IChargeInformationRepository
     {
         private readonly IChargesDatabaseContext _chargesDatabaseContext;
 

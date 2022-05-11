@@ -61,7 +61,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
         public async Task CreateRulesForChargeCommandAsync_WhenChargeDoesNotExistForLinks_ReturnsExpectedMandatoryRules(
             Type expectedRule,
             [Frozen] Mock<IMeteringPointRepository> meteringPointRepository,
-            [Frozen] Mock<IChargeRepository> chargeRepository,
+            [Frozen] Mock<IChargeInformationRepository> chargeRepository,
             MeteringPoint meteringPoint,
             ChargeLinksCommandBusinessValidationRulesFactory sut,
             ChargeLinkDtoBuilder linksBuilder)
@@ -88,7 +88,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
         public async Task CreateRulesForChargeCommandAsync_WhenChargeDoesExist_ReturnsExpectedMandatoryRulesForSingleChargeLinks(
             Type expectedRule,
             [Frozen] Mock<IMeteringPointRepository> meteringPointRepository,
-            [Frozen] Mock<IChargeRepository> chargeRepository,
+            [Frozen] Mock<IChargeInformationRepository> chargeRepository,
             MeteringPoint meteringPoint,
             ChargeInformation chargeInformation,
             ChargeLinksCommandBusinessValidationRulesFactory sut,
@@ -123,7 +123,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
                 .ConfigureAwait(false);
         }
 
-        private static void SetupChargeRepositoryMock(Mock<IChargeRepository> chargeRepository, ChargeInformation? charge)
+        private static void SetupChargeRepositoryMock(Mock<IChargeInformationRepository> chargeRepository, ChargeInformation? charge)
         {
             chargeRepository.Setup(r => r.GetOrNullAsync(It.IsAny<ChargeInformationIdentifier>())).ReturnsAsync(charge);
         }

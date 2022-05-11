@@ -87,7 +87,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
                 GetJsonSerializerOptions());
 
             actual.Should().BeInAscendingOrder(c => c.ChargeType)
-                .And.ThenBeInAscendingOrder(c => c.ChargeInformationId)
+                .And.ThenBeInAscendingOrder(c => c.ChargeId)
                 .And.ThenBeInDescendingOrder(c => c.StartDate);
         }
 

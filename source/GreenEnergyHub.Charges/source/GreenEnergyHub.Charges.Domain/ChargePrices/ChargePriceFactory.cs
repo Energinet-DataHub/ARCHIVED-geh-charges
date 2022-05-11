@@ -21,17 +21,17 @@ namespace GreenEnergyHub.Charges.Domain.ChargePrices
 {
     public class ChargePriceFactory : IChargePriceFactory
     {
-        private readonly IChargeRepository _chargeInformationRepository;
+        private readonly IChargeInformationRepository _chargeInformationInformationRepository;
 
-        public ChargePriceFactory(IChargeRepository chargeInformationRepository)
+        public ChargePriceFactory(IChargeInformationRepository chargeInformationInformationRepository)
         {
-            _chargeInformationRepository = chargeInformationRepository;
+            _chargeInformationInformationRepository = chargeInformationInformationRepository;
         }
 
         public async Task<ChargePrice> CreateFromChargeOperationDtoAsync(ChargeOperationDto operation, Point point)
         {
             var chargeIdentifier = new ChargeInformationIdentifier(operation.ChargeInformationId, operation.ChargeOwner, operation.Type);
-            var chargeInformation = await _chargeInformationRepository.GetOrNullAsync(chargeIdentifier).ConfigureAwait(false);
+            var chargeInformation = await _chargeInformationInformationRepository.GetOrNullAsync(chargeIdentifier).ConfigureAwait(false);
             ArgumentNullException.ThrowIfNull(chargeInformation);
             return new ChargePrice(
                 Guid.NewGuid(),

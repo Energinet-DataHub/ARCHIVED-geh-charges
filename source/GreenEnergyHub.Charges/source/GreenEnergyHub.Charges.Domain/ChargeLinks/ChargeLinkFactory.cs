@@ -23,12 +23,12 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
 {
     public class ChargeLinkFactory : IChargeLinkFactory
     {
-        private readonly IChargeRepository _chargeRepository;
+        private readonly IChargeInformationRepository _chargeInformationRepository;
         private readonly IMeteringPointRepository _meteringPointRepository;
 
-        public ChargeLinkFactory(IChargeRepository chargeRepository, IMeteringPointRepository meteringPointRepository)
+        public ChargeLinkFactory(IChargeInformationRepository chargeInformationRepository, IMeteringPointRepository meteringPointRepository)
         {
-            _chargeRepository = chargeRepository;
+            _chargeInformationRepository = chargeInformationRepository;
             _meteringPointRepository = meteringPointRepository;
         }
 
@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
             ArgumentNullException.ThrowIfNull(dto);
 
             var chargeIdentifier = new ChargeInformationIdentifier(dto.SenderProvidedChargeId, dto.ChargeOwner, dto.ChargeType);
-            var charge = await _chargeRepository.GetAsync(chargeIdentifier).ConfigureAwait(false);
+            var charge = await _chargeInformationRepository.GetAsync(chargeIdentifier).ConfigureAwait(false);
 
             var meteringPoint = await _meteringPointRepository
                 .GetMeteringPointAsync(dto.MeteringPointId)

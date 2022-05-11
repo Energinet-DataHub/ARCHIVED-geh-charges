@@ -22,7 +22,7 @@ namespace Energinet.Charges.Contracts.ChargeLink
     /// Represents a Charge Link
     /// </summary>
     /// <param name="ChargeType">The type of charge; tariff, fee or subscription</param>
-    /// <param name="ChargeInformationId">A charge identifier provided by the market participant. Combined with charge owner and charge type it becomes unique</param>
+    /// <param name="ChargeId">A charge identifier provided by the market participant. Combined with charge owner and charge type it becomes unique</param>
     /// <param name="ChargeName">Charge name provided by the market participant.</param>
     /// <param name="ChargeOwnerId">The UUID of the actor owned by the market participant domain.</param>
     /// <param name="TaxIndicator">Indicates whether a tariff is considered a tax or not</param>
@@ -32,7 +32,7 @@ namespace Energinet.Charges.Contracts.ChargeLink
     /// <param name="EndDate">The charge link's end date time in UTC</param>
     public record ChargeLinkV2Dto(
         ChargeType ChargeType,
-        string ChargeInformationId,
+        string ChargeId,
         string ChargeName,
         Guid ChargeOwnerId,
         bool TaxIndicator,

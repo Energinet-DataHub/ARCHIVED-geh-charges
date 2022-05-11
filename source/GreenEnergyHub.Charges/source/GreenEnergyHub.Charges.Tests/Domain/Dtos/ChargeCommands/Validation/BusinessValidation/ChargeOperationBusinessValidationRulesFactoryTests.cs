@@ -47,7 +47,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             Type expectedRule,
             TestMarketParticipant sender,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            [Frozen] Mock<IChargeRepository> repository,
+            [Frozen] Mock<IChargeInformationRepository> repository,
             [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
             ChargeOperationBusinessValidationRulesFactory sut,
             ChargeOperationDtoBuilder builder)
@@ -82,7 +82,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             Type expectedRule,
             TestMarketParticipant sender,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            [Frozen] Mock<IChargeRepository> chargeRepository,
+            [Frozen] Mock<IChargeInformationRepository> chargeRepository,
             [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
             ChargeOperationBusinessValidationRulesFactory sut,
             ChargeInformation chargeInformation)
@@ -111,7 +111,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             Type expectedRule,
             TestMarketParticipant sender,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            [Frozen] Mock<IChargeRepository> chargeRepository,
+            [Frozen] Mock<IChargeInformationRepository> chargeRepository,
             [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
             ChargeOperationBusinessValidationRulesFactory sut,
             ChargeInformation chargeInformation)
@@ -151,7 +151,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         public async Task CreateRulesAsync_WithChargeCommandAllRulesThatNeedTriggeredByForErrorMessage_MustImplementIValidationRuleWithExtendedData(
             CimValidationErrorTextToken cimValidationErrorTextToken,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            [Frozen] Mock<IChargeRepository> chargeRepository,
+            [Frozen] Mock<IChargeInformationRepository> chargeRepository,
             [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
             ChargeOperationBusinessValidationRulesFactory sut,
             TestMarketParticipant sender,
@@ -223,7 +223,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
                 .ReturnsAsync(sender);
         }
 
-        private static void SetupChargeRepositoryMock(Mock<IChargeRepository> chargeRepository, ChargeInformation chargeInformation)
+        private static void SetupChargeRepositoryMock(Mock<IChargeInformationRepository> chargeRepository, ChargeInformation chargeInformation)
         {
             chargeRepository
                 .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeInformationIdentifier>()))

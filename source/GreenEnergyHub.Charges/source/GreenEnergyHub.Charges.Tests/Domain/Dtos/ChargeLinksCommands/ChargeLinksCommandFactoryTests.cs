@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands
         [Theory]
         [InlineAutoMoqData]
         public async Task WhenCreateIsCalled_WithDefaultChargeLinkAndCreateLinkCommandEvent_NewChargeLinkCommandIsCreated(
-            [Frozen] Mock<IChargeRepository> chargeRepository,
+            [Frozen] Mock<IChargeInformationRepository> chargeRepository,
             [Frozen] Mock<IMeteringPointRepository> meteringPointRepository,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             TestMeteringPointAdministrator recipient,

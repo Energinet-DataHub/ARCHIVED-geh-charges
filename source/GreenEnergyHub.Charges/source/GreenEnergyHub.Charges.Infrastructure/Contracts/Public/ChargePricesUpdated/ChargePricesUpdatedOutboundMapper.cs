@@ -28,7 +28,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Contracts.Public.ChargePricesUpd
         {
             var chargePricesUpdatedContract = new Integration.ChargeConfirmation.ChargePricesUpdated
             {
-                ChargeInformationId = chargePricesUpdatedEvent.ChargeInformationId,
+                ChargeId = chargePricesUpdatedEvent.ChargeId,
                 ChargeOwner = chargePricesUpdatedEvent.ChargeOwner,
                 ChargeType = chargePricesUpdatedEvent.ChargeType.Cast<Integration.ChargeConfirmation.ChargePricesUpdated.Types.ChargeType>(),
                 UpdatePeriodStartDate = chargePricesUpdatedEvent.UpdatePeriodStartDate.ToTimestamp(),

@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.ChargeLinks
             ChargeLinkDto chargeLinkDto,
             ChargeInformation expectedChargeInformation,
             MeteringPoint expectedMeteringPoint,
-            [Frozen] Mock<IChargeRepository> chargeRepository,
+            [Frozen] Mock<IChargeInformationRepository> chargeRepository,
             [Frozen] Mock<IMeteringPointRepository> meteringPointRepository,
             ChargeLinkFactory sut)
         {

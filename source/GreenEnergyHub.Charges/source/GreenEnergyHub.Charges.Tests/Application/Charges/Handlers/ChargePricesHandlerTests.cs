@@ -54,7 +54,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             [Frozen] Mock<IBusinessValidator<ChargeOperationDto>> businessValidator,
             [Frozen] Mock<IChargeCommandReceiptService> receiptService,
             [Frozen] Mock<IChargePriceRepository> chargePriceRepository,
-            [Frozen] Mock<IChargeRepository> chargeRepository,
+            [Frozen] Mock<IChargeInformationRepository> chargeRepository,
             [Frozen] Mock<IChargePriceFactory> chargePriceFactory,
             ChargePriceBuilder chargePriceBuilder,
             ChargeBuilder chargeBuilder,
@@ -90,7 +90,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             [Frozen] Mock<IInputValidator<ChargeOperationDto>> inputValidator,
             [Frozen] Mock<IBusinessValidator<ChargeOperationDto>> businessValidator,
             [Frozen] Mock<IChargeCommandReceiptService> receiptService,
-            [Frozen] Mock<IChargeRepository> chargeRepository,
+            [Frozen] Mock<IChargeInformationRepository> chargeRepository,
             ChargeBuilder chargeBuilder,
             ChargeCommandReceivedEvent receivedEvent,
             ChargePricesHandler sut)
@@ -131,7 +131,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         public async Task HandleAsync_WhenPriceSeriesWithResolutionPT1H_StoreSeriesAndConfirmCommand(
             [Frozen] Mock<IInputValidator<ChargeOperationDto>> inputValidator,
             [Frozen] Mock<IBusinessValidator<ChargeOperationDto>> businessValidator,
-            [Frozen] Mock<IChargeRepository> chargeRepository,
+            [Frozen] Mock<IChargeInformationRepository> chargeRepository,
             [Frozen] Mock<IChargePriceRepository> chargePriceRepository,
             [Frozen] Mock<IChargePriceFactory> chargePriceFactory,
             ChargeBuilder chargeBuilder,
@@ -160,7 +160,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 
         private static void SetupRepositories(
             [Frozen] Mock<IChargePriceRepository> chargePriceRepository,
-            [Frozen] Mock<IChargeRepository> chargeRepository,
+            [Frozen] Mock<IChargeInformationRepository> chargeRepository,
             ChargeBuilder chargeBuilder)
         {
             chargePriceRepository

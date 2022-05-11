@@ -26,19 +26,19 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
 {
     public class ChargeOperationBusinessValidationRulesFactory : IBusinessValidationRulesFactory<ChargeOperationDto>
     {
-        private readonly IChargeRepository _chargeRepository;
+        private readonly IChargeInformationRepository _chargeInformationRepository;
         private readonly IClock _clock;
         private readonly IRulesConfigurationRepository _rulesConfigurationRepository;
         private readonly IZonedDateTimeService _zonedDateTimeService;
 
         public ChargeOperationBusinessValidationRulesFactory(
             IRulesConfigurationRepository rulesConfigurationRepository,
-            IChargeRepository chargeRepository,
+            IChargeInformationRepository chargeInformationRepository,
             IZonedDateTimeService zonedDateTimeService,
             IClock clock)
         {
             _rulesConfigurationRepository = rulesConfigurationRepository;
-            _chargeRepository = chargeRepository;
+            _chargeInformationRepository = chargeInformationRepository;
             _zonedDateTimeService = zonedDateTimeService;
             _clock = clock;
         }
@@ -113,7 +113,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
                 chargeOperationDto.ChargeOwner,
                 chargeOperationDto.Type);
 
-            return _chargeRepository.GetOrNullAsync(chargeIdentifier);
+            return _chargeInformationRepository.GetOrNullAsync(chargeIdentifier);
         }
     }
 }

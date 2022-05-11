@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.Application.ChargePrices.Handlers
         private readonly IChargeCommandReceiptService _chargeCommandReceiptService;
         private readonly IInputValidator<ChargeOperationDto> _inputValidator;
         private readonly IBusinessValidator<ChargeOperationDto> _businessValidator;
-        private readonly IChargeRepository _chargeInformationRepository;
+        private readonly IChargeInformationRepository _chargeInformationInformationRepository;
         private readonly IChargePriceRepository _chargePriceRepository;
         private readonly IChargePriceFactory _chargePriceFactory;
         private readonly IUnitOfWork _unitOfWork;
@@ -42,7 +42,7 @@ namespace GreenEnergyHub.Charges.Application.ChargePrices.Handlers
             IChargeCommandReceiptService chargeCommandReceiptService,
             IInputValidator<ChargeOperationDto> inputValidator,
             IBusinessValidator<ChargeOperationDto> businessValidator,
-            IChargeRepository chargeInformationRepository,
+            IChargeInformationRepository chargeInformationInformationRepository,
             IChargePriceRepository chargePriceRepository,
             IChargePriceFactory chargePriceFactory,
             IUnitOfWork unitOfWork)
@@ -50,7 +50,7 @@ namespace GreenEnergyHub.Charges.Application.ChargePrices.Handlers
             _chargeCommandReceiptService = chargeCommandReceiptService;
             _inputValidator = inputValidator;
             _businessValidator = businessValidator;
-            _chargeInformationRepository = chargeInformationRepository;
+            _chargeInformationInformationRepository = chargeInformationInformationRepository;
             _chargePriceRepository = chargePriceRepository;
             _chargePriceFactory = chargePriceFactory;
             _unitOfWork = unitOfWork;
@@ -164,7 +164,7 @@ namespace GreenEnergyHub.Charges.Application.ChargePrices.Handlers
                 chargeOperationDto.ChargeInformationId,
                 chargeOperationDto.ChargeOwner,
                 chargeOperationDto.Type);
-            return await _chargeInformationRepository.GetOrNullAsync(chargeIdentifier).ConfigureAwait(false);
+            return await _chargeInformationInformationRepository.GetOrNullAsync(chargeIdentifier).ConfigureAwait(false);
         }
     }
 }

@@ -47,7 +47,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         public async Task HandleAsync_WhenValidationSucceed_StoreAndConfirmCommand(
             [Frozen] Mock<IInputValidator<ChargeOperationDto>> inputValidator,
             [Frozen] Mock<IBusinessValidator<ChargeOperationDto>> businessValidator,
-            [Frozen] Mock<IChargeRepository> chargeRepository,
+            [Frozen] Mock<IChargeInformationRepository> chargeRepository,
             [Frozen] Mock<IChargeCommandReceiptService> receiptService,
             ChargeBuilder chargeBuilder,
             [Frozen] Mock<IChargeInformationFactory> chargeFactory,
@@ -95,7 +95,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             [Frozen] Mock<IInputValidator<ChargeOperationDto>> inputValidator,
             [Frozen] Mock<IBusinessValidator<ChargeOperationDto>> businessValidator,
             [Frozen] Mock<IChargeCommandReceiptService> receiptService,
-            [Frozen] Mock<IChargeRepository> chargeRepository,
+            [Frozen] Mock<IChargeInformationRepository> chargeRepository,
             ChargeBuilder chargeBuilder,
             ChargeCommandReceivedEvent receivedEvent,
             ChargeInformationHandler sut)
@@ -137,7 +137,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         public async Task HandleAsync_IfValidUpdateEvent_ChargeUpdated(
             [Frozen] Mock<IInputValidator<ChargeOperationDto>> inputValidator,
             [Frozen] Mock<IBusinessValidator<ChargeOperationDto>> businessValidator,
-            [Frozen] Mock<IChargeRepository> chargeRepository,
+            [Frozen] Mock<IChargeInformationRepository> chargeRepository,
             [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
             ChargeCommandReceivedEvent receivedEvent,
             ChargeInformationHandler sut)
@@ -171,7 +171,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         public async Task HandleAsync_IfValidStopEvent_ChargeStopped(
             [Frozen] Mock<IInputValidator<ChargeOperationDto>> inputValidator,
             [Frozen] Mock<IBusinessValidator<ChargeOperationDto>> businessValidator,
-            [Frozen] Mock<IChargeRepository> chargeRepository,
+            [Frozen] Mock<IChargeInformationRepository> chargeRepository,
             [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
             [Frozen] Instant stopDate,
             ChargeCommandReceivedEvent receivedEvent,
@@ -205,7 +205,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         public async Task HandleAsync_WhenValidCancelStop_ThenStopCancelled(
             [Frozen] Mock<IInputValidator<ChargeOperationDto>> inputValidator,
             [Frozen] Mock<IBusinessValidator<ChargeOperationDto>> businessValidator,
-            [Frozen] Mock<IChargeRepository> chargeRepository,
+            [Frozen] Mock<IChargeInformationRepository> chargeRepository,
             [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
             ChargeInformationHandler sut)
         {
@@ -248,7 +248,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         [Theory]
         [InlineAutoMoqData]
         public async Task HandleAsync_WhenValidationFailsInBundleOperation_RejectEventForAllSubsequentOperations(
-             [Frozen] Mock<IChargeRepository> chargeRepository,
+             [Frozen] Mock<IChargeInformationRepository> chargeRepository,
              [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
              [Frozen] Mock<IDocumentValidator<ChargeCommand>> documentValidator,
              [Frozen] Mock<IInputValidator<ChargeOperationDto>> inputValidator,
@@ -300,7 +300,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                 .Returns(newPeriod);
         }
 
-        private static void SetupChargeRepository(Mock<IChargeRepository> chargeRepository)
+        private static void SetupChargeRepository(Mock<IChargeInformationRepository> chargeRepository)
         {
             var periods = new List<ChargePeriod>
             {

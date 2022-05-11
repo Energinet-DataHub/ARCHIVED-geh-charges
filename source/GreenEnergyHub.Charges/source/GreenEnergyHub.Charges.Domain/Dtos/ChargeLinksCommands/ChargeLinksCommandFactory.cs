@@ -28,18 +28,18 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
 {
     public class ChargeLinksCommandFactory : IChargeLinksCommandFactory
     {
-        private readonly IChargeRepository _chargeRepository;
+        private readonly IChargeInformationRepository _chargeInformationRepository;
         private readonly IMeteringPointRepository _meteringPointRepository;
         private readonly IClock _clock;
         private readonly IMarketParticipantRepository _marketParticipantRepository;
 
         public ChargeLinksCommandFactory(
-            IChargeRepository chargeRepository,
+            IChargeInformationRepository chargeInformationRepository,
             IMeteringPointRepository meteringPointRepository,
             IClock clock,
             IMarketParticipantRepository marketParticipantRepository)
         {
-            _chargeRepository = chargeRepository;
+            _chargeInformationRepository = chargeInformationRepository;
             _clock = clock;
             _marketParticipantRepository = marketParticipantRepository;
             _meteringPointRepository = meteringPointRepository;
@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
         {
             var chargeIds = defaultChargeLinks.Select(x => x.ChargeInformationId).ToList();
 
-            var charges = await _chargeRepository
+            var charges = await _chargeInformationRepository
                 .GetAsync(chargeIds)
                 .ConfigureAwait(false);
 

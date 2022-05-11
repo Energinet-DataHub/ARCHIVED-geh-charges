@@ -22,14 +22,14 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCreatedEvents
         public ChargeLinkCreatedEvent(
             string chargeLinkId,
             string meteringPointId,
-            string chargeInformationId,
+            string chargeId,
             ChargeType chargeType,
             string chargeOwner,
             ChargeLinkPeriod chargeLinkPeriod)
         {
             ChargeLinkId = chargeLinkId;
             MeteringPointId = meteringPointId;
-            ChargeInformationId = chargeInformationId;
+            ChargeId = chargeId;
             ChargeType = chargeType;
             ChargeOwner = chargeOwner;
             ChargeLinkPeriod = chargeLinkPeriod;
@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCreatedEvents
 
         public string MeteringPointId { get; }
 
-        public string ChargeInformationId { get; }
+        public string ChargeId { get; }
 
         public ChargeType ChargeType { get; }
 

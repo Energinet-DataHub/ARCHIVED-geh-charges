@@ -26,7 +26,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Contracts.Public.ChargeCreated
         {
             return new Infrastructure.Integration.ChargeCreated.ChargeCreated
             {
-                ChargeInformationId = chargeInformationCreatedEvent.ChargeInformationId,
+                ChargeId = chargeInformationCreatedEvent.ChargeId,
                 ChargeType = chargeInformationCreatedEvent.ChargeType.Cast<Infrastructure.Integration.ChargeCreated.ChargeCreated.Types.ChargeType>(),
                 ChargeOwner = chargeInformationCreatedEvent.ChargeOwner,
                 Currency = chargeInformationCreatedEvent.Currency,

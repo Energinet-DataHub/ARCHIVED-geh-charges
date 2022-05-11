@@ -21,7 +21,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeInformation
     /// <summary>
     /// Contract defining the capabilities of the infrastructure component facilitating interaction with the charges data store.
     /// </summary>
-    public interface IChargeRepository
+    public interface IChargeInformationRepository
     {
         Task AddAsync(ChargeInformation chargeInformation);
 
