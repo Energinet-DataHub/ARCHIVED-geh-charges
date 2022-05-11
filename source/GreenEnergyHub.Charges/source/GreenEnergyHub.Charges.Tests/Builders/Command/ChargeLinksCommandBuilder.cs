@@ -23,20 +23,27 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
 {
     public class ChargeLinksCommandBuilder
     {
-        private readonly string _meteringPointId = Guid.NewGuid().ToString();
-        private readonly DocumentDto _document = new DocumentDto
+        private readonly DocumentDto _document = new()
         {
             Id = Guid.NewGuid().ToString(),
             CreatedDateTime = SystemClock.Instance.GetCurrentInstant(),
             BusinessReasonCode = BusinessReasonCode.UpdateMasterDataSettlement,
             IndustryClassification = IndustryClassification.Electricity,
             RequestDate = SystemClock.Instance.GetCurrentInstant(),
-            Recipient = new MarketParticipantDto { Id = Guid.NewGuid().ToString(), BusinessProcessRole = MarketParticipantRole.EnergyAgency },
-            Sender = new MarketParticipantDto { Id = Guid.NewGuid().ToString(), BusinessProcessRole = MarketParticipantRole.EnergyAgency },
+            Recipient = new MarketParticipantDto
+            {
+                Id = Guid.NewGuid().ToString("N"),
+                BusinessProcessRole = MarketParticipantRole.GridAccessProvider,
+            },
+            Sender = new MarketParticipantDto
+            {
+                Id = Guid.NewGuid().ToString("N"),
+                BusinessProcessRole = MarketParticipantRole.MeteringPointAdministrator,
+            },
             Type = DocumentType.RequestChangeBillingMasterData,
         };
 
-        private List<ChargeLinkDto> _links = new List<ChargeLinkDto>();
+        private List<ChargeLinkDto> _links = new();
 
         public ChargeLinksCommandBuilder WithChargeLinks(List<ChargeLinkDto> links)
         {
@@ -46,12 +53,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
 
         public ChargeLinksCommand Build()
         {
-            return new ChargeLinksCommand(_meteringPointId, _document, _links);
-        }
-
-        public ChargeLinksCommand Build(string meteringPointId)
-        {
-            return new ChargeLinksCommand(meteringPointId, _document, _links);
+            return new ChargeLinksCommand(_document, _links);
         }
     }
 }

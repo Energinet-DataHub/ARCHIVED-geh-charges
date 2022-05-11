@@ -28,43 +28,16 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Validation
     {
         [Theory]
         [InlineAutoMoqData]
-        public async Task ValidateAsync_WhenCalled_WithCommand_UsesFactoryToFetchRulesAndUseRulesToGetResult(
-            [Frozen] Mock<IBusinessValidationRulesFactory<ChargeCommand>> factory,
-            Mock<IValidationRuleSet> rules,
-            ChargeCommand command,
-            ValidationResult validationResult,
-            BusinessValidator<ChargeCommand> sut)
-        {
-            // Arrange
-            factory.Setup(
-                    f => f.CreateRulesAsync(command))
-                .Returns(
-                    Task.FromResult(rules.Object));
-
-            rules.Setup(
-                    r => r.Validate())
-                .Returns(validationResult);
-
-            // Act
-            var result = await sut.ValidateAsync(command).ConfigureAwait(false);
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.Equal(validationResult, result);
-        }
-
-        [Theory]
-        [InlineAutoMoqData]
         public async Task ValidateAsync_WhenCalled_WithOperation_UsesFactoryToFetchRulesAndUseRulesToGetResult(
-            [Frozen] Mock<IBusinessValidationRulesFactory<ChargeCommand>> factory,
+            [Frozen] Mock<IBusinessValidationRulesFactory<ChargeOperationDto>> factory,
             Mock<IValidationRuleSet> rules,
-            ChargeCommand chargeCommand,
+            ChargeOperationDto operation,
             ValidationResult validationResult,
-            BusinessValidator<ChargeCommand> sut)
+            BusinessValidator<ChargeOperationDto> sut)
         {
             // Arrange
             factory.Setup(
-                    f => f.CreateRulesAsync(chargeCommand))
+                    f => f.CreateRulesAsync(operation))
                 .Returns(
                     Task.FromResult(rules.Object));
 
@@ -73,7 +46,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Validation
                 .Returns(validationResult);
 
             // Act
-            var result = await sut.ValidateAsync(chargeCommand).ConfigureAwait(false);
+            var result = await sut.ValidateAsync(operation).ConfigureAwait(false);
 
             // Assert
             Assert.NotNull(result);

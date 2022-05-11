@@ -7,6 +7,7 @@ The following asynchronous validation rules are currently implemented in the cha
 |VR.150|The sender of a message is mandatory|D02|All|N/A|
 |VR.152*|The sender of a message must currently be an existing and active market party (company)|D02|All|N/A|
 |VR.153|The recipient of a message is mandatory|D02|All|N/A|
+|VR.167|The recipient role of a message must be DDZ (Metering point administrator or DataHub)|E55|All|N/A|
 |VR.200|Metering point do not exist|E10|N/A|X|
 |VR.209|The data information must be received within the correct time period|E17|All|N/A|
 |VR.223|The identification of a transaction is mandatory|E0H|All|N/A|

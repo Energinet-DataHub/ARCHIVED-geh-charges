@@ -14,7 +14,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
@@ -24,14 +23,14 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.Factories
 {
-    public class ChargeCommandBusinessValidationRulesFactory : IBusinessValidationRulesFactory<ChargeCommand>
+    public class ChargeOperationBusinessValidationRulesFactory : IBusinessValidationRulesFactory<ChargeOperationDto>
     {
         private readonly IChargeRepository _chargeRepository;
         private readonly IClock _clock;
         private readonly IRulesConfigurationRepository _rulesConfigurationRepository;
         private readonly IZonedDateTimeService _zonedDateTimeService;
 
-        public ChargeCommandBusinessValidationRulesFactory(
+        public ChargeOperationBusinessValidationRulesFactory(
             IRulesConfigurationRepository rulesConfigurationRepository,
             IChargeRepository chargeRepository,
             IZonedDateTimeService zonedDateTimeService,
@@ -43,13 +42,11 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
             _clock = clock;
         }
 
-        public async Task<IValidationRuleSet> CreateRulesAsync(ChargeCommand chargeCommand)
+        public async Task<IValidationRuleSet> CreateRulesAsync(ChargeOperationDto operation)
         {
-            ArgumentNullException.ThrowIfNull(chargeCommand);
-            var chargeOperation = chargeCommand.ChargeOperations.SingleOrDefault();
-            ArgumentNullException.ThrowIfNull(chargeOperation);
+            ArgumentNullException.ThrowIfNull(operation);
 
-            var rules = await GetRulesForOperationAsync(chargeOperation).ConfigureAwait(false);
+            var rules = await GetRulesForOperationAsync(operation).ConfigureAwait(false);
             return ValidationRuleSet.FromRules(rules);
         }
 

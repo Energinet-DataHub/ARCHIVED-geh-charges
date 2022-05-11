@@ -24,6 +24,7 @@ using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
+using Microsoft.EntityFrameworkCore;
 using NodaTime;
 using Xunit;
 using Xunit.Abstractions;
@@ -57,7 +58,16 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
             public async Task When_ChargeLinksAcceptedEvent_Then_CreateLinkReply()
             {
                 // Arrange
-                var command = new ChargeLinksCommandBuilder().Build("571313180000000005");
+                await using var context = Fixture.DatabaseManager.CreateDbContext();
+                var charge = await context.Charges.FirstAsync();
+                var marketParticipant = await context.MarketParticipants.SingleAsync(mp => mp.Id == charge.OwnerId);
+                var links = new List<ChargeLinkDto>
+                {
+                    new ChargeLinkDtoBuilder()
+                        .WithCharge(charge.SenderProvidedChargeId, charge.Type, marketParticipant.MarketParticipantId)
+                        .WithMeteringPointId("571313180000000005").Build(),
+                };
+                var command = new ChargeLinksCommandBuilder().WithChargeLinks(links).Build();
                 var correlationId = CorrelationIdGenerator.Create();
                 var parentId = $"00-{correlationId}-b7ad6b7169203331-02";
                 var message = CreateServiceBusMessage(command, correlationId);

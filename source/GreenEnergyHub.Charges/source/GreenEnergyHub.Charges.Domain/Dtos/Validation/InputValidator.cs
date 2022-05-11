@@ -16,19 +16,19 @@ using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 {
-    public class InputValidator<TCommand> : IInputValidator<TCommand>
-        where TCommand : CommandBase
+    public class InputValidator<TOperation> : IInputValidator<TOperation>
+        where TOperation : OperationBase
     {
-        private readonly IInputValidationRulesFactory<TCommand> _inputValidationRulesFactory;
+        private readonly IInputValidationRulesFactory<TOperation> _inputValidationRulesFactory;
 
-        public InputValidator(IInputValidationRulesFactory<TCommand> inputValidationRulesFactory)
+        public InputValidator(IInputValidationRulesFactory<TOperation> inputValidationRulesFactory)
         {
             _inputValidationRulesFactory = inputValidationRulesFactory;
         }
 
-        public ValidationResult Validate(TCommand command)
+        public ValidationResult Validate(TOperation operation)
         {
-            IValidationRuleSet ruleSet = _inputValidationRulesFactory.CreateRulesForCommand(command);
+            var ruleSet = _inputValidationRulesFactory.CreateRules(operation);
             return ruleSet.Validate();
         }
     }

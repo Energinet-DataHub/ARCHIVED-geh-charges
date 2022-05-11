@@ -149,6 +149,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         public const string ChargeResolutionCanNotBeUpdatedErrorText =
             "Period type {{ChargeResolution}} not allowed: The specified resolution for chargetype {{ChargeType}} charge ID {{DocumentSenderProvidedChargeId}} may not be changed. It must have the same period type as when created.";
 
+        [ErrorMessageFor(ValidationRuleIdentifier.RecipientRoleMustBeDdz)]
+        public const string RecipientRoleMustBeDdzErrorText =
+            "Recipient role {{DocumentRecipientBusinessProcessRole}} not allowed: the role for energy business process {{DocumentBusinessReasonCode}} must be Metering point administrator.";
+
         public const string Unknown = "unknown";
     }
 }
