@@ -5,7 +5,7 @@ EXEC sp_rename 'Charges.ChargePoint', 'ChargePrice';
 GO
 
 -- ChargePrice
-IF EXISTS (SELECT 1 FROM sys.objects WHERE NAME = 'FK_ChargePoint_ChargeInformation' AND TYPE='PK')
+IF EXISTS (SELECT 1 FROM sys.objects WHERE NAME = 'PK_ChargePoint' AND TYPE='PK')
 BEGIN
     EXEC sp_rename 'Charges.PK_ChargePoint', 'PK_ChargePrice';
 END

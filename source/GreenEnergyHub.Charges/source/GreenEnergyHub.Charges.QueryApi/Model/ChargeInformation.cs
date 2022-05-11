@@ -30,7 +30,7 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
         {
             ChargeLinks = new HashSet<ChargeLink>();
             ChargePeriods = new HashSet<ChargePeriod>();
-            ChargePoints = new HashSet<ChargePrice>();
+            ChargePrices = new HashSet<ChargePrice>();
             DefaultChargeLinks = new HashSet<DefaultChargeLink>();
         }
 
@@ -60,7 +60,7 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
         public virtual ICollection<ChargePeriod> ChargePeriods { get; set; }
 
         [InverseProperty(nameof(ChargePrice.ChargeInformation))]
-        public virtual ICollection<ChargePrice> ChargePoints { get; set; }
+        public virtual ICollection<ChargePrice> ChargePrices { get; set; }
 
         [InverseProperty(nameof(DefaultChargeLink.ChargeInformation))]
         public virtual ICollection<DefaultChargeLink> DefaultChargeLinks { get; set; }

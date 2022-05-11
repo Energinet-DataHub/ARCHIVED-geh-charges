@@ -36,5 +36,7 @@ namespace GreenEnergyHub.Charges.QueryApi
         public IQueryable<MarketParticipant> MarketParticipants => _context.MarketParticipants.AsNoTracking();
 
         public IQueryable<DefaultChargeLink> DefaultChargeLinks => _context.DefaultChargeLinks.AsNoTracking();
+
+        public IQueryable<ChargePrice> ChargePrices => _context.ChargePrices.AsNoTracking();
     }
 }

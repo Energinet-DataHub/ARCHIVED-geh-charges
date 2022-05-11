@@ -108,10 +108,10 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.HasOne(d => d.ChargeInformation)
-                    .WithMany(p => p.ChargePoints)
+                    .WithMany(p => p.ChargePrices)
                     .HasForeignKey(d => d.ChargeInformationId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ChargePoint_Charge");
+                    .HasConstraintName("FK_ChargePrice_Charge");
             });
 
             modelBuilder.Entity<DefaultChargeLink>(entity =>
