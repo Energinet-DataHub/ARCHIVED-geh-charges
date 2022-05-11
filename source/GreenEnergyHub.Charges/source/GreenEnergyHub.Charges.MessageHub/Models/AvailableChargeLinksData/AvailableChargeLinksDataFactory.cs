@@ -66,7 +66,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData
             var recipient = await _marketParticipantRepository
                 .GetGridAccessProviderAsync(operation.MeteringPointId).ConfigureAwait(false);
 
-            var chargeIdentifier = new ChargeIdentifier(operation.SenderProvidedChargeId, operation.ChargeOwner, operation.ChargeType);
+            var chargeIdentifier = new ChargeInformationIdentifier(operation.SenderProvidedChargeId, operation.ChargeOwner, operation.ChargeType);
             var charge = await _chargeRepository.GetAsync(chargeIdentifier).ConfigureAwait(false);
             var sender = await GetSenderAsync().ConfigureAwait(false);
             if (!ShouldMakeDataAvailableForGridOwnerOfMeteringPoint(charge)) return;
@@ -90,11 +90,11 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData
                 operationOrder));
         }
 
-        private static bool ShouldMakeDataAvailableForGridOwnerOfMeteringPoint(Charge charge)
+        private static bool ShouldMakeDataAvailableForGridOwnerOfMeteringPoint(ChargeInformation chargeInformation)
         {
             // We only need to notify the grid provider owning the metering point if
             // the link is about a tax charge; the rest they maintain themselves
-            return charge.TaxIndicator;
+            return chargeInformation.TaxIndicator;
         }
     }
 }

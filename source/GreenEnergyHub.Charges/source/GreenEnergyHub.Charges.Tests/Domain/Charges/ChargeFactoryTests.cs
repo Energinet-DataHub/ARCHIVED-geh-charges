@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
             Mock<ChargePeriod> chargePeriod,
             ChargeOperationDto chargeOperationDto,
-            ChargeFactory sut)
+            ChargeInformationFactory sut)
         {
             // Arrange
             marketParticipantRepository
@@ -65,7 +65,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
             Mock<ChargePeriod> chargePeriod,
             ChargeOperationDto chargeOperationDto,
-            ChargeFactory sut)
+            ChargeInformationFactory sut)
         {
             // Arrange
             marketParticipantRepository

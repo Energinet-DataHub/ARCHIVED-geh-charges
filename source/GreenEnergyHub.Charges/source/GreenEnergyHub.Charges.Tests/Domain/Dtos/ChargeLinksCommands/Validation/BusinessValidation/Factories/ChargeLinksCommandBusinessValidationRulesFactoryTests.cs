@@ -69,7 +69,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
             // Arrange
             var link = linksBuilder.Build();
 
-            Charge? charge = null;
+            ChargeInformation? charge = null;
             SetupChargeRepositoryMock(chargeRepository, charge);
             SetupMeteringPointRepositoryMock(meteringPointRepository, link, meteringPoint);
 
@@ -90,14 +90,14 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
             [Frozen] Mock<IMeteringPointRepository> meteringPointRepository,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             MeteringPoint meteringPoint,
-            Charge charge,
+            ChargeInformation chargeInformation,
             ChargeLinksCommandBusinessValidationRulesFactory sut,
             ChargeLinkDtoBuilder linksBuilder)
         {
             // Arrange
             var link = linksBuilder.Build();
 
-            SetupChargeRepositoryMock(chargeRepository, charge);
+            SetupChargeRepositoryMock(chargeRepository, chargeInformation);
             SetupMeteringPointRepositoryMock(meteringPointRepository, link, meteringPoint);
 
             // Act
@@ -123,9 +123,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
                 .ConfigureAwait(false);
         }
 
-        private static void SetupChargeRepositoryMock(Mock<IChargeRepository> chargeRepository, Charge? charge)
+        private static void SetupChargeRepositoryMock(Mock<IChargeRepository> chargeRepository, ChargeInformation? charge)
         {
-            chargeRepository.Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>())).ReturnsAsync(charge);
+            chargeRepository.Setup(r => r.GetOrNullAsync(It.IsAny<ChargeInformationIdentifier>())).ReturnsAsync(charge);
         }
 
         private static void SetupMeteringPointRepositoryMock(

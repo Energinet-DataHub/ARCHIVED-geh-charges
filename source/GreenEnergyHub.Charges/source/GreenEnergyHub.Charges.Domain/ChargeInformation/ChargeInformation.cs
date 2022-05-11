@@ -21,11 +21,11 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.ChargeInformation
 {
-    public class Charge
+    public class ChargeInformation
     {
         private readonly List<ChargePeriod> _periods;
 
-        public Charge(
+        public ChargeInformation(
             Guid id,
             string senderProvidedChargeId,
             Guid ownerId,
@@ -47,7 +47,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeInformation
         /// Minimal ctor to support EF Core.
         /// </summary>
         // ReSharper disable once UnusedMember.Local - used by EF Core
-        private Charge()
+        private ChargeInformation()
         {
             SenderProvidedChargeId = null!;
             _periods = new List<ChargePeriod>();

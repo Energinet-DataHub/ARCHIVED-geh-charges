@@ -19,18 +19,18 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 
 namespace GreenEnergyHub.Charges.Application.ChargeInformation.Factories
 {
-    public class ChargeCreatedEventFactory : IChargeCreatedEventFactory
+    public class ChargeInformationCreatedEventFactory : IChargeInformationCreatedEventFactory
     {
         private readonly CurrencyConfigurationIso4217 _currencyConfigurationIso4217;
 
-        public ChargeCreatedEventFactory(CurrencyConfigurationIso4217 currencyConfigurationIso4217)
+        public ChargeInformationCreatedEventFactory(CurrencyConfigurationIso4217 currencyConfigurationIso4217)
         {
             _currencyConfigurationIso4217 = currencyConfigurationIso4217;
         }
 
-        public ChargeCreatedEvent Create(ChargeOperationDto chargeOperationDto)
+        public ChargeInformationCreatedEvent Create(ChargeOperationDto chargeOperationDto)
         {
-            return new ChargeCreatedEvent(
+            return new ChargeInformationCreatedEvent(
                 chargeOperationDto.ChargeId,
                 chargeOperationDto.Type,
                 chargeOperationDto.ChargeOwner,

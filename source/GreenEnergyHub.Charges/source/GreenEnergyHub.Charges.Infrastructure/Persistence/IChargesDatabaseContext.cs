@@ -25,7 +25,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence
 {
     public interface IChargesDatabaseContext
     {
-        DbSet<Charge> Charges { get; }
+        DbSet<ChargeInformation> Charges { get; }
 
         DbSet<ChargePrice> ChargePrices { get; }
 

@@ -71,20 +71,20 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
         }
 
         private static IEnumerable<IValidationRule> AddTariffOnlyRules(
-            ChargeOperationDto chargeOperationDto, Charge charge)
+            ChargeOperationDto chargeOperationDto, ChargeInformation.ChargeInformation chargeInformation)
         {
-            return new List<IValidationRule> { new ChangingTariffTaxValueNotAllowedRule(chargeOperationDto, charge) };
+            return new List<IValidationRule> { new ChangingTariffTaxValueNotAllowedRule(chargeOperationDto, chargeInformation) };
         }
 
         private void AddUpdateRules(
             List<IValidationRule> rules,
             ChargeOperationDto chargeOperationDto,
-            Charge existingCharge)
+            ChargeInformation.ChargeInformation existingChargeInformation)
         {
             var updateRules = new List<IValidationRule>
             {
-                new UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateRule(existingCharge, chargeOperationDto),
-                new ChargeResolutionCanNotBeUpdatedRule(existingCharge, chargeOperationDto),
+                new UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateRule(existingChargeInformation, chargeOperationDto),
+                new ChargeResolutionCanNotBeUpdatedRule(existingChargeInformation, chargeOperationDto),
             };
 
             rules.AddRange(updateRules);
@@ -106,9 +106,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
             return rules;
         }
 
-        private Task<Charge?> GetChargeOrNullAsync(ChargeOperationDto chargeOperationDto)
+        private Task<ChargeInformation.ChargeInformation?> GetChargeOrNullAsync(ChargeOperationDto chargeOperationDto)
         {
-            var chargeIdentifier = new ChargeIdentifier(
+            var chargeIdentifier = new ChargeInformationIdentifier(
                 chargeOperationDto.ChargeId,
                 chargeOperationDto.ChargeOwner,
                 chargeOperationDto.Type);

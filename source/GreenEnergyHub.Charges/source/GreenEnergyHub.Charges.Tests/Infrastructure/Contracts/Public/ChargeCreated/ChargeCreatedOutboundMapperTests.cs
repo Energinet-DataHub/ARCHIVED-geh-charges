@@ -29,11 +29,11 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Contracts.Public.ChargeCre
         [Theory]
         [InlineAutoMoqData]
         public void Convert_WhenCalled_MapsToCorrectValues(
-            [NotNull] ChargeCreatedEvent chargeCreatedEvent,
+            [NotNull] ChargeInformationCreatedEvent chargeInformationCreatedEvent,
             [NotNull] ChargeCreatedOutboundMapper sut)
         {
-            var result = (GreenEnergyHub.Charges.Infrastructure.Integration.ChargeCreated.ChargeCreated)sut.Convert(chargeCreatedEvent);
-            ProtobufAssert.OutgoingContractIsSubset(chargeCreatedEvent, result);
+            var result = (GreenEnergyHub.Charges.Infrastructure.Integration.ChargeCreated.ChargeCreated)sut.Convert(chargeInformationCreatedEvent);
+            ProtobufAssert.OutgoingContractIsSubset(chargeInformationCreatedEvent, result);
         }
 
         [Theory]

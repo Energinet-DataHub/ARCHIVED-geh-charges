@@ -12,13 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Application.ChargeInformation.Acknowledgement;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Common;
 
-namespace GreenEnergyHub.Charges.Application.ChargeInformation.Factories
+namespace GreenEnergyHub.Charges.Domain.ChargeInformation
 {
-    public interface IChargeCreatedEventFactory
-    {
-        ChargeCreatedEvent Create(ChargeOperationDto chargeOperationDto);
-    }
+    public record ChargeInformationIdentifier(string SenderProvidedChargeId, string Owner, ChargeType ChargeType);
 }

@@ -20,12 +20,12 @@ using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Domain.ChargeInformation
 {
-    public class ChargeFactory : IChargeFactory
+    public class ChargeInformationFactory : IChargeInformationFactory
     {
         private readonly IMarketParticipantRepository _marketParticipantRepository;
         private readonly IChargePeriodFactory _chargePeriodFactory;
 
-        public ChargeFactory(
+        public ChargeInformationFactory(
             IMarketParticipantRepository marketParticipantRepository,
             IChargePeriodFactory chargePeriodFactory)
         {
@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeInformation
             _chargePeriodFactory = chargePeriodFactory;
         }
 
-        public async Task<Charge> CreateFromChargeOperationDtoAsync(ChargeOperationDto chargeOperationDto)
+        public async Task<ChargeInformation> CreateFromChargeOperationDtoAsync(ChargeOperationDto chargeOperationDto)
         {
             var owner = await _marketParticipantRepository
                 .GetOrNullAsync(chargeOperationDto.ChargeOwner)
@@ -44,7 +44,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeInformation
 
             var period = _chargePeriodFactory.CreateFromChargeOperationDto(chargeOperationDto);
 
-            return new Charge(
+            return new ChargeInformation(
                 Guid.NewGuid(),
                 chargeOperationDto.ChargeId,
                 owner.Id,

@@ -101,7 +101,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             var rejected = false;
             var charge = chargeBuilder.Build();
             chargeRepository
-                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
+                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeInformationIdentifier>()))
                 .ReturnsAsync(charge);
 
             receiptService.Setup(s => s.RejectAsync(It.IsAny<ChargeCommand>(), It.IsAny<ValidationResult>()))
@@ -171,7 +171,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                 .ReturnsAsync(null as ICollection<ChargePrice>);
             var charge = chargeBuilder.Build();
             chargeRepository
-                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))!
+                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeInformationIdentifier>()))!
                 .ReturnsAsync(charge);
         }
 

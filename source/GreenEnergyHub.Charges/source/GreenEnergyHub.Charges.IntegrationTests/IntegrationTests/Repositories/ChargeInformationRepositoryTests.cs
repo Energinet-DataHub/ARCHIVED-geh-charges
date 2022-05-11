@@ -34,10 +34,10 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 {
     /// <summary>
-    /// Tests <see cref="ChargeRepository"/> using a database.
+    /// Tests <see cref="ChargeInformationRepository"/> using a database.
     /// </summary>
     [IntegrationTest]
-    public class ChargeRepositoryTests : IClassFixture<ChargesDatabaseFixture>
+    public class ChargeInformationRepositoryTests : IClassFixture<ChargesDatabaseFixture>
     {
         private const string MarketParticipantOwnerId = "MarketParticipantId";
 
@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
         private readonly ChargesDatabaseManager _databaseManager;
 
-        public ChargeRepositoryTests(ChargesDatabaseFixture fixture)
+        public ChargeInformationRepositoryTests(ChargesDatabaseFixture fixture)
         {
             _databaseManager = fixture.DatabaseManager;
         }
@@ -58,7 +58,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
             await GetOrAddMarketParticipantAsync(chargesDatabaseWriteContext);
             var charge = GetValidCharge();
-            var sut = new ChargeRepository(chargesDatabaseWriteContext);
+            var sut = new ChargeInformationRepository(chargesDatabaseWriteContext);
 
             // Act
             await sut.AddAsync(charge);
@@ -80,10 +80,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task AddAsync_WhenChargeIsNull_ThrowsArgumentNullException(ChargeRepository sut)
+        public async Task AddAsync_WhenChargeIsNull_ThrowsArgumentNullException(ChargeInformationRepository sut)
         {
             // Arrange
-            Charge? charge = null;
+            ChargeInformation? charge = null;
 
             // Act / Assert
             await Assert.ThrowsAsync<ArgumentNullException>(() => sut.AddAsync(charge!));
@@ -97,7 +97,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             var charge = await SetupValidCharge(chargesDatabaseWriteContext);
 
             await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
-            var sut = new ChargeRepository(chargesDatabaseReadContext);
+            var sut = new ChargeInformationRepository(chargesDatabaseReadContext);
 
             // Act
             var actual = await sut.GetAsync(charge.Id);
@@ -112,10 +112,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         {
             // Arrange
             await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
-            var sut = new ChargeRepository(chargesDatabaseContext);
+            var sut = new ChargeInformationRepository(chargesDatabaseContext);
 
             // Arrange => Matching data from seeded test data
-            var identifier = new ChargeIdentifier("EA-001", "5790000432752", ChargeType.Tariff);
+            var identifier = new ChargeInformationIdentifier("EA-001", "5790000432752", ChargeType.Tariff);
 
             // Act
             var actual = await sut.GetAsync(identifier);
@@ -129,14 +129,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         {
             // Arrange
             await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
-            var sut = new ChargeRepository(chargesDatabaseContext);
+            var sut = new ChargeInformationRepository(chargesDatabaseContext);
 
             // Arrange => Matching data from seeded test data
             var firstCharge = await sut.GetAsync(
-                    new ChargeIdentifier("EA-001", "5790000432752", ChargeType.Tariff));
+                    new ChargeInformationIdentifier("EA-001", "5790000432752", ChargeType.Tariff));
 
             var secondCharge = await sut.GetAsync(
-                new ChargeIdentifier("45013", "5790000432752", ChargeType.Tariff));
+                new ChargeInformationIdentifier("45013", "5790000432752", ChargeType.Tariff));
 
             // Act
             var actual = await sut.GetAsync(new List<Guid>
@@ -149,7 +149,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             actual.Should().NotBeEmpty();
         }
 
-        private static async Task<Charge> SetupValidCharge(ChargesDatabaseContext chargesDatabaseWriteContext)
+        private static async Task<ChargeInformation> SetupValidCharge(ChargesDatabaseContext chargesDatabaseWriteContext)
         {
             await GetOrAddMarketParticipantAsync(chargesDatabaseWriteContext);
             var charge = GetValidCharge();
@@ -158,9 +158,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             return charge;
         }
 
-        private static Charge GetValidCharge()
+        private static ChargeInformation GetValidCharge()
         {
-            var charge = new Charge(
+            var charge = new ChargeInformation(
                 Guid.NewGuid(),
                 $"ChgId{Guid.NewGuid().ToString("n")[..5]}",
                 _marketParticipantId,

@@ -23,14 +23,14 @@ namespace GreenEnergyHub.Charges.Application.ChargeCommands.Handlers
 {
     public class ChargeIntegrationEventsPublisher : IChargeIntegrationEventsPublisher
     {
-        private readonly IChargePublisher _chargePublisher;
+        private readonly IChargeInformationPublisher _chargeInformationPublisher;
         private readonly IChargePricesUpdatedPublisher _chargePricesUpdatedPublisher;
 
         public ChargeIntegrationEventsPublisher(
-            IChargePublisher chargePublisher,
+            IChargeInformationPublisher chargeInformationPublisher,
             IChargePricesUpdatedPublisher chargePricesUpdatedPublisher)
         {
-            _chargePublisher = chargePublisher;
+            _chargeInformationPublisher = chargeInformationPublisher;
             _chargePricesUpdatedPublisher = chargePricesUpdatedPublisher;
         }
 
@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeCommands.Handlers
 
             foreach (var chargeOperationDto in chargeCommandAcceptedEvent.Command.ChargeOperations)
             {
-                await _chargePublisher.PublishChargeCreatedAsync(chargeOperationDto).ConfigureAwait(false);
+                await _chargeInformationPublisher.PublishChargeInformationCreatedAsync(chargeOperationDto).ConfigureAwait(false);
 
                 if (chargeOperationDto.Points.Any())
                 {

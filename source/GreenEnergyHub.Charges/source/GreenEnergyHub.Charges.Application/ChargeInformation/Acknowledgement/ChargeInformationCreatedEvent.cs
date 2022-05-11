@@ -19,9 +19,9 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.ChargeInformation.Acknowledgement
 {
-    public class ChargeCreatedEvent : IMessage
+    public class ChargeInformationCreatedEvent : IMessage
     {
-        public ChargeCreatedEvent(
+        public ChargeInformationCreatedEvent(
             string chargeId,
             ChargeType chargeType,
             string chargeOwner,

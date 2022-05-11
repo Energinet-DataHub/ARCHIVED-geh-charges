@@ -25,10 +25,10 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
         private readonly Instant _incomingEffectiveDate;
 
         public UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateRule(
-            Charge existingCharge,
+            ChargeInformation.ChargeInformation existingChargeInformation,
             ChargeOperationDto chargeOperationDto)
         {
-            _lastPeriodEndDateOnExistingCharge = existingCharge.Periods.OrderBy(x => x.EndDateTime).Last().EndDateTime;
+            _lastPeriodEndDateOnExistingCharge = existingChargeInformation.Periods.OrderBy(x => x.EndDateTime).Last().EndDateTime;
             _incomingEffectiveDate = chargeOperationDto.StartDateTime;
         }
 

@@ -36,7 +36,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 {
     /// <summary>
-    /// Tests <see cref="ChargeRepository"/> using a database.
+    /// Tests <see cref="ChargeInformationRepository"/> using a database.
     /// </summary>
     [IntegrationTest]
     public class ChargeLinkRepositoryTests : IClassFixture<ChargesDatabaseFixture>
@@ -132,7 +132,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             context.MarketParticipants.Add(marketParticipant);
             context.SaveChanges(); // Sets marketParticipant.RowId
 
-            var charge = new Charge(
+            var charge = new ChargeInformation(
                 Guid.NewGuid(),
                 "charge id",
                 marketParticipant.Id,

@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         {
             serviceCollection.AddScoped<IChargeCommandReceiptService, ChargeCommandReceiptService>();
             serviceCollection.AddScoped<IChargeInformationHandler, ChargeInformationHandler>();
-            serviceCollection.AddScoped<IChargeFactory, ChargeFactory>();
+            serviceCollection.AddScoped<IChargeInformationFactory, ChargeInformationFactory>();
             serviceCollection.AddScoped<IChargePeriodFactory, ChargePeriodFactory>();
             serviceCollection.AddScoped<IChargeCommandAcceptedEventFactory, ChargeCommandAcceptedEventFactory>();
             serviceCollection.AddScoped<IChargeCommandRejectedEventFactory, ChargeCommandRejectedEventFactory>();

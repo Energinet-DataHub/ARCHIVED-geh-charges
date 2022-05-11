@@ -23,14 +23,14 @@ namespace GreenEnergyHub.Charges.Domain.ChargeInformation
     /// </summary>
     public interface IChargeRepository
     {
-        Task AddAsync(Charge charge);
+        Task AddAsync(ChargeInformation chargeInformation);
 
-        Task<Charge> GetAsync(ChargeIdentifier chargeIdentifier);
+        Task<ChargeInformation> GetAsync(ChargeInformationIdentifier chargeInformationIdentifier);
 
-        Task<Charge> GetAsync(Guid id);
+        Task<ChargeInformation> GetAsync(Guid id);
 
-        Task<IReadOnlyCollection<Charge>> GetAsync(IReadOnlyCollection<Guid> ids);
+        Task<IReadOnlyCollection<ChargeInformation>> GetAsync(IReadOnlyCollection<Guid> ids);
 
-        Task<Charge?> GetOrNullAsync(ChargeIdentifier chargeIdentifier);
+        Task<ChargeInformation?> GetOrNullAsync(ChargeInformationIdentifier chargeInformationIdentifier);
     }
 }

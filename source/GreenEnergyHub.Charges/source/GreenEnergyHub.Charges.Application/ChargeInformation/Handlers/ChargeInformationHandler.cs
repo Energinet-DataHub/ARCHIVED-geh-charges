@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeInformation.Handlers
         private readonly IInputValidator<ChargeOperationDto> _inputValidator;
         private readonly IBusinessValidator<ChargeOperationDto> _businessValidator;
         private readonly IChargeRepository _chargeRepository;
-        private readonly IChargeFactory _chargeFactory;
+        private readonly IChargeInformationFactory _chargeInformationFactory;
         private readonly IChargePeriodFactory _chargePeriodFactory;
         private readonly IUnitOfWork _unitOfWork;
 
@@ -42,7 +42,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeInformation.Handlers
             IInputValidator<ChargeOperationDto> inputValidator,
             IBusinessValidator<ChargeOperationDto> businessValidator,
             IChargeRepository chargeRepository,
-            IChargeFactory chargeFactory,
+            IChargeInformationFactory chargeInformationFactory,
             IChargePeriodFactory chargePeriodFactory,
             IUnitOfWork unitOfWork)
         {
@@ -50,7 +50,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeInformation.Handlers
             _inputValidator = inputValidator;
             _businessValidator = businessValidator;
             _chargeRepository = chargeRepository;
-            _chargeFactory = chargeFactory;
+            _chargeInformationFactory = chargeInformationFactory;
             _chargePeriodFactory = chargePeriodFactory;
             _unitOfWork = unitOfWork;
         }
@@ -153,26 +153,26 @@ namespace GreenEnergyHub.Charges.Application.ChargeInformation.Handlers
 
         private async Task HandleCreateEventAsync(ChargeOperationDto chargeOperationDto)
         {
-            var charge = await _chargeFactory
+            var charge = await _chargeInformationFactory
                 .CreateFromChargeOperationDtoAsync(chargeOperationDto)
                 .ConfigureAwait(false);
 
             await _chargeRepository.AddAsync(charge).ConfigureAwait(false);
         }
 
-        private void HandleUpdateEvent(Charge charge, ChargeOperationDto chargeOperationDto)
+        private void HandleUpdateEvent(Domain.ChargeInformation.ChargeInformation chargeInformation, ChargeOperationDto chargeOperationDto)
         {
             var newChargePeriod = _chargePeriodFactory.CreateFromChargeOperationDto(chargeOperationDto);
-            charge.Update(newChargePeriod);
+            chargeInformation.Update(newChargePeriod);
         }
 
-        private void HandleCancelStopEvent(Charge charge, ChargeOperationDto chargeOperationDto)
+        private void HandleCancelStopEvent(Domain.ChargeInformation.ChargeInformation chargeInformation, ChargeOperationDto chargeOperationDto)
         {
             var newChargePeriod = _chargePeriodFactory.CreateFromChargeOperationDto(chargeOperationDto);
-            charge.CancelStop(newChargePeriod);
+            chargeInformation.CancelStop(newChargePeriod);
         }
 
-        private static OperationType GetOperationType(ChargeOperationDto chargeOperationDto, Charge? charge)
+        private static OperationType GetOperationType(ChargeOperationDto chargeOperationDto, Domain.ChargeInformation.ChargeInformation? charge)
         {
             if (charge == null)
             {
@@ -190,9 +190,9 @@ namespace GreenEnergyHub.Charges.Application.ChargeInformation.Handlers
                 : OperationType.Update;
         }
 
-        private async Task<Charge?> GetChargeAsync(ChargeOperationDto chargeOperationDto)
+        private async Task<Domain.ChargeInformation.ChargeInformation?> GetChargeAsync(ChargeOperationDto chargeOperationDto)
         {
-            var chargeIdentifier = new ChargeIdentifier(
+            var chargeIdentifier = new ChargeInformationIdentifier(
                 chargeOperationDto.ChargeId,
                 chargeOperationDto.ChargeOwner,
                 chargeOperationDto.Type);

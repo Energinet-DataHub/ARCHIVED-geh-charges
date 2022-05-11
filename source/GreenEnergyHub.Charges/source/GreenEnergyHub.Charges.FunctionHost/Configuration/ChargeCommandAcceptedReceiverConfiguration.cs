@@ -32,14 +32,14 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<MessageExtractor<ChargeCommandAcceptedEvent>>();
-            serviceCollection.AddScoped<IChargeCreatedEventFactory, ChargeCreatedEventFactory>();
+            serviceCollection.AddScoped<IChargeInformationCreatedEventFactory, ChargeInformationCreatedEventFactory>();
             serviceCollection.AddScoped<IChargePricesUpdatedEventFactory, ChargePricesUpdatedEventFactory>();
-            serviceCollection.AddScoped<IChargePublisher, ChargePublisher>();
+            serviceCollection.AddScoped<IChargeInformationPublisher, ChargeInformationInformationPublisher>();
             serviceCollection.AddScoped<IChargePricesUpdatedPublisher, ChargePricesUpdatedPublisher>();
             serviceCollection.AddScoped<IChargeIntegrationEventsPublisher, ChargeIntegrationEventsPublisher>();
 
             serviceCollection.AddMessaging()
-                .AddExternalMessageDispatcher<ChargeCreatedEvent>(
+                .AddExternalMessageDispatcher<ChargeInformationCreatedEvent>(
                     EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString),
                     EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeCreatedTopicName))
                 .AddExternalMessageDispatcher<ChargePricesUpdatedEvent>(

@@ -61,7 +61,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands
                 chargeId,
                 meteringPoint.MeteringPointType);
 
-            var charge = new Charge(
+            var charge = new ChargeInformation(
                 chargeId,
                 "SenderProvidedId",
                 chargeOwner.Id,
@@ -82,7 +82,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands
 
             chargeRepository
                 .Setup(f => f.GetAsync(new List<Guid> { defaultChargeLink.ChargeId }))
-                .ReturnsAsync(new List<Charge> { charge });
+                .ReturnsAsync(new List<ChargeInformation> { charge });
 
             meteringPointRepository
                 .Setup(f => f.GetMeteringPointAsync(createDefaultChargeLinksRequest.MeteringPointId))

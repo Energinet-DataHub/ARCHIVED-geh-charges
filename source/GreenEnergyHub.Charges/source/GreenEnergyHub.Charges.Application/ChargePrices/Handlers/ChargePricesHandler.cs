@@ -158,9 +158,9 @@ namespace GreenEnergyHub.Charges.Application.ChargePrices.Handlers
                         endDate).ConfigureAwait(false);
         }
 
-        private async Task<Charge?> GetChargeAsync(ChargeOperationDto chargeOperationDto)
+        private async Task<Domain.ChargeInformation.ChargeInformation?> GetChargeAsync(ChargeOperationDto chargeOperationDto)
         {
-            var chargeIdentifier = new ChargeIdentifier(
+            var chargeIdentifier = new ChargeInformationIdentifier(
                 chargeOperationDto.ChargeId,
                 chargeOperationDto.ChargeOwner,
                 chargeOperationDto.Type);

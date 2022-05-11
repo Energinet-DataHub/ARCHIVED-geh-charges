@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinksDat
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             ChargeLinksAcceptedEvent acceptedEvent,
-            Charge charge,
+            ChargeInformation chargeInformation,
             TestGridAccessProvider gridAccessProvider,
             Instant now,
             AvailableChargeLinksDataFactory sut)
@@ -54,10 +54,10 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinksDat
                 .Setup(m => m.GetGridAccessProviderAsync(It.IsAny<string>()))
                 .ReturnsAsync(gridAccessProvider);
 
-            charge.SetPrivateProperty(c => c.TaxIndicator, true);
+            chargeInformation.SetPrivateProperty(c => c.TaxIndicator, true);
             chargeRepository
-                .Setup(r => r.GetAsync(It.IsAny<ChargeIdentifier>()))
-                .ReturnsAsync(charge);
+                .Setup(r => r.GetAsync(It.IsAny<ChargeInformationIdentifier>()))
+                .ReturnsAsync(chargeInformation);
 
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
 
@@ -92,7 +92,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinksDat
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             ChargeLinksAcceptedEvent acceptedEvent,
-            Charge charge,
+            ChargeInformation chargeInformation,
             TestGridAccessProvider gridAccessProvider,
             AvailableChargeLinksDataFactory sut)
         {
@@ -104,10 +104,10 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinksDat
                 .Setup(m => m.GetGridAccessProviderAsync(It.IsAny<string>()))
                 .ReturnsAsync(gridAccessProvider);
 
-            charge.SetPrivateProperty(c => c.TaxIndicator, false);
+            chargeInformation.SetPrivateProperty(c => c.TaxIndicator, false);
             chargeRepository
-                .Setup(r => r.GetAsync(It.IsAny<ChargeIdentifier>()))
-                .ReturnsAsync(charge);
+                .Setup(r => r.GetAsync(It.IsAny<ChargeInformationIdentifier>()))
+                .ReturnsAsync(chargeInformation);
 
             // Act
             var actualList = await sut.CreateAsync(acceptedEvent);

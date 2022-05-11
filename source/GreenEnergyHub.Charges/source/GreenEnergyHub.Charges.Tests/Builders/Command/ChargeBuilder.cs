@@ -30,9 +30,9 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             return this;
         }
 
-        public Charge Build()
+        public ChargeInformation Build()
         {
-            return new Charge(
+            return new ChargeInformation(
                 Guid.NewGuid(),
                 "senderProvidedChargeId",
                 Guid.NewGuid(),

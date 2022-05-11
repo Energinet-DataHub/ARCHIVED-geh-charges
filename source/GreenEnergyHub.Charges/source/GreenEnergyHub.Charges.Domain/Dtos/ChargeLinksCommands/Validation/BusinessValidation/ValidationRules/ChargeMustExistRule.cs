@@ -19,10 +19,10 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
 {
     public class ChargeMustExistRule : IValidationRuleForOperation
     {
-        private readonly Charge? _existingCharge;
+        private readonly ChargeInformation.ChargeInformation? _existingCharge;
         private readonly ChargeLinkDto _chargeLinkDto;
 
-        public ChargeMustExistRule(Charge? existingCharge, ChargeLinkDto chargeLinkDto)
+        public ChargeMustExistRule(ChargeInformation.ChargeInformation? existingCharge, ChargeLinkDto chargeLinkDto)
         {
             _existingCharge = existingCharge;
             _chargeLinkDto = chargeLinkDto;

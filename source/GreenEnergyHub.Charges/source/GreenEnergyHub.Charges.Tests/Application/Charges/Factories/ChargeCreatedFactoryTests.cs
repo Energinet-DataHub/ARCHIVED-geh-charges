@@ -31,7 +31,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Factories
         [InlineAutoDomainData]
         public void Create_Charge_HasNoNullsOrEmptyCollections(
             ChargeOperationDto chargeOperationDto,
-            ChargeCreatedEventFactory sut)
+            ChargeInformationCreatedEventFactory sut)
         {
             // Act
             var actual = sut.Create(chargeOperationDto);

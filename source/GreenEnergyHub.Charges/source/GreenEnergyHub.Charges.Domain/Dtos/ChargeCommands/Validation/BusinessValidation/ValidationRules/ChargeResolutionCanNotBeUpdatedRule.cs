@@ -19,16 +19,16 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
 {
     public class ChargeResolutionCanNotBeUpdatedRule : IValidationRuleForOperation
     {
-        private readonly Charge _existingCharge;
+        private readonly ChargeInformation.ChargeInformation _existingChargeInformation;
         private readonly ChargeOperationDto _chargeOperationDto;
 
-        public ChargeResolutionCanNotBeUpdatedRule(Charge existingCharge, ChargeOperationDto chargeOperationDto)
+        public ChargeResolutionCanNotBeUpdatedRule(ChargeInformation.ChargeInformation existingChargeInformation, ChargeOperationDto chargeOperationDto)
         {
-            _existingCharge = existingCharge;
+            _existingChargeInformation = existingChargeInformation;
             _chargeOperationDto = chargeOperationDto;
         }
 
-        public bool IsValid => _existingCharge.Resolution == _chargeOperationDto.Resolution;
+        public bool IsValid => _existingChargeInformation.Resolution == _chargeOperationDto.Resolution;
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.ChargeResolutionCanNotBeUpdated;

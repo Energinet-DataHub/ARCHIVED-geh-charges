@@ -18,30 +18,29 @@ using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.ChargeInformation;
 using Microsoft.EntityFrameworkCore;
-using Charge = GreenEnergyHub.Charges.Domain.ChargeInformation.Charge;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
 {
-    public class ChargeRepository : IChargeRepository
+    public class ChargeInformationRepository : IChargeRepository
     {
         private readonly IChargesDatabaseContext _chargesDatabaseContext;
 
-        public ChargeRepository(IChargesDatabaseContext chargesDatabaseContext)
+        public ChargeInformationRepository(IChargesDatabaseContext chargesDatabaseContext)
         {
             _chargesDatabaseContext = chargesDatabaseContext;
         }
 
-        public Task<Charge> GetAsync(ChargeIdentifier chargeIdentifier)
+        public Task<ChargeInformation> GetAsync(ChargeInformationIdentifier chargeInformationIdentifier)
         {
-            return GetChargeQueryable(chargeIdentifier).SingleAsync();
+            return GetChargeQueryable(chargeInformationIdentifier).SingleAsync();
         }
 
-        public Task<Charge> GetAsync(Guid id)
+        public Task<ChargeInformation> GetAsync(Guid id)
         {
             return GetChargesAsQueryable().SingleAsync(x => x.Id == id);
         }
 
-        public async Task<IReadOnlyCollection<Charge>> GetAsync(IReadOnlyCollection<Guid> ids)
+        public async Task<IReadOnlyCollection<ChargeInformation>> GetAsync(IReadOnlyCollection<Guid> ids)
         {
             return await GetChargesAsQueryable()
                 .Where(x => ids.Contains(x.Id))
@@ -49,31 +48,31 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
                 .ConfigureAwait(false);
         }
 
-        public async Task<Charge?> GetOrNullAsync(ChargeIdentifier chargeIdentifier)
+        public async Task<ChargeInformation?> GetOrNullAsync(ChargeInformationIdentifier chargeInformationIdentifier)
         {
-            return await GetChargeQueryable(chargeIdentifier).SingleOrDefaultAsync().ConfigureAwait(false);
+            return await GetChargeQueryable(chargeInformationIdentifier).SingleOrDefaultAsync().ConfigureAwait(false);
         }
 
-        public async Task AddAsync(Charge charge)
+        public async Task AddAsync(ChargeInformation chargeInformation)
         {
-            if (charge == null) throw new ArgumentNullException(nameof(charge));
-            await _chargesDatabaseContext.Charges.AddAsync(charge).ConfigureAwait(false);
+            if (chargeInformation == null) throw new ArgumentNullException(nameof(chargeInformation));
+            await _chargesDatabaseContext.Charges.AddAsync(chargeInformation).ConfigureAwait(false);
         }
 
-        private IQueryable<Charge> GetChargesAsQueryable()
+        private IQueryable<ChargeInformation> GetChargesAsQueryable()
         {
             return _chargesDatabaseContext.Charges.AsQueryable();
         }
 
-        private IQueryable<Charge> GetChargeQueryable(ChargeIdentifier chargeIdentifier)
+        private IQueryable<ChargeInformation> GetChargeQueryable(ChargeInformationIdentifier chargeInformationIdentifier)
         {
             var query =
                 from c in GetChargesAsQueryable()
                 join o in _chargesDatabaseContext.MarketParticipants
                     on c.OwnerId equals o.Id
-                where c.SenderProvidedChargeId == chargeIdentifier.SenderProvidedChargeId
-                where o.MarketParticipantId == chargeIdentifier.Owner
-                where c.Type == chargeIdentifier.ChargeType
+                where c.SenderProvidedChargeId == chargeInformationIdentifier.SenderProvidedChargeId
+                where o.MarketParticipantId == chargeInformationIdentifier.Owner
+                where c.Type == chargeInformationIdentifier.ChargeType
                 select c;
             return query;
         }

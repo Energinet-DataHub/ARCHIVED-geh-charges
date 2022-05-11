@@ -20,22 +20,22 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 
 namespace GreenEnergyHub.Charges.Application.ChargeInformation.Acknowledgement
 {
-    public class ChargePublisher : IChargePublisher
+    public class ChargeInformationInformationPublisher : IChargeInformationPublisher
     {
-        private readonly IMessageDispatcher<ChargeCreatedEvent> _messageChargeDispatcher;
-        private readonly IChargeCreatedEventFactory _chargeCreatedEventFactory;
+        private readonly IMessageDispatcher<ChargeInformationCreatedEvent> _messageChargeDispatcher;
+        private readonly IChargeInformationCreatedEventFactory _chargeInformationCreatedEventFactory;
 
-        public ChargePublisher(
-            IMessageDispatcher<ChargeCreatedEvent> messageChargeDispatcher,
-            IChargeCreatedEventFactory chargeCreatedEventFactory)
+        public ChargeInformationInformationPublisher(
+            IMessageDispatcher<ChargeInformationCreatedEvent> messageChargeDispatcher,
+            IChargeInformationCreatedEventFactory chargeInformationCreatedEventFactory)
         {
             _messageChargeDispatcher = messageChargeDispatcher;
-            _chargeCreatedEventFactory = chargeCreatedEventFactory;
+            _chargeInformationCreatedEventFactory = chargeInformationCreatedEventFactory;
         }
 
-        public async Task PublishChargeCreatedAsync(ChargeOperationDto chargeOperationDto)
+        public async Task PublishChargeInformationCreatedAsync(ChargeOperationDto chargeOperationDto)
         {
-            var chargeCreatedEvent = _chargeCreatedEventFactory.Create(chargeOperationDto);
+            var chargeCreatedEvent = _chargeInformationCreatedEventFactory.Create(chargeOperationDto);
             await _messageChargeDispatcher.DispatchAsync(chargeCreatedEvent).ConfigureAwait(false);
         }
 

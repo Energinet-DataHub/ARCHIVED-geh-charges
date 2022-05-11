@@ -89,9 +89,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
                 .ConfigureAwait(false);
         }
 
-        private static string GetChargeOwner(Charge charge, IReadOnlyCollection<MarketParticipant> owners)
+        private static string GetChargeOwner(ChargeInformation.ChargeInformation chargeInformation, IReadOnlyCollection<MarketParticipant> owners)
         {
-            return owners.Single(o => o.Id == charge.OwnerId).MarketParticipantId;
+            return owners.Single(o => o.Id == chargeInformation.OwnerId).MarketParticipantId;
         }
 
         private async Task<ChargeLinksCommand> CreateChargeLinksCommandAsync(

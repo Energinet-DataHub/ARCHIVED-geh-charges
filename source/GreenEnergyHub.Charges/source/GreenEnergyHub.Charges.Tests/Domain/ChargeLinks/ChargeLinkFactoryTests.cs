@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.ChargeLinks
         [InlineAutoDomainData]
         public async Task CreateAsync_WhenCalled_ShouldCreateChargeLinkCorrectly(
             ChargeLinkDto chargeLinkDto,
-            Charge expectedCharge,
+            ChargeInformation expectedChargeInformation,
             MeteringPoint expectedMeteringPoint,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IMeteringPointRepository> meteringPointRepository,
@@ -42,8 +42,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.ChargeLinks
         {
             // Arrange
             chargeRepository
-                .Setup(x => x.GetAsync(It.IsAny<ChargeIdentifier>()))
-                .ReturnsAsync(expectedCharge);
+                .Setup(x => x.GetAsync(It.IsAny<ChargeInformationIdentifier>()))
+                .ReturnsAsync(expectedChargeInformation);
 
             meteringPointRepository
                 .Setup(x => x.GetMeteringPointAsync(It.IsAny<string>()))
@@ -53,7 +53,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.ChargeLinks
             var actual = await sut.CreateAsync(chargeLinkDto).ConfigureAwait(false);
 
             // Assert
-            actual.ChargeId.Should().Be(expectedCharge.Id);
+            actual.ChargeId.Should().Be(expectedChargeInformation.Id);
             actual.MeteringPointId.Should().Be(expectedMeteringPoint.Id);
             actual.Factor.Should().Be(chargeLinkDto.Factor);
             actual.StartDateTime.Should().Be(chargeLinkDto.StartDateTime);

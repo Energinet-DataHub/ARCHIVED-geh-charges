@@ -32,10 +32,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         [InlineAutoDomainData]
         public void IsValid_WhenTaxIndicatorInCommandDoesNotMatchCharge_IsFalse(
             ChargeOperationDtoBuilder builder,
-            Charge charge)
+            ChargeInformation chargeInformation)
         {
-            var chargeOperationDto = builder.WithTaxIndicator(TaxIndicatorMapper.Map(!charge.TaxIndicator)).Build();
-            var sut = new ChangingTariffTaxValueNotAllowedRule(chargeOperationDto, charge);
+            var chargeOperationDto = builder.WithTaxIndicator(TaxIndicatorMapper.Map(!chargeInformation.TaxIndicator)).Build();
+            var sut = new ChangingTariffTaxValueNotAllowedRule(chargeOperationDto, chargeInformation);
             sut.IsValid.Should().BeFalse();
         }
 
@@ -43,27 +43,27 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         [InlineAutoDomainData]
         public void IsValid_WhenTaxIndicatorInCommandMatches_IsTrue(
             ChargeOperationDtoBuilder builder,
-            Charge charge)
+            ChargeInformation chargeInformation)
         {
-            var chargeOperationDto = builder.WithTaxIndicator(TaxIndicatorMapper.Map(charge.TaxIndicator)).Build();
-            var sut = new ChangingTariffTaxValueNotAllowedRule(chargeOperationDto, charge);
+            var chargeOperationDto = builder.WithTaxIndicator(TaxIndicatorMapper.Map(chargeInformation.TaxIndicator)).Build();
+            var sut = new ChangingTariffTaxValueNotAllowedRule(chargeOperationDto, chargeInformation);
             sut.IsValid.Should().BeTrue();
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeOperationDtoBuilder builder, Charge charge)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeOperationDtoBuilder builder, ChargeInformation chargeInformation)
         {
-            var chargeOperationDto = builder.WithTaxIndicator(TaxIndicatorMapper.Map(!charge.TaxIndicator)).Build();
-            var sut = new ChangingTariffTaxValueNotAllowedRule(chargeOperationDto, charge);
+            var chargeOperationDto = builder.WithTaxIndicator(TaxIndicatorMapper.Map(!chargeInformation.TaxIndicator)).Build();
+            var sut = new ChangingTariffTaxValueNotAllowedRule(chargeOperationDto, chargeInformation);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChangingTariffTaxValueNotAllowed);
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void OperationId_ShouldBe_EqualTo(ChargeOperationDto chargeOperationDto, Charge charge)
+        public void OperationId_ShouldBe_EqualTo(ChargeOperationDto chargeOperationDto, ChargeInformation chargeInformation)
         {
-            var sut = new ChangingTariffTaxValueNotAllowedRule(chargeOperationDto, charge);
+            var sut = new ChangingTariffTaxValueNotAllowedRule(chargeOperationDto, chargeInformation);
             sut.OperationId.Should().Be(chargeOperationDto.Id);
         }
     }

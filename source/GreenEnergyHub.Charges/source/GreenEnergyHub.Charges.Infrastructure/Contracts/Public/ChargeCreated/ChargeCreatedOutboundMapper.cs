@@ -20,20 +20,20 @@ using GreenEnergyHub.Charges.Core.Enumeration;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Contracts.Public.ChargeCreated
 {
-    public class ChargeCreatedOutboundMapper : ProtobufOutboundMapper<ChargeCreatedEvent>
+    public class ChargeCreatedOutboundMapper : ProtobufOutboundMapper<ChargeInformationCreatedEvent>
     {
-        protected override IMessage Convert(ChargeCreatedEvent chargeCreatedEvent)
+        protected override IMessage Convert(ChargeInformationCreatedEvent chargeInformationCreatedEvent)
         {
             return new Infrastructure.Integration.ChargeCreated.ChargeCreated
             {
-                ChargeId = chargeCreatedEvent.ChargeId,
-                ChargeType = chargeCreatedEvent.ChargeType.Cast<Infrastructure.Integration.ChargeCreated.ChargeCreated.Types.ChargeType>(),
-                ChargeOwner = chargeCreatedEvent.ChargeOwner,
-                Currency = chargeCreatedEvent.Currency,
-                Resolution = chargeCreatedEvent.Resolution.Cast<Infrastructure.Integration.ChargeCreated.ChargeCreated.Types.Resolution>(),
-                TaxIndicator = chargeCreatedEvent.TaxIndicator,
-                StartDateTime = chargeCreatedEvent.StartDateTime.ToTimestamp(),
-                EndDateTime = chargeCreatedEvent.EndDateTime.ToTimestamp(),
+                ChargeId = chargeInformationCreatedEvent.ChargeId,
+                ChargeType = chargeInformationCreatedEvent.ChargeType.Cast<Infrastructure.Integration.ChargeCreated.ChargeCreated.Types.ChargeType>(),
+                ChargeOwner = chargeInformationCreatedEvent.ChargeOwner,
+                Currency = chargeInformationCreatedEvent.Currency,
+                Resolution = chargeInformationCreatedEvent.Resolution.Cast<Infrastructure.Integration.ChargeCreated.ChargeCreated.Types.Resolution>(),
+                TaxIndicator = chargeInformationCreatedEvent.TaxIndicator,
+                StartDateTime = chargeInformationCreatedEvent.StartDateTime.ToTimestamp(),
+                EndDateTime = chargeInformationCreatedEvent.EndDateTime.ToTimestamp(),
             };
         }
     }

@@ -50,7 +50,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IChargeCommandReceiptService> receiptService,
             ChargeBuilder chargeBuilder,
-            [Frozen] Mock<IChargeFactory> chargeFactory,
+            [Frozen] Mock<IChargeInformationFactory> chargeFactory,
             [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
             ChargeCommandReceivedEvent receivedEvent,
             ChargeInformationHandler sut)
@@ -61,11 +61,11 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 
             var stored = false;
             chargeRepository
-                .Setup(r => r.AddAsync(It.IsAny<Charge>()))
-                .Callback<Charge>(_ => stored = true);
+                .Setup(r => r.AddAsync(It.IsAny<ChargeInformation>()))
+                .Callback<ChargeInformation>(_ => stored = true);
             chargeRepository
-                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
-                .ReturnsAsync(null as Charge);
+                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeInformationIdentifier>()))
+                .ReturnsAsync(null as ChargeInformation);
 
             var confirmed = false;
             receiptService
@@ -106,7 +106,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             SetupValidators(inputValidator, businessValidator, validationResult);
 
             chargeRepository
-                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
+                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeInformationIdentifier>()))
                 .ReturnsAsync(charge);
 
             var rejected = false;
@@ -153,7 +153,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                 .Build();
 
             chargeRepository
-                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
+                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeInformationIdentifier>()))
                 .ReturnsAsync(charge);
             chargePeriodFactory
                 .Setup(r => r.CreateFromChargeOperationDto(It.IsAny<ChargeOperationDto>()))
@@ -185,7 +185,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             var newPeriod = new ChargePeriodBuilder().WithStartDateTime(stopDate).WithEndDateTime(stopDate).Build();
 
             chargeRepository
-                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
+                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeInformationIdentifier>()))
                 .ReturnsAsync(charge);
             chargePeriodFactory
                 .Setup(r => r.CreateFromChargeOperationDto(It.IsAny<ChargeOperationDto>()))
@@ -229,7 +229,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                 .WithStartDateTime(InstantHelper.GetTomorrowAtMidnightUtc())
                 .Build();
             chargeRepository
-                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
+                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeInformationIdentifier>()))
                 .ReturnsAsync(charge);
             chargePeriodFactory
                 .Setup(r => r.CreateFromChargeOperationDto(It.IsAny<ChargeOperationDto>()))
@@ -310,7 +310,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             };
             var charge = new ChargeBuilder().WithPeriods(periods).Build();
             chargeRepository
-                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
+                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeInformationIdentifier>()))
                 .ReturnsAsync(charge);
         }
 
@@ -413,7 +413,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             };
         }
 
-        private static Charge CreateValidCharge(IEnumerable<ChargePeriod> periods)
+        private static ChargeInformation CreateValidCharge(IEnumerable<ChargePeriod> periods)
         {
             return new ChargeBuilder()
                 .WithPeriods(periods)

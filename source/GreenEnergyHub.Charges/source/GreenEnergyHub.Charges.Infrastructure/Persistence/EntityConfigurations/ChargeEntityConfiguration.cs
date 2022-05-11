@@ -20,11 +20,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
 {
-    public class ChargeEntityConfiguration : IEntityTypeConfiguration<Charge>
+    public class ChargeEntityConfiguration : IEntityTypeConfiguration<ChargeInformation>
     {
-        private static readonly string _aggregateTableName = nameof(Charge);
+        private static readonly string _aggregateTableName = nameof(ChargeInformation);
 
-        public void Configure(EntityTypeBuilder<Charge> builder)
+        public void Configure(EntityTypeBuilder<ChargeInformation> builder)
         {
             builder.ToTable(_aggregateTableName);
             builder.HasKey(c => c.Id);
@@ -38,18 +38,18 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
 
             // Enable EF Core to hydrate the periods
             var periods = builder.Metadata
-                .FindNavigation(nameof(Charge.Periods));
+                .FindNavigation(nameof(ChargeInformation.Periods));
 
             if (periods == null)
             {
                 throw new InvalidOperationException(
-                    $"Could not configure ChargeEntityConfiguration entity. Navigation property {nameof(Charge.Periods)} was not found.");
+                    $"Could not configure ChargeEntityConfiguration entity. Navigation property {nameof(ChargeInformation.Periods)} was not found.");
             }
 
             periods.SetPropertyAccessMode(PropertyAccessMode.Field);
         }
 
-        private void ConfigurePeriods(OwnedNavigationBuilder<Charge, ChargePeriod> periods)
+        private void ConfigurePeriods(OwnedNavigationBuilder<ChargeInformation, ChargePeriod> periods)
         {
             // This field is defined in the SQL model (as a foreign key)
             periods.WithOwner().HasForeignKey($"{_aggregateTableName}Id");

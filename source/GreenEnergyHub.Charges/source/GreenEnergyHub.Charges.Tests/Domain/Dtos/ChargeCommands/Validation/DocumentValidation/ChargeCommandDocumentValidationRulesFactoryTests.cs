@@ -71,17 +71,17 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Doc
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             ChargeCommandDocumentValidationRulesFactory sut,
-            Charge charge)
+            ChargeInformation chargeInformation)
         {
             // Arrange
             var chargeOperationDto = new ChargeOperationDtoBuilder().WithChargeType(ChargeType.Fee).Build();
             var chargeCommand = new ChargeCommandBuilder().WithChargeOperation(chargeOperationDto).Build();
             chargeRepository
-                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
-                .ReturnsAsync(charge);
+                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeInformationIdentifier>()))
+                .ReturnsAsync(chargeInformation);
             chargeRepository
-                .Setup(r => r.GetAsync(It.IsAny<ChargeIdentifier>()))
-                .Returns(Task.FromResult(charge));
+                .Setup(r => r.GetAsync(It.IsAny<ChargeInformationIdentifier>()))
+                .Returns(Task.FromResult(chargeInformation));
             marketParticipantRepository
                 .Setup(repo => repo.GetOrNullAsync(It.IsAny<string>()))
                 .ReturnsAsync(sender);
