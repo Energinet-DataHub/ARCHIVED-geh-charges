@@ -24,8 +24,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.Shared
         public static string BuildErrorMessage(DocumentDto documentDto, IEnumerable<ValidationError> validationErrors)
         {
             var sb = new StringBuilder();
-            sb.Append($"ValidationErrors for document Id {documentDto.Id} " +
-                      $"with Type {documentDto.Type} from GLN {documentDto.Sender.Id}:\r\n");
+            sb.Append($"document Id {documentDto.Id} with Type {documentDto.Type} from GLN {documentDto.Sender.Id}:\r\n");
 
             foreach (var validationError in validationErrors)
             {

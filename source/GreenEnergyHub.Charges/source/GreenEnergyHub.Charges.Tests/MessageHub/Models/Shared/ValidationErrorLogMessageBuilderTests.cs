@@ -37,8 +37,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared
             var documentDto = BuildDocumentDto(documentDtoBuilder);
             var validationErrors = BuildValidationErrors();
 
-            var expected = $"ValidationErrors for document Id {documentDto.Id} with " +
-                           $"Type {documentDto.Type} from GLN {documentDto.Sender.Id}:\r\n" +
+            var expected = $"document Id {documentDto.Id} with Type {documentDto.Type} from GLN {documentDto.Sender.Id}:\r\n" +
                             $"- ValidationRuleIdentifier: {validationErrors.First().ValidationRuleIdentifier}\r\n" +
                             $"- ValidationRuleIdentifier: {validationErrors.Last().ValidationRuleIdentifier}\r\n";
 
