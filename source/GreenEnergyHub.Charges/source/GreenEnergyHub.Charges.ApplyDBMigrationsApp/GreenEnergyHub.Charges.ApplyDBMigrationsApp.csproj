@@ -34,7 +34,7 @@ limitations under the License.
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Include="Scripts\Model\100520220830 Remove position from chargepoint.sql" />
+      <EmbeddedResource Include="Scripts\Model\202210050830 Remove position from chargepoint.sql" />
       <EmbeddedResource Include="Scripts\Model\202201261730 Create tables.sql" />
       <EmbeddedResource Include="Scripts\Model\202201281340 Increase OriginalOperationId length.sql" />
       <EmbeddedResource Include="Scripts\Model\202202151610 Move charge periods to ChargePeriod table.sql" />
@@ -46,7 +46,7 @@ limitations under the License.
       <EmbeddedResource Include="Scripts\Seed\202201261742 Add default charge links.sql" />
       <EmbeddedResource Include="Scripts\Seed\202203251356 Alter default charges.sql" />
       <EmbeddedResource Include="Scripts\Test\202201261750 Add test data.sql" />
-      <EmbeddedResource Include="Scripts\Model\280320221347 Add unique constraint on Charge Link.sql" />
+      <EmbeddedResource Include="Scripts\Model\202228031347 Add unique constraint on Charge Link.sql" />
     </ItemGroup>
 
 </Project>
