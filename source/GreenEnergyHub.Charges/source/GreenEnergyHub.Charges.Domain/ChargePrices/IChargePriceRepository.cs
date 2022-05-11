@@ -23,7 +23,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargePrices
     {
         Task AddAsync(ChargePrice chargePrice);
 
-        Task<ICollection<ChargePrice>> GetOrNullAsync(Guid chargeId, Instant startDate, Instant endDate);
+        Task<ICollection<ChargePrice>> GetOrNullAsync(Guid chargeInformationId, Instant startDate, Instant endDate);
 
         void RemoveRange(IEnumerable<ChargePrice> chargePrices);
     }

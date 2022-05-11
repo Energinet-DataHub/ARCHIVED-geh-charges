@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence
         {
         }
 
-        public DbSet<ChargeInformation> Charges { get; private set; }
+        public DbSet<ChargeInformation> ChargeInformations { get; private set; }
 
         public DbSet<ChargePrice> ChargePrices { get; private set; }
 

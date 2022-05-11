@@ -144,7 +144,7 @@ namespace GreenEnergyHub.Charges.Application.ChargePrices.Handlers
             }
         }
 
-        private async Task<IEnumerable<ChargePrice>> GetChargePriceAsync(Guid chargeId, ChargeOperationDto operationDto)
+        private async Task<IEnumerable<ChargePrice>> GetChargePriceAsync(Guid chargeInformationId, ChargeOperationDto operationDto)
         {
             var orderedPoints = operationDto.Points.OrderBy(x => x.Time).ToList();
             ArgumentNullException.ThrowIfNull(orderedPoints);
@@ -153,7 +153,7 @@ namespace GreenEnergyHub.Charges.Application.ChargePrices.Handlers
             return
                 await _chargePriceRepository
                     .GetOrNullAsync(
-                        chargeId,
+                        chargeInformationId,
                         startDate,
                         endDate).ConfigureAwait(false);
         }
@@ -161,7 +161,7 @@ namespace GreenEnergyHub.Charges.Application.ChargePrices.Handlers
         private async Task<Domain.ChargeInformation.ChargeInformation?> GetChargeAsync(ChargeOperationDto chargeOperationDto)
         {
             var chargeIdentifier = new ChargeInformationIdentifier(
-                chargeOperationDto.ChargeId,
+                chargeOperationDto.ChargeInformationId,
                 chargeOperationDto.ChargeOwner,
                 chargeOperationDto.Type);
             return await _chargeInformationRepository.GetOrNullAsync(chargeIdentifier).ConfigureAwait(false);

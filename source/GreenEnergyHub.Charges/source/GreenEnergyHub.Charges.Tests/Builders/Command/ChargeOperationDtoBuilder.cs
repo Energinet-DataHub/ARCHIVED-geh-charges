@@ -24,7 +24,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
    public class ChargeOperationDtoBuilder
     {
         private List<Point> _points;
-        private string _chargeId;
+        private string _chargeInformationId;
         private Instant _startDateTime;
         private Instant? _endDateTime;
         private VatClassification _vatClassification;
@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         public ChargeOperationDtoBuilder()
         {
             _operationId = "operationId";
-            _chargeId = "some charge id";
+            _chargeInformationId = "some charge id";
             _startDateTime = SystemClock.Instance.GetCurrentInstant()
                 .Plus(Duration.FromDays(500));
             _endDateTime = SystemClock.Instance.GetCurrentInstant()
@@ -73,9 +73,9 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             return this;
         }
 
-        public ChargeOperationDtoBuilder WithChargeId(string chargeId)
+        public ChargeOperationDtoBuilder WithChargeInformationId(string chargeInformationId)
         {
-            _chargeId = chargeId;
+            _chargeInformationId = chargeInformationId;
             return this;
         }
 
@@ -155,7 +155,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             return new ChargeOperationDto(
                 _operationId,
                 _chargeType,
-                _chargeId,
+                _chargeInformationId,
                 _chargeName,
                 _description,
                 _owner,

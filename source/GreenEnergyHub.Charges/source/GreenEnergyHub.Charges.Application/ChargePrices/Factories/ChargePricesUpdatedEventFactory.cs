@@ -22,7 +22,7 @@ namespace GreenEnergyHub.Charges.Application.ChargePrices.Factories
         public ChargePricesUpdatedEvent Create(ChargeOperationDto chargeOperationDto)
         {
             return new ChargePricesUpdatedEvent(
-                chargeOperationDto.ChargeId,
+                chargeOperationDto.ChargeInformationId,
                 chargeOperationDto.Type,
                 chargeOperationDto.ChargeOwner,
                 chargeOperationDto.StartDateTime,

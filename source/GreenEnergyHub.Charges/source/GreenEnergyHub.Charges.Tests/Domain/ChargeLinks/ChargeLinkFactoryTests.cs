@@ -53,7 +53,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.ChargeLinks
             var actual = await sut.CreateAsync(chargeLinkDto).ConfigureAwait(false);
 
             // Assert
-            actual.ChargeId.Should().Be(expectedChargeInformation.Id);
+            actual.ChargeInformationId.Should().Be(expectedChargeInformation.Id);
             actual.MeteringPointId.Should().Be(expectedMeteringPoint.Id);
             actual.Factor.Should().Be(chargeLinkDto.Factor);
             actual.StartDateTime.Should().Be(chargeLinkDto.StartDateTime);

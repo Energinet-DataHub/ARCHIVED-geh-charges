@@ -37,9 +37,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
             await _chargesDatabaseContext.ChargePrices.AddAsync(chargePrice).ConfigureAwait(false);
         }
 
-        public async Task<ICollection<ChargePrice>> GetOrNullAsync(Guid chargeId, Instant startDate, Instant endDate)
+        public async Task<ICollection<ChargePrice>> GetOrNullAsync(Guid chargeInformationId, Instant startDate, Instant endDate)
         {
-            return await GetChargePriceQueryable(chargeId, startDate, endDate).ToListAsync().ConfigureAwait(false);
+            return await GetChargePriceQueryable(chargeInformationId, startDate, endDate).ToListAsync().ConfigureAwait(false);
         }
 
         public void RemoveRange(IEnumerable<ChargePrice> chargePrices)
@@ -48,11 +48,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
             _chargesDatabaseContext.ChargePrices.RemoveRange(chargePrices);
         }
 
-        private IQueryable<ChargePrice> GetChargePriceQueryable(Guid chargeId, Instant startDate, Instant endDate)
+        private IQueryable<ChargePrice> GetChargePriceQueryable(Guid chargeInformationId, Instant startDate, Instant endDate)
         {
             var query =
                 from p in _chargesDatabaseContext.ChargePrices
-                where p.ChargeId == chargeId
+                where p.ChargeInformationId == chargeInformationId
                 where p.Time >= startDate
                 where p.Time <= endDate
                 select p;

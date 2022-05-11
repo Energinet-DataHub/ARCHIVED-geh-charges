@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinkCreatedEvents
             var chargeLinkCreatedEvents =
                 command.ChargeLinksOperations
                     .ToDictionary(chargeLinkDto => chargeLinkDto, chargeLinkDto => result
-                        .Single(x => x.ChargeId == chargeLinkDto.SenderProvidedChargeId));
+                        .Single(x => x.ChargeInformationId == chargeLinkDto.SenderProvidedChargeId));
 
             // Assert
             foreach (var c in chargeLinkCreatedEvents)
@@ -50,7 +50,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinkCreatedEvents
                 c.Key.OperationId.Should().Be(c.Value.ChargeLinkId);
                 c.Key.EndDateTime.Should().Be(c.Value.ChargeLinkPeriod.EndDateTime);
                 c.Key.StartDateTime.Should().Be(c.Value.ChargeLinkPeriod.StartDateTime);
-                c.Key.SenderProvidedChargeId.Should().Be(c.Value.ChargeId);
+                c.Key.SenderProvidedChargeId.Should().Be(c.Value.ChargeInformationId);
             }
         }
     }

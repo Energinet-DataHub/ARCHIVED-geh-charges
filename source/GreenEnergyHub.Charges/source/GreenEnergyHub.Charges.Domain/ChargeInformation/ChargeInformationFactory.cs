@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeInformation
 
             return new ChargeInformation(
                 Guid.NewGuid(),
-                chargeOperationDto.ChargeId,
+                chargeOperationDto.ChargeInformationId,
                 owner.Id,
                 chargeOperationDto.Type,
                 chargeOperationDto.Resolution,

@@ -21,12 +21,12 @@ namespace GreenEnergyHub.Charges.Domain.ChargePrices
     {
         public ChargePrice(
             Guid id,
-            Guid chargeId,
+            Guid chargeInformationId,
             Instant time,
             decimal price)
         {
             Id = id;
-            ChargeId = chargeId;
+            ChargeInformationId = chargeInformationId;
             Time = time;
             Price = price;
         }
@@ -37,12 +37,12 @@ namespace GreenEnergyHub.Charges.Domain.ChargePrices
         // ReSharper disable once UnusedMember.Local - used by EF Core
         private ChargePrice()
         {
-            ChargeId = Guid.Empty;
+            ChargeInformationId = Guid.Empty;
         }
 
         public Guid Id { get; }
 
-        public Guid ChargeId { get; }
+        public Guid ChargeInformationId { get; }
 
         public Instant Time { get; }
 

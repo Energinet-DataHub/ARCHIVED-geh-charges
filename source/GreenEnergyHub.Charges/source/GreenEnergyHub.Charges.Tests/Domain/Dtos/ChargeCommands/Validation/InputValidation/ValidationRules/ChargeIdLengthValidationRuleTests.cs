@@ -32,11 +32,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         [InlineAutoMoqData("12345678912", false)]
         [InlineAutoMoqData(null!, false)]
         public void ChargeIdLengthValidationRule_Test(
-            string chargeId,
+            string chargeInformationId,
             bool expected,
             ChargeOperationDtoBuilder chargeOperationDtoBuilder)
         {
-            var chargeOperationDto = chargeOperationDtoBuilder.WithChargeId(chargeId).Build();
+            var chargeOperationDto = chargeOperationDtoBuilder.WithChargeInformationId(chargeInformationId).Build();
             var sut = new ChargeIdLengthValidationRule(chargeOperationDto);
             sut.IsValid.Should().Be(expected);
         }
@@ -60,7 +60,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         private static ChargeOperationDto CreateInvalidChargeOperationDto(ChargeOperationDtoBuilder chargeOperationDtoBuilder)
         {
-            return chargeOperationDtoBuilder.WithChargeId("this charge id is to long").Build();
+            return chargeOperationDtoBuilder.WithChargeInformationId("this charge id is to long").Build();
         }
     }
 }

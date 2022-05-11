@@ -12,15 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Common;
+using System;
+using System.Collections.Generic;
 
-namespace GreenEnergyHub.Charges.QueryApi.Model
+#nullable disable
+
+namespace GreenEnergyHub.Charges.QueryApi.Model.Scaffolded
 {
-    public partial class Charge
+    public partial class ChargePriceObsolete
     {
-        public ChargeType GetChargeType()
-        {
-            return (ChargeType)Type;
-        }
+        public Guid Id { get; set; }
+
+        public Guid ChargeId { get; set; }
+
+        public DateTime Time { get; set; }
+
+        public decimal Price { get; set; }
+
+        public bool Retired { get; set; }
+
+        public DateTime? RetiredDateTime { get; set; }
+
+        public Guid ChargeOperationId { get; set; }
+
+        public virtual ChargeInformation ChargeInformation { get; set; }
     }
 }

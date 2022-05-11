@@ -47,7 +47,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands
             TestSystemOperator systemOperator,
             TestMarketParticipant chargeOwner,
             Guid defaultChargeLinkId,
-            Guid chargeId,
+            Guid chargeInformationId,
             Guid chargePeriodId,
             MeteringPoint meteringPoint,
             CreateDefaultChargeLinksRequest createDefaultChargeLinksRequest,
@@ -58,11 +58,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands
                 defaultChargeLinkId,
                 Instant.MinValue,
                 Instant.MaxValue,
-                chargeId,
+                chargeInformationId,
                 meteringPoint.MeteringPointType);
 
             var charge = new ChargeInformation(
-                chargeId,
+                chargeInformationId,
                 "SenderProvidedId",
                 chargeOwner.Id,
                 ChargeType.Fee,
@@ -81,7 +81,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands
                 });
 
             chargeRepository
-                .Setup(f => f.GetAsync(new List<Guid> { defaultChargeLink.ChargeId }))
+                .Setup(f => f.GetAsync(new List<Guid> { defaultChargeLink.ChargeInformationId }))
                 .ReturnsAsync(new List<ChargeInformation> { charge });
 
             meteringPointRepository

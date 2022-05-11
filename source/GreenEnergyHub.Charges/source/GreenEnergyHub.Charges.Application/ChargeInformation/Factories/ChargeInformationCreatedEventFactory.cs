@@ -31,7 +31,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeInformation.Factories
         public ChargeInformationCreatedEvent Create(ChargeOperationDto chargeOperationDto)
         {
             return new ChargeInformationCreatedEvent(
-                chargeOperationDto.ChargeId,
+                chargeOperationDto.ChargeInformationId,
                 chargeOperationDto.Type,
                 chargeOperationDto.ChargeOwner,
                 _currencyConfigurationIso4217.Currency,

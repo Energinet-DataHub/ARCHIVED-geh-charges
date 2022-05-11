@@ -30,23 +30,23 @@ namespace GreenEnergyHub.Charges.WebApi.ModelPredicates
 #pragma warning disable SA1118
             return queryable
                 .Select(cl => new ChargeLinkV1Dto(
-                    Map(cl.Charge.GetChargeType()),
-                    cl.Charge.SenderProvidedChargeId,
-                    (cl.Charge.ChargePeriods
+                    Map(cl.ChargeInformation.GetChargeType()),
+                    cl.ChargeInformation.SenderProvidedChargeId,
+                    (cl.ChargeInformation.ChargePeriods
                         .Where(cp => cp.StartDateTime <= todayAtMidnightUtc)
                         .OrderByDescending(cp => cp.StartDateTime)
                         .FirstOrDefault() ??
-                     cl.Charge.ChargePeriods
+                     cl.ChargeInformation.ChargePeriods
                          .OrderBy(cp => cp.StartDateTime)
                          .First()).Name,
-                    cl.Charge.Owner.MarketParticipantId,
+                    cl.ChargeInformation.Owner.MarketParticipantId,
                     "<Aktørnavn XYZ>", // Hardcoded as we currently don't have the ChargeOwnerName data
-                    cl.Charge.TaxIndicator,
-                    (cl.Charge.ChargePeriods
+                    cl.ChargeInformation.TaxIndicator,
+                    (cl.ChargeInformation.ChargePeriods
                         .Where(cp => cp.StartDateTime <= todayAtMidnightUtc)
                         .OrderByDescending(cp => cp.StartDateTime)
                         .FirstOrDefault() ??
-                     cl.Charge.ChargePeriods
+                     cl.ChargeInformation.ChargePeriods
                          .OrderBy(cp => cp.StartDateTime)
                          .First()).TransparentInvoicing,
                     cl.Factor,
@@ -62,22 +62,22 @@ namespace GreenEnergyHub.Charges.WebApi.ModelPredicates
 #pragma warning disable SA1118
             return queryable
                 .Select(cl => new ChargeLinkV2Dto(
-                    Map(cl.Charge.GetChargeType()),
-                    cl.Charge.SenderProvidedChargeId,
-                    (cl.Charge.ChargePeriods
+                    Map(cl.ChargeInformation.GetChargeType()),
+                    cl.ChargeInformation.SenderProvidedChargeId,
+                    (cl.ChargeInformation.ChargePeriods
                          .Where(cp => cp.StartDateTime <= todayAtMidnightUtc)
                          .OrderByDescending(cp => cp.StartDateTime)
                          .FirstOrDefault() ??
-                     cl.Charge.ChargePeriods
+                     cl.ChargeInformation.ChargePeriods
                          .OrderBy(cp => cp.StartDateTime)
                          .First()).Name,
-                    cl.Charge.Owner.Id,
-                    cl.Charge.TaxIndicator,
-                    (cl.Charge.ChargePeriods
+                    cl.ChargeInformation.Owner.Id,
+                    cl.ChargeInformation.TaxIndicator,
+                    (cl.ChargeInformation.ChargePeriods
                         .Where(cp => cp.StartDateTime <= todayAtMidnightUtc)
                         .OrderByDescending(cp => cp.StartDateTime)
                         .FirstOrDefault() ??
-                     cl.Charge.ChargePeriods
+                     cl.ChargeInformation.ChargePeriods
                          .OrderBy(cp => cp.StartDateTime)
                          .First()).TransparentInvoicing,
                     cl.Factor,

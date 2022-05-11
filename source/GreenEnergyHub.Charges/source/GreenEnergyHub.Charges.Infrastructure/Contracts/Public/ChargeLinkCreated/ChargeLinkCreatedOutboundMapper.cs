@@ -27,7 +27,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Contracts.Public.ChargeLinkCreat
             {
                 ChargeLinkId = obj.ChargeLinkId,
                 MeteringPointId = obj.MeteringPointId,
-                ChargeId = obj.ChargeId,
+                ChargeInformationId = obj.ChargeInformationId,
                 ChargeType = (ChargeTypeContract)obj.ChargeType,
                 ChargeOwner = obj.ChargeOwner,
                 ChargeLinkPeriod = new ChargeLinkPeriodContract

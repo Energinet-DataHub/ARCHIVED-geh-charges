@@ -13,28 +13,30 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 #nullable disable
 
-namespace GreenEnergyHub.Charges.QueryApi.Model.Scaffolded
+namespace GreenEnergyHub.Charges.QueryApi.Model
 {
+    [Table("ChargePrice", Schema = "Charges")]
     public partial class ChargePrice
     {
+        [Key]
         public Guid Id { get; set; }
 
-        public Guid ChargeId { get; set; }
+        public Guid ChargeInformationId { get; set; }
 
         public DateTime Time { get; set; }
 
+        [Column(TypeName = "decimal(14, 6)")]
         public decimal Price { get; set; }
 
-        public bool Retired { get; set; }
+        public int Position { get; set; }
 
-        public DateTime? RetiredDateTime { get; set; }
-
-        public Guid ChargeOperationId { get; set; }
-
-        public virtual Charge Charge { get; set; }
+        [ForeignKey(nameof(ChargeInformationId))]
+        [InverseProperty("ChargePrices")]
+        public virtual ChargeInformation ChargeInformation { get; set; }
     }
 }

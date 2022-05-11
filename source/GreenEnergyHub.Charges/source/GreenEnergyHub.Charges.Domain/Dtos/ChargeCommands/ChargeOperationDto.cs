@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
         public ChargeOperationDto(
                 string id,
                 ChargeType type,
-                string chargeId,
+                string chargeInformationId,
                 string chargeName,
                 string chargeDescription,
                 string chargeOwner,
@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
             Points = new List<Point>();
             Id = id;
             Type = type;
-            ChargeId = chargeId;
+            ChargeInformationId = chargeInformationId;
             ChargeName = chargeName;
             ChargeDescription = chargeDescription;
             ChargeOwner = chargeOwner;
@@ -70,7 +70,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
         /// Unique ID of a charge (Note, unique per market participants).
         /// Example: EA-001
         /// </summary>
-        public string ChargeId { get; }
+        public string ChargeInformationId { get; }
 
         public ChargeType Type { get; }
 

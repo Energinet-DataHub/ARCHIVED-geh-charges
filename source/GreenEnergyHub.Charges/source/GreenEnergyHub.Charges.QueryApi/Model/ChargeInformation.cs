@@ -22,15 +22,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GreenEnergyHub.Charges.QueryApi.Model
 {
-    [Table("Charge", Schema = "Charges")]
+    [Table("ChargeInformation", Schema = "Charges")]
     [Index(nameof(SenderProvidedChargeId), nameof(Type), nameof(OwnerId), Name = "IX_SenderProvidedChargeId_ChargeType_MarketParticipantId")]
-    public partial class Charge
+    public partial class ChargeInformation
     {
-        public Charge()
+        public ChargeInformation()
         {
             ChargeLinks = new HashSet<ChargeLink>();
             ChargePeriods = new HashSet<ChargePeriod>();
-            ChargePoints = new HashSet<ChargePoint>();
+            ChargePoints = new HashSet<ChargePrice>();
             DefaultChargeLinks = new HashSet<DefaultChargeLink>();
         }
 
@@ -50,19 +50,19 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
         public int Resolution { get; set; }
 
         [ForeignKey(nameof(OwnerId))]
-        [InverseProperty(nameof(MarketParticipant.Charges))]
+        [InverseProperty(nameof(MarketParticipant.ChargeInformations))]
         public virtual MarketParticipant Owner { get; set; }
 
-        [InverseProperty(nameof(ChargeLink.Charge))]
+        [InverseProperty(nameof(ChargeLink.ChargeInformation))]
         public virtual ICollection<ChargeLink> ChargeLinks { get; set; }
 
-        [InverseProperty(nameof(ChargePeriod.Charge))]
+        [InverseProperty(nameof(ChargePeriod.ChargeInformation))]
         public virtual ICollection<ChargePeriod> ChargePeriods { get; set; }
 
-        [InverseProperty(nameof(ChargePoint.Charge))]
-        public virtual ICollection<ChargePoint> ChargePoints { get; set; }
+        [InverseProperty(nameof(ChargePrice.ChargeInformation))]
+        public virtual ICollection<ChargePrice> ChargePoints { get; set; }
 
-        [InverseProperty(nameof(DefaultChargeLink.Charge))]
+        [InverseProperty(nameof(DefaultChargeLink.ChargeInformation))]
         public virtual ICollection<DefaultChargeLink> DefaultChargeLinks { get; set; }
     }
 }

@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
             CreateDefaultChargeLinksRequest createDefaultChargeLinksRequest,
             IReadOnlyCollection<DefaultChargeLink> defaultChargeLinks)
         {
-            var chargeIds = defaultChargeLinks.Select(x => x.ChargeId).ToList();
+            var chargeIds = defaultChargeLinks.Select(x => x.ChargeInformationId).ToList();
 
             var charges = await _chargeRepository
                 .GetAsync(chargeIds)
@@ -72,7 +72,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
                 defaultChargeLinks
                     .ToDictionary(
                         defaultChargeLink => defaultChargeLink,
-                        defaultChargeLink => charges.Single(c => defaultChargeLink.ChargeId == c.Id));
+                        defaultChargeLink => charges.Single(c => defaultChargeLink.ChargeInformationId == c.Id));
 
             var chargeLinks = defChargeAndCharge.Select(pair => new ChargeLinkDto(
                     Guid.NewGuid().ToString(), // When creating default charge links, the TSO starts a new operation, which is why a new OperationId is provided.

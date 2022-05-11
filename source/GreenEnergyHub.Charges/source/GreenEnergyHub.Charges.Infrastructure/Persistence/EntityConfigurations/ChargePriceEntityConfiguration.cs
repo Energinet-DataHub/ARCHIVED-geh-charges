@@ -27,7 +27,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
 
             builder.HasKey(c => c.Id);
 
-            builder.Property(c => c.ChargeId);
+            builder.Property(c => c.ChargeInformationId);
             builder.Property(c => c.Time);
             builder.Property(c => c.Price);
         }

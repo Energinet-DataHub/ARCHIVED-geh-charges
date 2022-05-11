@@ -81,7 +81,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
                 actual[i].RecipientRole.Should().Be(gridAccessProvider[i].BusinessProcessRole);
                 actual[i].BusinessReasonCode.Should().Be(acceptedEvent.Command.Document.BusinessReasonCode);
                 actual[i].RequestDateTime.Should().Be(now);
-                actual[i].ChargeId.Should().Be(operation.ChargeId);
+                actual[i].ChargeId.Should().Be(operation.ChargeInformationId);
                 actual[i].ChargeOwner.Should().Be(operation.ChargeOwner);
                 actual[i].ChargeType.Should().Be(operation.Type);
                 actual[i].ChargeName.Should().Be(operation.ChargeName);

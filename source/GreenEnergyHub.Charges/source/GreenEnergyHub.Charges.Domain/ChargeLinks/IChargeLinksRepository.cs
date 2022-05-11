@@ -29,8 +29,8 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
         /// <summary>
         /// Get charge links
         /// </summary>
-        /// <param name="chargeId"></param>
+        /// <param name="chargeInformationId"></param>
         /// <param name="meteringPointId"></param>
-        Task<IReadOnlyCollection<ChargeLink>> GetAsync(Guid chargeId, Guid meteringPointId);
+        Task<IReadOnlyCollection<ChargeLink>> GetAsync(Guid chargeInformationId, Guid meteringPointId);
     }
 }

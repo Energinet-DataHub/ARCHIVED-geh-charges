@@ -67,7 +67,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             // Assert
             await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
 
-            var actual = await chargesDatabaseReadContext.Charges
+            var actual = await chargesDatabaseReadContext.ChargeInformations
                 .SingleAsync(x =>
                     x.Id == charge.Id &&
                     x.SenderProvidedChargeId == charge.SenderProvidedChargeId &&
@@ -153,7 +153,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         {
             await GetOrAddMarketParticipantAsync(chargesDatabaseWriteContext);
             var charge = GetValidCharge();
-            chargesDatabaseWriteContext.Charges.Add(charge);
+            chargesDatabaseWriteContext.ChargeInformations.Add(charge);
             await chargesDatabaseWriteContext.SaveChangesAsync();
             return charge;
         }

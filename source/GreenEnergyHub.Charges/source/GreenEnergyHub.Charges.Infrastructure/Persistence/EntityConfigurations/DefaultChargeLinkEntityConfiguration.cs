@@ -27,7 +27,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).ValueGeneratedNever();
 
-            builder.Property(x => x.ChargeId);
+            builder.Property(x => x.ChargeInformationId);
             builder.Property(x => x.MeteringPointType);
             builder.Property(x => x.StartDateTime);
             builder.Property(x => x.EndDateTime);

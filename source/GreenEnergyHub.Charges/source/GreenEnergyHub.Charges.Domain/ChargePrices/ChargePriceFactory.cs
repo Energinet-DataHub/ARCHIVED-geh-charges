@@ -30,7 +30,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargePrices
 
         public async Task<ChargePrice> CreateFromChargeOperationDtoAsync(ChargeOperationDto operation, Point point)
         {
-            var chargeIdentifier = new ChargeInformationIdentifier(operation.ChargeId, operation.ChargeOwner, operation.Type);
+            var chargeIdentifier = new ChargeInformationIdentifier(operation.ChargeInformationId, operation.ChargeOwner, operation.Type);
             var chargeInformation = await _chargeInformationRepository.GetOrNullAsync(chargeIdentifier).ConfigureAwait(false);
             ArgumentNullException.ThrowIfNull(chargeInformation);
             return new ChargePrice(

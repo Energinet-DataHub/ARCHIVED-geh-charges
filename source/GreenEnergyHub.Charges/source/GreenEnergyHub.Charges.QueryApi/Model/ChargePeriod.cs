@@ -26,7 +26,7 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
         [Key]
         public Guid Id { get; set; }
 
-        public Guid ChargeId { get; set; }
+        public Guid ChargeInformationId { get; set; }
 
         public bool TransparentInvoicing { get; set; }
 
@@ -44,8 +44,8 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
 
         public DateTime EndDateTime { get; set; }
 
-        [ForeignKey(nameof(ChargeId))]
+        [ForeignKey(nameof(ChargeInformationId))]
         [InverseProperty("ChargePeriods")]
-        public virtual Charge Charge { get; set; }
+        public virtual ChargeInformation ChargeInformation { get; set; }
     }
 }

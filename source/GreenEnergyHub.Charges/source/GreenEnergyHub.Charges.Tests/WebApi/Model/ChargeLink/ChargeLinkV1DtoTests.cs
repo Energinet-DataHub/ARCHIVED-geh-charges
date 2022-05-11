@@ -28,7 +28,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.Model.ChargeLink
         [Fact]
         public void Props_HaveCorrectNames()
         {
-            nameof(ChargeLinkV1Dto.ChargeId).Should().Be("ChargeId");
+            nameof(ChargeLinkV1Dto.ChargeInformationId).Should().Be("ChargeId");
             nameof(ChargeLinkV1Dto.ChargeName).Should().Be("ChargeName");
             nameof(ChargeLinkV1Dto.Quantity).Should().Be("Quantity");
             nameof(ChargeLinkV1Dto.ChargeOwner).Should().Be("ChargeOwner"); // ID of the charge owner
