@@ -53,6 +53,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Doc
                 new DocumentTypeMustBeRequestChangeOfPriceListRule(chargeCommand.Document),
                 new RecipientIsMandatoryTypeValidationRule(chargeCommand.Document),
                 new SenderIsMandatoryTypeValidationRule(chargeCommand.Document),
+                new RecipientMustBeDdzRule(chargeCommand.Document),
             };
 
             // Act
@@ -91,12 +92,13 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Doc
             var actualRules = actual.GetRules().Select(r => r.GetType()).ToList();
 
             // Assert
-            Assert.Equal(5, actual.GetRules().Count); // This assert is added to ensure that when the rule set is expanded, the test gets attention as well.
+            Assert.Equal(6, actual.GetRules().Count); // This assert is added to ensure that when the rule set is expanded, the test gets attention as well.
             Assert.Contains(typeof(CommandSenderMustBeAnExistingMarketParticipantRule), actualRules);
             Assert.Contains(typeof(BusinessReasonCodeMustBeUpdateChargeInformationOrChargePricesRule), actualRules);
             Assert.Contains(typeof(DocumentTypeMustBeRequestChangeOfPriceListRule), actualRules);
             Assert.Contains(typeof(RecipientIsMandatoryTypeValidationRule), actualRules);
             Assert.Contains(typeof(SenderIsMandatoryTypeValidationRule), actualRules);
+            Assert.Contains(typeof(RecipientMustBeDdzRule), actualRules);
         }
     }
 }
