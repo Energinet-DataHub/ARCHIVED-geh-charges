@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers.V1
             return Ok(_data.MeteringPoints);
         }
 
-        [HttpGet("ChargeInformation")]
+        [HttpGet("ChargeInformations")]
         [EnableQuery]
         public IActionResult ChargeInformations()
         {

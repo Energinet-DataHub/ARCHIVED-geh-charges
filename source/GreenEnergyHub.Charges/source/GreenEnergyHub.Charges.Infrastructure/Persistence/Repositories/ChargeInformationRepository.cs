@@ -55,7 +55,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
 
         public async Task AddAsync(ChargeInformation chargeInformation)
         {
-            if (chargeInformation == null) throw new ArgumentNullException(nameof(chargeInformation));
+            ArgumentNullException.ThrowIfNull(chargeInformation);
             await _chargesDatabaseContext.ChargeInformations.AddAsync(chargeInformation).ConfigureAwait(false);
         }
 
