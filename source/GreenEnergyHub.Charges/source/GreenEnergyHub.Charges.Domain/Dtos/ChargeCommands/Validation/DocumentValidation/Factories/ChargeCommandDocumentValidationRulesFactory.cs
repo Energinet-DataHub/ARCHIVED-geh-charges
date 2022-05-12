@@ -55,6 +55,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.DocumentV
                 new DocumentTypeMustBeRequestChangeOfPriceListRule(documentDto),
                 new RecipientIsMandatoryTypeValidationRule(documentDto),
                 new SenderIsMandatoryTypeValidationRule(documentDto),
+                new RecipientMustBeDdzRule(documentDto),
             };
 
             return rules;
