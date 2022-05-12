@@ -86,7 +86,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
                 rejectedEvent.ChargeLinksCommand.Document,
                 rejectedEvent.ValidationErrors);
 
-            _logger.LogError($"ValidationErrors for {errorMessage} ", errorMessage);
+            _logger.LogError("ValidationErrors for {errorMessage}", errorMessage);
         }
 
         private List<AvailableReceiptValidationError> GetReasons(
