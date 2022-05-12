@@ -90,21 +90,17 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             var sut = new ChargeLinksRepository(secondChargesContext);
             var copyChargeLink = CreateExpectedChargeLink(chargeLink, ids);
 
-            await sut.AddAsync(copyChargeLink);
-            await secondChargesContext.SaveChangesAsync();
-            Assert.True(true);
-            // Act
-            // Func<Task> act = async () =>
-            // {
-            //     await sut.AddAsync(copyChargeLink);
-            //     await secondChargesContext.SaveChangesAsync();
-            // };
-            //
-            // // Assert
-            // await act.Should()
-            //     .ThrowAsync<DbUpdateException>()
-            //     .WithInnerException(typeof(SqlException))
-            //     .WithMessage("Violation of UNIQUE KEY constraint 'UQ_DefaultOverlap_StartDateTime'*");
+            Func<Task> act = async () =>
+            {
+                await sut.AddAsync(copyChargeLink);
+                await secondChargesContext.SaveChangesAsync();
+            };
+
+            // Assert
+            await act.Should()
+                .ThrowAsync<DbUpdateException>()
+                .WithInnerException(typeof(SqlException))
+                .WithMessage("Violation of UNIQUE KEY constraint 'UQ_DefaultOverlap_StartDateTime'*");
         }
 
         private ChargeLink CreateExpectedChargeLink(ChargeLink chargeLink, (Guid ChargeInformationId, Guid MeteringPointId) ids)
