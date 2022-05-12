@@ -17,7 +17,7 @@ FROM
 (
 SELECT *
 , DupRank = ROW_NUMBER() OVER (
-              PARTITION BY ChargeId, MeteringPointId, StartDateTime
+              PARTITION BY ChargeInformationId, MeteringPointId, StartDateTime
               ORDER BY (SELECT NULL)
             )
 FROM [Charges].[ChargeLink]
@@ -31,7 +31,7 @@ FROM
 (
 SELECT *
 , DupRank = ROW_NUMBER() OVER (
-              PARTITION BY ChargeId, MeteringPointId, EndDateTime
+              PARTITION BY ChargeInformationId, MeteringPointId, EndDateTime
               ORDER BY (SELECT NULL)
             )
 FROM [Charges].[ChargeLink]
@@ -41,11 +41,11 @@ WHERE DupRank > 1
 GO
 
 ALTER TABLE [Charges].[ChargeLink]
-    ADD CONSTRAINT UQ_DefaultOverlap_StartDateTime UNIQUE (ChargeId, MeteringPointId, StartDateTime);
+    ADD CONSTRAINT UQ_DefaultOverlap_StartDateTime UNIQUE (ChargeInformationId, MeteringPointId, StartDateTime);
 GO
 
 ALTER TABLE [Charges].[ChargeLink]
-    ADD CONSTRAINT UQ_DefaultOverlap_EndDateTime UNIQUE (ChargeId, MeteringPointId, EndDateTime);
+    ADD CONSTRAINT UQ_DefaultOverlap_EndDateTime UNIQUE (ChargeInformationId, MeteringPointId, EndDateTime);
 GO
 
 COMMIT
