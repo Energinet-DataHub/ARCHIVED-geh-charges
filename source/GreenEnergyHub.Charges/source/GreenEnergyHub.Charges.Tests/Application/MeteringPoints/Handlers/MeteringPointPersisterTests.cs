@@ -38,7 +38,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
             [Frozen] Mock<IMeteringPointRepository> meteringPointRepository,
             [Frozen] Mock<ILoggerFactory> loggerFactory,
             [Frozen] Mock<IUnitOfWork> unitOfWork,
-            Mock<ILogger> logger)
+            [Frozen] Mock<ILogger> logger)
         {
             // Arrange
             var meteringPointCreatedEvent = GetMeteringPointCreatedEvent();
@@ -64,7 +64,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
             [Frozen] Mock<IMeteringPointRepository> meteringPointRepository,
             [Frozen] Mock<ILoggerFactory> loggerFactory,
             [Frozen] Mock<IUnitOfWork> unitOfWork,
-            Mock<ILogger> logger)
+            [Frozen] Mock<ILogger> logger)
         {
             // Arrange
             var meteringPointCreatedEvent = GetMeteringPointCreatedEvent();
@@ -94,7 +94,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
             [Frozen] Mock<IMeteringPointRepository> meteringPointRepository,
             [Frozen] Mock<ILoggerFactory> loggerFactory,
             [Frozen] Mock<IUnitOfWork> unitOfWork,
-            Mock<ILogger> logger)
+            [Frozen] Mock<ILogger> logger)
         {
             // Arrange
             var meteringPointCreatedEvent = GetMeteringPointCreatedEvent();
