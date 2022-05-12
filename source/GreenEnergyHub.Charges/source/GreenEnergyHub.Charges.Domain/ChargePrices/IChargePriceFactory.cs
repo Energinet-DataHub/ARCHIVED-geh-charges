@@ -13,12 +13,13 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.ChargeInformations;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 
 namespace GreenEnergyHub.Charges.Domain.ChargePrices
 {
     public interface IChargePriceFactory
     {
-        Task<ChargePrice> CreateFromChargeOperationDtoAsync(ChargeOperationDto operation, Point point);
+        Task<ChargePrice> CreateChargePriceFromPointAsync(ChargeInformationIdentifier identifier, Point point);
     }
 }

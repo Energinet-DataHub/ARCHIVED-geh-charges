@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeInformations.Handlers
             [Frozen] Mock<IBusinessValidator<ChargeOperationDto>> businessValidator,
             [Frozen] Mock<IChargeInformationRepository> chargeRepository,
             [Frozen] Mock<IChargeCommandReceiptService> receiptService,
-            ChargeBuilder chargeBuilder,
+            ChargeInformationBuilder chargeInformationBuilder,
             [Frozen] Mock<IChargeInformationFactory> chargeFactory,
             [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
             ChargeCommandReceivedEvent receivedEvent,
@@ -68,7 +68,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeInformations.Handlers
                 .Setup(s => s.AcceptAsync(It.IsAny<ChargeCommand>()))
                 .Callback<ChargeCommand>(_ => confirmed = true);
 
-            var charge = chargeBuilder.WithPeriods(new List<ChargePeriod> { CreateValidPeriod() }).Build();
+            var charge = chargeInformationBuilder.WithPeriods(new List<ChargePeriod> { CreateValidPeriod() }).Build();
             chargeFactory
                 .Setup(s => s.CreateFromChargeOperationDtoAsync(It.IsAny<ChargeOperationDto>()))
                 .ReturnsAsync(charge);
@@ -92,12 +92,12 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeInformations.Handlers
             [Frozen] Mock<IBusinessValidator<ChargeOperationDto>> businessValidator,
             [Frozen] Mock<IChargeCommandReceiptService> receiptService,
             [Frozen] Mock<IChargeInformationRepository> chargeRepository,
-            ChargeBuilder chargeBuilder,
+            ChargeInformationBuilder chargeInformationBuilder,
             ChargeCommandReceivedEvent receivedEvent,
             ChargeInformationHandler sut)
         {
             // Arrange
-            var charge = chargeBuilder.Build();
+            var charge = chargeInformationBuilder.Build();
             var validationResult = GetFailedValidationResult();
             SetupValidators(inputValidator, businessValidator, validationResult);
 
@@ -220,7 +220,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeInformations.Handlers
             {
                 new ChargePeriodBuilder().WithEndDateTime(InstantHelper.GetTomorrowAtMidnightUtc()).Build(),
             };
-            var charge = new ChargeBuilder().WithPeriods(periods).Build();
+            var charge = new ChargeInformationBuilder().WithPeriods(periods).Build();
             var newPeriod = new ChargePeriodBuilder()
                 .WithStartDateTime(InstantHelper.GetTomorrowAtMidnightUtc())
                 .Build();
@@ -304,7 +304,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeInformations.Handlers
                     .WithStartDateTime(InstantHelper.GetYesterdayAtMidnightUtc())
                     .Build(),
             };
-            var charge = new ChargeBuilder().WithPeriods(periods).Build();
+            var charge = new ChargeInformationBuilder().WithPeriods(periods).Build();
             chargeRepository
                 .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeInformationIdentifier>()))
                 .ReturnsAsync(charge);
@@ -411,7 +411,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeInformations.Handlers
 
         private static GreenEnergyHub.Charges.Domain.ChargeInformations.ChargeInformation CreateValidCharge(IEnumerable<ChargePeriod> periods)
         {
-            return new ChargeBuilder()
+            return new ChargeInformationBuilder()
                 .WithPeriods(periods)
                 .Build();
         }

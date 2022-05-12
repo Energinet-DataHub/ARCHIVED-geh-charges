@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargePrice.Handlers
             [Frozen] Mock<IChargeInformationRepository> chargeRepository,
             [Frozen] Mock<IChargePriceFactory> chargePriceFactory,
             ChargePriceBuilder chargePriceBuilder,
-            ChargeBuilder chargeBuilder,
+            ChargeInformationBuilder chargeInformationBuilder,
             ChargeCommandReceivedEvent receivedEvent,
             ChargePricesHandler sut)
         {
@@ -56,7 +56,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargePrice.Handlers
             var validationResult = ValidationResult.CreateSuccess();
             SetupValidators(inputValidator, businessValidator, validationResult);
 
-            SetupRepositories(chargePriceRepository, chargeRepository, chargeBuilder);
+            SetupRepositories(chargePriceRepository, chargeRepository, chargeInformationBuilder);
             var confirmed = false;
             receiptService
                 .Setup(s => s.AcceptAsync(It.IsAny<ChargeCommand>()))
@@ -64,7 +64,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargePrice.Handlers
 
             var chargePrice = chargePriceBuilder.Build();
             chargePriceFactory
-                .Setup(s => s.CreateFromChargeOperationDtoAsync(It.IsAny<ChargeOperationDto>(), It.IsAny<Point>()))
+                .Setup(s => s.CreateChargePriceFromPointAsync(It.IsAny<ChargeInformationIdentifier>(), It.IsAny<Point>()))
                 .ReturnsAsync(chargePrice);
 
             // Act
@@ -82,7 +82,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargePrice.Handlers
             [Frozen] Mock<IBusinessValidator<ChargeOperationDto>> businessValidator,
             [Frozen] Mock<IChargeCommandReceiptService> receiptService,
             [Frozen] Mock<IChargeInformationRepository> chargeRepository,
-            ChargeBuilder chargeBuilder,
+            ChargeInformationBuilder chargeInformationBuilder,
             ChargeCommandReceivedEvent receivedEvent,
             ChargePricesHandler sut)
         {
@@ -90,7 +90,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargePrice.Handlers
             var validationResult = GetFailedValidationResult();
             SetupValidators(inputValidator, businessValidator, validationResult);
             var rejected = false;
-            var charge = chargeBuilder.Build();
+            var charge = chargeInformationBuilder.Build();
             chargeRepository
                 .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeInformationIdentifier>()))
                 .ReturnsAsync(charge);
@@ -125,18 +125,18 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargePrice.Handlers
             [Frozen] Mock<IChargeInformationRepository> chargeRepository,
             [Frozen] Mock<IChargePriceRepository> chargePriceRepository,
             [Frozen] Mock<IChargePriceFactory> chargePriceFactory,
-            ChargeBuilder chargeBuilder,
+            ChargeInformationBuilder chargeInformationBuilder,
             ChargePriceBuilder chargePriceBuilder,
             ChargePricesHandler sut)
         {
             // Arrange
             var validationResult = ValidationResult.CreateSuccess();
             SetupValidators(inputValidator, businessValidator, validationResult);
-            SetupRepositories(chargePriceRepository, chargeRepository, chargeBuilder);
+            SetupRepositories(chargePriceRepository, chargeRepository, chargeInformationBuilder);
             var chargeCommand = CreateChargeCommandWith24Points();
             var chargePrice = chargePriceBuilder.Build();
             chargePriceFactory
-                .Setup(x => x.CreateFromChargeOperationDtoAsync(It.IsAny<ChargeOperationDto>(), It.IsAny<Point>()))
+                .Setup(x => x.CreateChargePriceFromPointAsync(It.IsAny<ChargeInformationIdentifier>(), It.IsAny<Point>()))
                 .ReturnsAsync(chargePrice);
             var receivedEvent = new ChargeCommandReceivedEvent(InstantHelper.GetTodayAtMidnightUtc(), chargeCommand);
 
@@ -149,10 +149,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargePrice.Handlers
                 Times.Exactly(24));
         }
 
+        // ½Todo: Count Operations accepted and rejected if an inputvalidation fails
+        // Todo: Count Operations accepted and rejected if a businessvalidatin fails
+        // Todo: Count Operations accepted if no one fails
+        // Todo: Count no of prices when only updates a part of the series
         private static void SetupRepositories(
             [Frozen] Mock<IChargePriceRepository> chargePriceRepository,
             [Frozen] Mock<IChargeInformationRepository> chargeRepository,
-            ChargeBuilder chargeBuilder)
+            ChargeInformationBuilder chargeInformationBuilder)
         {
             chargePriceRepository
                 .Setup(r => r.AddAsync(It.IsAny<GreenEnergyHub.Charges.Domain.ChargePrices.ChargePrice>()))
@@ -160,7 +164,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargePrice.Handlers
             chargePriceRepository
                 .Setup(r => r.GetOrNullAsync(It.IsAny<Guid>(), It.IsAny<Instant>(), It.IsAny<Instant>()))!
                 .ReturnsAsync(null as ICollection<GreenEnergyHub.Charges.Domain.ChargePrices.ChargePrice>);
-            var charge = chargeBuilder.Build();
+            var charge = chargeInformationBuilder.Build();
             chargeRepository
                 .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeInformationIdentifier>()))!
                 .ReturnsAsync(charge);

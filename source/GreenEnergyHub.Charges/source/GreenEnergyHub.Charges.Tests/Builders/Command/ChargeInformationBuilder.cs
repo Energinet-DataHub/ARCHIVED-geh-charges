@@ -20,11 +20,11 @@ using GreenEnergyHub.Charges.Domain.Common;
 
 namespace GreenEnergyHub.Charges.Tests.Builders.Command
 {
-    public class ChargeBuilder
+    public class ChargeInformationBuilder
     {
         private List<ChargePeriod> _periods = new();
 
-        public ChargeBuilder WithPeriods(IEnumerable<ChargePeriod> periods)
+        public ChargeInformationBuilder WithPeriods(IEnumerable<ChargePeriod> periods)
         {
             _periods = periods.ToList();
             return this;

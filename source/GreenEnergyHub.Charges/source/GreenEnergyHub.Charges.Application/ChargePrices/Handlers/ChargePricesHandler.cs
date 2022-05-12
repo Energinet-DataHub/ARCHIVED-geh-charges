@@ -136,9 +136,14 @@ namespace GreenEnergyHub.Charges.Application.ChargePrices.Handlers
         {
             var chargePrices = await GetChargePriceAsync(chargeInformationId, operation).ConfigureAwait(false);
             _chargePriceRepository.RemoveRange(chargePrices);
+            var chargeInformationIdentifier = new ChargeInformationIdentifier(
+                operation.ChargeInformationId,
+                operation.ChargeOwner,
+                operation.Type);
+
             foreach (var point in operation.Points)
             {
-                var chargePrice = await _chargePriceFactory.CreateFromChargeOperationDtoAsync(operation, point)
+                var chargePrice = await _chargePriceFactory.CreateChargePriceFromPointAsync(chargeInformationIdentifier, point)
                     .ConfigureAwait(false);
                 await _chargePriceRepository.AddAsync(chargePrice).ConfigureAwait(false);
             }
@@ -158,13 +163,13 @@ namespace GreenEnergyHub.Charges.Application.ChargePrices.Handlers
                         endDate).ConfigureAwait(false);
         }
 
-        private async Task<Domain.ChargeInformations.ChargeInformation?> GetChargeAsync(ChargeOperationDto chargeOperationDto)
+        private async Task<ChargeInformation?> GetChargeAsync(ChargeOperationDto operation)
         {
-            var chargeIdentifier = new ChargeInformationIdentifier(
-                chargeOperationDto.ChargeInformationId,
-                chargeOperationDto.ChargeOwner,
-                chargeOperationDto.Type);
-            return await _chargeInformationInformationRepository.GetOrNullAsync(chargeIdentifier).ConfigureAwait(false);
+            var chargeInformationIdentifier = new ChargeInformationIdentifier(
+                operation.ChargeInformationId,
+                operation.ChargeOwner,
+                operation.Type);
+            return await _chargeInformationInformationRepository.GetOrNullAsync(chargeInformationIdentifier).ConfigureAwait(false);
         }
     }
 }

@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<MessageExtractor<ChargeCommandAcceptedEvent>>();
             serviceCollection.AddScoped<IChargeInformationCreatedEventFactory, ChargeInformationCreatedEventFactory>();
             serviceCollection.AddScoped<IChargePricesUpdatedEventFactory, ChargePricesUpdatedEventFactory>();
-            serviceCollection.AddScoped<IChargeInformationPublisher, ChargeInformationInformationPublisher>();
+            serviceCollection.AddScoped<IChargeInformationPublisher, ChargeInformationPublisher>();
             serviceCollection.AddScoped<IChargePricesUpdatedPublisher, ChargePricesUpdatedPublisher>();
             serviceCollection.AddScoped<IChargeIntegrationEventsPublisher, ChargeIntegrationEventsPublisher>();
 

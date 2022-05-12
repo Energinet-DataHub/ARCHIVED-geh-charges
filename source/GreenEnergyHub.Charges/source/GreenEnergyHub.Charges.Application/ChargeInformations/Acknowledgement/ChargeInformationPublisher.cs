@@ -20,12 +20,12 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 
 namespace GreenEnergyHub.Charges.Application.ChargeInformations.Acknowledgement
 {
-    public class ChargeInformationInformationPublisher : IChargeInformationPublisher
+    public class ChargeInformationPublisher : IChargeInformationPublisher
     {
         private readonly IMessageDispatcher<ChargeInformationCreatedEvent> _messageChargeDispatcher;
         private readonly IChargeInformationCreatedEventFactory _chargeInformationCreatedEventFactory;
 
-        public ChargeInformationInformationPublisher(
+        public ChargeInformationPublisher(
             IMessageDispatcher<ChargeInformationCreatedEvent> messageChargeDispatcher,
             IChargeInformationCreatedEventFactory chargeInformationCreatedEventFactory)
         {
