@@ -43,6 +43,7 @@ limitations under the License.
       <EmbeddedResource Include="Scripts\Model\202204191415 Ensure unique charges by removing duplicates and adding constraint.sql" />
       <EmbeddedResource Include="Scripts\Model\202205111629 Rename Charge to ChargeInformation.sql" />
       <EmbeddedResource Include="Scripts\Model\202205111631 Rename ChargePoint to ChargePrice.sql" />
+      <EmbeddedResource Include="Scripts\Model\280320221347 Add unique constraint on Charge Link.sql" />
       <EmbeddedResource Include="Scripts\Seed\202201261740 Add default charges owner.sql" />
       <EmbeddedResource Include="Scripts\Seed\202201261741 Add default charges.sql" />
       <EmbeddedResource Include="Scripts\Seed\202201261742 Add default charge links.sql" />
