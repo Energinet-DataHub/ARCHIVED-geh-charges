@@ -1,5 +1,17 @@
 ﻿BEGIN TRANSACTION
 
+IF EXISTS (SELECT 1 FROM sys.objects WHERE NAME = 'UQ_DefaultOverlap_StartDateTime' AND TYPE='UQ')
+BEGIN
+    ALTER TABLE [Charges].[ChargeLink]
+        DROP CONSTRAINT UQ_DefaultOverlap_StartDateTime
+END
+
+IF EXISTS (SELECT 1 FROM sys.objects WHERE NAME = 'UQ_DefaultOverlap_EndDateTime' AND TYPE='UQ')
+BEGIN
+    ALTER TABLE [Charges].[ChargeLink]
+        DROP CONSTRAINT UQ_DefaultOverlap_EndDateTime
+END
+
 DELETE T
 FROM
 (
