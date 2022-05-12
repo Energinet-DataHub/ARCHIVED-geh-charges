@@ -50,7 +50,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
             return ValidationRuleSet.FromRules(rules);
         }
 
-        private async Task<List<IValidationError>> GetRulesForOperationAsync(ChargeOperationDto chargeOperationDto)
+        private async Task<List<IValidationRule>> GetRulesForOperationAsync(ChargeOperationDto chargeOperationDto)
         {
             var configuration = await _rulesConfigurationRepository.GetConfigurationAsync().ConfigureAwait(false);
             var charge = await GetChargeOrNullAsync(chargeOperationDto).ConfigureAwait(false);

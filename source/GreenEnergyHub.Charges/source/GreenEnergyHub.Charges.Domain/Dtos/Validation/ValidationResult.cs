@@ -53,7 +53,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
             return new ValidationResult();
         }
 
-        public static ValidationResult CreateFailure(IList<IValidationError> invalidRules)
+        public static ValidationResult CreateFailure(List<IValidationError> invalidRules)
         {
             return new ValidationResult(invalidRules.ToArray());
         }

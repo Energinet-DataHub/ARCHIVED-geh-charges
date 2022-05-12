@@ -13,29 +13,30 @@
 // limitations under the License.
 
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 {
     public class ValidationRuleSet : IValidationRuleSet
     {
-        private readonly List<IValidationError> _rules;
+        private readonly List<IValidationRule> _rules;
 
-        private ValidationRuleSet(List<IValidationError> rules)
+        private ValidationRuleSet(List<IValidationRule> rules)
         {
             _rules = rules;
         }
 
-        public static IValidationRuleSet FromRules(List<IValidationError> rules)
+        public static IValidationRuleSet FromRules(List<IValidationRule> rules)
         {
             return new ValidationRuleSet(rules);
         }
 
-        public IReadOnlyCollection<IValidationError> GetRules() => _rules.AsReadOnly();
+        public ReadOnlyCollection<IValidationRule> GetRules() => _rules.AsReadOnly();
 
         public ValidationResult Validate()
         {
-            var invalidRules = _rules.Where(r => !r.ValidationRule.IsValid).ToList();
+            var invalidRules = _rules.Where(r => !r.IsValid).ToList();
             return invalidRules.Any() ?
                 ValidationResult.CreateFailure(invalidRules) :
                 ValidationResult.CreateSuccess();
