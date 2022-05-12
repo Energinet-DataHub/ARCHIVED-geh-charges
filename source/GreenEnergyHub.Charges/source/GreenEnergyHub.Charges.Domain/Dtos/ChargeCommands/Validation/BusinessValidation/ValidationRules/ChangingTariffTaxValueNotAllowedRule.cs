@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.ChargeInformation;
+using GreenEnergyHub.Charges.Domain.ChargeInformations;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules
@@ -20,9 +20,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
     public class ChangingTariffTaxValueNotAllowedRule : IValidationRuleForOperation
     {
         private readonly ChargeOperationDto _chargeOperationDto;
-        private readonly ChargeInformation.ChargeInformation _chargeInformation;
+        private readonly ChargeInformations.ChargeInformation _chargeInformation;
 
-        public ChangingTariffTaxValueNotAllowedRule(ChargeOperationDto chargeOperationDto, ChargeInformation.ChargeInformation chargeInformation)
+        public ChangingTariffTaxValueNotAllowedRule(ChargeOperationDto chargeOperationDto, ChargeInformations.ChargeInformation chargeInformation)
         {
             _chargeOperationDto = chargeOperationDto;
             _chargeInformation = chargeInformation;

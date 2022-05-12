@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System;
-using GreenEnergyHub.Charges.Domain.ChargeInformation;
+using GreenEnergyHub.Charges.Domain.ChargeInformations;
 using GreenEnergyHub.Charges.Infrastructure.Core.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

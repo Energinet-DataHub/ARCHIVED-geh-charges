@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.ChargeInformation;
+using GreenEnergyHub.Charges.Domain.ChargeInformations;
 using GreenEnergyHub.Charges.Domain.Common;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules;

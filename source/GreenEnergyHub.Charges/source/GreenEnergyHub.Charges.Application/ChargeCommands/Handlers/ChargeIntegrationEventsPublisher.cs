@@ -15,7 +15,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.ChargeInformation.Acknowledgement;
+using GreenEnergyHub.Charges.Application.ChargeInformations.Acknowledgement;
 using GreenEnergyHub.Charges.Application.ChargePrices.Acknowledgement;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 

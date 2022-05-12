@@ -14,7 +14,7 @@
 
 using Energinet.DataHub.Core.Messaging.Protobuf;
 using Google.Protobuf;
-using GreenEnergyHub.Charges.Application.ChargeInformation.Acknowledgement;
+using GreenEnergyHub.Charges.Application.ChargeInformations.Acknowledgement;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Core.Enumeration;
 

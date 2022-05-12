@@ -16,7 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.ChargeInformation;
+using GreenEnergyHub.Charges.Domain.ChargeInformations;
 using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
 using GreenEnergyHub.Charges.Domain.Dtos.CreateDefaultChargeLinksRequests;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
@@ -89,7 +89,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
                 .ConfigureAwait(false);
         }
 
-        private static string GetChargeOwner(ChargeInformation.ChargeInformation chargeInformation, IReadOnlyCollection<MarketParticipant> owners)
+        private static string GetChargeOwner(ChargeInformations.ChargeInformation chargeInformation, IReadOnlyCollection<MarketParticipant> owners)
         {
             return owners.Single(o => o.Id == chargeInformation.OwnerId).MarketParticipantId;
         }

@@ -16,7 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Core.DateTime;
-using GreenEnergyHub.Charges.Domain.ChargeInformation;
+using GreenEnergyHub.Charges.Domain.ChargeInformations;
 using GreenEnergyHub.Charges.Domain.Common;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
@@ -71,7 +71,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
         }
 
         private static IEnumerable<IValidationRule> AddTariffOnlyRules(
-            ChargeOperationDto chargeOperationDto, ChargeInformation.ChargeInformation chargeInformation)
+            ChargeOperationDto chargeOperationDto, ChargeInformations.ChargeInformation chargeInformation)
         {
             return new List<IValidationRule> { new ChangingTariffTaxValueNotAllowedRule(chargeOperationDto, chargeInformation) };
         }
@@ -79,7 +79,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
         private void AddUpdateRules(
             List<IValidationRule> rules,
             ChargeOperationDto chargeOperationDto,
-            ChargeInformation.ChargeInformation existingChargeInformation)
+            ChargeInformations.ChargeInformation existingChargeInformation)
         {
             var updateRules = new List<IValidationRule>
             {
@@ -106,7 +106,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
             return rules;
         }
 
-        private Task<ChargeInformation.ChargeInformation?> GetChargeOrNullAsync(ChargeOperationDto chargeOperationDto)
+        private Task<ChargeInformations.ChargeInformation?> GetChargeOrNullAsync(ChargeOperationDto chargeOperationDto)
         {
             var chargeIdentifier = new ChargeInformationIdentifier(
                 chargeOperationDto.ChargeInformationId,

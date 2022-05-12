@@ -18,7 +18,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeCommands.Acknowledgement;
 using GreenEnergyHub.Charges.Application.Persistence;
-using GreenEnergyHub.Charges.Domain.ChargeInformation;
+using GreenEnergyHub.Charges.Domain.ChargeInformations;
 using GreenEnergyHub.Charges.Domain.ChargePrices;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
@@ -158,7 +158,7 @@ namespace GreenEnergyHub.Charges.Application.ChargePrices.Handlers
                         endDate).ConfigureAwait(false);
         }
 
-        private async Task<Domain.ChargeInformation.ChargeInformation?> GetChargeAsync(ChargeOperationDto chargeOperationDto)
+        private async Task<Domain.ChargeInformations.ChargeInformation?> GetChargeAsync(ChargeOperationDto chargeOperationDto)
         {
             var chargeIdentifier = new ChargeInformationIdentifier(
                 chargeOperationDto.ChargeInformationId,

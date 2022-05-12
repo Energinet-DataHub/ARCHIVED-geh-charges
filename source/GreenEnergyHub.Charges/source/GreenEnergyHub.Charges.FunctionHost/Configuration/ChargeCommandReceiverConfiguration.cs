@@ -14,11 +14,11 @@
 
 using GreenEnergyHub.Charges.Application.ChargeCommands.Acknowledgement;
 using GreenEnergyHub.Charges.Application.ChargeCommands.Handlers;
-using GreenEnergyHub.Charges.Application.ChargeInformation.Handlers;
+using GreenEnergyHub.Charges.Application.ChargeInformations.Handlers;
 using GreenEnergyHub.Charges.Application.ChargePrices.Handlers;
 using GreenEnergyHub.Charges.Core.Currency;
 using GreenEnergyHub.Charges.Core.DateTime;
-using GreenEnergyHub.Charges.Domain.ChargeInformation;
+using GreenEnergyHub.Charges.Domain.ChargeInformations;
 using GreenEnergyHub.Charges.Domain.ChargePrices;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;

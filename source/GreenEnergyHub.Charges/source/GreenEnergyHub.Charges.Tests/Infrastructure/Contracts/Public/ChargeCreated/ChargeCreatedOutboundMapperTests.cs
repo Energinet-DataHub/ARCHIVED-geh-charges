@@ -14,7 +14,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using GreenEnergyHub.Charges.Application.ChargeInformation.Acknowledgement;
+using GreenEnergyHub.Charges.Application.ChargeInformations.Acknowledgement;
 using GreenEnergyHub.Charges.Infrastructure.Contracts.Public.ChargeCreated;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Protobuf;

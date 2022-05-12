@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.ChargeInformation;
+using GreenEnergyHub.Charges.Domain.ChargeInformations;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.Common;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
@@ -103,7 +103,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 .WithMessage("Violation of UNIQUE KEY constraint 'UQ_DefaultOverlap_StartDateTime'*");
         }
 
-        private ChargeLink CreateExpectedChargeLink(ChargeLink chargeLink, (Guid ChargeInformationId, Guid MeteringPointId) ids)
+        private static ChargeLink CreateExpectedChargeLink(ChargeLink chargeLink, (Guid ChargeInformationId, Guid MeteringPointId) ids)
         {
             return new ChargeLink(
                 ids.ChargeInformationId,

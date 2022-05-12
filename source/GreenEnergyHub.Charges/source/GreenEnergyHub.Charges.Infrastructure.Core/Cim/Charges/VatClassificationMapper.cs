@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System.ComponentModel;
-using GreenEnergyHub.Charges.Domain.ChargeInformation;
+using GreenEnergyHub.Charges.Domain.ChargeInformations;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.Charges
 {
