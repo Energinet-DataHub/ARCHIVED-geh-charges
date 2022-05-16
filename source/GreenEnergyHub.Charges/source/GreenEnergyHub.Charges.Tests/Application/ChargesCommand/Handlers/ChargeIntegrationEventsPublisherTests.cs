@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargesCommand.Handlers
         [Theory]
         [InlineAutoDomainData]
         public async Task HandleAsync_WhenCalledWithPrices_ShouldCallBothSenders(
-            [Frozen] Mock<IChargeInformationPublisher> chargeSender,
+            [Frozen] Mock<IChargePublisher> chargeSender,
             [Frozen] Mock<IChargePricesUpdatedPublisher> chargePricesUpdatedSender,
             ChargeCommandAcceptedEvent chargeCommandAcceptedEvent,
             ChargeIntegrationEventsPublisher sut)
@@ -42,14 +42,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargesCommand.Handlers
             await sut.PublishAsync(chargeCommandAcceptedEvent).ConfigureAwait(false);
 
             // Assert
-            chargeSender.Verify(x => x.PublishChargeInformationCreatedAsync(It.IsAny<ChargeOperationDto>()), Times.Exactly(3));
+            chargeSender.Verify(x => x.PublishChargeCreatedAsync(It.IsAny<ChargeOperationDto>()), Times.Exactly(3));
             chargePricesUpdatedSender.Verify(x => x.PublishChargePricesAsync(It.IsAny<ChargeOperationDto>()), Times.Exactly(3));
         }
 
         [Theory]
         [InlineAutoDomainData]
         public async Task HandleAsync_WhenCalledWithoutPrices_ShouldOnlyCallChargeCreatedSender(
-            [Frozen] Mock<IChargeInformationPublisher> chargeSender,
+            [Frozen] Mock<IChargePublisher> chargeSender,
             [Frozen] Mock<IChargePricesUpdatedPublisher> chargePricesUpdatedSender,
             ChargeCommandBuilder chargeCommandBuilder,
             ChargeCommandAcceptedEventBuilder chargeCommandAcceptedEventBuilder,
@@ -63,7 +63,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargesCommand.Handlers
             await sut.PublishAsync(acceptedEvent).ConfigureAwait(false);
 
             // Assert
-            chargeSender.Verify(x => x.PublishChargeInformationCreatedAsync(It.IsAny<ChargeOperationDto>()), Times.Once);
+            chargeSender.Verify(x => x.PublishChargeCreatedAsync(It.IsAny<ChargeOperationDto>()), Times.Once);
             chargePricesUpdatedSender.Verify(x => x.PublishChargePricesAsync(It.IsAny<ChargeOperationDto>()), Times.Never);
         }
     }

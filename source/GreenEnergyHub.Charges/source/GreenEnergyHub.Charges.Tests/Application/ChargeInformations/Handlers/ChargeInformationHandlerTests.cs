@@ -21,6 +21,7 @@ using FluentAssertions;
 using GreenEnergyHub.Charges.Application.ChargeCommands.Acknowledgement;
 using GreenEnergyHub.Charges.Application.ChargeInformations.Handlers;
 using GreenEnergyHub.Charges.Domain.ChargeInformations;
+using GreenEnergyHub.Charges.Domain.ChargePrices;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
@@ -32,6 +33,7 @@ using Moq;
 using NodaTime;
 using Xunit;
 using Xunit.Categories;
+using Duration = NodaTime.Duration;
 
 namespace GreenEnergyHub.Charges.Tests.Application.ChargeInformations.Handlers
 {
@@ -57,8 +59,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeInformations.Handlers
 
             var stored = false;
             chargeRepository
-                .Setup(r => r.AddAsync(It.IsAny<Charges.Domain.ChargeInformations.ChargeInformation>()))
-                .Callback<Charges.Domain.ChargeInformations.ChargeInformation>(_ => stored = true);
+                .Setup(r => r.AddAsync(It.IsAny<ChargeInformation>()))
+                .Callback<ChargeInformation>(_ => stored = true);
             chargeRepository
                 .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeInformationIdentifier>()))
                 .ReturnsAsync(null as ChargeInformation);
@@ -169,7 +171,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeInformations.Handlers
             [Frozen] Mock<IBusinessValidator<ChargeOperationDto>> businessValidator,
             [Frozen] Mock<IChargeInformationRepository> chargeRepository,
             [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
+            [Frozen] Mock<IChargePriceRepository> chargePriceRepository,
             [Frozen] Instant stopDate,
+            ChargePriceSeriesBuilder priceSeriesBuilder,
             ChargeCommandReceivedEvent receivedEvent,
             ChargeInformationHandler sut)
         {
@@ -179,13 +183,25 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeInformations.Handlers
             var periods = CreateValidPeriodsFromOffset(stopDate);
             var charge = CreateValidCharge(periods);
             var newPeriod = new ChargePeriodBuilder().WithStartDateTime(stopDate).WithEndDateTime(stopDate).Build();
-
             chargeRepository
                 .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeInformationIdentifier>()))
                 .ReturnsAsync(charge);
             chargePeriodFactory
                 .Setup(r => r.CreateFromChargeOperationDto(It.IsAny<ChargeOperationDto>()))
                 .Returns(newPeriod);
+
+            var priceList = priceSeriesBuilder
+                .WithTimeAndPrice(InstantHelper.GetYesterdayAtMidnightUtc(), 1.00m)
+                .WithTimeAndPrice(InstantHelper.GetTodayAtMidnightUtc(), 2.00m)
+                .WithTimeAndPrice(InstantHelper.GetTomorrowAtMidnightUtc(), 3.00m)
+                .WithTimeAndPrice(InstantHelper.GetTodayPlusDaysAtMidnightUtc(2), 4.00m)
+                .Build();
+            chargePriceRepository
+                .Setup(r => r.GetOrNullAsync(
+                    It.IsAny<Guid>(),
+                    It.IsAny<Instant>(),
+                    It.IsAny<Instant>()))!
+                .ReturnsAsync(null as IEnumerable<ChargePrice>);
 
             // Act
             await sut.HandleAsync(receivedEvent);
@@ -194,6 +210,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeInformations.Handlers
             charge.Periods.Count.Should().Be(2);
             var actual = charge.Periods.OrderByDescending(p => p.StartDateTime).First();
             actual.EndDateTime.Should().Be(stopDate);
+            chargePriceRepository.Verify(x => x.RemoveRange(
+                It.IsAny<IEnumerable<ChargePrice>>()));
         }
 
         [Theory]
@@ -409,7 +427,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeInformations.Handlers
             };
         }
 
-        private static GreenEnergyHub.Charges.Domain.ChargeInformations.ChargeInformation CreateValidCharge(IEnumerable<ChargePeriod> periods)
+        private static ChargeInformation CreateValidCharge(IEnumerable<ChargePeriod> periods)
         {
             return new ChargeInformationBuilder()
                 .WithPeriods(periods)

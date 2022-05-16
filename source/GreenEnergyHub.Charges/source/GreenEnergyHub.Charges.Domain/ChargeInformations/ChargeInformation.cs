@@ -126,7 +126,6 @@ namespace GreenEnergyHub.Charges.Domain.ChargeInformations
 
             StopExistingPeriod(stopDate.Value);
             RemoveAllSubsequentPeriods(stopDate.Value);
-            //_Todo_: _points.RemoveAll(p => p.Time >= stopDate); this should be done elsewhere
         }
 
         public void CancelStop(ChargePeriod chargePeriod)

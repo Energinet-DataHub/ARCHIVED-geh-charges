@@ -19,11 +19,13 @@ using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeCommands.Acknowledgement;
 using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.ChargeInformations;
+using GreenEnergyHub.Charges.Domain.ChargePrices;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.TestCore;
 
 namespace GreenEnergyHub.Charges.Application.ChargeInformations.Handlers
 {
@@ -33,6 +35,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeInformations.Handlers
         private readonly IInputValidator<ChargeOperationDto> _inputValidator;
         private readonly IBusinessValidator<ChargeOperationDto> _businessValidator;
         private readonly IChargeInformationRepository _chargeInformationRepository;
+        private readonly IChargePriceRepository _chargePriceRepository;
         private readonly IChargeInformationFactory _chargeInformationFactory;
         private readonly IChargePeriodFactory _chargePeriodFactory;
         private readonly IUnitOfWork _unitOfWork;
@@ -42,6 +45,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeInformations.Handlers
             IInputValidator<ChargeOperationDto> inputValidator,
             IBusinessValidator<ChargeOperationDto> businessValidator,
             IChargeInformationRepository chargeInformationRepository,
+            IChargePriceRepository chargePriceRepository,
             IChargeInformationFactory chargeInformationFactory,
             IChargePeriodFactory chargePeriodFactory,
             IUnitOfWork unitOfWork)
@@ -50,6 +54,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeInformations.Handlers
             _inputValidator = inputValidator;
             _businessValidator = businessValidator;
             _chargeInformationRepository = chargeInformationRepository;
+            _chargePriceRepository = chargePriceRepository;
             _chargeInformationFactory = chargeInformationFactory;
             _chargePeriodFactory = chargePeriodFactory;
             _unitOfWork = unitOfWork;
@@ -108,6 +113,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeInformations.Handlers
                         break;
                     case OperationType.Stop:
                         charge!.Stop(operation.EndDateTime);
+                        await RemoveChargePricesAsync(charge, operation).ConfigureAwait(false);
                         break;
                     case OperationType.CancelStop:
                         HandleCancelStopEvent(charge!, operation);
@@ -124,6 +130,15 @@ namespace GreenEnergyHub.Charges.Application.ChargeInformations.Handlers
             var document = commandReceivedEvent.Command.Document;
             await RejectInvalidOperationsAsync(operationsToBeRejected, document, rejectionRules).ConfigureAwait(false);
             await AcceptValidOperationsAsync(operationsToBeConfirmed, document).ConfigureAwait(false);
+        }
+
+        private async Task RemoveChargePricesAsync(ChargeInformation charge, ChargeOperationDto operation)
+        {
+            var chargePrices = await _chargePriceRepository.GetOrNullAsync(
+                charge.Id,
+                operation.EndDateTime,
+                InstantHelper.GetEndDefault()).ConfigureAwait(false);
+            _chargePriceRepository.RemoveRange(chargePrices);
         }
 
         private async Task RejectInvalidOperationsAsync(
@@ -160,19 +175,19 @@ namespace GreenEnergyHub.Charges.Application.ChargeInformations.Handlers
             await _chargeInformationRepository.AddAsync(charge).ConfigureAwait(false);
         }
 
-        private void HandleUpdateEvent(Domain.ChargeInformations.ChargeInformation chargeInformation, ChargeOperationDto chargeOperationDto)
+        private void HandleUpdateEvent(ChargeInformation chargeInformation, ChargeOperationDto chargeOperationDto)
         {
             var newChargePeriod = _chargePeriodFactory.CreateFromChargeOperationDto(chargeOperationDto);
             chargeInformation.Update(newChargePeriod);
         }
 
-        private void HandleCancelStopEvent(Domain.ChargeInformations.ChargeInformation chargeInformation, ChargeOperationDto chargeOperationDto)
+        private void HandleCancelStopEvent(ChargeInformation chargeInformation, ChargeOperationDto chargeOperationDto)
         {
             var newChargePeriod = _chargePeriodFactory.CreateFromChargeOperationDto(chargeOperationDto);
             chargeInformation.CancelStop(newChargePeriod);
         }
 
-        private static OperationType GetOperationType(ChargeOperationDto chargeOperationDto, Domain.ChargeInformations.ChargeInformation? charge)
+        private static OperationType GetOperationType(ChargeOperationDto chargeOperationDto, ChargeInformation? charge)
         {
             if (charge == null)
             {
@@ -190,7 +205,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeInformations.Handlers
                 : OperationType.Update;
         }
 
-        private async Task<Domain.ChargeInformations.ChargeInformation?> GetChargeAsync(ChargeOperationDto chargeOperationDto)
+        private async Task<ChargeInformation?> GetChargeAsync(ChargeOperationDto chargeOperationDto)
         {
             var chargeIdentifier = new ChargeInformationIdentifier(
                 chargeOperationDto.ChargeInformationId,

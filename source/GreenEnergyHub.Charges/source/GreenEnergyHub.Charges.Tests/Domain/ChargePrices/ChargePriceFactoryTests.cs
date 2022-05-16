@@ -20,7 +20,6 @@ using GreenEnergyHub.Charges.Domain.ChargePrices;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.TestHelpers;
-using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
 using Moq;
 using Xunit;
 using Xunit.Categories;

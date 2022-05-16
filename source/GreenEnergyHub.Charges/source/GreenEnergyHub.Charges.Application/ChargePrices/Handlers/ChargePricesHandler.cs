@@ -25,6 +25,9 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.TestCore;
+using Microsoft.Azure.Amqp.Framing;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.ChargePrices.Handlers
 {
@@ -33,7 +36,7 @@ namespace GreenEnergyHub.Charges.Application.ChargePrices.Handlers
         private readonly IChargeCommandReceiptService _chargeCommandReceiptService;
         private readonly IInputValidator<ChargeOperationDto> _inputValidator;
         private readonly IBusinessValidator<ChargeOperationDto> _businessValidator;
-        private readonly IChargeInformationRepository _chargeInformationInformationRepository;
+        private readonly IChargeInformationRepository _chargeInformationRepository;
         private readonly IChargePriceRepository _chargePriceRepository;
         private readonly IChargePriceFactory _chargePriceFactory;
         private readonly IUnitOfWork _unitOfWork;
@@ -42,7 +45,7 @@ namespace GreenEnergyHub.Charges.Application.ChargePrices.Handlers
             IChargeCommandReceiptService chargeCommandReceiptService,
             IInputValidator<ChargeOperationDto> inputValidator,
             IBusinessValidator<ChargeOperationDto> businessValidator,
-            IChargeInformationRepository chargeInformationInformationRepository,
+            IChargeInformationRepository chargeInformationRepository,
             IChargePriceRepository chargePriceRepository,
             IChargePriceFactory chargePriceFactory,
             IUnitOfWork unitOfWork)
@@ -50,7 +53,7 @@ namespace GreenEnergyHub.Charges.Application.ChargePrices.Handlers
             _chargeCommandReceiptService = chargeCommandReceiptService;
             _inputValidator = inputValidator;
             _businessValidator = businessValidator;
-            _chargeInformationInformationRepository = chargeInformationInformationRepository;
+            _chargeInformationRepository = chargeInformationRepository;
             _chargePriceRepository = chargePriceRepository;
             _chargePriceFactory = chargePriceFactory;
             _unitOfWork = unitOfWork;
@@ -151,10 +154,15 @@ namespace GreenEnergyHub.Charges.Application.ChargePrices.Handlers
 
         private async Task<IEnumerable<ChargePrice>> GetChargePriceAsync(Guid chargeInformationId, ChargeOperationDto operationDto)
         {
+            Instant? startDate = null;
+            var endDate = InstantHelper.GetEndDefault();
             var orderedPoints = operationDto.Points.OrderBy(x => x.Time).ToList();
-            ArgumentNullException.ThrowIfNull(orderedPoints);
-            var startDate = orderedPoints.First().Time;
-            var endDate = orderedPoints.Last().Time;
+            if (orderedPoints.Count > 0)
+            {
+                startDate = orderedPoints.First().Time;
+                endDate = orderedPoints.Last().Time;
+            }
+
             return
                 await _chargePriceRepository
                     .GetOrNullAsync(
@@ -169,7 +177,7 @@ namespace GreenEnergyHub.Charges.Application.ChargePrices.Handlers
                 operation.ChargeInformationId,
                 operation.ChargeOwner,
                 operation.Type);
-            return await _chargeInformationInformationRepository.GetOrNullAsync(chargeInformationIdentifier).ConfigureAwait(false);
+            return await _chargeInformationRepository.GetOrNullAsync(chargeInformationIdentifier).ConfigureAwait(false);
         }
     }
 }

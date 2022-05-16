@@ -20,7 +20,7 @@ using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Application.ChargePrice.Factories
+namespace GreenEnergyHub.Charges.Tests.Application.ChargePrices.Factories
 {
     [UnitTest]
     public class ChargePricesUpdatedFactoryTests

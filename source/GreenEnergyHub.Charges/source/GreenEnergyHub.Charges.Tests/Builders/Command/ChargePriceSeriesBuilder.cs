@@ -14,20 +14,24 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.ChargePrices;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.Domain.ChargePrices
+namespace GreenEnergyHub.Charges.Tests.Builders.Command
 {
-    public interface IChargePriceRepository
+    public class ChargePriceSeriesBuilder
     {
-        Task AddAsync(ChargePrice chargePrice);
+        private List<ChargePrice> _chargePriceSeries = new List<ChargePrice> { };
 
-        Task<IEnumerable<ChargePrice>> GetOrNullAsync(
-            Guid chargeInformationId,
-            Instant? startDate,
-            Instant endDate);
+        public ChargePriceSeriesBuilder WithTimeAndPrice(Instant time, decimal price)
+        {
+            _chargePriceSeries.Add(new ChargePrice(Guid.NewGuid(), Guid.NewGuid(), time, price));
+            return this;
+        }
 
-        void RemoveRange(IEnumerable<ChargePrice> chargePrices);
+        public IEnumerable<ChargePrice> Build()
+        {
+            return _chargePriceSeries;
+        }
     }
 }

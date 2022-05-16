@@ -20,20 +20,20 @@ using GreenEnergyHub.Charges.Core.Enumeration;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Contracts.Public.ChargeCreated
 {
-    public class ChargeCreatedOutboundMapper : ProtobufOutboundMapper<ChargeInformationCreatedEvent>
+    public class ChargeCreatedOutboundMapper : ProtobufOutboundMapper<ChargeCreatedEvent>
     {
-        protected override IMessage Convert(ChargeInformationCreatedEvent chargeInformationCreatedEvent)
+        protected override IMessage Convert(ChargeCreatedEvent chargeCreatedEvent)
         {
             return new Infrastructure.Integration.ChargeCreated.ChargeCreated
             {
-                ChargeId = chargeInformationCreatedEvent.ChargeId,
-                ChargeType = chargeInformationCreatedEvent.ChargeType.Cast<Infrastructure.Integration.ChargeCreated.ChargeCreated.Types.ChargeType>(),
-                ChargeOwner = chargeInformationCreatedEvent.ChargeOwner,
-                Currency = chargeInformationCreatedEvent.Currency,
-                Resolution = chargeInformationCreatedEvent.Resolution.Cast<Infrastructure.Integration.ChargeCreated.ChargeCreated.Types.Resolution>(),
-                TaxIndicator = chargeInformationCreatedEvent.TaxIndicator,
-                StartDateTime = chargeInformationCreatedEvent.StartDateTime.ToTimestamp(),
-                EndDateTime = chargeInformationCreatedEvent.EndDateTime.ToTimestamp(),
+                ChargeId = chargeCreatedEvent.ChargeId,
+                ChargeType = chargeCreatedEvent.ChargeType.Cast<Infrastructure.Integration.ChargeCreated.ChargeCreated.Types.ChargeType>(),
+                ChargeOwner = chargeCreatedEvent.ChargeOwner,
+                Currency = chargeCreatedEvent.Currency,
+                Resolution = chargeCreatedEvent.Resolution.Cast<Infrastructure.Integration.ChargeCreated.ChargeCreated.Types.Resolution>(),
+                TaxIndicator = chargeCreatedEvent.TaxIndicator,
+                StartDateTime = chargeCreatedEvent.StartDateTime.ToTimestamp(),
+                EndDateTime = chargeCreatedEvent.EndDateTime.ToTimestamp(),
             };
         }
     }

@@ -15,7 +15,6 @@
 using System;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.ChargeInformations;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 
 namespace GreenEnergyHub.Charges.Domain.ChargePrices
 {

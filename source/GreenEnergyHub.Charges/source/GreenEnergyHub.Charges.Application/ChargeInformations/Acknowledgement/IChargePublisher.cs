@@ -12,13 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Application.ChargeInformations.Acknowledgement;
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 
-namespace GreenEnergyHub.Charges.Application.ChargeInformations.Factories
+namespace GreenEnergyHub.Charges.Application.ChargeInformations.Acknowledgement
 {
-    public interface IChargeInformationCreatedEventFactory
+    public interface IChargePublisher
     {
-        ChargeInformationCreatedEvent Create(ChargeOperationDto chargeOperationDto);
+        Task PublishChargeCreatedAsync(ChargeOperationDto chargeOperationDto);
+
+        Task PublishChargeUpdatedAsync(ChargeCommandAcceptedEvent chargeCommandAcceptedEvent);
     }
 }

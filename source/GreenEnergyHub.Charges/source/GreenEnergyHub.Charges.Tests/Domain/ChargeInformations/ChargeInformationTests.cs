@@ -369,29 +369,6 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             Assert.Throws<ArgumentNullException>(() => sut.Stop(stopDate));
         }
 
-        //[Fact]
-        // _Todo_: How and where should we remove those points after stopdate
-        // public void StopCharge_WhenPointsExistAfterStopDate_PointsRemoved()
-        // {
-        //     // Arrange
-        //     var points = new List<Point>
-        //     {
-        //         new(0, decimal.One, InstantHelper.GetTodayPlusDaysAtMidnightUtc(0)),
-        //         new(0, decimal.One, InstantHelper.GetTodayPlusDaysAtMidnightUtc(1)),
-        //         new(0, decimal.One, InstantHelper.GetTodayPlusDaysAtMidnightUtc(2)),
-        //         new(0, decimal.One, InstantHelper.GetTodayPlusDaysAtMidnightUtc(3)),
-        //         new(0, decimal.One, InstantHelper.GetTodayPlusDaysAtMidnightUtc(4)),
-        //     };
-        //     var sut = new ChargeBuilder()
-        //         .WithPeriods(new List<ChargePeriod> { new ChargePeriodBuilder().Build() })
-        //         .WithPoints(points).Build();
-        //
-        //     // Act
-        //     sut.Stop(InstantHelper.GetTodayPlusDaysAtMidnightUtc(2));
-        //
-        //     // Assert
-        //     sut.Points.Count.Should().Be(2);
-        // }
         [Fact]
         public void CancelStop_WhenStopPeriodExists_ThenAddNewLastPeriod()
         {
