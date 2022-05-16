@@ -1,8 +1,6 @@
 # Charges
 
-<!--
 [![codecov](https://codecov.io/gh/Energinet-DataHub/geh-charges/branch/main/graph/badge.svg?token=MGC9QR9S3Q)](https://codecov.io/gh/Energinet-DataHub/geh-charges)
--->
 
 ## Intro
 
@@ -59,15 +57,11 @@ If you are interested in the public contracts of the Charges domain, please visi
 
 ## Domain Road Map
 
-In the current program increment (PI) the planned work is captured by the stated PI goals:
+Planned work for the current program increment (PI):
 
-1. When a Grid Access Provider submits a **new charge**, the Charges domain will store it and make a confirmation message available to the Grid Access Provider, so that the Grid Access Provider may maintain its' charges.
-(Out of scope: Updating and stopping charges, some input and business validations)
+1. When a charge owner submits a charge price series, using the new business reason code `D08`, the Charges domain will be able to receive, validate, persist and forward it to relevant market partipants. When this is implemented, it will no longer be possible to include price series with charge information request submitted with business reason code `D18`.
 
-2. When a Grid Access Provider submits a **new metering point**, the Charges domain will link relevant TSO charges to the metering point, and if any of those charges are marked as tax a charge link message will be made available to the Grid Access Provider, so that a correct basis is provided for settling the customer(s) on the metering point.
-
-3. When a Grid Access Provider submits a **new charge link**, the Charges domain will store it and make a confirmation message available to the Grid Access Provider, so that the Grid Access Provider may maintain its charge links.
-(Out of scope: Updating and stopping charge links, validation)
+2. Subscribe to and use the integration events published by the [Market Participant](https://github.com/Energinet-DataHub/geh-market-participant) domain, thereby replacing the existing manual data synchronization process.
 
 ## Where can I get more help?
 
