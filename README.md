@@ -59,9 +59,9 @@ If you are interested in the public contracts of the Charges domain, please visi
 
 Planned work for the current program increment (PI):
 
-1. When a charge owner submits a charge price series, using the new business reason code 'D08', the Charges domain will be able to receive, validate, persist and forward it to relevant market partipants. When this is implemented, it will no longer be possible to include price series with charge information request submitted with business reason code 'D18'.
+1. When a charge owner submits a charge price series, using the new business reason code `D08`, the Charges domain will be able to receive, validate, persist and forward it to relevant market partipants. When this is implemented, it will no longer be possible to include price series with charge information request submitted with business reason code `D18`.
 
-2. Subscribe to and use integration events published by the Market Participant domain, replacing the existing manual data synchronization process.
+2. Subscribe to and use the integration events published by the [Market Participant](https://github.com/Energinet-DataHub/geh-market-participant) domain, thereby replacing the existing manual data synchronization process.
 
 ## Where can I get more help?
 
