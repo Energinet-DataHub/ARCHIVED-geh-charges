@@ -131,11 +131,12 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             var parsed = int.TryParse(triggeredBy, out var position);
             if (!string.IsNullOrWhiteSpace(triggeredBy) && parsed && position > 0)
                 return triggeredBy;
+
             var errorMessage = $"Invalid position ({triggeredBy}) for charge with " +
                                $"id: {chargeOperationDto.ChargeInformationId}," +
                                $"type: {chargeOperationDto.Type}," +
                                $"owner: {chargeOperationDto.ChargeOwner}";
-            _logger.LogError(errorMessage);
+            _logger.LogError("Invalid position: {errorMessage}", errorMessage);
 
             return CimValidationErrorTextTemplateMessages.Unknown;
         }
@@ -150,8 +151,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             }
             catch (Exception e)
             {
-                var errorMessage = $"Price not found by position: {triggeredBy}";
-                _logger.LogError(e, errorMessage);
+                _logger.LogError(e, "Price not found {errorMessage}", $"by position: {triggeredBy}");
 
                 return CimValidationErrorTextTemplateMessages.Unknown;
             }
@@ -161,8 +161,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
         {
             if (!string.IsNullOrWhiteSpace(triggeredBy))
                 return triggeredBy;
-            var errorMessage = $":Id for failed operation is null";
-            _logger.LogError(errorMessage);
+
+            _logger.LogError("Id for failed operation is null");
 
             return CimValidationErrorTextTemplateMessages.Unknown;
         }
