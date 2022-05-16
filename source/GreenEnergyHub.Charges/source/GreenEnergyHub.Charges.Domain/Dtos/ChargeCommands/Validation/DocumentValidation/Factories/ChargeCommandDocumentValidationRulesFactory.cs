@@ -42,20 +42,20 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.DocumentV
             return ValidationRuleSet.FromRules(rules);
         }
 
-        private async Task<List<IValidationRule>> GetRulesForDocumentAsync(DocumentDto documentDto)
+        private async Task<List<IValidationError>> GetRulesForDocumentAsync(DocumentDto documentDto)
         {
             var sender = await _marketParticipantRepository
                 .GetOrNullAsync(documentDto.Sender.Id)
                 .ConfigureAwait(false);
 
-            var rules = new List<IValidationRule>
+            var rules = new List<IValidationError>
             {
-                new CommandSenderMustBeAnExistingMarketParticipantRule(sender),
-                new BusinessReasonCodeMustBeUpdateChargeInformationOrChargePricesRule(documentDto),
-                new DocumentTypeMustBeRequestChangeOfPriceListRule(documentDto),
-                new RecipientIsMandatoryTypeValidationRule(documentDto),
-                new SenderIsMandatoryTypeValidationRule(documentDto),
-                new RecipientMustBeDdzRule(documentDto),
+                new ValidationError(new CommandSenderMustBeAnExistingMarketParticipantRule(sender)),
+                new ValidationError(new BusinessReasonCodeMustBeUpdateChargeInformationOrChargePricesRule(documentDto)),
+                new ValidationError(new DocumentTypeMustBeRequestChangeOfPriceListRule(documentDto)),
+                new ValidationError(new RecipientIsMandatoryTypeValidationRule(documentDto)),
+                new ValidationError(new SenderIsMandatoryTypeValidationRule(documentDto)),
+                new ValidationError(new RecipientMustBeDdzRule(documentDto)),
             };
 
             return rules;

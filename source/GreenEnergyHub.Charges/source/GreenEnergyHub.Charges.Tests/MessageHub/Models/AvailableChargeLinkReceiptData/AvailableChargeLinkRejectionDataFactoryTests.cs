@@ -62,10 +62,10 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
                 .Setup(f => f.Create(It.IsAny<ValidationError>(), rejectedEvent.ChargeLinksCommand, It.IsAny<ChargeLinkDto>()))
                 .Returns<ValidationError, ChargeLinksCommand, ChargeLinkDto>((validationError, _, _) =>
                     new AvailableReceiptValidationError(
-                        ReasonCode.D01, validationError.ValidationRuleIdentifier.ToString()));
+                        ReasonCode.D01, validationError.ValidationRule.ValidationRuleIdentifier.ToString()));
 
             var expectedValidationErrors = rejectedEvent.ValidationErrors
-                .Select(x => x.ValidationRuleIdentifier.ToString()).ToList();
+                .Select(x => x.ValidationRule.ValidationRuleIdentifier.ToString()).ToList();
 
             // Act
             var actualList = await sut.CreateAsync(rejectedEvent);

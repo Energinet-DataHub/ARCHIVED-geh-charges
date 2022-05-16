@@ -109,12 +109,12 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                 Times.Once);
         }
 
-        private static List<IValidationRule> GetFailedValidationResult()
+        private static List<IValidationError> GetFailedValidationResult()
         {
-            var failedRule = new Mock<IValidationRule>();
-            failedRule.Setup(r => r.IsValid).Returns(false);
+            var failedRule = new Mock<IValidationError>();
+            failedRule.Setup(r => r.ValidationRule.IsValid).Returns(false);
 
-            return new List<IValidationRule> { failedRule.Object };
+            return new List<IValidationError> { failedRule.Object };
         }
     }
 }

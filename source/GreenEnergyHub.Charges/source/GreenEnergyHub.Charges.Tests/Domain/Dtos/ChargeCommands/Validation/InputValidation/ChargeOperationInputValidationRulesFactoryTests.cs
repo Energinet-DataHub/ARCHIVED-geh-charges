@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
@@ -123,7 +124,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         private static void AssertAllRulesThatNeedTriggeredByForErrorMessageImplementsIValidationRuleWithExtendedData(
             CimValidationErrorTextToken cimValidationErrorTextToken,
-            IReadOnlyCollection<IValidationRule> validationRules)
+            ReadOnlyCollection<IValidationError> validationRules)
         {
             var type = typeof(CimValidationErrorTextTemplateMessages);
             foreach (var fieldInfo in type.GetFields(BindingFlags.Static | BindingFlags.Public))
@@ -137,7 +138,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 var errorText = fieldInfo.GetValue(null)!.ToString();
                 var validationErrorTextTokens = CimValidationErrorTextTokenMatcher.GetTokens(errorText!);
                 var validationRule = validationRules
-                    .FirstOrDefault(x => x.ValidationRuleIdentifier == validationRuleIdentifier);
+                    .FirstOrDefault(x => x.ValidationRule.ValidationRuleIdentifier == validationRuleIdentifier);
 
                 if (validationErrorTextTokens.Contains(cimValidationErrorTextToken) && validationRule != null)
                     Assert.True(validationRule is IValidationRuleWithExtendedData);

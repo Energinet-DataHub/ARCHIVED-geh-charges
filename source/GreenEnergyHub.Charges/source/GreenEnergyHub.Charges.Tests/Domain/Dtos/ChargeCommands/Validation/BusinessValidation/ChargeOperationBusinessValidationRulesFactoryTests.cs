@@ -18,6 +18,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
+using FluentAssertions;
 using GreenEnergyHub.Charges.Core;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
@@ -69,8 +70,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             var actualRules = actual.GetRules().Select(r => r.GetType());
 
             // Assert
-            Assert.Equal(1, actual.GetRules().Count); // This assert is added to ensure that when the rule set is expanded, the test gets attention as well.
-            Assert.Contains(expectedRule, actualRules);
+            actual.GetRules().Count.Should().Be(1); // This assert is added to ensure that when the rule set is expanded, the test gets attention as well.
+            actualRules.Should().Contain(expectedRule);
         }
 
         [Theory]

@@ -54,7 +54,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
             ArgumentNullException.ThrowIfNull(chargeLinksReceivedEvent);
 
             var operationsToBeRejected = new List<ChargeLinkDto>();
-            var rejectionRules = new List<IValidationRule>();
+            var rejectionRules = new List<IValidationError>();
             var operationsToBeConfirmed = new List<ChargeLinkDto>();
 
             var operations = chargeLinksReceivedEvent.ChargeLinksCommand.ChargeLinksOperations.ToArray();
@@ -69,8 +69,10 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
                     operationsToBeRejected = operations[i..].ToList();
                     rejectionRules.AddRange(validationResult.InvalidRules);
                     rejectionRules.AddRange(operationsToBeRejected.Skip(1)
-                        .Select(toBeRejected => new PreviousChargeLinkOperationsMustBeValidRule(
-                            operation.OperationId, toBeRejected)));
+                        .Select(toBeRejected =>
+                            new ValidationError(
+                                new PreviousChargeLinkOperationsMustBeValidRule(operation.OperationId, toBeRejected),
+                                operation.OperationId)));
                     break;
                 }
 
@@ -94,7 +96,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
         private async Task RejectInvalidOperationsAsync(
             IReadOnlyCollection<ChargeLinkDto> operationsToBeRejected,
             DocumentDto document,
-            IList<IValidationRule> rejectionRules)
+            List<IValidationError> rejectionRules)
         {
             if (operationsToBeRejected.Any())
             {

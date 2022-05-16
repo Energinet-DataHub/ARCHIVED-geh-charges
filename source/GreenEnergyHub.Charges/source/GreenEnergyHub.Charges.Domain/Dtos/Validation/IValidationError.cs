@@ -20,14 +20,14 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
     public interface IValidationError
     {
         /// <summary>
-        /// OperationId for which the validationRule is applicable
-        /// </summary>
-        string OperationId { get; }
-
-        /// <summary>
         /// ValidationRule that applies to the OperationId
         /// </summary>
         IValidationRule ValidationRule { get; }
+
+        /// <summary>
+        /// OperationId for which the validationRule is applicable
+        /// </summary>
+        public string? OperationId { get; }
 
         /// <summary>
         /// Violation of some validation rules are triggered by an element in a list.

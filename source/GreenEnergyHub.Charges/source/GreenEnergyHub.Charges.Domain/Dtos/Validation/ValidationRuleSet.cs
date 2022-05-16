@@ -20,23 +20,23 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 {
     public class ValidationRuleSet : IValidationRuleSet
     {
-        private readonly List<IValidationRule> _rules;
+        private readonly List<IValidationError> _rules;
 
-        private ValidationRuleSet(List<IValidationRule> rules)
+        private ValidationRuleSet(List<IValidationError> rules)
         {
             _rules = rules;
         }
 
-        public static IValidationRuleSet FromRules(List<IValidationRule> rules)
+        public static IValidationRuleSet FromRules(List<IValidationError> rules)
         {
             return new ValidationRuleSet(rules);
         }
 
-        public ReadOnlyCollection<IValidationRule> GetRules() => _rules.AsReadOnly();
+        public ReadOnlyCollection<IValidationError> GetRules() => _rules.AsReadOnly();
 
         public ValidationResult Validate()
         {
-            var invalidRules = _rules.Where(r => !r.IsValid).ToList();
+            var invalidRules = _rules.Where(r => !r.ValidationRule.IsValid).ToList();
             return invalidRules.Any() ?
                 ValidationResult.CreateFailure(invalidRules) :
                 ValidationResult.CreateSuccess();

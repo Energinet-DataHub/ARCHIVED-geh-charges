@@ -56,25 +56,25 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
             return ValidationRuleSet.FromRules(rules);
         }
 
-        private List<IValidationRule> GetMandatoryRulesForCommand(MeteringPoint? meteringPoint)
+        private List<IValidationError> GetMandatoryRulesForCommand(MeteringPoint? meteringPoint)
         {
-            return new List<IValidationRule>
+            return new List<IValidationError>
             {
-                new MeteringPointMustExistRule(meteringPoint),
+                new ValidationError(new MeteringPointMustExistRule(meteringPoint)),
             };
         }
 
-        private async Task<IEnumerable<IValidationRule>> GetRulesForChargeLinkDtoAsync(
+        private async Task<IList<IValidationError>> GetRulesForChargeLinkDtoAsync(
             ChargeLinkDto chargeLinkDto,
             MeteringPoint meteringPoint)
         {
-            var rules = new List<IValidationRule>();
+            var rules = new List<IValidationError>();
 
             var charge = await _chargeRepository
                 .GetOrNullAsync(new ChargeIdentifier(chargeLinkDto.SenderProvidedChargeId, chargeLinkDto.ChargeOwner, chargeLinkDto.ChargeType))
                 .ConfigureAwait(false);
 
-            rules.Add(new ChargeMustExistRule(charge, chargeLinkDto));
+            rules.Add(new ValidationError(new ChargeMustExistRule(charge, chargeLinkDto), chargeLinkDto.OperationId));
 
             if (charge == null)
                 return rules;
@@ -83,7 +83,10 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
                 .GetAsync(charge.Id, meteringPoint.Id)
                 .ConfigureAwait(false);
 
-            rules.Add(new ChargeLinksUpdateNotYetSupportedRule(chargeLinkDto, existingChargeLinks));
+            rules.Add(
+                new ValidationError(
+                    new ChargeLinksUpdateNotYetSupportedRule(chargeLinkDto, existingChargeLinks),
+                    chargeLinkDto.OperationId));
 
             return rules;
         }

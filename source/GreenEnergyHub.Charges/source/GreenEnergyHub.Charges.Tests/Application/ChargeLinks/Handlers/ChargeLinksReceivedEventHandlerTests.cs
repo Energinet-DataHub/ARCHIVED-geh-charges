@@ -68,9 +68,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             var links = new List<ChargeLinkDto> { linksDtoBuilder.Build() };
             var chargeLinksCommand = linksCommandBuilder.WithChargeLinks(links).Build();
             var chargeLinksReceivedEvent = new ChargeLinksReceivedEvent(Instant.MinValue, chargeLinksCommand);
-            var links = new List<ChargeLinkDto> { linksDtoBuilder.Build() };
-            var chargeLinksCommand = linksCommandBuilder.WithChargeLinks(links).Build();
-            var chargeLinksReceivedEvent = new ChargeLinksReceivedEvent(Instant.MinValue, chargeLinksCommand);
 
             SetupSuccessfulValidator(businessValidator);
             SetupFactories(chargeLinkFactory, chargeLinkCommandAcceptedEventFactory, chargeLinksAcceptedEvent, chargeLink);
@@ -142,9 +139,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             // Assert
             var validationRules = validationResultsArgs.Single().InvalidRules.ToList();
             var invalid = validationRules.Where(vr =>
-                vr.ValidationRuleIdentifier == ValidationRuleIdentifier.MeteringPointDoesNotExist);
+                vr.ValidationRule.ValidationRuleIdentifier == ValidationRuleIdentifier.MeteringPointDoesNotExist);
             var subsequent = validationRules.Where(vr =>
-                vr.ValidationRuleIdentifier == ValidationRuleIdentifier.SubsequentBundleOperationsFail);
+                vr.ValidationRule.ValidationRuleIdentifier == ValidationRuleIdentifier.SubsequentBundleOperationsFail);
 
             validationRules.Count.Should().Be(3);
             invalid.Count().Should().Be(1);
@@ -167,9 +164,11 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
         private static void SetupErroneousValidator(Mock<IBusinessValidator<ChargeLinkDto>> businessValidator)
         {
             businessValidator.Setup(x => x.ValidateAsync(It.IsAny<ChargeLinkDto>()))
-                .ReturnsAsync(ValidationResult.CreateFailure(new List<IValidationRule>
+                .ReturnsAsync(ValidationResult.CreateFailure(new List<IValidationError>
                 {
-                    new TestValidationRule(false, ValidationRuleIdentifier.MeteringPointDoesNotExist),
+                    new ValidationError(
+                        new TestValidationRule(false, ValidationRuleIdentifier.MeteringPointDoesNotExist),
+                        "testOperationId"),
                 }));
         }
 

@@ -20,6 +20,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.MessageHub.Models.Shared;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
+using GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Categories;
@@ -38,8 +39,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared
             var validationErrors = BuildValidationErrors();
 
             var expected = $"document Id {documentDto.Id} with Type {documentDto.Type} from GLN {documentDto.Sender.Id}:\r\n" +
-                            $"- ValidationRuleIdentifier: {validationErrors.First().ValidationRuleIdentifier}\r\n" +
-                            $"- ValidationRuleIdentifier: {validationErrors.Last().ValidationRuleIdentifier}\r\n";
+                            $"- ValidationRuleIdentifier: {validationErrors.First().ValidationRule.ValidationRuleIdentifier}\r\n" +
+                            $"- ValidationRuleIdentifier: {validationErrors.Last().ValidationRule.ValidationRuleIdentifier}\r\n";
 
             // Act
             var actual = ValidationErrorLogMessageBuilder.BuildErrorMessage(documentDto, validationErrors);
@@ -62,12 +63,12 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared
             return documentDto;
         }
 
-        private static List<ValidationError> BuildValidationErrors()
+        private static List<IValidationError> BuildValidationErrors()
         {
-            var validationErrors = new List<ValidationError>
+            var validationErrors = new List<IValidationError>
             {
-                new(ValidationRuleIdentifier.ChargeDoesNotExist, null!),
-                new(ValidationRuleIdentifier.SubsequentBundleOperationsFail, null!),
+                new ValidationError(new TestValidationRule(false, ValidationRuleIdentifier.ChargeDoesNotExist)),
+                new ValidationError(new TestValidationRule(false, ValidationRuleIdentifier.SubsequentBundleOperationsFail)),
             };
             return validationErrors;
         }

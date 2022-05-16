@@ -13,10 +13,10 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
+using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.BusinessValidation.Factories;
@@ -52,8 +52,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
             var actualRules = actual.GetRules().Select(r => r.GetType());
 
             // Assert
-            Assert.Equal(1, actual.GetRules().Count);
-            Assert.Contains(expectedRule, actualRules);
+            actual.GetRules().Count.Should().Be(1);
+            actualRules.Should().Contain(expectedRule);
         }
 
         [Theory]

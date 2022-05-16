@@ -21,14 +21,14 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.Shared
 {
     public static class ValidationErrorLogMessageBuilder
     {
-        public static string BuildErrorMessage(DocumentDto documentDto, IEnumerable<ValidationError> validationErrors)
+        public static string BuildErrorMessage(DocumentDto documentDto, IEnumerable<IValidationError> validationErrors)
         {
             var sb = new StringBuilder();
             sb.Append($"document Id {documentDto.Id} with Type {documentDto.Type} from GLN {documentDto.Sender.Id}:\r\n");
 
             foreach (var validationError in validationErrors)
             {
-                sb.Append($"- {nameof(ValidationRuleIdentifier)}: {validationError.ValidationRuleIdentifier}\r\n");
+                sb.Append($"- {nameof(ValidationRuleIdentifier)}: {validationError.ValidationRule.ValidationRuleIdentifier}\r\n");
             }
 
             return sb.ToString();
