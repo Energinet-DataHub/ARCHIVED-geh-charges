@@ -43,8 +43,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation
         public void CreateFailure_WhenCreatedWithAnyValidRule_ThrowsArgumentException()
         {
             var validRules = CreateValidRules();
-            Assert.Throws<ArgumentException>(
-                () => ValidationResult.CreateFailure(validRules));
+            Assert.Throws<ArgumentException>(() => ValidationResult.CreateFailure(validRules));
         }
 
         [Fact]
@@ -59,21 +58,19 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation
             Assert.Throws<ArgumentException>(() => ValidationResult.CreateFailure(allRules));
         }
 
-        private static List<IValidationRuleContainer> CreateValidRules()
+        private static List<ValidationRuleContainer> CreateValidRules()
         {
-            return new List<IValidationRuleContainer>
+            return new List<ValidationRuleContainer>
             {
-                new ValidationRuleContainer(
-                    new TestValidationRule(true, ValidationRuleIdentifier.StartDateValidation), string.Empty),
+                new(new TestValidationRule(true, ValidationRuleIdentifier.StartDateValidation), string.Empty),
             };
         }
 
-        private static List<IValidationRuleContainer> CreateInvalidRules()
+        private static List<ValidationRuleContainer> CreateInvalidRules()
         {
-            return new List<IValidationRuleContainer>
+            return new List<ValidationRuleContainer>
             {
-                new ValidationRuleContainer(
-                    new TestValidationRule(false, ValidationRuleIdentifier.StartDateValidation), string.Empty),
+                new(new TestValidationRule(false, ValidationRuleIdentifier.StartDateValidation), string.Empty),
             };
         }
     }

@@ -64,7 +64,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
                     new AvailableReceiptValidationError(
                         ReasonCode.D01, validationError.ValidationRule.ValidationRuleIdentifier.ToString()));
 
-            var expectedValidationErrors = rejectedEvent.ValidationErrors
+            var expectedValidationErrors = rejectedEvent.ValidationRuleContainers
                 .Select(x => x.ValidationRule.ValidationRuleIdentifier.ToString()).ToList();
 
             // Act

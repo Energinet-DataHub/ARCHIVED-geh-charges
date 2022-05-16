@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
 
             // Act
             var actual = await sut.CreateRulesAsync(chargeLinkDto).ConfigureAwait(false);
-            var actualRules = actual.GetRules().Select(r => r.GetType());
+            var actualRules = actual.GetRules().Select(r => r.ValidationRule.GetType());
 
             // Assert
             actual.GetRules().Count.Should().Be(1);
@@ -75,11 +75,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
 
             // Act
             var actual = await sut.CreateRulesAsync(link).ConfigureAwait(false);
-            var actualRules = actual.GetRules().Select(r => r.GetType());
+            var actualRules = actual.GetRules().Select(r => r.ValidationRule.GetType());
 
             // Assert
-            Assert.Equal(2, actual.GetRules().Count);
-            Assert.Contains(expectedRule, actualRules);
+            actual.GetRules().Count.Should().Be(2);
+            actualRules.Should().Contain(expectedRule);
         }
 
         [Theory]
@@ -102,7 +102,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
 
             // Act
             var actual = await sut.CreateRulesAsync(link).ConfigureAwait(false);
-            var actualRules = actual.GetRules().Select(r => r.GetType());
+            var actualRules = actual.GetRules().Select(r => r.ValidationRule.GetType());
 
             // Assert
             Assert.Equal(3, actual.GetRules().Count);

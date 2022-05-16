@@ -29,30 +29,26 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
             return ValidationRuleSet.FromRules(rules);
         }
 
-        private static IList<IValidationRuleContainer> GetRulesForOperation(ChargeOperationDto chargeOperationDto)
+        private static IList<ValidationRuleContainer> GetRulesForOperation(ChargeOperationDto chargeOperationDto)
         {
-            var rules = new List<IValidationRuleContainer>
+            var rules = new List<ValidationRuleContainer>
             {
-                new ValidationRuleContainer(
-                    new ChargeDescriptionHasMaximumLengthRule(chargeOperationDto), chargeOperationDto.Id),
-                new ValidationRuleContainer(new ChargeIdLengthValidationRule(chargeOperationDto), chargeOperationDto.Id),
-                new ValidationRuleContainer(new ChargeIdRequiredValidationRule(chargeOperationDto), chargeOperationDto.Id),
-                new ValidationRuleContainer(new ChargeNameHasMaximumLengthRule(chargeOperationDto), chargeOperationDto.Id),
-                new ValidationRuleContainer(new ChargeOperationIdRequiredRule(chargeOperationDto), chargeOperationDto.Id),
-                new ValidationRuleContainer(new ChargeOwnerIsRequiredValidationRule(chargeOperationDto), chargeOperationDto.Id),
-                new ValidationRuleContainer(
-                    new ChargePriceMaximumDigitsAndDecimalsRule(chargeOperationDto), chargeOperationDto.Id),
-                new ValidationRuleContainer(new ChargeTypeIsKnownValidationRule(chargeOperationDto), chargeOperationDto.Id),
-                new ValidationRuleContainer(new ChargeTypeTariffPriceCountRule(chargeOperationDto), chargeOperationDto.Id),
-                new ValidationRuleContainer(new MaximumPriceRule(chargeOperationDto), chargeOperationDto.Id),
-                new ValidationRuleContainer(new ResolutionFeeValidationRule(chargeOperationDto), chargeOperationDto.Id),
-                new ValidationRuleContainer(
-                    new ResolutionSubscriptionValidationRule(chargeOperationDto), chargeOperationDto.Id),
-                new ValidationRuleContainer(new ResolutionTariffValidationRule(chargeOperationDto), chargeOperationDto.Id),
-                new ValidationRuleContainer(new StartDateTimeRequiredValidationRule(chargeOperationDto), chargeOperationDto.Id),
-                new ValidationRuleContainer(new VatClassificationValidationRule(chargeOperationDto), chargeOperationDto.Id),
-                new ValidationRuleContainer(
-                    new TransparentInvoicingIsNotAllowedForFeeValidationRule(chargeOperationDto), chargeOperationDto.Id),
+                new(new ChargeDescriptionHasMaximumLengthRule(chargeOperationDto), chargeOperationDto.Id),
+                new(new ChargeIdLengthValidationRule(chargeOperationDto), chargeOperationDto.Id),
+                new(new ChargeIdRequiredValidationRule(chargeOperationDto), chargeOperationDto.Id),
+                new(new ChargeNameHasMaximumLengthRule(chargeOperationDto), chargeOperationDto.Id),
+                new(new ChargeOperationIdRequiredRule(chargeOperationDto), chargeOperationDto.Id),
+                new(new ChargeOwnerIsRequiredValidationRule(chargeOperationDto), chargeOperationDto.Id),
+                new(new ChargePriceMaximumDigitsAndDecimalsRule(chargeOperationDto), chargeOperationDto.Id),
+                new(new ChargeTypeIsKnownValidationRule(chargeOperationDto), chargeOperationDto.Id),
+                new(new ChargeTypeTariffPriceCountRule(chargeOperationDto), chargeOperationDto.Id),
+                new(new MaximumPriceRule(chargeOperationDto), chargeOperationDto.Id),
+                new(new ResolutionFeeValidationRule(chargeOperationDto), chargeOperationDto.Id),
+                new(new ResolutionSubscriptionValidationRule(chargeOperationDto), chargeOperationDto.Id),
+                new(new ResolutionTariffValidationRule(chargeOperationDto), chargeOperationDto.Id),
+                new(new StartDateTimeRequiredValidationRule(chargeOperationDto), chargeOperationDto.Id),
+                new(new VatClassificationValidationRule(chargeOperationDto), chargeOperationDto.Id),
+                new(new TransparentInvoicingIsNotAllowedForFeeValidationRule(chargeOperationDto), chargeOperationDto.Id),
             };
 
             return rules;

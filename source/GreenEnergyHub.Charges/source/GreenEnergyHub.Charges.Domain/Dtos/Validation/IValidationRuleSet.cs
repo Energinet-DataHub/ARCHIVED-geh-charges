@@ -18,7 +18,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 {
     public interface IValidationRuleSet
     {
-        ReadOnlyCollection<IValidationRuleContainer> GetRules();
+        ReadOnlyCollection<ValidationRuleContainer> GetRules();
 
         ValidationResult Validate();
     }

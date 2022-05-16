@@ -67,7 +67,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
 
             // Act
             var actual = await sut.CreateRulesAsync(operation).ConfigureAwait(false);
-            var actualRules = actual.GetRules().Select(r => r.GetType());
+            var actualRules = actual.GetRules().Select(r => r.ValidationRule.GetType());
 
             // Assert
             actual.GetRules().Count.Should().Be(1); // This assert is added to ensure that when the rule set is expanded, the test gets attention as well.
@@ -95,7 +95,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
 
             // Act
             var actual = await sut.CreateRulesAsync(chargeOperationDto).ConfigureAwait(false);
-            var actualRules = actual.GetRules().Select(r => r.GetType());
+            var actualRules = actual.GetRules().Select(r => r.ValidationRule.GetType());
 
             // Assert
             Assert.Equal(3, actual.GetRules().Count); // This assert is added to ensure that when the rule set is expanded, the test gets attention as well.
@@ -126,7 +126,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             var actual = await sut.CreateRulesAsync(chargeOperationDto).ConfigureAwait(false);
 
             // Assert
-            var actualRules = actual.GetRules().Select(r => r.GetType());
+            var actualRules = actual.GetRules().Select(r => r.ValidationRule.GetType());
             Assert.Equal(4, actual.GetRules().Count); // This assert is added to ensure that when the rule set is expanded, the test gets attention as well.
             Assert.Contains(expectedRule, actualRules);
         }
@@ -190,11 +190,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
                 var validationRuleIdentifier = errorMessageForAttribute.ValidationRuleIdentifier;
                 var errorText = fieldInfo.GetValue(null)!.ToString();
                 var validationErrorTextTokens = CimValidationErrorTextTokenMatcher.GetTokens(errorText!);
-                var validationRule = validationRules
+                var validationRuleContainer = validationRules
                     .FirstOrDefault(x => x.ValidationRule.ValidationRuleIdentifier == validationRuleIdentifier);
 
-                if (validationErrorTextTokens.Contains(cimValidationErrorTextToken) && validationRule != null)
-                    Assert.True(validationRule is IValidationRuleWithExtendedData);
+                if (validationErrorTextTokens.Contains(cimValidationErrorTextToken) && validationRuleContainer != null)
+                    Assert.True(validationRuleContainer.ValidationRule is IValidationRuleWithExtendedData);
             }
         }
 

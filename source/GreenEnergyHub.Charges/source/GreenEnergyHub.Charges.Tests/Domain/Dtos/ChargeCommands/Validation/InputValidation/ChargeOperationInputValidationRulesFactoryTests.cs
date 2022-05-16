@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
             // Act
             var actualRuleTypes = sut.CreateRules(chargeOperationDto)
-                .GetRules().Select(r => r.GetType()).ToList();
+                .GetRules().Select(r => r.ValidationRule.GetType()).ToList();
             var expectedRuleTypes = expectedRules.Select(r => r.GetType()).ToList();
 
             // Assert
@@ -64,7 +64,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
             // Act
             var actualRuleTypes = sut.CreateRules(chargeOperationDto)
-                .GetRules().Select(r => r.GetType()).ToList();
+                .GetRules().Select(r => r.ValidationRule.GetType()).ToList();
             var expectedRuleTypes = expectedRules.Select(r => r.GetType()).ToList();
 
             // Assert
@@ -124,7 +124,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         private static void AssertAllRulesThatNeedTriggeredByForErrorMessageImplementsIValidationRuleWithExtendedData(
             CimValidationErrorTextToken cimValidationErrorTextToken,
-            ReadOnlyCollection<IValidationRuleContainer> validationRules)
+            IReadOnlyCollection<IValidationRuleContainer> validationRules)
         {
             var type = typeof(CimValidationErrorTextTemplateMessages);
             foreach (var fieldInfo in type.GetFields(BindingFlags.Static | BindingFlags.Public))
@@ -137,11 +137,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 var validationRuleIdentifier = errorMessageForAttribute.ValidationRuleIdentifier;
                 var errorText = fieldInfo.GetValue(null)!.ToString();
                 var validationErrorTextTokens = CimValidationErrorTextTokenMatcher.GetTokens(errorText!);
-                var validationRule = validationRules
+                var validationRuleContainer = validationRules
                     .FirstOrDefault(x => x.ValidationRule.ValidationRuleIdentifier == validationRuleIdentifier);
 
-                if (validationErrorTextTokens.Contains(cimValidationErrorTextToken) && validationRule != null)
-                    Assert.True(validationRule is IValidationRuleWithExtendedData);
+                if (validationErrorTextTokens.Contains(cimValidationErrorTextToken) && validationRuleContainer != null)
+                    Assert.True(validationRuleContainer.ValidationRule is IValidationRuleWithExtendedData);
             }
         }
     }

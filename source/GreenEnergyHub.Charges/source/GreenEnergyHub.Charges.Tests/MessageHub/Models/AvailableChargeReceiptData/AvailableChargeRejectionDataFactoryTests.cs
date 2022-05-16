@@ -62,7 +62,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
                     new AvailableReceiptValidationError(
                         ReasonCode.D01, validationError.ValidationRule.ValidationRuleIdentifier.ToString()));
 
-            var expectedValidationErrors = rejectedEvent.ValidationErrors
+            var expectedValidationErrors = rejectedEvent.ValidationRuleContainers
                 .Select(x => x.ValidationRule.ValidationRuleIdentifier.ToString()).ToList();
 
             // Act
@@ -82,7 +82,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
                 actual.DocumentType.Should().Be(DocumentType.RejectRequestChangeOfPriceList);
                 actual.OriginalOperationId.Should().Be(chargeCommand.ChargeOperations.ToArray()[i1].Id);
                 var actualValidationErrors = actual.ValidationErrors.ToList();
-                actual.ValidationErrors.Should().HaveSameCount(rejectedEvent.ValidationErrors);
+                actual.ValidationErrors.Should().HaveSameCount(rejectedEvent.ValidationRuleContainers);
                 actual.OperationOrder.Should().BeGreaterThan(operationOrder);
                 operationOrder = actual.OperationOrder;
 

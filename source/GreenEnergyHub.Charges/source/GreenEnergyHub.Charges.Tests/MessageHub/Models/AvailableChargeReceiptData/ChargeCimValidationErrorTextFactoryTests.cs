@@ -85,7 +85,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             actual.Should().Be(expected);
         }
 
-        /*[Theory]
+        [Theory]
         [InlineAutoMoqData(ValidationRuleIdentifier.MaximumPrice, null!)]
         [InlineAutoMoqData(ValidationRuleIdentifier.MaximumPrice, -1)]
         [InlineAutoMoqData(ValidationRuleIdentifier.ChargePriceMaximumDigitsAndDecimals, null!)]
@@ -179,7 +179,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
                     actual.Should().NotContain("  ");
                 }
             }
-        }*/
+        }
 
         private static string? SetTriggeredByWithValidationError(
             ChargeOperationDto chargeOperationDto, ValidationRuleIdentifier validationRuleIdentifier)
