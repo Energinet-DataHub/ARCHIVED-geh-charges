@@ -26,6 +26,7 @@ using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using GreenEnergyHub.TestHelpers;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NodaTime;
 using Xunit;
@@ -108,6 +109,38 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
 
             // Assert
             actualList.Should().BeEmpty();
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task CreateAsync_WhenCalled_ShouldLogValidationErrors(
+            ChargeLinksRejectedEvent rejectedEvent,
+            [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
+            [Frozen] Mock<IAvailableChargeLinksReceiptValidationErrorFactory> availableChargeLinksReceiptValidationErrorFactory,
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
+            [Frozen] Mock<ILoggerFactory> loggerFactory,
+            [Frozen] Mock<ILogger> logger)
+        {
+            // Arrange
+            rejectedEvent.ChargeLinksCommand.Document.Sender.BusinessProcessRole = MarketParticipantRole.SystemOperator;
+            loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
+
+            var sut = new AvailableChargeLinksRejectionDataFactory(
+                messageMetaDataContext.Object,
+                availableChargeLinksReceiptValidationErrorFactory.Object,
+                marketParticipantRepository.Object,
+                loggerFactory.Object);
+
+            // Act
+            await sut.CreateAsync(rejectedEvent);
+
+            // Assert
+            var document = rejectedEvent.ChargeLinksCommand.Document;
+            var expectedMessage = $"ValidationErrors for document Id {document.Id} with Type {document.Type} from GLN {document.Sender.Id}:\r\n" +
+                                   "- ValidationRuleIdentifier: StartDateValidation\r\n" +
+                                   "- ValidationRuleIdentifier: ChangingTariffTaxValueNotAllowed\r\n" +
+                                   "- ValidationRuleIdentifier: SenderIsMandatoryTypeValidation\r\n";
+            logger.VerifyLoggerWasCalled(expectedMessage, LogLevel.Error);
         }
     }
 }

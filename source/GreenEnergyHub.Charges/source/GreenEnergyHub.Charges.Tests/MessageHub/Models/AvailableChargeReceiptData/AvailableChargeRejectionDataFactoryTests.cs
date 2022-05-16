@@ -27,6 +27,8 @@ using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Testables;
+using GreenEnergyHub.TestHelpers;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NodaTime;
 using Xunit;
@@ -55,12 +57,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
                 .Setup(r => r.GetMeteringPointAdministratorAsync())
                 .ReturnsAsync(meteringPointAdministrator);
 
-            // fake error code and text
-            availableChargeReceiptValidationErrorFactory
-                .Setup(f => f.Create(It.IsAny<ValidationRuleContainer>(), rejectedEvent.Command, It.IsAny<ChargeOperationDto>()))
-                .Returns<IValidationRuleContainer, ChargeCommand, ChargeOperationDto>((validationError, _, _) =>
-                    new AvailableReceiptValidationError(
-                        ReasonCode.D01, validationError.ValidationRule.ValidationRuleIdentifier.ToString()));
+            SetupAvailableChargeReceiptValidationErrorFactory(
+                availableChargeReceiptValidationErrorFactory, rejectedEvent);
 
             var expectedValidationErrors = rejectedEvent.ValidationRuleContainers
                 .Select(x => x.ValidationRule.ValidationRuleIdentifier.ToString()).ToList();
@@ -92,6 +90,56 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
                     actualValidationErrors[i2].Text.Should().Be(expectedValidationErrors[i2]);
                 }
             }
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task CreateAsync_WhenCalled_ShouldLogValidationErrors(
+            ChargeCommandRejectedEvent rejectedEvent,
+            MarketParticipant meteringPointAdministrator,
+            [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
+            [Frozen] Mock<IAvailableChargeReceiptValidationErrorFactory> availableChargeReceiptValidationErrorFactory,
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
+            [Frozen] Mock<ILoggerFactory> loggerFactory,
+            [Frozen] Mock<ILogger> logger)
+        {
+            // Arrange
+            loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
+            marketParticipantRepository
+                .Setup(x => x.GetMeteringPointAdministratorAsync())
+                .ReturnsAsync(meteringPointAdministrator);
+
+            SetupAvailableChargeReceiptValidationErrorFactory(
+                availableChargeReceiptValidationErrorFactory, rejectedEvent);
+
+            var sut = new AvailableChargeRejectionDataFactory(
+                messageMetaDataContext.Object,
+                availableChargeReceiptValidationErrorFactory.Object,
+                marketParticipantRepository.Object,
+                loggerFactory.Object);
+
+            // Act
+            await sut.CreateAsync(rejectedEvent);
+
+            // Assert
+            var document = rejectedEvent.Command.Document;
+            var expectedMessage = $"ValidationErrors for document Id {document.Id} with Type {document.Type} from GLN {document.Sender.Id}:\r\n" +
+                                  "- ValidationRuleIdentifier: StartDateValidation\r\n" +
+                                  "- ValidationRuleIdentifier: ChangingTariffTaxValueNotAllowed\r\n" +
+                                  "- ValidationRuleIdentifier: SenderIsMandatoryTypeValidation\r\n";
+            logger.VerifyLoggerWasCalled(expectedMessage, LogLevel.Error);
+        }
+
+        private static void SetupAvailableChargeReceiptValidationErrorFactory(
+            Mock<IAvailableChargeReceiptValidationErrorFactory> availableChargeReceiptValidationErrorFactory,
+            ChargeCommandRejectedEvent rejectedEvent)
+        {
+            // fake error code and text
+            availableChargeReceiptValidationErrorFactory
+                .Setup(f => f.Create(It.IsAny<IValidationRuleContainer>(), rejectedEvent.Command, It.IsAny<ChargeOperationDto>()))
+                .Returns<ValidationRuleContainer, ChargeCommand, ChargeOperationDto>((validationError, _, _) =>
+                    new AvailableReceiptValidationError(
+                        ReasonCode.D01, validationError.ValidationRule.ValidationRuleIdentifier.ToString()));
         }
     }
 }

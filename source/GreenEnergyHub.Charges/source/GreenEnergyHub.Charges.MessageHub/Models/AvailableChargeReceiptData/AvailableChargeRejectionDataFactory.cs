@@ -77,7 +77,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                 rejectedEvent.Command.Document,
                 rejectedEvent.ValidationRuleContainers);
 
-            _logger.LogError("ValidationErrors for {errorMessage} ", errorMessage);
+            _logger.LogError("ValidationErrors for {errorMessage}", errorMessage);
         }
 
         private List<AvailableReceiptValidationError> GetReasons(
