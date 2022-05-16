@@ -33,9 +33,17 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
             var functionEndpointName = context.FunctionDefinition.Name;
             var logger = _loggerFactory.CreateLogger(functionEndpointName);
 
-            logger.LogInformation("Function {FunctionName} started to process a request with invocation ID {InvocationId}", functionEndpointName, context.InvocationId);
+            logger.LogInformation(
+                "Function {FunctionName} started to process a request with invocation ID {InvocationId}",
+                functionEndpointName,
+                context.InvocationId);
+
             await next(context).ConfigureAwait(false);
-            logger.LogInformation("Function {FunctionName} ended to process a request with invocation ID {InvocationId}", functionEndpointName, context.InvocationId);
+
+            logger.LogInformation(
+                "Function {FunctionName} ended to process a request with invocation ID {InvocationId}",
+                functionEndpointName,
+                context.InvocationId);
         }
     }
 }
