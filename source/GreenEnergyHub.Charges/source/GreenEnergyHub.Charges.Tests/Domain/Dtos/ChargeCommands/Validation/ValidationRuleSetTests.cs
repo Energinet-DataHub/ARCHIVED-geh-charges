@@ -63,9 +63,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation
             Assert.True(result.IsFailed);
         }
 
-        private static List<IValidationError> GetRules(int desiredNumberOfRules, int failedRules)
+        private static List<IValidationRuleContainer> GetRules(int desiredNumberOfRules, int failedRules)
         {
-            var rules = new List<IValidationError>();
+            var rules = new List<IValidationRuleContainer>();
 
             for (var i = 0; i < desiredNumberOfRules; i++)
             {
@@ -75,9 +75,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation
             return rules;
         }
 
-        private static IValidationError CreateRule(bool failed)
+        private static IValidationRuleContainer CreateRule(bool failed)
         {
-            var rule = new Mock<IValidationError>();
+            var rule = new Mock<IValidationRuleContainer>();
             rule.Setup(r => r.ValidationRule.IsValid).Returns(!failed);
             return rule.Object;
         }

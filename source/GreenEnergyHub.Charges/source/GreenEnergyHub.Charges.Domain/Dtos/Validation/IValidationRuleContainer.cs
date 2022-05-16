@@ -17,7 +17,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
     /// <summary>
     /// Container for validationrules with operationId in the Charges domain
     /// </summary>
-    public interface IValidationError
+    public interface IValidationRuleContainer
     {
         /// <summary>
         /// ValidationRule that applies to the OperationId

@@ -164,7 +164,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             SetupMarketParticipantMock(sender, marketParticipantRepository);
 
             // Act
-            var validationRules = new List<IValidationError>();
+            var validationRules = new List<IValidationRuleContainer>();
             foreach (var operation in chargeCommand.ChargeOperations)
             {
                 validationRules.AddRange((await sut.CreateRulesAsync(operation)).GetRules().ToList());
@@ -177,7 +177,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
 
         private static void AssertAllRulesThatNeedTriggeredByForErrorMessageImplementsIValidationRuleWithExtendedData(
             CimValidationErrorTextToken cimValidationErrorTextToken,
-            IReadOnlyCollection<IValidationError> validationRules)
+            IReadOnlyCollection<IValidationRuleContainer> validationRules)
         {
             var type = typeof(CimValidationErrorTextTemplateMessages);
             foreach (var fieldInfo in type.GetFields(BindingFlags.Static | BindingFlags.Public))

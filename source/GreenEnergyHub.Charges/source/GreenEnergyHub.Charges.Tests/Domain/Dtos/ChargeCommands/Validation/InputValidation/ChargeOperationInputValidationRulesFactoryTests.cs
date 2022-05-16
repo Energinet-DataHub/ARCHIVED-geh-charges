@@ -124,7 +124,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         private static void AssertAllRulesThatNeedTriggeredByForErrorMessageImplementsIValidationRuleWithExtendedData(
             CimValidationErrorTextToken cimValidationErrorTextToken,
-            ReadOnlyCollection<IValidationError> validationRules)
+            ReadOnlyCollection<IValidationRuleContainer> validationRules)
         {
             var type = typeof(CimValidationErrorTextTemplateMessages);
             foreach (var fieldInfo in type.GetFields(BindingFlags.Static | BindingFlags.Public))

@@ -63,12 +63,12 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared
             return documentDto;
         }
 
-        private static List<IValidationError> BuildValidationErrors()
+        private static List<IValidationRuleContainer> BuildValidationErrors()
         {
-            var validationErrors = new List<IValidationError>
+            var validationErrors = new List<IValidationRuleContainer>
             {
-                new ValidationError(new TestValidationRule(false, ValidationRuleIdentifier.ChargeDoesNotExist)),
-                new ValidationError(new TestValidationRule(false, ValidationRuleIdentifier.SubsequentBundleOperationsFail)),
+                new ValidationRuleContainer(new TestValidationRule(false, ValidationRuleIdentifier.ChargeDoesNotExist)),
+                new ValidationRuleContainer(new TestValidationRule(false, ValidationRuleIdentifier.SubsequentBundleOperationsFail)),
             };
             return validationErrors;
         }

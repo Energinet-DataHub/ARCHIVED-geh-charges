@@ -20,19 +20,19 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 {
     public class ValidationResult
     {
-        private readonly IList<IValidationError> _invalidRules = new List<IValidationError>();
+        private readonly IList<IValidationRuleContainer> _invalidRules = new List<IValidationRuleContainer>();
 
         private ValidationResult()
-            : this(Array.Empty<IValidationError>())
+            : this(Array.Empty<IValidationRuleContainer>())
         {
         }
 
-        private ValidationResult(IList<IValidationError> invalidRules)
+        private ValidationResult(IList<IValidationRuleContainer> invalidRules)
         {
             InvalidRules = invalidRules;
         }
 
-        public IList<IValidationError> InvalidRules
+        public IList<IValidationRuleContainer> InvalidRules
         {
             get => _invalidRules;
             private init
@@ -53,7 +53,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
             return new ValidationResult();
         }
 
-        public static ValidationResult CreateFailure(IList<IValidationError> invalidRules)
+        public static ValidationResult CreateFailure(IList<IValidationRuleContainer> invalidRules)
         {
             return new ValidationResult(invalidRules.ToArray());
         }

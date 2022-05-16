@@ -78,7 +78,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             var sutRule = new MaximumPriceRule(chargeOperationDto);
             var sutFactory = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
             var actual = sutFactory.Create(
-                new ValidationError(validationRuleIdentifier, triggeredBy),
+                new ValidationRuleContainer(validationRuleIdentifier, triggeredBy),
                 invalidCommand,
                 chargeOperationDto);
 

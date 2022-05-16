@@ -164,9 +164,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
         private static void SetupErroneousValidator(Mock<IBusinessValidator<ChargeLinkDto>> businessValidator)
         {
             businessValidator.Setup(x => x.ValidateAsync(It.IsAny<ChargeLinkDto>()))
-                .ReturnsAsync(ValidationResult.CreateFailure(new List<IValidationError>
+                .ReturnsAsync(ValidationResult.CreateFailure(new List<IValidationRuleContainer>
                 {
-                    new ValidationError(
+                    new ValidationRuleContainer(
                         new TestValidationRule(false, ValidationRuleIdentifier.MeteringPointDoesNotExist),
                         "testOperationId"),
                 }));

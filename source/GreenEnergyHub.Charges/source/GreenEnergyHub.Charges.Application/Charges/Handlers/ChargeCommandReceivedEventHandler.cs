@@ -60,7 +60,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             ArgumentNullException.ThrowIfNull(commandReceivedEvent);
 
             var operationsToBeRejected = new List<ChargeOperationDto>();
-            var rejectionRules = new List<IValidationError>();
+            var rejectionRules = new List<IValidationRuleContainer>();
             var operationsToBeConfirmed = new List<ChargeOperationDto>();
 
             var operations = commandReceivedEvent.Command.ChargeOperations.ToArray();
@@ -77,7 +77,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                     rejectionRules.AddRange(validationResult.InvalidRules);
                     rejectionRules.AddRange(operationsToBeRejected.Skip(1)
                         .Select(toBeRejected =>
-                            new ValidationError(
+                            new ValidationRuleContainer(
                                 new PreviousOperationsMustBeValidRule(operation.Id, toBeRejected), operation.Id)));
                     break;
                 }
@@ -89,7 +89,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                     rejectionRules.AddRange(validationResult.InvalidRules);
                     rejectionRules.AddRange(operationsToBeRejected.Skip(1)
                         .Select(toBeRejected =>
-                            new ValidationError(
+                            new ValidationRuleContainer(
                                 new PreviousOperationsMustBeValidRule(operation.Id, toBeRejected), operation.Id)));
                     break;
                 }
@@ -133,7 +133,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         private async Task RejectInvalidOperationsAsync(
             IReadOnlyCollection<ChargeOperationDto> operationsToBeRejected,
             DocumentDto document,
-            IList<IValidationError> rejectionRules)
+            IList<IValidationRuleContainer> rejectionRules)
         {
             if (operationsToBeRejected.Any())
             {

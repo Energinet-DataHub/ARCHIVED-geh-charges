@@ -56,25 +56,25 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
             return ValidationRuleSet.FromRules(rules);
         }
 
-        private List<IValidationError> GetMandatoryRulesForCommand(MeteringPoint? meteringPoint)
+        private List<IValidationRuleContainer> GetMandatoryRulesForCommand(MeteringPoint? meteringPoint)
         {
-            return new List<IValidationError>
+            return new List<IValidationRuleContainer>
             {
-                new ValidationError(new MeteringPointMustExistRule(meteringPoint)),
+                new ValidationRuleContainer(new MeteringPointMustExistRule(meteringPoint)),
             };
         }
 
-        private async Task<IList<IValidationError>> GetRulesForChargeLinkDtoAsync(
+        private async Task<IList<IValidationRuleContainer>> GetRulesForChargeLinkDtoAsync(
             ChargeLinkDto chargeLinkDto,
             MeteringPoint meteringPoint)
         {
-            var rules = new List<IValidationError>();
+            var rules = new List<IValidationRuleContainer>();
 
             var charge = await _chargeRepository
                 .GetOrNullAsync(new ChargeIdentifier(chargeLinkDto.SenderProvidedChargeId, chargeLinkDto.ChargeOwner, chargeLinkDto.ChargeType))
                 .ConfigureAwait(false);
 
-            rules.Add(new ValidationError(new ChargeMustExistRule(charge, chargeLinkDto), chargeLinkDto.OperationId));
+            rules.Add(new ValidationRuleContainer(new ChargeMustExistRule(charge, chargeLinkDto), chargeLinkDto.OperationId));
 
             if (charge == null)
                 return rules;
@@ -84,7 +84,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
                 .ConfigureAwait(false);
 
             rules.Add(
-                new ValidationError(
+                new ValidationRuleContainer(
                     new ChargeLinksUpdateNotYetSupportedRule(chargeLinkDto, existingChargeLinks),
                     chargeLinkDto.OperationId));
 

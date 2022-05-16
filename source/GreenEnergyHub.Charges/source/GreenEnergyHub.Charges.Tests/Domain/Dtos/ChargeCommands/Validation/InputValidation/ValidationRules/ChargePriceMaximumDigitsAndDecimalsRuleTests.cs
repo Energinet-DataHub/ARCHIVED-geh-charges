@@ -79,7 +79,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
             var sutRule = new ChargePriceMaximumDigitsAndDecimalsRule(chargeOperationDto);
             var sutValidationRuleWithOperation =
-                new ValidationError(sutRule, chargeOperationDto.Id, triggeredBy);
+                new ValidationRuleContainer(sutRule, chargeOperationDto.Id, triggeredBy);
             var sutFactory = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
 
             // Act

@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Collections.Generic;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules;
@@ -20,6 +22,7 @@ using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
+using GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation;
 using Microsoft.Extensions.Logging;
 using Xunit;
 using Xunit.Categories;
@@ -41,7 +44,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             var chargeCommand = chargeCommandBuilder.WithChargeOperation(chargeOperationDto).Build();
             var sut = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
             var rule = new ResolutionTariffValidationRule(chargeOperationDto);
-            var validationRuleWithOperation = new ValidationError(rule, null!);
+            var validationRuleWithOperation = new ValidationRuleContainer(rule, null!);
 
             var expected = CimValidationErrorTextTemplateMessages.ResolutionTariffValidationErrorText
                 .Replace("{{ChargeResolution}}", chargeOperationDto.Resolution.ToString())
@@ -68,7 +71,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             var sut = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
             var rule = new MaximumPriceRule(chargeOperationDto);
             var triggeredBy = chargeOperationDto.Points[1].Position.ToString();
-            var validationRuleWithOperation = new ValidationError(rule, chargeOperationDto.Id, triggeredBy);
+            var validationRuleWithOperation = new ValidationRuleContainer(rule, chargeOperationDto.Id, triggeredBy);
 
             var expectedPoint = chargeOperationDto.Points[1];
             var expected = CimValidationErrorTextTemplateMessages.MaximumPriceErrorText
@@ -97,12 +100,12 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
         {
             // Arrange
             var chargeCommand = chargeCommandBuilder.WithChargeOperation(chargeOperationDto).Build();
-
+            var testValidationRule = new TestValidationRule(true, validationRuleIdentifier); // TODO: bool from input?
             var sut = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
 
             // Act
             var actual = sut.Create(
-                new ValidationError(validationRuleIdentifier, triggeredBy),
+                new ValidationRuleContainer(testValidationRule, triggeredBy),
                 chargeCommand,
                 chargeOperationDto);
 
@@ -126,6 +129,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
         {
             // Arrange
             var chargeCommand = chargeCommandBuilder.WithChargeOperation(chargeOperationDto).Build();
+            var testValidationRule = new TestValidationRule(true, validationRuleIdentifier); // TODO: bool from input?
             var triggeredBy = seedTriggeredBy == "0" ?
                 chargeOperationDto.Points[1].Position.ToString() :
                 seedTriggeredBy;
@@ -136,7 +140,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
 
             // Act
             var actual = sut.Create(
-                new ValidationError(validationRuleIdentifier, triggeredBy),
+                new ValidationRuleContainer(testValidationRule, triggeredBy),
                 chargeCommand,
                 chargeOperationDto);
 
@@ -164,8 +168,9 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
                 foreach (var validationRuleIdentifier in validationRuleIdentifiers)
                 {
                     var triggeredBy = SetTriggeredByWithValidationError(operation, validationRuleIdentifier);
+                    var testValidationRule = new TestValidationRule(true, validationRuleIdentifier); // TODO: are they all true?
                     var actual = sut.Create(
-                        new ValidationError(validationRuleIdentifier, triggeredBy),
+                        new ValidationRuleContainer(testValidationRule, triggeredBy),
                         commandWithOperation,
                         operation);
 

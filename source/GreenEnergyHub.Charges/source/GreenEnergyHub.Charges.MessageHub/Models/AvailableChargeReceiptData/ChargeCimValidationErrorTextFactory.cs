@@ -37,23 +37,23 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
         }
 
         public string Create(
-            IValidationError validationError,
+            IValidationRuleContainer validationRuleContainer,
             ChargeCommand command,
             ChargeOperationDto chargeOperationDto)
         {
-            return GetMergedErrorMessage(validationError, command, chargeOperationDto);
+            return GetMergedErrorMessage(validationRuleContainer, command, chargeOperationDto);
         }
 
         private string GetMergedErrorMessage(
-            IValidationError validationError,
+            IValidationRuleContainer validationRuleContainer,
             ChargeCommand chargeCommand,
             ChargeOperationDto chargeOperationDto)
         {
             var errorTextTemplate = _cimValidationErrorTextProvider
-                .GetCimValidationErrorText(validationError.ValidationRule.ValidationRuleIdentifier);
+                .GetCimValidationErrorText(validationRuleContainer.ValidationRule.ValidationRuleIdentifier);
 
             return MergeErrorText(
-                errorTextTemplate, chargeCommand, chargeOperationDto, validationError.TriggeredBy);
+                errorTextTemplate, chargeCommand, chargeOperationDto, validationRuleContainer.TriggeredBy);
         }
 
         private string MergeErrorText(

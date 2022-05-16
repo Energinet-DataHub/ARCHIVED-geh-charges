@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
             var meteringPoint = new MeteringPointBuilder().WithId(chargeLinkDto.MeteringPointId);
             var rule = new MeteringPointMustExistRule(meteringPoint);
             var validationRuleWithOperation =
-                new ValidationError(rule, chargeLinkDto.SenderProvidedChargeId);
+                new ValidationRuleContainer(rule, chargeLinkDto.SenderProvidedChargeId);
             var sut = new ChargeLinksCimValidationErrorTextFactory(cimValidationErrorTextProvider);
             var expected = CimValidationErrorTextTemplateMessages.MeteringPointDoesNotExistValidationErrorText
                 .Replace("{{MeteringPointId}}", chargeLinkDto.MeteringPointId)
@@ -71,7 +71,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
             {
                 var triggeredBy = SetTriggeredByWithValidationError(chargeLinksCommand, validationRuleIdentifier);
                 var actual = sut.Create(
-                    new ValidationError(validationRuleIdentifier, triggeredBy),
+                    new ValidationRuleContainer(validationRuleIdentifier, triggeredBy),
                     chargeLinksCommand,
                     chargeLinkDto);
 
