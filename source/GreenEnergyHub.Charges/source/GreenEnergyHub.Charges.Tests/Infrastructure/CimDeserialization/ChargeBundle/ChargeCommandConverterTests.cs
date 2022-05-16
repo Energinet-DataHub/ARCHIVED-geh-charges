@@ -79,7 +79,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             actualChargeOperation.Id.Should().Be("36251478");
             actualChargeOperation.ChargeOwner.Should().Be("5799999925698");
             actualChargeOperation.Type.Should().Be(ChargeType.Tariff);
-            actualChargeOperation.ChargeInformationId.Should().Be("253C");
+            actualChargeOperation.ChargeId.Should().Be("253C");
             actualChargeOperation.ChargeName.Should().Be("Elafgift 2019");
             actualChargeOperation.ChargeDescription.Should().Be("Dette er elafgiftssatsten for 2019");
             actualChargeOperation.Resolution.Should().Be(Resolution.PT1H);
@@ -143,7 +143,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             actualChargeOperation.Id.Should().Be("36251479");
             actualChargeOperation.ChargeOwner.Should().Be("5799999925699");
             actualChargeOperation.Type.Should().Be(ChargeType.Fee);
-            actualChargeOperation.ChargeInformationId.Should().Be("888");
+            actualChargeOperation.ChargeId.Should().Be("888");
             actualChargeOperation.ChargeName.Should().Be("Test 888");
             actualChargeOperation.ChargeDescription.Should().Be("Description 888");
             actualChargeOperation.Resolution.Should().Be(Resolution.PT15M);
@@ -191,7 +191,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             actualChargeOperation.Id.Should().Be("36251480");
             actualChargeOperation.ChargeOwner.Should().Be("5799999925600");
             actualChargeOperation.Type.Should().Be(ChargeType.Subscription);
-            actualChargeOperation.ChargeInformationId.Should().Be("444");
+            actualChargeOperation.ChargeId.Should().Be("444");
             actualChargeOperation.ChargeName.Should().BeNullOrEmpty();
             actualChargeOperation.ChargeDescription.Should().BeNullOrEmpty();
             actualChargeOperation.Resolution.Should().Be(Resolution.P1M);
@@ -253,7 +253,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             var actualFirstChargeOperationDto = actualFirstChargeCommand.ChargeOperations.First();
             actualFirstChargeOperationDto.ChargeOwner.Should().Be("8100000000030");
             actualFirstChargeOperationDto.Type.Should().Be(ChargeType.Tariff);
-            actualFirstChargeOperationDto.ChargeInformationId.Should().Be("ChId1234567890");
+            actualFirstChargeOperationDto.ChargeId.Should().Be("ChId1234567890");
             actualFirstChargeOperationDto.ChargeName.Should().Be("Charge Tariff day Name 1");
             actualFirstChargeOperationDto.ChargeDescription.Should().Be("The charge description 1");
             actualFirstChargeOperationDto.Resolution.Should().Be(Resolution.P1D);
@@ -271,7 +271,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             var actualSecondChargeOperationDto = actualSecondChargeCommand.ChargeOperations.First();
             actualSecondChargeOperationDto.ChargeOwner.Should().Be("8100000000030");
             actualSecondChargeOperationDto.Type.Should().Be(ChargeType.Tariff);
-            actualSecondChargeOperationDto.ChargeInformationId.Should().Be("ChId1234567891");
+            actualSecondChargeOperationDto.ChargeId.Should().Be("ChId1234567891");
             actualSecondChargeOperationDto.ChargeName.Should().Be("Charge Tariff day Name 2");
             actualSecondChargeOperationDto.ChargeDescription.Should().Be("The charge description 2");
             actualSecondChargeOperationDto.Resolution.Should().Be(Resolution.P1D);

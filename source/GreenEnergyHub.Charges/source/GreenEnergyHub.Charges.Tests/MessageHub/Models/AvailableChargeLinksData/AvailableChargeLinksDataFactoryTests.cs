@@ -56,7 +56,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinksDat
 
             chargeInformation.SetPrivateProperty(c => c.TaxIndicator, true);
             chargeRepository
-                .Setup(r => r.GetAsync(It.IsAny<ChargeInformationIdentifier>()))
+                .Setup(r => r.GetAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(chargeInformation);
 
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
@@ -106,7 +106,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinksDat
 
             chargeInformation.SetPrivateProperty(c => c.TaxIndicator, false);
             chargeRepository
-                .Setup(r => r.GetAsync(It.IsAny<ChargeInformationIdentifier>()))
+                .Setup(r => r.GetAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(chargeInformation);
 
             // Act

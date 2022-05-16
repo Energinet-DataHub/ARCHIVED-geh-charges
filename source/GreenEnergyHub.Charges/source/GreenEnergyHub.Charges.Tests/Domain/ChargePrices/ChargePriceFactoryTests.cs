@@ -34,18 +34,18 @@ namespace GreenEnergyHub.Charges.Tests.Domain.ChargePrices
         public async Task CreateFromOperationAsync_Charge_HasNoNullsOrEmptyCollections(
             [Frozen] Mock<IChargeInformationRepository> chargeInformationRepository,
             ChargeInformationBuilder chargeInformationBuilder,
-            ChargeInformationIdentifier chargeInformationIdentifier,
+            ChargeIdentifier chargeIdentifier,
             ChargePriceFactory sut)
         {
             // Arrange
             var chargeInformation = chargeInformationBuilder.Build();
             chargeInformationRepository
-                .Setup(repo => repo.GetOrNullAsync(It.IsAny<ChargeInformationIdentifier>()))
+                .Setup(repo => repo.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(chargeInformation);
             var point = new Point(1, 1.00m, InstantHelper.GetTomorrowAtMidnightUtc());
 
             // Act
-            var actual = await sut.CreateChargePriceFromPointAsync(chargeInformationIdentifier, point);
+            var actual = await sut.CreateChargePriceFromPointAsync(chargeIdentifier, point);
 
             // Assert
             actual.Should().NotBeNull();

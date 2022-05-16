@@ -66,7 +66,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData
             var recipient = await _marketParticipantRepository
                 .GetGridAccessProviderAsync(operation.MeteringPointId).ConfigureAwait(false);
 
-            var chargeIdentifier = new ChargeInformationIdentifier(operation.SenderProvidedChargeId, operation.ChargeOwner, operation.ChargeType);
+            var chargeIdentifier = new ChargeIdentifier(operation.SenderProvidedChargeId, operation.ChargeOwner, operation.ChargeType);
             var charge = await _chargeInformationRepository.GetAsync(chargeIdentifier).ConfigureAwait(false);
             var sender = await GetSenderAsync().ConfigureAwait(false);
             if (!ShouldMakeDataAvailableForGridOwnerOfMeteringPoint(charge)) return;

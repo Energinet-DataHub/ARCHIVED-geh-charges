@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
 
             var expected = CimValidationErrorTextTemplateMessages.ResolutionTariffValidationErrorText
                 .Replace("{{ChargeResolution}}", chargeOperationDto.Resolution.ToString())
-                .Replace("{{DocumentSenderProvidedChargeId}}", chargeOperationDto.ChargeInformationId)
+                .Replace("{{DocumentSenderProvidedChargeId}}", chargeOperationDto.ChargeId)
                 .Replace("{{ChargeType}}", chargeOperationDto.Type.ToString());
 
             // Act

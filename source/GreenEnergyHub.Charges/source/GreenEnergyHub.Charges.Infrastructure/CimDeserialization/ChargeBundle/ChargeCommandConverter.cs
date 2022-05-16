@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
         {
             var chargeOperationsAsync = await ParseChargeOperationsAsync(reader).ConfigureAwait(false);
 
-            var chargeCommands = chargeOperationsAsync.GroupBy(x => new { ChargeInformationId = x.ChargeInformationId, x.ChargeOwner, x.Type })
+            var chargeCommands = chargeOperationsAsync.GroupBy(x => new { ChargeInformationId = x.ChargeId, x.ChargeOwner, x.Type })
                 .Select(chargeOperationDtoGroup =>
                     new ChargeCommand(
                         document,

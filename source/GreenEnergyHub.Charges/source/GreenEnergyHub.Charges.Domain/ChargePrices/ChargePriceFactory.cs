@@ -27,7 +27,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargePrices
             _chargeInformationRepository = chargeInformationRepository;
         }
 
-        public async Task<ChargePrice> CreateChargePriceFromPointAsync(ChargeInformationIdentifier identifier, Point point)
+        public async Task<ChargePrice> CreateChargePriceFromPointAsync(ChargeIdentifier identifier, Point point)
         {
             var chargeInformation = await _chargeInformationRepository.GetOrNullAsync(identifier).ConfigureAwait(false);
             ArgumentNullException.ThrowIfNull(chargeInformation);

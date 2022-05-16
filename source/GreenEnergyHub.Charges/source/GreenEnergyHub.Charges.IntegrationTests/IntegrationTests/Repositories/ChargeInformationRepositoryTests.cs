@@ -115,7 +115,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             var sut = new ChargeInformationRepository(chargesDatabaseContext);
 
             // Arrange => Matching data from seeded test data
-            var identifier = new ChargeInformationIdentifier("EA-001", "5790000432752", ChargeType.Tariff);
+            var identifier = new ChargeIdentifier("EA-001", "5790000432752", ChargeType.Tariff);
 
             // Act
             var actual = await sut.GetAsync(identifier);
@@ -133,10 +133,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
             // Arrange => Matching data from seeded test data
             var firstCharge = await sut.GetAsync(
-                    new ChargeInformationIdentifier("EA-001", "5790000432752", ChargeType.Tariff));
+                    new ChargeIdentifier("EA-001", "5790000432752", ChargeType.Tariff));
 
             var secondCharge = await sut.GetAsync(
-                new ChargeInformationIdentifier("45013", "5790000432752", ChargeType.Tariff));
+                new ChargeIdentifier("45013", "5790000432752", ChargeType.Tariff));
 
             // Act
             var actual = await sut.GetAsync(new List<Guid>

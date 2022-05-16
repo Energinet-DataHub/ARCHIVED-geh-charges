@@ -42,7 +42,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.ChargeLinks
         {
             // Arrange
             chargeRepository
-                .Setup(x => x.GetAsync(It.IsAny<ChargeInformationIdentifier>()))
+                .Setup(x => x.GetAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(expectedChargeInformation);
 
             meteringPointRepository

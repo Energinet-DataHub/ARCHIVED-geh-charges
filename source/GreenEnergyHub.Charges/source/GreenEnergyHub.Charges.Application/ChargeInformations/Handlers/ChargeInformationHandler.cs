@@ -207,8 +207,8 @@ namespace GreenEnergyHub.Charges.Application.ChargeInformations.Handlers
 
         private async Task<ChargeInformation?> GetChargeAsync(ChargeOperationDto chargeOperationDto)
         {
-            var chargeIdentifier = new ChargeInformationIdentifier(
-                chargeOperationDto.ChargeInformationId,
+            var chargeIdentifier = new ChargeIdentifier(
+                chargeOperationDto.ChargeId,
                 chargeOperationDto.ChargeOwner,
                 chargeOperationDto.Type);
             return await _chargeInformationRepository.GetOrNullAsync(chargeIdentifier).ConfigureAwait(false);

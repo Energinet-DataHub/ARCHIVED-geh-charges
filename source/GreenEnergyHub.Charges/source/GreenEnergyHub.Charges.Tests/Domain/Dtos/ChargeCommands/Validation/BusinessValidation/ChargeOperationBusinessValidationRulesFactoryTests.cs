@@ -58,7 +58,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
 
             ChargeInformation? charge = null;
             repository
-                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeInformationIdentifier>()))
+                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(charge);
 
             marketParticipantRepository
@@ -226,11 +226,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         private static void SetupChargeRepositoryMock(Mock<IChargeInformationRepository> chargeRepository, ChargeInformation chargeInformation)
         {
             chargeRepository
-                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeInformationIdentifier>()))
+                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(chargeInformation);
 
             chargeRepository
-                .Setup(r => r.GetAsync(It.IsAny<ChargeInformationIdentifier>()))
+                .Setup(r => r.GetAsync(It.IsAny<ChargeIdentifier>()))
                 .Returns(Task.FromResult(chargeInformation));
         }
     }

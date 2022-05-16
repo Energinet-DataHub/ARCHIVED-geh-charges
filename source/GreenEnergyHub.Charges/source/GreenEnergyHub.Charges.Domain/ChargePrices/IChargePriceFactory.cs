@@ -19,6 +19,6 @@ namespace GreenEnergyHub.Charges.Domain.ChargePrices
 {
     public interface IChargePriceFactory
     {
-        Task<ChargePrice> CreateChargePriceFromPointAsync(ChargeInformationIdentifier identifier, Point point);
+        Task<ChargePrice> CreateChargePriceFromPointAsync(ChargeIdentifier identifier, Point point);
     }
 }

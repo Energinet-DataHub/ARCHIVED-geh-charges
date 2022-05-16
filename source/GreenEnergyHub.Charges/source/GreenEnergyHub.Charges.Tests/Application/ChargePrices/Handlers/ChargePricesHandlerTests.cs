@@ -67,7 +67,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargePrices.Handlers
 
             var chargePrice = chargePriceBuilder.Build();
             chargePriceFactory
-                .Setup(s => s.CreateChargePriceFromPointAsync(It.IsAny<ChargeInformationIdentifier>(), It.IsAny<Point>()))
+                .Setup(s => s.CreateChargePriceFromPointAsync(It.IsAny<ChargeIdentifier>(), It.IsAny<Point>()))
                 .ReturnsAsync(chargePrice);
 
             // Act
@@ -95,7 +95,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargePrices.Handlers
             var rejected = false;
             var charge = chargeInformationBuilder.Build();
             chargeRepository
-                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeInformationIdentifier>()))
+                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(charge);
 
             receiptService.Setup(s => s.RejectAsync(It.IsAny<ChargeCommand>(), It.IsAny<ValidationResult>()))
@@ -140,7 +140,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargePrices.Handlers
             var chargeCommand = CreateChargeCommandWith24Points();
             var chargePrice = chargePriceBuilder.Build();
             chargePriceFactory
-                .Setup(x => x.CreateChargePriceFromPointAsync(It.IsAny<ChargeInformationIdentifier>(), It.IsAny<Point>()))
+                .Setup(x => x.CreateChargePriceFromPointAsync(It.IsAny<ChargeIdentifier>(), It.IsAny<Point>()))
                 .ReturnsAsync(chargePrice);
             var receivedEvent = new ChargeCommandReceivedEvent(InstantHelper.GetTodayAtMidnightUtc(), chargeCommand);
 
@@ -272,7 +272,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargePrices.Handlers
                 .Setup(r => r.GetOrNullAsync(It.IsAny<Guid>(), It.IsAny<Instant>(), It.IsAny<Instant>()))!
                 .ReturnsAsync(null as IEnumerable<ChargePrice>);
             chargeRepository
-                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeInformationIdentifier>()))!
+                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))!
                 .ReturnsAsync(charge);
             chargePriceRepository
                 .Setup(r => r.GetOrNullAsync(It.IsAny<Guid>(), It.IsAny<Instant>(), It.IsAny<Instant>()))!

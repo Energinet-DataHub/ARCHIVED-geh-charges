@@ -73,7 +73,7 @@ namespace GreenEnergyHub.Charges.Application.ChargePrices.Handlers
             for (var i = 0; i < operations.Length; i++)
             {
                 var operation = operations[i];
-                var chargeInformation = await GetChargeAsync(operation).ConfigureAwait(false);
+                var chargeInformation = await GetChargeInformationAsync(operation).ConfigureAwait(false);
                 ArgumentNullException.ThrowIfNull(chargeInformation);
 
                 var validationResult = _inputValidator.Validate(operation);
@@ -139,8 +139,8 @@ namespace GreenEnergyHub.Charges.Application.ChargePrices.Handlers
         {
             var chargePrices = await GetChargePriceAsync(chargeInformationId, operation).ConfigureAwait(false);
             _chargePriceRepository.RemoveRange(chargePrices);
-            var chargeInformationIdentifier = new ChargeInformationIdentifier(
-                operation.ChargeInformationId,
+            var chargeInformationIdentifier = new ChargeIdentifier(
+                operation.ChargeId,
                 operation.ChargeOwner,
                 operation.Type);
 
@@ -171,10 +171,10 @@ namespace GreenEnergyHub.Charges.Application.ChargePrices.Handlers
                         endDate).ConfigureAwait(false);
         }
 
-        private async Task<ChargeInformation?> GetChargeAsync(ChargeOperationDto operation)
+        private async Task<ChargeInformation?> GetChargeInformationAsync(ChargeOperationDto operation)
         {
-            var chargeInformationIdentifier = new ChargeInformationIdentifier(
-                operation.ChargeInformationId,
+            var chargeInformationIdentifier = new ChargeIdentifier(
+                operation.ChargeId,
                 operation.ChargeOwner,
                 operation.Type);
             return await _chargeInformationRepository.GetOrNullAsync(chargeInformationIdentifier).ConfigureAwait(false);

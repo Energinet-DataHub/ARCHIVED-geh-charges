@@ -108,8 +108,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
 
         private Task<ChargeInformations.ChargeInformation?> GetChargeOrNullAsync(ChargeOperationDto chargeOperationDto)
         {
-            var chargeIdentifier = new ChargeInformationIdentifier(
-                chargeOperationDto.ChargeInformationId,
+            var chargeIdentifier = new ChargeIdentifier(
+                chargeOperationDto.ChargeId,
                 chargeOperationDto.ChargeOwner,
                 chargeOperationDto.Type);
 

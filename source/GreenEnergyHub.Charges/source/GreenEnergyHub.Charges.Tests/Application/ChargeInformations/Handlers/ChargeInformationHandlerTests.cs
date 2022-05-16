@@ -62,7 +62,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeInformations.Handlers
                 .Setup(r => r.AddAsync(It.IsAny<ChargeInformation>()))
                 .Callback<ChargeInformation>(_ => stored = true);
             chargeRepository
-                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeInformationIdentifier>()))
+                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(null as ChargeInformation);
 
             var confirmed = false;
@@ -104,7 +104,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeInformations.Handlers
             SetupValidators(inputValidator, businessValidator, validationResult);
 
             chargeRepository
-                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeInformationIdentifier>()))
+                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(charge);
 
             var rejected = false;
@@ -151,7 +151,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeInformations.Handlers
                 .Build();
 
             chargeRepository
-                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeInformationIdentifier>()))
+                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(charge);
             chargePeriodFactory
                 .Setup(r => r.CreateFromChargeOperationDto(It.IsAny<ChargeOperationDto>()))
@@ -184,7 +184,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeInformations.Handlers
             var charge = CreateValidCharge(periods);
             var newPeriod = new ChargePeriodBuilder().WithStartDateTime(stopDate).WithEndDateTime(stopDate).Build();
             chargeRepository
-                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeInformationIdentifier>()))
+                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(charge);
             chargePeriodFactory
                 .Setup(r => r.CreateFromChargeOperationDto(It.IsAny<ChargeOperationDto>()))
@@ -243,7 +243,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeInformations.Handlers
                 .WithStartDateTime(InstantHelper.GetTomorrowAtMidnightUtc())
                 .Build();
             chargeRepository
-                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeInformationIdentifier>()))
+                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(charge);
             chargePeriodFactory
                 .Setup(r => r.CreateFromChargeOperationDto(It.IsAny<ChargeOperationDto>()))
@@ -324,7 +324,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeInformations.Handlers
             };
             var charge = new ChargeInformationBuilder().WithPeriods(periods).Build();
             chargeRepository
-                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeInformationIdentifier>()))
+                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(charge);
         }
 

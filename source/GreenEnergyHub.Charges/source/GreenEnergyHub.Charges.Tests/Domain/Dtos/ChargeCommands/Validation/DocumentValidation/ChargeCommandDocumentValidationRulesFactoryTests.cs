@@ -78,10 +78,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Doc
             var chargeOperationDto = new ChargeOperationDtoBuilder().WithChargeType(ChargeType.Fee).Build();
             var chargeCommand = new ChargeCommandBuilder().WithChargeOperation(chargeOperationDto).Build();
             chargeRepository
-                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeInformationIdentifier>()))
+                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(chargeInformation);
             chargeRepository
-                .Setup(r => r.GetAsync(It.IsAny<ChargeInformationIdentifier>()))
+                .Setup(r => r.GetAsync(It.IsAny<ChargeIdentifier>()))
                 .Returns(Task.FromResult(chargeInformation));
             marketParticipantRepository
                 .Setup(repo => repo.GetOrNullAsync(It.IsAny<string>()))

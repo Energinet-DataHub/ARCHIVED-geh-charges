@@ -30,9 +30,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
             _chargesDatabaseContext = chargesDatabaseContext;
         }
 
-        public Task<ChargeInformation> GetAsync(ChargeInformationIdentifier chargeInformationIdentifier)
+        public Task<ChargeInformation> GetAsync(ChargeIdentifier chargeIdentifier)
         {
-            return GetChargeQueryable(chargeInformationIdentifier).SingleAsync();
+            return GetChargeQueryable(chargeIdentifier).SingleAsync();
         }
 
         public Task<ChargeInformation> GetAsync(Guid id)
@@ -48,9 +48,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
                 .ConfigureAwait(false);
         }
 
-        public async Task<ChargeInformation?> GetOrNullAsync(ChargeInformationIdentifier chargeInformationIdentifier)
+        public async Task<ChargeInformation?> GetOrNullAsync(ChargeIdentifier chargeIdentifier)
         {
-            return await GetChargeQueryable(chargeInformationIdentifier).SingleOrDefaultAsync().ConfigureAwait(false);
+            return await GetChargeQueryable(chargeIdentifier).SingleOrDefaultAsync().ConfigureAwait(false);
         }
 
         public async Task AddAsync(ChargeInformation chargeInformation)
@@ -64,15 +64,15 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
             return _chargesDatabaseContext.ChargeInformations.AsQueryable();
         }
 
-        private IQueryable<ChargeInformation> GetChargeQueryable(ChargeInformationIdentifier chargeInformationIdentifier)
+        private IQueryable<ChargeInformation> GetChargeQueryable(ChargeIdentifier chargeIdentifier)
         {
             var query =
                 from c in GetChargesAsQueryable()
                 join o in _chargesDatabaseContext.MarketParticipants
                     on c.OwnerId equals o.Id
-                where c.SenderProvidedChargeId == chargeInformationIdentifier.SenderProvidedChargeId
-                where o.MarketParticipantId == chargeInformationIdentifier.Owner
-                where c.Type == chargeInformationIdentifier.ChargeType
+                where c.SenderProvidedChargeId == chargeIdentifier.SenderProvidedChargeId
+                where o.MarketParticipantId == chargeIdentifier.Owner
+                where c.Type == chargeIdentifier.ChargeType
                 select c;
             return query;
         }

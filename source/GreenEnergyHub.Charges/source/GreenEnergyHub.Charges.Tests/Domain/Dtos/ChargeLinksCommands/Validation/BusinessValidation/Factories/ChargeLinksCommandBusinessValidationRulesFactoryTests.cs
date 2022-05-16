@@ -125,7 +125,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
 
         private static void SetupChargeRepositoryMock(Mock<IChargeInformationRepository> chargeRepository, ChargeInformation? charge)
         {
-            chargeRepository.Setup(r => r.GetOrNullAsync(It.IsAny<ChargeInformationIdentifier>())).ReturnsAsync(charge);
+            chargeRepository.Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>())).ReturnsAsync(charge);
         }
 
         private static void SetupMeteringPointRepositoryMock(

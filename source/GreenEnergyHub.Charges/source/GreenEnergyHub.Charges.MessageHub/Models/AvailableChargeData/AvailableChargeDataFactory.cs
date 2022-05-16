@@ -78,7 +78,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
                     input.Command.Document.BusinessReasonCode,
                     _messageMetaDataContext.RequestDataTime,
                     Guid.NewGuid(), // ID of each available piece of data must be unique
-                    operation.ChargeInformationId,
+                    operation.ChargeId,
                     operation.ChargeOwner,
                     operation.Type,
                     operation.ChargeName,

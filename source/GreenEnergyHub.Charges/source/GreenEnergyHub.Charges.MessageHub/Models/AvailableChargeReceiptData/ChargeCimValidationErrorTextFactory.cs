@@ -112,7 +112,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                 CimValidationErrorTextToken.DocumentSenderId =>
                     chargeCommand.Document.Sender.Id,
                 CimValidationErrorTextToken.DocumentSenderProvidedChargeId =>
-                    chargeOperationDto.ChargeInformationId,
+                    chargeOperationDto.ChargeId,
                 CimValidationErrorTextToken.DocumentType =>
                     chargeCommand.Document.Type.ToString(),
                 CimValidationErrorTextToken.TriggeredByOperationId =>
@@ -133,7 +133,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                 return triggeredBy;
 
             var errorMessage = $"Invalid position ({triggeredBy}) for charge with " +
-                               $"id: {chargeOperationDto.ChargeInformationId}," +
+                               $"id: {chargeOperationDto.ChargeId}," +
                                $"type: {chargeOperationDto.Type}," +
                                $"owner: {chargeOperationDto.ChargeOwner}";
             _logger.LogError("Invalid position: {errorMessage}", errorMessage);

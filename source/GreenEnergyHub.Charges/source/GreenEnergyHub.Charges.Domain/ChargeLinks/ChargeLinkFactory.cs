@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
         {
             ArgumentNullException.ThrowIfNull(dto);
 
-            var chargeIdentifier = new ChargeInformationIdentifier(dto.SenderProvidedChargeId, dto.ChargeOwner, dto.ChargeType);
+            var chargeIdentifier = new ChargeIdentifier(dto.SenderProvidedChargeId, dto.ChargeOwner, dto.ChargeType);
             var charge = await _chargeInformationRepository.GetAsync(chargeIdentifier).ConfigureAwait(false);
 
             var meteringPoint = await _meteringPointRepository
