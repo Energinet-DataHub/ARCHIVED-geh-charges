@@ -25,15 +25,15 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents
         public ChargeCommandRejectedEvent(
             Instant publishedTime,
             ChargeCommand command,
-            IEnumerable<ValidationRuleContainer> validationRuleContainers)
+            IEnumerable<ValidationError> validationErrors)
             : base(publishedTime)
         {
             Command = command;
-            ValidationRuleContainers = validationRuleContainers;
+            ValidationErrors = validationErrors;
         }
 
         public ChargeCommand Command { get; }
 
-        public IEnumerable<ValidationRuleContainer> ValidationRuleContainers { get; }
+        public IEnumerable<ValidationError> ValidationErrors { get; }
     }
 }

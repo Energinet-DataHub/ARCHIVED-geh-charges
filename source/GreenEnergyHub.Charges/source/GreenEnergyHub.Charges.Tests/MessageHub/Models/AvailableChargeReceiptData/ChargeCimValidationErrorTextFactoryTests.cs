@@ -44,7 +44,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             var chargeCommand = chargeCommandBuilder.WithChargeOperation(chargeOperationDto).Build();
             var sut = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
             var rule = new ResolutionTariffValidationRule(chargeOperationDto);
-            var validationRuleWithOperation = new ValidationRuleContainer(rule, null!);
+            var validationError = new ValidationError(rule.ValidationRuleIdentifier, null!, null!);
 
             var expected = CimValidationErrorTextTemplateMessages.ResolutionTariffValidationErrorText
                 .Replace("{{ChargeResolution}}", chargeOperationDto.Resolution.ToString())
@@ -52,7 +52,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
                 .Replace("{{ChargeType}}", chargeOperationDto.Type.ToString());
 
             // Act
-            var actual = sut.Create(validationRuleWithOperation, chargeCommand, chargeOperationDto);
+            var actual = sut.Create(validationError, chargeCommand, chargeOperationDto);
 
             // Assert
             actual.Should().Be(expected);
@@ -71,7 +71,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             var sut = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
             var rule = new MaximumPriceRule(chargeOperationDto);
             var triggeredBy = chargeOperationDto.Points[1].Position.ToString();
-            var validationRuleWithOperation = new ValidationRuleContainer(rule, chargeOperationDto.Id, triggeredBy);
+            var validationError = new ValidationError(rule.ValidationRuleIdentifier, chargeOperationDto.Id, triggeredBy);
 
             var expectedPoint = chargeOperationDto.Points[1];
             var expected = CimValidationErrorTextTemplateMessages.MaximumPriceErrorText
@@ -79,7 +79,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
                 .Replace("{{ChargePointPosition}}", expectedPoint.Position.ToString());
 
             // Act
-            var actual = sut.Create(validationRuleWithOperation, chargeCommand, chargeOperationDto);
+            var actual = sut.Create(validationError, chargeCommand, chargeOperationDto);
 
             // Assert
             actual.Should().Be(expected);
@@ -100,12 +100,12 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
         {
             // Arrange
             var chargeCommand = chargeCommandBuilder.WithChargeOperation(chargeOperationDto).Build();
-            var testValidationRule = new TestValidationRule(true, validationRuleIdentifier); // TODO: bool from input?
+            var validationError = new ValidationError(validationRuleIdentifier, chargeOperationDto.Id, triggeredBy);
             var sut = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
 
             // Act
             var actual = sut.Create(
-                new ValidationRuleContainer(testValidationRule, triggeredBy),
+                validationError,
                 chargeCommand,
                 chargeOperationDto);
 
@@ -129,20 +129,17 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
         {
             // Arrange
             var chargeCommand = chargeCommandBuilder.WithChargeOperation(chargeOperationDto).Build();
-            var testValidationRule = new TestValidationRule(true, validationRuleIdentifier); // TODO: bool from input?
             var triggeredBy = seedTriggeredBy == "0" ?
                 chargeOperationDto.Points[1].Position.ToString() :
                 seedTriggeredBy;
+            var validationError = new ValidationError(validationRuleIdentifier, chargeOperationDto.Id, triggeredBy);
 
             var sut = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
             var expected = CimValidationErrorTextTemplateMessages.StartDateValidationErrorText
                 .Replace("{{ChargeStartDateTime}}", chargeOperationDto.StartDateTime.ToString());
 
             // Act
-            var actual = sut.Create(
-                new ValidationRuleContainer(testValidationRule, triggeredBy),
-                chargeCommand,
-                chargeOperationDto);
+            var actual = sut.Create(validationError, chargeCommand, chargeOperationDto);
 
             // Assert
             actual.Should().Contain(expected);
@@ -163,20 +160,20 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             // Assert
             foreach (var operation in chargeCommand.ChargeOperations)
             {
-                var commandWithOperation =
-                    new ChargeCommand(chargeCommand.Document, new List<ChargeOperationDto>() { operation });
+                var chargeOperationDtos = new List<ChargeOperationDto> { operation };
+                var commandWithOperation = new ChargeCommand(chargeCommand.Document, chargeOperationDtos);
+
                 foreach (var validationRuleIdentifier in validationRuleIdentifiers)
                 {
                     var triggeredBy = SetTriggeredByWithValidationError(operation, validationRuleIdentifier);
-                    var testValidationRule = new TestValidationRule(true, validationRuleIdentifier); // TODO: are they all true?
-                    var actual = sut.Create(
-                        new ValidationRuleContainer(testValidationRule, triggeredBy),
-                        commandWithOperation,
-                        operation);
+                    var validationError = new ValidationError(validationRuleIdentifier, operation.Id, triggeredBy);
+
+                    var actual = sut.Create(validationError, commandWithOperation, operation);
 
                     actual.Should().NotBeNullOrWhiteSpace();
                     actual.Should().NotContain("{");
                     actual.Should().NotContain("  ");
+                    // actual.Should().NotContain("unknown"); // TODO: Can we do this?
                 }
             }
         }

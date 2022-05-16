@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
@@ -25,6 +26,7 @@ using GreenEnergyHub.Charges.Infrastructure.Core.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
+using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.TestHelpers;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -46,53 +48,107 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             [Frozen] Mock<IAvailableChargeLinksReceiptValidationErrorFactory> availableChargeLinksReceiptValidationErrorFactory,
-            ChargeLinksRejectedEvent rejectedEvent,
+            List<ChargeLinkDto> chargeLinkDtos,
+            ChargeLinksCommandBuilder chargeLinksCommandBuilder,
             Instant now,
             AvailableChargeLinksRejectionDataFactory sut)
         {
             // Arrange
-            rejectedEvent.ChargeLinksCommand.Document.Sender.BusinessProcessRole = marketParticipantRole;
+            var chargeLinksCommand = chargeLinksCommandBuilder.WithChargeLinks(chargeLinkDtos).Build();
+            chargeLinksCommand.Document.Sender.BusinessProcessRole = marketParticipantRole;
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
-            var expectedLinks = rejectedEvent.ChargeLinksCommand.ChargeLinksOperations.ToList();
+
+            var validationErrors = chargeLinksCommand.ChargeLinksOperations
+                .Reverse() // GetReasons() should provide the correct ValidationError no matter what order they have here
+                .Select(x => new ValidationError(
+                    ValidationRuleIdentifier.SenderIsMandatoryTypeValidation, x.OperationId, null))
+                .ToList();
+
+            var rejectedEvent = new ChargeLinksRejectedEvent(now, chargeLinksCommand, validationErrors);
+
             marketParticipantRepository
                 .Setup(r => r.GetMeteringPointAdministratorAsync())
                 .ReturnsAsync(meteringPointAdministrator);
 
-            // fake error code and text
-            availableChargeLinksReceiptValidationErrorFactory
-                .Setup(f => f.Create(It.IsAny<ValidationRuleContainer>(), rejectedEvent.ChargeLinksCommand, It.IsAny<ChargeLinkDto>()))
-                .Returns<ValidationRuleContainer, ChargeLinksCommand, ChargeLinkDto>((validationError, _, _) =>
-                    new AvailableReceiptValidationError(
-                        ReasonCode.D01, validationError.ValidationRule.ValidationRuleIdentifier.ToString()));
-
-            var expectedValidationErrors = rejectedEvent.ValidationRuleContainers
-                .Select(x => x.ValidationRule.ValidationRuleIdentifier.ToString()).ToList();
+            SetupAvailableChargeLinksReceiptValidationErrorFactory(
+                availableChargeLinksReceiptValidationErrorFactory, chargeLinksCommand);
 
             // Act
             var actualList = await sut.CreateAsync(rejectedEvent);
 
             // Assert
-            actualList.Should().HaveSameCount(expectedLinks);
+            actualList.Should().HaveSameCount(chargeLinkDtos);
+            var operationOrder = -1;
+
             for (var i1 = 0; i1 < actualList.Count; i1++)
             {
-                actualList[i1].RecipientId.Should().Be(rejectedEvent.ChargeLinksCommand.Document.Sender.Id);
-                actualList[i1].RecipientRole.Should()
-                    .Be(rejectedEvent.ChargeLinksCommand.Document.Sender.BusinessProcessRole);
-                actualList[i1].BusinessReasonCode.Should()
-                    .Be(rejectedEvent.ChargeLinksCommand.Document.BusinessReasonCode);
-                actualList[i1].RequestDateTime.Should().Be(now);
-                actualList[i1].ReceiptStatus.Should().Be(ReceiptStatus.Rejected);
-                actualList[i1].DocumentType.Should().Be(DocumentType.RejectRequestChangeBillingMasterData);
-                actualList[i1].OriginalOperationId.Should().Be(expectedLinks[i1].OperationId);
-                actualList[i1].MeteringPointId.Should().Be(expectedLinks[i1].MeteringPointId);
-                var actualValidationErrors = actualList[i1].ValidationErrors.ToList();
+                var actual = actualList[i1];
+                actual.RecipientId.Should().Be(chargeLinksCommand.Document.Sender.Id);
+                actual.RecipientRole.Should().Be(chargeLinksCommand.Document.Sender.BusinessProcessRole);
+                actual.BusinessReasonCode.Should().Be(chargeLinksCommand.Document.BusinessReasonCode);
+                actual.RequestDateTime.Should().Be(now);
+                actual.ReceiptStatus.Should().Be(ReceiptStatus.Rejected);
+                actual.DocumentType.Should().Be(DocumentType.RejectRequestChangeBillingMasterData);
+
+                var expectedChargeLinkDto = chargeLinksCommand.ChargeLinksOperations.ToArray()[i1];
+                actual.OriginalOperationId.Should().Be(expectedChargeLinkDto.OperationId);
+                actual.MeteringPointId.Should().Be(expectedChargeLinkDto.MeteringPointId);
+
+                var actualValidationErrors = actual.ValidationErrors.ToList();
+                var expectedValidationErrors = validationErrors.Where(x => x.OperationId == expectedChargeLinkDto.OperationId);
+                actual.ValidationErrors.Should().HaveSameCount(expectedValidationErrors);
+                actual.OperationOrder.Should().BeGreaterThan(operationOrder);
+                operationOrder = actual.OperationOrder;
 
                 for (var i2 = 0; i2 < actualValidationErrors.Count; i2++)
                 {
+                    var expectedText = validationErrors[i2].ValidationRuleIdentifier.ToString();
+                    actualValidationErrors[i2].Text.Should().Be(expectedText);
                     actualValidationErrors[i2].ReasonCode.ToString().Should().Be("D01");
-                    actualValidationErrors[i2].Text.Should().Be(expectedValidationErrors[i2]);
                 }
             }
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task CreateAsync_WhenCalled_ShouldLogValidationErrors(
+            Instant now,
+            ChargeLinksRejectedEvent rejectedEvent,
+            MarketParticipantRole marketParticipantRole,
+            MarketParticipant meteringPointAdministrator,
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
+            [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
+            [Frozen] Mock<IAvailableChargeLinksReceiptValidationErrorFactory> availableChargeLinksReceiptValidationErrorFactory,
+            [Frozen] Mock<ILoggerFactory> loggerFactory,
+            [Frozen] Mock<ILogger> logger)
+        {
+            // Arrange
+            loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
+            rejectedEvent.ChargeLinksCommand.Document.Sender.BusinessProcessRole = marketParticipantRole;
+            messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
+            marketParticipantRepository
+                .Setup(r => r.GetMeteringPointAdministratorAsync())
+                .ReturnsAsync(meteringPointAdministrator);
+
+            SetupAvailableChargeLinksReceiptValidationErrorFactory(
+                availableChargeLinksReceiptValidationErrorFactory, rejectedEvent.ChargeLinksCommand);
+
+            var sut = new AvailableChargeLinksRejectionDataFactory(
+                messageMetaDataContext.Object,
+                availableChargeLinksReceiptValidationErrorFactory.Object,
+                marketParticipantRepository.Object,
+                loggerFactory.Object);
+
+            // Act
+            await sut.CreateAsync(rejectedEvent);
+
+            // Assert
+            var document = rejectedEvent.ChargeLinksCommand.Document;
+            var expectedMessage = $"ValidationErrors for document Id {document.Id} with Type {document.Type} from GLN {document.Sender.Id}:\r\n" +
+                                  "- ValidationRuleIdentifier: StartDateValidation\r\n" +
+                                  "- ValidationRuleIdentifier: ChangingTariffTaxValueNotAllowed\r\n" +
+                                  "- ValidationRuleIdentifier: SenderIsMandatoryTypeValidation\r\n";
+            logger.VerifyLoggerWasCalled(expectedMessage, LogLevel.Error);
         }
 
         [Theory]
@@ -111,36 +167,16 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
             actualList.Should().BeEmpty();
         }
 
-        [Theory]
-        [InlineAutoDomainData]
-        public async Task CreateAsync_WhenCalled_ShouldLogValidationErrors(
-            ChargeLinksRejectedEvent rejectedEvent,
-            [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
-            [Frozen] Mock<IAvailableChargeLinksReceiptValidationErrorFactory> availableChargeLinksReceiptValidationErrorFactory,
-            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            [Frozen] Mock<ILoggerFactory> loggerFactory,
-            [Frozen] Mock<ILogger> logger)
+        private static void SetupAvailableChargeLinksReceiptValidationErrorFactory(
+            Mock<IAvailableChargeLinksReceiptValidationErrorFactory> availableChargeLinksReceiptValidationErrorFactory,
+            ChargeLinksCommand chargeLinksCommand)
         {
-            // Arrange
-            rejectedEvent.ChargeLinksCommand.Document.Sender.BusinessProcessRole = MarketParticipantRole.SystemOperator;
-            loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
-
-            var sut = new AvailableChargeLinksRejectionDataFactory(
-                messageMetaDataContext.Object,
-                availableChargeLinksReceiptValidationErrorFactory.Object,
-                marketParticipantRepository.Object,
-                loggerFactory.Object);
-
-            // Act
-            await sut.CreateAsync(rejectedEvent);
-
-            // Assert
-            var document = rejectedEvent.ChargeLinksCommand.Document;
-            var expectedMessage = $"ValidationErrors for document Id {document.Id} with Type {document.Type} from GLN {document.Sender.Id}:\r\n" +
-                                   "- ValidationRuleIdentifier: StartDateValidation\r\n" +
-                                   "- ValidationRuleIdentifier: ChangingTariffTaxValueNotAllowed\r\n" +
-                                   "- ValidationRuleIdentifier: SenderIsMandatoryTypeValidation\r\n";
-            logger.VerifyLoggerWasCalled(expectedMessage, LogLevel.Error);
+            // fake error code and text
+            availableChargeLinksReceiptValidationErrorFactory
+                .Setup(f => f.Create(It.IsAny<ValidationError>(), chargeLinksCommand, It.IsAny<ChargeLinkDto>()))
+                .Returns<ValidationError, ChargeLinksCommand, ChargeLinkDto>((validationError, _, _) =>
+                    new AvailableReceiptValidationError(
+                        ReasonCode.D01, validationError.ValidationRuleIdentifier.ToString()));
         }
     }
 }

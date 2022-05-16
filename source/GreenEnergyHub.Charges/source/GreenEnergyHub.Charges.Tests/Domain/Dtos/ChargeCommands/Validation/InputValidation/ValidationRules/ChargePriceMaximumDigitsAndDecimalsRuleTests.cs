@@ -78,12 +78,12 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             var triggeredBy = expectedPoint.Position.ToString();
 
             var sutRule = new ChargePriceMaximumDigitsAndDecimalsRule(chargeOperationDto);
-            var sutValidationRuleWithOperation =
-                new ValidationRuleContainer(sutRule, chargeOperationDto.Id, triggeredBy);
+            var validationError =
+                new ValidationError(sutRule.ValidationRuleIdentifier, chargeOperationDto.Id, triggeredBy);
             var sutFactory = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
 
             // Act
-            var actual = sutFactory.Create(sutValidationRuleWithOperation, invalidCommand, chargeOperationDto);
+            var actual = sutFactory.Create(validationError, invalidCommand, chargeOperationDto);
 
             // Assert
             sutRule.IsValid.Should().BeFalse();

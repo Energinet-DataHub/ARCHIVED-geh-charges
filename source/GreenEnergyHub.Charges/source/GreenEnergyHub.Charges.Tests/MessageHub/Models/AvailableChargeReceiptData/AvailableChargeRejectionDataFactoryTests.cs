@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
@@ -26,6 +27,7 @@ using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.Charges.Tests.Builders.Testables;
 using GreenEnergyHub.TestHelpers;
 using Microsoft.Extensions.Logging;
@@ -46,29 +48,37 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             [Frozen] Mock<IAvailableChargeReceiptValidationErrorFactory> availableChargeReceiptValidationErrorFactory,
-            ChargeCommandRejectedEvent rejectedEvent,
+            List<ChargeOperationDto> chargeOperations,
+            ChargeCommandBuilder chargeCommandBuilder,
             Instant now,
             AvailableChargeRejectionDataFactory sut)
         {
             // Arrange
-            var chargeCommand = rejectedEvent.Command;
+            var chargeCommand = chargeCommandBuilder.WithChargeOperations(chargeOperations).Build();
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
+
             marketParticipantRepository
                 .Setup(r => r.GetMeteringPointAdministratorAsync())
                 .ReturnsAsync(meteringPointAdministrator);
 
             SetupAvailableChargeReceiptValidationErrorFactory(
-                availableChargeReceiptValidationErrorFactory, rejectedEvent);
+                availableChargeReceiptValidationErrorFactory, chargeCommand);
 
-            var expectedValidationErrors = rejectedEvent.ValidationRuleContainers
-                .Select(x => x.ValidationRule.ValidationRuleIdentifier.ToString()).ToList();
+            var validationErrors = chargeCommand.ChargeOperations
+                .Reverse() // GetReasons() should provide the correct ValidationError no matter what order they have here
+                .Select(x => new ValidationError(ValidationRuleIdentifier.SenderIsMandatoryTypeValidation, x.Id, null))
+                .ToList();
+
+            var chargeCommandRejectedEvent =
+                new ChargeCommandRejectedEvent(now, chargeCommand, validationErrors);
 
             // Act
-            var actualList = await sut.CreateAsync(rejectedEvent);
+            var actualList = await sut.CreateAsync(chargeCommandRejectedEvent);
 
             // Assert
-            actualList.Should().HaveCount(3);
+            actualList.Should().HaveSameCount(chargeOperations);
             var operationOrder = -1;
+
             for (var i1 = 0; i1 < actualList.Count; i1++)
             {
                 var actual = actualList[i1];
@@ -78,16 +88,21 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
                 actual.RequestDateTime.Should().Be(now);
                 actual.ReceiptStatus.Should().Be(ReceiptStatus.Rejected);
                 actual.DocumentType.Should().Be(DocumentType.RejectRequestChangeOfPriceList);
-                actual.OriginalOperationId.Should().Be(chargeCommand.ChargeOperations.ToArray()[i1].Id);
+
+                var expectedChargeOperationDto = chargeCommand.ChargeOperations.ToArray()[i1];
+                actual.OriginalOperationId.Should().Be(expectedChargeOperationDto.Id);
+
                 var actualValidationErrors = actual.ValidationErrors.ToList();
-                actual.ValidationErrors.Should().HaveSameCount(rejectedEvent.ValidationRuleContainers);
+                var expectedValidationErrors = validationErrors.Where(x => x.OperationId == expectedChargeOperationDto.Id);
+                actual.ValidationErrors.Should().HaveSameCount(expectedValidationErrors);
                 actual.OperationOrder.Should().BeGreaterThan(operationOrder);
                 operationOrder = actual.OperationOrder;
 
                 for (var i2 = 0; i2 < actualValidationErrors.Count; i2++)
                 {
+                    var expectedText = validationErrors[i2].ValidationRuleIdentifier.ToString();
+                    actualValidationErrors[i2].Text.Should().Be(expectedText);
                     actualValidationErrors[i2].ReasonCode.ToString().Should().NotBeNullOrWhiteSpace();
-                    actualValidationErrors[i2].Text.Should().Be(expectedValidationErrors[i2]);
                 }
             }
         }
@@ -110,7 +125,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
                 .ReturnsAsync(meteringPointAdministrator);
 
             SetupAvailableChargeReceiptValidationErrorFactory(
-                availableChargeReceiptValidationErrorFactory, rejectedEvent);
+                availableChargeReceiptValidationErrorFactory, rejectedEvent.Command);
 
             var sut = new AvailableChargeRejectionDataFactory(
                 messageMetaDataContext.Object,
@@ -132,14 +147,14 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
 
         private static void SetupAvailableChargeReceiptValidationErrorFactory(
             Mock<IAvailableChargeReceiptValidationErrorFactory> availableChargeReceiptValidationErrorFactory,
-            ChargeCommandRejectedEvent rejectedEvent)
+            ChargeCommand chargeCommand)
         {
             // fake error code and text
             availableChargeReceiptValidationErrorFactory
-                .Setup(f => f.Create(It.IsAny<IValidationRuleContainer>(), rejectedEvent.Command, It.IsAny<ChargeOperationDto>()))
-                .Returns<ValidationRuleContainer, ChargeCommand, ChargeOperationDto>((validationError, _, _) =>
+                .Setup(f => f.Create(It.IsAny<ValidationError>(), chargeCommand, It.IsAny<ChargeOperationDto>()))
+                .Returns<ValidationError, ChargeCommand, ChargeOperationDto>((validationError, _, _) =>
                     new AvailableReceiptValidationError(
-                        ReasonCode.D01, validationError.ValidationRule.ValidationRuleIdentifier.ToString()));
+                        ReasonCode.D01, validationError.ValidationRuleIdentifier.ToString()));
         }
     }
 }

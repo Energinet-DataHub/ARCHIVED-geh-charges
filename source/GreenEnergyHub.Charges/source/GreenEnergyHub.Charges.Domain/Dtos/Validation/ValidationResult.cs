@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
             {
                 if (value.Any(r => r.ValidationRule.IsValid))
                 {
-                    throw new ArgumentException("All validation rules must be valid", nameof(InvalidRules));
+                    throw new ArgumentException("All validation rules must be invalid", nameof(InvalidRules));
                 }
 
                 _invalidRules = value;

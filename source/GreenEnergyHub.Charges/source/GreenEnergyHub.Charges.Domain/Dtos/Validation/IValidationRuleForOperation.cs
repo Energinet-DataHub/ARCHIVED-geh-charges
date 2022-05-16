@@ -12,17 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.Validation;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
-
-namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData
+namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 {
-    public interface IAvailableChargeLinksReceiptValidationErrorFactory
+    /// <summary>
+    /// Interface for validationrules for an operation
+    /// </summary>
+    public interface IValidationRuleForOperation : IValidationRule
     {
-        AvailableReceiptValidationError Create(
-            ValidationError validationError,
-            ChargeLinksCommand command,
-            ChargeLinkDto chargeLinkDto);
+        /// <summary>
+        /// Id of an operation that violated a validation rule
+        /// </summary>
+        public string OperationId { get; }
     }
 }

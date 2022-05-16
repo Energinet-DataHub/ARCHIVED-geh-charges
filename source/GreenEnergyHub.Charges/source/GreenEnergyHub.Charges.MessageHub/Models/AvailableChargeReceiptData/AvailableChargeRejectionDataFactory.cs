@@ -75,7 +75,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
         {
             var errorMessage = ValidationErrorLogMessageBuilder.BuildErrorMessage(
                 rejectedEvent.Command.Document,
-                rejectedEvent.ValidationRuleContainers);
+                rejectedEvent.ValidationErrors);
 
             _logger.LogError("ValidationErrors for {errorMessage}", errorMessage);
         }
@@ -85,7 +85,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             ChargeOperationDto chargeOperationDto)
         {
             return input
-                .ValidationRuleContainers
+                .ValidationErrors
                 .Where(ve => ve.OperationId == chargeOperationDto.Id || string.IsNullOrWhiteSpace(ve.OperationId)) // TODO Can we avoid the null-check for validationrules without operation?
                 .Select(validationError => _availableChargeReceiptValidationErrorFactory
                     .Create(validationError, input.Command, chargeOperationDto))

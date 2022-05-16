@@ -39,8 +39,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared
             var validationErrors = BuildValidationErrors();
 
             var expected = $"document Id {documentDto.Id} with Type {documentDto.Type} from GLN {documentDto.Sender.Id}:\r\n" +
-                            $"- ValidationRuleIdentifier: {validationErrors.First().ValidationRule.ValidationRuleIdentifier}\r\n" +
-                            $"- ValidationRuleIdentifier: {validationErrors.Last().ValidationRule.ValidationRuleIdentifier}\r\n";
+                            $"- ValidationRuleIdentifier: {validationErrors.First().ValidationRuleIdentifier}\r\n" +
+                            $"- ValidationRuleIdentifier: {validationErrors.Last().ValidationRuleIdentifier}\r\n";
 
             // Act
             var actual = ValidationErrorLogMessageBuilder.BuildErrorMessage(documentDto, validationErrors);
@@ -63,12 +63,12 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared
             return documentDto;
         }
 
-        private static List<IValidationRuleContainer> BuildValidationErrors()
+        private static List<ValidationError> BuildValidationErrors()
         {
-            var validationErrors = new List<IValidationRuleContainer>
+            var validationErrors = new List<ValidationError>
             {
-                new ValidationRuleContainer(new TestValidationRule(false, ValidationRuleIdentifier.ChargeDoesNotExist)),
-                new ValidationRuleContainer(new TestValidationRule(false, ValidationRuleIdentifier.SubsequentBundleOperationsFail)),
+                new(ValidationRuleIdentifier.ChargeDoesNotExist, null, null),
+                new(ValidationRuleIdentifier.SubsequentBundleOperationsFail, null, null),
             };
             return validationErrors;
         }
