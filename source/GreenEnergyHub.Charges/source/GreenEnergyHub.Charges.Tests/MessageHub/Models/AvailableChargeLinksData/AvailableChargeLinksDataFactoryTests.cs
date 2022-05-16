@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.Messaging;
-using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.ChargeInformations;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData;
@@ -40,10 +40,10 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinksDat
         public async Task CreateAsync_WhenTaxCharges_ReturnsAvailableData(
             TestMeteringPointAdministrator meteringPointAdministrator,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            [Frozen] Mock<IChargeRepository> chargeRepository,
+            [Frozen] Mock<IChargeInformationRepository> chargeRepository,
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             ChargeLinksAcceptedEvent acceptedEvent,
-            Charge charge,
+            ChargeInformation chargeInformation,
             TestGridAccessProvider gridAccessProvider,
             Instant now,
             AvailableChargeLinksDataFactory sut)
@@ -54,10 +54,10 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinksDat
                 .Setup(m => m.GetGridAccessProviderAsync(It.IsAny<string>()))
                 .ReturnsAsync(gridAccessProvider);
 
-            charge.SetPrivateProperty(c => c.TaxIndicator, true);
+            chargeInformation.SetPrivateProperty(c => c.TaxIndicator, true);
             chargeRepository
                 .Setup(r => r.GetAsync(It.IsAny<ChargeIdentifier>()))
-                .ReturnsAsync(charge);
+                .ReturnsAsync(chargeInformation);
 
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
 
@@ -90,9 +90,9 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinksDat
         public async Task CreateAsync_WhenNotTaxCharges_ReturnsEmptyList(
             TestMeteringPointAdministrator meteringPointAdministrator,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            [Frozen] Mock<IChargeRepository> chargeRepository,
+            [Frozen] Mock<IChargeInformationRepository> chargeRepository,
             ChargeLinksAcceptedEvent acceptedEvent,
-            Charge charge,
+            ChargeInformation chargeInformation,
             TestGridAccessProvider gridAccessProvider,
             AvailableChargeLinksDataFactory sut)
         {
@@ -104,10 +104,10 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinksDat
                 .Setup(m => m.GetGridAccessProviderAsync(It.IsAny<string>()))
                 .ReturnsAsync(gridAccessProvider);
 
-            charge.SetPrivateProperty(c => c.TaxIndicator, false);
+            chargeInformation.SetPrivateProperty(c => c.TaxIndicator, false);
             chargeRepository
                 .Setup(r => r.GetAsync(It.IsAny<ChargeIdentifier>()))
-                .ReturnsAsync(charge);
+                .ReturnsAsync(chargeInformation);
 
             // Act
             var actualList = await sut.CreateAsync(acceptedEvent);

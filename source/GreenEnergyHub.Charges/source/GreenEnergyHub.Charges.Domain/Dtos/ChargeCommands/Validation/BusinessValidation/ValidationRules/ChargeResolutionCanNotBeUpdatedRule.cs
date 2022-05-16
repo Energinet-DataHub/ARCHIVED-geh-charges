@@ -12,23 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules
 {
     public class ChargeResolutionCanNotBeUpdatedRule : IValidationRuleForOperation
     {
-        private readonly Charge _existingCharge;
+        private readonly ChargeInformations.ChargeInformation _existingChargeInformation;
         private readonly ChargeOperationDto _chargeOperationDto;
 
-        public ChargeResolutionCanNotBeUpdatedRule(Charge existingCharge, ChargeOperationDto chargeOperationDto)
+        public ChargeResolutionCanNotBeUpdatedRule(ChargeInformations.ChargeInformation existingChargeInformation, ChargeOperationDto chargeOperationDto)
         {
-            _existingCharge = existingCharge;
+            _existingChargeInformation = existingChargeInformation;
             _chargeOperationDto = chargeOperationDto;
         }
 
-        public bool IsValid => _existingCharge.Resolution == _chargeOperationDto.Resolution;
+        public bool IsValid => _existingChargeInformation.Resolution == _chargeOperationDto.Resolution;
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.ChargeResolutionCanNotBeUpdated;

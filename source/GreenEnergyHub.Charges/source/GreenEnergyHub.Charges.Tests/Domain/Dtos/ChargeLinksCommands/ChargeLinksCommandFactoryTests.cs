@@ -18,7 +18,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.ChargeInformations;
+using GreenEnergyHub.Charges.Domain.Common;
 using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.CreateDefaultChargeLinksRequests;
@@ -39,14 +40,14 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands
         [Theory]
         [InlineAutoMoqData]
         public async Task WhenCreateIsCalled_WithDefaultChargeLinkAndCreateLinkCommandEvent_NewChargeLinkCommandIsCreated(
-            [Frozen] Mock<IChargeRepository> chargeRepository,
+            [Frozen] Mock<IChargeInformationRepository> chargeRepository,
             [Frozen] Mock<IMeteringPointRepository> meteringPointRepository,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             TestMeteringPointAdministrator recipient,
             TestSystemOperator systemOperator,
             TestMarketParticipant chargeOwner,
             Guid defaultChargeLinkId,
-            Guid chargeId,
+            Guid chargeInformationId,
             Guid chargePeriodId,
             MeteringPoint meteringPoint,
             CreateDefaultChargeLinksRequest createDefaultChargeLinksRequest,
@@ -57,17 +58,16 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands
                 defaultChargeLinkId,
                 Instant.MinValue,
                 Instant.MaxValue,
-                chargeId,
+                chargeInformationId,
                 meteringPoint.MeteringPointType);
 
-            var charge = new Charge(
-                chargeId,
+            var charge = new ChargeInformation(
+                chargeInformationId,
                 "SenderProvidedId",
                 chargeOwner.Id,
                 ChargeType.Fee,
                 Resolution.P1D,
                 true,
-                new List<Point> { new(1, 200m, SystemClock.Instance.GetCurrentInstant()) },
                 new List<ChargePeriod>
                 {
                     new ChargePeriod(
@@ -81,8 +81,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands
                 });
 
             chargeRepository
-                .Setup(f => f.GetAsync(new List<Guid> { defaultChargeLink.ChargeId }))
-                .ReturnsAsync(new List<Charge> { charge });
+                .Setup(f => f.GetAsync(new List<Guid> { defaultChargeLink.ChargeInformationId }))
+                .ReturnsAsync(new List<ChargeInformation> { charge });
 
             meteringPointRepository
                 .Setup(f => f.GetMeteringPointAsync(createDefaultChargeLinksRequest.MeteringPointId))

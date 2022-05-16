@@ -45,11 +45,11 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers.V1
             return Ok(_data.MeteringPoints);
         }
 
-        [HttpGet("Charges")]
+        [HttpGet("ChargeInformations")]
         [EnableQuery]
-        public IActionResult Charges()
+        public IActionResult ChargeInformations()
         {
-            return Ok(_data.Charges);
+            return Ok(_data.ChargeInformations);
         }
 
         [HttpGet("ChargeLinks")]

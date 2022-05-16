@@ -29,13 +29,13 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
         {
         }
 
-        public virtual DbSet<Charge> Charges { get; set; }
+        public virtual DbSet<ChargeInformation> ChargeInformations { get; set; }
 
         public virtual DbSet<ChargeLink> ChargeLinks { get; set; }
 
         public virtual DbSet<ChargePeriod> ChargePeriods { get; set; }
 
-        public virtual DbSet<ChargePoint> ChargePoints { get; set; }
+        public virtual DbSet<ChargePrice> ChargePrices { get; set; }
 
         public virtual DbSet<DefaultChargeLink> DefaultChargeLinks { get; set; }
 
@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
 
-            modelBuilder.Entity<Charge>(entity =>
+            modelBuilder.Entity<ChargeInformation>(entity =>
             {
                 entity.HasKey(e => e.Id)
                     .IsClustered(false);
@@ -59,7 +59,7 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.HasOne(d => d.Owner)
-                    .WithMany(p => p.Charges)
+                    .WithMany(p => p.ChargeInformations)
                     .HasForeignKey(d => d.OwnerId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Charge_MarketParticipant");
@@ -72,9 +72,9 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
 
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
-                entity.HasOne(d => d.Charge)
+                entity.HasOne(d => d.ChargeInformation)
                     .WithMany(p => p.ChargeLinks)
-                    .HasForeignKey(d => d.ChargeId)
+                    .HasForeignKey(d => d.ChargeInformationId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ChargeLink_Charge");
 
@@ -92,14 +92,14 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
 
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
-                entity.HasOne(d => d.Charge)
+                entity.HasOne(d => d.ChargeInformation)
                     .WithMany(p => p.ChargePeriods)
-                    .HasForeignKey(d => d.ChargeId)
+                    .HasForeignKey(d => d.ChargeInformationId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ChargePeriod_Charge");
             });
 
-            modelBuilder.Entity<ChargePoint>(entity =>
+            modelBuilder.Entity<ChargePrice>(entity =>
             {
                 entity.HasKey(e => e.Id)
                     .HasName("PK_ChargePrice")
@@ -107,11 +107,11 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
 
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
-                entity.HasOne(d => d.Charge)
-                    .WithMany(p => p.ChargePoints)
-                    .HasForeignKey(d => d.ChargeId)
+                entity.HasOne(d => d.ChargeInformation)
+                    .WithMany(p => p.ChargePrices)
+                    .HasForeignKey(d => d.ChargeInformationId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ChargePoint_Charge");
+                    .HasConstraintName("FK_ChargePrice_Charge");
             });
 
             modelBuilder.Entity<DefaultChargeLink>(entity =>
@@ -121,9 +121,9 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
 
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
-                entity.HasOne(d => d.Charge)
+                entity.HasOne(d => d.ChargeInformation)
                     .WithMany(p => p.DefaultChargeLinks)
-                    .HasForeignKey(d => d.ChargeId)
+                    .HasForeignKey(d => d.ChargeInformationId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_DefaultChargeLink_Charge");
             });

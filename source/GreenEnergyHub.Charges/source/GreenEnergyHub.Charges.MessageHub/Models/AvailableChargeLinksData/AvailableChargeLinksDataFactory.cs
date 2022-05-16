@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Messaging;
-using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.ChargeInformations;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
@@ -29,17 +29,17 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData
         : AvailableDataFactoryBase<AvailableChargeLinksData, ChargeLinksAcceptedEvent>
     {
         private readonly IMarketParticipantRepository _marketParticipantRepository;
-        private readonly IChargeRepository _chargeRepository;
+        private readonly IChargeInformationRepository _chargeInformationRepository;
         private readonly IMessageMetaDataContext _messageMetaDataContext;
 
         public AvailableChargeLinksDataFactory(
             IMarketParticipantRepository marketParticipantRepository,
-            IChargeRepository chargeRepository,
+            IChargeInformationRepository chargeInformationRepository,
             IMessageMetaDataContext messageMetaDataContext)
             : base(marketParticipantRepository)
         {
             _marketParticipantRepository = marketParticipantRepository;
-            _chargeRepository = chargeRepository;
+            _chargeInformationRepository = chargeInformationRepository;
             _messageMetaDataContext = messageMetaDataContext;
         }
 
@@ -67,7 +67,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData
                 .GetGridAccessProviderAsync(operation.MeteringPointId).ConfigureAwait(false);
 
             var chargeIdentifier = new ChargeIdentifier(operation.SenderProvidedChargeId, operation.ChargeOwner, operation.ChargeType);
-            var charge = await _chargeRepository.GetAsync(chargeIdentifier).ConfigureAwait(false);
+            var charge = await _chargeInformationRepository.GetAsync(chargeIdentifier).ConfigureAwait(false);
             var sender = await GetSenderAsync().ConfigureAwait(false);
             if (!ShouldMakeDataAvailableForGridOwnerOfMeteringPoint(charge)) return;
             var operationOrder = input.ChargeLinksCommand.ChargeLinksOperations.ToList().IndexOf(operation);
@@ -90,11 +90,11 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData
                 operationOrder));
         }
 
-        private static bool ShouldMakeDataAvailableForGridOwnerOfMeteringPoint(Charge charge)
+        private static bool ShouldMakeDataAvailableForGridOwnerOfMeteringPoint(ChargeInformation chargeInformation)
         {
             // We only need to notify the grid provider owning the metering point if
             // the link is about a tax charge; the rest they maintain themselves
-            return charge.TaxIndicator;
+            return chargeInformation.TaxIndicator;
         }
     }
 }

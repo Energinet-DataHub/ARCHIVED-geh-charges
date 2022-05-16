@@ -13,8 +13,9 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.ChargeInformations;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
-using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.ChargePrices;
 using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
@@ -24,7 +25,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence
 {
     public interface IChargesDatabaseContext
     {
-        DbSet<Charge> Charges { get; }
+        DbSet<ChargeInformation> ChargeInformations { get; }
+
+        DbSet<ChargePrice> ChargePrices { get; }
 
         DbSet<MarketParticipant> MarketParticipants { get; }
 

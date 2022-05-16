@@ -22,13 +22,13 @@ using Microsoft.EntityFrameworkCore;
 namespace GreenEnergyHub.Charges.QueryApi.Model
 {
     [Table("ChargeLink", Schema = "Charges")]
-    [Index(nameof(MeteringPointId), nameof(ChargeId), Name = "IX_MeteringPointId_ChargeId")]
+    [Index(nameof(MeteringPointId), nameof(ChargeInformationId), Name = "IX_MeteringPointId_ChargeId")]
     public partial class ChargeLink
     {
         [Key]
         public Guid Id { get; set; }
 
-        public Guid ChargeId { get; set; }
+        public Guid ChargeInformationId { get; set; }
 
         public Guid MeteringPointId { get; set; }
 
@@ -38,9 +38,9 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
 
         public int Factor { get; set; }
 
-        [ForeignKey(nameof(ChargeId))]
+        [ForeignKey(nameof(ChargeInformationId))]
         [InverseProperty("ChargeLinks")]
-        public virtual Charge Charge { get; set; }
+        public virtual ChargeInformation ChargeInformation { get; set; }
 
         [ForeignKey(nameof(MeteringPointId))]
         [InverseProperty("ChargeLinks")]

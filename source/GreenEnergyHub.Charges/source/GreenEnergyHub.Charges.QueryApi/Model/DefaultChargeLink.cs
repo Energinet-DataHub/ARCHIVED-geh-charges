@@ -30,14 +30,14 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
 
         public int MeteringPointType { get; set; }
 
-        public Guid ChargeId { get; set; }
+        public Guid ChargeInformationId { get; set; }
 
         public DateTime StartDateTime { get; set; }
 
         public DateTime EndDateTime { get; set; }
 
-        [ForeignKey(nameof(ChargeId))]
+        [ForeignKey(nameof(ChargeInformationId))]
         [InverseProperty("DefaultChargeLinks")]
-        public virtual Charge Charge { get; set; }
+        public virtual ChargeInformation ChargeInformation { get; set; }
     }
 }

@@ -30,11 +30,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
             _context = context;
         }
 
-        public async Task<IReadOnlyCollection<ChargeLink>> GetAsync(Guid chargeId, Guid meteringPointId)
+        public async Task<IReadOnlyCollection<ChargeLink>> GetAsync(Guid chargeInformationId, Guid meteringPointId)
         {
             return await _context.ChargeLinks
                 .Where(chargeLink =>
-                    chargeLink.ChargeId == chargeId &&
+                    chargeLink.ChargeInformationId == chargeInformationId &&
                     chargeLink.MeteringPointId == meteringPointId)
                 .ToListAsync()
                 .ConfigureAwait(false);

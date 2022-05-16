@@ -17,8 +17,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Domain.ChargeInformations;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
-using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Common;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Persistence;
@@ -34,7 +35,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 {
     /// <summary>
-    /// Tests <see cref="ChargeRepository"/> using a database.
+    /// Tests <see cref="ChargeInformationRepository"/> using a database.
     /// </summary>
     [IntegrationTest]
     public class ChargeLinkRepositoryTests : IClassFixture<ChargesDatabaseFixture>
@@ -64,14 +65,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
 
             var actual = await chargesDatabaseReadContext.ChargeLinks.SingleAsync(
-                    c => c.ChargeId == ids.ChargeId && c.MeteringPointId == ids.MeteringPointId)
+                    c => c.ChargeInformationId == ids.ChargeInformationId && c.MeteringPointId == ids.MeteringPointId)
                 .ConfigureAwait(false);
             actual.Should().BeEquivalentTo(expected);
         }
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task AddRangeAsync_WhenIdenticalChargeLinksAreReceived_ThrowsUniqueConstraintException(ChargeLink chargeLink)
+        public async Task AddRangeAsync_WhenIdenticalChargeLinksAreReceived_ThrowsUniqueConstraintException(
+            ChargeLink chargeLink)
         {
             // Seed Arrange
             await using var firstChargesContext = _databaseManager.CreateDbContext();
@@ -88,7 +90,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             var sut = new ChargeLinksRepository(secondChargesContext);
             var copyChargeLink = CreateExpectedChargeLink(chargeLink, ids);
 
-            // Act
             Func<Task> act = async () =>
             {
                 await sut.AddAsync(copyChargeLink);
@@ -102,21 +103,21 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 .WithMessage("Violation of UNIQUE KEY constraint 'UQ_DefaultOverlap_StartDateTime'*");
         }
 
-        private ChargeLink CreateExpectedChargeLink(ChargeLink chargeLink, (Guid ChargeId, Guid MeteringPointId) ids)
+        private static ChargeLink CreateExpectedChargeLink(ChargeLink chargeLink, (Guid ChargeInformationId, Guid MeteringPointId) ids)
         {
             return new ChargeLink(
-                ids.ChargeId,
+                ids.ChargeInformationId,
                 ids.MeteringPointId,
                 chargeLink.StartDateTime,
                 chargeLink.EndDateTime,
                 chargeLink.Factor);
         }
 
-        private static (Guid ChargeId, Guid MeteringPointId) SeedDatabase(ChargesDatabaseContext context)
+        private static (Guid ChargeInformationId, Guid MeteringPointId) SeedDatabase(ChargesDatabaseContext context)
         {
             var marketParticipantId = "MarketParticipantId";
             var existingMeteringPoint = context.MeteringPoints.FirstOrDefault();
-            var existingCharge = context.Charges.FirstOrDefault();
+            var existingCharge = context.ChargeInformations.FirstOrDefault();
 
             if (existingMeteringPoint is not null && existingCharge is not null)
                 return (existingCharge.Id, existingMeteringPoint.Id);
@@ -130,14 +131,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             context.MarketParticipants.Add(marketParticipant);
             context.SaveChanges(); // Sets marketParticipant.RowId
 
-            var charge = new Charge(
+            var charge = new ChargeInformation(
                 Guid.NewGuid(),
                 "charge id",
                 marketParticipant.Id,
                 ChargeType.Tariff,
                 Resolution.P1D,
                 false,
-                new List<Point>(),
                 new List<ChargePeriod>
                 {
                     new ChargePeriod(
@@ -149,7 +149,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                         SystemClock.Instance.GetCurrentInstant(),
                         SystemClock.Instance.GetCurrentInstant()),
                 });
-            context.Charges.Add(charge);
+            context.ChargeInformations.Add(charge);
 
             var gridAreaLinkId = context.GridAreaLinks.First().Id;
 

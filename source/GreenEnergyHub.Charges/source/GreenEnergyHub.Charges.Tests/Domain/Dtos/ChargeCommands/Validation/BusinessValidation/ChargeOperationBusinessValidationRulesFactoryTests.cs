@@ -19,7 +19,8 @@ using System.Reflection;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Core;
-using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.ChargeInformations;
+using GreenEnergyHub.Charges.Domain.Common;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.Factories;
@@ -46,7 +47,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             Type expectedRule,
             TestMarketParticipant sender,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            [Frozen] Mock<IChargeRepository> repository,
+            [Frozen] Mock<IChargeInformationRepository> repository,
             [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
             ChargeOperationBusinessValidationRulesFactory sut,
             ChargeOperationDtoBuilder builder)
@@ -55,7 +56,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             var operation = builder.Build();
             SetupConfigureRepositoryMock(rulesConfigurationRepository);
 
-            Charge? charge = null;
+            ChargeInformation? charge = null;
             repository
                 .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(charge);
@@ -81,15 +82,15 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             Type expectedRule,
             TestMarketParticipant sender,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            [Frozen] Mock<IChargeRepository> chargeRepository,
+            [Frozen] Mock<IChargeInformationRepository> chargeRepository,
             [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
             ChargeOperationBusinessValidationRulesFactory sut,
-            Charge charge)
+            ChargeInformation chargeInformation)
         {
             // Arrange
             var chargeOperationDto = new ChargeOperationDtoBuilder().WithChargeType(ChargeType.Fee).Build();
             SetupConfigureRepositoryMock(rulesConfigurationRepository);
-            SetupChargeRepositoryMock(chargeRepository, charge);
+            SetupChargeRepositoryMock(chargeRepository, chargeInformation);
             SetupMarketParticipantMock(sender, marketParticipantRepository);
 
             // Act
@@ -110,15 +111,15 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             Type expectedRule,
             TestMarketParticipant sender,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            [Frozen] Mock<IChargeRepository> chargeRepository,
+            [Frozen] Mock<IChargeInformationRepository> chargeRepository,
             [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
             ChargeOperationBusinessValidationRulesFactory sut,
-            Charge charge)
+            ChargeInformation chargeInformation)
         {
             // Arrange
             var chargeOperationDto = new ChargeOperationDtoBuilder().WithChargeType(ChargeType.Tariff).Build();
             SetupConfigureRepositoryMock(rulesConfigurationRepository);
-            SetupChargeRepositoryMock(chargeRepository, charge);
+            SetupChargeRepositoryMock(chargeRepository, chargeInformation);
             SetupMarketParticipantMock(sender, marketParticipantRepository);
 
             // Act
@@ -150,16 +151,16 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         public async Task CreateRulesAsync_WithChargeCommandAllRulesThatNeedTriggeredByForErrorMessage_MustImplementIValidationRuleWithExtendedData(
             CimValidationErrorTextToken cimValidationErrorTextToken,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            [Frozen] Mock<IChargeRepository> chargeRepository,
+            [Frozen] Mock<IChargeInformationRepository> chargeRepository,
             [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
             ChargeOperationBusinessValidationRulesFactory sut,
             TestMarketParticipant sender,
             ChargeCommand chargeCommand,
-            Charge charge)
+            ChargeInformation chargeInformation)
         {
             // Arrange
             SetupConfigureRepositoryMock(rulesConfigurationRepository);
-            SetupChargeRepositoryMock(chargeRepository, charge);
+            SetupChargeRepositoryMock(chargeRepository, chargeInformation);
             SetupMarketParticipantMock(sender, marketParticipantRepository);
 
             // Act
@@ -222,15 +223,15 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
                 .ReturnsAsync(sender);
         }
 
-        private static void SetupChargeRepositoryMock(Mock<IChargeRepository> chargeRepository, Charge charge)
+        private static void SetupChargeRepositoryMock(Mock<IChargeInformationRepository> chargeRepository, ChargeInformation chargeInformation)
         {
             chargeRepository
                 .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
-                .ReturnsAsync(charge);
+                .ReturnsAsync(chargeInformation);
 
             chargeRepository
                 .Setup(r => r.GetAsync(It.IsAny<ChargeIdentifier>()))
-                .Returns(Task.FromResult(charge));
+                .Returns(Task.FromResult(chargeInformation));
         }
     }
 }

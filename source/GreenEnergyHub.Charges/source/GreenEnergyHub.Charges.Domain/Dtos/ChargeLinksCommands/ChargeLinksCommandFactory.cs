@@ -16,7 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.ChargeInformations;
 using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
 using GreenEnergyHub.Charges.Domain.Dtos.CreateDefaultChargeLinksRequests;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
@@ -28,18 +28,18 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
 {
     public class ChargeLinksCommandFactory : IChargeLinksCommandFactory
     {
-        private readonly IChargeRepository _chargeRepository;
+        private readonly IChargeInformationRepository _chargeInformationRepository;
         private readonly IMeteringPointRepository _meteringPointRepository;
         private readonly IClock _clock;
         private readonly IMarketParticipantRepository _marketParticipantRepository;
 
         public ChargeLinksCommandFactory(
-            IChargeRepository chargeRepository,
+            IChargeInformationRepository chargeInformationRepository,
             IMeteringPointRepository meteringPointRepository,
             IClock clock,
             IMarketParticipantRepository marketParticipantRepository)
         {
-            _chargeRepository = chargeRepository;
+            _chargeInformationRepository = chargeInformationRepository;
             _clock = clock;
             _marketParticipantRepository = marketParticipantRepository;
             _meteringPointRepository = meteringPointRepository;
@@ -49,9 +49,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
             CreateDefaultChargeLinksRequest createDefaultChargeLinksRequest,
             IReadOnlyCollection<DefaultChargeLink> defaultChargeLinks)
         {
-            var chargeIds = defaultChargeLinks.Select(x => x.ChargeId).ToList();
+            var chargeIds = defaultChargeLinks.Select(x => x.ChargeInformationId).ToList();
 
-            var charges = await _chargeRepository
+            var charges = await _chargeInformationRepository
                 .GetAsync(chargeIds)
                 .ConfigureAwait(false);
 
@@ -72,7 +72,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
                 defaultChargeLinks
                     .ToDictionary(
                         defaultChargeLink => defaultChargeLink,
-                        defaultChargeLink => charges.Single(c => defaultChargeLink.ChargeId == c.Id));
+                        defaultChargeLink => charges.Single(c => defaultChargeLink.ChargeInformationId == c.Id));
 
             var chargeLinks = defChargeAndCharge.Select(pair => new ChargeLinkDto(
                     Guid.NewGuid().ToString(), // When creating default charge links, the TSO starts a new operation, which is why a new OperationId is provided.
@@ -89,9 +89,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
                 .ConfigureAwait(false);
         }
 
-        private static string GetChargeOwner(Charge charge, IReadOnlyCollection<MarketParticipant> owners)
+        private static string GetChargeOwner(ChargeInformations.ChargeInformation chargeInformation, IReadOnlyCollection<MarketParticipant> owners)
         {
-            return owners.Single(o => o.Id == charge.OwnerId).MarketParticipantId;
+            return owners.Single(o => o.Id == chargeInformation.OwnerId).MarketParticipantId;
         }
 
         private async Task<ChargeLinksCommand> CreateChargeLinksCommandAsync(

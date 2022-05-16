@@ -15,8 +15,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.ChargeInformations;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
-using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
@@ -25,16 +25,16 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
 {
     public class ChargeLinksCommandBusinessValidationRulesFactory : IBusinessValidationRulesFactory<ChargeLinkDto>
     {
-        private readonly IChargeRepository _chargeRepository;
+        private readonly IChargeInformationRepository _chargeInformationRepository;
         private readonly IMeteringPointRepository _meteringPointRepository;
         private readonly IChargeLinksRepository _chargeLinksRepository;
 
         public ChargeLinksCommandBusinessValidationRulesFactory(
-            IChargeRepository chargeRepository,
+            IChargeInformationRepository chargeInformationRepository,
             IMeteringPointRepository meteringPointRepository,
             IChargeLinksRepository chargeLinksRepository)
         {
-            _chargeRepository = chargeRepository;
+            _chargeInformationRepository = chargeInformationRepository;
             _meteringPointRepository = meteringPointRepository;
             _chargeLinksRepository = chargeLinksRepository;
         }
@@ -70,7 +70,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
         {
             var rules = new List<IValidationRule>();
 
-            var charge = await _chargeRepository
+            var charge = await _chargeInformationRepository
                 .GetOrNullAsync(new ChargeIdentifier(chargeLinkDto.SenderProvidedChargeId, chargeLinkDto.ChargeOwner, chargeLinkDto.ChargeType))
                 .ConfigureAwait(false);
 

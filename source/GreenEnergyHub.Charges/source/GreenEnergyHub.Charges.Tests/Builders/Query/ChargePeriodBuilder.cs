@@ -49,13 +49,13 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Query
             return this;
         }
 
-        public ChargePeriod Build(Charge charge)
+        public ChargePeriod Build(ChargeInformation chargeInformation)
         {
             return new ChargePeriod
             {
                 Id = Guid.NewGuid(),
-                Charge = charge,
-                ChargeId = charge.Id,
+                ChargeInformation = chargeInformation,
+                ChargeInformationId = chargeInformation.Id,
                 TransparentInvoicing = _transparentInvoicing,
                 Description = "Charge description",
                 Name = _name,

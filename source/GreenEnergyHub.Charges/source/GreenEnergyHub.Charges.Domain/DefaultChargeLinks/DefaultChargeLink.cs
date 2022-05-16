@@ -32,14 +32,14 @@ namespace GreenEnergyHub.Charges.Domain.DefaultChargeLinks
             Guid id,
             Instant startDateTime,
             Instant endDateTime,
-            Guid chargeId,
+            Guid chargeInformationId,
             MeteringPointType meteringPointType)
         {
             Id = id;
             StartDateTime = startDateTime;
             EndDateTime = endDateTime;
             MeteringPointType = meteringPointType;
-            ChargeId = chargeId;
+            ChargeInformationId = chargeInformationId;
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace GreenEnergyHub.Charges.Domain.DefaultChargeLinks
         /// <summary>
         /// A reference to the charge in the Charge table
         /// </summary>
-        public Guid ChargeId { get; }
+        public Guid ChargeInformationId { get; }
 
         /// <summary>
         /// The metering point type that must match to be applicable for linking.

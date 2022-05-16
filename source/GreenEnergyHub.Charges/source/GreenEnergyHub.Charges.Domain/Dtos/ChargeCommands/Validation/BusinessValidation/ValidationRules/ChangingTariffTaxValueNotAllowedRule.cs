@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.ChargeInformations;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules
@@ -20,19 +20,19 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
     public class ChangingTariffTaxValueNotAllowedRule : IValidationRuleForOperation
     {
         private readonly ChargeOperationDto _chargeOperationDto;
-        private readonly Charge _charge;
+        private readonly ChargeInformations.ChargeInformation _chargeInformation;
 
-        public ChangingTariffTaxValueNotAllowedRule(ChargeOperationDto chargeOperationDto, Charge charge)
+        public ChangingTariffTaxValueNotAllowedRule(ChargeOperationDto chargeOperationDto, ChargeInformations.ChargeInformation chargeInformation)
         {
             _chargeOperationDto = chargeOperationDto;
-            _charge = charge;
+            _chargeInformation = chargeInformation;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.ChangingTariffTaxValueNotAllowed;
 
-        public bool IsValid => (_chargeOperationDto.TaxIndicator == TaxIndicator.Tax && _charge.TaxIndicator) ||
-                               (_chargeOperationDto.TaxIndicator == TaxIndicator.NoTax && !_charge.TaxIndicator);
+        public bool IsValid => (_chargeOperationDto.TaxIndicator == TaxIndicator.Tax && _chargeInformation.TaxIndicator) ||
+                               (_chargeOperationDto.TaxIndicator == TaxIndicator.NoTax && !_chargeInformation.TaxIndicator);
 
         public string OperationId => _chargeOperationDto.Id;
     }

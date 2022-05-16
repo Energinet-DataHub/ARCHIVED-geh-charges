@@ -28,7 +28,7 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
     {
         public MarketParticipant()
         {
-            Charges = new HashSet<Charge>();
+            ChargeInformations = new HashSet<ChargeInformation>();
             GridAreas = new HashSet<GridArea>();
         }
 
@@ -43,8 +43,8 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
 
         public bool IsActive { get; set; }
 
-        [InverseProperty(nameof(Charge.Owner))]
-        public virtual ICollection<Charge> Charges { get; set; }
+        [InverseProperty(nameof(ChargeInformation.Owner))]
+        public virtual ICollection<ChargeInformation> ChargeInformations { get; set; }
 
         [InverseProperty(nameof(GridArea.GridAccessProvider))]
         public virtual ICollection<GridArea> GridAreas { get; set; }

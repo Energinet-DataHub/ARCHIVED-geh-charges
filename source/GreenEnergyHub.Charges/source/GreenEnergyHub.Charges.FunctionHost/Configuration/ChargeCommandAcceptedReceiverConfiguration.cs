@@ -12,9 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
-using GreenEnergyHub.Charges.Application.Charges.Factories;
-using GreenEnergyHub.Charges.Application.Charges.Handlers;
+using GreenEnergyHub.Charges.Application.ChargeCommands.Handlers;
+using GreenEnergyHub.Charges.Application.ChargeInformations.Acknowledgement;
+using GreenEnergyHub.Charges.Application.ChargeInformations.Factories;
+using GreenEnergyHub.Charges.Application.ChargePrices;
+using GreenEnergyHub.Charges.Application.ChargePrices.Acknowledgement;
+using GreenEnergyHub.Charges.Application.ChargePrices.Factories;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;

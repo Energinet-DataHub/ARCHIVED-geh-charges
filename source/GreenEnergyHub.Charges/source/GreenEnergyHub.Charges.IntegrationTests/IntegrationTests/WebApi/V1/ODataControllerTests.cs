@@ -60,7 +60,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
         [Theory]
         [InlineData("MarketParticipants")]
         [InlineData("MeteringPoints")]
-        [InlineData("Charges")]
+        [InlineData("ChargeInformations")]
         [InlineData("ChargeLinks")]
         [InlineData("DefaultChargeLinks")]
         public async Task Get_ReturnsOkAndCorrectContentType(string collection)

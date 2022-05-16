@@ -16,7 +16,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Core.DateTime;
-using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.ChargeInformations;
+using GreenEnergyHub.Charges.Domain.Common;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using NodaTime;
@@ -25,19 +26,19 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
 {
     public class ChargeOperationBusinessValidationRulesFactory : IBusinessValidationRulesFactory<ChargeOperationDto>
     {
-        private readonly IChargeRepository _chargeRepository;
+        private readonly IChargeInformationRepository _chargeInformationRepository;
         private readonly IClock _clock;
         private readonly IRulesConfigurationRepository _rulesConfigurationRepository;
         private readonly IZonedDateTimeService _zonedDateTimeService;
 
         public ChargeOperationBusinessValidationRulesFactory(
             IRulesConfigurationRepository rulesConfigurationRepository,
-            IChargeRepository chargeRepository,
+            IChargeInformationRepository chargeInformationRepository,
             IZonedDateTimeService zonedDateTimeService,
             IClock clock)
         {
             _rulesConfigurationRepository = rulesConfigurationRepository;
-            _chargeRepository = chargeRepository;
+            _chargeInformationRepository = chargeInformationRepository;
             _zonedDateTimeService = zonedDateTimeService;
             _clock = clock;
         }
@@ -70,20 +71,20 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
         }
 
         private static IEnumerable<IValidationRule> AddTariffOnlyRules(
-            ChargeOperationDto chargeOperationDto, Charge charge)
+            ChargeOperationDto chargeOperationDto, ChargeInformations.ChargeInformation chargeInformation)
         {
-            return new List<IValidationRule> { new ChangingTariffTaxValueNotAllowedRule(chargeOperationDto, charge) };
+            return new List<IValidationRule> { new ChangingTariffTaxValueNotAllowedRule(chargeOperationDto, chargeInformation) };
         }
 
         private void AddUpdateRules(
             List<IValidationRule> rules,
             ChargeOperationDto chargeOperationDto,
-            Charge existingCharge)
+            ChargeInformations.ChargeInformation existingChargeInformation)
         {
             var updateRules = new List<IValidationRule>
             {
-                new UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateRule(existingCharge, chargeOperationDto),
-                new ChargeResolutionCanNotBeUpdatedRule(existingCharge, chargeOperationDto),
+                new UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateRule(existingChargeInformation, chargeOperationDto),
+                new ChargeResolutionCanNotBeUpdatedRule(existingChargeInformation, chargeOperationDto),
             };
 
             rules.AddRange(updateRules);
@@ -105,14 +106,14 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
             return rules;
         }
 
-        private Task<Charge?> GetChargeOrNullAsync(ChargeOperationDto chargeOperationDto)
+        private Task<ChargeInformations.ChargeInformation?> GetChargeOrNullAsync(ChargeOperationDto chargeOperationDto)
         {
             var chargeIdentifier = new ChargeIdentifier(
                 chargeOperationDto.ChargeId,
                 chargeOperationDto.ChargeOwner,
                 chargeOperationDto.Type);
 
-            return _chargeRepository.GetOrNullAsync(chargeIdentifier);
+            return _chargeInformationRepository.GetOrNullAsync(chargeIdentifier);
         }
     }
 }

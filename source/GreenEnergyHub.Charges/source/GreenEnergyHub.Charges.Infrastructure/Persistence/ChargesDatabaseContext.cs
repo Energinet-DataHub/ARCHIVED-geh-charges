@@ -15,8 +15,9 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.ChargeInformations;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
-using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.ChargePrices;
 using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
@@ -34,7 +35,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence
         {
         }
 
-        public DbSet<Charge> Charges { get; private set; }
+        public DbSet<ChargeInformation> ChargeInformations { get; private set; }
+
+        public DbSet<ChargePrice> ChargePrices { get; private set; }
 
         public DbSet<MarketParticipant> MarketParticipants { get; private set; }
 
@@ -58,6 +61,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence
             if (modelBuilder == null) throw new ArgumentNullException(nameof(modelBuilder));
 
             modelBuilder.ApplyConfiguration(new ChargeEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new ChargePriceEntityConfiguration());
             modelBuilder.ApplyConfiguration(new ChargeLinkEntityConfiguration());
             modelBuilder.ApplyConfiguration(new DefaultChargeLinkEntityConfiguration());
             modelBuilder.ApplyConfiguration(new MarketParticipantEntityConfiguration());

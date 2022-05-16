@@ -58,7 +58,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
         }
 
         [Theory]
-        [InlineAutoDomainData("/odata/charges")]
+        [InlineAutoDomainData("/odata/chargeinformations")]
         [InlineAutoDomainData("/odata/chargelinks")]
         [InlineAutoDomainData("/odata/marketParticipants")]
         [InlineAutoDomainData("/odata/meteringPoints")]

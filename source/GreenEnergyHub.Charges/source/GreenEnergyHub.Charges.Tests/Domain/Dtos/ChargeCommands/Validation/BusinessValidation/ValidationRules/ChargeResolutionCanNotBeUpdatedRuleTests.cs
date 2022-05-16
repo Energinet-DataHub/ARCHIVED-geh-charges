@@ -13,7 +13,8 @@
 // limitations under the License.
 
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.ChargeInformations;
+using GreenEnergyHub.Charges.Domain.Common;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.TestHelpers;
@@ -29,10 +30,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         [InlineAutoDomainData]
         public void IsValid_WhenResolutionIsTheSame_ShouldReturnTrue(
             ChargeOperationDtoBuilder builder,
-            Charge charge)
+            ChargeInformation chargeInformation)
         {
-            var chargeOperationDto = builder.WithResolution(charge.Resolution).Build();
-            var sut = new ChargeResolutionCanNotBeUpdatedRule(charge, chargeOperationDto);
+            var chargeOperationDto = builder.WithResolution(chargeInformation.Resolution).Build();
+            var sut = new ChargeResolutionCanNotBeUpdatedRule(chargeInformation, chargeOperationDto);
             sut.IsValid.Should().BeTrue();
         }
 
@@ -40,12 +41,12 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         [InlineAutoDomainData]
         public void IsValid_WhenResolutionIsNotTheSame_ShouldReturnFalse(
             ChargeOperationDtoBuilder builder,
-            Charge charge)
+            ChargeInformation chargeInformation)
         {
             var chargeOperationDto = builder
-                .WithResolution(charge.Resolution == Resolution.P1D ? Resolution.P1M : Resolution.PT1H)
+                .WithResolution(chargeInformation.Resolution == Resolution.P1D ? Resolution.P1M : Resolution.PT1H)
                 .Build();
-            var sut = new ChargeResolutionCanNotBeUpdatedRule(charge, chargeOperationDto);
+            var sut = new ChargeResolutionCanNotBeUpdatedRule(chargeInformation, chargeOperationDto);
             sut.IsValid.Should().BeFalse();
         }
     }
