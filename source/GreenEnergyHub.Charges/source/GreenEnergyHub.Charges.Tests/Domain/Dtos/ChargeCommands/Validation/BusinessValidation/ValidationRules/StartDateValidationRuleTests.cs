@@ -85,21 +85,6 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.StartDateValidation);
         }
 
-        /*[Theory]
-        [InlineAutoDomainData]
-        public void OperationId_ShouldBe_EqualTo(ChargeOperationDto chargeOperationDto, IClock clock)
-        {
-            // Arrange
-            var configuration = CreateRuleConfiguration(1, 3);
-            var zonedDateTimeService = CreateLocalDateTimeService("Europe/Copenhagen");
-
-            // Act
-            var sut = new StartDateValidationRule(chargeOperationDto, configuration, zonedDateTimeService, clock);
-
-            // Assert
-            sut.OperationId.Should().Be(chargeOperationDto.Id);
-        }*/
-
         private static ZonedDateTimeService CreateLocalDateTimeService(string timeZoneId)
         {
             var clock = new Mock<IClock>();
