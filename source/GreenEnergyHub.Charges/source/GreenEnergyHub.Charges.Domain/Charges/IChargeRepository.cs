@@ -27,8 +27,6 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 
         Task<Charge> SingleAsync(ChargeIdentifier chargeIdentifier);
 
-        Task<Charge> SingleAsync(Guid id);
-
         Task<IReadOnlyCollection<Charge>> SingleAsync(IReadOnlyCollection<Guid> ids);
 
         Task<Charge?> SingleOrNullAsync(ChargeIdentifier chargeIdentifier);

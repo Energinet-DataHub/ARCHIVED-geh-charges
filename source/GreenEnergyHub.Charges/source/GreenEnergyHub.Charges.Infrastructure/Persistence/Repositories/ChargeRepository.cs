@@ -39,20 +39,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
             return charge;
         }
 
-        public async Task<Charge> SingleAsync(Guid id)
-        {
-            var charge = SingleOrDefaultLocal(id) ??
-                         await SingleFromDbAsync(id).ConfigureAwait(false);
-            return charge;
-        }
-
         public async Task<IReadOnlyCollection<Charge>> SingleAsync(IReadOnlyCollection<Guid> ids)
         {
             var charges = new List<Charge>();
             foreach (var id in ids)
             {
                 var charge = SingleOrDefaultLocal(id) ??
-                             await SingleAsync(id).ConfigureAwait(false);
+                             await SingleFromDbAsync(id).ConfigureAwait(false);
                 charges.Add(charge);
             }
 
@@ -62,7 +55,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
         public async Task<Charge?> SingleOrNullAsync(ChargeIdentifier chargeIdentifier)
         {
             var charge = SingleOrDefaultLocal(chargeIdentifier) ??
-                         await SingleFromDbAsync(chargeIdentifier).ConfigureAwait(false);
+                         await SingleOrNullFromDbAsync(chargeIdentifier).ConfigureAwait(false);
             return charge;
         }
 
@@ -103,6 +96,16 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
             return await _chargesDatabaseContext.Charges
                 .SingleAsync(c =>
                     c.Id == id)
+                .ConfigureAwait(false);
+        }
+
+        private async Task<Charge?> SingleOrNullFromDbAsync(ChargeIdentifier chargeIdentifier)
+        {
+            return await _chargesDatabaseContext.Charges
+                .SingleOrDefaultAsync(c =>
+                    c.SenderProvidedChargeId == chargeIdentifier.SenderProvidedChargeId &&
+                    c.OwnerId == chargeIdentifier.Owner &&
+                    c.Type == chargeIdentifier.ChargeType)
                 .ConfigureAwait(false);
         }
     }

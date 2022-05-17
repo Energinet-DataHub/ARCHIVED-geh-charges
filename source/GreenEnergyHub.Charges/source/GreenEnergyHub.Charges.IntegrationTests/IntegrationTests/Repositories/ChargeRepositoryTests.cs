@@ -91,24 +91,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         }
 
         [Fact]
-        public async Task GetAsync_WithId_ReturnsCharge()
-        {
-            // Arrange
-            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-            var charge = await SetupValidChargeAsync(chargesDatabaseWriteContext);
-
-            await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
-            var sut = new ChargeRepository(chargesDatabaseReadContext);
-
-            // Act
-            var actual = await sut.SingleAsync(charge.Id);
-
-            // Assert
-            actual.Should().NotBeNull();
-            actual.Should().BeEquivalentTo(charge);
-        }
-
-        [Fact]
         public async Task FindAsync_WithKnownId_ReturnsCharge()
         {
             // Arrange
