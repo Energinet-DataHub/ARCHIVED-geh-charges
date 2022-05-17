@@ -52,7 +52,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
             var chargeIds = defaultChargeLinks.Select(x => x.ChargeId).ToList();
 
             var charges = await _chargeRepository
-                .GetAsync(chargeIds)
+                .SingleAsync(chargeIds)
                 .ConfigureAwait(false);
 
             var ownerIds = charges.Select(c => c.OwnerId);

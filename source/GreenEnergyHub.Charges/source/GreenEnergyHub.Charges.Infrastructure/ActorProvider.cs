@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.Infrastructure
 
         public async Task<Actor> GetActorAsync(Guid actorId)
         {
-            var mp = await _marketParticipantRepository.GetOrNullAsync(actorId).ConfigureAwait(false);
+            var mp = await _marketParticipantRepository.SingleOrNullAsync(actorId).ConfigureAwait(false);
 
             if (mp == null)
                 throw new Exception($"no actor found with actorId {actorId}");

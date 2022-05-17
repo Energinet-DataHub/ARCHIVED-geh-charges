@@ -19,6 +19,7 @@ using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.BusinessValidation.Factories
@@ -28,15 +29,18 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
         private readonly IChargeRepository _chargeRepository;
         private readonly IMeteringPointRepository _meteringPointRepository;
         private readonly IChargeLinksRepository _chargeLinksRepository;
+        private readonly IMarketParticipantRepository _marketParticipantRepository;
 
         public ChargeLinksCommandBusinessValidationRulesFactory(
             IChargeRepository chargeRepository,
             IMeteringPointRepository meteringPointRepository,
-            IChargeLinksRepository chargeLinksRepository)
+            IChargeLinksRepository chargeLinksRepository,
+            IMarketParticipantRepository marketParticipantRepository)
         {
             _chargeRepository = chargeRepository;
             _meteringPointRepository = meteringPointRepository;
             _chargeLinksRepository = chargeLinksRepository;
+            _marketParticipantRepository = marketParticipantRepository;
         }
 
         public async Task<IValidationRuleSet> CreateRulesAsync(ChargeLinkDto operation)
@@ -70,8 +74,12 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
         {
             var rules = new List<IValidationRule>();
 
+            var chargeOwner = await _marketParticipantRepository
+                .SingleAsync(chargeLinkDto.ChargeOwner)
+                .ConfigureAwait(false);
+
             var charge = await _chargeRepository
-                .GetOrNullAsync(new ChargeIdentifier(chargeLinkDto.SenderProvidedChargeId, chargeLinkDto.ChargeOwner, chargeLinkDto.ChargeType))
+                .SingleOrNullAsync(new ChargeIdentifier(chargeLinkDto.SenderProvidedChargeId, chargeOwner.Id, chargeLinkDto.ChargeType))
                 .ConfigureAwait(false);
 
             rules.Add(new ChargeMustExistRule(charge, chargeLinkDto));

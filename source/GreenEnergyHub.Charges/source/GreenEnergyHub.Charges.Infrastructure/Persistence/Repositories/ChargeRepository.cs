@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Charges;
@@ -31,27 +32,65 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
             _chargesDatabaseContext = chargesDatabaseContext;
         }
 
-        public Task<Charge> GetAsync(ChargeIdentifier chargeIdentifier)
+        public async Task<Charge> SingleAsync(ChargeIdentifier chargeIdentifier)
         {
-            return GetChargeQueryable(chargeIdentifier).SingleAsync();
+            var charge = SingleOrDefaultLocal(chargeIdentifier);
+
+            if (charge == null)
+            {
+                charge = await _chargesDatabaseContext.Charges
+                    .SingleAsync(c =>
+                        c.SenderProvidedChargeId == chargeIdentifier.SenderProvidedChargeId &&
+                        c.OwnerId == chargeIdentifier.Owner &&
+                        c.Type == chargeIdentifier.ChargeType)
+                    .ConfigureAwait(false);
+            }
+
+            return charge;
         }
 
-        public Task<Charge> GetAsync(Guid id)
+        public async Task<Charge> SingleAsync(Guid id)
         {
-            return GetChargesAsQueryable().SingleAsync(x => x.Id == id);
+            var charge = SingleOrDefaultLocal(id);
+            if (charge == null)
+            {
+                charge = await _chargesDatabaseContext.Charges
+                    .SingleAsync(c =>
+                        c.Id == id)
+                    .ConfigureAwait(false);
+            }
+
+            return charge;
         }
 
-        public async Task<IReadOnlyCollection<Charge>> GetAsync(IReadOnlyCollection<Guid> ids)
+        public async Task<IReadOnlyCollection<Charge>> SingleAsync(IReadOnlyCollection<Guid> ids)
         {
-            return await GetChargesAsQueryable()
-                .Where(x => ids.Contains(x.Id))
-                .ToListAsync()
-                .ConfigureAwait(false);
+            var charges = new List<Charge>();
+            foreach (var id in ids)
+            {
+                var charge = SingleOrDefaultLocal(id);
+                if (charge == null)
+                    charges.Add(await SingleAsync(id).ConfigureAwait(false));
+            }
+
+            return new ReadOnlyCollection<Charge>(charges);
         }
 
-        public async Task<Charge?> GetOrNullAsync(ChargeIdentifier chargeIdentifier)
+        public async Task<Charge?> SingleOrNullAsync(ChargeIdentifier chargeIdentifier)
         {
-            return await GetChargeQueryable(chargeIdentifier).SingleOrDefaultAsync().ConfigureAwait(false);
+            var charge = SingleOrDefaultLocal(chargeIdentifier);
+
+            if (charge == null)
+            {
+                charge = await _chargesDatabaseContext.Charges
+                    .SingleOrDefaultAsync(c =>
+                        c.SenderProvidedChargeId == chargeIdentifier.SenderProvidedChargeId &&
+                        c.OwnerId == chargeIdentifier.Owner &&
+                        c.Type == chargeIdentifier.ChargeType)
+                    .ConfigureAwait(false);
+            }
+
+            return charge;
         }
 
         public async Task AddAsync(Charge charge)
@@ -60,24 +99,20 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
             await _chargesDatabaseContext.Charges.AddAsync(charge).ConfigureAwait(false);
         }
 
-        private IQueryable<Charge> GetChargesAsQueryable()
+        private Charge? SingleOrDefaultLocal(ChargeIdentifier chargeIdentifier)
         {
             return _chargesDatabaseContext.Charges
-                .Include(x => x.Points)
-                .AsQueryable();
+                .Local.SingleOrDefault(c =>
+                    c.SenderProvidedChargeId == chargeIdentifier.SenderProvidedChargeId &&
+                    c.OwnerId == chargeIdentifier.Owner &&
+                    c.Type == chargeIdentifier.ChargeType);
         }
 
-        private IQueryable<Charge> GetChargeQueryable(ChargeIdentifier chargeIdentifier)
+        private Charge? SingleOrDefaultLocal(Guid id)
         {
-            var query =
-                from c in GetChargesAsQueryable()
-                join o in _chargesDatabaseContext.MarketParticipants
-                    on c.OwnerId equals o.Id
-                where c.SenderProvidedChargeId == chargeIdentifier.SenderProvidedChargeId
-                where o.MarketParticipantId == chargeIdentifier.Owner
-                where c.Type == chargeIdentifier.ChargeType
-                select c;
-            return query;
+            return _chargesDatabaseContext.Charges
+                .Local.SingleOrDefault(c =>
+                    c.Id == id);
         }
     }
 }
