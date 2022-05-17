@@ -95,7 +95,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         {
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-            var charge = await SetupValidCharge(chargesDatabaseWriteContext);
+            var charge = await SetupValidChargeAsync(chargesDatabaseWriteContext);
 
             await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
             var sut = new ChargeRepository(chargesDatabaseReadContext);
@@ -136,10 +136,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         {
             // Arrange
             await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
+            await GetOrAddMarketParticipantAsync(chargesDatabaseContext);
             var sut = new ChargeRepository(chargesDatabaseContext);
 
             // Arrange => Matching data from seeded test data
-            var identifier = new ChargeIdentifier("EA-001", _marketParticipantId, ChargeType.Tariff);
+            var identifier = new ChargeIdentifier(
+                "EA-001",
+                new Guid("AF450C03-1937-4EA1-BB66-17B6E4AA51F5"),
+                ChargeType.Tariff);
 
             // Act
             var actual = await sut.SingleAsync(identifier);
@@ -153,14 +157,19 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         {
             // Arrange
             await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
+            await SetupValidChargeAsync(chargesDatabaseContext);
             var sut = new ChargeRepository(chargesDatabaseContext);
 
             // Arrange => Matching data from seeded test data
-            var firstCharge = await sut.SingleAsync(
-                    new ChargeIdentifier("EA-001", _marketParticipantId, ChargeType.Tariff));
+            var firstCharge = await sut.SingleAsync(new ChargeIdentifier(
+                "EA-001",
+                new Guid("AF450C03-1937-4EA1-BB66-17B6E4AA51F5"),
+                ChargeType.Tariff));
 
-            var secondCharge = await sut.SingleAsync(
-                new ChargeIdentifier("45013", _marketParticipantId, ChargeType.Tariff));
+            var secondCharge = await sut.SingleAsync(new ChargeIdentifier(
+                "45013",
+                new Guid("AF450C03-1937-4EA1-BB66-17B6E4AA51F5"),
+                ChargeType.Tariff));
 
             // Act
             var actual = await sut.SingleAsync(new List<Guid>
@@ -170,10 +179,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             });
 
             // Assert
-            actual.Should().NotBeEmpty();
+            actual.First().OwnerId.Should().Be(firstCharge.OwnerId);
+            actual.Last().OwnerId.Should().Be(secondCharge.OwnerId);
         }
 
-        private static async Task<Charge> SetupValidCharge(ChargesDatabaseContext chargesDatabaseWriteContext)
+        private static async Task<Charge> SetupValidChargeAsync(ChargesDatabaseContext chargesDatabaseWriteContext)
         {
             await GetOrAddMarketParticipantAsync(chargesDatabaseWriteContext);
             var charge = GetValidCharge();
