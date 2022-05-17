@@ -16,7 +16,6 @@ using System;
 using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData;
@@ -29,7 +28,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
     [UnitTest]
     public class ChargeLinksCimValidationErrorTextFactoryTests
     {
-        /*[Theory]
+        [Theory]
         [InlineAutoMoqData]
         public void Create_WhenTwoMergeFields_ReturnsExpectedDescription(
             ChargeLinksCommand chargeLinksCommand,
@@ -37,23 +36,21 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
             CimValidationErrorTextProvider cimValidationErrorTextProvider)
         {
             // Arrange
-            var meteringPoint = new MeteringPointBuilder().WithId(chargeLinkDto.MeteringPointId);
-            var rule = new MeteringPointMustExistRule(meteringPoint);
-            var validationRuleWithOperation =
-                new ValidationRuleContainer(rule, chargeLinkDto.SenderProvidedChargeId);
+            var validationError = new ValidationError(
+                ValidationRuleIdentifier.MeteringPointDoesNotExist, chargeLinkDto.SenderProvidedChargeId, null!);
             var sut = new ChargeLinksCimValidationErrorTextFactory(cimValidationErrorTextProvider);
             var expected = CimValidationErrorTextTemplateMessages.MeteringPointDoesNotExistValidationErrorText
                 .Replace("{{MeteringPointId}}", chargeLinkDto.MeteringPointId)
                 .Replace("{{ChargeLinkStartDate}}", chargeLinkDto.StartDateTime.ToString());
 
             // Act
-            var actual = sut.Create(validationRuleWithOperation, chargeLinksCommand, chargeLinkDto);
+            var actual = sut.Create(validationError, chargeLinksCommand, chargeLinkDto);
 
             // Assert
             actual.Should().Be(expected);
-        }*/
+        }
 
-        /*[Theory]
+        [Theory]
         [InlineAutoMoqData]
         public void Create_MergesAllMergeFields(
             ChargeLinksCommand chargeLinksCommand,
@@ -71,15 +68,16 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
             {
                 var triggeredBy = SetTriggeredByWithValidationError(chargeLinksCommand, validationRuleIdentifier);
                 var actual = sut.Create(
-                    new ValidationRuleContainer(validationRuleIdentifier, triggeredBy),
+                    new ValidationError(validationRuleIdentifier, chargeLinkDto.OperationId, triggeredBy),
                     chargeLinksCommand,
                     chargeLinkDto);
 
                 actual.Should().NotBeNullOrWhiteSpace();
                 actual.Should().NotContain("{");
                 actual.Should().NotContain("  ");
+                // actual.Should().NotContain("unknown"); // Todo: Can we do this?
             }
-        }*/
+        }
 
         private static string? SetTriggeredByWithValidationError(
             ChargeLinksCommand chargeLinksCommand, ValidationRuleIdentifier validationRuleIdentifier)
