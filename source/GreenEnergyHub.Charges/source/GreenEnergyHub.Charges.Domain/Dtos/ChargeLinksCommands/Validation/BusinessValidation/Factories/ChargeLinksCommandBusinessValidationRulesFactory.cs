@@ -47,15 +47,17 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
             return ValidationRuleSet.FromRules(rules);
         }
 
-        private async Task<List<ValidationRuleContainer>> GetRulesForChargeLinkDtoAsync(ChargeLinkDto chargeLinkDto)
+        private async Task<List<IValidationRuleContainer>> GetRulesForChargeLinkDtoAsync(ChargeLinkDto chargeLinkDto)
         {
-            var rules = new List<ValidationRuleContainer>();
+            var rules = new List<IValidationRuleContainer>();
 
             var meteringPoint = await _meteringPointRepository
                 .GetOrNullAsync(chargeLinkDto.MeteringPointId)
                 .ConfigureAwait(false);
 
-            rules.Add(new ValidationRuleContainer(new MeteringPointMustExistRule(meteringPoint), chargeLinkDto.OperationId));
+            rules.Add(new OperationValidationRuleContainer(
+                new MeteringPointMustExistRule(meteringPoint),
+                chargeLinkDto.OperationId));
 
             if (meteringPoint == null)
                 return rules;
@@ -64,7 +66,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
                 .GetOrNullAsync(new ChargeIdentifier(chargeLinkDto.SenderProvidedChargeId, chargeLinkDto.ChargeOwner, chargeLinkDto.ChargeType))
                 .ConfigureAwait(false);
 
-            rules.Add(new ValidationRuleContainer(new ChargeMustExistRule(charge, chargeLinkDto), chargeLinkDto.OperationId));
+            rules.Add(new OperationValidationRuleContainer(
+                new ChargeMustExistRule(charge, chargeLinkDto),
+                chargeLinkDto.OperationId));
 
             if (charge == null)
                 return rules;
@@ -73,10 +77,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
                 .GetAsync(charge.Id, meteringPoint.Id)
                 .ConfigureAwait(false);
 
-            rules.Add(
-                new ValidationRuleContainer(
-                    new ChargeLinksUpdateNotYetSupportedRule(chargeLinkDto, existingChargeLinks),
-                    chargeLinkDto.OperationId));
+            rules.Add(new OperationValidationRuleContainer(
+                new ChargeLinksUpdateNotYetSupportedRule(chargeLinkDto, existingChargeLinks),
+                chargeLinkDto.OperationId));
 
             return rules;
         }

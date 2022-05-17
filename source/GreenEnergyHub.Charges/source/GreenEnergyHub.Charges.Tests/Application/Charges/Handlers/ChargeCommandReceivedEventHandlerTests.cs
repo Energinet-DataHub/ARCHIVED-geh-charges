@@ -257,8 +257,12 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
              SetupChargeRepository(chargeRepository);
              SetupChargePeriodFactory(chargePeriodFactory);
 
-             var invalidValidationResult = ValidationResult.CreateFailure(new List<ValidationRuleContainer>
-                 { new(new TestValidationRule(false, ValidationRuleIdentifier.StartDateValidation)) });
+             var invalidValidationResult = ValidationResult.CreateFailure(
+                 new List<IValidationRuleContainer>
+                 {
+                     new CommandValidationRuleContainer(
+                         new TestValidationRule(false, ValidationRuleIdentifier.StartDateValidation)),
+                 });
 
              SetupValidatorsForOperation(documentValidator, inputValidator, businessValidator, invalidValidationResult);
 
@@ -423,7 +427,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             failedRule.Setup(r => r.IsValid).Returns(false);
 
             return ValidationResult.CreateFailure(
-                new List<ValidationRuleContainer> { new(failedRule.Object) });
+                new List<IValidationRuleContainer> { new CommandValidationRuleContainer(failedRule.Object) });
         }
 
         private static void SetupValidators(

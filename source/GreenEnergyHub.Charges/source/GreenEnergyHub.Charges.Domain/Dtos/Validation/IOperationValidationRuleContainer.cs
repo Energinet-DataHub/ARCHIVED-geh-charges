@@ -14,17 +14,14 @@
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 {
-    public class ValidationRuleContainer : IValidationRuleContainer
+    /// <summary>
+    /// Container for validationrules with operationId in the Charges domain
+    /// </summary>
+    public interface IOperationValidationRuleContainer : IValidationRuleContainer
     {
-        public ValidationRuleContainer(IValidationRule validationRule, string? operationId = null, string? triggeredBy = null)
-        {
-            ValidationRule = validationRule;
-            TriggeredBy = triggeredBy;
-            OperationId = operationId;
-        }
-
-        public IValidationRule ValidationRule { get; }
-
+        /// <summary>
+        /// OperationId for which the validationRule is applicable
+        /// </summary>
         public string? OperationId { get; }
 
         /// <summary>

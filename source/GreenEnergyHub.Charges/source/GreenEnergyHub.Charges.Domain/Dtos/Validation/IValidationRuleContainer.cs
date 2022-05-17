@@ -15,25 +15,13 @@
 namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 {
     /// <summary>
-    /// Container for validationrules with operationId in the Charges domain
+    /// Container for validationrules in the Charges domain
     /// </summary>
     public interface IValidationRuleContainer
     {
         /// <summary>
-        /// ValidationRule that applies to the OperationId
+        /// ValidationRule that applies to a command
         /// </summary>
         IValidationRule ValidationRule { get; }
-
-        /// <summary>
-        /// OperationId for which the validationRule is applicable
-        /// </summary>
-        public string? OperationId { get; }
-
-        /// <summary>
-        /// Violation of some validation rules are triggered by an element in a list.
-        /// In these cases this property will tell which element triggered the rule
-        /// identified by <see cref="ValidationRuleIdentifier"/> to be violated.
-        /// </summary>
-        public string? TriggeredBy { get; }
     }
 }

@@ -50,7 +50,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
             return ValidationRuleSet.FromRules(rules);
         }
 
-        private async Task<List<ValidationRuleContainer>> GetRulesForOperationAsync(ChargeOperationDto chargeOperationDto)
+        private async Task<List<IValidationRuleContainer>> GetRulesForOperationAsync(ChargeOperationDto chargeOperationDto)
         {
             var configuration = await _rulesConfigurationRepository.GetConfigurationAsync().ConfigureAwait(false);
             var charge = await GetChargeOrNullAsync(chargeOperationDto).ConfigureAwait(false);
@@ -69,26 +69,27 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
             return rules;
         }
 
-        private static IEnumerable<ValidationRuleContainer> AddTariffOnlyRules(
+        private static IEnumerable<IValidationRuleContainer> AddTariffOnlyRules(
             ChargeOperationDto chargeOperationDto, Charge charge)
         {
-            return new List<ValidationRuleContainer>
+            return new List<IValidationRuleContainer>
             {
-                new(new ChangingTariffTaxValueNotAllowedRule(chargeOperationDto, charge), chargeOperationDto.Id),
+                new OperationValidationRuleContainer(
+                    new ChangingTariffTaxValueNotAllowedRule(chargeOperationDto, charge), chargeOperationDto.Id),
             };
         }
 
         private static void AddUpdateRules(
-            List<ValidationRuleContainer> rules,
+            List<IValidationRuleContainer> rules,
             ChargeOperationDto chargeOperationDto,
             Charge existingCharge)
         {
-            var updateRules = new List<ValidationRuleContainer>
+            var updateRules = new List<IValidationRuleContainer>
             {
-                new(
+                new OperationValidationRuleContainer(
                     new UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateRule(existingCharge, chargeOperationDto),
                     chargeOperationDto.Id),
-                new(
+                new OperationValidationRuleContainer(
                     new ChargeResolutionCanNotBeUpdatedRule(existingCharge, chargeOperationDto),
                     chargeOperationDto.Id),
             };
@@ -96,13 +97,13 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
             rules.AddRange(updateRules);
         }
 
-        private List<ValidationRuleContainer> GetMandatoryRulesForOperation(
+        private List<IValidationRuleContainer> GetMandatoryRulesForOperation(
             ChargeOperationDto chargeOperationDto,
             RulesConfiguration configuration)
         {
-            var rules = new List<ValidationRuleContainer>
+            var rules = new List<IValidationRuleContainer>
             {
-                new(
+                new OperationValidationRuleContainer(
                     new StartDateValidationRule(
                         chargeOperationDto,
                         configuration.StartDateValidationRuleConfiguration,

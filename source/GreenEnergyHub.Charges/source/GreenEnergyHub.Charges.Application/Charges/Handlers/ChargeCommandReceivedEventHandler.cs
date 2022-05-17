@@ -60,7 +60,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             ArgumentNullException.ThrowIfNull(commandReceivedEvent);
 
             var operationsToBeRejected = new List<ChargeOperationDto>();
-            var rejectionRules = new List<ValidationRuleContainer>();
+            var rejectionRules = new List<IValidationRuleContainer>();
             var operationsToBeConfirmed = new List<ChargeOperationDto>();
 
             var operations = commandReceivedEvent.Command.ChargeOperations.ToArray();
@@ -77,8 +77,9 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                     rejectionRules.AddRange(validationResult.InvalidRules);
                     rejectionRules.AddRange(operationsToBeRejected.Skip(1)
                         .Select(toBeRejected =>
-                            new ValidationRuleContainer(
-                                new PreviousOperationsMustBeValidRule(operation.Id, toBeRejected), operation.Id)));
+                            new OperationValidationRuleContainer(
+                                new PreviousOperationsMustBeValidRule(operation.Id, toBeRejected),
+                                operation.Id)));
                     break;
                 }
 
@@ -89,8 +90,9 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                     rejectionRules.AddRange(validationResult.InvalidRules);
                     rejectionRules.AddRange(operationsToBeRejected.Skip(1)
                         .Select(toBeRejected =>
-                            new ValidationRuleContainer(
-                                new PreviousOperationsMustBeValidRule(operation.Id, toBeRejected), operation.Id)));
+                            new OperationValidationRuleContainer(
+                                new PreviousOperationsMustBeValidRule(operation.Id, toBeRejected),
+                                operation.Id)));
                     break;
                 }
 
@@ -133,7 +135,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         private async Task RejectInvalidOperationsAsync(
             IReadOnlyCollection<ChargeOperationDto> operationsToBeRejected,
             DocumentDto document,
-            IList<ValidationRuleContainer> rejectionRules)
+            IList<IValidationRuleContainer> rejectionRules)
         {
             if (operationsToBeRejected.Any())
             {
