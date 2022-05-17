@@ -43,29 +43,22 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
         {
             ArgumentNullException.ThrowIfNull(operation);
 
-            var meteringPoint = await _meteringPointRepository
-                .GetOrNullAsync(operation.MeteringPointId)
-                .ConfigureAwait(false);
-
-            var rules = GetMandatoryRulesForCommand(meteringPoint);
-            if (meteringPoint == null)
-                return ValidationRuleSet.FromRules(rules);
-
-            rules.AddRange(await GetRulesForChargeLinkDtoAsync(operation, meteringPoint).ConfigureAwait(false));
-
+            var rules = await GetRulesForChargeLinkDtoAsync(operation).ConfigureAwait(false);
             return ValidationRuleSet.FromRules(rules);
         }
 
-        private List<ValidationRuleContainer> GetMandatoryRulesForCommand(MeteringPoint? meteringPoint)
-        {
-            return new List<ValidationRuleContainer> { new(new MeteringPointMustExistRule(meteringPoint)) };
-        }
-
-        private async Task<IList<ValidationRuleContainer>> GetRulesForChargeLinkDtoAsync(
-            ChargeLinkDto chargeLinkDto,
-            MeteringPoint meteringPoint)
+        private async Task<List<ValidationRuleContainer>> GetRulesForChargeLinkDtoAsync(ChargeLinkDto chargeLinkDto)
         {
             var rules = new List<ValidationRuleContainer>();
+
+            var meteringPoint = await _meteringPointRepository
+                .GetOrNullAsync(chargeLinkDto.MeteringPointId)
+                .ConfigureAwait(false);
+
+            rules.Add(new ValidationRuleContainer(new MeteringPointMustExistRule(meteringPoint), chargeLinkDto.OperationId));
+
+            if (meteringPoint == null)
+                return rules;
 
             var charge = await _chargeRepository
                 .GetOrNullAsync(new ChargeIdentifier(chargeLinkDto.SenderProvidedChargeId, chargeLinkDto.ChargeOwner, chargeLinkDto.ChargeType))

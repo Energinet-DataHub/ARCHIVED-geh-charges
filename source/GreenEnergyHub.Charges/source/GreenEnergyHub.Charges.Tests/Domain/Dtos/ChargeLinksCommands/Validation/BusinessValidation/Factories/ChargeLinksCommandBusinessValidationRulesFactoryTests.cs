@@ -42,9 +42,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
             ChargeLinkDtoBuilder builder)
         {
             // Arrange
-            var chargeLinkDto = builder.Build();
-
             MeteringPoint? meteringPoint = null;
+            var chargeLinkDto = builder.Build();
             SetupMeteringPointRepositoryMock(repository, chargeLinkDto, meteringPoint);
 
             // Act
@@ -67,7 +66,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
             ChargeLinkDtoBuilder linksBuilder)
         {
             // Arrange
-            var link = linksBuilder.Build();
+            var link = linksBuilder.WithMeteringPointId(meteringPoint.MeteringPointId).Build();
 
             Charge? charge = null;
             SetupChargeRepositoryMock(chargeRepository, charge);
