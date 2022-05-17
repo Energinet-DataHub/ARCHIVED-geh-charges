@@ -22,23 +22,23 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
         {
             return rule =>
             {
-                if (rule.ValidationRule is IValidationRuleForOperation validationRuleForOperation)
+                /*if (rule.ValidationRule is IValidationRuleForOperation validationRuleForOperation)
                 {
                     return new ValidationError(
                         validationRuleForOperation.ValidationRuleIdentifier,
-                        validationRuleForOperation.OperationId,
+                        rule.OperationId, // TODO: remove OperationId from rule and just use rule.OperationId?
                         null);
-                }
+                }*/
 
                 if (rule.ValidationRule is IValidationRuleWithExtendedData validationRuleWithExtendedData)
                 {
                     return new ValidationError(
                         validationRuleWithExtendedData.ValidationRuleIdentifier,
-                        validationRuleWithExtendedData.OperationId,
+                        rule.OperationId,
                         validationRuleWithExtendedData.TriggeredBy);
                 }
 
-                return new ValidationError(rule.ValidationRule.ValidationRuleIdentifier, null, null);
+                return new ValidationError(rule.ValidationRule.ValidationRuleIdentifier, rule.OperationId, null);
             };
         }
     }

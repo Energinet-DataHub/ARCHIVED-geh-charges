@@ -31,8 +31,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.SubsequentBundleOperationsFail;
 
-        public string OperationId => _chargeLinkDto.OperationId;
-
         /// <summary>
         /// This property will tell which previous failed operation that triggered this rule,
         /// it contains the Id of the previous failed operation.

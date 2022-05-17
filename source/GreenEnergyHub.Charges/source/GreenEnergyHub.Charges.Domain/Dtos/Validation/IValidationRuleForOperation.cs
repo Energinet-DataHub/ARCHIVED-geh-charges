@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
+/*namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 {
     /// <summary>
     /// Interface for validationrules for an operation
@@ -24,4 +24,4 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
         /// </summary>
         public string OperationId { get; }
     }
-}
+}*/
