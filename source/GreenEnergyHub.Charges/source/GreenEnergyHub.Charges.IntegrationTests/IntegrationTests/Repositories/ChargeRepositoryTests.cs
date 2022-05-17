@@ -24,6 +24,7 @@ using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.Tests.Builders.Command;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
 using Xunit;
@@ -100,7 +101,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             var sut = new ChargeRepository(chargesDatabaseReadContext);
 
             // Act
-            var actual = await sut.GetAsync(charge.Id);
+            var actual = await sut.SingleAsync(charge.Id);
 
             // Assert
             actual.Should().NotBeNull();
@@ -108,38 +109,61 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         }
 
         [Fact]
-        public async Task GetAsync_WithChargeIdentifier_ReturnsCharge()
+        public async Task FindAsync_WithKnownId_ReturnsCharge()
+        {
+            // Arrange
+            await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
+            var charge = new ChargeBuilder().Build();
+            var marketParticipant = new MarketParticipantBuilder().WithId(charge.OwnerId).Build();
+            await chargesDatabaseContext.MarketParticipants.AddAsync(marketParticipant);
+            await chargesDatabaseContext.SaveChangesAsync();
+            await chargesDatabaseContext.AddAsync(charge);
+            var sut = new ChargeRepository(chargesDatabaseContext);
+
+            // Act
+            var key = new ChargeIdentifier(
+                charge.SenderProvidedChargeId,
+                charge.OwnerId,
+                charge.Type);
+            var actual = await sut.SingleAsync(key);
+
+            // Assert
+            Assert.NotNull(actual);
+        }
+
+        [Fact]
+        public async Task FindAsync_WithChargeIdentifier_ReturnsCharge()
         {
             // Arrange
             await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
             var sut = new ChargeRepository(chargesDatabaseContext);
 
             // Arrange => Matching data from seeded test data
-            var identifier = new ChargeIdentifier("EA-001", "5790000432752", ChargeType.Tariff);
+            var identifier = new ChargeIdentifier("EA-001", _marketParticipantId, ChargeType.Tariff);
 
             // Act
-            var actual = await sut.GetAsync(identifier);
+            var actual = await sut.SingleAsync(identifier);
 
             // Assert
             actual.Should().NotBeNull();
         }
 
         [Fact]
-        public async Task GetChargesAsync_ReturnsCharges()
+        public async Task FindAsync_ReturnsCharges()
         {
             // Arrange
             await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
             var sut = new ChargeRepository(chargesDatabaseContext);
 
             // Arrange => Matching data from seeded test data
-            var firstCharge = await sut.GetAsync(
-                    new ChargeIdentifier("EA-001", "5790000432752", ChargeType.Tariff));
+            var firstCharge = await sut.SingleAsync(
+                    new ChargeIdentifier("EA-001", _marketParticipantId, ChargeType.Tariff));
 
-            var secondCharge = await sut.GetAsync(
-                new ChargeIdentifier("45013", "5790000432752", ChargeType.Tariff));
+            var secondCharge = await sut.SingleAsync(
+                new ChargeIdentifier("45013", _marketParticipantId, ChargeType.Tariff));
 
             // Act
-            var actual = await sut.GetAsync(new List<Guid>
+            var actual = await sut.SingleAsync(new List<Guid>
             {
                 firstCharge.Id,
                 secondCharge.Id,

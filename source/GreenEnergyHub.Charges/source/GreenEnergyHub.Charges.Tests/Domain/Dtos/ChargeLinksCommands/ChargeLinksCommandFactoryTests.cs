@@ -81,7 +81,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands
                 });
 
             chargeRepository
-                .Setup(f => f.GetAsync(new List<Guid> { defaultChargeLink.ChargeId }))
+                .Setup(f => f.SingleAsync(new List<Guid> { defaultChargeLink.ChargeId }))
                 .ReturnsAsync(new List<Charge> { charge });
 
             meteringPointRepository
