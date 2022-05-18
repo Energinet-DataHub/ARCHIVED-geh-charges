@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
             return charge;
         }
 
-        public async Task<IReadOnlyCollection<Charge>> SingleAsync(IReadOnlyCollection<Guid> ids)
+        public async Task<IReadOnlyCollection<Charge>> GetByIdsAsync(IReadOnlyCollection<Guid> ids)
         {
             var charges = new List<Charge>();
             foreach (var id in ids)

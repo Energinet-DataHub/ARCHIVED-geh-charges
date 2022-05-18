@@ -154,7 +154,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 ChargeType.Tariff));
 
             // Act
-            var actual = await sut.SingleAsync(new List<Guid>
+            var actual = await sut.GetByIdsAsync(new List<Guid>
             {
                 firstCharge.Id,
                 secondCharge.Id,
