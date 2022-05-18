@@ -22,13 +22,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
         /// <summary>
         /// OperationId for which the validationRule is applicable
         /// </summary>
-        public string? OperationId { get; }
-
-        /// <summary>
-        /// Violation of some validation rules are triggered by an element in a list.
-        /// In these cases this property will tell which element triggered the rule
-        /// identified by <see cref="ValidationRuleIdentifier"/> to be violated.
-        /// </summary>
-        public string? TriggeredBy { get; }
+        public string OperationId { get; }
     }
 }
