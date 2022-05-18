@@ -111,9 +111,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands
             actual.Document.IndustryClassification.Should().Be(IndustryClassification.Electricity);
             actual.Document.BusinessReasonCode.Should().Be(BusinessReasonCode.UpdateMasterDataSettlement);
             actual.Document.Sender.BusinessProcessRole.Should().Be(MarketParticipantRole.SystemOperator);
-            actual.Document.Sender.Id.Should().Be(systemOperator.MarketParticipantId);
+            actual.Document.Sender.MarketParticipantId.Should().Be(systemOperator.MarketParticipantId);
             actual.Document.Recipient.BusinessProcessRole.Should().Be(MarketParticipantRole.MeteringPointAdministrator);
-            actual.Document.Recipient.Id.Should().Be(recipient.MarketParticipantId);
+            actual.Document.Recipient.MarketParticipantId.Should().Be(recipient.MarketParticipantId);
             actual.ChargeLinksOperations.First().SenderProvidedChargeId.Should().Be(charge.SenderProvidedChargeId);
             actual.ChargeLinksOperations.First().ChargeType.Should().Be(charge.Type);
             actual.ChargeLinksOperations.First().EndDateTime.Should().Be(defaultChargeLink.EndDateTime);

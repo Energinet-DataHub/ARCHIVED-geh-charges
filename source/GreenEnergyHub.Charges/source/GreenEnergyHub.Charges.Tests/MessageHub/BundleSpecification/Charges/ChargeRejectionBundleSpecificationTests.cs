@@ -113,6 +113,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.Charges
                 MaxLengthId,
                 DocumentType.RejectRequestChangeOfPriceList,
                 0,
+                Guid.NewGuid(),
                 GetReasons(noOfReasons));
         }
 

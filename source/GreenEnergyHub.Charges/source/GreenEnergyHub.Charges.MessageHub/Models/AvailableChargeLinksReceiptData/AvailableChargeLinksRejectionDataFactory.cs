@@ -66,7 +66,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
                 return new AvailableChargeLinksReceiptData(
                     sender.MarketParticipantId,
                     sender.BusinessProcessRole,
-                    recipient.Id,
+                    recipient.MarketParticipantId,
                     recipient.BusinessProcessRole,
                     input.ChargeLinksCommand.Document.BusinessReasonCode,
                     _messageMetaDataContext.RequestDataTime,
@@ -76,6 +76,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
                     chargeLinkDto.MeteringPointId,
                     DocumentType.RejectRequestChangeBillingMasterData, // Will be added to the HTTP MessageType header
                     input.ChargeLinksCommand.ChargeLinksOperations.ToList().IndexOf(chargeLinkDto),
+                    recipient.ActorId,
                     GetReasons(input, chargeLinkDto));
             }).ToList();
         }

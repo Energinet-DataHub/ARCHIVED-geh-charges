@@ -27,11 +27,13 @@ namespace GreenEnergyHub.Charges.Tests.Builders.MessageHub
         private Guid _availableDataReferenceId;
         private int _operationOrder = 0;
         private Instant _requestDateTime = SystemClock.Instance.GetCurrentInstant();
+        private Guid _actorId;
 
         public AvailableChargeDataBuilder()
         {
             _businessReasonCode = BusinessReasonCode.UpdateChargeInformation;
             _availableDataReferenceId = Guid.NewGuid();
+            _actorId = Guid.NewGuid();
         }
 
         public AvailableChargeDataBuilder WithBusinessReasonCode(BusinessReasonCode businessReasonCode)
@@ -41,6 +43,12 @@ namespace GreenEnergyHub.Charges.Tests.Builders.MessageHub
         }
 
         public AvailableChargeDataBuilder WithAvailableDataReferenceId(Guid referenceId)
+        {
+            _availableDataReferenceId = referenceId;
+            return this;
+        }
+
+        public AvailableChargeDataBuilder WithActorId(Guid referenceId)
         {
             _availableDataReferenceId = referenceId;
             return this;
@@ -81,6 +89,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.MessageHub
                 Resolution.PT15M,
                 DocumentType.NotifyPriceList,
                 _operationOrder,
+                _actorId,
                 new List<AvailableChargeDataPoint>());
         }
     }

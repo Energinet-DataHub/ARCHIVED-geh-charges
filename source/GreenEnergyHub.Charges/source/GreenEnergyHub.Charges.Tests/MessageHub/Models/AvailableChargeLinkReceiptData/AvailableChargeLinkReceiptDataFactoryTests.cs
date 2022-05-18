@@ -59,7 +59,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
             actualList.Should().HaveSameCount(expectedLinks);
             for (var i = 0; i < actualList.Count; i++)
             {
-                actualList[i].RecipientId.Should().Be(acceptedEvent.ChargeLinksCommand.Document.Sender.Id);
+                actualList[i].RecipientId.Should().Be(acceptedEvent.ChargeLinksCommand.Document.Sender.MarketParticipantId);
                 actualList[i].RecipientRole.Should()
                     .Be(acceptedEvent.ChargeLinksCommand.Document.Sender.BusinessProcessRole);
                 actualList[i].BusinessReasonCode.Should()

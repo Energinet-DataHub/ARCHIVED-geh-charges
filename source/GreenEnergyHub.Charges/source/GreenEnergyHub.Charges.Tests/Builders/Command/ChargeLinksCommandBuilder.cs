@@ -32,12 +32,12 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             RequestDate = SystemClock.Instance.GetCurrentInstant(),
             Recipient = new MarketParticipantDto
             {
-                Id = Guid.NewGuid().ToString("N"),
+                MarketParticipantId = Guid.NewGuid().ToString("N"),
                 BusinessProcessRole = MarketParticipantRole.GridAccessProvider,
             },
             Sender = new MarketParticipantDto
             {
-                Id = Guid.NewGuid().ToString("N"),
+                MarketParticipantId = Guid.NewGuid().ToString("N"),
                 BusinessProcessRole = MarketParticipantRole.MeteringPointAdministrator,
             },
             Type = DocumentType.RequestChangeBillingMasterData,

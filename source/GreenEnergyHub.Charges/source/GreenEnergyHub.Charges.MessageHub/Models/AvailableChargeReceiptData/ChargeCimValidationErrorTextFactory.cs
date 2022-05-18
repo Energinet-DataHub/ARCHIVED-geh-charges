@@ -110,7 +110,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                 CimValidationErrorTextToken.DocumentId =>
                     chargeCommand.Document.Id,
                 CimValidationErrorTextToken.DocumentSenderId =>
-                    chargeCommand.Document.Sender.Id,
+                    chargeCommand.Document.Sender.MarketParticipantId,
                 CimValidationErrorTextToken.DocumentSenderProvidedChargeId =>
                     chargeOperationDto.ChargeId,
                 CimValidationErrorTextToken.DocumentType =>
