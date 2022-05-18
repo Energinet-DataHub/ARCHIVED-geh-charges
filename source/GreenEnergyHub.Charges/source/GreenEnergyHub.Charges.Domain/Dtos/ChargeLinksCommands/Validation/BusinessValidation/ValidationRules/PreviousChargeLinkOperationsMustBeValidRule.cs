@@ -18,11 +18,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
 {
     public class PreviousChargeLinkOperationsMustBeValidRule : IValidationRuleWithExtendedData
     {
-        private readonly ChargeLinkDto _chargeLinkDto;
-
-        public PreviousChargeLinkOperationsMustBeValidRule(string triggeredBy, ChargeLinkDto chargeLinkDto)
+        public PreviousChargeLinkOperationsMustBeValidRule(string triggeredBy)
         {
-            _chargeLinkDto = chargeLinkDto;
             TriggeredBy = triggeredBy;
         }
 
