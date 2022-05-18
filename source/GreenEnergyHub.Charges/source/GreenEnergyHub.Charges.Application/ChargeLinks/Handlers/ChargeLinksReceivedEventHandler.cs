@@ -69,9 +69,9 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
                     operationsToBeRejected = operations[i..].ToList();
                     rejectionRules.AddRange(validationResult.InvalidRules);
                     rejectionRules.AddRange(operationsToBeRejected.Skip(1)
-                        .Select(toBeRejected =>
+                        .Select(_ =>
                             new OperationValidationRuleContainer(
-                                new PreviousChargeLinkOperationsMustBeValidRule(operation.OperationId, toBeRejected),
+                                new PreviousChargeLinkOperationsMustBeValidRule(operation.OperationId),
                                 operation.OperationId)));
                     break;
                 }

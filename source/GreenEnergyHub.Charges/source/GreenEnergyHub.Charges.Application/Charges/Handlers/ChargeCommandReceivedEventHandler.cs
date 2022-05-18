@@ -76,10 +76,9 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                     operationsToBeRejected = operations[i..].ToList();
                     rejectionRules.AddRange(validationResult.InvalidRules);
                     rejectionRules.AddRange(operationsToBeRejected.Skip(1)
-                        .Select(toBeRejected =>
+                        .Select(_ =>
                             new OperationValidationRuleContainer(
-                                new PreviousOperationsMustBeValidRule(operation.Id, toBeRejected),
-                                operation.Id)));
+                                new PreviousOperationsMustBeValidRule(operation.Id), operation.Id)));
                     break;
                 }
 
@@ -89,10 +88,9 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                     operationsToBeRejected = operations[i..].ToList();
                     rejectionRules.AddRange(validationResult.InvalidRules);
                     rejectionRules.AddRange(operationsToBeRejected.Skip(1)
-                        .Select(toBeRejected =>
+                        .Select(_ =>
                             new OperationValidationRuleContainer(
-                                new PreviousOperationsMustBeValidRule(operation.Id, toBeRejected),
-                                operation.Id)));
+                                new PreviousOperationsMustBeValidRule(operation.Id), operation.Id)));
                     break;
                 }
 
