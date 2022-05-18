@@ -166,7 +166,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargePrices.Handlers
              ChargePriceSeriesBuilder chargePriceSeriesBuilder,
              ChargePricesHandler sut)
          {
-             if (chargePriceRepository == null) throw new ArgumentNullException(nameof(chargePriceRepository));
              // Arrange
              var receivedEvent = CreateReceivedEventWithChargeOperations();
              var charge = chargeInformationBuilder.Build();

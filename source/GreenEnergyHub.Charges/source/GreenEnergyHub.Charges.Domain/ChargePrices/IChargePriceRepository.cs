@@ -19,6 +19,9 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.ChargePrices
 {
+    /// <summary>
+    /// Contract defining the capabilities of the infrastructure component facilitating interaction with the chargeprice data store.
+    /// </summary>
     public interface IChargePriceRepository
     {
         Task AddAsync(ChargePrice chargePrice);
