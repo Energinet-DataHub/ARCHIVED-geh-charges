@@ -165,6 +165,25 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             actual.Last().OwnerId.Should().Be(secondCharge.OwnerId);
         }
 
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task GetByIdsAsync_VerifyLocalContextItemsAreAlsoFetched(Charge notSavedCharge)
+        {
+            // Arrange
+            await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
+            var savedCharge = await SetupValidChargeAsync(chargesDatabaseContext);
+            var sut = new ChargeRepository(chargesDatabaseContext);
+            await sut.AddAsync(notSavedCharge);
+
+            // Act
+            var actual = await sut.GetByIdsAsync(new List<Guid> { savedCharge.Id, notSavedCharge.Id });
+
+            // Assert
+            actual.Count.Should().Be(2);
+            actual.Should().Contain(savedCharge);
+            actual.Should().Contain(notSavedCharge);
+        }
+
         private static async Task<Charge> SetupValidChargeAsync(ChargesDatabaseContext chargesDatabaseWriteContext)
         {
             await GetOrAddMarketParticipantAsync(chargesDatabaseWriteContext);

@@ -42,14 +42,18 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
         public async Task<IReadOnlyCollection<Charge>> GetByIdsAsync(IReadOnlyCollection<Guid> ids)
         {
             var charges = new List<Charge>();
-            foreach (var id in ids)
-            {
-                var charge = SingleOrDefaultLocal(id) ??
-                             await SingleFromDbAsync(id).ConfigureAwait(false);
-                charges.Add(charge);
-            }
 
-            return new ReadOnlyCollection<Charge>(charges);
+            var chargesFoundInLocalContext = _chargesDatabaseContext.Charges.Local.Where(charge => ids.Contains(charge.Id)).ToList();
+            var chargeIdsFoundInLocalContext = chargesFoundInLocalContext.Select(charge => charge.Id).ToList();
+
+            var chargeIdsNotFoundInLocalContext = ids.Except(chargeIdsFoundInLocalContext);
+            var chargesFetchedFromDatabase = await _chargesDatabaseContext.Charges
+                .Where(charge => chargeIdsNotFoundInLocalContext.Contains(charge.Id)).ToListAsync().ConfigureAwait(false);
+
+            charges.AddRange(chargesFoundInLocalContext);
+            charges.AddRange(chargesFetchedFromDatabase);
+
+            return new ReadOnlyCollection<Charge>(chargesFoundInLocalContext);
         }
 
         public async Task<Charge?> SingleOrNullAsync(ChargeIdentifier chargeIdentifier)
