@@ -22,7 +22,7 @@ using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
-using GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation;
+using GreenEnergyHub.Charges.Tests.TestCore;
 using Microsoft.Extensions.Logging;
 using Xunit;
 using Xunit.Categories;
@@ -104,10 +104,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             var sut = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
 
             // Act
-            var actual = sut.Create(
-                validationError,
-                chargeCommand,
-                chargeOperationDto);
+            var actual = sut.Create(validationError, chargeCommand, chargeOperationDto);
 
             // Assert
             actual.ToLower().Should().Contain($"price {CimValidationErrorTextTemplateMessages.Unknown}");
@@ -154,6 +151,10 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
         {
             // Arrange
             var validationRuleIdentifiers = (ValidationRuleIdentifier[])Enum.GetValues(typeof(ValidationRuleIdentifier));
+            var identifiersForRulesWithExtendedData =
+                ValidationRuleForInterfaceLoader.GetValidationRuleIdentifierForTypes(
+                    typeof(MaximumPriceRule).Assembly, typeof(IValidationRuleWithExtendedData));
+
             var sut = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
 
             // Act
@@ -163,22 +164,24 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
                 var chargeOperationDtos = new List<ChargeOperationDto> { operation };
                 var commandWithOperation = new ChargeCommand(chargeCommand.Document, chargeOperationDtos);
 
-                foreach (var validationRuleIdentifier in validationRuleIdentifiers)
+                foreach (var identifier in validationRuleIdentifiers)
                 {
-                    var triggeredBy = SetTriggeredByWithValidationError(operation, validationRuleIdentifier);
-                    var validationError = new ValidationError(validationRuleIdentifier, operation.Id, triggeredBy);
+                    var triggeredBy = GetTriggeredBy(operation, identifier);
+                    var validationError = new ValidationError(identifier, operation.Id, triggeredBy);
 
                     var actual = sut.Create(validationError, commandWithOperation, operation);
 
                     actual.Should().NotBeNullOrWhiteSpace();
                     actual.Should().NotContain("{");
                     actual.Should().NotContain("  ");
-                    // actual.Should().NotContain("unknown"); // TODO: Can we do this?
+
+                    if (identifiersForRulesWithExtendedData.Contains(identifier))
+                        actual.Should().NotContain("unknown");
                 }
             }
         }
 
-        private static string? SetTriggeredByWithValidationError(
+        private static string? GetTriggeredBy(
             ChargeOperationDto chargeOperationDto, ValidationRuleIdentifier validationRuleIdentifier)
         {
             return validationRuleIdentifier switch
@@ -187,6 +190,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
                     chargeOperationDto.Points[0].Position.ToString(),
                 ValidationRuleIdentifier.MaximumPrice =>
                     chargeOperationDto.Points[1].Position.ToString(),
+                ValidationRuleIdentifier.SubsequentBundleOperationsFail =>
+                    chargeOperationDto.Id,
                 _ => null,
             };
         }
