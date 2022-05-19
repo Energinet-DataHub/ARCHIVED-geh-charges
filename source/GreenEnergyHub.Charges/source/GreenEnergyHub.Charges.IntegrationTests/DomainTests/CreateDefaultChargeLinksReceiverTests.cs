@@ -63,11 +63,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId);
             }
 
-            [Fact]
-            public async Task When_ReceivingCreateDefaultChargeLinksRequest_MeteringPointDomainIsNotifiedThatDefaultChargeLinksAreCreated()
+            [Theory]
+            [InlineData("571313180000000012")]
+            [InlineData("571313180000000045")]
+            public async Task When_ReceivingCreateDefaultChargeLinksRequest_MeteringPointDomainIsNotifiedThatDefaultChargeLinksAreCreated(
+                string meteringPointId)
             {
                 // Arrange
-                var meteringPointId = "571313180000000012";
                 var request = CreateServiceBusMessage(
                     meteringPointId,
                     Fixture.CreateLinkReplyQueue.Name,
@@ -83,7 +85,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                     () => Fixture.CreateLinkRequestQueue.SenderClient.SendMessageAsync(request), correlationId, parentId);
 
                 // Assert
-                var isMessageReceivedByQueue = isMessageReceived.MessageAwaiter!.Wait(TimeSpan.FromSeconds(10));
+                var isMessageReceivedByQueue = isMessageReceived.MessageAwaiter!.Wait(TimeSpan.FromSeconds(60));
                 isMessageReceivedByQueue.Should().BeTrue();
             }
 
@@ -105,8 +107,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 var message = new CreateDefaultChargeLinks { MeteringPointId = meteringPointId };
                 parentId = $"00-{correlationId}-b7ad6b7169203331-01";
 
-                var actor = JsonSerializer.Serialize(
-                        new Actor(new Guid("ed6c94f3-24a8-43b3-913d-bf7513390a32"), "???", "???", MarketParticipantRole.GridAccessProvider.ToString()));
+                var actor = JsonSerializer.Serialize(new Actor(
+                    new Guid("ed6c94f3-24a8-43b3-913d-bf7513390a32"),
+                    "???",
+                    "???",
+                    MarketParticipantRole.GridAccessProvider.ToString()));
 
                 var byteArray = message.ToByteArray();
                 var serviceBusMessage = new ServiceBusMessage(byteArray)

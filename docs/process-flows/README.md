@@ -31,7 +31,10 @@ Note, stopping a charge results in a removal of any registered prices from the s
 
 ### Persist Charge Prices
 
-The rule set for persisting charge prices is yet to be defined. Pending business reason code decision.
+The rule set for persisting charge prices.
+
+![Persist charge prices](images/PersistingChargePricesRuleSet_ProcessFlow.png)
+
 <br>
 
 ## Charge Link Flow

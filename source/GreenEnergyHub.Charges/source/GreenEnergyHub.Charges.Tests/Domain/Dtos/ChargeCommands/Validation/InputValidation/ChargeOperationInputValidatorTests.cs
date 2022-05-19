@@ -22,19 +22,19 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.InputValidation
 {
     [UnitTest]
-    public class ChargeCommandInputValidatorTests
+    public class ChargeOperationInputValidatorTests
     {
         [Theory]
         [InlineAutoData]
         public void Validate_WhenValidatingChargeCommand_ReturnsChargeCommandValidationResult(
-            ChargeCommandInputValidationRulesFactory chargeCommandInputValidationRulesFactory,
-            ChargeCommand chargeCommand)
+            ChargeOperationInputValidationRulesFactory chargeOperationInputValidationRulesFactory,
+            ChargeOperationDto chargeOperationDto)
         {
             // Arrange
-            var sut = new InputValidator<ChargeCommand>(chargeCommandInputValidationRulesFactory);
+            var sut = new InputValidator<ChargeOperationDto>(chargeOperationInputValidationRulesFactory);
 
             // Act
-            var result = sut.Validate(chargeCommand);
+            var result = sut.Validate(chargeOperationDto);
 
             // Assert
             Assert.IsType<ValidationResult>(result);

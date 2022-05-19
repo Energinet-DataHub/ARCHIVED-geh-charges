@@ -55,11 +55,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.DocumentTypeMustBeRequestChangeOfPriceList)]
         public const string DocumentTypeMustBeRequestChangeOfPriceListErrorText =
-            "Document type {{DocumentType}} not allowed together with energy business process {{DocumentBusinessReasonCode}}";
+            "Document type {{DocumentType}} not allowed together with business reason code {{DocumentBusinessReasonCode}}";
 
         [ErrorMessageFor(ValidationRuleIdentifier.BusinessReasonCodeMustBeUpdateChargeInformationOrChargePrices)]
         public const string BusinessReasonCodeMustBeUpdateChargeInformationErrorText =
-            "Energy business process {{DocumentBusinessReasonCode}} not allowed together with document type {{DocumentType}}";
+            "Business reason code {{DocumentBusinessReasonCode}} not allowed together with document type {{DocumentType}}";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeTypeIsKnownValidation)]
         public const string ChargeTypeIsKnownValidationErrorText =
@@ -148,6 +148,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeResolutionCanNotBeUpdated)]
         public const string ChargeResolutionCanNotBeUpdatedErrorText =
             "Period type {{ChargeResolution}} not allowed: The specified resolution for chargetype {{ChargeType}} charge ID {{DocumentSenderProvidedChargeId}} may not be changed. It must have the same period type as when created.";
+
+        [ErrorMessageFor(ValidationRuleIdentifier.RecipientRoleMustBeDdz)]
+        public const string RecipientRoleMustBeDdzErrorText =
+            "Recipient role {{DocumentRecipientBusinessProcessRole}} not allowed: the role used with business reason code {{DocumentBusinessReasonCode}} must be metering point administrator (DDZ).";
 
         public const string Unknown = "unknown";
     }

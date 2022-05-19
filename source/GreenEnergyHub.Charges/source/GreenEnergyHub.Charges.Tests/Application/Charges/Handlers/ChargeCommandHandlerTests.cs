@@ -48,8 +48,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             // Assert
             chargeEventPublisher.Verify(
                 x => x.DispatchAsync(
-                    It.Is<ChargeCommandReceivedEvent>(
-                        localEvent => localEvent.Command == command),
+                    It.Is<ChargeCommandReceivedEvent>(localEvent => localEvent.Command == command),
                     It.IsAny<CancellationToken>()),
                 Times.Once);
         }
