@@ -67,7 +67,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData
                 .GetGridAccessProviderAsync(operation.MeteringPointId)
                 .ConfigureAwait(false);
 
-            // TODO INDEN PR: Spørg Peter eller Irene om recipient altid er lig owner
             var owner = await _marketParticipantRepository
                 .SingleAsync(operation.ChargeOwner)
                 .ConfigureAwait(false);
