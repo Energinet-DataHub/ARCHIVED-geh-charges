@@ -13,12 +13,19 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 
-namespace GreenEnergyHub.Charges.Application.Charges.Handlers
+namespace GreenEnergyHub.Charges.Application.ChargeCommands.Handlers
 {
-    public interface IChargeCommandReceivedEventHandler
+    /// <summary>
+    /// Contract for handling a charge bundle.
+    /// </summary>
+    public interface IChargesBundleHandler
     {
-        Task HandleAsync(ChargeCommandReceivedEvent commandReceivedEvent);
+        /// <summary>
+        /// Synchronously handle the bundle.
+        /// </summary>
+        /// <param name="bundle">Charges bundle</param>
+        Task HandleAsync(ChargeCommandBundle bundle);
     }
 }

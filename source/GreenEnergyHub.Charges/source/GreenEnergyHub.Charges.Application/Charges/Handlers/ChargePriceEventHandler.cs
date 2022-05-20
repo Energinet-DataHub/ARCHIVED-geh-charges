@@ -16,7 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
+using GreenEnergyHub.Charges.Application.ChargeCommands.Acknowledgement;
 using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
@@ -27,35 +27,30 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
-    public class ChargeCommandReceivedEventHandler : IChargeCommandReceivedEventHandler
+    public class ChargePriceEventHandler : IChargePriceEventHandler
     {
         private readonly IChargeCommandReceiptService _chargeCommandReceiptService;
         private readonly IInputValidator<ChargeOperationDto> _inputValidator;
         private readonly IBusinessValidator<ChargeOperationDto> _businessValidator;
         private readonly IChargeRepository _chargeRepository;
-        private readonly IChargeFactory _chargeFactory;
-        private readonly IChargePeriodFactory _chargePeriodFactory;
         private readonly IUnitOfWork _unitOfWork;
 
-        public ChargeCommandReceivedEventHandler(
+        public ChargePriceEventHandler(
             IChargeCommandReceiptService chargeCommandReceiptService,
             IInputValidator<ChargeOperationDto> inputValidator,
             IBusinessValidator<ChargeOperationDto> businessValidator,
             IChargeRepository chargeRepository,
-            IChargeFactory chargeFactory,
-            IChargePeriodFactory chargePeriodFactory,
             IUnitOfWork unitOfWork)
         {
             _chargeCommandReceiptService = chargeCommandReceiptService;
             _inputValidator = inputValidator;
             _businessValidator = businessValidator;
             _chargeRepository = chargeRepository;
-            _chargeFactory = chargeFactory;
-            _chargePeriodFactory = chargePeriodFactory;
             _unitOfWork = unitOfWork;
         }
 
-        public async Task HandleAsync(ChargeCommandReceivedEvent commandReceivedEvent)
+        public async Task HandleAsync(
+            ChargeCommandReceivedEvent commandReceivedEvent)
         {
             ArgumentNullException.ThrowIfNull(commandReceivedEvent);
 
@@ -69,6 +64,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             {
                 var operation = operations[i];
                 var charge = await GetChargeAsync(operation).ConfigureAwait(false);
+                ArgumentNullException.ThrowIfNull(charge);
 
                 var validationResult = _inputValidator.Validate(operation);
                 if (validationResult.IsFailed)
@@ -90,37 +86,11 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                     break;
                 }
 
-                var operationType = GetOperationType(operation, charge);
-                switch (operationType)
-                {
-                    /*
-                     * In order to fix issue 1276, the create operation is allowed to violate the unit of work pattern.
-                     * This is done to ensure the next operations in the bundle will be processed correctly.
-                     * Do note that the ChargeCommandReceivedEventHandler is currently being refactored. So this is
-                     * considered a short-sighted solution.
-                     */
-                    case OperationType.Create:
-                        await HandleCreateEventAsync(operation).ConfigureAwait(false);
-                        await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-                        break;
-                    case OperationType.Update:
-                        HandleUpdateEvent(charge!, operation);
-                        break;
-                    case OperationType.Stop:
-                        charge!.Stop(operation.EndDateTime);
-                        break;
-                    case OperationType.CancelStop:
-                        HandleCancelStopEvent(charge!, operation);
-                        break;
-                    default:
-                        throw new InvalidOperationException("Could not handle charge command.");
-                }
-
+                charge.UpdatePrices(operation.StartDateTime, operation.EndDateTime, operation.Points);
                 operationsToBeConfirmed.Add(operation);
             }
 
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-
             var document = commandReceivedEvent.Command.Document;
             await RejectInvalidOperationsAsync(operationsToBeRejected, document, rejectionRules).ConfigureAwait(false);
             await AcceptValidOperationsAsync(operationsToBeConfirmed, document).ConfigureAwait(false);
@@ -151,51 +121,12 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             }
         }
 
-        private async Task HandleCreateEventAsync(ChargeOperationDto chargeOperationDto)
-        {
-            var charge = await _chargeFactory
-                .CreateFromChargeOperationDtoAsync(chargeOperationDto)
-                .ConfigureAwait(false);
-
-            await _chargeRepository.AddAsync(charge).ConfigureAwait(false);
-        }
-
-        private void HandleUpdateEvent(Charge charge, ChargeOperationDto chargeOperationDto)
-        {
-            var newChargePeriod = _chargePeriodFactory.CreateFromChargeOperationDto(chargeOperationDto);
-            charge.Update(newChargePeriod);
-        }
-
-        private void HandleCancelStopEvent(Charge charge, ChargeOperationDto chargeOperationDto)
-        {
-            var newChargePeriod = _chargePeriodFactory.CreateFromChargeOperationDto(chargeOperationDto);
-            charge.CancelStop(newChargePeriod);
-        }
-
-        private static OperationType GetOperationType(ChargeOperationDto chargeOperationDto, Charge? charge)
-        {
-            if (charge == null)
-            {
-                return OperationType.Create;
-            }
-
-            if (chargeOperationDto.StartDateTime == chargeOperationDto.EndDateTime)
-            {
-                return OperationType.Stop;
-            }
-
-            var latestChargePeriod = charge.Periods.OrderByDescending(p => p.StartDateTime).First();
-            return chargeOperationDto.StartDateTime == latestChargePeriod.EndDateTime
-                ? OperationType.CancelStop
-                : OperationType.Update;
-        }
-
-        private async Task<Charge?> GetChargeAsync(ChargeOperationDto chargeOperationDto)
+        private async Task<Charge?> GetChargeAsync(ChargeOperationDto operation)
         {
             var chargeIdentifier = new ChargeIdentifier(
-                chargeOperationDto.ChargeId,
-                chargeOperationDto.ChargeOwner,
-                chargeOperationDto.Type);
+                operation.ChargeId,
+                operation.ChargeOwner,
+                operation.Type);
             return await _chargeRepository.GetOrNullAsync(chargeIdentifier).ConfigureAwait(false);
         }
     }

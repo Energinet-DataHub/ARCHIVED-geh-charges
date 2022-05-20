@@ -23,7 +23,7 @@ using GreenEnergyHub.TestHelpers;
 using Moq;
 using Xunit;
 using Xunit.Categories;
-using ChargeCommandHandler = GreenEnergyHub.Charges.Application.Charges.Handlers.ChargeCommandHandler;
+using ChargeCommandHandler = GreenEnergyHub.Charges.Application.ChargeCommands.Handlers.ChargeCommandHandler;
 
 namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 {

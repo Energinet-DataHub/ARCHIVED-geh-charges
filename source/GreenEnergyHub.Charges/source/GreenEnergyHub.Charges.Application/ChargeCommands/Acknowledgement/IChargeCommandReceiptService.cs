@@ -13,21 +13,15 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using System.Transactions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
-namespace GreenEnergyHub.Charges.Application.Charges.Handlers
+namespace GreenEnergyHub.Charges.Application.ChargeCommands.Acknowledgement
 {
-    /// <summary>
-    /// Contract for handling a change of charges message.
-    /// </summary>
-    public interface IChargeCommandHandler
+    public interface IChargeCommandReceiptService
     {
-        /// <summary>
-        /// Synchronously handle the message.
-        /// Supports <see cref="TransactionScope"/>.
-        /// </summary>
-        /// <param name="command">ChargeCommand</param>
-        Task HandleAsync(ChargeCommand command);
+        Task RejectAsync(ChargeCommand command, ValidationResult validationResult);
+
+        Task AcceptAsync(ChargeCommand command);
     }
 }

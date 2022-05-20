@@ -12,26 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using NodaTime;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 
-namespace GreenEnergyHub.Charges.Domain.Charges
+namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
-    /// <summary>
-    /// Contract defining the capabilities of the infrastructure component facilitating interaction with the charges data store.
-    /// </summary>
-    public interface IChargeRepository
+    public interface IChargePriceEventHandler
     {
-        Task AddAsync(Charge charge);
-
-        Task<Charge> GetAsync(ChargeIdentifier chargeIdentifier);
-
-        Task<Charge> GetAsync(Guid id);
-
-        Task<IReadOnlyCollection<Charge>> GetAsync(IReadOnlyCollection<Guid> ids);
-
-        Task<Charge?> GetOrNullAsync(ChargeIdentifier chargeIdentifier);
+        Task HandleAsync(ChargeCommandReceivedEvent commandReceivedEvent);
     }
 }

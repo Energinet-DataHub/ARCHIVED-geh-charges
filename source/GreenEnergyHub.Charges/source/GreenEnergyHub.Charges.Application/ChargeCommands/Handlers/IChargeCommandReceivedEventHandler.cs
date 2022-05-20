@@ -15,13 +15,13 @@
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 
-namespace GreenEnergyHub.Charges.Application.Charges.Handlers
+namespace GreenEnergyHub.Charges.Application.ChargeCommands.Handlers
 {
     /// <summary>
     /// Delegates a charge depending on if it contains
     /// Charge Prices or Charge information.
     /// </summary>
-    public interface IChargeHandler
+    public interface IChargeCommandReceivedEventHandler
     {
         /// <summary>
         /// Asynchronously handle the event.
