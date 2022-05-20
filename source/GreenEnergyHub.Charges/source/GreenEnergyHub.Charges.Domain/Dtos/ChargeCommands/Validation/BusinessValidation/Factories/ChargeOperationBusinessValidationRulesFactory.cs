@@ -19,6 +19,7 @@ using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.Factories
@@ -28,15 +29,18 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
         private readonly IChargeRepository _chargeRepository;
         private readonly IClock _clock;
         private readonly IRulesConfigurationRepository _rulesConfigurationRepository;
+        private readonly IMarketParticipantRepository _marketParticipantRepository;
         private readonly IZonedDateTimeService _zonedDateTimeService;
 
         public ChargeOperationBusinessValidationRulesFactory(
             IRulesConfigurationRepository rulesConfigurationRepository,
+            IMarketParticipantRepository marketParticipantRepository,
             IChargeRepository chargeRepository,
             IZonedDateTimeService zonedDateTimeService,
             IClock clock)
         {
             _rulesConfigurationRepository = rulesConfigurationRepository;
+            _marketParticipantRepository = marketParticipantRepository;
             _chargeRepository = chargeRepository;
             _zonedDateTimeService = zonedDateTimeService;
             _clock = clock;
@@ -45,7 +49,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
         public async Task<IValidationRuleSet> CreateRulesAsync(ChargeOperationDto operation)
         {
             ArgumentNullException.ThrowIfNull(operation);
-
             var rules = await GetRulesForOperationAsync(operation).ConfigureAwait(false);
             return ValidationRuleSet.FromRules(rules);
         }
@@ -115,14 +118,18 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
             return rules;
         }
 
-        private Task<Charge?> GetChargeOrNullAsync(ChargeOperationDto chargeOperationDto)
+        private async Task<Charge?> GetChargeOrNullAsync(ChargeOperationDto chargeOperationDto)
         {
+            var marketParticipant = await _marketParticipantRepository
+                .SingleAsync(chargeOperationDto.ChargeOwner)
+                .ConfigureAwait(false);
+
             var chargeIdentifier = new ChargeIdentifier(
                 chargeOperationDto.ChargeId,
-                chargeOperationDto.ChargeOwner,
+                marketParticipant.Id,
                 chargeOperationDto.Type);
 
-            return _chargeRepository.GetOrNullAsync(chargeIdentifier);
+            return await _chargeRepository.SingleOrNullAsync(chargeIdentifier).ConfigureAwait(false);
         }
     }
 }

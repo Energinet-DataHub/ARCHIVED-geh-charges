@@ -19,7 +19,9 @@ using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
+using GreenEnergyHub.Charges.Tests.Builders.Testables;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using Xunit;
@@ -36,13 +38,19 @@ namespace GreenEnergyHub.Charges.Tests.Domain.ChargeLinks
             ChargeLinkDto chargeLinkDto,
             Charge expectedCharge,
             MeteringPoint expectedMeteringPoint,
+            TestMarketParticipant sender,
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IMeteringPointRepository> meteringPointRepository,
             ChargeLinkFactory sut)
         {
             // Arrange
+            marketParticipantRepository
+                .Setup(x => x.SingleAsync(It.IsAny<string>()))
+                .ReturnsAsync(sender);
+
             chargeRepository
-                .Setup(x => x.GetAsync(It.IsAny<ChargeIdentifier>()))
+                .Setup(x => x.SingleAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(expectedCharge);
 
             meteringPointRepository

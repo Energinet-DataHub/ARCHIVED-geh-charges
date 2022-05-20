@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+
 namespace GreenEnergyHub.Charges.Domain.Charges
 {
-    public record ChargeIdentifier(string SenderProvidedChargeId, string Owner, ChargeType ChargeType);
+    public record ChargeIdentifier(string SenderProvidedChargeId, Guid Owner, ChargeType ChargeType);
 }
