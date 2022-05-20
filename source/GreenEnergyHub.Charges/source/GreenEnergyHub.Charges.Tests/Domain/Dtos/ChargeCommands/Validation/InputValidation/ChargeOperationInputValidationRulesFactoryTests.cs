@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
     public class ChargeOperationInputValidationRulesFactoryTests
     {
         [Fact]
-        public void CreateRules_ShouldContainRulesTest()
+        public void CreateRules_ShouldContainRules()
         {
             // Arrange
             var sut = new ChargeOperationInputValidationRulesFactory();
