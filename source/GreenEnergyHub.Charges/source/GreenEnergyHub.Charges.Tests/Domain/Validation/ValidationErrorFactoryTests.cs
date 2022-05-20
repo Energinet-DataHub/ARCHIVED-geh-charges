@@ -29,7 +29,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Validation
         public void Create_WhenDifferentKindsOfRulesAreViolated_ValidationErrorResult()
         {
             // Arrange
-            const string invalidChargeId = "InValidId123";
+            const string invalidChargeId = "InvalidId123";
             const string validChargeId = "ValidId123";
             var rejectionRules = BuildValidationRuleContainers(invalidChargeId, validChargeId);
             var validationResult = ValidationResult.CreateFailure(rejectionRules);
