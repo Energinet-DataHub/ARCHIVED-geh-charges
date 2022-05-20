@@ -18,7 +18,7 @@ using Moq;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation
+namespace GreenEnergyHub.Charges.Tests.Domain.Validation
 {
     [UnitTest]
     public class ValidationRuleSetTests
