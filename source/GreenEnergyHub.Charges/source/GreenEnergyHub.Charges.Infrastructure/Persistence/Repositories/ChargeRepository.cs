@@ -78,13 +78,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
                     c.Type == chargeIdentifier.ChargeType);
         }
 
-        private Charge? SingleOrDefaultLocal(Guid id)
-        {
-            return _chargesDatabaseContext.Charges
-                .Local.SingleOrDefault(c =>
-                    c.Id == id);
-        }
-
         private async Task<Charge> SingleFromDbAsync(ChargeIdentifier chargeIdentifier)
         {
             return await _chargesDatabaseContext.Charges
@@ -92,14 +85,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
                     c.SenderProvidedChargeId == chargeIdentifier.SenderProvidedChargeId &&
                     c.OwnerId == chargeIdentifier.Owner &&
                     c.Type == chargeIdentifier.ChargeType)
-                .ConfigureAwait(false);
-        }
-
-        private async Task<Charge> SingleFromDbAsync(Guid id)
-        {
-            return await _chargesDatabaseContext.Charges
-                .SingleAsync(c =>
-                    c.Id == id)
                 .ConfigureAwait(false);
         }
 
