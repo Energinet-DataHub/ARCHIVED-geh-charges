@@ -182,6 +182,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             actual.Count.Should().Be(2);
             actual.Should().Contain(savedCharge);
             actual.Should().Contain(notSavedCharge);
+            chargesDatabaseContext.Entry(savedCharge).State.Should().Be(EntityState.Unchanged);
+            chargesDatabaseContext.Entry(notSavedCharge).State.Should().Be(EntityState.Added);
         }
 
         private static async Task<Charge> SetupValidChargeAsync(ChargesDatabaseContext chargesDatabaseWriteContext)
