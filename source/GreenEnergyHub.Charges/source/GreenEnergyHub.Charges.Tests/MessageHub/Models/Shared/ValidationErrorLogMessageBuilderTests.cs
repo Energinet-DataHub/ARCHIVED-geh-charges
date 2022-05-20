@@ -20,6 +20,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.MessageHub.Models.Shared;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
+using GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Categories;
@@ -66,8 +67,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared
         {
             var validationErrors = new List<ValidationError>
             {
-                new(ValidationRuleIdentifier.ChargeDoesNotExist, null!),
-                new(ValidationRuleIdentifier.SubsequentBundleOperationsFail, null!),
+                new(ValidationRuleIdentifier.ChargeDoesNotExist, null, null),
+                new(ValidationRuleIdentifier.SubsequentBundleOperationsFail, null, null),
             };
             return validationErrors;
         }

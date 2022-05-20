@@ -18,25 +18,28 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 {
     public static class ValidationErrorFactory
     {
-        public static Func<IValidationRule, ValidationError> Create()
+        public static Func<IValidationRuleContainer, ValidationError> Create()
         {
             return rule =>
             {
-                if (rule is IValidationRuleForOperation validationRuleForOperation)
+                if (rule is IOperationValidationRuleContainer operationValidationRuleContainer &&
+                    rule.ValidationRule is IValidationRuleWithExtendedData validationRuleWithExtendedData)
                 {
                     return new ValidationError(
-                        rule.ValidationRuleIdentifier,
-                        null);
-                }
-
-                if (rule is IValidationRuleWithExtendedData validationRuleWithExtendedData)
-                {
-                    return new ValidationError(
-                        rule.ValidationRuleIdentifier,
+                        rule.ValidationRule.ValidationRuleIdentifier,
+                        operationValidationRuleContainer.OperationId,
                         validationRuleWithExtendedData.TriggeredBy);
                 }
 
-                return new ValidationError(rule.ValidationRuleIdentifier, null);
+                if (rule is IOperationValidationRuleContainer validationRuleForOperation)
+                {
+                    return new ValidationError(
+                        rule.ValidationRule.ValidationRuleIdentifier,
+                        validationRuleForOperation.OperationId,
+                        null!);
+                }
+
+                return new ValidationError(rule.ValidationRule.ValidationRuleIdentifier, null!, null!);
             };
         }
     }

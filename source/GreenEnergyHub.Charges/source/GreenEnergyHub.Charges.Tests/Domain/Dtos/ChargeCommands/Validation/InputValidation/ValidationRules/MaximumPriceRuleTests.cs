@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules;
@@ -78,7 +77,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             var sutRule = new MaximumPriceRule(chargeOperationDto);
             var sutFactory = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
             var actual = sutFactory.Create(
-                new ValidationError(validationRuleIdentifier, triggeredBy),
+                new ValidationError(validationRuleIdentifier, chargeOperationDto.Id, triggeredBy),
                 invalidCommand,
                 chargeOperationDto);
 
@@ -90,14 +89,6 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 .Replace("{{ChargePointPrice}}", expectedPoint.Price.ToString("N"))
                 .Replace("{{ChargePointPosition}}", triggeredBy);
             actual.Should().Be(expected);
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
-        public void OperationId_ShouldBe_EqualTo(ChargeOperationDto chargeOperationDto)
-        {
-            var sut = new MaximumPriceRule(chargeOperationDto);
-            sut.OperationId.Should().Be(chargeOperationDto.Id);
         }
 
         private static ChargeOperationDto CreateChargeOperationDto(ChargeOperationDtoBuilder builder, decimal price)

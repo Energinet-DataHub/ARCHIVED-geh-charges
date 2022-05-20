@@ -57,7 +57,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Doc
 
             // Act
             var rules = await sut.CreateRulesAsync(chargeCommand).ConfigureAwait(false);
-            var actualRuleTypes = rules.GetRules().Select(r => r.GetType()).ToList();
+            var actualRuleTypes = rules.GetRules().Select(r => r.ValidationRule.GetType()).ToList();
             var expectedRuleTypes = expectedRules.Select(r => r.GetType()).ToList();
 
             // Assert
@@ -88,7 +88,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Doc
 
             // Act
             var actual = await sut.CreateRulesAsync(chargeCommand).ConfigureAwait(false);
-            var actualRules = actual.GetRules().Select(r => r.GetType()).ToList();
+            var actualRules = actual.GetRules().Select(r => r.ValidationRule.GetType()).ToList();
 
             // Assert
             Assert.Equal(6, actual.GetRules().Count); // This assert is added to ensure that when the rule set is expanded, the test gets attention as well.

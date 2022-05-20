@@ -58,13 +58,5 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             var sut = new ChangingTariffTaxValueNotAllowedRule(chargeOperationDto, charge);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChangingTariffTaxValueNotAllowed);
         }
-
-        [Theory]
-        [InlineAutoDomainData]
-        public void OperationId_ShouldBe_EqualTo(ChargeOperationDto chargeOperationDto, Charge charge)
-        {
-            var sut = new ChangingTariffTaxValueNotAllowedRule(chargeOperationDto, charge);
-            sut.OperationId.Should().Be(chargeOperationDto.Id);
-        }
     }
 }
