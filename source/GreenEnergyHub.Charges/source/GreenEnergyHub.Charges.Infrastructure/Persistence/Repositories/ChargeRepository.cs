@@ -53,7 +53,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
             charges.AddRange(chargesFoundInLocalContext);
             charges.AddRange(chargesFetchedFromDatabase);
 
-            return new ReadOnlyCollection<Charge>(chargesFoundInLocalContext);
+            return new ReadOnlyCollection<Charge>(charges);
         }
 
         public async Task<Charge?> SingleOrNullAsync(ChargeIdentifier chargeIdentifier)
