@@ -63,11 +63,10 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         {
             ArgumentNullException.ThrowIfNull(commandReceivedEvent);
 
+            var operations = commandReceivedEvent.Command.ChargeOperations.ToArray();
             var operationsToBeRejected = new List<ChargeOperationDto>();
             var rejectionRules = new List<IValidationRuleContainer>();
             var operationsToBeConfirmed = new List<ChargeOperationDto>();
-
-            var operations = commandReceivedEvent.Command.ChargeOperations.ToArray();
 
             for (var i = 0; i < operations.Length; i++)
             {
@@ -78,11 +77,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 if (validationResult.IsFailed)
                 {
                     operationsToBeRejected = operations[i..].ToList();
-                    rejectionRules.AddRange(validationResult.InvalidRules);
-                    rejectionRules.AddRange(operationsToBeRejected.Skip(1)
-                        .Select(_ =>
-                            new OperationValidationRuleContainer(
-                                new PreviousOperationsMustBeValidRule(operation.Id), operation.Id)));
+                    CollectRejectionRules(rejectionRules, validationResult, operationsToBeRejected, operation);
                     break;
                 }
 
@@ -90,11 +85,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 if (validationResult.IsFailed)
                 {
                     operationsToBeRejected = operations[i..].ToList();
-                    rejectionRules.AddRange(validationResult.InvalidRules);
-                    rejectionRules.AddRange(operationsToBeRejected.Skip(1)
-                        .Select(_ =>
-                            new OperationValidationRuleContainer(
-                                new PreviousOperationsMustBeValidRule(operation.Id), operation.Id)));
+                    CollectRejectionRules(rejectionRules, validationResult, operationsToBeRejected, operation);
                     break;
                 }
 
@@ -125,6 +116,19 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             var document = commandReceivedEvent.Command.Document;
             await RejectInvalidOperationsAsync(operationsToBeRejected, document, rejectionRules).ConfigureAwait(false);
             await AcceptValidOperationsAsync(operationsToBeConfirmed, document).ConfigureAwait(false);
+        }
+
+        private static void CollectRejectionRules(
+            List<IValidationRuleContainer> rejectionRules,
+            ValidationResult validationResult,
+            IEnumerable<ChargeOperationDto> operationsToBeRejected,
+            ChargeOperationDto operation)
+        {
+            rejectionRules.AddRange(validationResult.InvalidRules);
+            rejectionRules.AddRange(operationsToBeRejected.Skip(1)
+                .Select(_ =>
+                    new OperationValidationRuleContainer(
+                        new PreviousOperationsMustBeValidRule(operation.Id), operation.Id)));
         }
 
         private async Task RejectInvalidOperationsAsync(
@@ -201,6 +205,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 chargeOperationDto.ChargeId,
                 marketParticipant.Id,
                 chargeOperationDto.Type);
+
             return await _chargeRepository.SingleOrNullAsync(chargeIdentifier).ConfigureAwait(false);
         }
     }
