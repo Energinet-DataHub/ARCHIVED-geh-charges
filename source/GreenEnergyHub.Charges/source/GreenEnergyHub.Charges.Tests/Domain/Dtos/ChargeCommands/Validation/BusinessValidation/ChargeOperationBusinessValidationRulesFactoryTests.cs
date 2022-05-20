@@ -46,23 +46,18 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             Type expectedRule,
             TestMarketParticipant sender,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            [Frozen] Mock<IChargeRepository> repository,
+            [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
             ChargeOperationBusinessValidationRulesFactory sut,
             ChargeOperationDtoBuilder builder)
         {
             // Arrange
             var operation = builder.Build();
-            SetupConfigureRepositoryMock(rulesConfigurationRepository);
-
             Charge? charge = null;
-            repository
-                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
-                .ReturnsAsync(charge);
 
-            marketParticipantRepository
-                .Setup(repo => repo.GetOrNullAsync(It.IsAny<string>()))
-                .ReturnsAsync(sender);
+            SetupConfigureRepositoryMock(rulesConfigurationRepository);
+            SetupMarketParticipantMock(sender, marketParticipantRepository);
+            SetupChargeRepositoryMock(chargeRepository, charge!);
 
             // Act
             var actual = await sut.CreateRulesAsync(operation).ConfigureAwait(false);
@@ -89,8 +84,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             // Arrange
             var chargeOperationDto = new ChargeOperationDtoBuilder().WithChargeType(ChargeType.Fee).Build();
             SetupConfigureRepositoryMock(rulesConfigurationRepository);
-            SetupChargeRepositoryMock(chargeRepository, charge);
             SetupMarketParticipantMock(sender, marketParticipantRepository);
+            SetupChargeRepositoryMock(chargeRepository, charge);
 
             // Act
             var actual = await sut.CreateRulesAsync(chargeOperationDto).ConfigureAwait(false);
@@ -218,18 +213,18 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         private static void SetupMarketParticipantMock(TestMarketParticipant sender, Mock<IMarketParticipantRepository> marketParticipantRepository)
         {
             marketParticipantRepository
-                .Setup(repo => repo.GetOrNullAsync(It.IsAny<string>()))
+                .Setup(repo => repo.SingleAsync(It.IsAny<string>()))
                 .ReturnsAsync(sender);
         }
 
         private static void SetupChargeRepositoryMock(Mock<IChargeRepository> chargeRepository, Charge charge)
         {
             chargeRepository
-                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
+                .Setup(r => r.SingleOrNullAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(charge);
 
             chargeRepository
-                .Setup(r => r.GetAsync(It.IsAny<ChargeIdentifier>()))
+                .Setup(r => r.SingleAsync(It.IsAny<ChargeIdentifier>()))
                 .Returns(Task.FromResult(charge));
         }
     }
