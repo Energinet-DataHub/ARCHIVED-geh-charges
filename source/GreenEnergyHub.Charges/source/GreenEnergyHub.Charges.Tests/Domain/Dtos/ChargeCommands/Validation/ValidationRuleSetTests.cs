@@ -78,7 +78,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation
             var rule = new Mock<IValidationRule>();
             rule.Setup(r => r.IsValid).Returns(!failed);
 
-            return new CommandValidationRuleContainer(rule.Object);
+            return new DocumentValidationRuleContainer(rule.Object);
         }
     }
 }

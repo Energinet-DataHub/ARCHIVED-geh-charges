@@ -50,12 +50,12 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.DocumentV
 
             var rules = new List<IValidationRuleContainer>
             {
-                new CommandValidationRuleContainer(new CommandSenderMustBeAnExistingMarketParticipantRule(sender)),
-                new CommandValidationRuleContainer(new BusinessReasonCodeMustBeUpdateChargeInformationOrChargePricesRule(documentDto)),
-                new CommandValidationRuleContainer(new DocumentTypeMustBeRequestChangeOfPriceListRule(documentDto)),
-                new CommandValidationRuleContainer(new RecipientIsMandatoryTypeValidationRule(documentDto)),
-                new CommandValidationRuleContainer(new SenderIsMandatoryTypeValidationRule(documentDto)),
-                new CommandValidationRuleContainer(new RecipientMustBeDdzRule(documentDto)),
+                new DocumentValidationRuleContainer(new CommandSenderMustBeAnExistingMarketParticipantRule(sender)),
+                new DocumentValidationRuleContainer(new BusinessReasonCodeMustBeUpdateChargeInformationOrChargePricesRule(documentDto)),
+                new DocumentValidationRuleContainer(new DocumentTypeMustBeRequestChangeOfPriceListRule(documentDto)),
+                new DocumentValidationRuleContainer(new RecipientIsMandatoryTypeValidationRule(documentDto)),
+                new DocumentValidationRuleContainer(new SenderIsMandatoryTypeValidationRule(documentDto)),
+                new DocumentValidationRuleContainer(new RecipientMustBeDdzRule(documentDto)),
             };
 
             return rules;

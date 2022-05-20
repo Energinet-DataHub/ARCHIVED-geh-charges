@@ -41,8 +41,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Validation
             var testValidationRule = new TestValidationRule(isValid, ValidationRuleIdentifier.StartDateValidation);
             var rules = new List<IValidationRuleContainer>
             {
-                new CommandValidationRuleContainer(testValidationRule),
-                new CommandValidationRuleContainer(testValidationRule),
+                new DocumentValidationRuleContainer(testValidationRule),
+                new DocumentValidationRuleContainer(testValidationRule),
             };
             var validationRuleSet = ValidationRuleSet.FromRules(rules);
             documentValidationRulesFactory

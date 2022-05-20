@@ -114,7 +114,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             var failedRule = new Mock<IValidationRule>();
             failedRule.Setup(r => r.IsValid).Returns(false);
 
-            return new List<IValidationRuleContainer> { new CommandValidationRuleContainer(failedRule.Object) };
+            return new List<IValidationRuleContainer> { new DocumentValidationRuleContainer(failedRule.Object) };
         }
     }
 }

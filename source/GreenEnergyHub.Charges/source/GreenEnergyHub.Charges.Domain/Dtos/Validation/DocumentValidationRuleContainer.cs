@@ -14,9 +14,9 @@
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 {
-    public class CommandValidationRuleContainer : IValidationRuleContainer
+    public class DocumentValidationRuleContainer : IValidationRuleContainer
     {
-        public CommandValidationRuleContainer(IValidationRule validationRule)
+        public DocumentValidationRuleContainer(IValidationRule validationRule)
         {
             ValidationRule = validationRule;
         }

@@ -62,7 +62,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation
         {
             return new List<IValidationRuleContainer>
             {
-                new CommandValidationRuleContainer(
+                new DocumentValidationRuleContainer(
                     new TestValidationRule(true, ValidationRuleIdentifier.StartDateValidation)),
             };
         }
@@ -71,7 +71,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation
         {
             return new List<IValidationRuleContainer>
             {
-                new CommandValidationRuleContainer(
+                new DocumentValidationRuleContainer(
                     new TestValidationRule(false, ValidationRuleIdentifier.StartDateValidation)),
             };
         }
