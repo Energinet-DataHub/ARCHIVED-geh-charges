@@ -31,18 +31,19 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
             _chargesDatabaseContext = chargesDatabaseContext;
         }
 
-        public async Task<MarketParticipant?> GetOrNullAsync(Guid id)
+        public async Task<MarketParticipant?> SingleOrNullAsync(Guid id)
         {
             return await _chargesDatabaseContext
                 .MarketParticipants
-                .FindAsync(id).ConfigureAwait(false);
+                .SingleOrDefaultAsync(mp => mp.Id == id).ConfigureAwait(false);
         }
 
-        public async Task<MarketParticipant?> GetOrNullAsync(string marketParticipantId)
+        public async Task<MarketParticipant?> SingleOrNullAsync(string marketParticipantId)
         {
             return await _chargesDatabaseContext
                 .MarketParticipants
-                .SingleOrDefaultAsync(mp => mp.MarketParticipantId == marketParticipantId).ConfigureAwait(false);
+                .SingleOrDefaultAsync(mp => mp.MarketParticipantId == marketParticipantId)
+                .ConfigureAwait(false);
         }
 
         public Task<List<MarketParticipant>> GetGridAccessProvidersAsync()
@@ -52,6 +53,22 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
                 .Where(mp => mp.BusinessProcessRole == MarketParticipantRole.GridAccessProvider)
                 .Where(m => m.IsActive)
                 .ToListAsync();
+        }
+
+        public async Task<MarketParticipant> SingleAsync(string marketParticipantId)
+        {
+            return await _chargesDatabaseContext
+                .MarketParticipants
+                .SingleAsync(mp => mp.MarketParticipantId == marketParticipantId)
+                .ConfigureAwait(false);
+        }
+
+        public async Task<MarketParticipant> SingleAsync(Guid id)
+        {
+            return await _chargesDatabaseContext
+                .MarketParticipants
+                .SingleAsync(mp => mp.Id == id)
+                .ConfigureAwait(false);
         }
 
         public async Task<IReadOnlyCollection<MarketParticipant>> GetAsync(IEnumerable<Guid> ids)
@@ -85,15 +102,15 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
 
         public Task<MarketParticipant> GetMeteringPointAdministratorAsync()
         {
-            return GetAsync(MarketParticipantRole.MeteringPointAdministrator);
+            return SingleAsync(MarketParticipantRole.MeteringPointAdministrator);
         }
 
         public Task<MarketParticipant> GetSystemOperatorAsync()
         {
-            return GetAsync(MarketParticipantRole.SystemOperator);
+            return SingleAsync(MarketParticipantRole.SystemOperator);
         }
 
-        private Task<MarketParticipant> GetAsync(MarketParticipantRole marketParticipantRole)
+        private Task<MarketParticipant> SingleAsync(MarketParticipantRole marketParticipantRole)
         {
             return _chargesDatabaseContext
                 .MarketParticipants

@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 
 namespace GreenEnergyHub.Charges.Domain.ChargeLinks
@@ -25,19 +26,28 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
     {
         private readonly IChargeRepository _chargeRepository;
         private readonly IMeteringPointRepository _meteringPointRepository;
+        private readonly IMarketParticipantRepository _marketParticipantRepository;
 
-        public ChargeLinkFactory(IChargeRepository chargeRepository, IMeteringPointRepository meteringPointRepository)
+        public ChargeLinkFactory(
+            IChargeRepository chargeRepository,
+            IMeteringPointRepository meteringPointRepository,
+            IMarketParticipantRepository marketParticipantRepository)
         {
             _chargeRepository = chargeRepository;
             _meteringPointRepository = meteringPointRepository;
+            _marketParticipantRepository = marketParticipantRepository;
         }
 
         public async Task<ChargeLink> CreateAsync(ChargeLinkDto dto)
         {
             ArgumentNullException.ThrowIfNull(dto);
 
-            var chargeIdentifier = new ChargeIdentifier(dto.SenderProvidedChargeId, dto.ChargeOwner, dto.ChargeType);
-            var charge = await _chargeRepository.GetAsync(chargeIdentifier).ConfigureAwait(false);
+            var marketParticipant = await _marketParticipantRepository
+                .SingleAsync(dto.ChargeOwner)
+                .ConfigureAwait(false);
+
+            var chargeIdentifier = new ChargeIdentifier(dto.SenderProvidedChargeId, marketParticipant.Id, dto.ChargeType);
+            var charge = await _chargeRepository.SingleAsync(chargeIdentifier).ConfigureAwait(false);
 
             var meteringPoint = await _meteringPointRepository
                 .GetMeteringPointAsync(dto.MeteringPointId)
