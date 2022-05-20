@@ -26,14 +26,14 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
     {
         [Theory]
         [InlineAutoMoqData]
-        public void IsValid_WhenCalledWithMeteringPoint_ReturnsTrue(Charge charge)
+        public void IsValid_WhenCalledWithCharge_ReturnsTrue(Charge charge)
         {
             var sut = new ChargeMustExistRule(charge);
             sut.IsValid.Should().BeTrue();
         }
 
         [Fact]
-        public void IsValid_WhenCalledWithNullMeteringPoint_ReturnsFalse()
+        public void IsValid_WhenCalledWithNull_ReturnsFalse()
         {
             var sut = new ChargeMustExistRule(null);
             sut.IsValid.Should().BeFalse();
