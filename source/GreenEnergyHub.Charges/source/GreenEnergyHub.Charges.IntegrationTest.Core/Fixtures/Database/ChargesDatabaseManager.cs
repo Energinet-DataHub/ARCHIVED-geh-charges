@@ -31,8 +31,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database
         /// <inheritdoc/>
         public override ChargesDatabaseContext CreateDbContext()
         {
-            var optionsBuilder = new DbContextOptionsBuilder<ChargesDatabaseContext>();
-            var dbContextOptions = optionsBuilder
+            var optionsBuilder = new DbContextOptionsBuilder<ChargesDatabaseContext>()
                 .UseSqlServer(ConnectionString, options => options.UseNodaTime());
 
             return new ChargesDatabaseContext(optionsBuilder.Options);

@@ -49,14 +49,20 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinksDat
             AvailableChargeLinksDataFactory sut)
         {
             // Arrange
-            marketParticipantRepository.Setup(r => r.GetMeteringPointAdministratorAsync()).ReturnsAsync(meteringPointAdministrator);
+            var chargeOwner = new TestMarketParticipant(charge.OwnerId, "ownerId");
+            marketParticipantRepository
+                .Setup(r => r.SingleAsync(It.IsAny<string>()))
+                .ReturnsAsync(chargeOwner);
+            marketParticipantRepository
+                .Setup(r => r.GetMeteringPointAdministratorAsync())
+                .ReturnsAsync(meteringPointAdministrator);
             marketParticipantRepository
                 .Setup(m => m.GetGridAccessProviderAsync(It.IsAny<string>()))
                 .ReturnsAsync(gridAccessProvider);
 
             charge.SetPrivateProperty(c => c.TaxIndicator, true);
             chargeRepository
-                .Setup(r => r.GetAsync(It.IsAny<ChargeIdentifier>()))
+                .Setup(r => r.SingleAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(charge);
 
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
@@ -97,16 +103,20 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinksDat
             AvailableChargeLinksDataFactory sut)
         {
             // Arrange
+            var chargeOwner = new TestMarketParticipant(charge.OwnerId, "ownerId");
+            marketParticipantRepository
+                .Setup(r => r.SingleAsync(It.IsAny<string>()))
+                .ReturnsAsync(chargeOwner);
             marketParticipantRepository
                 .Setup(r => r.GetMeteringPointAdministratorAsync())
                 .ReturnsAsync(meteringPointAdministrator);
             marketParticipantRepository
-                .Setup(m => m.GetGridAccessProviderAsync(It.IsAny<string>()))
+                .Setup(r => r.GetGridAccessProviderAsync(It.IsAny<string>()))
                 .ReturnsAsync(gridAccessProvider);
 
             charge.SetPrivateProperty(c => c.TaxIndicator, false);
             chargeRepository
-                .Setup(r => r.GetAsync(It.IsAny<ChargeIdentifier>()))
+                .Setup(r => r.SingleAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(charge);
 
             // Act
