@@ -31,17 +31,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Validation
             // Arrange
             const string invalidChargeId = "InValidId123";
             const string validChargeId = "ValidId123";
-            var rejectionRules = new List<IValidationRuleContainer>
-            {
-                new DocumentValidationRuleContainer(
-                    new TestValidationRule(false, ValidationRuleIdentifier.RecipientRoleMustBeDdz)),
-                new OperationValidationRuleContainer(
-                    new TestValidationRule(false, ValidationRuleIdentifier.ChargeIdLengthValidation), invalidChargeId),
-                new OperationValidationRuleContainer(
-                    new TestValidationRuleWithExtendedData(
-                        false, ValidationRuleIdentifier.SubsequentBundleOperationsFail, invalidChargeId),
-                    validChargeId),
-            };
+            var rejectionRules = BuildValidationRuleContainers(invalidChargeId, validChargeId);
             var validationResult = ValidationResult.CreateFailure(rejectionRules);
 
             // Act
@@ -61,6 +51,22 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Validation
             actualOperationValidationError.TriggeredBy.Should().BeNull();
             actualExtendedDataValidationError.OperationId.Should().Be(validChargeId);
             actualExtendedDataValidationError.TriggeredBy.Should().Be(invalidChargeId);
+        }
+
+        private static List<IValidationRuleContainer> BuildValidationRuleContainers(string invalidChargeId, string validChargeId)
+        {
+            var rejectionRules = new List<IValidationRuleContainer>
+            {
+                new DocumentValidationRuleContainer(
+                    new TestValidationRule(false, ValidationRuleIdentifier.RecipientRoleMustBeDdz)),
+                new OperationValidationRuleContainer(
+                    new TestValidationRule(false, ValidationRuleIdentifier.ChargeIdLengthValidation), invalidChargeId),
+                new OperationValidationRuleContainer(
+                    new TestValidationRuleWithExtendedData(
+                        false, ValidationRuleIdentifier.SubsequentBundleOperationsFail, invalidChargeId),
+                    validChargeId),
+            };
+            return rejectionRules;
         }
     }
 }
