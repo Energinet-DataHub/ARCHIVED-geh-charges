@@ -110,7 +110,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             var actual = await sut.SingleAsync(key);
 
             // Assert
-            Assert.NotNull(actual);
+            actual.Should().NotBeNull();
         }
 
         [Fact]
