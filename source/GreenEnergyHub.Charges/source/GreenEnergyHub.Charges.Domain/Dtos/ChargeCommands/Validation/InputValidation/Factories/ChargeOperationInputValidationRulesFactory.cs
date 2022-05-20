@@ -29,29 +29,35 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
             return ValidationRuleSet.FromRules(rules);
         }
 
-        private static List<IValidationRule> GetRulesForOperation(ChargeOperationDto chargeOperationDto)
+        private static IList<IValidationRuleContainer> GetRulesForOperation(ChargeOperationDto chargeOperationDto)
         {
-            var rules = new List<IValidationRule>
+            var rules = new List<IValidationRuleContainer>
             {
-                new ChargeDescriptionHasMaximumLengthRule(chargeOperationDto),
-                new ChargeIdLengthValidationRule(chargeOperationDto),
-                new ChargeIdRequiredValidationRule(chargeOperationDto),
-                new ChargeNameHasMaximumLengthRule(chargeOperationDto),
-                new ChargeOperationIdRequiredRule(chargeOperationDto),
-                new ChargeOwnerIsRequiredValidationRule(chargeOperationDto),
-                new ChargePriceMaximumDigitsAndDecimalsRule(chargeOperationDto),
-                new ChargeTypeIsKnownValidationRule(chargeOperationDto),
-                new ChargeTypeTariffPriceCountRule(chargeOperationDto),
-                new MaximumPriceRule(chargeOperationDto),
-                new ResolutionFeeValidationRule(chargeOperationDto),
-                new ResolutionSubscriptionValidationRule(chargeOperationDto),
-                new ResolutionTariffValidationRule(chargeOperationDto),
-                new StartDateTimeRequiredValidationRule(chargeOperationDto),
-                new VatClassificationValidationRule(chargeOperationDto),
-                new TransparentInvoicingIsNotAllowedForFeeValidationRule(chargeOperationDto),
+                CreateRuleContainer(new ChargeDescriptionHasMaximumLengthRule(chargeOperationDto), chargeOperationDto),
+                CreateRuleContainer(new ChargeIdLengthValidationRule(chargeOperationDto), chargeOperationDto),
+                CreateRuleContainer(new ChargeIdRequiredValidationRule(chargeOperationDto), chargeOperationDto),
+                CreateRuleContainer(new ChargeNameHasMaximumLengthRule(chargeOperationDto), chargeOperationDto),
+                CreateRuleContainer(new ChargeOperationIdRequiredRule(chargeOperationDto), chargeOperationDto),
+                CreateRuleContainer(new ChargeOwnerIsRequiredValidationRule(chargeOperationDto), chargeOperationDto),
+                CreateRuleContainer(new ChargePriceMaximumDigitsAndDecimalsRule(chargeOperationDto), chargeOperationDto),
+                CreateRuleContainer(new ChargeTypeIsKnownValidationRule(chargeOperationDto), chargeOperationDto),
+                CreateRuleContainer(new ChargeTypeTariffPriceCountRule(chargeOperationDto), chargeOperationDto),
+                CreateRuleContainer(new MaximumPriceRule(chargeOperationDto), chargeOperationDto),
+                CreateRuleContainer(new ResolutionFeeValidationRule(chargeOperationDto), chargeOperationDto),
+                CreateRuleContainer(new ResolutionSubscriptionValidationRule(chargeOperationDto), chargeOperationDto),
+                CreateRuleContainer(new ResolutionTariffValidationRule(chargeOperationDto), chargeOperationDto),
+                CreateRuleContainer(new StartDateTimeRequiredValidationRule(chargeOperationDto), chargeOperationDto),
+                CreateRuleContainer(new VatClassificationValidationRule(chargeOperationDto), chargeOperationDto),
+                CreateRuleContainer(new TransparentInvoicingIsNotAllowedForFeeValidationRule(chargeOperationDto), chargeOperationDto),
             };
 
             return rules;
+        }
+
+        private static IValidationRuleContainer CreateRuleContainer(
+            IValidationRule validationRule, ChargeOperationDto chargeOperationDto)
+        {
+            return new OperationValidationRuleContainer(validationRule, chargeOperationDto.Id);
         }
     }
 }

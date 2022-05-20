@@ -62,9 +62,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         }
 
         [Theory]
-        [InlineAutoDomainData(ValidationRuleIdentifier.ChargePriceMaximumDigitsAndDecimals)]
+        [InlineAutoDomainData]
         public void TriggeredBy_ShouldCauseCompleteErrorMessages_ToMarketParticipant(
-            ValidationRuleIdentifier validationRuleIdentifier,
             ILoggerFactory loggerFactory,
             CimValidationErrorTextProvider cimValidationErrorTextProvider)
         {
@@ -78,14 +77,13 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             var expectedPoint = chargeOperationDto.Points[0];
             var triggeredBy = expectedPoint.Position.ToString();
 
-            // Act & arrange
             var sutRule = new ChargePriceMaximumDigitsAndDecimalsRule(chargeOperationDto);
+            var validationError =
+                new ValidationError(sutRule.ValidationRuleIdentifier, chargeOperationDto.Id, triggeredBy);
             var sutFactory = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
 
-            var actual = sutFactory.Create(
-                new ValidationError(validationRuleIdentifier, triggeredBy),
-                invalidCommand,
-                chargeOperationDto);
+            // Act
+            var actual = sutFactory.Create(validationError, invalidCommand, chargeOperationDto);
 
             // Assert
             sutRule.IsValid.Should().BeFalse();
@@ -95,14 +93,6 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                             .Replace("{{ChargePointPrice}}", expectedPoint.Price.ToString("N"))
                             .Replace("{{DocumentSenderProvidedChargeId}}", chargeOperationDto.ChargeId);
             actual.Should().Be(expected);
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
-        public void OperationId_ShouldBe_EqualTo(ChargeOperationDto chargeOperationDto)
-        {
-            var sut = new ChargePriceMaximumDigitsAndDecimalsRule(chargeOperationDto);
-            sut.OperationId.Should().Be(chargeOperationDto.Id);
         }
     }
 }

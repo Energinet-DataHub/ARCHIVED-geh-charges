@@ -20,40 +20,40 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 {
     public class ValidationResult
     {
-        private IEnumerable<IValidationRule> _invalidRules = new List<IValidationRule>();
+        private readonly IList<IValidationRuleContainer> _invalidRules = new List<IValidationRuleContainer>();
 
         private ValidationResult()
-            : this(Array.Empty<IValidationRule>())
+            : this(Array.Empty<IValidationRuleContainer>())
         {
         }
 
-        private ValidationResult(IList<IValidationRule> invalidRules)
+        private ValidationResult(IList<IValidationRuleContainer> invalidRules)
         {
             InvalidRules = invalidRules;
         }
 
-        public IEnumerable<IValidationRule> InvalidRules
+        public IList<IValidationRuleContainer> InvalidRules
         {
             get => _invalidRules;
-            private set
+            private init
             {
-                if (value.Any(r => r.IsValid))
+                if (value.Any(r => r.ValidationRule.IsValid))
                 {
-                    throw new ArgumentException("All validation rules must be valid", nameof(InvalidRules));
+                    throw new ArgumentException("All validation rules must be invalid", nameof(InvalidRules));
                 }
 
                 _invalidRules = value;
             }
         }
 
-        public bool IsFailed => InvalidRules.Select(r => !r.IsValid).Any();
+        public bool IsFailed => InvalidRules.Select(r => !r.ValidationRule.IsValid).Any();
 
         public static ValidationResult CreateSuccess()
         {
             return new ValidationResult();
         }
 
-        public static ValidationResult CreateFailure(IList<IValidationRule> invalidRules)
+        public static ValidationResult CreateFailure(IList<IValidationRuleContainer> invalidRules)
         {
             return new ValidationResult(invalidRules.ToArray());
         }

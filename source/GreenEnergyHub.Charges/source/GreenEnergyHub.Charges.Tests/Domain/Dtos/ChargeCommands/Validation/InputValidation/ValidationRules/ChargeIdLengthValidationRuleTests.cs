@@ -50,14 +50,6 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChargeIdLengthValidation);
         }
 
-        [Theory]
-        [InlineAutoDomainData]
-        public void OperationId_ShouldBe_EqualTo(ChargeOperationDto chargeOperationDto)
-        {
-            var sut = new ChargeIdLengthValidationRule(chargeOperationDto);
-            sut.OperationId.Should().Be(chargeOperationDto.Id);
-        }
-
         private static ChargeOperationDto CreateInvalidChargeOperationDto(ChargeOperationDtoBuilder chargeOperationDtoBuilder)
         {
             return chargeOperationDtoBuilder.WithChargeId("this charge id is to long").Build();

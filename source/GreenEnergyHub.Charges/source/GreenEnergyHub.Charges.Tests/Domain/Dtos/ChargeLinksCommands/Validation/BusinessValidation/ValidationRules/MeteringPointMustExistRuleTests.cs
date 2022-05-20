@@ -22,7 +22,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validation.BusinessValidation.ValidationRules
 {
     [UnitTest]
-    public class MeteringPointDoesNotExistRuleTests
+    public class MeteringPointMustExistRuleTests
     {
         [Theory]
         [InlineAutoMoqData]

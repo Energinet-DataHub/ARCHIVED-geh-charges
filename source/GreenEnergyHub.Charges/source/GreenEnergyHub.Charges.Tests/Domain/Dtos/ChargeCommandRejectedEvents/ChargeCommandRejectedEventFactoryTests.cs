@@ -34,14 +34,12 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommandRejectedEvents
         public void CreateEvent_WhenCalledWithValidationResult_CreatesEventWithCorrectFailures(
             [Frozen] Mock<IClock> clock,
             ChargeCommand command,
-            IList<IValidationRule> failedRules,
+            IList<IValidationRuleContainer> failedRules,
             ChargeCommandRejectedEventFactory sut)
         {
             // Arrange
             var currentTime = Instant.FromUtc(2021, 7, 7, 7, 50, 49);
-            clock.Setup(
-                    c => c.GetCurrentInstant())
-                .Returns(currentTime);
+            clock.Setup(c => c.GetCurrentInstant()).Returns(currentTime);
 
             var validationResult = ValidationResult.CreateFailure(failedRules);
 
@@ -55,7 +53,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommandRejectedEvents
             foreach (var failedRule in failedRules)
             {
                 Assert.Contains(
-                    failedRule.ValidationRuleIdentifier,
+                    failedRule.ValidationRule.ValidationRuleIdentifier,
                     result.ValidationErrors.Select(x => x.ValidationRuleIdentifier));
             }
         }

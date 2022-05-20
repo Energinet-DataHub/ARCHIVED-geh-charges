@@ -18,7 +18,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
 {
-    public abstract class ResolutionValidationRule : IValidationRuleForOperation
+    public abstract class ResolutionValidationRule : IValidationRule
     {
         private readonly ChargeOperationDto _chargeOperationDto;
         private readonly ChargeType _chargeType;
@@ -42,7 +42,5 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
             _allowedResolutions.Contains(_chargeOperationDto.Resolution);
 
         public ValidationRuleIdentifier ValidationRuleIdentifier => _validationRuleIdentifier;
-
-        public string OperationId => _chargeOperationDto.Id;
     }
 }
