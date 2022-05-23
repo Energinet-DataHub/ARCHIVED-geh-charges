@@ -22,7 +22,6 @@ using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
-using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
@@ -30,24 +29,21 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
     public class ChargePriceEventHandler : IChargePriceEventHandler
     {
-        private readonly IChargeCommandReceiptService _chargeCommandReceiptService;
         private readonly IInputValidator<ChargeOperationDto> _inputValidator;
         private readonly IBusinessValidator<ChargeOperationDto> _businessValidator;
         private readonly IMarketParticipantRepository _marketParticipantRepository;
         private readonly IChargeRepository _chargeRepository;
-        private readonly ChargeCommandReceiptsForOperations _chargeCommandReceiptsForOperations;
+        private readonly IChargeCommandReceiptsForOperations _chargeCommandReceiptsForOperations;
         private readonly IUnitOfWork _unitOfWork;
 
         public ChargePriceEventHandler(
-            IChargeCommandReceiptService chargeCommandReceiptService,
             IInputValidator<ChargeOperationDto> inputValidator,
             IBusinessValidator<ChargeOperationDto> businessValidator,
             IMarketParticipantRepository marketParticipantRepository,
             IChargeRepository chargeRepository,
-            ChargeCommandReceiptsForOperations chargeCommandReceiptsForOperations,
+            IChargeCommandReceiptsForOperations chargeCommandReceiptsForOperations,
             IUnitOfWork unitOfWork)
         {
-            _chargeCommandReceiptService = chargeCommandReceiptService;
             _inputValidator = inputValidator;
             _businessValidator = businessValidator;
             _marketParticipantRepository = marketParticipantRepository;

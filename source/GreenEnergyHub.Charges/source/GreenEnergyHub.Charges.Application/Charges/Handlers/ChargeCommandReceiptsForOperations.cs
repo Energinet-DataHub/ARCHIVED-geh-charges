@@ -22,7 +22,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
-    public class ChargeCommandReceiptsForOperations
+    public class ChargeCommandReceiptsForOperations : IChargeCommandReceiptsForOperations
     {
         private readonly IChargeCommandReceiptService _chargeCommandReceiptService;
 

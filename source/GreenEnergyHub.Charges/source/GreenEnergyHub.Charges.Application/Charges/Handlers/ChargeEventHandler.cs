@@ -22,7 +22,6 @@ using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
-using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
@@ -30,7 +29,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
     public class ChargeEventHandler : IChargeEventHandler
     {
-        private readonly IChargeCommandReceiptService _chargeCommandReceiptService;
         private readonly IInputValidator<ChargeOperationDto> _inputValidator;
         private readonly IBusinessValidator<ChargeOperationDto> _businessValidator;
         private readonly IChargeRepository _chargeRepository;
@@ -38,7 +36,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         private readonly IChargeFactory _chargeFactory;
         private readonly IChargePeriodFactory _chargePeriodFactory;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly ChargeCommandReceiptsForOperations _chargeCommandReceiptsForOperations;
+        private readonly IChargeCommandReceiptsForOperations _chargeCommandReceiptsForOperations;
 
         public ChargeEventHandler(
             IChargeCommandReceiptService chargeCommandReceiptService,
@@ -51,7 +49,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             IUnitOfWork unitOfWork,
             ChargeCommandReceiptsForOperations chargeCommandReceiptsForOperations)
         {
-            _chargeCommandReceiptService = chargeCommandReceiptService;
             _inputValidator = inputValidator;
             _businessValidator = businessValidator;
             _chargeRepository = chargeRepository;
