@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         public async Task RejectInvalidOperationsAsync(
             IReadOnlyCollection<ChargeOperationDto> operationsToBeRejected,
             DocumentDto document,
-            IList<IValidationRule> rejectionRules)
+            IList<IValidationRuleContainer> rejectionRules)
         {
             if (operationsToBeRejected.Any())
             {

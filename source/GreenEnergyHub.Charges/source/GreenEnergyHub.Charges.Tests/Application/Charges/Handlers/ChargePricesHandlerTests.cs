@@ -167,8 +167,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
              var charge = chargeBuilder.Build();
              SetupChargeRepository(chargeRepository, charge);
              SetupMarketParticipantRepository(marketParticipantRepository, sender);
-             var invalidValidationResult = ValidationResult.CreateFailure(new List<IValidationRule>
-                 { new TestValidationRule(false, ValidationRuleIdentifier.StartDateValidation) });
+
+             var invalidValidationResult = ValidationResult.CreateFailure(
+                 new List<IValidationRuleContainer>
+                 {
+                     new DocumentValidationRuleContainer(
+                         new TestValidationRule(false, ValidationRuleIdentifier.StartDateValidation)),
+                 });
+
              SetupValidatorsForOperation(documentValidator, inputValidator, businessValidator, invalidValidationResult);
 
              var accepted = 0;
@@ -187,9 +193,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 
              var validationRules = validationResultsArgs.Single().InvalidRules.ToList();
              var invalid = validationRules.Where(vr =>
-                 vr.ValidationRuleIdentifier == ValidationRuleIdentifier.StartDateValidation);
+                 vr.ValidationRule.ValidationRuleIdentifier == ValidationRuleIdentifier.StartDateValidation);
              var subsequent = validationRules.Where(vr =>
-                 vr.ValidationRuleIdentifier == ValidationRuleIdentifier.SubsequentBundleOperationsFail);
+                 vr.ValidationRule.ValidationRuleIdentifier == ValidationRuleIdentifier.SubsequentBundleOperationsFail);
 
              validationRules.Count.Should().Be(3);
              invalid.Count().Should().Be(1);
@@ -284,7 +290,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             var failedRule = new Mock<IValidationRule>();
             failedRule.Setup(r => r.IsValid).Returns(false);
 
-            return ValidationResult.CreateFailure(new List<IValidationRule> { failedRule.Object });
+            return ValidationResult.CreateFailure(
+                new List<IValidationRuleContainer> { new DocumentValidationRuleContainer(failedRule.Object) });
         }
 
         private static ChargeCommand CreateChargeCommandWith24Points()
