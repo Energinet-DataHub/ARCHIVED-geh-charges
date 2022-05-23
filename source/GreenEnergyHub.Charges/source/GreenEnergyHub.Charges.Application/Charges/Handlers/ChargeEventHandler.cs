@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
@@ -35,7 +36,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         private readonly IChargeFactory _chargeFactory;
         private readonly IChargePeriodFactory _chargePeriodFactory;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IChargeCommandReceiptsForOperations _chargeCommandReceiptsForOperations;
+        private readonly IChargeCommandReceiptService _chargeCommandReceiptService;
 
         public ChargeEventHandler(
             IInputValidator<ChargeOperationDto> inputValidator,
@@ -45,7 +46,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             IChargeFactory chargeFactory,
             IChargePeriodFactory chargePeriodFactory,
             IUnitOfWork unitOfWork,
-            ChargeCommandReceiptsForOperations chargeCommandReceiptsForOperations)
+            IChargeCommandReceiptService chargeCommandReceiptService)
         {
             _inputValidator = inputValidator;
             _businessValidator = businessValidator;
@@ -54,7 +55,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             _chargeFactory = chargeFactory;
             _chargePeriodFactory = chargePeriodFactory;
             _unitOfWork = unitOfWork;
-            _chargeCommandReceiptsForOperations = chargeCommandReceiptsForOperations;
+            _chargeCommandReceiptService = chargeCommandReceiptService;
         }
 
         public async Task HandleAsync(ChargeCommandReceivedEvent commandReceivedEvent)
@@ -121,8 +122,9 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
 
             var document = commandReceivedEvent.Command.Document;
-            await _chargeCommandReceiptsForOperations.RejectInvalidOperationsAsync(operationsToBeRejected, document, rejectionRules).ConfigureAwait(false);
-            await _chargeCommandReceiptsForOperations.AcceptValidOperationsAsync(operationsToBeConfirmed, document).ConfigureAwait(false);
+            var chargeCommandReceiptsForOperations = new ChargeCommandReceiptsForOperations(_chargeCommandReceiptService);
+            await chargeCommandReceiptsForOperations.RejectInvalidOperationsAsync(operationsToBeRejected, document, rejectionRules).ConfigureAwait(false);
+            await chargeCommandReceiptsForOperations.AcceptValidOperationsAsync(operationsToBeConfirmed, document).ConfigureAwait(false);
         }
 
         private async Task HandleCreateEventAsync(ChargeOperationDto chargeOperationDto)
