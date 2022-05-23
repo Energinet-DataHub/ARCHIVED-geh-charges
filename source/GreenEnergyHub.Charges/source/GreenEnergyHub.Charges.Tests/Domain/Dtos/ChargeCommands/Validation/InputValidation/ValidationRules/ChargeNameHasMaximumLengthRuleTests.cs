@@ -53,13 +53,5 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             var sut = new ChargeNameHasMaximumLengthRule(chargeOperationDto);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChargeNameHasMaximumLength);
         }
-
-        [Theory]
-        [InlineAutoDomainData]
-        public void OperationId_ShouldBe_EqualTo(ChargeOperationDto chargeOperationDto)
-        {
-            var sut = new ChargeNameHasMaximumLengthRule(chargeOperationDto);
-            sut.OperationId.Should().Be(chargeOperationDto.Id);
-        }
     }
 }

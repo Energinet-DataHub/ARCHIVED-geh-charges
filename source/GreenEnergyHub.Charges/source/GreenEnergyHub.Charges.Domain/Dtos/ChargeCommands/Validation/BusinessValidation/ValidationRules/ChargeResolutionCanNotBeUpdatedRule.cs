@@ -17,7 +17,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules
 {
-    public class ChargeResolutionCanNotBeUpdatedRule : IValidationRuleForOperation
+    public class ChargeResolutionCanNotBeUpdatedRule : IValidationRule
     {
         private readonly Charge _existingCharge;
         private readonly ChargeOperationDto _chargeOperationDto;
@@ -32,7 +32,5 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.ChargeResolutionCanNotBeUpdated;
-
-        public string OperationId => _chargeOperationDto.Id;
     }
 }

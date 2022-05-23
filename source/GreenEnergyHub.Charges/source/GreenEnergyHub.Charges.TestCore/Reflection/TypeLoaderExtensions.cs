@@ -12,16 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+
+namespace GreenEnergyHub.Charges.TestCore.Reflection
 {
-    /// <summary>
-    /// Interface for validationrules for an operation
-    /// </summary>
-    public interface IValidationRuleForOperation : IValidationRule
+    public static class TypeLoaderExtensions
     {
-        /// <summary>
-        /// Id of an operation that violated a validation rule
-        /// </summary>
-        public string OperationId { get; }
+        public static IEnumerable<Type?> GetLoadableTypes(this Assembly? assembly)
+        {
+            if (assembly == null) ArgumentNullException.ThrowIfNull(assembly);
+
+            try
+            {
+                return assembly.GetTypes();
+            }
+            catch (ReflectionTypeLoadException e)
+            {
+                return e.Types.Where(t => t != null);
+            }
+        }
     }
 }

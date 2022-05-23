@@ -13,10 +13,10 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
+using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.BusinessValidation.Factories;
@@ -44,18 +44,17 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
             ChargeLinkDtoBuilder builder)
         {
             // Arrange
-            var chargeLinkDto = builder.Build();
-
             MeteringPoint? meteringPoint = null;
+            var chargeLinkDto = builder.Build();
             SetupMeteringPointRepositoryMock(repository, chargeLinkDto, meteringPoint);
 
             // Act
             var actual = await sut.CreateRulesAsync(chargeLinkDto).ConfigureAwait(false);
-            var actualRules = actual.GetRules().Select(r => r.GetType());
+            var actualRules = actual.GetRules().Select(r => r.ValidationRule.GetType());
 
             // Assert
-            Assert.Equal(1, actual.GetRules().Count);
-            Assert.Contains(expectedRule, actualRules);
+            actual.GetRules().Count.Should().Be(1);
+            actualRules.Should().Contain(expectedRule);
         }
 
         [Theory]
@@ -71,7 +70,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
             ChargeLinkDtoBuilder linksBuilder)
         {
             // Arrange
-            var link = linksBuilder.Build();
+            var link = linksBuilder.WithMeteringPointId(meteringPoint.MeteringPointId).Build();
             Charge? charge = null;
             SetupMarketParticipantRepositoryMock(marketParticipantRepository, sender);
             SetupChargeRepositoryMock(chargeRepository, charge);
@@ -79,11 +78,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
 
             // Act
             var actual = await sut.CreateRulesAsync(link).ConfigureAwait(false);
-            var actualRules = actual.GetRules().Select(r => r.GetType());
+            var actualRules = actual.GetRules().Select(r => r.ValidationRule.GetType());
 
             // Assert
-            Assert.Equal(2, actual.GetRules().Count);
-            Assert.Contains(expectedRule, actualRules);
+            actual.GetRules().Count.Should().Be(2);
+            actualRules.Should().Contain(expectedRule);
         }
 
         [Theory]
@@ -108,7 +107,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
 
             // Act
             var actual = await sut.CreateRulesAsync(link).ConfigureAwait(false);
-            var actualRules = actual.GetRules().Select(r => r.GetType());
+            var actualRules = actual.GetRules().Select(r => r.ValidationRule.GetType());
 
             // Assert
             Assert.Equal(3, actual.GetRules().Count);
