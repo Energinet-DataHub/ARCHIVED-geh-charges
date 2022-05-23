@@ -16,7 +16,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
@@ -39,7 +38,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         private readonly IChargeCommandReceiptsForOperations _chargeCommandReceiptsForOperations;
 
         public ChargeEventHandler(
-            IChargeCommandReceiptService chargeCommandReceiptService,
             IInputValidator<ChargeOperationDto> inputValidator,
             IBusinessValidator<ChargeOperationDto> businessValidator,
             IChargeRepository chargeRepository,

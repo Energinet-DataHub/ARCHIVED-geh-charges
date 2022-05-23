@@ -16,7 +16,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
@@ -41,8 +40,8 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             IBusinessValidator<ChargeOperationDto> businessValidator,
             IMarketParticipantRepository marketParticipantRepository,
             IChargeRepository chargeRepository,
-            IChargeCommandReceiptsForOperations chargeCommandReceiptsForOperations,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            ChargeCommandReceiptsForOperations chargeCommandReceiptsForOperations)
         {
             _inputValidator = inputValidator;
             _businessValidator = businessValidator;
