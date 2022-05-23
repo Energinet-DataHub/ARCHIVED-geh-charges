@@ -14,14 +14,18 @@
 
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
-namespace GreenEnergyHub.Charges.Application.ChargeCommands.Acknowledgement
+namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
-    public interface IChargeCommandReceiptService
+    /// <summary>
+    /// Contract for handling a charge bundle.
+    /// </summary>
+    public interface IChargesBundleHandler
     {
-        Task RejectAsync(ChargeCommand command, ValidationResult validationResult);
-
-        Task AcceptAsync(ChargeCommand command);
+        /// <summary>
+        /// Synchronously handle the bundle.
+        /// </summary>
+        /// <param name="bundle">Charges bundle</param>
+        Task HandleAsync(ChargeCommandBundle bundle);
     }
 }

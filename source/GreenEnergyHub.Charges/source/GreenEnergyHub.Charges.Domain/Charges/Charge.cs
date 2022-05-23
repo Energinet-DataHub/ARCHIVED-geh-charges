@@ -149,16 +149,22 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 
         public void UpdatePrices(Instant startDate, Instant? endDate, IReadOnlyList<Point> newPrices)
         {
-            ArgumentNullException.ThrowIfNull(endDate);
             ArgumentNullException.ThrowIfNull(newPrices);
             if (newPrices.Count == 0) return;
+            RemoveExistingChargePrices(startDate, endDate);
+            _points.AddRange(newPrices);
+        }
+
+        private void RemoveExistingChargePrices(
+            Instant startDate,
+            Instant? endDate)
+        {
+            ArgumentNullException.ThrowIfNull(endDate);
             var removePoints = _points.Where(x => x.Time >= startDate && x.Time <= endDate).ToList();
             if (removePoints.Count > 0)
             {
                 _points.RemoveAll(x => removePoints.Contains(x));
             }
-
-            _points.AddRange(newPrices);
         }
 
         private void StopExistingPeriod(Instant stopDate)

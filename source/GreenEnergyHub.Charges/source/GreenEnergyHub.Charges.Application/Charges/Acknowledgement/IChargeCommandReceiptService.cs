@@ -12,22 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Transactions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
-namespace GreenEnergyHub.Charges.Application.ChargeCommands.Handlers
+namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
 {
-    /// <summary>
-    /// Contract for handling a change of charges message.
-    /// </summary>
-    public interface IChargeCommandHandler
+    public interface IChargeCommandReceiptService
     {
-        /// <summary>
-        /// Synchronously handle the message.
-        /// Supports <see cref="TransactionScope"/>.
-        /// </summary>
-        /// <param name="command">ChargeCommand</param>
-        Task HandleAsync(ChargeCommand command);
+        Task RejectAsync(ChargeCommand command, ValidationResult validationResult);
+
+        Task AcceptAsync(ChargeCommand command);
     }
 }

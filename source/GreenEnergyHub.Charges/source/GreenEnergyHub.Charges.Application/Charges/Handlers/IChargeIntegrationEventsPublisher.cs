@@ -15,7 +15,7 @@
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 
-namespace GreenEnergyHub.Charges.Application.ChargeCommands.Handlers
+namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
     public interface IChargeIntegrationEventsPublisher
     {

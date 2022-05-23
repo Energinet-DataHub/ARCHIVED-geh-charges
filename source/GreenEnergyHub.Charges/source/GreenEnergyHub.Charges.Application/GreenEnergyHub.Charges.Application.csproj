@@ -27,7 +27,6 @@ limitations under the License.
   <ItemGroup>
     <ProjectReference Include="..\GreenEnergyHub.Charges.Core\GreenEnergyHub.Charges.Core.csproj" />
     <ProjectReference Include="..\GreenEnergyHub.Charges.Domain\GreenEnergyHub.Charges.Domain.csproj" />
-    <ProjectReference Include="..\GreenEnergyHub.Charges.TestCore\GreenEnergyHub.Charges.TestCore.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -49,6 +48,11 @@ limitations under the License.
     <Compile Include="..\..\..\Contracts\ErrorCode.cs">
       <Link>ChargeLinks\CreateDefaultChargeLinkReplier\ErrorCode.cs</Link>
     </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ChargeCommands\Acknowledgement" />
+    <Folder Include="ChargeCommands\Handlers" />
   </ItemGroup>
 
 </Project>
