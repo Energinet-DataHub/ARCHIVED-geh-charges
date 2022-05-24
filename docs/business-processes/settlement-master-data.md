@@ -13,18 +13,19 @@ The following sequence diagram shows the exchange of messages in this process.
 
 ![SettlmentMasterData](images/SettlementMasterData_SequenceDiagram.png)
 
-### Charge links created upon metering point creation
-
-When a Grid Access Provider uses this [process](https://github.com/Energinet-DataHub/geh-metering-point/blob/main/docs/business-processes/create-metering-point.md) to create a new metering point, Green Energy Hub will, given certain metering point types, create one or more charge links. Often referred to as default charge links. Such links consists of relevant taxes (tariffs marked as tax) and TSO tariffs.
-When default charge links are created, the current energy supplier on the metering point receives a notification per charge link.
-From this point on, it is the current energy supplier's responsibility to maintain these default charge links, in accordance with the conditions for collection for the specific metering point
-
-Green Energy Hub fowards accepted charge links to the relevant energy suppliers*, and grid access provider should charge link concern a tariff marked as tax.
+Green Energy Hub fowards accepted all charge links to the relevant energy suppliers* as well as the grid access provider, should the charge link concern a tariff marked as tax.
 
 <u>*Relevant energy suppliers:</u>
 
-* Subscription/Tariff link: Notification sent to the energy supplier registered on the metering point on effective date and any future energy suppliers registered on the metering point.
+* Subscription/Tariff link: Notification is sent to the energy supplier registered on the metering point on effective date and any future energy suppliers registered on the metering point.
 
 * Fee link: Notification is only sent to the energy supplier registered on the metering point on the effective date.
+
+### Charge links created upon metering point creation
+
+When a Grid Access Provider uses this [process](https://github.com/Energinet-DataHub/geh-metering-point/blob/main/docs/business-processes/create-metering-point.md) to create a new metering point, Green Energy Hub will for certain types of metering points, on behalf of TSO, create one or more charge links. Often referred to as default charge links. Such links consists of relevant taxes (tariffs marked as tax) and TSO tariffs.
+Should any of the default charge links concern a tariff marked as tax, the grid access provider receives a notification per link.
+
+It is always the current energy supplier's responsibility to maintain the tax charge links on a metering point, in accordance with the conditions for collection for the specific metering point
 
 For further details on how a Charge Links are processed within the system, please see the [charge link flow](../process-flows/README.md/#charge-link-flow).
