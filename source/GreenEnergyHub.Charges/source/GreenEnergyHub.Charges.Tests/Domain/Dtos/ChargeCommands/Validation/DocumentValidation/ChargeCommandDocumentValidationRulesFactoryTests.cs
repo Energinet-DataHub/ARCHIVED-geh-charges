@@ -42,7 +42,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Doc
         {
             // Arrange
             marketParticipantRepository
-                .Setup(r => r.GetOrNullAsync(It.IsAny<string>()))
+                .Setup(r => r.SingleOrNullAsync(It.IsAny<string>()))
                 .ReturnsAsync(sender);
             var chargeCommand = new ChargeCommandBuilder().Build();
             var expectedRules = new List<IValidationRule>
@@ -57,7 +57,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Doc
 
             // Act
             var rules = await sut.CreateRulesAsync(chargeCommand).ConfigureAwait(false);
-            var actualRuleTypes = rules.GetRules().Select(r => r.GetType()).ToList();
+            var actualRuleTypes = rules.GetRules().Select(r => r.ValidationRule.GetType()).ToList();
             var expectedRuleTypes = expectedRules.Select(r => r.GetType()).ToList();
 
             // Assert
@@ -77,18 +77,18 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Doc
             var chargeOperationDto = new ChargeOperationDtoBuilder().WithChargeType(ChargeType.Fee).Build();
             var chargeCommand = new ChargeCommandBuilder().WithChargeOperation(chargeOperationDto).Build();
             chargeRepository
-                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
+                .Setup(r => r.SingleOrNullAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(charge);
             chargeRepository
-                .Setup(r => r.GetAsync(It.IsAny<ChargeIdentifier>()))
+                .Setup(r => r.SingleAsync(It.IsAny<ChargeIdentifier>()))
                 .Returns(Task.FromResult(charge));
             marketParticipantRepository
-                .Setup(repo => repo.GetOrNullAsync(It.IsAny<string>()))
+                .Setup(repo => repo.SingleOrNullAsync(It.IsAny<string>()))
                 .ReturnsAsync(sender);
 
             // Act
             var actual = await sut.CreateRulesAsync(chargeCommand).ConfigureAwait(false);
-            var actualRules = actual.GetRules().Select(r => r.GetType()).ToList();
+            var actualRules = actual.GetRules().Select(r => r.ValidationRule.GetType()).ToList();
 
             // Assert
             Assert.Equal(6, actual.GetRules().Count); // This assert is added to ensure that when the rule set is expanded, the test gets attention as well.

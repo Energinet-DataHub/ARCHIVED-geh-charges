@@ -24,6 +24,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
@@ -33,6 +34,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         private readonly IInputValidator<ChargeOperationDto> _inputValidator;
         private readonly IBusinessValidator<ChargeOperationDto> _businessValidator;
         private readonly IChargeRepository _chargeRepository;
+        private readonly IMarketParticipantRepository _marketParticipantRepository;
         private readonly IChargeFactory _chargeFactory;
         private readonly IChargePeriodFactory _chargePeriodFactory;
         private readonly IUnitOfWork _unitOfWork;
@@ -42,6 +44,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             IInputValidator<ChargeOperationDto> inputValidator,
             IBusinessValidator<ChargeOperationDto> businessValidator,
             IChargeRepository chargeRepository,
+            IMarketParticipantRepository marketParticipantRepository,
             IChargeFactory chargeFactory,
             IChargePeriodFactory chargePeriodFactory,
             IUnitOfWork unitOfWork)
@@ -50,6 +53,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             _inputValidator = inputValidator;
             _businessValidator = businessValidator;
             _chargeRepository = chargeRepository;
+            _marketParticipantRepository = marketParticipantRepository;
             _chargeFactory = chargeFactory;
             _chargePeriodFactory = chargePeriodFactory;
             _unitOfWork = unitOfWork;
@@ -60,7 +64,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             ArgumentNullException.ThrowIfNull(commandReceivedEvent);
 
             var operationsToBeRejected = new List<ChargeOperationDto>();
-            var rejectionRules = new List<IValidationRule>();
+            var rejectionRules = new List<IValidationRuleContainer>();
             var operationsToBeConfirmed = new List<ChargeOperationDto>();
 
             var operations = commandReceivedEvent.Command.ChargeOperations.ToArray();
@@ -76,7 +80,9 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                     operationsToBeRejected = operations[i..].ToList();
                     rejectionRules.AddRange(validationResult.InvalidRules);
                     rejectionRules.AddRange(operationsToBeRejected.Skip(1)
-                        .Select(toBeRejected => new PreviousOperationsMustBeValidRule(operation.Id, toBeRejected)));
+                        .Select(_ =>
+                            new OperationValidationRuleContainer(
+                                new PreviousOperationsMustBeValidRule(operation.Id), operation.Id)));
                     break;
                 }
 
@@ -86,22 +92,17 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                     operationsToBeRejected = operations[i..].ToList();
                     rejectionRules.AddRange(validationResult.InvalidRules);
                     rejectionRules.AddRange(operationsToBeRejected.Skip(1)
-                        .Select(toBeRejected => new PreviousOperationsMustBeValidRule(operation.Id, toBeRejected)));
+                        .Select(_ =>
+                            new OperationValidationRuleContainer(
+                                new PreviousOperationsMustBeValidRule(operation.Id), operation.Id)));
                     break;
                 }
 
                 var operationType = GetOperationType(operation, charge);
                 switch (operationType)
                 {
-                    /*
-                     * In order to fix issue 1276, the create operation is allowed to violate the unit of work pattern.
-                     * This is done to ensure the next operations in the bundle will be processed correctly.
-                     * Do note that the ChargeCommandReceivedEventHandler is currently being refactored. So this is
-                     * considered a short-sighted solution.
-                     */
                     case OperationType.Create:
                         await HandleCreateEventAsync(operation).ConfigureAwait(false);
-                        await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                         break;
                     case OperationType.Update:
                         HandleUpdateEvent(charge!, operation);
@@ -129,7 +130,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         private async Task RejectInvalidOperationsAsync(
             IReadOnlyCollection<ChargeOperationDto> operationsToBeRejected,
             DocumentDto document,
-            IList<IValidationRule> rejectionRules)
+            IList<IValidationRuleContainer> rejectionRules)
         {
             if (operationsToBeRejected.Any())
             {
@@ -192,11 +193,15 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 
         private async Task<Charge?> GetChargeAsync(ChargeOperationDto chargeOperationDto)
         {
+            var marketParticipant = await _marketParticipantRepository
+                .SingleAsync(chargeOperationDto.ChargeOwner)
+                .ConfigureAwait(false);
+
             var chargeIdentifier = new ChargeIdentifier(
                 chargeOperationDto.ChargeId,
-                chargeOperationDto.ChargeOwner,
+                marketParticipant.Id,
                 chargeOperationDto.Type);
-            return await _chargeRepository.GetOrNullAsync(chargeIdentifier).ConfigureAwait(false);
+            return await _chargeRepository.SingleOrNullAsync(chargeIdentifier).ConfigureAwait(false);
         }
     }
 }

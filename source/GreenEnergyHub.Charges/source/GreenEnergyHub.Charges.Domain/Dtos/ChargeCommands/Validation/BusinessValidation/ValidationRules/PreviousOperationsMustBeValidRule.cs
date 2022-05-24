@@ -18,11 +18,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
 {
     public class PreviousOperationsMustBeValidRule : IValidationRuleWithExtendedData
     {
-        private readonly ChargeOperationDto _chargeOperationDto;
-
-        public PreviousOperationsMustBeValidRule(string triggeredBy, ChargeOperationDto chargeOperationDto)
+        public PreviousOperationsMustBeValidRule(string triggeredBy)
         {
-            _chargeOperationDto = chargeOperationDto;
             TriggeredBy = triggeredBy;
         }
 
@@ -30,8 +27,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.SubsequentBundleOperationsFail;
-
-        public string OperationId => _chargeOperationDto.Id;
 
         /// <summary>
         /// This property will tell which previous failed operation that triggered this rule,

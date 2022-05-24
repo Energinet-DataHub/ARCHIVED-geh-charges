@@ -18,6 +18,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
+using FluentAssertions;
 using GreenEnergyHub.Charges.Core;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
@@ -46,31 +47,26 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             Type expectedRule,
             TestMarketParticipant sender,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            [Frozen] Mock<IChargeRepository> repository,
+            [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
             ChargeOperationBusinessValidationRulesFactory sut,
             ChargeOperationDtoBuilder builder)
         {
             // Arrange
             var operation = builder.Build();
-            SetupConfigureRepositoryMock(rulesConfigurationRepository);
-
             Charge? charge = null;
-            repository
-                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
-                .ReturnsAsync(charge);
 
-            marketParticipantRepository
-                .Setup(repo => repo.GetOrNullAsync(It.IsAny<string>()))
-                .ReturnsAsync(sender);
+            SetupConfigureRepositoryMock(rulesConfigurationRepository);
+            SetupMarketParticipantMock(sender, marketParticipantRepository);
+            SetupChargeRepositoryMock(chargeRepository, charge!);
 
             // Act
             var actual = await sut.CreateRulesAsync(operation).ConfigureAwait(false);
-            var actualRules = actual.GetRules().Select(r => r.GetType());
+            var actualRules = actual.GetRules().Select(r => r.ValidationRule.GetType());
 
             // Assert
-            Assert.Equal(1, actual.GetRules().Count); // This assert is added to ensure that when the rule set is expanded, the test gets attention as well.
-            Assert.Contains(expectedRule, actualRules);
+            actual.GetRules().Count.Should().Be(1); // This assert is added to ensure that when the rule set is expanded, the test gets attention as well.
+            actualRules.Should().Contain(expectedRule);
         }
 
         [Theory]
@@ -89,12 +85,12 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             // Arrange
             var chargeOperationDto = new ChargeOperationDtoBuilder().WithChargeType(ChargeType.Fee).Build();
             SetupConfigureRepositoryMock(rulesConfigurationRepository);
-            SetupChargeRepositoryMock(chargeRepository, charge);
             SetupMarketParticipantMock(sender, marketParticipantRepository);
+            SetupChargeRepositoryMock(chargeRepository, charge);
 
             // Act
             var actual = await sut.CreateRulesAsync(chargeOperationDto).ConfigureAwait(false);
-            var actualRules = actual.GetRules().Select(r => r.GetType());
+            var actualRules = actual.GetRules().Select(r => r.ValidationRule.GetType());
 
             // Assert
             Assert.Equal(3, actual.GetRules().Count); // This assert is added to ensure that when the rule set is expanded, the test gets attention as well.
@@ -125,7 +121,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             var actual = await sut.CreateRulesAsync(chargeOperationDto).ConfigureAwait(false);
 
             // Assert
-            var actualRules = actual.GetRules().Select(r => r.GetType());
+            var actualRules = actual.GetRules().Select(r => r.ValidationRule.GetType());
             Assert.Equal(4, actual.GetRules().Count); // This assert is added to ensure that when the rule set is expanded, the test gets attention as well.
             Assert.Contains(expectedRule, actualRules);
         }
@@ -163,7 +159,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             SetupMarketParticipantMock(sender, marketParticipantRepository);
 
             // Act
-            var validationRules = new List<IValidationRule>();
+            var validationRules = new List<IValidationRuleContainer>();
             foreach (var operation in chargeCommand.ChargeOperations)
             {
                 validationRules.AddRange((await sut.CreateRulesAsync(operation)).GetRules().ToList());
@@ -176,7 +172,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
 
         private static void AssertAllRulesThatNeedTriggeredByForErrorMessageImplementsIValidationRuleWithExtendedData(
             CimValidationErrorTextToken cimValidationErrorTextToken,
-            IReadOnlyCollection<IValidationRule> validationRules)
+            IReadOnlyCollection<IValidationRuleContainer> validationRules)
         {
             var type = typeof(CimValidationErrorTextTemplateMessages);
             foreach (var fieldInfo in type.GetFields(BindingFlags.Static | BindingFlags.Public))
@@ -189,11 +185,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
                 var validationRuleIdentifier = errorMessageForAttribute.ValidationRuleIdentifier;
                 var errorText = fieldInfo.GetValue(null)!.ToString();
                 var validationErrorTextTokens = CimValidationErrorTextTokenMatcher.GetTokens(errorText!);
-                var validationRule = validationRules
-                    .FirstOrDefault(x => x.ValidationRuleIdentifier == validationRuleIdentifier);
+                var validationRuleContainer = validationRules
+                    .FirstOrDefault(x => x.ValidationRule.ValidationRuleIdentifier == validationRuleIdentifier);
 
-                if (validationErrorTextTokens.Contains(cimValidationErrorTextToken) && validationRule != null)
-                    Assert.True(validationRule is IValidationRuleWithExtendedData);
+                if (validationErrorTextTokens.Contains(cimValidationErrorTextToken) && validationRuleContainer != null)
+                    Assert.True(validationRuleContainer.ValidationRule is IValidationRuleWithExtendedData);
             }
         }
 
@@ -218,18 +214,18 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         private static void SetupMarketParticipantMock(TestMarketParticipant sender, Mock<IMarketParticipantRepository> marketParticipantRepository)
         {
             marketParticipantRepository
-                .Setup(repo => repo.GetOrNullAsync(It.IsAny<string>()))
+                .Setup(repo => repo.SingleAsync(It.IsAny<string>()))
                 .ReturnsAsync(sender);
         }
 
         private static void SetupChargeRepositoryMock(Mock<IChargeRepository> chargeRepository, Charge charge)
         {
             chargeRepository
-                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
+                .Setup(r => r.SingleOrNullAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(charge);
 
             chargeRepository
-                .Setup(r => r.GetAsync(It.IsAny<ChargeIdentifier>()))
+                .Setup(r => r.SingleAsync(It.IsAny<ChargeIdentifier>()))
                 .Returns(Task.FromResult(charge));
         }
     }

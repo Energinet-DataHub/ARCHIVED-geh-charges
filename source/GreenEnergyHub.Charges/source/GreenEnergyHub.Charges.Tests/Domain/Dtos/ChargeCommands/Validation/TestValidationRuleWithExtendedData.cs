@@ -14,20 +14,22 @@
 
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
+namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation
 {
-    public class ChargeNameHasMaximumLengthRule : IValidationRule
+    public class TestValidationRuleWithExtendedData : IValidationRuleWithExtendedData
     {
-        private const int MaximumChargeNameLength = 50;
-        private readonly ChargeOperationDto _chargeOperationDto;
-
-        public ChargeNameHasMaximumLengthRule(ChargeOperationDto chargeOperationDto)
+        public TestValidationRuleWithExtendedData(
+            bool isValid, ValidationRuleIdentifier ruleIdentifier, string triggeredBy)
         {
-            _chargeOperationDto = chargeOperationDto;
+            IsValid = isValid;
+            ValidationRuleIdentifier = ruleIdentifier;
+            TriggeredBy = triggeredBy;
         }
 
-        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeNameHasMaximumLength;
+        public bool IsValid { get; }
 
-        public bool IsValid => _chargeOperationDto.ChargeName.Length <= MaximumChargeNameLength;
+        public ValidationRuleIdentifier ValidationRuleIdentifier { get; }
+
+        public string TriggeredBy { get; }
     }
 }

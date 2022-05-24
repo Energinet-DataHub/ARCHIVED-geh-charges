@@ -60,7 +60,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
         }
 
         /// <summary>
-        /// Contains a unique ID for the specific Charge Operation, provided by the sender.
+        /// Contains a unique ID for the specific Charge OperationId, provided by the sender.
         /// </summary>
         public string Id { get; }
 
