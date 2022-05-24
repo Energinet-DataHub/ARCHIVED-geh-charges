@@ -13,11 +13,11 @@
 # limitations under the License.
 
 module "sbt_default_charge_links_available_notified" {
-  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic?ref=5.1.0"
+  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic?ref=6.0.0"
 
   name                = "default-charge-links-available"
-  namespace_name      = module.sb_charges.name
-  resource_group_name = azurerm_resource_group.this.name
+  namespace_id        = module.sb_charges.id
+
   subscriptions       = [
     {
       name                = "default-charge-links-available-notified"

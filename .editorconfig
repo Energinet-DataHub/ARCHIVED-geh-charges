@@ -28,6 +28,10 @@ root = true
 end_of_line = lf
 indent_style = space
 
+# Terraform
+[*.{tf}]
+indent_size = 2
+
 # Code files
 [*.{cs,csx,vb,vbx}]
 indent_size = 4
