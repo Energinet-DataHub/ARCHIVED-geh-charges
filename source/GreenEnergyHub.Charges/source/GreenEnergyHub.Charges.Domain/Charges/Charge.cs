@@ -160,7 +160,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             Instant? endDate)
         {
             ArgumentNullException.ThrowIfNull(endDate);
-            var removePoints = _points.Where(x => x.Time >= startDate && x.Time <= endDate).ToList();
+            var removePoints = _points.Where(x => x.Time >= startDate && x.Time < endDate).ToList();
             if (removePoints.Count > 0)
             {
                 _points.RemoveAll(x => removePoints.Contains(x));
