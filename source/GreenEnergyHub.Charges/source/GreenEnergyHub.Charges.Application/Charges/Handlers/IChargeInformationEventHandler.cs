@@ -17,7 +17,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
-    public interface IChargeEventHandler
+    public interface IChargeInformationEventHandler
     {
         Task HandleAsync(ChargeCommandReceivedEvent commandReceivedEvent);
     }

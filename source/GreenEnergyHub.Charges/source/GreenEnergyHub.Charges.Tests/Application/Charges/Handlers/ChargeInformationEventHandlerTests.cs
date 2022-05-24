@@ -38,7 +38,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 {
     [UnitTest]
-    public class ChargeEventHandlerTests
+    public class ChargeInformationEventHandlerTests
     {
         [Theory]
         [InlineAutoMoqData]
@@ -53,7 +53,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             [Frozen] Mock<IChargeFactory> chargeFactory,
             [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
             ChargeCommandReceivedEvent receivedEvent,
-            ChargeEventHandler sut)
+            ChargeInformationEventHandler sut)
         {
             // Arrange
             var validationResult = ValidationResult.CreateSuccess();
@@ -101,7 +101,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             TestMarketParticipant sender,
             ChargeBuilder chargeBuilder,
             ChargeCommandReceivedEvent receivedEvent,
-            ChargeEventHandler sut)
+            ChargeInformationEventHandler sut)
         {
             // Arrange
             var charge = chargeBuilder.Build();
@@ -126,7 +126,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         [Theory]
         [InlineAutoMoqData]
         public async Task HandleAsync_IfEventIsNull_ThrowsArgumentNullException(
-            ChargeEventHandler sut)
+            ChargeInformationEventHandler sut)
         {
             // Arrange
             ChargeCommandReceivedEvent? receivedEvent = null;
@@ -146,7 +146,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             TestMarketParticipant sender,
             ChargePeriodBuilder chargePeriodBuilder,
             ChargeCommandReceivedEvent receivedEvent,
-            ChargeEventHandler sut)
+            ChargeInformationEventHandler sut)
         {
             // Arrange
             var validationResult = ValidationResult.CreateSuccess();
@@ -184,7 +184,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             TestMarketParticipant sender,
             ChargePeriodBuilder chargePeriodBuilder,
             ChargeCommandReceivedEvent receivedEvent,
-            ChargeEventHandler sut)
+            ChargeInformationEventHandler sut)
         {
             // Arrange
             var validationResult = ValidationResult.CreateSuccess();
@@ -222,7 +222,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             ChargeCommandBuilder chargeCommandBuilder,
             ChargeBuilder chargeBuilder,
             ChargeOperationDtoBuilder chargeOperationDtoBuilder,
-            ChargeEventHandler sut)
+            ChargeInformationEventHandler sut)
         {
             // Arrange
             var validationResult = ValidationResult.CreateSuccess();
@@ -265,7 +265,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             [Frozen] Mock<IInputValidator<ChargeOperationDto>> inputValidator,
             [Frozen] Mock<IBusinessValidator<ChargeOperationDto>> businessValidator,
             [Frozen] Mock<IChargeCommandReceiptService> receiptService,
-            ChargeEventHandler sut)
+            ChargeInformationEventHandler sut)
          {
              // Arrange
              var receivedEvent = CreateReceivedEventWithChargeOperations();

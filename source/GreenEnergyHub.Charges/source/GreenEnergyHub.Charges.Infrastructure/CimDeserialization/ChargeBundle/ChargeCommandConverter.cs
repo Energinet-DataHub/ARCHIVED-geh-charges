@@ -111,6 +111,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
             var vatClassification = VatClassification.Unknown;
             var transparentInvoicing = TransparentInvoicing.Unknown;
             var taxIndicator = TaxIndicator.Unknown;
+            Instant pointsStartTime = default;
+            Instant? pointsEndTime = null;
             var points = new List<Point>();
 
             while (await reader.AdvanceAsync().ConfigureAwait(false))
@@ -193,6 +195,14 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                         taxIndicator = TaxIndicatorMapper.Map(content);
                     }
                 }
+                else if (reader.Is(CimChargeCommandConstants.TimeIntervalStart))
+                {
+                    pointsStartTime = await reader.ReadValueAsNodaTimeAsync().ConfigureAwait(false);
+                }
+                else if (reader.Is(CimChargeCommandConstants.TimeIntervalEnd))
+                {
+                    pointsEndTime = await reader.ReadValueAsNodaTimeAsync().ConfigureAwait(false);
+                }
                 else if (reader.Is(CimChargeCommandConstants.SeriesPeriod))
                 {
                     var seriesPeriodIntoOperationAsync = await ParseSeriesPeriodIntoOperationAsync(reader, startDateTime, resolution).ConfigureAwait(false);
@@ -218,6 +228,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                 vatClassification,
                 startDateTime,
                 endDateTime,
+                pointsStartTime,
+                pointsEndTime,
                 points);
         }
 
@@ -258,7 +270,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
             return (points, resolution);
         }
 
-        private async Task<Instant> ParseTimeIntervalAsync(SchemaValidatingReader reader, Instant startDateTime)
+        private async Task<Instant> ParseTimeIntervalAsync(SchemaValidatingReader reader, Instant intervalDateTime)
         {
             while (await reader.AdvanceAsync().ConfigureAwait(false))
             {
@@ -270,15 +282,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
 
                     return Instant.FromDateTimeOffset(DateTimeOffset.Parse(cimTimeInterval));
                 }
-                else if (reader.Is(
-                    CimChargeCommandConstants.TimeInterval,
-                    NodeType.EndElement))
+                else if (reader.Is(CimChargeCommandConstants.TimeInterval, NodeType.EndElement))
                 {
                     break;
                 }
             }
 
-            return startDateTime;
+            return intervalDateTime;
         }
 
         private async Task<Point> ParsePointAsync(SchemaValidatingReader reader, Resolution resolution, Instant startDateTime)

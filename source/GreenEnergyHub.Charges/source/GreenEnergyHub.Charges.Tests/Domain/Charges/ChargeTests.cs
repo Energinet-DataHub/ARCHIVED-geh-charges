@@ -472,7 +472,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
                 .WithPoints(points).Build();
 
             // Act
-            sut.UpdatePrices(InstantHelper.GetTodayPlusDaysAtMidnightUtc(2), InstantHelper.GetTodayPlusDaysAtMidnightUtc(3), newPrices);
+            sut.UpdatePrices(InstantHelper.GetTodayPlusDaysAtMidnightUtc(2), InstantHelper.GetTodayPlusDaysAtMidnightUtc(4), newPrices);
 
             // Assert
             sut.Points.Count.Should().Be(5);

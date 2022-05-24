@@ -15,8 +15,6 @@
 using System;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
-using GreenEnergyHub.Charges.Application.Messaging;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
@@ -26,20 +24,18 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
     public class ChargeCommandReceivedEventHandler : IChargeCommandReceivedEventHandler
     {
-        private readonly IChargeEventHandler _chargeEventHandler;
+        private readonly IChargeInformationEventHandler _chargeInformationEventHandler;
         private readonly IChargePriceEventHandler _chargePriceEventHandler;
         private readonly IDocumentValidator<ChargeCommand> _documentValidator;
         private readonly IChargeCommandReceiptService _chargeCommandReceiptService;
 
         public ChargeCommandReceivedEventHandler(
-            IChargeEventHandler chargeEventHandler,
+            IChargeInformationEventHandler chargeInformationEventHandler,
             IChargePriceEventHandler chargePriceEventHandler,
-            IMessageDispatcher<ChargeCommandAcceptedEvent> acceptedMessageDispatcher,
-            IChargeCommandAcceptedEventFactory chargeCommandAcceptedEventFactory,
             IDocumentValidator<ChargeCommand> documentValidator,
             IChargeCommandReceiptService chargeCommandReceiptService)
         {
-            _chargeEventHandler = chargeEventHandler;
+            _chargeInformationEventHandler = chargeInformationEventHandler;
             _chargePriceEventHandler = chargePriceEventHandler;
             _documentValidator = documentValidator;
             _chargeCommandReceiptService = chargeCommandReceiptService;
@@ -61,7 +57,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                     await _chargePriceEventHandler.HandleAsync(commandReceivedEvent).ConfigureAwait(false);
                     break;
                 case BusinessReasonCode.UpdateChargeInformation:
-                    await _chargeEventHandler.HandleAsync(commandReceivedEvent).ConfigureAwait(false);
+                    await _chargeInformationEventHandler.HandleAsync(commandReceivedEvent).ConfigureAwait(false);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(
