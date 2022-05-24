@@ -24,7 +24,6 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
@@ -34,8 +33,8 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         private readonly IInputValidator<ChargeOperationDto> _inputValidator;
         private readonly IBusinessValidator<ChargeOperationDto> _businessValidator;
         private readonly IChargeRepository _chargeRepository;
-        private readonly IMarketParticipantRepository _marketParticipantRepository;
         private readonly IChargeFactory _chargeFactory;
+        private readonly IChargeIdentifierFactory _chargeIdentifierFactory;
         private readonly IChargePeriodFactory _chargePeriodFactory;
         private readonly IUnitOfWork _unitOfWork;
 
@@ -44,8 +43,8 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             IInputValidator<ChargeOperationDto> inputValidator,
             IBusinessValidator<ChargeOperationDto> businessValidator,
             IChargeRepository chargeRepository,
-            IMarketParticipantRepository marketParticipantRepository,
             IChargeFactory chargeFactory,
+            IChargeIdentifierFactory chargeIdentifierFactory,
             IChargePeriodFactory chargePeriodFactory,
             IUnitOfWork unitOfWork)
         {
@@ -53,8 +52,8 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             _inputValidator = inputValidator;
             _businessValidator = businessValidator;
             _chargeRepository = chargeRepository;
-            _marketParticipantRepository = marketParticipantRepository;
             _chargeFactory = chargeFactory;
+            _chargeIdentifierFactory = chargeIdentifierFactory;
             _chargePeriodFactory = chargePeriodFactory;
             _unitOfWork = unitOfWork;
         }
@@ -197,14 +196,9 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 
         private async Task<Charge?> GetChargeAsync(ChargeOperationDto chargeOperationDto)
         {
-            var marketParticipant = await _marketParticipantRepository
-                .SingleAsync(chargeOperationDto.ChargeOwner)
+            var chargeIdentifier = await _chargeIdentifierFactory
+                .CreateAsync(chargeOperationDto.ChargeId, chargeOperationDto.Type, chargeOperationDto.ChargeOwner)
                 .ConfigureAwait(false);
-
-            var chargeIdentifier = new ChargeIdentifier(
-                chargeOperationDto.ChargeId,
-                marketParticipant.Id,
-                chargeOperationDto.Type);
 
             return await _chargeRepository.SingleOrNullAsync(chargeIdentifier).ConfigureAwait(false);
         }
