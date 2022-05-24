@@ -28,8 +28,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
     {
         private readonly IChargeEventHandler _chargeEventHandler;
         private readonly IChargePriceEventHandler _chargePriceEventHandler;
-        private readonly IMessageDispatcher<ChargeCommandAcceptedEvent> _acceptedMessageDispatcher;
-        private readonly IChargeCommandAcceptedEventFactory _chargeCommandAcceptedEventFactory;
         private readonly IDocumentValidator<ChargeCommand> _documentValidator;
         private readonly IChargeCommandReceiptService _chargeCommandReceiptService;
 
@@ -43,8 +41,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         {
             _chargeEventHandler = chargeEventHandler;
             _chargePriceEventHandler = chargePriceEventHandler;
-            _acceptedMessageDispatcher = acceptedMessageDispatcher;
-            _chargeCommandAcceptedEventFactory = chargeCommandAcceptedEventFactory;
             _documentValidator = documentValidator;
             _chargeCommandReceiptService = chargeCommandReceiptService;
         }
