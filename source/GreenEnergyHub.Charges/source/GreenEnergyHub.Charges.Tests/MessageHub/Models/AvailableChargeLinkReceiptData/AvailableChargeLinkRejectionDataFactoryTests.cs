@@ -83,7 +83,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
             for (var i1 = 0; i1 < actualList.Count; i1++)
             {
                 var actual = actualList[i1];
-                actual.RecipientId.Should().Be(chargeLinksCommand.Document.Sender.MarketParticipantId));
+                actual.RecipientId.Should().Be(chargeLinksCommand.Document.Sender.MarketParticipantId);
                 actual.RecipientRole.Should().Be(chargeLinksCommand.Document.Sender.BusinessProcessRole);
                 actual.BusinessReasonCode.Should().Be(chargeLinksCommand.Document.BusinessReasonCode);
                 actual.RequestDateTime.Should().Be(now);
@@ -99,7 +99,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
                 actual.ValidationErrors.Should().HaveSameCount(expectedValidationErrors);
                 actual.OperationOrder.Should().BeGreaterThan(operationOrder);
                 operationOrder = actual.OperationOrder;
-              
+
                 for (var i2 = 0; i2 < actualValidationErrors.Count; i2++)
                 {
                     var expectedText = validationErrors[i2].ValidationRuleIdentifier.ToString();
