@@ -68,7 +68,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 var charge = await GetChargeAsync(operation).ConfigureAwait(false);
                 if (charge is null)
                 {
-                    throw new InvalidOperationException($"Chargeinformation ID '{operation.ChargeId}' does not exist.");
+                    throw new InvalidOperationException($"Charge ID '{operation.ChargeId}' does not exist.");
                 }
 
                 var validationResult = _inputValidator.Validate(operation);
