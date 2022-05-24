@@ -39,13 +39,15 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 
             foreach (var chargeOperationDto in chargeCommandAcceptedEvent.Command.ChargeOperations)
             {
-                await _chargePublisher.PublishChargeCreatedAsync(chargeOperationDto).ConfigureAwait(false);
-
                 if (chargeOperationDto.Points.Any())
                 {
                     await _chargePricesUpdatedPublisher
                         .PublishChargePricesAsync(chargeOperationDto)
                         .ConfigureAwait(false);
+                }
+                else
+                {
+                    await _chargePublisher.PublishChargeCreatedAsync(chargeOperationDto).ConfigureAwait(false);
                 }
             }
         }
