@@ -24,9 +24,11 @@ using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
+using GreenEnergyHub.Charges.Tests.Builders.Testables;
 using GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation;
 using Moq;
 using NodaTime;
@@ -41,8 +43,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         [Theory]
         [InlineAutoMoqData]
         public async Task HandleAsync_WhenValidationSucceed_StoreAndConfirmCommand(
+            TestMarketParticipant sender,
             [Frozen] Mock<IInputValidator<ChargeOperationDto>> inputValidator,
             [Frozen] Mock<IBusinessValidator<ChargeOperationDto>> businessValidator,
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IChargeCommandReceiptService> receiptService,
             ChargeBuilder chargeBuilder,
@@ -56,11 +60,12 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             SetupValidators(inputValidator, businessValidator, validationResult);
 
             var stored = false;
+            SetupMarketParticipantRepository(marketParticipantRepository, sender);
             chargeRepository
                 .Setup(r => r.AddAsync(It.IsAny<Charge>()))
                 .Callback<Charge>(_ => stored = true);
             chargeRepository
-                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
+                .Setup(r => r.SingleOrNullAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(null as Charge);
 
             var confirmed = false;
@@ -88,9 +93,11 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         [Theory]
         [InlineAutoMoqData]
         public async Task HandleAsync_WhenValidationFails_RejectsEvent(
+            TestMarketParticipant sender,
             [Frozen] Mock<IInputValidator<ChargeOperationDto>> inputValidator,
             [Frozen] Mock<IBusinessValidator<ChargeOperationDto>> businessValidator,
             [Frozen] Mock<IChargeCommandReceiptService> receiptService,
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             ChargeBuilder chargeBuilder,
             ChargeCommandReceivedEvent receivedEvent,
@@ -101,8 +108,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             var validationResult = GetFailedValidationResult();
             SetupValidators(inputValidator, businessValidator, validationResult);
 
+            SetupMarketParticipantRepository(marketParticipantRepository, sender);
             chargeRepository
-                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
+                .Setup(r => r.SingleOrNullAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(charge);
 
             var rejected = false;
@@ -131,11 +139,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         [Theory]
         [InlineAutoMoqData]
         public async Task HandleAsync_IfValidUpdateEvent_ChargeUpdated(
+            TestMarketParticipant sender,
             [Frozen] Mock<IInputValidator<ChargeOperationDto>> inputValidator,
             [Frozen] Mock<IBusinessValidator<ChargeOperationDto>> businessValidator,
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
             ChargeCommandReceivedEvent receivedEvent,
+            ChargePeriodBuilder chargePeriodBuilder,
             ChargeCommandReceivedEventHandler sut)
         {
             // Arrange
@@ -143,13 +154,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             SetupValidators(inputValidator, businessValidator, validationResult);
             var periods = CreateValidPeriods(3);
             var charge = CreateValidCharge(periods);
-            var newPeriod = new ChargePeriodBuilder()
+            var newPeriod = chargePeriodBuilder
                 .WithStartDateTime(InstantHelper.GetTomorrowAtMidnightUtc())
                 .WithEndDateTime(InstantHelper.GetEndDefault())
                 .Build();
 
+            SetupMarketParticipantRepository(marketParticipantRepository, sender);
             chargeRepository
-                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
+                .Setup(r => r.SingleOrNullAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(charge);
             chargePeriodFactory
                 .Setup(r => r.CreateFromChargeOperationDto(It.IsAny<ChargeOperationDto>()))
@@ -165,12 +177,15 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         [Theory]
         [InlineAutoMoqData]
         public async Task HandleAsync_IfValidStopEvent_ChargeStopped(
+            TestMarketParticipant sender,
             [Frozen] Mock<IInputValidator<ChargeOperationDto>> inputValidator,
             [Frozen] Mock<IBusinessValidator<ChargeOperationDto>> businessValidator,
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
             [Frozen] Instant stopDate,
             ChargeCommandReceivedEvent receivedEvent,
+            ChargePeriodBuilder chargePeriodBuilder,
             ChargeCommandReceivedEventHandler sut)
         {
             // Arrange
@@ -178,10 +193,11 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             SetupValidators(inputValidator, businessValidator, validationResult);
             var periods = CreateValidPeriodsFromOffset(stopDate);
             var charge = CreateValidCharge(periods);
-            var newPeriod = new ChargePeriodBuilder().WithStartDateTime(stopDate).WithEndDateTime(stopDate).Build();
+            var newPeriod = chargePeriodBuilder.WithStartDateTime(stopDate).WithEndDateTime(stopDate).Build();
 
+            SetupMarketParticipantRepository(marketParticipantRepository, sender);
             chargeRepository
-                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
+                .Setup(r => r.SingleOrNullAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(charge);
             chargePeriodFactory
                 .Setup(r => r.CreateFromChargeOperationDto(It.IsAny<ChargeOperationDto>()))
@@ -199,37 +215,37 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         [Theory]
         [InlineAutoMoqData]
         public async Task HandleAsync_WhenValidCancelStop_ThenStopCancelled(
+            TestMarketParticipant sender,
             [Frozen] Mock<IInputValidator<ChargeOperationDto>> inputValidator,
             [Frozen] Mock<IBusinessValidator<ChargeOperationDto>> businessValidator,
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
+            ChargeCommandBuilder chargeCommandBuilder,
+            ChargeBuilder chargeBuilder,
+            ChargePeriodBuilder chargePeriodBuilder,
+            ChargeOperationDtoBuilder chargeOperationDtoBuilder,
             ChargeCommandReceivedEventHandler sut)
         {
             // Arrange
             var validationResult = ValidationResult.CreateSuccess();
             SetupValidators(inputValidator, businessValidator, validationResult);
-            var chargeOperationDto = new ChargeOperationDtoBuilder()
+            var chargeOperationDto = chargeOperationDtoBuilder
                 .WithStartDateTime(InstantHelper.GetTomorrowAtMidnightUtc())
                 .WithEndDateTime(InstantHelper.GetEndDefault())
                 .Build();
-            var chargeCommand = new ChargeCommandBuilder()
+            var chargeCommand = chargeCommandBuilder
                 .WithChargeOperation(chargeOperationDto)
                 .Build();
             var receivedEvent = new ChargeCommandReceivedEvent(InstantHelper.GetTodayAtMidnightUtc(), chargeCommand);
             var periods = new List<ChargePeriod>
             {
-                new ChargePeriodBuilder().WithEndDateTime(InstantHelper.GetTomorrowAtMidnightUtc()).Build(),
+                chargePeriodBuilder.WithEndDateTime(InstantHelper.GetTomorrowAtMidnightUtc()).Build(),
             };
-            var charge = new ChargeBuilder().WithPeriods(periods).Build();
-            var newPeriod = new ChargePeriodBuilder()
-                .WithStartDateTime(InstantHelper.GetTomorrowAtMidnightUtc())
-                .Build();
-            chargeRepository
-                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
-                .ReturnsAsync(charge);
-            chargePeriodFactory
-                .Setup(r => r.CreateFromChargeOperationDto(It.IsAny<ChargeOperationDto>()))
-                .Returns(newPeriod);
+            var charge = chargeBuilder.WithPeriods(periods).Build();
+            SetupMarketParticipantRepository(marketParticipantRepository, sender);
+            SetupChargeRepository(chargeRepository, charge);
+            SetupChargePeriodFactory(chargePeriodFactory);
 
             // Act
             await sut.HandleAsync(receivedEvent);
@@ -244,21 +260,29 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         [Theory]
         [InlineAutoMoqData]
         public async Task HandleAsync_WhenValidationFailsInBundleOperation_RejectEventForAllSubsequentOperations(
-             [Frozen] Mock<IChargeRepository> chargeRepository,
-             [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
-             [Frozen] Mock<IDocumentValidator<ChargeCommand>> documentValidator,
-             [Frozen] Mock<IInputValidator<ChargeOperationDto>> inputValidator,
-             [Frozen] Mock<IBusinessValidator<ChargeOperationDto>> businessValidator,
-             [Frozen] Mock<IChargeCommandReceiptService> receiptService,
-             ChargeCommandReceivedEventHandler sut)
+            TestMarketParticipant sender,
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
+            [Frozen] Mock<IChargeRepository> chargeRepository,
+            [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
+            [Frozen] Mock<IDocumentValidator<ChargeCommand>> documentValidator,
+            [Frozen] Mock<IInputValidator<ChargeOperationDto>> inputValidator,
+            [Frozen] Mock<IBusinessValidator<ChargeOperationDto>> businessValidator,
+            [Frozen] Mock<IChargeCommandReceiptService> receiptService,
+            ChargeCommandReceivedEventHandler sut)
          {
              // Arrange
              var receivedEvent = CreateReceivedEventWithChargeOperations();
+             SetupMarketParticipantRepository(marketParticipantRepository, sender);
              SetupChargeRepository(chargeRepository);
              SetupChargePeriodFactory(chargePeriodFactory);
 
-             var invalidValidationResult = ValidationResult.CreateFailure(new List<IValidationRule>
-                 { new TestValidationRule(false, ValidationRuleIdentifier.StartDateValidation) });
+             var invalidValidationResult = ValidationResult.CreateFailure(
+                 new List<IValidationRuleContainer>
+                 {
+                     new DocumentValidationRuleContainer(
+                         new TestValidationRule(false, ValidationRuleIdentifier.StartDateValidation)),
+                 });
+
              SetupValidatorsForOperation(documentValidator, inputValidator, businessValidator, invalidValidationResult);
 
              var accepted = 0;
@@ -277,36 +301,55 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 
              var validationRules = validationResultsArgs.Single().InvalidRules.ToList();
              var invalid = validationRules.Where(vr =>
-                 vr.ValidationRuleIdentifier == ValidationRuleIdentifier.StartDateValidation);
+                 vr.ValidationRule.ValidationRuleIdentifier == ValidationRuleIdentifier.StartDateValidation);
              var subsequent = validationRules.Where(vr =>
-                 vr.ValidationRuleIdentifier == ValidationRuleIdentifier.SubsequentBundleOperationsFail);
+                 vr.ValidationRule.ValidationRuleIdentifier == ValidationRuleIdentifier.SubsequentBundleOperationsFail);
 
              validationRules.Count.Should().Be(3);
              invalid.Count().Should().Be(1);
              subsequent.Count().Should().Be(2);
          }
 
-        private static void SetupChargePeriodFactory(Mock<IChargePeriodFactory> chargePeriodFactory)
+        private static void SetupMarketParticipantRepository(
+            Mock<IMarketParticipantRepository> marketParticipantRepository,
+            TestMarketParticipant marketParticipant)
         {
-            var newPeriod = new ChargePeriodBuilder()
-                .WithStartDateTime(InstantHelper.GetTomorrowAtMidnightUtc())
-                .Build();
-            chargePeriodFactory
-                .Setup(r => r.CreateFromChargeOperationDto(It.IsAny<ChargeOperationDto>()))
-                .Returns(newPeriod);
+            marketParticipantRepository
+                .Setup(r => r.SingleAsync(It.IsAny<string>()))
+                .ReturnsAsync(marketParticipant);
         }
 
-        private static void SetupChargeRepository(Mock<IChargeRepository> chargeRepository)
+        private static void SetupChargePeriodFactory(Mock<IChargePeriodFactory> chargePeriodFactory, ChargePeriod? period = null)
         {
-            var periods = new List<ChargePeriod>
+            if (period == null)
             {
-                new ChargePeriodBuilder()
-                    .WithStartDateTime(InstantHelper.GetYesterdayAtMidnightUtc())
-                    .Build(),
-            };
-            var charge = new ChargeBuilder().WithPeriods(periods).Build();
+                period = new ChargePeriodBuilder()
+                    .WithStartDateTime(InstantHelper.GetTomorrowAtMidnightUtc())
+                    .Build();
+            }
+
+            chargePeriodFactory
+                .Setup(r => r.CreateFromChargeOperationDto(It.IsAny<ChargeOperationDto>()))
+                .Returns(period!);
+        }
+
+        private static void SetupChargeRepository(Mock<IChargeRepository> chargeRepository, Charge? charge = null)
+        {
+            if (charge == null)
+            {
+                charge = new ChargeBuilder()
+                    .WithPeriods(
+                        new List<ChargePeriod>
+                        {
+                            new ChargePeriodBuilder()
+                            .WithStartDateTime(InstantHelper.GetYesterdayAtMidnightUtc())
+                            .Build(),
+                        })
+                    .Build();
+            }
+
             chargeRepository
-                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
+                .Setup(r => r.SingleOrNullAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(charge);
         }
 
@@ -421,7 +464,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             var failedRule = new Mock<IValidationRule>();
             failedRule.Setup(r => r.IsValid).Returns(false);
 
-            return ValidationResult.CreateFailure(new List<IValidationRule> { failedRule.Object });
+            return ValidationResult.CreateFailure(
+                new List<IValidationRuleContainer> { new DocumentValidationRuleContainer(failedRule.Object) });
         }
 
         private static void SetupValidators(

@@ -95,6 +95,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
         {
             return input
                 .ValidationErrors
+                .Where(ve => ve.OperationId == chargeLinkDto.OperationId || string.IsNullOrWhiteSpace(ve.OperationId))
                 .Select(validationError => _availableChargeLinksReceiptValidationErrorFactory
                     .Create(validationError, input.ChargeLinksCommand, chargeLinkDto))
                 .ToList();

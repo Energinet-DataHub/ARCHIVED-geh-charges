@@ -29,7 +29,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
             builder.ToTable(_aggregateTableName);
             builder.HasKey(c => c.Id);
             builder.Property(x => x.Id).ValueGeneratedNever();
-
             builder.Property(c => c.OwnerId);
             builder.Property(c => c.SenderProvidedChargeId);
             builder.Property(c => c.Resolution);

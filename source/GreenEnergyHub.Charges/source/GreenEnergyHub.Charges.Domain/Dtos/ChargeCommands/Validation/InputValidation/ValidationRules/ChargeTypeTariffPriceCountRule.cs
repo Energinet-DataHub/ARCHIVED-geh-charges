@@ -18,7 +18,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
 {
-    public class ChargeTypeTariffPriceCountRule : IValidationRuleForOperation
+    public class ChargeTypeTariffPriceCountRule : IValidationRule
     {
         private const int PricePointsRequiredInP1D = 1;
         private const int PricePointsRequiredInP1M = 1;
@@ -34,8 +34,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
         public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeTypeTariffPriceCount;
 
         public bool IsValid => Validate();
-
-        public string OperationId => _chargeOperationDto.Id;
 
         private bool Validate()
         {

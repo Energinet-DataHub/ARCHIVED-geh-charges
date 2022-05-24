@@ -52,7 +52,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
             var chargeIds = defaultChargeLinks.Select(x => x.ChargeId).ToList();
 
             var charges = await _chargeRepository
-                .GetAsync(chargeIds)
+                .GetByIdsAsync(chargeIds)
                 .ConfigureAwait(false);
 
             var ownerIds = charges.Select(c => c.OwnerId);
@@ -85,8 +85,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
                     pair.Value.Type))
                 .ToList();
 
-            return await CreateChargeLinksCommandAsync(createDefaultChargeLinksRequest, systemOperator, chargeLinks)
-                .ConfigureAwait(false);
+            return await CreateChargeLinksCommandAsync(systemOperator, chargeLinks).ConfigureAwait(false);
         }
 
         private static string GetChargeOwner(Charge charge, IReadOnlyCollection<MarketParticipant> owners)
@@ -95,7 +94,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
         }
 
         private async Task<ChargeLinksCommand> CreateChargeLinksCommandAsync(
-            CreateDefaultChargeLinksRequest createDefaultChargeLinksRequest,
             MarketParticipant systemOperator,
             List<ChargeLinkDto> chargeLinks)
         {

@@ -23,7 +23,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
     /// <summary>
     /// Temporary rule that stops both update and stops from taking place to charge links until that is implemented
     /// </summary>
-    public class ChargeLinksUpdateNotYetSupportedRule : IValidationRuleForOperation
+    public class ChargeLinksUpdateNotYetSupportedRule : IValidationRule
     {
         private readonly Instant _newLinkStartDate;
         private readonly Instant? _newLinkEndDate;
@@ -33,7 +33,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
             ChargeLinkDto chargeLinkDto,
             IReadOnlyCollection<ChargeLink> existingChargeLinks)
         {
-            OperationId = chargeLinkDto.OperationId;
             _newLinkStartDate = chargeLinkDto.StartDateTime;
             _newLinkEndDate = chargeLinkDto.EndDateTime;
             _existingChargeLinks = existingChargeLinks;
@@ -42,8 +41,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
         public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeLinkUpdateNotYetSupported;
 
         public bool IsValid => ChargeLinkDateRangeIsNotOverlapping();
-
-        public string OperationId { get; }
 
         private bool ChargeLinkDateRangeIsNotOverlapping()
         {
