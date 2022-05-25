@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
@@ -43,7 +44,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
         [Theory]
         [InlineAutoDomainData("GreenEnergyHub.Charges.Tests.TestFiles.ExpectedOutputChargeCimSerializerMasterDataAndPrices.blob", true, true)]
         [InlineAutoDomainData("GreenEnergyHub.Charges.Tests.TestFiles.ExpectedOutputChargeCimSerializerMasterDataWithoutPrices.blob", true, false)]
-        [InlineAutoDomainData("GreenEnergyHub.Charges.Tests.TestFiles.ExpectedOutputChargeCimSerializerPricesWithoutMasterData.blob", false, true)]
+        [InlineAutoDomainData("GreenEnergyHub.Charges.Tests.TestFiles.ExpectedOutputChargeCimSerializerChargePrices.blob", false, true)]
         public async Task SerializeAsync_WhenCalled_StreamHasSerializedResult(
             string embeddedResource,
             bool includeMasterData,
@@ -68,7 +69,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
             await sut.SerializeToStreamAsync(
                 charges,
                 stream,
-                BusinessReasonCode.UpdateChargeInformation,
+                charges.First().BusinessReasonCode,
                 "5790001330552",
                 MarketParticipantRole.MeteringPointAdministrator,
                 RecipientId,
@@ -189,7 +190,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
                 MarketParticipantRole.MeteringPointAdministrator,
                 "Recipient",
                 MarketParticipantRole.GridAccessProvider,
-                BusinessReasonCode.UpdateChargeInformation,
+                BusinessReasonCode.UpdateChargePrices,
                 clock.GetCurrentInstant(),
                 Guid.NewGuid(),
                 "ChargeId" + no,
