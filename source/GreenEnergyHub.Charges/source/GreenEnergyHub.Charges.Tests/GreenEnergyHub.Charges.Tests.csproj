@@ -73,7 +73,7 @@ limitations under the License.
       <EmbeddedResource Include="TestFiles\Valid_CIM_Charge_Without_Prices.xml" />
       <EmbeddedResource Include="TestFiles\ExpectedOutputChargeCimSerializerMasterDataAndPrices.blob" />
       <EmbeddedResource Include="TestFiles\ExpectedOutputChargeCimSerializerMasterDataWithoutPrices.blob" />
-      <EmbeddedResource Include="TestFiles\ExpectedOutputChargeCimSerializerPricesWithoutMasterData.blob" />
+      <EmbeddedResource Include="TestFiles\ExpectedOutputChargeCimSerializerChargePrices.blob" />
       <EmbeddedResource Include="TestFiles\ExpectedOutputChargeLinkReceiptCimSerializerConfirmation.blob" />
       <EmbeddedResource Include="TestFiles\ExpectedOutputChargeLinkReceiptCimSerializerRejection.blob" />
       <EmbeddedResource Include="TestFiles\ExpectedOutputChargeReceiptCimSerializerConfirmation.blob" />
