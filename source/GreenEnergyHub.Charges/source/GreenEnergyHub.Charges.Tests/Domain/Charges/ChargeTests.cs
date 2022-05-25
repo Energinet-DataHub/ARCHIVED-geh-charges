@@ -449,6 +449,72 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             Assert.Throws<InvalidOperationException>(() => sut.CancelStop(chargePeriod));
         }
 
+        [Fact]
+        public void UpdatePrices_WhenPointsExistBetweenStartAndStopDate_PointsUpdated()
+        {
+            // Arrange
+            var points = new List<Point>
+            {
+                new(0, 1.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(0)),
+                new(0, 2.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(1)),
+                new(0, 3.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(2)),
+                new(0, 4.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(3)),
+                new(0, 5.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(4)),
+            };
+            var newPrices = new List<Point>
+            {
+                new(0, 3.50m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(2)),
+                new(0, 4.50m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(3)),
+            };
+
+            var sut = new ChargeBuilder()
+                .WithPeriods(new List<ChargePeriod> { new ChargePeriodBuilder().Build() })
+                .WithPoints(points).Build();
+
+            // Act
+            sut.UpdatePrices(InstantHelper.GetTodayPlusDaysAtMidnightUtc(2), InstantHelper.GetTodayPlusDaysAtMidnightUtc(3), newPrices);
+
+            // Assert
+            sut.Points.Count.Should().Be(5);
+            var actualPriceFirstUpdated = sut.Points.Single(x => x.Time == InstantHelper.GetTodayPlusDaysAtMidnightUtc(2));
+            var actualPriceSecondUpdated = sut.Points.Single(x => x.Time == InstantHelper.GetTodayPlusDaysAtMidnightUtc(3));
+            actualPriceFirstUpdated.Price.Should().Be(3.50m);
+            actualPriceSecondUpdated.Price.Should().Be(4.50m);
+        }
+
+        [Fact]
+        public void UpdatePrices_WhenNoPointsExistBetweenStartAndStopDate_PointsUpdated()
+        {
+            // Arrange
+            var points = new List<Point>
+            {
+                new(0, 1.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(0)),
+                new(0, 2.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(1)),
+                new(0, 3.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(2)),
+                new(0, 4.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(3)),
+                new(0, 5.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(4)),
+            };
+            var newPrices = new List<Point>
+            {
+                new(0, 6.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(5)),
+                new(0, 7.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(6)),
+            };
+
+            var sut = new ChargeBuilder()
+                .WithPeriods(new List<ChargePeriod> { new ChargePeriodBuilder().Build() })
+                .WithPoints(points).Build();
+
+            // Act
+            sut.UpdatePrices(InstantHelper.GetTodayPlusDaysAtMidnightUtc(5), InstantHelper.GetTodayPlusDaysAtMidnightUtc(6), newPrices);
+
+            // Assert
+            sut.Points.Count.Should().Be(7);
+            var actualPriceFirstAdded = sut.Points.Single(x => x.Time == InstantHelper.GetTodayPlusDaysAtMidnightUtc(5));
+            var actualPriceSecondAdded = sut.Points.Single(x => x.Time == InstantHelper.GetTodayPlusDaysAtMidnightUtc(6));
+            actualPriceFirstAdded.Price.Should().Be(6.00m);
+            actualPriceSecondAdded.Price.Should().Be(7.00m);
+        }
+
         private static IEnumerable<ChargePeriod> BuildStoppedChargePeriods()
         {
             return new List<ChargePeriod>

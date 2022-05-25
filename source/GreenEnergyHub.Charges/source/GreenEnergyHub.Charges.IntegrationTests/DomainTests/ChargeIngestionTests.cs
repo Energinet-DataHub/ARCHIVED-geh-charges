@@ -103,7 +103,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             }
 
             [Fact]
-            public async Task When_ChargeIsReceived_Then_ChargeCreatedIntegrationEventIsPublished()
+            public async Task When_ChargeInformationIsReceived_Then_ChargeCreatedIntegrationEventIsPublished()
             {
                 // Arrange
                 var (request, correlationId) = await _authenticatedHttpRequestGenerator
