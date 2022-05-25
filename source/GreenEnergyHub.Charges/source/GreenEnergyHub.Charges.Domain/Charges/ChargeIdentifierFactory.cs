@@ -26,7 +26,6 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             _marketParticipantRepository = marketParticipantRepository;
         }
 
-        // TODO: ChargeIdentifierFactoryTests
         public async Task<ChargeIdentifier> CreateAsync(string chargeId, ChargeType chargeType, string chargeOwner)
         {
             var marketParticipant = await _marketParticipantRepository
