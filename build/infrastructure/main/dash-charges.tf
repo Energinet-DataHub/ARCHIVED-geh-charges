@@ -28,4 +28,12 @@ resource "azurerm_dashboard" "dash_charges" {
   dashboard_properties  = data.template_file.dash_charges_template.rendered
   
   tags                  = azurerm_resource_group.this.tags
+
+  lifecycle {
+    ignore_changes = [
+      # Ignore changes to tags, e.g. because a management agent
+      # updates these based on some ruleset managed elsewhere.
+      tags,
+    ]
+  }
 }
