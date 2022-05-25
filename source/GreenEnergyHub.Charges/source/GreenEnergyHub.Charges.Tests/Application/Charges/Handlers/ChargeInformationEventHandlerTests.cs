@@ -23,6 +23,7 @@ using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.TestCore;
@@ -70,8 +71,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 
             var confirmed = false;
             receiptService
-                .Setup(s => s.AcceptAsync(It.IsAny<ChargeCommand>()))
-                .Callback<ChargeCommand>(_ => confirmed = true);
+                .Setup(s => s.AcceptValidOperationsAsync(It.IsAny<IReadOnlyCollection<ChargeOperationDto>>(), It.IsAny<DocumentDto>()))
+                .Callback<IReadOnlyCollection<ChargeOperationDto>, DocumentDto>((_, _) => confirmed = true);
 
             var charge = chargeBuilder.WithPeriods(new List<ChargePeriod> { CreateValidPeriod() }).Build();
             chargeFactory
@@ -113,8 +114,12 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                 .ReturnsAsync(charge);
 
             var rejected = false;
-            receiptService.Setup(s => s.RejectAsync(It.IsAny<ChargeCommand>(), It.IsAny<ValidationResult>()))
-                .Callback<ChargeCommand, ValidationResult>((_, _) => rejected = true);
+            receiptService
+                .Setup(s => s.RejectInvalidOperationsAsync(
+                    It.IsAny<IReadOnlyCollection<ChargeOperationDto>>(),
+                    It.IsAny<DocumentDto>(),
+                    It.IsAny<IList<IValidationRuleContainer>>()))
+                .Callback<IReadOnlyCollection<ChargeOperationDto>, DocumentDto, IList<IValidationRuleContainer>>((_, _, _) => rejected = true);
 
             // Act
             await sut.HandleAsync(receivedEvent);
@@ -283,26 +288,30 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
              SetupValidatorsForOperation(documentValidator, inputValidator, businessValidator, invalidValidationResult);
 
              var accepted = 0;
-             receiptService.Setup(s => s.AcceptAsync(It.IsAny<ChargeCommand>()))
-                 .Callback<ChargeCommand>(_ => accepted++);
-
-             var validationResultsArgs = new List<ValidationResult>();
-             receiptService.Setup(s => s.RejectAsync(It.IsAny<ChargeCommand>(), It.IsAny<ValidationResult>()))
-                 .Callback<ChargeCommand, ValidationResult>((_, s) => validationResultsArgs.Add(s));
+             receiptService
+                 .Setup(s => s.AcceptValidOperationsAsync(
+                     It.IsAny<IReadOnlyCollection<ChargeOperationDto>>(),
+                     It.IsAny<DocumentDto>()))
+                 .Callback<IReadOnlyCollection<ChargeOperationDto>, DocumentDto>((_, _) => accepted++);
+             var rejectedRules = new List<IValidationRuleContainer>();
+             receiptService
+                 .Setup(s => s.RejectInvalidOperationsAsync(
+                     It.IsAny<IReadOnlyCollection<ChargeOperationDto>>(),
+                     It.IsAny<DocumentDto>(),
+                     It.IsAny<IList<IValidationRuleContainer>>()))
+                 .Callback<IReadOnlyCollection<ChargeOperationDto>, DocumentDto, IList<IValidationRuleContainer>>((_, _, s) => rejectedRules.AddRange(s));
 
              // Act
              await sut.HandleAsync(receivedEvent);
 
              // Assert
              accepted.Should().Be(1);
-
-             var validationRules = validationResultsArgs.Single().InvalidRules.ToList();
-             var invalid = validationRules.Where(vr =>
+             var invalid = rejectedRules.Where(vr =>
                  vr.ValidationRule.ValidationRuleIdentifier == ValidationRuleIdentifier.StartDateValidation);
-             var subsequent = validationRules.Where(vr =>
+             var subsequent = rejectedRules.Where(vr =>
                  vr.ValidationRule.ValidationRuleIdentifier == ValidationRuleIdentifier.SubsequentBundleOperationsFail);
 
-             validationRules.Count.Should().Be(3);
+             rejectedRules.Count.Should().Be(3);
              invalid.Count().Should().Be(1);
              subsequent.Count().Should().Be(2);
          }

@@ -67,9 +67,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             SetupChargeRepository(chargeRepository, charge);
             SetupMarketParticipantRepository(marketParticipantRepository, sender);
             var confirmed = false;
-            // receiptService
-            //     .Setup(s => s.AcceptAsync(It.IsAny<ChargeCommand>()))
-            //     .Callback<ChargeCommand>(_ => confirmed = true);
             receiptService
                 .Setup(s => s.AcceptValidOperationsAsync(It.IsAny<IReadOnlyCollection<ChargeOperationDto>>(), It.IsAny<DocumentDto>()))
                 .Callback<IReadOnlyCollection<ChargeOperationDto>, DocumentDto>((_, _) => confirmed = true);
@@ -187,16 +184,12 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
              SetupValidatorsForOperation(documentValidator, inputValidator, businessValidator, invalidValidationResult);
 
              var accepted = 0;
-             // receiptService.Setup(s => s.AcceptAsync(It.IsAny<ChargeCommand>()))
-             //     .Callback<ChargeCommand>(_ => accepted++);
              receiptService
                  .Setup(s => s.AcceptValidOperationsAsync(
                      It.IsAny<IReadOnlyCollection<ChargeOperationDto>>(),
                      It.IsAny<DocumentDto>()))
                  .Callback<IReadOnlyCollection<ChargeOperationDto>, DocumentDto>((_, _) => accepted++);
              var rejectedRules = new List<IValidationRuleContainer>();
-             // receiptService.Setup(s => s.RejectAsync(It.IsAny<ChargeCommand>(), It.IsAny<ValidationResult>()))
-             //     .Callback<ChargeCommand, ValidationResult>((_, s) => validationResultsArgs.Add(s));
              receiptService
                  .Setup(s => s.RejectInvalidOperationsAsync(
                      It.IsAny<IReadOnlyCollection<ChargeOperationDto>>(),
