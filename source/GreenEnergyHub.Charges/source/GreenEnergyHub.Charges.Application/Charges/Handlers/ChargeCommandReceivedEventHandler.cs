@@ -88,24 +88,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                     break;
                 }
 
-                var operationType = GetOperationType(operation, charge);
-                switch (operationType)
-                {
-                    case OperationType.Create:
-                        await HandleCreateEventAsync(operation).ConfigureAwait(false);
-                        break;
-                    case OperationType.Update:
-                        HandleUpdateEvent(charge!, operation);
-                        break;
-                    case OperationType.Stop:
-                        charge!.Stop(operation.EndDateTime);
-                        break;
-                    case OperationType.CancelStop:
-                        HandleCancelStopEvent(charge!, operation);
-                        break;
-                    default:
-                        throw new InvalidOperationException("Could not handle charge command.");
-                }
+                await HandleOperationAsync(operation, charge).ConfigureAwait(false);
 
                 operationsToBeConfirmed.Add(operation);
             }
@@ -115,6 +98,28 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             var document = commandReceivedEvent.Command.Document;
             await RejectInvalidOperationsAsync(operationsToBeRejected, document, rejectionRules).ConfigureAwait(false);
             await AcceptValidOperationsAsync(operationsToBeConfirmed, document).ConfigureAwait(false);
+        }
+
+        private async Task HandleOperationAsync(ChargeOperationDto operation, Charge? charge)
+        {
+            var operationType = GetOperationType(operation, charge);
+            switch (operationType)
+            {
+                case OperationType.Create:
+                    await HandleCreateEventAsync(operation).ConfigureAwait(false);
+                    break;
+                case OperationType.Update:
+                    HandleUpdateEvent(charge!, operation);
+                    break;
+                case OperationType.Stop:
+                    charge!.Stop(operation.EndDateTime);
+                    break;
+                case OperationType.CancelStop:
+                    HandleCancelStopEvent(charge!, operation);
+                    break;
+                default:
+                    throw new InvalidOperationException("Could not handle charge command.");
+            }
         }
 
         private static void CollectRejectionRules(
