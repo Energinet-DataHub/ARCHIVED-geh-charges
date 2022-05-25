@@ -62,6 +62,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 
             var operations = commandReceivedEvent.Command.ChargeOperations.ToArray();
 
+            ValidationResult? validationResult;
             for (var i = 0; i < operations.Length; i++)
             {
                 var operation = operations[i];
@@ -71,7 +72,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                     throw new InvalidOperationException($"Chargeinformation ID '{operation.ChargeId}' does not exist.");
                 }
 
-                var validationResult = _inputValidator.Validate(operation);
+                validationResult = _inputValidator.Validate(operation);
                 if (validationResult.IsFailed)
                 {
                     operationsToBeRejected = operations[i..].ToList();
@@ -101,9 +102,11 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             var document = commandReceivedEvent.Command.Document;
-            var chargeCommandReceiptsForOperations = new ChargeCommandReceiptsForOperations(_chargeCommandReceiptService);
-            await chargeCommandReceiptsForOperations.RejectInvalidOperationsAsync(operationsToBeRejected, document, rejectionRules).ConfigureAwait(false);
-            await chargeCommandReceiptsForOperations.AcceptValidOperationsAsync(operationsToBeConfirmed, document).ConfigureAwait(false);
+            // var chargeCommandReceiptsForOperations = new ChargeCommandReceiptsForOperations(_chargeCommandReceiptService);
+            // await chargeCommandReceiptsForOperations.RejectInvalidOperationsAsync(operationsToBeRejected, document, rejectionRules).ConfigureAwait(false);
+            // await chargeCommandReceiptsForOperations.AcceptValidOperationsAsync(operationsToBeConfirmed, document).ConfigureAwait(false);
+            await _chargeCommandReceiptService.RejectInvalidOperationsAsync(operationsToBeRejected, document, rejectionRules).ConfigureAwait(false);
+            await _chargeCommandReceiptService.AcceptValidOperationsAsync(operationsToBeConfirmed, document).ConfigureAwait(false);
         }
 
         private async Task<Charge?> GetChargeAsync(ChargeOperationDto operation)

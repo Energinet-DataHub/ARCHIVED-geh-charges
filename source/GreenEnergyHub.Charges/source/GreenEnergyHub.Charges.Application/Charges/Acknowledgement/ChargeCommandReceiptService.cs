@@ -54,5 +54,30 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
             var acceptedEvent = _chargeCommandAcceptedEventFactory.CreateEvent(command);
             await _acceptedMessageDispatcher.DispatchAsync(acceptedEvent).ConfigureAwait(false);
         }
+
+        public async Task RejectInvalidOperationsAsync(
+            IReadOnlyCollection<ChargeOperationDto> operationsToBeRejected,
+            DocumentDto document,
+            IList<IValidationRuleContainer> rejectionRules)
+        {
+            if (operationsToBeRejected.Any())
+            {
+                await RejectAsync(
+                        new ChargeCommand(document, operationsToBeRejected),
+                        ValidationResult.CreateFailure(rejectionRules))
+                    .ConfigureAwait(false);
+            }
+        }
+
+        public async Task AcceptValidOperationsAsync(
+            IReadOnlyCollection<ChargeOperationDto> operationsToBeConfirmed,
+            DocumentDto document)
+        {
+            if (operationsToBeConfirmed.Any())
+            {
+                await AcceptAsync(
+                    new ChargeCommand(document, operationsToBeConfirmed)).ConfigureAwait(false);
+            }
+        }
     }
 }

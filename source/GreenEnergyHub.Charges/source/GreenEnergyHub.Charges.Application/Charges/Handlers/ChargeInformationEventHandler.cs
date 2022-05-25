@@ -122,9 +122,11 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
 
             var document = commandReceivedEvent.Command.Document;
-            var chargeCommandReceiptsForOperations = new ChargeCommandReceiptsForOperations(_chargeCommandReceiptService);
-            await chargeCommandReceiptsForOperations.RejectInvalidOperationsAsync(operationsToBeRejected, document, rejectionRules).ConfigureAwait(false);
-            await chargeCommandReceiptsForOperations.AcceptValidOperationsAsync(operationsToBeConfirmed, document).ConfigureAwait(false);
+            // var chargeCommandReceiptsForOperations = new ChargeCommandReceiptsForOperations(_chargeCommandReceiptService);
+            // await chargeCommandReceiptsForOperations.RejectInvalidOperationsAsync(operationsToBeRejected, document, rejectionRules).ConfigureAwait(false);
+            // await chargeCommandReceiptsForOperations.AcceptValidOperationsAsync(operationsToBeConfirmed, document).ConfigureAwait(false);
+            await _chargeCommandReceiptService.RejectInvalidOperationsAsync(operationsToBeRejected, document, rejectionRules).ConfigureAwait(false);
+            await _chargeCommandReceiptService.AcceptValidOperationsAsync(operationsToBeConfirmed, document).ConfigureAwait(false);
         }
 
         private async Task HandleCreateEventAsync(ChargeOperationDto chargeOperationDto)
