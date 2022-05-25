@@ -71,7 +71,8 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             for (var i = 0; i < operations.Length; i++)
             {
                 var operation = operations[i];
-                var charge = await GetChargeAsync(operation).ConfigureAwait(false);
+                var marketParticipantRole = commandReceivedEvent.Command.Document.Sender.BusinessProcessRole;
+                var charge = await GetChargeAsync(marketParticipantRole, operation).ConfigureAwait(false);
 
                 var validationResult = _inputValidator.Validate(operation);
                 if (validationResult.IsFailed)
@@ -101,7 +102,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 switch (operationType)
                 {
                     case OperationType.Create:
-                        await HandleCreateEventAsync(operation).ConfigureAwait(false);
+                        await HandleCreateEventAsync(marketParticipantRole, operation).ConfigureAwait(false);
                         break;
                     case OperationType.Update:
                         HandleUpdateEvent(charge!, operation);
@@ -126,10 +127,10 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             await _chargeCommandReceiptService.AcceptValidOperationsAsync(operationsToBeConfirmed, document).ConfigureAwait(false);
         }
 
-        private async Task HandleCreateEventAsync(ChargeOperationDto chargeOperationDto)
+        private async Task HandleCreateEventAsync(MarketParticipantRole marketParticipantRole, ChargeOperationDto chargeOperationDto)
         {
             var charge = await _chargeFactory
-                .CreateFromChargeOperationDtoAsync(chargeOperationDto)
+                .CreateFromChargeOperationDtoAsync(marketParticipantRole, chargeOperationDto)
                 .ConfigureAwait(false);
 
             await _chargeRepository.AddAsync(charge).ConfigureAwait(false);
@@ -165,15 +166,15 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 : OperationType.Update;
         }
 
-        private async Task<Charge?> GetChargeAsync(ChargeOperationDto chargeOperationDto)
+        private async Task<Charge?> GetChargeAsync(MarketParticipantRole marketParticipantRole, ChargeOperationDto chargeOperationDto)
         {
             var marketParticipant = await _marketParticipantRepository
-                .SingleAsync(chargeOperationDto.ChargeOwner)
+                .SingleAsync(marketParticipantRole, chargeOperationDto.ChargeOwner)
                 .ConfigureAwait(false);
 
             var chargeIdentifier = new ChargeIdentifier(
                 chargeOperationDto.ChargeId,
-                marketParticipant.Id,
+                marketParticipant!.Id,
                 chargeOperationDto.Type);
             return await _chargeRepository.SingleOrNullAsync(chargeIdentifier).ConfigureAwait(false);
         }

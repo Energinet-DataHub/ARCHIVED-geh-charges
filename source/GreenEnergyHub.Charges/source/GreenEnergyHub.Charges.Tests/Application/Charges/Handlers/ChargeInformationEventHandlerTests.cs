@@ -76,7 +76,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 
             var charge = chargeBuilder.WithPeriods(new List<ChargePeriod> { CreateValidPeriod() }).Build();
             chargeFactory
-                .Setup(s => s.CreateFromChargeOperationDtoAsync(It.IsAny<ChargeOperationDto>()))
+                .Setup(s => s.CreateFromChargeOperationDtoAsync(It.IsAny<MarketParticipantRole>(), It.IsAny<ChargeOperationDto>()))
                 .ReturnsAsync(charge);
 
             chargePeriodFactory
@@ -321,7 +321,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             TestMarketParticipant marketParticipant)
         {
             marketParticipantRepository
-                .Setup(r => r.SingleAsync(It.IsAny<string>()))
+                .Setup(r => r.SingleAsync(
+                    It.IsAny<MarketParticipantRole>(),
+                    It.IsAny<string>()))
                 .ReturnsAsync(marketParticipant);
         }
 

@@ -34,8 +34,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         }
 
         public async Task<Charge> CreateFromChargeOperationDtoAsync(
-            MarketParticipantRole marketParticipantRole,
-            ChargeOperationDto chargeOperationDto)
+            MarketParticipantRole marketParticipantRole, ChargeOperationDto chargeOperationDto)
         {
             var owner = await _marketParticipantRepository
                 .SingleOrNullAsync(marketParticipantRole, chargeOperationDto.ChargeOwner)

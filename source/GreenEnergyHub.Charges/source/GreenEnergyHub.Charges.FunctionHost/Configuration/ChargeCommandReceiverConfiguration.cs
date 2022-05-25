@@ -57,12 +57,16 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 AvailableChargeReceiptValidationErrorFactory>();
             serviceCollection.AddScoped<IChargeCommandReceivedEventHandler, ChargeCommandReceivedEventHandler>();
             serviceCollection.AddScoped<IChargePriceEventHandler, ChargePriceEventHandler>();
-            serviceCollection.AddScoped<IChargeCommandReceiptsForOperations, ChargeCommandReceiptsForOperations>();
             ConfigureDatabase(serviceCollection);
             ConfigureValidation(serviceCollection);
             ConfigureIso8601Timezones(serviceCollection);
             ConfigureIso4217Currency(serviceCollection);
             ConfigureMessaging(serviceCollection);
+        }
+
+        private static void ConfigureDatabase(IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddScoped<IMarketParticipantRepository, MarketParticipantRepository>();
         }
 
         private static void ConfigureValidation(IServiceCollection serviceCollection)

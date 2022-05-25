@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
         {
             // Arrange
             marketParticipantRepository
-                .Setup(repo => repo.GetOrNullAsync(
+                .Setup(repo => repo.SingleOrNullAsync(
                     marketParticipantDto.BusinessProcessRole,
                     chargeOperationDto.ChargeOwner))
                 .ReturnsAsync(owner);
@@ -76,7 +76,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
         {
             // Arrange
             marketParticipantRepository
-                .Setup(repo => repo.GetOrNullAsync(
+                .Setup(repo => repo.SingleOrNullAsync(
                     It.IsAny<MarketParticipantRole>(),
                     It.IsAny<string>()))
                 .ReturnsAsync((MarketParticipant?)null);

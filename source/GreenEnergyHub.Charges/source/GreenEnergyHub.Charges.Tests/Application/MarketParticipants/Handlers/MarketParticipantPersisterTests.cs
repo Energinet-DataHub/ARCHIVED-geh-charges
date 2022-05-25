@@ -252,7 +252,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             GridArea gridArea)
         {
             marketParticipantRepository.Setup(x =>
-                    x.GetOrNullAsync(It.IsAny<MarketParticipantRole>(), It.IsAny<string>()))
+                    x.SingleOrNullAsync(It.IsAny<MarketParticipantRole>(), It.IsAny<string>()))
                 .ReturnsAsync(() => marketParticipant);
 
             gridAreaRepository.Setup(x =>

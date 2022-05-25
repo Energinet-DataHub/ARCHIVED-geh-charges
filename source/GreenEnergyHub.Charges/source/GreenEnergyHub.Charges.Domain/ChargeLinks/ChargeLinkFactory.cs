@@ -38,15 +38,15 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
             _marketParticipantRepository = marketParticipantRepository;
         }
 
-        public async Task<ChargeLink> CreateAsync(ChargeLinkDto dto)
+        public async Task<ChargeLink> CreateAsync(MarketParticipantRole marketParticipantRole, ChargeLinkDto dto)
         {
             ArgumentNullException.ThrowIfNull(dto);
 
             var marketParticipant = await _marketParticipantRepository
-                .SingleAsync(dto.ChargeOwner)
+                .SingleAsync(marketParticipantRole, dto.ChargeOwner)
                 .ConfigureAwait(false);
 
-            var chargeIdentifier = new ChargeIdentifier(dto.SenderProvidedChargeId, marketParticipant.Id, dto.ChargeType);
+            var chargeIdentifier = new ChargeIdentifier(dto.SenderProvidedChargeId, marketParticipant!.Id, dto.ChargeType);
             var charge = await _chargeRepository.SingleAsync(chargeIdentifier).ConfigureAwait(false);
 
             var meteringPoint = await _meteringPointRepository

@@ -51,7 +51,9 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinksDat
             // Arrange
             var chargeOwner = new TestMarketParticipant(charge.OwnerId, "ownerId");
             marketParticipantRepository
-                .Setup(r => r.SingleAsync(It.IsAny<string>()))
+                .Setup(r => r.SingleAsync(
+                    It.IsAny<MarketParticipantRole>(),
+                    It.IsAny<string>()))
                 .ReturnsAsync(chargeOwner);
             marketParticipantRepository
                 .Setup(r => r.GetMeteringPointAdministratorAsync())
@@ -105,7 +107,9 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinksDat
             // Arrange
             var chargeOwner = new TestMarketParticipant(charge.OwnerId, "ownerId");
             marketParticipantRepository
-                .Setup(r => r.SingleAsync(It.IsAny<string>()))
+                .Setup(r => r.SingleAsync(
+                    It.IsAny<MarketParticipantRole>(),
+                    It.IsAny<string>()))
                 .ReturnsAsync(chargeOwner);
             marketParticipantRepository
                 .Setup(r => r.GetMeteringPointAdministratorAsync())

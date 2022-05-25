@@ -61,12 +61,13 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             var operationsToBeConfirmed = new List<ChargeOperationDto>();
 
             var operations = commandReceivedEvent.Command.ChargeOperations.ToArray();
+            var marketParticipantRole = commandReceivedEvent.Command.Document.Sender.BusinessProcessRole;
 
             ValidationResult? validationResult;
             for (var i = 0; i < operations.Length; i++)
             {
                 var operation = operations[i];
-                var charge = await GetChargeAsync(operation).ConfigureAwait(false);
+                var charge = await GetChargeAsync(marketParticipantRole, operation).ConfigureAwait(false);
                 if (charge is null)
                 {
                     throw new InvalidOperationException($"Charge ID '{operation.ChargeId}' does not exist.");
@@ -106,15 +107,15 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             await _chargeCommandReceiptService.AcceptValidOperationsAsync(operationsToBeConfirmed, document).ConfigureAwait(false);
         }
 
-        private async Task<Charge?> GetChargeAsync(ChargeOperationDto operation)
+        private async Task<Charge?> GetChargeAsync(MarketParticipantRole marketParticipantRole, ChargeOperationDto operation)
         {
             var marketParticipant = await _marketParticipantRepository
-                .SingleAsync(operation.ChargeOwner)
+                .SingleAsync(marketParticipantRole, operation.ChargeOwner)
                 .ConfigureAwait(false);
 
             var chargeIdentifier = new ChargeIdentifier(
                 operation.ChargeId,
-                marketParticipant.Id,
+                marketParticipant!.Id,
                 operation.Type);
             return await _chargeRepository.SingleOrNullAsync(chargeIdentifier).ConfigureAwait(false);
         }

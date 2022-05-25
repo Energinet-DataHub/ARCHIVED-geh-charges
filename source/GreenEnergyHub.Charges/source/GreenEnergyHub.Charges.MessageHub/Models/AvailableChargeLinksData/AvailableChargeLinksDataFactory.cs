@@ -68,10 +68,10 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData
                 .ConfigureAwait(false);
 
             var owner = await _marketParticipantRepository
-                .SingleAsync(operation.ChargeOwner)
+                .SingleAsync(input.ChargeLinksCommand.Document.Sender.BusinessProcessRole, operation.ChargeOwner)
                 .ConfigureAwait(false);
 
-            var chargeIdentifier = new ChargeIdentifier(operation.SenderProvidedChargeId, owner.Id, operation.ChargeType);
+            var chargeIdentifier = new ChargeIdentifier(operation.SenderProvidedChargeId, owner!.Id, operation.ChargeType);
             var charge = await _chargeRepository.SingleAsync(chargeIdentifier).ConfigureAwait(false);
             var sender = await GetSenderAsync().ConfigureAwait(false);
             if (!ShouldMakeDataAvailableForGridOwnerOfMeteringPoint(charge)) return;
