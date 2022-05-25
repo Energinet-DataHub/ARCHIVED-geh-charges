@@ -23,8 +23,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
         ChargeOperationIdRequired = 7, // VR223 / E0H
         ChargeIdLengthValidation = 9, // VR441 / E86
         ChargeIdRequiredValidation = 10, // VR440 / E0H
-        DocumentTypeMustBeRequestUpdateChargeInformation = 11, // VR404 / D02
-        BusinessReasonCodeMustBeUpdateChargeInformation = 12, // VR424 / D02
+        DocumentTypeMustBeRequestChangeOfPriceList = 11, // VR404 / D02
+        BusinessReasonCodeMustBeUpdateChargeInformationOrChargePrices = 12, // VR424 / D02
         ChargeTypeIsKnownValidation = 13, // VR449 / E86
         VatClassificationValidation = 14, // VR488 / E86
         ResolutionTariffValidation = 15, // VR505-1 / D23
@@ -47,5 +47,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
         SubsequentBundleOperationsFail = 33, // VR906 / D14
         TransparentInvoicingIsNotAllowedForFee = 34, // VR904 / D67
         ChargeResolutionCanNotBeUpdated = 35, // VR907 / D23
+        RecipientRoleMustBeDdz = 36, // VR165 / E55
     }
 }

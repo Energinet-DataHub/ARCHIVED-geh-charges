@@ -16,46 +16,42 @@ using System.Collections.Generic;
 using System.Linq;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.BusinessValidation.ValidationRules
 {
     /// <summary>
     /// Temporary rule that stops both update and stops from taking place to charge links until that is implemented
     /// </summary>
-    public class ChargeLinksUpdateNotYetSupportedRule : IValidationRuleForOperation
+    public class ChargeLinksUpdateNotYetSupportedRule : IValidationRule
     {
-        private readonly ChargeLinksCommand _chargeLinksCommand;
+        private readonly Instant _newLinkStartDate;
+        private readonly Instant? _newLinkEndDate;
         private readonly IReadOnlyCollection<ChargeLink> _existingChargeLinks;
 
         public ChargeLinksUpdateNotYetSupportedRule(
-            ChargeLinksCommand chargeLinksCommand,
+            ChargeLinkDto chargeLinkDto,
             IReadOnlyCollection<ChargeLink> existingChargeLinks)
         {
-            _chargeLinksCommand = chargeLinksCommand;
+            _newLinkStartDate = chargeLinkDto.StartDateTime;
+            _newLinkEndDate = chargeLinkDto.EndDateTime;
             _existingChargeLinks = existingChargeLinks;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeLinkUpdateNotYetSupported;
 
-        public bool IsValid => _chargeLinksCommand.ChargeLinksOperations.All(ChargeLinkDateRangeIsNotOverlapping);
+        public bool IsValid => ChargeLinkDateRangeIsNotOverlapping();
 
-        /// <summary>
-        /// This validation rule validates each ChargeLink in a list of ChargeLink(s). This property will
-        /// tell which ChargeLink triggered the rule. The ChargeLink is identified by OperationId.
-        /// </summary>
-        public string OperationId => _chargeLinksCommand.ChargeLinksOperations
-            .First(link => !ChargeLinkDateRangeIsNotOverlapping(link)).OperationId;
-
-        private bool ChargeLinkDateRangeIsNotOverlapping(ChargeLinkDto newLink)
+        private bool ChargeLinkDateRangeIsNotOverlapping()
         {
-            return _existingChargeLinks.All(existingLink => !IsOverlapping(existingLink, newLink));
+            return _existingChargeLinks.All(existingLink => !IsOverlapping(existingLink));
         }
 
-        private static bool IsOverlapping(ChargeLink existingLink, ChargeLinkDto newLink)
+        private bool IsOverlapping(ChargeLink existingLink)
         {
             // See https://stackoverflow.com/questions/325933/determine-whether-two-date-ranges-overlap
-            var isOverlapping = (newLink.EndDateTime == null || existingLink.StartDateTime < newLink.EndDateTime)
-                                && newLink.StartDateTime < existingLink.EndDateTime;
+            var isOverlapping = (_newLinkEndDate == null || existingLink.StartDateTime < _newLinkEndDate)
+                                && _newLinkStartDate < existingLink.EndDateTime;
 
             return isOverlapping;
         }

@@ -22,6 +22,8 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
+using GreenEnergyHub.Charges.MessageHub.Models.Shared;
+using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 {
@@ -30,19 +32,24 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
     {
         private readonly IMessageMetaDataContext _messageMetaDataContext;
         private readonly IAvailableChargeReceiptValidationErrorFactory _availableChargeReceiptValidationErrorFactory;
+        private readonly ILogger _logger;
 
         public AvailableChargeRejectionDataFactory(
             IMessageMetaDataContext messageMetaDataContext,
             IAvailableChargeReceiptValidationErrorFactory availableChargeReceiptValidationErrorFactory,
-            IMarketParticipantRepository marketParticipantRepository)
+            IMarketParticipantRepository marketParticipantRepository,
+            ILoggerFactory loggerFactory)
             : base(marketParticipantRepository)
         {
             _messageMetaDataContext = messageMetaDataContext;
             _availableChargeReceiptValidationErrorFactory = availableChargeReceiptValidationErrorFactory;
+            _logger = loggerFactory.CreateLogger(nameof(AvailableChargeRejectionDataFactory));
         }
 
         public override async Task<IReadOnlyList<AvailableChargeReceiptData>> CreateAsync(ChargeCommandRejectedEvent input)
         {
+            LogValidationErrors(input);
+
             var recipient = input.Command.Document.Sender; // The original sender is the recipient of the receipt
             var sender = await GetSenderAsync().ConfigureAwait(false);
 
@@ -58,10 +65,19 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                     Guid.NewGuid(), // ID of each available piece of data must be unique
                     ReceiptStatus.Rejected,
                     chargeOperationDto.Id,
-                    input.Command.Document.Type,
+                    DocumentType.RejectRequestChangeOfPriceList, // Will be added to the HTTP MessageType header
                     operationOrder++,
                     GetReasons(input, chargeOperationDto)))
                 .ToList();
+        }
+
+        private void LogValidationErrors(ChargeCommandRejectedEvent rejectedEvent)
+        {
+            var errorMessage = ValidationErrorLogMessageBuilder.BuildErrorMessage(
+                rejectedEvent.Command.Document,
+                rejectedEvent.ValidationErrors);
+
+            _logger.LogError("ValidationErrors for {errorMessage}", errorMessage);
         }
 
         private List<AvailableReceiptValidationError> GetReasons(
@@ -70,6 +86,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
         {
             return input
                 .ValidationErrors
+                .Where(ve => ve.OperationId == chargeOperationDto.Id || string.IsNullOrWhiteSpace(ve.OperationId))
                 .Select(validationError => _availableChargeReceiptValidationErrorFactory
                     .Create(validationError, input.Command, chargeOperationDto))
                 .ToList();

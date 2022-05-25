@@ -13,11 +13,11 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 
 namespace GreenEnergyHub.Charges.Domain.ChargeLinks
@@ -26,37 +26,41 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
     {
         private readonly IChargeRepository _chargeRepository;
         private readonly IMeteringPointRepository _meteringPointRepository;
+        private readonly IMarketParticipantRepository _marketParticipantRepository;
 
-        public ChargeLinkFactory(IChargeRepository chargeRepository, IMeteringPointRepository meteringPointRepository)
+        public ChargeLinkFactory(
+            IChargeRepository chargeRepository,
+            IMeteringPointRepository meteringPointRepository,
+            IMarketParticipantRepository marketParticipantRepository)
         {
             _chargeRepository = chargeRepository;
             _meteringPointRepository = meteringPointRepository;
+            _marketParticipantRepository = marketParticipantRepository;
         }
 
-        public async Task<IReadOnlyCollection<ChargeLink>> CreateAsync(ChargeLinksReceivedEvent chargeLinksEvent)
+        public async Task<ChargeLink> CreateAsync(ChargeLinkDto dto)
         {
-            ArgumentNullException.ThrowIfNull(chargeLinksEvent);
+            ArgumentNullException.ThrowIfNull(dto);
 
-            var chargeLinksCreated = new List<ChargeLink>();
+            var marketParticipant = await _marketParticipantRepository
+                .SingleAsync(dto.ChargeOwner)
+                .ConfigureAwait(false);
 
-            foreach (var chargeLink in chargeLinksEvent.ChargeLinksCommand.ChargeLinksOperations)
-            {
-                var chargeIdentifier = new ChargeIdentifier(chargeLink.SenderProvidedChargeId, chargeLink.ChargeOwner, chargeLink.ChargeType);
-                var charge = await _chargeRepository.GetAsync(chargeIdentifier).ConfigureAwait(false);
+            var chargeIdentifier = new ChargeIdentifier(dto.SenderProvidedChargeId, marketParticipant.Id, dto.ChargeType);
+            var charge = await _chargeRepository.SingleAsync(chargeIdentifier).ConfigureAwait(false);
 
-                var meteringPoint = await _meteringPointRepository
-                    .GetMeteringPointAsync(chargeLinksEvent.ChargeLinksCommand.MeteringPointId)
-                    .ConfigureAwait(false);
+            var meteringPoint = await _meteringPointRepository
+                .GetMeteringPointAsync(dto.MeteringPointId)
+                .ConfigureAwait(false);
 
-                chargeLinksCreated.Add(new ChargeLink(
-                    charge.Id,
-                    meteringPoint.Id,
-                    chargeLink.StartDateTime,
-                    chargeLink.EndDateTime.TimeOrEndDefault(),
-                    chargeLink.Factor));
-            }
+            var chargeLink = new ChargeLink(
+                charge.Id,
+                meteringPoint.Id,
+                dto.StartDateTime,
+                dto.EndDateTime.TimeOrEndDefault(),
+                dto.Factor);
 
-            return chargeLinksCreated;
+            return chargeLink;
         }
     }
 }

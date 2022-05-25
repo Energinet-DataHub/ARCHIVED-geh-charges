@@ -50,13 +50,5 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             var sut = new ChargeIdRequiredValidationRule(invalidChargeOperationDto);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChargeIdRequiredValidation);
         }
-
-        [Theory]
-        [InlineAutoDomainData]
-        public void OperationId_ShouldBe_EqualTo(ChargeOperationDto chargeOperationDto)
-        {
-            var sut = new ChargeIdRequiredValidationRule(chargeOperationDto);
-            sut.OperationId.Should().Be(chargeOperationDto.Id);
-        }
     }
 }

@@ -38,7 +38,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             ChargeOperationDto chargeOperationDto)
         {
             var owner = await _marketParticipantRepository
-                .GetOrNullAsync(marketParticipantRole, chargeOperationDto.ChargeOwner)
+                .SingleOrNullAsync(marketParticipantRole, chargeOperationDto.ChargeOwner)
                 .ConfigureAwait(false);
 
             if (owner == null)

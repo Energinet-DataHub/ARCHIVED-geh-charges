@@ -42,19 +42,20 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.DocumentV
             return ValidationRuleSet.FromRules(rules);
         }
 
-        private async Task<List<IValidationRule>> GetRulesForDocumentAsync(DocumentDto documentDto)
+        private async Task<List<IValidationRuleContainer>> GetRulesForDocumentAsync(DocumentDto documentDto)
         {
             var sender = await _marketParticipantRepository
-                .GetOrNullAsync(documentDto.Sender.BusinessProcessRole, documentDto.Sender.Id)
+                .SingleOrNullAsync(documentDto.Sender.BusinessProcessRole, documentDto.Sender.Id)
                 .ConfigureAwait(false);
 
-            var rules = new List<IValidationRule>
+            var rules = new List<IValidationRuleContainer>
             {
-                new CommandSenderMustBeAnExistingMarketParticipantRule(sender),
-                new BusinessReasonCodeMustBeUpdateChargeInformationRule(documentDto),
-                new DocumentTypeMustBeRequestUpdateChargeInformationRule(documentDto),
-                new RecipientIsMandatoryTypeValidationRule(documentDto),
-                new SenderIsMandatoryTypeValidationRule(documentDto),
+                new DocumentValidationRuleContainer(new CommandSenderMustBeAnExistingMarketParticipantRule(sender)),
+                new DocumentValidationRuleContainer(new BusinessReasonCodeMustBeUpdateChargeInformationOrChargePricesRule(documentDto)),
+                new DocumentValidationRuleContainer(new DocumentTypeMustBeRequestChangeOfPriceListRule(documentDto)),
+                new DocumentValidationRuleContainer(new RecipientIsMandatoryTypeValidationRule(documentDto)),
+                new DocumentValidationRuleContainer(new SenderIsMandatoryTypeValidationRule(documentDto)),
+                new DocumentValidationRuleContainer(new RecipientMustBeDdzRule(documentDto)),
             };
 
             return rules;

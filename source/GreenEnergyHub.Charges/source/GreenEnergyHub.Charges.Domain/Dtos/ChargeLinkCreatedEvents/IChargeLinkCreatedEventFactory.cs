@@ -20,6 +20,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCreatedEvents
 {
     public interface IChargeLinkCreatedEventFactory
     {
-        IReadOnlyCollection<ChargeLinkCreatedEvent> CreateEvents([NotNull] ChargeLinksCommand command);
+        IReadOnlyCollection<ChargeLinkCreatedEvent> CreateEvents(ChargeLinksCommand command);
     }
 }

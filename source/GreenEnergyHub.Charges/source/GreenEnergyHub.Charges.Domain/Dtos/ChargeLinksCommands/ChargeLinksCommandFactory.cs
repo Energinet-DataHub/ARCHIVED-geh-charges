@@ -14,7 +14,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Charges;
@@ -47,13 +46,13 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
         }
 
         public async Task<ChargeLinksCommand> CreateAsync(
-            [NotNull] CreateDefaultChargeLinksRequest createDefaultChargeLinksRequest,
-            [NotNull] IReadOnlyCollection<DefaultChargeLink> defaultChargeLinks)
+            CreateDefaultChargeLinksRequest createDefaultChargeLinksRequest,
+            IReadOnlyCollection<DefaultChargeLink> defaultChargeLinks)
         {
             var chargeIds = defaultChargeLinks.Select(x => x.ChargeId).ToList();
 
             var charges = await _chargeRepository
-                .GetAsync(chargeIds)
+                .GetByIdsAsync(chargeIds)
                 .ConfigureAwait(false);
 
             var ownerIds = charges.Select(c => c.OwnerId);
@@ -77,6 +76,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
 
             var chargeLinks = defChargeAndCharge.Select(pair => new ChargeLinkDto(
                     Guid.NewGuid().ToString(), // When creating default charge links, the TSO starts a new operation, which is why a new OperationId is provided.
+                    meteringPoint.MeteringPointId,
                     pair.Key.GetStartDateTime(meteringPoint.EffectiveDate),
                     pair.Key.EndDateTime,
                     pair.Value.SenderProvidedChargeId,
@@ -85,8 +85,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
                     pair.Value.Type))
                 .ToList();
 
-            return await CreateChargeLinksCommandAsync(createDefaultChargeLinksRequest, systemOperator, chargeLinks)
-                .ConfigureAwait(false);
+            return await CreateChargeLinksCommandAsync(systemOperator, chargeLinks).ConfigureAwait(false);
         }
 
         private static string GetChargeOwner(Charge charge, IReadOnlyCollection<MarketParticipant> owners)
@@ -95,7 +94,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
         }
 
         private async Task<ChargeLinksCommand> CreateChargeLinksCommandAsync(
-            CreateDefaultChargeLinksRequest createDefaultChargeLinksRequest,
             MarketParticipant systemOperator,
             List<ChargeLinkDto> chargeLinks)
         {
@@ -105,7 +103,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
                 .ConfigureAwait(false);
 
             return new ChargeLinksCommand(
-                createDefaultChargeLinksRequest.MeteringPointId,
                 new DocumentDto
                 {
                     Id = Guid.NewGuid().ToString(),

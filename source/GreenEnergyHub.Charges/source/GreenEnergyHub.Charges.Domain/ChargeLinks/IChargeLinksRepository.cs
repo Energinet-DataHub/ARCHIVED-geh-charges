@@ -23,8 +23,8 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
         /// <summary>
         /// Adds the supplied charge link to the context
         /// </summary>
-        /// <param name="chargeLinks"></param>
-        Task AddRangeAsync(IReadOnlyCollection<ChargeLink> chargeLinks);
+        /// <param name="chargeLink"></param>
+        Task AddAsync(ChargeLink chargeLink);
 
         /// <summary>
         /// Get charge links

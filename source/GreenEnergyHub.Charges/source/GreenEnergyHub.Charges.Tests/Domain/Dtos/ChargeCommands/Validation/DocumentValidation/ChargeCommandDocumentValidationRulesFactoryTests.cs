@@ -17,10 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
-using GreenEnergyHub.Charges.Core;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.DocumentValidation.Factories;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.DocumentValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
@@ -39,14 +36,14 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Doc
     {
         [Theory]
         [InlineAutoMoqData]
-        public async Task CreateRulesForChargeCommand_ShouldContainRulesTest(
+        public async Task CreateRulesAsync_ShouldContainRulesTest(
             TestMarketParticipant sender,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             ChargeCommandDocumentValidationRulesFactory sut)
         {
             // Arrange
             marketParticipantRepository
-                .Setup(r => r.GetOrNullAsync(
+                .Setup(r => r.SingleOrNullAsync(
                     It.IsAny<MarketParticipantRole>(),
                     It.IsAny<string>()))
                 .ReturnsAsync(sender);
@@ -54,15 +51,16 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Doc
             var expectedRules = new List<IValidationRule>
             {
                 new CommandSenderMustBeAnExistingMarketParticipantRule(sender),
-                new BusinessReasonCodeMustBeUpdateChargeInformationRule(chargeCommand.Document),
-                new DocumentTypeMustBeRequestUpdateChargeInformationRule(chargeCommand.Document),
+                new BusinessReasonCodeMustBeUpdateChargeInformationOrChargePricesRule(chargeCommand.Document),
+                new DocumentTypeMustBeRequestChangeOfPriceListRule(chargeCommand.Document),
                 new RecipientIsMandatoryTypeValidationRule(chargeCommand.Document),
                 new SenderIsMandatoryTypeValidationRule(chargeCommand.Document),
+                new RecipientMustBeDdzRule(chargeCommand.Document),
             };
 
             // Act
             var rules = await sut.CreateRulesAsync(chargeCommand).ConfigureAwait(false);
-            var actualRuleTypes = rules.GetRules().Select(r => r.GetType()).ToList();
+            var actualRuleTypes = rules.GetRules().Select(r => r.ValidationRule.GetType()).ToList();
             var expectedRuleTypes = expectedRules.Select(r => r.GetType()).ToList();
 
             // Assert
@@ -71,7 +69,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Doc
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task CreateRulesForChargeCommandAsync_WhenCalledWithExistingChargeNotTariff_ReturnsExpectedRules(
+        public async Task CreateRulesAsync_WhenCalledWithExistingChargeNotTariff_ReturnsExpectedRules(
             TestMarketParticipant sender,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IChargeRepository> chargeRepository,
@@ -82,28 +80,29 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Doc
             var chargeOperationDto = new ChargeOperationDtoBuilder().WithChargeType(ChargeType.Fee).Build();
             var chargeCommand = new ChargeCommandBuilder().WithChargeOperation(chargeOperationDto).Build();
             chargeRepository
-                .Setup(r => r.GetOrNullAsync(It.IsAny<ChargeIdentifier>()))
+                .Setup(r => r.SingleOrNullAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(charge);
             chargeRepository
-                .Setup(r => r.GetAsync(It.IsAny<ChargeIdentifier>()))
+                .Setup(r => r.SingleAsync(It.IsAny<ChargeIdentifier>()))
                 .Returns(Task.FromResult(charge));
             marketParticipantRepository
-                .Setup(repo => repo.GetOrNullAsync(
+                .Setup(repo => repo.SingleOrNullAsync(
                     It.IsAny<MarketParticipantRole>(),
                     It.IsAny<string>()))
                 .ReturnsAsync(sender);
 
             // Act
             var actual = await sut.CreateRulesAsync(chargeCommand).ConfigureAwait(false);
-            var actualRules = actual.GetRules().Select(r => r.GetType()).ToList();
+            var actualRules = actual.GetRules().Select(r => r.ValidationRule.GetType()).ToList();
 
             // Assert
-            Assert.Equal(5, actual.GetRules().Count); // This assert is added to ensure that when the rule set is expanded, the test gets attention as well.
+            Assert.Equal(6, actual.GetRules().Count); // This assert is added to ensure that when the rule set is expanded, the test gets attention as well.
             Assert.Contains(typeof(CommandSenderMustBeAnExistingMarketParticipantRule), actualRules);
-            Assert.Contains(typeof(BusinessReasonCodeMustBeUpdateChargeInformationRule), actualRules);
-            Assert.Contains(typeof(DocumentTypeMustBeRequestUpdateChargeInformationRule), actualRules);
+            Assert.Contains(typeof(BusinessReasonCodeMustBeUpdateChargeInformationOrChargePricesRule), actualRules);
+            Assert.Contains(typeof(DocumentTypeMustBeRequestChangeOfPriceListRule), actualRules);
             Assert.Contains(typeof(RecipientIsMandatoryTypeValidationRule), actualRules);
             Assert.Contains(typeof(SenderIsMandatoryTypeValidationRule), actualRules);
+            Assert.Contains(typeof(RecipientMustBeDdzRule), actualRules);
         }
     }
 }

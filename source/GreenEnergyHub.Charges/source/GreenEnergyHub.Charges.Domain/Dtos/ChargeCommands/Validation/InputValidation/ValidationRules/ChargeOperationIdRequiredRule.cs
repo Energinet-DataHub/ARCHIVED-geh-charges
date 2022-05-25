@@ -16,7 +16,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
 {
-    public class ChargeOperationIdRequiredRule : IValidationRuleForOperation
+    public class ChargeOperationIdRequiredRule : IValidationRule
     {
         private readonly ChargeOperationDto _chargeOperationDto;
 
@@ -28,7 +28,5 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
         public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeOperationIdRequired;
 
         public bool IsValid => !string.IsNullOrWhiteSpace(_chargeOperationDto.Id);
-
-        public string OperationId => _chargeOperationDto.Id;
     }
 }

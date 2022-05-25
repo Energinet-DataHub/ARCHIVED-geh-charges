@@ -16,10 +16,12 @@ using System;
 using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.Tests.TestCore;
 using Microsoft.Extensions.Logging;
 using Xunit;
 using Xunit.Categories;
@@ -33,22 +35,20 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
         [InlineAutoMoqData]
         public void Create_WhenTwoMergeFields_ReturnsExpectedDescription(
             ChargeLinksCommand chargeLinksCommand,
-            CimValidationErrorTextProvider cimValidationErrorTextProvider)
+            ChargeLinkDto chargeLinkDto,
+            CimValidationErrorTextProvider cimValidationErrorTextProvider,
+            ILoggerFactory loggerFactory)
         {
             // Arrange
-            var sut = new ChargeLinksCimValidationErrorTextFactory(cimValidationErrorTextProvider);
-            var chargeLinkDto = chargeLinksCommand.ChargeLinksOperations.First();
+            var validationError = new ValidationError(
+                ValidationRuleIdentifier.MeteringPointDoesNotExist, chargeLinkDto.SenderProvidedChargeId, null!);
+            var sut = new ChargeLinksCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
             var expected = CimValidationErrorTextTemplateMessages.MeteringPointDoesNotExistValidationErrorText
-                .Replace("{{MeteringPointId}}", chargeLinksCommand.MeteringPointId)
+                .Replace("{{MeteringPointId}}", chargeLinkDto.MeteringPointId)
                 .Replace("{{ChargeLinkStartDate}}", chargeLinkDto.StartDateTime.ToString());
 
             // Act
-            var actual = sut.Create(
-                new ValidationError(
-                    ValidationRuleIdentifier.MeteringPointDoesNotExist,
-                    chargeLinkDto.SenderProvidedChargeId),
-                chargeLinksCommand,
-                chargeLinkDto);
+            var actual = sut.Create(validationError, chargeLinksCommand, chargeLinkDto);
 
             // Assert
             actual.Should().Be(expected);
@@ -58,39 +58,44 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
         [InlineAutoMoqData]
         public void Create_MergesAllMergeFields(
             ChargeLinksCommand chargeLinksCommand,
-            CimValidationErrorTextProvider cimValidationErrorTextProvider)
+            CimValidationErrorTextProvider cimValidationErrorTextProvider,
+            ILoggerFactory loggerFactory)
         {
             // Arrange
             var chargeLinkDto = chargeLinksCommand.ChargeLinksOperations.First();
-            var validationRuleIdentifiers =
-                (ValidationRuleIdentifier[])Enum.GetValues(typeof(ValidationRuleIdentifier));
-            var sut = new ChargeLinksCimValidationErrorTextFactory(cimValidationErrorTextProvider);
+            var validationRuleIdentifiers = (ValidationRuleIdentifier[])Enum.GetValues(typeof(ValidationRuleIdentifier));
+            var identifiersForRulesWithExtendedData =
+                ValidationRuleForInterfaceLoader.GetValidationRuleIdentifierForTypes(
+                    typeof(PreviousChargeLinkOperationsMustBeValidRule).Assembly, typeof(IValidationRuleWithExtendedData));
+
+            var sut = new ChargeLinksCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
 
             // Act
             // Assert
             foreach (var validationRuleIdentifier in validationRuleIdentifiers)
             {
-                var triggeredBy = SetTriggeredByWithValidationError(chargeLinksCommand, validationRuleIdentifier);
+                var triggeredBy = GetTriggeredBy(chargeLinksCommand, validationRuleIdentifier);
                 var actual = sut.Create(
-                    new ValidationError(validationRuleIdentifier, triggeredBy),
+                    new ValidationError(validationRuleIdentifier, chargeLinkDto.OperationId, triggeredBy),
                     chargeLinksCommand,
                     chargeLinkDto);
 
                 actual.Should().NotBeNullOrWhiteSpace();
                 actual.Should().NotContain("{");
                 actual.Should().NotContain("  ");
+
+                if (identifiersForRulesWithExtendedData.Contains(validationRuleIdentifier) && triggeredBy != null)
+                    actual.Should().NotContain("unknown");
             }
         }
 
-        private static string? SetTriggeredByWithValidationError(
+        private static string? GetTriggeredBy(
             ChargeLinksCommand chargeLinksCommand, ValidationRuleIdentifier validationRuleIdentifier)
         {
             switch (validationRuleIdentifier)
             {
-                case ValidationRuleIdentifier.ChargeDoesNotExist:
-                case ValidationRuleIdentifier.MeteringPointDoesNotExist:
-                case ValidationRuleIdentifier.ChargeLinkUpdateNotYetSupported:
-                    return chargeLinksCommand.ChargeLinksOperations.First().SenderProvidedChargeId;
+                case ValidationRuleIdentifier.SubsequentBundleOperationsFail:
+                    return chargeLinksCommand.ChargeLinksOperations.First().OperationId;
                 default:
                     return null;
             }

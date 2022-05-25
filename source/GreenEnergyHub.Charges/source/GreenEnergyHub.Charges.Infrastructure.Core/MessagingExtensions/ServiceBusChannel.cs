@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions
         private readonly IServiceBusMessageFactory _serviceBusMessageFactory;
 
         public ServiceBusChannel(
-            [NotNull] IServiceBusSender<TOutboundMessage> serviceBusSender,
+            IServiceBusSender<TOutboundMessage> serviceBusSender,
             IServiceBusMessageFactory serviceBusMessageFactory)
         {
             _serviceBusSender = serviceBusSender.Instance;

@@ -79,11 +79,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 var marketParticipant = await context.MarketParticipants.SingleAsync(mp => mp.Id == charge.OwnerId);
 
                 var link = chargeLinkDtoBuilder
+                    .WithMeteringPointId("571313180000000005")
                     .WithCharge(charge.SenderProvidedChargeId, charge.Type, marketParticipant.MarketParticipantId)
                     .Build();
 
                 var links = new List<ChargeLinkDto> { link };
-                var command = chargeLinksCommandBuilder.WithChargeLinks(links).Build("571313180000000005");
+                var command = chargeLinksCommandBuilder.WithChargeLinks(links).Build();
                 var correlationIdOne = CorrelationIdGenerator.Create();
                 var parentIdOne = $"00-{correlationIdOne}-b7ad6b7169203331-02";
                 var messageOne = CreateServiceBusMessage(command, correlationIdOne);

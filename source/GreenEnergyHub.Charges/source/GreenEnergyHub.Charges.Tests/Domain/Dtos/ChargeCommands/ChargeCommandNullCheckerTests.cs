@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
@@ -27,13 +28,16 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands
     public class ChargeCommandNullCheckerTests
     {
         [Theory]
-        [InlineAutoDomainData(null, "Valid", "Valid")]
-        [InlineAutoDomainData("Valid", null, "Valid")]
-        [InlineAutoDomainData("Valid", "Valid", null)]
-        [InlineAutoDomainData("", "Valid", "Valid")]
-        [InlineAutoDomainData("Valid", "", "Valid")]
-        [InlineAutoDomainData("Valid", "Valid", "")]
+        [InlineAutoDomainData(BusinessReasonCode.UpdateChargeInformation, null, "Valid", "Valid")]
+        [InlineAutoDomainData(BusinessReasonCode.UpdateChargeInformation, "Valid", null, "Valid")]
+        [InlineAutoDomainData(BusinessReasonCode.UpdateChargeInformation, "Valid", "Valid", null)]
+        [InlineAutoDomainData(BusinessReasonCode.UpdateChargeInformation, "", "Valid", "Valid")]
+        [InlineAutoDomainData(BusinessReasonCode.UpdateChargeInformation, "Valid", "", "Valid")]
+        [InlineAutoDomainData(BusinessReasonCode.UpdateChargeInformation, "Valid", "Valid", "")]
+        [InlineAutoDomainData(BusinessReasonCode.UpdateChargePrices, "Valid", "Valid", null)]
+        [InlineAutoDomainData(BusinessReasonCode.UpdateChargePrices, "Valid", "Valid", "")]
         public void ChargeCommandPropertiesAreNotNullOrWhitespace(
+            BusinessReasonCode businessReasonCode,
             string description,
             string chargeName,
             string documentId)
@@ -45,6 +49,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands
                 .Build();
             var documentDto = new DocumentDtoBuilder()
                 .WithDocumentId(documentId)
+                .WithBusinessReasonCode(businessReasonCode)
                 .Build();
             var chargeCommand = new ChargeCommandBuilder()
                 .WithDocumentDto(documentDto)
