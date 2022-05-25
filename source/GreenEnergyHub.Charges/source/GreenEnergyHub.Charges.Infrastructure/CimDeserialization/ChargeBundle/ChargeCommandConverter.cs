@@ -270,7 +270,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
             return (points, resolution);
         }
 
-        private async Task<Instant> ParseTimeIntervalAsync(SchemaValidatingReader reader, Instant intervalDateTime)
+        private static async Task<Instant> ParseTimeIntervalAsync(SchemaValidatingReader reader, Instant intervalDateTime)
         {
             while (await reader.AdvanceAsync().ConfigureAwait(false))
             {
