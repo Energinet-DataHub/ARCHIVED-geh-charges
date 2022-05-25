@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 module "app_webapi" {
-  source                                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/app-service?ref=5.8.0"
+  source                                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/app-service?ref=6.0.0"
 
   name                                      = "webapi"
   project_name                              = var.domain_name_short
@@ -20,6 +20,8 @@ module "app_webapi" {
   environment_instance                      = var.environment_instance
   resource_group_name                       = azurerm_resource_group.this.name
   location                                  = azurerm_resource_group.this.location
+  vnet_integration_subnet_id                = data.azurerm_key_vault_secret.snet_vnet_integrations_id.value
+  private_endpoint_subnet_id                = data.azurerm_key_vault_secret.snet_private_endpoints_id.value
   app_service_plan_id                       = data.azurerm_key_vault_secret.plan_shared_id.value
   application_insights_instrumentation_key  = data.azurerm_key_vault_secret.appi_shared_instrumentation_key.value
   health_check_path                         = "/monitor/ready"
@@ -45,7 +47,7 @@ module "app_webapi" {
 }
 
 module "kvs_app_charges_webapi_base_url" {
-  source        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/key-vault-secret?ref=5.1.0"
+  source        = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/key-vault-secret?ref=6.0.0"
 
   name          = "app-charges-webapi-base-url"
   value         = "https://${module.app_webapi.default_site_hostname}"
