@@ -17,6 +17,9 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
+    /// <summary>
+    /// Handles events for charges with BusinessReasonCode D18
+    /// </summary>
     public interface IChargeInformationEventHandler
     {
         Task HandleAsync(ChargeCommandReceivedEvent commandReceivedEvent);

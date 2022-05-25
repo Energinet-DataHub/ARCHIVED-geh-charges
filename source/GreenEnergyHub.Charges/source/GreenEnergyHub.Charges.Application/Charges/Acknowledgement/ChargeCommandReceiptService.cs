@@ -55,6 +55,12 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
             await _acceptedMessageDispatcher.DispatchAsync(acceptedEvent).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Rejects all invalid operations in a bundle
+        /// </summary>
+        /// <param name="operationsToBeRejected"></param>
+        /// <param name="document"></param>
+        /// <param name="rejectionRules"></param>
         public async Task RejectInvalidOperationsAsync(
             IReadOnlyCollection<ChargeOperationDto> operationsToBeRejected,
             DocumentDto document,
@@ -69,6 +75,11 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
             }
         }
 
+        /// <summary>
+        /// Accepts all valid operations in a bundle
+        /// </summary>
+        /// <param name="operationsToBeConfirmed"></param>
+        /// <param name="document"></param>
         public async Task AcceptValidOperationsAsync(
             IReadOnlyCollection<ChargeOperationDto> operationsToBeConfirmed,
             DocumentDto document)
