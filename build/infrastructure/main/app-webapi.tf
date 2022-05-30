@@ -30,7 +30,7 @@ module "app_webapi" {
   dotnet_framework_version                  = "v6.0"
 
   app_settings = {
-    APPINSIGHTS_INSTRUMENTATIONKEY = "${data.azurerm_key_vault_secret.appi_shared_instrumentation_key.value}",
+    APPINSIGHTS_INSTRUMENTATIONKEY = "@Microsoft.KeyVault(SecretUri=https://${var.shared_resources_keyvault_name}.vault.azure.net/secrets/appi-shared-instrumentation-key/)",
     FRONTEND_OPEN_ID_URL = "${data.azurerm_key_vault_secret.frontend_open_id_url.value}",
     FRONTEND_SERVICE_APP_ID = "${data.azurerm_key_vault_secret.frontend_service_app_id.value}"
   }
