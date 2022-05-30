@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -24,6 +23,7 @@ using Energinet.DataHub.Core.Messaging.Transport;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
+using GreenEnergyHub.Charges.Tests.TestCore;
 using GreenEnergyHub.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
@@ -91,10 +91,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions.S
             {
                 var data = new TheoryData<IInboundMessage>();
                 var fixture = new Fixture().Customize(new AutoMoqCustomization());
-                var domainAssembly = AppDomain
-                    .CurrentDomain
-                    .GetAssemblies()
-                    .Single(a => a.GetName().Name == "GreenEnergyHub.Charges.Domain");
+                var domainAssembly = DomainAssemblyHelper.GetDomainAssembly();
                 var messageTypes = domainAssembly
                     .GetTypes()
                     .Where(t => typeof(IMessage).IsAssignableFrom(t) && t.IsClass && !t.IsAbstract)

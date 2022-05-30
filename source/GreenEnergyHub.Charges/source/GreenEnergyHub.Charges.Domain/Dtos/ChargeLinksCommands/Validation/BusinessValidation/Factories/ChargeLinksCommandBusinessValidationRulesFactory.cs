@@ -29,18 +29,18 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
         private readonly IChargeRepository _chargeRepository;
         private readonly IMeteringPointRepository _meteringPointRepository;
         private readonly IChargeLinksRepository _chargeLinksRepository;
-        private readonly IMarketParticipantRepository _marketParticipantRepository;
+        private readonly IChargeIdentifierFactory _chargeIdentifierFactory;
 
         public ChargeLinksCommandBusinessValidationRulesFactory(
             IChargeRepository chargeRepository,
             IMeteringPointRepository meteringPointRepository,
             IChargeLinksRepository chargeLinksRepository,
-            IMarketParticipantRepository marketParticipantRepository)
+            IChargeIdentifierFactory chargeIdentifierFactory)
         {
             _chargeRepository = chargeRepository;
             _meteringPointRepository = meteringPointRepository;
             _chargeLinksRepository = chargeLinksRepository;
-            _marketParticipantRepository = marketParticipantRepository;
+            _chargeIdentifierFactory = chargeIdentifierFactory;
         }
 
         public async Task<IValidationRuleSet> CreateRulesAsync(ChargeLinkDto operation)
@@ -66,13 +66,11 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
             if (meteringPoint == null)
                 return rules;
 
-            var chargeOwner = await _marketParticipantRepository
-                .SingleAsync(chargeLinkDto.ChargeOwner)
+            var chargeIdentifier = await _chargeIdentifierFactory
+                .CreateAsync(chargeLinkDto.SenderProvidedChargeId, chargeLinkDto.ChargeType, chargeLinkDto.ChargeOwner)
                 .ConfigureAwait(false);
 
-            var charge = await _chargeRepository
-                .SingleOrNullAsync(new ChargeIdentifier(chargeLinkDto.SenderProvidedChargeId, chargeOwner.Id, chargeLinkDto.ChargeType))
-                .ConfigureAwait(false);
+            var charge = await _chargeRepository.SingleOrNullAsync(chargeIdentifier).ConfigureAwait(false);
 
             rules.Add(new OperationValidationRuleContainer(new ChargeMustExistRule(charge), chargeLinkDto.OperationId));
 
