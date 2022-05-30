@@ -136,7 +136,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 
         public void CancelStop(ChargePeriod chargePeriod)
         {
-            var existingLastPeriod = _periods.OrderByDescending(p => p.StartDateTime).First();
+            var existingLastPeriod = _periods.OrderBy(p => p.StartDateTime).First();
 
             if (chargePeriod.StartDateTime != existingLastPeriod.EndDateTime)
             {
