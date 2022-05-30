@@ -102,7 +102,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
                 throw new InvalidOperationException("Charge update must not have bound end date.");
             }
 
-            var stopDate = _periods.Max(p => p.EndDateTime);
+            var stopDate = _periods.Min(p => p.EndDateTime);
             if (stopDate != InstantExtensions.GetEndDefault())
             {
                 newChargePeriod = newChargePeriod.WithEndDate(stopDate);
