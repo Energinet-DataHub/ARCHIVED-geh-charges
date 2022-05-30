@@ -19,3 +19,11 @@ module "kv_shared_access_policy_func_functionhost" {
   app_identity_tenant_id    = module.func_functionhost.identity_tenant_id
   app_identity_principal_id = module.func_functionhost.identity_principal_id
 }
+
+module "kv_shared_access_policy_app_webapi" {
+  source                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/key-vault-access-policy?ref=6.1.0"
+
+  key_vault_id              = data.azurerm_key_vault.kv_shared_resources.id
+  app_identity_tenant_id    = module.app_webapi.identity.0.tenant_id
+  app_identity_principal_id = module.app_webapi.identity.0.principal_id
+}
