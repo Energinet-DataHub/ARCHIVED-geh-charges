@@ -26,11 +26,22 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
 
         Task AcceptAsync(ChargeCommand command);
 
+        /// <summary>
+        /// Send reject receipt containing all invalid operations
+        /// </summary>
+        /// <param name="operationsToBeRejected"></param>
+        /// <param name="document"></param>
+        /// <param name="rejectionRules"></param>
         Task RejectInvalidOperationsAsync(
             IReadOnlyCollection<ChargeOperationDto> operationsToBeRejected,
             DocumentDto document,
             IList<IValidationRuleContainer> rejectionRules);
 
+        /// <summary>
+        /// Send accept receipt containing all valid operations
+        /// </summary>
+        /// <param name="operationsToBeConfirmed"></param>
+        /// <param name="document"></param>
         Task AcceptValidOperationsAsync(
             IReadOnlyCollection<ChargeOperationDto> operationsToBeConfirmed,
             DocumentDto document);
