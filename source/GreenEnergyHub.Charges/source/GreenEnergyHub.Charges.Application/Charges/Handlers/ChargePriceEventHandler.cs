@@ -56,11 +56,10 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         {
             ArgumentNullException.ThrowIfNull(commandReceivedEvent);
 
+            var operations = commandReceivedEvent.Command.ChargeOperations.ToArray();
             var operationsToBeRejected = new List<ChargeOperationDto>();
             var rejectionRules = new List<IValidationRuleContainer>();
             var operationsToBeConfirmed = new List<ChargeOperationDto>();
-
-            var operations = commandReceivedEvent.Command.ChargeOperations.ToArray();
 
             ValidationResult? validationResult;
             for (var i = 0; i < operations.Length; i++)
@@ -76,6 +75,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 if (validationResult.IsFailed)
                 {
                     operationsToBeRejected = operations[i..].ToList();
+                    CollectRejectionRules(rejectionRules, validationResult, operationsToBeRejected, operation);
                     rejectionRules.AddRange(validationResult.InvalidRules);
                     rejectionRules.AddRange(operationsToBeRejected.Skip(1)
                         .Select(_ =>
@@ -88,11 +88,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 if (validationResult.IsFailed)
                 {
                     operationsToBeRejected = operations[i..].ToList();
-                    rejectionRules.AddRange(validationResult.InvalidRules);
-                    rejectionRules.AddRange(operationsToBeRejected.Skip(1)
-                        .Select(_ =>
-                            new OperationValidationRuleContainer(
-                                new PreviousOperationsMustBeValidRule(operation.Id), operation.Id)));
+                    CollectRejectionRules(rejectionRules, validationResult, operationsToBeRejected, operation);
                     break;
                 }
 
@@ -104,6 +100,19 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             var document = commandReceivedEvent.Command.Document;
             await _chargeCommandReceiptService.RejectInvalidOperationsAsync(operationsToBeRejected, document, rejectionRules).ConfigureAwait(false);
             await _chargeCommandReceiptService.AcceptValidOperationsAsync(operationsToBeConfirmed, document).ConfigureAwait(false);
+        }
+
+        private static void CollectRejectionRules(
+            List<IValidationRuleContainer> rejectionRules,
+            ValidationResult validationResult,
+            IEnumerable<ChargeOperationDto> operationsToBeRejected,
+            ChargeOperationDto operation)
+        {
+            rejectionRules.AddRange(validationResult.InvalidRules);
+            rejectionRules.AddRange(operationsToBeRejected.Skip(1)
+                .Select(_ =>
+                    new OperationValidationRuleContainer(
+                        new PreviousOperationsMustBeValidRule(operation.Id), operation.Id)));
         }
 
         private async Task<Charge?> GetChargeAsync(ChargeOperationDto operation)

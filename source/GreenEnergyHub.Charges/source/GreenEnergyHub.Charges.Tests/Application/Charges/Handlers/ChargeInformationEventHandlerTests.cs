@@ -148,6 +148,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         [Theory]
         [InlineAutoMoqData]
         public async Task HandleAsync_IfValidUpdateEvent_ChargeUpdated(
+            [Frozen] Mock<IChargeIdentifierFactory> chargeIdentifierFactory,
             [Frozen] Mock<IInputValidator<ChargeOperationDto>> inputValidator,
             [Frozen] Mock<IBusinessValidator<ChargeOperationDto>> businessValidator,
             [Frozen] Mock<IChargeRepository> chargeRepository,
@@ -168,6 +169,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                 .WithEndDateTime(InstantHelper.GetEndDefault())
                 .Build();
             SetupMarketParticipantRepository(marketParticipantRepository, sender);
+            SetupChargeIdentifierFactoryMock(chargeIdentifierFactory);
             chargeRepository
                 .Setup(r => r.SingleOrNullAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(charge);

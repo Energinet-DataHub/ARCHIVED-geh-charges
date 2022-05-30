@@ -44,6 +44,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         [Theory]
         [InlineAutoMoqData]
         public async Task HandleAsync_WhenValidationSucceed_StoreAndConfirmCommand(
+            [Frozen] Mock<IChargeIdentifierFactory> chargeIdentifierFactory,
             [Frozen] Mock<IInputValidator<ChargeOperationDto>> inputValidator,
             [Frozen] Mock<IBusinessValidator<ChargeOperationDto>> businessValidator,
             [Frozen] Mock<IChargeCommandReceiptService> receiptService,
@@ -66,6 +67,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             var charge = chargeBuilder.WithPoints(points).Build();
             SetupChargeRepository(chargeRepository, charge);
             SetupMarketParticipantRepository(marketParticipantRepository, sender);
+            SetupChargeIdentifierFactoryMock(chargeIdentifierFactory);
+
             var confirmed = false;
             receiptService
                 .Setup(s => s.AcceptValidOperationsAsync(It.IsAny<IReadOnlyCollection<ChargeOperationDto>>(), It.IsAny<DocumentDto>()))
@@ -82,6 +85,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         [Theory]
         [InlineAutoMoqData]
         public async Task HandleAsync_WhenValidationFails_RejectsEvent(
+            [Frozen] Mock<IChargeIdentifierFactory> chargeIdentifierFactory,
             [Frozen] Mock<IInputValidator<ChargeOperationDto>> inputValidator,
             [Frozen] Mock<IBusinessValidator<ChargeOperationDto>> businessValidator,
             [Frozen] Mock<IChargeCommandReceiptService> receiptService,
@@ -99,9 +103,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             var charge = chargeBuilder.Build();
             SetupChargeRepository(chargeRepository, charge);
             SetupMarketParticipantRepository(marketParticipantRepository, sender);
+            SetupChargeIdentifierFactoryMock(chargeIdentifierFactory);
 
-            // receiptService.Setup(s => s.RejectAsync(It.IsAny<ChargeCommand>(), It.IsAny<ValidationResult>()))
-            //     .Callback<ChargeCommand, ValidationResult>((_, _) => rejected = true);
             receiptService
                 .Setup(s => s.RejectInvalidOperationsAsync(
                         It.IsAny<IReadOnlyCollection<ChargeOperationDto>>(),
@@ -131,6 +134,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         [Theory]
         [InlineAutoMoqData]
         public async Task HandleAsync_WhenPriceSeriesWithResolutionPT1H_StorePriceSeries(
+            [Frozen] Mock<IChargeIdentifierFactory> chargeIdentifierFactory,
             [Frozen] Mock<IInputValidator<ChargeOperationDto>> inputValidator,
             [Frozen] Mock<IBusinessValidator<ChargeOperationDto>> businessValidator,
             [Frozen] Mock<IChargeRepository> chargeRepository,
@@ -145,6 +149,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             var charge = chargeBuilder.Build();
             SetupChargeRepository(chargeRepository, charge);
             SetupMarketParticipantRepository(marketParticipantRepository, sender);
+            SetupChargeIdentifierFactoryMock(chargeIdentifierFactory);
+
             var chargeCommand = CreateChargeCommandWith24Points();
             var receivedEvent = new ChargeCommandReceivedEvent(InstantHelper.GetTodayAtMidnightUtc(), chargeCommand);
 
@@ -158,21 +164,23 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         [Theory]
         [InlineAutoMoqData]
         public async Task HandleAsync_WhenValidationFailsInBundleOperation_RejectEventForAllSubsequentOperations(
-             [Frozen] Mock<IChargeRepository> chargeRepository,
-             [Frozen] Mock<IDocumentValidator<ChargeCommand>> documentValidator,
-             [Frozen] Mock<IInputValidator<ChargeOperationDto>> inputValidator,
-             [Frozen] Mock<IBusinessValidator<ChargeOperationDto>> businessValidator,
-             [Frozen] Mock<IChargeCommandReceiptService> receiptService,
-             TestMarketParticipant sender,
-             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-             ChargeBuilder chargeBuilder,
-             ChargePriceEventHandler sut)
+            [Frozen] Mock<IChargeIdentifierFactory> chargeIdentifierFactory,
+            [Frozen] Mock<IChargeRepository> chargeRepository,
+            [Frozen] Mock<IDocumentValidator<ChargeCommand>> documentValidator,
+            [Frozen] Mock<IInputValidator<ChargeOperationDto>> inputValidator,
+            [Frozen] Mock<IBusinessValidator<ChargeOperationDto>> businessValidator,
+            [Frozen] Mock<IChargeCommandReceiptService> receiptService,
+            TestMarketParticipant sender,
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
+            ChargeBuilder chargeBuilder,
+            ChargePriceEventHandler sut)
          {
              // Arrange
              var receivedEvent = CreateReceivedEventWithChargeOperations();
              var charge = chargeBuilder.Build();
              SetupChargeRepository(chargeRepository, charge);
              SetupMarketParticipantRepository(marketParticipantRepository, sender);
+             SetupChargeIdentifierFactoryMock(chargeIdentifierFactory);
 
              var invalidValidationResult = ValidationResult.CreateFailure(
                  new List<IValidationRuleContainer>
@@ -274,6 +282,13 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             marketParticipantRepository
                 .Setup(r => r.SingleAsync(It.IsAny<string>()))
                 .ReturnsAsync(marketParticipant);
+        }
+
+        private static void SetupChargeIdentifierFactoryMock(Mock<IChargeIdentifierFactory> chargeIdentifierFactory)
+        {
+            chargeIdentifierFactory
+                .Setup(x => x.CreateAsync(It.IsAny<string>(), It.IsAny<ChargeType>(), It.IsAny<string>()))
+                .ReturnsAsync(It.IsAny<ChargeIdentifier>());
         }
 
         private static void SetupChargeRepository(
