@@ -28,7 +28,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence
 
         public async Task SaveChangesAsync()
         {
-            await Task.CompletedTask.ConfigureAwait(false);
+            await _chargesDatabaseContext.SaveChangesAsync().ConfigureAwait(false);
         }
     }
 }
