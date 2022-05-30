@@ -149,7 +149,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 
         private void StopExistingPeriod(Instant stopDate)
         {
-            var previousPeriod = _periods.OrderByDescending(p => p.StartDateTime)
+            var previousPeriod = _periods.OrderBy(p => p.StartDateTime)
                 .FirstOrDefault(p =>
                     p.EndDateTime >= stopDate &&
                     p.StartDateTime <= stopDate);
