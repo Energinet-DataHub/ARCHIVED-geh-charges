@@ -55,6 +55,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
 
         internal const string TimeIntervalStart = "start";
 
+        internal const string TimeIntervalEnd = "end";
+
         internal const string Point = "Point";
 
         internal const string Position = "position";

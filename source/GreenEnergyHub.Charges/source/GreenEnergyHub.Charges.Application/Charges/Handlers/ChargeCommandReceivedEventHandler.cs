@@ -13,199 +13,56 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
-using GreenEnergyHub.Charges.Application.Persistence;
-using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
-using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
     public class ChargeCommandReceivedEventHandler : IChargeCommandReceivedEventHandler
     {
+        private readonly IChargeInformationEventHandler _chargeInformationEventHandler;
+        private readonly IChargePriceEventHandler _chargePriceEventHandler;
+        private readonly IDocumentValidator<ChargeCommand> _documentValidator;
         private readonly IChargeCommandReceiptService _chargeCommandReceiptService;
-        private readonly IInputValidator<ChargeOperationDto> _inputValidator;
-        private readonly IBusinessValidator<ChargeOperationDto> _businessValidator;
-        private readonly IChargeRepository _chargeRepository;
-        private readonly IChargeFactory _chargeFactory;
-        private readonly IChargeIdentifierFactory _chargeIdentifierFactory;
-        private readonly IChargePeriodFactory _chargePeriodFactory;
-        private readonly IUnitOfWork _unitOfWork;
 
         public ChargeCommandReceivedEventHandler(
-            IChargeCommandReceiptService chargeCommandReceiptService,
-            IInputValidator<ChargeOperationDto> inputValidator,
-            IBusinessValidator<ChargeOperationDto> businessValidator,
-            IChargeRepository chargeRepository,
-            IChargeFactory chargeFactory,
-            IChargeIdentifierFactory chargeIdentifierFactory,
-            IChargePeriodFactory chargePeriodFactory,
-            IUnitOfWork unitOfWork)
+            IChargeInformationEventHandler chargeInformationEventHandler,
+            IChargePriceEventHandler chargePriceEventHandler,
+            IDocumentValidator<ChargeCommand> documentValidator,
+            IChargeCommandReceiptService chargeCommandReceiptService)
         {
+            _chargeInformationEventHandler = chargeInformationEventHandler;
+            _chargePriceEventHandler = chargePriceEventHandler;
+            _documentValidator = documentValidator;
             _chargeCommandReceiptService = chargeCommandReceiptService;
-            _inputValidator = inputValidator;
-            _businessValidator = businessValidator;
-            _chargeRepository = chargeRepository;
-            _chargeFactory = chargeFactory;
-            _chargeIdentifierFactory = chargeIdentifierFactory;
-            _chargePeriodFactory = chargePeriodFactory;
-            _unitOfWork = unitOfWork;
         }
 
         public async Task HandleAsync(ChargeCommandReceivedEvent commandReceivedEvent)
         {
-            ArgumentNullException.ThrowIfNull(commandReceivedEvent);
-
-            var operations = commandReceivedEvent.Command.ChargeOperations.ToArray();
-            var operationsToBeRejected = new List<ChargeOperationDto>();
-            var rejectionRules = new List<IValidationRuleContainer>();
-            var operationsToBeConfirmed = new List<ChargeOperationDto>();
-
-            for (var i = 0; i < operations.Length; i++)
+            var documentValidationResult = await _documentValidator.ValidateAsync(commandReceivedEvent.Command).ConfigureAwait(false);
+            if (documentValidationResult.IsFailed)
             {
-                var operation = operations[i];
-                var charge = await GetChargeAsync(operation).ConfigureAwait(false);
-
-                var validationResult = _inputValidator.Validate(operation);
-                if (validationResult.IsFailed)
-                {
-                    operationsToBeRejected = operations[i..].ToList();
-                    CollectRejectionRules(rejectionRules, validationResult, operationsToBeRejected, operation);
-                    break;
-                }
-
-                validationResult = await _businessValidator.ValidateAsync(operation).ConfigureAwait(false);
-                if (validationResult.IsFailed)
-                {
-                    operationsToBeRejected = operations[i..].ToList();
-                    CollectRejectionRules(rejectionRules, validationResult, operationsToBeRejected, operation);
-                    break;
-                }
-
-                await HandleOperationAsync(operation, charge).ConfigureAwait(false);
-
-                operationsToBeConfirmed.Add(operation);
+                await _chargeCommandReceiptService
+                    .RejectAsync(commandReceivedEvent.Command, documentValidationResult).ConfigureAwait(false);
+                return;
             }
 
-            await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-
-            var document = commandReceivedEvent.Command.Document;
-            await RejectInvalidOperationsAsync(operationsToBeRejected, document, rejectionRules).ConfigureAwait(false);
-            await AcceptValidOperationsAsync(operationsToBeConfirmed, document).ConfigureAwait(false);
-        }
-
-        private async Task HandleOperationAsync(ChargeOperationDto operation, Charge? charge)
-        {
-            var operationType = GetOperationType(operation, charge);
-            switch (operationType)
+            switch (commandReceivedEvent.Command.Document.BusinessReasonCode)
             {
-                case OperationType.Create:
-                    await HandleCreateEventAsync(operation).ConfigureAwait(false);
+                case BusinessReasonCode.UpdateChargePrices:
+                    await _chargePriceEventHandler.HandleAsync(commandReceivedEvent).ConfigureAwait(false);
                     break;
-                case OperationType.Update:
-                    HandleUpdateEvent(charge!, operation);
-                    break;
-                case OperationType.Stop:
-                    charge!.Stop(operation.EndDateTime);
-                    break;
-                case OperationType.CancelStop:
-                    HandleCancelStopEvent(charge!, operation);
+                case BusinessReasonCode.UpdateChargeInformation:
+                    await _chargeInformationEventHandler.HandleAsync(commandReceivedEvent).ConfigureAwait(false);
                     break;
                 default:
-                    throw new InvalidOperationException("Could not handle charge command.");
+                    throw new ArgumentOutOfRangeException(
+                        $"Invalid BusinessReasonCode {commandReceivedEvent.Command.Document.BusinessReasonCode}");
             }
-        }
-
-        private static void CollectRejectionRules(
-            List<IValidationRuleContainer> rejectionRules,
-            ValidationResult validationResult,
-            IEnumerable<ChargeOperationDto> operationsToBeRejected,
-            ChargeOperationDto operation)
-        {
-            rejectionRules.AddRange(validationResult.InvalidRules);
-            rejectionRules.AddRange(operationsToBeRejected.Skip(1)
-                .Select(_ =>
-                    new OperationValidationRuleContainer(
-                        new PreviousOperationsMustBeValidRule(operation.Id), operation.Id)));
-        }
-
-        private async Task RejectInvalidOperationsAsync(
-            IReadOnlyCollection<ChargeOperationDto> operationsToBeRejected,
-            DocumentDto document,
-            IList<IValidationRuleContainer> rejectionRules)
-        {
-            if (operationsToBeRejected.Any())
-            {
-                await _chargeCommandReceiptService.RejectAsync(
-                        new ChargeCommand(document, operationsToBeRejected),
-                        ValidationResult.CreateFailure(rejectionRules))
-                    .ConfigureAwait(false);
-            }
-        }
-
-        private async Task AcceptValidOperationsAsync(
-            IReadOnlyCollection<ChargeOperationDto> operationsToBeConfirmed,
-            DocumentDto document)
-        {
-            if (operationsToBeConfirmed.Any())
-            {
-                await _chargeCommandReceiptService.AcceptAsync(
-                    new ChargeCommand(document, operationsToBeConfirmed)).ConfigureAwait(false);
-            }
-        }
-
-        private async Task HandleCreateEventAsync(ChargeOperationDto chargeOperationDto)
-        {
-            var charge = await _chargeFactory
-                .CreateFromChargeOperationDtoAsync(chargeOperationDto)
-                .ConfigureAwait(false);
-
-            await _chargeRepository.AddAsync(charge).ConfigureAwait(false);
-        }
-
-        private void HandleUpdateEvent(Charge charge, ChargeOperationDto chargeOperationDto)
-        {
-            var newChargePeriod = _chargePeriodFactory.CreateFromChargeOperationDto(chargeOperationDto);
-            charge.Update(newChargePeriod);
-        }
-
-        private void HandleCancelStopEvent(Charge charge, ChargeOperationDto chargeOperationDto)
-        {
-            var newChargePeriod = _chargePeriodFactory.CreateFromChargeOperationDto(chargeOperationDto);
-            charge.CancelStop(newChargePeriod);
-        }
-
-        private static OperationType GetOperationType(ChargeOperationDto chargeOperationDto, Charge? charge)
-        {
-            if (charge == null)
-            {
-                return OperationType.Create;
-            }
-
-            if (chargeOperationDto.StartDateTime == chargeOperationDto.EndDateTime)
-            {
-                return OperationType.Stop;
-            }
-
-            var latestChargePeriod = charge.Periods.OrderByDescending(p => p.StartDateTime).First();
-            return chargeOperationDto.StartDateTime == latestChargePeriod.EndDateTime
-                ? OperationType.CancelStop
-                : OperationType.Update;
-        }
-
-        private async Task<Charge?> GetChargeAsync(ChargeOperationDto chargeOperationDto)
-        {
-            var chargeIdentifier = await _chargeIdentifierFactory
-                .CreateAsync(chargeOperationDto.ChargeId, chargeOperationDto.Type, chargeOperationDto.ChargeOwner)
-                .ConfigureAwait(false);
-
-            return await _chargeRepository.SingleOrNullAsync(chargeIdentifier).ConfigureAwait(false);
         }
     }
 }
