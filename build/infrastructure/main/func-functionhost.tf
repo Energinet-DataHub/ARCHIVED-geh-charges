@@ -42,7 +42,7 @@ module "func_functionhost" {
     DOMAINEVENT_SENDER_CONNECTION_STRING                            = module.sb_charges.primary_connection_strings["send"]
     DOMAINEVENT_MANAGER_CONNECTION_STRING                           = module.sb_charges.primary_connection_strings["manage"]
     DOMAINEVENT_LISTENER_CONNECTION_STRING                          = module.sb_charges.primary_connection_strings["listen"]
-    CHARGE_CREATED_TOPIC_NAME                                       = data.azurerm_key_vault_secret.sbt_charge_created_name.value
+    CHARGE_CREATED_TOPIC_NAME                                       = "@Microsoft.KeyVault(SecretUri=https://${var.shared_resources_keyvault_name}.vault.azure.net/secrets/sbt-charge-created-name/)"
     CHARGE_PRICES_UPDATED_TOPIC_NAME                                = data.azurerm_key_vault_secret.sbt_charge_prices_updated_name.value
     CHARGE_LINKS_ACCEPTED_TOPIC_NAME                                = module.sbt_links_command_accepted.name
     CHARGE_LINKS_REJECTED_TOPIC_NAME                                = module.sbt_links_command_rejected.name
