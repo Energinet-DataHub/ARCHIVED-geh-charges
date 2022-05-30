@@ -108,7 +108,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
                 newChargePeriod = newChargePeriod.WithEndDate(stopDate);
             }
 
-            if (_periods.Exists(p => p.StartDateTime < newChargePeriod.StartDateTime))
+            if (_periods.Exists(p => p.StartDateTime <= newChargePeriod.StartDateTime))
             {
                 StopExistingPeriod(newChargePeriod.StartDateTime);
             }
