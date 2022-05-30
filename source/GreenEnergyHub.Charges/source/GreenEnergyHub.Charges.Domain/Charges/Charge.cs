@@ -151,7 +151,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         {
             var previousPeriod = _periods.OrderBy(p => p.StartDateTime)
                 .FirstOrDefault(p =>
-                    p.EndDateTime >= stopDate &&
+                    p.EndDateTime > stopDate &&
                     p.StartDateTime <= stopDate);
 
             if (previousPeriod == null)
