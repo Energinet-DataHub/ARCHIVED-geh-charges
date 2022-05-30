@@ -17,7 +17,6 @@ using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 
 namespace GreenEnergyHub.Charges.Domain.ChargeLinks
@@ -26,27 +25,25 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
     {
         private readonly IChargeRepository _chargeRepository;
         private readonly IMeteringPointRepository _meteringPointRepository;
-        private readonly IMarketParticipantRepository _marketParticipantRepository;
+        private readonly IChargeIdentifierFactory _chargeIdentifierFactory;
 
         public ChargeLinkFactory(
             IChargeRepository chargeRepository,
             IMeteringPointRepository meteringPointRepository,
-            IMarketParticipantRepository marketParticipantRepository)
+            IChargeIdentifierFactory chargeIdentifierFactory)
         {
             _chargeRepository = chargeRepository;
             _meteringPointRepository = meteringPointRepository;
-            _marketParticipantRepository = marketParticipantRepository;
+            _chargeIdentifierFactory = chargeIdentifierFactory;
         }
 
         public async Task<ChargeLink> CreateAsync(ChargeLinkDto dto)
         {
             ArgumentNullException.ThrowIfNull(dto);
 
-            var marketParticipant = await _marketParticipantRepository
-                .SingleAsync(dto.ChargeOwner)
-                .ConfigureAwait(false);
+            var chargeIdentifier = await _chargeIdentifierFactory.CreateAsync(
+                dto.SenderProvidedChargeId, dto.ChargeType, dto.ChargeOwner).ConfigureAwait(false);
 
-            var chargeIdentifier = new ChargeIdentifier(dto.SenderProvidedChargeId, marketParticipant.Id, dto.ChargeType);
             var charge = await _chargeRepository.SingleAsync(chargeIdentifier).ConfigureAwait(false);
 
             var meteringPoint = await _meteringPointRepository
