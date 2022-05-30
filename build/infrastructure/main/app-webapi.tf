@@ -31,8 +31,8 @@ module "app_webapi" {
 
   app_settings = {
     APPINSIGHTS_INSTRUMENTATIONKEY = "@Microsoft.KeyVault(SecretUri=https://${var.shared_resources_keyvault_name}.vault.azure.net/secrets/appi-shared-instrumentation-key/)",
-    FRONTEND_OPEN_ID_URL = "${data.azurerm_key_vault_secret.frontend_open_id_url.value}",
-    FRONTEND_SERVICE_APP_ID = "${data.azurerm_key_vault_secret.frontend_service_app_id.value}"
+    FRONTEND_OPEN_ID_URL = "@Microsoft.KeyVault(SecretUri=https://${var.shared_resources_keyvault_name}.vault.azure.net/secrets/frontend-open-id-url/)",
+    FRONTEND_SERVICE_APP_ID = "@Microsoft.KeyVault(SecretUri=https://${var.shared_resources_keyvault_name}.vault.azure.net/secrets/frontend-service-app-id/)",
   }
 
   connection_strings = [
