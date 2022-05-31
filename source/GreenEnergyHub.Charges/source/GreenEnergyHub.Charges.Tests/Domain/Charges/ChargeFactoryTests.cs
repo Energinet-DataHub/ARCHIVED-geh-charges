@@ -41,13 +41,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             Mock<ChargePeriod> chargePeriod,
             TestMarketParticipant owner,
             ChargeOperationDto chargeOperationDto,
-            MarketParticipantDto marketParticipantDto,
             ChargeFactory sut)
         {
             // Arrange
             marketParticipantRepository
                 .Setup(repo => repo.SingleOrNullAsync(
-                    marketParticipantDto.BusinessProcessRole,
                     chargeOperationDto.ChargeOwner))
                 .ReturnsAsync(owner);
 
@@ -56,9 +54,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
                 .Returns(chargePeriod.Object);
 
             // Act
-            var actual = await sut.CreateFromChargeOperationDtoAsync(
-                marketParticipantDto.BusinessProcessRole,
-                chargeOperationDto);
+            var actual = await sut.CreateFromChargeOperationDtoAsync(chargeOperationDto);
 
             // Assert
             actual.Should().NotContainNullsOrEmptyEnumerables();
@@ -71,13 +67,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
             Mock<ChargePeriod> chargePeriod,
             ChargeOperationDto chargeOperationDto,
-            MarketParticipantDto marketParticipantDto,
             ChargeFactory sut)
         {
             // Arrange
             marketParticipantRepository
                 .Setup(repo => repo.SingleOrNullAsync(
-                    It.IsAny<MarketParticipantRole>(),
                     It.IsAny<string>()))
                 .ReturnsAsync((MarketParticipant?)null);
 
@@ -87,7 +81,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
 
             // Act & Assert
             await Assert.ThrowsAsync<InvalidOperationException>(() =>
-                sut.CreateFromChargeOperationDtoAsync(marketParticipantDto.BusinessProcessRole, chargeOperationDto));
+                sut.CreateFromChargeOperationDtoAsync(chargeOperationDto));
         }
     }
 }

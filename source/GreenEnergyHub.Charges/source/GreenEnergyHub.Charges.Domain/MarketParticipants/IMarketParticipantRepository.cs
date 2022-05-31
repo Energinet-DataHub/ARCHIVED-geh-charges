@@ -27,7 +27,7 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
 
         Task<MarketParticipant> SingleAsync(Guid id);
 
-        Task<MarketParticipant?> SingleAsync(string marketParticipantId);
+        Task<MarketParticipant> SingleAsync(string marketParticipantId);
 
         Task<MarketParticipant?> SingleAsync(
             MarketParticipantRole businessProcessRole,

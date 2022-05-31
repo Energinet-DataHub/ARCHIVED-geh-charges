@@ -33,11 +33,10 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             _chargePeriodFactory = chargePeriodFactory;
         }
 
-        public async Task<Charge> CreateFromChargeOperationDtoAsync(
-            MarketParticipantRole marketParticipantRole, ChargeOperationDto chargeOperationDto)
+        public async Task<Charge> CreateFromChargeOperationDtoAsync(ChargeOperationDto chargeOperationDto)
         {
             var owner = await _marketParticipantRepository
-                .SingleOrNullAsync(marketParticipantRole, chargeOperationDto.ChargeOwner)
+                .SingleOrNullAsync(chargeOperationDto.ChargeOwner)
                 .ConfigureAwait(false);
 
             if (owner == null)

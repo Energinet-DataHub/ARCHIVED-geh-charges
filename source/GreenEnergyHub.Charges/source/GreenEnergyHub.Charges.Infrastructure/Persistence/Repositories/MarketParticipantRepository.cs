@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
                 .ConfigureAwait(false);
         }
 
-        public async Task<MarketParticipant?> SingleAsync(string marketParticipantId)
+        public async Task<MarketParticipant> SingleAsync(string marketParticipantId)
         {
             var roles = new HashSet<MarketParticipantRole>
             {

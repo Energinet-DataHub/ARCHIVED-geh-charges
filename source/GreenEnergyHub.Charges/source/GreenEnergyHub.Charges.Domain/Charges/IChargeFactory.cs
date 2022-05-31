@@ -20,7 +20,6 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 {
     public interface IChargeFactory
     {
-        Task<Charge> CreateFromChargeOperationDtoAsync(
-            MarketParticipantRole marketParticipantRole, ChargeOperationDto chargeOperationDto);
+        Task<Charge> CreateFromChargeOperationDtoAsync(ChargeOperationDto chargeOperationDto);
     }
 }
