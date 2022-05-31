@@ -23,13 +23,17 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
     /// </summary>
     public interface IMarketParticipantRepository
     {
+        /// <summary>
+        /// Adds a new market participant
+        /// </summary>
+        /// <param name="marketParticipant"></param>
         Task AddAsync(MarketParticipant marketParticipant);
 
         Task<MarketParticipant> SingleAsync(Guid id);
 
         Task<MarketParticipant> SingleAsync(string marketParticipantId);
 
-        Task<MarketParticipant?> SingleAsync(
+        Task<MarketParticipant> SingleAsync(
             MarketParticipantRole businessProcessRole,
             string marketParticipantId);
 

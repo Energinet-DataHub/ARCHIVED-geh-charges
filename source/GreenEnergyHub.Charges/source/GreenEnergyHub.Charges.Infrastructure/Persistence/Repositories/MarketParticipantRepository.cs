@@ -77,7 +77,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
         /// </summary>
         /// <param name="businessProcessRole"></param>
         /// <param name="marketParticipantId"></param>
-        public async Task<MarketParticipant?> SingleAsync(
+        public async Task<MarketParticipant> SingleAsync(
             MarketParticipantRole businessProcessRole,
             string marketParticipantId)
         {
