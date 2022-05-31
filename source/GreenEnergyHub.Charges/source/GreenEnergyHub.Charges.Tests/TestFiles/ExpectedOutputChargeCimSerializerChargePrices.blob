@@ -2,7 +2,7 @@
 <cim:NotifyPriceList_MarketDocument xmlns:cim="urn:ediel.org:structure:notifypricelist:0:1">
   <cim:mRID>00000000000000000000000000000000</cim:mRID>
   <cim:type>D12</cim:type>
-  <cim:process.processType>D18</cim:process.processType>
+  <cim:process.processType>D08</cim:process.processType>
   <cim:businessSector.type>23</cim:businessSector.type>
   <cim:sender_MarketParticipant.mRID codingScheme="A10">5790001330552</cim:sender_MarketParticipant.mRID>
   <cim:sender_MarketParticipant.marketRole.type>DDZ</cim:sender_MarketParticipant.marketRole.type>
