@@ -29,16 +29,16 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
     public class ChargePriceEventHandler : IChargePriceEventHandler
     {
-        private readonly IInputValidator<ChargeInformationDto> _inputValidator;
-        private readonly IBusinessValidator<ChargeInformationDto> _businessValidator;
+        private readonly IInputValidator<ChargeOperation> _inputValidator;
+        private readonly IBusinessValidator<ChargeOperation> _businessValidator;
         private readonly IMarketParticipantRepository _marketParticipantRepository;
         private readonly IChargeRepository _chargeRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IChargeCommandReceiptService _chargeCommandReceiptService;
 
         public ChargePriceEventHandler(
-            IInputValidator<ChargeInformationDto> inputValidator,
-            IBusinessValidator<ChargeInformationDto> businessValidator,
+            IInputValidator<ChargeOperation> inputValidator,
+            IBusinessValidator<ChargeOperation> businessValidator,
             IMarketParticipantRepository marketParticipantRepository,
             IChargeRepository chargeRepository,
             IUnitOfWork unitOfWork,
@@ -57,9 +57,9 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             ArgumentNullException.ThrowIfNull(commandReceivedEvent);
 
             var operations = commandReceivedEvent.Command.ChargeOperations.ToArray();
-            var operationsToBeRejected = new List<ChargeInformationDto>();
+            var operationsToBeRejected = new List<ChargeOperation>();
             var rejectionRules = new List<IValidationRuleContainer>();
-            var operationsToBeConfirmed = new List<ChargeInformationDto>();
+            var operationsToBeConfirmed = new List<ChargeOperation>();
 
             for (var i = 0; i < operations.Length; i++)
             {
@@ -91,7 +91,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                     break;
                 }
 
-                charge.UpdatePrices(operation.PointsStartInterval, operation.PointsEndInterval, operation.Points);
+                HandleOperation(operation, charge);
                 operationsToBeConfirmed.Add(operation);
             }
 
@@ -101,11 +101,17 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             await _chargeCommandReceiptService.AcceptValidOperationsAsync(operationsToBeConfirmed, document).ConfigureAwait(false);
         }
 
+        private static void HandleOperation(ChargeOperation operation, Charge charge)
+        {
+            var priceDto = (ChargePriceDto)operation;
+            charge.UpdatePrices(priceDto.PointsStartInterval, priceDto.PointsEndInterval, priceDto.Points);
+        }
+
         private static void CollectRejectionRules(
             List<IValidationRuleContainer> rejectionRules,
             ValidationResult validationResult,
-            IEnumerable<ChargeInformationDto> operationsToBeRejected,
-            ChargeInformationDto information)
+            IEnumerable<ChargeOperation> operationsToBeRejected,
+            ChargeOperation information)
         {
             rejectionRules.AddRange(validationResult.InvalidRules);
             rejectionRules.AddRange(operationsToBeRejected.Skip(1)
@@ -114,7 +120,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                         new PreviousOperationsMustBeValidRule(information.Id), information.Id)));
         }
 
-        private async Task<Charge?> GetChargeAsync(ChargeInformationDto information)
+        private async Task<Charge?> GetChargeAsync(ChargeOperation information)
         {
             var marketParticipant = await _marketParticipantRepository
                 .SingleAsync(information.ChargeOwner)

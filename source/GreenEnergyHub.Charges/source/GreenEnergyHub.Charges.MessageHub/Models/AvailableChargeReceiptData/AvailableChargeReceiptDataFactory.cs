@@ -57,7 +57,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 
         private IReadOnlyList<AvailableChargeReceiptData> CreateAvailableChargeReceiptData(
             DocumentDto documentDto,
-            ChargeInformationDto chargeInformationDto,
+            ChargeOperation chargeInformationDto,
             MarketParticipant sender,
             MarketParticipantDto recipient,
             int operationOrder)

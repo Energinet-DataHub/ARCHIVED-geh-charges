@@ -22,7 +22,6 @@ using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using GreenEnergyHub.Charges.Infrastructure.Core.Cim.Charges;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
@@ -45,7 +44,10 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
         {
             var result = new List<AvailableChargeData>();
 
-            foreach (var chargeOperationDto in input.Command.ChargeOperations.Where(ShouldMakeDataAvailableForActiveGridProviders))
+            // TODO: Will  fail for prices
+            foreach (var chargeOperationDto in input.Command.ChargeOperations
+                         .Select(x => (ChargeInformationDto)x)
+                         .Where(ShouldMakeDataAvailableForActiveGridProviders))
             {
                 await CreateForOperationAsync(input, chargeOperationDto, result).ConfigureAwait(false);
             }

@@ -78,6 +78,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
             return operations;
         }
 
+        // TODO: Maybe it should return the base class ChargeOperation, but let's postpone that for now
         private async Task<ChargeInformationDto> ParseChargeGroupIntoOperationAsync(SchemaValidatingReader reader, string operationId)
         {
             ChargeInformationDto? operation = null;

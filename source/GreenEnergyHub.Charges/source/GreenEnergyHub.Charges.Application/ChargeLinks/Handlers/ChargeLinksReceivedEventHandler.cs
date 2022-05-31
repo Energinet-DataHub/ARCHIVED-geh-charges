@@ -93,6 +93,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
             await _chargeLinksRepository.AddAsync(chargeLinks).ConfigureAwait(false);
         }
 
+        // TODO: Move to ChargeLinksReceiptService
         private async Task RejectInvalidOperationsAsync(
             IReadOnlyCollection<ChargeLinkDto> operationsToBeRejected,
             DocumentDto document,
@@ -107,6 +108,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
             }
         }
 
+        // TODO: Move to ChargeLinksReceiptService
         private async Task AcceptValidOperationsAsync(
             IReadOnlyCollection<ChargeLinkDto> operationsToBeConfirmed,
             DocumentDto document)

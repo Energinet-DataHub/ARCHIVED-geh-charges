@@ -13,10 +13,10 @@
 // limitations under the License.
 
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
@@ -39,13 +39,17 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 
             foreach (var chargeOperationDto in chargeCommandAcceptedEvent.Command.ChargeOperations)
             {
-                await _chargePublisher.PublishChargeCreatedAsync(chargeOperationDto).ConfigureAwait(false);
-
-                if (chargeOperationDto.Points.Any())
+                switch (chargeOperationDto)
                 {
-                    await _chargePricesUpdatedPublisher
-                        .PublishChargePricesAsync(chargeOperationDto)
-                        .ConfigureAwait(false);
+                    case ChargeInformationDto chargeInformationDto:
+                        await _chargePublisher.PublishChargeCreatedAsync(chargeInformationDto).ConfigureAwait(false);
+                        break;
+                    case ChargePriceDto chargePriceDto:
+                        await _chargePricesUpdatedPublisher.PublishChargePricesAsync(chargePriceDto).ConfigureAwait(false);
+                        break;
+                    default:
+                        throw new InvalidOperationException(
+                            $"Operation must be {nameof(ChargeInformationDto)} or {nameof(ChargePriceDto)}");
                 }
             }
         }
