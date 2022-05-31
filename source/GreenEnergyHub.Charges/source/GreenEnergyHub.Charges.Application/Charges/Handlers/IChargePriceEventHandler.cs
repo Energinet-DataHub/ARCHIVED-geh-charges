@@ -17,8 +17,20 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
+<<<<<<< HEAD:source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Application/Charges/Handlers/IChargeInformationEventHandler.cs
+    public interface IChargeInformationEventHandler
+    {
+=======
+    /// <summary>
+    /// Handles events for charges with BusinessReasonCode D08
+    /// </summary>
     public interface IChargePriceEventHandler
     {
+        /// <summary>
+        /// Handles the received event as a chargeprice event
+        /// </summary>
+        /// <param name="commandReceivedEvent"></param>
+>>>>>>> origin/main:source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Application/Charges/Handlers/IChargePriceEventHandler.cs
         Task HandleAsync(ChargeCommandReceivedEvent commandReceivedEvent);
     }
 }

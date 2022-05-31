@@ -38,16 +38,15 @@ namespace GreenEnergyHub.Charges.Tests.Domain.ChargeLinks
             ChargeLinkDto chargeLinkDto,
             Charge expectedCharge,
             MeteringPoint expectedMeteringPoint,
-            TestMarketParticipant sender,
-            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
+            [Frozen] Mock<IChargeIdentifierFactory> chargeIdentifierFactory,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IMeteringPointRepository> meteringPointRepository,
             ChargeLinkFactory sut)
         {
             // Arrange
-            marketParticipantRepository
-                .Setup(x => x.SingleAsync(It.IsAny<string>()))
-                .ReturnsAsync(sender);
+            chargeIdentifierFactory
+                .Setup(x => x.CreateAsync(It.IsAny<string>(), It.IsAny<ChargeType>(), It.IsAny<string>()))
+                .ReturnsAsync(It.IsAny<ChargeIdentifier>());
 
             chargeRepository
                 .Setup(x => x.SingleAsync(It.IsAny<ChargeIdentifier>()))

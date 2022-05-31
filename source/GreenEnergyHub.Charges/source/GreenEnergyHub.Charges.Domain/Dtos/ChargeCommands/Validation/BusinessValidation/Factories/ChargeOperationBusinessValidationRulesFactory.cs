@@ -19,7 +19,6 @@ using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.Factories
@@ -27,21 +26,21 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
     public class ChargeOperationBusinessValidationRulesFactory : IBusinessValidationRulesFactory<ChargeOperationDto>
     {
         private readonly IChargeRepository _chargeRepository;
+        private readonly IChargeIdentifierFactory _chargeIdentifierFactory;
         private readonly IClock _clock;
         private readonly IRulesConfigurationRepository _rulesConfigurationRepository;
-        private readonly IMarketParticipantRepository _marketParticipantRepository;
         private readonly IZonedDateTimeService _zonedDateTimeService;
 
         public ChargeOperationBusinessValidationRulesFactory(
             IRulesConfigurationRepository rulesConfigurationRepository,
-            IMarketParticipantRepository marketParticipantRepository,
             IChargeRepository chargeRepository,
+            IChargeIdentifierFactory chargeIdentifierFactory,
             IZonedDateTimeService zonedDateTimeService,
             IClock clock)
         {
             _rulesConfigurationRepository = rulesConfigurationRepository;
-            _marketParticipantRepository = marketParticipantRepository;
             _chargeRepository = chargeRepository;
+            _chargeIdentifierFactory = chargeIdentifierFactory;
             _zonedDateTimeService = zonedDateTimeService;
             _clock = clock;
         }
@@ -120,14 +119,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
 
         private async Task<Charge?> GetChargeOrNullAsync(ChargeOperationDto chargeOperationDto)
         {
-            var marketParticipant = await _marketParticipantRepository
-                .SingleAsync(chargeOperationDto.ChargeOwner)
+            var chargeIdentifier = await _chargeIdentifierFactory
+                .CreateAsync(chargeOperationDto.ChargeId, chargeOperationDto.Type, chargeOperationDto.ChargeOwner)
                 .ConfigureAwait(false);
-
-            var chargeIdentifier = new ChargeIdentifier(
-                chargeOperationDto.ChargeId,
-                marketParticipant!.Id,
-                chargeOperationDto.Type);
 
             return await _chargeRepository.SingleOrNullAsync(chargeIdentifier).ConfigureAwait(false);
         }

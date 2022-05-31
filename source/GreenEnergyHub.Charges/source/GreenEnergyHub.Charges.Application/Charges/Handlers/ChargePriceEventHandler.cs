@@ -56,27 +56,25 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         {
             ArgumentNullException.ThrowIfNull(commandReceivedEvent);
 
+            var operations = commandReceivedEvent.Command.ChargeOperations.ToArray();
             var operationsToBeRejected = new List<ChargeOperationDto>();
             var rejectionRules = new List<IValidationRuleContainer>();
             var operationsToBeConfirmed = new List<ChargeOperationDto>();
 
-            var operations = commandReceivedEvent.Command.ChargeOperations.ToArray();
-            var marketParticipantRole = commandReceivedEvent.Command.Document.Sender.BusinessProcessRole;
-
-            ValidationResult? validationResult;
             for (var i = 0; i < operations.Length; i++)
             {
                 var operation = operations[i];
-                var charge = await GetChargeAsync(marketParticipantRole, operation).ConfigureAwait(false);
+                var charge = await GetChargeAsync(operation).ConfigureAwait(false);
                 if (charge is null)
                 {
                     throw new InvalidOperationException($"Charge ID '{operation.ChargeId}' does not exist.");
                 }
 
-                validationResult = _inputValidator.Validate(operation);
+                var validationResult = _inputValidator.Validate(operation);
                 if (validationResult.IsFailed)
                 {
                     operationsToBeRejected = operations[i..].ToList();
+                    CollectRejectionRules(rejectionRules, validationResult, operationsToBeRejected, operation);
                     rejectionRules.AddRange(validationResult.InvalidRules);
                     rejectionRules.AddRange(operationsToBeRejected.Skip(1)
                         .Select(_ =>
@@ -89,11 +87,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 if (validationResult.IsFailed)
                 {
                     operationsToBeRejected = operations[i..].ToList();
-                    rejectionRules.AddRange(validationResult.InvalidRules);
-                    rejectionRules.AddRange(operationsToBeRejected.Skip(1)
-                        .Select(_ =>
-                            new OperationValidationRuleContainer(
-                                new PreviousOperationsMustBeValidRule(operation.Id), operation.Id)));
+                    CollectRejectionRules(rejectionRules, validationResult, operationsToBeRejected, operation);
                     break;
                 }
 
@@ -107,7 +101,20 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             await _chargeCommandReceiptService.AcceptValidOperationsAsync(operationsToBeConfirmed, document).ConfigureAwait(false);
         }
 
-        private async Task<Charge?> GetChargeAsync(MarketParticipantRole marketParticipantRole, ChargeOperationDto operation)
+        private static void CollectRejectionRules(
+            List<IValidationRuleContainer> rejectionRules,
+            ValidationResult validationResult,
+            IEnumerable<ChargeOperationDto> operationsToBeRejected,
+            ChargeOperationDto operation)
+        {
+            rejectionRules.AddRange(validationResult.InvalidRules);
+            rejectionRules.AddRange(operationsToBeRejected.Skip(1)
+                .Select(_ =>
+                    new OperationValidationRuleContainer(
+                        new PreviousOperationsMustBeValidRule(operation.Id), operation.Id)));
+        }
+
+        private async Task<Charge?> GetChargeAsync(ChargeOperationDto operation)
         {
             var marketParticipant = await _marketParticipantRepository
                 .SingleAsync(operation.ChargeOwner)
@@ -115,7 +122,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 
             var chargeIdentifier = new ChargeIdentifier(
                 operation.ChargeId,
-                marketParticipant!.Id,
+                marketParticipant.Id,
                 operation.Type);
             return await _chargeRepository.SingleOrNullAsync(chargeIdentifier).ConfigureAwait(false);
         }

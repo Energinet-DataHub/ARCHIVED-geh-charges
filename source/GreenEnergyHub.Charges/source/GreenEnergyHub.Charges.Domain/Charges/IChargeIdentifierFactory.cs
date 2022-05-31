@@ -13,19 +13,22 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 
-namespace GreenEnergyHub.Charges.Application.Charges.Handlers
+namespace GreenEnergyHub.Charges.Domain.Charges
 {
     /// <summary>
-    /// Handles events for charges with BusinessReasonCode D18
+    /// Factory to create ChargeIdentifier
     /// </summary>
-    public interface IChargeInformationEventHandler
+    public interface IChargeIdentifierFactory
     {
         /// <summary>
-        /// Handles received event as a chargeinformation event
+        /// Factory method to create ChargeIdentifier from <see cref="ChargeOperationDto"/>
         /// </summary>
-        /// <param name="commandReceivedEvent"></param>
-        Task HandleAsync(ChargeCommandReceivedEvent commandReceivedEvent);
+        /// <param name="chargeId"></param>
+        /// <param name="chargeType"></param>
+        /// <param name="chargeOwner"></param>
+        /// <returns>A <see cref="Task{ChargeIdentifier}"/> representing the result of the asynchronous operation.</returns>
+        Task<ChargeIdentifier> CreateAsync(string chargeId, ChargeType chargeType, string chargeOwner);
     }
 }
