@@ -20,9 +20,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 {
     public class ResolutionFeeValidationRule : ResolutionValidationRule
     {
-        public ResolutionFeeValidationRule(ChargeOperationDto chargeOperationDto)
+        public ResolutionFeeValidationRule(ChargeInformationDto chargeInformationDto)
             : base(
-                chargeOperationDto,
+                chargeInformationDto,
                 ChargeType.Fee,
                 new List<Resolution> { Resolution.P1M },
                 ValidationRuleIdentifier.ResolutionFeeValidation)

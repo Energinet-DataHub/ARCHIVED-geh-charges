@@ -91,7 +91,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             actual.Should().Be(expected);
         }
 
-        private static ChargeOperationDto CreateChargeOperationDto(ChargeOperationDtoBuilder builder, decimal price)
+        private static ChargeInformationDto CreateChargeOperationDto(ChargeOperationDtoBuilder builder, decimal price)
         {
             return builder.WithPoint(1, price).Build();
         }

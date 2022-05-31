@@ -19,15 +19,15 @@ namespace GreenEnergyHub.Charges.Application.Charges.Factories
 {
     public class ChargePricesUpdatedEventFactory : IChargePricesUpdatedEventFactory
     {
-        public ChargePricesUpdatedEvent Create(ChargeOperationDto chargeOperationDto)
+        public ChargePricesUpdatedEvent Create(ChargeInformationDto chargeInformationDto)
         {
             return new ChargePricesUpdatedEvent(
-                chargeOperationDto.ChargeId,
-                chargeOperationDto.Type,
-                chargeOperationDto.ChargeOwner,
-                chargeOperationDto.StartDateTime,
-                chargeOperationDto.EndDateTime.GetValueOrDefault(),
-                chargeOperationDto.Points);
+                chargeInformationDto.ChargeId,
+                chargeInformationDto.Type,
+                chargeInformationDto.ChargeOwner,
+                chargeInformationDto.StartDateTime,
+                chargeInformationDto.EndDateTime.GetValueOrDefault(),
+                chargeInformationDto.Points);
         }
     }
 }

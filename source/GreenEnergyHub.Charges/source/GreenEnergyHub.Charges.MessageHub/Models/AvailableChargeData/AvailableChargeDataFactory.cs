@@ -55,7 +55,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
 
         private async Task CreateForOperationAsync(
             ChargeCommandAcceptedEvent input,
-            ChargeOperationDto operation,
+            ChargeInformationDto informationDto,
             ICollection<AvailableChargeData> result)
         {
             var activeGridAccessProviders = await _marketParticipantRepository
@@ -64,11 +64,11 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
 
             foreach (var recipient in activeGridAccessProviders)
             {
-                var points = operation.Points
+                var points = informationDto.Points
                     .Select(x => new AvailableChargeDataPoint(x.Position, x.Price)).ToList();
 
                 var sender = await GetSenderAsync().ConfigureAwait(false);
-                var operationOrder = input.Command.ChargeOperations.ToList().IndexOf(operation);
+                var operationOrder = input.Command.ChargeOperations.ToList().IndexOf(informationDto);
 
                 result.Add(new AvailableChargeData(
                     sender.MarketParticipantId,
@@ -78,28 +78,28 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
                     input.Command.Document.BusinessReasonCode,
                     _messageMetaDataContext.RequestDataTime,
                     Guid.NewGuid(), // ID of each available piece of data must be unique
-                    operation.ChargeId,
-                    operation.ChargeOwner,
-                    operation.Type,
-                    operation.ChargeName,
-                    operation.ChargeDescription,
-                    operation.StartDateTime,
-                    operation.EndDateTime.TimeOrEndDefault(),
-                    operation.VatClassification,
-                    operation.TaxIndicator == TaxIndicator.Tax,
-                    operation.TransparentInvoicing == TransparentInvoicing.Transparent,
-                    operation.Resolution,
+                    informationDto.ChargeId,
+                    informationDto.ChargeOwner,
+                    informationDto.Type,
+                    informationDto.ChargeName,
+                    informationDto.ChargeDescription,
+                    informationDto.StartDateTime,
+                    informationDto.EndDateTime.TimeOrEndDefault(),
+                    informationDto.VatClassification,
+                    informationDto.TaxIndicator == TaxIndicator.Tax,
+                    informationDto.TransparentInvoicing == TransparentInvoicing.Transparent,
+                    informationDto.Resolution,
                     DocumentType.NotifyPriceList, // Will be added to the HTTP MessageType header
                     operationOrder,
                     points));
             }
         }
 
-        private static bool ShouldMakeDataAvailableForActiveGridProviders(ChargeOperationDto chargeOperationDto)
+        private static bool ShouldMakeDataAvailableForActiveGridProviders(ChargeInformationDto chargeInformationDto)
         {
             // We only need to notify grid providers if the charge includes tax which are the
             // only charges they do not maintain themselves
-            return chargeOperationDto.TaxIndicator == TaxIndicator.Tax;
+            return chargeInformationDto.TaxIndicator == TaxIndicator.Tax;
         }
     }
 }

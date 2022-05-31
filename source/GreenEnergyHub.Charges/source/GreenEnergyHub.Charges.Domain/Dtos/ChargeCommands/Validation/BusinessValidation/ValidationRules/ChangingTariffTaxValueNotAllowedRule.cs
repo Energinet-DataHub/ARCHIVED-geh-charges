@@ -19,19 +19,19 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
 {
     public class ChangingTariffTaxValueNotAllowedRule : IValidationRule
     {
-        private readonly ChargeOperationDto _chargeOperationDto;
+        private readonly ChargeInformationDto _chargeInformationDto;
         private readonly Charge _charge;
 
-        public ChangingTariffTaxValueNotAllowedRule(ChargeOperationDto chargeOperationDto, Charge charge)
+        public ChangingTariffTaxValueNotAllowedRule(ChargeInformationDto chargeInformationDto, Charge charge)
         {
-            _chargeOperationDto = chargeOperationDto;
+            _chargeInformationDto = chargeInformationDto;
             _charge = charge;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.ChangingTariffTaxValueNotAllowed;
 
-        public bool IsValid => (_chargeOperationDto.TaxIndicator == TaxIndicator.Tax && _charge.TaxIndicator) ||
-                               (_chargeOperationDto.TaxIndicator == TaxIndicator.NoTax && !_charge.TaxIndicator);
+        public bool IsValid => (_chargeInformationDto.TaxIndicator == TaxIndicator.Tax && _charge.TaxIndicator) ||
+                               (_chargeInformationDto.TaxIndicator == TaxIndicator.NoTax && !_charge.TaxIndicator);
     }
 }

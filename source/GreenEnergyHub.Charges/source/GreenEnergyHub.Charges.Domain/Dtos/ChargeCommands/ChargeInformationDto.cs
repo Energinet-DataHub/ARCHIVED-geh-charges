@@ -14,7 +14,6 @@
 
 using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
@@ -24,11 +23,11 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
     // ChargeEvent integrity is null checked by ChargeCommandNullChecker
 
     /// <summary>
-    /// The ChargeOperationDto class contains the intend of the charge command, e.g. updating an existing charge.
+    /// The ChargeInformationDto class contains the intend of the charge command, e.g. updating an existing charge.
     /// </summary>
-    public class ChargeOperationDto : OperationBase
+    public class ChargeInformationDto : ChargeOperationBase
     {
-        public ChargeOperationDto(
+        public ChargeInformationDto(
                 string id,
                 ChargeType type,
                 string chargeId,

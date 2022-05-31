@@ -57,9 +57,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
             return new ChargeCommandBundle(chargeCommands);
         }
 
-        private async Task<List<ChargeOperationDto>> ParseChargeOperationsAsync(SchemaValidatingReader reader)
+        private async Task<List<ChargeInformationDto>> ParseChargeOperationsAsync(SchemaValidatingReader reader)
         {
-            var operations = new List<ChargeOperationDto>();
+            var operations = new List<ChargeInformationDto>();
             var operationId = string.Empty;
 
             while (await reader.AdvanceAsync().ConfigureAwait(false))
@@ -78,9 +78,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
             return operations;
         }
 
-        private async Task<ChargeOperationDto> ParseChargeGroupIntoOperationAsync(SchemaValidatingReader reader, string operationId)
+        private async Task<ChargeInformationDto> ParseChargeGroupIntoOperationAsync(SchemaValidatingReader reader, string operationId)
         {
-            ChargeOperationDto? operation = null;
+            ChargeInformationDto? operation = null;
             while (await reader.AdvanceAsync().ConfigureAwait(false))
             {
                 if (reader.Is(CimChargeCommandConstants.ChargeTypeElement))
@@ -98,7 +98,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
             return operation!;
         }
 
-        private async Task<ChargeOperationDto> ParseChargeTypeElementIntoOperationAsync(SchemaValidatingReader reader, string operationId)
+        private async Task<ChargeInformationDto> ParseChargeTypeElementIntoOperationAsync(SchemaValidatingReader reader, string operationId)
         {
             var chargeOwner = string.Empty;
             var chargeType = ChargeType.Unknown;
@@ -215,7 +215,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                 }
             }
 
-            return new ChargeOperationDto(
+            return new ChargeInformationDto(
                 operationId,
                 chargeType,
                 senderProvidedChargeId,

@@ -68,37 +68,37 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void CreateRulesForChargeCommand_AllRulesThatNeedTriggeredByForErrorMessage_MustImplementIValidationRuleWithExtendedData(
             CimValidationErrorTextToken cimValidationErrorTextToken,
             ChargeOperationInputValidationRulesFactory sut,
-            ChargeOperationDto chargeOperationDto)
+            ChargeInformationDto chargeInformationDto)
         {
             // Arrange
             // Act
-            var validationRules = sut.CreateRules(chargeOperationDto).GetRules();
+            var validationRules = sut.CreateRules(chargeInformationDto).GetRules();
 
             // Assert
             AssertAllRulesThatNeedTriggeredByForErrorMessageImplementsIValidationRuleWithExtendedData(
                 cimValidationErrorTextToken, validationRules);
         }
 
-        private static List<IValidationRule> GetExpectedRulesForChargeOperation(ChargeOperationDto chargeOperationDto)
+        private static List<IValidationRule> GetExpectedRulesForChargeOperation(ChargeInformationDto chargeInformationDto)
         {
             var expectedRules = new List<IValidationRule>
             {
-                new ChargeDescriptionHasMaximumLengthRule(chargeOperationDto),
-                new ChargeIdLengthValidationRule(chargeOperationDto),
-                new ChargeIdRequiredValidationRule(chargeOperationDto),
-                new ChargeNameHasMaximumLengthRule(chargeOperationDto),
-                new ChargeOperationIdRequiredRule(chargeOperationDto),
-                new ChargeOwnerIsRequiredValidationRule(chargeOperationDto),
-                new ChargePriceMaximumDigitsAndDecimalsRule(chargeOperationDto),
-                new ChargeTypeIsKnownValidationRule(chargeOperationDto),
-                new ChargeTypeTariffPriceCountRule(chargeOperationDto),
-                new MaximumPriceRule(chargeOperationDto),
-                new ResolutionFeeValidationRule(chargeOperationDto),
-                new ResolutionSubscriptionValidationRule(chargeOperationDto),
-                new ResolutionTariffValidationRule(chargeOperationDto),
-                new StartDateTimeRequiredValidationRule(chargeOperationDto),
-                new VatClassificationValidationRule(chargeOperationDto),
-                new TransparentInvoicingIsNotAllowedForFeeValidationRule(chargeOperationDto),
+                new ChargeDescriptionHasMaximumLengthRule(chargeInformationDto),
+                new ChargeIdLengthValidationRule(chargeInformationDto),
+                new ChargeIdRequiredValidationRule(chargeInformationDto),
+                new ChargeNameHasMaximumLengthRule(chargeInformationDto),
+                new ChargeOperationIdRequiredRule(chargeInformationDto),
+                new ChargeOwnerIsRequiredValidationRule(chargeInformationDto),
+                new ChargePriceMaximumDigitsAndDecimalsRule(chargeInformationDto),
+                new ChargeTypeIsKnownValidationRule(chargeInformationDto),
+                new ChargeTypeTariffPriceCountRule(chargeInformationDto),
+                new MaximumPriceRule(chargeInformationDto),
+                new ResolutionFeeValidationRule(chargeInformationDto),
+                new ResolutionSubscriptionValidationRule(chargeInformationDto),
+                new ResolutionTariffValidationRule(chargeInformationDto),
+                new StartDateTimeRequiredValidationRule(chargeInformationDto),
+                new VatClassificationValidationRule(chargeInformationDto),
+                new TransparentInvoicingIsNotAllowedForFeeValidationRule(chargeInformationDto),
             };
             return expectedRules;
         }

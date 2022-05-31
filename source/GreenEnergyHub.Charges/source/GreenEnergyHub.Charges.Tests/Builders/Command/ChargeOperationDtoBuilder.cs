@@ -159,9 +159,9 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             return this;
         }
 
-        public ChargeOperationDto Build()
+        public ChargeInformationDto Build()
         {
-            return new ChargeOperationDto(
+            return new ChargeInformationDto(
                 _operationId,
                 _chargeType,
                 _chargeId,

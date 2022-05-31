@@ -28,13 +28,13 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         [InlineAutoData]
         public void Validate_WhenValidatingChargeCommand_ReturnsChargeCommandValidationResult(
             ChargeOperationInputValidationRulesFactory chargeOperationInputValidationRulesFactory,
-            ChargeOperationDto chargeOperationDto)
+            ChargeInformationDto chargeInformationDto)
         {
             // Arrange
-            var sut = new InputValidator<ChargeOperationDto>(chargeOperationInputValidationRulesFactory);
+            var sut = new InputValidator<ChargeInformationDto>(chargeOperationInputValidationRulesFactory);
 
             // Act
-            var result = sut.Validate(chargeOperationDto);
+            var result = sut.Validate(chargeInformationDto);
 
             // Assert
             Assert.IsType<ValidationResult>(result);

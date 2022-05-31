@@ -29,16 +29,16 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
     public class ChargePriceEventHandler : IChargePriceEventHandler
     {
-        private readonly IInputValidator<ChargeOperationDto> _inputValidator;
-        private readonly IBusinessValidator<ChargeOperationDto> _businessValidator;
+        private readonly IInputValidator<ChargeInformationDto> _inputValidator;
+        private readonly IBusinessValidator<ChargeInformationDto> _businessValidator;
         private readonly IMarketParticipantRepository _marketParticipantRepository;
         private readonly IChargeRepository _chargeRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IChargeCommandReceiptService _chargeCommandReceiptService;
 
         public ChargePriceEventHandler(
-            IInputValidator<ChargeOperationDto> inputValidator,
-            IBusinessValidator<ChargeOperationDto> businessValidator,
+            IInputValidator<ChargeInformationDto> inputValidator,
+            IBusinessValidator<ChargeInformationDto> businessValidator,
             IMarketParticipantRepository marketParticipantRepository,
             IChargeRepository chargeRepository,
             IUnitOfWork unitOfWork,
@@ -57,9 +57,9 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             ArgumentNullException.ThrowIfNull(commandReceivedEvent);
 
             var operations = commandReceivedEvent.Command.ChargeOperations.ToArray();
-            var operationsToBeRejected = new List<ChargeOperationDto>();
+            var operationsToBeRejected = new List<ChargeInformationDto>();
             var rejectionRules = new List<IValidationRuleContainer>();
-            var operationsToBeConfirmed = new List<ChargeOperationDto>();
+            var operationsToBeConfirmed = new List<ChargeInformationDto>();
 
             for (var i = 0; i < operations.Length; i++)
             {
@@ -104,26 +104,26 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         private static void CollectRejectionRules(
             List<IValidationRuleContainer> rejectionRules,
             ValidationResult validationResult,
-            IEnumerable<ChargeOperationDto> operationsToBeRejected,
-            ChargeOperationDto operation)
+            IEnumerable<ChargeInformationDto> operationsToBeRejected,
+            ChargeInformationDto information)
         {
             rejectionRules.AddRange(validationResult.InvalidRules);
             rejectionRules.AddRange(operationsToBeRejected.Skip(1)
                 .Select(_ =>
                     new OperationValidationRuleContainer(
-                        new PreviousOperationsMustBeValidRule(operation.Id), operation.Id)));
+                        new PreviousOperationsMustBeValidRule(information.Id), information.Id)));
         }
 
-        private async Task<Charge?> GetChargeAsync(ChargeOperationDto operation)
+        private async Task<Charge?> GetChargeAsync(ChargeInformationDto information)
         {
             var marketParticipant = await _marketParticipantRepository
-                .SingleAsync(operation.ChargeOwner)
+                .SingleAsync(information.ChargeOwner)
                 .ConfigureAwait(false);
 
             var chargeIdentifier = new ChargeIdentifier(
-                operation.ChargeId,
+                information.ChargeId,
                 marketParticipant.Id,
-                operation.Type);
+                information.Type);
             return await _chargeRepository.SingleOrNullAsync(chargeIdentifier).ConfigureAwait(false);
         }
     }

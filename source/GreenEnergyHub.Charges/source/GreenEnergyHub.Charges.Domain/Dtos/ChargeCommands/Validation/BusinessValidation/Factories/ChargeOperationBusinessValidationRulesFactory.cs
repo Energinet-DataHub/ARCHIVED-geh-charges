@@ -23,7 +23,7 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.Factories
 {
-    public class ChargeOperationBusinessValidationRulesFactory : IBusinessValidationRulesFactory<ChargeOperationDto>
+    public class ChargeOperationBusinessValidationRulesFactory : IBusinessValidationRulesFactory<ChargeInformationDto>
     {
         private readonly IChargeRepository _chargeRepository;
         private readonly IChargeIdentifierFactory _chargeIdentifierFactory;
@@ -45,82 +45,82 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
             _clock = clock;
         }
 
-        public async Task<IValidationRuleSet> CreateRulesAsync(ChargeOperationDto operation)
+        public async Task<IValidationRuleSet> CreateRulesAsync(ChargeInformationDto informationDto)
         {
-            ArgumentNullException.ThrowIfNull(operation);
-            var rules = await GetRulesForOperationAsync(operation).ConfigureAwait(false);
+            ArgumentNullException.ThrowIfNull(informationDto);
+            var rules = await GetRulesForOperationAsync(informationDto).ConfigureAwait(false);
             return ValidationRuleSet.FromRules(rules);
         }
 
-        private async Task<List<IValidationRuleContainer>> GetRulesForOperationAsync(ChargeOperationDto chargeOperationDto)
+        private async Task<List<IValidationRuleContainer>> GetRulesForOperationAsync(ChargeInformationDto chargeInformationDto)
         {
             var configuration = await _rulesConfigurationRepository.GetConfigurationAsync().ConfigureAwait(false);
-            var charge = await GetChargeOrNullAsync(chargeOperationDto).ConfigureAwait(false);
-            var rules = GetMandatoryRulesForOperation(chargeOperationDto, configuration);
+            var charge = await GetChargeOrNullAsync(chargeInformationDto).ConfigureAwait(false);
+            var rules = GetMandatoryRulesForOperation(chargeInformationDto, configuration);
             if (charge == null)
             {
                 return rules;
             }
 
-            if (chargeOperationDto.Type == ChargeType.Tariff)
+            if (chargeInformationDto.Type == ChargeType.Tariff)
             {
-                rules.AddRange(AddTariffOnlyRules(chargeOperationDto, charge));
+                rules.AddRange(AddTariffOnlyRules(chargeInformationDto, charge));
             }
 
-            AddUpdateRules(rules, chargeOperationDto, charge);
+            AddUpdateRules(rules, chargeInformationDto, charge);
             return rules;
         }
 
         private static IEnumerable<IValidationRuleContainer> AddTariffOnlyRules(
-            ChargeOperationDto chargeOperationDto, Charge charge)
+            ChargeInformationDto chargeInformationDto, Charge charge)
         {
             return new List<IValidationRuleContainer>
             {
                 new OperationValidationRuleContainer(
-                    new ChangingTariffTaxValueNotAllowedRule(chargeOperationDto, charge), chargeOperationDto.Id),
+                    new ChangingTariffTaxValueNotAllowedRule(chargeInformationDto, charge), chargeInformationDto.Id),
             };
         }
 
         private static void AddUpdateRules(
             List<IValidationRuleContainer> rules,
-            ChargeOperationDto chargeOperationDto,
+            ChargeInformationDto chargeInformationDto,
             Charge existingCharge)
         {
             var updateRules = new List<IValidationRuleContainer>
             {
                 new OperationValidationRuleContainer(
-                    new UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateRule(existingCharge, chargeOperationDto),
-                    chargeOperationDto.Id),
+                    new UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateRule(existingCharge, chargeInformationDto),
+                    chargeInformationDto.Id),
                 new OperationValidationRuleContainer(
-                    new ChargeResolutionCanNotBeUpdatedRule(existingCharge, chargeOperationDto),
-                    chargeOperationDto.Id),
+                    new ChargeResolutionCanNotBeUpdatedRule(existingCharge, chargeInformationDto),
+                    chargeInformationDto.Id),
             };
 
             rules.AddRange(updateRules);
         }
 
         private List<IValidationRuleContainer> GetMandatoryRulesForOperation(
-            ChargeOperationDto chargeOperationDto,
+            ChargeInformationDto chargeInformationDto,
             RulesConfiguration configuration)
         {
             var rules = new List<IValidationRuleContainer>
             {
                 new OperationValidationRuleContainer(
                     new StartDateValidationRule(
-                        chargeOperationDto,
+                        chargeInformationDto,
                         configuration.StartDateValidationRuleConfiguration,
                         _zonedDateTimeService,
                         _clock),
-                    chargeOperationDto.Id),
+                    chargeInformationDto.Id),
             };
 
             return rules;
         }
 
-        private async Task<Charge?> GetChargeOrNullAsync(ChargeOperationDto chargeOperationDto)
+        private async Task<Charge?> GetChargeOrNullAsync(ChargeInformationDto chargeInformationDto)
         {
             var chargeIdentifier = await _chargeIdentifierFactory
-                .CreateAsync(chargeOperationDto.ChargeId, chargeOperationDto.Type, chargeOperationDto.ChargeOwner)
+                .CreateAsync(chargeInformationDto.ChargeId, chargeInformationDto.Type, chargeInformationDto.ChargeOwner)
                 .ConfigureAwait(false);
 
             return await _chargeRepository.SingleOrNullAsync(chargeIdentifier).ConfigureAwait(false);

@@ -12,12 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 
-namespace GreenEnergyHub.Charges.Domain.Charges
+namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
 {
-    public interface IChargePeriodFactory
+    public abstract class ChargeOperationBase : OperationBase
     {
-        ChargePeriod CreateFromChargeOperationDto(ChargeInformationDto chargeInformationDto);
     }
 }

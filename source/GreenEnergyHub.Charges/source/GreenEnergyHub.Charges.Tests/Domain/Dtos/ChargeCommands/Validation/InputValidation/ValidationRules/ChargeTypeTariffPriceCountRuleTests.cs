@@ -180,7 +180,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             return new ChargeTypeTariffPriceCountRule(invalidChargeOperationDto);
         }
 
-        private static ChargeOperationDto CreateInvalidChargeOperationDto(ChargeOperationDtoBuilder chargeOperationDtoBuilder)
+        private static ChargeInformationDto CreateInvalidChargeOperationDto(ChargeOperationDtoBuilder chargeOperationDtoBuilder)
         {
             return chargeOperationDtoBuilder
                 .WithChargeType(ChargeType.Tariff)

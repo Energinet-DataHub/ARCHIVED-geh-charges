@@ -20,26 +20,26 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 {
     public abstract class ResolutionValidationRule : IValidationRule
     {
-        private readonly ChargeOperationDto _chargeOperationDto;
+        private readonly ChargeInformationDto _chargeInformationDto;
         private readonly ChargeType _chargeType;
         private readonly List<Resolution> _allowedResolutions;
         private readonly ValidationRuleIdentifier _validationRuleIdentifier;
 
         protected ResolutionValidationRule(
-            ChargeOperationDto chargeOperationDto,
+            ChargeInformationDto chargeInformationDto,
             ChargeType chargeType,
             List<Resolution> allowedResolutions,
             ValidationRuleIdentifier validationRuleIdentifier)
         {
-            _chargeOperationDto = chargeOperationDto;
+            _chargeInformationDto = chargeInformationDto;
             _chargeType = chargeType;
             _allowedResolutions = allowedResolutions;
             _validationRuleIdentifier = validationRuleIdentifier;
         }
 
         public virtual bool IsValid =>
-            _chargeOperationDto.Type != _chargeType ||
-            _allowedResolutions.Contains(_chargeOperationDto.Resolution);
+            _chargeInformationDto.Type != _chargeType ||
+            _allowedResolutions.Contains(_chargeInformationDto.Resolution);
 
         public ValidationRuleIdentifier ValidationRuleIdentifier => _validationRuleIdentifier;
     }

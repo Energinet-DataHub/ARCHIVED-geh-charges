@@ -39,20 +39,20 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
             Mock<ChargePeriod> chargePeriod,
-            ChargeOperationDto chargeOperationDto,
+            ChargeInformationDto chargeInformationDto,
             ChargeFactory sut)
         {
             // Arrange
             marketParticipantRepository
-                .Setup(repo => repo.SingleOrNullAsync(chargeOperationDto.ChargeOwner))
+                .Setup(repo => repo.SingleOrNullAsync(chargeInformationDto.ChargeOwner))
                 .ReturnsAsync(owner);
 
             chargePeriodFactory
-                .Setup(f => f.CreateFromChargeOperationDto(It.IsAny<ChargeOperationDto>()))
+                .Setup(f => f.CreateFromChargeOperationDto(It.IsAny<ChargeInformationDto>()))
                 .Returns(chargePeriod.Object);
 
             // Act
-            var actual = await sut.CreateFromChargeOperationDtoAsync(chargeOperationDto);
+            var actual = await sut.CreateFromChargeOperationDtoAsync(chargeInformationDto);
 
             // Assert
             actual.Should().NotContainNullsOrEmptyEnumerables();
@@ -64,7 +64,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
             Mock<ChargePeriod> chargePeriod,
-            ChargeOperationDto chargeOperationDto,
+            ChargeInformationDto chargeInformationDto,
             ChargeFactory sut)
         {
             // Arrange
@@ -73,12 +73,12 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
                 .ReturnsAsync((MarketParticipant?)null);
 
             chargePeriodFactory
-                .Setup(f => f.CreateFromChargeOperationDto(It.IsAny<ChargeOperationDto>()))
+                .Setup(f => f.CreateFromChargeOperationDto(It.IsAny<ChargeInformationDto>()))
                 .Returns(chargePeriod.Object);
 
             // Act & Assert
             await Assert.ThrowsAsync<InvalidOperationException>(() =>
-                sut.CreateFromChargeOperationDtoAsync(chargeOperationDto));
+                sut.CreateFromChargeOperationDtoAsync(chargeInformationDto));
         }
     }
 }

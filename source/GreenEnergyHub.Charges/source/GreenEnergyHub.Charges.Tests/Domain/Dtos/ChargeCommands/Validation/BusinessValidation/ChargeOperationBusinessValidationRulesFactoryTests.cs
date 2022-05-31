@@ -129,7 +129,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             ChargeOperationBusinessValidationRulesFactory sut)
         {
             // Arrange
-            ChargeOperationDto? chargeOperationDto = null;
+            ChargeInformationDto? chargeOperationDto = null;
 
             // Act / Assert
             await Assert

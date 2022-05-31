@@ -33,25 +33,25 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             _chargePeriodFactory = chargePeriodFactory;
         }
 
-        public async Task<Charge> CreateFromChargeOperationDtoAsync(ChargeOperationDto chargeOperationDto)
+        public async Task<Charge> CreateFromChargeOperationDtoAsync(ChargeInformationDto chargeInformationDto)
         {
             var owner = await _marketParticipantRepository
-                .SingleOrNullAsync(chargeOperationDto.ChargeOwner)
+                .SingleOrNullAsync(chargeInformationDto.ChargeOwner)
                 .ConfigureAwait(false);
 
             if (owner == null)
-                throw new InvalidOperationException($"Market participant '{chargeOperationDto.ChargeOwner}' does not exist.");
+                throw new InvalidOperationException($"Market participant '{chargeInformationDto.ChargeOwner}' does not exist.");
 
-            var period = _chargePeriodFactory.CreateFromChargeOperationDto(chargeOperationDto);
+            var period = _chargePeriodFactory.CreateFromChargeOperationDto(chargeInformationDto);
 
             return new Charge(
                 Guid.NewGuid(),
-                chargeOperationDto.ChargeId,
+                chargeInformationDto.ChargeId,
                 owner.Id,
-                chargeOperationDto.Type,
-                chargeOperationDto.Resolution,
-                chargeOperationDto.TaxIndicator == TaxIndicator.Tax,
-                chargeOperationDto.Points,
+                chargeInformationDto.Type,
+                chargeInformationDto.Resolution,
+                chargeInformationDto.TaxIndicator == TaxIndicator.Tax,
+                chargeInformationDto.Points,
                 new List<ChargePeriod> { period });
         }
     }
