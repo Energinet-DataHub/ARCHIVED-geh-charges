@@ -131,7 +131,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                     .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.TariffPriceSeries);
                 using var eventualChargePriceUpdatedEvent = await Fixture
                     .ChargePricesUpdatedListener
-                    .ListenForEventsAsync(correlationId, expectedCount: 2)
+                    .ListenForEventsAsync(correlationId, expectedCount: 1)
                     .ConfigureAwait(false);
 
                 // Act
