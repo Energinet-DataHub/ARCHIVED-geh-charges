@@ -319,14 +319,27 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 
              // Assert
              accepted.Should().Be(1);
+             rejectedRules.Count.Should().Be(3);
+
              var invalid = rejectedRules.Where(vr =>
                  vr.ValidationRule.ValidationRuleIdentifier == ValidationRuleIdentifier.StartDateValidation);
-             var subsequent = rejectedRules.Where(vr =>
-                 vr.ValidationRule.ValidationRuleIdentifier == ValidationRuleIdentifier.SubsequentBundleOperationsFail);
-
-             rejectedRules.Count.Should().Be(3);
              invalid.Count().Should().Be(1);
-             subsequent.Count().Should().Be(2);
+
+             var subsequent = rejectedRules.Where(vr =>
+                 vr.ValidationRule.ValidationRuleIdentifier == ValidationRuleIdentifier.SubsequentBundleOperationsFail).ToList();
+             subsequent.Should().HaveCount(2);
+
+             var firstOperationValidationRuleContainer = (IOperationValidationRuleContainer)subsequent.First();
+             firstOperationValidationRuleContainer.OperationId.Should().Be("Operation3");
+             var firstOperationTriggeredBy =
+                 ((IValidationRuleWithExtendedData)firstOperationValidationRuleContainer.ValidationRule).TriggeredBy;
+             firstOperationTriggeredBy.Should().Be("Operation2");
+
+             var secondOperationValidationRuleContainer = (IOperationValidationRuleContainer)subsequent.Last();
+             secondOperationValidationRuleContainer.OperationId.Should().Be("Operation4");
+             var secondOperationTriggeredBy =
+                 ((IValidationRuleWithExtendedData)secondOperationValidationRuleContainer.ValidationRule).TriggeredBy;
+             secondOperationTriggeredBy.Should().Be("Operation2");
          }
 
         private static void SetupMarketParticipantRepository(
@@ -382,17 +395,26 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         private static ChargeCommandReceivedEvent CreateReceivedEventWithChargeOperations()
         {
             var validChargeOperationDto = new ChargeOperationDtoBuilder()
+                .WithChargeOperationId("Operation1")
                 .WithDescription("valid")
                 .WithStartDateTime(InstantHelper.GetYesterdayAtMidnightUtc())
                 .WithEndDateTime(InstantHelper.GetEndDefault())
                 .Build();
             var invalidChargeOperationDto = new ChargeOperationDtoBuilder()
+                .WithChargeOperationId("Operation2")
                 .WithDescription("invalid")
                 .WithStartDateTime(InstantHelper.GetYesterdayAtMidnightUtc())
                 .WithEndDateTime(InstantHelper.GetEndDefault())
                 .Build();
             var failedChargeOperationDto = new ChargeOperationDtoBuilder()
+                .WithChargeOperationId("Operation3")
                 .WithDescription("failed")
+                .WithStartDateTime(InstantHelper.GetYesterdayAtMidnightUtc())
+                .WithEndDateTime(InstantHelper.GetEndDefault())
+                .Build();
+            var anotherFailedChargeOperationDto = new ChargeOperationDtoBuilder()
+                .WithChargeOperationId("Operation4")
+                .WithDescription("another failed")
                 .WithStartDateTime(InstantHelper.GetYesterdayAtMidnightUtc())
                 .WithEndDateTime(InstantHelper.GetEndDefault())
                 .Build();
@@ -403,7 +425,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                         validChargeOperationDto,
                         invalidChargeOperationDto,
                         failedChargeOperationDto,
-                        failedChargeOperationDto,
+                        anotherFailedChargeOperationDto,
                     })
                 .Build();
             var receivedEvent = new ChargeCommandReceivedEvent(
