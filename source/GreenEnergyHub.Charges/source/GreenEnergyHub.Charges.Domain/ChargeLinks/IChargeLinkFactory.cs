@@ -20,6 +20,6 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
 {
     public interface IChargeLinkFactory
     {
-        Task<ChargeLink> CreateAsync(MarketParticipantRole marketParticipantRole, ChargeLinkDto dto);
+        Task<ChargeLink> CreateAsync(ChargeLinkDto dto);
     }
 }

@@ -31,7 +31,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
         private readonly IRulesConfigurationRepository _rulesConfigurationRepository;
         private readonly IMarketParticipantRepository _marketParticipantRepository;
         private readonly IZonedDateTimeService _zonedDateTimeService;
-        private readonly MarketParticipantRole _marketParticipantRole;
 
         public ChargeOperationBusinessValidationRulesFactory(
             IRulesConfigurationRepository rulesConfigurationRepository,
@@ -47,10 +46,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
             _clock = clock;
         }
 
-        public async Task<IValidationRuleSet> CreateRulesAsync(MarketParticipantRole marketParticipantRole, ChargeOperationDto operation)
+        public async Task<IValidationRuleSet> CreateRulesAsync(ChargeOperationDto operation)
         {
             ArgumentNullException.ThrowIfNull(operation);
-            _marketParticipantRole = marketParticipantRole;
             var rules = await GetRulesForOperationAsync(operation).ConfigureAwait(false);
             return ValidationRuleSet.FromRules(rules);
         }
@@ -123,7 +121,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
         private async Task<Charge?> GetChargeOrNullAsync(ChargeOperationDto chargeOperationDto)
         {
             var marketParticipant = await _marketParticipantRepository
-                .SingleAsync(_marketParticipantRole, chargeOperationDto.ChargeOwner)
+                .SingleAsync(chargeOperationDto.ChargeOwner)
                 .ConfigureAwait(false);
 
             var chargeIdentifier = new ChargeIdentifier(

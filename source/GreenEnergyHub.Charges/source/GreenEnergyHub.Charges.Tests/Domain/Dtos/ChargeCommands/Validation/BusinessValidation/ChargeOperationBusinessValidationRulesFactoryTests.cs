@@ -214,8 +214,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         private static void SetupMarketParticipantMock(TestMarketParticipant sender, Mock<IMarketParticipantRepository> marketParticipantRepository)
         {
             marketParticipantRepository
-                .Setup(repo => repo.SingleOrNullAsync(
-                    It.IsAny<MarketParticipantRole>(),
+                .Setup(repo => repo.SingleAsync(
                     It.IsAny<string>()))
                 .ReturnsAsync(sender);
         }

@@ -68,7 +68,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData
                 .ConfigureAwait(false);
 
             var owner = await _marketParticipantRepository
-                .SingleAsync(input.ChargeLinksCommand.Document.Sender.BusinessProcessRole, operation.ChargeOwner)
+                .SingleAsync(operation.ChargeOwner)
                 .ConfigureAwait(false);
 
             var chargeIdentifier = new ChargeIdentifier(operation.SenderProvidedChargeId, owner!.Id, operation.ChargeType);

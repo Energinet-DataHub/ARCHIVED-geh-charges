@@ -46,9 +46,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.ChargeLinks
         {
             // Arrange
             marketParticipantRepository
-                .Setup(x => x.SingleAsync(
-                    It.IsAny<MarketParticipantRole>(),
-                    It.IsAny<string>()))
+                .Setup(x => x.SingleAsync(It.IsAny<string>()))
                 .ReturnsAsync(sender);
 
             chargeRepository

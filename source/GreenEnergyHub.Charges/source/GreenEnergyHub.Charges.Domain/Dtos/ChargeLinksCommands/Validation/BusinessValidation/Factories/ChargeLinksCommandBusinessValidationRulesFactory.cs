@@ -71,7 +71,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
                 .ConfigureAwait(false);
 
             var charge = await _chargeRepository
-                .SingleOrNullAsync(new ChargeIdentifier(chargeLinkDto.SenderProvidedChargeId, chargeOwner.Id, chargeLinkDto.ChargeType))
+                .SingleOrNullAsync(new ChargeIdentifier(chargeLinkDto.SenderProvidedChargeId, chargeOwner!.Id, chargeLinkDto.ChargeType))
                 .ConfigureAwait(false);
 
             rules.Add(new OperationValidationRuleContainer(new ChargeMustExistRule(charge), chargeLinkDto.OperationId));

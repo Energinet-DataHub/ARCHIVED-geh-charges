@@ -322,7 +322,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         {
             marketParticipantRepository
                 .Setup(r => r.SingleAsync(
-                    It.IsAny<MarketParticipantRole>(),
                     It.IsAny<string>()))
                 .ReturnsAsync(marketParticipant);
         }

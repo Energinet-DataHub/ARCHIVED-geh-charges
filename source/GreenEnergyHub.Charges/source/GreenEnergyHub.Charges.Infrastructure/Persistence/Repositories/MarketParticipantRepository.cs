@@ -45,14 +45,31 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
                 .ConfigureAwait(false);
         }
 
+        public async Task<MarketParticipant?> SingleAsync(string marketParticipantId)
+        {
+            var roles = new HashSet<MarketParticipantRole>
+            {
+                MarketParticipantRole.SystemOperator, MarketParticipantRole.GridAccessProvider,
+            };
+
+            return await _chargesDatabaseContext
+                .MarketParticipants
+                .SingleAsync(mp =>
+                    mp.MarketParticipantId == marketParticipantId && mp.IsActive &&
+                    roles.Contains(mp.BusinessProcessRole))
+                .ConfigureAwait(false);
+        }
+
         public async Task<MarketParticipant?> SingleAsync(
             MarketParticipantRole businessProcessRole,
             string marketParticipantId)
         {
             return await _chargesDatabaseContext
                 .MarketParticipants
-                .SingleAsync(mp => mp.MarketParticipantId == marketParticipantId
-                                            && mp.BusinessProcessRole == businessProcessRole).ConfigureAwait(false);
+                .SingleAsync(mp =>
+                    mp.MarketParticipantId == marketParticipantId && mp.IsActive &&
+                    mp.BusinessProcessRole == businessProcessRole)
+                .ConfigureAwait(false);
         }
 
         public async Task<MarketParticipant?> SingleOrNullAsync(Guid id)
@@ -62,14 +79,31 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
                 .SingleOrDefaultAsync(mp => mp.Id == id).ConfigureAwait(false);
         }
 
+        public async Task<MarketParticipant?> SingleOrNullAsync(string marketParticipantId)
+        {
+            var roles = new HashSet<MarketParticipantRole>
+            {
+                MarketParticipantRole.SystemOperator, MarketParticipantRole.GridAccessProvider,
+            };
+
+            return await _chargesDatabaseContext
+                .MarketParticipants
+                .SingleOrDefaultAsync(mp =>
+                    mp.MarketParticipantId == marketParticipantId && mp.IsActive &&
+                    roles.Contains(mp.BusinessProcessRole))
+                .ConfigureAwait(false);
+        }
+
         public async Task<MarketParticipant?> SingleOrNullAsync(
             MarketParticipantRole businessProcessRole,
             string marketParticipantId)
         {
             return await _chargesDatabaseContext
                 .MarketParticipants
-                .SingleOrDefaultAsync(mp => mp.MarketParticipantId == marketParticipantId
-                                            && mp.BusinessProcessRole == businessProcessRole).ConfigureAwait(false);
+                .SingleOrDefaultAsync(mp =>
+                    mp.MarketParticipantId == marketParticipantId && mp.IsActive &&
+                    mp.BusinessProcessRole == businessProcessRole)
+                .ConfigureAwait(false);
         }
 
         public async Task<IReadOnlyCollection<MarketParticipant>> GetAsync(IEnumerable<Guid> ids)

@@ -146,9 +146,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
             TestMarketParticipant marketParticipant)
         {
             repository
-                .Setup(r => r.SingleAsync(
-                    It.IsAny<MarketParticipantRole>(),
-                    It.IsAny<string>()))
+                .Setup(r => r.SingleAsync(It.IsAny<string>()))
                 .ReturnsAsync(marketParticipant);
         }
     }
