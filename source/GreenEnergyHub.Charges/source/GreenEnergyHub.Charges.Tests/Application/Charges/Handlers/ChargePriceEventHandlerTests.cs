@@ -39,7 +39,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 {
     [UnitTest]
-    public class ChargePricesHandlerTests
+    public class ChargePriceEventHandlerTests
     {
         [Theory]
         [InlineAutoMoqData]
