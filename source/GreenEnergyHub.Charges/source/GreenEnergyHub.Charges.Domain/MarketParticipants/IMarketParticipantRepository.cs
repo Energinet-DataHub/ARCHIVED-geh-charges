@@ -33,6 +33,9 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
 
         Task<MarketParticipant> SingleAsync(string marketParticipantId);
 
+        /// <summary>
+        /// Retrieves a market participant from role and gln/eic no.
+        /// </summary>
         Task<MarketParticipant> SingleAsync(
             MarketParticipantRole businessProcessRole,
             string marketParticipantId);
@@ -41,6 +44,9 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
 
         Task<MarketParticipant?> SingleOrNullAsync(string marketParticipantId);
 
+        /// <summary>
+        /// Retrieves a market participant from role and gln/eic no.
+        /// </summary>
         Task<MarketParticipant?> SingleOrNullAsync(
             MarketParticipantRole businessProcessRole,
             string marketParticipantId);
