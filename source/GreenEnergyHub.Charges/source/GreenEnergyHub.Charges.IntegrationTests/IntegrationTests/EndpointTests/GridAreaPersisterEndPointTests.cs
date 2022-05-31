@@ -60,7 +60,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 // Arrange
                 await using var context = Fixture.DatabaseManager.CreateDbContext();
                 var id = Guid.NewGuid();
-//                var gridAccessProviderId = await CreateMarketParticipantInRepository(context);
                 var (message, parentId) = CreateServiceBusMessage(id);
 
                 // Act
@@ -74,14 +73,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
                 // We need to clear host log after each test is done to ensure that we can assert on function executed on each test run because we only check on function name.
                 Fixture.HostManager.ClearHostLog();
-            }
-
-            private static async Task<Guid> CreateMarketParticipantInRepository(ChargesDatabaseContext context)
-            {
-                var markedParticipant = new MarketParticipantBuilder().Build();
-                context.MarketParticipants.Add(markedParticipant);
-                await context.SaveChangesAsync().ConfigureAwait(false);
-                return markedParticipant.Id;
             }
 
             private static (ServiceBusMessage ServiceBusMessage, string ParentId)

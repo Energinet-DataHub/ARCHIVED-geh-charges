@@ -44,16 +44,22 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
         Task<IReadOnlyCollection<MarketParticipant>> GetAsync(IEnumerable<Guid> ids);
 
         /// <summary>
+        /// Get all the active grid access providers
+        /// </summary>
+        Task<List<MarketParticipant>> GetGridAccessProvidersAsync();
+
+        /// <summary>
+        /// Get the grid access provider from primary key
+        /// </summary>
+        Task<MarketParticipant?> GetGridAccessProviderAsync(Guid gridAreaId);
+
+        /// <summary>
         /// Get the grid access provider of the grid area that the metering point belongs to.
         /// </summary>
         Task<MarketParticipant> GetGridAccessProviderAsync(string meteringPointId);
 
-        Task<List<MarketParticipant>> GetGridAccessProvidersAsync();
-
         Task<MarketParticipant> GetMeteringPointAdministratorAsync();
 
         Task<MarketParticipant> GetSystemOperatorAsync();
-
-        Task<MarketParticipant?> GetGridAccessProviderAsync(Guid gridAreaId);
     }
 }

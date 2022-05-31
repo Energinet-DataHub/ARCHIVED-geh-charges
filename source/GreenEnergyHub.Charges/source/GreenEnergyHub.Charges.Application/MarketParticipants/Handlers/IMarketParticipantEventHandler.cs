@@ -17,8 +17,15 @@ using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
 
 namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 {
+    /// <summary>
+    /// Handles integration events from the market participant domain
+    /// </summary>
     public interface IMarketParticipantEventHandler
     {
+        /// <summary>
+        /// Handles an integration event from the market participant domain
+        /// </summary>
+        /// <param name="message"></param>
         Task HandleAsync(BaseIntegrationEvent message);
     }
 }

@@ -57,7 +57,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             var sut = new GridAreaPersister(
                 gridAreaRepository.Object,
                 gridAreaLinkRepository.Object,
-                marketParticipantRepository.Object,
                 loggerFactory.Object,
                 unitOfWork.Object);
 
@@ -101,7 +100,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             var sut = new GridAreaPersister(
                 gridAreaRepository.Object,
                 gridAreaLinkRepository.Object,
-                marketParticipantRepository.Object,
                 loggerFactory.Object,
                 unitOfWork.Object);
 
@@ -151,7 +149,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             var sut = new GridAreaPersister(
                 gridAreaRepository.Object,
                 gridAreaLinkRepository.Object,
-                marketParticipantRepository.Object,
                 loggerFactory.Object,
                 unitOfWork.Object);
 

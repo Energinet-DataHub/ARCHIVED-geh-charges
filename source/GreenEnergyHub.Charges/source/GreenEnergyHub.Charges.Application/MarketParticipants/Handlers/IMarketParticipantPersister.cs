@@ -17,6 +17,9 @@ using GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsChangedEvents;
 
 namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 {
+    /// <summary>
+    /// Persist a market participant from a market particioant event
+    /// </summary>
     public interface IMarketParticipantPersister
     {
         /// <summary>

@@ -60,8 +60,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
                 {
                     UpdateMarketParticipant(
                         marketParticipantChangedEvent,
-                        existingMarketParticipant,
-                        businessProcessRole);
+                        existingMarketParticipant);
                 }
             }
 
@@ -70,8 +69,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 
         private void UpdateMarketParticipant(
             MarketParticipantChangedEvent marketParticipantChangedEvent,
-            MarketParticipant existingMarketParticipant,
-            MarketParticipantRole businessProcessRole)
+            MarketParticipant existingMarketParticipant)
         {
             existingMarketParticipant.IsActive = marketParticipantChangedEvent.IsActive;
             _logger.LogInformation(

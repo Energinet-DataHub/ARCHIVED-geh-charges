@@ -27,20 +27,17 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
         private readonly IUnitOfWork _unitOfWork;
         private readonly IGridAreaRepository _gridAreaRepository;
         private readonly IGridAreaLinkRepository _gridAreaLinkRepository;
-        private readonly IMarketParticipantRepository _marketParticipantRepository;
         private readonly ILogger _logger;
 
         public GridAreaPersister(
             IGridAreaRepository gridAreaRepository,
             IGridAreaLinkRepository gridAreaLinkRepository,
-            IMarketParticipantRepository marketParticipantRepository,
             ILoggerFactory loggerFactory,
             IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
             _gridAreaRepository = gridAreaRepository;
             _gridAreaLinkRepository = gridAreaLinkRepository;
-            _marketParticipantRepository = marketParticipantRepository;
             _logger = loggerFactory.CreateLogger(nameof(GridAreaPersister));
         }
 

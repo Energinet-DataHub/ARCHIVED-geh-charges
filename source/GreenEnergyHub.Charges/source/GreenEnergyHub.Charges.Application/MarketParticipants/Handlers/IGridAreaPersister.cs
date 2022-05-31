@@ -17,6 +17,9 @@ using GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsChangedEvents;
 
 namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 {
+    /// <summary>
+    /// Handles Adds and updates for a grid area
+    /// </summary>
     public interface IGridAreaPersister
     {
         /// <summary>

@@ -31,9 +31,9 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
             _gridAreaPersister = gridAreaPersister;
         }
 
-        public async Task HandleAsync(BaseIntegrationEvent messageEvent)
+        public async Task HandleAsync(BaseIntegrationEvent message)
         {
-            switch (messageEvent)
+            switch (message)
             {
                 case ActorUpdatedIntegrationEvent actorEvent:
                     {

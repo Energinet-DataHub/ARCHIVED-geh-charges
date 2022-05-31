@@ -31,12 +31,20 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
             _chargesDatabaseContext = chargesDatabaseContext;
         }
 
+        /// <summary>
+        /// Persist a market participant
+        /// </summary>
+        /// <param name="marketParticipant"></param>
         public async Task AddAsync(MarketParticipant marketParticipant)
         {
             marketParticipant = CheckMarketParticipantArguments(marketParticipant);
             await _chargesDatabaseContext.MarketParticipants.AddAsync(marketParticipant).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Retrieves a market participant from primary key
+        /// </summary>
+        /// <param name="id"></param>
         public async Task<MarketParticipant> SingleAsync(Guid id)
         {
             return await _chargesDatabaseContext
@@ -45,6 +53,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
                 .ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Retrieves a market participant from gln/eic no.
+        /// </summary>
+        /// <param name="marketParticipantId"></param>
         public async Task<MarketParticipant> SingleAsync(string marketParticipantId)
         {
             var roles = new HashSet<MarketParticipantRole>
@@ -60,6 +72,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
                 .ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Retrieves a market participant from role and gln/eic no.
+        /// </summary>
+        /// <param name="businessProcessRole"></param>
+        /// <param name="marketParticipantId"></param>
         public async Task<MarketParticipant?> SingleAsync(
             MarketParticipantRole businessProcessRole,
             string marketParticipantId)
@@ -72,6 +89,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
                 .ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Retrieves a market participant from primary key
+        /// </summary>
+        /// <param name="id"></param>
         public async Task<MarketParticipant?> SingleOrNullAsync(Guid id)
         {
             return await _chargesDatabaseContext
@@ -79,6 +100,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
                 .SingleOrDefaultAsync(mp => mp.Id == id).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Retrieves a market participant from gln/eic no.
+        /// </summary>
+        /// <param name="marketParticipantId"></param>
         public async Task<MarketParticipant?> SingleOrNullAsync(string marketParticipantId)
         {
             var roles = new HashSet<MarketParticipantRole>
@@ -94,6 +119,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
                 .ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Retrieves a market participant from role and gln/eic no.
+        /// </summary>
+        /// <param name="businessProcessRole"></param>
+        /// <param name="marketParticipantId"></param>
         public async Task<MarketParticipant?> SingleOrNullAsync(
             MarketParticipantRole businessProcessRole,
             string marketParticipantId)
