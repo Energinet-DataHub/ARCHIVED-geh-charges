@@ -23,21 +23,15 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
     // ChargeEvent integrity is null checked by ChargeCommandNullChecker
 
     /// <summary>
-    /// The ChargeInformationDto class contains the intend of the charge command, e.g. updating an existing charge.
+    /// The ChargePriceDto class contains the intend of the charge command, e.g. updating an existing charge.
     /// </summary>
-    public class ChargeInformationDto : ChargeOperation
+    public class ChargePriceDto : ChargeOperation
     {
-        public ChargeInformationDto(
+        public ChargePriceDto(
                 string id,
                 ChargeType type,
                 string chargeId,
-                string chargeName,
-                string chargeDescription,
                 string chargeOwner,
-                Resolution resolution,
-                TaxIndicator taxIndicator,
-                TransparentInvoicing transparentInvoicing,
-                VatClassification vatClassification,
                 Instant startDateTime,
                 Instant? endDateTime,
                 Instant? pointsStartInterval,
@@ -46,12 +40,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
             : base(id, chargeId, type, chargeOwner, startDateTime)
         {
             Points = new List<Point>();
-            ChargeName = chargeName;
-            ChargeDescription = chargeDescription;
-            Resolution = resolution;
-            TaxIndicator = taxIndicator;
-            TransparentInvoicing = transparentInvoicing;
-            VatClassification = vatClassification;
             EndDateTime = endDateTime;
             PointsStartInterval = pointsStartInterval;
             PointsEndInterval = pointsEndInterval;
@@ -59,31 +47,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
         }
 
         /// <summary>
-        /// The charge name
-        /// </summary>
-        public string ChargeName { get; }
-
-        public string ChargeDescription { get; }
-
-        /// <summary>
         /// Valid to, of a charge price list.
         /// </summary>
         public Instant? EndDateTime { get; }
-
-        public VatClassification VatClassification { get; }
-
-        /// <summary>
-        /// In Denmark the Energy Supplier invoices the customer, including the charges from the Grid Access Provider and the System Operator.
-        /// This enum can be use to indicate that a charge must be visible on the invoice sent to the customer.
-        /// </summary>
-        public TransparentInvoicing TransparentInvoicing { get; }
-
-        /// <summary>
-        /// Indicates whether the Charge is tax or not.
-        /// </summary>
-        public TaxIndicator TaxIndicator { get; }
-
-        public Resolution Resolution { get; }
 
         public Instant? PointsStartInterval { get; }
 
