@@ -21,7 +21,7 @@ using Microsoft.Azure.Functions.Worker;
 
 namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
 {
-    public class MarketParticipantEndpoint
+    public class MarketParticipantPersisterEndpoint
     {
         public const string FunctionName = nameof(MarketParticipantEndpoint);
         private readonly ISharedIntegrationEventParser _sharedIntegrationEventParser;
