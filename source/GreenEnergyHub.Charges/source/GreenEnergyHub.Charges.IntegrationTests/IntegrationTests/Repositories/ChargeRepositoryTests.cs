@@ -23,7 +23,6 @@ using GreenEnergyHub.Charges.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using GreenEnergyHub.Charges.TestCore;
-using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
@@ -80,7 +79,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         }
 
         [Theory]
-        [InlineAutoMoqData]
+        [TestCore.Attributes.InlineAutoMoqData]
         public async Task AddAsync_WhenChargeIsNull_ThrowsArgumentNullException(ChargeRepository sut)
         {
             // Arrange
@@ -166,7 +165,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         }
 
         [Theory]
-        [InlineAutoMoqData]
+        [TestCore.Attributes.InlineAutoMoqData]
         public async Task GetByIdsAsync_VerifyLocalContextItemsAreAlsoFetched(Charge notSavedCharge)
         {
             // Arrange
