@@ -19,7 +19,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsChangedEvents;
 
 namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 {
-    public static class MarketParticipantChangedEventMapper
+    public static class MarketParticipantDomainEventMapper
     {
         public static MarketParticipantChangedEvent MapFromActor(
             ActorUpdatedIntegrationEvent actorUpdatedIntegrationEvent)
