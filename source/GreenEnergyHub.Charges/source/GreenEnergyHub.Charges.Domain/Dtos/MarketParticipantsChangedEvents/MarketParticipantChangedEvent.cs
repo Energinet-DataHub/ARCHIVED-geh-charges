@@ -20,7 +20,7 @@ using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsChangedEvents
 {
-    public class MarketParticipantChangedEvent : InboundIntegrationEvent
+    public class MarketParticipantUpdatedEvent : InboundIntegrationEvent
     {
         public MarketParticipantChangedEvent(
             string marketParticipantId,
