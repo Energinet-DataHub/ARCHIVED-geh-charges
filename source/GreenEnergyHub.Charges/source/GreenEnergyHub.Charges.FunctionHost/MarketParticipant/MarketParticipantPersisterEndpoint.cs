@@ -16,18 +16,17 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Parsers;
 using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers;
 using GreenEnergyHub.Charges.FunctionHost.Common;
-using JetBrains.Annotations;
 using Microsoft.Azure.Functions.Worker;
 
 namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
 {
     public class MarketParticipantPersisterEndpoint
     {
-        private const string FunctionName = nameof(MarketParticipantEndpoint);
+        private const string FunctionName = nameof(MarketParticipantPersisterEndpoint);
         private readonly ISharedIntegrationEventParser _sharedIntegrationEventParser;
         private readonly IMarketParticipantEventHandler _marketParticipantEventHandler;
 
-        public MarketParticipantEndpoint(
+        public MarketParticipantPersisterEndpoint(
             ISharedIntegrationEventParser sharedIntegrationEventParser,
             IMarketParticipantEventHandler marketParticipantEventHandler)
         {

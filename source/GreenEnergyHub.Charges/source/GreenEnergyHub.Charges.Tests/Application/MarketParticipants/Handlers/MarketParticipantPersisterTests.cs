@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers;
 using GreenEnergyHub.Charges.Application.Persistence;
-using GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsChangedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsUpdatedEvents;
 using GreenEnergyHub.Charges.Domain.GridAreas;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.TestCore.Attributes;
@@ -216,7 +216,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
         public async Task PersistAsync_WhenEventIsNull_ThrowsArgumentNullException(MarketParticipantPersister sut)
         {
             // Arrange
-            MarketParticipantChangedEvent? marketParticipantChangedEvent = null;
+            MarketParticipantUpdatedEvent? marketParticipantChangedEvent = null;
 
             // Act / Assert
             await Assert.ThrowsAsync<ArgumentNullException>(
@@ -224,11 +224,11 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
                 .ConfigureAwait(false);
         }
 
-        private static MarketParticipantChangedEvent GetMarketParticipantChangedEvent(
+        private static MarketParticipantUpdatedEvent GetMarketParticipantChangedEvent(
             List<MarketParticipantRole> marketParticipantRoleCodes,
             IEnumerable<Guid> gridAreas)
         {
-            return new MarketParticipantChangedEvent(
+            return new MarketParticipantUpdatedEvent(
                 "mp123",
                 marketParticipantRoleCodes,
                 true,
@@ -236,7 +236,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
         }
 
         private static MarketParticipant GetMarketParticipant(
-            MarketParticipantChangedEvent marketParticipantChangedEvent)
+            MarketParticipantUpdatedEvent marketParticipantChangedEvent)
         {
             return new MarketParticipant(
                 Guid.NewGuid(),

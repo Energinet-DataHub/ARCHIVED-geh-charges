@@ -15,13 +15,13 @@
 using System.Linq;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
 using GreenEnergyHub.Charges.Domain.Dtos.GridAreas;
-using GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsChangedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsUpdatedEvents;
 
 namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 {
     public static class MarketParticipantDomainEventMapper
     {
-        public static MarketParticipantChangedEvent MapFromActor(
+        public static MarketParticipantUpdatedEvent MapFromActor(
             ActorUpdatedIntegrationEvent actorUpdatedIntegrationEvent)
         {
             var isActive = actorUpdatedIntegrationEvent.Status is ActorStatus.Active or ActorStatus.New;
@@ -29,7 +29,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
             var rolesUsedInChargesDomain = actorUpdatedIntegrationEvent.BusinessRoles
                 .Select(MarketParticipantRoleMapper.Map).ToList();
 
-            return new MarketParticipantChangedEvent(
+            return new MarketParticipantUpdatedEvent(
                 actorUpdatedIntegrationEvent.Gln,
                 rolesUsedInChargesDomain,
                 isActive,

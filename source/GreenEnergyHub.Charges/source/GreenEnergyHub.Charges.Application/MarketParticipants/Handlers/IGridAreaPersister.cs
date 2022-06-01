@@ -14,7 +14,6 @@
 
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.GridAreas;
-using GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsChangedEvents;
 
 namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 {

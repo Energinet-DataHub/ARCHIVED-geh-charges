@@ -18,11 +18,11 @@ using Energinet.DataHub.Core.Messaging.MessageTypes.Common;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsChangedEvents
+namespace GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsUpdatedEvents
 {
     public class MarketParticipantUpdatedEvent : InboundIntegrationEvent
     {
-        public MarketParticipantChangedEvent(
+        public MarketParticipantUpdatedEvent(
             string marketParticipantId,
             List<MarketParticipantRole> businessProcessRole,
             bool isActive,

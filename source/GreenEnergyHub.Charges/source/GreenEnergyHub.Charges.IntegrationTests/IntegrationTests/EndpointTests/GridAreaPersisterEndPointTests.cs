@@ -21,12 +21,10 @@ using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Parsers;
 using FluentAssertions;
 using GreenEnergyHub.Charges.FunctionHost.MarketParticipant;
-using GreenEnergyHub.Charges.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
-using GreenEnergyHub.Charges.Tests.Builders.Command;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
@@ -67,7 +65,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     () => Fixture.MarketParticipantChangedTopic.SenderClient.SendMessageAsync(message), message.CorrelationId, parentId);
 
                 // Assert
-                await FunctionAsserts.AssertHasExecutedAsync(Fixture.HostManager, nameof(MarketParticipantEndpoint)).ConfigureAwait(false);
+                await FunctionAsserts.AssertHasExecutedAsync(Fixture.HostManager, nameof(MarketParticipantPersisterEndpoint)).ConfigureAwait(false);
                 var gridArea = context.GridAreas.SingleOrDefault(x => x.Id == id);
                 gridArea.Should().NotBeNull();
 

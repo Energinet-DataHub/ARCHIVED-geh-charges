@@ -15,7 +15,7 @@
 using System;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Persistence;
-using GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsChangedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsUpdatedEvents;
 using GreenEnergyHub.Charges.Domain.GridAreas;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using Microsoft.Extensions.Logging;
@@ -41,25 +41,25 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
             _unitOfWork = unitOfWork;
         }
 
-        public async Task PersistAsync(MarketParticipantChangedEvent marketParticipantChangedEvent)
+        public async Task PersistAsync(MarketParticipantUpdatedEvent marketParticipantUpdatedEvent)
         {
-            ArgumentNullException.ThrowIfNull(marketParticipantChangedEvent);
-            foreach (var businessProcessRole in marketParticipantChangedEvent.BusinessProcessRoles)
+            ArgumentNullException.ThrowIfNull(marketParticipantUpdatedEvent);
+            foreach (var businessProcessRole in marketParticipantUpdatedEvent.BusinessProcessRoles)
             {
                 var existingMarketParticipant = await _marketParticipantRepository.SingleOrNullAsync(
                     businessProcessRole,
-                    marketParticipantChangedEvent.MarketParticipantId).ConfigureAwait(false);
+                    marketParticipantUpdatedEvent.MarketParticipantId).ConfigureAwait(false);
 
                 if (existingMarketParticipant is null)
                 {
                     await AddMarketParticipantAsync(
-                        marketParticipantChangedEvent,
+                        marketParticipantUpdatedEvent,
                         businessProcessRole).ConfigureAwait(false);
                 }
                 else
                 {
                     UpdateMarketParticipant(
-                        marketParticipantChangedEvent,
+                        marketParticipantUpdatedEvent,
                         existingMarketParticipant);
                 }
             }
@@ -68,7 +68,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
         }
 
         private void UpdateMarketParticipant(
-            MarketParticipantChangedEvent marketParticipantChangedEvent,
+            MarketParticipantUpdatedEvent marketParticipantChangedEvent,
             MarketParticipant existingMarketParticipant)
         {
             existingMarketParticipant.IsActive = marketParticipantChangedEvent.IsActive;
@@ -80,13 +80,13 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
         }
 
         private async Task AddMarketParticipantAsync(
-            MarketParticipantChangedEvent marketParticipantChangedEvent,
+            MarketParticipantUpdatedEvent marketParticipantUpdatedEvent,
             MarketParticipantRole businessProcessRole)
         {
             var marketParticipant = new MarketParticipant(
                 Guid.NewGuid(),
-                marketParticipantChangedEvent.MarketParticipantId,
-                marketParticipantChangedEvent.IsActive,
+                marketParticipantUpdatedEvent.MarketParticipantId,
+                marketParticipantUpdatedEvent.IsActive,
                 businessProcessRole);
 
             await _marketParticipantRepository.AddAsync(marketParticipant).ConfigureAwait(false);
@@ -96,14 +96,14 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
                 marketParticipant.MarketParticipantId,
                 marketParticipant.BusinessProcessRole);
             if (marketParticipant.BusinessProcessRole.Equals(MarketParticipantRole.GridAccessProvider))
-              await ConnectToGridAreaAsync(marketParticipantChangedEvent, marketParticipant).ConfigureAwait(false);
+              await ConnectToGridAreaAsync(marketParticipantUpdatedEvent, marketParticipant).ConfigureAwait(false);
         }
 
         private async Task ConnectToGridAreaAsync(
-            MarketParticipantChangedEvent marketParticipantChangedEvent,
+            MarketParticipantUpdatedEvent marketParticipantUpdatedEvent,
             MarketParticipant marketParticipant)
         {
-            foreach (var gridAreaId in marketParticipantChangedEvent.GridAreas)
+            foreach (var gridAreaId in marketParticipantUpdatedEvent.GridAreas)
             {
                 var existingGridArea = await _gridAreaRepository.GetOrNullAsync(gridAreaId).ConfigureAwait(false);
                 if (existingGridArea is not null)

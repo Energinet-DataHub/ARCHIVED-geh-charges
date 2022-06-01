@@ -73,7 +73,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     () => Fixture.MarketParticipantChangedTopic.SenderClient.SendMessageAsync(message), message.CorrelationId, parentId);
 
                 // Assert
-                await FunctionAsserts.AssertHasExecutedAsync(Fixture.HostManager, nameof(MarketParticipantEndpoint)).ConfigureAwait(false);
+                await FunctionAsserts.AssertHasExecutedAsync(Fixture.HostManager, nameof(MarketParticipantPersisterEndpoint)).ConfigureAwait(false);
                 var marketParticipant = context.MarketParticipants.SingleOrDefault(x =>
                     x.MarketParticipantId == gln && x.BusinessProcessRole == role);
                 marketParticipant.Should().NotBeNull();
