@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
@@ -79,7 +80,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         }
 
         [Theory]
-        [TestCore.Attributes.InlineAutoMoqData]
+        [InlineAutoMoqData]
         public async Task AddAsync_WhenChargeIsNull_ThrowsArgumentNullException(ChargeRepository sut)
         {
             // Arrange
@@ -165,7 +166,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         }
 
         [Theory]
-        [TestCore.Attributes.InlineAutoMoqData]
+        [InlineAutoMoqData]
         public async Task GetByIdsAsync_VerifyLocalContextItemsAreAlsoFetched(Charge notSavedCharge)
         {
             // Arrange
