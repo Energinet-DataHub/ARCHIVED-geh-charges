@@ -39,18 +39,23 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 
             foreach (var chargeOperationDto in chargeCommandAcceptedEvent.Command.ChargeOperations)
             {
-                switch (chargeOperationDto)
-                {
-                    case ChargeInformationDto chargeInformationDto:
-                        await _chargePublisher.PublishChargeCreatedAsync(chargeInformationDto).ConfigureAwait(false);
-                        break;
-                    case ChargePriceDto chargePriceDto:
-                        await _chargePricesUpdatedPublisher.PublishChargePricesAsync(chargePriceDto).ConfigureAwait(false);
-                        break;
-                    default:
-                        throw new InvalidOperationException(
-                            $"Operation must be {nameof(ChargeInformationDto)} or {nameof(ChargePriceDto)}");
-                }
+                await PublishEventAsync(chargeOperationDto).ConfigureAwait(false);
+            }
+        }
+
+        private async Task PublishEventAsync(ChargeOperation chargeOperationDto)
+        {
+            switch (chargeOperationDto)
+            {
+                case ChargeInformationDto chargeInformationDto:
+                    await _chargePublisher.PublishChargeCreatedAsync(chargeInformationDto).ConfigureAwait(false);
+                    break;
+                case ChargePriceDto chargePriceDto:
+                    await _chargePricesUpdatedPublisher.PublishChargePricesAsync(chargePriceDto).ConfigureAwait(false);
+                    break;
+                default:
+                    throw new InvalidOperationException(
+                        $"Operation must be {nameof(ChargeInformationDto)} or {nameof(ChargePriceDto)}");
             }
         }
     }
