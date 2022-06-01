@@ -235,7 +235,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                 points);
         }
 
-        private async Task<(List<Point> Points, Resolution Resolution, Instant IntervalStartTime, Instant IntervalEndTime)> ParseSeriesPeriodIntoOperationAsync(SchemaValidatingReader reader, Instant startDateTime, Resolution initialResolution)
+        private async Task<ParseSeriesPeriodResult> ParseSeriesPeriodIntoOperationAsync(SchemaValidatingReader reader, Instant startDateTime, Resolution initialResolution)
         {
             var points = new List<Point>();
             var resolution = initialResolution;
@@ -271,7 +271,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                 }
             }
 
-            return (points, resolution, startDateTime, endDateTime);
+            return new ParseSeriesPeriodResult(points, resolution, startDateTime, endDateTime);
         }
 
         private static async Task<(Instant StartDateTime, Instant EndDateTime)> ParseTimeIntervalAsync(SchemaValidatingReader reader, Instant intervalStartDateTime)
