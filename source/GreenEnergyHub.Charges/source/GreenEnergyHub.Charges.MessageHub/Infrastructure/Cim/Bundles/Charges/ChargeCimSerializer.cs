@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Xml.Linq;
 using GreenEnergyHub.Charges.Core.DateTime;
@@ -75,12 +74,21 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.Charges
             XNamespace cimNamespace,
             AvailableChargeData charge)
         {
-            return new XElement(
-                cimNamespace + CimChargeConstants.ChargeGroup,
-                GetChargeTypeElement(cimNamespace, charge));
+            if (charge.BusinessReasonCode == BusinessReasonCode.UpdateChargeInformation)
+            {
+                return new XElement(
+                    cimNamespace + CimChargeConstants.ChargeGroup,
+                    GetChargeInformationTypeElement(cimNamespace, charge));
+            }
+            else
+            {
+                return new XElement(
+                    cimNamespace + CimChargeConstants.ChargeGroup,
+                    GetChargePricesTypeElement(cimNamespace, charge));
+            }
         }
 
-        private XElement GetChargeTypeElement(
+        private XElement GetChargeInformationTypeElement(
             XNamespace cimNamespace,
             AvailableChargeData charge)
         {
@@ -141,6 +149,25 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.Charges
                     string.IsNullOrEmpty(charge.ChargeName),
                     CimChargeConstants.TaxIndicator,
                     () => charge.TaxIndicator),
+                GetSeriesPeriod(cimNamespace, charge));
+        }
+
+        private XElement GetChargePricesTypeElement(
+            XNamespace cimNamespace,
+            AvailableChargeData charge)
+        {
+            return new XElement(
+                cimNamespace + CimChargeConstants.ChargeTypeElement,
+                new XElement(
+                    cimNamespace + CimChargeConstants.ChargeOwner,
+                    new XAttribute(
+                        CimMarketDocumentConstants.CodingScheme,
+                        CodingSchemeMapper.Map(CodingScheme.GS1)),
+                    charge.ChargeOwner),
+                new XElement(cimNamespace + CimChargeConstants.ChargeType, ChargeTypeMapper.Map(charge.ChargeType)),
+                new XElement(cimNamespace + CimChargeConstants.ChargeId, charge.ChargeId),
+                // EffectiveDate
+                new XElement(cimNamespace + CimChargeConstants.EffectiveDate, charge.StartDateTime.ToString()),
                 GetSeriesPeriod(cimNamespace, charge));
         }
 

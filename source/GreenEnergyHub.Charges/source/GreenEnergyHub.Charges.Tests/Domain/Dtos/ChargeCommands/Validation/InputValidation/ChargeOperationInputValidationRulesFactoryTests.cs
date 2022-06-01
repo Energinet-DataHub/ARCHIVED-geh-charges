@@ -14,7 +14,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
@@ -34,14 +33,29 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
     public class ChargeOperationInputValidationRulesFactoryTests
     {
         [Fact]
-        public void CreateRules_ShouldContainRules()
+        public void CreateRules_WhenOperationContainsPoints_ShouldContainRules()
+        {
+            // Arrange
+            var sut = new ChargeOperationInputValidationRulesFactory();
+            var chargeOperationDto = new ChargeOperationDtoBuilder().WithPoint(0, 1.00m).Build();
+            var expectedRules = GetExpectedRulesForChargePriceOperation(chargeOperationDto);
+
+            // Act
+            var actualRuleTypes = sut.CreateRules(chargeOperationDto)
+                .GetRules().Select(r => r.ValidationRule.GetType()).ToList();
+            var expectedRuleTypes = expectedRules.Select(r => r.GetType()).ToList();
+
+            // Assert
+            Assert.True(actualRuleTypes.SequenceEqual(expectedRuleTypes));
+        }
+
+        [Fact]
+        public void CreateRules_WhenOperationContainsNoPoints_ShouldContainRules()
         {
             // Arrange
             var sut = new ChargeOperationInputValidationRulesFactory();
             var chargeOperationDto = new ChargeInformationDtoBuilder().Build();
-            var expectedRules = new List<IValidationRule>();
-
-            expectedRules.AddRange(GetExpectedRulesForChargeOperation(chargeOperationDto));
+            var expectedRules = GetExpectedRulesForChargeInformationOperation(chargeOperationDto);
 
             // Act
             var actualRuleTypes = sut.CreateRules(chargeOperationDto)
@@ -79,26 +93,45 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 cimValidationErrorTextToken, validationRules);
         }
 
-        private static List<IValidationRule> GetExpectedRulesForChargeOperation(ChargeInformationDto chargeInformationDto)
+        private static IEnumerable<IValidationRule> GetExpectedRulesForChargeInformationOperation(
+            ChargeOperationDto chargeOperationDto)
         {
             var expectedRules = new List<IValidationRule>
             {
-                new ChargeDescriptionHasMaximumLengthRule(chargeInformationDto),
-                new ChargeIdLengthValidationRule(chargeInformationDto),
+                new ChargeIdLengthValidationRule(chargeOperationDto),
                 new ChargeIdRequiredValidationRule(chargeInformationDto),
-                new ChargeNameHasMaximumLengthRule(chargeInformationDto),
                 new ChargeOperationIdRequiredRule(chargeInformationDto),
-                new ChargeOwnerIsRequiredValidationRule(chargeInformationDto),
-                new ChargePriceMaximumDigitsAndDecimalsRule(chargeInformationDto),
-                new ChargeTypeIsKnownValidationRule(chargeInformationDto),
-                new ChargeTypeTariffPriceCountRule(chargeInformationDto),
-                new MaximumPriceRule(chargeInformationDto),
-                new ResolutionFeeValidationRule(chargeInformationDto),
-                new ResolutionSubscriptionValidationRule(chargeInformationDto),
+                new ChargeOwnerIsRequiredValidationRule(chargeOperationDto),
+                new ChargeTypeIsKnownValidationRule(chargeOperationDto),
+                new StartDateTimeRequiredValidationRule(chargeOperationDto),
+                new ResolutionFeeValidationRule(chargeOperationDto),
+                new ResolutionSubscriptionValidationRule(chargeOperationDto),
                 new ResolutionTariffValidationRule(chargeInformationDto),
-                new StartDateTimeRequiredValidationRule(chargeInformationDto),
+                new ChargeNameHasMaximumLengthRule(chargeInformationDto),
+                new ChargeDescriptionHasMaximumLengthRule(chargeInformationDto),
                 new VatClassificationValidationRule(chargeInformationDto),
                 new TransparentInvoicingIsNotAllowedForFeeValidationRule(chargeInformationDto),
+                new ChargePriceMaximumDigitsAndDecimalsRule(chargeInformationDto),
+                new ChargeTypeTariffPriceCountRule(chargeInformationDto),
+                new MaximumPriceRule(chargeInformationDto),
+            };
+            return expectedRules;
+        }
+
+        private static IEnumerable<IValidationRule> GetExpectedRulesForChargePriceOperation(
+            ChargeOperationDto chargeOperationDto)
+        {
+            var expectedRules = new List<IValidationRule>
+            {
+                new ChargeIdLengthValidationRule(chargeOperationDto),
+                new ChargeIdRequiredValidationRule(chargeOperationDto),
+                new ChargeOperationIdRequiredRule(chargeInformationDto),
+                new ChargeOwnerIsRequiredValidationRule(chargeInformationDto),
+                new ChargeTypeIsKnownValidationRule(chargeInformationDto),
+                new StartDateTimeRequiredValidationRule(chargeInformationDto),
+                new ChargePriceMaximumDigitsAndDecimalsRule(chargeInformationDto),
+                new ChargeTypeTariffPriceCountRule(chargeOperationDto),
+                new MaximumPriceRule(chargeInformationDto),
             };
             return expectedRules;
         }
