@@ -146,19 +146,22 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
             ChargeOperationBusinessValidationRulesFactory sut,
-            ChargeCommand chargeCommand,
+            ChargeCommandBuilder chargeCommandBuilder,
+            ChargeInformationDtoBuilder chargeInformationDtoBuilder,
             Charge charge)
         {
             // Arrange
             SetupConfigureRepositoryMock(rulesConfigurationRepository);
             SetupChargeIdentifierFactoryMock(chargeIdentifierFactory);
             SetupChargeRepositoryMock(chargeRepository, charge);
+            var chargeInformationDto = chargeInformationDtoBuilder.Build();
+            var chargeCommand = chargeCommandBuilder.WithChargeOperation(chargeInformationDto).Build();
 
             // Act
             var validationRules = new List<IValidationRuleContainer>();
-            foreach (var operation in chargeCommand.ChargeOperations.Select(x => (ChargeInformationDto)x))
+            foreach (var operation in chargeCommand.ChargeOperations)
             {
-                validationRules.AddRange((await sut.CreateRulesAsync(operation)).GetRules().ToList());
+                validationRules.AddRange((await sut.CreateRulesAsync((ChargeInformationDto)operation)).GetRules().ToList());
             }
 
             // Assert

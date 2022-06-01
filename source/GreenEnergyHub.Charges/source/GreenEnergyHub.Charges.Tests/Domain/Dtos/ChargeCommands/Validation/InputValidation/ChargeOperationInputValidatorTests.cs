@@ -26,15 +26,31 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
     {
         [Theory]
         [InlineAutoData]
-        public void Validate_WhenValidatingChargeCommand_ReturnsChargeCommandValidationResult(
-            ChargeOperationInputValidationRulesFactory chargeOperationInputValidationRulesFactory,
+        public void Validate_WhenValidatingChargeCommandWithChargeInformation_ReturnsChargeCommandValidationResult(
+            ChargeInformationInputValidationRulesFactory chargeInformationInputValidationRulesFactory,
             ChargeInformationDto chargeInformationDto)
         {
             // Arrange
-            var sut = new InputValidator<ChargeInformationDto>(chargeOperationInputValidationRulesFactory);
+            var sut = new InputValidator<ChargeInformationDto>(chargeInformationInputValidationRulesFactory);
 
             // Act
             var result = sut.Validate(chargeInformationDto);
+
+            // Assert
+            Assert.IsType<ValidationResult>(result);
+        }
+
+        [Theory]
+        [InlineAutoData]
+        public void Validate_WhenValidatingChargeCommandWithPrices_ReturnsChargeCommandValidationResult(
+            ChargePriceInputValidationRulesFactory chargePriceInputValidationRulesFactory,
+            ChargePriceDto chargePriceDto)
+        {
+            // Arrange
+            var sut = new InputValidator<ChargePriceDto>(chargePriceInputValidationRulesFactory);
+
+            // Act
+            var result = sut.Validate(chargePriceDto);
 
             // Assert
             Assert.IsType<ValidationResult>(result);

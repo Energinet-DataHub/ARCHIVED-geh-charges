@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
@@ -21,22 +23,28 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
     public class MaximumPriceRule : IValidationRuleWithExtendedData
     {
         private const int PriceUpperBound = 1000000;
-        private readonly ChargeInformationDto _chargeInformationDto;
+        private readonly List<Point> _points;
 
+        [Obsolete("Points will be removed from ChargeInformationDto")]
         public MaximumPriceRule(ChargeInformationDto chargeInformationDto)
         {
-            _chargeInformationDto = chargeInformationDto;
+            _points = chargeInformationDto.Points;
+        }
+
+        public MaximumPriceRule(ChargePriceDto chargePriceDto)
+        {
+            _points = chargePriceDto.Points;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.MaximumPrice;
 
-        public bool IsValid => _chargeInformationDto.Points.All(Validate);
+        public bool IsValid => _points.All(Validate);
 
         /// <summary>
         /// This validation rule validates each Price in a list of Point(s). This property
         /// will tell which Point triggered the rule. The Point is identified by Position.
         /// </summary>
-        public string TriggeredBy => _chargeInformationDto.Points.First(point => !Validate(point)).Position.ToString();
+        public string TriggeredBy => _points.First(point => !Validate(point)).Position.ToString();
 
         private bool Validate(Point point)
         {

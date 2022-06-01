@@ -23,30 +23,29 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
     public class ChargePriceEventHandler : IChargePriceEventHandler
     {
-        private readonly IInputValidator<ChargeOperation> _inputValidator;
+        private readonly IInputValidator<ChargePriceDto> _inputValidator;
         private readonly IBusinessValidator<ChargeOperation> _businessValidator;
-        private readonly IMarketParticipantRepository _marketParticipantRepository;
+        private readonly IChargeIdentifierFactory _chargeIdentifierFactory;
         private readonly IChargeRepository _chargeRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IChargeCommandReceiptService _chargeCommandReceiptService;
 
         public ChargePriceEventHandler(
-            IInputValidator<ChargeOperation> inputValidator,
+            IInputValidator<ChargePriceDto> inputValidator,
             IBusinessValidator<ChargeOperation> businessValidator,
-            IMarketParticipantRepository marketParticipantRepository,
+            IChargeIdentifierFactory chargeIdentifierFactory,
             IChargeRepository chargeRepository,
             IUnitOfWork unitOfWork,
             IChargeCommandReceiptService chargeCommandReceiptService)
         {
             _inputValidator = inputValidator;
             _businessValidator = businessValidator;
-            _marketParticipantRepository = marketParticipantRepository;
+            _chargeIdentifierFactory = chargeIdentifierFactory;
             _chargeRepository = chargeRepository;
             _unitOfWork = unitOfWork;
             _chargeCommandReceiptService = chargeCommandReceiptService;
@@ -70,7 +69,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                     throw new InvalidOperationException($"Charge ID '{operation.ChargeId}' does not exist.");
                 }
 
-                var validationResult = _inputValidator.Validate(operation);
+                var validationResult = _inputValidator.Validate((ChargePriceDto)operation);
                 if (validationResult.IsFailed)
                 {
                     operationsToBeRejected = operations[i..].ToList();
@@ -120,16 +119,12 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                         new PreviousOperationsMustBeValidRule(information.Id), information.Id)));
         }
 
-        private async Task<Charge?> GetChargeAsync(ChargeOperation information)
+        private async Task<Charge?> GetChargeAsync(ChargeOperation chargeOperation)
         {
-            var marketParticipant = await _marketParticipantRepository
-                .SingleAsync(information.ChargeOwner)
+            var chargeIdentifier = await _chargeIdentifierFactory
+                .CreateAsync(chargeOperation.ChargeId, chargeOperation.Type, chargeOperation.ChargeOwner)
                 .ConfigureAwait(false);
 
-            var chargeIdentifier = new ChargeIdentifier(
-                information.ChargeId,
-                marketParticipant.Id,
-                information.Type);
             return await _chargeRepository.SingleOrNullAsync(chargeIdentifier).ConfigureAwait(false);
         }
     }

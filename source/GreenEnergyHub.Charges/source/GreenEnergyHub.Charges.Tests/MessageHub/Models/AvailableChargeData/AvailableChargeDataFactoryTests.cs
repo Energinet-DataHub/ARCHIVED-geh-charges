@@ -156,7 +156,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
                 .ReturnsAsync(meteringPointAdministrator);
             var chargeCommand = chargeCommandBuilder
                 .WithChargeOperations(
-                    new List<ChargeInformationDto>
+                    new List<ChargeOperation>
                     {
                         new ChargeInformationDtoBuilder().WithTaxIndicator(TaxIndicator.Tax)
                             .WithTransparentInvoicing(TransparentInvoicing.Transparent).Build(),

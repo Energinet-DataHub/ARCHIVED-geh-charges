@@ -54,7 +54,9 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             AvailableChargeRejectionDataFactory sut)
         {
             // Arrange
-            var chargeCommand = chargeCommandBuilder.WithChargeOperations(chargeOperations).Build();
+            var chargeCommand = chargeCommandBuilder
+                .WithChargeOperations(new List<ChargeOperation>(chargeOperations))
+                .Build();
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
 
             marketParticipantRepository

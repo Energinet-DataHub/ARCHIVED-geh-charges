@@ -30,6 +30,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
     [UnitTest]
     public class MaximumPriceRuleTests
     {
+#pragma warning disable CS0618
         private const decimal LargestValidPrice = 999999;
         private const decimal SmallestInvalidPrice = 1000000;
 
@@ -44,6 +45,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             ChargeInformationDtoBuilder chargeInformationDtoBuilder)
         {
             var chargeOperationDto = CreateChargeOperationDto(chargeInformationDtoBuilder, price);
+
             var sut = new MaximumPriceRule(chargeOperationDto);
             sut.IsValid.Should().Be(expected);
         }
@@ -96,5 +98,6 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         {
             return builder.WithPoint(1, price).Build();
         }
+#pragma warning restore CS0618
     }
 }

@@ -12,15 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
 {
-    public abstract class ChargeOperation : OperationBase
+    public class ChargeOperation : OperationBase
     {
-        protected ChargeOperation(string id, string chargeId, ChargeType type, string chargeOwner, Instant startDateTime)
+        [SuppressMessage("Usage", "MemberCanBeProtected.Global", Justification = "Must be public to enable deserialization.")]
+        public ChargeOperation(string id, string chargeId, ChargeType type, string chargeOwner, Instant startDateTime)
         {
             Id = id;
             ChargeId = chargeId;

@@ -29,20 +29,20 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
     public class ChargeInformationEventHandler : IChargeInformationEventHandler
     {
-        private readonly IInputValidator<ChargeOperation> _inputValidator;
+        private readonly IInputValidator<ChargeInformationDto> _inputValidator;
         private readonly IBusinessValidator<ChargeOperation> _businessValidator;
         private readonly IChargeRepository _chargeRepository;
-        private readonly IMarketParticipantRepository _marketParticipantRepository;
+        private readonly IChargeIdentifierFactory _chargeIdentifierFactory;
         private readonly IChargeFactory _chargeFactory;
         private readonly IChargePeriodFactory _chargePeriodFactory;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IChargeCommandReceiptService _chargeCommandReceiptService;
 
         public ChargeInformationEventHandler(
-            IInputValidator<ChargeOperation> inputValidator,
+            IInputValidator<ChargeInformationDto> inputValidator,
             IBusinessValidator<ChargeOperation> businessValidator,
             IChargeRepository chargeRepository,
-            IMarketParticipantRepository marketParticipantRepository,
+            IChargeIdentifierFactory chargeIdentifierFactory,
             IChargeFactory chargeFactory,
             IChargePeriodFactory chargePeriodFactory,
             IUnitOfWork unitOfWork,
@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             _inputValidator = inputValidator;
             _businessValidator = businessValidator;
             _chargeRepository = chargeRepository;
-            _marketParticipantRepository = marketParticipantRepository;
+            _chargeIdentifierFactory = chargeIdentifierFactory;
             _chargeFactory = chargeFactory;
             _chargePeriodFactory = chargePeriodFactory;
             _unitOfWork = unitOfWork;
@@ -72,7 +72,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 var operation = operations[i];
                 var charge = await GetChargeAsync(operation).ConfigureAwait(false);
 
-                var validationResult = _inputValidator.Validate(operation);
+                var validationResult = _inputValidator.Validate((ChargeInformationDto)operation);
                 if (validationResult.IsFailed)
                 {
                     operationsToBeRejected = operations[i..].ToList();
@@ -177,14 +177,10 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 
         private async Task<Charge?> GetChargeAsync(ChargeOperation chargeInformationDto)
         {
-            var marketParticipant = await _marketParticipantRepository
-                .SingleAsync(chargeInformationDto.ChargeOwner)
+            var chargeIdentifier = await _chargeIdentifierFactory
+                .CreateAsync(chargeInformationDto.ChargeId, chargeInformationDto.Type, chargeInformationDto.ChargeOwner)
                 .ConfigureAwait(false);
 
-            var chargeIdentifier = new ChargeIdentifier(
-                chargeInformationDto.ChargeId,
-                marketParticipant.Id,
-                chargeInformationDto.Type);
             return await _chargeRepository.SingleOrNullAsync(chargeIdentifier).ConfigureAwait(false);
         }
     }

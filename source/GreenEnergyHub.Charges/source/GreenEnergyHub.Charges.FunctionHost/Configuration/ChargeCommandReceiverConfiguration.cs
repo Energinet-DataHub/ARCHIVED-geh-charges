@@ -78,10 +78,13 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IBusinessValidationRulesFactory<ChargeInformationDto>,
                 ChargeOperationBusinessValidationRulesFactory>();
             serviceCollection.AddScoped<IInputValidationRulesFactory<ChargeInformationDto>,
-                ChargeOperationInputValidationRulesFactory>();
+                ChargeInformationInputValidationRulesFactory>();
+            serviceCollection.AddScoped<IInputValidationRulesFactory<ChargePriceDto>,
+                ChargePriceInputValidationRulesFactory>();
             serviceCollection.AddScoped<IRulesConfigurationRepository, RulesConfigurationRepository>();
             serviceCollection.AddScoped<IDocumentValidator<ChargeCommand>, DocumentValidator<ChargeCommand>>();
             serviceCollection.AddScoped<IInputValidator<ChargeInformationDto>, InputValidator<ChargeInformationDto>>();
+            serviceCollection.AddScoped<IInputValidator<ChargePriceDto>, InputValidator<ChargePriceDto>>();
             serviceCollection.AddScoped<IBusinessValidator<ChargeInformationDto>, BusinessValidator<ChargeInformationDto>>();
         }
 

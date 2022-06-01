@@ -69,7 +69,9 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             // Arrange
             var chargeCommand = chargeCommandBuilder.WithChargeOperation(chargeInformationDto).Build();
             var sut = new ChargeInformationCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
+#pragma warning disable CS0618
             var rule = new MaximumPriceRule(chargeInformationDto);
+#pragma warning restore CS0618
             var triggeredBy = chargeInformationDto.Points[1].Position.ToString();
             var validationError = new ValidationError(rule.ValidationRuleIdentifier, chargeInformationDto.Id, triggeredBy);
 
@@ -145,11 +147,14 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
         [Theory]
         [InlineAutoMoqData]
         public void Create_MergesAllMergeFields(
-            ChargeCommand chargeCommand,
+            ChargeCommandBuilder chargeCommandBuilder,
+            ChargeInformationDtoBuilder chargeInformationDtoBuilder,
             CimValidationErrorTextProvider cimValidationErrorTextProvider,
             ILoggerFactory loggerFactory)
         {
             // Arrange
+            var chargeInformationDto = chargeInformationDtoBuilder.WithPoint(0, 1.11m).WithPoint(1, 2.22m).Build();
+            var chargeCommand = chargeCommandBuilder.WithChargeOperation(chargeInformationDto).Build();
             var validationRuleIdentifiers = (ValidationRuleIdentifier[])Enum.GetValues(typeof(ValidationRuleIdentifier));
             var identifiersForRulesWithExtendedData =
                 ValidationRuleForInterfaceLoader.GetValidationRuleIdentifierForTypes(
@@ -161,7 +166,6 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             // Assert
             foreach (var operation in chargeCommand.ChargeOperations)
             {
-                var chargeInformationDto = (ChargeInformationDto)operation;
                 var chargeOperations = new List<ChargeOperation> { operation };
                 var commandWithOperation = new ChargeCommand(chargeCommand.Document, chargeOperations);
 
@@ -170,7 +174,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
                     var triggeredBy = GetTriggeredBy(chargeInformationDto, identifier);
                     var validationError = new ValidationError(identifier, operation.Id, triggeredBy);
 
-                    var actual = sut.Create(validationError, commandWithOperation, chargeInformationDto);
+                    var actual = sut.Create(validationError, commandWithOperation, (ChargeInformationDto)operation);
 
                     actual.Should().NotBeNullOrWhiteSpace();
                     actual.Should().NotContain("{");
