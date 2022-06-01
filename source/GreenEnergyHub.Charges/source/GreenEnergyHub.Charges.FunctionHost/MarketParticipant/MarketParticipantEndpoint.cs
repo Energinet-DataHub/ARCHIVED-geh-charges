@@ -41,7 +41,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
                 "%" + EnvironmentSettingNames.MarketParticipantChangedTopicName + "%",
                 "%" + EnvironmentSettingNames.MarketParticipantChangedSubscriptionName + "%",
                 Connection = EnvironmentSettingNames.DataHubListenerConnectionString)]
-            [NotNull] byte[] message)
+            byte[] message)
         {
             var messageEvent = _sharedIntegrationEventParser.Parse(message);
             await _marketParticipantEventHandler.HandleAsync(messageEvent).ConfigureAwait(false);
