@@ -50,7 +50,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
             AvailableChargeDataFactory sut)
         {
             // Arrange
-            var chargeOperationDto = new ChargeOperationDtoBuilder()
+            var chargeOperationDto = new ChargeInformationDtoBuilder()
                 .WithPoint(1, 1)
                 .WithTaxIndicator(TaxIndicator.Tax)
                 .WithTransparentInvoicing(TransparentInvoicing.Transparent)
@@ -72,7 +72,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
             var actual = await sut.CreateAsync(acceptedEvent);
 
             // Assert
-            var operation = acceptedEvent.Command.ChargeOperations.First();
+            var operation = (ChargeInformationDto)acceptedEvent.Command.ChargeOperations.First();
             actual.Should().HaveSameCount(gridAccessProvider);
             for (var i = 0; i < actual.Count; i++)
             {
@@ -122,7 +122,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
             marketParticipantRepository
                 .Setup(m => m.GetMeteringPointAdministratorAsync())
                 .ReturnsAsync(new MarketParticipantBuilder().Build());
-            var chargeOperationDto = new ChargeOperationDtoBuilder()
+            var chargeOperationDto = new ChargeInformationDtoBuilder()
                 .WithPoint(1, 1)
                 .WithTaxIndicator(taxIndicator)
                 .WithTransparentInvoicing(TransparentInvoicing.Transparent)
@@ -158,11 +158,11 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
                 .WithChargeOperations(
                     new List<ChargeInformationDto>
                     {
-                        new ChargeOperationDtoBuilder().WithTaxIndicator(TaxIndicator.Tax)
+                        new ChargeInformationDtoBuilder().WithTaxIndicator(TaxIndicator.Tax)
                             .WithTransparentInvoicing(TransparentInvoicing.Transparent).Build(),
-                        new ChargeOperationDtoBuilder().WithTaxIndicator(TaxIndicator.Tax)
+                        new ChargeInformationDtoBuilder().WithTaxIndicator(TaxIndicator.Tax)
                             .WithTransparentInvoicing(TransparentInvoicing.Transparent).Build(),
-                        new ChargeOperationDtoBuilder().WithTaxIndicator(TaxIndicator.Tax)
+                        new ChargeInformationDtoBuilder().WithTaxIndicator(TaxIndicator.Tax)
                             .WithTransparentInvoicing(TransparentInvoicing.Transparent).Build(),
                     })
                 .Build();

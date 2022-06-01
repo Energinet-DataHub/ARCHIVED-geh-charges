@@ -25,7 +25,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
 
         public ChargeCommandBuilder()
         {
-            _chargeOperationDtos = new List<ChargeInformationDto> { new ChargeOperationDtoBuilder().Build() };
+            _chargeOperationDtos = new List<ChargeInformationDto> { new ChargeInformationDtoBuilder().Build() };
             _documentDto = new DocumentDtoBuilder().Build();
         }
 

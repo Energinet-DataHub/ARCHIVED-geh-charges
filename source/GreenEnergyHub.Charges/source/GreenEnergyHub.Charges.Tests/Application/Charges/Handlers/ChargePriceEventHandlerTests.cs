@@ -222,17 +222,17 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 
         private static ChargeCommandReceivedEvent CreateReceivedEventWithChargeOperations()
         {
-            var validChargeInformationDto = new ChargeOperationDtoBuilder()
+            var validChargeInformationDto = new ChargeInformationDtoBuilder()
                 .WithDescription("valid")
                 .WithStartDateTime(InstantHelper.GetYesterdayAtMidnightUtc())
                 .WithEndDateTime(InstantHelper.GetEndDefault())
                 .Build();
-            var invalidChargeInformationDto = new ChargeOperationDtoBuilder()
+            var invalidChargeInformationDto = new ChargeInformationDtoBuilder()
                 .WithDescription("invalid")
                 .WithStartDateTime(InstantHelper.GetYesterdayAtMidnightUtc())
                 .WithEndDateTime(InstantHelper.GetEndDefault())
                 .Build();
-            var failedChargeInformationDto = new ChargeOperationDtoBuilder()
+            var failedChargeInformationDto = new ChargeInformationDtoBuilder()
                 .WithDescription("failed")
                 .WithStartDateTime(InstantHelper.GetYesterdayAtMidnightUtc())
                 .WithEndDateTime(InstantHelper.GetEndDefault())
@@ -328,7 +328,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                 points.Add(new Point(i, price + i, InstantHelper.GetTodayPlusDaysAtMidnightUtc(i)));
             }
 
-            var operation = new ChargeOperationDtoBuilder()
+            var operation = new ChargeInformationDtoBuilder()
                 .WithPoints(points)
                 .Build();
 

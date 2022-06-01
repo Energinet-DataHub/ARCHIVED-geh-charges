@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands
             string documentId)
         {
             // Arrange
-            var chargeOperationDto = new ChargeOperationDtoBuilder()
+            var chargeOperationDto = new ChargeInformationDtoBuilder()
                 .WithDescription(description)
                 .WithChargeName(chargeName)
                 .Build();

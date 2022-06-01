@@ -30,11 +30,11 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Factories
         [Theory]
         [InlineAutoDomainData]
         public void Create_Charge_HasNoNullsOrEmptyCollections(
-            ChargeInformationDto chargeInformationDto,
+            ChargePriceDto chargePriceDto,
             ChargePricesUpdatedEventFactory sut)
         {
             // Act
-            var actual = sut.Create(chargeInformationDto);
+            var actual = sut.Create(chargePriceDto);
 
             // Assert
             actual.Should().NotContainNullsOrEmptyEnumerables();

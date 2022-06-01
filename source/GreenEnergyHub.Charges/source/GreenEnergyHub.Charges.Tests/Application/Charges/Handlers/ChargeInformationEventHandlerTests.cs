@@ -236,13 +236,13 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             ChargePeriodBuilder chargePeriodBuilder,
             ChargeCommandBuilder chargeCommandBuilder,
             ChargeBuilder chargeBuilder,
-            ChargeOperationDtoBuilder chargeOperationDtoBuilder,
+            ChargeInformationDtoBuilder chargeInformationDtoBuilder,
             ChargeInformationEventHandler sut)
         {
             // Arrange
             var validationResult = ValidationResult.CreateSuccess();
             SetupValidators(inputValidator, businessValidator, validationResult);
-            var chargeOperationDto = chargeOperationDtoBuilder
+            var chargeOperationDto = chargeInformationDtoBuilder
                 .WithStartDateTime(InstantHelper.GetTomorrowAtMidnightUtc())
                 .WithEndDateTime(InstantHelper.GetEndDefault())
                 .Build();
@@ -394,25 +394,25 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 
         private static ChargeCommandReceivedEvent CreateReceivedEventWithChargeOperations()
         {
-            var validChargeOperationDto = new ChargeOperationDtoBuilder()
+            var validChargeOperationDto = new ChargeInformationDtoBuilder()
                 .WithChargeOperationId("Operation1")
                 .WithDescription("valid")
                 .WithStartDateTime(InstantHelper.GetYesterdayAtMidnightUtc())
                 .WithEndDateTime(InstantHelper.GetEndDefault())
                 .Build();
-            var invalidChargeOperationDto = new ChargeOperationDtoBuilder()
+            var invalidChargeOperationDto = new ChargeInformationDtoBuilder()
                 .WithChargeOperationId("Operation2")
                 .WithDescription("invalid")
                 .WithStartDateTime(InstantHelper.GetYesterdayAtMidnightUtc())
                 .WithEndDateTime(InstantHelper.GetEndDefault())
                 .Build();
-            var failedChargeOperationDto = new ChargeOperationDtoBuilder()
+            var failedChargeOperationDto = new ChargeInformationDtoBuilder()
                 .WithChargeOperationId("Operation3")
                 .WithDescription("failed")
                 .WithStartDateTime(InstantHelper.GetYesterdayAtMidnightUtc())
                 .WithEndDateTime(InstantHelper.GetEndDefault())
                 .Build();
-            var anotherFailedChargeOperationDto = new ChargeOperationDtoBuilder()
+            var anotherFailedChargeOperationDto = new ChargeInformationDtoBuilder()
                 .WithChargeOperationId("Operation4")
                 .WithDescription("another failed")
                 .WithStartDateTime(InstantHelper.GetYesterdayAtMidnightUtc())

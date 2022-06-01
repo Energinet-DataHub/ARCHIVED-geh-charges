@@ -20,7 +20,7 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Tests.Builders.Command
 {
-   public class ChargeOperationDtoBuilder
+   public class ChargeInformationDtoBuilder
     {
         private List<Point> _points;
         private string _chargeId;
@@ -38,7 +38,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         private Instant? _pointsStartInterval;
         private Instant? _pointsEndInterval;
 
-        public ChargeOperationDtoBuilder()
+        public ChargeInformationDtoBuilder()
         {
             _operationId = "operationId";
             _chargeId = "some charge id";
@@ -58,73 +58,73 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             _pointsEndInterval = null;
         }
 
-        public ChargeOperationDtoBuilder WithDescription(string description)
+        public ChargeInformationDtoBuilder WithDescription(string description)
         {
             _description = description;
             return this;
         }
 
-        public ChargeOperationDtoBuilder WithChargeName(string name)
+        public ChargeInformationDtoBuilder WithChargeName(string name)
         {
             _chargeName = name;
             return this;
         }
 
-        public ChargeOperationDtoBuilder WithChargeOperationId(string operationId)
+        public ChargeInformationDtoBuilder WithChargeOperationId(string operationId)
         {
             _operationId = operationId;
             return this;
         }
 
-        public ChargeOperationDtoBuilder WithChargeId(string chargeId)
+        public ChargeInformationDtoBuilder WithChargeId(string chargeId)
         {
             _chargeId = chargeId;
             return this;
         }
 
-        public ChargeOperationDtoBuilder WithTaxIndicator(TaxIndicator taxIndicator)
+        public ChargeInformationDtoBuilder WithTaxIndicator(TaxIndicator taxIndicator)
         {
             _taxIndicator = taxIndicator;
             return this;
         }
 
-        public ChargeOperationDtoBuilder WithOwner(string owner)
+        public ChargeInformationDtoBuilder WithOwner(string owner)
         {
             _owner = owner;
             return this;
         }
 
-        public ChargeOperationDtoBuilder WithVatClassification(VatClassification vatClassification)
+        public ChargeInformationDtoBuilder WithVatClassification(VatClassification vatClassification)
         {
             _vatClassification = vatClassification;
             return this;
         }
 
-        public ChargeOperationDtoBuilder WithTransparentInvoicing(TransparentInvoicing transparentInvoicing)
+        public ChargeInformationDtoBuilder WithTransparentInvoicing(TransparentInvoicing transparentInvoicing)
         {
             _transparentInvoicing = transparentInvoicing;
             return this;
         }
 
-        public ChargeOperationDtoBuilder WithChargeType(ChargeType type)
+        public ChargeInformationDtoBuilder WithChargeType(ChargeType type)
         {
             _chargeType = type;
             return this;
         }
 
-        public ChargeOperationDtoBuilder WithStartDateTime(Instant startDateTime)
+        public ChargeInformationDtoBuilder WithStartDateTime(Instant startDateTime)
         {
             _startDateTime = startDateTime;
             return this;
         }
 
-        public ChargeOperationDtoBuilder WithEndDateTime(Instant endDateTime)
+        public ChargeInformationDtoBuilder WithEndDateTime(Instant endDateTime)
         {
             _endDateTime = endDateTime;
             return this;
         }
 
-        public ChargeOperationDtoBuilder WithPoints(List<Point> points)
+        public ChargeInformationDtoBuilder WithPoints(List<Point> points)
         {
             _points = points;
             _pointsStartInterval = _points.Min(x => x.Time);
@@ -132,7 +132,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             return this;
         }
 
-        public ChargeOperationDtoBuilder WithPoint(int position, decimal price)
+        public ChargeInformationDtoBuilder WithPoint(int position, decimal price)
         {
             _points.Add(new Point(position, price, SystemClock.Instance.GetCurrentInstant()));
             _pointsStartInterval = _points.Min(x => x.Time);
@@ -140,7 +140,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             return this;
         }
 
-        public ChargeOperationDtoBuilder WithPointWithXNumberOfPrices(int numberOfPrices)
+        public ChargeInformationDtoBuilder WithPointWithXNumberOfPrices(int numberOfPrices)
         {
             for (var i = 0; i < numberOfPrices; i++)
             {
@@ -153,7 +153,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             return this;
         }
 
-        public ChargeOperationDtoBuilder WithResolution(Resolution resolution)
+        public ChargeInformationDtoBuilder WithResolution(Resolution resolution)
         {
             _resolution = resolution;
             return this;

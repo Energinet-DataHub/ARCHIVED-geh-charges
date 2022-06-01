@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void IsValid_WhenLessThan8DigitsAnd6Decimals_IsValid(
             decimal price,
             bool expected,
-            ChargeOperationDtoBuilder builder)
+            ChargeInformationDtoBuilder builder)
         {
             // Arrange
             var chargeOperationDto = builder.WithPoint(1, price).Build();
@@ -54,7 +54,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeOperationDtoBuilder builder)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeInformationDtoBuilder builder)
         {
             var invalidChargeOperationDto = builder.WithPoint(1, 123456789m).Build();
             var sut = new ChargePriceMaximumDigitsAndDecimalsRule(invalidChargeOperationDto);
@@ -68,7 +68,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             CimValidationErrorTextProvider cimValidationErrorTextProvider)
         {
             // Arrange
-            var chargeOperationDto = new ChargeOperationDtoBuilder()
+            // TODO: ChargePriceDtoBuilder
+            var chargeOperationDto = new ChargeInformationDtoBuilder()
                 .WithPoint(1, 123456789m)
                 .Build();
             var invalidCommand = new ChargeCommandBuilder()
@@ -80,7 +81,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             var sutRule = new ChargePriceMaximumDigitsAndDecimalsRule(chargeOperationDto);
             var validationError =
                 new ValidationError(sutRule.ValidationRuleIdentifier, chargeOperationDto.Id, triggeredBy);
-            var sutFactory = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
+            var sutFactory = new ChargeInformationCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
 
             // Act
             var actual = sutFactory.Create(validationError, invalidCommand, chargeOperationDto);

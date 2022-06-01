@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
             ChargeOperationBusinessValidationRulesFactory sut,
-            ChargeOperationDtoBuilder builder)
+            ChargeInformationDtoBuilder builder)
         {
             // Arrange
             var operation = builder.Build();
@@ -81,7 +81,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             Charge charge)
         {
             // Arrange
-            var chargeOperationDto = new ChargeOperationDtoBuilder().WithChargeType(ChargeType.Fee).Build();
+            var chargeOperationDto = new ChargeInformationDtoBuilder().WithChargeType(ChargeType.Fee).Build();
             SetupConfigureRepositoryMock(rulesConfigurationRepository);
             SetupChargeIdentifierFactoryMock(chargeIdentifierFactory);
             SetupChargeRepositoryMock(chargeRepository, charge);
@@ -109,7 +109,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             Charge charge)
         {
             // Arrange
-            var chargeOperationDto = new ChargeOperationDtoBuilder().WithChargeType(ChargeType.Tariff).Build();
+            var chargeOperationDto = new ChargeInformationDtoBuilder().WithChargeType(ChargeType.Tariff).Build();
             SetupConfigureRepositoryMock(rulesConfigurationRepository);
             SetupChargeRepositoryMock(chargeRepository, charge);
             SetupChargeIdentifierFactoryMock(chargeIdentifierFactory);
@@ -156,7 +156,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
 
             // Act
             var validationRules = new List<IValidationRuleContainer>();
-            foreach (var operation in chargeCommand.ChargeOperations)
+            foreach (var operation in chargeCommand.ChargeOperations.Select(x => (ChargeInformationDto)x))
             {
                 validationRules.AddRange((await sut.CreateRulesAsync(operation)).GetRules().ToList());
             }
@@ -205,13 +205,6 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             rulesConfigurationRepository
                 .Setup(r => r.GetConfigurationAsync())
                 .Returns(Task.FromResult(configuration));
-        }
-
-        private static void SetupMarketParticipantMock(TestMarketParticipant sender, Mock<IMarketParticipantRepository> marketParticipantRepository)
-        {
-            marketParticipantRepository
-                .Setup(repo => repo.SingleAsync(It.IsAny<string>()))
-                .ReturnsAsync(sender);
         }
 
         private static void SetupChargeIdentifierFactoryMock(Mock<IChargeIdentifierFactory> chargeIdentifierFactory)

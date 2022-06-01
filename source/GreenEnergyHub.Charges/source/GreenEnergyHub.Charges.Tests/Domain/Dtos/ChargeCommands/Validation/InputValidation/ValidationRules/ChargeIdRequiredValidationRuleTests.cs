@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void ChargeIdRequiredValidationRule_Test(
             string chargeId,
             bool expected,
-            ChargeOperationDtoBuilder builder)
+            ChargeInformationDtoBuilder builder)
         {
             var chargeOperationDto = builder.WithChargeId(chargeId).Build();
             var sut = new ChargeIdRequiredValidationRule(chargeOperationDto);
@@ -44,7 +44,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeOperationDtoBuilder builder)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeInformationDtoBuilder builder)
         {
             var invalidChargeOperationDto = builder.WithChargeId(string.Empty).Build();
             var sut = new ChargeIdRequiredValidationRule(invalidChargeOperationDto);

@@ -42,7 +42,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 
             // Assert
             chargeSender.Verify(x => x.PublishChargeCreatedAsync(It.IsAny<ChargeInformationDto>()), Times.Exactly(3));
-            chargePricesUpdatedSender.Verify(x => x.PublishChargePricesAsync(It.IsAny<ChargeInformationDto>()), Times.Exactly(3));
+            chargePricesUpdatedSender.Verify(x => x.PublishChargePricesAsync(It.IsAny<ChargePriceDto>()), Times.Exactly(3));
         }
 
         [Theory]
@@ -63,7 +63,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 
             // Assert
             chargeSender.Verify(x => x.PublishChargeCreatedAsync(It.IsAny<ChargeInformationDto>()), Times.Once);
-            chargePricesUpdatedSender.Verify(x => x.PublishChargePricesAsync(It.IsAny<ChargeInformationDto>()), Times.Never);
+            chargePricesUpdatedSender.Verify(x => x.PublishChargePricesAsync(It.IsAny<ChargePriceDto>()), Times.Never);
         }
     }
 }

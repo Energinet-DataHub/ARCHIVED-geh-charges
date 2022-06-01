@@ -38,7 +38,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         {
             // Arrange
             var sut = new ChargeOperationInputValidationRulesFactory();
-            var chargeOperationDto = new ChargeOperationDtoBuilder().Build();
+            var chargeOperationDto = new ChargeInformationDtoBuilder().Build();
             var expectedRules = new List<IValidationRule>();
 
             expectedRules.AddRange(GetExpectedRulesForChargeOperation(chargeOperationDto));

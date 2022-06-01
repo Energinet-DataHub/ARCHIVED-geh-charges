@@ -30,7 +30,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptData
 {
     [UnitTest]
-    public class ChargeCimValidationErrorTextFactoryTests
+    public class ChargeInformationCimValidationErrorTextFactoryTests
     {
         [Theory]
         [InlineAutoMoqData]
@@ -42,7 +42,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
         {
             // Arrange
             var chargeCommand = chargeCommandBuilder.WithChargeOperation(chargeInformationDto).Build();
-            var sut = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
+            var sut = new ChargeInformationCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
             var rule = new ResolutionTariffValidationRule(chargeInformationDto);
             var validationError = new ValidationError(rule.ValidationRuleIdentifier, null!, null!);
 
@@ -68,7 +68,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
         {
             // Arrange
             var chargeCommand = chargeCommandBuilder.WithChargeOperation(chargeInformationDto).Build();
-            var sut = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
+            var sut = new ChargeInformationCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
             var rule = new MaximumPriceRule(chargeInformationDto);
             var triggeredBy = chargeInformationDto.Points[1].Position.ToString();
             var validationError = new ValidationError(rule.ValidationRuleIdentifier, chargeInformationDto.Id, triggeredBy);
@@ -101,7 +101,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             // Arrange
             var chargeCommand = chargeCommandBuilder.WithChargeOperation(chargeInformationDto).Build();
             var validationError = new ValidationError(validationRuleIdentifier, chargeInformationDto.Id, triggeredBy);
-            var sut = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
+            var sut = new ChargeInformationCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
 
             // Act
             var actual = sut.Create(validationError, chargeCommand, chargeInformationDto);
@@ -131,7 +131,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
                 seedTriggeredBy;
             var validationError = new ValidationError(validationRuleIdentifier, chargeInformationDto.Id, triggeredBy);
 
-            var sut = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
+            var sut = new ChargeInformationCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
             var expected = CimValidationErrorTextTemplateMessages.StartDateValidationErrorText
                 .Replace("{{ChargeStartDateTime}}", chargeInformationDto.StartDateTime.ToString());
 
@@ -155,21 +155,22 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
                 ValidationRuleForInterfaceLoader.GetValidationRuleIdentifierForTypes(
                     typeof(MaximumPriceRule).Assembly, typeof(IValidationRuleWithExtendedData));
 
-            var sut = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
+            var sut = new ChargeInformationCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
 
             // Act
             // Assert
             foreach (var operation in chargeCommand.ChargeOperations)
             {
-                var chargeInformationDtos = new List<ChargeInformationDto> { operation };
-                var commandWithOperation = new ChargeCommand(chargeCommand.Document, chargeInformationDtos);
+                var chargeInformationDto = (ChargeInformationDto)operation;
+                var chargeOperations = new List<ChargeOperation> { operation };
+                var commandWithOperation = new ChargeCommand(chargeCommand.Document, chargeOperations);
 
                 foreach (var identifier in validationRuleIdentifiers)
                 {
-                    var triggeredBy = GetTriggeredBy(operation, identifier);
+                    var triggeredBy = GetTriggeredBy(chargeInformationDto, identifier);
                     var validationError = new ValidationError(identifier, operation.Id, triggeredBy);
 
-                    var actual = sut.Create(validationError, commandWithOperation, operation);
+                    var actual = sut.Create(validationError, commandWithOperation, chargeInformationDto);
 
                     actual.Should().NotBeNullOrWhiteSpace();
                     actual.Should().NotContain("{");
