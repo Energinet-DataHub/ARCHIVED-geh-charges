@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Collections.Generic;
+using System.Linq;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using NodaTime;
@@ -34,6 +35,8 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         private ChargeType _chargeType;
         private Resolution _resolution;
         private string _operationId;
+        private Instant? _pointsStartInterval;
+        private Instant? _pointsEndInterval;
 
         public ChargeOperationDtoBuilder()
         {
@@ -51,6 +54,8 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             _chargeType = ChargeType.Fee;
             _points = new List<Point>();
             _resolution = Resolution.PT1H;
+            _pointsStartInterval = null;
+            _pointsEndInterval = null;
         }
 
         public ChargeOperationDtoBuilder WithDescription(string description)
@@ -122,12 +127,16 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         public ChargeOperationDtoBuilder WithPoints(List<Point> points)
         {
             _points = points;
+            _pointsStartInterval = _points.Min(x => x.Time);
+            _pointsEndInterval = _points.Max(x => x.Time) + Duration.FromMinutes(1);
             return this;
         }
 
         public ChargeOperationDtoBuilder WithPoint(int position, decimal price)
         {
             _points.Add(new Point(position, price, SystemClock.Instance.GetCurrentInstant()));
+            _pointsStartInterval = _points.Min(x => x.Time);
+            _pointsEndInterval = _points.Max(x => x.Time) + Duration.FromMinutes(1);
             return this;
         }
 
@@ -139,6 +148,8 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
                 _points.Add(point);
             }
 
+            _pointsStartInterval = _points.Min(x => x.Time);
+            _pointsEndInterval = _points.Max(x => x.Time) + Duration.FromMinutes(1);
             return this;
         }
 
@@ -163,6 +174,8 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
                 _vatClassification,
                 _startDateTime,
                 _endDateTime,
+                _pointsStartInterval,
+                _pointsEndInterval,
                 _points);
         }
     }

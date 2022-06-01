@@ -41,6 +41,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
                 VatClassification vatClassification,
                 Instant startDateTime,
                 Instant? endDateTime,
+                Instant? pointsStartInterval,
+                Instant? pointsEndInterval,
                 List<Point> points)
         {
             Points = new List<Point>();
@@ -56,6 +58,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
             VatClassification = vatClassification;
             StartDateTime = startDateTime;
             EndDateTime = endDateTime;
+            PointsStartInterval = pointsStartInterval;
+            PointsEndInterval = pointsEndInterval;
             Points = points;
         }
 
@@ -108,6 +112,10 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
         public string ChargeOwner { get; }
 
         public Resolution Resolution { get; }
+
+        public Instant? PointsStartInterval { get; }
+
+        public Instant? PointsEndInterval { get; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2227", Justification = "JSON deserialization")]
         public List<Point> Points { get; }
