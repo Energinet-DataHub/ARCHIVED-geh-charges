@@ -31,13 +31,13 @@ limitations under the License.
 				<cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">{{$senderMarketParticipant}}</cim:chargeTypeOwner_MarketParticipant.mRID>
 				<cim:type>D03</cim:type>
 				<cim:mRID>TariffId01</cim:mRID>
-                <cim:name>Charge Tariff Hourly Name</cim:name>
-                <cim:description>Tariff description</cim:description>
-                <cim:priceTimeFrame_Period.resolution>PT1H</cim:priceTimeFrame_Period.resolution>
-                <cim:effectiveDate>2022-07-31T22:00:00Z</cim:effectiveDate>
-                <cim:VATPayer>D01</cim:VATPayer>
-                <cim:transparentInvoicing>false</cim:transparentInvoicing>
-                <cim:taxIndicator>false</cim:taxIndicator>
+				<cim:name>Charge Tariff Hourly Name</cim:name>
+				<cim:description>Tariff description</cim:description>
+				<cim:priceTimeFrame_Period.resolution>PT1H</cim:priceTimeFrame_Period.resolution>
+				<cim:effectiveDate>2022-07-31T22:00:00Z</cim:effectiveDate>
+				<cim:VATPayer>D01</cim:VATPayer>
+				<cim:transparentInvoicing>false</cim:transparentInvoicing>
+				<cim:taxIndicator>false</cim:taxIndicator>
 				<cim:Series_Period>
 					<cim:resolution>PT1H</cim:resolution>
 					<cim:timeInterval>
