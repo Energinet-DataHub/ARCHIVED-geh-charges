@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers;
 using GreenEnergyHub.Charges.Application.Persistence;
+using GreenEnergyHub.Charges.Domain.Dtos.GridAreas;
 using GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsChangedEvents;
 using GreenEnergyHub.Charges.Domain.GridAreas;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
@@ -44,7 +45,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
         {
             // Arrange
             loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
-            var gridAreaChangedEvent = new GridAreaChangedEvent(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
+            var gridAreaChangedEvent = new GridAreaUpdatedEvent(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
 
             SetupGridAreaRepositories(
                 gridAreaRepository,
@@ -86,10 +87,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
         {
             // Arrange
             loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
-            var gridAreaChangedEvent = new GridAreaChangedEvent(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
+            var gridAreaChangedEvent = new GridAreaUpdatedEvent(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
 
             var existingGridArea = new GridArea(gridAreaChangedEvent.GridAreaId, null);
-            var existingGridAreaLink = new GridAreaLink(gridAreaChangedEvent.GridAreaLinkId, existingGridArea.Id);
+            var existingGridAreaLink = new GridAreaLink(gridAreaChangedEvent.GridAreaLinkId, Guid.NewGuid());
             SetupGridAreaRepositories(
                 gridAreaRepository,
                 gridAreaLinkRepository,
@@ -127,7 +128,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
         {
             // Arrange
             loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
-            var gridAreaChangedEvent = new GridAreaChangedEvent(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
+            var gridAreaChangedEvent = new GridAreaUpdatedEvent(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
 
             var existingGridArea = new GridArea(gridAreaChangedEvent.GridAreaId, Guid.NewGuid());
             var existingGridAreaLink = new GridAreaLink(gridAreaChangedEvent.GridAreaLinkId, Guid.NewGuid());
@@ -169,7 +170,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
         public async Task PersistAsync_WhenEventIsNull_ThrowsArgumentNullException(GridAreaPersister sut)
         {
             // Arrange
-            GridAreaChangedEvent? gridAreaChangedEvent = null;
+            GridAreaUpdatedEvent? gridAreaChangedEvent = null;
 
             // Act / Assert
             await Assert.ThrowsAsync<ArgumentNullException>(

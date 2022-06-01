@@ -13,19 +13,20 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.Dtos.GridAreas;
 using GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsChangedEvents;
 
 namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 {
     /// <summary>
-    /// Handles Adds and updates for a grid area
+    /// Handles grid area updates
     /// </summary>
     public interface IGridAreaPersister
     {
         /// <summary>
-        /// Adds or update a grid area from an integrationevent
+        /// Adds or update a grid area from an integration event
         /// </summary>
-        /// <param name="gridAreaChangedEvent"></param>
-        Task PersistAsync(GridAreaChangedEvent gridAreaChangedEvent);
+        /// <param name="gridAreaUpdatedEvent"></param>
+        Task PersistAsync(GridAreaUpdatedEvent gridAreaUpdatedEvent);
     }
 }

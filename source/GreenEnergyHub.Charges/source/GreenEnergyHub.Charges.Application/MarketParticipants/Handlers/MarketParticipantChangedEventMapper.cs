@@ -14,6 +14,7 @@
 
 using System.Linq;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
+using GreenEnergyHub.Charges.Domain.Dtos.GridAreas;
 using GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsChangedEvents;
 
 namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
@@ -35,10 +36,10 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
                 actorUpdatedIntegrationEvent.GridAreas);
         }
 
-        public static GridAreaChangedEvent MapFromGridArea(
+        public static GridAreaUpdatedEvent MapFromGridArea(
             GridAreaUpdatedIntegrationEvent gridUpdatedIntegrationEvent)
         {
-            return new GridAreaChangedEvent(
+            return new GridAreaUpdatedEvent(
                 gridUpdatedIntegrationEvent.Id,
                 gridUpdatedIntegrationEvent.GridAreaId,
                 gridUpdatedIntegrationEvent.GridAreaLinkId);

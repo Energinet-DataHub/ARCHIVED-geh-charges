@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
 using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers;
+using GreenEnergyHub.Charges.Domain.Dtos.GridAreas;
 using GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsChangedEvents;
 using GreenEnergyHub.TestHelpers;
 using Moq;
@@ -72,7 +73,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
 
                 // Assert
                 gridAreaPersister
-                    .Verify(v => v.PersistAsync(It.IsAny<GridAreaChangedEvent>()), Times.Exactly(1));
+                    .Verify(v => v.PersistAsync(It.IsAny<GridAreaUpdatedEvent>()), Times.Exactly(1));
             }
         }
     }

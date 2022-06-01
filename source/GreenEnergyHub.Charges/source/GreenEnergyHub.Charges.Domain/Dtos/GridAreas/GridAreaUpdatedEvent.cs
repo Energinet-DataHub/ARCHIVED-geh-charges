@@ -13,16 +13,14 @@
 // limitations under the License.
 
 using System;
-using System.Threading.Tasks;
 using Energinet.DataHub.Core.Messaging.MessageTypes.Common;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsChangedEvents
+namespace GreenEnergyHub.Charges.Domain.Dtos.GridAreas
 {
-    public class GridAreaChangedEvent : InboundIntegrationEvent
+    public class GridAreaUpdatedEvent : InboundIntegrationEvent
     {
-        public GridAreaChangedEvent(
+        public GridAreaUpdatedEvent(
             Guid id,
             Guid gridAreaId,
             Guid gridAreaLinkId)
