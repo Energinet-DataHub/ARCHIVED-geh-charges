@@ -21,10 +21,10 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 {
     public static class MarketParticipantDomainEventMapper
     {
-        public static MarketParticipantUpdatedEvent MapFromActor(
+        public static MarketParticipantUpdatedEvent MapFromActorUpdatedIntegrationEvent(
             ActorUpdatedIntegrationEvent actorUpdatedIntegrationEvent)
         {
-            var isActive = actorUpdatedIntegrationEvent.Status is ActorStatus.Active or ActorStatus.New;
+            var isActive = actorUpdatedIntegrationEvent.Status is ActorStatus.Active;
 
             var rolesUsedInChargesDomain = actorUpdatedIntegrationEvent.BusinessRoles
                 .Select(MarketParticipantRoleMapper.Map).ToList();
@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
                 actorUpdatedIntegrationEvent.GridAreas);
         }
 
-        public static GridAreaUpdatedEvent MapFromGridArea(
+        public static GridAreaUpdatedEvent MapFromGridAreaUpdatedIntegrationEvent(
             GridAreaUpdatedIntegrationEvent gridUpdatedIntegrationEvent)
         {
             return new GridAreaUpdatedEvent(
