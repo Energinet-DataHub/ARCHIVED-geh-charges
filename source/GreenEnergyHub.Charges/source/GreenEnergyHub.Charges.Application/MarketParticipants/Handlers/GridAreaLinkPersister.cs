@@ -21,20 +21,20 @@ using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 {
-    public class GridAreaLinkLinkPersister : IGridAreaLinkPersister
+    public class GridAreaLinkPersister : IGridAreaLinkPersister
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IGridAreaLinkRepository _gridAreaLinkRepository;
         private readonly ILogger _logger;
 
-        public GridAreaLinkLinkPersister(
+        public GridAreaLinkPersister(
             IGridAreaLinkRepository gridAreaLinkRepository,
             ILoggerFactory loggerFactory,
             IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
             _gridAreaLinkRepository = gridAreaLinkRepository;
-            _logger = loggerFactory.CreateLogger(nameof(GridAreaLinkLinkPersister));
+            _logger = loggerFactory.CreateLogger(nameof(GridAreaLinkPersister));
         }
 
         public async Task PersistAsync(GridAreaUpdatedEvent gridAreaUpdatedEvent)

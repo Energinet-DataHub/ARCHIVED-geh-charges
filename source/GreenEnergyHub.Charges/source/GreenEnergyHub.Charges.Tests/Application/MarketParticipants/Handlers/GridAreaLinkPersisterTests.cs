@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
         {
             // Arrange
             loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
-            var gridAreaChangedEvent = new GridAreaUpdatedEvent(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
+            var gridAreaUpdatedEvent = new GridAreaUpdatedEvent(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
 
             SetupGridAreaRepositories(
                 gridAreaLinkRepository,
@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
                 null,
                 null);
 
-            var sut = new GridAreaLinkLinkPersister(
+            var sut = new GridAreaLinkPersister(
                 gridAreaLinkRepository.Object,
                 loggerFactory.Object,
                 unitOfWork.Object);
@@ -89,13 +89,13 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
                     string.Empty,
                     true,
                     MarketParticipantRole.GridAccessProvider));
-            var sut = new GridAreaLinkLinkPersister(
+            var sut = new GridAreaLinkPersister(
                 gridAreaLinkRepository.Object,
                 loggerFactory.Object,
                 unitOfWork.Object);
 
             // Act
-            await sut.PersistAsync(gridAreaChangedEvent).ConfigureAwait(false);
+            await sut.PersistAsync(gridAreaUpdatedEvent).ConfigureAwait(false);
 
             // Assert
             gridAreaLinkRepository.Verify(v => v.AddAsync(It.IsAny<GridAreaLink>()), Times.Never);
@@ -107,7 +107,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task PersistAsync_WhenEventIsNull_ThrowsArgumentNullException(GridAreaPersister sut)
+        public async Task PersistAsync_WhenEventIsNull_ThrowsArgumentNullException(GridAreaLinkPersister sut)
         {
             // Arrange
             GridAreaUpdatedEvent? gridAreaChangedEvent = null;
