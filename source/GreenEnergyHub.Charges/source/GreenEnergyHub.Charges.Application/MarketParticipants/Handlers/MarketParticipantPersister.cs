@@ -106,14 +106,14 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
             foreach (var gridAreaId in marketParticipantUpdatedEvent.GridAreas)
             {
                 var existingGridAreaLink = await _gridAreaLinkRepository.GetGridAreaOrNullAsync(gridAreaId).ConfigureAwait(false);
-                if (existingGridAreaLink is not null)
-                {
-                    existingGridAreaLink.OwnerId = marketParticipant.Id;
-                    _logger.LogInformation(
-                        "GridAreaLink ID '{GridAreaLinkId}' has changed GridAccessProvider ID to '{OwnerId}'",
-                        existingGridAreaLink.Id,
-                        existingGridAreaLink.OwnerId);
-                }
+                if (existingGridAreaLink is null) return;
+                if (existingGridAreaLink.OwnerId == marketParticipant.Id) return;
+
+                existingGridAreaLink.OwnerId = marketParticipant.Id;
+                _logger.LogInformation(
+                    "GridAreaLink ID '{GridAreaLinkId}' has changed Owner ID to '{OwnerId}'",
+                    existingGridAreaLink.Id,
+                    existingGridAreaLink.OwnerId);
             }
         }
     }

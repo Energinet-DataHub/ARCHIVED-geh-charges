@@ -148,7 +148,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
 
             // Assert
             marketParticipantRepository.Verify(v => v.AddAsync(It.IsAny<MarketParticipant>()), Times.Exactly(2));
-            gridAreaLinkRepository.Verify(v => v.GetOrNullAsync(It.IsAny<Guid>()), Times.Exactly(1));
+            gridAreaLinkRepository.Verify(v => v.GetGridAreaOrNullAsync(It.IsAny<Guid>()), Times.Exactly(1));
             logger.VerifyLoggerWasCalled(
                 $"Market participant with ID '{marketParticipantChangedEvent.MarketParticipantId}' " +
                 $"and role '{MarketParticipantRole.GridAccessProvider}' has been persisted",
@@ -198,7 +198,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
 
             // Assert
             marketParticipantRepository.Verify(v => v.AddAsync(It.IsAny<MarketParticipant>()), Times.Exactly(2));
-            gridAreaLinkRepository.Verify(v => v.GetOrNullAsync(It.IsAny<Guid>()), Times.Exactly(2));
+            gridAreaLinkRepository.Verify(v => v.GetGridAreaOrNullAsync(It.IsAny<Guid>()), Times.Exactly(2));
             logger.VerifyLoggerWasCalled(
                 $"Market participant with ID '{marketParticipantChangedEvent.MarketParticipantId}' " +
                 $"and role '{MarketParticipantRole.GridAccessProvider}' has been persisted",
@@ -259,6 +259,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
 
             gridAreaLinkRepository.Setup(x =>
                     x.GetOrNullAsync(It.IsAny<Guid>()))
+                .ReturnsAsync(() => gridAreaLink);
+            gridAreaLinkRepository.Setup(x =>
+                    x.GetGridAreaOrNullAsync(It.IsAny<Guid>()))
                 .ReturnsAsync(() => gridAreaLink);
         }
     }
