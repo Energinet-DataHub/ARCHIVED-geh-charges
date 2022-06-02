@@ -21,7 +21,6 @@ using GreenEnergyHub.Charges.Domain.Dtos.GridAreas;
 using GreenEnergyHub.Charges.Domain.GridAreaLinks;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Charges.Tests.Builders.Testables;
 using GreenEnergyHub.TestHelpers;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -58,12 +57,12 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
                 unitOfWork.Object);
 
             // Act
-            await sut.PersistAsync(gridAreaChangedEvent).ConfigureAwait(false);
+            await sut.PersistAsync(gridAreaUpdatedEvent).ConfigureAwait(false);
 
             // Assert
             gridAreaLinkRepository.Verify(v => v.AddAsync(It.IsAny<GridAreaLink>()), Times.Exactly(1));
             logger.VerifyLoggerWasCalled(
-                $"GridAreaLink ID {gridAreaChangedEvent.GridAreaLinkId} for GridArea ID {gridAreaChangedEvent.GridAreaId} has been persisted",
+                $"GridAreaLink ID {gridAreaUpdatedEvent.GridAreaLinkId} for GridArea ID {gridAreaUpdatedEvent.GridAreaId} has been persisted",
                 LogLevel.Information);
         }
 
@@ -78,9 +77,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
         {
             // Arrange
             loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
-            var gridAreaChangedEvent = new GridAreaUpdatedEvent(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
+            var gridAreaUpdatedEvent = new GridAreaUpdatedEvent(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
 
-            var existingGridAreaLink = new GridAreaLink(gridAreaChangedEvent.GridAreaLinkId, Guid.NewGuid(), Guid.NewGuid());
+            var existingGridAreaLink = new GridAreaLink(gridAreaUpdatedEvent.GridAreaLinkId, Guid.NewGuid(), Guid.NewGuid());
             SetupGridAreaRepositories(
                 gridAreaLinkRepository,
                 marketParticipantRepository,
@@ -101,14 +100,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             // Assert
             gridAreaLinkRepository.Verify(v => v.AddAsync(It.IsAny<GridAreaLink>()), Times.Never);
             logger.VerifyLoggerWasCalled(
-                $"GridAreaLink ID {gridAreaChangedEvent.GridAreaLinkId} has changed GridArea ID to {gridAreaChangedEvent.GridAreaId}",
+                $"GridAreaLink ID {gridAreaUpdatedEvent.GridAreaLinkId} has changed GridArea ID to {gridAreaUpdatedEvent.GridAreaId}",
                 LogLevel.Information);
             logger.VerifyNoOtherCalls();
         }
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task PersistAsync_WhenEventIsNull_ThrowsArgumentNullException(GridAreaLinkLinkPersister sut)
+        public async Task PersistAsync_WhenEventIsNull_ThrowsArgumentNullException(GridAreaPersister sut)
         {
             // Arrange
             GridAreaUpdatedEvent? gridAreaChangedEvent = null;

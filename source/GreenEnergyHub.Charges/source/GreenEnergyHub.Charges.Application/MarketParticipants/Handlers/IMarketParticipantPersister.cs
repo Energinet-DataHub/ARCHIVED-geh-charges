@@ -18,14 +18,14 @@ using GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsUpdatedEvents;
 namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 {
     /// <summary>
-    /// Persist a market participant from a market particioant event
+    /// Handles market participant updates
     /// </summary>
     public interface IMarketParticipantPersister
     {
         /// <summary>
-        /// Adds or update a market participant from an integrationevent
+        /// Adds or update a market participant from an integration event
         /// </summary>
-        /// <param name="marketParticipantChangedEvent"></param>
-        Task PersistAsync(MarketParticipantUpdatedEvent marketParticipantChangedEvent);
+        /// <param name="marketParticipantUpdatedEvent"></param>
+        Task PersistAsync(MarketParticipantUpdatedEvent marketParticipantUpdatedEvent);
     }
 }
