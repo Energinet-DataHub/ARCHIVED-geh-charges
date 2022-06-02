@@ -68,10 +68,10 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
         }
 
         private void UpdateMarketParticipant(
-            MarketParticipantUpdatedEvent marketParticipantChangedEvent,
+            MarketParticipantUpdatedEvent marketParticipantUpdatedEvent,
             MarketParticipant existingMarketParticipant)
         {
-            existingMarketParticipant.IsActive = marketParticipantChangedEvent.IsActive;
+            existingMarketParticipant.IsActive = marketParticipantUpdatedEvent.IsActive;
             _logger.LogInformation(
                 "Market participant with ID '{MarketParticipantId}' and role '{BusinessProcessRole}' " +
                 "has changed state",
