@@ -117,16 +117,6 @@ data "azurerm_key_vault_secret" "sbs_metering_point_created_sub_charges_name" {
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
 }
 
-data "azurerm_key_vault_secret" "sbt_market_participant_changed_name" {
-  name         = "sbt-market-participant-changed-name"
-  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
-}
-
-data "azurerm_key_vault_secret" "sbs_market_participant_changed_to_charges_name" {
-  name         = "sbs-market-participant-changed-to-charges-name"
-  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
-}
-
 data "azurerm_key_vault_secret" "st_market_operator_logs_primary_connection_string" {
   name         = "st-marketoplogs-primary-connection-string"
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
