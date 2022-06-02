@@ -33,6 +33,7 @@ using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.Charges.Tests.Builders.Testables;
 using GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation;
 using Moq;
+using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
@@ -335,7 +336,11 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                 points.Add(new Point(i, price + i, InstantHelper.GetTodayPlusDaysAtMidnightUtc(i)));
             }
 
+            var startDate = points.Min(x => x.Time);
+            var endDate = points.Max(x => x.Time) + Duration.FromMinutes(1);
+
             var operation = new ChargeOperationDtoBuilder()
+                .WithPointsInterval(startDate, endDate)
                 .WithPoints(points)
                 .Build();
 
