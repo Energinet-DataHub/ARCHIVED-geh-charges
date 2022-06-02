@@ -127,16 +127,19 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         public ChargeOperationDtoBuilder WithPoints(List<Point> points)
         {
             _points = points;
-            _pointsStartInterval = _points.Min(x => x.Time);
-            _pointsEndInterval = _points.Max(x => x.Time) + Duration.FromMinutes(1);
             return this;
         }
 
         public ChargeOperationDtoBuilder WithPoint(int position, decimal price)
         {
             _points.Add(new Point(position, price, SystemClock.Instance.GetCurrentInstant()));
-            _pointsStartInterval = _points.Min(x => x.Time);
-            _pointsEndInterval = _points.Max(x => x.Time) + Duration.FromMinutes(1);
+            return this;
+        }
+
+        public ChargeOperationDtoBuilder WithPointsInterval(Instant startTime, Instant endTime)
+        {
+            _pointsStartInterval = startTime;
+            _pointsEndInterval = endTime;
             return this;
         }
 
