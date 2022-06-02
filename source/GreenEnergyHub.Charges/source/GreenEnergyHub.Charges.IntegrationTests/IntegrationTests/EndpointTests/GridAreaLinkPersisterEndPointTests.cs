@@ -32,7 +32,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 {
     [IntegrationTest]
-    public class GridAreaPersisterEndPointTests
+    public class GridAreaLinkPersisterEndPointTests
     {
         [Collection(nameof(ChargesFunctionAppCollectionFixture))]
         public class RunAsync : FunctionAppTestBase<ChargesFunctionAppFixture>, IAsyncLifetime
@@ -53,7 +53,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
             }
 
             [Fact]
-            public async Task When_ReceivingGridAreaIntegrationUpdatedMessage_GridAreaIsSavedToDatabase()
+            public async Task When_ReceivingGridAreaIntegrationUpdatedMessage_GridAreaLinkIsSavedToDatabase()
             {
                 // Arrange
                 await using var context = Fixture.DatabaseManager.CreateDbContext();
@@ -66,8 +66,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
                 // Assert
                 await FunctionAsserts.AssertHasExecutedAsync(Fixture.HostManager, nameof(MarketParticipantPersisterEndpoint)).ConfigureAwait(false);
-                var gridArea = context.GridAreas.SingleOrDefault(x => x.Id == id);
-                gridArea.Should().NotBeNull();
+                var gridAreaLink = context.GridAreaLinks.SingleOrDefault(x => x.Id == id);
+                gridAreaLink.Should().NotBeNull();
 
                 // We need to clear host log after each test is done to ensure that we can assert on function executed on each test run because we only check on function name.
                 Fixture.HostManager.ClearHostLog();

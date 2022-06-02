@@ -64,7 +64,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             [InlineAutoDomainData]
             public async Task
                 HandleAsync_WhenCalledWithGridAreaUpdateIntegrationEvent_ShouldCallGridAreaPersister(
-                    [Frozen] Mock<IGridAreaPersister> gridAreaPersister,
+                    [Frozen] Mock<IGridAreaLinkPersister> gridAreaPersister,
                     GridAreaUpdatedIntegrationEvent gridAreaUpdatedIntegrationEvent,
                     MarketParticipantEventHandler sut)
             {

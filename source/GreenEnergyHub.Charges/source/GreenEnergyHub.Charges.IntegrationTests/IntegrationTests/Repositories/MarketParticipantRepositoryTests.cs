@@ -163,11 +163,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             var sut = new MarketParticipantRepository(chargesDatabaseContext);
 
             // Act
-            var actual = await sut.GetGridAccessProviderAsync(SeededData.GridArea.Provider8100000000030.Id);
+            var actual = await sut.GetGridAccessProviderAsync(SeededData.GridAreaLink.Provider8100000000030.GridAreaId);
 
             // Assert
             actual.Should().NotBeNull();
-            actual?.MarketParticipantId.Should().Be(SeededData.GridArea.Provider8100000000030.MarketParticipantId);
+            actual?.MarketParticipantId.Should().Be(SeededData.GridAreaLink.Provider8100000000030.MarketParticipantId);
         }
     }
 }

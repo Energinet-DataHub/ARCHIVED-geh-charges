@@ -15,7 +15,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace GreenEnergyHub.Charges.Domain.GridAreas
+namespace GreenEnergyHub.Charges.Domain.GridAreaLinks
 {
     /// <summary>
     /// Repository for managing grid area links.
@@ -33,5 +33,7 @@ namespace GreenEnergyHub.Charges.Domain.GridAreas
         /// </summary>
         /// <param name="gridAreaLinkId"></param>
         Task<GridAreaLink?> GetOrNullAsync(Guid gridAreaLinkId);
+
+        Task<GridAreaLink?> GetGridAreaOrNullAsync(Guid gridAreaId);
     }
 }

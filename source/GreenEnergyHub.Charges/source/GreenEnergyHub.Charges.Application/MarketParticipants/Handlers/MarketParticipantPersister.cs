@@ -16,7 +16,7 @@ using System;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsUpdatedEvents;
-using GreenEnergyHub.Charges.Domain.GridAreas;
+using GreenEnergyHub.Charges.Domain.GridAreaLinks;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using Microsoft.Extensions.Logging;
 
@@ -25,18 +25,18 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
     public class MarketParticipantPersister : IMarketParticipantPersister
     {
         private readonly IMarketParticipantRepository _marketParticipantRepository;
-        private readonly IGridAreaRepository _gridAreaRepository;
+        private readonly IGridAreaLinkRepository _gridAreaLinkRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger _logger;
 
         public MarketParticipantPersister(
             IMarketParticipantRepository marketParticipantRepository,
-            IGridAreaRepository gridAreaRepository,
+            IGridAreaLinkRepository gridAreaLinkRepository,
             ILoggerFactory loggerFactory,
             IUnitOfWork unitOfWork)
         {
             _marketParticipantRepository = marketParticipantRepository;
-            _gridAreaRepository = gridAreaRepository;
+            _gridAreaLinkRepository = gridAreaLinkRepository;
             _logger = loggerFactory.CreateLogger(nameof(MarketParticipantPersister));
             _unitOfWork = unitOfWork;
         }
@@ -105,14 +105,14 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
         {
             foreach (var gridAreaId in marketParticipantUpdatedEvent.GridAreas)
             {
-                var existingGridArea = await _gridAreaRepository.GetOrNullAsync(gridAreaId).ConfigureAwait(false);
-                if (existingGridArea is not null)
+                var existingGridAreaLink = await _gridAreaLinkRepository.GetGridAreaOrNullAsync(gridAreaId).ConfigureAwait(false);
+                if (existingGridAreaLink is not null)
                 {
-                    existingGridArea.GridAccessProviderId = marketParticipant.Id;
+                    existingGridAreaLink.OwnerId = marketParticipant.Id;
                     _logger.LogInformation(
-                        "GridArea ID '{GridAreaId}' has changed GridAccessProvider ID to '{GridAccessProviderId}'",
-                        existingGridArea.Id,
-                        existingGridArea.GridAccessProviderId);
+                        "GridAreaLink ID '{GridAreaLinkId}' has changed GridAccessProvider ID to '{OwnerId}'",
+                        existingGridAreaLink.Id,
+                        existingGridAreaLink.OwnerId);
                 }
             }
         }

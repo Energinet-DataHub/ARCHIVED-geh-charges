@@ -24,7 +24,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         {
             serviceCollection.AddScoped<IMarketParticipantEventHandler, MarketParticipantEventHandler>();
             serviceCollection.AddScoped<IMarketParticipantPersister, MarketParticipantPersister>();
-            serviceCollection.AddScoped<IGridAreaPersister, GridAreaPersister>();
+            serviceCollection.AddScoped<IGridAreaLinkPersister, GridAreaLinkLinkPersister>();
             serviceCollection.AddScoped<ISharedIntegrationEventParser, SharedIntegrationEventParser>();
         }
     }

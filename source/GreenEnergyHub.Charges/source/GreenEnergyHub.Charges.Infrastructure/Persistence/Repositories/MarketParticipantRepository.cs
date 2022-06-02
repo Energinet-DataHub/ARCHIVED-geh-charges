@@ -164,22 +164,20 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
             // an owner grid access provider. So no special handling of those cases.
             return (from meteringPoint in _chargesDatabaseContext.MeteringPoints
                     from gridAreaLink in _chargesDatabaseContext.GridAreaLinks
-                    from gridArea in _chargesDatabaseContext.GridAreas
                     from marketParticipant in _chargesDatabaseContext.MarketParticipants
-                    where gridArea.GridAccessProviderId == marketParticipant.Id
+                    where gridAreaLink.OwnerId == marketParticipant.Id
                     where meteringPoint.MeteringPointId == meteringPointId
                     where meteringPoint.GridAreaLinkId == gridAreaLink.Id
-                    where gridAreaLink.GridAreaId == gridArea.Id
                     select marketParticipant)
                 .SingleAsync();
         }
 
         public Task<MarketParticipant?> GetGridAccessProviderAsync(Guid gridAreaId)
         {
-            return (from gridArea in _chargesDatabaseContext.GridAreas
+            return (from gridAreaLink in _chargesDatabaseContext.GridAreaLinks
                     from marketParticipant in _chargesDatabaseContext.MarketParticipants
-                    where gridArea.GridAccessProviderId == marketParticipant.Id
-                    where gridArea.GridAccessProviderId == gridAreaId
+                    where gridAreaLink.OwnerId == marketParticipant.Id
+                    where gridAreaLink.GridAreaId == gridAreaId
                     select marketParticipant)
                 .SingleOrDefaultAsync();
         }

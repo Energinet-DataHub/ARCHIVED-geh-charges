@@ -15,7 +15,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.GridAreas;
+using GreenEnergyHub.Charges.Domain.GridAreaLinks;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
 {
@@ -39,6 +39,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
             return await Task.FromResult(_chargesDatabaseContext
                 .GridAreaLinks
                 .SingleOrDefault(gal => gal.Id == gridAreaLinkId)).ConfigureAwait(false);
+        }
+
+        public async Task<GridAreaLink?> GetGridAreaOrNullAsync(Guid gridAreaId)
+        {
+            return await Task.FromResult(_chargesDatabaseContext
+                .GridAreaLinks
+                .Single(gal => gal.GridAreaId == gridAreaId)).ConfigureAwait(false);
         }
     }
 }

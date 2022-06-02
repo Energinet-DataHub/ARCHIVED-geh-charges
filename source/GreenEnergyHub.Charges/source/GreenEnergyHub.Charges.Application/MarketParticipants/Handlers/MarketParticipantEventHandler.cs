@@ -21,14 +21,14 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
     public class MarketParticipantEventHandler : IMarketParticipantEventHandler
     {
         private readonly IMarketParticipantPersister _marketParticipantPersister;
-        private readonly IGridAreaPersister _gridAreaPersister;
+        private readonly IGridAreaLinkPersister _gridAreaLinkPersister;
 
         public MarketParticipantEventHandler(
             IMarketParticipantPersister marketParticipantPersister,
-            IGridAreaPersister gridAreaPersister)
+            IGridAreaLinkPersister gridAreaLinkPersister)
         {
             _marketParticipantPersister = marketParticipantPersister;
-            _gridAreaPersister = gridAreaPersister;
+            _gridAreaLinkPersister = gridAreaLinkPersister;
         }
 
         public async Task HandleAsync(BaseIntegrationEvent message)
@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
                     {
                         var gridAreaChangedEvent =
                             MarketParticipantDomainEventMapper.MapFromGridArea(gridAreaEvent);
-                        await _gridAreaPersister
+                        await _gridAreaLinkPersister
                             .PersistAsync(gridAreaChangedEvent)
                             .ConfigureAwait(false);
                         break;

@@ -20,7 +20,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
     /// <summary>
     /// Handles grid area updates
     /// </summary>
-    public interface IGridAreaPersister
+    public interface IGridAreaLinkPersister
     {
         /// <summary>
         /// Adds or update a grid area from an integration event

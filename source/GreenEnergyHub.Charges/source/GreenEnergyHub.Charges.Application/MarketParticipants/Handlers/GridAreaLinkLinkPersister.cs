@@ -16,37 +16,31 @@ using System;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.Dtos.GridAreas;
-using GreenEnergyHub.Charges.Domain.GridAreas;
+using GreenEnergyHub.Charges.Domain.GridAreaLinks;
 using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 {
-    public class GridAreaPersister : IGridAreaPersister
+    public class GridAreaLinkLinkPersister : IGridAreaLinkPersister
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IGridAreaRepository _gridAreaRepository;
         private readonly IGridAreaLinkRepository _gridAreaLinkRepository;
         private readonly ILogger _logger;
 
-        public GridAreaPersister(
-            IGridAreaRepository gridAreaRepository,
+        public GridAreaLinkLinkPersister(
             IGridAreaLinkRepository gridAreaLinkRepository,
             ILoggerFactory loggerFactory,
             IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            _gridAreaRepository = gridAreaRepository;
             _gridAreaLinkRepository = gridAreaLinkRepository;
-            _logger = loggerFactory.CreateLogger(nameof(GridAreaPersister));
+            _logger = loggerFactory.CreateLogger(nameof(GridAreaLinkLinkPersister));
         }
 
         public async Task PersistAsync(GridAreaUpdatedEvent gridAreaUpdatedEvent)
         {
             ArgumentNullException.ThrowIfNull(gridAreaUpdatedEvent);
-            await PersistGridAreaAsync(gridAreaUpdatedEvent).ConfigureAwait(false);
-
             await PersistGridAreaLinkAsync(gridAreaUpdatedEvent).ConfigureAwait(false);
-
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
         }
 
@@ -56,7 +50,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
                 await _gridAreaLinkRepository.GetOrNullAsync(gridAreaUpdatedEvent.GridAreaLinkId).ConfigureAwait(false);
             if (existingGridAreaLink is null)
             {
-                var gridAreaLink = new GridAreaLink(gridAreaUpdatedEvent.GridAreaLinkId, gridAreaUpdatedEvent.GridAreaId);
+                var gridAreaLink = new GridAreaLink(gridAreaUpdatedEvent.GridAreaLinkId, gridAreaUpdatedEvent.GridAreaId, null);
 
                 await _gridAreaLinkRepository.AddAsync(gridAreaLink).ConfigureAwait(false);
                 _logger.LogInformation(
@@ -71,28 +65,11 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
                     return;
                 }
 
-                var existingGridArea = await _gridAreaRepository.GetOrNullAsync(
-                    gridAreaUpdatedEvent.GridAreaId).ConfigureAwait(false);
-                if (existingGridArea is not null)
-                {
-                    existingGridAreaLink.GridAreaId = existingGridArea.Id;
-                    _logger.LogInformation(
-                        "GridAreaLink ID {GridAreaLink} has changed GridArea ID to {GridAreaId}",
-                        existingGridAreaLink.Id,
-                        existingGridAreaLink.GridAreaId);
-                }
-            }
-        }
-
-        private async Task PersistGridAreaAsync(GridAreaUpdatedEvent gridAreaUpdatedEvent)
-        {
-            var existingGridArea = await _gridAreaRepository.GetOrNullAsync(
-                gridAreaUpdatedEvent.GridAreaId).ConfigureAwait(false);
-            if (existingGridArea is null)
-            {
-                var gridArea = new GridArea(gridAreaUpdatedEvent.GridAreaId, null!);
-                await _gridAreaRepository.AddAsync(gridArea).ConfigureAwait(false);
-                _logger.LogInformation("GridArea ID {GridAreaId} has been persisted", gridArea.Id);
+                existingGridAreaLink.GridAreaId = gridAreaUpdatedEvent.GridAreaId;
+                _logger.LogInformation(
+                    "GridAreaLink ID {GridAreaLink} has changed GridArea ID to {GridAreaId}",
+                    existingGridAreaLink.Id,
+                    existingGridAreaLink.GridAreaId);
             }
         }
     }
