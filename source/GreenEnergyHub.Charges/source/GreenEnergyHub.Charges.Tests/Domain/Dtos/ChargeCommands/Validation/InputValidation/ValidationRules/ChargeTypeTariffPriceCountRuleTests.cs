@@ -76,7 +76,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             // Arrange
             var chargeOperationDto = chargeOperationDtoBuilder
                 .WithChargeType(ChargeType.Tariff)
-                .WithResolution(Resolution.P1D)
+                .WithPeriodResolution(Resolution.P1D)
                 .WithPointWithXNumberOfPrices(priceCount).Build();
 
             // Act
@@ -97,7 +97,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             // Arrange
             var chargeOperationDto = chargeOperationDtoBuilder
                 .WithChargeType(ChargeType.Tariff)
-                .WithResolution(Resolution.P1M)
+                .WithPeriodResolution(Resolution.P1M)
                 .WithPointWithXNumberOfPrices(priceCount).Build();
 
             // Act
@@ -122,7 +122,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             // Arrange
             var chargeOperationDto = chargeOperationDtoBuilder
                 .WithChargeType(ChargeType.Tariff)
-                .WithResolution(Resolution.PT15M)
+                .WithPeriodResolution(Resolution.PT15M)
                 .WithPointWithXNumberOfPrices(priceCount).Build();
 
             // Act
@@ -154,7 +154,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             // Arrange
             var chargeOperationDto = chargeOperationDtoBuilder
                 .WithChargeType(ChargeType.Tariff)
-                .WithResolution(resolution)
+                .WithPeriodResolution(resolution)
                 .WithPointWithXNumberOfPrices(24)
                 .Build();
             var chargeTypeTariffPriceCountRule = new ChargeTypeTariffPriceCountRule(chargeOperationDto);
@@ -184,7 +184,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         {
             return chargeOperationDtoBuilder
                 .WithChargeType(ChargeType.Tariff)
-                .WithResolution(Resolution.P1D)
+                .WithPeriodResolution(Resolution.P1D)
                 .Build();
         }
     }
