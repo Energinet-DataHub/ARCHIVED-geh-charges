@@ -34,6 +34,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         private string _chargeName;
         private ChargeType _chargeType;
         private Resolution _resolution;
+        private Resolution _periodResolution;
         private string _operationId;
         private Instant? _pointsStartInterval;
         private Instant? _pointsEndInterval;
@@ -54,6 +55,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             _chargeType = ChargeType.Fee;
             _points = new List<Point>();
             _resolution = Resolution.PT1H;
+            _periodResolution = Resolution.PT1H;
             _pointsStartInterval = null;
             _pointsEndInterval = null;
         }
@@ -162,6 +164,12 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             return this;
         }
 
+        public ChargeOperationDtoBuilder WithPeriodResolution(Resolution periodResolution)
+        {
+            _periodResolution = periodResolution;
+            return this;
+        }
+
         public ChargeOperationDto Build()
         {
             return new ChargeOperationDto(
@@ -172,6 +180,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
                 _description,
                 _owner,
                 _resolution,
+                _periodResolution,
                 _taxIndicator,
                 _transparentInvoicing,
                 _vatClassification,

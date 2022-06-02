@@ -24,13 +24,13 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
     {
         private readonly Instant _startTime;
         private readonly Instant _endTime;
-        private readonly Resolution _resolution;
+        private readonly Resolution _periodResolution;
         private readonly int _actualPointCount;
         private double _expectedPointCount;
 
         public ChargePricesNumberOfPricePointsMatchTimeInterval(ChargeOperationDto chargeOperationDto)
         {
-            _resolution = chargeOperationDto.Resolution;
+            _periodResolution = chargeOperationDto.PeriodResolution;
             _startTime = chargeOperationDto.PointsStartInterval.GetValueOrDefault();
             _endTime = chargeOperationDto.PointsEndInterval.GetValueOrDefault();
             SetExpectedPointCount();
@@ -41,7 +41,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
         {
             var interval = new Interval(_startTime, _endTime);
 
-            _expectedPointCount = _resolution switch
+            _expectedPointCount = _periodResolution switch
             {
                 Resolution.Unknown => throw new ArgumentException("Resolution may not be unknown"),
                 Resolution.PT15M => interval.Duration.TotalMinutes / 15,
