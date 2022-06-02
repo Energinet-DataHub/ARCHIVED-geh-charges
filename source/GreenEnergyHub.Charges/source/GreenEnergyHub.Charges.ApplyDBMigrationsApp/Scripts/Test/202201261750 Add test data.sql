@@ -23,22 +23,6 @@ INSERT INTO [Charges].[MarketParticipant] VALUES (@provider8900000000005,'890000
 INSERT INTO [Charges].[MarketParticipant] VALUES (NEWID(),'5790001330552', 7, 1);
 
 ------------------------------------------------------------------------------------------------------------------------
--- Add grid areas
-------------------------------------------------------------------------------------------------------------------------
-
-DECLARE @areaIdOfProvider8100000000016 UNIQUEIDENTIFIER = NEWID()
-DECLARE @areaIdOfProvider8100000000023 UNIQUEIDENTIFIER = NEWID()
-DECLARE @areaIdOfProvider8100000000030 UNIQUEIDENTIFIER = NEWID()
-DECLARE @areaIdOfProvider8900000000005 UNIQUEIDENTIFIER = NEWID()
-DECLARE @areaIdOfProvider8510000000013 UNIQUEIDENTIFIER = 'c13d70cb-8a0e-480e-bd05-3b28b9e3b104'
-
-INSERT INTO [Charges].[GridArea] VALUES (@areaIdOfProvider8100000000016, @provider8100000000016);
-INSERT INTO [Charges].[GridArea] VALUES (@areaIdOfProvider8100000000023, @provider8100000000023);
-INSERT INTO [Charges].[GridArea] VALUES (@areaIdOfProvider8100000000030, @provider8100000000030);
-INSERT INTO [Charges].[GridArea] VALUES (@areaIdOfProvider8510000000013, @provider8510000000013);
-INSERT INTO [Charges].[GridArea] VALUES (@areaIdOfProvider8900000000005, @provider8900000000005);
-
-------------------------------------------------------------------------------------------------------------------------
 -- Add grid area links
 ------------------------------------------------------------------------------------------------------------------------
 
@@ -47,6 +31,12 @@ DECLARE @areaLinkIdOfProvider8100000000023 UNIQUEIDENTIFIER = NEWID()
 DECLARE @areaLinkIdOfProvider8100000000030 UNIQUEIDENTIFIER = NEWID()
 DECLARE @areaLinkIdOfProvider8510000000013 UNIQUEIDENTIFIER = 'a37aca18-51e1-4978-a52b-28ac165f801b'
 DECLARE @areaLinkIdOfProvider8900000000005 UNIQUEIDENTIFIER = NEWID()
+
+DECLARE @areaIdOfProvider8100000000016 UNIQUEIDENTIFIER = NEWID()
+DECLARE @areaIdOfProvider8100000000023 UNIQUEIDENTIFIER = NEWID()
+DECLARE @areaIdOfProvider8100000000030 UNIQUEIDENTIFIER = NEWID()
+DECLARE @areaIdOfProvider8900000000005 UNIQUEIDENTIFIER = NEWID()
+DECLARE @areaIdOfProvider8510000000013 UNIQUEIDENTIFIER = 'c13d70cb-8a0e-480e-bd05-3b28b9e3b104'
 
 INSERT INTO [Charges].[GridAreaLink] VALUES (@areaLinkIdOfProvider8100000000016, @areaIdOfProvider8100000000016);
 INSERT INTO [Charges].[GridAreaLink] VALUES (@areaLinkIdOfProvider8100000000023, @areaIdOfProvider8100000000023);
