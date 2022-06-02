@@ -43,11 +43,11 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
             _chargeIdentifierFactory = chargeIdentifierFactory;
         }
 
-        public async Task<IValidationRuleSet> CreateRulesAsync(ChargeLinkDto operation)
+        public async Task<IValidationRuleSet> CreateRulesAsync(ChargeLinkDto chargeLinkDto)
         {
-            ArgumentNullException.ThrowIfNull(operation);
+            ArgumentNullException.ThrowIfNull(chargeLinkDto);
 
-            var rules = await GetRulesForChargeLinkDtoAsync(operation).ConfigureAwait(false);
+            var rules = await GetRulesForChargeLinkDtoAsync(chargeLinkDto).ConfigureAwait(false);
             return ValidationRuleSet.FromRules(rules);
         }
 
