@@ -195,14 +195,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                         taxIndicator = TaxIndicatorMapper.Map(content);
                     }
                 }
-                else if (reader.Is(CimChargeCommandConstants.TimeIntervalStart))
-                {
-                    pointsStartTime = await reader.ReadValueAsNodaTimeAsync().ConfigureAwait(false);
-                }
-                else if (reader.Is(CimChargeCommandConstants.TimeIntervalEnd))
-                {
-                    pointsEndTime = await reader.ReadValueAsNodaTimeAsync().ConfigureAwait(false);
-                }
                 else if (reader.Is(CimChargeCommandConstants.SeriesPeriod))
                 {
                     var seriesPeriodIntoOperationAsync = await ParseSeriesPeriodIntoOperationAsync(reader, startDateTime, resolution).ConfigureAwait(false);
