@@ -50,7 +50,7 @@ Also, some components have singular names while others have plural names. This i
 Below depicts architectural components which supports the Charges domain in fulfilling its business purpose.
 One such example is consuming market participant integration events published by the Market Participant domain. Market participant data is required to authenticate and authorize the sender of incoming requests.
 
-![Market Participants](ARCHITECTURE-MarketParticipants.png)
+![Supporting Architecture](ARCHITECTURE-SupportingArchitecture.png)
 
 ## Context Streams
 
