@@ -37,20 +37,20 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
             {
                 case ActorUpdatedIntegrationEvent actorEvent:
                     {
-                        var marketParticipantChangedEvent =
+                        var marketParticipantUpdatedEvent =
                             MarketParticipantDomainEventMapper.MapFromActor(actorEvent);
                         await _marketParticipantPersister
-                            .PersistAsync(marketParticipantChangedEvent)
+                            .PersistAsync(marketParticipantUpdatedEvent)
                             .ConfigureAwait(false);
                         break;
                     }
 
                 case GridAreaUpdatedIntegrationEvent gridAreaEvent:
                     {
-                        var gridAreaChangedEvent =
+                        var gridAreaUpdatedEvent =
                             MarketParticipantDomainEventMapper.MapFromGridArea(gridAreaEvent);
                         await _gridAreaPersister
-                            .PersistAsync(gridAreaChangedEvent)
+                            .PersistAsync(gridAreaUpdatedEvent)
                             .ConfigureAwait(false);
                         break;
                     }

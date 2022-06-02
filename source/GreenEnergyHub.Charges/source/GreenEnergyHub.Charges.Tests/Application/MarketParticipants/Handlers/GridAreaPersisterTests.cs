@@ -44,7 +44,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
         {
             // Arrange
             loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
-            var gridAreaChangedEvent = new GridAreaUpdatedEvent(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
+            var gridAreaUpdatedEvent = new GridAreaUpdatedEvent(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
 
             SetupGridAreaRepositories(
                 gridAreaRepository,
@@ -61,16 +61,16 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
                 unitOfWork.Object);
 
             // Act
-            await sut.PersistAsync(gridAreaChangedEvent).ConfigureAwait(false);
+            await sut.PersistAsync(gridAreaUpdatedEvent).ConfigureAwait(false);
 
             // Assert
             gridAreaRepository.Verify(v => v.AddAsync(It.IsAny<GridArea>()), Times.Exactly(1));
             gridAreaLinkRepository.Verify(v => v.AddAsync(It.IsAny<GridAreaLink>()), Times.Exactly(1));
             logger.VerifyLoggerWasCalled(
-                $"GridArea ID {gridAreaChangedEvent.GridAreaId} has been persisted",
+                $"GridArea ID {gridAreaUpdatedEvent.GridAreaId} has been persisted",
                 LogLevel.Information);
             logger.VerifyLoggerWasCalled(
-                $"GridAreaLink ID {gridAreaChangedEvent.GridAreaLinkId} for GridArea ID {gridAreaChangedEvent.GridAreaId} has been persisted",
+                $"GridAreaLink ID {gridAreaUpdatedEvent.GridAreaLinkId} for GridArea ID {gridAreaUpdatedEvent.GridAreaId} has been persisted",
                 LogLevel.Information);
         }
 
@@ -86,10 +86,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
         {
             // Arrange
             loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
-            var gridAreaChangedEvent = new GridAreaUpdatedEvent(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
+            var gridAreaUpdatedEvent = new GridAreaUpdatedEvent(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
 
-            var existingGridArea = new GridArea(gridAreaChangedEvent.GridAreaId, null);
-            var existingGridAreaLink = new GridAreaLink(gridAreaChangedEvent.GridAreaLinkId, Guid.NewGuid());
+            var existingGridArea = new GridArea(gridAreaUpdatedEvent.GridAreaId, null);
+            var existingGridAreaLink = new GridAreaLink(gridAreaUpdatedEvent.GridAreaLinkId, Guid.NewGuid());
             SetupGridAreaRepositories(
                 gridAreaRepository,
                 gridAreaLinkRepository,
@@ -104,13 +104,13 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
                 unitOfWork.Object);
 
             // Act
-            await sut.PersistAsync(gridAreaChangedEvent).ConfigureAwait(false);
+            await sut.PersistAsync(gridAreaUpdatedEvent).ConfigureAwait(false);
 
             // Assert
             gridAreaRepository.Verify(v => v.AddAsync(It.IsAny<GridArea>()), Times.Never);
             gridAreaLinkRepository.Verify(v => v.AddAsync(It.IsAny<GridAreaLink>()), Times.Never);
             logger.VerifyLoggerWasCalled(
-                $"GridAreaLink ID {gridAreaChangedEvent.GridAreaLinkId} has changed GridArea ID to {gridAreaChangedEvent.GridAreaId}",
+                $"GridAreaLink ID {gridAreaUpdatedEvent.GridAreaLinkId} has changed GridArea ID to {gridAreaUpdatedEvent.GridAreaId}",
                 LogLevel.Information);
             logger.VerifyNoOtherCalls();
         }
@@ -127,10 +127,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
         {
             // Arrange
             loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
-            var gridAreaChangedEvent = new GridAreaUpdatedEvent(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
+            var gridAreaUpdatedEvent = new GridAreaUpdatedEvent(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
 
-            var existingGridArea = new GridArea(gridAreaChangedEvent.GridAreaId, Guid.NewGuid());
-            var existingGridAreaLink = new GridAreaLink(gridAreaChangedEvent.GridAreaLinkId, Guid.NewGuid());
+            var existingGridArea = new GridArea(gridAreaUpdatedEvent.GridAreaId, Guid.NewGuid());
+            var existingGridAreaLink = new GridAreaLink(gridAreaUpdatedEvent.GridAreaLinkId, Guid.NewGuid());
             var gridAccessProviderId = existingGridArea.GridAccessProviderId ?? Guid.Empty;
             var marketParticipantId = existingGridArea.GridAccessProviderId.ToString() ?? string.Empty;
             var existingMarketParticipant = new MarketParticipant(
@@ -153,13 +153,13 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
                 unitOfWork.Object);
 
             // Act
-            await sut.PersistAsync(gridAreaChangedEvent).ConfigureAwait(false);
+            await sut.PersistAsync(gridAreaUpdatedEvent).ConfigureAwait(false);
 
             // Assert
             gridAreaRepository.Verify(v => v.AddAsync(It.IsAny<GridArea>()), Times.Never);
             gridAreaLinkRepository.Verify(v => v.AddAsync(It.IsAny<GridAreaLink>()), Times.Never);
             logger.VerifyLoggerWasCalled(
-                $"GridAreaLink ID {gridAreaChangedEvent.GridAreaLinkId} has changed GridArea ID to {gridAreaChangedEvent.GridAreaId}",
+                $"GridAreaLink ID {gridAreaUpdatedEvent.GridAreaLinkId} has changed GridArea ID to {gridAreaUpdatedEvent.GridAreaId}",
                 LogLevel.Information);
             logger.VerifyNoOtherCalls();
         }
@@ -169,11 +169,11 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
         public async Task PersistAsync_WhenEventIsNull_ThrowsArgumentNullException(GridAreaPersister sut)
         {
             // Arrange
-            GridAreaUpdatedEvent? gridAreaChangedEvent = null;
+            GridAreaUpdatedEvent? gridAreaUpdatedEvent = null;
 
             // Act / Assert
             await Assert.ThrowsAsync<ArgumentNullException>(
-                    () => sut.PersistAsync(gridAreaChangedEvent!))
+                    () => sut.PersistAsync(gridAreaUpdatedEvent!))
                 .ConfigureAwait(false);
         }
 
