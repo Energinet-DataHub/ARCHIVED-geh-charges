@@ -1,8 +1,6 @@
 ﻿------------------------------------------------------------------------------------------------------------------------
 -- Add OwnerId to GridAreaLink and populate with GridAccessProvider from GridArea
 ------------------------------------------------------------------------------------------------------------------------
-BEGIN TRAN
-
 ALTER TABLE [Charges].[GridAreaLink]
     ADD [OwnerId] [uniqueidentifier] NULL
 GO
@@ -17,10 +15,6 @@ FROM [Charges].[GridAreaLink]
     JOIN [Charges].[GridArea] ON [Charges].[GridArea].[Id] = [Charges].[GridAreaLink].[GridAreaId]
 GO
 
-ALTER TABLE [Charges].[GridAreaLink]
-    ADD [OwnerId] [uniqueidentifier] NOT NULL
-GO
-
 ALTER TABLE [Charges].[GridAreaLink] WITH CHECK
     ADD CONSTRAINT [FK_GridAreaLink_MarketParticipant]
     FOREIGN KEY ([OwnerId]) REFERENCES [Charges].[MarketParticipant] (Id);
@@ -31,5 +25,3 @@ GO
 ------------------------------------------------------------------------------------------------------------------------
 DROP TABLE [Charges].[GridArea]
 GO
-
-COMMIT TRAN
