@@ -56,7 +56,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             var end = Instant.FromUtc(2022, endMonth, endDay, endHour, 0);
 
             var dto = new ChargeOperationDtoBuilder()
-                .WithResolution(resolution)
+                .WithPeriodResolution(resolution)
                 .WithPointWithXNumberOfPrices(expectedNumberOfPoints)
                 .WithPointsInterval(start, end)
                 .Build();
