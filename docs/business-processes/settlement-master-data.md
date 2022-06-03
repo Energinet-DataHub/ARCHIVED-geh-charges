@@ -5,7 +5,7 @@ This process handles subscription, fee, and tariff links for a metering point. J
 To create a correct wholesale settlement basis for the electricity market, the charges registered in Green Energy Hub must be linked to metering points, and these charge links must be forwarded to the relevant market participants.
 
 Grid access providers and the TSO can request Green Energy Hub to create, update and stop charge links for their own subscriptions, fees and
-tariffs per metering point. The current energy supplier on a metering point is responsible for maintaining the TSO's charge links in accordance with the conditions for collection and thus may do similar requests as the TSO for both tax and non-tax tariffs.
+tariffs per metering point. The current energy supplier on a metering point is responsible for maintaining the TSO charge links in accordance with the conditions for collection and thus may do similar requests as the TSO for both tax and non-tax tariffs.
 
 Certain time limits do apply cf. the Danish market rules.
 
