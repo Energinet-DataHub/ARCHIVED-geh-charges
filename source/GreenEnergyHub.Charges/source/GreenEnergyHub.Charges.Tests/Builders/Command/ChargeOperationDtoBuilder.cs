@@ -162,7 +162,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             return this;
         }
 
-        public ChargeOperationDtoBuilder WithPeriodResolution(Resolution periodResolution)
+        public ChargeOperationDtoBuilder WithPriceResolution(Resolution periodResolution)
         {
             _periodResolution = periodResolution;
             return this;

@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
@@ -35,7 +36,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         [InlineAutoMoqData(Resolution.PT1H, 3, 26, 23, 3, 27, 22, 23, "switching to Daylight Saving Time must be supported")]
         [InlineAutoMoqData(Resolution.PT1H, 10, 29, 22, 10, 30, 23, 25, "switching to Normal Time must be supported")]
         [InlineAutoMoqData(Resolution.P1D, 1, 1, 23, 1, 6, 23, 5, "longer price series must be supported")]
-        public void IsValid_When_Should(
+        public void IsValid_WhenCalledWithCorrectNumberOfPrices_ShouldParse(
             Resolution resolution,
             int startMonth,
             int startDay,
@@ -51,7 +52,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             var end = Instant.FromUtc(2022, endMonth, endDay, endHour, 0);
 
             var dto = new ChargeOperationDtoBuilder()
-                .WithPeriodResolution(resolution)
+                .WithPriceResolution(resolution)
                 .WithPointWithXNumberOfPrices(expectedNumberOfPoints)
                 .WithPointsInterval(start, end)
                 .Build();
@@ -63,6 +64,19 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
             // Assert
             actual.Should().BeTrue(because);
+        }
+
+        [Fact]
+        public void IsValid_WhenCalledWithUnknownPriceResolution_ShouldThrow()
+        {
+            // Arrange
+            var dto = new ChargeOperationDtoBuilder().WithPriceResolution(Resolution.Unknown).Build();
+
+            // Act
+            Action act = () => new NumberOfPointsMatchTimeIntervalAndResolutionRule(dto);
+
+            // Assert
+            act.Should().Throw<ArgumentException>();
         }
     }
 }
