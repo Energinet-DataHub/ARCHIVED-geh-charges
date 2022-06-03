@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
         [InverseProperty(nameof(Charge.Owner))]
         public virtual ICollection<Charge> Charges { get; set; }
 
-        [InverseProperty(nameof(GridAreaLink.OwnerId))]
+        [InverseProperty(nameof(GridAreaLink.GridAccessProvider))]
         public virtual ICollection<GridAreaLink> GridAreaLinks { get; set; }
     }
 }

@@ -23,17 +23,21 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsUpdatedEvents
     public class MarketParticipantUpdatedEvent : InboundIntegrationEvent
     {
         public MarketParticipantUpdatedEvent(
+            Guid actorId,
             string marketParticipantId,
             List<MarketParticipantRole> businessProcessRole,
             bool isActive,
             IEnumerable<Guid> gridAreas)
             : base(Transaction.NewTransaction())
         {
+            ActorId = actorId;
             MarketParticipantId = marketParticipantId;
             BusinessProcessRoles = businessProcessRole;
             IsActive = isActive;
             GridAreas = gridAreas;
         }
+
+        public Guid ActorId { get; }
 
         public string MarketParticipantId { get; }
 

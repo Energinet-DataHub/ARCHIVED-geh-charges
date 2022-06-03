@@ -231,6 +231,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             IEnumerable<Guid> gridAreas)
         {
             return new MarketParticipantUpdatedEvent(
+                Guid.NewGuid(),
                 "mp123",
                 marketParticipantRoleCodes,
                 true,

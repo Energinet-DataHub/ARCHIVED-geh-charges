@@ -30,6 +30,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
                 .Select(MarketParticipantRoleMapper.Map).ToList();
 
             return new MarketParticipantUpdatedEvent(
+                actorUpdatedIntegrationEvent.ActorId,
                 actorUpdatedIntegrationEvent.Gln,
                 rolesUsedInChargesDomain,
                 isActive,
@@ -40,7 +41,6 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
             GridAreaUpdatedIntegrationEvent gridUpdatedIntegrationEvent)
         {
             return new GridAreaUpdatedEvent(
-                gridUpdatedIntegrationEvent.Id,
                 gridUpdatedIntegrationEvent.GridAreaId,
                 gridUpdatedIntegrationEvent.GridAreaLinkId);
         }

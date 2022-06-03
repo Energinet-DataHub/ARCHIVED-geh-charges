@@ -21,17 +21,13 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.GridAreas
     public class GridAreaUpdatedEvent : InboundIntegrationEvent
     {
         public GridAreaUpdatedEvent(
-            Guid id,
             Guid gridAreaId,
             Guid gridAreaLinkId)
             : base(Transaction.NewTransaction())
         {
-            Id = id;
             GridAreaId = gridAreaId;
             GridAreaLinkId = gridAreaLinkId;
         }
-
-        public Guid Id { get; }
 
         public Guid GridAreaId { get; }
 

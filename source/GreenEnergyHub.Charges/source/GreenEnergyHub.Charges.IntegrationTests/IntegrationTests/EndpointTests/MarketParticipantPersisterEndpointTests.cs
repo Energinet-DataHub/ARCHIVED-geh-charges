@@ -55,7 +55,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
             }
 
             [Theory]
-            [InlineData(BusinessRoleCode.Ddm, ActorStatus.New)]
+            [InlineData(BusinessRoleCode.Ddm, ActorStatus.Active)]
             public async Task When_ReceivingActorIntegrationUpdatedMessage_MarketParticipantIsSavedToDatabase(
                 BusinessRoleCode businessRoleCode, ActorStatus actorStatus)
             {
