@@ -82,7 +82,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 
         private List<AvailableReceiptValidationError> GetReasons(
             ChargeCommandRejectedEvent input,
-            ChargeOperation chargeOperation)
+            IChargeOperation chargeOperation)
         {
             return input
                 .ValidationErrors

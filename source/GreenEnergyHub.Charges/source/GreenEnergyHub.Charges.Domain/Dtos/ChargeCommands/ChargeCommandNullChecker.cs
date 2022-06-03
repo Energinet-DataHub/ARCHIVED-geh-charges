@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
             if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
         }
 
-        private static void CheckChargeOperation(ChargeOperation chargeOperation, BusinessReasonCode businessReasonCode)
+        private static void CheckChargeOperation(IChargeOperation chargeOperation, BusinessReasonCode businessReasonCode)
         {
             if (chargeOperation == null) throw new ArgumentNullException(nameof(chargeOperation));
 

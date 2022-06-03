@@ -18,9 +18,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 {
     public class StartDateTimeRequiredValidationRule : IValidationRule
     {
-        private readonly ChargeOperation _chargeOperation;
+        private readonly IChargeOperation _chargeOperation;
 
-        public StartDateTimeRequiredValidationRule(ChargeOperation chargeOperation)
+        public StartDateTimeRequiredValidationRule(IChargeOperation chargeOperation)
         {
             _chargeOperation = chargeOperation;
         }

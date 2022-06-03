@@ -12,17 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.Validation;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
+using System;
+using System.Text.Json.Serialization;
 
-namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
+namespace GreenEnergyHub.Charges.Core
 {
-    public interface IAvailableChargeReceiptValidationErrorFactory
+    // Source: https://khalidabuhakmeh.com/serialize-interface-instances-system-text-json
+    [AttributeUsage(AttributeTargets.Interface)]
+    public class JsonInterfaceConverterAttribute : JsonConverterAttribute
     {
-        AvailableReceiptValidationError Create(
-            ValidationError validationError,
-            ChargeCommand command,
-            IChargeOperation chargeOperation);
+        public JsonInterfaceConverterAttribute(Type converterType)
+            : base(converterType)
+        {
+        }
     }
 }

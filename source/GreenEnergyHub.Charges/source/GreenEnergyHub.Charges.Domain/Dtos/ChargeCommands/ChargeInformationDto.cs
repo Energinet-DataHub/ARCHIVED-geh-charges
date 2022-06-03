@@ -14,6 +14,7 @@
 
 using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
@@ -25,27 +26,31 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
     /// <summary>
     /// The ChargeInformationDto class contains the intend of the charge command, e.g. updating an existing charge.
     /// </summary>
-    public class ChargeInformationDto : ChargeOperation
+    public class ChargeInformationDto : OperationBase, IChargeOperation
     {
         public ChargeInformationDto(
                 string id,
                 ChargeType type,
                 string chargeId,
+                string chargeOwner,
+                Instant startDateTime,
                 string chargeName,
                 string chargeDescription,
-                string chargeOwner,
                 Resolution resolution,
                 TaxIndicator taxIndicator,
                 TransparentInvoicing transparentInvoicing,
                 VatClassification vatClassification,
-                Instant startDateTime,
                 Instant? endDateTime,
                 Instant? pointsStartInterval,
                 Instant? pointsEndInterval,
                 List<Point> points)
-            : base(id, chargeId, type, chargeOwner, startDateTime)
         {
             Points = new List<Point>();
+            Id = id;
+            Type = type;
+            ChargeId = chargeId;
+            ChargeOwner = chargeOwner;
+            StartDateTime = startDateTime;
             ChargeName = chargeName;
             ChargeDescription = chargeDescription;
             Resolution = resolution;
@@ -57,6 +62,26 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
             PointsEndInterval = pointsEndInterval;
             Points = points;
         }
+
+        /*public ChargeInformationDto()
+        {
+            Id = Guid.NewGuid().ToString();
+            ChargeId = Guid.NewGuid().ToString();
+            ChargeOwner = Guid.NewGuid().ToString();
+            ChargeName = Guid.NewGuid().ToString();
+            ChargeDescription = Guid.NewGuid().ToString();
+            Points = new List<Point>();
+        }*/
+
+        public string Id { get; }
+
+        public string ChargeId { get; }
+
+        public ChargeType Type { get; }
+
+        public string ChargeOwner { get; }
+
+        public Instant StartDateTime { get; }
 
         /// <summary>
         /// The charge name

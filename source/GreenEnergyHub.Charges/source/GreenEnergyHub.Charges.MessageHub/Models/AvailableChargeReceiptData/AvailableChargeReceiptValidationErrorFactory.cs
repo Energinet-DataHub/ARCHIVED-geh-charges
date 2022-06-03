@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
         public AvailableReceiptValidationError Create(
             ValidationError validationError,
             ChargeCommand command,
-            ChargeOperation chargeOperation)
+            IChargeOperation chargeOperation)
         {
             var reasonCode = _cimValidationErrorCodeFactory.Create(validationError.ValidationRuleIdentifier);
 

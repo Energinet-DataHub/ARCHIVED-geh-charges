@@ -25,7 +25,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
         private readonly Instant _periodEnd;
 
         public StartDateValidationRule(
-            ChargeOperation chargeInformationDto,
+            IChargeOperation chargeInformationDto,
             StartDateValidationRuleConfiguration configuration,
             IZonedDateTimeService zonedDateTimeService,
             IClock clock)

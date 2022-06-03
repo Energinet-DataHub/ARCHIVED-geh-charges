@@ -75,8 +75,10 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         {
             serviceCollection.AddScoped<IDocumentValidationRulesFactory<ChargeCommand>,
                 ChargeCommandDocumentValidationRulesFactory>();
-            serviceCollection.AddScoped<IBusinessValidationRulesFactory<ChargeOperation>,
-                ChargeOperationBusinessValidationRulesFactory>();
+            serviceCollection.AddScoped<IBusinessValidationRulesFactory<ChargeInformationDto>,
+                ChargeInformationBusinessValidationRulesFactory>();
+            serviceCollection.AddScoped<IBusinessValidationRulesFactory<ChargePriceDto>,
+                ChargePriceBusinessValidationRulesFactory>();
             serviceCollection.AddScoped<IInputValidationRulesFactory<ChargeInformationDto>,
                 ChargeInformationInputValidationRulesFactory>();
             serviceCollection.AddScoped<IInputValidationRulesFactory<ChargePriceDto>,
@@ -85,7 +87,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IDocumentValidator<ChargeCommand>, DocumentValidator<ChargeCommand>>();
             serviceCollection.AddScoped<IInputValidator<ChargeInformationDto>, InputValidator<ChargeInformationDto>>();
             serviceCollection.AddScoped<IInputValidator<ChargePriceDto>, InputValidator<ChargePriceDto>>();
-            serviceCollection.AddScoped<IBusinessValidator<ChargeOperation>, BusinessValidator<ChargeOperation>>();
+            serviceCollection.AddScoped<IBusinessValidator<ChargeInformationDto>, BusinessValidator<ChargeInformationDto>>();
+            serviceCollection.AddScoped<IBusinessValidator<ChargePriceDto>, BusinessValidator<ChargePriceDto>>();
         }
 
         private static void ConfigureIso8601Timezones(IServiceCollection serviceCollection)

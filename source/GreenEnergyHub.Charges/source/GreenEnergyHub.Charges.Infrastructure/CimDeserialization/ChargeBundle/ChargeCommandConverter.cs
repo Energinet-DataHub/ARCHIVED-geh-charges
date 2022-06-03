@@ -59,11 +59,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
             return new ChargeCommandBundle(chargeCommands);
         }
 
-        private async Task<List<ChargeOperation>> ParseChargeOperationsAsync(
+        private async Task<List<IChargeOperation>> ParseChargeOperationsAsync(
             SchemaValidatingReader reader,
             BusinessReasonCode businessReasonCode)
         {
-            var operations = new List<ChargeOperation>();
+            var operations = new List<IChargeOperation>();
             var operationId = string.Empty;
 
             while (await reader.AdvanceAsync().ConfigureAwait(false))
@@ -84,12 +84,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
             return operations;
         }
 
-        private async Task<ChargeOperation> ParseChargeGroupToOperationAsync(
+        private async Task<IChargeOperation> ParseChargeGroupToOperationAsync(
             SchemaValidatingReader reader,
             string operationId,
             BusinessReasonCode businessReasonCode)
         {
-            ChargeOperation? operation = null;
+            IChargeOperation? operation = null;
             while (await reader.AdvanceAsync().ConfigureAwait(false))
             {
                 if (reader.Is(CimChargeCommandConstants.ChargeTypeElement))
@@ -109,7 +109,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
             return operation!;
         }
 
-        private async Task<ChargeOperation> ParseChargeTypeElementToOperationAsync(
+        private async Task<IChargeOperation> ParseChargeTypeElementToOperationAsync(
             SchemaValidatingReader reader,
             string operationId,
             BusinessReasonCode businessReasonCode)
@@ -236,14 +236,14 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                         operationId,
                         chargeType,
                         senderProvidedChargeId,
+                        chargeOwner,
+                        startDateTime,
                         chargeName,
                         description,
-                        chargeOwner,
                         resolution,
                         taxIndicator,
                         transparentInvoicing,
                         vatClassification,
-                        startDateTime,
                         endDateTime,
                         pointsStartTime,
                         pointsEndTime,

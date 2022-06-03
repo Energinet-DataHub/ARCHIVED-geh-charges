@@ -18,9 +18,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 {
     public class ChargeOwnerIsRequiredValidationRule : IValidationRule
     {
-        private readonly ChargeOperation _chargeOperation;
+        private readonly IChargeOperation _chargeOperation;
 
-        public ChargeOwnerIsRequiredValidationRule(ChargeOperation chargeOperation)
+        public ChargeOwnerIsRequiredValidationRule(IChargeOperation chargeOperation)
         {
             _chargeOperation = chargeOperation;
         }

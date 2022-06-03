@@ -56,7 +56,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
         }
 
         private static IValidationRuleContainer CreateRuleContainer(
-            IValidationRule validationRule, ChargeOperation chargePriceDto)
+            IValidationRule validationRule, IChargeOperation chargePriceDto)
         {
             return new OperationValidationRuleContainer(validationRule, chargePriceDto.Id);
         }

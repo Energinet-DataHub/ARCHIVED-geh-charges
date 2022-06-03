@@ -30,7 +30,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
     public class ChargeInformationEventHandler : IChargeInformationEventHandler
     {
         private readonly IInputValidator<ChargeInformationDto> _inputValidator;
-        private readonly IBusinessValidator<ChargeOperation> _businessValidator;
+        private readonly IBusinessValidator<ChargeInformationDto> _businessValidator;
         private readonly IChargeRepository _chargeRepository;
         private readonly IChargeIdentifierFactory _chargeIdentifierFactory;
         private readonly IChargeFactory _chargeFactory;
@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 
         public ChargeInformationEventHandler(
             IInputValidator<ChargeInformationDto> inputValidator,
-            IBusinessValidator<ChargeOperation> businessValidator,
+            IBusinessValidator<ChargeInformationDto> businessValidator,
             IChargeRepository chargeRepository,
             IChargeIdentifierFactory chargeIdentifierFactory,
             IChargeFactory chargeFactory,
@@ -63,13 +63,14 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             ArgumentNullException.ThrowIfNull(commandReceivedEvent);
 
             var operations = commandReceivedEvent.Command.ChargeOperations.ToArray();
-            var operationsToBeRejected = new List<ChargeOperation>();
+            var operationsToBeRejected = new List<IChargeOperation>();
             var rejectionRules = new List<IValidationRuleContainer>();
-            var operationsToBeConfirmed = new List<ChargeOperation>();
+            var operationsToBeConfirmed = new List<IChargeOperation>();
 
             for (var i = 0; i < operations.Length; i++)
             {
                 var operation = operations[i];
+                var chargeInformationDto = (ChargeInformationDto)operation;
                 var charge = await GetChargeAsync(operation).ConfigureAwait(false);
 
                 var validationResult = _inputValidator.Validate((ChargeInformationDto)operation);
@@ -80,7 +81,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                     break;
                 }
 
-                validationResult = await _businessValidator.ValidateAsync(operation).ConfigureAwait(false);
+                validationResult = await _businessValidator.ValidateAsync(chargeInformationDto).ConfigureAwait(false);
                 if (validationResult.IsFailed)
                 {
                     operationsToBeRejected = operations[i..].ToList();
@@ -102,8 +103,8 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         private static void CollectRejectionRules(
             List<IValidationRuleContainer> rejectionRules,
             ValidationResult validationResult,
-            IEnumerable<ChargeOperation> operationsToBeRejected,
-            ChargeOperation operation)
+            IEnumerable<IChargeOperation> operationsToBeRejected,
+            IChargeOperation operation)
         {
             rejectionRules.AddRange(validationResult.InvalidRules);
             rejectionRules.AddRange(operationsToBeRejected.Skip(1)
@@ -112,7 +113,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                         new PreviousOperationsMustBeValidRule(operation.Id), subsequentOperation.Id)));
         }
 
-        private async Task HandleOperationAsync(ChargeOperation operation, Charge? charge)
+        private async Task HandleOperationAsync(IChargeOperation operation, Charge? charge)
         {
             var informationDto = (ChargeInformationDto)operation;
             var operationType = GetOperationType(informationDto, charge);
@@ -175,7 +176,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 : OperationType.Update;
         }
 
-        private async Task<Charge?> GetChargeAsync(ChargeOperation chargeInformationDto)
+        private async Task<Charge?> GetChargeAsync(IChargeOperation chargeInformationDto)
         {
             var chargeIdentifier = await _chargeIdentifierFactory
                 .CreateAsync(chargeInformationDto.ChargeId, chargeInformationDto.Type, chargeInformationDto.ChargeOwner)

@@ -23,7 +23,7 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.Factories
 {
-    public class ChargeOperationBusinessValidationRulesFactory : IBusinessValidationRulesFactory<ChargeOperation>
+    public class ChargeInformationBusinessValidationRulesFactory : IBusinessValidationRulesFactory<ChargeInformationDto>
     {
         private readonly IChargeRepository _chargeRepository;
         private readonly IChargeIdentifierFactory _chargeIdentifierFactory;
@@ -31,7 +31,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
         private readonly IRulesConfigurationRepository _rulesConfigurationRepository;
         private readonly IZonedDateTimeService _zonedDateTimeService;
 
-        public ChargeOperationBusinessValidationRulesFactory(
+        public ChargeInformationBusinessValidationRulesFactory(
             IRulesConfigurationRepository rulesConfigurationRepository,
             IChargeRepository chargeRepository,
             IChargeIdentifierFactory chargeIdentifierFactory,
@@ -45,16 +45,15 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
             _clock = clock;
         }
 
-        public async Task<IValidationRuleSet> CreateRulesAsync(ChargeOperation chargeOperation)
+        public async Task<IValidationRuleSet> CreateRulesAsync(ChargeInformationDto chargeOperation)
         {
             ArgumentNullException.ThrowIfNull(chargeOperation);
             var rules = await GetRulesForOperationAsync(chargeOperation).ConfigureAwait(false);
             return ValidationRuleSet.FromRules(rules);
         }
 
-        private async Task<List<IValidationRuleContainer>> GetRulesForOperationAsync(ChargeOperation chargeOperation)
+        private async Task<List<IValidationRuleContainer>> GetRulesForOperationAsync(ChargeInformationDto chargeOperation)
         {
-            var chargeInformationDto = (ChargeInformationDto)chargeOperation;
             var configuration = await _rulesConfigurationRepository.GetConfigurationAsync().ConfigureAwait(false);
             var charge = await GetChargeOrNullAsync(chargeOperation).ConfigureAwait(false);
             var rules = GetMandatoryRulesForOperation(chargeOperation, configuration);
@@ -65,10 +64,10 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
 
             if (chargeOperation.Type == ChargeType.Tariff)
             {
-                rules.AddRange(AddTariffOnlyRules(chargeInformationDto, charge));
+                rules.AddRange(AddTariffOnlyRules(chargeOperation, charge));
             }
 
-            AddUpdateRules(rules, chargeInformationDto, charge);
+            AddUpdateRules(rules, chargeOperation, charge);
             return rules;
         }
 
@@ -101,7 +100,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
         }
 
         private List<IValidationRuleContainer> GetMandatoryRulesForOperation(
-            ChargeOperation chargeOperation,
+            IChargeOperation chargeOperation,
             RulesConfiguration configuration)
         {
             var rules = new List<IValidationRuleContainer>
@@ -118,7 +117,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
             return rules;
         }
 
-        private async Task<Charge?> GetChargeOrNullAsync(ChargeOperation chargeOperation)
+        private async Task<Charge?> GetChargeOrNullAsync(IChargeOperation chargeOperation)
         {
             var chargeIdentifier = await _chargeIdentifierFactory
                 .CreateAsync(chargeOperation.ChargeId, chargeOperation.Type, chargeOperation.ChargeOwner)

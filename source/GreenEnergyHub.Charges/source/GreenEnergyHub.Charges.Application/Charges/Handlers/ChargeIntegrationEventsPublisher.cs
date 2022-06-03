@@ -44,7 +44,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             }
         }
 
-        private async Task PublishEventAsync(ChargeOperation chargeOperationDto)
+        private async Task PublishEventAsync(IChargeOperation chargeOperationDto)
         {
             switch (chargeOperationDto)
             {

@@ -14,6 +14,7 @@
 
 using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
@@ -25,7 +26,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
     /// <summary>
     /// The ChargePriceDto class contains the intend of the charge command, e.g. updating an existing charge.
     /// </summary>
-    public class ChargePriceDto : ChargeOperation
+    public class ChargePriceDto : OperationBase, IChargeOperation
     {
         public ChargePriceDto(
                 string id,
@@ -37,14 +38,28 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
                 Instant? pointsStartInterval,
                 Instant? pointsEndInterval,
                 List<Point> points)
-            : base(id, chargeId, type, chargeOwner, startDateTime)
         {
             Points = new List<Point>();
+            Id = id;
+            Type = type;
+            ChargeId = chargeId;
+            ChargeOwner = chargeOwner;
+            StartDateTime = startDateTime;
             EndDateTime = endDateTime;
             PointsStartInterval = pointsStartInterval;
             PointsEndInterval = pointsEndInterval;
             Points = points;
         }
+
+        public string Id { get; }
+
+        public string ChargeId { get; }
+
+        public ChargeType Type { get; }
+
+        public string ChargeOwner { get; }
+
+        public Instant StartDateTime { get; }
 
         /// <summary>
         /// Valid to, of a charge price list.
