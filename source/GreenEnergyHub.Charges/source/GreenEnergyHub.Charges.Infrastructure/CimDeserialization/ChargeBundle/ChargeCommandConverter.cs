@@ -198,7 +198,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                 }
                 else if (reader.Is(CimChargeCommandConstants.SeriesPeriod))
                 {
-                    var seriesPeriodIntoOperationAsync = await ParseSeriesPeriodIntoOperationAsync(reader, startDateTime, resolution).ConfigureAwait(false);
+                    var seriesPeriodIntoOperationAsync = await ParseSeriesPeriodIntoOperationAsync(reader, startDateTime).ConfigureAwait(false);
                     points.AddRange(seriesPeriodIntoOperationAsync.Points);
                     periodResolution = seriesPeriodIntoOperationAsync.Resolution;
                     pointsStartTime = seriesPeriodIntoOperationAsync.IntervalStartTime;
@@ -229,10 +229,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                 points);
         }
 
-        private async Task<ParseSeriesPeriodResult> ParseSeriesPeriodIntoOperationAsync(SchemaValidatingReader reader, Instant startDateTime, Resolution initialResolution)
+        private async Task<ParseSeriesPeriodResult> ParseSeriesPeriodIntoOperationAsync(SchemaValidatingReader reader, Instant startDateTime)
         {
             var points = new List<Point>();
-            var periodResolution = initialResolution;
+            var periodResolution = Resolution.Unknown;
             Instant endDateTime = default;
 
             while (await reader.AdvanceAsync().ConfigureAwait(false))
