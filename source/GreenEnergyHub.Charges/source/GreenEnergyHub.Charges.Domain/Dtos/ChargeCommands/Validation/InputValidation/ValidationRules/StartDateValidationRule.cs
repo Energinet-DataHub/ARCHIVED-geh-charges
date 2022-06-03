@@ -16,10 +16,12 @@ using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules
+namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
 {
     public class StartDateValidationRule : IValidationRule
     {
+        private const int LowerTimeLimitInDays = -720;
+        private const int UpperTimeLimitInDays = -1095;
         private readonly Instant _validityStartDate;
         private readonly Instant _periodStart;
         private readonly Instant _periodEnd;
@@ -31,8 +33,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
         {
             _validityStartDate = startDate;
             var today = zonedDateTimeService.GetZonedDateTime(clock.GetCurrentInstant()).Date;
-            _periodStart = CalculatePeriodPoint(-720, zonedDateTimeService, today);
-            _periodEnd = CalculatePeriodPoint(1095 + 1, zonedDateTimeService, today);
+            _periodStart = CalculatePeriodPoint(LowerTimeLimitInDays, zonedDateTimeService, today);
+            // TODO: Ask Peter or Irene why "+ 1"?
+            _periodEnd = CalculatePeriodPoint(UpperTimeLimitInDays + 1, zonedDateTimeService, today);
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.StartDateValidation;
