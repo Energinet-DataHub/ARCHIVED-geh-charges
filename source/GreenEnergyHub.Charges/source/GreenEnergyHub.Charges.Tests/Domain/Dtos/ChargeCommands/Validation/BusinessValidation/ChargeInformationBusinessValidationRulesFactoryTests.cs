@@ -26,12 +26,10 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValid
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.Factories;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.MessageHub.Models.Shared;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
-using GreenEnergyHub.Charges.Tests.Builders.Testables;
 using Moq;
 using Xunit;
 using Xunit.Categories;
@@ -39,7 +37,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.BusinessValidation
 {
     [UnitTest]
-    public class ChargeOperationBusinessValidationRulesFactoryTests
+    public class ChargeInformationBusinessValidationRulesFactoryTests
     {
         [Theory]
         [InlineAutoMoqData(typeof(StartDateValidationRule))]
@@ -48,7 +46,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             [Frozen] Mock<IChargeIdentifierFactory> chargeIdentifierFactory,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
-            ChargeOperationBusinessValidationRulesFactory sut,
+            ChargeInformationBusinessValidationRulesFactory sut,
             ChargeInformationDtoBuilder builder)
         {
             // Arrange
@@ -77,7 +75,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             [Frozen] Mock<IChargeIdentifierFactory> chargeIdentifierFactory,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
-            ChargeOperationBusinessValidationRulesFactory sut,
+            ChargeInformationBusinessValidationRulesFactory sut,
             Charge charge)
         {
             // Arrange
@@ -105,7 +103,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             [Frozen] Mock<IChargeIdentifierFactory> chargeIdentifierFactory,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
-            ChargeOperationBusinessValidationRulesFactory sut,
+            ChargeInformationBusinessValidationRulesFactory sut,
             Charge charge)
         {
             // Arrange
@@ -126,7 +124,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         [Theory]
         [InlineAutoMoqData]
         public static async Task CreateRulesAsync_WhenCalledWithNull_ThrowsArgumentNullException(
-            ChargeOperationBusinessValidationRulesFactory sut)
+            ChargeInformationBusinessValidationRulesFactory sut)
         {
             // Arrange
             ChargeInformationDto? chargeOperationDto = null;
@@ -145,7 +143,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             [Frozen] Mock<IChargeIdentifierFactory> chargeIdentifierFactory,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
-            ChargeOperationBusinessValidationRulesFactory sut,
+            ChargeInformationBusinessValidationRulesFactory sut,
             ChargeCommandBuilder chargeCommandBuilder,
             ChargeInformationDtoBuilder chargeInformationDtoBuilder,
             Charge charge)

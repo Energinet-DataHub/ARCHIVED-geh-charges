@@ -166,7 +166,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             // Assert
             foreach (var operation in chargeCommand.ChargeOperations)
             {
-                var chargeOperations = new List<ChargeOperation> { operation };
+                var chargeOperations = new List<IChargeOperation> { operation };
                 var commandWithOperation = new ChargeCommand(chargeCommand.Document, chargeOperations);
 
                 foreach (var identifier in validationRuleIdentifiers)

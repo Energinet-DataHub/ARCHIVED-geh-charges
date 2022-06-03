@@ -55,7 +55,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
         {
             // Arrange
             var chargeCommand = chargeCommandBuilder
-                .WithChargeOperations(new List<ChargeOperation>(chargeOperations))
+                .WithChargeOperations(new List<IChargeOperation>(chargeOperations))
                 .Build();
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
 
