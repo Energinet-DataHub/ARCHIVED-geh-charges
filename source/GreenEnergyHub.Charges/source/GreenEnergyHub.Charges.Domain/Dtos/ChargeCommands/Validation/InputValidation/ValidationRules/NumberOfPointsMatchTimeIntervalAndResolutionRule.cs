@@ -23,24 +23,22 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
     {
         private readonly Instant _startTime;
         private readonly Instant _endTime;
-        private readonly Resolution _periodResolution;
         private readonly int _actualPointCount;
         private double _expectedPointCount;
 
         public NumberOfPointsMatchTimeIntervalAndResolutionRule(ChargeOperationDto chargeOperationDto)
         {
-            _periodResolution = chargeOperationDto.PriceResolution;
             _startTime = chargeOperationDto.PointsStartInterval.GetValueOrDefault();
             _endTime = chargeOperationDto.PointsEndInterval.GetValueOrDefault();
-            SetExpectedPointCount();
+            SetExpectedPointCount(chargeOperationDto.PriceResolution);
             _actualPointCount = chargeOperationDto.Points.Count;
         }
 
-        private void SetExpectedPointCount()
+        private void SetExpectedPointCount(Resolution priceResolution)
         {
             var interval = new Interval(_startTime, _endTime);
 
-            _expectedPointCount = _periodResolution switch
+            _expectedPointCount = priceResolution switch
             {
                 Resolution.Unknown => throw new ArgumentException("Resolution may not be unknown"),
                 Resolution.PT15M => interval.Duration.TotalMinutes / 15,
@@ -51,7 +49,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
                     // https://stackoverflow.com/a/4639057
                     ((_endTime.InUtc().Year - _startTime.InUtc().Year) * 12) + _endTime.InUtc().Month -
                     _startTime.InUtc().Month,
-                _ => throw new ArgumentOutOfRangeException(nameof(_periodResolution)),
+                _ => throw new ArgumentOutOfRangeException(nameof(priceResolution)),
             };
         }
 
