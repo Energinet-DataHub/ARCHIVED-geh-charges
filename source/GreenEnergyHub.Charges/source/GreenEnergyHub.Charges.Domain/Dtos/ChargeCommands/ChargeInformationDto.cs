@@ -63,16 +63,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
             Points = points;
         }
 
-        /*public ChargeInformationDto()
-        {
-            Id = Guid.NewGuid().ToString();
-            ChargeId = Guid.NewGuid().ToString();
-            ChargeOwner = Guid.NewGuid().ToString();
-            ChargeName = Guid.NewGuid().ToString();
-            ChargeDescription = Guid.NewGuid().ToString();
-            Points = new List<Point>();
-        }*/
-
         public string Id { get; }
 
         public string ChargeId { get; }

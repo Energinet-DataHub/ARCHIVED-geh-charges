@@ -17,7 +17,7 @@ using System.Text.Json.Serialization;
 
 namespace GreenEnergyHub.Charges.Core
 {
-    // Source: https://khalidabuhakmeh.com/serialize-interface-instances-system-text-json
+    // TODO: Summary reference to source https://khalidabuhakmeh.com/serialize-interface-instances-system-text-json
     [AttributeUsage(AttributeTargets.Interface)]
     public class JsonInterfaceConverterAttribute : JsonConverterAttribute
     {

@@ -27,6 +27,7 @@ namespace GreenEnergyHub.Charges.Core
 
         public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
+            // TODO: method for throwing exceptions to be DRY
             var readerClone = reader;
             if (readerClone.TokenType != JsonTokenType.StartObject)
                 throw new JsonException("Problem in Start object! method: " + nameof(Read) + " class :" + nameof(InterfaceConverter<T, TI1, TI2>));
