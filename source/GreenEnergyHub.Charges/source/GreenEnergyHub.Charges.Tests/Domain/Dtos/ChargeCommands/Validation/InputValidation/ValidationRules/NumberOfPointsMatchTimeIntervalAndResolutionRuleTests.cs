@@ -28,19 +28,22 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
     public class NumberOfPointsMatchTimeIntervalAndResolutionRuleTests
     {
         [Theory]
-        [InlineAutoMoqData(Resolution.PT15M, 1, 1, 23, 1, 2, 23, 96, "")]
-        [InlineAutoMoqData(Resolution.PT1H, 1, 1, 23, 1, 2, 23, 24, "")]
-        [InlineAutoMoqData(Resolution.P1D, 1, 1, 23, 1, 2, 23, 1, "")]
-        [InlineAutoMoqData(Resolution.P1M, 1, 1, 23, 2, 1, 23, 1, "")]
-        [InlineAutoMoqData(Resolution.P1M, 1, 15, 23, 2, 1, 23, 1, "irregular price series must be allowed")]
-        [InlineAutoMoqData(Resolution.PT1H, 3, 26, 23, 3, 27, 22, 23, "switching to Daylight Saving Time must be supported")]
-        [InlineAutoMoqData(Resolution.PT1H, 10, 29, 22, 10, 30, 23, 25, "switching to Normal Time must be supported")]
-        [InlineAutoMoqData(Resolution.P1D, 1, 1, 23, 1, 6, 23, 5, "longer price series must be supported")]
+        [InlineAutoMoqData(Resolution.PT15M, 2022, 1, 1, 23, 2022, 1, 2, 23, 96, "")]
+        [InlineAutoMoqData(Resolution.PT1H, 2022, 1, 1, 23, 2022, 1, 2, 23, 24, "")]
+        [InlineAutoMoqData(Resolution.P1D, 2022, 1, 1, 23, 2022, 1, 2, 23, 1, "")]
+        [InlineAutoMoqData(Resolution.P1M, 2022, 1, 1, 23, 2022, 2, 1, 23, 1, "")]
+        [InlineAutoMoqData(Resolution.P1M, 2022, 1, 15, 23, 2022, 2, 1, 23, 1, "irregular price series must be allowed")]
+        [InlineAutoMoqData(Resolution.PT1H, 2022, 3, 26, 23, 2022, 3, 27, 22, 23, "switching to Daylight Saving Time must be supported")]
+        [InlineAutoMoqData(Resolution.PT1H, 2022, 10, 29, 22, 2022, 10, 30, 23, 25, "switching to Normal Time must be supported")]
+        [InlineAutoMoqData(Resolution.P1D, 2022, 1, 1, 23, 2022, 1, 6, 23, 5, "longer price series must be supported")]
+        [InlineAutoMoqData(Resolution.P1M, 2022, 1, 1, 23, 2024, 1, 1, 23, 24, "longer price series spanning years must be supported")]
         public void IsValid_WhenCalledWithCorrectNumberOfPrices_ShouldParse(
             Resolution resolution,
+            int startYear,
             int startMonth,
             int startDay,
             int startHour,
+            int endYear,
             int endMonth,
             int endDay,
             int endHour,
@@ -48,8 +51,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             string because)
         {
             // Arrange
-            var start = Instant.FromUtc(2022, startMonth, startDay, startHour, 0);
-            var end = Instant.FromUtc(2022, endMonth, endDay, endHour, 0);
+            var start = Instant.FromUtc(startYear, startMonth, startDay, startHour, 0);
+            var end = Instant.FromUtc(endYear, endMonth, endDay, endHour, 0);
 
             var dto = new ChargeOperationDtoBuilder()
                 .WithPriceResolution(resolution)
