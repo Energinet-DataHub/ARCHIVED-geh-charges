@@ -17,8 +17,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
-using AutoFixture.Xunit2;
-using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.Factories;
@@ -28,9 +26,6 @@ using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.MessageHub.Models.Shared;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
-using Moq;
-using NodaTime;
-using NodaTime.Testing;
 using Xunit;
 using Xunit.Categories;
 
@@ -41,14 +36,29 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
     {
         [Theory]
         [InlineAutoMoqData]
-        public void CreateRules_ShouldContainRules(
+        public void CreateRules_WhenOperationContainsPoints_ShouldContainRules(
+            ChargeOperationInputValidationRulesFactory sut)
+        {
+            // Arrange
+            var chargeOperationDto = new ChargeOperationDtoBuilder().WithPoint(0, 1.00m).Build();
+            var expectedRuleTypes = GetExpectedRulesForChargePriceOperation();
+
+            // Act
+            var actualRuleTypes = sut.CreateRules(chargeOperationDto)
+                .GetRules().Select(r => r.ValidationRule.GetType()).ToList();
+
+            // Assert
+            Assert.True(actualRuleTypes.SequenceEqual(expectedRuleTypes));
+        }
+
+        [Theory]
+        [InlineAutoMoqData]
+        public void CreateRules_WhenOperationContainsNoPoints_ShouldContainRules(
             ChargeOperationInputValidationRulesFactory sut)
         {
             // Arrange
             var chargeOperationDto = new ChargeOperationDtoBuilder().Build();
-            var expectedRulesTypes = new List<Type>();
-
-            expectedRulesTypes.AddRange(GetExpectedRulesForChargeOperation());
+            var expectedRulesTypes = GetExpectedRulesForChargeInformationOperation();
 
             // Act
             var actualRuleTypes = sut.CreateRules(chargeOperationDto)
@@ -84,29 +94,45 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 cimValidationErrorTextToken, validationRules);
         }
 
-        private static List<Type> GetExpectedRulesForChargeOperation()
+        private static List<Type> GetExpectedRulesForChargeInformationOperation()
         {
             var expectedRules = new List<Type>
             {
-                typeof(ChargeDescriptionHasMaximumLengthRule),
                 typeof(ChargeIdLengthValidationRule),
                 typeof(ChargeIdRequiredValidationRule),
-                typeof(ChargeNameHasMaximumLengthRule),
                 typeof(ChargeOperationIdRequiredRule),
                 typeof(ChargeOwnerIsRequiredValidationRule),
-                typeof(ChargePriceMaximumDigitsAndDecimalsRule),
                 typeof(ChargeTypeIsKnownValidationRule),
-                typeof(ChargeTypeTariffPriceCountRule),
-                typeof(MaximumPriceRule),
+                typeof(StartDateTimeRequiredValidationRule),
                 typeof(ResolutionFeeValidationRule),
                 typeof(ResolutionSubscriptionValidationRule),
                 typeof(ResolutionTariffValidationRule),
-                typeof(StartDateTimeRequiredValidationRule),
+                typeof(ChargeNameHasMaximumLengthRule),
+                typeof(ChargeDescriptionHasMaximumLengthRule),
                 typeof(VatClassificationValidationRule),
                 typeof(TransparentInvoicingIsNotAllowedForFeeValidationRule),
+                typeof(ChargePriceMaximumDigitsAndDecimalsRule),
+                typeof(ChargeTypeTariffPriceCountRule),
+                typeof(MaximumPriceRule),
                 typeof(StartDateValidationRule),
             };
             return expectedRules;
+        }
+
+        private static IEnumerable<Type> GetExpectedRulesForChargePriceOperation()
+        {
+            return new List<Type>
+            {
+                typeof(ChargeIdLengthValidationRule),
+                typeof(ChargeIdRequiredValidationRule),
+                typeof(ChargeOperationIdRequiredRule),
+                typeof(ChargeOwnerIsRequiredValidationRule),
+                typeof(ChargeTypeIsKnownValidationRule),
+                typeof(StartDateTimeRequiredValidationRule),
+                typeof(ChargePriceMaximumDigitsAndDecimalsRule),
+                typeof(ChargeTypeTariffPriceCountRule),
+                typeof(MaximumPriceRule),
+            };
         }
 
         private static void AssertAllRulesThatNeedTriggeredByForErrorMessageImplementsIValidationRuleWithExtendedData(

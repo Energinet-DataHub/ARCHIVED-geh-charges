@@ -61,7 +61,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             var rejectionRules = new List<IValidationRuleContainer>();
             var operationsToBeConfirmed = new List<ChargeOperationDto>();
 
-            ValidationResult? validationResult;
             for (var i = 0; i < operations.Length; i++)
             {
                 var operation = operations[i];
@@ -71,16 +70,11 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                     throw new InvalidOperationException($"Charge ID '{operation.ChargeId}' does not exist.");
                 }
 
-                validationResult = _inputValidator.Validate(operation);
+                var validationResult = _inputValidator.Validate(operation);
                 if (validationResult.IsFailed)
                 {
                     operationsToBeRejected = operations[i..].ToList();
                     CollectRejectionRules(rejectionRules, validationResult, operationsToBeRejected, operation);
-                    rejectionRules.AddRange(validationResult.InvalidRules);
-                    rejectionRules.AddRange(operationsToBeRejected.Skip(1)
-                        .Select(_ =>
-                            new OperationValidationRuleContainer(
-                                new PreviousOperationsMustBeValidRule(operation.Id), operation.Id)));
                     break;
                 }
 
