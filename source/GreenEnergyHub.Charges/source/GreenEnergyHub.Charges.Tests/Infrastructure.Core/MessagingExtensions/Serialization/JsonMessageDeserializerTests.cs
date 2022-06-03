@@ -21,8 +21,10 @@ using AutoFixture.AutoMoq;
 using AutoFixture.Kernel;
 using Energinet.DataHub.Core.Messaging.Transport;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
+using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.Charges.Tests.TestCore;
 using GreenEnergyHub.Json;
 using Microsoft.Extensions.DependencyInjection;
@@ -91,6 +93,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions.S
             {
                 var data = new TheoryData<IInboundMessage>();
                 var fixture = new Fixture().Customize(new AutoMoqCustomization());
+                fixture.Register<IChargeOperation>(() => new ChargePriceDtoBuilder().Build());
+
                 var domainAssembly = DomainAssemblyHelper.GetDomainAssembly();
                 var messageTypes = domainAssembly
                     .GetTypes()
