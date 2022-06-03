@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
                     // https://stackoverflow.com/a/4639057
                     ((_endTime.InUtc().Year - _startTime.InUtc().Year) * 12) + _endTime.InUtc().Month -
                     _startTime.InUtc().Month,
-                _ => throw new ArgumentOutOfRangeException(),
+                _ => throw new ArgumentOutOfRangeException(nameof(_periodResolution)),
             };
         }
 
