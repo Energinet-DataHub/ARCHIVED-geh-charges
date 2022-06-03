@@ -17,7 +17,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
+using AutoFixture.Xunit2;
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.Factories;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
@@ -25,6 +28,9 @@ using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.MessageHub.Models.Shared;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
+using Moq;
+using NodaTime;
+using NodaTime.Testing;
 using Xunit;
 using Xunit.Categories;
 
@@ -33,31 +39,30 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
     [UnitTest]
     public class ChargeOperationInputValidationRulesFactoryTests
     {
-        [Fact]
-        public void CreateRules_ShouldContainRules()
+        [Theory]
+        [InlineAutoMoqData]
+        public void CreateRules_ShouldContainRules(
+            ChargeOperationInputValidationRulesFactory sut)
         {
             // Arrange
-            var sut = new ChargeOperationInputValidationRulesFactory();
             var chargeOperationDto = new ChargeOperationDtoBuilder().Build();
-            var expectedRules = new List<IValidationRule>();
+            var expectedRulesTypes = new List<Type>();
 
-            expectedRules.AddRange(GetExpectedRulesForChargeOperation(chargeOperationDto));
+            expectedRulesTypes.AddRange(GetExpectedRulesForChargeOperation());
 
             // Act
             var actualRuleTypes = sut.CreateRules(chargeOperationDto)
                 .GetRules().Select(r => r.ValidationRule.GetType()).ToList();
-            var expectedRuleTypes = expectedRules.Select(r => r.GetType()).ToList();
 
             // Assert
-            Assert.True(actualRuleTypes.SequenceEqual(expectedRuleTypes));
+            Assert.True(actualRuleTypes.SequenceEqual(expectedRulesTypes));
         }
 
-        [Fact]
-        public void CreateRules_ShouldThrowArgumentNullException_WhenCalledWithNull()
+        [Theory]
+        [InlineAutoMoqData]
+        public void CreateRules_ShouldThrowArgumentNullException_WhenCalledWithNull(
+            ChargeOperationInputValidationRulesFactory sut)
         {
-            // Arrange
-            var sut = new ChargeOperationInputValidationRulesFactory();
-
             // Act & Assert
             Assert.Throws<ArgumentNullException>(() => sut.CreateRules(null!));
         }
@@ -79,26 +84,27 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 cimValidationErrorTextToken, validationRules);
         }
 
-        private static List<IValidationRule> GetExpectedRulesForChargeOperation(ChargeOperationDto chargeOperationDto)
+        private static List<Type> GetExpectedRulesForChargeOperation()
         {
-            var expectedRules = new List<IValidationRule>
+            var expectedRules = new List<Type>
             {
-                new ChargeDescriptionHasMaximumLengthRule(chargeOperationDto),
-                new ChargeIdLengthValidationRule(chargeOperationDto),
-                new ChargeIdRequiredValidationRule(chargeOperationDto),
-                new ChargeNameHasMaximumLengthRule(chargeOperationDto),
-                new ChargeOperationIdRequiredRule(chargeOperationDto),
-                new ChargeOwnerIsRequiredValidationRule(chargeOperationDto),
-                new ChargePriceMaximumDigitsAndDecimalsRule(chargeOperationDto),
-                new ChargeTypeIsKnownValidationRule(chargeOperationDto),
-                new ChargeTypeTariffPriceCountRule(chargeOperationDto),
-                new MaximumPriceRule(chargeOperationDto),
-                new ResolutionFeeValidationRule(chargeOperationDto),
-                new ResolutionSubscriptionValidationRule(chargeOperationDto),
-                new ResolutionTariffValidationRule(chargeOperationDto),
-                new StartDateTimeRequiredValidationRule(chargeOperationDto),
-                new VatClassificationValidationRule(chargeOperationDto),
-                new TransparentInvoicingIsNotAllowedForFeeValidationRule(chargeOperationDto),
+                typeof(ChargeDescriptionHasMaximumLengthRule),
+                typeof(ChargeIdLengthValidationRule),
+                typeof(ChargeIdRequiredValidationRule),
+                typeof(ChargeNameHasMaximumLengthRule),
+                typeof(ChargeOperationIdRequiredRule),
+                typeof(ChargeOwnerIsRequiredValidationRule),
+                typeof(ChargePriceMaximumDigitsAndDecimalsRule),
+                typeof(ChargeTypeIsKnownValidationRule),
+                typeof(ChargeTypeTariffPriceCountRule),
+                typeof(MaximumPriceRule),
+                typeof(ResolutionFeeValidationRule),
+                typeof(ResolutionSubscriptionValidationRule),
+                typeof(ResolutionTariffValidationRule),
+                typeof(StartDateTimeRequiredValidationRule),
+                typeof(VatClassificationValidationRule),
+                typeof(TransparentInvoicingIsNotAllowedForFeeValidationRule),
+                typeof(StartDateValidationRule),
             };
             return expectedRules;
         }

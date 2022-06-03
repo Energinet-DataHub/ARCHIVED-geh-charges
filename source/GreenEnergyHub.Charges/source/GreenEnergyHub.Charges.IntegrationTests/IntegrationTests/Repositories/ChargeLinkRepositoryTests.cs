@@ -25,6 +25,7 @@ using GreenEnergyHub.Charges.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.Tests.Builders.Command;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
@@ -130,25 +131,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             context.MarketParticipants.Add(marketParticipant);
             context.SaveChanges(); // Sets marketParticipant.RowId
 
-            var charge = new Charge(
-                Guid.NewGuid(),
-                "charge id",
-                marketParticipant.Id,
-                ChargeType.Tariff,
-                Resolution.P1D,
-                false,
-                new List<Point>(),
-                new List<ChargePeriod>
-                {
-                    new ChargePeriod(
-                        Guid.NewGuid(),
-                        "charge name",
-                        "charge description",
-                        VatClassification.Vat25,
-                        false,
-                        SystemClock.Instance.GetCurrentInstant(),
-                        SystemClock.Instance.GetCurrentInstant()),
-                });
+            var charge = new ChargeBuilder().WithOwnerId(marketParticipant.Id).Build();
             context.Charges.Add(charge);
 
             var gridAreaLinkId = context.GridAreaLinks.First().Id;

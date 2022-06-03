@@ -38,20 +38,13 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
     public class StartDateValidationRuleTests
     {
         [Theory]
-
-        // Test that start of interval is inclusive
-        [InlineAutoMoqData("2020-05-10T13:00:00Z", "2020-05-10T21:59:59Z", "Europe/Copenhagen", 1, 3, false)]
-        [InlineAutoMoqData("2020-05-10T13:00:00Z", "2020-05-10T22:00:00Z", "Europe/Copenhagen", 1, 3, true)]
-
-        // Test that end of interval is inclusive
-        [InlineAutoMoqData("2020-05-10T13:00:00Z", "2020-05-13T21:59:59Z", "Europe/Copenhagen", 1, 3, true)]
-        [InlineAutoMoqData("2020-05-10T13:00:00Z", "2020-05-13T22:00:00Z", "Europe/Copenhagen", 1, 3, false)]
+        [InlineAutoMoqData("2020-05-10T13:00:00Z", "2010-05-10T21:59:59Z", "Europe/Copenhagen", false)]
+        [InlineAutoMoqData("2020-05-10T13:00:00Z", "2020-05-10T22:00:00Z", "Europe/Copenhagen", true)]
+        [InlineAutoMoqData("2020-05-10T13:00:00Z", "2030-05-13T21:59:59Z", "Europe/Copenhagen", false)]
         public void IsValid_WhenStartDateIsWithinInterval_IsTrue(
             string nowIsoString,
             string effectuationDateIsoString,
             string timeZoneId,
-            int startOfOccurrence,
-            int endOfOccurrence,
             bool expected,
             [Frozen] ChargeOperationDtoBuilder builder)
         {
@@ -59,12 +52,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             var chargeOperationDto = builder
                 .WithStartDateTime(InstantPattern.General.Parse(effectuationDateIsoString).Value)
                 .Build();
-            var configuration = CreateRuleConfiguration(startOfOccurrence, endOfOccurrence);
             var zonedDateTimeService = CreateLocalDateTimeService(timeZoneId);
             var clock = new FakeClock(InstantPattern.General.Parse(nowIsoString).Value);
 
             // Act (implicit)
-            var sut = new StartDateValidationRule(chargeOperationDto, configuration, zonedDateTimeService, clock);
+            var sut = new StartDateValidationRule(chargeOperationDto.StartDateTime, zonedDateTimeService, clock);
 
             // Assert
             sut.IsValid.Should().Be(expected);
@@ -76,10 +68,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         {
             // Arrange
             var chargeOperationDto = builder.WithStartDateTime(InstantHelper.GetEndDefault()).Build();
-            var configuration = CreateRuleConfiguration(1, 3);
             var zonedDateTimeService = CreateLocalDateTimeService("Europe/Copenhagen");
 
-            var sut = new StartDateValidationRule(chargeOperationDto, configuration, zonedDateTimeService, clock);
+            // Act (implicit)
+            var sut = new StartDateValidationRule(chargeOperationDto.StartDateTime, zonedDateTimeService, clock);
 
             // Assert
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.StartDateValidation);
@@ -89,16 +81,6 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         {
             var clock = new Mock<IClock>();
             return new ZonedDateTimeService(clock.Object, new Iso8601ConversionConfiguration(timeZoneId));
-        }
-
-        private static StartDateValidationRuleConfiguration CreateRuleConfiguration(
-            int startOfOccurrence,
-            int endOfOccurrence)
-        {
-            var configuration = new StartDateValidationRuleConfiguration(
-                new Interval<int>(startOfOccurrence, endOfOccurrence));
-
-            return configuration;
         }
     }
 }

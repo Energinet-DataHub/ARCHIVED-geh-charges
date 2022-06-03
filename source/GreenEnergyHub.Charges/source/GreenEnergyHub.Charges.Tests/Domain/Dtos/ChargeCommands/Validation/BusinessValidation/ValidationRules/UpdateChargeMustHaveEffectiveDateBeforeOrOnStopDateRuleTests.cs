@@ -41,7 +41,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             var existingStopDate = InstantPattern.General.Parse(existingChargeEndDateIsoString).Value;
             var incomingCommandStartDate = InstantPattern.General.Parse(incomingCommandStartDateIsoString).Value;
 
-            var existingCharge = new ChargeBuilder().WithPeriods(CreateExistingChargePeriods(existingStopDate)).Build();
+            var existingCharge = new ChargeBuilder()
+                .AddPeriods(CreateExistingChargePeriods(existingStopDate))
+                .WithStopDate(existingStopDate)
+                .Build();
             var chargeOperation = new ChargeOperationDtoBuilder().WithStartDateTime(incomingCommandStartDate).Build();
 
             var sut = new UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateRule(existingCharge, chargeOperation);
@@ -58,13 +61,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             var existingPeriod1 = new ChargePeriodBuilder()
                 .WithStartDateTime(existingStopDate
                     .Minus(Duration.FromDays(20)))
-                .WithEndDateTime(existingStopDate
-                    .Minus(Duration.FromDays(10)))
                 .Build();
             var existingPeriod2 = new ChargePeriodBuilder()
                 .WithStartDateTime(existingStopDate
                     .Minus(Duration.FromDays(10)))
-                .WithEndDateTime(existingStopDate)
                 .Build();
 
             return new List<ChargePeriod> { existingPeriod1, existingPeriod2 };

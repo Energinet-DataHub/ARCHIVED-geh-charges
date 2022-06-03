@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
@@ -23,14 +22,10 @@ namespace GreenEnergyHub.Charges.Domain.Charges
     public class ChargeFactory : IChargeFactory
     {
         private readonly IMarketParticipantRepository _marketParticipantRepository;
-        private readonly IChargePeriodFactory _chargePeriodFactory;
 
-        public ChargeFactory(
-            IMarketParticipantRepository marketParticipantRepository,
-            IChargePeriodFactory chargePeriodFactory)
+        public ChargeFactory(IMarketParticipantRepository marketParticipantRepository)
         {
             _marketParticipantRepository = marketParticipantRepository;
-            _chargePeriodFactory = chargePeriodFactory;
         }
 
         public async Task<Charge> CreateFromChargeOperationDtoAsync(ChargeOperationDto chargeOperationDto)
@@ -42,17 +37,17 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             if (owner == null)
                 throw new InvalidOperationException($"Market participant '{chargeOperationDto.ChargeOwner}' does not exist.");
 
-            var period = _chargePeriodFactory.CreateFromChargeOperationDto(chargeOperationDto);
-
-            return new Charge(
-                Guid.NewGuid(),
+            return Charge.Create(
+                chargeOperationDto.ChargeName,
+                chargeOperationDto.ChargeDescription,
                 chargeOperationDto.ChargeId,
                 owner.Id,
                 chargeOperationDto.Type,
                 chargeOperationDto.Resolution,
                 chargeOperationDto.TaxIndicator == TaxIndicator.Tax,
-                chargeOperationDto.Points,
-                new List<ChargePeriod> { period });
+                chargeOperationDto.VatClassification,
+                chargeOperationDto.TransparentInvoicing == TransparentInvoicing.Transparent,
+                chargeOperationDto.StartDateTime);
         }
     }
 }

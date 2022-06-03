@@ -16,13 +16,20 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.TestCore;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Tests.Builders.Command
 {
     public class ChargeBuilder
     {
+        private Guid _ownerId = Guid.NewGuid();
+        private string _name = "ChargeBuilderDefaultName";
+        private Instant _stopDate = InstantHelper.GetEndDefault();
         private List<Point> _points = new();
         private List<ChargePeriod> _periods = new();
+        private string _senderProvidedChargeId = "SenderProvidedChargeId";
+        private Instant _startDate = InstantHelper.GetStartDefault();
 
         public ChargeBuilder WithPoints(IEnumerable<Point> points)
         {
@@ -30,23 +37,87 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             return this;
         }
 
-        public ChargeBuilder WithPeriods(IEnumerable<ChargePeriod> periods)
+        public ChargeBuilder AddPeriod(ChargePeriod period)
         {
-            _periods = periods.ToList();
+            _periods.Add(period);
+            return this;
+        }
+
+        public ChargeBuilder AddPeriods(IEnumerable<ChargePeriod> periods)
+        {
+            _periods.AddRange(periods);
+            return this;
+        }
+
+        public ChargeBuilder WithStopDate(Instant stopDate)
+        {
+            _stopDate = stopDate;
+            return this;
+        }
+
+        public ChargeBuilder WithSenderProvidedChargeId(string senderProvidedChargeId)
+        {
+            _senderProvidedChargeId = senderProvidedChargeId;
+            return this;
+        }
+
+        public ChargeBuilder WithOwnerId(Guid ownerId)
+        {
+            _ownerId = ownerId;
+            return this;
+        }
+
+        public ChargeBuilder WithName(string name)
+        {
+            _name = name;
+            return this;
+        }
+
+        public ChargeBuilder WithStartDate(Instant startDate)
+        {
+            _startDate = startDate;
             return this;
         }
 
         public Charge Build()
         {
-            return new Charge(
-                Guid.NewGuid(),
-                "senderProvidedChargeId",
-                Guid.NewGuid(),
+            var charge = Charge.Create(
+                _name,
+                "chargeDescription",
+                _senderProvidedChargeId,
+                _ownerId,
                 ChargeType.Tariff,
                 Resolution.PT1H,
                 true,
-                _points,
-                _periods);
+                VatClassification.Unknown,
+                true,
+                _startDate);
+
+            if (_periods.Any())
+            {
+                foreach (var period in _periods.OrderBy(p => p.StartDateTime))
+                {
+                    if (period.EndDateTime != InstantHelper.GetEndDefault())
+                    {
+                        throw new InvalidOperationException(
+                            $"Could not create charge periods in {nameof(ChargeBuilder)}. Period must have infinite end date.");
+                    }
+
+                    charge.Update(period);
+                }
+            }
+
+            if (_stopDate != InstantHelper.GetEndDefault())
+            {
+                charge.Stop(_stopDate);
+            }
+
+            if (_points.Any())
+            {
+                charge.UpdatePrices(_points.Min(p => p.Time), _points.Max(p => p.Time), _points);
+            }
+
+            return charge;
         }
     }
 }

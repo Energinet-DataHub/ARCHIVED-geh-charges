@@ -98,5 +98,26 @@ namespace GreenEnergyHub.Charges.Domain.Charges
                 StartDateTime,
                 endDate);
         }
+
+        public static ChargePeriod Create(
+            string name,
+            string description,
+            VatClassification vatClassification,
+            bool transparentInvoicing,
+            Instant startDateTime,
+            Instant endDateTime)
+        {
+            ArgumentNullException.ThrowIfNull(name);
+            ArgumentNullException.ThrowIfNull(description);
+
+            return new ChargePeriod(
+                Guid.NewGuid(),
+                name,
+                description,
+                vatClassification,
+                transparentInvoicing,
+                startDateTime,
+                endDateTime);
+        }
     }
 }

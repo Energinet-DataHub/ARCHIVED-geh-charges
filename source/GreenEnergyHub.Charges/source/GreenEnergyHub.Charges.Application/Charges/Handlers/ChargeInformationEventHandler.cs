@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Charges.Exceptions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
@@ -72,23 +73,28 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 var operation = operations[i];
                 var charge = await GetChargeAsync(operation).ConfigureAwait(false);
 
-                var validationResult = _inputValidator.Validate(operation);
-                if (validationResult.IsFailed)
+                var inputValidationResult = _inputValidator.Validate(operation);
+                if (inputValidationResult.IsFailed)
                 {
                     operationsToBeRejected = operations[i..].ToList();
-                    CollectRejectionRules(rejectionRules, validationResult, operationsToBeRejected, operation);
+                    CollectRejectionRules(rejectionRules, inputValidationResult, operationsToBeRejected, operation);
                     break;
                 }
 
-                validationResult = await _businessValidator.ValidateAsync(operation).ConfigureAwait(false);
-                if (validationResult.IsFailed)
+                try
+                {
+                    await HandleOperationAsync(operation, charge).ConfigureAwait(false);
+                }
+                catch (ChargeOperationFailedException exception)
                 {
                     operationsToBeRejected = operations[i..].ToList();
-                    CollectRejectionRules(rejectionRules, validationResult, operationsToBeRejected, operation);
+                    CollectRejectionRules(
+                        rejectionRules,
+                        ValidationResult.CreateFailure(exception.InvalidRules),
+                        operationsToBeRejected,
+                        operation);
                     break;
                 }
-
-                await HandleOperationAsync(operation, charge).ConfigureAwait(false);
 
                 operationsToBeConfirmed.Add(operation);
             }

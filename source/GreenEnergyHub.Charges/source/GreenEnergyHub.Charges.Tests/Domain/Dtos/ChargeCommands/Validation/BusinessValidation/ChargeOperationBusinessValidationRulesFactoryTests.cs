@@ -19,10 +19,8 @@ using System.Reflection;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Core;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.Factories;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
@@ -42,47 +40,17 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
     public class ChargeOperationBusinessValidationRulesFactoryTests
     {
         [Theory]
-        [InlineAutoMoqData(typeof(StartDateValidationRule))]
-        public async Task CreateRulesAsync_WhenCalledWithNewCharge_ReturnsExpectedMandatoryRules(
-            Type expectedRule,
-            [Frozen] Mock<IChargeIdentifierFactory> chargeIdentifierFactory,
-            [Frozen] Mock<IChargeRepository> chargeRepository,
-            [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
-            ChargeOperationBusinessValidationRulesFactory sut,
-            ChargeOperationDtoBuilder builder)
-        {
-            // Arrange
-            var operation = builder.Build();
-            Charge? charge = null;
-
-            SetupConfigureRepositoryMock(rulesConfigurationRepository);
-            SetupChargeIdentifierFactoryMock(chargeIdentifierFactory);
-            SetupChargeRepositoryMock(chargeRepository, charge!);
-
-            // Act
-            var actual = await sut.CreateRulesAsync(operation).ConfigureAwait(false);
-            var actualRules = actual.GetRules().Select(r => r.ValidationRule.GetType());
-
-            // Assert
-            actual.GetRules().Count.Should().Be(1); // This assert is added to ensure that when the rule set is expanded, the test gets attention as well.
-            actualRules.Should().Contain(expectedRule);
-        }
-
-        [Theory]
-        [InlineAutoMoqData(typeof(StartDateValidationRule))]
         [InlineAutoMoqData(typeof(UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateRule))]
         [InlineAutoMoqData(typeof(ChargeResolutionCanNotBeUpdatedRule))]
         public async Task CreateRulesAsync_WhenCalledWithExistingChargeNotTariff_ReturnsExpectedRules(
             Type expectedRule,
             [Frozen] Mock<IChargeIdentifierFactory> chargeIdentifierFactory,
             [Frozen] Mock<IChargeRepository> chargeRepository,
-            [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
             ChargeOperationBusinessValidationRulesFactory sut,
             Charge charge)
         {
             // Arrange
             var chargeOperationDto = new ChargeOperationDtoBuilder().WithChargeType(ChargeType.Fee).Build();
-            SetupConfigureRepositoryMock(rulesConfigurationRepository);
             SetupChargeIdentifierFactoryMock(chargeIdentifierFactory);
             SetupChargeRepositoryMock(chargeRepository, charge);
 
@@ -91,12 +59,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             var actualRules = actual.GetRules().Select(r => r.ValidationRule.GetType());
 
             // Assert
-            Assert.Equal(3, actual.GetRules().Count); // This assert is added to ensure that when the rule set is expanded, the test gets attention as well.
+            Assert.Equal(2, actual.GetRules().Count); // This assert is added to ensure that when the rule set is expanded, the test gets attention as well.
             Assert.Contains(expectedRule, actualRules);
         }
 
         [Theory]
-        [InlineAutoMoqData(typeof(StartDateValidationRule))]
         [InlineAutoMoqData(typeof(ChangingTariffTaxValueNotAllowedRule))]
         [InlineAutoMoqData(typeof(UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateRule))]
         [InlineAutoMoqData(typeof(ChargeResolutionCanNotBeUpdatedRule))]
@@ -104,13 +71,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             Type expectedRule,
             [Frozen] Mock<IChargeIdentifierFactory> chargeIdentifierFactory,
             [Frozen] Mock<IChargeRepository> chargeRepository,
-            [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
             ChargeOperationBusinessValidationRulesFactory sut,
             Charge charge)
         {
             // Arrange
             var chargeOperationDto = new ChargeOperationDtoBuilder().WithChargeType(ChargeType.Tariff).Build();
-            SetupConfigureRepositoryMock(rulesConfigurationRepository);
             SetupChargeRepositoryMock(chargeRepository, charge);
             SetupChargeIdentifierFactoryMock(chargeIdentifierFactory);
 
@@ -119,7 +84,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
 
             // Assert
             var actualRules = actual.GetRules().Select(r => r.ValidationRule.GetType());
-            Assert.Equal(4, actual.GetRules().Count); // This assert is added to ensure that when the rule set is expanded, the test gets attention as well.
+            Assert.Equal(3, actual.GetRules().Count); // This assert is added to ensure that when the rule set is expanded, the test gets attention as well.
             Assert.Contains(expectedRule, actualRules);
         }
 
@@ -144,13 +109,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             CimValidationErrorTextToken cimValidationErrorTextToken,
             [Frozen] Mock<IChargeIdentifierFactory> chargeIdentifierFactory,
             [Frozen] Mock<IChargeRepository> chargeRepository,
-            [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
             ChargeOperationBusinessValidationRulesFactory sut,
             ChargeCommand chargeCommand,
             Charge charge)
         {
             // Arrange
-            SetupConfigureRepositoryMock(rulesConfigurationRepository);
             SetupChargeIdentifierFactoryMock(chargeIdentifierFactory);
             SetupChargeRepositoryMock(chargeRepository, charge);
 
@@ -187,24 +150,6 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
                 if (validationErrorTextTokens.Contains(cimValidationErrorTextToken) && validationRuleContainer != null)
                     Assert.True(validationRuleContainer.ValidationRule is IValidationRuleWithExtendedData);
             }
-        }
-
-        /// <summary>
-        /// Workaround because we haven't yet found a way to have AutoFixture create objects
-        /// without parameterless constructors.
-        /// </summary>
-        private static RulesConfiguration CreateConfiguration()
-        {
-            return new RulesConfiguration(new StartDateValidationRuleConfiguration(new Interval<int>(31, 1095)));
-        }
-
-        private static void SetupConfigureRepositoryMock(
-            Mock<IRulesConfigurationRepository> rulesConfigurationRepository)
-        {
-            var configuration = CreateConfiguration();
-            rulesConfigurationRepository
-                .Setup(r => r.GetConfigurationAsync())
-                .Returns(Task.FromResult(configuration));
         }
 
         private static void SetupMarketParticipantMock(TestMarketParticipant sender, Mock<IMarketParticipantRepository> marketParticipantRepository)

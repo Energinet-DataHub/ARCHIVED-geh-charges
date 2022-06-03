@@ -12,12 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
+using System;
+using System.Collections.Generic;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation
+namespace GreenEnergyHub.Charges.Domain.Charges.Exceptions
 {
-    public interface IRulesConfigurationRepository
+    public class ChargeOperationFailedException : Exception
     {
-        Task<RulesConfiguration> GetConfigurationAsync();
+        public ChargeOperationFailedException(IList<IValidationRuleContainer> invalidRules)
+        {
+            InvalidRules = invalidRules;
+        }
+
+        public IList<IValidationRuleContainer> InvalidRules { get; }
     }
 }

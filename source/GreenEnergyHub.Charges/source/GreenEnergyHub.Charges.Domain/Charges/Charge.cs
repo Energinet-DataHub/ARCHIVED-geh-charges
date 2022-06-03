@@ -16,6 +16,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using GreenEnergyHub.Charges.Core.DateTime;
+using GreenEnergyHub.Charges.Domain.Charges.Exceptions;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Charges
@@ -25,7 +27,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         private readonly List<Point> _points;
         private readonly List<ChargePeriod> _periods;
 
-        public Charge(
+        private Charge(
             Guid id,
             string senderProvidedChargeId,
             Guid ownerId,
@@ -86,6 +88,47 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 
         public IReadOnlyCollection<ChargePeriod> Periods => _periods;
 
+        public static Charge Create(
+            string name,
+            string description,
+            string senderProvidedChargeId,
+            Guid ownerId,
+            ChargeType type,
+            Resolution resolution,
+            bool taxIndicator,
+            VatClassification vatClassification,
+            bool transparentInvoicing,
+            Instant startDate)
+        {
+            ArgumentNullException.ThrowIfNull(name);
+            ArgumentNullException.ThrowIfNull(description);
+            ArgumentNullException.ThrowIfNull(senderProvidedChargeId);
+
+            var chargePeriod = ChargePeriod.Create(
+                name,
+                description,
+                vatClassification,
+                transparentInvoicing,
+                startDate,
+                InstantExtensions.GetEndDefault());
+
+            var validationResult = CheckRules(startDate);
+            if (validationResult.IsFailed)
+            {
+                throw new ChargeOperationFailedException(validationResult.InvalidRules);
+            }
+
+            return new Charge(
+                Guid.NewGuid(),
+                senderProvidedChargeId,
+                ownerId,
+                type,
+                resolution,
+                taxIndicator,
+                new List<Point>(),
+                new List<ChargePeriod> { chargePeriod });
+        }
+
         /// <summary>
         /// Use this method to update the charge periods timeline of a charge upon receiving a charge update request
         /// Please see the persist charge documentation where the update flow is covered:
@@ -100,6 +143,12 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             if (newChargePeriod.EndDateTime != InstantExtensions.GetEndDefault())
             {
                 throw new InvalidOperationException("Charge update must not have bound end date.");
+            }
+
+            var validationResult = CheckRules(newChargePeriod.StartDateTime);
+            if (validationResult.IsFailed)
+            {
+                throw new ChargeOperationFailedException(validationResult.InvalidRules);
             }
 
             var stopDate = _periods.Max(p => p.EndDateTime);
@@ -159,10 +208,10 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         {
             if (startDate is null) return;
             if (endDate is null) return;
-            var removePoints = _points.Where(x => x.Time >= startDate && x.Time < endDate).ToList();
-            if (removePoints.Count > 0)
+            bool Predicate(Point x) => x.Time >= startDate && x.Time < endDate;
+            if (_points.Any(Predicate))
             {
-                _points.RemoveAll(x => removePoints.Contains(x));
+                _points.RemoveAll(x => x.Time >= startDate && x.Time < endDate);
             }
         }
 
@@ -192,6 +241,11 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         private void RemoveAllSubsequentPeriods(Instant date)
         {
             _periods.RemoveAll(p => p.StartDateTime >= date);
+        }
+
+        private static ValidationResult CheckRules(Instant startDate)
+        {
+            return ValidationResult.CreateSuccess();
         }
     }
 }

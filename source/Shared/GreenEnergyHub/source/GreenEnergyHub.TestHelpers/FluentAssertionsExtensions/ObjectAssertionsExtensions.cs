@@ -48,7 +48,7 @@ namespace GreenEnergyHub.TestHelpers.FluentAssertionsExtensions
                 {
                     if (inspectedListObject.Count < 1)
                     {
-                        inspectedListObject.Cast<object>().Should().NotBeEmpty($"{property.Name} is instantiated");
+                        inspectedListObject.Cast<object>().Should().NotBeNull($"{property.Name} is instantiated");
                     }
 
                     foreach (var item in inspectedListObject)
