@@ -195,7 +195,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             actualChargeOperation.ChargeId.Should().Be("444");
             actualChargeOperation.ChargeName.Should().BeNullOrEmpty();
             actualChargeOperation.ChargeDescription.Should().BeNullOrEmpty();
-            actualChargeOperation.PeriodResolution.Should().Be(Resolution.P1M);
+            actualChargeOperation.PriceResolution.Should().Be(Resolution.P1M);
             actualChargeOperation.StartDateTime.Should().Be(expectedTime);
             actualChargeOperation.EndDateTime.Should().BeNull();
             actualChargeOperation.VatClassification.Should().Be(VatClassification.Unknown);

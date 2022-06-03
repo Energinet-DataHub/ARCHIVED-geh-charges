@@ -29,7 +29,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 
         public NumberOfPointsMatchTimeIntervalAndResolutionRule(ChargeOperationDto chargeOperationDto)
         {
-            _periodResolution = chargeOperationDto.PeriodResolution;
+            _periodResolution = chargeOperationDto.PriceResolution;
             _startTime = chargeOperationDto.PointsStartInterval.GetValueOrDefault();
             _endTime = chargeOperationDto.PointsEndInterval.GetValueOrDefault();
             SetExpectedPointCount();

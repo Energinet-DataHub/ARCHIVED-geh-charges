@@ -42,13 +42,13 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 
             if (_chargeOperationDto.Type == ChargeType.Tariff)
             {
-                return _chargeOperationDto.PeriodResolution switch
+                return _chargeOperationDto.PriceResolution switch
                 {
                     Resolution.PT15M => _chargeOperationDto.Points.Count == PricePointsRequiredInPt15M,
                     Resolution.PT1H => _chargeOperationDto.Points.Count == PricePointsRequiredInPt1H,
                     Resolution.P1D => _chargeOperationDto.Points.Count == PricePointsRequiredInP1D,
                     Resolution.P1M => _chargeOperationDto.Points.Count == PricePointsRequiredInP1M,
-                    _ => throw new ArgumentException(nameof(_chargeOperationDto.PeriodResolution)),
+                    _ => throw new ArgumentException(nameof(_chargeOperationDto.PriceResolution)),
                 };
             }
 

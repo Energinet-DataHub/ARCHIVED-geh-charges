@@ -56,6 +56,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.Shared
                 ValidationRuleIdentifier.TransparentInvoicingIsNotAllowedForFee => ReasonCode.D67,
                 ValidationRuleIdentifier.ChargeResolutionCanNotBeUpdated => ReasonCode.D23,
                 ValidationRuleIdentifier.RecipientRoleMustBeDdz => ReasonCode.E55,
+                ValidationRuleIdentifier.NumberOfPointsMatchTimeIntervalAndResolution => ReasonCode.D01,
                 _ => throw new NotImplementedException(),
             };
         }
