@@ -34,6 +34,10 @@ namespace GreenEnergyHub.Charges.Domain.GridAreaLinks
         /// <param name="gridAreaLinkId"></param>
         Task<GridAreaLink?> GetOrNullAsync(Guid gridAreaLinkId);
 
+        /// <summary>
+        /// Retrieves a grid area link from grid area
+        /// </summary>
+        /// <param name="gridAreaId"></param>
         Task<GridAreaLink?> GetGridAreaOrNullAsync(Guid gridAreaId);
     }
 }
