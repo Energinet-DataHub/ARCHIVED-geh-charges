@@ -44,6 +44,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             }
         }
 
+        //TODO: Update unit test to handle both expected cases and default
         private async Task PublishEventAsync(IChargeOperation chargeOperationDto)
         {
             switch (chargeOperationDto)

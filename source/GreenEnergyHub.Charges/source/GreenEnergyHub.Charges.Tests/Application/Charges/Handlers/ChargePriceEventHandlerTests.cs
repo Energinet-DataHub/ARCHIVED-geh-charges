@@ -153,7 +153,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             // Arrange
             var validationResult = ValidationResult.CreateSuccess();
             SetupValidators(inputValidator, businessValidator, validationResult);
-            var charge = chargeBuilder.Build();
+            var points = new List<Point>();
+            var price = 99.00M;
+            for (var i = 1; i <= 24; i++)
+            {
+                points.Add(new Point(i, price + i, InstantHelper.GetTodayPlusDaysAtMidnightUtc(i)));
+            }
+
+            var charge = chargeBuilder.WithPoints(points).Build();
             SetupChargeRepository(chargeRepository, charge);
             SetupMarketParticipantRepository(marketParticipantRepository, sender);
             SetupChargeIdentifierFactoryMock(chargeIdentifierFactory);

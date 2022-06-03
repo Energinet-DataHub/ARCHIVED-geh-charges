@@ -75,11 +75,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 {
                     operationsToBeRejected = operations[i..].ToList();
                     CollectRejectionRules(rejectionRules, validationResult, operationsToBeRejected, operation);
-                    rejectionRules.AddRange(validationResult.InvalidRules);
-                    rejectionRules.AddRange(operationsToBeRejected.Skip(1)
-                        .Select(_ =>
-                            new OperationValidationRuleContainer(
-                                new PreviousOperationsMustBeValidRule(operation.Id), operation.Id)));
                     break;
                 }
 

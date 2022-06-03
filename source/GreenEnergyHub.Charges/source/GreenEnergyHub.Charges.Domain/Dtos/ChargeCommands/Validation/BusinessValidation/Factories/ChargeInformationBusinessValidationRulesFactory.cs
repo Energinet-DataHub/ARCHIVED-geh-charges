@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
@@ -62,7 +63,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
                 return rules;
             }
 
-            if (chargeOperation.Type == ChargeType.Tariff)
+            var containsChargePrices = chargeOperation.Points.Any();
+            if (chargeOperation.Type == ChargeType.Tariff && containsChargePrices is false)
             {
                 rules.AddRange(AddTariffOnlyRules(chargeOperation, charge));
             }
