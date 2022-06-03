@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void IsValid_WhenLessThan8DigitsAnd6Decimals_IsValid(
             decimal price,
             bool expected,
-            ChargeOperationDtoBuilder builder)
+            ChargePriceDtoBuilder builder)
         {
             // Arrange
             var chargeOperationDto = builder.WithPoint(1, price).Build();
@@ -54,7 +54,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeOperationDtoBuilder builder)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargePriceDtoBuilder builder)
         {
             var invalidChargeOperationDto = builder.WithPoint(1, 123456789m).Build();
             var sut = new ChargePriceMaximumDigitsAndDecimalsRule(invalidChargeOperationDto);
@@ -68,19 +68,15 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             CimValidationErrorTextProvider cimValidationErrorTextProvider)
         {
             // Arrange
-            var chargeOperationDto = new ChargeOperationDtoBuilder()
-                .WithPoint(1, 123456789m)
-                .Build();
-            var invalidCommand = new ChargeCommandBuilder()
-                .WithChargeOperation(chargeOperationDto)
-                .Build();
+            var chargeOperationDto = new ChargePriceDtoBuilder().WithPoint(1, 123456789m).Build();
+            var invalidCommand = new ChargeCommandBuilder().WithChargeOperation(chargeOperationDto).Build();
             var expectedPoint = chargeOperationDto.Points[0];
             var triggeredBy = expectedPoint.Position.ToString();
 
             var sutRule = new ChargePriceMaximumDigitsAndDecimalsRule(chargeOperationDto);
             var validationError =
                 new ValidationError(sutRule.ValidationRuleIdentifier, chargeOperationDto.Id, triggeredBy);
-            var sutFactory = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
+            var sutFactory = new ChargePriceCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
 
             // Act
             var actual = sutFactory.Create(validationError, invalidCommand, chargeOperationDto);

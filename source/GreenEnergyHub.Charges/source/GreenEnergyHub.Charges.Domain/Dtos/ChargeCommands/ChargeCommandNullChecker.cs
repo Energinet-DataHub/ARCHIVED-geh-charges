@@ -48,15 +48,17 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
             if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
         }
 
-        private static void CheckChargeOperation(ChargeOperationDto chargeOperationDto, BusinessReasonCode businessReasonCode)
+        private static void CheckChargeOperation(IChargeOperation chargeOperation, BusinessReasonCode businessReasonCode)
         {
-            if (chargeOperationDto == null) throw new ArgumentNullException(nameof(chargeOperationDto));
+            if (chargeOperation == null) throw new ArgumentNullException(nameof(chargeOperation));
 
-            if (businessReasonCode != BusinessReasonCode.UpdateChargeInformation)
-                return;
+            if (businessReasonCode != BusinessReasonCode.UpdateChargeInformation) return;
+            if (chargeOperation is not ChargeInformationDto chargeInformationDto) return;
 
-            if (string.IsNullOrWhiteSpace(chargeOperationDto.ChargeName)) throw new ArgumentException(chargeOperationDto.ChargeName);
-            if (string.IsNullOrWhiteSpace(chargeOperationDto.ChargeDescription)) throw new ArgumentException(chargeOperationDto.ChargeDescription);
+            if (string.IsNullOrWhiteSpace(chargeInformationDto.ChargeName))
+                throw new ArgumentException(chargeInformationDto.ChargeName);
+            if (string.IsNullOrWhiteSpace(chargeInformationDto.ChargeDescription))
+                throw new ArgumentException(chargeInformationDto.ChargeDescription);
         }
 
         private static void CheckDocument(DocumentDto document)

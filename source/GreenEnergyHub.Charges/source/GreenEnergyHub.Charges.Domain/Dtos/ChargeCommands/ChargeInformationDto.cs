@@ -24,22 +24,22 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
     // ChargeEvent integrity is null checked by ChargeCommandNullChecker
 
     /// <summary>
-    /// The ChargeOperationDto class contains the intend of the charge command, e.g. updating an existing charge.
+    /// The ChargeInformationDto class contains the intend of the charge command, e.g. updating an existing charge.
     /// </summary>
-    public class ChargeOperationDto : OperationBase
+    public class ChargeInformationDto : OperationBase, IChargeOperation
     {
-        public ChargeOperationDto(
+        public ChargeInformationDto(
                 string id,
                 ChargeType type,
                 string chargeId,
+                string chargeOwner,
+                Instant startDateTime,
                 string chargeName,
                 string chargeDescription,
-                string chargeOwner,
                 Resolution resolution,
                 TaxIndicator taxIndicator,
                 TransparentInvoicing transparentInvoicing,
                 VatClassification vatClassification,
-                Instant startDateTime,
                 Instant? endDateTime,
                 Instant? pointsStartInterval,
                 Instant? pointsEndInterval,
@@ -49,32 +49,29 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
             Id = id;
             Type = type;
             ChargeId = chargeId;
+            ChargeOwner = chargeOwner;
+            StartDateTime = startDateTime;
             ChargeName = chargeName;
             ChargeDescription = chargeDescription;
-            ChargeOwner = chargeOwner;
             Resolution = resolution;
             TaxIndicator = taxIndicator;
             TransparentInvoicing = transparentInvoicing;
             VatClassification = vatClassification;
-            StartDateTime = startDateTime;
             EndDateTime = endDateTime;
             PointsStartInterval = pointsStartInterval;
             PointsEndInterval = pointsEndInterval;
             Points = points;
         }
 
-        /// <summary>
-        /// Contains a unique ID for the specific Charge OperationId, provided by the sender.
-        /// </summary>
         public string Id { get; }
 
-        /// <summary>
-        /// Unique ID of a charge (Note, unique per market participants).
-        /// Example: EA-001
-        /// </summary>
         public string ChargeId { get; }
 
         public ChargeType Type { get; }
+
+        public string ChargeOwner { get; }
+
+        public Instant StartDateTime { get; }
 
         /// <summary>
         /// The charge name
@@ -82,11 +79,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
         public string ChargeName { get; }
 
         public string ChargeDescription { get; }
-
-        /// <summary>
-        /// Valid from, of a charge price list. Also known as Effective Date.
-        /// </summary>
-        public Instant StartDateTime { get; }
 
         /// <summary>
         /// Valid to, of a charge price list.
@@ -105,11 +97,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
         /// Indicates whether the Charge is tax or not.
         /// </summary>
         public TaxIndicator TaxIndicator { get; }
-
-        /// <summary>
-        ///  Charge Owner, e.g. the GLN or EIC identification number.
-        /// </summary>
-        public string ChargeOwner { get; }
 
         public Resolution Resolution { get; }
 

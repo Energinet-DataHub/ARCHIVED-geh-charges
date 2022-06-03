@@ -24,11 +24,11 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
         private const int PricePointsRequiredInP1M = 1;
         private const int PricePointsRequiredInPt1H = 24;
         private const int PricePointsRequiredInPt15M = 96;
-        private readonly ChargeOperationDto _chargeOperationDto;
+        private readonly ChargeInformationDto _chargeInformationDto;
 
-        public ChargeTypeTariffPriceCountRule(ChargeOperationDto chargeOperationDto)
+        public ChargeTypeTariffPriceCountRule(ChargeInformationDto chargeInformationDto)
         {
-            _chargeOperationDto = chargeOperationDto;
+            _chargeInformationDto = chargeInformationDto;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeTypeTariffPriceCount;
@@ -38,17 +38,17 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
         private bool Validate()
         {
             // Allow master data only requests.
-            if (_chargeOperationDto.Points.Count == 0) return true;
+            if (_chargeInformationDto.Points.Count == 0) return true;
 
-            if (_chargeOperationDto.Type == ChargeType.Tariff)
+            if (_chargeInformationDto.Type == ChargeType.Tariff)
             {
-                return _chargeOperationDto.Resolution switch
+                return _chargeInformationDto.Resolution switch
                 {
-                    Resolution.PT15M => _chargeOperationDto.Points.Count == PricePointsRequiredInPt15M,
-                    Resolution.PT1H => _chargeOperationDto.Points.Count == PricePointsRequiredInPt1H,
-                    Resolution.P1D => _chargeOperationDto.Points.Count == PricePointsRequiredInP1D,
-                    Resolution.P1M => _chargeOperationDto.Points.Count == PricePointsRequiredInP1M,
-                    _ => throw new ArgumentException(nameof(_chargeOperationDto.Resolution)),
+                    Resolution.PT15M => _chargeInformationDto.Points.Count == PricePointsRequiredInPt15M,
+                    Resolution.PT1H => _chargeInformationDto.Points.Count == PricePointsRequiredInPt1H,
+                    Resolution.P1D => _chargeInformationDto.Points.Count == PricePointsRequiredInP1D,
+                    Resolution.P1M => _chargeInformationDto.Points.Count == PricePointsRequiredInP1M,
+                    _ => throw new ArgumentException(nameof(_chargeInformationDto.Resolution)),
                 };
             }
 

@@ -28,17 +28,17 @@ namespace GreenEnergyHub.Charges.Application.Charges.Factories
             _currencyConfigurationIso4217 = currencyConfigurationIso4217;
         }
 
-        public ChargeCreatedEvent Create(ChargeOperationDto chargeOperationDto)
+        public ChargeCreatedEvent Create(ChargeInformationDto chargeInformationDto)
         {
             return new ChargeCreatedEvent(
-                chargeOperationDto.ChargeId,
-                chargeOperationDto.Type,
-                chargeOperationDto.ChargeOwner,
+                chargeInformationDto.ChargeId,
+                chargeInformationDto.Type,
+                chargeInformationDto.ChargeOwner,
                 _currencyConfigurationIso4217.Currency,
-                chargeOperationDto.Resolution,
-                chargeOperationDto.TaxIndicator == TaxIndicator.Tax,
-                chargeOperationDto.StartDateTime,
-                chargeOperationDto.EndDateTime.GetValueOrDefault());
+                chargeInformationDto.Resolution,
+                chargeInformationDto.TaxIndicator == TaxIndicator.Tax,
+                chargeInformationDto.StartDateTime,
+                chargeInformationDto.EndDateTime.GetValueOrDefault());
         }
     }
 }

@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void ChargeNameLengthValidationRule_WhenCalledWithChargeNameLength_EqualsExpectedResult(
             int chargeNameLength,
             bool expected,
-            ChargeOperationDtoBuilder builder)
+            ChargeInformationDtoBuilder builder)
         {
             var chargeOperationDto = builder.WithChargeName(new string('x', chargeNameLength)).Build();
             var sut = new ChargeNameHasMaximumLengthRule(chargeOperationDto);
@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeOperationDtoBuilder builder)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeInformationDtoBuilder builder)
         {
             var chargeOperationDto = builder
                 .WithChargeName(new string('x', ChargeNameMaximumLength + 1))

@@ -74,7 +74,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             actual.Document.CreatedDateTime.Should().Be(InstantPattern.ExtendedIso.Parse("2021-12-17T09:30:47Z").Value);
 
             // Charge operation
-            var actualChargeOperation = actual.ChargeOperations.First();
+            var actualChargeOperation = (ChargeInformationDto)actual.ChargeOperations.First();
             actualChargeOperation.Id.Should().Be("36251478");
             actualChargeOperation.ChargeOwner.Should().Be("5799999925698");
             actualChargeOperation.Type.Should().Be(ChargeType.Tariff);
@@ -138,7 +138,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             var actual = actualBundle.ChargeCommands.Single();
 
             // Charge operation
-            var actualChargeOperation = actual.ChargeOperations.First();
+            var actualChargeOperation = (ChargeInformationDto)actual.ChargeOperations.First();
             actualChargeOperation.Id.Should().Be("36251479");
             actualChargeOperation.ChargeOwner.Should().Be("5799999925699");
             actualChargeOperation.Type.Should().Be(ChargeType.Fee);
@@ -188,19 +188,13 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             var actual = actualBundle.ChargeCommands.Single();
 
             // Charge operation, should only be partially filled
-            var actualChargeOperation = actual.ChargeOperations.First();
+            var actualChargeOperation = (ChargePriceDto)actual.ChargeOperations.First();
             actualChargeOperation.Id.Should().Be("36251480");
             actualChargeOperation.ChargeOwner.Should().Be("5799999925600");
             actualChargeOperation.Type.Should().Be(ChargeType.Subscription);
             actualChargeOperation.ChargeId.Should().Be("444");
-            actualChargeOperation.ChargeName.Should().BeNullOrEmpty();
-            actualChargeOperation.ChargeDescription.Should().BeNullOrEmpty();
-            actualChargeOperation.Resolution.Should().Be(Resolution.P1M);
             actualChargeOperation.StartDateTime.Should().Be(expectedTime);
             actualChargeOperation.EndDateTime.Should().BeNull();
-            actualChargeOperation.VatClassification.Should().Be(VatClassification.Unknown);
-            actualChargeOperation.TransparentInvoicing.Should().Be(TransparentInvoicing.Unknown);
-            actualChargeOperation.TaxIndicator.Should().Be(TaxIndicator.Unknown);
             actualChargeOperation.PointsStartInterval.Should().Be(expectedStartInterval);
             actualChargeOperation.PointsEndInterval.Should().Be(expectedEndInterval);
 
@@ -253,7 +247,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
 
             // Charge operation
             var actualFirstChargeCommand = actual.ChargeCommands.Single(x => x.ChargeOperations.Any(y => y.Id == "36251480"));
-            var actualFirstChargeOperationDto = actualFirstChargeCommand.ChargeOperations.First();
+            var actualFirstChargeOperationDto = (ChargeInformationDto)actualFirstChargeCommand.ChargeOperations.First();
             actualFirstChargeOperationDto.ChargeOwner.Should().Be("8100000000030");
             actualFirstChargeOperationDto.Type.Should().Be(ChargeType.Tariff);
             actualFirstChargeOperationDto.ChargeId.Should().Be("ChId1234567890");
@@ -271,7 +265,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             actualFirstChargeOperationDto.Points.First().Price.Should().Be(150.001m);
 
             var actualSecondChargeCommand = actual.ChargeCommands.Single(x => x.ChargeOperations.Any(y => y.Id == "36251481"));
-            var actualSecondChargeOperationDto = actualSecondChargeCommand.ChargeOperations.First();
+            var actualSecondChargeOperationDto = (ChargeInformationDto)actualSecondChargeCommand.ChargeOperations.First();
             actualSecondChargeOperationDto.ChargeOwner.Should().Be("8100000000030");
             actualSecondChargeOperationDto.Type.Should().Be(ChargeType.Tariff);
             actualSecondChargeOperationDto.ChargeId.Should().Be("ChId1234567891");

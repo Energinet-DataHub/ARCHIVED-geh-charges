@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void ResolutionTariffValidationRule_WithTariffType_EqualsExpectedResult(
             Resolution resolution,
             bool expected,
-            ChargeOperationDtoBuilder builder)
+            ChargeInformationDtoBuilder builder)
         {
             // Arrange
             var chargeOperationDto = builder
@@ -63,7 +63,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void ResolutionTariffValidationRule_WithSubscriptionType_EqualsExpectedResult(
             Resolution resolution,
             bool expected,
-            ChargeOperationDtoBuilder builder)
+            ChargeInformationDtoBuilder builder)
         {
             // Arrange
             var chargeOperationDto = builder
@@ -87,7 +87,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void ResolutionTariffValidationRule_WithFeeType_EqualsExpectedResult(
             Resolution resolution,
             bool expected,
-            ChargeOperationDtoBuilder builder)
+            ChargeInformationDtoBuilder builder)
         {
             // Arrange
             var chargeOperationDto = builder
@@ -104,7 +104,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeOperationDtoBuilder builder)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeInformationDtoBuilder builder)
         {
             var chargeOperationDto = builder
                 .WithChargeType(ChargeType.Tariff)

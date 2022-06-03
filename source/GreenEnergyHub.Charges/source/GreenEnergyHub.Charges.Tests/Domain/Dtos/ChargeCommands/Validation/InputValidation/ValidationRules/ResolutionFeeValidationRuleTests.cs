@@ -38,10 +38,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void ResolutionFeeValidationRule_WithTariffType_EqualsExpectedResult(
             Resolution resolution,
             bool expected,
-            ChargeOperationDtoBuilder chargeOperationDtoBuilder)
+            ChargeInformationDtoBuilder chargeInformationDtoBuilder)
         {
             // Arrange
-            var chargeOperationDto = chargeOperationDtoBuilder
+            var chargeOperationDto = chargeInformationDtoBuilder
                 .WithChargeType(ChargeType.Tariff)
                 .WithResolution(resolution)
                 .Build();
@@ -62,10 +62,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void ResolutionFeeValidationRule_WithSubscriptionType_EqualsExpectedResult(
             Resolution resolution,
             bool expected,
-            ChargeOperationDtoBuilder chargeOperationDtoBuilder)
+            ChargeInformationDtoBuilder chargeInformationDtoBuilder)
         {
             // Arrange
-            var chargeOperationDto = chargeOperationDtoBuilder
+            var chargeOperationDto = chargeInformationDtoBuilder
                 .WithChargeType(ChargeType.Subscription)
                 .WithResolution(resolution)
                 .Build();
@@ -86,10 +86,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void ResolutionFeeValidationRule_WithFeeType_EqualsExpectedResult(
             Resolution resolution,
             bool expected,
-            ChargeOperationDtoBuilder chargeOperationDtoBuilder)
+            ChargeInformationDtoBuilder chargeInformationDtoBuilder)
         {
             // Arrange
-            var chargeOperationDto = chargeOperationDtoBuilder
+            var chargeOperationDto = chargeInformationDtoBuilder
                     .WithChargeType(ChargeType.Fee)
                     .WithResolution(resolution)
                     .Build();
@@ -103,9 +103,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeOperationDtoBuilder chargeOperationDtoBuilder)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeInformationDtoBuilder chargeInformationDtoBuilder)
         {
-            var chargeOperationDto = chargeOperationDtoBuilder.Build();
+            var chargeOperationDto = chargeInformationDtoBuilder.Build();
             var sut = new ResolutionFeeValidationRule(chargeOperationDto);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ResolutionFeeValidation);
         }

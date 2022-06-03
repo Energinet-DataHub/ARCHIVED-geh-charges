@@ -35,17 +35,17 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
         public async Task CreateAsync_ChargeIdentifier_HasNoNullsOrEmptyCollections(
             TestMarketParticipant owner,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            ChargeOperationDto chargeOperationDto,
+            ChargeInformationDto chargeInformationDto,
             ChargeIdentifierFactory sut)
         {
             // Arrange
             marketParticipantRepository
-                .Setup(repo => repo.SingleAsync(chargeOperationDto.ChargeOwner))
+                .Setup(repo => repo.SingleAsync(chargeInformationDto.ChargeOwner))
                 .ReturnsAsync(owner);
 
             // Act
             var actual = await sut.CreateAsync(
-                chargeOperationDto.ChargeId, chargeOperationDto.Type, chargeOperationDto.ChargeOwner);
+                chargeInformationDto.ChargeId, chargeInformationDto.Type, chargeInformationDto.ChargeOwner);
 
             // Assert
             actual.Should().NotContainNullsOrEmptyEnumerables();

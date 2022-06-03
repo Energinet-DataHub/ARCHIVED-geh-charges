@@ -62,7 +62,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
         /// <param name="document"></param>
         /// <param name="rejectionRules"></param>
         public async Task RejectInvalidOperationsAsync(
-            IReadOnlyCollection<ChargeOperationDto> operationsToBeRejected,
+            IReadOnlyCollection<IChargeOperation> operationsToBeRejected,
             DocumentDto document,
             IList<IValidationRuleContainer> rejectionRules)
         {
@@ -81,7 +81,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
         /// <param name="operationsToBeConfirmed"></param>
         /// <param name="document"></param>
         public async Task AcceptValidOperationsAsync(
-            IReadOnlyCollection<ChargeOperationDto> operationsToBeConfirmed,
+            IReadOnlyCollection<IChargeOperation> operationsToBeConfirmed,
             DocumentDto document)
         {
             if (operationsToBeConfirmed.Any())

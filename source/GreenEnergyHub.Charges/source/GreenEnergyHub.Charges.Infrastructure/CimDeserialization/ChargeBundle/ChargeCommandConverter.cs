@@ -22,6 +22,7 @@ using Energinet.DataHub.Core.SchemaValidation;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.Charges;
 using GreenEnergyHub.Iso8601;
@@ -45,7 +46,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
             SchemaValidatingReader reader,
             DocumentDto document)
         {
-            var chargeOperationsAsync = await ParseChargeOperationsAsync(reader).ConfigureAwait(false);
+            var chargeOperationsAsync =
+                await ParseChargeOperationsAsync(reader, document.BusinessReasonCode).ConfigureAwait(false);
 
             var chargeCommands = chargeOperationsAsync.GroupBy(x => new { x.ChargeId, x.ChargeOwner, x.Type })
                 .Select(chargeOperationDtoGroup =>
@@ -57,9 +59,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
             return new ChargeCommandBundle(chargeCommands);
         }
 
-        private async Task<List<ChargeOperationDto>> ParseChargeOperationsAsync(SchemaValidatingReader reader)
+        private async Task<List<IChargeOperation>> ParseChargeOperationsAsync(
+            SchemaValidatingReader reader,
+            BusinessReasonCode businessReasonCode)
         {
-            var operations = new List<ChargeOperationDto>();
+            var operations = new List<IChargeOperation>();
             var operationId = string.Empty;
 
             while (await reader.AdvanceAsync().ConfigureAwait(false))
@@ -71,21 +75,28 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                 }
                 else if (reader.Is(CimChargeCommandConstants.ChargeGroup))
                 {
-                    operations.Add(await ParseChargeGroupIntoOperationAsync(reader, operationId).ConfigureAwait(false));
+                    operations.Add(
+                        await ParseChargeGroupToOperationAsync(reader, operationId, businessReasonCode)
+                            .ConfigureAwait(false));
                 }
             }
 
             return operations;
         }
 
-        private async Task<ChargeOperationDto> ParseChargeGroupIntoOperationAsync(SchemaValidatingReader reader, string operationId)
+        private async Task<IChargeOperation> ParseChargeGroupToOperationAsync(
+            SchemaValidatingReader reader,
+            string operationId,
+            BusinessReasonCode businessReasonCode)
         {
-            ChargeOperationDto? operation = null;
+            IChargeOperation? operation = null;
             while (await reader.AdvanceAsync().ConfigureAwait(false))
             {
                 if (reader.Is(CimChargeCommandConstants.ChargeTypeElement))
                 {
-                    operation = await ParseChargeTypeElementIntoOperationAsync(reader, operationId).ConfigureAwait(false);
+                    operation =
+                        await ParseChargeTypeElementToOperationAsync(reader, operationId, businessReasonCode)
+                            .ConfigureAwait(false);
                 }
                 else if (reader.Is(
                     CimChargeCommandConstants.ChargeGroup,
@@ -98,7 +109,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
             return operation!;
         }
 
-        private async Task<ChargeOperationDto> ParseChargeTypeElementIntoOperationAsync(SchemaValidatingReader reader, string operationId)
+        private async Task<IChargeOperation> ParseChargeTypeElementToOperationAsync(
+            SchemaValidatingReader reader,
+            string operationId,
+            BusinessReasonCode businessReasonCode)
         {
             var chargeOwner = string.Empty;
             var chargeType = ChargeType.Unknown;
@@ -197,7 +211,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                 }
                 else if (reader.Is(CimChargeCommandConstants.SeriesPeriod))
                 {
-                    var seriesPeriodIntoOperationAsync = await ParseSeriesPeriodIntoOperationAsync(reader, startDateTime, resolution).ConfigureAwait(false);
+                    var seriesPeriodIntoOperationAsync = await ParseSeriesPeriodToOperationAsync(reader, startDateTime, resolution).ConfigureAwait(false);
                     points.AddRange(seriesPeriodIntoOperationAsync.Points);
                     resolution = seriesPeriodIntoOperationAsync.Resolution;
                     pointsStartTime = seriesPeriodIntoOperationAsync.IntervalStartTime;
@@ -209,25 +223,47 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                 }
             }
 
-            return new ChargeOperationDto(
-                operationId,
-                chargeType,
-                senderProvidedChargeId,
-                chargeName,
-                description,
-                chargeOwner,
-                resolution,
-                taxIndicator,
-                transparentInvoicing,
-                vatClassification,
-                startDateTime,
-                endDateTime,
-                pointsStartTime,
-                pointsEndTime,
-                points);
+            return businessReasonCode switch
+            {
+                BusinessReasonCode.UpdateChargeInformation =>
+                    new ChargeInformationDto(
+                        operationId,
+                        chargeType,
+                        senderProvidedChargeId,
+                        chargeOwner,
+                        startDateTime,
+                        chargeName,
+                        description,
+                        resolution,
+                        taxIndicator,
+                        transparentInvoicing,
+                        vatClassification,
+                        endDateTime,
+                        pointsStartTime,
+                        pointsEndTime,
+                        points),
+
+                BusinessReasonCode.UpdateChargePrices =>
+                    new ChargePriceDto(
+                        operationId,
+                        chargeType,
+                        senderProvidedChargeId,
+                        chargeOwner,
+                        startDateTime,
+                        endDateTime,
+                        pointsStartTime,
+                        pointsEndTime,
+                        points),
+
+                _ => throw new InvalidOperationException(
+                    $"{businessReasonCode} must be" +
+                    $" {nameof(BusinessReasonCode.UpdateChargeInformation)}" +
+                    $" or {nameof(BusinessReasonCode.UpdateChargePrices)}"),
+            };
         }
 
-        private async Task<ParseSeriesPeriodResult> ParseSeriesPeriodIntoOperationAsync(SchemaValidatingReader reader, Instant startDateTime, Resolution initialResolution)
+        private async Task<ParseSeriesPeriodResult> ParseSeriesPeriodToOperationAsync(
+            SchemaValidatingReader reader, Instant startDateTime, Resolution initialResolution)
         {
             var points = new List<Point>();
             var resolution = initialResolution;
@@ -255,9 +291,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                     var point = await ParsePointAsync(reader, resolution, startDateTime).ConfigureAwait(false);
                     points.Add(point);
                 }
-                else if (reader.Is(
-                    CimChargeCommandConstants.SeriesPeriod,
-                    NodeType.EndElement))
+                else if (reader.Is(CimChargeCommandConstants.SeriesPeriod, NodeType.EndElement))
                 {
                     break;
                 }

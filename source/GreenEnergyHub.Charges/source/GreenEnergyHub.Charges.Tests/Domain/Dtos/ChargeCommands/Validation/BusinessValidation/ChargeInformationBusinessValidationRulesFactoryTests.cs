@@ -15,7 +15,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
@@ -26,12 +25,9 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValid
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.Factories;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
-using GreenEnergyHub.Charges.MessageHub.Models.Shared;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
-using GreenEnergyHub.Charges.Tests.Builders.Testables;
 using Moq;
 using Xunit;
 using Xunit.Categories;
@@ -39,7 +35,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.BusinessValidation
 {
     [UnitTest]
-    public class ChargeOperationBusinessValidationRulesFactoryTests
+    public class ChargeInformationBusinessValidationRulesFactoryTests
     {
         [Theory]
         [InlineAutoMoqData(typeof(StartDateValidationRule))]
@@ -48,8 +44,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             [Frozen] Mock<IChargeIdentifierFactory> chargeIdentifierFactory,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
-            ChargeOperationBusinessValidationRulesFactory sut,
-            ChargeOperationDtoBuilder builder)
+            ChargeInformationBusinessValidationRulesFactory sut,
+            ChargeInformationDtoBuilder builder)
         {
             // Arrange
             var operation = builder.Build();
@@ -77,11 +73,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             [Frozen] Mock<IChargeIdentifierFactory> chargeIdentifierFactory,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
-            ChargeOperationBusinessValidationRulesFactory sut,
+            ChargeInformationBusinessValidationRulesFactory sut,
             Charge charge)
         {
             // Arrange
-            var chargeOperationDto = new ChargeOperationDtoBuilder().WithChargeType(ChargeType.Fee).Build();
+            var chargeOperationDto = new ChargeInformationDtoBuilder().WithChargeType(ChargeType.Fee).Build();
             SetupConfigureRepositoryMock(rulesConfigurationRepository);
             SetupChargeIdentifierFactoryMock(chargeIdentifierFactory);
             SetupChargeRepositoryMock(chargeRepository, charge);
@@ -105,11 +101,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             [Frozen] Mock<IChargeIdentifierFactory> chargeIdentifierFactory,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
-            ChargeOperationBusinessValidationRulesFactory sut,
+            ChargeInformationBusinessValidationRulesFactory sut,
             Charge charge)
         {
             // Arrange
-            var chargeOperationDto = new ChargeOperationDtoBuilder().WithChargeType(ChargeType.Tariff).Build();
+            var chargeOperationDto = new ChargeInformationDtoBuilder().WithChargeType(ChargeType.Tariff).Build();
             SetupConfigureRepositoryMock(rulesConfigurationRepository);
             SetupChargeRepositoryMock(chargeRepository, charge);
             SetupChargeIdentifierFactoryMock(chargeIdentifierFactory);
@@ -126,10 +122,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         [Theory]
         [InlineAutoMoqData]
         public static async Task CreateRulesAsync_WhenCalledWithNull_ThrowsArgumentNullException(
-            ChargeOperationBusinessValidationRulesFactory sut)
+            ChargeInformationBusinessValidationRulesFactory sut)
         {
             // Arrange
-            ChargeOperationDto? chargeOperationDto = null;
+            ChargeInformationDto? chargeOperationDto = null;
 
             // Act / Assert
             await Assert
@@ -145,48 +141,28 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             [Frozen] Mock<IChargeIdentifierFactory> chargeIdentifierFactory,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IRulesConfigurationRepository> rulesConfigurationRepository,
-            ChargeOperationBusinessValidationRulesFactory sut,
-            ChargeCommand chargeCommand,
+            ChargeInformationBusinessValidationRulesFactory sut,
+            ChargeCommandBuilder chargeCommandBuilder,
+            ChargeInformationDtoBuilder chargeInformationDtoBuilder,
             Charge charge)
         {
             // Arrange
             SetupConfigureRepositoryMock(rulesConfigurationRepository);
             SetupChargeIdentifierFactoryMock(chargeIdentifierFactory);
             SetupChargeRepositoryMock(chargeRepository, charge);
+            var chargeInformationDto = chargeInformationDtoBuilder.Build();
+            var chargeCommand = chargeCommandBuilder.WithChargeOperation(chargeInformationDto).Build();
 
             // Act
             var validationRules = new List<IValidationRuleContainer>();
             foreach (var operation in chargeCommand.ChargeOperations)
             {
-                validationRules.AddRange((await sut.CreateRulesAsync(operation)).GetRules().ToList());
+                validationRules.AddRange((await sut.CreateRulesAsync((ChargeInformationDto)operation)).GetRules().ToList());
             }
 
             // Assert
-            AssertAllRulesThatNeedTriggeredByForErrorMessageImplementsIValidationRuleWithExtendedData(
+            CimValidationErrorMessageAssertionHelper.AssertAllRulesThatNeedTriggeredByForErrorMessageImplementsIValidationRuleWithExtendedData(
                 cimValidationErrorTextToken, validationRules);
-        }
-
-        private static void AssertAllRulesThatNeedTriggeredByForErrorMessageImplementsIValidationRuleWithExtendedData(
-            CimValidationErrorTextToken cimValidationErrorTextToken,
-            IReadOnlyCollection<IValidationRuleContainer> validationRules)
-        {
-            var type = typeof(CimValidationErrorTextTemplateMessages);
-            foreach (var fieldInfo in type.GetFields(BindingFlags.Static | BindingFlags.Public))
-            {
-                if (!fieldInfo.GetCustomAttributes().Any()) continue;
-
-                var errorMessageForAttribute = (ErrorMessageForAttribute)fieldInfo.GetCustomAttributes()
-                    .Single(x => x.GetType() == typeof(ErrorMessageForAttribute));
-
-                var validationRuleIdentifier = errorMessageForAttribute.ValidationRuleIdentifier;
-                var errorText = fieldInfo.GetValue(null)!.ToString();
-                var validationErrorTextTokens = CimValidationErrorTextTokenMatcher.GetTokens(errorText!);
-                var validationRuleContainer = validationRules
-                    .FirstOrDefault(x => x.ValidationRule.ValidationRuleIdentifier == validationRuleIdentifier);
-
-                if (validationErrorTextTokens.Contains(cimValidationErrorTextToken) && validationRuleContainer != null)
-                    Assert.True(validationRuleContainer.ValidationRule is IValidationRuleWithExtendedData);
-            }
         }
 
         /// <summary>
@@ -205,13 +181,6 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             rulesConfigurationRepository
                 .Setup(r => r.GetConfigurationAsync())
                 .Returns(Task.FromResult(configuration));
-        }
-
-        private static void SetupMarketParticipantMock(TestMarketParticipant sender, Mock<IMarketParticipantRepository> marketParticipantRepository)
-        {
-            marketParticipantRepository
-                .Setup(repo => repo.SingleAsync(It.IsAny<string>()))
-                .ReturnsAsync(sender);
         }
 
         private static void SetupChargeIdentifierFactoryMock(Mock<IChargeIdentifierFactory> chargeIdentifierFactory)

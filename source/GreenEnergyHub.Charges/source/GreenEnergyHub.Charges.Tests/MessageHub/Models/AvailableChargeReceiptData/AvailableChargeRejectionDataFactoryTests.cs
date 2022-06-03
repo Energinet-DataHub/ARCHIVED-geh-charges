@@ -48,13 +48,15 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             [Frozen] Mock<IAvailableChargeReceiptValidationErrorFactory> availableChargeReceiptValidationErrorFactory,
-            List<ChargeOperationDto> chargeOperations,
+            List<ChargeInformationDto> chargeOperations,
             ChargeCommandBuilder chargeCommandBuilder,
             Instant now,
             AvailableChargeRejectionDataFactory sut)
         {
             // Arrange
-            var chargeCommand = chargeCommandBuilder.WithChargeOperations(chargeOperations).Build();
+            var chargeCommand = chargeCommandBuilder
+                .WithChargeOperations(new List<IChargeOperation>(chargeOperations))
+                .Build();
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
 
             marketParticipantRepository
@@ -151,8 +153,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
         {
             // fake error code and text
             availableChargeReceiptValidationErrorFactory
-                .Setup(f => f.Create(It.IsAny<ValidationError>(), chargeCommand, It.IsAny<ChargeOperationDto>()))
-                .Returns<ValidationError, ChargeCommand, ChargeOperationDto>((validationError, _, _) =>
+                .Setup(f => f.Create(It.IsAny<ValidationError>(), chargeCommand, It.IsAny<ChargeInformationDto>()))
+                .Returns<ValidationError, ChargeCommand, ChargeInformationDto>((validationError, _, _) =>
                     new AvailableReceiptValidationError(
                         ReasonCode.D01, validationError.ValidationRuleIdentifier.ToString()));
         }

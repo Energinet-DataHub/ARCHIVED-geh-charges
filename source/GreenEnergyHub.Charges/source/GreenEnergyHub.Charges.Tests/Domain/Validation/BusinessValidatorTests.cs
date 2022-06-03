@@ -29,15 +29,15 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Validation
         [Theory]
         [InlineAutoMoqData]
         public async Task ValidateAsync_WhenCalled_WithOperation_UsesFactoryToFetchRulesAndUseRulesToGetResult(
-            [Frozen] Mock<IBusinessValidationRulesFactory<ChargeOperationDto>> factory,
+            [Frozen] Mock<IBusinessValidationRulesFactory<ChargeInformationDto>> factory,
             Mock<IValidationRuleSet> rules,
-            ChargeOperationDto operation,
+            ChargeInformationDto informationDto,
             ValidationResult validationResult,
-            BusinessValidator<ChargeOperationDto> sut)
+            BusinessValidator<ChargeInformationDto> sut)
         {
             // Arrange
             factory.Setup(
-                    f => f.CreateRulesAsync(operation))
+                    f => f.CreateRulesAsync(informationDto))
                 .Returns(
                     Task.FromResult(rules.Object));
 
@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Validation
                 .Returns(validationResult);
 
             // Act
-            var result = await sut.ValidateAsync(operation).ConfigureAwait(false);
+            var result = await sut.ValidateAsync(informationDto).ConfigureAwait(false);
 
             // Assert
             Assert.NotNull(result);

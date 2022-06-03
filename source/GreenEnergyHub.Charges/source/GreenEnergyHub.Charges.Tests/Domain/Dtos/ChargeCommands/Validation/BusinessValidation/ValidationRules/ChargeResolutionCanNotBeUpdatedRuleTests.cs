@@ -28,7 +28,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         [Theory]
         [InlineAutoDomainData]
         public void IsValid_WhenResolutionIsTheSame_ShouldReturnTrue(
-            ChargeOperationDtoBuilder builder,
+            ChargeInformationDtoBuilder builder,
             Charge charge)
         {
             var chargeOperationDto = builder.WithResolution(charge.Resolution).Build();
@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         [Theory]
         [InlineAutoDomainData]
         public void IsValid_WhenResolutionIsNotTheSame_ShouldReturnFalse(
-            ChargeOperationDtoBuilder builder,
+            ChargeInformationDtoBuilder builder,
             Charge charge)
         {
             var chargeOperationDto = builder

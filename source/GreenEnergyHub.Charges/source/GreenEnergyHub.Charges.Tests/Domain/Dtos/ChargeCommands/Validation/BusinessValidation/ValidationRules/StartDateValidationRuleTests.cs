@@ -53,7 +53,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             int startOfOccurrence,
             int endOfOccurrence,
             bool expected,
-            [Frozen] ChargeOperationDtoBuilder builder)
+            [Frozen] ChargeInformationDtoBuilder builder)
         {
             // Arrange
             var chargeOperationDto = builder
@@ -72,7 +72,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeOperationDtoBuilder builder, IClock clock)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeInformationDtoBuilder builder, IClock clock)
         {
             // Arrange
             var chargeOperationDto = builder.WithStartDateTime(InstantHelper.GetEndDefault()).Build();

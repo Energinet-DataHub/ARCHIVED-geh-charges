@@ -20,16 +20,16 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 {
     public class ChargePeriodFactory : IChargePeriodFactory
     {
-        public ChargePeriod CreateFromChargeOperationDto(ChargeOperationDto chargeOperationDto)
+        public ChargePeriod CreateFromChargeOperationDto(ChargeInformationDto chargeInformationDto)
         {
             return new ChargePeriod(
                 Guid.NewGuid(),
-                chargeOperationDto.ChargeName,
-                chargeOperationDto.ChargeDescription,
-                chargeOperationDto.VatClassification,
-                chargeOperationDto.TransparentInvoicing == TransparentInvoicing.Transparent,
-                chargeOperationDto.StartDateTime,
-                chargeOperationDto.EndDateTime.TimeOrEndDefault());
+                chargeInformationDto.ChargeName,
+                chargeInformationDto.ChargeDescription,
+                chargeInformationDto.VatClassification,
+                chargeInformationDto.TransparentInvoicing == TransparentInvoicing.Transparent,
+                chargeInformationDto.StartDateTime,
+                chargeInformationDto.EndDateTime.TimeOrEndDefault());
         }
     }
 }

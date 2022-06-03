@@ -12,9 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
 using Xunit;
@@ -28,7 +27,7 @@ namespace GreenEnergyHub.Charges.Tests.TestCore.Attributes
         [Theory]
         [InlineAutoMoqData]
         public void Attribute_SupportsInstantiatingClassTypeObjectsWithPropsWithGeneratedValues(
-            [NotNull] ChargeCommand command)
+            ChargeLinksCommand command)
         {
             command.Should().NotContainNullsOrEmptyEnumerables();
         }

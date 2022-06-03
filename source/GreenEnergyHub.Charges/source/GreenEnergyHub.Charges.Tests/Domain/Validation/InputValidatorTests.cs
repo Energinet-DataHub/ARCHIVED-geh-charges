@@ -32,24 +32,24 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Validation
         [InlineAutoDomainData(true)]
         public void Validate_WhenFactoryCreateInvalidRules_ThenInvalidValidationResult(
             bool isValid,
-            [Frozen] Mock<IInputValidationRulesFactory<ChargeOperationDto>> inputValidationRulesFactory,
-            InputValidator<ChargeOperationDto> sut,
-            ChargeOperationDto chargeOperationDto)
+            [Frozen] Mock<IInputValidationRulesFactory<ChargeInformationDto>> inputValidationRulesFactory,
+            InputValidator<ChargeInformationDto> sut,
+            ChargeInformationDto chargeInformationDto)
         {
             // Arrange
             var testValidationRule = new TestValidationRule(isValid, ValidationRuleIdentifier.StartDateValidation);
             var rules = new List<IValidationRuleContainer>
             {
-                new OperationValidationRuleContainer(testValidationRule, chargeOperationDto.Id),
-                new OperationValidationRuleContainer(testValidationRule, chargeOperationDto.Id),
+                new OperationValidationRuleContainer(testValidationRule, chargeInformationDto.Id),
+                new OperationValidationRuleContainer(testValidationRule, chargeInformationDto.Id),
             };
             var validationRuleSet = ValidationRuleSet.FromRules(rules);
             inputValidationRulesFactory
-                .Setup(f => f.CreateRules(It.IsAny<ChargeOperationDto>()))
+                .Setup(f => f.CreateRules(It.IsAny<ChargeInformationDto>()))
                 .Returns(validationRuleSet);
 
             // Act
-            var actual = sut.Validate(chargeOperationDto);
+            var actual = sut.Validate(chargeInformationDto);
 
             // Assert
             var shouldFail = !isValid;

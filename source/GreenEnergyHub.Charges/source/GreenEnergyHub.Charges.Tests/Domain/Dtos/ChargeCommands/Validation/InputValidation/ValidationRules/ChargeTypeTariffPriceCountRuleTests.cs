@@ -32,9 +32,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
     {
         [Theory]
         [AutoDomainData]
-        public void IsValid_WhenPointsCountIsZero_IsTrue(ChargeOperationDtoBuilder chargeOperationDtoBuilder)
+        public void IsValid_WhenPointsCountIsZero_IsTrue(ChargeInformationDtoBuilder chargeInformationDtoBuilder)
         {
-            var chargeOperationDto = chargeOperationDtoBuilder.WithChargeType(ChargeType.Tariff).Build();
+            var chargeOperationDto = chargeInformationDtoBuilder.WithChargeType(ChargeType.Tariff).Build();
             var sut = new ChargeTypeTariffPriceCountRule(chargeOperationDto);
             sut.IsValid.Should().BeTrue();
         }
@@ -48,10 +48,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void IsValid_WhenPT1HAnd24PricePoints_IsTrue(
             int priceCount,
             bool expected,
-            ChargeOperationDtoBuilder chargeOperationDtoBuilder)
+            ChargeInformationDtoBuilder chargeInformationDtoBuilder)
         {
             // Arrange
-            var chargeOperationDto = chargeOperationDtoBuilder
+            var chargeOperationDto = chargeInformationDtoBuilder
                 .WithChargeType(ChargeType.Tariff)
                 .WithPointWithXNumberOfPrices(priceCount)
                 .Build();
@@ -71,10 +71,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void IsValid_WhenP1DAnd1PricePoint_IsTrue(
             int priceCount,
             bool expected,
-            ChargeOperationDtoBuilder chargeOperationDtoBuilder)
+            ChargeInformationDtoBuilder chargeInformationDtoBuilder)
         {
             // Arrange
-            var chargeOperationDto = chargeOperationDtoBuilder
+            var chargeOperationDto = chargeInformationDtoBuilder
                 .WithChargeType(ChargeType.Tariff)
                 .WithResolution(Resolution.P1D)
                 .WithPointWithXNumberOfPrices(priceCount).Build();
@@ -92,10 +92,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void IsValid_WhenP1MAnd1PricePoint_IsTrue(
             int priceCount,
             bool expected,
-            ChargeOperationDtoBuilder chargeOperationDtoBuilder)
+            ChargeInformationDtoBuilder chargeInformationDtoBuilder)
         {
             // Arrange
-            var chargeOperationDto = chargeOperationDtoBuilder
+            var chargeOperationDto = chargeInformationDtoBuilder
                 .WithChargeType(ChargeType.Tariff)
                 .WithResolution(Resolution.P1M)
                 .WithPointWithXNumberOfPrices(priceCount).Build();
@@ -117,10 +117,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void IsValid_WhenPT15MAnd96PricePoints_IsTrue(
             int priceCount,
             bool expected,
-            ChargeOperationDtoBuilder chargeOperationDtoBuilder)
+            ChargeInformationDtoBuilder chargeInformationDtoBuilder)
         {
             // Arrange
-            var chargeOperationDto = chargeOperationDtoBuilder
+            var chargeOperationDto = chargeInformationDtoBuilder
                 .WithChargeType(ChargeType.Tariff)
                 .WithResolution(Resolution.PT15M)
                 .WithPointWithXNumberOfPrices(priceCount).Build();
@@ -138,9 +138,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         [InlineAutoMoqData(ChargeType.Unknown)]
         public void IsValid_WhenNotTariff_IsValid(
             ChargeType chargeType,
-            ChargeOperationDtoBuilder chargeOperationDtoBuilder)
+            ChargeInformationDtoBuilder chargeInformationDtoBuilder)
         {
-            var chargeOperationDto = chargeOperationDtoBuilder.WithChargeType(chargeType).Build();
+            var chargeOperationDto = chargeInformationDtoBuilder.WithChargeType(chargeType).Build();
             var sut = new ChargeTypeTariffPriceCountRule(chargeOperationDto);
             sut.IsValid.Should().BeTrue();
         }
@@ -149,10 +149,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         [InlineAutoMoqData(Resolution.Unknown)]
         public void IsValid_WhenTariffAndUnknownResolutionType_Throws(
             Resolution resolution,
-            ChargeOperationDtoBuilder chargeOperationDtoBuilder)
+            ChargeInformationDtoBuilder chargeInformationDtoBuilder)
         {
             // Arrange
-            var chargeOperationDto = chargeOperationDtoBuilder
+            var chargeOperationDto = chargeInformationDtoBuilder
                 .WithChargeType(ChargeType.Tariff)
                 .WithResolution(resolution)
                 .WithPointWithXNumberOfPrices(24)
@@ -168,21 +168,21 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeOperationDtoBuilder chargeOperationDtoBuilder)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeInformationDtoBuilder chargeInformationDtoBuilder)
         {
-            var sut = CreateInvalidRule(chargeOperationDtoBuilder);
+            var sut = CreateInvalidRule(chargeInformationDtoBuilder);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChargeTypeTariffPriceCount);
         }
 
-        private static ChargeTypeTariffPriceCountRule CreateInvalidRule(ChargeOperationDtoBuilder chargeOperationDtoBuilder)
+        private static ChargeTypeTariffPriceCountRule CreateInvalidRule(ChargeInformationDtoBuilder chargeInformationDtoBuilder)
         {
-            var invalidChargeOperationDto = CreateInvalidChargeOperationDto(chargeOperationDtoBuilder);
+            var invalidChargeOperationDto = CreateInvalidChargeOperationDto(chargeInformationDtoBuilder);
             return new ChargeTypeTariffPriceCountRule(invalidChargeOperationDto);
         }
 
-        private static ChargeOperationDto CreateInvalidChargeOperationDto(ChargeOperationDtoBuilder chargeOperationDtoBuilder)
+        private static ChargeInformationDto CreateInvalidChargeOperationDto(ChargeInformationDtoBuilder chargeInformationDtoBuilder)
         {
-            return chargeOperationDtoBuilder
+            return chargeInformationDtoBuilder
                 .WithChargeType(ChargeType.Tariff)
                 .WithResolution(Resolution.P1D)
                 .Build();

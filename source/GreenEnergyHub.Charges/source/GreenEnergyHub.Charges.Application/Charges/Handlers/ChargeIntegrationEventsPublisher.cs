@@ -13,10 +13,11 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
@@ -39,16 +40,45 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 
             foreach (var chargeOperationDto in chargeCommandAcceptedEvent.Command.ChargeOperations)
             {
-                if (chargeCommandAcceptedEvent.Command.Document.BusinessReasonCode == BusinessReasonCode.UpdateChargeInformation)
-                {
-                    await _chargePublisher.PublishChargeCreatedAsync(chargeOperationDto).ConfigureAwait(false);
-                }
-                else
-                {
-                    await _chargePricesUpdatedPublisher
-                        .PublishChargePricesAsync(chargeOperationDto)
-                        .ConfigureAwait(false);
-                }
+                await PublishEventAsync(chargeOperationDto).ConfigureAwait(false);
+            }
+        }
+
+        //TODO: Update unit test to handle both expected cases and default
+        private async Task PublishEventAsync(IChargeOperation chargeOperationDto)
+        {
+            switch (chargeOperationDto)
+            {
+                case ChargeInformationDto chargeInformationDto:
+                    await _chargePublisher.PublishChargeCreatedAsync(chargeInformationDto).ConfigureAwait(false);
+                    await TemporarilyPublishPricesFromChargeInformationAsync(chargeInformationDto).ConfigureAwait(false);
+                    break;
+                case ChargePriceDto chargePriceDto:
+                    await _chargePricesUpdatedPublisher.PublishChargePricesAsync(chargePriceDto).ConfigureAwait(false);
+                    break;
+                default:
+                    throw new InvalidOperationException(
+                        $"Operation must be {nameof(ChargeInformationDto)} or {nameof(ChargePriceDto)}");
+            }
+        }
+
+        // TODO: Remove when D18 no longer support prices
+        private async Task TemporarilyPublishPricesFromChargeInformationAsync(ChargeInformationDto chargeInformationDto)
+        {
+            if (chargeInformationDto.Points.Any())
+            {
+                var chargePriceDto = new ChargePriceDto(
+                    chargeInformationDto.Id,
+                    chargeInformationDto.Type,
+                    chargeInformationDto.ChargeId,
+                    chargeInformationDto.ChargeOwner,
+                    chargeInformationDto.StartDateTime,
+                    chargeInformationDto.EndDateTime,
+                    chargeInformationDto.PointsStartInterval,
+                    chargeInformationDto.PointsEndInterval,
+                    chargeInformationDto.Points);
+
+                await _chargePricesUpdatedPublisher.PublishChargePricesAsync(chargePriceDto).ConfigureAwait(false);
             }
         }
     }

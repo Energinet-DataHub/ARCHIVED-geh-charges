@@ -57,7 +57,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 
         private IReadOnlyList<AvailableChargeReceiptData> CreateAvailableChargeReceiptData(
             DocumentDto documentDto,
-            ChargeOperationDto chargeOperationDto,
+            IChargeOperation chargeInformationDto,
             MarketParticipant sender,
             MarketParticipantDto recipient,
             int operationOrder)
@@ -73,7 +73,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                     _messageMetaDataContext.RequestDataTime,
                     Guid.NewGuid(), // ID of each available piece of data must be unique
                     ReceiptStatus.Confirmed,
-                    chargeOperationDto.Id,
+                    chargeInformationDto.Id,
                     DocumentType.ConfirmRequestChangeOfPriceList, // Will be added to the HTTP MessageType header
                     operationOrder,
                     new List<AvailableReceiptValidationError>()),
