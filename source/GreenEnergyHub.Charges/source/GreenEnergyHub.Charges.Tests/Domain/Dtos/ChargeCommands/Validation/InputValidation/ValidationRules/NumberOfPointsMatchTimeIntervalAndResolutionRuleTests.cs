@@ -12,16 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using System.Linq;
-using AutoFixture;
 using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
-using Microsoft.EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using NodaTime;
 using Xunit;
 using Xunit.Categories;
@@ -29,7 +24,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
 {
     [UnitTest]
-    public class ChargePricesNumberOfPricePointsMatchTimeIntervalTests
+    public class NumberOfPointsMatchTimeIntervalAndResolutionRuleTests
     {
         [Theory]
         [InlineAutoMoqData(Resolution.PT15M, 1, 1, 23, 1, 2, 23, 96, "")]
@@ -61,7 +56,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 .WithPointsInterval(start, end)
                 .Build();
 
-            var sut = new ChargePricesNumberOfPricePointsMatchTimeInterval(dto);
+            var sut = new NumberOfPointsMatchTimeIntervalAndResolutionRule(dto);
 
             // Act
             var actual = sut.IsValid;

@@ -56,8 +56,8 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             _points = new List<Point>();
             _resolution = Resolution.PT1H;
             _periodResolution = Resolution.PT1H;
-            _pointsStartInterval = null;
-            _pointsEndInterval = null;
+            _pointsStartInterval = SystemClock.Instance.GetCurrentInstant().Minus(Duration.FromDays(1));
+            _pointsEndInterval = SystemClock.Instance.GetCurrentInstant().Plus(Duration.FromDays(3));
         }
 
         public ChargeOperationDtoBuilder WithDescription(string description)
@@ -153,8 +153,6 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
                 _points.Add(point);
             }
 
-            _pointsStartInterval = _points.Min(x => x.Time);
-            _pointsEndInterval = _points.Max(x => x.Time) + Duration.FromMinutes(1);
             return this;
         }
 

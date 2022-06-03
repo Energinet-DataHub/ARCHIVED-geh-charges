@@ -13,14 +13,13 @@
 // limitations under the License.
 
 using System;
-using System.Linq;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
 {
-    public class ChargePricesNumberOfPricePointsMatchTimeInterval : IValidationRule
+    public class NumberOfPointsMatchTimeIntervalAndResolutionRule : IValidationRule
     {
         private readonly Instant _startTime;
         private readonly Instant _endTime;
@@ -28,7 +27,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
         private readonly int _actualPointCount;
         private double _expectedPointCount;
 
-        public ChargePricesNumberOfPricePointsMatchTimeInterval(ChargeOperationDto chargeOperationDto)
+        public NumberOfPointsMatchTimeIntervalAndResolutionRule(ChargeOperationDto chargeOperationDto)
         {
             _periodResolution = chargeOperationDto.PeriodResolution;
             _startTime = chargeOperationDto.PointsStartInterval.GetValueOrDefault();
@@ -56,7 +55,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
-            ValidationRuleIdentifier.ChargeDescriptionHasMaximumLength;
+            ValidationRuleIdentifier.NumberOfPointsMatchTimeIntervalAndResolution;
 
         public bool IsValid => _expectedPointCount == _actualPointCount;
     }
