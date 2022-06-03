@@ -4,8 +4,10 @@ This process handles subscription, fee, and tariff links for a metering point. J
 
 To create a correct wholesale settlement basis for the electricity market, the charges registered in Green Energy Hub must be linked to metering points, and these charge links must be forwarded to the relevant market participants.
 
-Grid access providers and the TSO must submit links for their own subscriptions, fees and
-tariffs per metering point to Green Energy Hub.
+Grid access providers and the TSO can request Green Energy Hub to create, update and stop charge links for their own subscriptions, fees and
+tariffs per metering point. The current energy supplier on a metering point is responsible for maintaining the TSO charge links in accordance with the conditions for collection and thus may do similar requests as the TSO for both tax and non-tax tariffs.
+
+Certain time limits do apply cf. the Danish market rules.
 
 ## Sequence diagram
 
@@ -21,11 +23,11 @@ Green Energy Hub forwards all accepted charge links to the relevant energy suppl
 
 * Fee link: Notification is only sent to the energy supplier registered on the metering point on the effective date.
 
+For further details on how charge links are processed within the system, please see the [charge link flow](../process-flows/README.md/#charge-link-flow).
+
 ## Charge links created upon metering point creation (Separate process)
 
 When a grid access provider uses this [process](https://github.com/Energinet-DataHub/geh-metering-point/blob/main/docs/business-processes/create-metering-point.md) to create a new metering point, Green Energy Hub will, for certain types of metering points, on behalf of TSO, create one or more charge links. These are referred to as default charge links. Such links consist of relevant taxes (tariffs marked as tax) and TSO tariffs.
 Should any of the default charge links concern a tariff marked as tax, the grid access provider receives a notification per link.
 
-It is always the current energy supplier's responsibility to maintain the tax tariff links on a metering point, in accordance with the conditions for collection for the specific metering point
-
-For further details on how charge links are processed within the system, please see the [charge link flow](../process-flows/README.md/#charge-link-flow).
+It is always the current energy supplier's responsibility to maintain the TSO links on a metering point, in accordance with the conditions for collection for the specific metering point
