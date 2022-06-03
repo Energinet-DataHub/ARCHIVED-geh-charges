@@ -76,7 +76,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             var dto = new ChargeOperationDtoBuilder().WithPriceResolution(Resolution.Unknown).Build();
 
             // Act
-            Action act = () => new NumberOfPointsMatchTimeIntervalAndResolutionRule(dto);
+            Action act = () =>
+            {
+                var notUsed = new NumberOfPointsMatchTimeIntervalAndResolutionRule(dto);
+            };
 
             // Assert
             act.Should().Throw<ArgumentException>();
