@@ -1,0 +1,27 @@
+------------------------------------------------------------------------------------------------------------------------
+-- Add grid area links
+------------------------------------------------------------------------------------------------------------------------
+
+DECLARE @provider8100000000016 UNIQUEIDENTIFIER = NEWID()
+DECLARE @provider8100000000023 UNIQUEIDENTIFIER = NEWID()
+DECLARE @provider8100000000030 UNIQUEIDENTIFIER = 'ed6c94f3-24a8-43b3-913d-bf7513390a32';
+DECLARE @provider8510000000013 UNIQUEIDENTIFIER = 'a977c279-8d9a-469b-be26-94b18b0e7dbb';
+DECLARE @provider8900000000005 UNIQUEIDENTIFIER = NEWID()
+
+DECLARE @areaLinkIdOfProvider8100000000016 UNIQUEIDENTIFIER = NEWID()
+DECLARE @areaLinkIdOfProvider8100000000023 UNIQUEIDENTIFIER = NEWID()
+DECLARE @areaLinkIdOfProvider8100000000030 UNIQUEIDENTIFIER = NEWID()
+DECLARE @areaLinkIdOfProvider8510000000013 UNIQUEIDENTIFIER = 'a37aca18-51e1-4978-a52b-28ac165f801b'
+DECLARE @areaLinkIdOfProvider8900000000005 UNIQUEIDENTIFIER = NEWID()
+
+DECLARE @areaIdOfProvider8100000000016 UNIQUEIDENTIFIER = NEWID()
+DECLARE @areaIdOfProvider8100000000023 UNIQUEIDENTIFIER = NEWID()
+DECLARE @areaIdOfProvider8100000000030 UNIQUEIDENTIFIER = 'cb655a73-090e-4352-b93d-c66a875ca5a0'
+DECLARE @areaIdOfProvider8900000000005 UNIQUEIDENTIFIER = NEWID()
+DECLARE @areaIdOfProvider8510000000013 UNIQUEIDENTIFIER = 'c13d70cb-8a0e-480e-bd05-3b28b9e3b104'
+
+INSERT INTO [Charges].[GridAreaLink] VALUES (@areaLinkIdOfProvider8100000000016, @areaIdOfProvider8100000000016, @provider8100000000016);
+INSERT INTO [Charges].[GridAreaLink] VALUES (@areaLinkIdOfProvider8100000000023, @areaIdOfProvider8100000000023, @provider8100000000023);
+INSERT INTO [Charges].[GridAreaLink] VALUES (@areaLinkIdOfProvider8100000000030, @areaIdOfProvider8100000000030, @provider8100000000030);
+INSERT INTO [Charges].[GridAreaLink] VALUES (@areaLinkIdOfProvider8510000000013, @areaIdOfProvider8510000000013, @provider8510000000013);
+INSERT INTO [Charges].[GridAreaLink] VALUES (@areaLinkIdOfProvider8900000000005, @areaIdOfProvider8900000000005, @provider8900000000005);
