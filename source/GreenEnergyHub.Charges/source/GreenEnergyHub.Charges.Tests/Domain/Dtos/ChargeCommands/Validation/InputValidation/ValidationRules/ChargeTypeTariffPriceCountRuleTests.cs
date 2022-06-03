@@ -41,11 +41,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [InlineAutoMoqData(1, false)]
-        [InlineAutoMoqData(23, false)]
+        [InlineAutoMoqData(23, true)]
         [InlineAutoMoqData(24, true)]
-        [InlineAutoMoqData(25, false)]
-        [InlineAutoMoqData(96, false)]
-        public void IsValid_WhenPT1HAnd24PricePoints_IsTrue(
+        [InlineAutoMoqData(25, true)]
+        [InlineAutoMoqData(96, true)]
+        public void IsValid_WhenPT1HAndAtLeast23PricePoints_IsTrue(
             int priceCount,
             bool expected,
             ChargeOperationDtoBuilder chargeOperationDtoBuilder)
@@ -65,10 +65,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [InlineAutoMoqData(1, true)]
-        [InlineAutoMoqData(2, false)]
-        [InlineAutoMoqData(24, false)]
-        [InlineAutoMoqData(96, false)]
-        public void IsValid_WhenP1DAnd1PricePoint_IsTrue(
+        [InlineAutoMoqData(2, true)]
+        [InlineAutoMoqData(24, true)]
+        [InlineAutoMoqData(96, true)]
+        public void IsValid_WhenP1DAndAtLeast1PricePoint_IsTrue(
             int priceCount,
             bool expected,
             ChargeOperationDtoBuilder chargeOperationDtoBuilder)
@@ -88,8 +88,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [InlineAutoMoqData(1, true)]
-        [InlineAutoMoqData(2, false)]
-        public void IsValid_WhenP1MAnd1PricePoint_IsTrue(
+        [InlineAutoMoqData(2, true)]
+        public void IsValid_WhenP1MAndAtLeast1PricePoint_IsTrue(
             int priceCount,
             bool expected,
             ChargeOperationDtoBuilder chargeOperationDtoBuilder)
@@ -111,10 +111,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         [InlineAutoMoqData(1, false)]
         [InlineAutoMoqData(2, false)]
         [InlineAutoMoqData(24, false)]
-        [InlineAutoMoqData(95, false)]
+        [InlineAutoMoqData(92, true)]
         [InlineAutoMoqData(96, true)]
-        [InlineAutoMoqData(97, false)]
-        public void IsValid_WhenPT15MAnd96PricePoints_IsTrue(
+        [InlineAutoMoqData(100, true)]
+        public void IsValid_WhenPT15MAndAtLeast92PricePoints_IsTrue(
             int priceCount,
             bool expected,
             ChargeOperationDtoBuilder chargeOperationDtoBuilder)

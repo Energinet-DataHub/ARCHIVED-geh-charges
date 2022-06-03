@@ -22,8 +22,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
     {
         private const int PricePointsRequiredInP1D = 1;
         private const int PricePointsRequiredInP1M = 1;
-        private const int PricePointsRequiredInPt1H = 24;
-        private const int PricePointsRequiredInPt15M = 96;
+        private const int PricePointsRequiredInPt1H = 23;
+        private const int PricePointsRequiredInPt15M = 92;
         private readonly ChargeOperationDto _chargeOperationDto;
 
         public ChargeTypeTariffPriceCountRule(ChargeOperationDto chargeOperationDto)
@@ -44,10 +44,10 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
             {
                 return _chargeOperationDto.PriceResolution switch
                 {
-                    Resolution.PT15M => _chargeOperationDto.Points.Count == PricePointsRequiredInPt15M,
-                    Resolution.PT1H => _chargeOperationDto.Points.Count == PricePointsRequiredInPt1H,
-                    Resolution.P1D => _chargeOperationDto.Points.Count == PricePointsRequiredInP1D,
-                    Resolution.P1M => _chargeOperationDto.Points.Count == PricePointsRequiredInP1M,
+                    Resolution.PT15M => _chargeOperationDto.Points.Count >= PricePointsRequiredInPt15M,
+                    Resolution.PT1H => _chargeOperationDto.Points.Count >= PricePointsRequiredInPt1H,
+                    Resolution.P1D => _chargeOperationDto.Points.Count >= PricePointsRequiredInP1D,
+                    Resolution.P1M => _chargeOperationDto.Points.Count >= PricePointsRequiredInP1M,
                     _ => throw new ArgumentException(nameof(_chargeOperationDto.PriceResolution)),
                 };
             }
