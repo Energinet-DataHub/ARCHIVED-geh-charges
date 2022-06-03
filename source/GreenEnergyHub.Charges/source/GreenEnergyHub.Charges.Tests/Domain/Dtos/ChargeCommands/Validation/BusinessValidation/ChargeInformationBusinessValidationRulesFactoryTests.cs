@@ -15,7 +15,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
@@ -27,7 +26,6 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValid
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
-using GreenEnergyHub.Charges.MessageHub.Models.Shared;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using Moq;
@@ -163,31 +161,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             }
 
             // Assert
-            AssertAllRulesThatNeedTriggeredByForErrorMessageImplementsIValidationRuleWithExtendedData(
+            CimValidationErrorMessageAssertionHelper.AssertAllRulesThatNeedTriggeredByForErrorMessageImplementsIValidationRuleWithExtendedData(
                 cimValidationErrorTextToken, validationRules);
-        }
-
-        private static void AssertAllRulesThatNeedTriggeredByForErrorMessageImplementsIValidationRuleWithExtendedData(
-            CimValidationErrorTextToken cimValidationErrorTextToken,
-            IReadOnlyCollection<IValidationRuleContainer> validationRules)
-        {
-            var type = typeof(CimValidationErrorTextTemplateMessages);
-            foreach (var fieldInfo in type.GetFields(BindingFlags.Static | BindingFlags.Public))
-            {
-                if (!fieldInfo.GetCustomAttributes().Any()) continue;
-
-                var errorMessageForAttribute = (ErrorMessageForAttribute)fieldInfo.GetCustomAttributes()
-                    .Single(x => x.GetType() == typeof(ErrorMessageForAttribute));
-
-                var validationRuleIdentifier = errorMessageForAttribute.ValidationRuleIdentifier;
-                var errorText = fieldInfo.GetValue(null)!.ToString();
-                var validationErrorTextTokens = CimValidationErrorTextTokenMatcher.GetTokens(errorText!);
-                var validationRuleContainer = validationRules
-                    .FirstOrDefault(x => x.ValidationRule.ValidationRuleIdentifier == validationRuleIdentifier);
-
-                if (validationErrorTextTokens.Contains(cimValidationErrorTextToken) && validationRuleContainer != null)
-                    Assert.True(validationRuleContainer.ValidationRule is IValidationRuleWithExtendedData);
-            }
         }
 
         /// <summary>

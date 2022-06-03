@@ -16,7 +16,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Core.DateTime;
-using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using NodaTime;
@@ -25,22 +24,16 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
 {
     public class ChargePriceBusinessValidationRulesFactory : IBusinessValidationRulesFactory<ChargePriceDto>
     {
-        private readonly IChargeRepository _chargeRepository;
-        private readonly IChargeIdentifierFactory _chargeIdentifierFactory;
         private readonly IClock _clock;
         private readonly IRulesConfigurationRepository _rulesConfigurationRepository;
         private readonly IZonedDateTimeService _zonedDateTimeService;
 
         public ChargePriceBusinessValidationRulesFactory(
             IRulesConfigurationRepository rulesConfigurationRepository,
-            IChargeRepository chargeRepository,
-            IChargeIdentifierFactory chargeIdentifierFactory,
             IZonedDateTimeService zonedDateTimeService,
             IClock clock)
         {
             _rulesConfigurationRepository = rulesConfigurationRepository;
-            _chargeRepository = chargeRepository;
-            _chargeIdentifierFactory = chargeIdentifierFactory;
             _zonedDateTimeService = zonedDateTimeService;
             _clock = clock;
         }
@@ -55,7 +48,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
         private async Task<List<IValidationRuleContainer>> GetRulesForOperationAsync(ChargePriceDto chargeOperation)
         {
             var configuration = await _rulesConfigurationRepository.GetConfigurationAsync().ConfigureAwait(false);
-            var charge = await GetChargeOrNullAsync(chargeOperation).ConfigureAwait(false);
             var rules = GetMandatoryRulesForOperation(chargeOperation, configuration);
 
             return rules;
@@ -77,15 +69,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
             };
 
             return rules;
-        }
-
-        private async Task<Charge?> GetChargeOrNullAsync(IChargeOperation chargeOperation)
-        {
-            var chargeIdentifier = await _chargeIdentifierFactory
-                .CreateAsync(chargeOperation.ChargeId, chargeOperation.Type, chargeOperation.ChargeOwner)
-                .ConfigureAwait(false);
-
-            return await _chargeRepository.SingleOrNullAsync(chargeIdentifier).ConfigureAwait(false);
         }
     }
 }
