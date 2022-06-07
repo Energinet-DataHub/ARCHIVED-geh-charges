@@ -14,7 +14,7 @@
 
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.MessageHub.Models.Shared;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
