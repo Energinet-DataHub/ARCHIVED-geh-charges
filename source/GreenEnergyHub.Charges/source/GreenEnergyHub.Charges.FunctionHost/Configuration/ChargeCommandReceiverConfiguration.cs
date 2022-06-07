@@ -44,8 +44,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<IChargeCommandReceiptService, ChargeCommandReceiptService>();
-            serviceCollection.AddScoped<IChargeCommandReceivedEventHandler, ChargeCommandReceivedEventHandler>();
+            serviceCollection.AddScoped<IChargeInformationEventHandler, ChargeInformationEventHandler>();
             serviceCollection.AddScoped<IChargeFactory, ChargeFactory>();
+            serviceCollection.AddScoped<IChargeIdentifierFactory, ChargeIdentifierFactory>();
             serviceCollection.AddScoped<IChargePeriodFactory, ChargePeriodFactory>();
             serviceCollection.AddScoped<IChargeCommandAcceptedEventFactory, ChargeCommandAcceptedEventFactory>();
             serviceCollection.AddScoped<IChargeCommandRejectedEventFactory, ChargeCommandRejectedEventFactory>();
@@ -54,8 +55,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<ICimValidationErrorCodeFactory, CimValidationErrorCodeFactory>();
             serviceCollection.AddScoped<IAvailableChargeReceiptValidationErrorFactory,
                 AvailableChargeReceiptValidationErrorFactory>();
-            serviceCollection.AddScoped<IChargeHandler, ChargeHandler>();
-
+            serviceCollection.AddScoped<IChargeCommandReceivedEventHandler, ChargeCommandReceivedEventHandler>();
+            serviceCollection.AddScoped<IChargePriceEventHandler, ChargePriceEventHandler>();
             ConfigureDatabase(serviceCollection);
             ConfigureValidation(serviceCollection);
             ConfigureIso8601Timezones(serviceCollection);

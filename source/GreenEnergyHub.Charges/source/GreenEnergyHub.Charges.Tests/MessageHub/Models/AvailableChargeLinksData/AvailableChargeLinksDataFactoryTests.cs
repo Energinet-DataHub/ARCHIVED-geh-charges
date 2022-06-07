@@ -38,32 +38,25 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinksDat
         [Theory]
         [InlineAutoDomainData]
         public async Task CreateAsync_WhenTaxCharges_ReturnsAvailableData(
-            TestMeteringPointAdministrator meteringPointAdministrator,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
+            [Frozen] Mock<IChargeIdentifierFactory> chargeIdentifierFactory,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             ChargeLinksAcceptedEvent acceptedEvent,
             Charge charge,
+            TestMeteringPointAdministrator meteringPointAdministrator,
             TestGridAccessProvider gridAccessProvider,
             Instant now,
             AvailableChargeLinksDataFactory sut)
         {
             // Arrange
-            var chargeOwner = new TestMarketParticipant(charge.OwnerId, "ownerId");
-            marketParticipantRepository
-                .Setup(r => r.SingleAsync(It.IsAny<string>()))
-                .ReturnsAsync(chargeOwner);
-            marketParticipantRepository
-                .Setup(r => r.GetMeteringPointAdministratorAsync())
-                .ReturnsAsync(meteringPointAdministrator);
-            marketParticipantRepository
-                .Setup(m => m.GetGridAccessProviderAsync(It.IsAny<string>()))
-                .ReturnsAsync(gridAccessProvider);
-
+            SetupChargeIdentifierFactoryMock(chargeIdentifierFactory);
             charge.SetPrivateProperty(c => c.TaxIndicator, true);
-            chargeRepository
-                .Setup(r => r.SingleAsync(It.IsAny<ChargeIdentifier>()))
-                .ReturnsAsync(charge);
+            SetupChargeRepositoryMock(chargeRepository, charge);
+            SetupMarketParticipantRepositoryMock(
+                marketParticipantRepository,
+                meteringPointAdministrator,
+                gridAccessProvider);
 
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
 
@@ -94,36 +87,56 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinksDat
         [Theory]
         [InlineAutoDomainData]
         public async Task CreateAsync_WhenNotTaxCharges_ReturnsEmptyList(
-            TestMeteringPointAdministrator meteringPointAdministrator,
+            [Frozen] Mock<IChargeIdentifierFactory> chargeIdentifierFactory,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             ChargeLinksAcceptedEvent acceptedEvent,
             Charge charge,
+            TestMeteringPointAdministrator meteringPointAdministrator,
             TestGridAccessProvider gridAccessProvider,
             AvailableChargeLinksDataFactory sut)
         {
             // Arrange
-            var chargeOwner = new TestMarketParticipant(charge.OwnerId, "ownerId");
-            marketParticipantRepository
-                .Setup(r => r.SingleAsync(It.IsAny<string>()))
-                .ReturnsAsync(chargeOwner);
-            marketParticipantRepository
-                .Setup(r => r.GetMeteringPointAdministratorAsync())
-                .ReturnsAsync(meteringPointAdministrator);
-            marketParticipantRepository
-                .Setup(r => r.GetGridAccessProviderAsync(It.IsAny<string>()))
-                .ReturnsAsync(gridAccessProvider);
-
             charge.SetPrivateProperty(c => c.TaxIndicator, false);
-            chargeRepository
-                .Setup(r => r.SingleAsync(It.IsAny<ChargeIdentifier>()))
-                .ReturnsAsync(charge);
+            SetupChargeIdentifierFactoryMock(chargeIdentifierFactory);
+            SetupChargeRepositoryMock(chargeRepository, charge);
+            SetupMarketParticipantRepositoryMock(
+                marketParticipantRepository,
+                meteringPointAdministrator,
+                gridAccessProvider);
 
             // Act
             var actualList = await sut.CreateAsync(acceptedEvent);
 
             // Assert
             actualList.Should().BeEmpty();
+        }
+
+        private static void SetupChargeRepositoryMock(Mock<IChargeRepository> chargeRepository, Charge charge)
+        {
+            chargeRepository
+                .Setup(r => r.SingleAsync(It.IsAny<ChargeIdentifier>()))
+                .ReturnsAsync(charge);
+        }
+
+        private static void SetupMarketParticipantRepositoryMock(
+            Mock<IMarketParticipantRepository> marketParticipantRepository,
+            TestMeteringPointAdministrator meteringPointAdministrator,
+            TestGridAccessProvider gridAccessProvider)
+        {
+            marketParticipantRepository
+                .Setup(r => r.GetMeteringPointAdministratorAsync())
+                .ReturnsAsync(meteringPointAdministrator);
+            marketParticipantRepository
+                .Setup(r => r.GetGridAccessProviderAsync(It.IsAny<string>()))
+                .ReturnsAsync(gridAccessProvider);
+        }
+
+        private static void SetupChargeIdentifierFactoryMock(Mock<IChargeIdentifierFactory> chargeIdentifierFactory)
+        {
+            chargeIdentifierFactory
+                .Setup(x => x.CreateAsync(It.IsAny<string>(), It.IsAny<ChargeType>(), It.IsAny<string>()))
+                .ReturnsAsync(It.IsAny<ChargeIdentifier>());
         }
     }
 }

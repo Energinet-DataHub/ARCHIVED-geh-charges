@@ -103,7 +103,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             }
 
             [Fact]
-            public async Task When_ChargeIsReceived_Then_ChargeCreatedIntegrationEventIsPublished()
+            public async Task When_ChargeInformationIsReceived_Then_ChargeCreatedIntegrationEventIsPublished()
             {
                 // Arrange
                 var (request, correlationId) = await _authenticatedHttpRequestGenerator
@@ -124,14 +124,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             }
 
             [Fact]
-            public async Task When_ChargeBundleWithChargesIncludingPriceIsReceived_Then_ChargePricesUpdatedIntegrationEventsArePublished()
+            public async Task When_ChargePricesAreReceived_Then_ChargePricesUpdatedIntegrationEventsArePublished()
             {
                 // Arrange
                 var (request, correlationId) = await _authenticatedHttpRequestGenerator
-                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.TariffBundleWithValidAndInvalid);
+                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.TariffPriceSeries);
                 using var eventualChargePriceUpdatedEvent = await Fixture
                     .ChargePricesUpdatedListener
-                    .ListenForEventsAsync(correlationId, expectedCount: 2)
+                    .ListenForEventsAsync(correlationId, expectedCount: 1)
                     .ConfigureAwait(false);
 
                 // Act
@@ -168,8 +168,23 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             [InlineAutoMoqData(ChargeDocument.SubscriptionMonthlyPriceSample)]
             [InlineAutoMoqData(ChargeDocument.FeeMonthlyPriceSample)]
             [InlineAutoMoqData(ChargeDocument.TariffHourlyPricesSample)]
+            public async Task Given_ChargeInformationExampleFileWithPrices_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply(
+                string testFilePath)
+            {
+                // Arrange
+                var (request, correlationId) = await _authenticatedHttpRequestGenerator
+                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, testFilePath);
+
+                // Act
+                await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Act and assert
+                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId);
+            }
+
+            [Theory]
             [InlineAutoMoqData(ChargeDocument.TariffPriceSeries)]
-            public async Task Given_ChargeExampleFileWithPrices_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply(
+            public async Task Given_ChargePricesExampleFileWithPrices_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply(
                 string testFilePath)
             {
                 // Arrange

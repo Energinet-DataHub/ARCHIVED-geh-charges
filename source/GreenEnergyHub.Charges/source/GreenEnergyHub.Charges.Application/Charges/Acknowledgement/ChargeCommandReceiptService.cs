@@ -12,11 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
@@ -50,6 +53,42 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
         {
             var acceptedEvent = _chargeCommandAcceptedEventFactory.CreateEvent(command);
             await _acceptedMessageDispatcher.DispatchAsync(acceptedEvent).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Rejects all invalid operations in a bundle
+        /// </summary>
+        /// <param name="operationsToBeRejected"></param>
+        /// <param name="document"></param>
+        /// <param name="rejectionRules"></param>
+        public async Task RejectInvalidOperationsAsync(
+            IReadOnlyCollection<ChargeOperationDto> operationsToBeRejected,
+            DocumentDto document,
+            IList<IValidationRuleContainer> rejectionRules)
+        {
+            if (operationsToBeRejected.Any())
+            {
+                await RejectAsync(
+                        new ChargeCommand(document, operationsToBeRejected),
+                        ValidationResult.CreateFailure(rejectionRules))
+                    .ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
+        /// Accepts all valid operations in a bundle
+        /// </summary>
+        /// <param name="operationsToBeConfirmed"></param>
+        /// <param name="document"></param>
+        public async Task AcceptValidOperationsAsync(
+            IReadOnlyCollection<ChargeOperationDto> operationsToBeConfirmed,
+            DocumentDto document)
+        {
+            if (operationsToBeConfirmed.Any())
+            {
+                await AcceptAsync(
+                    new ChargeCommand(document, operationsToBeConfirmed)).ConfigureAwait(false);
+            }
         }
     }
 }

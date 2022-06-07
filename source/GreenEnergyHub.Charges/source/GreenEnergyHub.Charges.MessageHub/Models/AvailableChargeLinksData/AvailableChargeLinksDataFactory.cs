@@ -30,16 +30,19 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData
     {
         private readonly IMarketParticipantRepository _marketParticipantRepository;
         private readonly IChargeRepository _chargeRepository;
+        private readonly IChargeIdentifierFactory _chargeIdentifierFactory;
         private readonly IMessageMetaDataContext _messageMetaDataContext;
 
         public AvailableChargeLinksDataFactory(
             IMarketParticipantRepository marketParticipantRepository,
             IChargeRepository chargeRepository,
+            IChargeIdentifierFactory chargeIdentifierFactory,
             IMessageMetaDataContext messageMetaDataContext)
             : base(marketParticipantRepository)
         {
             _marketParticipantRepository = marketParticipantRepository;
             _chargeRepository = chargeRepository;
+            _chargeIdentifierFactory = chargeIdentifierFactory;
             _messageMetaDataContext = messageMetaDataContext;
         }
 
@@ -67,11 +70,10 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData
                 .GetGridAccessProviderAsync(operation.MeteringPointId)
                 .ConfigureAwait(false);
 
-            var owner = await _marketParticipantRepository
-                .SingleAsync(operation.ChargeOwner)
+            var chargeIdentifier = await _chargeIdentifierFactory
+                .CreateAsync(operation.SenderProvidedChargeId, operation.ChargeType, operation.ChargeOwner)
                 .ConfigureAwait(false);
 
-            var chargeIdentifier = new ChargeIdentifier(operation.SenderProvidedChargeId, owner.Id, operation.ChargeType);
             var charge = await _chargeRepository.SingleAsync(chargeIdentifier).ConfigureAwait(false);
             var sender = await GetSenderAsync().ConfigureAwait(false);
             if (!ShouldMakeDataAvailableForGridOwnerOfMeteringPoint(charge)) return;

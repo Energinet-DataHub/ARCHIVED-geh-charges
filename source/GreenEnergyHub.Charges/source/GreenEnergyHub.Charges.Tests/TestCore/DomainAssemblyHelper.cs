@@ -12,20 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
+using System;
+using System.Linq;
+using System.Reflection;
 
-namespace GreenEnergyHub.Charges.Application.Charges.Handlers
+namespace GreenEnergyHub.Charges.Tests.TestCore
 {
-    /// <summary>
-    /// Delegates a charge depending on if it contains
-    /// Charge Prices or Charge information.
-    /// </summary>
-    public interface IChargeCommandReceivedEventHandler
+    public static class DomainAssemblyHelper
     {
-        /// <summary>
-        /// Asynchronously handle the event.
-        /// </summary>
-        Task HandleAsync(ChargeCommandReceivedEvent commandReceivedEvent);
+        public static Assembly GetDomainAssembly()
+        {
+            return AppDomain
+                .CurrentDomain
+                .GetAssemblies()
+                .Single(a => a.GetName().Name == "GreenEnergyHub.Charges.Domain");
+        }
     }
 }
