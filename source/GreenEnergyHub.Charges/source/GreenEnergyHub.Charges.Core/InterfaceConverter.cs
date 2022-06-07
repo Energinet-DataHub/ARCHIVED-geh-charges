@@ -27,38 +27,33 @@ namespace GreenEnergyHub.Charges.Core
 
         public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            // TODO: method for throwing exceptions to be DRY
             var readerClone = reader;
             if (readerClone.TokenType != JsonTokenType.StartObject)
-                throw new JsonException("Problem in Start object! method: " + nameof(Read) + " class :" + nameof(InterfaceConverter<T, TI1, TI2>));
+                ThrowJsonException("Problem in Start object!");
 
             readerClone.Read();
             if (readerClone.TokenType != JsonTokenType.PropertyName)
-                throw new JsonException("Token Type not equal to property name! method: " + nameof(Read) + " class :" + nameof(InterfaceConverter<T, TI1, TI2>));
+                ThrowJsonException("Token Type not equal to property name!");
 
             var propertyName = readerClone.GetString();
-            if (string.IsNullOrWhiteSpace(propertyName) || propertyName != "$type")
-                throw new JsonException("Unable to get $type! method: " + nameof(Read) + " class :" + nameof(InterfaceConverter<T, TI1, TI2>));
+            if (string.IsNullOrWhiteSpace(propertyName) || propertyName != "$intent")
+                ThrowJsonException("Unable to get $intent!");
 
             readerClone.Read();
             if (readerClone.TokenType != JsonTokenType.String)
-                throw new JsonException("Token Type is not JsonTokenString! method: " + nameof(Read) + " class :" + nameof(InterfaceConverter<T, TI1, TI2>));
+                ThrowJsonException("Token Type is not JsonTokenString!");
 
-            var typeValue = readerClone.GetString();
-            if (string.IsNullOrWhiteSpace(typeValue))
-                throw new JsonException("typeValue is null or empty string! method: " + nameof(Read) + " class :" + nameof(InterfaceConverter<T, TI1, TI2>));
+            var intentValue = readerClone.GetString();
+            if (string.IsNullOrWhiteSpace(intentValue))
+                ThrowJsonException("IntentValue is null or empty string!");
 
-            var type = _expectedTypes.FirstOrDefault(x => x.FullName == typeValue);
+            var intent = _expectedTypes.FirstOrDefault(x => x.Name == intentValue);
+            if (intent == null)
+                ThrowJsonException("IntentValue does not match any expected intent!");
 
-            if (type == null)
-                throw new JsonException("TypeValue does not match any expected type! method: " + nameof(Read) + " class :" + nameof(InterfaceConverter<T, TI1, TI2>));
-
-            if (string.IsNullOrWhiteSpace(type.Assembly.FullName))
-                throw new JsonException("Assembly name is null or empty string! method: " + nameof(Read) + " class :" + nameof(InterfaceConverter<T, TI1, TI2>));
-
-            var deserialized = JsonSerializer.Deserialize(ref reader, type, options);
+            var deserialized = JsonSerializer.Deserialize(ref reader, intent!, options);
             if (deserialized == null)
-                throw new JsonException("De-Serialized object is null here!");
+                ThrowJsonException("De-Serialized object is null here!");
 
             return (T)deserialized;
         }
@@ -75,7 +70,7 @@ namespace GreenEnergyHub.Charges.Core
                         var type = value.GetType();
                         using var jsonDocument = JsonDocument.Parse(JsonSerializer.Serialize(value, type, options));
                         writer.WriteStartObject();
-                        writer.WriteString("$type", type.FullName);
+                        writer.WriteString("$intent", type.Name);
 
                         foreach (var element in jsonDocument.RootElement.EnumerateObject())
                         {
@@ -86,6 +81,11 @@ namespace GreenEnergyHub.Charges.Core
                         break;
                     }
             }
+        }
+
+        private void ThrowJsonException(string errorMessage)
+        {
+            throw new JsonException($"{errorMessage} method: {nameof(Read)} class :{nameof(InterfaceConverter<T, TI1, TI2>)}");
         }
     }
 }
