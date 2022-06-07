@@ -149,9 +149,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             SetupValidators(inputValidator, businessValidator, validationResult);
             var points = new List<Point>();
             var price = 99.00M;
-            for (var i = 1; i <= 24; i++)
+            for (var i = 0; i <= 23; i++)
             {
-                points.Add(new Point(i, price + i, InstantHelper.GetTodayPlusDaysAtMidnightUtc(i)));
+                points.Add(new Point(1 + i, price + i, InstantHelper.GetTodayAtMidnightUtc() + Duration.FromHours(i)));
             }
 
             var charge = chargeBuilder.WithPoints(points).Build();
@@ -331,13 +331,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         {
             var points = new List<Point>();
             var price = 0.00M;
-            for (var i = 1; i <= 24; i++)
+            var startTime = InstantHelper.GetTodayAtMidnightUtc();
+            for (var i = 0; i <= 23; i++)
             {
-                points.Add(new Point(i, price + i, InstantHelper.GetTodayPlusDaysAtMidnightUtc(i)));
+                points.Add(new Point(1 + i, price + i, startTime + Duration.FromHours(i)));
             }
 
             var startDate = points.Min(x => x.Time);
-            var endDate = points.Max(x => x.Time) + Duration.FromMinutes(1);
+            var endDate = points.Max(x => x.Time) + Duration.FromHours(1);
 
             var operation = new ChargeOperationDtoBuilder()
                 .WithPointsInterval(startDate, endDate)
