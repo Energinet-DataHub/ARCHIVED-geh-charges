@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.TestCore;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Tests.Builders.Command
@@ -34,7 +35,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         private string _chargeName;
         private ChargeType _chargeType;
         private Resolution _resolution;
-        private Resolution _periodResolution;
+        private Resolution _priceResolution;
         private string _operationId;
         private Instant? _pointsStartInterval;
         private Instant? _pointsEndInterval;
@@ -43,10 +44,8 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         {
             _operationId = "operationId";
             _chargeId = "some charge id";
-            _startDateTime = SystemClock.Instance.GetCurrentInstant()
-                .Plus(Duration.FromDays(500));
-            _endDateTime = SystemClock.Instance.GetCurrentInstant()
-                .Plus(Duration.FromDays(1000));
+            _startDateTime = InstantHelper.GetTodayPlusDaysAtMidnightUtc(31);
+            _endDateTime = InstantHelper.GetTodayPlusDaysAtMidnightUtc(32);
             _vatClassification = VatClassification.Vat25;
             _taxIndicator = TaxIndicator.Tax;
             _owner = "owner";
@@ -55,9 +54,9 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             _chargeType = ChargeType.Fee;
             _points = new List<Point>();
             _resolution = Resolution.PT1H;
-            _periodResolution = Resolution.PT1H;
-            _pointsStartInterval = SystemClock.Instance.GetCurrentInstant().Minus(Duration.FromDays(1));
-            _pointsEndInterval = SystemClock.Instance.GetCurrentInstant().Plus(Duration.FromDays(3));
+            _priceResolution = Resolution.PT1H;
+            _pointsStartInterval = _startDateTime;
+            _pointsEndInterval = _endDateTime;
         }
 
         public ChargeOperationDtoBuilder WithDescription(string description)
@@ -162,9 +161,9 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             return this;
         }
 
-        public ChargeOperationDtoBuilder WithPriceResolution(Resolution periodResolution)
+        public ChargeOperationDtoBuilder WithPriceResolution(Resolution priceResolution)
         {
-            _periodResolution = periodResolution;
+            _priceResolution = priceResolution;
             return this;
         }
 
@@ -178,7 +177,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
                 _description,
                 _owner,
                 _resolution,
-                _periodResolution,
+                _priceResolution,
                 _taxIndicator,
                 _transparentInvoicing,
                 _vatClassification,
