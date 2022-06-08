@@ -70,7 +70,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         }
 
         [Fact]
-        public void IsValid_WhenCalledWithUnknownPriceResolution_ShouldThrow()
+        public void IsValid_WhenCalledWithUnknownPriceResolution_ShouldThrowArgumentException()
         {
             // Arrange
             var dto = new ChargeOperationDtoBuilder().WithPriceResolution(Resolution.Unknown).Build();
@@ -83,6 +83,22 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
             // Assert
             act.Should().Throw<ArgumentException>();
+        }
+
+        [Fact]
+        public void IsValid_WhenCalledWithNonExistingPriceResolution_ShouldThrowArgumentOutOfRangeException()
+        {
+            // Arrange
+            var dto = new ChargeOperationDtoBuilder().WithPriceResolution((Resolution)99).Build();
+
+            // Act
+            Action act = () =>
+            {
+                var notUsed = new NumberOfPointsMatchTimeIntervalAndResolutionRule(dto);
+            };
+
+            // Assert
+            act.Should().Throw<ArgumentOutOfRangeException>();
         }
     }
 }
