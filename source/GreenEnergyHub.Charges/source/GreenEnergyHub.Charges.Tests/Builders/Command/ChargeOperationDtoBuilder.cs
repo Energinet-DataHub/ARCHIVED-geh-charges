@@ -132,7 +132,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
 
         public ChargeOperationDtoBuilder WithPoint(int position, decimal price)
         {
-            _points.Add(new Point(position, price, SystemClock.Instance.GetCurrentInstant()));
+            _points.Add(new Point(position, price, _startDateTime));
             return this;
         }
 
