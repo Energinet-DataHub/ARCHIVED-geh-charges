@@ -172,6 +172,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             // Arrange
             var correlationId = Guid.NewGuid().ToString();
             var expectedTime = InstantPattern.ExtendedIso.Parse("2020-12-31T23:00:00Z").Value;
+            var expectedStartInterval = InstantPattern.ExtendedIso.Parse("2020-12-31T23:00:00Z").Value;
+            var expectedEndInterval = InstantPattern.ExtendedIso.Parse("2021-02-28T23:00:00Z").Value;
             var reader = GetReaderAndArrangeTest(
                 context,
                 iso8601Durations,
@@ -199,6 +201,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             actualChargeOperation.VatClassification.Should().Be(VatClassification.Unknown);
             actualChargeOperation.TransparentInvoicing.Should().Be(TransparentInvoicing.Unknown);
             actualChargeOperation.TaxIndicator.Should().Be(TaxIndicator.Unknown);
+            actualChargeOperation.PointsStartInterval.Should().Be(expectedStartInterval);
+            actualChargeOperation.PointsEndInterval.Should().Be(expectedEndInterval);
 
             // Points
             actualChargeOperation.Points.Should().HaveCount(2);

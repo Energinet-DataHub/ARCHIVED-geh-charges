@@ -13,10 +13,10 @@
 // limitations under the License.
 
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
@@ -39,9 +39,11 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 
             foreach (var chargeOperationDto in chargeCommandAcceptedEvent.Command.ChargeOperations)
             {
-                await _chargePublisher.PublishChargeCreatedAsync(chargeOperationDto).ConfigureAwait(false);
-
-                if (chargeOperationDto.Points.Any())
+                if (chargeCommandAcceptedEvent.Command.Document.BusinessReasonCode == BusinessReasonCode.UpdateChargeInformation)
+                {
+                    await _chargePublisher.PublishChargeCreatedAsync(chargeOperationDto).ConfigureAwait(false);
+                }
+                else
                 {
                     await _chargePricesUpdatedPublisher
                         .PublishChargePricesAsync(chargeOperationDto)
