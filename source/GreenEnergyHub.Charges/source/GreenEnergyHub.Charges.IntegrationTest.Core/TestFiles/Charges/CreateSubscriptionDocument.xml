@@ -34,15 +34,15 @@ limitations under the License.
                 <cim:name>Charge Sub Name</cim:name>
                 <cim:description>The charge subscription description</cim:description>
                 <cim:priceTimeFrame_Period.resolution>P1M</cim:priceTimeFrame_Period.resolution>
-                <cim:effectiveDate>{{$isoTimestampPlusOneMonth}}</cim:effectiveDate>
+                <cim:effectiveDate>{{$NextYear}}-12-31T23:00:00Z</cim:effectiveDate>
                 <cim:VATPayer>D01</cim:VATPayer>
                 <cim:transparentInvoicing>false</cim:transparentInvoicing>
                 <cim:taxIndicator>false</cim:taxIndicator>
                 <cim:Series_Period>
                     <cim:resolution>P1M</cim:resolution>
                     <cim:timeInterval>
-                        <cim:start>{{$YMDHM_TimestampPlusOneMonth}}</cim:start>
-                        <cim:end>{{$YMDHM_TimestampPlusOneMonth}}</cim:end>
+                        <cim:start>{{$NextYear}}-12-31T23:00Z</cim:start>
+                        <cim:end>{{$NextYear}}-01-31T23:00Z</cim:end>
                     </cim:timeInterval>
                     <cim:Point>
                         <cim:position>1</cim:position>
