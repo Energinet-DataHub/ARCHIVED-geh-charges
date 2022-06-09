@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.SystemTests
         private BusinessProcessConfiguration Configuration { get; }
 
         [SystemFact]
-        public async Task When_SubmittingCreateSubscriptionDocument_Then_PeekReturnsCorrespondingConfirmation()
+        public async Task When_SubmittingCreateSubscriptionWithPriceDocument_Then_PeekReturnsCorrespondingConfirmation()
         {
             // Setup
             await FlushPostOfficeQueueAsync();
