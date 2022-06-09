@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
 
         internal const string SeriesPeriod = "Series_Period";
 
-        internal const string PeriodResolution = "resolution";
+        internal const string PriceResolution = "resolution";
 
         internal const string TimeInterval = "timeInterval";
 

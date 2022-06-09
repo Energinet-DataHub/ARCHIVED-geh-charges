@@ -83,9 +83,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void CreateRulesForChargeCommand_AllRulesThatNeedTriggeredByForErrorMessage_MustImplementIValidationRuleWithExtendedData(
             CimValidationErrorTextToken cimValidationErrorTextToken,
             ChargeOperationInputValidationRulesFactory sut,
-            ChargeOperationDto chargeOperationDto)
+            ChargeOperationDtoBuilder chargeOperationDtoBuilder)
         {
             // Arrange
+            var chargeOperationDto = chargeOperationDtoBuilder.Build();
+
             // Act
             var validationRules = sut.CreateRules(chargeOperationDto).GetRules();
 
@@ -115,6 +117,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 typeof(ChargeTypeTariffPriceCountRule),
                 typeof(MaximumPriceRule),
                 typeof(StartDateValidationRule),
+                typeof(MaximumPriceRule),
             };
             return expectedRules;
         }
