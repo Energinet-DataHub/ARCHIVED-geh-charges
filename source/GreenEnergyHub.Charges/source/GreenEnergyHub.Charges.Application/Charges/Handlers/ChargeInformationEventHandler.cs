@@ -153,13 +153,21 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         private void HandleUpdateEvent(Charge charge, ChargeOperationDto chargeOperationDto)
         {
             var newChargePeriod = _chargePeriodFactory.CreateFromChargeOperationDto(chargeOperationDto);
-            charge.Update(newChargePeriod);
+            charge.Update(
+                newChargePeriod,
+                chargeOperationDto.TaxIndicator == TaxIndicator.Tax,
+                chargeOperationDto.Resolution,
+                chargeOperationDto.Id);
         }
 
         private void HandleCancelStopEvent(Charge charge, ChargeOperationDto chargeOperationDto)
         {
             var newChargePeriod = _chargePeriodFactory.CreateFromChargeOperationDto(chargeOperationDto);
-            charge.CancelStop(newChargePeriod);
+            charge.CancelStop(
+                newChargePeriod,
+                chargeOperationDto.TaxIndicator == TaxIndicator.Tax,
+                chargeOperationDto.Resolution,
+                chargeOperationDto.Id);
         }
 
         private static OperationType GetOperationType(ChargeOperationDto chargeOperationDto, Charge? charge)

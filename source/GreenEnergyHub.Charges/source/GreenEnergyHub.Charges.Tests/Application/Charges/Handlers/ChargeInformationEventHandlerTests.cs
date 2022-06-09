@@ -162,12 +162,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             ChargeInformationEventHandler sut)
         {
             // Arrange
-            var updateOperationDto = chargeOperationDtoBuilder.WithStartDateTime(InstantHelper.GetTodayAtMidnightUtc()).Build();
+            var charge = chargeBuilder.Build();
+            var updateOperationDto = chargeOperationDtoBuilder
+                .WithStartDateTime(InstantHelper.GetTodayAtMidnightUtc())
+                .Build();
             var chargeCommand = chargeCommandBuilder.WithChargeOperation(updateOperationDto).Build();
             var receivedEvent = new ChargeCommandReceivedEvent(InstantHelper.GetTodayAtMidnightUtc(), chargeCommand);
             var validationResult = ValidationResult.CreateSuccess();
             SetupValidators(inputValidator, businessValidator, validationResult);
-            var charge = chargeBuilder.Build();
             var newPeriod = chargePeriodBuilder
                 .WithStartDateTime(updateOperationDto.StartDateTime)
                 .Build();

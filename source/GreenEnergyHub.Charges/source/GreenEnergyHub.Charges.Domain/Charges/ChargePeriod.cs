@@ -22,8 +22,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
     /// </summary>
     public class ChargePeriod
     {
-        public ChargePeriod(
-            Guid id,
+        private ChargePeriod(
             string name,
             string description,
             VatClassification vatClassification,
@@ -31,7 +30,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             Instant startDateTime,
             Instant endDateTime)
         {
-            Id = id;
+            Id = Guid.NewGuid();
             Name = name;
             Description = description;
             VatClassification = vatClassification;
@@ -90,7 +89,6 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             }
 
             return new ChargePeriod(
-                Id,
                 Name,
                 Description,
                 VatClassification,
@@ -111,7 +109,6 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             ArgumentNullException.ThrowIfNull(description);
 
             return new ChargePeriod(
-                Guid.NewGuid(),
                 name,
                 description,
                 vatClassification,

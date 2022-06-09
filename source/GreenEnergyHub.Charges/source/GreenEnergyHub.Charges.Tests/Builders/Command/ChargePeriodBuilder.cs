@@ -47,8 +47,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
 
         public ChargePeriod Build()
         {
-            return new ChargePeriod(
-                Guid.NewGuid(),
+            return ChargePeriod.Create(
                 _name,
                 Description,
                 VatClassification.Vat25,

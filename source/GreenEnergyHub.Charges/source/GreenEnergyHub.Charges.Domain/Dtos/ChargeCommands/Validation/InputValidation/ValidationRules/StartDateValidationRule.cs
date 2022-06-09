@@ -20,8 +20,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 {
     public class StartDateValidationRule : IValidationRule
     {
+        // -720 lower limit is only for test environments. In production this should be +31 days
         private const int LowerTimeLimitInDays = -720;
-        private const int UpperTimeLimitInDays = -1095;
+        private const int UpperTimeLimitInDays = 1095;
         private readonly Instant _validityStartDate;
         private readonly Instant _periodStart;
         private readonly Instant _periodEnd;
@@ -34,13 +35,12 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
             _validityStartDate = startDate;
             var today = zonedDateTimeService.GetZonedDateTime(clock.GetCurrentInstant()).Date;
             _periodStart = CalculatePeriodPoint(LowerTimeLimitInDays, zonedDateTimeService, today);
-            // TODO: Ask Peter or Irene why "+ 1"?
-            _periodEnd = CalculatePeriodPoint(UpperTimeLimitInDays + 1, zonedDateTimeService, today);
+            _periodEnd = CalculatePeriodPoint(UpperTimeLimitInDays, zonedDateTimeService, today);
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.StartDateValidation;
 
-        public bool IsValid => _validityStartDate >= _periodStart && _validityStartDate < _periodEnd;
+        public bool IsValid => _validityStartDate >= _periodStart && _validityStartDate <= _periodEnd;
 
         private static Instant CalculatePeriodPoint(
             int numberOfDays,

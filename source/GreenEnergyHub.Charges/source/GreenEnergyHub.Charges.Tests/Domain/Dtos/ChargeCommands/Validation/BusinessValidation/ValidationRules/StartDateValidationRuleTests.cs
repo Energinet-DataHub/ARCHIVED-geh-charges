@@ -39,22 +39,21 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
     public class StartDateValidationRuleTests
     {
         [Theory]
-        [InlineAutoMoqData("2020-05-10T13:00:00Z", "2010-05-10T21:59:59Z", "Europe/Copenhagen", false)]
-        [InlineAutoMoqData("2020-05-10T13:00:00Z", "2020-05-10T22:00:00Z", "Europe/Copenhagen", true)]
-        [InlineAutoMoqData("2020-05-10T13:00:00Z", "2030-05-13T21:59:59Z", "Europe/Copenhagen", false)]
+        [InlineAutoMoqData(-1000, false)]
+        [InlineAutoMoqData(0, true)]
+        [InlineAutoMoqData(2000, false)]
         public void IsValid_WhenStartDateIsWithinInterval_IsTrue(
-            string nowIsoString,
-            string effectuationDateIsoString,
-            string timeZoneId,
+            int daysOffset,
             bool expected,
             [Frozen] ChargeOperationDtoBuilder builder)
         {
             // Arrange
+            var effectiveDate = InstantHelper.GetTodayPlusDaysAtMidnightUtc(daysOffset);
+            var clock = new FakeClock(InstantHelper.GetTodayAtMidnightUtc());
+            var zonedDateTimeService = new ZonedDateTimeService(clock, new Iso8601ConversionConfiguration("Europe/Copenhagen"));
             var chargeOperationDto = builder
-                .WithStartDateTime(InstantPattern.General.Parse(effectuationDateIsoString).Value)
+                .WithStartDateTime(effectiveDate)
                 .Build();
-            var zonedDateTimeService = CreateLocalDateTimeService(timeZoneId);
-            var clock = new FakeClock(InstantPattern.General.Parse(nowIsoString).Value);
 
             // Act (implicit)
             var sut = new StartDateValidationRule(chargeOperationDto.StartDateTime, zonedDateTimeService, clock);
@@ -69,19 +68,13 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         {
             // Arrange
             var chargeOperationDto = builder.WithStartDateTime(InstantHelper.GetEndDefault()).Build();
-            var zonedDateTimeService = CreateLocalDateTimeService("Europe/Copenhagen");
+            var zonedDateTimeService = new ZonedDateTimeService(clock, new Iso8601ConversionConfiguration("Europe/Copenhagen"));
 
             // Act (implicit)
             var sut = new StartDateValidationRule(chargeOperationDto.StartDateTime, zonedDateTimeService, clock);
 
             // Assert
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.StartDateValidation);
-        }
-
-        private static ZonedDateTimeService CreateLocalDateTimeService(string timeZoneId)
-        {
-            var clock = new Mock<IClock>();
-            return new ZonedDateTimeService(clock.Object, new Iso8601ConversionConfiguration(timeZoneId));
         }
     }
 }

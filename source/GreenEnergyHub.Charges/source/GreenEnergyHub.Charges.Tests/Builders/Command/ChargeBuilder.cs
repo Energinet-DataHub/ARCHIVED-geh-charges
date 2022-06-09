@@ -30,6 +30,20 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         private List<ChargePeriod> _periods = new();
         private string _senderProvidedChargeId = "SenderProvidedChargeId";
         private Instant _startDate = InstantHelper.GetStartDefault();
+        private Resolution _resolution = Resolution.PT1H;
+        private bool _taxIndicator = true;
+
+        public ChargeBuilder WithTaxIndicator(bool taxIndicator)
+        {
+            _taxIndicator = taxIndicator;
+            return this;
+        }
+
+        public ChargeBuilder WithResolution(Resolution resolution)
+        {
+            _resolution = resolution;
+            return this;
+        }
 
         public ChargeBuilder WithPoints(IEnumerable<Point> points)
         {
@@ -87,8 +101,8 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
                 _senderProvidedChargeId,
                 _ownerId,
                 ChargeType.Tariff,
-                Resolution.PT1H,
-                true,
+                _resolution,
+                _taxIndicator,
                 VatClassification.Unknown,
                 true,
                 _startDate);
@@ -103,7 +117,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
                             $"Could not create charge periods in {nameof(ChargeBuilder)}. Period must have infinite end date.");
                     }
 
-                    charge.Update(period);
+                    charge.Update(period, _taxIndicator, _resolution, Guid.NewGuid().ToString());
                 }
             }
 

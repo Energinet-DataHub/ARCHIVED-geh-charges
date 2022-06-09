@@ -15,11 +15,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Charges.Exceptions;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.TestCore;
-using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
+using Moq;
 using NodaTime;
 using Xunit;
 using Xunit.Categories;
@@ -29,6 +33,35 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
     [UnitTest]
     public class ChargeTests
     {
+        [Theory]
+        [InlineAutoMoqData(false, true)]
+        [InlineAutoMoqData(true, false)]
+        public void UpdateCharge_NewPeriodChangeTaxIndicator_ShouldThrowExceptionWithInvalidRule(
+            bool existingTax,
+            bool newTax)
+        {
+            // Arrange
+            var sut = new ChargeBuilder()
+                .WithName("ExistingPeriod")
+                .WithTaxIndicator(existingTax)
+                .WithStartDate(InstantHelper.GetTodayAtMidnightUtc())
+                .Build();
+
+            var newPeriod = new ChargePeriodBuilder()
+                .WithName("NewPeriod")
+                .WithStartDateTime(InstantHelper.GetTomorrowAtMidnightUtc())
+                .Build();
+
+            // Act & Assert
+            var ex = Assert.Throws<ChargeOperationFailedException>(() => sut.Update(
+                newPeriod,
+                newTax,
+                sut.Resolution,
+                Guid.NewGuid().ToString()));
+            ex.InvalidRules.Should().Contain(r =>
+                r.ValidationRule.ValidationRuleIdentifier == ValidationRuleIdentifier.ChangingTariffTaxValueNotAllowed);
+        }
+
         [Fact]
         public void UpdateCharge_NewPeriodInsideSingleExistingPeriod_SetsNewEndDateForExistingPeriodAndInsertsNewPeriod()
         {
@@ -44,7 +77,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
                 .Build();
 
             // Act
-            sut.Update(newPeriod);
+            sut.Update(
+                newPeriod,
+                sut.TaxIndicator,
+                sut.Resolution,
+                Guid.NewGuid().ToString());
 
             // Assert
             var actualTimeline = sut.Periods.OrderBy(p => p.StartDateTime).ToList();
@@ -75,7 +112,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
                 .Build();
 
             // Act
-            sut.Update(newPeriod);
+            sut.Update(
+                newPeriod,
+                sut.TaxIndicator,
+                sut.Resolution,
+                Guid.NewGuid().ToString());
 
             // Assert
             var actualTimeline = sut.Periods.OrderBy(p => p.StartDateTime).ToList();
@@ -109,7 +150,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
                 .Build();
 
             // Act
-            sut.Update(newPeriod);
+            sut.Update(
+                newPeriod,
+                sut.TaxIndicator,
+                sut.Resolution,
+                Guid.NewGuid().ToString());
 
             // Assert
             var actualFirstPeriod = sut.Periods.Single();
@@ -120,12 +165,16 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
         }
 
         [Theory]
-        [InlineAutoMoqData]
+        [GreenEnergyHub.Charges.TestCore.Attributes.InlineAutoMoqData]
         public void UpdateCharge_WhenChargePeriodIsNull_ThrowsArgumentNullException(Charge sut)
         {
             ChargePeriod? chargePeriod = null;
 
-            Assert.Throws<ArgumentNullException>(() => sut.Update(chargePeriod!));
+            Assert.Throws<ArgumentNullException>(() => sut.Update(
+                chargePeriod!,
+                sut.TaxIndicator,
+                sut.Resolution,
+                It.IsAny<string>()));
         }
 
         [Fact]
@@ -147,7 +196,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
                 .Build();
 
             // Act
-            Assert.Throws<InvalidOperationException>(() => sut.Update(newPeriod));
+            Assert.Throws<InvalidOperationException>(() => sut.Update(
+                newPeriod,
+                sut.TaxIndicator,
+                sut.Resolution,
+                Guid.NewGuid().ToString()));
         }
 
         [Fact]
@@ -163,7 +216,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
                 .Build();
 
             // Act
-            sut.Update(newPeriod);
+            sut.Update(
+                newPeriod,
+                sut.TaxIndicator,
+                sut.Resolution,
+                Guid.NewGuid().ToString());
 
             // Assert
             var actualTimeline = sut.Periods.OrderBy(p => p.StartDateTime).ToList();
@@ -323,7 +380,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             var sut = new ChargeBuilder().WithName("oldName").WithStopDate(stopDate).Build();
 
             // Act
-            sut.CancelStop(newPeriod);
+            sut.CancelStop(
+                newPeriod,
+                sut.TaxIndicator,
+                sut.Resolution,
+                It.IsAny<string>());
 
             // Assert
             var orderedPeriods = sut.Periods.OrderBy(p => p.StartDateTime).ToList();
@@ -345,7 +406,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             var cancelPeriod = new ChargePeriodBuilder().WithStartDateTime(InstantHelper.GetTodayAtMidnightUtc()).Build();
 
             // Act & Assert
-            Assert.Throws<InvalidOperationException>(() => sut.CancelStop(cancelPeriod));
+            Assert.Throws<InvalidOperationException>(() => sut.CancelStop(
+                cancelPeriod,
+                sut.TaxIndicator,
+                sut.Resolution,
+                It.IsAny<string>()));
         }
 
         [Fact]
@@ -356,7 +421,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             var sut = new ChargeBuilder().Build();
 
             // Act & Assert
-            Assert.Throws<InvalidOperationException>(() => sut.CancelStop(chargePeriod));
+            Assert.Throws<InvalidOperationException>(() => sut.CancelStop(
+                chargePeriod,
+                sut.TaxIndicator,
+                sut.Resolution,
+                It.IsAny<string>()));
         }
 
         [Fact]

@@ -22,8 +22,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
     {
         public ChargePeriod CreateFromChargeOperationDto(ChargeOperationDto chargeOperationDto)
         {
-            return new ChargePeriod(
-                Guid.NewGuid(),
+            return ChargePeriod.Create(
                 chargeOperationDto.ChargeName,
                 chargeOperationDto.ChargeDescription,
                 chargeOperationDto.VatClassification,

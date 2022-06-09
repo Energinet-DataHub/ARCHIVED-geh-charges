@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges.Exceptions;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using NodaTime;
 
@@ -112,7 +113,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
                 startDate,
                 InstantExtensions.GetEndDefault());
 
-            var validationResult = CheckRules(startDate);
+            var validationResult = CheckRules(Array.Empty<IValidationRuleContainer>());
             if (validationResult.IsFailed)
             {
                 throw new ChargeOperationFailedException(validationResult.InvalidRules);
@@ -135,17 +136,25 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         /// https://github.com/Energinet-DataHub/geh-charges/tree/main/docs/process-flows#persist-charge
         /// </summary>
         /// <param name="newChargePeriod">New Charge Period from update charge request</param>
+        /// <param name="taxIndicator">Tax indicator in the update charge request</param>
+        /// <param name="resolution">Resolution of the update charge request</param>
+        /// <param name="operationId">Charge operation id</param>
         /// <exception cref="ArgumentNullException">Throws when <paramref name="newChargePeriod"/> is empty</exception>
-        public void Update(ChargePeriod newChargePeriod)
+        public void Update(ChargePeriod newChargePeriod, bool taxIndicator, Resolution resolution, string operationId)
         {
             if (newChargePeriod == null) throw new ArgumentNullException(nameof(newChargePeriod));
+            if (operationId == null) throw new ArgumentNullException(nameof(operationId));
 
+            // This should be in a separate rule and handled by ChargeOperationFailedException
+            // in order to notify sender that operation failed because of this constraint
             if (newChargePeriod.EndDateTime != InstantExtensions.GetEndDefault())
             {
                 throw new InvalidOperationException("Charge update must not have bound end date.");
             }
 
-            var validationResult = CheckRules(newChargePeriod.StartDateTime);
+            var rules = GenerateRules(newChargePeriod, taxIndicator, resolution, operationId);
+
+            var validationResult = CheckRules(rules);
             if (validationResult.IsFailed)
             {
                 throw new ChargeOperationFailedException(validationResult.InvalidRules);
@@ -183,14 +192,23 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             _points.RemoveAll(p => p.Time >= stopDate);
         }
 
-        public void CancelStop(ChargePeriod chargePeriod)
+        public void CancelStop(ChargePeriod chargePeriod, bool taxIndicator, Resolution resolution, string operationId)
         {
             var existingLastPeriod = _periods.OrderByDescending(p => p.StartDateTime).First();
 
+            // This should be in a separate rule and handled by ChargeOperationFailedException
+            // in order to notify sender that operation failed because of this constraint
             if (chargePeriod.StartDateTime != existingLastPeriod.EndDateTime)
             {
                 throw new InvalidOperationException(
                     "Cannot cancel stop when new start date is not equal to existing stop date.");
+            }
+
+            var rules = GenerateRules(chargePeriod, taxIndicator, resolution, operationId).ToList();
+            var validationResult = CheckRules(rules);
+            if (validationResult.IsFailed)
+            {
+                throw new ChargeOperationFailedException(validationResult.InvalidRules);
             }
 
             _periods.Add(chargePeriod);
@@ -222,6 +240,8 @@ namespace GreenEnergyHub.Charges.Domain.Charges
                     p.EndDateTime >= stopDate &&
                     p.StartDateTime <= stopDate);
 
+            // This should be in a separate rule and handled by ChargeOperationFailedException
+            // in order to notify sender that operation failed because of this constraint
             if (previousPeriod == null)
             {
                 throw new InvalidOperationException("Cannot stop charge. No period exist on stop date.");
@@ -240,12 +260,48 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 
         private void RemoveAllSubsequentPeriods(Instant date)
         {
-            _periods.RemoveAll(p => p.StartDateTime >= date);
+            bool Predicate(ChargePeriod p) => p.StartDateTime >= date;
+            if (_periods.Any(Predicate))
+            {
+                _periods.RemoveAll(Predicate);
+            }
         }
 
-        private static ValidationResult CheckRules(Instant startDate)
+        private IEnumerable<IValidationRuleContainer> GenerateRules(
+            ChargePeriod newChargePeriod,
+            bool taxIndicator,
+            Resolution resolution,
+            string operationId)
         {
-            return ValidationResult.CreateSuccess();
+            var rules = new List<IValidationRuleContainer>
+            {
+                new OperationValidationRuleContainer(
+                    new ChangingTariffTaxValueNotAllowedRule(
+                        taxIndicator,
+                        TaxIndicator),
+                    operationId),
+                new OperationValidationRuleContainer(
+                    new UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateRule(
+                        this,
+                        newChargePeriod.StartDateTime),
+                    operationId),
+                new OperationValidationRuleContainer(
+                    new ChargeResolutionCanNotBeUpdatedRule(
+                        this,
+                        resolution),
+                    operationId),
+            };
+            return rules;
+        }
+
+        private static ValidationResult CheckRules(IEnumerable<IValidationRuleContainer> rules)
+        {
+            var invalidRules = rules
+                .Where(r => r.ValidationRule.IsValid == false)
+                .ToList();
+            return invalidRules.Any()
+                ? ValidationResult.CreateFailure(invalidRules)
+                : ValidationResult.CreateSuccess();
         }
     }
 }
