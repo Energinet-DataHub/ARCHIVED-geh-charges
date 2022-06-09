@@ -14,7 +14,6 @@
 module "func_functionhost" {
   source                                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/function-app?ref=6.0.0"
 
-
   name                                      = "functionhost"
   project_name                              = var.domain_name_short
   environment_short                         = var.environment_short
@@ -43,8 +42,8 @@ module "func_functionhost" {
     DOMAINEVENT_SENDER_CONNECTION_STRING                            = module.sb_charges.primary_connection_strings["send"]
     DOMAINEVENT_MANAGER_CONNECTION_STRING                           = module.sb_charges.primary_connection_strings["manage"]
     DOMAINEVENT_LISTENER_CONNECTION_STRING                          = module.sb_charges.primary_connection_strings["listen"]
-    CHARGE_CREATED_TOPIC_NAME                                       = data.azurerm_key_vault_secret.sbt_charge_created_name.value
-    CHARGE_PRICES_UPDATED_TOPIC_NAME                                = data.azurerm_key_vault_secret.sbt_charge_prices_updated_name.value
+    CHARGE_CREATED_TOPIC_NAME                                       = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbt-charge-created-name)"
+    CHARGE_PRICES_UPDATED_TOPIC_NAME                                = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbt-charge-prices-updated-name)"
     CHARGE_LINKS_ACCEPTED_TOPIC_NAME                                = module.sbt_links_command_accepted.name
     CHARGE_LINKS_REJECTED_TOPIC_NAME                                = module.sbt_links_command_rejected.name
     CHARGE_LINKS_REJECTED_SUBSCRIPTION_NAME                         = "links-command-rejected"
@@ -52,7 +51,7 @@ module "func_functionhost" {
     CHARGE_LINKS_ACCEPTED_SUB_EVENT_PUBLISHER                       = "charge-links-accepted-sub-event-publisher"
     CHARGE_LINKS_ACCEPTED_SUB_DATA_AVAILABLE_NOTIFIER               = "charge-links-accepted-sub-data-available-notifier"
     CHARGE_LINKS_ACCEPTED_SUB_CONFIRMATION_NOTIFIER                 = "charge-links-accepted-sub-confirmation-notifier"
-    CHARGE_LINKS_CREATED_TOPIC_NAME                                 = data.azurerm_key_vault_secret.sbt_charge_link_created_name.value
+    CHARGE_LINKS_CREATED_TOPIC_NAME                                 = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbt-charge-link-created-name)"
     CHARGE_LINKS_RECEIVED_TOPIC_NAME                                = module.sbt_links_command_received.name
     CHARGE_LINKS_RECEIVED_SUBSCRIPTION_NAME                         = "links-command-received-receiver"
     COMMAND_ACCEPTED_TOPIC_NAME                                     = module.sbt_command_accepted.name
@@ -65,32 +64,32 @@ module "func_functionhost" {
     COMMAND_REJECTED_SUBSCRIPTION_NAME                              = "command-rejected"
     DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_TOPIC_NAME         = module.sbt_default_charge_links_available_notified.name
     DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_SUBSCRIPTION_NAME  = "default-charge-links-available-notified"
-    CREATE_LINKS_REQUEST_QUEUE_NAME                                 = data.azurerm_key_vault_secret.sbq_create_link_request_name.value
-    METERING_POINT_CREATED_TOPIC_NAME                               = data.azurerm_key_vault_secret.sbt_metering_point_created_name.value
-    METERING_POINT_CREATED_SUBSCRIPTION_NAME                        = data.azurerm_key_vault_secret.sbs_metering_point_created_sub_charges_name.value
+    CREATE_LINKS_REQUEST_QUEUE_NAME                                 = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbq-create-link-request-name)"
+    METERING_POINT_CREATED_TOPIC_NAME                               = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbt-metering-point-created-name)"
+    METERING_POINT_CREATED_SUBSCRIPTION_NAME                        = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbs-metering-point-created-sub-charges-name)"
     MARKET_PARTICIPANT_CHANGED_TOPIC_NAME                           = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbt-market-participant-changed-name)"
     MARKET_PARTICIPANT_CHANGED_SUBSCRIPTION_NAME                    = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbs-market-participant-changed-to-charges-name)"
 
     # Shared resources
-    INTEGRATIONEVENT_SENDER_CONNECTION_STRING                       = data.azurerm_key_vault_secret.sb_domain_relay_send_connection_string.value
-    INTEGRATIONEVENT_LISTENER_CONNECTION_STRING                     = data.azurerm_key_vault_secret.sb_domain_relay_listen_connection_string.value
-    INTEGRATIONEVENT_MANAGER_CONNECTION_STRING                      = data.azurerm_key_vault_secret.sb_domain_relay_manage_connection_string.value
+    INTEGRATIONEVENT_SENDER_CONNECTION_STRING                       = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-send-connection-string)"
+    INTEGRATIONEVENT_LISTENER_CONNECTION_STRING                     = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-listen-connection-string)"
+    INTEGRATIONEVENT_MANAGER_CONNECTION_STRING                      = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-manage-connection-string)"
     MARKET_PARTICIPANT_REGISTRY_CONNECTION_STRING                   = local.MS_MARKET_PARTICIPANT_REGISTRY_CONNECTION_STRING
 
     # Message Hub
-    MESSAGEHUB_STORAGE_CONNECTION_STRING                            = data.azurerm_key_vault_secret.messagehub_storage_connection_string.value
-    MESSAGEHUB_STORAGE_CONTAINER                                    = data.azurerm_key_vault_secret.messagehub_storage_container.value
+    MESSAGEHUB_STORAGE_CONNECTION_STRING                            = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=st-marketres-primary-connection-string)"
+    MESSAGEHUB_STORAGE_CONTAINER                                    = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=st-marketres-postofficereply-container-name)"
     MESSAGEHUB_DATAAVAILABLE_QUEUE                                  = "dataavailable"
     MESSAGEHUB_BUNDLEREQUEST_QUEUE                                  = "charges"
     MESSAGEHUB_BUNDLEREPLY_QUEUE                                    = "charges-reply"
 
     # Shared resources logging
-    REQUEST_RESPONSE_LOGGING_CONNECTION_STRING                      = data.azurerm_key_vault_secret.st_market_operator_logs_primary_connection_string.value
-    REQUEST_RESPONSE_LOGGING_CONTAINER_NAME                         = data.azurerm_key_vault_secret.st_market_operator_logs_container_name.value
+    REQUEST_RESPONSE_LOGGING_CONNECTION_STRING                      = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=st-marketoplogs-primary-connection-string)"
+    REQUEST_RESPONSE_LOGGING_CONTAINER_NAME                         = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=st-marketoplogs-container-name)"
 
     # JWT token
-    B2C_TENANT_ID                                                   = data.azurerm_key_vault_secret.b2c_tenant_id.value
-    BACKEND_SERVICE_APP_ID                                          = data.azurerm_key_vault_secret.backend_service_app_id.value
+    B2C_TENANT_ID                                                   = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=b2c-tenant-id)"
+    BACKEND_SERVICE_APP_ID                                          = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=backend-service-app-id)"
   }
 
   tags                                      = azurerm_resource_group.this.tags
