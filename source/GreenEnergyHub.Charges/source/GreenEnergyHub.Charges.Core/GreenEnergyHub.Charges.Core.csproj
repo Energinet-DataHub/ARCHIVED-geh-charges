@@ -24,7 +24,7 @@ limitations under the License.
       <PackageReference Include="NodaTime" Version="3.1.0" />
       <PackageReference Include="NodaTime.Serialization.JsonNet" Version="3.0.0" />
       <PackageReference Include="Google.Protobuf" Version="3.20.1" />
-      <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.354">
+      <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.435">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
