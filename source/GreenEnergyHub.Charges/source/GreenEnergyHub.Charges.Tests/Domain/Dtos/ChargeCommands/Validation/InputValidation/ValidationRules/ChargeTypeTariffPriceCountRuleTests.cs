@@ -41,6 +41,31 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [InlineAutoMoqData(1, false)]
+        [InlineAutoMoqData(2, false)]
+        [InlineAutoMoqData(24, false)]
+        [InlineAutoMoqData(92, true)]
+        [InlineAutoMoqData(96, true)]
+        [InlineAutoMoqData(100, true)]
+        public void IsValid_WhenPT15MAndAtLeast92PricePoints_IsTrue(
+            int priceCount,
+            bool expected,
+            ChargeOperationDtoBuilder chargeOperationDtoBuilder)
+        {
+            // Arrange
+            var chargeOperationDto = chargeOperationDtoBuilder
+                .WithChargeType(ChargeType.Tariff)
+                .WithPriceResolution(Resolution.PT15M)
+                .WithPointWithXNumberOfPrices(priceCount).Build();
+
+            // Act
+            var sut = new ChargeTypeTariffPriceCountRule(chargeOperationDto);
+
+            // Assert
+            sut.IsValid.Should().Be(expected);
+        }
+
+        [Theory]
+        [InlineAutoMoqData(1, false)]
         [InlineAutoMoqData(23, true)]
         [InlineAutoMoqData(24, true)]
         [InlineAutoMoqData(25, true)]
@@ -98,31 +123,6 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             var chargeOperationDto = chargeOperationDtoBuilder
                 .WithChargeType(ChargeType.Tariff)
                 .WithPriceResolution(Resolution.P1M)
-                .WithPointWithXNumberOfPrices(priceCount).Build();
-
-            // Act
-            var sut = new ChargeTypeTariffPriceCountRule(chargeOperationDto);
-
-            // Assert
-            sut.IsValid.Should().Be(expected);
-        }
-
-        [Theory]
-        [InlineAutoMoqData(1, false)]
-        [InlineAutoMoqData(2, false)]
-        [InlineAutoMoqData(24, false)]
-        [InlineAutoMoqData(92, true)]
-        [InlineAutoMoqData(96, true)]
-        [InlineAutoMoqData(100, true)]
-        public void IsValid_WhenPT15MAndAtLeast92PricePoints_IsTrue(
-            int priceCount,
-            bool expected,
-            ChargeOperationDtoBuilder chargeOperationDtoBuilder)
-        {
-            // Arrange
-            var chargeOperationDto = chargeOperationDtoBuilder
-                .WithChargeType(ChargeType.Tariff)
-                .WithPriceResolution(Resolution.PT15M)
                 .WithPointWithXNumberOfPrices(priceCount).Build();
 
             // Act
