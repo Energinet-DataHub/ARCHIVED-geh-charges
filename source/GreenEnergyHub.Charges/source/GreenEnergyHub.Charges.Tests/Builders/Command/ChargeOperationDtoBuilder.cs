@@ -13,9 +13,9 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using System.Linq;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.TestCore;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Tests.Builders.Command
@@ -34,6 +34,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         private string _chargeName;
         private ChargeType _chargeType;
         private Resolution _resolution;
+        private Resolution _priceResolution;
         private string _operationId;
         private Instant? _pointsStartInterval;
         private Instant? _pointsEndInterval;
@@ -42,10 +43,8 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         {
             _operationId = "operationId";
             _chargeId = "some charge id";
-            _startDateTime = SystemClock.Instance.GetCurrentInstant()
-                .Plus(Duration.FromDays(500));
-            _endDateTime = SystemClock.Instance.GetCurrentInstant()
-                .Plus(Duration.FromDays(1000));
+            _startDateTime = InstantHelper.GetTodayPlusDaysAtMidnightUtc(31);
+            _endDateTime = InstantHelper.GetTodayPlusDaysAtMidnightUtc(32);
             _vatClassification = VatClassification.Vat25;
             _taxIndicator = TaxIndicator.Tax;
             _owner = "owner";
@@ -54,8 +53,9 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             _chargeType = ChargeType.Fee;
             _points = new List<Point>();
             _resolution = Resolution.PT1H;
-            _pointsStartInterval = null;
-            _pointsEndInterval = null;
+            _priceResolution = Resolution.PT1H;
+            _pointsStartInterval = _startDateTime;
+            _pointsEndInterval = _endDateTime;
         }
 
         public ChargeOperationDtoBuilder WithDescription(string description)
@@ -127,16 +127,19 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         public ChargeOperationDtoBuilder WithPoints(List<Point> points)
         {
             _points = points;
-            _pointsStartInterval = _points.Min(x => x.Time);
-            _pointsEndInterval = _points.Max(x => x.Time) + Duration.FromMinutes(1);
             return this;
         }
 
         public ChargeOperationDtoBuilder WithPoint(int position, decimal price)
         {
-            _points.Add(new Point(position, price, SystemClock.Instance.GetCurrentInstant()));
-            _pointsStartInterval = _points.Min(x => x.Time);
-            _pointsEndInterval = _points.Max(x => x.Time) + Duration.FromMinutes(1);
+            _points.Add(new Point(position, price, _startDateTime));
+            return this;
+        }
+
+        public ChargeOperationDtoBuilder WithPointsInterval(Instant startTime, Instant endTime)
+        {
+            _pointsStartInterval = startTime;
+            _pointsEndInterval = endTime;
             return this;
         }
 
@@ -148,14 +151,18 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
                 _points.Add(point);
             }
 
-            _pointsStartInterval = _points.Min(x => x.Time);
-            _pointsEndInterval = _points.Max(x => x.Time) + Duration.FromMinutes(1);
             return this;
         }
 
         public ChargeOperationDtoBuilder WithResolution(Resolution resolution)
         {
             _resolution = resolution;
+            return this;
+        }
+
+        public ChargeOperationDtoBuilder WithPriceResolution(Resolution priceResolution)
+        {
+            _priceResolution = priceResolution;
             return this;
         }
 
@@ -169,6 +176,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
                 _description,
                 _owner,
                 _resolution,
+                _priceResolution,
                 _taxIndicator,
                 _transparentInvoicing,
                 _vatClassification,
