@@ -153,6 +153,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         public const string RecipientRoleMustBeDdzErrorText =
             "Recipient role {{DocumentRecipientBusinessProcessRole}} not allowed: the role used with business reason code {{DocumentBusinessReasonCode}} must be metering point administrator (DDZ).";
 
+        [ErrorMessageFor(ValidationRuleIdentifier.NumberOfPointsMatchTimeIntervalAndResolution)]
+        public const string NumberOfPointsMatchTimeIntervalAndResolutionText =
+            "The number of prices received does not match the expected number of prices given the time interval and resolution provided.";
+
         public const string Unknown = "unknown";
     }
 }
