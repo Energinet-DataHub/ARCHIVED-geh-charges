@@ -260,15 +260,17 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 responseAsString.Should().Contain("process.processType' element is invalid - The value 'A99' is invalid according to its datatype");
             }
 
-            /*[Fact]
+            [Fact]
             public async Task Given_ChargePriceMessageWithChargeInformationData_WhenPosted_ThenChargeInformationDataIsIgnored()
             {
                 // Arrange
                 const string senderProvidedChargeId = "TestSub";
                 const ChargeType chargeType = ChargeType.Subscription;
-                var ownerId = new Guid("AF450C03-1937-4EA1-BB66-17B6E4AA51F5"); // MarketParticipant with GLN 5790000432752
+                /*const string ownerGln = "5790000432752";*/
+                var ownerId = new Guid("ed6c94f3-24a8-43b3-913d-bf7513390a32");
 
-                await using var dbContext = Fixture.DatabaseManager.CreateDbContext();
+                await using var chargesDatabaseContext = Fixture.ChargesDatabaseManager.CreateDbContext();
+                await using var messageHubDatabaseContext = Fixture.MessageHubDatabaseManager.CreateDbContext();
                 var (request, _) = await _authenticatedHttpRequestGenerator
                     .CreateAuthenticatedHttpPostRequestAsync(
                         EndpointUrl, ChargeDocument.DeprecatedCreatePricesForSubscription);
@@ -279,18 +281,27 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // Assert
                 actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
                 await FunctionAsserts.AssertHasExecutedAsync(
+                    Fixture.HostManager, nameof(ChargeConfirmationDataAvailableNotifierEndpoint)).ConfigureAwait(false);
+
+                await FunctionAsserts.AssertHasExecutedAsync(
                     Fixture.HostManager, nameof(ChargeDataAvailableNotifierEndpoint)).ConfigureAwait(false);
 
-                var charge = dbContext.Charges.SingleOrDefault(x =>
+                var charge = chargesDatabaseContext.Charges.SingleOrDefault(x =>
                     x.SenderProvidedChargeId == senderProvidedChargeId &&
                     x.OwnerId == ownerId &&
                     x.Type == chargeType);
                 charge.Should().NotBeNull();
                 charge!.Points.Should().NotBeEmpty();
 
+                var availableChargeData = messageHubDatabaseContext.AvailableChargeData.FirstOrDefault();
+                availableChargeData.Should().BeNull();
+
+                var availableChargeReceiptData = messageHubDatabaseContext.AvailableChargeReceiptData.FirstOrDefault();
+                availableChargeReceiptData.Should().NotBeNull();
+
                 // We need to clear host log after each test is done to ensure that we can assert on function executed on each test run because we only check on function name.
                 Fixture.HostManager.ClearHostLog();
-            }*/
+            }
 
             [Fact(Skip = "Used for debugging ChargeCommandReceivedEventHandler")]
             public async Task Given_UpdateRequest_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply()
