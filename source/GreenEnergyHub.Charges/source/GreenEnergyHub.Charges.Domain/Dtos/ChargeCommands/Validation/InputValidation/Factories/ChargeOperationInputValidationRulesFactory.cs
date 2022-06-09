@@ -55,6 +55,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
                 CreateRuleContainer(new ChargePriceMaximumDigitsAndDecimalsRule(chargeOperationDto), chargeOperationDto),
                 CreateRuleContainer(new ChargeTypeTariffPriceCountRule(chargeOperationDto), chargeOperationDto),
                 CreateRuleContainer(new MaximumPriceRule(chargeOperationDto), chargeOperationDto),
+                CreateRuleContainer(new NumberOfPointsMatchTimeIntervalAndResolutionRule(chargeOperationDto), chargeOperationDto),
             };
         }
 
