@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.MarketParticipantRegistry.MarketParticipantsSynchronization;
 using GreenEnergyHub.Charges.Infrastructure.MarketParticipantRegistry.Persistence.Actors;
 using GreenEnergyHub.Charges.TestCore.Attributes;

@@ -15,7 +15,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Core.Enumeration;
-using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Xunit;
 using Xunit.Categories;
