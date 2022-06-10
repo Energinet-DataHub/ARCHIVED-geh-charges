@@ -15,7 +15,7 @@
 using System.Collections.Generic;
 using Energinet.DataHub.MessageHub.Model.Model;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification;
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;

@@ -22,7 +22,7 @@ using Energinet.DataHub.Core.App.Common.Abstractions.ServiceBus;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using FluentAssertions;
 using Google.Protobuf;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;

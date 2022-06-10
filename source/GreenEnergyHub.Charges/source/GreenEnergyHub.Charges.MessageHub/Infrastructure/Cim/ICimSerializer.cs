@@ -15,7 +15,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 
 namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim
