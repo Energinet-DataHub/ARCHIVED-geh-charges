@@ -12,54 +12,89 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading.Tasks;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Domain.GridAreaLinks;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
+using Microsoft.EntityFrameworkCore;
 using Xunit;
 using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 {
-    public class GridAreaLinkRepositoryTests
+    /// <summary>
+    /// Tests <see cref="GridAreaLinkRepository"/> using a database.
+    /// </summary>
+    [IntegrationTest]
+    public class GridAreaLinkRepositoryTests : IClassFixture<ChargesDatabaseFixture>
     {
-        [IntegrationTest]
-        public class GridAreaRepositoryTests : IClassFixture<ChargesDatabaseFixture>
+        private readonly ChargesDatabaseManager _databaseManager;
+
+        public GridAreaLinkRepositoryTests(ChargesDatabaseFixture fixture)
         {
-            private readonly ChargesDatabaseManager _databaseManager;
+            _databaseManager = fixture.DatabaseManager;
+        }
 
-            public GridAreaRepositoryTests(ChargesDatabaseFixture fixture)
-            {
-                _databaseManager = fixture.DatabaseManager;
-            }
+        [Fact]
+        public async Task AddAsync_WhenGridAreaLink_IsPersisted()
+        {
+            // Arrange
+            await using var chargesWriteDatabaseContext = _databaseManager.CreateDbContext();
+            var sut = new GridAreaLinkRepository(chargesWriteDatabaseContext);
 
-            [Fact]
-            public async Task GetOrNullAsync_ReturnsGridAreaLink()
-            {
-                // Arrange
-                await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
-                var sut = new GridAreaLinkRepository(chargesDatabaseContext);
+            var gridAreaLinkId = Guid.NewGuid();
+            var gridAreaId = Guid.NewGuid();
+            var gridAreaLink = new GridAreaLink(gridAreaLinkId, gridAreaId, null);
 
-                // Act
-                var actual = await sut.GetOrNullAsync(SeededData.GridAreaLink.Provider8500000000013.Id);
+            // Act
+            await sut.AddAsync(gridAreaLink);
+            await chargesWriteDatabaseContext.SaveChangesAsync();
 
-                // Assert
-                actual.Should().NotBeNull();
-            }
+            // Assert
+            await using var chargesReadDatabaseContext = _databaseManager.CreateDbContext();
 
-            [Fact]
-            public async Task GetGridAreaOrNullAsync_ReturnsGridAreaLink()
-            {
-                // Arrange
-                await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
-                var sut = new GridAreaLinkRepository(chargesDatabaseContext);
+            var actual = await chargesReadDatabaseContext.GridAreaLinks.SingleAsync(x => x.Id == gridAreaLinkId);
+            actual.Id.Should().Be(gridAreaLinkId);
+            actual.GridAreaId.Should().Be(gridAreaId);
+            actual.OwnerId.Should().BeNull();
+        }
 
-                // Act
-                var actual = await sut.GetGridAreaOrNullAsync(SeededData.GridAreaLink.Provider8500000000013.GridAreaId);
+        [Fact]
+        public async Task AddAsync_WhenGridAreaLinkIsNull_Throws()
+        {
+            await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
+            var sut = new GridAreaLinkRepository(chargesDatabaseContext);
+            await Assert.ThrowsAsync<ArgumentNullException>(() => sut.AddAsync(null!));
+        }
 
-                // Assert
-                actual.Should().NotBeNull();
-            }
+        [Fact]
+        public async Task GetOrNullAsync_ReturnsGridAreaLink()
+        {
+            // Arrange
+            await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
+            var sut = new GridAreaLinkRepository(chargesDatabaseContext);
+
+            // Act
+            var actual = await sut.GetOrNullAsync(SeededData.GridAreaLink.Provider8500000000013.Id);
+
+            // Assert
+            actual.Should().NotBeNull();
+        }
+
+        [Fact]
+        public async Task GetGridAreaOrNullAsync_ReturnsGridAreaLink()
+        {
+            // Arrange
+            await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
+            var sut = new GridAreaLinkRepository(chargesDatabaseContext);
+
+            // Act
+            var actual = await sut.GetGridAreaOrNullAsync(SeededData.GridAreaLink.Provider8500000000013.GridAreaId);
+
+            // Assert
+            actual.Should().NotBeNull();
         }
     }
 }
