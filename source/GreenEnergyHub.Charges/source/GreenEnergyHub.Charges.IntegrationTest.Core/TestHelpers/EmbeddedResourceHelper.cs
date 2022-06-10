@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -24,7 +23,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
 {
     public static class EmbeddedResourceHelper
     {
-        public static string GetEmbeddedFile(string filePath, [NotNull] Instant currentInstant)
+        public static string GetEmbeddedFile(string filePath, Instant currentInstant)
         {
             var basePath = Assembly.GetExecutingAssembly().Location;
             var path = Path.Combine(Directory.GetParent(basePath)!.FullName, filePath);
@@ -64,6 +63,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
                 .Replace("{{$YMDHM_TimestampPlusOneMonthAndOneDay}}", inThirtyoneDays.Plus(Duration.FromDays(1)).GetTimeAndPriceSeriesDateTimeFormat())
                 .Replace("{{$isoTimestampPlusOneMonthAndOneDay}}", inThirtyoneDays.Plus(Duration.FromDays(1)).ToString())
                 .Replace("{{$isoTimestampPlusOneMonthAndTwoDays}}", inThirtyoneDays.Plus(Duration.FromDays(2)).ToString())
+                .Replace("{{$NextYear}}", DateTime.Now.AddYears(1).Year.ToString())
                 .Replace("{{$ISO8601Timestamp}}", ymdhmsTimeInterval);
         }
     }
