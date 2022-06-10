@@ -31,13 +31,7 @@ limitations under the License.
                 <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">{{$senderMarketParticipant}}</cim:chargeTypeOwner_MarketParticipant.mRID>
                 <cim:type>D01</cim:type>
                 <cim:mRID>TestSub</cim:mRID>
-                <cim:name>Charge prices Subscription Name</cim:name>
-                <cim:description>The charge prices subscription description</cim:description>
-                <cim:priceTimeFrame_Period.resolution>P1M</cim:priceTimeFrame_Period.resolution>
                 <cim:effectiveDate>{{$NextYear}}-05-31T22:00:00Z</cim:effectiveDate>
-                <cim:VATPayer>D01</cim:VATPayer>
-                <cim:transparentInvoicing>false</cim:transparentInvoicing>
-                <cim:taxIndicator>false</cim:taxIndicator>
                 <cim:Series_Period>
                     <cim:resolution>P1M</cim:resolution>
                     <cim:timeInterval>

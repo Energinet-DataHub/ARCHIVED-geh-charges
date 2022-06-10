@@ -19,7 +19,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.Charges
         public const string AnyValid = "TestFiles/Charges/TaxTariffWithPriceDocument.xml";
         public const string AnyWithPrice = "TestFiles/Charges/TaxTariffWithPriceDocument.xml";
         public const string CreateSubscription = "TestFiles/Charges/CreateSubscriptionDocument.xml";
-        public const string DeprecatedCreatePricesForSubscription = "TestFiles/Charges/DeprecatedCreatePricesForSubscriptionDocument.xml";
+        public const string SubscriptionPriceSeries = "TestFiles/Charges/PriceSeries/SubscriptionPriceSeries.xml";
         public const string CreateTariff = "TestFiles/Charges/CreateTariffDocument.xml";
         public const string UpdateTariff = "TestFiles/Charges/UpdateTariffDocument.xml";
         public const string TaxTariffWithPrice = "TestFiles/Charges/TaxTariffWithPriceDocument.xml";

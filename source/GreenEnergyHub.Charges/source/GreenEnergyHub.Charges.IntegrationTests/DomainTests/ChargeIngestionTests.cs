@@ -273,7 +273,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 await using var messageHubDatabaseContext = Fixture.MessageHubDatabaseManager.CreateDbContext();
                 var (request, _) = await _authenticatedHttpRequestGenerator
                     .CreateAuthenticatedHttpPostRequestAsync(
-                        EndpointUrl, ChargeDocument.DeprecatedCreatePricesForSubscription);
+                        EndpointUrl, ChargeDocument.SubscriptionPriceSeries);
 
                 // Act
                 var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
