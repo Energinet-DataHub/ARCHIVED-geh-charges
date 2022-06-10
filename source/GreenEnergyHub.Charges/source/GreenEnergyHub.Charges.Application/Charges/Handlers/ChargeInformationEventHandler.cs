@@ -31,7 +31,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
     public class ChargeInformationEventHandler : IChargeInformationEventHandler
     {
         private readonly IInputValidator<ChargeOperationDto> _inputValidator;
-        private readonly IBusinessValidator<ChargeOperationDto> _businessValidator;
         private readonly IChargeRepository _chargeRepository;
         private readonly IMarketParticipantRepository _marketParticipantRepository;
         private readonly IChargeFactory _chargeFactory;
@@ -41,7 +40,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 
         public ChargeInformationEventHandler(
             IInputValidator<ChargeOperationDto> inputValidator,
-            IBusinessValidator<ChargeOperationDto> businessValidator,
             IChargeRepository chargeRepository,
             IMarketParticipantRepository marketParticipantRepository,
             IChargeFactory chargeFactory,
@@ -50,7 +48,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             IChargeCommandReceiptService chargeCommandReceiptService)
         {
             _inputValidator = inputValidator;
-            _businessValidator = businessValidator;
             _chargeRepository = chargeRepository;
             _marketParticipantRepository = marketParticipantRepository;
             _chargeFactory = chargeFactory;

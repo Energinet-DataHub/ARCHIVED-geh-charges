@@ -113,12 +113,6 @@ namespace GreenEnergyHub.Charges.Domain.Charges
                 startDate,
                 InstantExtensions.GetEndDefault());
 
-            var validationResult = CheckRules(Array.Empty<IValidationRuleContainer>());
-            if (validationResult.IsFailed)
-            {
-                throw new ChargeOperationFailedException(validationResult.InvalidRules);
-            }
-
             return new Charge(
                 Guid.NewGuid(),
                 senderProvidedChargeId,
@@ -153,12 +147,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             }
 
             var rules = GenerateRules(newChargePeriod, taxIndicator, resolution, operationId);
-
-            var validationResult = CheckRules(rules);
-            if (validationResult.IsFailed)
-            {
-                throw new ChargeOperationFailedException(validationResult.InvalidRules);
-            }
+            CheckRules(rules);
 
             var stopDate = _periods.Max(p => p.EndDateTime);
             if (stopDate != InstantExtensions.GetEndDefault())
@@ -205,19 +194,22 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             }
 
             var rules = GenerateRules(chargePeriod, taxIndicator, resolution, operationId).ToList();
-            var validationResult = CheckRules(rules);
-            if (validationResult.IsFailed)
-            {
-                throw new ChargeOperationFailedException(validationResult.InvalidRules);
-            }
+            CheckRules(rules);
 
             _periods.Add(chargePeriod);
         }
 
-        public void UpdatePrices(Instant? startDate, Instant? endDate, IReadOnlyList<Point> newPrices)
+        public void UpdatePrices(Instant startDate, Instant endDate, IReadOnlyList<Point> newPrices, string operationId)
         {
             ArgumentNullException.ThrowIfNull(newPrices);
             if (newPrices.Count == 0) return;
+
+            var rules = new List<OperationValidationRuleContainer>
+            {
+                new(new UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateRule(this, startDate), operationId),
+            };
+            CheckRules(rules);
+
             RemoveExistingChargePrices(startDate, endDate);
             _points.AddRange(newPrices);
         }
@@ -294,14 +286,18 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             return rules;
         }
 
-        private static ValidationResult CheckRules(IEnumerable<IValidationRuleContainer> rules)
+        private static void CheckRules(IEnumerable<IValidationRuleContainer> rules)
         {
             var invalidRules = rules
                 .Where(r => r.ValidationRule.IsValid == false)
                 .ToList();
-            return invalidRules.Any()
+            var result = invalidRules.Any()
                 ? ValidationResult.CreateFailure(invalidRules)
                 : ValidationResult.CreateSuccess();
+            if (result.IsFailed)
+            {
+                throw new ChargeOperationFailedException(result.InvalidRules);
+            }
         }
     }
 }

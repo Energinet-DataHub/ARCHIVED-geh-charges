@@ -95,6 +95,8 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
 
         public Charge Build()
         {
+            var operationId = Guid.NewGuid().ToString();
+
             var charge = Charge.Create(
                 _name,
                 "chargeDescription",
@@ -117,7 +119,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
                             $"Could not create charge periods in {nameof(ChargeBuilder)}. Period must have infinite end date.");
                     }
 
-                    charge.Update(period, _taxIndicator, _resolution, Guid.NewGuid().ToString());
+                    charge.Update(period, _taxIndicator, _resolution, operationId);
                 }
             }
 
@@ -128,7 +130,11 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
 
             if (_points.Any())
             {
-                charge.UpdatePrices(_points.Min(p => p.Time), _points.Max(p => p.Time), _points);
+                charge.UpdatePrices(
+                    _points.Min(p => p.Time),
+                    _points.Max(p => p.Time),
+                    _points,
+                    operationId);
             }
 
             return charge;

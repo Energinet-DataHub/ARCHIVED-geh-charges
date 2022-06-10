@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
+using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.Factories;
@@ -41,14 +42,17 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         {
             // Arrange
             var chargeOperationDto = new ChargeOperationDtoBuilder().WithPoint(0, 1.00m).Build();
-            var expectedRuleTypes = GetExpectedRulesForChargePriceOperation();
+            var expectedRuleTypes = GetExpectedRulesForChargePriceOperation().ToList();
 
             // Act
             var actualRuleTypes = sut.CreateRules(chargeOperationDto)
                 .GetRules().Select(r => r.ValidationRule.GetType()).ToList();
 
             // Assert
-            Assert.True(actualRuleTypes.SequenceEqual(expectedRuleTypes));
+            var actualNotInExpected = actualRuleTypes.Except(expectedRuleTypes).ToList();
+            var expectedNotInActual = expectedRuleTypes.Except(actualRuleTypes).ToList();
+            actualNotInExpected.Should().BeEmpty();
+            expectedNotInActual.Should().BeEmpty();
         }
 
         [Theory]
@@ -65,7 +69,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 .GetRules().Select(r => r.ValidationRule.GetType()).ToList();
 
             // Assert
-            Assert.True(actualRuleTypes.SequenceEqual(expectedRulesTypes));
+            var actualNotInExpected = actualRuleTypes.Except(expectedRulesTypes).ToList();
+            var expectedNotInActual = expectedRulesTypes.Except(actualRuleTypes).ToList();
+            actualNotInExpected.Should().BeEmpty();
+            expectedNotInActual.Should().BeEmpty();
         }
 
         [Theory]
@@ -115,7 +122,6 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 typeof(TransparentInvoicingIsNotAllowedForFeeValidationRule),
                 typeof(ChargePriceMaximumDigitsAndDecimalsRule),
                 typeof(ChargeTypeTariffPriceCountRule),
-                typeof(MaximumPriceRule),
                 typeof(StartDateValidationRule),
                 typeof(MaximumPriceRule),
             };
@@ -135,6 +141,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 typeof(ChargePriceMaximumDigitsAndDecimalsRule),
                 typeof(ChargeTypeTariffPriceCountRule),
                 typeof(MaximumPriceRule),
+                typeof(NumberOfPointsMatchTimeIntervalAndResolutionRule),
             };
         }
 

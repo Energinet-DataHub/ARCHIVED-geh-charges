@@ -24,6 +24,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
@@ -64,6 +65,13 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             for (var i = 0; i < operations.Length; i++)
             {
                 var operation = operations[i];
+                if (operation.PointsStartInterval == null ||
+                    operation.PointsEndInterval == null)
+                {
+                    throw new InvalidOperationException(
+                        "Charge operation must have point start and end interval date.");
+                }
+
                 var charge = await GetChargeAsync(operation).ConfigureAwait(false);
                 if (charge is null)
                 {
@@ -86,7 +94,11 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                     break;
                 }
 
-                charge.UpdatePrices(operation.PointsStartInterval, operation.PointsEndInterval, operation.Points);
+                charge.UpdatePrices(
+                    (Instant)operation.PointsStartInterval,
+                    (Instant)operation.PointsEndInterval,
+                    operation.Points,
+                    operation.Id);
                 operationsToBeConfirmed.Add(operation);
             }
 
