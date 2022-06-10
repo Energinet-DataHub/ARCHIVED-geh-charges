@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.MarketParticipants
+namespace GreenEnergyHub.Charges.Domain.Dtos.SharedDtos
 {
     /// <summary>
     /// IMPORTANT: This is used in transport so the numbers matters.

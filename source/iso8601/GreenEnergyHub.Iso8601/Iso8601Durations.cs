@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.ComponentModel;
 using NodaTime;
 
 namespace GreenEnergyHub.Iso8601

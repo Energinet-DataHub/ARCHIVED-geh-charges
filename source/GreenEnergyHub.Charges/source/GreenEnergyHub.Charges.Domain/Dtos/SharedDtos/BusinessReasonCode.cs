@@ -11,14 +11,17 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-namespace GreenEnergyHub.Charges.Domain.MarketParticipants
+
+namespace GreenEnergyHub.Charges.Domain.Dtos.SharedDtos
 {
     /// <summary>
-    /// IndustryClassification indicates the industry context. E.g. if a Charge price list is related to electricity.
+    /// BusinessReasonCode indicates the intended business context.
     /// </summary>
-    public enum IndustryClassification
+    public enum BusinessReasonCode
     {
         Unknown = 0,
-        Electricity = 1,
+        UpdateMasterDataSettlement = 1,
+        UpdateChargeInformation = 2,
+        UpdateChargePrices = 3,
     }
 }
