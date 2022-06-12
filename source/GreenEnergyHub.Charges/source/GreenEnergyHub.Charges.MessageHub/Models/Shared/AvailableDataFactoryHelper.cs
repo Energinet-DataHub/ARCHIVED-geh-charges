@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.Shared
 {

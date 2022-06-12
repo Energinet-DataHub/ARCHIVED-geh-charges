@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Tests.Builders.Command

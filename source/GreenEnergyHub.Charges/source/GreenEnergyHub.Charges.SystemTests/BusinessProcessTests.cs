@@ -21,7 +21,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.TestCommon;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.Charges;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.SystemTests.Fixtures;
@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.SystemTests
         private BusinessProcessConfiguration Configuration { get; }
 
         [SystemFact]
-        public async Task When_SubmittingCreateSubscriptionDocument_Then_PeekReturnsCorrespondingConfirmation()
+        public async Task When_SubmittingCreateSubscriptionWithPriceDocument_Then_PeekReturnsCorrespondingConfirmation()
         {
             // Setup
             await FlushPostOfficeQueueAsync();
