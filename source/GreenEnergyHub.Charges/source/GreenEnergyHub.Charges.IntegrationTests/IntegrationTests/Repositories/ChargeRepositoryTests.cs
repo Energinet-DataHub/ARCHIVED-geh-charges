@@ -27,7 +27,6 @@ using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using Microsoft.EntityFrameworkCore;
-using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
@@ -75,9 +74,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                     x.Type == charge.Type);
 
             actual.Should().BeEquivalentTo(charge);
-            actual.Points.Should().NotBeNullOrEmpty();
+            actual.Points.Should().BeEmpty();
             actual.Periods.Should().NotBeNullOrEmpty();
-            actual.Points.Single().Price.Should().Be(200.111111m);
         }
 
         [Theory]
@@ -168,9 +166,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task GetByIdsAsync_VerifyLocalContextItemsAreAlsoFetched(Charge notSavedCharge)
+        public async Task GetByIdsAsync_VerifyLocalContextItemsAreAlsoFetched(ChargeBuilder chargeBuilder)
         {
             // Arrange
+            var notSavedCharge = chargeBuilder.Build();
             await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
             var savedCharge = await SetupValidChargeAsync(chargesDatabaseContext);
             var sut = new ChargeRepository(chargesDatabaseContext);
@@ -198,27 +197,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
         private static Charge GetValidCharge()
         {
-            var charge = new Charge(
-                Guid.NewGuid(),
-                $"ChgId{Guid.NewGuid().ToString("n")[..5]}",
-                _marketParticipantId,
-                ChargeType.Fee,
-                Resolution.P1D,
-                false,
-                new List<Point> { new(1, 200.111111m, SystemClock.Instance.GetCurrentInstant()) },
-                new List<ChargePeriod>
-                {
-                    new(
-                        Guid.NewGuid(),
-                        "Name",
-                        "description",
-                        VatClassification.Vat25,
-                        true,
-                        Instant.FromDateTimeUtc(DateTime.Now.Date.ToUniversalTime()),
-                        InstantHelper.GetEndDefault()),
-                });
-
-            return charge;
+            return new ChargeBuilder()
+                .WithStartDate(InstantHelper.GetTodayAtMidnightUtc())
+                .WithSenderProvidedChargeId($"ChgId{Guid.NewGuid().ToString("n")[..5]}")
+                .WithOwnerId(_marketParticipantId)
+                .Build();
         }
 
         private static async Task GetOrAddMarketParticipantAsync(ChargesDatabaseContext context)

@@ -79,6 +79,9 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
         public TopicResource? MeteringPointCreatedTopic { get; private set; }
 
         [NotNull]
+        public TopicResource? MarketParticipantChangedTopic { get; private set; }
+
+        [NotNull]
         public TopicResource? ChargeLinksAcceptedTopic { get; private set; }
 
         public AuthorizationConfiguration AuthorizationConfiguration { get; }
@@ -202,6 +205,13 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
                 .BuildTopic(ChargesServiceBusResourceNames.ChargeCreatedTopicKey)
                 .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.ChargeCreatedTopicName)
                 .AddSubscription(ChargesServiceBusResourceNames.ChargeCreatedSubscriptionName)
+                .CreateAsync();
+
+            MarketParticipantChangedTopic = await ServiceBusResourceProvider
+                .BuildTopic(ChargesServiceBusResourceNames.MarketParticipantChangedTopicKey)
+                .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.MarketParticipantChangedTopicName)
+                .AddSubscription(ChargesServiceBusResourceNames.MarketParticipantChangedSubscriptionName)
+                .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.MarketParticipantChangedSubscriptionName)
                 .CreateAsync();
 
             await ServiceBusResourceProvider

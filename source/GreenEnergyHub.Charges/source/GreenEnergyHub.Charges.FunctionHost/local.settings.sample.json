@@ -37,6 +37,10 @@
     "CREATE_LINKS_REQUEST_QUEUE_NAME": "create-links-request",
     "CREATE_LINKS_REPLY_QUEUE_NAME": "create-links-reply",
 
+    // Integration, market participant domain
+    "MARKET_PARTICIPANT_CHANGED_TOPIC_NAME": "market-participant-changed",
+    "MARKET_PARTICIPANT_CHANGED_SUBSCRIPTION_NAME": "market-participant-changed-to-charges",
+
     // Integration, message hub
     "MESSAGEHUB_DATAAVAILABLE_QUEUE": "dataavailable",
     "MESSAGEHUB_BUNDLEREQUEST_QUEUE": "charges",

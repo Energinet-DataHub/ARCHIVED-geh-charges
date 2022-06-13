@@ -13,9 +13,9 @@
 // limitations under the License.
 
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.Tests.Builders.Command;
 using Xunit;
 using Xunit.Categories;
 
@@ -26,8 +26,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
     {
         [Theory]
         [InlineAutoMoqData]
-        public void IsValid_WhenCalledWithCharge_ReturnsTrue(Charge charge)
+        public void IsValid_WhenCalledWithCharge_ReturnsTrue(ChargeBuilder chargeBuilder)
         {
+            var charge = chargeBuilder.Build();
             var sut = new ChargeMustExistRule(charge);
             sut.IsValid.Should().BeTrue();
         }
