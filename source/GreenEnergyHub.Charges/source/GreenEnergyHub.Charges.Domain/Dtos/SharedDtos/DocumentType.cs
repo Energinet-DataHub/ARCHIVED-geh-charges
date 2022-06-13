@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.MarketParticipants
+namespace GreenEnergyHub.Charges.Domain.Dtos.SharedDtos
 {
     /// <summary>
     /// The document type indicates the intended business context of this business message.
