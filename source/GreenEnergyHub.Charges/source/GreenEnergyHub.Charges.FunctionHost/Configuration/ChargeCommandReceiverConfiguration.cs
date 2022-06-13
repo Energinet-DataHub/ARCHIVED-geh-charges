@@ -75,7 +75,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 ChargeOperationInputValidationRulesFactory>();
             serviceCollection.AddScoped<IDocumentValidator<ChargeCommand>, DocumentValidator<ChargeCommand>>();
             serviceCollection.AddScoped<IInputValidator<ChargeOperationDto>, InputValidator<ChargeOperationDto>>();
-            serviceCollection.AddScoped<IBusinessValidator<ChargeOperationDto>, BusinessValidator<ChargeOperationDto>>();
         }
 
         private static void ConfigureIso8601Timezones(IServiceCollection serviceCollection)
