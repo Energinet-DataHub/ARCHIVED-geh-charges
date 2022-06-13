@@ -50,13 +50,13 @@ limitations under the License.
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Google.Protobuf" Version="3.20.1" />
+        <PackageReference Include="Google.Protobuf" Version="3.21.1" />
         <PackageReference Include="Grpc.Tools" Version="2.45.0" PrivateAssets="All" />
         <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.435">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Update="Microsoft.VisualStudio.Threading.Analyzers" Version="17.1.46">
+        <PackageReference Update="Microsoft.VisualStudio.Threading.Analyzers" Version="17.2.32">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>

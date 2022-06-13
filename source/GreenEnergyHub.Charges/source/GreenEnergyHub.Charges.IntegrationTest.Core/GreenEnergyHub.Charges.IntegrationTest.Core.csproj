@@ -34,8 +34,8 @@ limitations under the License.
   <ItemGroup>
     <PackageReference Include="AutoFixture" Version="4.17.0" />
     <PackageReference Include="AutoFixture.AutoMoq" Version="4.17.0" />
-    <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.7.0" />
-    <PackageReference Include="Energinet.DataHub.Core.FunctionApp.TestCommon" Version="2.2.0" />
+    <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.8.1" />
+    <PackageReference Include="Energinet.DataHub.Core.FunctionApp.TestCommon" Version="2.3.4" />
     <PackageReference Include="Energinet.DataHub.MessageHub.Client" Version="2.1.0" />
     <PackageReference Include="Energinet.DataHub.MessageHub.IntegrationTesting" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
@@ -60,7 +60,7 @@ limitations under the License.
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Update="Microsoft.VisualStudio.Threading.Analyzers" Version="17.1.46">
+    <PackageReference Update="Microsoft.VisualStudio.Threading.Analyzers" Version="17.2.32">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

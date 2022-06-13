@@ -30,7 +30,7 @@ limitations under the License.
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.OData" Version="8.0.10" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.0" />
-    <PackageReference Update="Microsoft.VisualStudio.Threading.Analyzers" Version="17.1.46">
+    <PackageReference Update="Microsoft.VisualStudio.Threading.Analyzers" Version="17.2.32">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

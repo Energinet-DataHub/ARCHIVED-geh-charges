@@ -26,13 +26,13 @@ limitations under the License.
 
     <ItemGroup>
       <PackageReference Include="Energinet.DataHub.Core.App.FunctionApp" Version="2.3.3" />
-      <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.7.0" />
+      <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.8.1" />
       <PackageReference Include="Energinet.DataHub.Core.Messaging" Version="1.1.5" />
       <PackageReference Include="Energinet.DataHub.Core.Messaging.Protobuf" Version="1.1.5" />
       <PackageReference Include="Microsoft.ApplicationInsights" Version="2.20.0" />
       <PackageReference Include="Microsoft.Azure.Functions.Worker.Core" Version="1.4.0" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
-      <PackageReference Update="Microsoft.VisualStudio.Threading.Analyzers" Version="17.1.46">
+      <PackageReference Update="Microsoft.VisualStudio.Threading.Analyzers" Version="17.2.32">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
