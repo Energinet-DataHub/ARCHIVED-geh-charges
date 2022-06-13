@@ -13,12 +13,15 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
+using Microsoft.ApplicationInsights.WindowsServer;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 using Xunit.Categories;
@@ -90,6 +93,33 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             // Assert
             actual.Should().NotBeNull();
             actual!.MarketParticipantId.Should().Be(SeededData.MarketParticipant.Inactive8900000000005);
+        }
+
+        [Fact]
+        public async Task SingleOrNullAsync_WhenRoleAndMarketParticipantIdEqualsExistingMarketParticipant_ReturnsMarketParticipant()
+        {
+            // Arrange
+            await using var writeContext = _databaseManager.CreateDbContext();
+
+            var roles = new List<MarketParticipantRole>
+            {
+                MarketParticipantRole.GridAccessProvider,
+                MarketParticipantRole.SystemOperator,
+            };
+
+            await AddMarketParticipantToContextAsync("1337", MarketParticipantRole.GridAccessProvider, writeContext);
+            await AddMarketParticipantToContextAsync("1337", MarketParticipantRole.SystemOperator, writeContext);
+
+            await using var readContext = _databaseManager.CreateDbContext();
+            var sut = new MarketParticipantRepository(readContext);
+
+            // Act
+            var actual = await sut.SingleOrNullAsync(MarketParticipantRole.SystemOperator, "1337");
+
+            // Assert
+            actual.Should().NotBeNull();
+            actual!.MarketParticipantId.Should().Be("1337");
+            actual!.BusinessProcessRole.Should().Be(MarketParticipantRole.SystemOperator);
         }
 
         [Fact]
@@ -207,6 +237,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             // Assert
             actual.Should().NotBeNull();
             actual?.MarketParticipantId.Should().Be(SeededData.GridAreaLink.Provider8100000000030.MarketParticipantId);
+        }
+
+        private static async Task AddMarketParticipantToContextAsync(string marketParticipantId, MarketParticipantRole role, ChargesDatabaseContext context)
+        {
+            var marketParticipant = new MarketParticipant(Guid.NewGuid(), marketParticipantId, true, role);
+            await context.AddAsync(marketParticipant);
+            await context.SaveChangesAsync();
         }
     }
 }
