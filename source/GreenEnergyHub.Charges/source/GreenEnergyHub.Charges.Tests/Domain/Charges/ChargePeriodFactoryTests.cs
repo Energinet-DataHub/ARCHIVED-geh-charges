@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
         {
             var actual = sut.CreateFromChargeOperationDto(chargeOperationDto);
 
-            actual.Should().NotContainNullsOrEmptyEnumerables();
+            actual.Should().NotContainNullEnumerable();
         }
     }
 }

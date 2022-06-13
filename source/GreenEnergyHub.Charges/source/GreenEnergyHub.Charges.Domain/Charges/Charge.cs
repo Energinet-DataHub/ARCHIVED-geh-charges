@@ -16,6 +16,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using GreenEnergyHub.Charges.Core.DateTime;
+using GreenEnergyHub.Charges.Domain.Charges.Exceptions;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Charges
@@ -25,7 +28,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         private readonly List<Point> _points;
         private readonly List<ChargePeriod> _periods;
 
-        public Charge(
+        private Charge(
             Guid id,
             string senderProvidedChargeId,
             Guid ownerId,
@@ -86,21 +89,65 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 
         public IReadOnlyCollection<ChargePeriod> Periods => _periods;
 
+        public static Charge Create(
+            string name,
+            string description,
+            string senderProvidedChargeId,
+            Guid ownerId,
+            ChargeType type,
+            Resolution resolution,
+            TaxIndicator taxIndicator,
+            VatClassification vatClassification,
+            bool transparentInvoicing,
+            Instant startDate)
+        {
+            ArgumentNullException.ThrowIfNull(name);
+            ArgumentNullException.ThrowIfNull(description);
+            ArgumentNullException.ThrowIfNull(senderProvidedChargeId);
+
+            var chargePeriod = ChargePeriod.Create(
+                name,
+                description,
+                vatClassification,
+                transparentInvoicing,
+                startDate,
+                InstantExtensions.GetEndDefault());
+
+            return new Charge(
+                Guid.NewGuid(),
+                senderProvidedChargeId,
+                ownerId,
+                type,
+                resolution,
+                ParseTaxIndicator(taxIndicator),
+                new List<Point>(),
+                new List<ChargePeriod> { chargePeriod });
+        }
+
         /// <summary>
         /// Use this method to update the charge periods timeline of a charge upon receiving a charge update request
         /// Please see the persist charge documentation where the update flow is covered:
         /// https://github.com/Energinet-DataHub/geh-charges/tree/main/docs/process-flows#persist-charge
         /// </summary>
         /// <param name="newChargePeriod">New Charge Period from update charge request</param>
+        /// <param name="taxIndicator">Tax indicator in the update charge request</param>
+        /// <param name="resolution">Resolution of the update charge request</param>
+        /// <param name="operationId">Charge operation id</param>
         /// <exception cref="ArgumentNullException">Throws when <paramref name="newChargePeriod"/> is empty</exception>
-        public void Update(ChargePeriod newChargePeriod)
+        public void Update(ChargePeriod newChargePeriod, TaxIndicator taxIndicator, Resolution resolution, string operationId)
         {
-            if (newChargePeriod == null) throw new ArgumentNullException(nameof(newChargePeriod));
+            ArgumentNullException.ThrowIfNull(newChargePeriod);
+            ArgumentNullException.ThrowIfNull(operationId);
 
+            // This should be in a separate rule and handled by ChargeOperationFailedException
+            // in order to notify sender that operation failed because of this constraint
             if (newChargePeriod.EndDateTime != InstantExtensions.GetEndDefault())
             {
                 throw new InvalidOperationException("Charge update must not have bound end date.");
             }
+
+            var rules = GenerateRules(newChargePeriod, taxIndicator, resolution, operationId);
+            CheckRules(rules);
 
             var stopDate = _periods.Max(p => p.EndDateTime);
             if (stopDate != InstantExtensions.GetEndDefault())
@@ -134,35 +181,67 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             _points.RemoveAll(p => p.Time >= stopDate);
         }
 
-        public void CancelStop(ChargePeriod chargePeriod)
+        public void CancelStop(ChargePeriod chargePeriod, TaxIndicator taxIndicator, Resolution resolution, string operationId)
         {
+            ArgumentNullException.ThrowIfNull(chargePeriod);
+            ArgumentNullException.ThrowIfNull(operationId);
+
             var existingLastPeriod = _periods.OrderByDescending(p => p.StartDateTime).First();
 
+            // This should be in a separate rule and handled by ChargeOperationFailedException
+            // in order to notify sender that operation failed because of this constraint
             if (chargePeriod.StartDateTime != existingLastPeriod.EndDateTime)
             {
                 throw new InvalidOperationException(
                     "Cannot cancel stop when new start date is not equal to existing stop date.");
             }
 
+            var rules = GenerateRules(chargePeriod, taxIndicator, resolution, operationId).ToList();
+            CheckRules(rules);
+
             _periods.Add(chargePeriod);
         }
 
-        public void UpdatePrices(Instant? startDate, Instant? endDate, IReadOnlyList<Point> newPrices)
+        public void UpdatePrices(Instant startDate, Instant endDate, IReadOnlyList<Point> newPrices, string operationId)
         {
             ArgumentNullException.ThrowIfNull(newPrices);
+            ArgumentNullException.ThrowIfNull(operationId);
+
             if (newPrices.Count == 0) return;
+
+            var rules = new List<OperationValidationRuleContainer>
+            {
+                new(
+                    new UpdateChargeMustHaveStartDateBeforeOrOnStopDateRule(
+                        _periods.OrderBy(x => x.EndDateTime).Last().EndDateTime,
+                        startDate),
+                    operationId),
+            };
+            CheckRules(rules);
+
             RemoveExistingChargePrices(startDate, endDate);
             _points.AddRange(newPrices);
+        }
+
+        private static bool ParseTaxIndicator(TaxIndicator taxIndicator)
+        {
+            // TODO: TaxIndicator is refactored in upcoming PR and by then this temporary fix i going to be removed
+            return taxIndicator switch
+            {
+                Charges.TaxIndicator.Tax => true,
+                Charges.TaxIndicator.NoTax => false,
+                _ => throw new InvalidOperationException("Tax indicator must be set."),
+            };
         }
 
         private void RemoveExistingChargePrices(Instant? startDate, Instant? endDate)
         {
             if (startDate is null) return;
             if (endDate is null) return;
-            var removePoints = _points.Where(x => x.Time >= startDate && x.Time < endDate).ToList();
-            if (removePoints.Count > 0)
+            bool Predicate(Point x) => x.Time >= startDate && x.Time < endDate;
+            if (_points.Any(Predicate))
             {
-                _points.RemoveAll(x => removePoints.Contains(x));
+                _points.RemoveAll(Predicate);
             }
         }
 
@@ -173,6 +252,8 @@ namespace GreenEnergyHub.Charges.Domain.Charges
                     p.EndDateTime >= stopDate &&
                     p.StartDateTime <= stopDate);
 
+            // This should be in a separate rule and handled by ChargeOperationFailedException
+            // in order to notify sender that operation failed because of this constraint
             if (previousPeriod == null)
             {
                 throw new InvalidOperationException("Cannot stop charge. No period exist on stop date.");
@@ -191,7 +272,50 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 
         private void RemoveAllSubsequentPeriods(Instant date)
         {
-            _periods.RemoveAll(p => p.StartDateTime >= date);
+            bool Predicate(ChargePeriod p) => p.StartDateTime >= date;
+            if (_periods.Any(Predicate))
+            {
+                _periods.RemoveAll(Predicate);
+            }
+        }
+
+        private IEnumerable<IValidationRuleContainer> GenerateRules(
+            ChargePeriod newChargePeriod,
+            TaxIndicator newTaxIndicator,
+            Resolution newResolution,
+            string operationId)
+        {
+            var rules = new List<IValidationRuleContainer>
+            {
+                new OperationValidationRuleContainer(
+                    new ChangingTariffTaxValueNotAllowedRule(
+                        newTaxIndicator,
+                        TaxIndicator),
+                    operationId),
+                new OperationValidationRuleContainer(
+                    new UpdateChargeMustHaveStartDateBeforeOrOnStopDateRule(
+                        _periods.OrderBy(x => x.EndDateTime).Last().EndDateTime,
+                        newChargePeriod.StartDateTime),
+                    operationId),
+                new OperationValidationRuleContainer(
+                    new ChargeResolutionCanNotBeUpdatedRule(
+                        Resolution,
+                        newResolution),
+                    operationId),
+            };
+            return rules;
+        }
+
+        private static void CheckRules(IEnumerable<IValidationRuleContainer> rules)
+        {
+            var invalidRules = rules.Where(r => !r.ValidationRule.IsValid).ToList();
+            var result = invalidRules.Any()
+                ? ValidationResult.CreateFailure(invalidRules)
+                : ValidationResult.CreateSuccess();
+            if (result.IsFailed)
+            {
+                throw new ChargeOperationFailedException(result.InvalidRules);
+            }
         }
     }
 }

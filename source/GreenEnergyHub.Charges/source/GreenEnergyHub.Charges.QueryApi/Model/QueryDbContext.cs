@@ -39,8 +39,6 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
 
         public virtual DbSet<DefaultChargeLink> DefaultChargeLinks { get; set; }
 
-        public virtual DbSet<GridArea> GridAreas { get; set; }
-
         public virtual DbSet<GridAreaLink> GridAreaLinks { get; set; }
 
         public virtual DbSet<MarketParticipant> MarketParticipants { get; set; }
@@ -128,31 +126,12 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
                     .HasConstraintName("FK_DefaultChargeLink_Charge");
             });
 
-            modelBuilder.Entity<GridArea>(entity =>
-            {
-                entity.HasKey(e => e.Id)
-                    .IsClustered(false);
-
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
-                entity.HasOne(d => d.GridAccessProvider)
-                    .WithMany(p => p.GridAreas)
-                    .HasForeignKey(d => d.GridAccessProviderId)
-                    .HasConstraintName("FK_GridArea_MarketParticipant");
-            });
-
             modelBuilder.Entity<GridAreaLink>(entity =>
             {
                 entity.HasKey(e => e.Id)
                     .IsClustered(false);
 
                 entity.Property(e => e.Id).ValueGeneratedNever();
-
-                entity.HasOne(d => d.GridArea)
-                    .WithMany(p => p.GridAreaLinks)
-                    .HasForeignKey(d => d.GridAreaId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_GridAreaLink_GridArea");
             });
 
             modelBuilder.Entity<MarketParticipant>(entity =>

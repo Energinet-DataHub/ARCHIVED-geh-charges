@@ -32,6 +32,20 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
             _chargesDatabaseContext = chargesDatabaseContext;
         }
 
+        /// <summary>
+        /// Persist a market participant
+        /// </summary>
+        /// <param name="marketParticipant"></param>
+        public async Task AddAsync(MarketParticipant marketParticipant)
+        {
+            ArgumentNullException.ThrowIfNull(marketParticipant);
+            await _chargesDatabaseContext.MarketParticipants.AddAsync(marketParticipant).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Retrieves a market participant from primary key
+        /// </summary>
+        /// <param name="id"></param>
         public async Task<MarketParticipant?> SingleOrNullAsync(Guid id)
         {
             return await _chargesDatabaseContext
@@ -39,36 +53,39 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
                 .SingleOrDefaultAsync(mp => mp.Id == id).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Retrieves a market participant from gln/eic no.
+        /// </summary>
+        /// <param name="marketParticipantId"></param>
         public async Task<MarketParticipant?> SingleOrNullAsync(string marketParticipantId)
         {
+            var roles = new HashSet<MarketParticipantRole>
+            {
+                MarketParticipantRole.SystemOperator, MarketParticipantRole.GridAccessProvider,
+            };
+
             return await _chargesDatabaseContext
                 .MarketParticipants
-                .SingleOrDefaultAsync(mp => mp.MarketParticipantId == marketParticipantId)
+                .SingleOrDefaultAsync(mp =>
+                    mp.MarketParticipantId == marketParticipantId &&
+                    roles.Contains(mp.BusinessProcessRole))
                 .ConfigureAwait(false);
         }
 
-        public Task<List<MarketParticipant>> GetGridAccessProvidersAsync()
-        {
-            return _chargesDatabaseContext
-                .MarketParticipants
-                .Where(mp => mp.BusinessProcessRole == MarketParticipantRole.GridAccessProvider)
-                .Where(m => m.IsActive)
-                .ToListAsync();
-        }
-
-        public async Task<MarketParticipant> SingleAsync(string marketParticipantId)
+        /// <summary>
+        /// Retrieves a market participant from role and gln/eic no.
+        /// </summary>
+        /// <param name="businessProcessRole"></param>
+        /// <param name="marketParticipantId"></param>
+        public async Task<MarketParticipant?> SingleOrNullAsync(
+            MarketParticipantRole businessProcessRole,
+            string marketParticipantId)
         {
             return await _chargesDatabaseContext
                 .MarketParticipants
-                .SingleAsync(mp => mp.MarketParticipantId == marketParticipantId)
-                .ConfigureAwait(false);
-        }
-
-        public async Task<MarketParticipant> SingleAsync(Guid id)
-        {
-            return await _chargesDatabaseContext
-                .MarketParticipants
-                .SingleAsync(mp => mp.Id == id)
+                .SingleOrDefaultAsync(mp =>
+                    mp.MarketParticipantId == marketParticipantId &&
+                    mp.BusinessProcessRole == businessProcessRole)
                 .ConfigureAwait(false);
         }
 
@@ -81,9 +98,18 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
                 .ConfigureAwait(false);
         }
 
+        public Task<List<MarketParticipant>> GetGridAccessProvidersAsync()
+        {
+            return _chargesDatabaseContext
+                .MarketParticipants
+                .Where(mp => mp.BusinessProcessRole == MarketParticipantRole.GridAccessProvider)
+                .Where(m => m.IsActive)
+                .ToListAsync();
+        }
+
         public Task<MarketParticipant> GetGridAccessProviderAsync(string meteringPointId)
         {
-            if (meteringPointId == null) throw new ArgumentNullException(nameof(meteringPointId));
+            ArgumentNullException.ThrowIfNull(meteringPointId);
             if (string.IsNullOrEmpty(meteringPointId.Trim())) throw new ArgumentException();
 
             // According to product owner the business processes should not be able to result
@@ -91,14 +117,22 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
             // an owner grid access provider. So no special handling of those cases.
             return (from meteringPoint in _chargesDatabaseContext.MeteringPoints
                     from gridAreaLink in _chargesDatabaseContext.GridAreaLinks
-                    from gridArea in _chargesDatabaseContext.GridAreas
                     from marketParticipant in _chargesDatabaseContext.MarketParticipants
-                    where gridArea.GridAccessProviderId == marketParticipant.Id
+                    where gridAreaLink.OwnerId == marketParticipant.Id
                     where meteringPoint.MeteringPointId == meteringPointId
                     where meteringPoint.GridAreaLinkId == gridAreaLink.Id
-                    where gridAreaLink.GridAreaId == gridArea.Id
                     select marketParticipant)
                 .SingleAsync();
+        }
+
+        public Task<MarketParticipant?> GetGridAccessProviderAsync(Guid gridAreaId)
+        {
+            return (from gridAreaLink in _chargesDatabaseContext.GridAreaLinks
+                    from marketParticipant in _chargesDatabaseContext.MarketParticipants
+                    where gridAreaLink.OwnerId == marketParticipant.Id
+                    where gridAreaLink.GridAreaId == gridAreaId
+                    select marketParticipant)
+                .SingleOrDefaultAsync();
         }
 
         public Task<MarketParticipant> GetMeteringPointAdministratorAsync()
@@ -111,12 +145,30 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
             return SingleAsync(MarketParticipantRole.SystemOperator);
         }
 
+        /// <summary>
+        /// Retrieves an active market participant from gln/eic no. with the role EZ or DDM
+        /// </summary>
+        /// <param name="marketParticipantId"></param>
+        public async Task<MarketParticipant> GetSystemOperatorOrGridAccessProviderAsync(string marketParticipantId)
+        {
+            var roles = new HashSet<MarketParticipantRole>
+            {
+                MarketParticipantRole.SystemOperator, MarketParticipantRole.GridAccessProvider,
+            };
+
+            return await _chargesDatabaseContext
+                .MarketParticipants
+                .SingleAsync(mp =>
+                    mp.MarketParticipantId == marketParticipantId && mp.IsActive &&
+                    roles.Contains(mp.BusinessProcessRole))
+                .ConfigureAwait(false);
+        }
+
         private Task<MarketParticipant> SingleAsync(MarketParticipantRole marketParticipantRole)
         {
             return _chargesDatabaseContext
                 .MarketParticipants
                 .Where(mp => mp.BusinessProcessRole == marketParticipantRole)
-                .Where(mp => mp.IsActive)
                 .SingleAsync();
         }
     }

@@ -91,11 +91,12 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
             [Frozen] Mock<IChargeIdentifierFactory> chargeIdentifierFactory,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             MeteringPoint meteringPoint,
-            Charge charge,
+            ChargeBuilder chargeBuilder,
             ChargeLinksCommandBusinessValidationRulesFactory sut,
             ChargeLinkDtoBuilder linksBuilder)
         {
             // Arrange
+            var charge = chargeBuilder.Build();
             var link = linksBuilder.Build();
             SetupChargeIdentifierFactoryMock(chargeIdentifierFactory);
             SetupChargeRepositoryMock(chargeRepository, charge);

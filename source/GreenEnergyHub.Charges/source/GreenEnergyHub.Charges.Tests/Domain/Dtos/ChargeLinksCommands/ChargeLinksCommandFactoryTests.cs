@@ -25,10 +25,11 @@ using GreenEnergyHub.Charges.Domain.Dtos.CreateDefaultChargeLinksRequests;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
+using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.Charges.Tests.Builders.Testables;
 using Moq;
-using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
@@ -47,39 +48,19 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands
             TestSystemOperator systemOperator,
             TestMarketParticipant chargeOwner,
             Guid defaultChargeLinkId,
-            Guid chargeId,
-            Guid chargePeriodId,
             MeteringPoint meteringPoint,
             CreateDefaultChargeLinksRequest createDefaultChargeLinksRequest,
+            ChargeBuilder chargeBuilder,
             ChargeLinksCommandFactory sut)
         {
             // Arrange
+            var charge = chargeBuilder.WithOwnerId(chargeOwner.Id).Build();
             var defaultChargeLink = new DefaultChargeLink(
                 defaultChargeLinkId,
-                Instant.MinValue,
-                Instant.MaxValue,
-                chargeId,
+                InstantHelper.GetTodayAtMidnightUtc(),
+                InstantHelper.GetEndDefault(),
+                charge.Id,
                 meteringPoint.MeteringPointType);
-
-            var charge = new Charge(
-                chargeId,
-                "SenderProvidedId",
-                chargeOwner.Id,
-                ChargeType.Fee,
-                Resolution.P1D,
-                true,
-                new List<Point> { new(1, 200m, SystemClock.Instance.GetCurrentInstant()) },
-                new List<ChargePeriod>
-                {
-                    new ChargePeriod(
-                        chargePeriodId,
-                        "Name",
-                        "Description",
-                        VatClassification.Unknown,
-                        true,
-                        SystemClock.Instance.GetCurrentInstant(),
-                        Instant.FromUtc(9999, 12, 31, 23, 59, 59)),
-                });
 
             chargeRepository
                 .Setup(f => f.GetByIdsAsync(new List<Guid> { defaultChargeLink.ChargeId }))

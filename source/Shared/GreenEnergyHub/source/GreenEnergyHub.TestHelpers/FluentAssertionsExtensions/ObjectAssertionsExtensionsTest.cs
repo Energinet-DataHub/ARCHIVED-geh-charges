@@ -33,7 +33,7 @@ namespace GreenEnergyHub.TestHelpers.FluentAssertionsExtensions
             };
 
             // Assert
-            sut.Should().NotContainNullsOrEmptyEnumerables();
+            sut.Should().NotContainNullEnumerable();
         }
 
         [Fact]
@@ -46,7 +46,7 @@ namespace GreenEnergyHub.TestHelpers.FluentAssertionsExtensions
             };
 
             // Assert
-            Assert.Throws<XunitException>(() => sut.Should().NotContainNullsOrEmptyEnumerables());
+            Assert.Throws<XunitException>(() => sut.Should().NotContainNullEnumerable());
         }
 
         [Fact]
@@ -56,7 +56,7 @@ namespace GreenEnergyHub.TestHelpers.FluentAssertionsExtensions
             var sut = new RecursiveTestHelperWithOnePropAndOneList { Number = 1, RecursiveTestHelperWithOneProps = null };
 
             // Assert
-            Assert.Throws<XunitException>(() => sut.Should().NotContainNullsOrEmptyEnumerables());
+            Assert.Throws<XunitException>(() => sut.Should().NotContainNullEnumerable());
         }
 
         [Fact]
@@ -66,7 +66,7 @@ namespace GreenEnergyHub.TestHelpers.FluentAssertionsExtensions
             var sut = new RecursiveTestHelperWithOnePropAndOneList { Number = 1, RecursiveTestHelperWithOneProps = new List<RecursiveTestHelperWithOneProp>() };
 
             // Assert
-            Assert.Throws<XunitException>(() => sut.Should().NotContainNullsOrEmptyEnumerables());
+            sut.Should().NotContainNullEnumerable();
         }
 
         [Fact]
@@ -80,7 +80,7 @@ namespace GreenEnergyHub.TestHelpers.FluentAssertionsExtensions
             };
 
             // Assert
-            sut.Should().NotContainNullsOrEmptyEnumerables();
+            sut.Should().NotContainNullEnumerable();
         }
 
         [Fact]
@@ -93,7 +93,7 @@ namespace GreenEnergyHub.TestHelpers.FluentAssertionsExtensions
             testHelper2.TestHelperHelper = testHelper1;
 
             // Assert
-            testHelper1.Should().NotContainNullsOrEmptyEnumerables();
+            testHelper1.Should().NotContainNullEnumerable();
         }
 
         [Fact]
@@ -106,7 +106,7 @@ namespace GreenEnergyHub.TestHelpers.FluentAssertionsExtensions
             testHelper2.List.Add(testHelper1);
 
             // Assert
-            testHelper1.Should().NotContainNullsOrEmptyEnumerables();
+            testHelper1.Should().NotContainNullEnumerable();
         }
     }
 }
