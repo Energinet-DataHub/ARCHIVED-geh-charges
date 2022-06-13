@@ -31,6 +31,8 @@ using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
+using GreenEnergyHub.Charges.Domain.GridAreaLinks;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
@@ -138,6 +140,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<
                 IAvailableDataRepository<AvailableChargeReceiptData>,
                 AvailableDataRepository<AvailableChargeReceiptData>>();
+            serviceCollection.AddScoped<IMarketParticipantRepository, MarketParticipantRepository>();
+            serviceCollection.AddScoped<IGridAreaLinkRepository, GridAreaLinkRepository>();
         }
 
         private static void ConfigureSharedMessaging(IServiceCollection serviceCollection)

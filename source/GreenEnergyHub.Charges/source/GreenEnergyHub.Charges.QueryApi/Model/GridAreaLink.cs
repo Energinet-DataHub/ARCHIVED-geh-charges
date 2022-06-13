@@ -36,9 +36,11 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
 
         public Guid GridAreaId { get; set; }
 
-        [ForeignKey(nameof(GridAreaId))]
-        [InverseProperty("GridAreaLinks")]
-        public virtual GridArea GridArea { get; set; }
+        public Guid? OwnerId { get; set; }
+
+        [ForeignKey(nameof(OwnerId))]
+        [InverseProperty(nameof(MarketParticipant.GridAreaLinks))]
+        public virtual MarketParticipant GridAccessProvider { get; set; }
 
         [InverseProperty(nameof(MeteringPoint.GridAreaLink))]
         public virtual ICollection<MeteringPoint> MeteringPoints { get; set; }

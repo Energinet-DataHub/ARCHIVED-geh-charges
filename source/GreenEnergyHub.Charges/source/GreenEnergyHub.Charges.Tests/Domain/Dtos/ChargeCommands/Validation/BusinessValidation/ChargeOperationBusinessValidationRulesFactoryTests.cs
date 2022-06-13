@@ -210,7 +210,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         private static void SetupMarketParticipantMock(TestMarketParticipant sender, Mock<IMarketParticipantRepository> marketParticipantRepository)
         {
             marketParticipantRepository
-                .Setup(repo => repo.SingleAsync(It.IsAny<string>()))
+                .Setup(repo => repo.GetSystemOperatorOrGridAccessProviderAsync(
+                    It.IsAny<string>()))
                 .ReturnsAsync(sender);
         }
 

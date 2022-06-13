@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using GreenEnergyHub.Charges.Domain.GridAreaLinks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -26,6 +27,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
             builder.HasKey(l => l.Id);
             builder.Property(l => l.Id).ValueGeneratedNever();
             builder.Property(l => l.GridAreaId);
+            builder.Property(l => l.OwnerId);
         }
     }
 }
