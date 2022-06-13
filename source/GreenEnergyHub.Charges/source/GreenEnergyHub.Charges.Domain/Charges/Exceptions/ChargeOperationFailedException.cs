@@ -14,10 +14,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Charges.Exceptions
 {
+    [Serializable]
     public class ChargeOperationFailedException : Exception
     {
         public ChargeOperationFailedException(IList<IValidationRuleContainer> invalidRules)
@@ -26,5 +28,11 @@ namespace GreenEnergyHub.Charges.Domain.Charges.Exceptions
         }
 
         public IList<IValidationRuleContainer> InvalidRules { get; }
+
+        protected ChargeOperationFailedException(SerializationInfo serializationInfo, StreamingContext streamingContext)
+            : base(serializationInfo, streamingContext)
+        {
+            InvalidRules = new List<IValidationRuleContainer>();
+        }
     }
 }
