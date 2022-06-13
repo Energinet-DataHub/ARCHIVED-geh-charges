@@ -56,7 +56,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
             public async Task When_ReceivingGridAreaIntegrationUpdatedMessage_GridAreaLinkIsSavedToDatabase()
             {
                 // Arrange
-                await using var context = Fixture.DatabaseManager.CreateDbContext();
+                await using var context = Fixture.ChargesDatabaseManager.CreateDbContext();
                 var id = Guid.NewGuid();
                 var (message, parentId) = CreateServiceBusMessage(id);
 
