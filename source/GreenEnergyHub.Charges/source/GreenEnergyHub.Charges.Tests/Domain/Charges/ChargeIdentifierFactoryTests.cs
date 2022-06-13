@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
         {
             // Arrange
             marketParticipantRepository
-                .Setup(repo => repo.SingleOrNullAsync(chargeOperationDto.ChargeOwner))
+                .Setup(repo => repo.SingleAsync(chargeOperationDto.ChargeOwner))
                 .ReturnsAsync(owner);
 
             // Act

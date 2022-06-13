@@ -112,12 +112,12 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         private async Task<Charge?> GetChargeAsync(ChargeOperationDto operation)
         {
             var marketParticipant = await _marketParticipantRepository
-                .SingleOrNullAsync(operation.ChargeOwner)
+                .SingleAsync(operation.ChargeOwner)
                 .ConfigureAwait(false);
 
             var chargeIdentifier = new ChargeIdentifier(
                 operation.ChargeId,
-                marketParticipant!.Id,
+                marketParticipant.Id,
                 operation.Type);
             return await _chargeRepository.SingleOrNullAsync(chargeIdentifier).ConfigureAwait(false);
         }
