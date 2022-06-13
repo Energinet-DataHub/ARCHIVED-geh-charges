@@ -40,14 +40,43 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             sut.IsValid.Should().BeTrue();
         }
 
+        // To any future developers reading this boilerplate code. Know that Mr. Henrik Sommer made me do it.
+        // Don't hate the player, hate the game.
         [Theory]
-        [InlineAutoDomainData]
+        [InlineAutoDomainData(Resolution.Unknown, Resolution.Unknown, true)]
+        [InlineAutoDomainData(Resolution.Unknown, Resolution.P1D, false)]
+        [InlineAutoDomainData(Resolution.Unknown, Resolution.P1M, false)]
+        [InlineAutoDomainData(Resolution.Unknown, Resolution.PT1H, false)]
+        [InlineAutoDomainData(Resolution.Unknown, Resolution.PT15M, false)]
+        [InlineAutoDomainData(Resolution.P1D, Resolution.Unknown, false)]
+        [InlineAutoDomainData(Resolution.P1D, Resolution.P1D, true)]
+        [InlineAutoDomainData(Resolution.P1D, Resolution.P1M, false)]
+        [InlineAutoDomainData(Resolution.P1D, Resolution.PT1H, false)]
+        [InlineAutoDomainData(Resolution.P1D, Resolution.PT15M, false)]
+        [InlineAutoDomainData(Resolution.P1M, Resolution.Unknown, false)]
+        [InlineAutoDomainData(Resolution.P1M, Resolution.P1D, false)]
+        [InlineAutoDomainData(Resolution.P1M, Resolution.P1M, true)]
+        [InlineAutoDomainData(Resolution.P1M, Resolution.PT1H, false)]
+        [InlineAutoDomainData(Resolution.P1M, Resolution.PT15M, false)]
+        [InlineAutoDomainData(Resolution.PT1H, Resolution.Unknown, false)]
+        [InlineAutoDomainData(Resolution.PT1H, Resolution.P1D, false)]
+        [InlineAutoDomainData(Resolution.PT1H, Resolution.P1M, false)]
+        [InlineAutoDomainData(Resolution.PT1H, Resolution.PT1H, true)]
+        [InlineAutoDomainData(Resolution.PT1H, Resolution.PT15M, false)]
+        [InlineAutoDomainData(Resolution.PT15M, Resolution.Unknown, false)]
+        [InlineAutoDomainData(Resolution.PT15M, Resolution.P1D, false)]
+        [InlineAutoDomainData(Resolution.PT15M, Resolution.P1M, false)]
+        [InlineAutoDomainData(Resolution.PT15M, Resolution.PT1H, false)]
+        [InlineAutoDomainData(Resolution.PT15M, Resolution.PT15M, true)]
         public void IsValid_WhenResolutionIsNotTheSame_ShouldReturnFalse(
+            Resolution existingResolution,
+            Resolution newResolution,
+            bool isValid,
             ChargeBuilder chargeBuilder)
         {
-            var charge = chargeBuilder.WithResolution(Resolution.P1D).Build();
-            var sut = new ChargeResolutionCanNotBeUpdatedRule(charge.Resolution, Resolution.P1M);
-            sut.IsValid.Should().BeFalse();
+            var charge = chargeBuilder.WithResolution(existingResolution).Build();
+            var sut = new ChargeResolutionCanNotBeUpdatedRule(charge.Resolution, newResolution);
+            sut.IsValid.Should().Be(isValid);
         }
     }
 }
