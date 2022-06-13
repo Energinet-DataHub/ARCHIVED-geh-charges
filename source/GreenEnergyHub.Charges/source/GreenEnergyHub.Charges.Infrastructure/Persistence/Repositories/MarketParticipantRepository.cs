@@ -43,25 +43,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
         }
 
         /// <summary>
-        /// Retrieves a market participant from gln/eic no.
-        /// </summary>
-        /// <param name="marketParticipantId"></param>
-        public async Task<MarketParticipant> SingleAsync(string marketParticipantId)
-        {
-            var roles = new HashSet<MarketParticipantRole>
-            {
-                MarketParticipantRole.SystemOperator, MarketParticipantRole.GridAccessProvider,
-            };
-
-            return await _chargesDatabaseContext
-                .MarketParticipants
-                .SingleAsync(mp =>
-                    mp.MarketParticipantId == marketParticipantId && mp.IsActive &&
-                    roles.Contains(mp.BusinessProcessRole))
-                .ConfigureAwait(false);
-        }
-
-        /// <summary>
         /// Retrieves a market participant from primary key
         /// </summary>
         /// <param name="id"></param>

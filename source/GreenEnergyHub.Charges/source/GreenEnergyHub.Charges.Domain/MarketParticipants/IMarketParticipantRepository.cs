@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
 namespace GreenEnergyHub.Charges.Domain.MarketParticipants
 {
@@ -28,8 +29,6 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
         /// </summary>
         /// <param name="marketParticipant"></param>
         Task AddAsync(MarketParticipant marketParticipant);
-
-        Task<MarketParticipant> SingleAsync(string marketParticipantId);
 
         Task<MarketParticipant?> SingleOrNullAsync(Guid id);
 
