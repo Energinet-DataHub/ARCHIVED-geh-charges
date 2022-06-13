@@ -27,7 +27,6 @@ using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using Microsoft.EntityFrameworkCore;
-using NodaTime;
 using Xunit;
 using Xunit.Categories;
 

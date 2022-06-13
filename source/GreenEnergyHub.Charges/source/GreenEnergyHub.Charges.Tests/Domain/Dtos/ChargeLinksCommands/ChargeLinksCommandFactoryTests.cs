@@ -30,7 +30,6 @@ using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.Charges.Tests.Builders.Testables;
 using Moq;
-using NodaTime;
 using Xunit;
 using Xunit.Categories;
 

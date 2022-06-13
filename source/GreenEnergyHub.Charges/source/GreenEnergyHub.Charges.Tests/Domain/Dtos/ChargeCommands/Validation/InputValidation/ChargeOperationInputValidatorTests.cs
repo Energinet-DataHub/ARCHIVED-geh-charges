@@ -14,16 +14,9 @@
 
 using System.Collections.Generic;
 using AutoFixture.Xunit2;
-using FluentAssertions;
-using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.Factories;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
-using GreenEnergyHub.Charges.TestCore;
-using GreenEnergyHub.Charges.Tests.Builders.Command;
 using Moq;
-using NodaTime;
-using NodaTime.Testing;
 using Xunit;
 using Xunit.Categories;
 
