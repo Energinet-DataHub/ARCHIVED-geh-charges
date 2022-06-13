@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges.Exceptions;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using NodaTime;
@@ -221,7 +222,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             bool Predicate(Point x) => x.Time >= startDate && x.Time < endDate;
             if (_points.Any(Predicate))
             {
-                _points.RemoveAll(x => x.Time >= startDate && x.Time < endDate);
+                _points.RemoveAll(Predicate);
             }
         }
 
