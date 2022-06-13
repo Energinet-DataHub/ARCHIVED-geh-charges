@@ -14,12 +14,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.Factories;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
@@ -62,17 +59,17 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         {
             // Arrange
             var chargeOperationDto = new ChargeOperationDtoBuilder().Build();
-            var expectedRulesTypes = GetExpectedRulesForChargeInformationOperation();
+            var expectedRulesTypes = GetExpectedRulesForChargeInformationOperation()
+                .OrderBy(r => r.FullName);
 
             // Act
-            var actualRuleTypes = sut.CreateRules(chargeOperationDto)
-                .GetRules().Select(r => r.ValidationRule.GetType()).ToList();
+            var actualRuleTypes = sut.CreateRules(chargeOperationDto).GetRules()
+                .Select(r => r.ValidationRule.GetType())
+                .OrderBy(r => r.FullName)
+                .ToList();
 
             // Assert
-            var actualNotInExpected = actualRuleTypes.Except(expectedRulesTypes).ToList();
-            var expectedNotInActual = expectedRulesTypes.Except(actualRuleTypes).ToList();
-            actualNotInExpected.Should().BeEmpty();
-            expectedNotInActual.Should().BeEmpty();
+            actualRuleTypes.Should().Equal(expectedRulesTypes);
         }
 
         [Theory]
