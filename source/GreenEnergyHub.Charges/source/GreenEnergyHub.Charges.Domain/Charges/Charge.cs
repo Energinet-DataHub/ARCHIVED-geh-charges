@@ -212,7 +212,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             var rules = new List<OperationValidationRuleContainer>
             {
                 new(
-                    new UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateRule(
+                    new UpdateChargeMustHaveStartDateBeforeOrOnStopDateRule(
                         _periods.OrderBy(x => x.EndDateTime).Last().EndDateTime,
                         startDate),
                     operationId),
@@ -293,7 +293,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
                         TaxIndicator),
                     operationId),
                 new OperationValidationRuleContainer(
-                    new UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateRule(
+                    new UpdateChargeMustHaveStartDateBeforeOrOnStopDateRule(
                         _periods.OrderBy(x => x.EndDateTime).Last().EndDateTime,
                         newChargePeriod.StartDateTime),
                     operationId),

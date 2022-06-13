@@ -19,22 +19,22 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules
 {
-    public class UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateRule : IValidationRule
+    public class UpdateChargeMustHaveStartDateBeforeOrOnStopDateRule : IValidationRule
     {
         private readonly Instant _lastPeriodEndDateOnExistingCharge;
-        private readonly Instant _incomingEffectiveDate;
+        private readonly Instant _incomingStartDateDate;
 
-        public UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateRule(
+        public UpdateChargeMustHaveStartDateBeforeOrOnStopDateRule(
             Instant existingLastPeriod,
-            Instant incomingEffectiveDate)
+            Instant incomingStartDateDate)
         {
             _lastPeriodEndDateOnExistingCharge = existingLastPeriod;
-            _incomingEffectiveDate = incomingEffectiveDate;
+            _incomingStartDateDate = incomingStartDateDate;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDate;
 
-        public bool IsValid => _incomingEffectiveDate <= _lastPeriodEndDateOnExistingCharge;
+        public bool IsValid => _incomingStartDateDate <= _lastPeriodEndDateOnExistingCharge;
     }
 }
