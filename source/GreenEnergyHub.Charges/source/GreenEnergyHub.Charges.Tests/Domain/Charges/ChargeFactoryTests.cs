@@ -19,6 +19,7 @@ using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.Charges.Tests.Builders.Testables;
 using GreenEnergyHub.TestHelpers;
 using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
@@ -36,25 +37,21 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
         public async Task CreateFromCommandAsync_Charge_HasNoNullsOrEmptyCollections(
             TestMarketParticipant owner,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
-            Mock<ChargePeriod> chargePeriod,
-            ChargeOperationDto chargeOperationDto,
+            ChargeOperationDtoBuilder chargeOperationDtoBuilder,
             ChargeFactory sut)
         {
             // Arrange
+            var chargeOperationDto = chargeOperationDtoBuilder.Build();
             marketParticipantRepository
-                .Setup(repo => repo.SingleOrNullAsync(chargeOperationDto.ChargeOwner))
+                .Setup(repo => repo.SingleOrNullAsync(
+                    chargeOperationDto.ChargeOwner))
                 .ReturnsAsync(owner);
-
-            chargePeriodFactory
-                .Setup(f => f.CreateFromChargeOperationDto(It.IsAny<ChargeOperationDto>()))
-                .Returns(chargePeriod.Object);
 
             // Act
             var actual = await sut.CreateFromChargeOperationDtoAsync(chargeOperationDto);
 
             // Assert
-            actual.Should().NotContainNullsOrEmptyEnumerables();
+            actual.Should().NotContainNullEnumerable();
         }
 
         [Theory]
@@ -62,18 +59,19 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
         public async Task CreateFromCommandAsync_WhenOwnerIsNull_ThrowsException(
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
-            Mock<ChargePeriod> chargePeriod,
             ChargeOperationDto chargeOperationDto,
             ChargeFactory sut)
         {
             // Arrange
+            var chargePeriod = new ChargePeriodBuilder().Build();
             marketParticipantRepository
-                .Setup(repo => repo.SingleOrNullAsync(It.IsAny<string>()))
+                .Setup(repo => repo.SingleOrNullAsync(
+                    It.IsAny<string>()))
                 .ReturnsAsync((MarketParticipant?)null);
 
             chargePeriodFactory
                 .Setup(f => f.CreateFromChargeOperationDto(It.IsAny<ChargeOperationDto>()))
-                .Returns(chargePeriod.Object);
+                .Returns(chargePeriod);
 
             // Act & Assert
             await Assert.ThrowsAsync<InvalidOperationException>(() =>

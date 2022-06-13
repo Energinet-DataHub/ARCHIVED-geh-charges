@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
         {
             // Arrange
             marketParticipantRepository
-                .Setup(repo => repo.SingleAsync(chargeOperationDto.ChargeOwner))
+                .Setup(repo => repo.GetSystemOperatorOrGridAccessProviderAsync(chargeOperationDto.ChargeOwner))
                 .ReturnsAsync(owner);
 
             // Act
@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
                 chargeOperationDto.ChargeId, chargeOperationDto.Type, chargeOperationDto.ChargeOwner);
 
             // Assert
-            actual.Should().NotContainNullsOrEmptyEnumerables();
+            actual.Should().NotContainNullEnumerable();
         }
     }
 }

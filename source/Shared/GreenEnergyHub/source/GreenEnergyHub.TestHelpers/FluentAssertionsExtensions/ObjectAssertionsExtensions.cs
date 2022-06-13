@@ -27,14 +27,14 @@ namespace GreenEnergyHub.TestHelpers.FluentAssertionsExtensions
         /// Recursively checks all properties if any are null. Any Enumerable must be instantiated and contain elements.
         /// </summary>
         /// <param name="obj"></param>
-        public static void NotContainNullsOrEmptyEnumerables(this ObjectAssertions obj)
+        public static void NotContainNullEnumerable(this ObjectAssertions obj)
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
 
-            NotContainNullsOrEmptyEnumerables(obj.Subject, new List<object>());
+            NotContainNullEnumerable(obj.Subject, new List<object>());
         }
 
-        private static void NotContainNullsOrEmptyEnumerables(object obj, ICollection<object> visitedObjects)
+        private static void NotContainNullEnumerable(object obj, ICollection<object> visitedObjects)
         {
             if (visitedObjects.Any(v => ReferenceEquals(v, obj))) return;
             visitedObjects.Add(obj);
@@ -48,12 +48,12 @@ namespace GreenEnergyHub.TestHelpers.FluentAssertionsExtensions
                 {
                     if (inspectedListObject.Count < 1)
                     {
-                        inspectedListObject.Cast<object>().Should().NotBeEmpty($"{property.Name} is instantiated");
+                        inspectedListObject.Cast<object>().Should().NotBeNull($"{property.Name} is instantiated");
                     }
 
                     foreach (var item in inspectedListObject)
                     {
-                        NotContainNullsOrEmptyEnumerables(item!, visitedObjects);
+                        NotContainNullEnumerable(item!, visitedObjects);
                     }
                 }
                 else
@@ -62,7 +62,7 @@ namespace GreenEnergyHub.TestHelpers.FluentAssertionsExtensions
 
                     if (property.PropertyType.Assembly == objType.Assembly)
                     {
-                        NotContainNullsOrEmptyEnumerables(inspectedObjectsValue!, visitedObjects);
+                        NotContainNullEnumerable(inspectedObjectsValue!, visitedObjects);
                     }
                 }
             }

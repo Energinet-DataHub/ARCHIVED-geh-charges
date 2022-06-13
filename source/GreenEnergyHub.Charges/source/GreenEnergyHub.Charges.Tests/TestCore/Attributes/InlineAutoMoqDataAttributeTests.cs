@@ -30,7 +30,7 @@ namespace GreenEnergyHub.Charges.Tests.TestCore.Attributes
         public void Attribute_SupportsInstantiatingClassTypeObjectsWithPropsWithGeneratedValues(
             [NotNull] ChargeCommand command)
         {
-            command.Should().NotContainNullsOrEmptyEnumerables();
+            command.Should().NotContainNullEnumerable();
         }
     }
 }
