@@ -137,8 +137,8 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         /// <exception cref="ArgumentNullException">Throws when <paramref name="newChargePeriod"/> is empty</exception>
         public void Update(ChargePeriod newChargePeriod, bool taxIndicator, Resolution resolution, string operationId)
         {
-            if (newChargePeriod == null) throw new ArgumentNullException(nameof(newChargePeriod));
-            if (operationId == null) throw new ArgumentNullException(nameof(operationId));
+            ArgumentNullException.ThrowIfNull(newChargePeriod);
+            ArgumentNullException.ThrowIfNull(operationId);
 
             // This should be in a separate rule and handled by ChargeOperationFailedException
             // in order to notify sender that operation failed because of this constraint
@@ -184,6 +184,9 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 
         public void CancelStop(ChargePeriod chargePeriod, bool taxIndicator, Resolution resolution, string operationId)
         {
+            ArgumentNullException.ThrowIfNull(chargePeriod);
+            ArgumentNullException.ThrowIfNull(operationId);
+
             var existingLastPeriod = _periods.OrderByDescending(p => p.StartDateTime).First();
 
             // This should be in a separate rule and handled by ChargeOperationFailedException
@@ -203,6 +206,8 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         public void UpdatePrices(Instant startDate, Instant endDate, IReadOnlyList<Point> newPrices, string operationId)
         {
             ArgumentNullException.ThrowIfNull(newPrices);
+            ArgumentNullException.ThrowIfNull(operationId);
+            
             if (newPrices.Count == 0) return;
 
             var rules = new List<OperationValidationRuleContainer>
