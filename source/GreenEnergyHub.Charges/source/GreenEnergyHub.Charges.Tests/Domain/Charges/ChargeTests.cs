@@ -165,7 +165,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
         }
 
         [Theory]
-        [GreenEnergyHub.Charges.TestCore.Attributes.InlineAutoMoqData]
+        [InlineAutoMoqData]
         public void UpdateCharge_WhenChargePeriodIsNull_ThrowsArgumentNullException(Charge sut)
         {
             ChargePeriod? chargePeriod = null;
