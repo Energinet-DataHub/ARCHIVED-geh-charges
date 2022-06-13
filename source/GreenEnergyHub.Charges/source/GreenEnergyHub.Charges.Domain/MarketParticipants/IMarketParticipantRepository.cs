@@ -30,9 +30,9 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
         /// <param name="marketParticipant"></param>
         Task AddAsync(MarketParticipant marketParticipant);
 
-        Task<MarketParticipant?> SingleOrNullAsync(Guid id);
-
         Task<MarketParticipant> SingleAsync(string marketParticipantId);
+
+        Task<MarketParticipant?> SingleOrNullAsync(Guid id);
 
         Task<MarketParticipant?> SingleOrNullAsync(string marketParticipantId);
 
