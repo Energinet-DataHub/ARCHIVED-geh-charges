@@ -77,7 +77,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
             actual.Should().HaveSameCount(gridAccessProvider);
             for (var i = 0; i < actual.Count; i++)
             {
-                actual[i].Should().NotContainNullsOrEmptyEnumerables();
+                actual[i].Should().NotContainNullEnumerable();
                 actual[i].RecipientId.Should().Be(gridAccessProvider[i].MarketParticipantId);
                 actual[i].RecipientRole.Should().Be(gridAccessProvider[i].BusinessProcessRole);
                 actual[i].BusinessReasonCode.Should().Be(acceptedEvent.Command.Document.BusinessReasonCode);

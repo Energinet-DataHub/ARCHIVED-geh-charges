@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -75,9 +74,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Doc
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             ChargeCommandDocumentValidationRulesFactory sut,
-            Charge charge)
+            ChargeBuilder chargeBuilder)
         {
             // Arrange
+            var charge = chargeBuilder.Build();
             var chargeOperationDto = new ChargeOperationDtoBuilder().WithChargeType(ChargeType.Fee).Build();
             var chargeCommand = new ChargeCommandBuilder().WithChargeOperation(chargeOperationDto).Build();
             chargeRepository

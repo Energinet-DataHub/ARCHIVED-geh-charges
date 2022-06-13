@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
                 chargeOperationDto.ChargeId, chargeOperationDto.Type, chargeOperationDto.ChargeOwner);
 
             // Assert
-            actual.Should().NotContainNullsOrEmptyEnumerables();
+            actual.Should().NotContainNullEnumerable();
         }
     }
 }
