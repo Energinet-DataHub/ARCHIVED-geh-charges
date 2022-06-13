@@ -31,9 +31,9 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         private string _senderProvidedChargeId = "SenderProvidedChargeId";
         private Instant _startDate = InstantHelper.GetStartDefault();
         private Resolution _resolution = Resolution.PT1H;
-        private bool _taxIndicator = true;
+        private TaxIndicator _taxIndicator = TaxIndicator.Tax;
 
-        public ChargeBuilder WithTaxIndicator(bool taxIndicator)
+        public ChargeBuilder WithTaxIndicator(TaxIndicator taxIndicator)
         {
             _taxIndicator = taxIndicator;
             return this;

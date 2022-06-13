@@ -34,11 +34,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
     public class ChargeTests
     {
         [Theory]
-        [InlineAutoMoqData(false, true)]
-        [InlineAutoMoqData(true, false)]
+        [InlineAutoMoqData(TaxIndicator.NoTax, TaxIndicator.Tax)]
+        [InlineAutoMoqData(TaxIndicator.Tax, TaxIndicator.NoTax)]
         public void UpdateCharge_NewPeriodChangeTaxIndicator_ShouldThrowExceptionWithInvalidRule(
-            bool existingTax,
-            bool newTax)
+            TaxIndicator existingTax,
+            TaxIndicator newTax)
         {
             // Arrange
             var sut = new ChargeBuilder()
@@ -79,7 +79,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             // Act
             sut.Update(
                 newPeriod,
-                sut.TaxIndicator,
+                sut.TaxIndicator ? TaxIndicator.Tax : TaxIndicator.NoTax,
                 sut.Resolution,
                 Guid.NewGuid().ToString());
 
@@ -114,7 +114,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             // Act
             sut.Update(
                 newPeriod,
-                sut.TaxIndicator,
+                sut.TaxIndicator ? TaxIndicator.Tax : TaxIndicator.NoTax,
                 sut.Resolution,
                 Guid.NewGuid().ToString());
 
@@ -152,7 +152,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             // Act
             sut.Update(
                 newPeriod,
-                sut.TaxIndicator,
+                sut.TaxIndicator ? TaxIndicator.Tax : TaxIndicator.NoTax,
                 sut.Resolution,
                 Guid.NewGuid().ToString());
 
@@ -166,13 +166,14 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
 
         [Theory]
         [InlineAutoMoqData]
-        public void UpdateCharge_WhenChargePeriodIsNull_ThrowsArgumentNullException(Charge sut)
+        public void UpdateCharge_WhenChargePeriodIsNull_ThrowsArgumentNullException(ChargeBuilder chargeBuilder)
         {
+            var sut = chargeBuilder.Build();
             ChargePeriod? chargePeriod = null;
 
             Assert.Throws<ArgumentNullException>(() => sut.Update(
                 chargePeriod!,
-                sut.TaxIndicator,
+                sut.TaxIndicator ? TaxIndicator.Tax : TaxIndicator.NoTax,
                 sut.Resolution,
                 It.IsAny<string>()));
         }
@@ -198,7 +199,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             // Act
             Assert.Throws<InvalidOperationException>(() => sut.Update(
                 newPeriod,
-                sut.TaxIndicator,
+                sut.TaxIndicator ? TaxIndicator.Tax : TaxIndicator.NoTax,
                 sut.Resolution,
                 Guid.NewGuid().ToString()));
         }
@@ -218,7 +219,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             // Act
             sut.Update(
                 newPeriod,
-                sut.TaxIndicator,
+                sut.TaxIndicator ? TaxIndicator.Tax : TaxIndicator.NoTax,
                 sut.Resolution,
                 Guid.NewGuid().ToString());
 
@@ -382,9 +383,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             // Act
             sut.CancelStop(
                 newPeriod,
-                sut.TaxIndicator,
+                sut.TaxIndicator ? TaxIndicator.Tax : TaxIndicator.NoTax,
                 sut.Resolution,
-                It.IsAny<string>());
+                Guid.NewGuid().ToString());
 
             // Assert
             var orderedPeriods = sut.Periods.OrderBy(p => p.StartDateTime).ToList();
@@ -408,9 +409,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             // Act & Assert
             Assert.Throws<InvalidOperationException>(() => sut.CancelStop(
                 cancelPeriod,
-                sut.TaxIndicator,
+                sut.TaxIndicator ? TaxIndicator.Tax : TaxIndicator.NoTax,
                 sut.Resolution,
-                It.IsAny<string>()));
+                Guid.NewGuid().ToString()));
         }
 
         [Fact]
@@ -423,9 +424,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             // Act & Assert
             Assert.Throws<InvalidOperationException>(() => sut.CancelStop(
                 chargePeriod,
-                sut.TaxIndicator,
+                sut.TaxIndicator ? TaxIndicator.Tax : TaxIndicator.NoTax,
                 sut.Resolution,
-                It.IsAny<string>()));
+                Guid.NewGuid().ToString()));
         }
 
         [Fact]

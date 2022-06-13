@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Contracts.External.Meterin
             var converted = (MeteringPointCreatedEvent)sut.Convert(meteringPointCreatedEvent);
 
             // Assert
-            converted.Should().NotContainNullsOrEmptyEnumerables();
+            converted.Should().NotContainNullEnumerable();
             converted.MeteringPointId.Should().Be(meteringPointCreatedEvent.GsrnNumber);
             converted.EffectiveDate.Should().Be(meteringPointCreatedEvent.EffectiveDate.ToInstant());
             converted.GridAreaLinkId.Should().Be(meteringPointCreatedEvent.GridAreaCode);

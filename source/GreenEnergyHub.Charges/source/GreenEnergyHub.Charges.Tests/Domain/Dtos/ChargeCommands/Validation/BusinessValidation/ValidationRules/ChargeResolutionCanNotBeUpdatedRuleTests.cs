@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             ChargeBuilder chargeBuilder)
         {
             var charge = chargeBuilder.WithResolution(resolution).Build();
-            var sut = new ChargeResolutionCanNotBeUpdatedRule(charge, resolution);
+            var sut = new ChargeResolutionCanNotBeUpdatedRule(charge.Resolution, resolution);
             sut.IsValid.Should().BeTrue();
         }
 
@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             ChargeBuilder chargeBuilder)
         {
             var charge = chargeBuilder.WithResolution(Resolution.P1D).Build();
-            var sut = new ChargeResolutionCanNotBeUpdatedRule(charge, Resolution.P1M);
+            var sut = new ChargeResolutionCanNotBeUpdatedRule(charge.Resolution, Resolution.P1M);
             sut.IsValid.Should().BeFalse();
         }
     }

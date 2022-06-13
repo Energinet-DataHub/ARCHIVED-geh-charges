@@ -360,7 +360,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             ChargeInformationEventHandler sut)
         {
             // Arrange
-            var charge = chargeBuilder.WithTaxIndicator(true).Build();
+            var charge = chargeBuilder.WithTaxIndicator(TaxIndicator.Tax).Build();
             var (receivedEvent, invalidOperationId) = CreateReceivedEventWithChargeOperations();
             SetupChargeRepository(chargeRepository, charge);
             SetupChargePeriodFactory(chargePeriodFactory, receivedEvent.Command.ChargeOperations.ToList());

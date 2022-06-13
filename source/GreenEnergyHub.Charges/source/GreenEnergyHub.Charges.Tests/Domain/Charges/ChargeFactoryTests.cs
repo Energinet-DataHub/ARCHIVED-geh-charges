@@ -37,10 +37,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
         public async Task CreateFromCommandAsync_Charge_HasNoNullsOrEmptyCollections(
             TestMarketParticipant owner,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            ChargeOperationDto chargeOperationDto,
+            ChargeOperationDtoBuilder chargeOperationDtoBuilder,
             ChargeFactory sut)
         {
             // Arrange
+            var chargeOperationDto = chargeOperationDtoBuilder.Build();
             marketParticipantRepository
                 .Setup(repo => repo.SingleOrNullAsync(chargeOperationDto.ChargeOwner))
                 .ReturnsAsync(owner);
@@ -49,7 +50,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             var actual = await sut.CreateFromChargeOperationDtoAsync(chargeOperationDto);
 
             // Assert
-            actual.Should().NotContainNullsOrEmptyEnumerables();
+            actual.Should().NotContainNullEnumerable();
         }
 
         [Theory]

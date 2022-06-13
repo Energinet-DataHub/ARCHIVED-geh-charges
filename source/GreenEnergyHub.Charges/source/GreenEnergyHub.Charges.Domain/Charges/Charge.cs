@@ -17,7 +17,6 @@ using System.Collections.Generic;
 using System.Linq;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges.Exceptions;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using NodaTime;
@@ -97,7 +96,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             Guid ownerId,
             ChargeType type,
             Resolution resolution,
-            bool taxIndicator,
+            TaxIndicator taxIndicator,
             VatClassification vatClassification,
             bool transparentInvoicing,
             Instant startDate)
@@ -120,7 +119,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
                 ownerId,
                 type,
                 resolution,
-                taxIndicator,
+                ParseTaxIndicator(taxIndicator),
                 new List<Point>(),
                 new List<ChargePeriod> { chargePeriod });
         }
@@ -135,7 +134,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         /// <param name="resolution">Resolution of the update charge request</param>
         /// <param name="operationId">Charge operation id</param>
         /// <exception cref="ArgumentNullException">Throws when <paramref name="newChargePeriod"/> is empty</exception>
-        public void Update(ChargePeriod newChargePeriod, bool taxIndicator, Resolution resolution, string operationId)
+        public void Update(ChargePeriod newChargePeriod, TaxIndicator taxIndicator, Resolution resolution, string operationId)
         {
             ArgumentNullException.ThrowIfNull(newChargePeriod);
             ArgumentNullException.ThrowIfNull(operationId);
@@ -182,7 +181,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             _points.RemoveAll(p => p.Time >= stopDate);
         }
 
-        public void CancelStop(ChargePeriod chargePeriod, bool taxIndicator, Resolution resolution, string operationId)
+        public void CancelStop(ChargePeriod chargePeriod, TaxIndicator taxIndicator, Resolution resolution, string operationId)
         {
             ArgumentNullException.ThrowIfNull(chargePeriod);
             ArgumentNullException.ThrowIfNull(operationId);
@@ -207,17 +206,32 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         {
             ArgumentNullException.ThrowIfNull(newPrices);
             ArgumentNullException.ThrowIfNull(operationId);
-            
+
             if (newPrices.Count == 0) return;
 
             var rules = new List<OperationValidationRuleContainer>
             {
-                new(new UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateRule(this, startDate), operationId),
+                new(
+                    new UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateRule(
+                        _periods.OrderBy(x => x.EndDateTime).Last().EndDateTime,
+                        startDate),
+                    operationId),
             };
             CheckRules(rules);
 
             RemoveExistingChargePrices(startDate, endDate);
             _points.AddRange(newPrices);
+        }
+
+        private static bool ParseTaxIndicator(TaxIndicator taxIndicator)
+        {
+            // TODO: TaxIndicator is refactored in upcoming PR and by then this temporary fix i going to be removed
+            return taxIndicator switch
+            {
+                Charges.TaxIndicator.Tax => true,
+                Charges.TaxIndicator.NoTax => false,
+                _ => throw new InvalidOperationException("Tax indicator must be set."),
+            };
         }
 
         private void RemoveExistingChargePrices(Instant? startDate, Instant? endDate)
@@ -267,26 +281,26 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 
         private IEnumerable<IValidationRuleContainer> GenerateRules(
             ChargePeriod newChargePeriod,
-            bool taxIndicator,
-            Resolution resolution,
+            TaxIndicator newTaxIndicator,
+            Resolution newResolution,
             string operationId)
         {
             var rules = new List<IValidationRuleContainer>
             {
                 new OperationValidationRuleContainer(
                     new ChangingTariffTaxValueNotAllowedRule(
-                        taxIndicator,
+                        newTaxIndicator,
                         TaxIndicator),
                     operationId),
                 new OperationValidationRuleContainer(
                     new UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateRule(
-                        this,
+                        _periods.OrderBy(x => x.EndDateTime).Last().EndDateTime,
                         newChargePeriod.StartDateTime),
                     operationId),
                 new OperationValidationRuleContainer(
                     new ChargeResolutionCanNotBeUpdatedRule(
-                        this,
-                        resolution),
+                        Resolution,
+                        newResolution),
                     operationId),
             };
             return rules;

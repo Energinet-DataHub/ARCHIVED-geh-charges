@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Collections.Generic;
+using System.Linq;
 using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
@@ -46,7 +47,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
                 .WithStopDate(existingStopDate)
                 .Build();
 
-            var sut = new UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateRule(existingCharge, incomingCommandStartDate);
+            var sut = new UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateRule(
+                existingCharge.Periods.OrderBy(p => p.StartDateTime).Last().EndDateTime,
+                incomingCommandStartDate);
 
             // Act
             var isValid = sut.IsValid;

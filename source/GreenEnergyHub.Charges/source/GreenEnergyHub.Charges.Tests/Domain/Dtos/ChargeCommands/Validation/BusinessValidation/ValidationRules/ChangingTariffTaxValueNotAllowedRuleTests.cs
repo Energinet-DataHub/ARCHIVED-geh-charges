@@ -30,11 +30,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
     public class ChangingTariffTaxValueNotAllowedRuleTests
     {
         [Theory]
-        [InlineAutoDomainData(true, true, true)]
-        [InlineAutoDomainData(true, false, false)]
-        [InlineAutoDomainData(false, false, true)]
+        [InlineAutoDomainData(TaxIndicator.Tax, true, true)]
+        [InlineAutoDomainData(TaxIndicator.Tax, false, false)]
+        [InlineAutoDomainData(TaxIndicator.NoTax, false, true)]
         public void IsValid_WhenTaxIndicatorInCommandMatches_IsTrue(
-            bool newTaxIndicator,
+            TaxIndicator newTaxIndicator,
             bool existingTaxIndicator,
             bool expected)
         {
@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         public void ValidationRuleIdentifier_ShouldBe_EqualTo()
         {
             var sut = new ChangingTariffTaxValueNotAllowedRule(
-                It.IsAny<bool>(),
+                It.IsAny<TaxIndicator>(),
                 It.IsAny<bool>());
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChangingTariffTaxValueNotAllowed);
         }

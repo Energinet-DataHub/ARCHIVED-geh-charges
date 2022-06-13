@@ -167,9 +167,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task GetByIdsAsync_VerifyLocalContextItemsAreAlsoFetched(Charge notSavedCharge)
+        public async Task GetByIdsAsync_VerifyLocalContextItemsAreAlsoFetched(ChargeBuilder chargeBuilder)
         {
             // Arrange
+            var notSavedCharge = chargeBuilder.Build();
             await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
             var savedCharge = await SetupValidChargeAsync(chargesDatabaseContext);
             var sut = new ChargeRepository(chargesDatabaseContext);

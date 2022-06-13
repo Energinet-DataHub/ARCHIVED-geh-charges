@@ -19,10 +19,10 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
 {
     public class ChangingTariffTaxValueNotAllowedRule : IValidationRule
     {
-        private readonly bool _newTaxIndicator;
+        private readonly TaxIndicator _newTaxIndicator;
         private readonly bool _existingTaxIndicator;
 
-        public ChangingTariffTaxValueNotAllowedRule(bool newTaxIndicator, bool existingTaxIndicator)
+        public ChangingTariffTaxValueNotAllowedRule(TaxIndicator newTaxIndicator, bool existingTaxIndicator)
         {
             _newTaxIndicator = newTaxIndicator;
             _existingTaxIndicator = existingTaxIndicator;
@@ -31,6 +31,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessV
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.ChangingTariffTaxValueNotAllowed;
 
-        public bool IsValid => _newTaxIndicator == _existingTaxIndicator;
+        public bool IsValid => (_newTaxIndicator == TaxIndicator.Tax && _existingTaxIndicator) ||
+                               (_newTaxIndicator == TaxIndicator.NoTax && !_existingTaxIndicator);
     }
 }

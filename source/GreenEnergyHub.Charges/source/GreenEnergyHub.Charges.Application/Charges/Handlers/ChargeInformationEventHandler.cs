@@ -152,7 +152,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             var newChargePeriod = _chargePeriodFactory.CreateFromChargeOperationDto(chargeOperationDto);
             charge.Update(
                 newChargePeriod,
-                chargeOperationDto.TaxIndicator == TaxIndicator.Tax,
+                chargeOperationDto.TaxIndicator,
                 chargeOperationDto.Resolution,
                 chargeOperationDto.Id);
         }
@@ -162,7 +162,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             var newChargePeriod = _chargePeriodFactory.CreateFromChargeOperationDto(chargeOperationDto);
             charge.CancelStop(
                 newChargePeriod,
-                chargeOperationDto.TaxIndicator == TaxIndicator.Tax,
+                chargeOperationDto.TaxIndicator,
                 chargeOperationDto.Resolution,
                 chargeOperationDto.Id);
         }
