@@ -205,6 +205,8 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         public void UpdatePrices(Instant startDate, Instant endDate, IReadOnlyList<Point> newPrices, string operationId)
         {
             ArgumentNullException.ThrowIfNull(newPrices);
+            ArgumentNullException.ThrowIfNull(operationId);
+            
             if (newPrices.Count == 0) return;
 
             var rules = new List<OperationValidationRuleContainer>
