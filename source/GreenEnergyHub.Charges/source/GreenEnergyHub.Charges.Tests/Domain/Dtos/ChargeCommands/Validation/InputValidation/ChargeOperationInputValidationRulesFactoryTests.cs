@@ -39,17 +39,14 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         {
             // Arrange
             var chargeOperationDto = new ChargeOperationDtoBuilder().WithPoint(0, 1.00m).Build();
-            var expectedRuleTypes = GetExpectedRulesForChargePriceOperation().ToList();
+            var expectedRulesTypes = GetExpectedRulesForChargePriceOperation().ToList();
 
             // Act
             var actualRuleTypes = sut.CreateRules(chargeOperationDto)
                 .GetRules().Select(r => r.ValidationRule.GetType()).ToList();
 
             // Assert
-            var actualNotInExpected = actualRuleTypes.Except(expectedRuleTypes).ToList();
-            var expectedNotInActual = expectedRuleTypes.Except(actualRuleTypes).ToList();
-            actualNotInExpected.Should().BeEmpty();
-            expectedNotInActual.Should().BeEmpty();
+            actualRuleTypes.Should().Equal(expectedRulesTypes);
         }
 
         [Theory]
