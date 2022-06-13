@@ -281,7 +281,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             TestMarketParticipant marketParticipant)
         {
             marketParticipantRepository
-                .Setup(r => r.SingleAsync(It.IsAny<string>()))
+                .Setup(r => r.GetSystemOperatorOrGridAccessProviderAsync(It.IsAny<string>()))
                 .ReturnsAsync(marketParticipant);
         }
 
