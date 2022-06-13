@@ -183,6 +183,9 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 
         public void CancelStop(ChargePeriod chargePeriod, bool taxIndicator, Resolution resolution, string operationId)
         {
+            ArgumentNullException.ThrowIfNull(chargePeriod);
+            ArgumentNullException.ThrowIfNull(operationId);
+
             var existingLastPeriod = _periods.OrderByDescending(p => p.StartDateTime).First();
 
             // This should be in a separate rule and handled by ChargeOperationFailedException
