@@ -124,7 +124,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             var actualSecondPeriod = actualTimeline[1];
             var actualThirdPeriod = actualTimeline[2];
 
-            actualTimeline.Count.Should().Be(3);
+            actualTimeline.Should().HaveCount(3);
             actualFirstPeriod.Name.Should().Be("ExistingPeriod");
             actualFirstPeriod.StartDateTime.Should().Be(InstantHelper.GetStartDefault());
             actualFirstPeriod.EndDateTime.Should().Be(InstantHelper.GetYesterdayAtMidnightUtc());
