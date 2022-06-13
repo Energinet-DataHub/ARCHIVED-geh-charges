@@ -225,7 +225,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
 
             // Assert
             var actualTimeline = sut.Periods.OrderBy(p => p.StartDateTime).ToList();
-            actualTimeline.Count.Should().Be(2);
+            actualTimeline.Should().HaveCount(2);
             var actualFirstPeriod = actualTimeline[0];
             var actualSecondPeriod = actualTimeline[1];
             actualFirstPeriod.Name.Should().Be("ChargeBuilderDefaultName");
