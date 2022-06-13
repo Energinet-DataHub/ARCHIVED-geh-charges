@@ -29,7 +29,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         public async Task<ChargeIdentifier> CreateAsync(string chargeId, ChargeType chargeType, string chargeOwner)
         {
             var marketParticipant = await _marketParticipantRepository
-                .SingleAsync(chargeOwner)
+                .GetSystemOperatorOrGridAccessProviderAsync(chargeOwner)
                 .ConfigureAwait(false);
 
             return new ChargeIdentifier(chargeId, marketParticipant.Id, chargeType);

@@ -77,12 +77,12 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
                 gridAreaLinkId);
 
             // Act
-            var actualMarketParticipantUpdatedEvent =
+            var actualGridAreaUpdatedEvent =
                 MarketParticipantDomainEventMapper.MapFromGridAreaUpdatedIntegrationEvent(gridAreaUpdatedIntegrationEvent);
 
             // Assert
-            actualMarketParticipantUpdatedEvent.GridAreaId.Should().Be(gridAreaId);
-            actualMarketParticipantUpdatedEvent.GridAreaLinkId.Should().Be(gridAreaLinkId);
+            actualGridAreaUpdatedEvent.GridAreaId.Should().Be(gridAreaId);
+            actualGridAreaUpdatedEvent.GridAreaLinkId.Should().Be(gridAreaLinkId);
         }
     }
 }
