@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 
@@ -22,8 +21,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
     {
         public ChargePeriod CreateFromChargeOperationDto(ChargeOperationDto chargeOperationDto)
         {
-            return new ChargePeriod(
-                Guid.NewGuid(),
+            return ChargePeriod.Create(
                 chargeOperationDto.ChargeName,
                 chargeOperationDto.ChargeDescription,
                 chargeOperationDto.VatClassification,

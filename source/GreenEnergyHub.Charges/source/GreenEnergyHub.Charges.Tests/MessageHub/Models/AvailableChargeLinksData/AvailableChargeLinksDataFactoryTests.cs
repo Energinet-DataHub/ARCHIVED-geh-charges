@@ -22,6 +22,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.TestCore.Reflection;
+using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.Charges.Tests.Builders.Testables;
 using GreenEnergyHub.TestHelpers;
 using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
@@ -43,15 +44,15 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinksDat
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             ChargeLinksAcceptedEvent acceptedEvent,
-            Charge charge,
+            ChargeBuilder chargeBuilder,
             TestMeteringPointAdministrator meteringPointAdministrator,
             TestGridAccessProvider gridAccessProvider,
             Instant now,
             AvailableChargeLinksDataFactory sut)
         {
             // Arrange
+            var charge = chargeBuilder.WithTaxIndicator(TaxIndicator.Tax).Build();
             SetupChargeIdentifierFactoryMock(chargeIdentifierFactory);
-            charge.SetPrivateProperty(c => c.TaxIndicator, true);
             SetupChargeRepositoryMock(chargeRepository, charge);
             SetupMarketParticipantRepositoryMock(
                 marketParticipantRepository,
@@ -69,7 +70,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinksDat
             actual.Should().HaveSameCount(expectedLinks);
             for (var i = 0; i < actual.Count; i++)
             {
-                actual[i].Should().NotContainNullsOrEmptyEnumerables();
+                actual[i].Should().NotContainNullEnumerable();
                 actual[i].RecipientId.Should().Be(gridAccessProvider.MarketParticipantId);
                 actual[i].RecipientRole.Should().Be(gridAccessProvider.BusinessProcessRole);
                 actual[i].BusinessReasonCode.Should().Be(acceptedEvent.ChargeLinksCommand.Document.BusinessReasonCode);
@@ -91,12 +92,13 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinksDat
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             ChargeLinksAcceptedEvent acceptedEvent,
-            Charge charge,
+            ChargeBuilder chargeBuilder,
             TestMeteringPointAdministrator meteringPointAdministrator,
             TestGridAccessProvider gridAccessProvider,
             AvailableChargeLinksDataFactory sut)
         {
             // Arrange
+            var charge = chargeBuilder.WithTaxIndicator(TaxIndicator.NoTax).Build();
             charge.SetPrivateProperty(c => c.TaxIndicator, false);
             SetupChargeIdentifierFactoryMock(chargeIdentifierFactory);
             SetupChargeRepositoryMock(chargeRepository, charge);
