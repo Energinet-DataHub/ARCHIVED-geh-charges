@@ -102,7 +102,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
             return await _chargesDatabaseContext
                 .MarketParticipants
                 .SingleOrDefaultAsync(mp =>
-                    mp.MarketParticipantId == marketParticipantId && mp.IsActive &&
+                    mp.MarketParticipantId == marketParticipantId &&
                     mp.BusinessProcessRole == businessProcessRole)
                 .ConfigureAwait(false);
         }

@@ -46,13 +46,13 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
             ArgumentNullException.ThrowIfNull(marketParticipantUpdatedEvent);
             foreach (var businessProcessRole in marketParticipantUpdatedEvent.BusinessProcessRoles)
             {
-                var existingMarketParticipant = await _marketParticipantRepository.SingleOrNullAsync(
+                var persistMarketParticipant = await _marketParticipantRepository.SingleOrNullAsync(
                     businessProcessRole,
                     marketParticipantUpdatedEvent.MarketParticipantId).ConfigureAwait(false);
 
-                if (existingMarketParticipant is null)
+                if (persistMarketParticipant is null)
                 {
-                    await AddMarketParticipantAsync(
+                    persistMarketParticipant = await AddMarketParticipantAsync(
                         marketParticipantUpdatedEvent,
                         businessProcessRole).ConfigureAwait(false);
                 }
@@ -60,8 +60,10 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
                 {
                     UpdateMarketParticipant(
                         marketParticipantUpdatedEvent,
-                        existingMarketParticipant);
+                        persistMarketParticipant);
                 }
+
+                await ConnectToGridAreaAsync(marketParticipantUpdatedEvent, persistMarketParticipant).ConfigureAwait(false);
             }
 
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
@@ -79,7 +81,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
                 existingMarketParticipant.BusinessProcessRole);
         }
 
-        private async Task AddMarketParticipantAsync(
+        private async Task<MarketParticipant> AddMarketParticipantAsync(
             MarketParticipantUpdatedEvent marketParticipantUpdatedEvent,
             MarketParticipantRole businessProcessRole)
         {
@@ -95,14 +97,15 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
                 "has been persisted",
                 marketParticipant.MarketParticipantId,
                 marketParticipant.BusinessProcessRole);
-            if (marketParticipant.BusinessProcessRole.Equals(MarketParticipantRole.GridAccessProvider))
-              await ConnectToGridAreaAsync(marketParticipantUpdatedEvent, marketParticipant).ConfigureAwait(false);
+            return marketParticipant;
         }
 
         private async Task ConnectToGridAreaAsync(
             MarketParticipantUpdatedEvent marketParticipantUpdatedEvent,
             MarketParticipant marketParticipant)
         {
+            if (!marketParticipant.BusinessProcessRole.Equals(MarketParticipantRole.GridAccessProvider)) return;
+
             foreach (var gridAreaId in marketParticipantUpdatedEvent.GridAreas)
             {
                 var existingGridAreaLink = await _gridAreaLinkRepository.GetGridAreaOrNullAsync(gridAreaId).ConfigureAwait(false);
