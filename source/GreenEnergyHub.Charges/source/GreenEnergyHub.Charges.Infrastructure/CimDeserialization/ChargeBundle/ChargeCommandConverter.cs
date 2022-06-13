@@ -106,6 +106,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
             var chargeName = string.Empty;
             var description = string.Empty;
             var resolution = Resolution.Unknown;
+            var priceResolution = Resolution.Unknown;
             Instant startDateTime = default;
             Instant? endDateTime = null;
             var vatClassification = VatClassification.Unknown;
@@ -197,9 +198,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                 }
                 else if (reader.Is(CimChargeCommandConstants.SeriesPeriod))
                 {
-                    var seriesPeriodIntoOperationAsync = await ParseSeriesPeriodIntoOperationAsync(reader, startDateTime, resolution).ConfigureAwait(false);
+                    var seriesPeriodIntoOperationAsync = await ParseSeriesPeriodIntoOperationAsync(reader, startDateTime).ConfigureAwait(false);
                     points.AddRange(seriesPeriodIntoOperationAsync.Points);
-                    resolution = seriesPeriodIntoOperationAsync.Resolution;
+                    priceResolution = seriesPeriodIntoOperationAsync.Resolution;
                     pointsStartTime = seriesPeriodIntoOperationAsync.IntervalStartTime;
                     pointsEndTime = seriesPeriodIntoOperationAsync.IntervalEndTime;
                 }
@@ -217,6 +218,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                 description,
                 chargeOwner,
                 resolution,
+                priceResolution,
                 taxIndicator,
                 transparentInvoicing,
                 vatClassification,
@@ -227,23 +229,18 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                 points);
         }
 
-        private async Task<ParseSeriesPeriodResult> ParseSeriesPeriodIntoOperationAsync(SchemaValidatingReader reader, Instant startDateTime, Resolution initialResolution)
+        private async Task<ParseSeriesPeriodResult> ParseSeriesPeriodIntoOperationAsync(SchemaValidatingReader reader, Instant startDateTime)
         {
             var points = new List<Point>();
-            var resolution = initialResolution;
+            var priceResolution = Resolution.Unknown;
             Instant endDateTime = default;
 
             while (await reader.AdvanceAsync().ConfigureAwait(false))
             {
-                if (reader.Is(CimChargeCommandConstants.PeriodResolution))
+                if (reader.Is(CimChargeCommandConstants.PriceResolution))
                 {
-                    // Note, this is the second place where the resolution might be identified
-                    // If it was not set previous, we use this one instead
-                    if (initialResolution == Resolution.Unknown)
-                    {
-                        var content = await reader.ReadValueAsDurationAsync().ConfigureAwait(false);
-                        resolution = ResolutionMapper.Map(content);
-                    }
+                    var content = await reader.ReadValueAsDurationAsync().ConfigureAwait(false);
+                    priceResolution = ResolutionMapper.Map(content);
                 }
                 else if (reader.Is(CimChargeCommandConstants.TimeInterval))
                 {
@@ -252,7 +249,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                 }
                 else if (reader.Is(CimChargeCommandConstants.Point))
                 {
-                    var point = await ParsePointAsync(reader, resolution, startDateTime).ConfigureAwait(false);
+                    var point = await ParsePointAsync(reader, priceResolution, startDateTime).ConfigureAwait(false);
                     points.Add(point);
                 }
                 else if (reader.Is(
@@ -263,7 +260,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                 }
             }
 
-            return new ParseSeriesPeriodResult(points, resolution, startDateTime, endDateTime);
+            return new ParseSeriesPeriodResult(points, priceResolution, startDateTime, endDateTime);
         }
 
         private static async Task<(Instant StartDateTime, Instant EndDateTime)> ParseTimeIntervalAsync(SchemaValidatingReader reader, Instant intervalStartDateTime)

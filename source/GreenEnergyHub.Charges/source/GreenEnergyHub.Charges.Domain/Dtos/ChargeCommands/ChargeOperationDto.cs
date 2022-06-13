@@ -36,6 +36,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
                 string chargeDescription,
                 string chargeOwner,
                 Resolution resolution,
+                Resolution priceResolution,
                 TaxIndicator taxIndicator,
                 TransparentInvoicing transparentInvoicing,
                 VatClassification vatClassification,
@@ -53,6 +54,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
             ChargeDescription = chargeDescription;
             ChargeOwner = chargeOwner;
             Resolution = resolution;
+            PriceResolution = priceResolution;
             TaxIndicator = taxIndicator;
             TransparentInvoicing = transparentInvoicing;
             VatClassification = vatClassification;
@@ -112,6 +114,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
         public string ChargeOwner { get; }
 
         public Resolution Resolution { get; }
+
+        public Resolution PriceResolution { get; }
 
         public Instant? PointsStartInterval { get; }
 
