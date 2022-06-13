@@ -136,8 +136,8 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         /// <exception cref="ArgumentNullException">Throws when <paramref name="newChargePeriod"/> is empty</exception>
         public void Update(ChargePeriod newChargePeriod, bool taxIndicator, Resolution resolution, string operationId)
         {
-            if (newChargePeriod == null) throw new ArgumentNullException(nameof(newChargePeriod));
-            if (operationId == null) throw new ArgumentNullException(nameof(operationId));
+            ArgumentNullException.ThrowIfNull(newChargePeriod);
+            ArgumentNullException.ThrowIfNull(operationId);
 
             // This should be in a separate rule and handled by ChargeOperationFailedException
             // in order to notify sender that operation failed because of this constraint
