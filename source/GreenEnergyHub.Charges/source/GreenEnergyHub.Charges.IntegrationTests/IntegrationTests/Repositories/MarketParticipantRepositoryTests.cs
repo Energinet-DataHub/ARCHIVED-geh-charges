@@ -13,12 +13,15 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using Xunit.Categories;
 
@@ -38,7 +41,30 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         }
 
         [Fact]
-        public async Task GetOrNullAsync_WhenGuidEqualsExistingMarketParticipant_ReturnsMarketParticipant()
+        public async Task AddAsync_WhenValidMarketParticipant_IsPersisted()
+        {
+            // Arrange
+            await using var chargesWriteDatabaseContext = _databaseManager.CreateDbContext();
+            var sut = new MarketParticipantRepository(chargesWriteDatabaseContext);
+            var id = Guid.NewGuid();
+            var marketParticipant = new MarketParticipant(id, "1337", true, MarketParticipantRole.GridAccessProvider);
+
+            // Act
+            await sut.AddAsync(marketParticipant).ConfigureAwait(false);
+            await chargesWriteDatabaseContext.SaveChangesAsync();
+
+            // Assert
+            await using var chargesReadDatabaseContext = _databaseManager.CreateDbContext();
+            var actual =
+                await chargesReadDatabaseContext.MarketParticipants.SingleAsync(mp => mp.Id == marketParticipant.Id);
+            actual.Id.Should().Be(id);
+            actual.MarketParticipantId.Should().Be("1337");
+            actual.IsActive.Should().BeTrue();
+            actual.BusinessProcessRole.Should().Be(MarketParticipantRole.GridAccessProvider);
+        }
+
+        [Fact]
+        public async Task SingleOrNullAsync_WhenGuidEqualsExistingMarketParticipant_ReturnsMarketParticipant()
         {
             // Arrange
             await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
@@ -50,6 +76,21 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             var actual = await sut.SingleOrNullAsync(existingMarketParticipant.Id);
 
             // Assert
+            actual!.MarketParticipantId.Should().Be(SeededData.MarketParticipant.Inactive8900000000005);
+        }
+
+        [Fact]
+        public async Task SingleOrNullAsync_WhenMarketParticipantIdEqualsExistingMarketParticipant_ReturnsMarketParticipant()
+        {
+            // Arrange
+            await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
+            var sut = new MarketParticipantRepository(chargesDatabaseContext);
+
+            // Act
+            var actual = await sut.SingleOrNullAsync(SeededData.MarketParticipant.Inactive8900000000005);
+
+            // Assert
+            actual.Should().NotBeNull();
             actual!.MarketParticipantId.Should().Be(SeededData.MarketParticipant.Inactive8900000000005);
         }
 
