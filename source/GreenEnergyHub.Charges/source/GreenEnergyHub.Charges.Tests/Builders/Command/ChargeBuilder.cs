@@ -28,7 +28,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         private Instant _stopDate = InstantHelper.GetEndDefault();
         private List<Point> _points = new();
         private List<ChargePeriod> _periods = new();
-        private string _senderProvidedChargeId = "SenderProvidedChargeId";
+        private string _senderProvidedChargeId = "sender";
         private Instant _startDate = InstantHelper.GetStartDefault();
         private Resolution _resolution = Resolution.PT1H;
         private TaxIndicator _taxIndicator = TaxIndicator.Tax;
