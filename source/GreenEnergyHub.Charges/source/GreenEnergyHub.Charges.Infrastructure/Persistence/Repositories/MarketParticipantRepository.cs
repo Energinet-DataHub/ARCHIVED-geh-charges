@@ -38,7 +38,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
         /// <param name="marketParticipant"></param>
         public async Task AddAsync(MarketParticipant marketParticipant)
         {
-            marketParticipant = CheckMarketParticipantArguments(marketParticipant);
+            ArgumentNullException.ThrowIfNull(marketParticipant);
             await _chargesDatabaseContext.MarketParticipants.AddAsync(marketParticipant).ConfigureAwait(false);
         }
 
@@ -128,7 +128,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
 
         public Task<MarketParticipant> GetGridAccessProviderAsync(string meteringPointId)
         {
-            if (meteringPointId == null) throw new ArgumentNullException(nameof(meteringPointId));
+            ArgumentNullException.ThrowIfNull(meteringPointId);
             if (string.IsNullOrEmpty(meteringPointId.Trim())) throw new ArgumentException();
 
             // According to product owner the business processes should not be able to result
@@ -171,12 +171,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
                 .Where(mp => mp.BusinessProcessRole == marketParticipantRole)
                 .Where(mp => mp.IsActive)
                 .SingleAsync();
-        }
-
-        private static MarketParticipant CheckMarketParticipantArguments(MarketParticipant marketParticipant)
-        {
-            ArgumentNullException.ThrowIfNull(marketParticipant);
-            return marketParticipant;
         }
     }
 }
