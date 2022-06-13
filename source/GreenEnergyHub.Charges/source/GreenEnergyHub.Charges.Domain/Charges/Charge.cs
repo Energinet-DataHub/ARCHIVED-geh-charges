@@ -308,9 +308,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 
         private static void CheckRules(IEnumerable<IValidationRuleContainer> rules)
         {
-            var invalidRules = rules
-                .Where(r => r.ValidationRule.IsValid == false)
-                .ToList();
+            var invalidRules = rules.Where(r => !r.ValidationRule.IsValid).ToList();
             var result = invalidRules.Any()
                 ? ValidationResult.CreateFailure(invalidRules)
                 : ValidationResult.CreateSuccess();
