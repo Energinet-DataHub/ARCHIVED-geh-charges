@@ -14,7 +14,7 @@
 
 using System;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using NodaTime;
 

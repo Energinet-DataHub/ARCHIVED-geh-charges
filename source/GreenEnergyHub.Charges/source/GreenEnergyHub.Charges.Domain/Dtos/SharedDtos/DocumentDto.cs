@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using NodaTime;
 
 #pragma warning disable 8618

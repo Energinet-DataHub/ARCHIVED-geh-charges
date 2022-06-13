@@ -16,7 +16,6 @@ using System;
 using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Tests.Builders.Command

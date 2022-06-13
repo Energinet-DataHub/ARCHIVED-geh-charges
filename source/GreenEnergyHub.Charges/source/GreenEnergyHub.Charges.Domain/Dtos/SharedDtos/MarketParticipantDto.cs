@@ -12,9 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
-
 #pragma warning disable 8618
 namespace GreenEnergyHub.Charges.Domain.Dtos.SharedDtos
 {

@@ -17,7 +17,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.WebApi;
-using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;

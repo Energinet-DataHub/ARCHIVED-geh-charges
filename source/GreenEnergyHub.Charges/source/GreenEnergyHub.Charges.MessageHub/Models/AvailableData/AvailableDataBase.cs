@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableData
