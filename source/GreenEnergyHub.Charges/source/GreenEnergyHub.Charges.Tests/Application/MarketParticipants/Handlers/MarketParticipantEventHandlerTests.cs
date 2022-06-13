@@ -27,54 +27,51 @@ using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
 {
+    [UnitTest]
     public class MarketParticipantEventHandlerTests
     {
-        [UnitTest]
-        public class MarketParticipantPersisterTests
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task
+            HandleAsync_WhenCalledWithActorUpdatedIntegrationEvent_ShouldCallMarketParticipantPersister(
+                [Frozen] Mock<IMarketParticipantPersister> marketParticipantPersister,
+                MarketParticipantEventHandler sut)
         {
-            [Theory]
-            [InlineAutoDomainData]
-            public async Task
-                HandleAsync_WhenCalledWithActorUpdateIntegrationEvent_ShouldCallMarketParticipantPersister(
-                    [Frozen] Mock<IMarketParticipantPersister> marketParticipantPersister,
-                    MarketParticipantEventHandler sut)
-            {
-                // Assert
-                var actorUpdatedIntegrationEvent = new ActorUpdatedIntegrationEvent(
-                    Guid.Empty,
-                    Guid.Empty,
-                    Guid.Empty,
-                    Guid.Empty,
-                    string.Empty,
-                    ActorStatus.New,
-                    new List<BusinessRoleCode>() { BusinessRoleCode.Ddm },
-                    new List<EicFunction>(),
-                    new List<Guid>(),
-                    new List<string>());
+            // Assert
+            var actorUpdatedIntegrationEvent = new ActorUpdatedIntegrationEvent(
+                Guid.Empty,
+                Guid.Empty,
+                Guid.Empty,
+                Guid.Empty,
+                string.Empty,
+                ActorStatus.New,
+                new List<BusinessRoleCode>() { BusinessRoleCode.Ddm },
+                new List<EicFunction>(),
+                new List<Guid>(),
+                new List<string>());
 
-                // Act
-                await sut.HandleAsync(actorUpdatedIntegrationEvent);
+            // Act
+            await sut.HandleAsync(actorUpdatedIntegrationEvent);
 
-                // Assert
-                marketParticipantPersister
-                    .Verify(v => v.PersistAsync(It.IsAny<MarketParticipantUpdatedEvent>()), Times.Exactly(1));
-            }
+            // Assert
+            marketParticipantPersister
+                .Verify(v => v.PersistAsync(It.IsAny<MarketParticipantUpdatedEvent>()), Times.Exactly(1));
+        }
 
-            [Theory]
-            [InlineAutoDomainData]
-            public async Task
-                HandleAsync_WhenCalledWithGridAreaUpdateIntegrationEvent_ShouldCallGridAreaPersister(
-                    [Frozen] Mock<IGridAreaLinkPersister> gridAreaPersister,
-                    GridAreaUpdatedIntegrationEvent gridAreaUpdatedIntegrationEvent,
-                    MarketParticipantEventHandler sut)
-            {
-                // Act
-                await sut.HandleAsync(gridAreaUpdatedIntegrationEvent);
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task
+            HandleAsync_WhenCalledWithGridAreaUpdatedIntegrationEvent_ShouldCallGridAreaPersister(
+                [Frozen] Mock<IGridAreaLinkPersister> gridAreaPersister,
+                GridAreaUpdatedIntegrationEvent gridAreaUpdatedIntegrationEvent,
+                MarketParticipantEventHandler sut)
+        {
+            // Act
+            await sut.HandleAsync(gridAreaUpdatedIntegrationEvent);
 
-                // Assert
-                gridAreaPersister
-                    .Verify(v => v.PersistAsync(It.IsAny<GridAreaUpdatedEvent>()), Times.Exactly(1));
-            }
+            // Assert
+            gridAreaPersister
+                .Verify(v => v.PersistAsync(It.IsAny<GridAreaUpdatedEvent>()), Times.Exactly(1));
         }
     }
 }
