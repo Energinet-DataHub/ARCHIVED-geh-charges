@@ -13,6 +13,8 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
@@ -20,6 +22,7 @@ using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
+using Microsoft.Azure.Amqp.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 using Xunit.Categories;
@@ -122,6 +125,29 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             actual.Should().NotBeNull();
             actual!.MarketParticipantId.Should().Be("1337");
             actual.BusinessProcessRole.Should().Be(MarketParticipantRole.GridAccessProvider);
+        }
+
+        [Fact]
+        public async Task GetAsync_ListOfExistingMarketParticipants_ReturnsMarketParticipants()
+        {
+            // Arrange
+            await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
+            var sut = new MarketParticipantRepository(chargesDatabaseContext);
+            var idsOnExistingMarketParticipants = new List<Guid>()
+            {
+                Guid.Parse("75ED087C-5A15-4D30-8711-FCD509A8D559"),
+                Guid.Parse("369F2216-2237-454A-9C4F-BAB34726BFE4"),
+            };
+
+            // Act
+            var actualMarketParticipants = await sut.GetAsync(idsOnExistingMarketParticipants);
+
+            // Arrange
+            actualMarketParticipants.Count.Should().Be(2);
+            var firstMarketParticipant = actualMarketParticipants.First();
+            firstMarketParticipant.MarketParticipantId.Should().Be("8100000000016");
+            var secondMarketParticipant = actualMarketParticipants.Last();
+            secondMarketParticipant.MarketParticipantId.Should().Be("8100000000023");
         }
 
         [Fact]
