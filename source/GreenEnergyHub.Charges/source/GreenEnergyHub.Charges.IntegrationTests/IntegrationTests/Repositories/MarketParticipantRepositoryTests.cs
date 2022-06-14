@@ -99,8 +99,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         {
             // Arrange
             await using var writeContext = _databaseManager.CreateDbContext();
-            await AddMarketParticipantToContextAsync("1337", MarketParticipantRole.GridAccessProvider, writeContext);
-            await AddMarketParticipantToContextAsync("1337", MarketParticipantRole.EnergySupplier, writeContext);
+            await AddMarketParticipantToContextAsync("1337", MarketParticipantRole.GridAccessProvider, true, writeContext);
+            await AddMarketParticipantToContextAsync("1337", MarketParticipantRole.EnergySupplier, true, writeContext);
             await writeContext.SaveChangesAsync();
 
             await using var readContext = _databaseManager.CreateDbContext();
@@ -232,9 +232,32 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             actual?.MarketParticipantId.Should().Be(SeededData.GridAreaLink.Provider8100000000030.MarketParticipantId);
         }
 
-        private static async Task AddMarketParticipantToContextAsync(string marketParticipantId, MarketParticipantRole role, ChargesDatabaseContext context)
+        [Fact]
+        public async Task GetSystemOperatorOrGridAccessProviderAsync_WhenSharedGlnAndGridAccessProviderIsNotActive_ReturnsSystemOperator()
         {
-            var marketParticipant = new MarketParticipant(Guid.NewGuid(), marketParticipantId, true, role);
+            // Arrange
+            await using var writeDatabaseContext = _databaseManager.CreateDbContext();
+            await AddMarketParticipantToContextAsync(
+                "5790000432752",
+                MarketParticipantRole.GridAccessProvider,
+                false,
+                writeDatabaseContext);
+            await writeDatabaseContext.SaveChangesAsync();
+
+            await using var readDatabaseContext = _databaseManager.CreateDbContext();
+            var sut = new MarketParticipantRepository(readDatabaseContext);
+
+            // Act
+            var actual = await sut.GetSystemOperatorOrGridAccessProviderAsync("5790000432752");
+
+            // Assert
+            actual.BusinessProcessRole.Should().Be(MarketParticipantRole.SystemOperator);
+            actual.IsActive.Should().BeTrue();
+        }
+
+        private static async Task AddMarketParticipantToContextAsync(string marketParticipantId, MarketParticipantRole role, bool isActive, ChargesDatabaseContext context)
+        {
+            var marketParticipant = new MarketParticipant(Guid.NewGuid(), marketParticipantId, isActive, role);
             await context.AddAsync(marketParticipant);
             await context.SaveChangesAsync();
         }
