@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Charges.Exceptions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
@@ -30,7 +31,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
     public class ChargeInformationEventHandler : IChargeInformationEventHandler
     {
         private readonly IInputValidator<ChargeOperationDto> _inputValidator;
-        private readonly IBusinessValidator<ChargeOperationDto> _businessValidator;
         private readonly IChargeRepository _chargeRepository;
         private readonly IMarketParticipantRepository _marketParticipantRepository;
         private readonly IChargeFactory _chargeFactory;
@@ -40,7 +40,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 
         public ChargeInformationEventHandler(
             IInputValidator<ChargeOperationDto> inputValidator,
-            IBusinessValidator<ChargeOperationDto> businessValidator,
             IChargeRepository chargeRepository,
             IMarketParticipantRepository marketParticipantRepository,
             IChargeFactory chargeFactory,
@@ -49,7 +48,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             IChargeCommandReceiptService chargeCommandReceiptService)
         {
             _inputValidator = inputValidator;
-            _businessValidator = businessValidator;
             _chargeRepository = chargeRepository;
             _marketParticipantRepository = marketParticipantRepository;
             _chargeFactory = chargeFactory;
@@ -72,23 +70,28 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 var operation = operations[i];
                 var charge = await GetChargeAsync(operation).ConfigureAwait(false);
 
-                var validationResult = _inputValidator.Validate(operation);
-                if (validationResult.IsFailed)
+                var inputValidationResult = _inputValidator.Validate(operation);
+                if (inputValidationResult.IsFailed)
                 {
                     operationsToBeRejected = operations[i..].ToList();
-                    CollectRejectionRules(rejectionRules, validationResult, operationsToBeRejected, operation);
+                    CollectRejectionRules(rejectionRules, inputValidationResult, operationsToBeRejected, operation);
                     break;
                 }
 
-                validationResult = await _businessValidator.ValidateAsync(operation).ConfigureAwait(false);
-                if (validationResult.IsFailed)
+                try
+                {
+                    await HandleOperationAsync(operation, charge).ConfigureAwait(false);
+                }
+                catch (ChargeOperationFailedException exception)
                 {
                     operationsToBeRejected = operations[i..].ToList();
-                    CollectRejectionRules(rejectionRules, validationResult, operationsToBeRejected, operation);
+                    CollectRejectionRules(
+                        rejectionRules,
+                        ValidationResult.CreateFailure(exception.InvalidRules),
+                        operationsToBeRejected,
+                        operation);
                     break;
                 }
-
-                await HandleOperationAsync(operation, charge).ConfigureAwait(false);
 
                 operationsToBeConfirmed.Add(operation);
             }
@@ -147,13 +150,21 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         private void HandleUpdateEvent(Charge charge, ChargeOperationDto chargeOperationDto)
         {
             var newChargePeriod = _chargePeriodFactory.CreateFromChargeOperationDto(chargeOperationDto);
-            charge.Update(newChargePeriod);
+            charge.Update(
+                newChargePeriod,
+                chargeOperationDto.TaxIndicator,
+                chargeOperationDto.Resolution,
+                chargeOperationDto.Id);
         }
 
         private void HandleCancelStopEvent(Charge charge, ChargeOperationDto chargeOperationDto)
         {
             var newChargePeriod = _chargePeriodFactory.CreateFromChargeOperationDto(chargeOperationDto);
-            charge.CancelStop(newChargePeriod);
+            charge.CancelStop(
+                newChargePeriod,
+                chargeOperationDto.TaxIndicator,
+                chargeOperationDto.Resolution,
+                chargeOperationDto.Id);
         }
 
         private static OperationType GetOperationType(ChargeOperationDto chargeOperationDto, Charge? charge)

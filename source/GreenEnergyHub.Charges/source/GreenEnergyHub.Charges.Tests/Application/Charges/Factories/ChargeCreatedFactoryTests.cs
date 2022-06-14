@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Factories
             var actual = sut.Create(chargeOperationDto);
 
             // Assert
-            actual.Should().NotContainNullsOrEmptyEnumerables();
+            actual.Should().NotContainNullEnumerable();
         }
     }
 }
