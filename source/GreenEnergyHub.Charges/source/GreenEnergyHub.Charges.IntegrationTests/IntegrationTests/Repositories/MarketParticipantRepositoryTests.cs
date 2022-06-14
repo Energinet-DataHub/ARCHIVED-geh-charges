@@ -47,7 +47,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             await using var chargesWriteDatabaseContext = _databaseManager.CreateDbContext();
             var sut = new MarketParticipantRepository(chargesWriteDatabaseContext);
             var id = Guid.NewGuid();
-            var marketParticipant = new MarketParticipant(id, "1337", true, MarketParticipantRole.GridAccessProvider);
+            var marketParticipant = new MarketParticipant(id, "00001", true, MarketParticipantRole.GridAccessProvider);
 
             // Act
             await sut.AddAsync(marketParticipant).ConfigureAwait(false);
@@ -58,7 +58,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             var actual =
                 await chargesReadDatabaseContext.MarketParticipants.SingleAsync(mp => mp.Id == marketParticipant.Id);
             actual.Id.Should().Be(id);
-            actual.MarketParticipantId.Should().Be("1337");
+            actual.MarketParticipantId.Should().Be("00001");
             actual.IsActive.Should().BeTrue();
             actual.BusinessProcessRole.Should().Be(MarketParticipantRole.GridAccessProvider);
         }
@@ -99,26 +99,20 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         {
             // Arrange
             await using var writeContext = _databaseManager.CreateDbContext();
-
-            var roles = new List<MarketParticipantRole>
-            {
-                MarketParticipantRole.GridAccessProvider,
-                MarketParticipantRole.SystemOperator,
-            };
-
             await AddMarketParticipantToContextAsync("1337", MarketParticipantRole.GridAccessProvider, writeContext);
-            await AddMarketParticipantToContextAsync("1337", MarketParticipantRole.SystemOperator, writeContext);
+            await AddMarketParticipantToContextAsync("1337", MarketParticipantRole.EnergySupplier, writeContext);
+            await writeContext.SaveChangesAsync();
 
             await using var readContext = _databaseManager.CreateDbContext();
             var sut = new MarketParticipantRepository(readContext);
 
             // Act
-            var actual = await sut.SingleOrNullAsync(MarketParticipantRole.SystemOperator, "1337");
+            var actual = await sut.SingleOrNullAsync(MarketParticipantRole.GridAccessProvider, "1337");
 
             // Assert
             actual.Should().NotBeNull();
             actual!.MarketParticipantId.Should().Be("1337");
-            actual!.BusinessProcessRole.Should().Be(MarketParticipantRole.SystemOperator);
+            actual!.BusinessProcessRole.Should().Be(MarketParticipantRole.GridAccessProvider);
         }
 
         [Fact]
