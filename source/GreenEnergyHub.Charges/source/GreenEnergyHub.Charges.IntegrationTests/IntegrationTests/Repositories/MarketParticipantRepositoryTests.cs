@@ -13,11 +13,16 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
+using Microsoft.Azure.Amqp.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 using Xunit.Categories;
@@ -38,7 +43,41 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         }
 
         [Fact]
-        public async Task GetOrNullAsync_WhenGuidEqualsExistingMarketParticipant_ReturnsMarketParticipant()
+        public async Task AddAsync_WhenValidMarketParticipant_IsPersisted()
+        {
+            // Arrange
+            await using var chargesWriteDatabaseContext = _databaseManager.CreateDbContext();
+            var sut = new MarketParticipantRepository(chargesWriteDatabaseContext);
+            var id = Guid.NewGuid();
+            var marketParticipant = new MarketParticipant(id, "00001", true, MarketParticipantRole.GridAccessProvider);
+
+            // Act
+            await sut.AddAsync(marketParticipant).ConfigureAwait(false);
+            await chargesWriteDatabaseContext.SaveChangesAsync();
+
+            // Assert
+            await using var chargesReadDatabaseContext = _databaseManager.CreateDbContext();
+            var actual =
+                await chargesReadDatabaseContext.MarketParticipants.SingleAsync(mp => mp.Id == marketParticipant.Id);
+            actual.Id.Should().Be(id);
+            actual.MarketParticipantId.Should().Be("00001");
+            actual.IsActive.Should().BeTrue();
+            actual.BusinessProcessRole.Should().Be(MarketParticipantRole.GridAccessProvider);
+        }
+
+        [Fact]
+        public async Task AddAsync_WhenMarketParticipantIsNull_ThrowsArgumentNullException()
+        {
+            // Arrange
+            await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
+            var sut = new MarketParticipantRepository(chargesDatabaseContext);
+
+            // Act / Assert
+            await Assert.ThrowsAsync<ArgumentNullException>(() => sut.AddAsync(null!));
+        }
+
+        [Fact]
+        public async Task SingleOrNullAsync_WhenIdEqualsExistingMarketParticipant_ReturnsMarketParticipant()
         {
             // Arrange
             await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
@@ -54,6 +93,64 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         }
 
         [Fact]
+        public async Task SingleOrNullAsync_WhenMarketParticipantIdEqualsExistingMarketParticipant_ReturnsMarketParticipant()
+        {
+            // Arrange
+            await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
+            var sut = new MarketParticipantRepository(chargesDatabaseContext);
+
+            // Act
+            var actual = await sut.SingleOrNullAsync(SeededData.MarketParticipant.Inactive8900000000005);
+
+            // Assert
+            actual.Should().NotBeNull();
+            actual!.MarketParticipantId.Should().Be(SeededData.MarketParticipant.Inactive8900000000005);
+        }
+
+        [Fact]
+        public async Task SingleOrNullAsync_WhenRoleAndMarketParticipantIdEqualsExistingMarketParticipant_ReturnsMarketParticipant()
+        {
+            // Arrange
+            await using var writeDatabaseContext = _databaseManager.CreateDbContext();
+            await AddMarketParticipantToContextAndSaveAsync("1337", MarketParticipantRole.GridAccessProvider, true, writeDatabaseContext);
+            await AddMarketParticipantToContextAndSaveAsync("1337", MarketParticipantRole.EnergySupplier, true, writeDatabaseContext);
+
+            await using var readDatabaseContext = _databaseManager.CreateDbContext();
+            var sut = new MarketParticipantRepository(readDatabaseContext);
+
+            // Act
+            var actual = await sut.SingleOrNullAsync(MarketParticipantRole.GridAccessProvider, "1337");
+
+            // Assert
+            actual.Should().NotBeNull();
+            actual!.MarketParticipantId.Should().Be("1337");
+            actual.BusinessProcessRole.Should().Be(MarketParticipantRole.GridAccessProvider);
+        }
+
+        [Fact]
+        public async Task GetAsync_ListOfExistingMarketParticipantIds_ReturnsMarketParticipants()
+        {
+            // Arrange
+            await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
+            var sut = new MarketParticipantRepository(chargesDatabaseContext);
+            var idsOnExistingMarketParticipants = new List<Guid>()
+            {
+                Guid.Parse("75ED087C-5A15-4D30-8711-FCD509A8D559"),
+                Guid.Parse("369F2216-2237-454A-9C4F-BAB34726BFE4"),
+            };
+
+            // Act
+            var actualMarketParticipants = await sut.GetAsync(idsOnExistingMarketParticipants);
+
+            // Arrange
+            actualMarketParticipants.Count.Should().Be(2);
+            var firstMarketParticipant = actualMarketParticipants.First();
+            firstMarketParticipant.MarketParticipantId.Should().Be("8100000000016");
+            var secondMarketParticipant = actualMarketParticipants.Last();
+            secondMarketParticipant.MarketParticipantId.Should().Be("8100000000023");
+        }
+
+        [Fact]
         public async Task GetGridAccessProviderAsync_WhenNotFound_ThrowsInvalidOperationException()
         {
             // Arrange
@@ -64,6 +161,18 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             // Act and assert
             await Assert.ThrowsAsync<InvalidOperationException>(
                 async () => await sut.GetGridAccessProviderAsync(nonExistingMeteringPointId));
+        }
+
+        [Fact]
+        public async Task GetGridAccessProviderAsync_WhenEmpty_ThrowsArgumentException()
+        {
+            // Arrange
+            await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
+            var sut = new MarketParticipantRepository(chargesDatabaseContext);
+
+            // Act and assert
+            await Assert.ThrowsAsync<ArgumentException>(
+                async () => await sut.GetGridAccessProviderAsync(string.Empty));
         }
 
         [Fact]
@@ -168,6 +277,35 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             // Assert
             actual.Should().NotBeNull();
             actual?.MarketParticipantId.Should().Be(SeededData.GridAreaLink.Provider8100000000030.MarketParticipantId);
+        }
+
+        [Fact]
+        public async Task GetSystemOperatorOrGridAccessProviderAsync_WhenSharedGlnAndGridAccessProviderIsNotActive_ReturnsSystemOperator()
+        {
+            // Arrange
+            await using var writeDatabaseContext = _databaseManager.CreateDbContext();
+            await AddMarketParticipantToContextAndSaveAsync(
+                "5790000432752",
+                MarketParticipantRole.GridAccessProvider,
+                false,
+                writeDatabaseContext);
+
+            await using var readDatabaseContext = _databaseManager.CreateDbContext();
+            var sut = new MarketParticipantRepository(readDatabaseContext);
+
+            // Act
+            var actual = await sut.GetSystemOperatorOrGridAccessProviderAsync("5790000432752");
+
+            // Assert
+            actual.BusinessProcessRole.Should().Be(MarketParticipantRole.SystemOperator);
+            actual.IsActive.Should().BeTrue();
+        }
+
+        private static async Task AddMarketParticipantToContextAndSaveAsync(string marketParticipantId, MarketParticipantRole role, bool isActive, ChargesDatabaseContext context)
+        {
+            var marketParticipant = new MarketParticipant(Guid.NewGuid(), marketParticipantId, isActive, role);
+            await context.AddAsync(marketParticipant);
+            await context.SaveChangesAsync();
         }
     }
 }
