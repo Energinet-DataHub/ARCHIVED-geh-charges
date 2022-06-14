@@ -264,8 +264,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task Given_ChargePriceMessageWithChargeInformationData_WhenPosted_ThenChargeInformationDataIsIgnored()
             {
                 // Arrange
-                const string senderProvidedChargeId = "TestSub";
-                const ChargeType chargeType = ChargeType.Subscription;
+                const string senderProvidedChargeId = "TestTar002";
+                const ChargeType chargeType = ChargeType.Tariff;
                 /*const string ownerGln = "5790000432752";*/
                 var ownerId = new Guid("ed6c94f3-24a8-43b3-913d-bf7513390a32");
 
@@ -273,7 +273,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 await using var messageHubDatabaseContext = Fixture.MessageHubDatabaseManager.CreateDbContext();
                 var (request, _) = await _authenticatedHttpRequestGenerator
                     .CreateAuthenticatedHttpPostRequestAsync(
-                        EndpointUrl, ChargeDocument.SubscriptionPriceSeries);
+                        EndpointUrl, ChargeDocument.TariffPriceSeries);
 
                 // Act
                 var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
