@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
@@ -112,7 +111,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             // Assert
             actual.Should().NotBeNull();
             actual!.MarketParticipantId.Should().Be("1337");
-            actual!.BusinessProcessRole.Should().Be(MarketParticipantRole.GridAccessProvider);
+            actual.BusinessProcessRole.Should().Be(MarketParticipantRole.GridAccessProvider);
         }
 
         [Fact]
