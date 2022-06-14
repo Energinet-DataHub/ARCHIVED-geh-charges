@@ -109,9 +109,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         {
             // Arrange
             await using var writeDatabaseContext = _databaseManager.CreateDbContext();
-            await AddMarketParticipantToContextAsync("1337", MarketParticipantRole.GridAccessProvider, true, writeDatabaseContext);
-            await AddMarketParticipantToContextAsync("1337", MarketParticipantRole.EnergySupplier, true, writeDatabaseContext);
-            await writeDatabaseContext.SaveChangesAsync();
+            await AddMarketParticipantToContextAndSaveAsync("1337", MarketParticipantRole.GridAccessProvider, true, writeDatabaseContext);
+            await AddMarketParticipantToContextAndSaveAsync("1337", MarketParticipantRole.EnergySupplier, true, writeDatabaseContext);
 
             await using var readDatabaseContext = _databaseManager.CreateDbContext();
             var sut = new MarketParticipantRepository(readDatabaseContext);
@@ -259,12 +258,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         {
             // Arrange
             await using var writeDatabaseContext = _databaseManager.CreateDbContext();
-            await AddMarketParticipantToContextAsync(
+            await AddMarketParticipantToContextAndSaveAsync(
                 "5790000432752",
                 MarketParticipantRole.GridAccessProvider,
                 false,
                 writeDatabaseContext);
-            await writeDatabaseContext.SaveChangesAsync();
 
             await using var readDatabaseContext = _databaseManager.CreateDbContext();
             var sut = new MarketParticipantRepository(readDatabaseContext);
@@ -277,7 +275,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             actual.IsActive.Should().BeTrue();
         }
 
-        private static async Task AddMarketParticipantToContextAsync(string marketParticipantId, MarketParticipantRole role, bool isActive, ChargesDatabaseContext context)
+        private static async Task AddMarketParticipantToContextAndSaveAsync(string marketParticipantId, MarketParticipantRole role, bool isActive, ChargesDatabaseContext context)
         {
             var marketParticipant = new MarketParticipant(Guid.NewGuid(), marketParticipantId, isActive, role);
             await context.AddAsync(marketParticipant);
