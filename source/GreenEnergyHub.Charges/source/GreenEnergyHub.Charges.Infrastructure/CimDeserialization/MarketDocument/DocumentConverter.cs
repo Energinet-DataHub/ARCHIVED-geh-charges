@@ -45,8 +45,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocumen
         {
             var hasReadRoot = false;
 
-            document.Sender.Id = string.Empty;
-            document.Recipient.Id = string.Empty;
+            document.Sender.MarketParticipantId = string.Empty;
+            document.Recipient.MarketParticipantId = string.Empty;
 
             while (await reader.AdvanceAsync().ConfigureAwait(false))
             {
@@ -78,7 +78,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocumen
                 {
                     if (!reader.CanReadValue) continue;
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
-                    document.Sender.Id = content;
+                    document.Sender.MarketParticipantId = content;
                 }
                 else if (reader.Is(CimMarketDocumentConstants.SenderBusinessProcessRole))
                 {
@@ -89,7 +89,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocumen
                 {
                     if (!reader.CanReadValue) continue;
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
-                    document.Recipient.Id = content;
+                    document.Recipient.MarketParticipantId = content;
                 }
                 else if (reader.Is(CimMarketDocumentConstants.RecipientBusinessProcessRole))
                 {

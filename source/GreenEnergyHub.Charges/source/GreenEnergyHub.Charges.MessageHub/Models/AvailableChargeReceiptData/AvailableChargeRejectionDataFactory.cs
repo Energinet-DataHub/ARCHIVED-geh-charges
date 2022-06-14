@@ -59,7 +59,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             return input.Command.ChargeOperations.Select(chargeOperationDto => new AvailableChargeReceiptData(
                     sender.MarketParticipantId,
                     sender.BusinessProcessRole,
-                    recipient.Id,
+                    recipient.MarketParticipantId,
                     recipient.BusinessProcessRole,
                     input.Command.Document.BusinessReasonCode,
                     _messageMetaDataContext.RequestDataTime,
@@ -68,6 +68,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                     chargeOperationDto.Id,
                     DocumentType.RejectRequestChangeOfPriceList, // Will be added to the HTTP MessageType header
                     operationOrder++,
+                    recipient.ActorId,
                     GetReasons(input, chargeOperationDto)))
                 .ToList();
         }
