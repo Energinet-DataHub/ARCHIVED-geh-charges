@@ -63,6 +63,17 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         }
 
         [Fact]
+        public async Task AddAsync_WhenMarketParticipantIsNull_ThrowsArgumentNullException()
+        {
+            // Arrange
+            await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
+            var sut = new MarketParticipantRepository(chargesDatabaseContext);
+
+            // Act / Assert
+            await Assert.ThrowsAsync<ArgumentNullException>(() => sut.AddAsync(null!));
+        }
+
+        [Fact]
         public async Task SingleOrNullAsync_WhenGuidEqualsExistingMarketParticipant_ReturnsMarketParticipant()
         {
             // Arrange
@@ -125,6 +136,18 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             // Act and assert
             await Assert.ThrowsAsync<InvalidOperationException>(
                 async () => await sut.GetGridAccessProviderAsync(nonExistingMeteringPointId));
+        }
+
+        [Fact]
+        public async Task GetGridAccessProviderAsync_WhenEmpty_ThrowsArgumentException()
+        {
+            // Arrange
+            await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
+            var sut = new MarketParticipantRepository(chargesDatabaseContext);
+
+            // Act and assert
+            await Assert.ThrowsAsync<ArgumentException>(
+                async () => await sut.GetGridAccessProviderAsync(string.Empty));
         }
 
         [Fact]
