@@ -31,8 +31,8 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         public DocumentDtoBuilder()
         {
             _id = "id";
-            _recipient = new MarketParticipantDto { Id = "5790001330552", BusinessProcessRole = MarketParticipantRole.MeteringPointAdministrator };
-            _sender = new MarketParticipantDto { Id = "0", BusinessProcessRole = MarketParticipantRole.GridAccessProvider };
+            _recipient = new MarketParticipantDto { MarketParticipantId = "5790001330552", BusinessProcessRole = MarketParticipantRole.MeteringPointAdministrator };
+            _sender = new MarketParticipantDto { MarketParticipantId = "0", BusinessProcessRole = MarketParticipantRole.GridAccessProvider };
         }
 
         public DocumentDtoBuilder WithDocumentId(string id)

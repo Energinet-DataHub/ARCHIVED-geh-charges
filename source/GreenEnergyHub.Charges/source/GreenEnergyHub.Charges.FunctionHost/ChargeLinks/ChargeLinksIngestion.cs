@@ -86,7 +86,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         private bool AuthenticatedMatchesSenderId(SchemaValidatedInboundMessage<ChargeLinksCommandBundle> inboundMessage)
         {
             var authorizedActor = _actorContext.CurrentActor;
-            var senderId = inboundMessage.ValidatedMessage?.ChargeLinksCommands.First().Document.Sender.Id;
+            var senderId = inboundMessage.ValidatedMessage?.ChargeLinksCommands.First().Document.Sender.MarketParticipantId;
 
             return authorizedActor != null && senderId == authorizedActor.Identifier;
         }

@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         {
             return new MarketParticipantDto
             {
-                Id = _id,
+                MarketParticipantId = _id,
                 BusinessProcessRole = _marketParticipantRole,
             };
         }

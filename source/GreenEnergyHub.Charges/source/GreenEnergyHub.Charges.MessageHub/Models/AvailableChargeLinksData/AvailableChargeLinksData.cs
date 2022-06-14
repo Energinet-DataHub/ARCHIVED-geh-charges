@@ -38,7 +38,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData
             Instant startDateTime,
             Instant endDateTime,
             DocumentType documentType,
-            int operationOrder)
+            int operationOrder,
+            Guid actorId)
                 : base(
                     senderId,
                     senderRole,
@@ -48,7 +49,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData
                     requestDateTime,
                     availableDataReferenceId,
                     documentType,
-                    operationOrder)
+                    operationOrder,
+                    actorId)
         {
             ChargeId = chargeId;
             ChargeOwner = chargeOwner;
