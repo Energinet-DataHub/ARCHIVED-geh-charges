@@ -128,7 +128,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         }
 
         [Fact]
-        public async Task GetAsync_ListOfExistingMarketParticipants_ReturnsMarketParticipants()
+        public async Task GetAsync_ListOfExistingMarketParticipantIds_ReturnsMarketParticipants()
         {
             // Arrange
             await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
