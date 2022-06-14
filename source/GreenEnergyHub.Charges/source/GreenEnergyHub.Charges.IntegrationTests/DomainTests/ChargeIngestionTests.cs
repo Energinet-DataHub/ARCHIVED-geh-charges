@@ -283,9 +283,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 await FunctionAsserts.AssertHasExecutedAsync(
                     Fixture.HostManager, nameof(ChargeConfirmationDataAvailableNotifierEndpoint)).ConfigureAwait(false);
 
-                await FunctionAsserts.AssertHasExecutedAsync(
-                    Fixture.HostManager, nameof(ChargeDataAvailableNotifierEndpoint)).ConfigureAwait(false);
-
                 var charge = chargesDatabaseContext.Charges.SingleOrDefault(x =>
                     x.SenderProvidedChargeId == senderProvidedChargeId &&
                     x.OwnerId == ownerId &&
@@ -295,6 +292,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
                 var availableChargeData = messageHubDatabaseContext.AvailableChargeData.FirstOrDefault();
                 availableChargeData.Should().BeNull();
+
+                await FunctionAsserts.AssertHasExecutedAsync(
+                    Fixture.HostManager, nameof(ChargeDataAvailableNotifierEndpoint)).ConfigureAwait(false);
 
                 var availableChargeReceiptData = messageHubDatabaseContext.AvailableChargeReceiptData.FirstOrDefault();
                 availableChargeReceiptData.Should().NotBeNull();
