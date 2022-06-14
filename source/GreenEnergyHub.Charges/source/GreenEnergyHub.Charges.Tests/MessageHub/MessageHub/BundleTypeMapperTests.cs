@@ -99,7 +99,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.MessageHub
                 Guid.NewGuid(),
                 Guid.NewGuid().ToString(),
                 Guid.NewGuid().ToString(),
-                messageType);
+                new MessageTypeDto(messageType));
         }
     }
 }

@@ -67,7 +67,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                 new AvailableChargeReceiptData(
                     sender.MarketParticipantId,
                     sender.BusinessProcessRole,
-                    recipient.Id,
+                    recipient.MarketParticipantId,
                     recipient.BusinessProcessRole,
                     documentDto.BusinessReasonCode,
                     _messageMetaDataContext.RequestDataTime,
@@ -76,6 +76,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                     chargeOperationDto.Id,
                     DocumentType.ConfirmRequestChangeOfPriceList, // Will be added to the HTTP MessageType header
                     operationOrder,
+                    recipient.ActorId,
                     new List<AvailableReceiptValidationError>()),
             };
         }
