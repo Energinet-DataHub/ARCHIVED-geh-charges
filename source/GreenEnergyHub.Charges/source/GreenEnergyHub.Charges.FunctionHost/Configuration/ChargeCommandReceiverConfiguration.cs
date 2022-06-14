@@ -21,8 +21,6 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.Factories;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.DocumentValidation.Factories;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.Factories;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
@@ -73,14 +71,10 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         {
             serviceCollection.AddScoped<IDocumentValidationRulesFactory<ChargeCommand>,
                 ChargeCommandDocumentValidationRulesFactory>();
-            serviceCollection.AddScoped<IBusinessValidationRulesFactory<ChargeOperationDto>,
-                ChargeOperationBusinessValidationRulesFactory>();
             serviceCollection.AddScoped<IInputValidationRulesFactory<ChargeOperationDto>,
                 ChargeOperationInputValidationRulesFactory>();
-            serviceCollection.AddScoped<IRulesConfigurationRepository, RulesConfigurationRepository>();
             serviceCollection.AddScoped<IDocumentValidator<ChargeCommand>, DocumentValidator<ChargeCommand>>();
             serviceCollection.AddScoped<IInputValidator<ChargeOperationDto>, InputValidator<ChargeOperationDto>>();
-            serviceCollection.AddScoped<IBusinessValidator<ChargeOperationDto>, BusinessValidator<ChargeOperationDto>>();
         }
 
         private static void ConfigureIso8601Timezones(IServiceCollection serviceCollection)

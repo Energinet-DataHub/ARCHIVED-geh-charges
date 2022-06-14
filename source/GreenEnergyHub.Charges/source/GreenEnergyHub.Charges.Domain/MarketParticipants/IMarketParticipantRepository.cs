@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
 namespace GreenEnergyHub.Charges.Domain.MarketParticipants
 {
@@ -23,25 +24,47 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
     /// </summary>
     public interface IMarketParticipantRepository
     {
-        Task<MarketParticipant> SingleAsync(string marketParticipantId);
-
-        Task<MarketParticipant> SingleAsync(Guid id);
-
-        Task<IReadOnlyCollection<MarketParticipant>> GetAsync(IEnumerable<Guid> ids);
+        /// <summary>
+        /// Adds a new market participant
+        /// </summary>
+        /// <param name="marketParticipant"></param>
+        Task AddAsync(MarketParticipant marketParticipant);
 
         Task<MarketParticipant?> SingleOrNullAsync(Guid id);
 
         Task<MarketParticipant?> SingleOrNullAsync(string marketParticipantId);
 
         /// <summary>
+        /// Retrieves a market participant from role and gln/eic no.
+        /// </summary>
+        Task<MarketParticipant?> SingleOrNullAsync(
+            MarketParticipantRole businessProcessRole,
+            string marketParticipantId);
+
+        Task<IReadOnlyCollection<MarketParticipant>> GetAsync(IEnumerable<Guid> ids);
+
+        /// <summary>
+        /// Get all the active grid access providers
+        /// </summary>
+        Task<List<MarketParticipant>> GetGridAccessProvidersAsync();
+
+        /// <summary>
+        /// Get the grid access provider from primary key
+        /// </summary>
+        Task<MarketParticipant?> GetGridAccessProviderAsync(Guid gridAreaId);
+
+        /// <summary>
         /// Get the grid access provider of the grid area that the metering point belongs to.
         /// </summary>
         Task<MarketParticipant> GetGridAccessProviderAsync(string meteringPointId);
 
-        Task<List<MarketParticipant>> GetGridAccessProvidersAsync();
-
         Task<MarketParticipant> GetMeteringPointAdministratorAsync();
 
         Task<MarketParticipant> GetSystemOperatorAsync();
+
+        /// <summary>
+        /// Retrieves an active market participant from gln/eic no. with the role EZ or DDM
+        /// </summary>
+        Task<MarketParticipant> GetSystemOperatorOrGridAccessProviderAsync(string marketParticipantId);
     }
 }

@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.Factories;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using Moq;
 using Xunit;
 using Xunit.Categories;
 
@@ -27,11 +28,19 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         [Theory]
         [InlineAutoData]
         public void Validate_WhenValidatingChargeCommand_ReturnsChargeCommandValidationResult(
-            ChargeOperationInputValidationRulesFactory chargeOperationInputValidationRulesFactory,
+            Mock<IInputValidationRulesFactory<ChargeOperationDto>> chargeOperationInputValidationRulesFactory,
             ChargeOperationDto chargeOperationDto)
         {
             // Arrange
-            var sut = new InputValidator<ChargeOperationDto>(chargeOperationInputValidationRulesFactory);
+            var invalidRule = new OperationValidationRuleContainer(
+                new TestValidationRule(false, ValidationRuleIdentifier.StartDateValidation),
+                chargeOperationDto.Id);
+            var invalidRules = new List<IValidationRuleContainer> { invalidRule };
+            var invalidRuleSet = ValidationRuleSet.FromRules(invalidRules);
+            chargeOperationInputValidationRulesFactory
+                .Setup(c => c.CreateRules(It.IsAny<ChargeOperationDto>()))
+                .Returns(invalidRuleSet);
+            var sut = new InputValidator<ChargeOperationDto>(chargeOperationInputValidationRulesFactory.Object);
 
             // Act
             var result = sut.Validate(chargeOperationDto);

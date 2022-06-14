@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.DocumentV
         private async Task<List<IValidationRuleContainer>> GetRulesForDocumentAsync(DocumentDto documentDto)
         {
             var sender = await _marketParticipantRepository
-                .SingleOrNullAsync(documentDto.Sender.MarketParticipantId)
+                .SingleOrNullAsync(documentDto.Sender.BusinessProcessRole, documentDto.Sender.MarketParticipantId)
                 .ConfigureAwait(false);
 
             var rules = new List<IValidationRuleContainer>

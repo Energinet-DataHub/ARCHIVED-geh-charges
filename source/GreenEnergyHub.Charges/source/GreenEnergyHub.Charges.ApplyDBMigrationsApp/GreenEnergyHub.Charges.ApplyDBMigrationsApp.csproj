@@ -23,11 +23,11 @@ limitations under the License.
 
     <ItemGroup>
       <PackageReference Include="dbup-sqlserver" Version="4.5.0" />
-      <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.354">
+      <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.435">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
-      <PackageReference Update="Microsoft.VisualStudio.Threading.Analyzers" Version="17.1.46">
+      <PackageReference Update="Microsoft.VisualStudio.Threading.Analyzers" Version="17.2.32">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
@@ -41,12 +41,14 @@ limitations under the License.
       <EmbeddedResource Include="Scripts\Model\202203231212 Add OperationOrder to AvailableData.sql" />
       <EmbeddedResource Include="Scripts\Model\202204191415 Ensure unique charges by removing duplicates and adding constraint.sql" />
       <EmbeddedResource Include="Scripts\Model\202205181253 Add actorId to availabledata.sql" />
+      <EmbeddedResource Include="Scripts\Model\202206021409 Remove GridArea table.sql" />
       <EmbeddedResource Include="Scripts\Seed\202201261740 Add default charges owner.sql" />
       <EmbeddedResource Include="Scripts\Seed\202201261741 Add default charges.sql" />
       <EmbeddedResource Include="Scripts\Seed\202201261742 Add default charge links.sql" />
       <EmbeddedResource Include="Scripts\Seed\202203251356 Alter default charges.sql" />
       <EmbeddedResource Include="Scripts\Test\202201261750 Add test data.sql" />
       <EmbeddedResource Include="Scripts\Model\280320221347 Add unique constraint on Charge Link.sql" />
+      <EmbeddedResource Include="Scripts\Test\202206030818 Add test data to gridarealinks.sql" />
     </ItemGroup>
 
 </Project>
