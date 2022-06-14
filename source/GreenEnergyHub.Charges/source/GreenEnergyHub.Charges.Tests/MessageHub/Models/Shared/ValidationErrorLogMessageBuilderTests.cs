@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared
             var documentDto = BuildDocumentDto(documentDtoBuilder);
             var validationErrors = BuildValidationErrors();
 
-            var expected = $"document Id {documentDto.Id} with Type {documentDto.Type} from GLN {documentDto.Sender.Id}:\r\n" +
+            var expected = $"document Id {documentDto.Id} with Type {documentDto.Type} from GLN {documentDto.Sender.MarketParticipantId}:\r\n" +
                             $"- ValidationRuleIdentifier: {validationErrors.First().ValidationRuleIdentifier}\r\n" +
                             $"- ValidationRuleIdentifier: {validationErrors.Last().ValidationRuleIdentifier}\r\n";
 
@@ -54,7 +54,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared
                 .WithDocumentType(DocumentType.RequestChangeBillingMasterData)
                 .WithSender(new MarketParticipantDto
                 {
-                    Id = "10000",
+                    MarketParticipantId = "10000",
                     BusinessProcessRole = MarketParticipantRole.GridAccessProvider,
                 })
                 .Build();

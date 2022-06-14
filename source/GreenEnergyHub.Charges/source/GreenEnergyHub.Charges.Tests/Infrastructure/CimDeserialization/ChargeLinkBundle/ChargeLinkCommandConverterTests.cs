@@ -63,9 +63,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeL
             result.Document.Id.Should().Be("DocId_Valid_001");
             result.Document.Type.Should().Be(DocumentType.RequestChangeBillingMasterData);
             result.Document.BusinessReasonCode.Should().Be(BusinessReasonCode.UpdateMasterDataSettlement);
-            result.Document.Sender.Id.Should().Be("8100000000016");
+            result.Document.Sender.MarketParticipantId.Should().Be("8100000000016");
             result.Document.Sender.BusinessProcessRole.Should().Be(MarketParticipantRole.GridAccessProvider);
-            result.Document.Recipient.Id.Should().Be("5790001330552");
+            result.Document.Recipient.MarketParticipantId.Should().Be("5790001330552");
             result.Document.Recipient.BusinessProcessRole.Should().Be(MarketParticipantRole.MeteringPointAdministrator);
             result.Document.CreatedDateTime.Should().Be(InstantPattern.ExtendedIso.Parse("2021-07-05T13:20:02.387Z").Value);
 
@@ -150,9 +150,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeL
             document.Id.Should().Be("DocId_Valid_001");
             document.Type.Should().Be(DocumentType.RequestChangeBillingMasterData);
             document.BusinessReasonCode.Should().Be(BusinessReasonCode.UpdateMasterDataSettlement);
-            document.Sender.Id.Should().Be("8100000000016");
+            document.Sender.MarketParticipantId.Should().Be("8100000000016");
             document.Sender.BusinessProcessRole.Should().Be(MarketParticipantRole.GridAccessProvider);
-            document.Recipient.Id.Should().Be("5790001330552");
+            document.Recipient.MarketParticipantId.Should().Be("5790001330552");
             document.Recipient.BusinessProcessRole.Should().Be(MarketParticipantRole.MeteringPointAdministrator);
             document.CreatedDateTime.Should().Be(InstantPattern.ExtendedIso.Parse("2021-07-05T13:20:02.387Z").Value);
 

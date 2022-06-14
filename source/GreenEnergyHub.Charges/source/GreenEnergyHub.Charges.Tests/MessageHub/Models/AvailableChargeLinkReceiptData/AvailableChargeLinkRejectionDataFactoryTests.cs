@@ -84,7 +84,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
             for (var i1 = 0; i1 < actualList.Count; i1++)
             {
                 var actual = actualList[i1];
-                actual.RecipientId.Should().Be(chargeLinksCommand.Document.Sender.Id);
+                actual.RecipientId.Should().Be(chargeLinksCommand.Document.Sender.MarketParticipantId);
                 actual.RecipientRole.Should().Be(chargeLinksCommand.Document.Sender.BusinessProcessRole);
                 actual.BusinessReasonCode.Should().Be(chargeLinksCommand.Document.BusinessReasonCode);
                 actual.RequestDateTime.Should().Be(now);
@@ -145,10 +145,10 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
 
             // Assert
             var document = rejectedEvent.ChargeLinksCommand.Document;
-            var expectedMessage = $"ValidationErrors for document Id {document.Id} with Type {document.Type} from GLN {document.Sender.Id}:\r\n" +
-                                  "- ValidationRuleIdentifier: StartDateValidation\r\n" +
-                                  "- ValidationRuleIdentifier: ChangingTariffTaxValueNotAllowed\r\n" +
-                                  "- ValidationRuleIdentifier: SenderIsMandatoryTypeValidation\r\n";
+            var expectedMessage = $"ValidationErrors for document Id {document.Id} with Type {document.Type} from GLN {document.Sender.MarketParticipantId}:\r\n" +
+                                   "- ValidationRuleIdentifier: StartDateValidation\r\n" +
+                                   "- ValidationRuleIdentifier: ChangingTariffTaxValueNotAllowed\r\n" +
+                                   "- ValidationRuleIdentifier: SenderIsMandatoryTypeValidation\r\n";
             logger.VerifyLoggerWasCalled(expectedMessage, LogLevel.Error);
         }
 
