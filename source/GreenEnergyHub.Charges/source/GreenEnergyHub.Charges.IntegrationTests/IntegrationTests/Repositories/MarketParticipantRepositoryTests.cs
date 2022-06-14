@@ -74,7 +74,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         }
 
         [Fact]
-        public async Task SingleOrNullAsync_WhenGuidEqualsExistingMarketParticipant_ReturnsMarketParticipant()
+        public async Task SingleOrNullAsync_WhenIdEqualsExistingMarketParticipant_ReturnsMarketParticipant()
         {
             // Arrange
             await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
