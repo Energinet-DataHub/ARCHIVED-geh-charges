@@ -108,13 +108,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         public async Task SingleOrNullAsync_WhenRoleAndMarketParticipantIdEqualsExistingMarketParticipant_ReturnsMarketParticipant()
         {
             // Arrange
-            await using var writeContext = _databaseManager.CreateDbContext();
-            await AddMarketParticipantToContextAsync("1337", MarketParticipantRole.GridAccessProvider, true, writeContext);
-            await AddMarketParticipantToContextAsync("1337", MarketParticipantRole.EnergySupplier, true, writeContext);
-            await writeContext.SaveChangesAsync();
+            await using var writeDatabaseContext = _databaseManager.CreateDbContext();
+            await AddMarketParticipantToContextAsync("1337", MarketParticipantRole.GridAccessProvider, true, writeDatabaseContext);
+            await AddMarketParticipantToContextAsync("1337", MarketParticipantRole.EnergySupplier, true, writeDatabaseContext);
+            await writeDatabaseContext.SaveChangesAsync();
 
-            await using var readContext = _databaseManager.CreateDbContext();
-            var sut = new MarketParticipantRepository(readContext);
+            await using var readDatabaseContext = _databaseManager.CreateDbContext();
+            var sut = new MarketParticipantRepository(readDatabaseContext);
 
             // Act
             var actual = await sut.SingleOrNullAsync(MarketParticipantRole.GridAccessProvider, "1337");
