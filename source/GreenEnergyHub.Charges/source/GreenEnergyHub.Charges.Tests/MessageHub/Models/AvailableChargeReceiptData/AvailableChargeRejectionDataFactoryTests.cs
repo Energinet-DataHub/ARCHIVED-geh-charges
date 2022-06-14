@@ -83,7 +83,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             for (var i1 = 0; i1 < actualList.Count; i1++)
             {
                 var actual = actualList[i1];
-                actual.RecipientId.Should().Be(chargeCommand.Document.Sender.Id);
+                actual.RecipientId.Should().Be(chargeCommand.Document.Sender.MarketParticipantId);
                 actual.RecipientRole.Should().Be(chargeCommand.Document.Sender.BusinessProcessRole);
                 actual.BusinessReasonCode.Should().Be(chargeCommand.Document.BusinessReasonCode);
                 actual.RequestDateTime.Should().Be(now);
@@ -139,7 +139,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
 
             // Assert
             var document = rejectedEvent.Command.Document;
-            var expectedMessage = $"ValidationErrors for document Id {document.Id} with Type {document.Type} from GLN {document.Sender.Id}:\r\n" +
+            var expectedMessage = $"ValidationErrors for document Id {document.Id} with Type {document.Type} from GLN {document.Sender.MarketParticipantId}:\r\n" +
                                   "- ValidationRuleIdentifier: StartDateValidation\r\n" +
                                   "- ValidationRuleIdentifier: ChangingTariffTaxValueNotAllowed\r\n" +
                                   "- ValidationRuleIdentifier: SenderIsMandatoryTypeValidation\r\n";

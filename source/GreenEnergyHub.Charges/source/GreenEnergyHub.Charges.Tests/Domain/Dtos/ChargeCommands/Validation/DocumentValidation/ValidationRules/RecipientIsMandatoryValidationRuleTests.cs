@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Doc
         [InlineAutoMoqData("content", true)]
         public void RecipientIsMandatoryValidationRule_Test(string id, bool expected, ChargeCommand command)
         {
-            command.Document.Recipient.Id = id;
+            command.Document.Recipient.MarketParticipantId = id;
             var sut = new RecipientIsMandatoryTypeValidationRule(command.Document);
             sut.IsValid.Should().Be(expected);
         }
@@ -41,7 +41,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Doc
         [InlineAutoDomainData]
         public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommand command)
         {
-            command.Document.Recipient.Id = null!;
+            command.Document.Recipient.MarketParticipantId = null!;
             var sut = new RecipientIsMandatoryTypeValidationRule(command.Document);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.RecipientIsMandatoryTypeValidation);
         }
