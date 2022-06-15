@@ -43,7 +43,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             byte[] message)
         {
-            var receivedEvent = (ChargePriceCommandReceivedEvent)await _deserializer.FromBytesAsync(message).ConfigureAwait(false);
+            var unused = (ChargePriceCommandReceivedEvent)await _deserializer.FromBytesAsync(message).ConfigureAwait(false);
+
             // TODO call: _chargePriceEventHandler.HandleAsync(receivedEvent);
         }
     }
