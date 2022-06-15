@@ -168,6 +168,13 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
                 .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.CommandReceivedSubscriptionName)
                 .CreateAsync();
 
+            var priceCommandReceivedTopic = await ServiceBusResourceProvider
+                .BuildTopic(ChargesServiceBusResourceNames.PriceCommandReceivedTopicKey)
+                .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.PriceCommandReceivedTopicName)
+                .AddSubscription(ChargesServiceBusResourceNames.PriceCommandReceivedSubscriptionName)
+                .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.PriceCommandReceivedSubscriptionName)
+                .CreateAsync();
+
             var commandRejectedTopic = await ServiceBusResourceProvider
                 .BuildTopic(ChargesServiceBusResourceNames.CommandRejectedTopicKey)
                 .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.CommandRejectedTopicName)
