@@ -52,6 +52,10 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
         public const string CommandReceivedTopicKey = "command-received";
         public const string CommandReceivedSubscriptionName = "command-received";
 
+        // Internal, charge price, received
+        public const string PriceCommandReceivedTopicKey = "price-command-received";
+        public const string PriceCommandReceivedSubscriptionName = "price-command-received";
+
         // Internal, charge, accepted
         public const string CommandAcceptedTopicKey = "command-accepted";
         public const string ChargeAcceptedSubDataAvailableNotifier = "chargeaccepted-sub-dataavailablenotifier";
