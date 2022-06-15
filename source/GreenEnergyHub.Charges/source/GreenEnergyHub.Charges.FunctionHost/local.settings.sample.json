@@ -54,6 +54,10 @@
     "COMMAND_RECEIVED_TOPIC_NAME": "command-received",
     "COMMAND_RECEIVED_SUBSCRIPTION_NAME": "command-received",
 
+    // Internal, charge price, received
+    "PRICE_COMMAND_RECEIVED_TOPIC_NAME": "price-command-received",
+    "PRICE_COMMAND_RECEIVED_SUBSCRIPTION_NAME": "price-command-received",
+
     // Internal, charge, accepted
     "COMMAND_ACCEPTED_TOPIC_NAME": "command-accepted",
     "CHARGEACCEPTED_SUB_DATAAVAILABLENOTIFIER": "chargeaccepted-sub-dataavailablenotifier",

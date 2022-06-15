@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
@@ -35,12 +34,12 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Acknowledgement
         [Theory]
         [AutoMoqData]
         public async Task RejectAsync_WhenCalledWithCommandAndResult_UsesFactoryToCreateEventAndDispatchesIt(
-            [Frozen] [NotNull] Mock<IChargeCommandRejectedEventFactory> rejectedEventFactory,
-            [Frozen] [NotNull] Mock<IMessageDispatcher<ChargeCommandRejectedEvent>> rejectedEventDispatcher,
-            [NotNull] ChargeCommand command,
-            [NotNull] ValidationResult validationResult,
-            [NotNull] ChargeCommandRejectedEvent rejectedEvent,
-            [NotNull] ChargeCommandReceiptService sut)
+            [Frozen] Mock<IChargeCommandRejectedEventFactory> rejectedEventFactory,
+            [Frozen] Mock<IMessageDispatcher<ChargeCommandRejectedEvent>> rejectedEventDispatcher,
+            ChargeCommand command,
+            ValidationResult validationResult,
+            ChargeCommandRejectedEvent rejectedEvent,
+            ChargeCommandReceiptService sut)
         {
             // Arrange
             rejectedEventFactory.Setup(
@@ -67,11 +66,11 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Acknowledgement
         [Theory]
         [AutoMoqData]
         public async Task AcceptAsync_WhenCalledWithCommand_UsesFactoryToCreateEventAndDispatchesIt(
-            [Frozen] [NotNull] Mock<IChargeCommandAcceptedEventFactory> acceptedEventFactory,
-            [Frozen] [NotNull] Mock<IMessageDispatcher<ChargeCommandAcceptedEvent>> acceptedEventDispatcher,
-            [NotNull] ChargeCommand command,
-            [NotNull] ChargeCommandAcceptedEvent acceptedEvent,
-            [NotNull] ChargeCommandReceiptService sut)
+            [Frozen] Mock<IChargeCommandAcceptedEventFactory> acceptedEventFactory,
+            [Frozen] Mock<IMessageDispatcher<ChargeCommandAcceptedEvent>> acceptedEventDispatcher,
+            ChargeCommand command,
+            ChargeCommandAcceptedEvent acceptedEvent,
+            ChargeCommandReceiptService sut)
         {
             // Arrange
             acceptedEventFactory.Setup(

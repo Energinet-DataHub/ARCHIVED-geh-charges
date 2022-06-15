@@ -73,6 +73,10 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
         public const string CommandReceivedTopicName = "COMMAND_RECEIVED_TOPIC_NAME";
         public const string CommandReceivedSubscriptionName = "COMMAND_RECEIVED_SUBSCRIPTION_NAME";
 
+        // Internal, charge price, received
+        public const string PriceCommandReceivedTopicName = "PRICE_COMMAND_RECEIVED_TOPIC_NAME";
+        public const string PriceCommandReceivedSubscriptionName = "PRICE_COMMAND_RECEIVED_SUBSCRIPTION_NAME";
+
         // Internal, charge, accepted
         public const string CommandAcceptedTopicName = "COMMAND_ACCEPTED_TOPIC_NAME";
         public const string ChargeAcceptedSubDataAvailableNotifier = "CHARGEACCEPTED_SUB_DATAAVAILABLENOTIFIER";
