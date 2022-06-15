@@ -19,7 +19,9 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using FluentAssertions;
+using GreenEnergyHub.Charges.FunctionHost.Charges;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
+using GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.Charges;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
@@ -142,6 +144,29 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                     .CountdownEvent!
                     .Wait(TimeSpan.FromSeconds(SecondsToWaitForIntegrationEvents));
                 isChargePricesUpdatedReceived.Should().BeTrue();
+            }
+
+            // TODO: Let this test evolve in step with the price flow expansion (and change the name accordingly)
+            [Fact]
+            public async Task When_ChargePricesAreReceived_Then_ChargePriceCommandReceiverEndpointIsTriggered()
+            {
+                // Arrange
+                var (request, correlationId) = await _authenticatedHttpRequestGenerator
+                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.TariffPriceSeries);
+                using var eventualChargePriceUpdatedEvent = await Fixture
+                    .ChargePricesUpdatedListener
+                    .ListenForEventsAsync(correlationId, expectedCount: 1)
+                    .ConfigureAwait(false);
+
+                // Act
+                await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                await FunctionAsserts.AssertHasExecutedAsync(
+                    Fixture.HostManager, nameof(ChargePriceCommandReceiverEndpoint)).ConfigureAwait(false);
+
+                // We need to clear host log after each test is done to ensure that we can assert on function executed on each test run because we only check on function name.
+                Fixture.HostManager.ClearHostLog();
             }
 
             [Fact]
