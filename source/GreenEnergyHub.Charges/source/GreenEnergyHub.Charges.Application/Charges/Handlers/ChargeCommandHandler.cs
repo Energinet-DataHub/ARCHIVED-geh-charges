@@ -43,7 +43,8 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             var receivedEvent = new ChargeCommandReceivedEvent(_clock.GetCurrentInstant(), command);
             await _chargeMessageDispatcher.DispatchAsync(receivedEvent).ConfigureAwait(false);
 
-            // TODO: In step with the price flow expansion taking place this should probably be removed
+            // TODO: In step with the price flow expansion taking place this should be replaced by code that
+            // differentiates between ChargeInformation and ChargePrice commands
             if (command.Document.BusinessReasonCode == BusinessReasonCode.UpdateChargePrices)
             {
                 var priceReceivedEvent = new ChargePriceCommandReceivedEvent(_clock.GetCurrentInstant(), command);
