@@ -45,14 +45,14 @@ namespace GreenEnergyHub.Charges.MessageHub.MessageHub
 
         public static BundleType Map(DataBundleRequestDto request)
         {
-            var index = request.MessageType.IndexOf('_');
+            var index = request.MessageType.Value.IndexOf('_');
 
             if (index < 0)
             {
-                throw new ArgumentException($"Provided request.MessageType value '{request.MessageType}' is invalid");
+                throw new ArgumentException($"Provided request.MessageType value '{request.MessageType.Value}' is invalid");
             }
 
-            return Map(request.MessageType.Substring(0, index));
+            return Map(request.MessageType.Value.Substring(0, index));
         }
 
         public static BundleType Map(string bundleType)

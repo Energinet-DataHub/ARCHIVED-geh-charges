@@ -60,6 +60,8 @@ module "func_functionhost" {
     COMMAND_ACCEPTED_SUBSCRIPTION_NAME                              = "command-accepted"
     COMMAND_RECEIVED_TOPIC_NAME                                     = module.sbt_command_received.name
     COMMAND_RECEIVED_SUBSCRIPTION_NAME                              = "command-received"
+    PRICE_COMMAND_RECEIVED_TOPIC_NAME                               = module.sbt_price_command_received.name
+    PRICE_COMMAND_RECEIVED_SUBSCRIPTION_NAME                        = "price-command-received"
     COMMAND_REJECTED_TOPIC_NAME                                     = module.sbt_command_rejected.name
     COMMAND_REJECTED_SUBSCRIPTION_NAME                              = "command-rejected"
     DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_TOPIC_NAME         = module.sbt_default_charge_links_available_notified.name

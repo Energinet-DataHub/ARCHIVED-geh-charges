@@ -25,8 +25,8 @@ limitations under the License.
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Energinet.DataHub.MessageHub.Client" Version="2.1.0" />
-      <PackageReference Include="Energinet.DataHub.MessageHub.IntegrationTesting" Version="1.1.2" />
+      <PackageReference Include="Energinet.DataHub.MessageHub.Client" Version="3.0.0" />
+      <PackageReference Include="Energinet.DataHub.MessageHub.IntegrationTesting" Version="3.0.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.3" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.3" />
       <PackageReference Include="NodaTime" Version="3.1.0" />

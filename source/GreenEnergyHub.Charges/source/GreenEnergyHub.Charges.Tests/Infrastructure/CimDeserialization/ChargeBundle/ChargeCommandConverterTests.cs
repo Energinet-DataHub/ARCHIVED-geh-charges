@@ -67,9 +67,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             actual.Document.Id.Should().Be("25369874");
             actual.Document.Type.Should().Be(DocumentType.RequestChangeOfPriceList);
             actual.Document.BusinessReasonCode.Should().Be(BusinessReasonCode.UpdateChargeInformation);
-            actual.Document.Sender.Id.Should().Be("5799999925698");
+            actual.Document.Sender.MarketParticipantId.Should().Be("5799999925698");
             actual.Document.Sender.BusinessProcessRole.Should().Be(MarketParticipantRole.GridAccessProvider);
-            actual.Document.Recipient.Id.Should().Be("5790001330552");
+            actual.Document.Recipient.MarketParticipantId.Should().Be("5790001330552");
             actual.Document.Recipient.BusinessProcessRole.Should().Be(MarketParticipantRole.MeteringPointAdministrator);
             actual.Document.CreatedDateTime.Should().Be(InstantPattern.ExtendedIso.Parse("2021-12-17T09:30:47Z").Value);
 
