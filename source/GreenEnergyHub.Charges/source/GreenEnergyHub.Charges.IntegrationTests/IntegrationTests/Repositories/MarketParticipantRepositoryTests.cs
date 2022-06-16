@@ -81,14 +81,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             // Arrange
             await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
             var sut = new MarketParticipantRepository(chargesDatabaseContext);
-            var existingMarketParticipant = await chargesDatabaseContext.MarketParticipants
-                .SingleAsync(mp => mp.MarketParticipantId == SeededData.MarketParticipant.Inactive8900000000005);
+            var existingMarketParticipant = await chargesDatabaseContext.MarketParticipants.SingleAsync(mp =>
+                    mp.MarketParticipantId == SeededData.MarketParticipants.Inactive8900000000005.Gln);
 
             // Act
             var actual = await sut.SingleOrNullAsync(existingMarketParticipant.Id);
 
             // Assert
-            actual!.MarketParticipantId.Should().Be(SeededData.MarketParticipant.Inactive8900000000005);
+            actual!.MarketParticipantId.Should().Be(
+                SeededData.MarketParticipants.Inactive8900000000005.Gln);
         }
 
         [Fact]
@@ -99,11 +100,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             var sut = new MarketParticipantRepository(chargesDatabaseContext);
 
             // Act
-            var actual = await sut.SingleOrNullAsync(SeededData.MarketParticipant.Inactive8900000000005);
+            var actual = await sut.SingleOrNullAsync(SeededData.MarketParticipants.Inactive8900000000005.Gln);
 
             // Assert
             actual.Should().NotBeNull();
-            actual!.MarketParticipantId.Should().Be(SeededData.MarketParticipant.Inactive8900000000005);
+            actual!.MarketParticipantId.Should().Be(SeededData.MarketParticipants.Inactive8900000000005.Gln);
         }
 
         [Fact]
@@ -201,7 +202,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             var actual = await sut.GetGridAccessProvidersAsync();
 
             // Assert
-            actual.Should().NotContain(x => x.MarketParticipantId == SeededData.MarketParticipant.Inactive8900000000005);
+            actual.Should().NotContain(x => x.MarketParticipantId == SeededData.MarketParticipants.Inactive8900000000005.Gln);
         }
 
         [Fact]

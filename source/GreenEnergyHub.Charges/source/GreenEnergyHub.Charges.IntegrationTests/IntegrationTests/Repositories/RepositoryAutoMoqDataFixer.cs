@@ -28,7 +28,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             List<AvailableDataBase> availableList)
         {
             return availableList
-                .Select(receipt => (AvailableDataBase)GetAvailableDataBasedOn((dynamic)receipt))
+                .Select(availableData => (AvailableDataBase)GetAvailableDataBasedOn((dynamic)availableData))
                 .ToList();
         }
 
@@ -60,7 +60,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 availableChargeData.Resolution,
                 availableChargeData.DocumentType,
                 availableChargeData.OperationOrder,
-                availableChargeData.ActorId,
+                SeededData.MarketParticipants.SystemOperator.ActorId,
                 availableChargeData.Points.ToList());
         }
 
@@ -79,7 +79,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 availableChargeReceiptData.OriginalOperationId.Substring(0, 34),
                 availableChargeReceiptData.DocumentType,
                 availableChargeReceiptData.OperationOrder,
-                availableChargeReceiptData.ActorId,
+                SeededData.MarketParticipants.SystemOperator.ActorId,
                 availableChargeReceiptData.ValidationErrors.ToList());
         }
 
@@ -102,7 +102,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 availableChargeData.EndDateTime,
                 availableChargeData.DocumentType,
                 availableChargeData.OperationOrder,
-                availableChargeData.ActorId);
+                SeededData.MarketParticipants.SystemOperator.ActorId);
         }
 
         private static AvailableChargeLinksReceiptData GetAvailableDataBasedOn(
@@ -121,7 +121,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 availableChargeLinksReceiptData.MeteringPointId.Substring(0, 49),
                 availableChargeLinksReceiptData.DocumentType,
                 availableChargeLinksReceiptData.OperationOrder,
-                availableChargeLinksReceiptData.ActorId,
+                SeededData.MarketParticipants.SystemOperator.ActorId,
                 availableChargeLinksReceiptData.ValidationErrors.ToList());
         }
     }
