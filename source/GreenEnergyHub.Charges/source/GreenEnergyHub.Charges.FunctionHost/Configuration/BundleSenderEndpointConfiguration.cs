@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using Energinet.DataHub.MessageHub.Model.Peek;
+using GreenEnergyHub.Charges.Infrastructure.MarketParticipantRegistry;
 using GreenEnergyHub.Charges.MessageHub.Infrastructure.Bundling;
 using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim;
 using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeLinkReceipt;
@@ -49,6 +50,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<ICimSerializer<AvailableChargeLinksData>, ChargeLinkCimSerializer>();
             serviceCollection.AddScoped<IBundleCreator, BundleCreator<AvailableChargeLinksReceiptData>>();
             serviceCollection.AddScoped<ICimSerializer<AvailableChargeLinksReceiptData>, ChargeLinksReceiptCimSerializer>();
+            serviceCollection.AddScoped<IMarketParticipantRegistrySynchronizer, MarketParticipantRegistrySynchronizer>();
         }
     }
 }
