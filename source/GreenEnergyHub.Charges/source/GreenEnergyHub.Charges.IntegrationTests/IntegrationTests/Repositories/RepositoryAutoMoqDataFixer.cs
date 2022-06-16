@@ -60,7 +60,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 availableChargeData.Resolution,
                 availableChargeData.DocumentType,
                 availableChargeData.OperationOrder,
-                availableChargeData.ActorId,
+                //availableChargeData.ActorId,
                 availableChargeData.Points.ToList());
         }
 
@@ -79,7 +79,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 availableChargeReceiptData.OriginalOperationId.Substring(0, 34),
                 availableChargeReceiptData.DocumentType,
                 availableChargeReceiptData.OperationOrder,
-                availableChargeReceiptData.ActorId,
+                //availableChargeReceiptData.ActorId,
                 availableChargeReceiptData.ValidationErrors.ToList());
         }
 
@@ -101,8 +101,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 availableChargeData.StartDateTime,
                 availableChargeData.EndDateTime,
                 availableChargeData.DocumentType,
-                availableChargeData.OperationOrder,
-                availableChargeData.ActorId);
+                availableChargeData.OperationOrder);
+            //availableChargeData.ActorId);
         }
 
         private static AvailableChargeLinksReceiptData GetAvailableDataBasedOn(
@@ -121,7 +121,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 availableChargeLinksReceiptData.MeteringPointId.Substring(0, 49),
                 availableChargeLinksReceiptData.DocumentType,
                 availableChargeLinksReceiptData.OperationOrder,
-                availableChargeLinksReceiptData.ActorId,
+                //availableChargeLinksReceiptData.ActorId,
                 availableChargeLinksReceiptData.ValidationErrors.ToList());
         }
     }

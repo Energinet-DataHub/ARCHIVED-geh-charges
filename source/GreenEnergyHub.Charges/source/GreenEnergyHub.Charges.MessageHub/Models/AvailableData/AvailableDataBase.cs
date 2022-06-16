@@ -33,8 +33,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableData
             Instant requestDateTime,
             Guid availableDataReferenceId,
             DocumentType documentType,
-            int operationOrder,
-            Guid actorId)
+            int operationOrder)
+            //Guid actorId)
         {
             Id = Guid.NewGuid();
             SenderId = senderId;
@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableData
             AvailableDataReferenceId = availableDataReferenceId;
             DocumentType = documentType;
             OperationOrder = operationOrder;
-            ActorId = actorId;
+            //ActorId = actorId;
         }
 
         // ReSharper disable once UnusedMember.Local - needed by persistence

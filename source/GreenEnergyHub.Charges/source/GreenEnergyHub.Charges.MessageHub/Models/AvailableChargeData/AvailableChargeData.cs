@@ -44,7 +44,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
             Resolution resolution,
             DocumentType documentType,
             int operationOrder,
-            Guid actorId,
+            //Guid actorId,
             List<AvailableChargeDataPoint> points)
             : base(
                 senderId,
@@ -55,8 +55,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
                 requestDateTime,
                 availableDataReferenceId,
                 documentType,
-                operationOrder,
-                actorId)
+                operationOrder)
+                //actorId)
         {
             ChargeId = chargeId;
             ChargeOwner = chargeOwner;
