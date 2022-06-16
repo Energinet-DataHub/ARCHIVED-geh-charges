@@ -1,5 +1,9 @@
 # Energinet.DataHub.Charges.Clients Release notes
 
+## Version 3.0.4
+
+Bumped because workflow file was updated.
+
 ## Version 3.0.3
 
 Bumped to latest .Net SDK version 6.0.300 and updated NuGet packages
