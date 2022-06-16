@@ -16,6 +16,8 @@ using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
@@ -24,19 +26,30 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
     {
         private readonly IClock _clock;
         private readonly IMessageDispatcher<ChargeCommandReceivedEvent> _chargeMessageDispatcher;
+        private readonly IMessageDispatcher<ChargePriceCommandReceivedEvent> _chargePriceMessageDispatcher;
 
         public ChargeCommandHandler(
             IClock clock,
-            IMessageDispatcher<ChargeCommandReceivedEvent> chargeMessageDispatcher)
+            IMessageDispatcher<ChargeCommandReceivedEvent> chargeMessageDispatcher,
+            IMessageDispatcher<ChargePriceCommandReceivedEvent> chargePriceMessageDispatcher)
         {
             _clock = clock;
             _chargeMessageDispatcher = chargeMessageDispatcher;
+            _chargePriceMessageDispatcher = chargePriceMessageDispatcher;
         }
 
         public async Task HandleAsync(ChargeCommand command)
         {
             var receivedEvent = new ChargeCommandReceivedEvent(_clock.GetCurrentInstant(), command);
             await _chargeMessageDispatcher.DispatchAsync(receivedEvent).ConfigureAwait(false);
+
+            // TODO: In step with the price flow expansion taking place this should be replaced by code that
+            // differentiates between ChargeInformation and ChargePrice commands
+            if (command.Document.BusinessReasonCode == BusinessReasonCode.UpdateChargePrices)
+            {
+                var priceReceivedEvent = new ChargePriceCommandReceivedEvent(_clock.GetCurrentInstant(), command);
+                await _chargePriceMessageDispatcher.DispatchAsync(priceReceivedEvent).ConfigureAwait(false);
+            }
         }
     }
 }

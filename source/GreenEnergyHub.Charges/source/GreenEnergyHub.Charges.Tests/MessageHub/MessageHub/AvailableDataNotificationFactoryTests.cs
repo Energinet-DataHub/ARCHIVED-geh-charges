@@ -12,14 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using Energinet.DataHub.MessageHub.Model.Model;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification;
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
+using GreenEnergyHub.Charges.Tests.Builders.MessageHub;
+using GreenEnergyHub.TestHelpers;
 using Moq;
+using NodaTime;
+using Xunit;
 using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.MessageHub.MessageHub
@@ -27,15 +33,17 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.MessageHub
     [UnitTest]
     public class AvailableDataNotificationFactoryTests
     {
+        [Theory]
+        [InlineAutoDomainData]
         public void Create_WhenGivenAvailableConfirmations_CreatesNotifications(
             Mock<IBundleSpecification<AvailableDataBase>> bundleSpecification,
-            IReadOnlyList<AvailableDataBase> availableData,
             string messageType,
             int messageWeight,
-            string documentType,
             AvailableDataNotificationFactory<AvailableDataBase> sut)
         {
             // Arrange
+            var actorId = Guid.NewGuid();
+            var availableData = GenerateListOfAvailableChargeDataForSameCharge(actorId, 3);
             bundleSpecification.Setup(
                     b => b.GetMessageType(
                         It.IsAny<BusinessReasonCode>()))
@@ -54,13 +62,28 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.MessageHub
             for (var i = 0; i < actualNotificationList.Count; i++)
             {
                 actualNotificationList[i].Uuid.Should().Be(availableData[i].AvailableDataReferenceId);
-                actualNotificationList[i].Recipient.Value.Should().Be(availableData[i].RecipientId);
+                actualNotificationList[i].Recipient.Value.Should().Be(availableData[i].ActorId);
                 actualNotificationList[i].MessageType.Value.Should().Be(messageType);
                 actualNotificationList[i].Origin.Should().Be(DomainOrigin.Charges);
                 actualNotificationList[i].SupportsBundling.Should().BeTrue();
                 actualNotificationList[i].RelativeWeight.Should().Be(messageWeight);
-                actualNotificationList[i].DocumentType.Should().Be(documentType);
+                actualNotificationList[i].DocumentType.Should().Be(availableData[i].DocumentType.ToString());
             }
+        }
+
+        private static List<AvailableChargeData> GenerateListOfAvailableChargeDataForSameCharge(Guid actorId, int numberOfAvailableChargeData)
+        {
+            var builder = new AvailableChargeDataBuilder();
+            var now = Instant.FromDateTimeUtc(DateTime.UtcNow);
+            var availableChargeDataList = new List<AvailableChargeData>();
+
+            for (var i = 0; i < numberOfAvailableChargeData; i++)
+            {
+                var data = builder.WithActorId(actorId).WithRequestDateTime(now).WithOperationOrder(i).Build();
+                availableChargeDataList.Add(data);
+            }
+
+            return availableChargeDataList;
         }
     }
 }

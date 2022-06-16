@@ -55,7 +55,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
 
             // Assert
             actualList.Should().HaveCount(3);
-            actualList[0].RecipientId.Should().Be(acceptedEvent.Command.Document.Sender.Id);
+            actualList[0].RecipientId.Should().Be(acceptedEvent.Command.Document.Sender.MarketParticipantId);
             actualList[0].RecipientRole.Should()
                     .Be(acceptedEvent.Command.Document.Sender.BusinessProcessRole);
             actualList[0].BusinessReasonCode.Should()
