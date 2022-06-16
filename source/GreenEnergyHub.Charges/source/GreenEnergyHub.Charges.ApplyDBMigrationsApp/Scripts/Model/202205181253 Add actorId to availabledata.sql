@@ -5,10 +5,14 @@
 BEGIN TRANSACTION
 
 -- Trim RecipientIds (some has CRLF)
-update MessageHub.AvailableChargeData set RecipientId = lTrim(rTrim(RecipientId))
-update MessageHub.AvailableChargeReceiptData set RecipientId = lTrim(rTrim(RecipientId))
-update MessageHub.AvailableChargeLinksData set RecipientId = lTrim(rTrim(RecipientId))
-update MessageHub.AvailableChargeLinksReceiptData set RecipientId = lTrim(rTrim(RecipientId))
+update MessageHub.AvailableChargeData
+    set RecipientId = lTrim(rTrim(REPLACE(REPLACE(RecipientId, CHAR(13), ''), CHAR(10), '')))
+update MessageHub.AvailableChargeReceiptData
+    set RecipientId = lTrim(rTrim(REPLACE(REPLACE(RecipientId, CHAR(13), ''), CHAR(10), '')))
+update MessageHub.AvailableChargeLinksData
+    set RecipientId = lTrim(rTrim(REPLACE(REPLACE(RecipientId, CHAR(13), ''), CHAR(10), '')))
+update MessageHub.AvailableChargeLinksReceiptData
+    set RecipientId = lTrim(rTrim(REPLACE(REPLACE(RecipientId, CHAR(13), ''), CHAR(10), '')))
     
 -- Add foreign key field to table
 ALTER TABLE [MessageHub].[AvailableChargeData]
