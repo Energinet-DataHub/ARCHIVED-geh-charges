@@ -50,7 +50,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<ICimSerializer<AvailableChargeLinksData>, ChargeLinkCimSerializer>();
             serviceCollection.AddScoped<IBundleCreator, BundleCreator<AvailableChargeLinksReceiptData>>();
             serviceCollection.AddScoped<ICimSerializer<AvailableChargeLinksReceiptData>, ChargeLinksReceiptCimSerializer>();
-            serviceCollection.AddScoped<IMarketParticipantRegistrySynchronizer, MarketParticipantRegistrySynchronizer>();
         }
     }
 }
