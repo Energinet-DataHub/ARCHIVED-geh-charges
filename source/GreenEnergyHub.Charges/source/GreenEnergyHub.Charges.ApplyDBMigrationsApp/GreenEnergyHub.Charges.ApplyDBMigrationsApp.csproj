@@ -40,7 +40,7 @@ limitations under the License.
       <EmbeddedResource Include="Scripts\Model\202203090952 Add DocumentType to AvailableData.sql" />
       <EmbeddedResource Include="Scripts\Model\202203231212 Add OperationOrder to AvailableData.sql" />
       <EmbeddedResource Include="Scripts\Model\202204191415 Ensure unique charges by removing duplicates and adding constraint.sql" />
-      <EmbeddedResource Include="Scripts\Model\202205181253 Add actorId to availabledata.sql" />
+      <Resource Include="Scripts\Model\202205181253 Add actorId to availabledata.sql" />
       <EmbeddedResource Include="Scripts\Model\202206021409 Remove GridArea table.sql" />
       <EmbeddedResource Include="Scripts\Model\202206131600 Changed unique constraint on MarketParticipant.sql" />
       <EmbeddedResource Include="Scripts\Seed\202201261740 Add default charges owner.sql" />
@@ -49,7 +49,7 @@ limitations under the License.
       <EmbeddedResource Include="Scripts\Seed\202203251356 Alter default charges.sql" />
       <EmbeddedResource Include="Scripts\Test\202201261750 Add test data.sql" />
       <EmbeddedResource Include="Scripts\Model\280320221347 Add unique constraint on Charge Link.sql" />
-      <EmbeddedResource Include="Scripts\Test\202206030818 Add test data to gridarealinks.sql" />
+      <Resource Include="Scripts\Test\202206030818 Add test data to gridarealinks.sql" />
     </ItemGroup>
 
 </Project>
