@@ -10,10 +10,10 @@ ALTER TABLE [MessageHub].[AvailableChargeData]
 GO
 
 -- Populate field, if any entries in current available table
+DECLARE @EmptyGuid uniqueidentifier = CONVERT(uniqueidentifier, N'00000000-0000-0000-0000-000000000000');
 UPDATE [MessageHub].[AvailableChargeData]
-    SET ActorId =
-        (SELECT Id FROM [Charges].[MarketParticipant] MP
-        WHERE MP.MarketParticipantId = RecipientId AND MP.BusinessProcessRole = RecipientRole)
+    SET ActorId = COALESCE((SELECT Id FROM [Charges].[MarketParticipant] MP
+    WHERE MP.MarketParticipantId = RecipientId AND MP.BusinessProcessRole = RecipientRole), @EmptyGuid)
 GO
 
 -- Change field to be NOT NULL
@@ -27,10 +27,10 @@ ALTER TABLE [MessageHub].[AvailableChargeReceiptData]
 GO
 
 -- Populate field, if any entries in current available table
+DECLARE @EmptyGuid uniqueidentifier = CONVERT(uniqueidentifier, N'00000000-0000-0000-0000-000000000000');
 UPDATE [MessageHub].[AvailableChargeReceiptData]
-    SET ActorId =
-        (SELECT Id FROM [Charges].[MarketParticipant] MP
-        WHERE MP.MarketParticipantId = RecipientId AND MP.BusinessProcessRole = RecipientRole)
+    SET ActorId = COALESCE((SELECT Id FROM [Charges].[MarketParticipant] MP
+    WHERE MP.MarketParticipantId = RecipientId AND MP.BusinessProcessRole = RecipientRole), @EmptyGuid)
 GO
 
 -- Change field to be NOT NULL
@@ -44,10 +44,10 @@ ALTER TABLE [MessageHub].[AvailableChargeLinksData]
 GO
 
 -- Populate field, if any entries in current available table
-UPDATE [MessageHub].[AvailableChargeLinksData]
-    SET ActorId =
-        (SELECT Id FROM [Charges].[MarketParticipant] MP
-        WHERE MP.MarketParticipantId = RecipientId AND MP.BusinessProcessRole = RecipientRole)
+DECLARE @EmptyGuid uniqueidentifier = CONVERT(uniqueidentifier, N'00000000-0000-0000-0000-000000000000');
+    UPDATE [MessageHub].[AvailableChargeLinksData]
+    SET ActorId = COALESCE((SELECT Id FROM [Charges].[MarketParticipant] MP
+    WHERE MP.MarketParticipantId = RecipientId AND MP.BusinessProcessRole = RecipientRole), @EmptyGuid)
 GO
 
 -- Change field to be NOT NULL
@@ -61,10 +61,10 @@ ALTER TABLE [MessageHub].[AvailableChargeLinksReceiptData]
 GO
 
 -- Populate field, if any entries in current available table
+DECLARE @EmptyGuid uniqueidentifier = CONVERT(uniqueidentifier, N'00000000-0000-0000-0000-000000000000');
 UPDATE [MessageHub].[AvailableChargeLinksReceiptData]
-    SET ActorId =
-        (SELECT Id FROM [Charges].[MarketParticipant] MP
-        WHERE MP.MarketParticipantId = RecipientId AND MP.BusinessProcessRole = RecipientRole)
+    SET ActorId = COALESCE((SELECT Id FROM [Charges].[MarketParticipant] MP
+    WHERE MP.MarketParticipantId = RecipientId AND MP.BusinessProcessRole = RecipientRole), @EmptyGuid)
 GO
 
 -- Change field to be NOT NULL
