@@ -114,7 +114,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.ChargeLink
                 MaxLengthId,
                 DocumentType.RejectRequestChangeBillingMasterData,
                 0,
-                Guid.NewGuid(),
+                //Guid.NewGuid(),
                 GetReasons(noOfReasons));
         }
 

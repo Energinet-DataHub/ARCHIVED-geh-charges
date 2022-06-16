@@ -151,8 +151,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
                 Instant.FromUtc(2020, 12, 31, 23, 0, 0),
                 validTo,
                 DocumentType.NotifyBillingMasterData,
-                0,
-                Guid.NewGuid());
+                0);
+                //Guid.NewGuid());
         }
     }
 }
