@@ -4,6 +4,12 @@
 ------------------------------------------------------------------------------------------------------------------------
 BEGIN TRANSACTION
 
+-- Trim RecipientIds (some has CRLF)
+update MessageHub.AvailableChargeData set RecipientId = lTrim(rTrim(RecipientId))
+update MessageHub.AvailableChargeReceiptData set RecipientId = lTrim(rTrim(RecipientId))
+update MessageHub.AvailableChargeLinksData set RecipientId = lTrim(rTrim(RecipientId))
+update MessageHub.AvailableChargeLinksReceiptData set RecipientId = lTrim(rTrim(RecipientId))
+    
 -- Add foreign key field to table
 ALTER TABLE [MessageHub].[AvailableChargeData]
     ADD ActorId [uniqueidentifier]
@@ -11,7 +17,7 @@ GO
 
 -- Add foreign key constraint
 ALTER TABLE [MessageHub].[AvailableChargeData]
-    WITH CHECK ADD  CONSTRAINT [FK_AvailableChargeData_ActorId] FOREIGN KEY([ActorId])
+    WITH CHECK ADD CONSTRAINT [FK_AvailableChargeData_ActorId] FOREIGN KEY([ActorId])
     REFERENCES [Charges].[MarketParticipant] ([Id])
 GO
 
@@ -33,7 +39,7 @@ GO
 
 -- Add foreign key constraint
 ALTER TABLE [MessageHub].[AvailableChargeReceiptData]
-    WITH CHECK ADD  CONSTRAINT [FK_AvailableChargeReceiptData_ActorId] FOREIGN KEY([ActorId])
+    WITH CHECK ADD CONSTRAINT [FK_AvailableChargeReceiptData_ActorId] FOREIGN KEY([ActorId])
     REFERENCES [Charges].[MarketParticipant] ([Id])
 GO
 
@@ -55,7 +61,7 @@ GO
 
 -- Add foreign key constraint
 ALTER TABLE [MessageHub].[AvailableChargeLinksData]
-    WITH CHECK ADD  CONSTRAINT [FK_AvailableChargeLinksData_ActorId] FOREIGN KEY([ActorId])
+    WITH CHECK ADD CONSTRAINT [FK_AvailableChargeLinksData_ActorId] FOREIGN KEY([ActorId])
     REFERENCES [Charges].[MarketParticipant] ([Id])
 GO
 
@@ -77,7 +83,7 @@ GO
 
 -- Add foreign key constraint
 ALTER TABLE [MessageHub].[AvailableChargeLinksReceiptData]
-    WITH CHECK ADD  CONSTRAINT [FK_AvailableChargeLinksReceiptData_ActorId] FOREIGN KEY([ActorId])
+    WITH CHECK ADD CONSTRAINT [FK_AvailableChargeLinksReceiptData_ActorId] FOREIGN KEY([ActorId])
     REFERENCES [Charges].[MarketParticipant] ([Id])
 GO
 
