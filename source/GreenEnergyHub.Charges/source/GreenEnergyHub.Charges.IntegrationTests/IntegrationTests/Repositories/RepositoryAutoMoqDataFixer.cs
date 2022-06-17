@@ -60,7 +60,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 availableChargeData.Resolution,
                 availableChargeData.DocumentType,
                 availableChargeData.OperationOrder,
-                SeededData.MarketParticipants.SystemOperator.ActorId,
+                SeededData.MarketParticipants.SystemOperator.MarketParticipantId,
                 availableChargeData.Points.ToList());
         }
 
@@ -79,7 +79,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 availableChargeReceiptData.OriginalOperationId.Substring(0, 34),
                 availableChargeReceiptData.DocumentType,
                 availableChargeReceiptData.OperationOrder,
-                SeededData.MarketParticipants.SystemOperator.ActorId,
+                SeededData.MarketParticipants.SystemOperator.MarketParticipantId,
                 availableChargeReceiptData.ValidationErrors.ToList());
         }
 
@@ -102,7 +102,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 availableChargeData.EndDateTime,
                 availableChargeData.DocumentType,
                 availableChargeData.OperationOrder,
-                SeededData.MarketParticipants.SystemOperator.ActorId);
+                SeededData.MarketParticipants.SystemOperator.MarketParticipantId);
         }
 
         private static AvailableChargeLinksReceiptData GetAvailableDataBasedOn(
@@ -121,7 +121,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 availableChargeLinksReceiptData.MeteringPointId.Substring(0, 49),
                 availableChargeLinksReceiptData.DocumentType,
                 availableChargeLinksReceiptData.OperationOrder,
-                SeededData.MarketParticipants.SystemOperator.ActorId,
+                SeededData.MarketParticipants.SystemOperator.MarketParticipantId,
                 availableChargeLinksReceiptData.ValidationErrors.ToList());
         }
     }

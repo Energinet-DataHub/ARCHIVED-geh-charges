@@ -37,9 +37,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests
         {
             public static class SystemOperator
             {
-                public static Guid ActorId => new("AF450C03-1937-4EA1-BB66-17B6E4AA51F5");
-
                 public const string Gln = "5790000432752";
+                public static readonly Guid MarketParticipantId = new("AF450C03-1937-4EA1-BB66-17B6E4AA51F5");
+            }
+
+            public static class MeteringPointAdministrator
+            {
+                public const string Gln = "5790001330552";
             }
 
             public static class GridAccessProviderOfMeteringPoint571313180000000005

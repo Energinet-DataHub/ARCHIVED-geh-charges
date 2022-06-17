@@ -46,20 +46,18 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
         {
             // Arrange
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
-            marketParticipantRepository
-                .Setup(r => r.GetMeteringPointAdministratorAsync())
-                .ReturnsAsync(meteringPointAdministrator);
+            var documentDto = acceptedEvent.Command.Document;
+            documentDto.Sender.BusinessProcessRole = MarketParticipantRole.GridAccessProvider;
+            SetupMarketParticipantRepositoryMock(marketParticipantRepository, meteringPointAdministrator, documentDto.Sender);
 
             // Act
             var actualList = await sut.CreateAsync(acceptedEvent);
 
             // Assert
             actualList.Should().HaveCount(3);
-            actualList[0].RecipientId.Should().Be(acceptedEvent.Command.Document.Sender.MarketParticipantId);
-            actualList[0].RecipientRole.Should()
-                    .Be(acceptedEvent.Command.Document.Sender.BusinessProcessRole);
-            actualList[0].BusinessReasonCode.Should()
-                    .Be(acceptedEvent.Command.Document.BusinessReasonCode);
+            actualList[0].RecipientId.Should().Be(documentDto.Sender.MarketParticipantId);
+            actualList[0].RecipientRole.Should().Be(documentDto.Sender.BusinessProcessRole);
+            actualList[0].BusinessReasonCode.Should().Be(documentDto.BusinessReasonCode);
             actualList[0].RequestDateTime.Should().Be(now);
             actualList[0].ReceiptStatus.Should().Be(ReceiptStatus.Confirmed);
             actualList[0].DocumentType.Should().Be(DocumentType.ConfirmRequestChangeOfPriceList);
@@ -67,6 +65,23 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             actualList[0].ValidationErrors.Should().BeEmpty();
             var expectedList = actualList.OrderBy(x => x.OperationOrder);
             actualList.SequenceEqual(expectedList).Should().BeTrue();
+        }
+
+        private static void SetupMarketParticipantRepositoryMock(
+            Mock<IMarketParticipantRepository> marketParticipantRepository,
+            MarketParticipant meteringPointAdministrator,
+            MarketParticipantDto originalSender)
+        {
+            marketParticipantRepository
+                .Setup(r => r.GetMeteringPointAdministratorAsync())
+                .ReturnsAsync(meteringPointAdministrator);
+
+            var sender = new MarketParticipant(
+                originalSender.ActorId, originalSender.MarketParticipantId, true, originalSender.BusinessProcessRole);
+
+            marketParticipantRepository
+                .Setup(r => r.GetSystemOperatorOrGridAccessProviderAsync(It.IsAny<string>()))
+                .ReturnsAsync(sender);
         }
     }
 }

@@ -32,7 +32,7 @@ limitations under the License.
         <cim:marketEvaluationPoint.mRID codingScheme="A10">571313180000000005</cim:marketEvaluationPoint.mRID>
         <cim:ChargeGroup>
             <cim:ChargeType>
-                <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">5790000432752</cim:chargeTypeOwner_MarketParticipant.mRID>
+                <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">8100000000030</cim:chargeTypeOwner_MarketParticipant.mRID>
                 <cim:type>D03</cim:type>
                 <cim:mRID>EA-001</cim:mRID>
                 <cim:factor>1</cim:factor>
@@ -46,7 +46,7 @@ limitations under the License.
         <cim:marketEvaluationPoint.mRID codingScheme="A10">571313180000000005</cim:marketEvaluationPoint.mRID>
         <cim:ChargeGroup>
             <cim:ChargeType>
-                <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">5790000432752</cim:chargeTypeOwner_MarketParticipant.mRID>
+                <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">8100000000030</cim:chargeTypeOwner_MarketParticipant.mRID>
                 <cim:type>D03</cim:type>
                 <cim:mRID>EA-001</cim:mRID>
                 <cim:factor>1</cim:factor>

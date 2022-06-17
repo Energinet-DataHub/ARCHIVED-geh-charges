@@ -284,8 +284,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         {
             // Arrange
             await using var writeDatabaseContext = _databaseManager.CreateDbContext();
+            const string marketParticipantId = SeededData.MarketParticipants.SystemOperator.Gln;
             await AddMarketParticipantToContextAndSaveAsync(
-                "5790000432752",
+                marketParticipantId,
                 MarketParticipantRole.GridAccessProvider,
                 false,
                 writeDatabaseContext);
@@ -294,7 +295,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             var sut = new MarketParticipantRepository(readDatabaseContext);
 
             // Act
-            var actual = await sut.GetSystemOperatorOrGridAccessProviderAsync("5790000432752");
+            var actual = await sut.GetSystemOperatorOrGridAccessProviderAsync(marketParticipantId);
 
             // Assert
             actual.BusinessProcessRole.Should().Be(MarketParticipantRole.SystemOperator);
