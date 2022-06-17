@@ -68,22 +68,5 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             var expectedList = actualList.OrderBy(x => x.OperationOrder);
             actualList.SequenceEqual(expectedList).Should().BeTrue();
         }
-
-        /*private static void SetupMarketParticipantRepositoryMock(
-            Mock<IMarketParticipantRepository> marketParticipantRepository,
-            MarketParticipant meteringPointAdministrator,
-            MarketParticipantDto originalSender)
-        {
-            marketParticipantRepository
-                .Setup(r => r.GetMeteringPointAdministratorAsync())
-                .ReturnsAsync(meteringPointAdministrator);
-
-            var sender = new MarketParticipant(
-                originalSender.ActorId, originalSender.MarketParticipantId, true, originalSender.BusinessProcessRole);
-
-            marketParticipantRepository
-                .Setup(r => r.GetSystemOperatorOrGridAccessProviderAsync(It.IsAny<string>()))
-                .ReturnsAsync(sender);
-        }*/
     }
 }
