@@ -123,7 +123,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             // Arrange => Matching data from seeded test data
             var identifier = new ChargeIdentifier(
                 "EA-001",
-                SeededData.MarketParticipants.SystemOperator.MarketParticipantId,
+                SeededData.MarketParticipants.SystemOperator.Id,
                 ChargeType.Tariff);
 
             // Act
@@ -144,12 +144,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             // Arrange => Matching data from seeded test data
             var firstCharge = await sut.SingleAsync(new ChargeIdentifier(
                 "EA-001",
-                SeededData.MarketParticipants.SystemOperator.MarketParticipantId,
+                SeededData.MarketParticipants.SystemOperator.Id,
                 ChargeType.Tariff));
 
             var secondCharge = await sut.SingleAsync(new ChargeIdentifier(
                 "45013",
-                SeededData.MarketParticipants.SystemOperator.MarketParticipantId,
+                SeededData.MarketParticipants.SystemOperator.Id,
                 ChargeType.Tariff));
 
             // Act

@@ -128,7 +128,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             for (var i = 0; i < numberOfAvailableChargeData; i++)
             {
                 var data = builder
-                    .WithActorId(SeededData.MarketParticipants.SystemOperator.MarketParticipantId)
+                    .WithActorId(SeededData.MarketParticipants.SystemOperator.Id)
                     .WithRequestDateTime(now)
                     .WithOperationOrder(i).Build();
                 availableChargeDataList.Add(data);
