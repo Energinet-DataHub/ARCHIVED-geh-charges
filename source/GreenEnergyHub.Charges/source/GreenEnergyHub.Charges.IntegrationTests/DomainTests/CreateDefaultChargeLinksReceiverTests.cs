@@ -60,7 +60,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                     () => Fixture.CreateLinkRequestQueue.SenderClient.SendMessageAsync(request), correlationId, parentId);
 
                 // Assert
-                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId);
+                await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId);
             }
 
             [Theory]
@@ -108,7 +108,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 parentId = $"00-{correlationId}-b7ad6b7169203331-01";
 
                 var actor = JsonSerializer.Serialize(new Actor(
-                    new Guid("ed6c94f3-24a8-43b3-913d-bf7513390a32"),
+                    SeededData.GridAreaLink.Provider8100000000030.Id,
                     "???",
                     "???",
                     MarketParticipantRole.GridAccessProvider.ToString()));
