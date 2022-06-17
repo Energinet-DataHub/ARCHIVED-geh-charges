@@ -34,7 +34,7 @@ limitations under the License.
             <cim:ChargeType>
                 <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">8100000000030</cim:chargeTypeOwner_MarketParticipant.mRID>
                 <cim:type>D03</cim:type>
-                <cim:mRID>EA-001</cim:mRID>
+                <cim:mRID>EA-001a</cim:mRID>
                 <cim:factor>1</cim:factor>
                 <cim:effectiveDate>2021-10-27T22:00:00Z</cim:effectiveDate>
                 <cim:terminationDate>2021-11-05T23:00:00Z</cim:terminationDate>
@@ -48,7 +48,7 @@ limitations under the License.
             <cim:ChargeType>
                 <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">8100000000030</cim:chargeTypeOwner_MarketParticipant.mRID>
                 <cim:type>D03</cim:type>
-                <cim:mRID>EA-001</cim:mRID>
+                <cim:mRID>EA-001a</cim:mRID>
                 <cim:factor>1</cim:factor>
                 <cim:effectiveDate>2021-10-25T22:00:00Z</cim:effectiveDate>
                 <cim:terminationDate>2021-11-03T23:00:00Z</cim:terminationDate>
