@@ -30,6 +30,7 @@ using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.Charges.Tests.Builders.Testables;
+using GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared;
 using GreenEnergyHub.TestHelpers;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -57,7 +58,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             // Arrange
             var chargeCommand = chargeCommandBuilder.WithChargeOperations(chargeOperations).Build();
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
-            SetupMarketParticipantRepositoryMock(
+            MarketParticipantRepositoryMockBuilder.SetupMarketParticipantRepositoryMock(
                 marketParticipantRepository, meteringPointAdministrator, chargeCommand.Document.Sender);
 
             SetupAvailableChargeReceiptValidationErrorFactoryMock(
@@ -122,7 +123,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             var document = rejectedEvent.Command.Document;
             document.Sender.BusinessProcessRole = MarketParticipantRole.GridAccessProvider;
             loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
-            SetupMarketParticipantRepositoryMock(marketParticipantRepository, meteringPointAdministrator, document.Sender);
+            MarketParticipantRepositoryMockBuilder.SetupMarketParticipantRepositoryMock(marketParticipantRepository, meteringPointAdministrator, document.Sender);
 
             SetupAvailableChargeReceiptValidationErrorFactoryMock(
                 availableChargeReceiptValidationErrorFactory, rejectedEvent.Command);
@@ -154,23 +155,6 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
                 .Returns<ValidationError, ChargeCommand, ChargeOperationDto>((validationError, _, _) =>
                     new AvailableReceiptValidationError(
                         ReasonCode.D01, validationError.ValidationRuleIdentifier.ToString()));
-        }
-
-        private static void SetupMarketParticipantRepositoryMock(
-            Mock<IMarketParticipantRepository> marketParticipantRepository,
-            MarketParticipant meteringPointAdministrator,
-            MarketParticipantDto originalSender)
-        {
-            marketParticipantRepository
-                .Setup(r => r.GetMeteringPointAdministratorAsync())
-                .ReturnsAsync(meteringPointAdministrator);
-
-            var sender = new MarketParticipant(
-                originalSender.ActorId, originalSender.MarketParticipantId, true, originalSender.BusinessProcessRole);
-
-            marketParticipantRepository
-                .Setup(r => r.GetSystemOperatorOrGridAccessProviderAsync(It.IsAny<string>()))
-                .ReturnsAsync(sender);
         }
     }
 }

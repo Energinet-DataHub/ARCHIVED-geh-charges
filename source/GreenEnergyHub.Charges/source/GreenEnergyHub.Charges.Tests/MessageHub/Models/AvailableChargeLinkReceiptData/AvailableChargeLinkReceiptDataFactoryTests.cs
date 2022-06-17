@@ -22,6 +22,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData;
+using GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using NodaTime;
@@ -50,7 +51,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
             var expectedLinks = acceptedEvent.ChargeLinksCommand.ChargeLinksOperations.ToList();
             var documentDto = acceptedEvent.ChargeLinksCommand.Document;
             documentDto.Sender.BusinessProcessRole = marketParticipantRole;
-            SetupMarketParticipantRepositoryMock(
+            MarketParticipantRepositoryMockBuilder.SetupMarketParticipantRepositoryMock(
                 marketParticipantRepository, meteringPointAdministrator, documentDto.Sender);
 
             // Act
@@ -86,23 +87,6 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
 
             // Assert
             actualList.Should().BeEmpty();
-        }
-
-        private static void SetupMarketParticipantRepositoryMock(
-            Mock<IMarketParticipantRepository> marketParticipantRepository,
-            MarketParticipant meteringPointAdministrator,
-            MarketParticipantDto originalSender)
-        {
-            marketParticipantRepository
-                .Setup(r => r.GetMeteringPointAdministratorAsync())
-                .ReturnsAsync(meteringPointAdministrator);
-
-            var sender = new MarketParticipant(
-                originalSender.ActorId, originalSender.MarketParticipantId, true, originalSender.BusinessProcessRole);
-
-            marketParticipantRepository
-                .Setup(r => r.GetSystemOperatorOrGridAccessProviderAsync(It.IsAny<string>()))
-                .ReturnsAsync(sender);
         }
     }
 }

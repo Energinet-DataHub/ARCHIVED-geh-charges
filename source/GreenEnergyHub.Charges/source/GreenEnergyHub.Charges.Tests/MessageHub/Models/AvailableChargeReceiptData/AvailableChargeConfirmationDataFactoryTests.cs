@@ -24,6 +24,7 @@ using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Testables;
+using GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared;
 using Moq;
 using NodaTime;
 using Xunit;
@@ -48,7 +49,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
             var documentDto = acceptedEvent.Command.Document;
             documentDto.Sender.BusinessProcessRole = MarketParticipantRole.GridAccessProvider;
-            SetupMarketParticipantRepositoryMock(marketParticipantRepository, meteringPointAdministrator, documentDto.Sender);
+            MarketParticipantRepositoryMockBuilder.SetupMarketParticipantRepositoryMock(
+                marketParticipantRepository, meteringPointAdministrator, documentDto.Sender);
 
             // Act
             var actualList = await sut.CreateAsync(acceptedEvent);
@@ -67,7 +69,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             actualList.SequenceEqual(expectedList).Should().BeTrue();
         }
 
-        private static void SetupMarketParticipantRepositoryMock(
+        /*private static void SetupMarketParticipantRepositoryMock(
             Mock<IMarketParticipantRepository> marketParticipantRepository,
             MarketParticipant meteringPointAdministrator,
             MarketParticipantDto originalSender)
@@ -82,6 +84,6 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             marketParticipantRepository
                 .Setup(r => r.GetSystemOperatorOrGridAccessProviderAsync(It.IsAny<string>()))
                 .ReturnsAsync(sender);
-        }
+        }*/
     }
 }

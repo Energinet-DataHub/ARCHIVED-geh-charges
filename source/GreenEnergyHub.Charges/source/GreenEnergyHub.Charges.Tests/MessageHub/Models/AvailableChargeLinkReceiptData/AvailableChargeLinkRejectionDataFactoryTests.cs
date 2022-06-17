@@ -28,6 +28,7 @@ using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
+using GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared;
 using GreenEnergyHub.TestHelpers;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -67,7 +68,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
 
             var rejectedEvent = new ChargeLinksRejectedEvent(now, chargeLinksCommand, validationErrors);
 
-            SetupMarketParticipantRepositoryMock(
+            MarketParticipantRepositoryMockBuilder.SetupMarketParticipantRepositoryMock(
                 marketParticipantRepository, meteringPointAdministrator, chargeLinksCommand.Document.Sender);
 
             SetupAvailableChargeLinksReceiptValidationErrorFactory(
@@ -126,7 +127,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
             loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
             rejectedEvent.ChargeLinksCommand.Document.Sender.BusinessProcessRole = marketParticipantRole;
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
-            SetupMarketParticipantRepositoryMock(
+            MarketParticipantRepositoryMockBuilder.SetupMarketParticipantRepositoryMock(
                 marketParticipantRepository, meteringPointAdministrator, rejectedEvent.ChargeLinksCommand.Document.Sender);
 
             SetupAvailableChargeLinksReceiptValidationErrorFactory(
@@ -176,23 +177,6 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
                 .Returns<ValidationError, ChargeLinksCommand, ChargeLinkDto>((validationError, _, _) =>
                     new AvailableReceiptValidationError(
                         ReasonCode.D01, validationError.ValidationRuleIdentifier.ToString()));
-        }
-
-        private static void SetupMarketParticipantRepositoryMock(
-            Mock<IMarketParticipantRepository> marketParticipantRepository,
-            MarketParticipant meteringPointAdministrator,
-            MarketParticipantDto originalSender)
-        {
-            marketParticipantRepository
-                .Setup(r => r.GetMeteringPointAdministratorAsync())
-                .ReturnsAsync(meteringPointAdministrator);
-
-            var sender = new MarketParticipant(
-                originalSender.ActorId, originalSender.MarketParticipantId, true, originalSender.BusinessProcessRole);
-
-            marketParticipantRepository
-                .Setup(r => r.GetSystemOperatorOrGridAccessProviderAsync(It.IsAny<string>()))
-                .ReturnsAsync(sender);
         }
     }
 }
