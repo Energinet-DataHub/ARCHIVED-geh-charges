@@ -23,7 +23,8 @@ using Energinet.DataHub.Core.Schemas;
 using Energinet.DataHub.Core.SchemaValidation;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle;
 using GreenEnergyHub.Charges.TestCore;
@@ -58,7 +59,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
                 "GreenEnergyHub.Charges.Tests.TestFiles.Syntax_Valid_CIM_Charge.xml");
 
             // Act
-            var actualBundle = (ChargeCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
+            var actualBundle = (Charges.Domain.Dtos.ChargeInformationCommands.ChargeBundleDto)await sut.ConvertAsync(reader).ConfigureAwait(false);
 
             // Assert
             var actual = actualBundle.ChargeCommands.Single();
@@ -132,7 +133,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
                 "GreenEnergyHub.Charges.Tests.TestFiles.Valid_CIM_Charge_Without_Prices.xml");
 
             // Act
-            var actualBundle = (ChargeCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
+            var actualBundle = (Charges.Domain.Dtos.ChargeInformationCommands.ChargeBundleDto)await sut.ConvertAsync(reader).ConfigureAwait(false);
 
             // Assert
             var actual = actualBundle.ChargeCommands.Single();
@@ -182,7 +183,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
                 "GreenEnergyHub.Charges.Tests.TestFiles.Valid_CIM_Charge_Prices_Without_Master_Data.xml");
 
             // Act
-            var actualBundle = (ChargeCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
+            var actualBundle = (Charges.Domain.Dtos.ChargeInformationCommands.ChargeBundleDto)await sut.ConvertAsync(reader).ConfigureAwait(false);
 
             // Assert
             var actual = actualBundle.ChargeCommands.Single();
@@ -247,7 +248,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
                 "GreenEnergyHub.Charges.Tests.TestFiles.CreateTariffsBundle.xml");
 
             // Act
-            var actual = (ChargeCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
+            var actual = (Charges.Domain.Dtos.ChargeInformationCommands.ChargeBundleDto)await sut.ConvertAsync(reader).ConfigureAwait(false);
 
             // Assert
 
@@ -307,7 +308,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
                 "GreenEnergyHub.Charges.Tests.TestFiles.BundleMixOfChargeMasterDataOperations.xml");
 
             // Act
-            var actual = (ChargeCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
+            var actual = (Charges.Domain.Dtos.ChargeInformationCommands.ChargeBundleDto)await sut.ConvertAsync(reader).ConfigureAwait(false);
 
             // Assert - Grouping of operations for same unique charge is correctly done
             actual.ChargeCommands.Should().HaveCount(3);

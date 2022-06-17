@@ -13,8 +13,9 @@
 // limitations under the License.
 
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.DocumentValidation.ValidationRules;
+
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.DocumentValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.TestHelpers;
@@ -30,7 +31,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Doc
         [InlineAutoMoqData(null!, false)]
         [InlineAutoMoqData("", false)]
         [InlineAutoMoqData("content", true)]
-        public void RecipientIsMandatoryValidationRule_Test(string id, bool expected, ChargeCommand command)
+        public void RecipientIsMandatoryValidationRule_Test(string id, bool expected, ChargeInformationCommand command)
         {
             command.Document.Recipient.MarketParticipantId = id;
             var sut = new RecipientIsMandatoryTypeValidationRule(command.Document);
@@ -39,7 +40,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Doc
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommand command)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeInformationCommand command)
         {
             command.Document.Recipient.MarketParticipantId = null!;
             var sut = new RecipientIsMandatoryTypeValidationRule(command.Document);

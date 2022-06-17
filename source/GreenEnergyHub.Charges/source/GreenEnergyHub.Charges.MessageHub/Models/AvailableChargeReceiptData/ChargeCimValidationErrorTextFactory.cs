@@ -14,7 +14,8 @@
 
 using System;
 using System.Linq;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
@@ -23,7 +24,7 @@ using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 {
-    public class ChargeCimValidationErrorTextFactory : ICimValidationErrorTextFactory<ChargeCommand, ChargeOperationDto>
+    public class ChargeCimValidationErrorTextFactory : ICimValidationErrorTextFactory<ChargeInformationCommand, ChargeOperationDto>
     {
         private readonly ICimValidationErrorTextProvider _cimValidationErrorTextProvider;
         private readonly ILogger _logger;
@@ -38,7 +39,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 
         public string Create(
             ValidationError validationError,
-            ChargeCommand command,
+            ChargeInformationCommand command,
             ChargeOperationDto chargeOperationDto)
         {
             return GetMergedErrorMessage(validationError, command, chargeOperationDto);
@@ -46,19 +47,19 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 
         private string GetMergedErrorMessage(
             ValidationError validationError,
-            ChargeCommand chargeCommand,
+            ChargeInformationCommand chargeInformationCommand,
             ChargeOperationDto chargeOperationDto)
         {
             var errorTextTemplate = _cimValidationErrorTextProvider
                 .GetCimValidationErrorText(validationError.ValidationRuleIdentifier);
 
             return MergeErrorText(
-                errorTextTemplate, chargeCommand, chargeOperationDto, validationError.TriggeredBy);
+                errorTextTemplate, chargeInformationCommand, chargeOperationDto, validationError.TriggeredBy);
         }
 
         private string MergeErrorText(
             string errorTextTemplate,
-            ChargeCommand chargeCommand,
+            ChargeInformationCommand chargeInformationCommand,
             ChargeOperationDto chargeOperationDto,
             string? triggeredBy)
         {
@@ -68,7 +69,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 
             foreach (var token in tokens)
             {
-                var data = GetDataForToken(token, chargeCommand, chargeOperationDto, triggeredBy);
+                var data = GetDataForToken(token, chargeInformationCommand, chargeOperationDto, triggeredBy);
                 mergedErrorText = mergedErrorText.Replace("{{" + token + "}}", data);
             }
 
@@ -77,7 +78,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 
         private string GetDataForToken(
             CimValidationErrorTextToken token,
-            ChargeCommand chargeCommand,
+            ChargeInformationCommand chargeInformationCommand,
             ChargeOperationDto chargeOperationDto,
             string? triggeredBy)
         {
@@ -107,21 +108,21 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                 CimValidationErrorTextToken.ChargeVatClass =>
                     chargeOperationDto.VatClassification.ToString(),
                 CimValidationErrorTextToken.DocumentBusinessReasonCode =>
-                    chargeCommand.Document.BusinessReasonCode.ToString(),
+                    chargeInformationCommand.Document.BusinessReasonCode.ToString(),
                 CimValidationErrorTextToken.DocumentId =>
-                    chargeCommand.Document.Id,
+                    chargeInformationCommand.Document.Id,
                 CimValidationErrorTextToken.DocumentSenderId =>
-                    chargeCommand.Document.Sender.MarketParticipantId,
+                    chargeInformationCommand.Document.Sender.MarketParticipantId,
                 CimValidationErrorTextToken.DocumentSenderProvidedChargeId =>
                     chargeOperationDto.ChargeId,
                 CimValidationErrorTextToken.DocumentType =>
-                    chargeCommand.Document.Type.ToString(),
+                    chargeInformationCommand.Document.Type.ToString(),
                 CimValidationErrorTextToken.TriggeredByOperationId =>
                     GetOperationIdFromTriggeredBy(triggeredBy),
                 CimValidationErrorTextToken.ChargeOperationId =>
                     chargeOperationDto.Id,
                 CimValidationErrorTextToken.DocumentRecipientBusinessProcessRole =>
-                    chargeCommand.Document.Recipient.BusinessProcessRole.ToString(),
+                    chargeInformationCommand.Document.Recipient.BusinessProcessRole.ToString(),
                 _ => CimValidationErrorTextTemplateMessages.Unknown,
 
             };

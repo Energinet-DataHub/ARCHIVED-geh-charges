@@ -13,8 +13,9 @@
 // limitations under the License.
 
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.DocumentValidation.ValidationRules;
+
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.DocumentValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.TestHelpers;
@@ -30,20 +31,20 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Doc
         [InlineAutoMoqData(null!, false)]
         [InlineAutoMoqData("", false)]
         [InlineAutoMoqData("content", true)]
-        public void SenderIsMandatoryValidationRule_Test(string id, bool expected, ChargeCommand chargeCommand)
+        public void SenderIsMandatoryValidationRule_Test(string id, bool expected, ChargeInformationCommand chargeInformationCommand)
         {
-            chargeCommand.Document.Sender.MarketParticipantId = id;
-            var sut = new SenderIsMandatoryTypeValidationRule(chargeCommand.Document);
+            chargeInformationCommand.Document.Sender.MarketParticipantId = id;
+            var sut = new SenderIsMandatoryTypeValidationRule(chargeInformationCommand.Document);
             Assert.Equal(expected, sut.IsValid);
             sut.IsValid.Should().Be(expected);
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommand chargeCommand)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeInformationCommand chargeInformationCommand)
         {
-            chargeCommand.Document.Sender.MarketParticipantId = null!;
-            var sut = new SenderIsMandatoryTypeValidationRule(chargeCommand.Document);
+            chargeInformationCommand.Document.Sender.MarketParticipantId = null!;
+            var sut = new SenderIsMandatoryTypeValidationRule(chargeInformationCommand.Document);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.SenderIsMandatoryTypeValidation);
         }
     }

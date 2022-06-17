@@ -14,7 +14,8 @@
 
 using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
 using Xunit;
@@ -28,7 +29,7 @@ namespace GreenEnergyHub.Charges.Tests.TestCore.Attributes
         [Theory]
         [InlineAutoMoqData]
         public void Attribute_SupportsInstantiatingClassTypeObjectsWithPropsWithGeneratedValues(
-            [NotNull] ChargeCommand command)
+            ChargeInformationCommand command)
         {
             command.Should().NotContainNullEnumerable();
         }

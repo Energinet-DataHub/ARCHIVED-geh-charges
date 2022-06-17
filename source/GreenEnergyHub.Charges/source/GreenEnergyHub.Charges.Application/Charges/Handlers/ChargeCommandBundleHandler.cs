@@ -13,29 +13,43 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
     public class ChargeCommandBundleHandler : IChargesBundleHandler
     {
-        private readonly IChargeCommandHandler _chargeCommandHandler;
+        private readonly IChargeInformationCommandHandler _chargeInformationCommandHandler;
+        private readonly IChargePriceCommandHandler _chargePriceCommandHandler;
+        private readonly IChargePriceCommandFactory _chargePriceCommandFactory;
 
-        public ChargeCommandBundleHandler(IChargeCommandHandler chargeCommandHandler)
+        public ChargeCommandBundleHandler(
+            IChargeInformationCommandHandler chargeInformationCommandHandler,
+            IChargePriceCommandHandler chargePriceCommandHandler,
+            IChargePriceCommandFactory chargePriceCommandFactory)
         {
-            _chargeCommandHandler = chargeCommandHandler;
+            _chargeInformationCommandHandler = chargeInformationCommandHandler;
+            _chargePriceCommandHandler = chargePriceCommandHandler;
+            _chargePriceCommandFactory = chargePriceCommandFactory;
         }
 
-        public Task HandleAsync(ChargeCommandBundle bundle)
+        public async Task HandleAsync(ChargeBundleDto bundleDto)
         {
-            return HandleChargeCommandsAsync(bundle);
-        }
-
-        private async Task HandleChargeCommandsAsync(ChargeCommandBundle bundle)
-        {
-            foreach (var chargeCommand in bundle.ChargeCommands)
+            if (bundleDto.Document.BusinessReasonCode == BusinessReasonCode.UpdateChargePrices)
             {
-                await _chargeCommandHandler.HandleAsync(chargeCommand).ConfigureAwait(false);
+                foreach (var chargeCommand in bundleDto.ChargeCommands)
+                {
+                    var priceCommand = _chargePriceCommandFactory.Create(chargeCommand);
+                    await _chargePriceCommandHandler.HandleAsync(priceCommand).ConfigureAwait(false);
+                }
+            }
+
+            foreach (var chargeCommand in bundleDto.ChargeCommands)
+            {
+                await _chargeInformationCommandHandler.HandleAsync(chargeCommand).ConfigureAwait(false);
             }
         }
     }

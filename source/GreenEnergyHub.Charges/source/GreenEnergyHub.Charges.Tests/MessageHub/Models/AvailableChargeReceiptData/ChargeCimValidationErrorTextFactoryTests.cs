@@ -15,8 +15,9 @@
 using System;
 using System.Collections.Generic;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules;
+
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.InputValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
@@ -145,7 +146,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
         [Theory]
         [InlineAutoMoqData]
         public void Create_MergesAllMergeFields(
-            ChargeCommand chargeCommand,
+            ChargeInformationCommand chargeInformationCommand,
             CimValidationErrorTextProvider cimValidationErrorTextProvider,
             ILoggerFactory loggerFactory)
         {
@@ -159,10 +160,10 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
 
             // Act
             // Assert
-            foreach (var operation in chargeCommand.ChargeOperations)
+            foreach (var operation in chargeInformationCommand.ChargeOperations)
             {
                 var chargeOperationDtos = new List<ChargeOperationDto> { operation };
-                var commandWithOperation = new ChargeCommand(chargeCommand.Document, chargeOperationDtos);
+                var commandWithOperation = new ChargeInformationCommand(chargeInformationCommand.Document, chargeOperationDtos);
 
                 foreach (var identifier in validationRuleIdentifiers)
                 {

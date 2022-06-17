@@ -13,7 +13,8 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
@@ -25,7 +26,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         /// <summary>
         /// Synchronously handle the bundle.
         /// </summary>
-        /// <param name="bundle">Charges bundle</param>
-        Task HandleAsync(ChargeCommandBundle bundle);
+        /// <param name="bundleDto">Charges bundle</param>
+        Task HandleAsync(ChargeBundleDto bundleDto);
     }
 }

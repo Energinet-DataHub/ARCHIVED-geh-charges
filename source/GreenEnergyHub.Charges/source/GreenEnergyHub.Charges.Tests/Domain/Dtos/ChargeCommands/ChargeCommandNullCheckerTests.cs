@@ -14,7 +14,8 @@
 
 using System;
 using System.Collections.Generic;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.TestHelpers;
@@ -54,40 +55,48 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands
                 .WithDocumentDto(documentDto)
                 .WithChargeOperation(chargeOperationDto)
                 .Build();
-
-            var chargeCommands = new List<ChargeCommand> { chargeCommand };
+            var chargeCommands = new List<ChargeInformationCommand> { chargeCommand };
+            var chargeBundle = new ChargeBundleDto(documentDto, chargeCommands);
 
             // Act & Assert
             Assert.Throws<ArgumentException>(() =>
-                ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(chargeCommands));
+                ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(chargeBundle));
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void ThrowExceptionIfRequiredPropertyIsNull_WhenValid_DoesNotThrow(ChargeCommandBuilder chargeCommandBuilder)
+        public void ThrowExceptionIfRequiredPropertyIsNull_WhenValid_DoesNotThrow(
+            DocumentDtoBuilder documentDtoBuilder,
+            ChargeCommandBuilder chargeCommandBuilder)
         {
             // Arrange
+            var documentDto = documentDtoBuilder.Build();
             var chargeCommand = chargeCommandBuilder.Build();
-            var chargeCommands = new List<ChargeCommand> { chargeCommand };
+            var chargeCommands = new List<ChargeInformationCommand> { chargeCommand };
+            var chargeBundle = new ChargeBundleDto(documentDto, chargeCommands);
 
             // Act
             var ex = Record.Exception(() =>
-                ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(chargeCommands));
+                ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(chargeBundle));
 
             // Assert
             Assert.Null(ex);
         }
 
-        [Fact]
-        public void ThrowExceptionIfRequiredPropertyIsNull_WhenCommandIsNull_ThrowsArgumentNullException()
+        [Theory]
+        [InlineAutoDomainData]
+        public void ThrowExceptionIfRequiredPropertyIsNull_WhenCommandIsNull_ThrowsArgumentNullException(
+            DocumentDtoBuilder documentDtoBuilder)
         {
             // Arrange
-            ChargeCommand? chargeCommand = null;
-            var chargeCommands = new List<ChargeCommand> { chargeCommand! };
+            ChargeInformationCommand? chargeCommand = null;
+            var documentDto = documentDtoBuilder.Build();
+            var chargeCommands = new List<ChargeInformationCommand> { chargeCommand! };
+            var chargeBundle = new ChargeBundleDto(documentDto, chargeCommands);
 
             // Act & Assert
             Assert.Throws<ArgumentNullException>(() =>
-                ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(chargeCommands));
+                ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(chargeBundle));
         }
 
         [Theory]
@@ -101,36 +110,45 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands
                 .WithSender(marketParticipant!)
                 .Build();
             var chargeCommand = builder.WithDocumentDto(documentDto).Build();
-            var chargeCommands = new List<ChargeCommand> { chargeCommand };
+            var chargeCommands = new List<ChargeInformationCommand> { chargeCommand };
+            var chargeBundle = new ChargeBundleDto(documentDto, chargeCommands);
 
             // Act & Assert
             Assert.Throws<ArgumentNullException>(() =>
-                ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(chargeCommands));
+                ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(chargeBundle));
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void ChargeCommandDocumentIsNullThrowsException(ChargeCommandBuilder builder)
+        public void ChargeCommandDocumentIsNullThrowsException(
+            DocumentDtoBuilder documentDtoBuilder,
+            ChargeCommandBuilder builder)
         {
             // Arrange
+            var documentDto = documentDtoBuilder.Build();
             var chargeCommand = builder.WithDocumentDto(null!).Build();
-            var chargeCommands = new List<ChargeCommand> { chargeCommand };
+            var chargeCommands = new List<ChargeInformationCommand> { chargeCommand };
+            var chargeBundle = new ChargeBundleDto(documentDto, chargeCommands);
 
             // Act & Assert
             Assert.Throws<ArgumentNullException>(() =>
-                ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(chargeCommands));
+                ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(chargeBundle));
         }
 
-        [Fact]
-        public void ChargeCommandChargeOperationIsNullThrowsException()
+        [Theory]
+        [InlineAutoDomainData]
+        public void ChargeCommandChargeOperationIsNullThrowsException(
+            DocumentDtoBuilder documentDtoBuilder)
         {
             // Arrange
+            var documentDto = documentDtoBuilder.Build();
             var chargeCommand = new ChargeCommandBuilder().WithChargeOperation(null!).Build();
-            var chargeCommands = new List<ChargeCommand> { chargeCommand };
+            var chargeCommands = new List<ChargeInformationCommand> { chargeCommand };
+            var chargeBundle = new ChargeBundleDto(documentDto, chargeCommands);
 
             // Act & Assert
             Assert.Throws<ArgumentNullException>(() =>
-                ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(chargeCommands));
+                ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(chargeBundle));
         }
     }
 }

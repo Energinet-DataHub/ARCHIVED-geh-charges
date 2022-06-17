@@ -15,7 +15,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.TestHelpers;
@@ -33,9 +34,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Validation
         [InlineAutoDomainData(true)]
         public async Task ValidateAsync_WhenFactoryCreateInvalidRules_ThenInvalidValidationResult(
             bool isValid,
-            [Frozen] Mock<IDocumentValidationRulesFactory<ChargeCommand>> documentValidationRulesFactory,
-            DocumentValidator<ChargeCommand> sut,
-            ChargeCommand anyCommand)
+            [Frozen] Mock<IDocumentValidationRulesFactory<ChargeInformationCommand>> documentValidationRulesFactory,
+            DocumentValidator<ChargeInformationCommand> sut,
+            ChargeInformationCommand anyInformationCommand)
         {
             // Arrange
             var testValidationRule = new TestValidationRule(isValid, ValidationRuleIdentifier.StartDateValidation);
@@ -46,11 +47,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Validation
             };
             var validationRuleSet = ValidationRuleSet.FromRules(rules);
             documentValidationRulesFactory
-                .Setup(f => f.CreateRulesAsync(It.IsAny<ChargeCommand>()))
+                .Setup(f => f.CreateRulesAsync(It.IsAny<ChargeInformationCommand>()))
                 .ReturnsAsync(validationRuleSet);
 
             // Act
-            var actual = await sut.ValidateAsync(anyCommand);
+            var actual = await sut.ValidateAsync(anyInformationCommand);
 
             // Assert
             var shouldFail = !isValid;

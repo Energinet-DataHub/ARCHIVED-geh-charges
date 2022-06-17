@@ -17,7 +17,8 @@ using System.Threading.Tasks;
 using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
 using Energinet.DataHub.Core.Messaging.Transport.SchemaValidation;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
 using Microsoft.Azure.Functions.Worker;
@@ -33,13 +34,13 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
         /// </summary>
         private readonly IChargesBundleHandler _chargesBundleHandler;
         private readonly IHttpResponseBuilder _httpResponseBuilder;
-        private readonly ValidatingMessageExtractor<ChargeCommandBundle> _messageExtractor;
+        private readonly ValidatingMessageExtractor<ChargeBundleDto> _messageExtractor;
         private readonly IActorContext _actorContext;
 
         public ChargeIngestion(
             IChargesBundleHandler chargesBundleHandler,
             IHttpResponseBuilder httpResponseBuilder,
-            ValidatingMessageExtractor<ChargeCommandBundle> messageExtractor,
+            ValidatingMessageExtractor<ChargeBundleDto> messageExtractor,
             IActorContext actorContext)
         {
             _chargesBundleHandler = chargesBundleHandler;
@@ -69,24 +70,24 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             }
 
             var bundle = inboundMessage.ValidatedMessage;
-            ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(bundle.ChargeCommands);
+            ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(bundle);
 
             await _chargesBundleHandler.HandleAsync(bundle).ConfigureAwait(false);
 
             return _httpResponseBuilder.CreateAcceptedResponse(req);
         }
 
-        private bool AuthenticatedMatchesSenderId(SchemaValidatedInboundMessage<ChargeCommandBundle> inboundMessage)
+        private bool AuthenticatedMatchesSenderId(SchemaValidatedInboundMessage<ChargeBundleDto> inboundMessage)
         {
             var authorizedActor = _actorContext.CurrentActor;
-            var senderId = inboundMessage.ValidatedMessage?.ChargeCommands.First().Document.Sender.MarketParticipantId;
+            var senderId = inboundMessage.ValidatedMessage?.Document.Sender.MarketParticipantId;
 
             return authorizedActor != null && senderId == authorizedActor.Identifier;
         }
 
-        private async Task<SchemaValidatedInboundMessage<ChargeCommandBundle>> ValidateMessageAsync(HttpRequestData req)
+        private async Task<SchemaValidatedInboundMessage<ChargeBundleDto>> ValidateMessageAsync(HttpRequestData req)
         {
-            return (SchemaValidatedInboundMessage<ChargeCommandBundle>)await _messageExtractor
+            return (SchemaValidatedInboundMessage<ChargeBundleDto>)await _messageExtractor
                 .ExtractAsync(req.Body)
                 .ConfigureAwait(false);
         }

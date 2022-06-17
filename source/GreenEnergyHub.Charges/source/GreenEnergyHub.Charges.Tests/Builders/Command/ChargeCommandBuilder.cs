@@ -13,7 +13,8 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
 namespace GreenEnergyHub.Charges.Tests.Builders.Command
@@ -48,9 +49,9 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             return this;
         }
 
-        public ChargeCommand Build()
+        public ChargeInformationCommand Build()
         {
-            return new ChargeCommand(_documentDto, _chargeOperationDtos);
+            return new ChargeInformationCommand(_documentDto, _chargeOperationDtos);
         }
     }
 }

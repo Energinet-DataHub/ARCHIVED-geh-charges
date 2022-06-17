@@ -13,23 +13,27 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
 namespace GreenEnergyHub.Charges.Tests.Builders.Application
 {
     public class ChargeCommandBundleBuilder
     {
-        private readonly List<ChargeCommand> _chargeCommands = new();
+        private readonly List<ChargeInformationCommand> _chargeCommands = new();
+        private DocumentDto _document = new();
 
-        public ChargeCommandBundleBuilder WithChargeCommand(ChargeCommand command)
+        public ChargeCommandBundleBuilder WithChargeCommand(ChargeInformationCommand command)
         {
             _chargeCommands.Add(command);
+            _document = command.Document;
             return this;
         }
 
-        public ChargeCommandBundle Build()
+        public ChargeBundleDto Build()
         {
-            return new ChargeCommandBundle(_chargeCommands);
+            return new ChargeBundleDto(_document, _chargeCommands);
         }
     }
 }

@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents
 {
     public interface IChargeCommandAcceptedEventFactory
     {
-        ChargeCommandAcceptedEvent CreateEvent(ChargeCommand command);
+        ChargeCommandAcceptedEvent CreateEvent(ChargeInformationCommand command);
     }
 }

@@ -16,7 +16,8 @@ using System;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
@@ -26,13 +27,13 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
     {
         private readonly IChargeInformationEventHandler _chargeInformationEventHandler;
         private readonly IChargePriceEventHandler _chargePriceEventHandler;
-        private readonly IDocumentValidator<ChargeCommand> _documentValidator;
+        private readonly IDocumentValidator<ChargeInformationCommand> _documentValidator;
         private readonly IChargeCommandReceiptService _chargeCommandReceiptService;
 
         public ChargeCommandReceivedEventHandler(
             IChargeInformationEventHandler chargeInformationEventHandler,
             IChargePriceEventHandler chargePriceEventHandler,
-            IDocumentValidator<ChargeCommand> documentValidator,
+            IDocumentValidator<ChargeInformationCommand> documentValidator,
             IChargeCommandReceiptService chargeCommandReceiptService)
         {
             _chargeInformationEventHandler = chargeInformationEventHandler;

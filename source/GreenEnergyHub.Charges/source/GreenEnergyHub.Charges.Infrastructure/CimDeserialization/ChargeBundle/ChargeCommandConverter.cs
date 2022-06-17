@@ -20,7 +20,7 @@ using System.Threading.Tasks;
 using Energinet.DataHub.Core.Messaging.Transport;
 using Energinet.DataHub.Core.SchemaValidation;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.Charges;
@@ -49,12 +49,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
 
             var chargeCommands = chargeOperationsAsync.GroupBy(x => new { x.ChargeId, x.ChargeOwner, x.Type })
                 .Select(chargeOperationDtoGroup =>
-                    new ChargeCommand(
+                    new ChargeInformationCommand(
                         document,
                         chargeOperationDtoGroup.AsEnumerable().Select(dto => dto).ToList()))
                 .ToList();
 
-            return new ChargeCommandBundle(chargeCommands);
+            return new ChargeBundleDto(document, chargeCommands);
         }
 
         private async Task<List<ChargeOperationDto>> ParseChargeOperationsAsync(SchemaValidatingReader reader)

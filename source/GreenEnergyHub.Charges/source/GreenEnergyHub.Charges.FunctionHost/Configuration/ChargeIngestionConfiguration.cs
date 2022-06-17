@@ -15,7 +15,8 @@
 using Energinet.DataHub.Core.Messaging.Transport.SchemaValidation;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle;
@@ -33,12 +34,13 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         {
             serviceCollection.AddScoped<ChargeCommandConverter>();
             serviceCollection.AddScoped<IHttpResponseBuilder, HttpResponseBuilder>();
-            serviceCollection.AddScoped<ValidatingMessageExtractor<ChargeCommandBundle>>();
+            serviceCollection.AddScoped<ValidatingMessageExtractor<ChargeBundleDto>>();
             serviceCollection.AddScoped<IChargeCommandConverter, ChargeCommandConverter>();
-            serviceCollection.AddScoped<SchemaValidatingMessageDeserializer<ChargeCommandBundle>, ChargeCommandDeserializer>();
+            serviceCollection.AddScoped<SchemaValidatingMessageDeserializer<ChargeBundleDto>, ChargeCommandDeserializer>();
 
             serviceCollection.AddScoped<IChargesBundleHandler, ChargeCommandBundleHandler>();
-            serviceCollection.AddScoped<IChargeCommandHandler, ChargeCommandHandler>();
+            serviceCollection.AddScoped<IChargeInformationCommandHandler, ChargeInformationCommandHandler>();
+            serviceCollection.AddScoped<IChargePriceCommandHandler, ChargePriceCommandHandler>();
 
             serviceCollection.AddMessaging()
                 .AddInternalMessageDispatcher<ChargeCommandReceivedEvent>(

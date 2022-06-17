@@ -15,7 +15,8 @@
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Tests.Builders.Application;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.TestHelpers;
@@ -31,7 +32,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         [Theory]
         [InlineAutoDomainData]
         public async Task HandleAsync_WhenCalledWithMultipleChargeCommands_ShouldCallMultipleTimes(
-            [Frozen] Mock<IChargeCommandHandler> chargeCommandBundleHandler,
+            [Frozen] Mock<IChargeInformationCommandHandler> chargeCommandBundleHandler,
             ChargeCommandBundleHandler sut)
         {
             // Arrange
@@ -47,7 +48,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 
             // Assert
             chargeCommandBundleHandler
-                .Verify(v => v.HandleAsync(It.IsAny<ChargeCommand>()), Times.Exactly(3));
+                .Verify(v => v.HandleAsync(It.IsAny<ChargeInformationCommand>()), Times.Exactly(3));
         }
     }
 }

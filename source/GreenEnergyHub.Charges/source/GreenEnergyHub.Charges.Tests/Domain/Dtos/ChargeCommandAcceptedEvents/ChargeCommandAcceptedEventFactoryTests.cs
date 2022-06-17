@@ -15,7 +15,8 @@
 using System.Diagnostics.CodeAnalysis;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Moq;
 using NodaTime;
@@ -31,7 +32,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommandAcceptedEvents
         [InlineAutoMoqData]
         public void CreateEvent_WhenCalled_CreatesEventWithCorrectTime(
             [Frozen] [NotNull] Mock<IClock> clock,
-            [NotNull] ChargeCommand command,
+            [NotNull] ChargeInformationCommand command,
             [NotNull] ChargeCommandAcceptedEventFactory sut)
         {
             // Arrange
