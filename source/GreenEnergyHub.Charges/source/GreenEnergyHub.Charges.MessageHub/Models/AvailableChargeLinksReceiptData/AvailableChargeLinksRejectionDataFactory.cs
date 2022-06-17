@@ -57,14 +57,12 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
             if (AvailableDataFactoryHelper.ShouldSkipAvailableData(input.ChargeLinksCommand))
                 return new List<AvailableChargeLinksReceiptData>();
 
+            // The original sender is the recipient of the receipt
+            var recipient = await GetRecipientAsync(input.ChargeLinksCommand.Document.Sender).ConfigureAwait(false);
             var sender = await GetSenderAsync().ConfigureAwait(false);
 
             return input.ChargeLinksCommand.ChargeLinksOperations.Select(chargeLinkDto =>
-            {
-                // The original sender is the recipient of the receipt
-                var recipient = input.ChargeLinksCommand.Document.Sender;
-
-                return new AvailableChargeLinksReceiptData(
+                new AvailableChargeLinksReceiptData(
                     sender.MarketParticipantId,
                     sender.BusinessProcessRole,
                     recipient.MarketParticipantId,
@@ -77,9 +75,9 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
                     chargeLinkDto.MeteringPointId,
                     DocumentType.RejectRequestChangeBillingMasterData, // Will be added to the HTTP MessageType header
                     input.ChargeLinksCommand.ChargeLinksOperations.ToList().IndexOf(chargeLinkDto),
-                    recipient.ActorId,
-                    GetReasons(input, chargeLinkDto));
-            }).ToList();
+                    recipient.Id,
+                    GetReasons(input, chargeLinkDto)))
+                .ToList();
         }
 
         private void LogValidationErrors(ChargeLinksRejectedEvent rejectedEvent)
@@ -88,7 +86,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
                 rejectedEvent.ChargeLinksCommand.Document,
                 rejectedEvent.ValidationErrors);
 
-            _logger.LogError("ValidationErrors for {errorMessage}", errorMessage);
+            _logger.LogError("ValidationErrors for {ErrorMessage}", errorMessage);
         }
 
         private List<AvailableReceiptValidationError> GetReasons(
