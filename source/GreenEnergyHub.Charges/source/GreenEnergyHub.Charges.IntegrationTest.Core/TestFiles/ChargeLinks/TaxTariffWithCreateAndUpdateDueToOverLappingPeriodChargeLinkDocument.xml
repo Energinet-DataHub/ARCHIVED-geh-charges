@@ -29,7 +29,7 @@ limitations under the License.
     <cim:createdDateTime>{{$isoTimestamp}}</cim:createdDateTime>
     <cim:MktActivityRecord>
         <cim:mRID>clId{{$isoTimestamp}}</cim:mRID>
-        <cim:marketEvaluationPoint.mRID codingScheme="A10">571313180000000005</cim:marketEvaluationPoint.mRID>
+        <cim:marketEvaluationPoint.mRID codingScheme="A10">571313180000000029</cim:marketEvaluationPoint.mRID>
         <cim:ChargeGroup>
             <cim:ChargeType>
                 <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">8100000000030</cim:chargeTypeOwner_MarketParticipant.mRID>
@@ -43,7 +43,7 @@ limitations under the License.
     </cim:MktActivityRecord>
     <cim:MktActivityRecord>
         <cim:mRID>clId{{$isoTimestamp}}</cim:mRID>
-        <cim:marketEvaluationPoint.mRID codingScheme="A10">571313180000000005</cim:marketEvaluationPoint.mRID>
+        <cim:marketEvaluationPoint.mRID codingScheme="A10">571313180000000029</cim:marketEvaluationPoint.mRID>
         <cim:ChargeGroup>
             <cim:ChargeType>
                 <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">8100000000030</cim:chargeTypeOwner_MarketParticipant.mRID>
