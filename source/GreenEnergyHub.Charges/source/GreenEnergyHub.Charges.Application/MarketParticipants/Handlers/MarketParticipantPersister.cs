@@ -55,11 +55,11 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
                 {
                     var marketParticipantAlreadyExistWithOtherRole = await _marketParticipantRepository
                         .SingleOrNullAsync(marketParticipantUpdatedEvent.MarketParticipantId).ConfigureAwait(false);
-                    if (marketParticipantAlreadyExist != null)
+                    if (marketParticipantAlreadyExistWithOtherRole != null)
                     {
                         throw new InvalidOperationException(
-                            $"Only 1 market participant with ID '{marketParticipantAlreadyExist.MarketParticipantId}' is allowed, " +
-                            $"the current persisted market participant has role {marketParticipantAlreadyExist.BusinessProcessRole} " +
+                            $"Only 1 market participant with ID '{marketParticipantAlreadyExistWithOtherRole.MarketParticipantId}' is allowed, " +
+                            $"the current persisted market participant has role {marketParticipantAlreadyExistWithOtherRole.BusinessProcessRole} " +
                             $"and the new market participant to be created has role {businessProcessRole}");
                     }
 
