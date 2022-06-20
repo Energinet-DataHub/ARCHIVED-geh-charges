@@ -52,7 +52,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
         {
             LogValidationErrors(input);
 
-            var recipient = input.Command.Document.Sender; // The original sender is the recipient of the receipt
+            // The original sender is the recipient of the receipt
+            var recipient = await GetRecipientAsync(input.Command.Document.Sender).ConfigureAwait(false);
             var sender = await GetSenderAsync().ConfigureAwait(false);
 
             var operationOrder = 0;
@@ -69,7 +70,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                     chargeOperationDto.Id,
                     DocumentType.RejectRequestChangeOfPriceList, // Will be added to the HTTP MessageType header
                     operationOrder++,
-                    recipient.ActorId,
+                    recipient.Id,
                     GetReasons(input, chargeOperationDto)))
                 .ToList();
         }
@@ -80,7 +81,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                 rejectedEvent.Command.Document,
                 rejectedEvent.ValidationErrors);
 
-            _logger.LogError("ValidationErrors for {errorMessage}", errorMessage);
+            _logger.LogError("ValidationErrors for {ErrorMessage}", errorMessage);
         }
 
         private List<AvailableReceiptValidationError> GetReasons(

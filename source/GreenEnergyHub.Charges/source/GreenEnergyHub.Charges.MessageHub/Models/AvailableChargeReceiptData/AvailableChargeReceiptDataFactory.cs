@@ -41,7 +41,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 
         public override async Task<IReadOnlyList<AvailableChargeReceiptData>> CreateAsync(ChargeCommandAcceptedEvent input)
         {
-            var recipient = input.Command.Document.Sender; // The original sender is the recipient of the receipt
+            // The original sender is the recipient of the receipt
+            var recipient = await GetRecipientAsync(input.Command.Document.Sender).ConfigureAwait(false);
             var sender = await GetSenderAsync().ConfigureAwait(false);
 
             var availableChargeReceiptData = new List<AvailableChargeReceiptData>();
@@ -60,7 +61,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             DocumentDto documentDto,
             ChargeOperationDto chargeOperationDto,
             MarketParticipant sender,
-            MarketParticipantDto recipient,
+            MarketParticipant recipient,
             int operationOrder)
         {
             return new List<AvailableChargeReceiptData>()
@@ -77,7 +78,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                     chargeOperationDto.Id,
                     DocumentType.ConfirmRequestChangeOfPriceList, // Will be added to the HTTP MessageType header
                     operationOrder,
-                    recipient.ActorId,
+                    recipient.Id,
                     new List<AvailableReceiptValidationError>()),
             };
         }

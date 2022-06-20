@@ -24,6 +24,7 @@ using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Testables;
+using GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared;
 using Moq;
 using NodaTime;
 using Xunit;
@@ -46,20 +47,19 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
         {
             // Arrange
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
-            marketParticipantRepository
-                .Setup(r => r.GetMeteringPointAdministratorAsync())
-                .ReturnsAsync(meteringPointAdministrator);
+            var documentDto = acceptedEvent.Command.Document;
+            documentDto.Sender.BusinessProcessRole = MarketParticipantRole.GridAccessProvider;
+            MarketParticipantRepositoryMockBuilder.SetupMarketParticipantRepositoryMock(
+                marketParticipantRepository, meteringPointAdministrator, documentDto.Sender);
 
             // Act
             var actualList = await sut.CreateAsync(acceptedEvent);
 
             // Assert
             actualList.Should().HaveCount(3);
-            actualList[0].RecipientId.Should().Be(acceptedEvent.Command.Document.Sender.MarketParticipantId);
-            actualList[0].RecipientRole.Should()
-                    .Be(acceptedEvent.Command.Document.Sender.BusinessProcessRole);
-            actualList[0].BusinessReasonCode.Should()
-                    .Be(acceptedEvent.Command.Document.BusinessReasonCode);
+            actualList[0].RecipientId.Should().Be(documentDto.Sender.MarketParticipantId);
+            actualList[0].RecipientRole.Should().Be(documentDto.Sender.BusinessProcessRole);
+            actualList[0].BusinessReasonCode.Should().Be(documentDto.BusinessReasonCode);
             actualList[0].RequestDateTime.Should().Be(now);
             actualList[0].ReceiptStatus.Should().Be(ReceiptStatus.Confirmed);
             actualList[0].DocumentType.Should().Be(DocumentType.ConfirmRequestChangeOfPriceList);

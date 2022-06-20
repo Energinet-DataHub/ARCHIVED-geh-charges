@@ -50,7 +50,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.MessageHub
 
         public AvailableChargeDataBuilder WithActorId(Guid referenceId)
         {
-            _availableDataReferenceId = referenceId;
+            _actorId = referenceId;
             return this;
         }
 

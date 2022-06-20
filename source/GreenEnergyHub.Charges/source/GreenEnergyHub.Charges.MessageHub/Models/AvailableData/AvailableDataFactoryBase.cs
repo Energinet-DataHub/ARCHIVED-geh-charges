@@ -14,6 +14,7 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableData
@@ -32,5 +33,9 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableData
 
         protected async Task<MarketParticipant> GetSenderAsync() =>
             await _marketParticipantRepository.GetMeteringPointAdministratorAsync().ConfigureAwait(false);
+
+        protected async Task<MarketParticipant> GetRecipientAsync(MarketParticipantDto marketParticipantDto) =>
+            await _marketParticipantRepository.GetSystemOperatorOrGridAccessProviderAsync(marketParticipantDto
+                .MarketParticipantId).ConfigureAwait(false);
     }
 }

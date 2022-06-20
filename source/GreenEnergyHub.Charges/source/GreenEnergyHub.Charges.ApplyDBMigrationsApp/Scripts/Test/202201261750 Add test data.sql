@@ -70,12 +70,32 @@ DECLARE @chargeId3 UNIQUEIDENTIFIER = NEWID()
 DECLARE @chargeId4 UNIQUEIDENTIFIER = NEWID()
 DECLARE @meteringPointId VARCHAR(50)
 
-SELECT @chargeOwnerId = Id FROM charges.marketparticipant WHERE marketparticipantid = '8100000000016'
+SELECT @chargeOwnerId = Id FROM charges.marketparticipant WHERE marketparticipantid = '8100000000030'
 
 INSERT INTO charges.charge VALUES (@chargeId, 'TestTariff', 3, @chargeOwnerId, 0, 2, 0, 'Description...', 'Grid Access Provider test tariff', 1, '1999-12-31 23:00:00', '9999-12-31 23:59:59')
 INSERT INTO charges.charge VALUES (@chargeId2, 'TestTar002', 3, @chargeOwnerId, 0, 2, 1, 'Description...', 'Grid Access Provider test tariff2', 2, '1999-12-31 23:00:00', '9999-12-31 23:59:59')
 INSERT INTO charges.charge VALUES (@chargeId3, 'TestFee', 2, @chargeOwnerId, 0, 3, 0, 'Description...', 'Grid Access Provider test fee', 2, '1999-12-31 23:00:00', '9999-12-31 23:59:59')
 INSERT INTO charges.charge VALUES (@chargeId4, 'TestSub', 1, @chargeOwnerId, 0, 4, 0, 'Description...', 'Grid Access Provider test subscription', 2, '1999-12-31 23:00:00', '9999-12-31 23:59:59')
+
+/* Charge EA-001a is a copy of EA-001, but with 8100000000030 as owner.
+   This is necessary due to the fact that integration test requests are
+   authenticated with a token containing this actor.
+   */
+INSERT INTO [Charges].[Charge] (Id, SenderProvidedChargeId, [Type], OwnerId, TaxIndicator, Resolution, TransparentInvoicing, StartDateTime, EndDateTime, Name, Description, VatClassification) VALUES (
+    NEWID(),
+    'EA-001a', /* ChargeId */
+    3, /* [Type], Tariff */
+    @chargeOwnerId, /* Owner */
+    1, /* TaxIndicator, yes */
+    2, /* Resolution, P1D */
+    1, /* TransparentInvoicing, yes */
+    '2014-12-31 23:00', /* StartDateTime */
+    '9999-12-31 23:59:59', -- Equivalent to InstantExtensions.TimeOrEndDefault()
+    'Elafgift', /* Name */
+    'Elafgiften', /* Description */
+    2 /* VatClassification, 25% */
+    )
+
 
 ------------------------------------------------------------------------------------------------------------------------
 -- Add charge links

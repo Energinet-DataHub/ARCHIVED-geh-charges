@@ -30,6 +30,7 @@ using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.Charges.Tests.Builders.Testables;
+using GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared;
 using GreenEnergyHub.TestHelpers;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -57,12 +58,10 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             // Arrange
             var chargeCommand = chargeCommandBuilder.WithChargeOperations(chargeOperations).Build();
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
+            MarketParticipantRepositoryMockBuilder.SetupMarketParticipantRepositoryMock(
+                marketParticipantRepository, meteringPointAdministrator, chargeCommand.Document.Sender);
 
-            marketParticipantRepository
-                .Setup(r => r.GetMeteringPointAdministratorAsync())
-                .ReturnsAsync(meteringPointAdministrator);
-
-            SetupAvailableChargeReceiptValidationErrorFactory(
+            SetupAvailableChargeReceiptValidationErrorFactoryMock(
                 availableChargeReceiptValidationErrorFactory, chargeCommand);
 
             var validationErrors = chargeCommand.ChargeOperations
@@ -83,9 +82,10 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             for (var i1 = 0; i1 < actualList.Count; i1++)
             {
                 var actual = actualList[i1];
-                actual.RecipientId.Should().Be(chargeCommand.Document.Sender.MarketParticipantId);
-                actual.RecipientRole.Should().Be(chargeCommand.Document.Sender.BusinessProcessRole);
-                actual.BusinessReasonCode.Should().Be(chargeCommand.Document.BusinessReasonCode);
+                var chargeCommandDocument = chargeCommand.Document;
+                actual.RecipientId.Should().Be(chargeCommandDocument.Sender.MarketParticipantId);
+                actual.RecipientRole.Should().Be(chargeCommandDocument.Sender.BusinessProcessRole);
+                actual.BusinessReasonCode.Should().Be(chargeCommandDocument.BusinessReasonCode);
                 actual.RequestDateTime.Should().Be(now);
                 actual.ReceiptStatus.Should().Be(ReceiptStatus.Rejected);
                 actual.DocumentType.Should().Be(DocumentType.RejectRequestChangeOfPriceList);
@@ -120,12 +120,12 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             [Frozen] Mock<ILogger> logger)
         {
             // Arrange
+            var document = rejectedEvent.Command.Document;
+            document.Sender.BusinessProcessRole = MarketParticipantRole.GridAccessProvider;
             loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
-            marketParticipantRepository
-                .Setup(x => x.GetMeteringPointAdministratorAsync())
-                .ReturnsAsync(meteringPointAdministrator);
+            MarketParticipantRepositoryMockBuilder.SetupMarketParticipantRepositoryMock(marketParticipantRepository, meteringPointAdministrator, document.Sender);
 
-            SetupAvailableChargeReceiptValidationErrorFactory(
+            SetupAvailableChargeReceiptValidationErrorFactoryMock(
                 availableChargeReceiptValidationErrorFactory, rejectedEvent.Command);
 
             var sut = new AvailableChargeRejectionDataFactory(
@@ -138,7 +138,6 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             await sut.CreateAsync(rejectedEvent);
 
             // Assert
-            var document = rejectedEvent.Command.Document;
             var expectedMessage = $"ValidationErrors for document Id {document.Id} with Type {document.Type} from GLN {document.Sender.MarketParticipantId}:\r\n" +
                                   "- ValidationRuleIdentifier: StartDateValidation\r\n" +
                                   "- ValidationRuleIdentifier: ChangingTariffTaxValueNotAllowed\r\n" +
@@ -146,7 +145,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             logger.VerifyLoggerWasCalled(expectedMessage, LogLevel.Error);
         }
 
-        private static void SetupAvailableChargeReceiptValidationErrorFactory(
+        private static void SetupAvailableChargeReceiptValidationErrorFactoryMock(
             Mock<IAvailableChargeReceiptValidationErrorFactory> availableChargeReceiptValidationErrorFactory,
             ChargeInformationCommand chargeInformationCommand)
         {

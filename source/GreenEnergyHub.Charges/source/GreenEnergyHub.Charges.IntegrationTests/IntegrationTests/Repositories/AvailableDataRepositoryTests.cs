@@ -118,7 +118,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 .And.ThenBeInAscendingOrder(a => a.OperationOrder);
         }
 
-        private static List<AvailableChargeData> GenerateListOfAvailableChargeDataForSameCharge(int numberOfAvailableChargeData)
+        private static List<AvailableChargeData> GenerateListOfAvailableChargeDataForSameCharge(
+            int numberOfAvailableChargeData)
         {
             var builder = new AvailableChargeDataBuilder();
             var now = Instant.FromDateTimeUtc(DateTime.UtcNow);
@@ -126,7 +127,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
             for (var i = 0; i < numberOfAvailableChargeData; i++)
             {
-                var data = builder.WithRequestDateTime(now).WithOperationOrder(i).Build();
+                var data = builder
+                    .WithActorId(SeededData.MarketParticipants.SystemOperator.Id)
+                    .WithRequestDateTime(now)
+                    .WithOperationOrder(i).Build();
                 availableChargeDataList.Add(data);
             }
 
