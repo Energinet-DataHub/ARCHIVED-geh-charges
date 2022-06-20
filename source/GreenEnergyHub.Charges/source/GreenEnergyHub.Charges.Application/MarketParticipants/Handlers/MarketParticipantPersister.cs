@@ -53,7 +53,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 
                 if (persistMarketParticipant is null)
                 {
-                    var marketParticipantAlreadyExist = await _marketParticipantRepository
+                    var marketParticipantAlreadyExistWithOtherRole = await _marketParticipantRepository
                         .SingleOrNullAsync(marketParticipantUpdatedEvent.MarketParticipantId).ConfigureAwait(false);
                     if (marketParticipantAlreadyExist != null)
                     {
