@@ -202,7 +202,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
 
         [Theory]
         [InlineAutoDomainData]
-        public async Task PersistAsync_WhenCalledWithExistentMarketParticipant_ShouldThrowInvalidOperation(
+        public async Task PersistAsync_WhenCalledWithExistentMarketParticipantWithDifferentRole_ShouldThrowInvalidOperation(
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IGridAreaLinkRepository> gridAreaLinkRepository,
             [Frozen] Mock<ILoggerFactory> loggerFactory,

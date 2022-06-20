@@ -57,7 +57,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
         }
 
         [Fact]
-        public void MapFromActorIntegrationEvent_ShouldThrowInvalidOperationExceptionWhenSeveralRolesAssociated()
+        public void MapFromActorIntegrationEvent_WhenSeveralRolesAssociated_ShouldThrowInvalidOperationException()
         {
             // Arrange
             var actorId = Guid.NewGuid();
