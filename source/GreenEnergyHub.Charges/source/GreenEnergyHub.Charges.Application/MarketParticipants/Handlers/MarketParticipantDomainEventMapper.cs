@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
             {
                 throw new InvalidOperationException(
                     $"Only 1 role per market participant with ID '{actorUpdatedIntegrationEvent.Gln}' is allowed, " +
-                    $"the current market participant has {rolesUsedInChargesDomain.Count} roles associated");
+                    $"the current market participant has {rolesUsedInChargesDomain.Count} roles associated in the integration event with id '{actorUpdatedIntegrationEvent.Id}'");
             }
 
             return new MarketParticipantUpdatedEvent(
