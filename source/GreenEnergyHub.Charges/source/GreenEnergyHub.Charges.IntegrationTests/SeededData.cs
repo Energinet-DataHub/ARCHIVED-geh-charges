@@ -29,14 +29,32 @@ namespace GreenEnergyHub.Charges.IntegrationTests
                 public const string Id = "571313180000000005";
 
                 public const string GridAccessProvider =
-                    MarketParticipant.GridAccessProviderOfMeteringPoint571313180000000005;
+                    MarketParticipants.GridAccessProviderOfMeteringPoint571313180000000005.Gln;
             }
         }
 
-        public static class MarketParticipant
+        public static class MarketParticipants
         {
-            public const string GridAccessProviderOfMeteringPoint571313180000000005 = "8100000000016";
-            public const string Inactive8900000000005 = "8900000000005";
+            public static class SystemOperator
+            {
+                public const string Gln = "5790000432752";
+                public static readonly Guid Id = new("AF450C03-1937-4EA1-BB66-17B6E4AA51F5");
+            }
+
+            public static class MeteringPointAdministrator
+            {
+                public const string Gln = "5790001330552";
+            }
+
+            public static class GridAccessProviderOfMeteringPoint571313180000000005
+            {
+                public const string Gln = "8100000000016";
+            }
+
+            public static class Inactive8900000000005
+            {
+                public const string Gln = "8900000000005";
+            }
         }
 
         public static class GridAreaLink
