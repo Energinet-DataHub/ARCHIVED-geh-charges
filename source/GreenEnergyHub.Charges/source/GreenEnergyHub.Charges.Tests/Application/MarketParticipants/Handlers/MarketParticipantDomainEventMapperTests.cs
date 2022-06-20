@@ -30,7 +30,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             // Arrange
             var actorId = Guid.NewGuid();
             var gln = "AnyGln";
-            var roles = new List<BusinessRoleCode>() { BusinessRoleCode.Ddm, BusinessRoleCode.Ez };
+            var roles = new List<BusinessRoleCode>() { BusinessRoleCode.Ddm };
             var grids = new List<Guid>() { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() };
             var actorUpdatedIntegrationEvent = new ActorUpdatedIntegrationEvent(
                 Guid.Empty,
@@ -52,8 +52,32 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             actualMarketParticipantUpdatedEvent.ActorId.Should().Be(actorId);
             actualMarketParticipantUpdatedEvent.MarketParticipantId.Should().Be(gln);
             actualMarketParticipantUpdatedEvent.IsActive.Should().Be(true);
-            actualMarketParticipantUpdatedEvent.BusinessProcessRoles.Count.Should().Be(2);
+            actualMarketParticipantUpdatedEvent.BusinessProcessRoles.Count.Should().Be(1);
             actualMarketParticipantUpdatedEvent.GridAreas.Count().Should().Be(3);
+        }
+
+        [Fact]
+        public void MapFromActorIntegrationEvent_ShouldThrowInvalidOperationExceptionWhenSeveralRolesAssociated()
+        {
+            // Arrange
+            var actorId = Guid.NewGuid();
+            var gln = "AnyGln";
+            var roles = new List<BusinessRoleCode>() { BusinessRoleCode.Ddm, BusinessRoleCode.Ez };
+            var grids = new List<Guid>() { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() };
+            var actorUpdatedIntegrationEvent = new ActorUpdatedIntegrationEvent(
+                Guid.Empty,
+                actorId,
+                Guid.Empty,
+                Guid.Empty,
+                gln,
+                ActorStatus.Active,
+                roles,
+                new List<EicFunction>(),
+                grids,
+                new List<string>());
+
+            // Act and Assert
+            Assert.Throws<InvalidOperationException>(() => MarketParticipantDomainEventMapper.MapFromActorUpdatedIntegrationEvent(actorUpdatedIntegrationEvent));
         }
 
         [Fact]
