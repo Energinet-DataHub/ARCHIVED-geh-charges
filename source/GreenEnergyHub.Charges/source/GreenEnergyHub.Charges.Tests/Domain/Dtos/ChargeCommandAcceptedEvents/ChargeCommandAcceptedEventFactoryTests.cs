@@ -15,7 +15,6 @@
 using System.Diagnostics.CodeAnalysis;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
-
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Moq;

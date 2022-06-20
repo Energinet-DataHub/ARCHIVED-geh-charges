@@ -17,8 +17,6 @@ using Energinet.DataHub.Core.Messaging.Transport.SchemaValidation;
 using Energinet.DataHub.Core.Schemas;
 using Energinet.DataHub.Core.SchemaValidation;
 
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
-
 namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
 {
     public sealed class ChargeCommandDeserializer : SchemaValidatingMessageDeserializer<Domain.Dtos.ChargeInformationCommands.ChargeBundleDto>

@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers

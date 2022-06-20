@@ -14,7 +14,6 @@
 
 using System;
 using System.Collections.Generic;
-
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
@@ -120,15 +119,12 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands
 
         [Theory]
         [InlineAutoDomainData]
-        public void ChargeCommandDocumentIsNullThrowsException(
-            DocumentDtoBuilder documentDtoBuilder,
-            ChargeCommandBuilder builder)
+        public void ChargeCommandDocumentIsNullThrowsException(ChargeCommandBuilder builder)
         {
             // Arrange
-            var documentDto = documentDtoBuilder.Build();
             var chargeCommand = builder.WithDocumentDto(null!).Build();
             var chargeCommands = new List<ChargeInformationCommand> { chargeCommand };
-            var chargeBundle = new ChargeBundleDto(documentDto, chargeCommands);
+            var chargeBundle = new ChargeBundleDto(null!, chargeCommands);
 
             // Act & Assert
             Assert.Throws<ArgumentNullException>(() =>

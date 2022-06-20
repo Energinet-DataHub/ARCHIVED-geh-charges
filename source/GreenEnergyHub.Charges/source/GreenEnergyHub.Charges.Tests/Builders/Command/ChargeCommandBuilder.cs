@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 

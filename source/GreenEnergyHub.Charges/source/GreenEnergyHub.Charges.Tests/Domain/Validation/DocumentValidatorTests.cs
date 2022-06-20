@@ -15,7 +15,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
-
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation;
