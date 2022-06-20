@@ -22,6 +22,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData;
+using GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using NodaTime;
@@ -46,12 +47,12 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
             AvailableChargeLinksReceiptDataFactory sut)
         {
             // Arrange
-            acceptedEvent.ChargeLinksCommand.Document.Sender.BusinessProcessRole = marketParticipantRole;
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
             var expectedLinks = acceptedEvent.ChargeLinksCommand.ChargeLinksOperations.ToList();
-            marketParticipantRepository
-                .Setup(r => r.GetMeteringPointAdministratorAsync())
-                .ReturnsAsync(meteringPointAdministrator);
+            var documentDto = acceptedEvent.ChargeLinksCommand.Document;
+            documentDto.Sender.BusinessProcessRole = marketParticipantRole;
+            MarketParticipantRepositoryMockBuilder.SetupMarketParticipantRepositoryMock(
+                marketParticipantRepository, meteringPointAdministrator, documentDto.Sender);
 
             // Act
             var actualList = await sut.CreateAsync(acceptedEvent);
@@ -60,11 +61,9 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
             actualList.Should().HaveSameCount(expectedLinks);
             for (var i = 0; i < actualList.Count; i++)
             {
-                actualList[i].RecipientId.Should().Be(acceptedEvent.ChargeLinksCommand.Document.Sender.MarketParticipantId);
-                actualList[i].RecipientRole.Should()
-                    .Be(acceptedEvent.ChargeLinksCommand.Document.Sender.BusinessProcessRole);
-                actualList[i].BusinessReasonCode.Should()
-                    .Be(acceptedEvent.ChargeLinksCommand.Document.BusinessReasonCode);
+                actualList[i].RecipientId.Should().Be(documentDto.Sender.MarketParticipantId);
+                actualList[i].RecipientRole.Should().Be(documentDto.Sender.BusinessProcessRole);
+                actualList[i].BusinessReasonCode.Should().Be(documentDto.BusinessReasonCode);
                 actualList[i].RequestDateTime.Should().Be(now);
                 actualList[i].ReceiptStatus.Should().Be(ReceiptStatus.Confirmed);
                 actualList[i].DocumentType.Should().Be(DocumentType.ConfirmRequestChangeBillingMasterData);

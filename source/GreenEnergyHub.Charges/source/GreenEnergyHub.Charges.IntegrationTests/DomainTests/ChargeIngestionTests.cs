@@ -186,7 +186,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // * one for the two confirmations
                 // * one for the notification (tax)
                 // * one for the rejection (ChargeIdLengthValidation)
-                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId, 3);
+                await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 3);
             }
 
             [Theory]
@@ -204,7 +204,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Act and assert
-                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId);
+                await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId);
             }
 
             [Theory]
@@ -220,7 +220,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Act and assert
-                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId);
+                await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId);
             }
 
             [Fact]
@@ -241,7 +241,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // * one for the create confirmation (update)
                 // * one for the create confirmation (stop)
                 // * one for the create confirmation (cancel stop)
-                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId, 4);
+                await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 4);
             }
 
             [Fact]
@@ -260,7 +260,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // We expect two peeks:
                 // * one for the confirmation (first operation)
                 // * one for the rejection (second operation violating VR.903)
-                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId, 2);
+                await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 2);
             }
 
             [Fact]
@@ -289,7 +289,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                     .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.CreateTariff);
                 var response = await Fixture.HostManager.HttpClient.SendAsync(createReq);
                 response.StatusCode.Should().Be(HttpStatusCode.Accepted);
-                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId);
+                await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId);
 
                 // Arrange - Update
                 var (updateReq, updateCorrelationId) = await _authenticatedHttpRequestGenerator
@@ -302,7 +302,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
 
                 // * Expect one for the confirmation (update)
-                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(updateCorrelationId);
+                await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(updateCorrelationId);
             }
         }
     }
