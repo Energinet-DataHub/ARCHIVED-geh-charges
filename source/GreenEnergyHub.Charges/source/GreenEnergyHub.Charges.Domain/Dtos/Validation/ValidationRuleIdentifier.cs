@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
         ChargeResolutionCanNotBeUpdated = 35, // VR907 / D23
         RecipientRoleMustBeDdz = 36, // VR165 / E55
         NumberOfPointsMatchTimeIntervalAndResolution = 37, // VR909 / E87,
-        ChargeNameIsRequired = 38, // VRXXX / E0H
-        ChargeDescriptionIsRequired = 39, // VRXXX / E0H
+        ChargeNameIsRequired = 38, // VR910 / E0H
+        ChargeDescriptionIsRequired = 39, // VR911 / E0H
     }
 }
