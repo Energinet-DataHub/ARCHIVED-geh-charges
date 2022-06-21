@@ -36,8 +36,8 @@ The following asynchronous validation rules are currently implemented in the cha
 |VR.906|Transaction not completed: The request received contained multiple transactions for the same charge, and one of the previous transactions failed validation why this transaction is also rejected|D14|All|N/A|
 |VR.907|After creating a Charge, it is no longer allowed to change the resolution of that charge|D23|All|N/A|
 |VR.909|The number of prices received does not match the expected number of prices given the time interval and resolution provided.|E87|All|N/A|
-|VR.XXX|Charge name is mandatory|E0H|All|N/A|
-|VR.XXX|Charge description is mandatory|E0H|All|N/A|
+|VR.910|Charge name is mandatory|E0H|All|N/A|
+|VR.911|Charge description is mandatory|E0H|All|N/A|
 
 * VR.152 is not fully implemented. Right now we only validate that it is filled with something
 * VR.679 is not fully implemented. For now it verifies that the charge exist, not checking that the linked period is within the charge's validity period
