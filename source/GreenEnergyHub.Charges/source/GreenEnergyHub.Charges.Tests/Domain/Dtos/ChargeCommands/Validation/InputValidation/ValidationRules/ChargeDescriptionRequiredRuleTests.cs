@@ -65,7 +65,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void IsValid_WhenChargeDescriptionIsAllWhitespace_ShouldReturnFalse(ChargeOperationDtoBuilder builder)
         {
             // Arrange
-            var dto = builder.WithChargeName("       ").Build();
+            var dto = builder.WithDescription("       ").Build();
             var sut = new ChargeDescriptionRequiredRule(dto);
 
             // Assert
