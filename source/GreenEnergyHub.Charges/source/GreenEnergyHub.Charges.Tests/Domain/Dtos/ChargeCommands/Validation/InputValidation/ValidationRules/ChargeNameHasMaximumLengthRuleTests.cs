@@ -26,7 +26,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
     [UnitTest]
     public class ChargeNameHasMaximumLengthRuleTests
     {
-        private const int ChargeNameMaximumLength = 50;
+        private const int ChargeNameMaximumLength = 132;
 
         [Theory]
         [InlineAutoMoqData(ChargeNameMaximumLength - 1, true)]
