@@ -92,6 +92,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
                         _zonedDateTimeService,
                         _clock),
                     chargeOperationDto.Id),
+                CreateRuleContainer(new ChargeNameRequiredRule(chargeOperationDto), chargeOperationDto.Id),
+                CreateRuleContainer(new ChargeDescriptionRequiredRule(chargeOperationDto), chargeOperationDto.Id),
             };
         }
 
