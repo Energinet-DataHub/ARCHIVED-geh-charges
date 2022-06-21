@@ -50,12 +50,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
         private static void CheckChargeOperation(ChargeOperationDto chargeOperationDto, BusinessReasonCode businessReasonCode)
         {
             if (chargeOperationDto == null) throw new ArgumentNullException(nameof(chargeOperationDto));
-
-            if (businessReasonCode != BusinessReasonCode.UpdateChargeInformation)
-                return;
-
-            if (string.IsNullOrWhiteSpace(chargeOperationDto.ChargeName)) throw new ArgumentException(chargeOperationDto.ChargeName);
-            if (string.IsNullOrWhiteSpace(chargeOperationDto.ChargeDescription)) throw new ArgumentException(chargeOperationDto.ChargeDescription);
         }
 
         private static void CheckDocument(DocumentDto document)

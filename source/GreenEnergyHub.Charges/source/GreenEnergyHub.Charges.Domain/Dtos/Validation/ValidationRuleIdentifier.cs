@@ -48,6 +48,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
         TransparentInvoicingIsNotAllowedForFee = 34, // VR904 / D67
         ChargeResolutionCanNotBeUpdated = 35, // VR907 / D23
         RecipientRoleMustBeDdz = 36, // VR165 / E55
-        NumberOfPointsMatchTimeIntervalAndResolution = 37, // VR909 / E87
+        NumberOfPointsMatchTimeIntervalAndResolution = 37, // VR909 / E87,
+        ChargeNameIsRequired = 38, // VRXXX / E0H
+        ChargeDescriptionIsRequired = 39, // VRXXX / E0H
     }
 }

@@ -157,6 +157,14 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         public const string NumberOfPointsMatchTimeIntervalAndResolutionText =
             "The number of prices received does not match the expected number of prices given the time interval and resolution provided.";
 
+        [ErrorMessageFor(ValidationRuleIdentifier.ChargeNameIsRequired)]
+        public const string ChargeNameRequiredErrorText =
+            "Charge name is missing: transaction can not be processed for document {{DocumentId}}";
+
+        [ErrorMessageFor(ValidationRuleIdentifier.ChargeDescriptionIsRequired)]
+        public const string ChargeDescriptionRequiredErrorText =
+            "Charge description is missing: transaction can not be processed for document {{DocumentId}}";
+
         public const string Unknown = "unknown";
     }
 }
