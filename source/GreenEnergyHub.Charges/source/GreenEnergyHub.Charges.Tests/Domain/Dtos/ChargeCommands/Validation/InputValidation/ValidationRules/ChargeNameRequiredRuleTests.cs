@@ -59,5 +59,17 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             // Assert
             sut.IsValid.Should().BeFalse();
         }
+
+        [Theory]
+        [InlineAutoMoqData]
+        public void IsValid_WhenChargeNameIsAllWhitespace_ShouldReturnFalse(ChargeOperationDtoBuilder builder)
+        {
+            // Arrange
+            var dto = builder.WithChargeName("       ").Build();
+            var sut = new ChargeNameRequiredRule(dto);
+
+            // Assert
+            sut.IsValid.Should().BeFalse();
+        }
     }
 }
