@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
 
                 foreach (var chargeDto in chargeCommand.ChargeOperations)
                 {
-                    CheckChargeOperation(chargeDto, chargeCommand.Document.BusinessReasonCode);
+                    CheckChargeOperation(chargeDto);
                 }
             }
         }
@@ -47,15 +47,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands
             if (chargeCommand == null) throw new ArgumentNullException(nameof(chargeCommand));
         }
 
-        private static void CheckChargeOperation(ChargeOperationDto chargeOperationDto, BusinessReasonCode businessReasonCode)
+        private static void CheckChargeOperation(ChargeOperationDto chargeOperationDto)
         {
             if (chargeOperationDto == null) throw new ArgumentNullException(nameof(chargeOperationDto));
-
-            if (businessReasonCode != BusinessReasonCode.UpdateChargeInformation)
-                return;
-
-            if (string.IsNullOrWhiteSpace(chargeOperationDto.ChargeName)) throw new ArgumentException(chargeOperationDto.ChargeName);
-            if (string.IsNullOrWhiteSpace(chargeOperationDto.ChargeDescription)) throw new ArgumentException(chargeOperationDto.ChargeDescription);
         }
 
         private static void CheckDocument(DocumentDto document)
