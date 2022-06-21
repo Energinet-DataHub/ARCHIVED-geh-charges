@@ -41,6 +41,12 @@ Also, some components have singular names while others have plural names. This i
 
 ![Charge And Charge Prices](ARCHITECTURE-ChargeAndChargePrices.png)
 
+### Charge Prices architecture
+
+Below diagram illustrates our ongoing work building a separate architectural path for handling Charge Prices. So please consider this as 'to be implemented'.
+
+![Charge Prices](ARCHITECTURE-ChargePrices.png)
+
 ### Charge links architecture
 
 ![Charge Links](ARCHITECTURE-ChargeLinks.png)
