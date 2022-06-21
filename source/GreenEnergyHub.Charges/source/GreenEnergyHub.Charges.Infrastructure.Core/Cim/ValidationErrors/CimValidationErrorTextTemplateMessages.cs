@@ -159,11 +159,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeNameIsRequired)]
         public const string ChargeNameRequiredErrorText =
-            "Charge name is missing: transaction can not be processed for document {{DocumentId}}";
+            "Charge name is missing.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeDescriptionIsRequired)]
         public const string ChargeDescriptionRequiredErrorText =
-            "Charge description is missing: transaction can not be processed for document {{DocumentId}}";
+            "Charge description is missing.";
 
         public const string Unknown = "unknown";
     }
