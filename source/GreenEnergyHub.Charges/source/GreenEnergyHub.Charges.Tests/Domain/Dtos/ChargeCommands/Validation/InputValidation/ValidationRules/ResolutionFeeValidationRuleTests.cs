@@ -76,7 +76,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         }
 
         [Theory]
-        [InlineAutoMoqData(Resolution.Unknown, false)]
+        [InlineAutoMoqData(Resolution.Unknown, true)]
         [InlineAutoMoqData(Resolution.P1D, false)]
         [InlineAutoMoqData(Resolution.P1M, true)]
         [InlineAutoMoqData(Resolution.PT1H, false)]
