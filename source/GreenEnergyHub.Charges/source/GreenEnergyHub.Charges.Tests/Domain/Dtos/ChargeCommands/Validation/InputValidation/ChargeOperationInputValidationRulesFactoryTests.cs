@@ -118,6 +118,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 typeof(ChargeTypeTariffPriceCountRule),
                 typeof(StartDateValidationRule),
                 typeof(MaximumPriceRule),
+                typeof(ChargeNameRequiredRule),
+                typeof(ChargeDescriptionRequiredRule),
             };
             return expectedRules;
         }

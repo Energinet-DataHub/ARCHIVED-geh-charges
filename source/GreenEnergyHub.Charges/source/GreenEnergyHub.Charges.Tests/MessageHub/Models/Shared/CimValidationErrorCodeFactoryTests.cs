@@ -56,6 +56,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared
         [InlineAutoMoqData(ValidationRuleIdentifier.TransparentInvoicingIsNotAllowedForFee, ReasonCode.D67)]
         [InlineAutoMoqData(ValidationRuleIdentifier.ChargeResolutionCanNotBeUpdated, ReasonCode.D23)]
         [InlineAutoMoqData(ValidationRuleIdentifier.NumberOfPointsMatchTimeIntervalAndResolution, ReasonCode.E87)]
+        [InlineAutoMoqData(ValidationRuleIdentifier.ChargeNameIsRequired, ReasonCode.E0H)]
+        [InlineAutoMoqData(ValidationRuleIdentifier.ChargeDescriptionIsRequired, ReasonCode.E0H)]
         public void Create_ReturnsExpectedCode(
             ValidationRuleIdentifier identifier,
             ReasonCode expected,
