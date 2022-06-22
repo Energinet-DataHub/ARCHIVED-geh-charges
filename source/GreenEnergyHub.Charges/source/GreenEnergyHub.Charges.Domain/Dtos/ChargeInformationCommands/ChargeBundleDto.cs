@@ -13,21 +13,26 @@
 // limitations under the License.
 
 using System.Collections.Generic;
+using Energinet.DataHub.Core.Messaging.MessageTypes.Common;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands
 {
-    public class ChargeBundleDto : CommandBase
+    public class ChargeBundleDto : IMessage
     {
-        public ChargeBundleDto(DocumentDto document, List<ChargeInformationCommand> chargeCommands)
+        public ChargeBundleDto(DocumentDto document, IReadOnlyCollection<CommandBase> commands)
         {
-            ChargeCommands = chargeCommands;
+            Transaction = Transaction.NewTransaction();
             Document = document;
+            Commands = commands;
         }
 
         public DocumentDto Document { get; }
 
-        public List<ChargeInformationCommand> ChargeCommands { get; }
+        public IReadOnlyCollection<CommandBase> Commands { get; }
+
+        public Transaction Transaction { get; set; }
     }
 }

@@ -64,7 +64,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             SetupAvailableChargeReceiptValidationErrorFactoryMock(
                 availableChargeReceiptValidationErrorFactory, chargeCommand);
 
-            var validationErrors = chargeCommand.ChargeOperations
+            var validationErrors = chargeCommand.Operations
                 .Reverse() // GetReasons() should provide the correct ValidationError no matter what order they have here
                 .Select(x => new ValidationError(ValidationRuleIdentifier.SenderIsMandatoryTypeValidation, x.Id, null))
                 .ToList();
@@ -90,7 +90,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
                 actual.ReceiptStatus.Should().Be(ReceiptStatus.Rejected);
                 actual.DocumentType.Should().Be(DocumentType.RejectRequestChangeOfPriceList);
 
-                var expectedChargeOperationDto = chargeCommand.ChargeOperations.ToArray()[i1];
+                var expectedChargeOperationDto = chargeCommand.Operations.ToArray()[i1];
                 actual.OriginalOperationId.Should().Be(expectedChargeOperationDto.Id);
 
                 var actualValidationErrors = actual.ValidationErrors.ToList();

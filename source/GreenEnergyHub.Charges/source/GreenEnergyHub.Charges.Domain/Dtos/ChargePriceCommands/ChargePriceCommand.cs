@@ -24,6 +24,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands
             Operations = operations;
         }
 
-        public IReadOnlyCollection<ChargePriceOperationDto> Operations { get; }
+        public override IReadOnlyCollection<ChargePriceOperationDto> Operations { get; }
     }
 }

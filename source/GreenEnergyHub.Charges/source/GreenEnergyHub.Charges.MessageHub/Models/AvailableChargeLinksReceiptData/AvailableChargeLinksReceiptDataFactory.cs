@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
             var recipient = await GetRecipientAsync(acceptedEvent.ChargeLinksCommand.Document.Sender).ConfigureAwait(false);
             var sender = await GetSenderAsync().ConfigureAwait(false);
 
-            return acceptedEvent.ChargeLinksCommand.ChargeLinksOperations.Select(link =>
+            return acceptedEvent.ChargeLinksCommand.Operations.Select(link =>
                     new AvailableChargeLinksReceiptData(
                         sender.MarketParticipantId,
                         sender.BusinessProcessRole,
@@ -62,7 +62,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
                         link.OperationId,
                         link.MeteringPointId,
                         DocumentType.ConfirmRequestChangeBillingMasterData, // Will be added to the HTTP MessageType header
-                        acceptedEvent.ChargeLinksCommand.ChargeLinksOperations.ToList().IndexOf(link),
+                        acceptedEvent.ChargeLinksCommand.Operations.ToList().IndexOf(link),
                         recipient.Id,
                         new List<AvailableReceiptValidationError>()))
                 .ToList();

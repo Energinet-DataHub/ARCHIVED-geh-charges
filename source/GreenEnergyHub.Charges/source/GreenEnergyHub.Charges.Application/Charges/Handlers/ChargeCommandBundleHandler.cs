@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Linq;
+using System;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
@@ -35,28 +35,24 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 
         public async Task HandleAsync(ChargeBundleDto bundleDto)
         {
-            if (bundleDto.Document.BusinessReasonCode == BusinessReasonCode.UpdateChargePrices)
+            foreach (var command in bundleDto.Commands)
             {
-                foreach (var priceCommand in bundleDto.ChargeCommands
-                             .Select(chargeCommand => chargeCommand.ChargeOperations
-                                 .Select(chargeInformationOperation => new ChargePriceOperationDto(
-                                     chargeInformationOperation.Id,
-                                     chargeInformationOperation.Type,
-                                     chargeInformationOperation.ChargeId,
-                                     chargeInformationOperation.ChargeOwner,
-                                     chargeInformationOperation.PointsStartInterval,
-                                     chargeInformationOperation.EndDateTime,
-                                     chargeInformationOperation.Points))
-                                 .ToList())
-                             .Select(priceOperations => new ChargePriceCommand(priceOperations)))
+                switch (command)
                 {
-                    await _chargePriceCommandHandler.HandleAsync(priceCommand).ConfigureAwait(false);
+                    case ChargePriceCommand priceCommand:
+                        await _chargePriceCommandHandler
+                            .HandleAsync(priceCommand)
+                            .ConfigureAwait(false);
+                        break;
+                    case ChargeInformationCommand informationCommand:
+                        await _chargeInformationCommandHandler
+                            .HandleAsync(informationCommand)
+                            .ConfigureAwait(false);
+                        break;
+                    default:
+                        throw new ArgumentException(
+                            $"Could not handle commands from charge bundle {bundleDto}");
                 }
-            }
-
-            foreach (var chargeCommand in bundleDto.ChargeCommands)
-            {
-                await _chargeInformationCommandHandler.HandleAsync(chargeCommand).ConfigureAwait(false);
             }
         }
     }

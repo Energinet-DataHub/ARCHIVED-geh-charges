@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData
         {
             var result = new List<AvailableChargeLinksData>();
 
-            foreach (var chargeLinksOperation in input.ChargeLinksCommand.ChargeLinksOperations)
+            foreach (var chargeLinksOperation in input.ChargeLinksCommand.Operations)
             {
                 await CreateForOperationsAsync(input, chargeLinksOperation, result).ConfigureAwait(false);
             }
@@ -78,7 +78,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData
             var charge = await _chargeRepository.SingleAsync(chargeIdentifier).ConfigureAwait(false);
             var sender = await GetSenderAsync().ConfigureAwait(false);
             if (!ShouldMakeDataAvailableForGridOwnerOfMeteringPoint(charge)) return;
-            var operationOrder = input.ChargeLinksCommand.ChargeLinksOperations.ToList().IndexOf(operation);
+            var operationOrder = input.ChargeLinksCommand.Operations.ToList().IndexOf(operation);
             result.Add(new AvailableChargeLinksData(
                 sender.MarketParticipantId,
                 sender.BusinessProcessRole,

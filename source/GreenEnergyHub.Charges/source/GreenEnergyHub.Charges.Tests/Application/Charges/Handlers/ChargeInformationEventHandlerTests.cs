@@ -363,7 +363,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             var charge = chargeBuilder.WithTaxIndicator(TaxIndicator.Tax).Build();
             var (receivedEvent, invalidOperationId) = CreateReceivedEventWithChargeOperations();
             SetupChargeRepository(chargeRepository, charge);
-            SetupChargePeriodFactory(chargePeriodFactory, receivedEvent.Command.ChargeOperations.ToList());
+            SetupChargePeriodFactory(chargePeriodFactory, receivedEvent.Command.Operations.ToList());
             SetupMarketParticipantRepository(marketParticipantRepository, sender);
             SetupChargeIdentifierFactoryMock(chargeIdentifierFactory);
             inputValidator.Setup(v =>

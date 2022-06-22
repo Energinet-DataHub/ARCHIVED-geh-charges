@@ -58,7 +58,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 
             var operationOrder = 0;
 
-            return input.Command.ChargeOperations.Select(chargeOperationDto => new AvailableChargeReceiptData(
+            return input.Command.Operations.Select(chargeOperationDto => new AvailableChargeReceiptData(
                     sender.MarketParticipantId,
                     sender.BusinessProcessRole,
                     recipient.MarketParticipantId,

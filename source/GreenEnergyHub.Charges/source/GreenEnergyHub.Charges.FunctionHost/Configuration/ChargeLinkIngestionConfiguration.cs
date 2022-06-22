@@ -32,8 +32,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         {
             serviceCollection.AddScoped<ChargeLinkCommandConverter>();
             serviceCollection.AddScoped<IHttpResponseBuilder, HttpResponseBuilder>();
-            serviceCollection.AddScoped<ValidatingMessageExtractor<ChargeLinksCommandBundle>>();
-            serviceCollection.AddScoped<SchemaValidatingMessageDeserializer<ChargeLinksCommandBundle>, ChargeLinkCommandDeserializer>();
+            serviceCollection.AddScoped<ValidatingMessageExtractor<ChargeLinksBundleDto>>();
+            serviceCollection.AddScoped<SchemaValidatingMessageDeserializer<ChargeLinksBundleDto>, ChargeLinkCommandDeserializer>();
             serviceCollection.AddScoped<IChargeLinksCommandBundleHandler, ChargeLinksCommandBundleHandler>();
             serviceCollection.AddScoped<IChargeLinksCommandHandler, ChargeLinksCommandHandler>();
             serviceCollection

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands
@@ -23,23 +24,23 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands
         {
             ArgumentNullException.ThrowIfNull(chargeBundleDto);
             var document = chargeBundleDto.Document;
+
             CheckDocument(document);
 
-            var chargeCommands = chargeBundleDto.ChargeCommands;
-            ArgumentNullException.ThrowIfNull(chargeCommands);
+            var commands = chargeBundleDto.Commands;
+            ArgumentNullException.ThrowIfNull(commands);
 
-            foreach (var chargeCommand in chargeCommands)
+            foreach (var command in commands)
             {
-                ArgumentNullException.ThrowIfNull(chargeCommand);
-
-                foreach (var chargeDto in chargeCommand.ChargeOperations)
+                ArgumentNullException.ThrowIfNull(command);
+                foreach (var operation in command.Operations)
                 {
-                    CheckChargeOperation(chargeDto);
+                    CheckOperation(operation);
                 }
             }
         }
 
-        private static void CheckChargeOperation(ChargeOperationDto chargeOperationDto)
+        private static void CheckOperation(OperationBase chargeOperationDto)
         {
             if (chargeOperationDto == null) throw new ArgumentNullException(nameof(chargeOperationDto));
         }
@@ -48,6 +49,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands
         {
             ArgumentNullException.ThrowIfNull(document);
             if (string.IsNullOrWhiteSpace(document.Id)) throw new ArgumentException(document.Id);
+            ArgumentNullException.ThrowIfNull(document.BusinessReasonCode);
             ArgumentNullException.ThrowIfNull(document.Recipient);
             ArgumentNullException.ThrowIfNull(document.Sender);
         }

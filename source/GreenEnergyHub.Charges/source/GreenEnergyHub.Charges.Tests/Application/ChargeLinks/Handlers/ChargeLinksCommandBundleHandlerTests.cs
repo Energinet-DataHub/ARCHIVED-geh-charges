@@ -31,17 +31,17 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
         [InlineAutoDomainData]
         public async Task HandleAsync_WhenValidChargeLinkBundle_HandlesAll(
             [Frozen] Mock<IChargeLinksCommandHandler> chargeLinksCommandHandler,
-            ChargeLinksCommandBundle chargeLinksCommandBundle,
+            ChargeLinksBundleDto chargeLinksBundleDto,
             ChargeLinksCommandBundleHandler sut)
         {
             // Act
-            await sut.HandleAsync(chargeLinksCommandBundle).ConfigureAwait(false);
+            await sut.HandleAsync(chargeLinksBundleDto).ConfigureAwait(false);
 
             // Assert
-            chargeLinksCommandBundle.ChargeLinksCommands.Should().NotBeEmpty();
+            chargeLinksBundleDto.Commands.Should().NotBeEmpty();
             chargeLinksCommandHandler.Verify(
                 x => x.HandleAsync(It.IsAny<ChargeLinksCommand>()),
-                Times.Exactly(chargeLinksCommandBundle.ChargeLinksCommands.Count));
+                Times.Exactly(chargeLinksBundleDto.Commands.Count));
         }
     }
 }

@@ -34,14 +34,14 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         /// The name of the function.
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
-        private readonly ValidatingMessageExtractor<ChargeLinksCommandBundle> _messageExtractor;
+        private readonly ValidatingMessageExtractor<ChargeLinksBundleDto> _messageExtractor;
 
         private readonly IActorContext _actorContext;
 
         public ChargeLinksIngestion(
             IChargeLinksCommandBundleHandler chargeLinksCommandBundleHandler,
             IHttpResponseBuilder httpResponseBuilder,
-            ValidatingMessageExtractor<ChargeLinksCommandBundle> messageExtractor,
+            ValidatingMessageExtractor<ChargeLinksBundleDto> messageExtractor,
             IActorContext actorContext)
         {
             _chargeLinksCommandBundleHandler = chargeLinksCommandBundleHandler;
@@ -76,17 +76,17 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
             return _httpResponseBuilder.CreateAcceptedResponse(req);
         }
 
-        private async Task<SchemaValidatedInboundMessage<ChargeLinksCommandBundle>> ValidateMessageAsync(HttpRequestData req)
+        private async Task<SchemaValidatedInboundMessage<ChargeLinksBundleDto>> ValidateMessageAsync(HttpRequestData req)
         {
-            return (SchemaValidatedInboundMessage<ChargeLinksCommandBundle>)await _messageExtractor
+            return (SchemaValidatedInboundMessage<ChargeLinksBundleDto>)await _messageExtractor
                 .ExtractAsync(req.Body)
                 .ConfigureAwait(false);
         }
 
-        private bool AuthenticatedMatchesSenderId(SchemaValidatedInboundMessage<ChargeLinksCommandBundle> inboundMessage)
+        private bool AuthenticatedMatchesSenderId(SchemaValidatedInboundMessage<ChargeLinksBundleDto> inboundMessage)
         {
             var authorizedActor = _actorContext.CurrentActor;
-            var senderId = inboundMessage.ValidatedMessage?.ChargeLinksCommands.First().Document.Sender.MarketParticipantId;
+            var senderId = inboundMessage.ValidatedMessage?.Commands.First().Document.Sender.MarketParticipantId;
 
             return authorizedActor != null && senderId == authorizedActor.Identifier;
         }

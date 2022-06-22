@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Tests.Builders.Application;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.TestHelpers;
@@ -35,11 +36,15 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             ChargeCommandBundleHandler sut)
         {
             // Arrange
+            var document = new DocumentDtoBuilder()
+                .WithBusinessReasonCode(BusinessReasonCode.UpdateChargeInformation)
+                .Build();
             var commandBuilder = new ChargeCommandBuilder();
-            var bundle = new ChargeCommandBundleBuilder()
-                .WithChargeCommand(commandBuilder.Build())
-                .WithChargeCommand(commandBuilder.Build())
-                .WithChargeCommand(commandBuilder.Build())
+            var bundle = new ChargeBundleDtoBuilder()
+                .WithDocument(document)
+                .WithCommand(commandBuilder.Build())
+                .WithCommand(commandBuilder.Build())
+                .WithCommand(commandBuilder.Build())
                 .Build();
 
             // Act

@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
         {
             var result = new List<AvailableChargeData>();
 
-            foreach (var chargeOperationDto in input.Command.ChargeOperations.Where(ShouldMakeDataAvailableForActiveGridProviders))
+            foreach (var chargeOperationDto in input.Command.Operations.Where(ShouldMakeDataAvailableForActiveGridProviders))
             {
                 await CreateForOperationAsync(input, chargeOperationDto, result).ConfigureAwait(false);
             }
@@ -69,7 +69,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
                     .Select(x => new AvailableChargeDataPoint(x.Position, x.Price)).ToList();
 
                 var sender = await GetSenderAsync().ConfigureAwait(false);
-                var operationOrder = input.Command.ChargeOperations.ToList().IndexOf(operation);
+                var operationOrder = input.Command.Operations.ToList().IndexOf(operation);
 
                 result.Add(new AvailableChargeData(
                     sender.MarketParticipantId,

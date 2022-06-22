@@ -26,9 +26,9 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
             _chargeLinksCommandHandler = chargeLinksCommandHandler;
         }
 
-        public async Task HandleAsync(ChargeLinksCommandBundle chargeLinksCommandBundle)
+        public async Task HandleAsync(ChargeLinksBundleDto chargeLinksBundleDto)
         {
-            foreach (var chargeLinksCommand in chargeLinksCommandBundle.ChargeLinksCommands)
+            foreach (var chargeLinksCommand in chargeLinksBundleDto.Commands)
             {
                 await _chargeLinksCommandHandler.HandleAsync(chargeLinksCommand).ConfigureAwait(false);
             }

@@ -18,21 +18,26 @@ using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
 namespace GreenEnergyHub.Charges.Tests.Builders.Application
 {
-    public class ChargeCommandBundleBuilder
+    public class ChargeBundleDtoBuilder
     {
-        private readonly List<ChargeInformationCommand> _chargeCommands = new();
+        private readonly List<ChargeInformationCommand> _commands = new();
         private DocumentDto _document = new();
 
-        public ChargeCommandBundleBuilder WithChargeCommand(ChargeInformationCommand command)
+        public ChargeBundleDtoBuilder WithDocument(DocumentDto document)
         {
-            _chargeCommands.Add(command);
-            _document = command.Document;
+            _document = document;
+            return this;
+        }
+
+        public ChargeBundleDtoBuilder WithCommand(ChargeInformationCommand command)
+        {
+            _commands.Add(command);
             return this;
         }
 
         public ChargeBundleDto Build()
         {
-            return new ChargeBundleDto(_document, _chargeCommands);
+            return new ChargeBundleDto(_document, _commands);
         }
     }
 }
