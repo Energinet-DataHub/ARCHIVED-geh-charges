@@ -44,7 +44,7 @@ jobs:
     uses: Energinet-DataHub/.github/.github/workflows/terraform-validate.yml@7.6.0
     with:
       TERRAFORM_WORKING_DIR_PATH: './build/infrastructure/main'
-      TERRAFORM_VERSION: '1.1.5'
+      TERRAFORM_VERSION: '1.2.2'
 
   # Create pre-release that might eventually be deployed in CD pipeline
   create_prerelease:
