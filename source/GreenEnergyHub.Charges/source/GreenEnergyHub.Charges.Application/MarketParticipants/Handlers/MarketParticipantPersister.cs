@@ -90,6 +90,8 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
             MarketParticipant existingMarketParticipant)
         {
             existingMarketParticipant.IsActive = marketParticipantUpdatedEvent.IsActive;
+            existingMarketParticipant.B2CActorId = marketParticipantUpdatedEvent.B2CActorId;
+
             _logger.LogInformation(
                 "Market participant with ID '{MarketParticipantId}' and role '{BusinessProcessRole}' " +
                 "has changed state",
