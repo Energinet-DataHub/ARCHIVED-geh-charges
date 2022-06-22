@@ -335,7 +335,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
         }
 
         [Fact]
-        public void StopCharge_WhenPointsExistAfterStopDate_PointsRemoved()
+        public void StopCharge_WhenPointsExistOnAndAfterStopDate_PointsRemoved()
         {
             // Arrange
             var points = new List<Point>
@@ -345,9 +345,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
                 new(0, decimal.One, InstantHelper.GetTodayPlusDaysAtMidnightUtc(2)),
                 new(0, decimal.One, InstantHelper.GetTodayPlusDaysAtMidnightUtc(3)),
                 new(0, decimal.One, InstantHelper.GetTodayPlusDaysAtMidnightUtc(4)),
+                new(0, decimal.One, InstantHelper.GetTodayPlusDaysAtMidnightUtc(5)),
             };
             var sut = new ChargeBuilder()
-                .AddPeriod(new ChargePeriodBuilder().Build())
+                .WithStartDate(InstantHelper.GetTodayPlusDaysAtMidnightUtc(0))
                 .WithPoints(points).Build();
 
             // Act
