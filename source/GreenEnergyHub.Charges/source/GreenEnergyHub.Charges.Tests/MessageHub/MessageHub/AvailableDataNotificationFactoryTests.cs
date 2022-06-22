@@ -62,7 +62,11 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.MessageHub
             for (var i = 0; i < actualNotificationList.Count; i++)
             {
                 actualNotificationList[i].Uuid.Should().Be(availableData[i].AvailableDataReferenceId);
-                actualNotificationList[i].Recipient.Value.Should().Be(availableData[i].ActorId);
+                /*actualNotificationList[i].Recipient.Value.Should().Be(availableData[i].ActorId); // Temporarily not in use*/
+#pragma warning disable CS0618
+                var legacyValue = (LegacyActorIdDto)actualNotificationList[i].Recipient;
+#pragma warning restore CS0618
+                legacyValue.LegacyValue.Should().Be(availableData[i].RecipientId);
                 actualNotificationList[i].MessageType.Value.Should().Be(messageType);
                 actualNotificationList[i].Origin.Should().Be(DomainOrigin.Charges);
                 actualNotificationList[i].SupportsBundling.Should().BeTrue();
