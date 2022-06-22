@@ -169,6 +169,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         public const string ResolutionRequiredErrorText =
             "Resolution is missing.";
 
+        [ErrorMessageFor(ValidationRuleIdentifier.ChargeOwnerHasLengthLimits)]
+        public const string ChargeOwnerTextLengthRuleText =
+            "When sending a charge information (D18) the Charge Owner must have a lenght between 13 and 16.";
+
         public const string Unknown = "unknown";
     }
 }
