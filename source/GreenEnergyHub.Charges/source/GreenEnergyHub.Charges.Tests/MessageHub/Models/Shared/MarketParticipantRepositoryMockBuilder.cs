@@ -31,6 +31,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared
 
             var sender = new MarketParticipant(
                 marketParticipantDto.ActorId,
+                marketParticipantDto.B2CActorId,
                 marketParticipantDto.MarketParticipantId,
                 true,
                 marketParticipantDto.BusinessProcessRole);

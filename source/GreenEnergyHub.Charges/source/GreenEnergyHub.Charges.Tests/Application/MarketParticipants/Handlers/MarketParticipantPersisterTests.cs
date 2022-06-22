@@ -209,8 +209,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             [Frozen] Mock<IUnitOfWork> unitOfWork)
         {
             // Arrange
-            var exisistingMarketParticipant = new MarketParticipant(
-                Guid.NewGuid(),
+            var existingMarketParticipant = new MarketParticipant(
+                id: Guid.NewGuid(),
+                b2CActorId: Guid.NewGuid(),
                 "mp123",
                 true,
                 MarketParticipantRole.GridAccessProvider);
@@ -222,7 +223,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             SetupRepositories(marketParticipantRepository, null!, gridAreaLinkRepository, null!);
             marketParticipantRepository.Setup(x =>
                     x.SingleOrNullAsync(It.IsAny<string>()))
-                .ReturnsAsync(() => exisistingMarketParticipant);
+                .ReturnsAsync(() => existingMarketParticipant);
 
             var sut = new MarketParticipantPersister(
                 marketParticipantRepository.Object,
@@ -369,6 +370,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
         {
             return new MarketParticipantUpdatedEvent(
                 Guid.NewGuid(),
+                Guid.NewGuid(),
                 "mp123",
                 marketParticipantRoleCodes,
                 true,
@@ -379,7 +381,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             MarketParticipantUpdatedEvent marketParticipantUpdatedEvent)
         {
             return new MarketParticipant(
-                Guid.NewGuid(),
+                id: Guid.NewGuid(),
+                b2CActorId: Guid.NewGuid(),
                 marketParticipantUpdatedEvent.MarketParticipantId,
                 marketParticipantUpdatedEvent.IsActive,
                 marketParticipantUpdatedEvent.BusinessProcessRoles.Single());

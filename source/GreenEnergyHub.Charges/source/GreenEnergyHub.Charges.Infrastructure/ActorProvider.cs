@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Security.Authentication;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
@@ -30,12 +31,12 @@ namespace GreenEnergyHub.Charges.Infrastructure
             _marketParticipantRepository = marketParticipantRepository;
         }
 
-        public async Task<Actor> GetActorAsync(Guid actorId)
+        public async Task<Actor> GetActorAsync(Guid b2CActorId)
         {
-            var mp = await _marketParticipantRepository.SingleOrNullAsync(actorId).ConfigureAwait(false);
+            var mp = await _marketParticipantRepository.SingleOrNullAsync(b2CActorId).ConfigureAwait(false);
 
             if (mp == null)
-                throw new Exception($"no actor found with actorId {actorId}");
+                throw new AuthenticationException($"No actor found with b2CActorId {b2CActorId}");
 
             return new Actor(
                 mp.Id,

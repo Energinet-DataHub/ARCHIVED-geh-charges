@@ -33,6 +33,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.SharedDtos
         /// </summary>
         public MarketParticipantRole BusinessProcessRole { get; set; }
 
-        public Guid ActorId { get; set; }
+        public Guid ActorId { get; init; }
+
+        public Guid? B2CActorId { get; init; }
     }
 }

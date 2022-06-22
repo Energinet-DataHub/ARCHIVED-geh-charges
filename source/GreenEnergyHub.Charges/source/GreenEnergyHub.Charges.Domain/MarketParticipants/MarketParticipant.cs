@@ -34,11 +34,13 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
 
         public MarketParticipant(
             Guid id,
+            Guid? b2CActorId,
             string marketParticipantId,
             bool isActive,
             MarketParticipantRole businessProcessRole)
         {
             Id = id;
+            B2CActorId = b2CActorId;
             MarketParticipantId = marketParticipantId;
             IsActive = isActive;
             UpdateBusinessProcessRole(businessProcessRole);
@@ -51,6 +53,8 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
         }
 
         public Guid Id { get; }
+
+        public Guid? B2CActorId { get; }
 
         /// <summary>
         /// The ID that identifies the market participant. In Denmark this would be the GLN number or EIC code.

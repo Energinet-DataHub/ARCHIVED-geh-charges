@@ -86,7 +86,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
                 marketParticipantRepository,
                 existingGridAreaLink,
                 new MarketParticipant(
-                    Guid.NewGuid(),
+                    id: Guid.NewGuid(),
+                    b2CActorId: Guid.NewGuid(),
                     string.Empty,
                     true,
                     MarketParticipantRole.GridAccessProvider));
@@ -125,7 +126,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
                 marketParticipantRepository,
                 existingGridAreaLink,
                 new MarketParticipant(
-                    Guid.NewGuid(),
+                    id: Guid.NewGuid(),
+                    b2CActorId: Guid.NewGuid(),
                     string.Empty,
                     true,
                     MarketParticipantRole.GridAccessProvider));

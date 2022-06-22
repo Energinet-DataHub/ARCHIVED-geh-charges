@@ -59,7 +59,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.Charges
             var availableData = GetRejection(noOfReasons);
 
             var meteringPointAdministrator = new MarketParticipant(
-                Guid.NewGuid(),
+                id: Guid.NewGuid(),
+                b2CActorId: Guid.NewGuid(),
                 MaxLengthId,
                 true,
                 MarketParticipantRole.GridAccessProvider);

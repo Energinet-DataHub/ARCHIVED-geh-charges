@@ -109,7 +109,12 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
         {
             marketParticipantRepository
                 .Setup(r => r.GetMeteringPointAdministratorAsync())
-                .ReturnsAsync(new MarketParticipant(Guid.NewGuid(), "5790001330552", true, MarketParticipantRole.MeteringPointAdministrator));
+                .ReturnsAsync(new MarketParticipant(
+                    id: Guid.NewGuid(),
+                    b2CActorId: Guid.NewGuid(),
+                    "5790001330552",
+                    true,
+                    MarketParticipantRole.MeteringPointAdministrator));
 
             var currentTime = Instant.FromUtc(2021, 10, 12, 13, 37, 43).PlusNanoseconds(4);
             clock.Setup(c => c.GetCurrentInstant()).Returns(currentTime);

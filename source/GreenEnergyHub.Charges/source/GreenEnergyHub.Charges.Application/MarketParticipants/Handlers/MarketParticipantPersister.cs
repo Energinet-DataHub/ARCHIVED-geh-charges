@@ -98,6 +98,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
         {
             var marketParticipant = new MarketParticipant(
                 marketParticipantUpdatedEvent.ActorId,
+                marketParticipantUpdatedEvent.B2CActorId,
                 marketParticipantUpdatedEvent.MarketParticipantId,
                 marketParticipantUpdatedEvent.IsActive,
                 businessProcessRole);

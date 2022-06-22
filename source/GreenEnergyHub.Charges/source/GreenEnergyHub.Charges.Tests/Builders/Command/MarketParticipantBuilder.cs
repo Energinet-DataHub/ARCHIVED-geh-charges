@@ -20,6 +20,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
 {
     public class MarketParticipantBuilder
     {
+        private readonly Guid _b2CActorId = Guid.NewGuid();
         private Guid _id = Guid.NewGuid();
         private bool _isActive;
         private string _marketParticipantId;
@@ -58,7 +59,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
 
         public MarketParticipant Build()
         {
-            return new(_id, _marketParticipantId, _isActive, _role);
+            return new MarketParticipant(_id, _b2CActorId, _marketParticipantId, _isActive, _role);
         }
     }
 }
