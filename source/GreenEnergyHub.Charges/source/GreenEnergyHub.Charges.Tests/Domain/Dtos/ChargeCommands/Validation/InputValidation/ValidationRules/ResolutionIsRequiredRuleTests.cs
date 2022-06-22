@@ -31,13 +31,13 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         [InlineAutoMoqData(Resolution.PT1H, true)]
         [InlineAutoMoqData(Resolution.P1D, true)]
         [InlineAutoMoqData(Resolution.P1M, true)]
-        public void IsValid_WhenCalled_ShouldReturnExpectedValue(Resolution resolution, bool expectedResult, ChargeOperationDtoBuilder builder)
+        public void IsValid_WhenCalled_ShouldReturnExpectedValue(
+        Resolution resolution, 
+        bool expectedResult, 
+        ChargeOperationDtoBuilder builder)
         {
-            // Arrange
             var dto = builder.WithResolution(resolution).Build();
             var sut = new ResolutionIsRequiredRule(dto);
-
-            // Assert
             sut.IsValid.Should().Be(expectedResult);
         }
     }
