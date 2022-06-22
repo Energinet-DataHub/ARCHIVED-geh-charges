@@ -38,6 +38,7 @@ The following asynchronous validation rules are currently implemented in the cha
 |VR.909|The number of prices received does not match the expected number of prices given the time interval and resolution provided.|E87|All|N/A|
 |VR.910|Charge name is mandatory|E0H|All|N/A|
 |VR.911|Charge description is mandatory|E0H|All|N/A|
+|VR.912|Resolution is mandatory|E0H|All|N/A|
 
 * VR.152 is not fully implemented. Right now we only validate that it is filled with something
 * VR.679 is not fully implemented. For now it verifies that the charge exist, not checking that the linked period is within the charge's validity period
