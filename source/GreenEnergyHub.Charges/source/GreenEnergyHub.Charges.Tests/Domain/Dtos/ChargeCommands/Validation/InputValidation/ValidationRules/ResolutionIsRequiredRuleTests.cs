@@ -32,8 +32,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         [InlineAutoMoqData(Resolution.P1D, true)]
         [InlineAutoMoqData(Resolution.P1M, true)]
         public void IsValid_WhenCalled_ShouldReturnExpectedValue(
-        Resolution resolution, 
-        bool expectedResult, 
+        Resolution resolution,
+        bool expectedResult,
         ChargeOperationDtoBuilder builder)
         {
             var dto = builder.WithResolution(resolution).Build();
