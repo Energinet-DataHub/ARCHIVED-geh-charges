@@ -182,11 +182,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // Assert
                 actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
 
-                // We expect three peeks:
-                // * one for the two confirmations
-                // * one for the notification (tax)
-                // * one for the rejection (ChargeIdLengthValidation)
-                await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 3);
+                // We expect six peek results:
+                // * two confirmations
+                // * one rejection (ChargeIdLengthValidation)
+                // * three notifications (tax)
+                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 6);
+                peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
+                peekResults.Should().ContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
+                peekResults.Should().ContainMatch("*NotifyPriceList_MarketDocument*");
             }
 
             [Theory]
@@ -204,7 +207,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Act and assert
-                await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId);
+                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId);
+                peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
             }
 
             [Theory]

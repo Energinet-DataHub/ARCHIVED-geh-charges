@@ -13,8 +13,13 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using Energinet.DataHub.MessageHub.IntegrationTesting;
+using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
 
 namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
 {
@@ -23,12 +28,13 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
         /// <summary>
         /// Listen for dataAvailable events, initiates a peek and assert that a reply is received.
         /// </summary>
-        public static async Task AssertPeekReceivesRepliesAsync(
+        public static async Task<List<string>> AssertPeekReceivesRepliesAsync(
             this MessageHubSimulation messageHub,
             string correlationId,
             int noOfMessageTypes = 1)
         {
             var noOfReceivedMessages = 0;
+            var peekResults = new List<string>();
 
             for (var i = 0; i < noOfMessageTypes; i++)
             {
@@ -38,7 +44,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
                     await messageHub.WaitForNotificationsInDataAvailableQueueAsync(correlationId);
 
                     // Invokes the domain and ensures that a reply to the peek request is received for each message type
-                    await messageHub.PeekAsync(); // Throws if corresponding peek reply is not received
+                    var peekSimulationResponseDto = await messageHub.PeekAsync(); // Throws if corresponding peek reply is not received
+                    peekResults.Add(await DownloadPeekResult(peekSimulationResponseDto));
                     noOfReceivedMessages++;
                 }
                 catch (Exception ex) when (ex is TaskCanceledException or TimeoutException)
@@ -51,6 +58,28 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
                     messageHub.Clear();
                 }
             }
+
+            return peekResults;
+        }
+
+        private static async Task<string> DownloadPeekResult(PeekSimulationResponseDto peekSimulationResponseDto)
+        {
+            ArgumentNullException.ThrowIfNull(peekSimulationResponseDto);
+            ArgumentNullException.ThrowIfNull(peekSimulationResponseDto.Content!.Path);
+
+            var uri = peekSimulationResponseDto.Content.Path;
+            var availableDataReferenceId = uri.Segments.Last().TrimEnd('/');
+
+            const string connectionString = ChargesServiceBusResourceNames.MessageHubStorageConnectionString;
+            const string blobContainerName = ChargesServiceBusResourceNames.MessageHubStorageContainerName;
+
+            var blobServiceClient = new BlobServiceClient(connectionString);
+            var blobClient = blobServiceClient
+                .GetBlobContainerClient(blobContainerName)
+                .GetBlobClient(availableDataReferenceId);
+
+            BlobDownloadResult downloadResult = await blobClient.DownloadContentAsync();
+            return downloadResult.Content.ToString();
         }
     }
 }
