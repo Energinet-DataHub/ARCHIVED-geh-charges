@@ -165,6 +165,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         public const string ChargeDescriptionRequiredErrorText =
             "Charge description is missing.";
 
+        [ErrorMessageFor(ValidationRuleIdentifier.ResolutionIsRequired)]
+        public const string ResolutionRequiredErrorText =
+            "Resolution is missing.";
+
         public const string Unknown = "unknown";
     }
 }
