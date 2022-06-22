@@ -45,39 +45,44 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
         public async Task PersistAsync(MarketParticipantUpdatedEvent marketParticipantUpdatedEvent)
         {
             ArgumentNullException.ThrowIfNull(marketParticipantUpdatedEvent);
+
             foreach (var businessProcessRole in marketParticipantUpdatedEvent.BusinessProcessRoles)
-            {
-                var persistMarketParticipant = await _marketParticipantRepository.SingleOrNullAsync(
-                    businessProcessRole,
-                    marketParticipantUpdatedEvent.MarketParticipantId).ConfigureAwait(false);
-
-                if (persistMarketParticipant is null)
-                {
-                    var marketParticipantAlreadyExistWithOtherRole = await _marketParticipantRepository
-                        .SingleOrNullAsync(marketParticipantUpdatedEvent.MarketParticipantId).ConfigureAwait(false);
-                    if (marketParticipantAlreadyExistWithOtherRole != null)
-                    {
-                        throw new InvalidOperationException(
-                            $"Only 1 market participant with ID '{marketParticipantAlreadyExistWithOtherRole.MarketParticipantId}' is allowed, " +
-                            $"the current persisted market participant has role {marketParticipantAlreadyExistWithOtherRole.BusinessProcessRole} " +
-                            $"and the new market participant to be created has role {businessProcessRole}");
-                    }
-
-                    persistMarketParticipant = await AddMarketParticipantAsync(
-                        marketParticipantUpdatedEvent,
-                        businessProcessRole).ConfigureAwait(false);
-                }
-                else
-                {
-                    UpdateMarketParticipant(
-                        marketParticipantUpdatedEvent,
-                        persistMarketParticipant);
-                }
-
-                await ConnectToGridAreaAsync(marketParticipantUpdatedEvent, persistMarketParticipant).ConfigureAwait(false);
-            }
+                await HandleBusinessProcessRoleAsync(marketParticipantUpdatedEvent, businessProcessRole).ConfigureAwait(false);
 
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+        }
+
+        private async Task HandleBusinessProcessRoleAsync(
+            MarketParticipantUpdatedEvent marketParticipantUpdatedEvent,
+            MarketParticipantRole businessProcessRole)
+        {
+            var persistMarketParticipant = await _marketParticipantRepository.SingleOrNullAsync(
+                businessProcessRole,
+                marketParticipantUpdatedEvent.MarketParticipantId).ConfigureAwait(false);
+
+            if (persistMarketParticipant is null)
+            {
+                var marketParticipantAlreadyExistWithOtherRole = await _marketParticipantRepository
+                    .SingleOrNullAsync(marketParticipantUpdatedEvent.MarketParticipantId).ConfigureAwait(false);
+
+                if (marketParticipantAlreadyExistWithOtherRole != null)
+                {
+                    throw new InvalidOperationException(
+                        $"Only 1 market participant with ID '{marketParticipantAlreadyExistWithOtherRole.MarketParticipantId}' is allowed, " +
+                        $"the current persisted market participant has role {marketParticipantAlreadyExistWithOtherRole.BusinessProcessRole} " +
+                        $"and the new market participant to be created has role {businessProcessRole}");
+                }
+
+                persistMarketParticipant = await AddMarketParticipantAsync(
+                    marketParticipantUpdatedEvent,
+                    businessProcessRole).ConfigureAwait(false);
+            }
+            else
+            {
+                UpdateMarketParticipant(marketParticipantUpdatedEvent, persistMarketParticipant);
+            }
+
+            await ConnectToGridAreaAsync(marketParticipantUpdatedEvent, persistMarketParticipant).ConfigureAwait(false);
         }
 
         private void UpdateMarketParticipant(
