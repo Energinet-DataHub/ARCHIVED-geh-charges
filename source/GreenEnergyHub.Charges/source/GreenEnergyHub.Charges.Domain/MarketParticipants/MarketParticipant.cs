@@ -52,7 +52,17 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
             MarketParticipantId = null!;
         }
 
-        public Guid Id { get; }
+        public Guid Id { get; private set; }
+
+        /// <summary>
+        /// TODO: This method is temporary and must be removed when all MarketParticipants have been updated from market participant domain in all environments!
+        /// TODO: Remove Id setter
+        /// </summary>
+        /// <param name="id"></param>
+        public void TemporarilyUpdateId(Guid id)
+        {
+            Id = id;
+        }
 
         /// <summary>
         /// ID used for authentication of B2B requests.

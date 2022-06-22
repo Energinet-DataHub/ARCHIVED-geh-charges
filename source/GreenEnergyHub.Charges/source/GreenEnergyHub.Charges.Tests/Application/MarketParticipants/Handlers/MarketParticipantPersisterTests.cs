@@ -354,6 +354,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
                 $"Market participant with ID '{existingMarketParticipant.MarketParticipantId}' " +
                 $"and role '{existingMarketParticipant.BusinessProcessRole}' has changed state",
                 LogLevel.Information);
+            logger.VerifyLoggerWasCalled(
+                $"GridAreaLink ID '{gridAreaLink.Id}' has changed Owner ID to '{gridAreaLink.OwnerId}'",
+                LogLevel.Information); // TODO: This verification should be removed when MarketParticipant.Id can no longer be changed
             logger.VerifyNoOtherCalls();
         }
 

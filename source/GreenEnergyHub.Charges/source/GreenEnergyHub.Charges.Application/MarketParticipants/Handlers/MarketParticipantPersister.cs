@@ -56,11 +56,11 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
             MarketParticipantUpdatedEvent marketParticipantUpdatedEvent,
             MarketParticipantRole businessProcessRole)
         {
-            var persistMarketParticipant = await _marketParticipantRepository.SingleOrNullAsync(
+            var marketParticipant = await _marketParticipantRepository.SingleOrNullAsync(
                 businessProcessRole,
                 marketParticipantUpdatedEvent.MarketParticipantId).ConfigureAwait(false);
 
-            if (persistMarketParticipant is null)
+            if (marketParticipant is null)
             {
                 var marketParticipantAlreadyExistWithOtherRole = await _marketParticipantRepository
                     .SingleOrNullAsync(marketParticipantUpdatedEvent.MarketParticipantId).ConfigureAwait(false);
@@ -73,22 +73,23 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
                         $"and the new market participant to be created has role {businessProcessRole}");
                 }
 
-                persistMarketParticipant = await AddMarketParticipantAsync(
+                marketParticipant = await AddMarketParticipantAsync(
                     marketParticipantUpdatedEvent,
                     businessProcessRole).ConfigureAwait(false);
             }
             else
             {
-                UpdateMarketParticipant(marketParticipantUpdatedEvent, persistMarketParticipant);
+                UpdateMarketParticipant(marketParticipantUpdatedEvent, marketParticipant);
             }
 
-            await ConnectToGridAreaAsync(marketParticipantUpdatedEvent, persistMarketParticipant).ConfigureAwait(false);
+            await ConnectToGridAreaAsync(marketParticipantUpdatedEvent, marketParticipant).ConfigureAwait(false);
         }
 
         private void UpdateMarketParticipant(
             MarketParticipantUpdatedEvent marketParticipantUpdatedEvent,
             MarketParticipant existingMarketParticipant)
         {
+            existingMarketParticipant.TemporarilyUpdateId(marketParticipantUpdatedEvent.ActorId);
             existingMarketParticipant.IsActive = marketParticipantUpdatedEvent.IsActive;
             existingMarketParticipant.B2CActorId = marketParticipantUpdatedEvent.B2CActorId;
 
