@@ -27,7 +27,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
-            ValidationRuleIdentifier.VatClassificationValidation;
+            ValidationRuleIdentifier.TransparentInvoicingIsRequired;
 
         public bool IsValid => _chargeOperationDto.TransparentInvoicing
             is TransparentInvoicing.Transparent
