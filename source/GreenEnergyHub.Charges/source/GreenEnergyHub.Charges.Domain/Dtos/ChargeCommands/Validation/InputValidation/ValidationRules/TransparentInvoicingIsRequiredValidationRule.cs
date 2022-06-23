@@ -17,11 +17,11 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
 {
-    public class TransparentInvoicingValidationRule : IValidationRule
+    public class TransparentInvoicingIsRequiredValidationRule : IValidationRule
     {
         private readonly ChargeOperationDto _chargeOperationDto;
 
-        public TransparentInvoicingValidationRule(ChargeOperationDto chargeOperationDto)
+        public TransparentInvoicingIsRequiredValidationRule(ChargeOperationDto chargeOperationDto)
         {
             _chargeOperationDto = chargeOperationDto;
         }

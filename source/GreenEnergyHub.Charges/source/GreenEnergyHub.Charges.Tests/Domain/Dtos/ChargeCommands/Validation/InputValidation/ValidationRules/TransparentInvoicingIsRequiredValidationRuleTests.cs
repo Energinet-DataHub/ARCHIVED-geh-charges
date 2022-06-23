@@ -23,19 +23,19 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
 {
     [UnitTest]
-    public class TaxIndicatorValidationRuleTests
+    public class TransparentInvoicingIsRequiredValidationRuleTests
     {
         [Theory]
-        [InlineAutoMoqData(TaxIndicator.Tax, true)]
-        [InlineAutoMoqData(TaxIndicator.NoTax, true)]
-        [InlineAutoMoqData(TaxIndicator.Unknown, false)]
-        public void IsValid_WhenCalled_ShouldReturnExpectedValue(
-            TaxIndicator taxIndicator,
+        [InlineAutoMoqData(TransparentInvoicing.NonTransparent, true)]
+        [InlineAutoMoqData(TransparentInvoicing.Transparent, true)]
+        [InlineAutoMoqData(TransparentInvoicing.Unknown, false)]
+        public void VatClassificationValidationRule_Test(
+            TransparentInvoicing transparentInvoicing,
             bool expected,
             ChargeOperationDtoBuilder chargeOperationDtoBuilder)
         {
-            var chargeOperationDto = chargeOperationDtoBuilder.WithTaxIndicator(taxIndicator).Build();
-            var sut = new TaxIndicatorValidationRule(chargeOperationDto);
+            var chargeOperationDto = chargeOperationDtoBuilder.WithTransparentInvoicing(transparentInvoicing).Build();
+            var sut = new TransparentInvoicingIsRequiredValidationRule(chargeOperationDto);
             sut.IsValid.Should().Be(expected);
         }
     }
