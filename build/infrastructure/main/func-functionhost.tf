@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 module "func_functionhost" {
-  source                                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/function-app?ref=6.0.0"
+  source                                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/function-app?ref=7.0.0"
 
   name                                      = "functionhost"
   project_name                              = var.domain_name_short
@@ -29,13 +29,9 @@ module "func_functionhost" {
   health_check_path                         = "/api/monitor/ready"
   health_check_alert_action_group_id        = data.azurerm_key_vault_secret.primary_action_group_id.value
   health_check_alert_enabled                = var.enable_health_check_alerts
+  dotnet_framework_version                  = "6"
+  use_dotnet_isolated_runtime               = true
   app_settings                              = {
-    # Region: Default Values
-    WEBSITE_ENABLE_SYNC_UPDATE_SITE                                 = true
-    WEBSITE_RUN_FROM_PACKAGE                                        = 1
-    WEBSITES_ENABLE_APP_SERVICE_STORAGE                             = true
-    FUNCTIONS_WORKER_RUNTIME                                        = "dotnet-isolated"
-
     LOCAL_TIMEZONENAME                                              = "Europe/Copenhagen"
     CURRENCY                                                        = "DKK"
     CHARGE_DB_CONNECTION_STRING                                     = local.MS_CHARGE_DB_CONNECTION_STRING
