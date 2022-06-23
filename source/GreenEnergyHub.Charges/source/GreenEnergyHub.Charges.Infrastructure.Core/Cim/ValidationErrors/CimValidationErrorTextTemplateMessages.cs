@@ -165,6 +165,18 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         public const string ChargeDescriptionRequiredErrorText =
             "Charge description is missing.";
 
+        [ErrorMessageFor(ValidationRuleIdentifier.ResolutionIsRequired)]
+        public const string ResolutionRequiredErrorText =
+            "Resolution is missing.";
+
+        [ErrorMessageFor(ValidationRuleIdentifier.ChargeOwnerHasLengthLimits)]
+        public const string ChargeOwnerTextLengthRuleText =
+            "Charge owner must have a length between 13 and 16.";
+
+        [ErrorMessageFor(ValidationRuleIdentifier.TransparentInvoicingIsRequired)]
+        public const string TransparentInvoicingIsRequiredErrorText =
+            "Transparent invoicing is missing.";
+
         [ErrorMessageFor(ValidationRuleIdentifier.CreateChargeIsNotAllowedATerminationDate)]
         public const string CreateChargeIsNotAllowedATerminationDateErrorText =
             "Upon termination of {{ChargeType}} {{DocumentSenderProvidedChargeId}}, the submitted price element {{DocumentSenderProvidedChargeId}} does not exist and has not previously been used by {{ChargeOwner}}";
