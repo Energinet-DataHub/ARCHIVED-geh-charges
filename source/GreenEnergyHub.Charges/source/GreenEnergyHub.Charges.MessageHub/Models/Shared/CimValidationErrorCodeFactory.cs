@@ -61,6 +61,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.Shared
                 ValidationRuleIdentifier.ChargeDescriptionIsRequired => ReasonCode.E0H,
                 ValidationRuleIdentifier.ResolutionIsRequired => ReasonCode.E0H,
                 ValidationRuleIdentifier.ChargeOwnerHasLengthLimits => ReasonCode.E86,
+                ValidationRuleIdentifier.TransparentInvoicingIsRequired => ReasonCode.E0H,
                 _ => throw new NotImplementedException(),
             };
         }
