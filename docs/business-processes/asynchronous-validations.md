@@ -39,6 +39,7 @@ The following asynchronous validation rules are currently implemented in the cha
 |VR.910|Charge name is mandatory|E0H|All|N/A|
 |VR.911|Charge description is mandatory|E0H|All|N/A|
 |VR.912|Resolution is mandatory|E0H|All|N/A|
+|VR.913|When sending a charge (D08 or D18) the Charge Owner must have a length between 13 (GLN) and 16 (EIC).|E86|All|N/A|
 
 * VR.152 is not fully implemented. Right now we only validate that it is filled with something
 * VR.679 is not fully implemented. For now it verifies that the charge exist, not checking that the linked period is within the charge's validity period
