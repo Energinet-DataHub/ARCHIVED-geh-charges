@@ -79,7 +79,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         }
 
         [Fact]
-        public async Task SingleOrNullAsync_WhenIdEqualsExistingMarketParticipant_ReturnsMarketParticipant()
+        public async Task SingleOrNullAsync_WhenB2CActorIdEqualsExistingMarketParticipant_ReturnsMarketParticipant()
         {
             // Arrange
             await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
@@ -88,11 +88,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                     mp.MarketParticipantId == SeededData.MarketParticipants.Inactive8900000000005.Gln);
 
             // Act
-            var actual = await sut.SingleOrNullAsync(existingMarketParticipant.Id);
+            var actual = await sut.SingleOrNullAsync(existingMarketParticipant.B2CActorId ?? Guid.NewGuid());
 
             // Assert
-            actual!.MarketParticipantId.Should().Be(
-                SeededData.MarketParticipants.Inactive8900000000005.Gln);
+            actual!.MarketParticipantId.Should().Be(SeededData.MarketParticipants.Inactive8900000000005.Gln);
         }
 
         [Fact]
