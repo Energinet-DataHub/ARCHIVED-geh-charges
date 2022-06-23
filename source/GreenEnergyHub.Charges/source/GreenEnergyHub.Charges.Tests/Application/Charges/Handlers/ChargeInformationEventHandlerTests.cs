@@ -152,55 +152,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task HandleAsync_WhenValidationFailsOnCreate_RejectsEvent(
-            [Frozen] Mock<IChargeIdentifierFactory> chargeIdentifierFactory,
-            [Frozen] Mock<IInputValidator<ChargeOperationDto>> inputValidator,
-            [Frozen] Mock<IChargeRepository> chargeRepository,
-            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            [Frozen] Mock<IChargeCommandReceiptService> receiptService,
-            ChargeCommandBuilder chargeCommandBuilder,
-            ChargeOperationDtoBuilder chargeOperationDtoBuilder,
-            TestMarketParticipant sender,
-            ChargeInformationEventHandler sut)
-        {
-            var createOperationDto = chargeOperationDtoBuilder
-                .WithStartDateTime(InstantHelper.GetTodayAtMidnightUtc())
-                .WithEndDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(1))
-                .Build();
-            var chargeCommand = chargeCommandBuilder.WithChargeOperation(createOperationDto).Build();
-            var receivedEvent = new ChargeCommandReceivedEvent(InstantHelper.GetTodayAtMidnightUtc(), chargeCommand);
-
-            var validationResult = ValidationResult.CreateSuccess();
-            SetupValidators(inputValidator, validationResult);
-
-            var stored = false;
-            SetupMarketParticipantRepository(marketParticipantRepository, sender);
-            SetupChargeIdentifierFactoryMock(chargeIdentifierFactory);
-            chargeRepository
-                .Setup(r => r.SingleOrNullAsync(It.IsAny<ChargeIdentifier>()))
-                .ReturnsAsync(null as Charge);
-            chargeRepository
-                .Setup(r => r.AddAsync(It.IsAny<Charge>()))
-                .Callback<Charge>(_ => stored = true);
-
-            var rejected = false;
-            receiptService
-                .Setup(s => s.RejectInvalidOperationsAsync(
-                    It.IsAny<IReadOnlyCollection<ChargeOperationDto>>(),
-                    It.IsAny<DocumentDto>(),
-                    It.IsAny<IList<IValidationRuleContainer>>()))
-                .Callback<IReadOnlyCollection<ChargeOperationDto>, DocumentDto, IList<IValidationRuleContainer>>((_, _, _) => rejected = true);
-
-            // Act
-            await sut.HandleAsync(receivedEvent);
-
-            // Assert
-            stored.Should().Be(false);
-            rejected.Should().Be(true);
-        }
-
-        [Theory]
-        [InlineAutoMoqData]
         public async Task HandleAsync_IfValidUpdateEvent_ChargeUpdated(
             [Frozen] Mock<IChargeIdentifierFactory> chargeIdentifierFactory,
             [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
