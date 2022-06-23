@@ -52,6 +52,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
                 CreateRuleContainer(new ChargeOwnerIsRequiredValidationRule(chargeOperationDto), chargeOperationDto.Id),
                 CreateRuleContainer(new ChargeTypeIsKnownValidationRule(chargeOperationDto), chargeOperationDto.Id),
                 CreateRuleContainer(new StartDateTimeRequiredValidationRule(chargeOperationDto), chargeOperationDto.Id),
+                CreateRuleContainer(new ChargeOwnerTextLengthRule(chargeOperationDto), chargeOperationDto.Id),
             };
 
             rules.AddRange(chargeOperationDto.Points.Any()
