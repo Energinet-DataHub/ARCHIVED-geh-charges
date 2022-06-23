@@ -66,7 +66,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 .ToList();
 
             // Assert
-            actualRuleTypes.Should().Contain(expectedRulesTypes);
+            actualRuleTypes.Should().Equal(expectedRulesTypes);
         }
 
         [Theory]
@@ -107,6 +107,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 typeof(ChargeOwnerIsRequiredValidationRule),
                 typeof(ChargeTypeIsKnownValidationRule),
                 typeof(StartDateTimeRequiredValidationRule),
+                typeof(ChargeOwnerTextLengthRule),
                 typeof(ResolutionFeeValidationRule),
                 typeof(ResolutionSubscriptionValidationRule),
                 typeof(ResolutionTariffValidationRule),
@@ -121,7 +122,6 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 typeof(ChargeNameRequiredRule),
                 typeof(ChargeDescriptionRequiredRule),
                 typeof(ResolutionIsRequiredRule),
-                typeof(ChargeOwnerTextLengthRule),
             };
             return expectedRules;
         }
@@ -136,11 +136,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 typeof(ChargeOwnerIsRequiredValidationRule),
                 typeof(ChargeTypeIsKnownValidationRule),
                 typeof(StartDateTimeRequiredValidationRule),
+                typeof(ChargeOwnerTextLengthRule),
                 typeof(ChargePriceMaximumDigitsAndDecimalsRule),
                 typeof(ChargeTypeTariffPriceCountRule),
                 typeof(MaximumPriceRule),
                 typeof(NumberOfPointsMatchTimeIntervalAndResolutionRule),
-                typeof(ChargeOwnerTextLengthRule),
             };
         }
 
