@@ -13,7 +13,7 @@
 # limitations under the License.
 
 module "sbt_links_command_rejected" {
-  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic?ref=6.0.0"
+  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic?ref=7.0.0"
 
   name                = "links-command-rejected"
   namespace_id        = module.sb_charges.id
