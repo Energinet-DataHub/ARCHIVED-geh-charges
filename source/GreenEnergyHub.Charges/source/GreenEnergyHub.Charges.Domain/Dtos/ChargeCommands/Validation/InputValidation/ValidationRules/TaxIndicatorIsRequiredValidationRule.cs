@@ -17,20 +17,20 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
 {
-    public class TransparentInvoicingValidationRule : IValidationRule
+    public class TaxIndicatorIsRequiredValidationRule : IValidationRule
     {
         private readonly ChargeOperationDto _chargeOperationDto;
 
-        public TransparentInvoicingValidationRule(ChargeOperationDto chargeOperationDto)
+        public TaxIndicatorIsRequiredValidationRule(ChargeOperationDto chargeOperationDto)
         {
             _chargeOperationDto = chargeOperationDto;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
-            ValidationRuleIdentifier.TransparentInvoicingIsRequired;
+            ValidationRuleIdentifier.TaxIndicatorIsRequired;
 
-        public bool IsValid => _chargeOperationDto.TransparentInvoicing
-            is TransparentInvoicing.Transparent
-            or TransparentInvoicing.NonTransparent;
+        public bool IsValid => _chargeOperationDto.TaxIndicator
+            is TaxIndicator.NoTax
+            or TaxIndicator.Tax;
     }
 }
