@@ -179,7 +179,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.TaxIndicatorIsRequired)]
         public const string TaxIndicatorIsRequiredErrorText =
-            "Tax indicator invoicing is missing.";
+            "Tax indicator is missing.";
 
         public const string Unknown = "unknown";
     }
