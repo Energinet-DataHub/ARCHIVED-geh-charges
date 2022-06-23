@@ -47,7 +47,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Function
             var httpRequestData = CreateHttpRequestData(executionContext, "GET", "test", "http://localhost?Id=1");
 
             // Act
-            var responseData = sut.CreateAcceptedResponse(httpRequestData);
+            var responseData = sut.CreateResponse(httpRequestData);
 
             // Assert
             const string correlationIdKey = "CorrelationId";

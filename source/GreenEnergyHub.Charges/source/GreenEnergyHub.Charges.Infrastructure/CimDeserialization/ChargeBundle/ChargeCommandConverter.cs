@@ -21,6 +21,8 @@ using Energinet.DataHub.Core.Messaging.Transport;
 using Energinet.DataHub.Core.SchemaValidation;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.Charges;
@@ -45,16 +47,121 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
             SchemaValidatingReader reader,
             DocumentDto document)
         {
-            var chargeOperationsAsync = await ParseChargeOperationsAsync(reader).ConfigureAwait(false);
+            var processType = document.BusinessReasonCode;
+            switch (document.BusinessReasonCode)
+            {
+                case BusinessReasonCode.UpdateChargeInformation:
+                    var chargeOperationsAsync = await ParseChargeOperationsAsync(reader).ConfigureAwait(false);
+                    var chargeCommands = chargeOperationsAsync
+                        .GroupBy(x => new { x.ChargeId, x.ChargeOwner, x.Type })
+                        .Select(chargeOperationDtoGroup =>
+                            new ChargeInformationCommand(
+                                document,
+                                chargeOperationDtoGroup.AsEnumerable().Select(dto => dto).ToList()))
+                        .ToList();
+                    return new ChargeInformationCommandBundle(document, chargeCommands);
+                case BusinessReasonCode.UpdateChargePrices:
+                    var priceOperations = await ParseChargePriceOperationsAsync(reader).ConfigureAwait(false);
+                    var priceCommands = priceOperations
+                        .GroupBy(x => new { x.ChargeId, x.ChargeOwner, x.Type })
+                        .Select(group =>
+                            new ChargePriceCommand(
+                                priceOperations.AsEnumerable().Select(dto => dto).ToList()))
+                        .ToList();
+                    return new ChargePriceCommandBundle(priceCommands);
+                case BusinessReasonCode.Unknown:
+                case BusinessReasonCode.UpdateMasterDataSettlement:
+                default:
+                    throw new InvalidOperationException(
+                        $"Could not convert specialized content. Process type not recognized: {processType}");
+            }
+        }
 
-            var chargeCommands = chargeOperationsAsync.GroupBy(x => new { x.ChargeId, x.ChargeOwner, x.Type })
-                .Select(chargeOperationDtoGroup =>
-                    new ChargeInformationCommand(
-                        document,
-                        chargeOperationDtoGroup.AsEnumerable().Select(dto => dto).ToList()))
-                .ToList();
+        private async Task<List<ChargePriceOperationDto>> ParseChargePriceOperationsAsync(SchemaValidatingReader reader)
+        {
+            var operations = new List<ChargePriceOperationDto>();
+            var operationId = string.Empty;
 
-            return new ChargeBundleDto(document, chargeCommands);
+            while (await reader.AdvanceAsync().ConfigureAwait(false))
+            {
+                if (reader.Is(CimChargeCommandConstants.Id))
+                {
+                    var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
+                    operationId = content;
+                }
+                else if (reader.Is(CimChargeCommandConstants.ChargeGroup))
+                {
+                    while (await reader.AdvanceAsync().ConfigureAwait(false))
+                    {
+                        if (reader.Is(CimChargeCommandConstants.ChargeTypeElement))
+                        {
+                            var senderProvidedChargeId = string.Empty;
+                            var chargeOwner = string.Empty;
+                            var chargeType = ChargeType.Unknown;
+                            var resolution = Resolution.Unknown;
+                            Instant startDateTime = default;
+                            Instant pointsStartTime = default;
+                            Instant pointsEndTime = default;
+                            var points = new List<Point>();
+
+                            while (await reader.AdvanceAsync().ConfigureAwait(false))
+                            {
+                                if (reader.Is(CimChargeCommandConstants.ChargeOwner))
+                                {
+                                    var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
+                                    chargeOwner = content;
+                                }
+                                else if (reader.Is(CimChargeCommandConstants.ChargeType))
+                                {
+                                    var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
+                                    chargeType = ChargeTypeMapper.Map(content);
+                                }
+                                else if (reader.Is(CimChargeCommandConstants.ChargeId))
+                                {
+                                    var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
+                                    senderProvidedChargeId = content;
+                                }
+                                else if (reader.Is(CimChargeCommandConstants.StartDateTime))
+                                {
+                                    startDateTime = await reader.ReadValueAsNodaTimeAsync().ConfigureAwait(false);
+                                }
+                                else if (reader.Is(CimChargeCommandConstants.SeriesPeriod))
+                                {
+                                    var seriesPeriodIntoOperationAsync = await ParseSeriesPeriodIntoOperationAsync(reader, startDateTime).ConfigureAwait(false);
+                                    points.AddRange(seriesPeriodIntoOperationAsync.Points);
+                                    resolution = seriesPeriodIntoOperationAsync.Resolution;
+                                    pointsStartTime = seriesPeriodIntoOperationAsync.IntervalStartTime;
+                                    pointsEndTime = seriesPeriodIntoOperationAsync.IntervalEndTime;
+                                }
+                                else if (reader.Is(CimChargeCommandConstants.ChargeTypeElement, NodeType.EndElement))
+                                {
+                                    break;
+                                }
+                            }
+
+                            var operation = new ChargePriceOperationDto(
+                                operationId,
+                                chargeType,
+                                senderProvidedChargeId,
+                                chargeOwner,
+                                pointsStartTime,
+                                pointsEndTime,
+                                resolution,
+                                points);
+
+                            operations.Add(operation);
+                        }
+                        else if (reader.Is(
+                                     CimChargeCommandConstants.ChargeGroup,
+                                     NodeType.EndElement))
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return operations;
         }
 
         private async Task<List<ChargeOperationDto>> ParseChargeOperationsAsync(SchemaValidatingReader reader)

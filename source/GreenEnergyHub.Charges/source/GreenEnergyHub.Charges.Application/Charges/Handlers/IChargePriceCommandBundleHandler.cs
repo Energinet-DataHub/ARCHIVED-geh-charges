@@ -12,21 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Net;
 using System.Threading.Tasks;
-using Energinet.DataHub.Core.SchemaValidation.Errors;
-using Microsoft.Azure.Functions.Worker.Http;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
+namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
-    public interface IHttpResponseBuilder
+    /// <summary>
+    /// Contract for handling a charge bundle.
+    /// </summary>
+    public interface IChargePriceCommandBundleHandler
     {
-        HttpResponseData CreateResponse(HttpRequestData request, HttpStatusCode httpStatusCode);
-
-        Task<HttpResponseData> CreateBadRequestResponseAsync(
-            HttpRequestData request,
-            ErrorResponse errorResponse);
-
-        HttpResponseData CreateBadRequestB2BResponse(HttpRequestData request, B2BErrorCode code);
+        /// <summary>
+        /// Synchronously handle the bundle.
+        /// </summary>
+        /// <param name="informationCommandCommandBundle">Charges bundle</param>
+        Task HandleAsync(ChargePriceCommandBundle informationCommandCommandBundle);
     }
 }

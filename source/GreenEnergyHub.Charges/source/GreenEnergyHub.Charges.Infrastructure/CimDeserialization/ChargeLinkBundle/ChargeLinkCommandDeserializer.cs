@@ -20,7 +20,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 
 namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeLinkBundle
 {
-    public sealed class ChargeLinkCommandDeserializer : SchemaValidatingMessageDeserializer<ChargeLinksBundleDto>
+    public sealed class ChargeLinkCommandDeserializer : SchemaValidatingMessageDeserializer<ChargeLinksCommandBundle>
     {
         private readonly ChargeLinkCommandConverter _chargeLinkCommandConverter;
 
@@ -30,13 +30,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeLinkBun
             _chargeLinkCommandConverter = chargeLinkCommandConverter;
         }
 
-        protected override async Task<ChargeLinksBundleDto> ConvertAsync(SchemaValidatingReader reader)
+        protected override async Task<ChargeLinksCommandBundle> ConvertAsync(SchemaValidatingReader reader)
         {
             var command = await _chargeLinkCommandConverter
                 .ConvertAsync(reader)
                 .ConfigureAwait(false);
 
-            return (ChargeLinksBundleDto)command;
+            return (ChargeLinksCommandBundle)command;
         }
     }
 }

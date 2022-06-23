@@ -20,12 +20,12 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
     /// <summary>
     /// Contract for handling a charge bundle.
     /// </summary>
-    public interface IChargesBundleHandler
+    public interface IChargeInformationCommandBundleHandler
     {
         /// <summary>
         /// Synchronously handle the bundle.
         /// </summary>
-        /// <param name="bundleDto">Charges bundle</param>
-        Task HandleAsync(ChargeBundleDto bundleDto);
+        /// <param name="informationCommandBundle">Charges bundle</param>
+        Task HandleAsync(ChargeInformationCommandBundle informationCommandBundle);
     }
 }

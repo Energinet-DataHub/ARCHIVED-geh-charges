@@ -28,12 +28,14 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands
             string chargeOwner,
             Instant? pointsStartInterval,
             Instant? pointsEndInterval,
+            Resolution resolution,
             List<Point> points)
         {
             Id = id;
             Type = type;
             ChargeId = chargeId;
             ChargeOwner = chargeOwner;
+            Resolution = resolution;
             PointsStartInterval = pointsStartInterval;
             PointsEndInterval = pointsEndInterval;
             Points = points;
@@ -46,6 +48,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands
         public string ChargeId { get; }
 
         public string ChargeOwner { get; }
+
+        public Resolution Resolution { get; }
 
         public Instant? PointsStartInterval { get; }
 

@@ -16,10 +16,11 @@ using System.Threading.Tasks;
 using Energinet.DataHub.Core.Messaging.Transport.SchemaValidation;
 using Energinet.DataHub.Core.Schemas;
 using Energinet.DataHub.Core.SchemaValidation;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages;
 
 namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
 {
-    public sealed class ChargeCommandDeserializer : SchemaValidatingMessageDeserializer<Domain.Dtos.ChargeInformationCommands.ChargeBundleDto>
+    public sealed class ChargeCommandDeserializer : SchemaValidatingMessageDeserializer<IMessage>
     {
         private readonly IChargeCommandConverter _chargeCommandConverter;
 
@@ -29,13 +30,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
             _chargeCommandConverter = chargeCommandConverter;
         }
 
-        protected override async Task<Domain.Dtos.ChargeInformationCommands.ChargeBundleDto> ConvertAsync(SchemaValidatingReader reader)
+        protected override async Task<IMessage> ConvertAsync(SchemaValidatingReader reader)
         {
             var command = await _chargeCommandConverter
                 .ConvertAsync(reader)
                 .ConfigureAwait(false);
 
-            return (Domain.Dtos.ChargeInformationCommands.ChargeBundleDto)command;
+            return (IMessage)command;
         }
     }
 }

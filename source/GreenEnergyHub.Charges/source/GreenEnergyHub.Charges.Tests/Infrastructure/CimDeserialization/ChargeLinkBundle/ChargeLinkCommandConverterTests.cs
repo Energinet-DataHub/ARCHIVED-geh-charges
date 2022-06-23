@@ -52,7 +52,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeL
             var reader = new SchemaValidatingReader(stream, Schemas.CimXml.StructureRequestChangeBillingMasterData);
 
             // Act
-            var resultBundle = (ChargeLinksBundleDto)await sut.ConvertAsync(reader).ConfigureAwait(false);
+            var resultBundle = (ChargeLinksCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
 
             // Assert
             var result = resultBundle.Commands.Single();
@@ -93,7 +93,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeL
             var reader = new SchemaValidatingReader(stream, Schemas.CimXml.StructureRequestChangeBillingMasterData);
 
             // Act
-            var resultBundle = (ChargeLinksBundleDto)await sut.ConvertAsync(reader).ConfigureAwait(false);
+            var resultBundle = (ChargeLinksCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
 
             // Assert
             var result = resultBundle.Commands.Single();
@@ -117,7 +117,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeL
             var reader = new SchemaValidatingReader(stream, Schemas.CimXml.StructureRequestChangeBillingMasterData);
 
             // Act
-            var resultBundle = (ChargeLinksBundleDto)await sut.ConvertAsync(reader).ConfigureAwait(false);
+            var resultBundle = (ChargeLinksCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
 
             // Assert
             var result = resultBundle.Commands.Single();
@@ -142,7 +142,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeL
             var reader = new SchemaValidatingReader(stream, Schemas.CimXml.StructureRequestChangeBillingMasterData);
 
             // Act
-            var result = (ChargeLinksBundleDto)await sut.ConvertAsync(reader).ConfigureAwait(false);
+            var result = (ChargeLinksCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
 
             // Assert
             // Document

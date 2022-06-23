@@ -12,21 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Net;
-using System.Threading.Tasks;
-using Energinet.DataHub.Core.SchemaValidation.Errors;
-using Microsoft.Azure.Functions.Worker.Http;
+using System.Collections.Generic;
+using Energinet.DataHub.Core.Messaging.MessageTypes.Common;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
+namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
 {
-    public interface IHttpResponseBuilder
+    public class ChargeLinksCommandBundle : IMessage
     {
-        HttpResponseData CreateResponse(HttpRequestData request, HttpStatusCode httpStatusCode);
+        public ChargeLinksCommandBundle(IReadOnlyCollection<ChargeLinksCommand> commands)
+        {
+            Transaction = Transaction.NewTransaction();
+            Commands = commands;
+        }
 
-        Task<HttpResponseData> CreateBadRequestResponseAsync(
-            HttpRequestData request,
-            ErrorResponse errorResponse);
+        public IReadOnlyCollection<ChargeLinksCommand> Commands { get; }
 
-        HttpResponseData CreateBadRequestB2BResponse(HttpRequestData request, B2BErrorCode code);
+        public Transaction Transaction { get; set; }
     }
 }

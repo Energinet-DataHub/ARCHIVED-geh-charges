@@ -31,10 +31,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
             _correlationContext = correlationContext;
         }
 
-        public HttpResponseData CreateAcceptedResponse(HttpRequestData request)
+        public HttpResponseData CreateResponse(HttpRequestData request, HttpStatusCode httpStatusCode)
         {
-            var httpResponseData = request.CreateResponse(HttpStatusCode.Accepted);
-            AddHeaders(httpResponseData);
+            var httpResponseData = request.CreateResponse(httpStatusCode);
+            AddCorrelationIdToHeaders(httpResponseData);
             return httpResponseData;
         }
 
@@ -42,7 +42,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
             HttpRequestData request, ErrorResponse errorResponse)
         {
             var httpResponse = request.CreateResponse(HttpStatusCode.BadRequest);
-            AddHeaders(httpResponse);
+            AddCorrelationIdToHeaders(httpResponse);
             await errorResponse.WriteAsXmlAsync(httpResponse.Body).ConfigureAwait(false);
             return httpResponse;
         }
@@ -50,14 +50,14 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
         public HttpResponseData CreateBadRequestB2BResponse(HttpRequestData request, B2BErrorCode code)
         {
             var httpResponse = request.CreateResponse(HttpStatusCode.BadRequest);
-            AddHeaders(httpResponse);
+            AddCorrelationIdToHeaders(httpResponse);
             var errorMessage = B2BErrorMessageFactory.Create(code);
             var unauthorizedRequest = errorMessage.WriteAsXmlString();
             httpResponse.WriteString(unauthorizedRequest, Encoding.UTF8);
             return httpResponse;
         }
 
-        private void AddHeaders(HttpResponseData httpResponseData)
+        private void AddCorrelationIdToHeaders(HttpResponseData httpResponseData)
         {
             httpResponseData.Headers.Add("CorrelationId", _correlationContext.Id);
         }

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
 using Energinet.DataHub.Core.Messaging.Transport.SchemaValidation;
@@ -34,14 +35,14 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         /// The name of the function.
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
-        private readonly ValidatingMessageExtractor<ChargeLinksBundleDto> _messageExtractor;
+        private readonly ValidatingMessageExtractor<ChargeLinksCommandBundle> _messageExtractor;
 
         private readonly IActorContext _actorContext;
 
         public ChargeLinksIngestion(
             IChargeLinksCommandBundleHandler chargeLinksCommandBundleHandler,
             IHttpResponseBuilder httpResponseBuilder,
-            ValidatingMessageExtractor<ChargeLinksBundleDto> messageExtractor,
+            ValidatingMessageExtractor<ChargeLinksCommandBundle> messageExtractor,
             IActorContext actorContext)
         {
             _chargeLinksCommandBundleHandler = chargeLinksCommandBundleHandler;
@@ -73,17 +74,17 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
                 .HandleAsync(inboundMessage.ValidatedMessage)
                 .ConfigureAwait(false);
 
-            return _httpResponseBuilder.CreateAcceptedResponse(req);
+            return _httpResponseBuilder.CreateResponse(req, HttpStatusCode.Accepted);
         }
 
-        private async Task<SchemaValidatedInboundMessage<ChargeLinksBundleDto>> ValidateMessageAsync(HttpRequestData req)
+        private async Task<SchemaValidatedInboundMessage<ChargeLinksCommandBundle>> ValidateMessageAsync(HttpRequestData req)
         {
-            return (SchemaValidatedInboundMessage<ChargeLinksBundleDto>)await _messageExtractor
+            return (SchemaValidatedInboundMessage<ChargeLinksCommandBundle>)await _messageExtractor
                 .ExtractAsync(req.Body)
                 .ConfigureAwait(false);
         }
 
-        private bool AuthenticatedMatchesSenderId(SchemaValidatedInboundMessage<ChargeLinksBundleDto> inboundMessage)
+        private bool AuthenticatedMatchesSenderId(SchemaValidatedInboundMessage<ChargeLinksCommandBundle> inboundMessage)
         {
             var authorizedActor = _actorContext.CurrentActor;
             var senderId = inboundMessage.ValidatedMessage?.Commands.First().Document.Sender.MarketParticipantId;

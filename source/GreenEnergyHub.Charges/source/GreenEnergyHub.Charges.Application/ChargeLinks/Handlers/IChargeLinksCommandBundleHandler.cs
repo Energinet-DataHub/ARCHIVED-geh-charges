@@ -19,6 +19,6 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
     public interface IChargeLinksCommandBundleHandler
     {
-        Task HandleAsync(ChargeLinksBundleDto chargeLinksBundleDto);
+        Task HandleAsync(ChargeLinksCommandBundle chargeLinksCommandBundle);
     }
 }
