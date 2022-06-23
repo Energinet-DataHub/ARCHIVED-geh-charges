@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 .GetRules().Select(r => r.ValidationRule.GetType()).ToList();
 
             // Assert
-            actualRuleTypes.Should().Equal(expectedRulesTypes);
+            actualRuleTypes.Should().Contain(expectedRulesTypes);
         }
 
         [Theory]
@@ -66,7 +66,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 .ToList();
 
             // Assert
-            actualRuleTypes.Should().Equal(expectedRulesTypes);
+            actualRuleTypes.Should().Contain(expectedRulesTypes);
         }
 
         [Theory]
@@ -140,6 +140,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 typeof(ChargeTypeTariffPriceCountRule),
                 typeof(MaximumPriceRule),
                 typeof(NumberOfPointsMatchTimeIntervalAndResolutionRule),
+                typeof(ChargeOwnerTextLengthRule),
             };
         }
 
