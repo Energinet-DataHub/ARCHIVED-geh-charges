@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 .GetRules().Select(r => r.ValidationRule.GetType()).ToList();
 
             // Assert
-            actualRuleTypes.Should().Equal(expectedRulesTypes);
+            actualRuleTypes.Should().Contain(expectedRulesTypes);
         }
 
         [Theory]
@@ -107,6 +107,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 typeof(ChargeOwnerIsRequiredValidationRule),
                 typeof(ChargeTypeIsKnownValidationRule),
                 typeof(StartDateTimeRequiredValidationRule),
+                typeof(ChargeOwnerTextLengthRule),
                 typeof(ResolutionFeeValidationRule),
                 typeof(ResolutionSubscriptionValidationRule),
                 typeof(ResolutionTariffValidationRule),
@@ -121,6 +122,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 typeof(ChargeNameRequiredRule),
                 typeof(ChargeDescriptionRequiredRule),
                 typeof(ResolutionIsRequiredRule),
+                typeof(TransparentInvoicingValidationRule),
             };
             return expectedRules;
         }
@@ -135,6 +137,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 typeof(ChargeOwnerIsRequiredValidationRule),
                 typeof(ChargeTypeIsKnownValidationRule),
                 typeof(StartDateTimeRequiredValidationRule),
+                typeof(ChargeOwnerTextLengthRule),
                 typeof(ChargePriceMaximumDigitsAndDecimalsRule),
                 typeof(ChargeTypeTariffPriceCountRule),
                 typeof(MaximumPriceRule),
