@@ -14,7 +14,5 @@
     
     UPDATE [Charges].[MarketParticipant]
     SET B2CActorId = Id
-    
-    select * from [Charges].[MarketParticipant]
 
 commit
