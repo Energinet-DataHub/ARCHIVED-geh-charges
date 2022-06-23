@@ -26,9 +26,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
     {
         [Theory]
         [InlineAutoMoqData("Short   name", false, "the length is less than 13 characters.")]
-        [InlineAutoMoqData("Too     long name", false, "the length is longer than 13 characters.")]
-        [InlineAutoMoqData("Charge  Owner", true, "13 character GLN names are supported.")]
-        [InlineAutoMoqData("Charge Fee Name", true, "16 character EIC names are supported.")]
+        [InlineAutoMoqData("Too     long name", false, "the length is longer than 16 characters.")]
+        [InlineAutoMoqData("1234567890123", true, "13 character GLN names are supported.")]
+        [InlineAutoMoqData("ThisIsA16charEic", true, "16 character EIC names are supported.")]
         public void IsValid_WhenCalled_ShouldReturnExpectedValue(
             string chargeOwner,
             bool expectedResult,
