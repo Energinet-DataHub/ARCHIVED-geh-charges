@@ -40,12 +40,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
             {
                 try
                 {
-                    // Throws if expected data available message (by correlation ID) is not received
-                    await messageHub.WaitForNotificationsInDataAvailableQueueAsync(correlationId);
-
-                    // Invokes the domain and ensures that a reply to the peek request is received for each message type
-                    var peekSimulationResponseDto = await messageHub.PeekAsync(); // Throws if corresponding peek reply is not received
-                    peekResults.Add(await DownloadPeekResult(peekSimulationResponseDto));
+                    peekResults.Add(await WaitForDataAvailableAndPeek(messageHub, correlationId));
                     noOfReceivedMessages++;
                 }
                 catch (Exception ex) when (ex is TaskCanceledException or TimeoutException)
@@ -60,6 +55,17 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
             }
 
             return peekResults;
+        }
+
+        private static async Task<string> WaitForDataAvailableAndPeek(
+            MessageHubSimulation messageHub, string correlationId)
+        {
+            // Throws if expected data available message (by correlation ID) is not received
+            await messageHub.WaitForNotificationsInDataAvailableQueueAsync(correlationId);
+
+            // Invokes the domain and ensures that a reply to the peek request is received for each message type
+            var peekSimulationResponseDto = await messageHub.PeekAsync(); // Throws if corresponding peek reply is not received
+            return await DownloadPeekResult(peekSimulationResponseDto);
         }
 
         private static async Task<string> DownloadPeekResult(PeekSimulationResponseDto peekSimulationResponseDto)

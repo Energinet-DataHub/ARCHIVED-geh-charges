@@ -185,7 +185,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // We expect six peek results:
                 // * two confirmations
                 // * one rejection (ChargeIdLengthValidation)
-                // * three notifications (tax)
+                // * three notifications (tax), one for each Active MarketParticipant with role GridAccessProvider
                 var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 6);
                 peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
                 peekResults.Should().ContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
