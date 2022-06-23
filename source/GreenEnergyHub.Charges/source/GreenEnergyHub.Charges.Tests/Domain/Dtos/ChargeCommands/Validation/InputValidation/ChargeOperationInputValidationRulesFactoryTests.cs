@@ -123,6 +123,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 typeof(ChargeDescriptionRequiredRule),
                 typeof(ResolutionIsRequiredRule),
                 typeof(TransparentInvoicingValidationRule),
+                typeof(TaxIndicatorValidationRule),
             };
             return expectedRules;
         }

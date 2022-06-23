@@ -97,6 +97,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
                 CreateRuleContainer(new ChargeDescriptionRequiredRule(chargeOperationDto), chargeOperationDto.Id),
                 CreateRuleContainer(new ResolutionIsRequiredRule(chargeOperationDto), chargeOperationDto.Id),
                 CreateRuleContainer(new TransparentInvoicingValidationRule(chargeOperationDto), chargeOperationDto.Id),
+                CreateRuleContainer(new TaxIndicatorValidationRule(chargeOperationDto), chargeOperationDto.Id),
             };
         }
 
