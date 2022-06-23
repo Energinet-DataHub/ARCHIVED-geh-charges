@@ -13,7 +13,7 @@
 # limitations under the License.
 
 module "sbt_price_command_received" {
-  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic?ref=6.0.0"
+  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic?ref=7.0.0"
 
   name                = "price-command-received"
   namespace_id        = module.sb_charges.id

@@ -23,9 +23,9 @@ data "template_file" "workbook_charges_template" {
   }
 }
 
-resource "azurerm_template_deployment" "workbook_charges" {
+resource "azurerm_resource_group_template_deployment" "workbook_charges" {
   name                  = "workbook-${lower(var.domain_name_short)}-${lower(var.environment_short)}-${lower(var.environment_instance)}"
   resource_group_name   = azurerm_resource_group.this.name
-  template_body         = data.template_file.workbook_charges_template.rendered
-  deployment_mode       = "incremental"
+  template_content      = data.template_file.workbook_charges_template.rendered
+  deployment_mode       = "Incremental"
 }
