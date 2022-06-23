@@ -171,7 +171,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeOwnerHasLengthLimits)]
         public const string ChargeOwnerTextLengthRuleText =
-            "When sending a charge (D08 or D18) the Charge Owner must have a lenght between 13 and 16.";
+            "Charge owner must have a length between 13 and 16.";
 
         public const string Unknown = "unknown";
     }
