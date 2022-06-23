@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges.Exceptions;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using NodaTime;
@@ -89,39 +90,53 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 
         public IReadOnlyCollection<ChargePeriod> Periods => _periods;
 
-        public static Charge Create(
-            string name,
-            string description,
-            string senderProvidedChargeId,
-            Guid ownerId,
-            ChargeType type,
-            Resolution resolution,
-            TaxIndicator taxIndicator,
-            VatClassification vatClassification,
-            bool transparentInvoicing,
-            Instant startDate)
+        /// <summary>
+        /// Creates an instance of a charge from a charge operation
+        /// </summary>
+        /// <param name="ownerId"></param>
+        /// <param name="operation"></param>
+        public static Charge Create(Guid ownerId, ChargeOperationDto operation)
         {
-            ArgumentNullException.ThrowIfNull(name);
-            ArgumentNullException.ThrowIfNull(description);
-            ArgumentNullException.ThrowIfNull(senderProvidedChargeId);
-
+            ArgumentNullException.ThrowIfNull(operation);
+            ArgumentNullException.ThrowIfNull(operation.ChargeName);
+            ArgumentNullException.ThrowIfNull(operation.ChargeDescription);
+            ArgumentNullException.ThrowIfNull(operation.ChargeId);
             var chargePeriod = ChargePeriod.Create(
-                name,
-                description,
-                vatClassification,
-                transparentInvoicing,
-                startDate,
+                operation.ChargeName,
+                operation.ChargeDescription,
+                operation.VatClassification,
+                operation.TransparentInvoicing == TransparentInvoicing.Transparent,
+                operation.StartDateTime,
                 InstantExtensions.GetEndDefault());
 
             return new Charge(
                 Guid.NewGuid(),
-                senderProvidedChargeId,
+                operation.ChargeId,
                 ownerId,
-                type,
-                resolution,
-                ParseTaxIndicator(taxIndicator),
+                operation.Type,
+                operation.Resolution,
+                ParseTaxIndicator(operation.TaxIndicator),
                 new List<Point>(),
                 new List<ChargePeriod> { chargePeriod });
+        }
+
+        /// <summary>
+        /// Creates an instant of a charge that is validated as a new charge that is not yet persisted.
+        /// </summary>
+        /// <param name="ownerId"></param>
+        /// <param name="operation"></param>
+        public static Charge Add(Guid ownerId, ChargeOperationDto operation)
+        {
+            ArgumentNullException.ThrowIfNull(operation);
+
+            var rules = new List<OperationValidationRuleContainer>
+            {
+                new(
+                    new CreateChargeIsNotAllowedATerminationRuleDate(operation.EndDateTime), operation.Id),
+            };
+            CheckRules(rules);
+
+            return Create(ownerId, operation);
         }
 
         /// <summary>

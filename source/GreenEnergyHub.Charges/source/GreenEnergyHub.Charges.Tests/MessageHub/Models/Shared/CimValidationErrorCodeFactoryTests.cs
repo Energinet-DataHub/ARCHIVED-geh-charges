@@ -58,6 +58,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared
         [InlineAutoMoqData(ValidationRuleIdentifier.NumberOfPointsMatchTimeIntervalAndResolution, ReasonCode.E87)]
         [InlineAutoMoqData(ValidationRuleIdentifier.ChargeNameIsRequired, ReasonCode.E0H)]
         [InlineAutoMoqData(ValidationRuleIdentifier.ChargeDescriptionIsRequired, ReasonCode.E0H)]
+        [InlineAutoMoqData(ValidationRuleIdentifier.CreateChargeIsNotAllowedATerminationDate, ReasonCode.D14)]
         public void Create_ReturnsExpectedCode(
             ValidationRuleIdentifier identifier,
             ReasonCode expected,

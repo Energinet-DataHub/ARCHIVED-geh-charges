@@ -59,6 +59,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.Shared
                 ValidationRuleIdentifier.NumberOfPointsMatchTimeIntervalAndResolution => ReasonCode.E87,
                 ValidationRuleIdentifier.ChargeNameIsRequired => ReasonCode.E0H,
                 ValidationRuleIdentifier.ChargeDescriptionIsRequired => ReasonCode.E0H,
+                ValidationRuleIdentifier.CreateChargeIsNotAllowedATerminationDate => ReasonCode.D14,
                 _ => throw new NotImplementedException(),
             };
         }

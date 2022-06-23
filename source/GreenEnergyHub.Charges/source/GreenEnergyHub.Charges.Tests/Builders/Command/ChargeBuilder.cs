@@ -96,18 +96,21 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         public Charge Build()
         {
             var operationId = Guid.NewGuid().ToString();
+            var operation = new ChargeOperationDtoBuilder()
+                .WithChargeOperationId(operationId)
+                .WithChargeName(_name)
+                .WithDescription("chargeDescription")
+                .WithChargeId(_senderProvidedChargeId)
+                .WithChargeType(ChargeType.Tariff)
+                .WithResolution(_resolution)
+                .WithTaxIndicator(_taxIndicator)
+                .WithVatClassification(VatClassification.Unknown)
+                .WithTransparentInvoicing(TransparentInvoicing.Transparent)
+                .WithStartDateTime(_startDate)
+                .WithEndDateTime(_stopDate)
+                .Build();
 
-            var charge = Charge.Create(
-                _name,
-                "chargeDescription",
-                _senderProvidedChargeId,
-                _ownerId,
-                ChargeType.Tariff,
-                _resolution,
-                _taxIndicator,
-                VatClassification.Unknown,
-                true,
-                _startDate);
+            var charge = Charge.Create(_ownerId, operation);
 
             if (_periods.Any())
             {

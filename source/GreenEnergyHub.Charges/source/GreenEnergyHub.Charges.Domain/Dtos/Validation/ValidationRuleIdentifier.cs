@@ -51,5 +51,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
         NumberOfPointsMatchTimeIntervalAndResolution = 37, // VR909 / E87,
         ChargeNameIsRequired = 38, // VR910 / E0H
         ChargeDescriptionIsRequired = 39, // VR911 / E0H
+        CreateChargeIsNotAllowedATerminationDate = 40, // VR914 / D14?
     }
 }

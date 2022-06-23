@@ -37,17 +37,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             if (owner == null)
                 throw new InvalidOperationException($"Market participant '{chargeOperationDto.ChargeOwner}' does not exist.");
 
-            return Charge.Create(
-                chargeOperationDto.ChargeName,
-                chargeOperationDto.ChargeDescription,
-                chargeOperationDto.ChargeId,
-                owner.Id,
-                chargeOperationDto.Type,
-                chargeOperationDto.Resolution,
-                chargeOperationDto.TaxIndicator,
-                chargeOperationDto.VatClassification,
-                chargeOperationDto.TransparentInvoicing == TransparentInvoicing.Transparent,
-                chargeOperationDto.StartDateTime);
+            return Charge.Add(owner.Id, chargeOperationDto);
         }
     }
 }

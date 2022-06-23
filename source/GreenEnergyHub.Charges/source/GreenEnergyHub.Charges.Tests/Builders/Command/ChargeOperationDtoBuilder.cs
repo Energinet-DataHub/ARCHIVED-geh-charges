@@ -44,7 +44,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             _operationId = "operationId";
             _chargeId = "some charge id";
             _startDateTime = InstantHelper.GetTodayPlusDaysAtMidnightUtc(31);
-            _endDateTime = InstantHelper.GetTodayPlusDaysAtMidnightUtc(32);
+            _endDateTime = InstantHelper.GetEndDefault();
             _vatClassification = VatClassification.Vat25;
             _taxIndicator = TaxIndicator.Tax;
             _owner = "owner";
