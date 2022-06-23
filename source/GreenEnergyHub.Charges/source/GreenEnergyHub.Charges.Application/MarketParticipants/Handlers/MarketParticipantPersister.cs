@@ -57,8 +57,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
             MarketParticipantRole businessProcessRole)
         {
             var marketParticipant = await _marketParticipantRepository.SingleOrNullAsync(
-                businessProcessRole,
-                marketParticipantUpdatedEvent.MarketParticipantId).ConfigureAwait(false);
+                businessProcessRole, marketParticipantUpdatedEvent.MarketParticipantId).ConfigureAwait(false);
 
             if (marketParticipant is null)
             {
@@ -74,8 +73,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
                 }
 
                 marketParticipant = await AddMarketParticipantAsync(
-                    marketParticipantUpdatedEvent,
-                    businessProcessRole).ConfigureAwait(false);
+                    marketParticipantUpdatedEvent, businessProcessRole).ConfigureAwait(false);
             }
             else
             {
