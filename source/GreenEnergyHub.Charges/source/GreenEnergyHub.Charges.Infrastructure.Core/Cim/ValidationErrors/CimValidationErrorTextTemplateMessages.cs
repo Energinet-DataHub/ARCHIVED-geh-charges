@@ -169,6 +169,18 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         public const string ResolutionRequiredErrorText =
             "Resolution is missing.";
 
+        [ErrorMessageFor(ValidationRuleIdentifier.ChargeOwnerHasLengthLimits)]
+        public const string ChargeOwnerTextLengthRuleText =
+            "Charge owner must have a length between 13 and 16.";
+
+        [ErrorMessageFor(ValidationRuleIdentifier.TransparentInvoicingIsRequired)]
+        public const string TransparentInvoicingIsRequiredErrorText =
+            "Transparent invoicing is missing.";
+
+        [ErrorMessageFor(ValidationRuleIdentifier.TaxIndicatorIsRequired)]
+        public const string TaxIndicatorIsRequiredErrorText =
+            "Tax indicator is missing.";
+
         public const string Unknown = "unknown";
     }
 }
