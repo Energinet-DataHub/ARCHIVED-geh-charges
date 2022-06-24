@@ -504,6 +504,29 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             actualPriceSecondAdded.Price.Should().Be(7.00m);
         }
 
+        [Fact]
+        public void Add_WithInvalidEndDate_ThrowsException()
+        {
+            // Arrange
+            var operation = new ChargeOperationDtoBuilder().WithEndDateTime(InstantHelper.GetTodayAtMidnightUtc()).Build();
+
+            // Act / Assert
+            Assert.Throws<ChargeOperationFailedException>(() => Charge.Add(Guid.NewGuid(), operation));
+        }
+
+        [Fact]
+        public void Add_WithNoEndDate_Succeed()
+        {
+            // Arrange
+            var operation = new ChargeOperationDtoBuilder().WithEndDateTime(InstantHelper.GetEndDefault()).Build();
+
+            // Act
+            var charge = Charge.Add(Guid.NewGuid(), operation);
+
+            // Assert
+            charge.Should().NotBeNull();
+        }
+
         private static List<ChargePeriod> CreateThreeExistingPeriods()
         {
             return new List<ChargePeriod>
