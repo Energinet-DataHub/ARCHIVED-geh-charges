@@ -34,12 +34,14 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
 
         public MarketParticipant(
             Guid id,
+            Guid actorId,
             Guid? b2CActorId,
             string marketParticipantId,
             bool isActive,
             MarketParticipantRole businessProcessRole)
         {
             Id = id;
+            ActorId = actorId;
             B2CActorId = b2CActorId;
             MarketParticipantId = marketParticipantId;
             IsActive = isActive;
@@ -52,17 +54,14 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
             MarketParticipantId = null!;
         }
 
-        public Guid Id { get; private set; }
+        public Guid Id { get; }
 
         /// <summary>
-        /// TODO: This method is temporary and must be removed when all MarketParticipants have been updated from market participant domain in all environments!
-        /// TODO: Remove Id setter
+        /// ID identifying the actor in the Market Participant domain
+        /// The setter is public as the charges domain doesn't enforce any validation
+        /// as it is the responsibility of the market participant domain providing the data.
         /// </summary>
-        /// <param name="id"></param>
-        public void TemporarilyUpdateId(Guid id)
-        {
-            Id = id;
-        }
+        public Guid ActorId { get; set; }
 
         /// <summary>
         /// ID used for authentication of B2B requests.

@@ -66,7 +66,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             // Assert
             marketParticipantRepository.Verify(v => v.AddAsync(It.IsAny<MarketParticipant>()), Times.Once());
             logger.VerifyLoggerWasCalled(
-                $"Market participant with GLN '{marketParticipantUpdatedEvent.MarketParticipantId}', ID " +
+                $"Market participant with GLN '{marketParticipantUpdatedEvent.MarketParticipantId}', ActorId " +
                 $"'{marketParticipantUpdatedEvent.ActorId}', B2CActorId '{marketParticipantUpdatedEvent.B2CActorId}' " +
                 $"and role '{MarketParticipantRole.GridAccessProvider}' has been persisted",
                 LogLevel.Information);
@@ -143,7 +143,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             marketParticipantRepository.Verify(v => v.AddAsync(It.IsAny<MarketParticipant>()), Times.Once);
             gridAreaLinkRepository.Verify(v => v.GetGridAreaOrNullAsync(It.IsAny<Guid>()), Times.Once);
             logger.VerifyLoggerWasCalled(
-                $"Market participant with GLN '{marketParticipantUpdatedEvent.MarketParticipantId}', ID " +
+                $"Market participant with GLN '{marketParticipantUpdatedEvent.MarketParticipantId}', ActorId " +
                 $"'{marketParticipantUpdatedEvent.ActorId}', B2CActorId '{marketParticipantUpdatedEvent.B2CActorId}' " +
                 $"and role '{MarketParticipantRole.GridAccessProvider}' has been persisted",
                 LogLevel.Information);
@@ -188,7 +188,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             marketParticipantRepository.Verify(v => v.AddAsync(It.IsAny<MarketParticipant>()), Times.Once);
             gridAreaLinkRepository.Verify(v => v.GetGridAreaOrNullAsync(It.IsAny<Guid>()), Times.Exactly(2));
             logger.VerifyLoggerWasCalled(
-                $"Market participant with GLN '{marketParticipantUpdatedEvent.MarketParticipantId}', ID " +
+                $"Market participant with GLN '{marketParticipantUpdatedEvent.MarketParticipantId}', ActorId " +
                 $"'{marketParticipantUpdatedEvent.ActorId}', B2CActorId '{marketParticipantUpdatedEvent.B2CActorId}' " +
                 $"and role '{MarketParticipantRole.GridAccessProvider}' has been persisted",
                 LogLevel.Information);
@@ -211,6 +211,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             // Arrange
             var existingMarketParticipant = new MarketParticipant(
                 id: Guid.NewGuid(),
+                actorId: Guid.NewGuid(),
                 b2CActorId: Guid.NewGuid(),
                 "mp123",
                 true,
@@ -358,11 +359,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
                 $"Market participant with ID '{existingMarketParticipant.MarketParticipantId}' " +
                 $"and role '{existingMarketParticipant.BusinessProcessRole}' has changed state",
                 LogLevel.Information);
-            logger.VerifyLoggerWasCalled(
-                $"GridAreaLink ID '{gridAreaLink.Id}' has changed Owner ID to '{gridAreaLink.OwnerId}' " +
-                $"with GLN {marketParticipantUpdatedEvent.MarketParticipantId} and " +
-                $"{marketParticipantUpdatedEvent.B2CActorId}",
-                LogLevel.Information); // TODO: This verification should be removed when MarketParticipant.Id can no longer be changed
             logger.VerifyNoOtherCalls();
         }
 
@@ -384,6 +380,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
         {
             return new MarketParticipant(
                 id: Guid.NewGuid(),
+                actorId: Guid.NewGuid(),
                 b2CActorId: Guid.NewGuid(),
                 marketParticipantUpdatedEvent.MarketParticipantId,
                 marketParticipantUpdatedEvent.IsActive,

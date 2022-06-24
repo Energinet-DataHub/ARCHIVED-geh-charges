@@ -60,6 +60,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.Charges
 
             var meteringPointAdministrator = new MarketParticipant(
                 id: Guid.NewGuid(),
+                actorId: Guid.NewGuid(),
                 b2CActorId: Guid.NewGuid(),
                 MaxLengthId,
                 true,

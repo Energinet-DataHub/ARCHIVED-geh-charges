@@ -83,6 +83,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             var existingGridAreaLink = new GridAreaLink(gridAreaUpdatedEvent.GridAreaLinkId, Guid.NewGuid(), Guid.NewGuid());
             var marketParticipant = new MarketParticipant(
                 id: Guid.NewGuid(),
+                actorId: Guid.NewGuid(),
                 b2CActorId: Guid.NewGuid(),
                 string.Empty,
                 true,
@@ -130,6 +131,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
                 existingGridAreaLink,
                 new MarketParticipant(
                     id: Guid.NewGuid(),
+                    actorId: Guid.NewGuid(),
                     b2CActorId: Guid.NewGuid(),
                     string.Empty,
                     true,

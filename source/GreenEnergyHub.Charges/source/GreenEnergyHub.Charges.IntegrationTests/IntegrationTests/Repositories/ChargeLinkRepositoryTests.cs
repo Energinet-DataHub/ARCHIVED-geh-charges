@@ -123,6 +123,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
             var marketParticipant = new MarketParticipant(
                 id: Guid.NewGuid(),
+                actorId: Guid.NewGuid(),
                 b2CActorId: Guid.NewGuid(),
                 marketParticipantId,
                 true,

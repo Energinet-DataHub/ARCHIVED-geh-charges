@@ -48,9 +48,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             await using var chargesWriteDatabaseContext = _databaseManager.CreateDbContext();
             var sut = new MarketParticipantRepository(chargesWriteDatabaseContext);
             var id = Guid.NewGuid();
+            var actorId = Guid.NewGuid();
             var b2CActorId = Guid.NewGuid();
             var marketParticipant = new MarketParticipant(
-                id, b2CActorId, "00001", true, MarketParticipantRole.GridAccessProvider);
+                id, actorId, b2CActorId, "00001", true, MarketParticipantRole.GridAccessProvider);
 
             // Act
             await sut.AddAsync(marketParticipant).ConfigureAwait(false);
@@ -308,7 +309,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             string marketParticipantId, MarketParticipantRole role, bool isActive, ChargesDatabaseContext context)
         {
             var marketParticipant = new MarketParticipant(
-                Guid.NewGuid(), Guid.NewGuid(), marketParticipantId, isActive, role);
+                id: Guid.NewGuid(),
+                actorId: Guid.NewGuid(),
+                b2CActorId: Guid.NewGuid(),
+                marketParticipantId,
+                isActive,
+                role);
             await context.AddAsync(marketParticipant);
             await context.SaveChangesAsync();
         }

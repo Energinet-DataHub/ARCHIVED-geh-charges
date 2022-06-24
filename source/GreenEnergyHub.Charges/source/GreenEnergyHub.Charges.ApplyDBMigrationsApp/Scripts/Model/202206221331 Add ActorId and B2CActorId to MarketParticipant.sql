@@ -1,18 +1,20 @@
 ﻿begin tran
 
     ------------------------------------------------------------------------------------------------------------------------
-    -- Add B2CActorId
+    -- Add ActorId and B2CActorId
     ------------------------------------------------------------------------------------------------------------------------
-
+    
     ALTER TABLE [Charges].[MarketParticipant]
-        ADD B2CActorId [uniqueidentifier]
-        GO
+    ADD ActorId [uniqueidentifier] not null default(newid()),
+        B2CActorId [uniqueidentifier]
+    GO
     
     ------------------------------------------------------------------------------------------------------------------------
-    -- Migrate ActorId to B2CActorId
+    -- Migrate Id to ActorId and B2CActorId
     ------------------------------------------------------------------------------------------------------------------------
     
     UPDATE [Charges].[MarketParticipant]
-    SET B2CActorId = Id
+    SET B2CActorId = Id,
+        ActorId = Id
 
 commit

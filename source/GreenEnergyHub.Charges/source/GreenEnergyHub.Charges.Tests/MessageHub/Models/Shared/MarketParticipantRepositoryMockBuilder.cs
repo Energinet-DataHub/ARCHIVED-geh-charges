@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using Moq;
@@ -30,7 +31,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared
                 .ReturnsAsync(meteringPointAdministrator);
 
             var sender = new MarketParticipant(
-                marketParticipantDto.ActorId,
+                Guid.NewGuid(),
+                marketParticipantDto.Id,
                 marketParticipantDto.B2CActorId,
                 marketParticipantDto.MarketParticipantId,
                 true,
