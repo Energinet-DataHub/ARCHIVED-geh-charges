@@ -80,6 +80,9 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
                 UpdateMarketParticipant(marketParticipantUpdatedEvent, marketParticipant);
             }
 
+            // TODO: Temporarily save MarketParticipant before connection grid areas
+            await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+
             await ConnectToGridAreaAsync(marketParticipantUpdatedEvent, marketParticipant).ConfigureAwait(false);
         }
 
