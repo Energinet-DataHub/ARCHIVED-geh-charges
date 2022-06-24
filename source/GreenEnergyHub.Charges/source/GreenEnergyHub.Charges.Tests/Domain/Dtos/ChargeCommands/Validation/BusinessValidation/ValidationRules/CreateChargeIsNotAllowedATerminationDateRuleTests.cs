@@ -14,7 +14,10 @@
 
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using Moq;
+using NodaTime;
 using NodaTime.Text;
 using Xunit;
 
@@ -49,6 +52,13 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
 
             // Assert
             isValid.Should().Be(true);
+        }
+
+        [Fact]
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo()
+        {
+            var sut = new CreateChargeIsNotAllowedATerminationRuleDate(It.IsAny<Instant>());
+            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.CreateChargeIsNotAllowedATerminationDate);
         }
     }
 }
