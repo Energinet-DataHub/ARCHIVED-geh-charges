@@ -15,19 +15,20 @@
 using System.Collections.Generic;
 using Energinet.DataHub.Core.Messaging.MessageTypes.Common;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
 {
-    public class ChargeLinksCommandBundle : IMessage
+    public class ChargeLinksCommandBundle : ChargeCommandBundle
     {
-        public ChargeLinksCommandBundle(IReadOnlyCollection<ChargeLinksCommand> commands)
+        public ChargeLinksCommandBundle(DocumentDto document, IReadOnlyCollection<ChargeLinksCommand> commands)
+            : base(document)
         {
             Transaction = Transaction.NewTransaction();
             Commands = commands;
         }
 
         public IReadOnlyCollection<ChargeLinksCommand> Commands { get; }
-
-        public Transaction Transaction { get; set; }
     }
 }

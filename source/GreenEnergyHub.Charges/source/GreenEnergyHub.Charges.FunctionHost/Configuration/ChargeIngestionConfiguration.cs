@@ -15,9 +15,8 @@
 using Energinet.DataHub.Core.Messaging.Transport.SchemaValidation;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
@@ -32,12 +31,11 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<ChargeCommandConverter>();
+            serviceCollection.AddScoped<ChargeCommandBundleConverter>();
             serviceCollection.AddScoped<IHttpResponseBuilder, HttpResponseBuilder>();
-            serviceCollection.AddScoped<ValidatingMessageExtractor<ChargeInformationCommandBundle>>();
-            serviceCollection.AddScoped<IChargeCommandConverter, ChargeCommandConverter>();
-            serviceCollection.AddScoped<SchemaValidatingMessageDeserializer<IMessage>, ChargeCommandDeserializer>();
-
+            serviceCollection.AddScoped<ValidatingMessageExtractor<ChargeCommandBundle>>();
+            serviceCollection.AddScoped<IChargeCommandBundleConverter, ChargeCommandBundleConverter>();
+            serviceCollection.AddScoped<SchemaValidatingMessageDeserializer<ChargeCommandBundle>, ChargeCommandDeserializer>();
             serviceCollection.AddScoped<IChargeInformationCommandBundleHandler, ChargeInformationCommandCommandBundleHandler>();
             serviceCollection.AddScoped<IChargeInformationCommandHandler, ChargeInformationCommandHandler>();
             serviceCollection.AddScoped<IChargePriceCommandHandler, ChargePriceCommandHandler>();

@@ -31,11 +31,14 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
             _correlationContext = correlationContext;
         }
 
-        public HttpResponseData CreateResponse(HttpRequestData request, HttpStatusCode httpStatusCode)
+        public HttpResponseData CreateAcceptedResponse(HttpRequestData requestData)
         {
-            var httpResponseData = request.CreateResponse(httpStatusCode);
-            AddCorrelationIdToHeaders(httpResponseData);
-            return httpResponseData;
+            return CreateResponse(requestData, HttpStatusCode.Accepted);
+        }
+
+        public HttpResponseData CreateBadRequestResponse(HttpRequestData requestData)
+        {
+            return CreateResponse(requestData, HttpStatusCode.BadRequest);
         }
 
         public async Task<HttpResponseData> CreateBadRequestResponseAsync(
@@ -55,6 +58,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
             var unauthorizedRequest = errorMessage.WriteAsXmlString();
             httpResponse.WriteString(unauthorizedRequest, Encoding.UTF8);
             return httpResponse;
+        }
+
+        private HttpResponseData CreateResponse(HttpRequestData request, HttpStatusCode httpStatusCode)
+        {
+            var httpResponseData = request.CreateResponse(httpStatusCode);
+            AddCorrelationIdToHeaders(httpResponseData);
+            return httpResponseData;
         }
 
         private void AddCorrelationIdToHeaders(HttpResponseData httpResponseData)

@@ -12,14 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using Energinet.DataHub.Core.Messaging.Transport;
-using Energinet.DataHub.Core.SchemaValidation;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
-namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
+namespace GreenEnergyHub.Charges.Domain.Dtos.Messages.Command
 {
-    public interface IChargeCommandConverter
+    public abstract class ChargeCommandBundle : MessageBase
     {
-        Task<IInboundMessage> ConvertAsync(SchemaValidatingReader reader);
+        protected ChargeCommandBundle(DocumentDto document)
+        {
+            Document = document;
+        }
+
+        public DocumentDto Document { get; }
     }
 }

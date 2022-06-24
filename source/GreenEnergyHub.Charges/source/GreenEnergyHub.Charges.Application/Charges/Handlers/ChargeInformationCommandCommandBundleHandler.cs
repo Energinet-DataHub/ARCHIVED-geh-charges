@@ -29,9 +29,9 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             _chargeInformationCommandHandler = chargeInformationCommandHandler;
         }
 
-        public async Task HandleAsync(ChargeInformationCommandBundle informationCommandBundle)
+        public async Task HandleAsync(ChargeCommandInformationBundle commandInformationBundle)
         {
-            foreach (var command in informationCommandBundle.Commands)
+            foreach (var command in commandInformationBundle.Commands)
             {
                 await _chargeInformationCommandHandler
                     .HandleAsync(command)

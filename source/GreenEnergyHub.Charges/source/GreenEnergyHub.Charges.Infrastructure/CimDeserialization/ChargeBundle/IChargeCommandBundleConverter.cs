@@ -12,22 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using Energinet.DataHub.Core.Messaging.MessageTypes.Common;
+using System.Threading.Tasks;
+using Energinet.DataHub.Core.SchemaValidation;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
-using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands
+namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
 {
-    public class ChargeCommandPriceBundle : ChargeCommandBundle
+    public interface IChargeCommandBundleConverter
     {
-        public ChargeCommandPriceBundle(DocumentDto document, IReadOnlyCollection<ChargePriceCommand> commands)
-            : base(document)
-        {
-            Transaction = Transaction.NewTransaction();
-            Commands = commands;
-        }
-
-        public IReadOnlyCollection<ChargePriceCommand> Commands { get; }
+        Task<Domain.Dtos.Messages.Command.ChargeCommandBundle> ConvertAsync(SchemaValidatingReader reader);
     }
 }

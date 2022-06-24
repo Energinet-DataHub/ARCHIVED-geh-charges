@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
         public async Task ConvertAsync_WhenCalledWithValidCimMessage_ReturnsParsedObject(
             [Frozen] Mock<ICorrelationContext> context,
             [Frozen] Mock<IIso8601Durations> iso8601Durations,
-            ChargeCommandConverter sut)
+            ChargeCommandBundleConverter sut)
         {
             // Arrange
             var correlationId = Guid.NewGuid().ToString();
@@ -58,7 +58,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
                 "GreenEnergyHub.Charges.Tests.TestFiles.Syntax_Valid_CIM_Charge.xml");
 
             // Act
-            var actualBundle = (ChargeInformationCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
+            var actualBundle = (ChargeCommandInformationBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
 
             // Assert
             var actual = (ChargeInformationCommand)actualBundle.Commands.Single();
@@ -119,7 +119,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
         public async Task ConvertAsync_WhenCalledWithValidCimMessageWithoutPrices_ReturnsParsedObject(
             [Frozen] Mock<ICorrelationContext> context,
             [Frozen] Mock<IIso8601Durations> iso8601Durations,
-            ChargeCommandConverter sut)
+            ChargeCommandBundleConverter sut)
         {
             // Arrange
             var correlationId = Guid.NewGuid().ToString();
@@ -132,7 +132,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
                 "GreenEnergyHub.Charges.Tests.TestFiles.Valid_CIM_Charge_Without_Prices.xml");
 
             // Act
-            var actualBundle = (ChargeInformationCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
+            var actualBundle = (ChargeCommandInformationBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
 
             // Assert
             var actual = (ChargeInformationCommand)actualBundle.Commands.Single();
@@ -167,7 +167,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
         public async Task ConvertAsync_WhenCalledWithValidCimMessageWithoutMasterData_ReturnsParsedObject(
             [Frozen] Mock<ICorrelationContext> context,
             [Frozen] Mock<IIso8601Durations> iso8601Durations,
-            ChargeCommandConverter sut)
+            ChargeCommandBundleConverter sut)
         {
             // Arrange
             var correlationId = Guid.NewGuid().ToString();
@@ -182,7 +182,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
                 "GreenEnergyHub.Charges.Tests.TestFiles.Valid_CIM_Charge_Prices_Without_Master_Data.xml");
 
             // Act
-            var actualBundle = (ChargeInformationCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
+            var actualBundle = (ChargeCommandInformationBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
 
             // Assert
             var actual = (ChargeInformationCommand)actualBundle.Commands.Single();
@@ -234,7 +234,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
         public async Task ConvertAsync_WhenCalledWithValidBundle_ReturnsMultipleParsedObject(
             [Frozen] Mock<ICorrelationContext> context,
             [Frozen] Mock<IIso8601Durations> iso8601Durations,
-            ChargeCommandConverter sut)
+            ChargeCommandBundleConverter sut)
         {
             // Arrange
             var correlationId = Guid.NewGuid().ToString();
@@ -247,7 +247,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
                 "GreenEnergyHub.Charges.Tests.TestFiles.CreateTariffsBundle.xml");
 
             // Act
-            var actual = (ChargeInformationCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
+            var actual = (ChargeCommandInformationBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
 
             // Assert
 
@@ -296,7 +296,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
         public async Task ConvertAsync_WhenCalledWithMixedChargeBundle_ReturnsGroupedChargeCommands(
             [Frozen] Mock<ICorrelationContext> context,
             [Frozen] Mock<IIso8601Durations> iso8601Durations,
-            ChargeCommandConverter sut)
+            ChargeCommandBundleConverter sut)
         {
             // Arrange
             var correlationId = Guid.NewGuid().ToString();
@@ -309,7 +309,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
                 "GreenEnergyHub.Charges.Tests.TestFiles.BundleMixOfChargeMasterDataOperations.xml");
 
             // Act
-            var actual = (ChargeInformationCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
+            var actual = (ChargeCommandInformationBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
 
             // Assert - Grouping of operations for same unique charge is correctly done
             actual.Commands.Should().HaveCount(3);

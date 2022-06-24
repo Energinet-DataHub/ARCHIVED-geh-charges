@@ -13,13 +13,12 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Threading.Tasks;
-using Energinet.DataHub.Core.Messaging.Transport;
 using Energinet.DataHub.Core.SchemaValidation;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.Charges;
@@ -34,13 +33,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeLinkBun
         {
         }
 
-        protected override async Task<IInboundMessage> ConvertSpecializedContentAsync(
+        protected override async Task<ChargeCommandBundle> ConvertSpecializedContentAsync(
             SchemaValidatingReader reader,
             DocumentDto document)
         {
             var chargeLinksCommands = await ParseChargeLinkCommandsAsync(reader, document).ConfigureAwait(false);
 
-            return new ChargeLinksCommandBundle(chargeLinksCommands);
+            return new ChargeLinksCommandBundle(document, chargeLinksCommands);
         }
 
         private static async Task<IReadOnlyCollection<ChargeLinksCommand>> ParseChargeLinkCommandsAsync(

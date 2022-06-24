@@ -31,11 +31,11 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
 {
-    public class ChargeCommandConverter : DocumentConverter, IChargeCommandConverter
+    public class ChargeCommandBundleConverter : DocumentConverter, IChargeCommandBundleConverter
     {
         private readonly IIso8601Durations _iso8601Durations;
 
-        public ChargeCommandConverter(
+        public ChargeCommandBundleConverter(
             IClock clock,
             IIso8601Durations iso8601Durations)
             : base(clock)
@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
             _iso8601Durations = iso8601Durations;
         }
 
-        protected override async Task<IInboundMessage> ConvertSpecializedContentAsync(
+        protected override async Task<ChargeCommandBundle> ConvertSpecializedContentAsync(
             SchemaValidatingReader reader,
             DocumentDto document)
         {
@@ -59,7 +59,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                                 document,
                                 chargeOperationDtoGroup.AsEnumerable().Select(dto => dto).ToList()))
                         .ToList();
-                    return new ChargeInformationCommandBundle(document, chargeCommands);
+                    return new ChargeCommandInformationBundle(document, chargeCommands);
                 case BusinessReasonCode.UpdateChargePrices:
                     var priceOperations = await ParseChargePriceOperationsAsync(reader).ConfigureAwait(false);
                     var priceCommands = priceOperations
@@ -68,7 +68,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                             new ChargePriceCommand(
                                 priceOperations.AsEnumerable().Select(dto => dto).ToList()))
                         .ToList();
-                    return new ChargePriceCommandBundle(priceCommands);
+                    return new ChargeCommandPriceBundle(document, priceCommands);
                 case BusinessReasonCode.Unknown:
                 case BusinessReasonCode.UpdateMasterDataSettlement:
                 default:

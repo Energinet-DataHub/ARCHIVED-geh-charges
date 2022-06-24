@@ -21,6 +21,7 @@ using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
 using Microsoft.Azure.Functions.Worker;
@@ -39,7 +40,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
         private readonly IChargeInformationCommandBundleHandler _chargeInformationCommandBundleHandler;
         private readonly IChargePriceCommandBundleHandler _chargePriceCommandBundleHandler;
         private readonly IHttpResponseBuilder _httpResponseBuilder;
-        private readonly ValidatingMessageExtractor<IMessage> _messageExtractor;
+        private readonly ValidatingMessageExtractor<ChargeCommandBundle> _messageExtractor;
         private readonly IActorContext _actorContext;
 
         public ChargeIngestion(
@@ -47,7 +48,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             IChargeInformationCommandBundleHandler chargeInformationCommandBundleHandler,
             IChargePriceCommandBundleHandler chargePriceCommandBundleHandler,
             IHttpResponseBuilder httpResponseBuilder,
-            ValidatingMessageExtractor<IMessage> messageExtractor,
+            ValidatingMessageExtractor<ChargeCommandBundle> messageExtractor,
             IActorContext actorContext)
         {
             _logger = logger;
@@ -61,47 +62,47 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
         [Function(IngestionFunctionNames.ChargeIngestion)]
         public async Task<HttpResponseData> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]
-            HttpRequestData req)
+            HttpRequestData request)
         {
             try
             {
-                var inboundMessage = await ValidateMessageAsync(req).ConfigureAwait(false);
+                var inboundMessage = await ValidateMessageAsync(request).ConfigureAwait(false);
 
                 if (inboundMessage.HasErrors)
                 {
                     return await _httpResponseBuilder
-                        .CreateBadRequestResponseAsync(req, inboundMessage.SchemaValidationError)
+                        .CreateBadRequestResponseAsync(request, inboundMessage.SchemaValidationError)
                         .ConfigureAwait(false);
                 }
 
                 if (AuthenticatedMatchesSenderId(inboundMessage) == false)
                 {
                     return _httpResponseBuilder.CreateBadRequestB2BResponse(
-                        req, B2BErrorCode.ActorIsNotWhoTheyClaimToBeErrorMessage);
+                        request, B2BErrorCode.ActorIsNotWhoTheyClaimToBeErrorMessage);
                 }
 
                 var bundle = inboundMessage.ValidatedMessage;
                 switch (bundle)
                 {
-                    case ChargeInformationCommandBundle commandBundle:
+                    case ChargeCommandInformationBundle commandBundle:
                         ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(commandBundle);
                         await _chargeInformationCommandBundleHandler.HandleAsync(commandBundle).ConfigureAwait(false);
                         break;
-                    case ChargePriceCommandBundle commandBundle:
+                    case ChargeCommandPriceBundle commandBundle:
                         await _chargePriceCommandBundleHandler.HandleAsync(commandBundle).ConfigureAwait(false);
                         break;
                 }
 
-                return _httpResponseBuilder.CreateResponse(req, HttpStatusCode.Accepted);
+                return _httpResponseBuilder.CreateAcceptedResponse(request);
             }
             catch (Exception exception)
             {
                 _logger.LogError(exception, "Unable to deserialize request");
-                return _httpResponseBuilder.CreateResponse(req, HttpStatusCode.BadRequest);
+                return _httpResponseBuilder.CreateBadRequestResponse(request);
             }
         }
 
-        private bool AuthenticatedMatchesSenderId(SchemaValidatedInboundMessage<IMessage> inboundMessage)
+        private bool AuthenticatedMatchesSenderId(SchemaValidatedInboundMessage<ChargeCommandBundle> inboundMessage)
         {
             var authorizedActor = _actorContext.CurrentActor;
             var senderId = inboundMessage.ValidatedMessage?.Document.Sender.MarketParticipantId;
@@ -109,9 +110,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             return authorizedActor != null && senderId == authorizedActor.Identifier;
         }
 
-        private async Task<SchemaValidatedInboundMessage<IMessage>> ValidateMessageAsync(HttpRequestData req)
+        private async Task<SchemaValidatedInboundMessage<ChargeCommandBundle>> ValidateMessageAsync(HttpRequestData req)
         {
-            return (SchemaValidatedInboundMessage<IMessage>)await _messageExtractor
+            return (SchemaValidatedInboundMessage<ChargeCommandBundle>)await _messageExtractor
                 .ExtractAsync(req.Body)
                 .ConfigureAwait(false);
         }

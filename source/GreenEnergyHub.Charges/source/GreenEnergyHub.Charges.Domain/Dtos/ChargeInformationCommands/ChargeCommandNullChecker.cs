@@ -20,14 +20,14 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands
 {
     public static class ChargeCommandNullChecker
     {
-        public static void ThrowExceptionIfRequiredPropertyIsNull(ChargeInformationCommandBundle chargeInformationCommandBundle)
+        public static void ThrowExceptionIfRequiredPropertyIsNull(ChargeCommandInformationBundle chargeCommandInformationBundle)
         {
-            ArgumentNullException.ThrowIfNull(chargeInformationCommandBundle);
-            var document = chargeInformationCommandBundle.Document;
+            ArgumentNullException.ThrowIfNull(chargeCommandInformationBundle);
+            var document = chargeCommandInformationBundle.Document;
 
             CheckDocument(document);
 
-            var commands = chargeInformationCommandBundle.Commands;
+            var commands = chargeCommandInformationBundle.Commands;
             ArgumentNullException.ThrowIfNull(commands);
 
             foreach (var command in commands)

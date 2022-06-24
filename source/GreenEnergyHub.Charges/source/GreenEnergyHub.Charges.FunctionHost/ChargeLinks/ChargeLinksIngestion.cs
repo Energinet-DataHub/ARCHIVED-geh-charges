@@ -54,27 +54,27 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         [Function(IngestionFunctionNames.ChargeLinksIngestion)]
         public async Task<HttpResponseData> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]
-            HttpRequestData req)
+            HttpRequestData request)
         {
-            var inboundMessage = await ValidateMessageAsync(req).ConfigureAwait(false);
+            var inboundMessage = await ValidateMessageAsync(request).ConfigureAwait(false);
             if (inboundMessage.HasErrors)
             {
                 return await _httpResponseBuilder
-                    .CreateBadRequestResponseAsync(req, inboundMessage.SchemaValidationError)
+                    .CreateBadRequestResponseAsync(request, inboundMessage.SchemaValidationError)
                     .ConfigureAwait(false);
             }
 
             if (AuthenticatedMatchesSenderId(inboundMessage) == false)
             {
                 return _httpResponseBuilder.CreateBadRequestB2BResponse(
-                    req, B2BErrorCode.ActorIsNotWhoTheyClaimToBeErrorMessage);
+                    request, B2BErrorCode.ActorIsNotWhoTheyClaimToBeErrorMessage);
             }
 
             await _chargeLinksCommandBundleHandler
                 .HandleAsync(inboundMessage.ValidatedMessage)
                 .ConfigureAwait(false);
 
-            return _httpResponseBuilder.CreateResponse(req, HttpStatusCode.Accepted);
+            return _httpResponseBuilder.CreateAcceptedResponse(request);
         }
 
         private async Task<SchemaValidatedInboundMessage<ChargeLinksCommandBundle>> ValidateMessageAsync(HttpRequestData req)

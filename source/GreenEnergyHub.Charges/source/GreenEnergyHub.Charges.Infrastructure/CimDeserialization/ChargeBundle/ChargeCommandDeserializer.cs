@@ -16,27 +16,27 @@ using System.Threading.Tasks;
 using Energinet.DataHub.Core.Messaging.Transport.SchemaValidation;
 using Energinet.DataHub.Core.Schemas;
 using Energinet.DataHub.Core.SchemaValidation;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 
 namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
 {
-    public sealed class ChargeCommandDeserializer : SchemaValidatingMessageDeserializer<IMessage>
+    public sealed class ChargeCommandDeserializer : SchemaValidatingMessageDeserializer<ChargeCommandBundle>
     {
-        private readonly IChargeCommandConverter _chargeCommandConverter;
+        private readonly IChargeCommandBundleConverter _chargeCommandBundleConverter;
 
-        public ChargeCommandDeserializer(IChargeCommandConverter chargeCommandConverter)
+        public ChargeCommandDeserializer(IChargeCommandBundleConverter chargeCommandBundleConverter)
             : base(Schemas.CimXml.StructureRequestChangeOfPriceList)
         {
-            _chargeCommandConverter = chargeCommandConverter;
+            _chargeCommandBundleConverter = chargeCommandBundleConverter;
         }
 
-        protected override async Task<IMessage> ConvertAsync(SchemaValidatingReader reader)
+        protected override async Task<ChargeCommandBundle> ConvertAsync(SchemaValidatingReader reader)
         {
-            var command = await _chargeCommandConverter
+            var command = await _chargeCommandBundleConverter
                 .ConvertAsync(reader)
                 .ConfigureAwait(false);
 
-            return (IMessage)command;
+            return command;
         }
     }
 }

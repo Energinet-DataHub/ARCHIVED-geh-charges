@@ -35,9 +35,9 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Application
             return this;
         }
 
-        public ChargeInformationCommandBundle Build()
+        public ChargeCommandInformationBundle Build()
         {
-            return new ChargeInformationCommandBundle(_document, _commands);
+            return new ChargeCommandInformationBundle(_document, _commands);
         }
     }
 }
