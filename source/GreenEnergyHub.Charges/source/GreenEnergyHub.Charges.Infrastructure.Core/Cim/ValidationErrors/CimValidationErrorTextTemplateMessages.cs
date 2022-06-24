@@ -177,6 +177,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         public const string TransparentInvoicingIsRequiredErrorText =
             "Transparent invoicing is missing.";
 
+        [ErrorMessageFor(ValidationRuleIdentifier.TaxIndicatorIsRequired)]
+        public const string TaxIndicatorIsRequiredErrorText =
+            "Tax indicator is missing.";
+
         [ErrorMessageFor(ValidationRuleIdentifier.CreateChargeIsNotAllowedATerminationDate)]
         public const string CreateChargeIsNotAllowedATerminationDateErrorText =
             "Upon termination of {{ChargeType}} {{DocumentSenderProvidedChargeId}}, the submitted price element {{DocumentSenderProvidedChargeId}} does not exist and has not previously been used by {{ChargeOwner}}";

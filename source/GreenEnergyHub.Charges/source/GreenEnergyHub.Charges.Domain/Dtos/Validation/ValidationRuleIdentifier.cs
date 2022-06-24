@@ -1,4 +1,4 @@
-﻿// Copyright 2020 Energinet DataHub A/S
+// Copyright 2020 Energinet DataHub A/S
 //
 // Licensed under the Apache License, Version 2.0 (the "License2");
 // you may not use this file except in compliance with the License.
@@ -54,6 +54,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
         ResolutionIsRequired = 40, // VR912 / E0H
         ChargeOwnerHasLengthLimits = 41, // VR913 / E86
         TransparentInvoicingIsRequired = 42, // VR915 / E0H
-        CreateChargeIsNotAllowedATerminationDate = 43, // VR914 / D14?
+        TaxIndicatorIsRequired = 43, // VR916 / E0H
+        CreateChargeIsNotAllowedATerminationDate = 4, // VR914 / D14
     }
 }
