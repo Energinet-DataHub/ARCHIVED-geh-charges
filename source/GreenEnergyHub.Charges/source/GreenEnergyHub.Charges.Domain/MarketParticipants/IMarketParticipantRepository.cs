@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
         /// </summary>
         /// <param name="b2CActorId"></param>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-        Task<MarketParticipant?> SingleOrNullAsync(Guid b2CActorId);
+        Task<MarketParticipant?> SingleOrNullAsync(Guid? b2CActorId);
 
         /// <summary>
         /// Get single actor or null from GLN
