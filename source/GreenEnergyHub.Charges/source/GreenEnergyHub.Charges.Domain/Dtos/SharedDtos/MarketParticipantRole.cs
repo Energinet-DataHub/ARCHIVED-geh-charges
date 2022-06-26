@@ -82,6 +82,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.SharedDtos
         /// Not used in the charges domain.
         /// Also known as DEA.
         /// </summary>
-        MeteredDataAggregator = 7,
+        MeteredDataAggregator = 10,
     }
 }
