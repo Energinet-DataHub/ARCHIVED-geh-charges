@@ -61,8 +61,8 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 
             if (marketParticipant is null)
             {
-                marketParticipant = await CreateMarketParticipantAsync(marketParticipantUpdatedEvent, businessProcessRole)
-                    .ConfigureAwait(false);
+                marketParticipant = await CreateMarketParticipantAsync(
+                    marketParticipantUpdatedEvent, businessProcessRole).ConfigureAwait(false);
             }
             else
             {
@@ -93,21 +93,6 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
             return marketParticipant;
         }
 
-        private void UpdateMarketParticipant(
-            MarketParticipantUpdatedEvent marketParticipantUpdatedEvent,
-            MarketParticipant existingMarketParticipant)
-        {
-            existingMarketParticipant.ActorId = marketParticipantUpdatedEvent.ActorId;
-            existingMarketParticipant.B2CActorId = marketParticipantUpdatedEvent.B2CActorId;
-            existingMarketParticipant.IsActive = marketParticipantUpdatedEvent.IsActive;
-
-            _logger.LogInformation(
-                "Market participant with ID '{MarketParticipantId}' and role '{BusinessProcessRole}' " +
-                "has changed state",
-                existingMarketParticipant.MarketParticipantId,
-                existingMarketParticipant.BusinessProcessRole);
-        }
-
         private async Task<MarketParticipant> AddMarketParticipantAsync(
             MarketParticipantUpdatedEvent marketParticipantUpdatedEvent,
             MarketParticipantRole businessProcessRole)
@@ -131,6 +116,21 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
                 marketParticipant.BusinessProcessRole);
 
             return marketParticipant;
+        }
+
+        private void UpdateMarketParticipant(
+            MarketParticipantUpdatedEvent marketParticipantUpdatedEvent,
+            MarketParticipant existingMarketParticipant)
+        {
+            existingMarketParticipant.ActorId = marketParticipantUpdatedEvent.ActorId;
+            existingMarketParticipant.B2CActorId = marketParticipantUpdatedEvent.B2CActorId;
+            existingMarketParticipant.IsActive = marketParticipantUpdatedEvent.IsActive;
+
+            _logger.LogInformation(
+                "Market participant with ID '{MarketParticipantId}' " +
+                "and role '{BusinessProcessRole}' has changed state",
+                existingMarketParticipant.MarketParticipantId,
+                existingMarketParticipant.BusinessProcessRole);
         }
 
         private async Task ConnectToGridAreaAsync(
