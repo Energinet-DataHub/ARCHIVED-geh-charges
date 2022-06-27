@@ -44,6 +44,7 @@ limitations under the License.
       <EmbeddedResource Include="Scripts\Model\202206021409 Remove GridArea table.sql" />
       <EmbeddedResource Include="Scripts\Model\202206131600 Changed unique constraint on MarketParticipant.sql" />
       <EmbeddedResource Include="Scripts\Model\202206221331 Add ActorId and B2CActorId to MarketParticipant.sql" />
+      <EmbeddedResource Include="Scripts\Model\202206271520 Add temporary unique constraint on ActorId in MarketParticipant table.sql" />
       <EmbeddedResource Include="Scripts\Seed\202201261740 Add default charges owner.sql" />
       <EmbeddedResource Include="Scripts\Seed\202201261741 Add default charges.sql" />
       <EmbeddedResource Include="Scripts\Seed\202201261742 Add default charge links.sql" />
