@@ -43,6 +43,17 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
         }
 
         /// <summary>
+        /// Retrieves a market participant from actorId
+        /// </summary>
+        /// <param name="actorId"></param>
+        public async Task<MarketParticipant?> GetByActorIdAsync(Guid? actorId)
+        {
+            return await _chargesDatabaseContext
+                .MarketParticipants
+                .SingleOrDefaultAsync(mp => mp.ActorId == actorId).ConfigureAwait(false);
+        }
+
+        /// <summary>
         /// Retrieves a market participant from b2CActorId
         /// </summary>
         /// <param name="b2CActorId"></param>
