@@ -55,6 +55,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
         ChargeOwnerHasLengthLimits = 41, // VR913 / E86
         TransparentInvoicingIsRequired = 42, // VR915 / E0H
         TaxIndicatorIsRequired = 43, // VR916 / E0H
-        CreateChargeIsNotAllowedATerminationDate = 44, // VR914 / D14
+        TerminationDateMustMatchEffectiveDate = 44, // VR917 / E0H
+        CreateChargeIsNotAllowedATerminationDate = 45, // VR914 / D14
     }
 }
