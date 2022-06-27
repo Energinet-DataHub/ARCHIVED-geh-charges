@@ -62,6 +62,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             var actual = await chargesReadDatabaseContext.MarketParticipants
                 .SingleAsync(mp => mp.Id == marketParticipant.Id);
             actual.Id.Should().Be(id);
+            actual.ActorId.Should().Be(actorId);
             actual.B2CActorId.Should().Be(b2CActorId);
             actual.MarketParticipantId.Should().Be("00001");
             actual.IsActive.Should().BeTrue();
