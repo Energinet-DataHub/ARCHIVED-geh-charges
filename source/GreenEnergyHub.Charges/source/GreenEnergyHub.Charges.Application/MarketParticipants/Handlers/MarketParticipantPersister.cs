@@ -108,7 +108,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
             await _marketParticipantRepository.AddAsync(marketParticipant).ConfigureAwait(false);
 
             _logger.LogInformation(
-                "Market participant with GLN '{MarketParticipantId}', ActorId '{ActorId}', B2CActorId " +
+                "Market participant with MarketParticipantId '{MarketParticipantId}', ActorId '{ActorId}', B2CActorId " +
                 "'{B2CActorId}' and role '{BusinessProcessRole}' has been persisted",
                 marketParticipant.MarketParticipantId,
                 marketParticipant.ActorId,
@@ -149,7 +149,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 
                 _logger.LogInformation(
                     "GridAreaLink ID '{GridAreaLinkId}' has changed Owner ID to '{OwnerId}' " +
-                    "with GLN {MarketParticipantId} and {B2CActorId}",
+                    "with MarketParticipantId {MarketParticipantId} and B2CActorId {B2CActorId}",
                     existingGridAreaLink.Id,
                     existingGridAreaLink.OwnerId,
                     marketParticipant.MarketParticipantId,
