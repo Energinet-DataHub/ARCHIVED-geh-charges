@@ -68,7 +68,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 
                 existingGridAreaLink.GridAreaId = gridAreaUpdatedEvent.GridAreaId;
                 _logger.LogInformation(
-                    "GridAreaLink ID {GridAreaLink} with {OwnerId} has changed GridArea ID to {GridAreaId}",
+                    "GridAreaLink ID {GridAreaLink} with OwnerId {OwnerId} has changed GridArea ID to {GridAreaId}",
                     existingGridAreaLink.Id,
                     existingGridAreaLink.OwnerId,
                     existingGridAreaLink.GridAreaId);

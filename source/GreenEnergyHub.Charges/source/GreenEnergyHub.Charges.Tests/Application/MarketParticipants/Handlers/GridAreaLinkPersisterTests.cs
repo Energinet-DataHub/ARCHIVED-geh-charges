@@ -105,7 +105,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             // Assert
             gridAreaLinkRepository.Verify(v => v.AddAsync(It.IsAny<GridAreaLink>()), Times.Never);
             logger.VerifyLoggerWasCalled(
-                $"GridAreaLink ID {gridAreaUpdatedEvent.GridAreaLinkId} with {existingGridAreaLink.OwnerId} " +
+                $"GridAreaLink ID {gridAreaUpdatedEvent.GridAreaLinkId} with OwnerId {existingGridAreaLink.OwnerId} " +
                 $"has changed GridArea ID to {gridAreaUpdatedEvent.GridAreaId}",
                 LogLevel.Information);
             logger.VerifyNoOtherCalls();
