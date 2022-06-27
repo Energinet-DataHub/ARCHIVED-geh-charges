@@ -127,7 +127,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
             existingMarketParticipant.IsActive = marketParticipantUpdatedEvent.IsActive;
 
             _logger.LogInformation(
-                "Market participant with ID '{MarketParticipantId}' " +
+                "Market participant with MarketParticipantId '{MarketParticipantId}' " +
                 "and role '{BusinessProcessRole}' has changed state",
                 existingMarketParticipant.MarketParticipantId,
                 existingMarketParticipant.BusinessProcessRole);

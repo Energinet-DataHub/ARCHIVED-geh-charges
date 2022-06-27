@@ -104,7 +104,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             // Assert
             marketParticipantRepository.Verify(v => v.AddAsync(It.IsAny<MarketParticipant>()), Times.Never());
             logger.VerifyLoggerWasCalled(
-                $"Market participant with ID '{existingMarketParticipant.MarketParticipantId}' " +
+                $"Market participant with MarketParticipantId '{existingMarketParticipant.MarketParticipantId}' " +
                 $"and role '{existingMarketParticipant.BusinessProcessRole}' has changed state",
                 LogLevel.Information);
             logger.VerifyNoOtherCalls();
@@ -282,7 +282,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             // Assert
             gridAreaLinkRepository.Verify(v => v.GetGridAreaOrNullAsync(It.IsAny<Guid>()), Times.Never());
             logger.VerifyLoggerWasCalled(
-                $"Market participant with ID '{existingMarketParticipant.MarketParticipantId}' " +
+                $"Market participant with MarketParticipantId '{existingMarketParticipant.MarketParticipantId}' " +
                 $"and role '{existingMarketParticipant.BusinessProcessRole}' has changed state",
                 LogLevel.Information);
             logger.VerifyNoOtherCalls();
@@ -318,7 +318,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             // Assert
             gridAreaLinkRepository.Verify(v => v.GetGridAreaOrNullAsync(It.IsAny<Guid>()), Times.Once);
             logger.VerifyLoggerWasCalled(
-                $"Market participant with ID '{existingMarketParticipant.MarketParticipantId}' " +
+                $"Market participant with MarketParticipantId '{existingMarketParticipant.MarketParticipantId}' " +
                 $"and role '{existingMarketParticipant.BusinessProcessRole}' has changed state",
                 LogLevel.Information);
             logger.VerifyNoOtherCalls();
@@ -356,7 +356,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             // Assert
             gridAreaLinkRepository.Verify(v => v.GetGridAreaOrNullAsync(It.IsAny<Guid>()), Times.Once());
             logger.VerifyLoggerWasCalled(
-                $"Market participant with ID '{existingMarketParticipant.MarketParticipantId}' " +
+                $"Market participant with MarketParticipantId '{existingMarketParticipant.MarketParticipantId}' " +
                 $"and role '{existingMarketParticipant.BusinessProcessRole}' has changed state",
                 LogLevel.Information);
             logger.VerifyNoOtherCalls();
