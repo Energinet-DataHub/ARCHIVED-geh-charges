@@ -60,6 +60,9 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
                 businessProcessRole, marketParticipantUpdatedEvent.MarketParticipantId).ConfigureAwait(false);
 
             if (marketParticipant is null)
+                marketParticipant = await _marketParticipantRepository.GetByActorIdAsync(marketParticipantUpdatedEvent.ActorId).ConfigureAwait(false);
+
+            if (marketParticipant is null)
             {
                 marketParticipant = await CreateMarketParticipantAsync(
                     marketParticipantUpdatedEvent, businessProcessRole).ConfigureAwait(false);
