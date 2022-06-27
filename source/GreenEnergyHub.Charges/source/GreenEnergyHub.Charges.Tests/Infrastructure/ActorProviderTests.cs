@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Security.Authentication;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
@@ -31,31 +32,33 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure
     {
         [Theory]
         [InlineAutoMoqData]
-        public async Task GetActorAsync_ShouldThrow_WhenNoActorFound([Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository)
+        public async Task GetActorAsync_ShouldThrow_WhenNoActorFound(
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository)
         {
             // Arrange
-            var actorId = Guid.NewGuid();
-            marketParticipantRepository.Setup(x => x.SingleOrNullAsync(actorId)).ReturnsAsync(null as MarketParticipant);
+            var b2CActorId = Guid.NewGuid();
+            marketParticipantRepository.Setup(x => x.SingleOrNullAsync(b2CActorId)).ReturnsAsync(null as MarketParticipant);
 
             var sut = new ActorProvider(marketParticipantRepository.Object);
 
             // Act and Assert
-            await Assert.ThrowsAsync<Exception>(() => sut.GetActorAsync(actorId));
+            await Assert.ThrowsAsync<AuthenticationException>(() => sut.GetActorAsync(b2CActorId));
         }
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task GetActorAsync_ShouldReturnActor([Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository)
+        public async Task GetActorAsync_ShouldReturnActor(
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository)
         {
             // Arrange
-            var actorId = Guid.NewGuid();
+            var b2CActorId = Guid.NewGuid();
             var marketParticipant = new MarketParticipantBuilder().Build();
-            marketParticipantRepository.Setup(x => x.SingleOrNullAsync(actorId)).ReturnsAsync(marketParticipant);
+            marketParticipantRepository.Setup(x => x.SingleOrNullAsync(b2CActorId)).ReturnsAsync(marketParticipant);
 
             var sut = new ActorProvider(marketParticipantRepository.Object);
 
             // Act
-            var actual = await sut.GetActorAsync(actorId);
+            var actual = await sut.GetActorAsync(b2CActorId);
 
             // Assert
             actual.ActorId.Should().Be(marketParticipant.Id);

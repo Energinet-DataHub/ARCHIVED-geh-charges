@@ -65,7 +65,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 var (message, parentId) = CreateServiceBusMessage(
                     gln,
                     actorStatus,
-                    new List<BusinessRoleCode>() { businessRoleCode });
+                    new List<BusinessRoleCode> { businessRoleCode });
                 await using var context = Fixture.DatabaseManager.CreateDbContext();
 
                 // Act

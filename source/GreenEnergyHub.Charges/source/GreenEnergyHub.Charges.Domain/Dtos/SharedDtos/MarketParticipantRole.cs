@@ -65,5 +65,23 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.SharedDtos
         /// In Denmark it's DataHub.
         /// </summary>
         MeteringPointAdministrator = 7,
+
+        /// <summary>
+        /// Not used in the charges domain.
+        /// Also known as DDK.
+        /// </summary>
+        BalanceResponsibleParty = 8,
+
+        /// <summary>
+        /// Not used in the charges domain.
+        /// Also known as DDX.
+        /// </summary>
+        ImbalanceSettlementResponsible = 9,
+
+        /// <summary>
+        /// Not used in the charges domain.
+        /// Also known as DEA.
+        /// </summary>
+        MeteredDataAggregator = 10,
     }
 }
