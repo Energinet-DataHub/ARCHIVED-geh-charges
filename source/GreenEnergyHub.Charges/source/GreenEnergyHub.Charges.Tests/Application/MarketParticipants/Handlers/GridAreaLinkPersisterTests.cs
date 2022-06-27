@@ -81,15 +81,19 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             var gridAreaUpdatedEvent = new GridAreaUpdatedEvent(Guid.NewGuid(), Guid.NewGuid());
 
             var existingGridAreaLink = new GridAreaLink(gridAreaUpdatedEvent.GridAreaLinkId, Guid.NewGuid(), Guid.NewGuid());
+            var marketParticipant = new MarketParticipant(
+                id: Guid.NewGuid(),
+                actorId: Guid.NewGuid(),
+                b2CActorId: Guid.NewGuid(),
+                string.Empty,
+                true,
+                MarketParticipantRole.GridAccessProvider);
+
             SetupGridAreaRepositories(
                 gridAreaLinkRepository,
                 marketParticipantRepository,
                 existingGridAreaLink,
-                new MarketParticipant(
-                    Guid.NewGuid(),
-                    string.Empty,
-                    true,
-                    MarketParticipantRole.GridAccessProvider));
+                marketParticipant);
             var sut = new GridAreaLinkPersister(
                 gridAreaLinkRepository.Object,
                 loggerFactory.Object,
@@ -101,7 +105,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             // Assert
             gridAreaLinkRepository.Verify(v => v.AddAsync(It.IsAny<GridAreaLink>()), Times.Never);
             logger.VerifyLoggerWasCalled(
-                $"GridAreaLink ID {gridAreaUpdatedEvent.GridAreaLinkId} has changed GridArea ID to {gridAreaUpdatedEvent.GridAreaId}",
+                $"GridAreaLink ID {gridAreaUpdatedEvent.GridAreaLinkId} with OwnerId {existingGridAreaLink.OwnerId} " +
+                $"has changed GridArea ID to {gridAreaUpdatedEvent.GridAreaId}",
                 LogLevel.Information);
             logger.VerifyNoOtherCalls();
         }
@@ -125,7 +130,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
                 marketParticipantRepository,
                 existingGridAreaLink,
                 new MarketParticipant(
-                    Guid.NewGuid(),
+                    id: Guid.NewGuid(),
+                    actorId: Guid.NewGuid(),
+                    b2CActorId: Guid.NewGuid(),
                     string.Empty,
                     true,
                     MarketParticipantRole.GridAccessProvider));

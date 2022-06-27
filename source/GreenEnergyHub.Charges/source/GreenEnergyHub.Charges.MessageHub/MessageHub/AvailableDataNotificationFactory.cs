@@ -31,7 +31,7 @@ namespace GreenEnergyHub.Charges.MessageHub.MessageHub
                     data => new DataAvailableNotificationDto(
                         data.AvailableDataReferenceId,
 #pragma warning disable CS0618
-                        new LegacyActorIdDto(data.RecipientId),
+                        new LegacyActorIdDto(data.RecipientId), // TODO: ActorIdDto(data.ActorId)
 #pragma warning restore CS0618
                         new MessageTypeDto(bundleSpecification.GetMessageType(data.BusinessReasonCode)),
                         data.DocumentType.ToString(),
