@@ -188,6 +188,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         [ErrorMessageFor(ValidationRuleIdentifier.CreateChargeIsNotAllowedATerminationDate)]
         public const string CreateChargeIsNotAllowedATerminationDateErrorText =
             "Upon termination of {{ChargeType}} {{DocumentSenderProvidedChargeId}}, the submitted price element {{DocumentSenderProvidedChargeId}} does not exist and has not previously been used by {{ChargeOwner}}";
+
         public const string Unknown = "unknown";
     }
 }
