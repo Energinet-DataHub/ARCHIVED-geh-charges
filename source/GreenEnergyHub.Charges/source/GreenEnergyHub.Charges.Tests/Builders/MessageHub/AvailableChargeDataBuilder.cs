@@ -48,9 +48,9 @@ namespace GreenEnergyHub.Charges.Tests.Builders.MessageHub
             return this;
         }
 
-        public AvailableChargeDataBuilder WithActorId(Guid referenceId)
+        public AvailableChargeDataBuilder WithActorId(Guid actorId)
         {
-            _actorId = referenceId;
+            _actorId = actorId;
             return this;
         }
 
