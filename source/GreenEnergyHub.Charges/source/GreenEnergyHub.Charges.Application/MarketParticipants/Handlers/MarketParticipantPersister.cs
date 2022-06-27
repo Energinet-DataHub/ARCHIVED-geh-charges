@@ -82,7 +82,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
             if (marketParticipantAlreadyExistWithOtherRole != null)
             {
                 throw new InvalidOperationException(
-                    $"Only 1 market participant with ID '{marketParticipantAlreadyExistWithOtherRole.MarketParticipantId}' is allowed, " +
+                    $"Only 1 market participant with MarketParticipantId '{marketParticipantAlreadyExistWithOtherRole.MarketParticipantId}' is allowed, " +
                     $"the current persisted market participant has role {marketParticipantAlreadyExistWithOtherRole.BusinessProcessRole} " +
                     $"and the new market participant to be created has role {businessProcessRole}");
             }
