@@ -42,7 +42,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
     public class ChargeInformationEventHandlerTests
     {
         [Theory]
-        [Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes.InlineAutoMoqData]
+        [InlineAutoMoqData]
         public async Task HandleAsync_WhenValidationSucceed_StoreAndConfirmCommand(
             [Frozen] Mock<IChargeIdentifierFactory> chargeIdentifierFactory,
             [Frozen] Mock<IInputValidator<ChargeOperationDto>> inputValidator,
@@ -100,7 +100,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         }
 
         [Theory]
-        [Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes.InlineAutoMoqData]
+        [InlineAutoMoqData]
         public async Task HandleAsync_WhenValidationFails_RejectsEvent(
             [Frozen] Mock<IChargeIdentifierFactory> chargeIdentifierFactory,
             [Frozen] Mock<IInputValidator<ChargeOperationDto>> inputValidator,
@@ -139,7 +139,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         }
 
         [Theory]
-        [Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes.InlineAutoMoqData]
+        [InlineAutoMoqData]
         public async Task HandleAsync_IfEventIsNull_ThrowsArgumentNullException(
             ChargeInformationEventHandler sut)
         {
@@ -200,7 +200,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         }
 
         [Theory]
-        [Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes.InlineAutoMoqData]
+        [InlineAutoMoqData]
         public async Task HandleAsync_IfValidStopEvent_ChargeStopped(
             [Frozen] Mock<IChargeIdentifierFactory> chargeIdentifierFactory,
             [Frozen] Mock<IInputValidator<ChargeOperationDto>> inputValidator,
@@ -236,7 +236,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         }
 
         [Theory]
-        [Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes.InlineAutoMoqData]
+        [InlineAutoMoqData]
         public async Task HandleAsync_WhenValidCancelStop_ThenStopCancelled(
             [Frozen] Mock<IChargeIdentifierFactory> chargeIdentifierFactory,
             [Frozen] Mock<IInputValidator<ChargeOperationDto>> inputValidator,
@@ -277,7 +277,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         }
 
         [Theory]
-        [Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes.InlineAutoMoqData]
+        [InlineAutoMoqData]
         public async Task HandleAsync_WhenInputValidationFailsInBundleOperation_RejectEventForAllSubsequentOperations(
             TestMarketParticipant sender,
             [Frozen] Mock<IChargeIdentifierFactory> chargeIdentifierFactory,
@@ -348,7 +348,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         }
 
         [Theory]
-        [Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes.InlineAutoMoqData]
+        [InlineAutoMoqData]
         public async Task HandleAsync_WhenChargeUpdateFailsInBundleOperation_RejectEventForAllSubsequentOperations(
             [Frozen] Mock<IChargeIdentifierFactory> chargeIdentifierFactory,
             [Frozen] Mock<IChargeRepository> chargeRepository,
