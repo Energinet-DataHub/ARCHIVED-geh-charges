@@ -115,7 +115,6 @@ namespace GreenEnergyHub.Charges.Domain.Charges
                 startDate,
                 InstantExtensions.GetEndDefault());
 
-            ArgumentNullException.ThrowIfNull(operationId);
             var rules = new List<OperationValidationRuleContainer>
             {
                 new(
