@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.GridAreaLinks;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -28,6 +29,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
             builder.Property(l => l.Id).ValueGeneratedNever();
             builder.Property(l => l.GridAreaId);
             builder.Property(l => l.OwnerId);
+            builder.HasOne<MarketParticipant>().WithMany().HasForeignKey(g => g.OwnerId);
         }
     }
 }
