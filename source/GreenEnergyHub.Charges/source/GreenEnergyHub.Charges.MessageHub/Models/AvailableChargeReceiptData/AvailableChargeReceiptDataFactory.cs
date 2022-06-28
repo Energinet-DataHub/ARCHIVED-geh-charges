@@ -77,7 +77,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                     chargeOperationDto.Id,
                     DocumentType.ConfirmRequestChangeOfPriceList, // Will be added to the HTTP MessageType header
                     operationOrder,
-                    recipient.Id,
+                    recipient.ActorId,
                     new List<AvailableReceiptValidationError>()),
             };
         }
