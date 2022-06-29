@@ -128,6 +128,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 3);
                 peekResults.Should().ContainMatch("*ConfirmRequestChangeBillingMasterData_MarketDocument*");
                 peekResults.Should().ContainMatch("*NotifyBillingMasterData_MarketDocument*");
+                peekResults.Should().ContainMatch("*RejectRequestChangeBillingMasterData_MarketDocument*");
             }
         }
     }
