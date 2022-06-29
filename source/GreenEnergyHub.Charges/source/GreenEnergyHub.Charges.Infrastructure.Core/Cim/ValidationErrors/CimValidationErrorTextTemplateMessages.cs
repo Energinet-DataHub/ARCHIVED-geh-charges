@@ -159,27 +159,27 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeNameIsRequired)]
         public const string ChargeNameRequiredErrorText =
-            "Charge name is missing.";
+            "Charge name for charge with ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}} is missing.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeDescriptionIsRequired)]
         public const string ChargeDescriptionRequiredErrorText =
-            "Charge description is missing.";
+            "Charge description for charge with ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}} is missing.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ResolutionIsRequired)]
         public const string ResolutionRequiredErrorText =
-            "Resolution is missing.";
+            "Resolution for charge with ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}} is missing.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeOwnerHasLengthLimits)]
         public const string ChargeOwnerTextLengthRuleText =
-            "Charge owner must have a length between 13 and 16.";
+            "Charge owner for charge with ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}} must have a length between 13 and 16.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.TransparentInvoicingIsRequired)]
         public const string TransparentInvoicingIsRequiredErrorText =
-            "Transparent invoicing is missing.";
+            "Transparent invoicing for charge with ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}} is missing.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.TaxIndicatorIsRequired)]
         public const string TaxIndicatorIsRequiredErrorText =
-            "Tax indicator is missing.";
+            "Tax indicator for charge with ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}} is missing.";
 
         public const string Unknown = "unknown";
     }
