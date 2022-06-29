@@ -505,10 +505,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
         }
 
         [Fact]
-        public void Create_WithInvalidEndDate_ThrowsException()
+        public void Create_WithEndDate_ThrowsException()
         {
             // Act / Assert
-            Assert.Throws<ChargeOperationFailedException>(() => Charge.Create(
+            var ex = Assert.Throws<ChargeOperationFailedException>(() => Charge.Create(
                 "id1",
                 "name",
                 "desc",
@@ -521,6 +521,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
                 false,
                 InstantHelper.GetTodayAtMidnightUtc(),
                 InstantHelper.GetTomorrowAtMidnightUtc()));
+            ex.InvalidRules.Should().Contain(r =>
+                r.ValidationRule.ValidationRuleIdentifier == ValidationRuleIdentifier.CreateChargeIsNotAllowedATerminationDate);
         }
 
         [Fact]
