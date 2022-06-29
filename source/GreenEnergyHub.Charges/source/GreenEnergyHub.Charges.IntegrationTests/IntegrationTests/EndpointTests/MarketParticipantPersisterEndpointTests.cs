@@ -63,6 +63,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 const string gln = "1234567890123";
                 var role = MarketParticipantRoleMapper.Map(businessRoleCode);
                 var (message, parentId) = CreateServiceBusMessage(gln, actorStatus, new List<BusinessRoleCode> { businessRoleCode });
+
                 await using var context = Fixture.DatabaseManager.CreateDbContext();
 
                 // Act

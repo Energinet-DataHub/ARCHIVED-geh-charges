@@ -122,7 +122,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 return (existingCharge.Id, existingMeteringPoint.Id);
 
             var marketParticipant = new MarketParticipant(
-                Guid.NewGuid(),
+                id: Guid.NewGuid(),
+                actorId: Guid.NewGuid(),
+                b2CActorId: Guid.NewGuid(),
                 marketParticipantId,
                 true,
                 MarketParticipantRole.EnergySupplier);
