@@ -61,6 +61,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared
         [InlineAutoMoqData(ValidationRuleIdentifier.ChargeOwnerHasLengthLimits, ReasonCode.E86)]
         [InlineAutoMoqData(ValidationRuleIdentifier.TransparentInvoicingIsRequired, ReasonCode.E0H)]
         [InlineAutoMoqData(ValidationRuleIdentifier.TaxIndicatorIsRequired, ReasonCode.E0H)]
+        [InlineAutoMoqData(ValidationRuleIdentifier.TerminationDateMustMatchEffectiveDate, ReasonCode.E0H)]
         public void Create_ReturnsExpectedCode(
             ValidationRuleIdentifier identifier,
             ReasonCode expected,

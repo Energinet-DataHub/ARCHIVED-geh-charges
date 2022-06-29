@@ -27,6 +27,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).ValueGeneratedNever();
 
+            builder.Property(x => x.ActorId);
+            builder.Property(x => x.B2CActorId);
             builder.Property(x => x.MarketParticipantId);
             builder.Property(x => x.IsActive);
             builder.Property(x => x.BusinessProcessRole);

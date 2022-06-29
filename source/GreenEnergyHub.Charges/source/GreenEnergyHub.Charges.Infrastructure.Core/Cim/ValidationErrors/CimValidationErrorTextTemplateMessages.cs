@@ -181,6 +181,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         public const string TaxIndicatorIsRequiredErrorText =
             "Tax indicator for charge with ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}} is missing.";
 
+        [ErrorMessageFor(ValidationRuleIdentifier.TerminationDateMustMatchEffectiveDate)]
+        public const string TerminationDateMustMatchEffectiveDateErrorText =
+            "Termination date and effective date must have the same value.";
+
         public const string Unknown = "unknown";
     }
 }

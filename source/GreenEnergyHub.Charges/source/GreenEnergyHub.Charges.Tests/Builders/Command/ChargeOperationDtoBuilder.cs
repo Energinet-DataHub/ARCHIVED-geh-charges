@@ -118,7 +118,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             return this;
         }
 
-        public ChargeOperationDtoBuilder WithEndDateTime(Instant endDateTime)
+        public ChargeOperationDtoBuilder WithEndDateTime(Instant? endDateTime)
         {
             _endDateTime = endDateTime;
             return this;
