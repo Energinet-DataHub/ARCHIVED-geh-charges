@@ -505,7 +505,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
         }
 
         [Fact]
-        public void Create_WithEndDate_ThrowsException()
+        public void Create_WithEndDate_ThrowsExceptionWithInvalidRule()
         {
             // Act / Assert
             var ex = Assert.Throws<ChargeOperationFailedException>(() => Charge.Create(
