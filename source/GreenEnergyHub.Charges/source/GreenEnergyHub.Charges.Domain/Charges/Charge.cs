@@ -247,8 +247,9 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 
         private void StopExistingPeriod(Instant stopDate)
         {
-            var previousPeriod = _periods.OrderByDescending(p => p.StartDateTime)
-                .FirstOrDefault(p =>
+            // When implementing validation rule: Cannot stop a charge on its stopped date,
+            // Then p.EndDateTime = stopDate can be removed from conditions below.
+            var previousPeriod = _periods.FirstOrDefault(p =>
                     p.EndDateTime >= stopDate &&
                     p.StartDateTime <= stopDate);
 
