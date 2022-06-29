@@ -31,6 +31,13 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
         Task AddAsync(MarketParticipant marketParticipant);
 
         /// <summary>
+        /// Get single actor by ActorId or null
+        /// </summary>
+        /// <param name="actorId"></param>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+        Task<MarketParticipant?> GetByActorIdAsync(Guid? actorId);
+
+        /// <summary>
         /// Get single actor or null from b2CActorId
         /// </summary>
         /// <param name="b2CActorId"></param>
