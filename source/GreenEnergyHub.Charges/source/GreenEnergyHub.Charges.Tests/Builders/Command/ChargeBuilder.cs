@@ -98,6 +98,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             var operationId = Guid.NewGuid().ToString();
 
             var charge = Charge.Create(
+                operationId,
                 _name,
                 "chargeDescription",
                 _senderProvidedChargeId,

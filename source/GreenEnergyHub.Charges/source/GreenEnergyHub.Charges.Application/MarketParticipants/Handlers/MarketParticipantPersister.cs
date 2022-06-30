@@ -45,41 +45,55 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
         public async Task PersistAsync(MarketParticipantUpdatedEvent marketParticipantUpdatedEvent)
         {
             ArgumentNullException.ThrowIfNull(marketParticipantUpdatedEvent);
+
             foreach (var businessProcessRole in marketParticipantUpdatedEvent.BusinessProcessRoles)
-            {
-                var persistMarketParticipant = await _marketParticipantRepository.SingleOrNullAsync(
-                    businessProcessRole,
-                    marketParticipantUpdatedEvent.MarketParticipantId).ConfigureAwait(false);
-
-                if (persistMarketParticipant is null)
-                {
-                    persistMarketParticipant = await AddMarketParticipantAsync(
-                        marketParticipantUpdatedEvent,
-                        businessProcessRole).ConfigureAwait(false);
-                }
-                else
-                {
-                    UpdateMarketParticipant(
-                        marketParticipantUpdatedEvent,
-                        persistMarketParticipant);
-                }
-
-                await ConnectToGridAreaAsync(marketParticipantUpdatedEvent, persistMarketParticipant).ConfigureAwait(false);
-            }
+                await HandleBusinessProcessRoleAsync(marketParticipantUpdatedEvent, businessProcessRole).ConfigureAwait(false);
 
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
         }
 
-        private void UpdateMarketParticipant(
+        private async Task HandleBusinessProcessRoleAsync(
             MarketParticipantUpdatedEvent marketParticipantUpdatedEvent,
-            MarketParticipant existingMarketParticipant)
+            MarketParticipantRole businessProcessRole)
         {
-            existingMarketParticipant.IsActive = marketParticipantUpdatedEvent.IsActive;
-            _logger.LogInformation(
-                "Market participant with ID '{MarketParticipantId}' and role '{BusinessProcessRole}' " +
-                "has changed state",
-                existingMarketParticipant.MarketParticipantId,
-                existingMarketParticipant.BusinessProcessRole);
+            var marketParticipant = await _marketParticipantRepository.SingleOrNullAsync(
+                businessProcessRole, marketParticipantUpdatedEvent.MarketParticipantId).ConfigureAwait(false);
+
+            if (marketParticipant is null)
+                marketParticipant = await _marketParticipantRepository.GetByActorIdAsync(marketParticipantUpdatedEvent.ActorId).ConfigureAwait(false);
+
+            if (marketParticipant is null)
+            {
+                marketParticipant = await CreateMarketParticipantAsync(
+                    marketParticipantUpdatedEvent, businessProcessRole).ConfigureAwait(false);
+            }
+            else
+            {
+                UpdateMarketParticipant(marketParticipantUpdatedEvent, marketParticipant);
+            }
+
+            await ConnectToGridAreaAsync(marketParticipantUpdatedEvent, marketParticipant!).ConfigureAwait(false);
+        }
+
+        private async Task<MarketParticipant?> CreateMarketParticipantAsync(
+            MarketParticipantUpdatedEvent marketParticipantUpdatedEvent,
+            MarketParticipantRole businessProcessRole)
+        {
+            var marketParticipantAlreadyExistWithOtherRole = await _marketParticipantRepository
+                .SingleOrNullAsync(marketParticipantUpdatedEvent.MarketParticipantId).ConfigureAwait(false);
+
+            if (marketParticipantAlreadyExistWithOtherRole != null)
+            {
+                throw new InvalidOperationException(
+                    $"Only 1 market participant with MarketParticipantId '{marketParticipantAlreadyExistWithOtherRole.MarketParticipantId}' is allowed, " +
+                    $"the current persisted market participant has role {marketParticipantAlreadyExistWithOtherRole.BusinessProcessRole} " +
+                    $"and the new market participant to be created has role {businessProcessRole}");
+            }
+
+            var marketParticipant = await AddMarketParticipantAsync(
+                marketParticipantUpdatedEvent, businessProcessRole).ConfigureAwait(false);
+
+            return marketParticipant;
         }
 
         private async Task<MarketParticipant> AddMarketParticipantAsync(
@@ -87,18 +101,39 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
             MarketParticipantRole businessProcessRole)
         {
             var marketParticipant = new MarketParticipant(
+                Guid.NewGuid(),
                 marketParticipantUpdatedEvent.ActorId,
+                marketParticipantUpdatedEvent.B2CActorId,
                 marketParticipantUpdatedEvent.MarketParticipantId,
                 marketParticipantUpdatedEvent.IsActive,
                 businessProcessRole);
 
             await _marketParticipantRepository.AddAsync(marketParticipant).ConfigureAwait(false);
+
             _logger.LogInformation(
-                "Market participant with ID '{MarketParticipantId}' and role '{BusinessProcessRole}' " +
-                "has been persisted",
+                "Market participant with MarketParticipantId '{MarketParticipantId}', ActorId '{ActorId}', B2CActorId " +
+                "'{B2CActorId}' and role '{BusinessProcessRole}' has been persisted",
                 marketParticipant.MarketParticipantId,
+                marketParticipant.ActorId,
+                marketParticipant.B2CActorId,
                 marketParticipant.BusinessProcessRole);
+
             return marketParticipant;
+        }
+
+        private void UpdateMarketParticipant(
+            MarketParticipantUpdatedEvent marketParticipantUpdatedEvent,
+            MarketParticipant existingMarketParticipant)
+        {
+            existingMarketParticipant.ActorId = marketParticipantUpdatedEvent.ActorId;
+            existingMarketParticipant.B2CActorId = marketParticipantUpdatedEvent.B2CActorId;
+            existingMarketParticipant.IsActive = marketParticipantUpdatedEvent.IsActive;
+
+            _logger.LogInformation(
+                "Market participant with MarketParticipantId '{MarketParticipantId}' " +
+                "and role '{BusinessProcessRole}' has changed state",
+                existingMarketParticipant.MarketParticipantId,
+                existingMarketParticipant.BusinessProcessRole);
         }
 
         private async Task ConnectToGridAreaAsync(
@@ -114,10 +149,14 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
                 if (existingGridAreaLink.OwnerId == marketParticipant.Id) return;
 
                 existingGridAreaLink.OwnerId = marketParticipant.Id;
+
                 _logger.LogInformation(
-                    "GridAreaLink ID '{GridAreaLinkId}' has changed Owner ID to '{OwnerId}'",
+                    "GridAreaLink ID '{GridAreaLinkId}' has changed Owner ID to '{OwnerId}' " +
+                    "with MarketParticipantId {MarketParticipantId} and B2CActorId {B2CActorId}",
                     existingGridAreaLink.Id,
-                    existingGridAreaLink.OwnerId);
+                    existingGridAreaLink.OwnerId,
+                    marketParticipant.MarketParticipantId,
+                    marketParticipant.B2CActorId);
             }
         }
     }

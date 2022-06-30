@@ -22,6 +22,7 @@ using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub;
+using GreenEnergyHub.Charges.FunctionHost.Charges;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.Charges;
@@ -148,6 +149,29 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 isChargePricesUpdatedReceived.Should().BeTrue();
             }
 
+            // TODO: Let this test evolve in step with the price flow expansion (and change the name accordingly)
+            [Fact]
+            public async Task When_ChargePricesAreReceived_Then_ChargePriceCommandReceiverEndpointIsTriggered()
+            {
+                // Arrange
+                var (request, correlationId) = await _authenticatedHttpRequestGenerator
+                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.TariffPriceSeries);
+                using var eventualChargePriceUpdatedEvent = await Fixture
+                    .ChargePricesUpdatedListener
+                    .ListenForEventsAsync(correlationId, expectedCount: 1)
+                    .ConfigureAwait(false);
+
+                // Act
+                await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                await FunctionAsserts.AssertHasExecutedAsync(
+                    Fixture.HostManager, nameof(ChargePriceCommandReceiverEndpoint)).ConfigureAwait(false);
+
+                // We need to clear host log after each test is done to ensure that we can assert on function executed on each test run because we only check on function name.
+                Fixture.HostManager.ClearHostLog();
+            }
+
             [Fact]
             public async Task Given_NewTaxBundleTariffWithPrices_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply()
             {
@@ -161,11 +185,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // Assert
                 actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
 
-                // We expect three peeks:
-                // * one for the two confirmations
-                // * one for the notification (tax)
-                // * one for the rejection (ChargeIdLengthValidation)
-                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId, 3);
+                // We expect six peek results:
+                // * two confirmations
+                // * one rejection (ChargeIdLengthValidation)
+                // * three notifications (tax), one for each Active MarketParticipant with role GridAccessProvider
+                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 6);
+                peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
+                peekResults.Should().ContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
+                peekResults.Should().ContainMatch("*NotifyPriceList_MarketDocument*");
             }
 
             [Theory]
@@ -183,7 +210,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Act and assert
-                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId);
+                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId);
+                peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
+                peekResults.Should().NotContainMatch("*Reject*");
             }
 
             [Theory]
@@ -199,7 +228,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Act and assert
-                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId);
+                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId);
+                peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
+                peekResults.Should().NotContainMatch("*Reject*");
             }
 
             [Fact]
@@ -220,7 +251,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // * one for the create confirmation (update)
                 // * one for the create confirmation (stop)
                 // * one for the create confirmation (cancel stop)
-                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId, 4);
+                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 4);
+                peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
+                peekResults.Should().NotContainMatch("*Reject*");
             }
 
             [Fact]
@@ -239,7 +272,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // We expect two peeks:
                 // * one for the confirmation (first operation)
                 // * one for the rejection (second operation violating VR.903)
-                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId, 2);
+                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 2);
+                peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
+                peekResults.Should().ContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
+                peekResults.Should().ContainMatch("*It is not allowed to change the tax indicator to Tax for charge*");
             }
 
             [Fact]
@@ -311,7 +347,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                     .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.CreateTariff);
                 var response = await Fixture.HostManager.HttpClient.SendAsync(createReq);
                 response.StatusCode.Should().Be(HttpStatusCode.Accepted);
-                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId);
+                await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId);
 
                 // Arrange - Update
                 var (updateReq, updateCorrelationId) = await _authenticatedHttpRequestGenerator
@@ -324,7 +360,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
 
                 // * Expect one for the confirmation (update)
-                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(updateCorrelationId);
+                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(updateCorrelationId);
+                peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
             }
         }
     }

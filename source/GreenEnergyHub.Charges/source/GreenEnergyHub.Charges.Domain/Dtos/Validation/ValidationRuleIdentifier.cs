@@ -48,6 +48,14 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
         TransparentInvoicingIsNotAllowedForFee = 34, // VR904 / D67
         ChargeResolutionCanNotBeUpdated = 35, // VR907 / D23
         RecipientRoleMustBeDdz = 36, // VR165 / E55
-        NumberOfPointsMatchTimeIntervalAndResolution = 37, // VR909 / E87
+        NumberOfPointsMatchTimeIntervalAndResolution = 37, // VR909 / E87,
+        ChargeNameIsRequired = 38, // VR910 / E0H
+        ChargeDescriptionIsRequired = 39, // VR911 / E0H
+        ResolutionIsRequired = 40, // VR912 / E0H
+        ChargeOwnerHasLengthLimits = 41, // VR913 / E86
+        TransparentInvoicingIsRequired = 42, // VR915 / E0H
+        TaxIndicatorIsRequired = 43, // VR916 / E0H
+        TerminationDateMustMatchEffectiveDate = 44, // VR917 / E0H
+        CreateChargeIsNotAllowedATerminationDate = 45, // VR914 / D14
     }
 }

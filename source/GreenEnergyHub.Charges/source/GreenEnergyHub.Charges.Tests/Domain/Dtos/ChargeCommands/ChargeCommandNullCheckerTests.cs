@@ -27,24 +27,16 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands
     public class ChargeCommandNullCheckerTests
     {
         [Theory]
-        [InlineAutoDomainData(BusinessReasonCode.UpdateChargeInformation, null, "Valid", "Valid")]
-        [InlineAutoDomainData(BusinessReasonCode.UpdateChargeInformation, "Valid", null, "Valid")]
-        [InlineAutoDomainData(BusinessReasonCode.UpdateChargeInformation, "Valid", "Valid", null)]
-        [InlineAutoDomainData(BusinessReasonCode.UpdateChargeInformation, "", "Valid", "Valid")]
-        [InlineAutoDomainData(BusinessReasonCode.UpdateChargeInformation, "Valid", "", "Valid")]
-        [InlineAutoDomainData(BusinessReasonCode.UpdateChargeInformation, "Valid", "Valid", "")]
-        [InlineAutoDomainData(BusinessReasonCode.UpdateChargePrices, "Valid", "Valid", null)]
-        [InlineAutoDomainData(BusinessReasonCode.UpdateChargePrices, "Valid", "Valid", "")]
+        [InlineAutoDomainData(BusinessReasonCode.UpdateChargeInformation, null)]
+        [InlineAutoDomainData(BusinessReasonCode.UpdateChargeInformation, "")]
+        [InlineAutoDomainData(BusinessReasonCode.UpdateChargePrices, null)]
+        [InlineAutoDomainData(BusinessReasonCode.UpdateChargePrices, "")]
         public void ChargeCommandPropertiesAreNotNullOrWhitespace(
             BusinessReasonCode businessReasonCode,
-            string description,
-            string chargeName,
             string documentId)
         {
             // Arrange
             var chargeOperationDto = new ChargeOperationDtoBuilder()
-                .WithDescription(description)
-                .WithChargeName(chargeName)
                 .Build();
             var documentDto = new DocumentDtoBuilder()
                 .WithDocumentId(documentId)

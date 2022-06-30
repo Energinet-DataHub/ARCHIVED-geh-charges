@@ -33,7 +33,7 @@ on:
   workflow_dispatch: {}
 
 env:
-  DOTNET_VERSION: '6.0.201'
+  DOTNET_VERSION: '6.0.300'
   CSPROJ_FILE_PATH: 'source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/Energinet.DataHub.Charges.Clients.csproj'
   BINARY_PATH: 'source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/bin/Release/*.nupkg'
 

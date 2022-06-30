@@ -24,20 +24,24 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsUpdatedEvents
     {
         public MarketParticipantUpdatedEvent(
             Guid actorId,
+            Guid? b2CActorId,
             string marketParticipantId,
-            List<MarketParticipantRole> businessProcessRole,
+            List<MarketParticipantRole> businessProcessRoles,
             bool isActive,
             IEnumerable<Guid> gridAreas)
             : base(Transaction.NewTransaction())
         {
+            B2CActorId = b2CActorId;
             ActorId = actorId;
             MarketParticipantId = marketParticipantId;
-            BusinessProcessRoles = businessProcessRole;
+            BusinessProcessRoles = businessProcessRoles;
             IsActive = isActive;
             GridAreas = gridAreas;
         }
 
         public Guid ActorId { get; }
+
+        public Guid? B2CActorId { get; }
 
         public string MarketParticipantId { get; }
 

@@ -34,11 +34,15 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
 
         public MarketParticipant(
             Guid id,
+            Guid actorId,
+            Guid? b2CActorId,
             string marketParticipantId,
             bool isActive,
             MarketParticipantRole businessProcessRole)
         {
             Id = id;
+            ActorId = actorId;
+            B2CActorId = b2CActorId;
             MarketParticipantId = marketParticipantId;
             IsActive = isActive;
             UpdateBusinessProcessRole(businessProcessRole);
@@ -53,14 +57,25 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
         public Guid Id { get; }
 
         /// <summary>
+        /// ID identifying the actor in the Market Participant domain
+        /// The setter is public as the charges domain doesn't enforce any validation
+        /// as it is the responsibility of the market participant domain providing the data.
+        /// </summary>
+        public Guid ActorId { get; set; }
+
+        /// <summary>
+        /// ID used for authentication of B2B requests.
+        /// The setter is public as the charges domain doesn't enforce any validation
+        /// as it is the responsibility of the market participant domain providing the data.
+        /// </summary>
+        public Guid? B2CActorId { get; set; }
+
+        /// <summary>
         /// The ID that identifies the market participant. In Denmark this would be the GLN number or EIC code.
         /// This ID must be immutable. A new market participant id would require de-activating the market participant
         /// and replacing it by a new market participant.
-        ///
-        /// IMPORTANT: There should not be a private setter but it's a temporary solution to handle non-valid
-        /// updates in the temporary market participant registry solution.
         /// </summary>
-        public string MarketParticipantId { get; private set; }
+        public string MarketParticipantId { get; }
 
         /// <summary>
         /// The roles of the market participant.
@@ -78,7 +93,7 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
         /// <summary>
         /// Market participants will not be deleted. They will be made in-active.
         /// The setter is public as the charges domain doesn't enforce any validation
-        /// as it is the responsibility of the market role domain providing the data.
+        /// as it is the responsibility of the market participant domain providing the data.
         /// </summary>
         public bool IsActive { get; set; }
     }

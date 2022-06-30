@@ -18,25 +18,27 @@ using System.Linq;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers;
+using GreenEnergyHub.TestHelpers;
 using Xunit;
 
 namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
 {
     public class MarketParticipantDomainEventMapperTests
     {
-        [Fact]
-        public void MapFromActorIntegrationEvent_ShouldReturnMarketParticipantUpdatedEvent()
+        [Theory]
+        [AutoDomainData]
+        public void MapFromActorIntegrationEvent_ShouldReturnMarketParticipantUpdatedEvent(
+            Guid actorId, Guid b2CActorId, string gln)
         {
             // Arrange
-            var actorId = Guid.NewGuid();
-            var gln = "AnyGln";
-            var roles = new List<BusinessRoleCode>() { BusinessRoleCode.Ddm, BusinessRoleCode.Ez };
+            var roles = new List<BusinessRoleCode>() { BusinessRoleCode.Ddm };
             var grids = new List<Guid>() { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() };
+
             var actorUpdatedIntegrationEvent = new ActorUpdatedIntegrationEvent(
                 Guid.Empty,
                 actorId,
                 Guid.Empty,
-                Guid.Empty,
+                b2CActorId,
                 gln,
                 ActorStatus.Active,
                 roles,
@@ -50,10 +52,36 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
 
             // Assert
             actualMarketParticipantUpdatedEvent.ActorId.Should().Be(actorId);
+            actualMarketParticipantUpdatedEvent.B2CActorId.Should().Be(b2CActorId);
             actualMarketParticipantUpdatedEvent.MarketParticipantId.Should().Be(gln);
             actualMarketParticipantUpdatedEvent.IsActive.Should().Be(true);
-            actualMarketParticipantUpdatedEvent.BusinessProcessRoles.Count.Should().Be(2);
+            actualMarketParticipantUpdatedEvent.BusinessProcessRoles.Count.Should().Be(1);
             actualMarketParticipantUpdatedEvent.GridAreas.Count().Should().Be(3);
+        }
+
+        [Theory]
+        [AutoDomainData]
+        public void MapFromActorIntegrationEvent_WhenSeveralRolesAssociated_ShouldThrowInvalidOperationException(
+            Guid actorId, Guid b2CActorId, string gln)
+        {
+            // Arrange
+            var roles = new List<BusinessRoleCode> { BusinessRoleCode.Ddm, BusinessRoleCode.Ez };
+            var grids = new List<Guid> { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() };
+
+            var actorUpdatedIntegrationEvent = new ActorUpdatedIntegrationEvent(
+                Guid.Empty,
+                actorId,
+                Guid.Empty,
+                b2CActorId,
+                gln,
+                ActorStatus.Active,
+                roles,
+                new List<EicFunction>(),
+                grids,
+                new List<string>());
+
+            // Act and Assert
+            Assert.Throws<InvalidOperationException>(() => MarketParticipantDomainEventMapper.MapFromActorUpdatedIntegrationEvent(actorUpdatedIntegrationEvent));
         }
 
         [Fact]
@@ -64,7 +92,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             var gridAreaLinkId = Guid.NewGuid();
 
             var gridAreaUpdatedIntegrationEvent = new GridAreaUpdatedIntegrationEvent(
-                System.Guid.NewGuid(),
+                Guid.NewGuid(),
                 gridAreaId,
                 string.Empty,
                 string.Empty,
