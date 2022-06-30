@@ -68,7 +68,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             for (var i = 0; i < operations.Length; i++)
             {
                 var operation = operations[i];
-                var charge = await GetChargeAsync(operation).ConfigureAwait(false);
 
                 var inputValidationResult = _inputValidator.Validate(operation);
                 if (inputValidationResult.IsFailed)
@@ -77,6 +76,8 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                     CollectRejectionRules(rejectionRules, inputValidationResult, operationsToBeRejected, operation);
                     break;
                 }
+
+                var charge = await GetChargeAsync(operation).ConfigureAwait(false);
 
                 try
                 {
