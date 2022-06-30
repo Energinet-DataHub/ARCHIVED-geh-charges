@@ -159,7 +159,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeNameIsRequired)]
         public const string ChargeNameRequiredErrorText =
-            "Charge name is missingfor charge with ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}}.";
+            "Charge name is missing for charge with ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeDescriptionIsRequired)]
         public const string ChargeDescriptionRequiredErrorText =
@@ -167,7 +167,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.ResolutionIsRequired)]
         public const string ResolutionRequiredErrorText =
-            "Resolution for charge with ID is missing {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}}.";
+            "Resolution is missing for charge with ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeOwnerHasLengthLimits)]
         public const string ChargeOwnerTextLengthRuleText =
