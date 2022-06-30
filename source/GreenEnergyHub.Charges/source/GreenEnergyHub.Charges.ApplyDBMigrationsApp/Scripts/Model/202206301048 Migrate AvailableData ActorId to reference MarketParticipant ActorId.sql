@@ -37,26 +37,26 @@ begin tran
     update acd
     set acd.ActorId = mp.ActorId
     from MessageHub.AvailableChargeData as acd
-             inner join Charges.MarketParticipant as mp
-                        on acd.DeprecatedActorId = mp.Id
+         inner join Charges.MarketParticipant as mp
+            on acd.DeprecatedActorId = mp.Id
     
     update acd
     set acd.ActorId = mp.ActorId
     from MessageHub.AvailableChargeReceiptData as acd
-             inner join Charges.MarketParticipant as mp
-                        on acd.DeprecatedActorId = mp.Id
+         inner join Charges.MarketParticipant as mp
+            on acd.DeprecatedActorId = mp.Id
     
     update acd
     set acd.ActorId = mp.ActorId
     from MessageHub.AvailableChargeLinksData as acd
-             inner join Charges.MarketParticipant as mp
-                        on acd.DeprecatedActorId = mp.Id
+         inner join Charges.MarketParticipant as mp
+            on acd.DeprecatedActorId = mp.Id
     
     update acd
     set acd.ActorId = mp.ActorId
     from MessageHub.AvailableChargeLinksReceiptData as acd
-             inner join Charges.MarketParticipant as mp
-                        on acd.DeprecatedActorId = mp.Id
+         inner join Charges.MarketParticipant as mp
+            on acd.DeprecatedActorId = mp.Id
     
     ------------------------------------------------------------------------------------------------------------------------
     -- ActorId not null
