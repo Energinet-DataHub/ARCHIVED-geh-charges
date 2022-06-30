@@ -185,6 +185,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         public const string TerminationDateMustMatchEffectiveDateErrorText =
             "Termination date must match effective date when requesting a stop of charge type {{ChargeType}} with charge ID {{DocumentSenderProvidedChargeId}} for owner.";
 
+        [ErrorMessageFor(ValidationRuleIdentifier.CreateChargeIsNotAllowedATerminationDate)]
+        public const string CreateChargeIsNotAllowedATerminationDateErrorText =
+            "Charge ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} for owner {{ChargeOwner}} cannot be stopped as it has never existed.";
+
         public const string Unknown = "unknown";
     }
 }
