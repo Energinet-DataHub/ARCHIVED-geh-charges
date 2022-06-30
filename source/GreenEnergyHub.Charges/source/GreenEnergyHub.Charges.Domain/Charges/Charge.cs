@@ -107,6 +107,13 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             ArgumentNullException.ThrowIfNull(description);
             ArgumentNullException.ThrowIfNull(senderProvidedChargeId);
 
+            var rules = new List<OperationValidationRuleContainer>
+            {
+                new(
+                    new CreateChargeIsNotAllowedATerminationRuleDate(stopDate), operationId),
+            };
+            CheckRules(rules);
+
             var chargePeriod = ChargePeriod.Create(
                 name,
                 description,
@@ -114,13 +121,6 @@ namespace GreenEnergyHub.Charges.Domain.Charges
                 transparentInvoicing,
                 startDate,
                 InstantExtensions.GetEndDefault());
-
-            var rules = new List<OperationValidationRuleContainer>
-            {
-                new(
-                    new CreateChargeIsNotAllowedATerminationRuleDate(stopDate), operationId),
-            };
-            CheckRules(rules);
 
             return new Charge(
                 Guid.NewGuid(),
