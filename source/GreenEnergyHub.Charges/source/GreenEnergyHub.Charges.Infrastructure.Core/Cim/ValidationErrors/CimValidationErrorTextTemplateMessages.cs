@@ -171,19 +171,19 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeOwnerHasLengthLimits)]
         public const string ChargeOwnerTextLengthRuleText =
-            "Charge owner for charge with ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}} must have a length between 13 and 16.";
+            "Charge owner for type {{ChargeType}} with charge ID {{DocumentSenderProvidedChargeId}} must have a length of 13 or 16.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.TransparentInvoicingIsRequired)]
         public const string TransparentInvoicingIsRequiredErrorText =
-            "Transparent invoicing for charge with ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}} is missing.";
+            "Transparent invoicing must be set when calling with BusinessReasonCode D18 for charge type {{ChargeType}} with charge ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.TaxIndicatorIsRequired)]
         public const string TaxIndicatorIsRequiredErrorText =
-            "Tax indicator for charge with ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}} is missing.";
+            "Tax indicator must be set when calling with BusinessReasonCode D18 for charge type {{ChargeType}} with charge ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.TerminationDateMustMatchEffectiveDate)]
         public const string TerminationDateMustMatchEffectiveDateErrorText =
-            "Termination date and effective date must have the same value.";
+            "Termination date must match effective date when requesting a stop of charge type {{ChargeType}} with charge ID {{DocumentSenderProvidedChargeId}} for owner .";
 
         public const string Unknown = "unknown";
     }
