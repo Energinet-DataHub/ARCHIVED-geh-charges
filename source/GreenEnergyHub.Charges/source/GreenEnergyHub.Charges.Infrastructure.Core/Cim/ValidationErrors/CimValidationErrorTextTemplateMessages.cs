@@ -159,31 +159,31 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeNameIsRequired)]
         public const string ChargeNameRequiredErrorText =
-            "Charge name is missing.";
+            "Charge name is missing for charge with ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeDescriptionIsRequired)]
         public const string ChargeDescriptionRequiredErrorText =
-            "Charge description is missing.";
+            "Charge description is missing for charge with ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ResolutionIsRequired)]
         public const string ResolutionRequiredErrorText =
-            "Resolution is missing.";
+            "Resolution is missing for charge with ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeOwnerHasLengthLimits)]
         public const string ChargeOwnerTextLengthRuleText =
-            "Charge owner must have a length between 13 and 16.";
+            "Charge owner for type {{ChargeType}} with charge ID {{DocumentSenderProvidedChargeId}} must have a length of 13 or 16.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.TransparentInvoicingIsRequired)]
         public const string TransparentInvoicingIsRequiredErrorText =
-            "Transparent invoicing is missing.";
+            "Transparent invoicing must be set when calling with BusinessReasonCode D18 for charge type {{ChargeType}} with charge ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.TaxIndicatorIsRequired)]
         public const string TaxIndicatorIsRequiredErrorText =
-            "Tax indicator is missing.";
+            "Tax indicator must be set when calling with BusinessReasonCode D18 for charge type {{ChargeType}} with charge ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.TerminationDateMustMatchEffectiveDate)]
         public const string TerminationDateMustMatchEffectiveDateErrorText =
-            "Termination date and effective date must have the same value.";
+            "Termination date must match effective date when requesting a stop of charge type {{ChargeType}} with charge ID {{DocumentSenderProvidedChargeId}} for owner.";
 
         public const string Unknown = "unknown";
     }
