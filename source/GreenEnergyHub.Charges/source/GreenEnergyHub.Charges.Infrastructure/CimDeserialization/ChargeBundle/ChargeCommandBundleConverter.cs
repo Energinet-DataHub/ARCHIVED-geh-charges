@@ -59,7 +59,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                                 document,
                                 chargeOperationDtoGroup.AsEnumerable().Select(dto => dto).ToList()))
                         .ToList();
-                    return new ChargeCommandInformationBundle(document, chargeCommands);
+                    return new ChargeInformationCommandBundle(document, chargeCommands);
                 case BusinessReasonCode.UpdateChargePrices:
                     var priceOperations = await ParseChargePriceOperationsAsync(reader).ConfigureAwait(false);
                     var priceCommands = priceOperations

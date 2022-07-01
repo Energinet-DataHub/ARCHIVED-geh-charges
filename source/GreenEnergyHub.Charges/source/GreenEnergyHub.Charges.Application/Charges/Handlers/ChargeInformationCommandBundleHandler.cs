@@ -12,26 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
-    public class ChargeInformationCommandCommandBundleHandler : IChargeInformationCommandBundleHandler
+    public class ChargeInformationCommandBundleHandler : IChargeInformationCommandBundleHandler
     {
         private readonly IChargeInformationCommandHandler _chargeInformationCommandHandler;
 
-        public ChargeInformationCommandCommandBundleHandler(IChargeInformationCommandHandler chargeInformationCommandHandler)
+        public ChargeInformationCommandBundleHandler(IChargeInformationCommandHandler chargeInformationCommandHandler)
         {
             _chargeInformationCommandHandler = chargeInformationCommandHandler;
         }
 
-        public async Task HandleAsync(ChargeCommandInformationBundle commandInformationBundle)
+        public async Task HandleAsync(ChargeInformationCommandBundle informationCommandBundle)
         {
-            foreach (var command in commandInformationBundle.Commands)
+            foreach (var command in informationCommandBundle.Commands)
             {
                 await _chargeInformationCommandHandler
                     .HandleAsync(command)

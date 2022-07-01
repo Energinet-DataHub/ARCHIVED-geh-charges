@@ -84,7 +84,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
                 var bundle = inboundMessage.ValidatedMessage;
                 switch (bundle)
                 {
-                    case ChargeCommandInformationBundle commandBundle:
+                    case ChargeInformationCommandBundle commandBundle:
                         ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(commandBundle);
                         await _chargeInformationCommandBundleHandler.HandleAsync(commandBundle).ConfigureAwait(false);
                         break;

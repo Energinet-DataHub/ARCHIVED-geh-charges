@@ -47,7 +47,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands
                 .WithChargeOperation(chargeOperationDto)
                 .Build();
             var chargeCommands = new List<ChargeInformationCommand> { chargeCommand };
-            var chargeBundle = new ChargeCommandInformationBundle(documentDto, chargeCommands);
+            var chargeBundle = new ChargeInformationCommandBundle(documentDto, chargeCommands);
 
             // Act & Assert
             Assert.Throws<ArgumentException>(() =>
@@ -64,7 +64,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands
             var documentDto = documentDtoBuilder.Build();
             var chargeCommand = chargeCommandBuilder.Build();
             var chargeCommands = new List<ChargeInformationCommand> { chargeCommand };
-            var chargeBundle = new ChargeCommandInformationBundle(documentDto, chargeCommands);
+            var chargeBundle = new ChargeInformationCommandBundle(documentDto, chargeCommands);
 
             // Act
             var ex = Record.Exception(() =>
@@ -83,7 +83,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands
             ChargeInformationCommand? chargeCommand = null;
             var documentDto = documentDtoBuilder.Build();
             var chargeCommands = new List<ChargeInformationCommand> { chargeCommand! };
-            var chargeBundle = new ChargeCommandInformationBundle(documentDto, chargeCommands);
+            var chargeBundle = new ChargeInformationCommandBundle(documentDto, chargeCommands);
 
             // Act & Assert
             Assert.Throws<ArgumentNullException>(() =>
@@ -102,7 +102,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands
                 .Build();
             var chargeCommand = builder.WithDocumentDto(documentDto).Build();
             var chargeCommands = new List<ChargeInformationCommand> { chargeCommand };
-            var chargeBundle = new ChargeCommandInformationBundle(documentDto, chargeCommands);
+            var chargeBundle = new ChargeInformationCommandBundle(documentDto, chargeCommands);
 
             // Act & Assert
             Assert.Throws<ArgumentNullException>(() =>
@@ -116,7 +116,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands
             // Arrange
             var chargeCommand = builder.WithDocumentDto(null!).Build();
             var chargeCommands = new List<ChargeInformationCommand> { chargeCommand };
-            var chargeBundle = new ChargeCommandInformationBundle(null!, chargeCommands);
+            var chargeBundle = new ChargeInformationCommandBundle(null!, chargeCommands);
 
             // Act & Assert
             Assert.Throws<ArgumentNullException>(() =>
@@ -132,7 +132,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands
             var documentDto = documentDtoBuilder.Build();
             var chargeCommand = new ChargeCommandBuilder().WithChargeOperation(null!).Build();
             var chargeCommands = new List<ChargeInformationCommand> { chargeCommand };
-            var chargeBundle = new ChargeCommandInformationBundle(documentDto, chargeCommands);
+            var chargeBundle = new ChargeInformationCommandBundle(documentDto, chargeCommands);
 
             // Act & Assert
             Assert.Throws<ArgumentNullException>(() =>

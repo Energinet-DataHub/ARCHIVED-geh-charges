@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         [InlineAutoDomainData]
         public async Task HandleAsync_WhenCalledWithMultipleChargeCommands_ShouldCallMultipleTimes(
             [Frozen] Mock<IChargeInformationCommandHandler> chargeCommandBundleHandler,
-            ChargeInformationCommandCommandBundleHandler sut)
+            ChargeInformationCommandBundleHandler sut)
         {
             // Arrange
             var document = new DocumentDtoBuilder()
