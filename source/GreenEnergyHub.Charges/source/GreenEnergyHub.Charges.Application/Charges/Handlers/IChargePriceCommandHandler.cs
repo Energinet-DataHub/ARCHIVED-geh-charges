@@ -27,7 +27,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         /// Synchronously handle the message.
         /// Supports <see cref="TransactionScope"/>.
         /// </summary>
-        /// <param name="command">ChargeCommand</param>
+        /// <param name="priceCommand">ChargePriceCommand</param>
         Task HandleAsync(ChargePriceCommand priceCommand);
     }
 }
