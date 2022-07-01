@@ -75,7 +75,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
                     chargeLinkDto.MeteringPointId,
                     DocumentType.RejectRequestChangeBillingMasterData, // Will be added to the HTTP MessageType header
                     input.ChargeLinksCommand.ChargeLinksOperations.ToList().IndexOf(chargeLinkDto),
-                    recipient.Id,
+                    recipient.ActorId,
                     GetReasons(input, chargeLinkDto)))
                 .ToList();
         }
