@@ -19,7 +19,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
     /// <summary>
-    /// Contract for handling a change of charges message.
+    /// Contract for handling a charge price message.
     /// </summary>
     public interface IChargePriceCommandHandler
     {
