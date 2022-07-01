@@ -28,8 +28,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 
         public ChargeInformationCommandHandler(
             IClock clock,
-            IMessageDispatcher<ChargeCommandReceivedEvent> chargeMessageDispatcher,
-            IMessageDispatcher<ChargePriceCommandReceivedEvent> chargePriceMessageDispatcher)
+            IMessageDispatcher<ChargeCommandReceivedEvent> chargeMessageDispatcher)
         {
             _clock = clock;
             _chargeMessageDispatcher = chargeMessageDispatcher;
