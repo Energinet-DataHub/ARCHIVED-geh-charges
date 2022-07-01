@@ -19,14 +19,14 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
     /// <summary>
-    /// Contract for handling a charge bundle.
+    /// Contract for handling a charge price bundle.
     /// </summary>
     public interface IChargePriceCommandBundleHandler
     {
         /// <summary>
         /// Synchronously handle the bundle.
         /// </summary>
-        /// <param name="informationBundle">Charges bundle</param>
-        Task HandleAsync(ChargeCommandPriceBundle informationBundle);
+        /// <param name="priceBundle">Charges bundle</param>
+        Task HandleAsync(ChargeCommandPriceBundle priceBundle);
     }
 }
