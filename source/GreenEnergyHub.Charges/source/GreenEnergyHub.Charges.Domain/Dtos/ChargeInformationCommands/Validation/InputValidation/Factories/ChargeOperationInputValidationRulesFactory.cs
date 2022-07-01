@@ -52,6 +52,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
                 CreateRuleContainer(new ChargeOwnerIsRequiredValidationRule(chargeOperationDto), chargeOperationDto.Id),
                 CreateRuleContainer(new ChargeTypeIsKnownValidationRule(chargeOperationDto), chargeOperationDto.Id),
                 CreateRuleContainer(new StartDateTimeRequiredValidationRule(chargeOperationDto), chargeOperationDto.Id),
+                CreateRuleContainer(new ChargeOwnerTextLengthRule(chargeOperationDto), chargeOperationDto.Id),
             };
 
             rules.AddRange(chargeOperationDto.Points.Any()
@@ -94,6 +95,10 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
                     chargeOperationDto.Id),
                 CreateRuleContainer(new ChargeNameRequiredRule(chargeOperationDto), chargeOperationDto.Id),
                 CreateRuleContainer(new ChargeDescriptionRequiredRule(chargeOperationDto), chargeOperationDto.Id),
+                CreateRuleContainer(new ResolutionIsRequiredRule(chargeOperationDto), chargeOperationDto.Id),
+                CreateRuleContainer(new TransparentInvoicingIsRequiredValidationRule(chargeOperationDto), chargeOperationDto.Id),
+                CreateRuleContainer(new TaxIndicatorIsRequiredValidationRule(chargeOperationDto), chargeOperationDto.Id),
+                CreateRuleContainer(new TerminationDateMustMatchEffectiveDateValidationRule(chargeOperationDto), chargeOperationDto.Id),
             };
         }
 

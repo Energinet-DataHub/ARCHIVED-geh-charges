@@ -40,7 +40,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
 
         public virtual bool IsValid =>
             _chargeOperationDto.Type != _chargeType ||
-            _allowedResolutions.Contains(_chargeOperationDto.Resolution);
+            _allowedResolutions.Contains(_chargeOperationDto.Resolution)
+            || _chargeOperationDto.Resolution == Resolution.Unknown;
 
         public ValidationRuleIdentifier ValidationRuleIdentifier => _validationRuleIdentifier;
     }

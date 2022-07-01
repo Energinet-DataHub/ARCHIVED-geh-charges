@@ -182,11 +182,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // Assert
                 actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
 
-                // We expect three peeks:
-                // * one for the two confirmations
-                // * one for the notification (tax)
-                // * one for the rejection (ChargeIdLengthValidation)
-                await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 3);
+                // We expect six peek results:
+                // * two confirmations
+                // * one rejection (ChargeIdLengthValidation)
+                // * three notifications (tax), one for each Active MarketParticipant with role GridAccessProvider
+                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 6);
+                peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
+                peekResults.Should().ContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
+                peekResults.Should().ContainMatch("*NotifyPriceList_MarketDocument*");
             }
 
             [Theory]
@@ -204,7 +207,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Act and assert
-                await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId);
+                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId);
+                peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
+                peekResults.Should().NotContainMatch("*Reject*");
             }
 
             [Theory]
@@ -220,7 +225,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Act and assert
-                await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId);
+                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId);
+                peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
+                peekResults.Should().NotContainMatch("*Reject*");
             }
 
             [Fact]
@@ -241,7 +248,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // * one for the create confirmation (update)
                 // * one for the create confirmation (stop)
                 // * one for the create confirmation (cancel stop)
-                await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 4);
+                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 4);
+                peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
+                peekResults.Should().NotContainMatch("*Reject*");
             }
 
             [Fact]
@@ -260,7 +269,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // We expect two peeks:
                 // * one for the confirmation (first operation)
                 // * one for the rejection (second operation violating VR.903)
-                await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 2);
+                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 2);
+                peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
+                peekResults.Should().ContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
+                peekResults.Should().ContainMatch("*It is not allowed to change the tax indicator to Tax for charge*");
             }
 
             [Fact]
@@ -302,7 +314,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
 
                 // * Expect one for the confirmation (update)
-                await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(updateCorrelationId);
+                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(updateCorrelationId);
+                peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
             }
         }
     }

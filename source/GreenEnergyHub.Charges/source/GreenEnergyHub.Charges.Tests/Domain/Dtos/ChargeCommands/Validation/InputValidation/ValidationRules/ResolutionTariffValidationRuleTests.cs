@@ -28,7 +28,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
     public class ResolutionTariffValidationRuleTests
     {
         [Theory]
-        [InlineAutoMoqData(Resolution.Unknown, false)]
+        [InlineAutoMoqData(Resolution.Unknown, true)]
         [InlineAutoMoqData(Resolution.P1D, true)]
         [InlineAutoMoqData(Resolution.P1M, false)]
         [InlineAutoMoqData(Resolution.PT1H, true)]

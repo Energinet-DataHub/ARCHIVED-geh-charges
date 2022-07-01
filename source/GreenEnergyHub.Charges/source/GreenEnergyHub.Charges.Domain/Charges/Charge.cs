@@ -90,6 +90,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         public IReadOnlyCollection<ChargePeriod> Periods => _periods;
 
         public static Charge Create(
+            string operationId,
             string name,
             string description,
             string senderProvidedChargeId,
@@ -99,11 +100,19 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             TaxIndicator taxIndicator,
             VatClassification vatClassification,
             bool transparentInvoicing,
-            Instant startDate)
+            Instant startDate,
+            Instant? stopDate = null)
         {
             ArgumentNullException.ThrowIfNull(name);
             ArgumentNullException.ThrowIfNull(description);
             ArgumentNullException.ThrowIfNull(senderProvidedChargeId);
+
+            var rules = new List<OperationValidationRuleContainer>
+            {
+                new(
+                    new CreateChargeIsNotAllowedATerminationRuleDate(stopDate), operationId),
+            };
+            CheckRules(rules);
 
             var chargePeriod = ChargePeriod.Create(
                 name,
@@ -247,8 +256,10 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 
         private void StopExistingPeriod(Instant stopDate)
         {
-            var previousPeriod = _periods.OrderByDescending(p => p.StartDateTime)
-                .FirstOrDefault(p =>
+            // When implementing this validation:
+            // 'Cannot perform a stop charge when the charge is already stopped on the same date',
+            // then p.EndDateTime = stopDate can be removed from conditions below, simplifying the code.
+            var previousPeriod = _periods.FirstOrDefault(p =>
                     p.EndDateTime >= stopDate &&
                     p.StartDateTime <= stopDate);
 
