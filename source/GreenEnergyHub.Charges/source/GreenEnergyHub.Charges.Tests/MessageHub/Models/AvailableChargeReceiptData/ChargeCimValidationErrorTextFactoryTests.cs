@@ -35,13 +35,13 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
         [Theory]
         [InlineAutoMoqData]
         public void Create_WithMultipleMergeFields_ReturnsExpectedDescription(
-            ChargeCommandBuilder chargeCommandBuilder,
+            ChargeInformationCommandBuilder chargeInformationCommandBuilder,
             ChargeOperationDto chargeOperationDto,
             CimValidationErrorTextProvider cimValidationErrorTextProvider,
             ILoggerFactory loggerFactory)
         {
             // Arrange
-            var chargeCommand = chargeCommandBuilder.WithChargeOperation(chargeOperationDto).Build();
+            var chargeCommand = chargeInformationCommandBuilder.WithChargeOperation(chargeOperationDto).Build();
             var sut = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
             var rule = new ResolutionTariffValidationRule(chargeOperationDto);
             var validationError = new ValidationError(rule.ValidationRuleIdentifier, null!, null!);
@@ -61,13 +61,13 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
         [Theory]
         [InlineAutoMoqData]
         public void Create_WithPointPosition_ReturnsExpectedDescription(
-            ChargeCommandBuilder chargeCommandBuilder,
+            ChargeInformationCommandBuilder chargeInformationCommandBuilder,
             ChargeOperationDto chargeOperationDto,
             CimValidationErrorTextProvider cimValidationErrorTextProvider,
             ILoggerFactory loggerFactory)
         {
             // Arrange
-            var chargeCommand = chargeCommandBuilder.WithChargeOperation(chargeOperationDto).Build();
+            var chargeCommand = chargeInformationCommandBuilder.WithChargeOperation(chargeOperationDto).Build();
             var sut = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
             var rule = new MaximumPriceRule(chargeOperationDto);
             var triggeredBy = chargeOperationDto.Points[1].Position.ToString();
@@ -93,13 +93,13 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
         public void Create_WithInvalidPointPosition_ReturnsErrorMessage(
             ValidationRuleIdentifier validationRuleIdentifier,
             string? triggeredBy,
-            ChargeCommandBuilder chargeCommandBuilder,
+            ChargeInformationCommandBuilder chargeInformationCommandBuilder,
             ChargeOperationDto chargeOperationDto,
             CimValidationErrorTextProvider cimValidationErrorTextProvider,
             ILoggerFactory loggerFactory)
         {
             // Arrange
-            var chargeCommand = chargeCommandBuilder.WithChargeOperation(chargeOperationDto).Build();
+            var chargeCommand = chargeInformationCommandBuilder.WithChargeOperation(chargeOperationDto).Build();
             var validationError = new ValidationError(validationRuleIdentifier, chargeOperationDto.Id, triggeredBy);
             var sut = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
 
@@ -119,13 +119,13 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
         public void Create_PointPositionAreIgnored_WhenNotApplicable(
             ValidationRuleIdentifier validationRuleIdentifier,
             string? seedTriggeredBy,
-            ChargeCommandBuilder chargeCommandBuilder,
+            ChargeInformationCommandBuilder chargeInformationCommandBuilder,
             ChargeOperationDto chargeOperationDto,
             CimValidationErrorTextProvider cimValidationErrorTextProvider,
             ILoggerFactory loggerFactory)
         {
             // Arrange
-            var chargeCommand = chargeCommandBuilder.WithChargeOperation(chargeOperationDto).Build();
+            var chargeCommand = chargeInformationCommandBuilder.WithChargeOperation(chargeOperationDto).Build();
             var triggeredBy = seedTriggeredBy == "0" ?
                 chargeOperationDto.Points[1].Position.ToString() :
                 seedTriggeredBy;

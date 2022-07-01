@@ -13,14 +13,13 @@
 // limitations under the License.
 
 using System;
-using System.Net;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
+using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using Energinet.DataHub.Core.Messaging.Transport.SchemaValidation;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
@@ -32,11 +31,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
 {
     public class ChargeIngestion
     {
-        /// <summary>
-        /// The name of the function.
-        /// Function name affects the URL and thus possibly dependent infrastructure.
-        /// </summary>
         private readonly ILogger _logger;
+        private readonly ICorrelationContext _correlationContext;
         private readonly IChargeInformationCommandBundleHandler _chargeInformationCommandBundleHandler;
         private readonly IChargePriceCommandBundleHandler _chargePriceCommandBundleHandler;
         private readonly IHttpResponseBuilder _httpResponseBuilder;
@@ -45,6 +41,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
 
         public ChargeIngestion(
             ILogger logger,
+            ICorrelationContext correlationContext,
             IChargeInformationCommandBundleHandler chargeInformationCommandBundleHandler,
             IChargePriceCommandBundleHandler chargePriceCommandBundleHandler,
             IHttpResponseBuilder httpResponseBuilder,
@@ -52,6 +49,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             IActorContext actorContext)
         {
             _logger = logger;
+            _correlationContext = correlationContext;
             _chargeInformationCommandBundleHandler = chargeInformationCommandBundleHandler;
             _chargePriceCommandBundleHandler = chargePriceCommandBundleHandler;
             _httpResponseBuilder = httpResponseBuilder;
@@ -97,7 +95,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             }
             catch (Exception exception)
             {
-                _logger.LogError(exception, "Unable to deserialize request");
+                _logger.LogError(exception, "Unable to deserialize request with correlation id: {CorrelationId}", _correlationContext.Id);
                 return _httpResponseBuilder.CreateBadRequestResponse(request);
             }
         }

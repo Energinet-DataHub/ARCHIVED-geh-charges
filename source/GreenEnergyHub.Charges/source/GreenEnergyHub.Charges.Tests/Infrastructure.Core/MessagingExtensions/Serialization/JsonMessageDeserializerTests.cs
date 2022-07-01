@@ -49,11 +49,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions.S
         public async Task FromBytesAsync_CreatesMessage(IInboundMessage expected)
         {
             // Arrange
-            if (expected is ChargeInformationCommandBundle)
-            {
-                Debugger.Break();
-            }
-
             var jsonSerializer = GetMessagingDeserializer();
             await using var stream = GetStream(expected, jsonSerializer);
 

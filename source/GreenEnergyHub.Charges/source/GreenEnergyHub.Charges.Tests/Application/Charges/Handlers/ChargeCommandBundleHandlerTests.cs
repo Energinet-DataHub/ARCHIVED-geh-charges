@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             var document = new DocumentDtoBuilder()
                 .WithBusinessReasonCode(BusinessReasonCode.UpdateChargeInformation)
                 .Build();
-            var commandBuilder = new ChargeCommandBuilder();
+            var commandBuilder = new ChargeInformationCommandBuilder();
             var bundle = new ChargeBundleDtoBuilder()
                 .WithDocument(document)
                 .WithCommand(commandBuilder.Build())

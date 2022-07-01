@@ -37,13 +37,13 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             [Frozen] Mock<IChargePricesUpdatedPublisher> chargePricesUpdatedSender,
             DocumentDtoBuilder documentDtoBuilder,
             List<ChargeOperationDto> chargeOperations,
-            ChargeCommandBuilder chargeCommandBuilder,
+            ChargeInformationCommandBuilder chargeInformationCommandBuilder,
             ChargeCommandAcceptedEventBuilder chargeCommandAcceptedEventBuilder,
             ChargeIntegrationEventsPublisher sut)
         {
             // Arrange
             var document = documentDtoBuilder.WithBusinessReasonCode(BusinessReasonCode.UpdateChargePrices).Build();
-            var chargeCommand = chargeCommandBuilder.WithDocumentDto(document).WithChargeOperations(chargeOperations).Build();
+            var chargeCommand = chargeInformationCommandBuilder.WithDocumentDto(document).WithChargeOperations(chargeOperations).Build();
             var acceptedEvent = chargeCommandAcceptedEventBuilder.WithChargeCommand(chargeCommand).Build();
 
             // Act
@@ -60,13 +60,13 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             [Frozen] Mock<IChargePublisher> chargeSender,
             [Frozen] Mock<IChargePricesUpdatedPublisher> chargePricesUpdatedSender,
             DocumentDtoBuilder documentDtoBuilder,
-            ChargeCommandBuilder chargeCommandBuilder,
+            ChargeInformationCommandBuilder chargeInformationCommandBuilder,
             ChargeCommandAcceptedEventBuilder chargeCommandAcceptedEventBuilder,
             ChargeIntegrationEventsPublisher sut)
         {
             // Arrange
             var document = documentDtoBuilder.WithBusinessReasonCode(BusinessReasonCode.UpdateChargeInformation).Build();
-            var chargeCommand = chargeCommandBuilder.WithDocumentDto(document).Build();
+            var chargeCommand = chargeInformationCommandBuilder.WithDocumentDto(document).Build();
             var acceptedEvent = chargeCommandAcceptedEventBuilder.WithChargeCommand(chargeCommand).Build();
 
             // Act

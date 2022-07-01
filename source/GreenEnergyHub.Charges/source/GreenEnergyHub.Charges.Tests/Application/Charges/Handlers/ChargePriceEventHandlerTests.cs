@@ -248,7 +248,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                     InstantHelper.GetTodayAtMidnightUtc())
                 .WithPointWithXNumberOfPrices(24)
                 .Build();
-            var chargeCommand = new ChargeCommandBuilder()
+            var chargeCommand = new ChargeInformationCommandBuilder()
                 .WithChargeOperations(
                     new List<ChargeOperationDto>
                     {
@@ -336,7 +336,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                 .WithPoints(points)
                 .Build();
 
-            return new ChargeCommandBuilder()
+            return new ChargeInformationCommandBuilder()
                 .WithChargeOperation(operation)
                 .Build();
         }

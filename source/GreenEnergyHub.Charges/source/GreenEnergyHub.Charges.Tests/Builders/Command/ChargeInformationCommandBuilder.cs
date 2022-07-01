@@ -18,31 +18,31 @@ using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
 namespace GreenEnergyHub.Charges.Tests.Builders.Command
 {
-   public class ChargeCommandBuilder
+   public class ChargeInformationCommandBuilder
     {
         private List<ChargeOperationDto> _chargeOperationDtos;
         private DocumentDto _documentDto;
 
-        public ChargeCommandBuilder()
+        public ChargeInformationCommandBuilder()
         {
             _chargeOperationDtos = new List<ChargeOperationDto> { new ChargeOperationDtoBuilder().Build() };
             _documentDto = new DocumentDtoBuilder().Build();
         }
 
-        public ChargeCommandBuilder WithDocumentDto(DocumentDto documentDto)
+        public ChargeInformationCommandBuilder WithDocumentDto(DocumentDto documentDto)
         {
             _documentDto = documentDto;
             return this;
         }
 
-        public ChargeCommandBuilder WithChargeOperation(ChargeOperationDto chargeOperationDto)
+        public ChargeInformationCommandBuilder WithChargeOperation(ChargeOperationDto chargeOperationDto)
         {
             _chargeOperationDtos.Clear();
             _chargeOperationDtos.Add(chargeOperationDto);
             return this;
         }
 
-        public ChargeCommandBuilder WithChargeOperations(List<ChargeOperationDto> chargeOperationDtos)
+        public ChargeInformationCommandBuilder WithChargeOperations(List<ChargeOperationDto> chargeOperationDtos)
         {
             _chargeOperationDtos = chargeOperationDtos;
             return this;

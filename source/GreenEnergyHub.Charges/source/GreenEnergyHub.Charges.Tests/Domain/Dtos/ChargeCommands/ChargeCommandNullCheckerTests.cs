@@ -42,7 +42,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands
                 .WithDocumentId(documentId)
                 .WithBusinessReasonCode(businessReasonCode)
                 .Build();
-            var chargeCommand = new ChargeCommandBuilder()
+            var chargeCommand = new ChargeInformationCommandBuilder()
                 .WithDocumentDto(documentDto)
                 .WithChargeOperation(chargeOperationDto)
                 .Build();
@@ -58,11 +58,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands
         [InlineAutoDomainData]
         public void ThrowExceptionIfRequiredPropertyIsNull_WhenValid_DoesNotThrow(
             DocumentDtoBuilder documentDtoBuilder,
-            ChargeCommandBuilder chargeCommandBuilder)
+            ChargeInformationCommandBuilder chargeInformationCommandBuilder)
         {
             // Arrange
             var documentDto = documentDtoBuilder.Build();
-            var chargeCommand = chargeCommandBuilder.Build();
+            var chargeCommand = chargeInformationCommandBuilder.Build();
             var chargeCommands = new List<ChargeInformationCommand> { chargeCommand };
             var chargeBundle = new ChargeInformationCommandBundle(documentDto, chargeCommands);
 
@@ -93,7 +93,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands
         [Theory]
         [InlineAutoDomainData]
         public void ThrowExceptionIfRequiredPropertyIsNull_WhenParticipantIsNull_ThrowsArgumentNullException(
-            ChargeCommandBuilder builder)
+            ChargeInformationCommandBuilder builder)
         {
             // Arrange
             MarketParticipantDto? marketParticipant = null;
@@ -111,7 +111,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands
 
         [Theory]
         [InlineAutoDomainData]
-        public void ChargeCommandDocumentIsNullThrowsException(ChargeCommandBuilder builder)
+        public void ChargeCommandDocumentIsNullThrowsException(ChargeInformationCommandBuilder builder)
         {
             // Arrange
             var chargeCommand = builder.WithDocumentDto(null!).Build();
@@ -130,7 +130,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands
         {
             // Arrange
             var documentDto = documentDtoBuilder.Build();
-            var chargeCommand = new ChargeCommandBuilder().WithChargeOperation(null!).Build();
+            var chargeCommand = new ChargeInformationCommandBuilder().WithChargeOperation(null!).Build();
             var chargeCommands = new List<ChargeInformationCommand> { chargeCommand };
             var chargeBundle = new ChargeInformationCommandBundle(documentDto, chargeCommands);
 

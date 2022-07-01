@@ -156,7 +156,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             ChargeBuilder chargeBuilder,
             ChargePeriodBuilder chargePeriodBuilder,
-            ChargeCommandBuilder chargeCommandBuilder,
+            ChargeInformationCommandBuilder chargeInformationCommandBuilder,
             ChargeOperationDtoBuilder chargeOperationDtoBuilder,
             TestMarketParticipant sender,
             ChargeInformationEventHandler sut)
@@ -166,7 +166,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             var updateOperationDto = chargeOperationDtoBuilder
                 .WithStartDateTime(InstantHelper.GetTodayAtMidnightUtc())
                 .Build();
-            var chargeCommand = chargeCommandBuilder.WithChargeOperation(updateOperationDto).Build();
+            var chargeCommand = chargeInformationCommandBuilder.WithChargeOperation(updateOperationDto).Build();
             var receivedEvent = new ChargeCommandReceivedEvent(InstantHelper.GetTodayAtMidnightUtc(), chargeCommand);
             var validationResult = ValidationResult.CreateSuccess();
             SetupValidators(inputValidator, businessValidator, validationResult);
@@ -204,7 +204,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             ChargeBuilder chargeBuilder,
-            ChargeCommandBuilder chargeCommandBuilder,
+            ChargeInformationCommandBuilder chargeInformationCommandBuilder,
             ChargeOperationDtoBuilder chargeOperationDtoBuilder,
             TestMarketParticipant sender,
             ChargeInformationEventHandler sut)
@@ -212,7 +212,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             // Arrange
             var stopDate = InstantHelper.GetTodayAtMidnightUtc();
             var stopOperationDto = chargeOperationDtoBuilder.WithStartDateTime(stopDate).WithEndDateTime(stopDate).Build();
-            var chargeCommand = chargeCommandBuilder.WithChargeOperation(stopOperationDto).Build();
+            var chargeCommand = chargeInformationCommandBuilder.WithChargeOperation(stopOperationDto).Build();
             var receivedEvent = new ChargeCommandReceivedEvent(InstantHelper.GetTodayAtMidnightUtc(), chargeCommand);
             var charge = chargeBuilder.Build();
             var validationResult = ValidationResult.CreateSuccess();
@@ -242,7 +242,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             TestMarketParticipant sender,
-            ChargeCommandBuilder chargeCommandBuilder,
+            ChargeInformationCommandBuilder chargeInformationCommandBuilder,
             ChargeBuilder chargeBuilder,
             ChargeOperationDtoBuilder chargeOperationDtoBuilder,
             ChargeInformationEventHandler sut)
@@ -254,7 +254,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                 .WithStartDateTime(InstantHelper.GetTomorrowAtMidnightUtc())
                 .WithEndDateTime(InstantHelper.GetEndDefault())
                 .Build();
-            var chargeCommand = chargeCommandBuilder
+            var chargeCommand = chargeInformationCommandBuilder
                 .WithChargeOperation(chargeOperationDto)
                 .Build();
             var receivedEvent = new ChargeCommandReceivedEvent(InstantHelper.GetTodayAtMidnightUtc(), chargeCommand);
@@ -491,7 +491,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                 .WithDescription("another failed")
                 .WithStartDateTime(InstantHelper.GetYesterdayAtMidnightUtc())
                 .Build();
-            var chargeCommand = new ChargeCommandBuilder()
+            var chargeCommand = new ChargeInformationCommandBuilder()
                 .WithChargeOperations(
                     new List<ChargeOperationDto>
                     {

@@ -69,7 +69,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             var chargeOperationDto = new ChargeOperationDtoBuilder()
                 .WithPoint(1, 123456789m)
                 .Build();
-            var invalidCommand = new ChargeCommandBuilder()
+            var invalidCommand = new ChargeInformationCommandBuilder()
                 .WithChargeOperation(chargeOperationDto)
                 .Build();
             var expectedPoint = chargeOperationDto.Points[0];

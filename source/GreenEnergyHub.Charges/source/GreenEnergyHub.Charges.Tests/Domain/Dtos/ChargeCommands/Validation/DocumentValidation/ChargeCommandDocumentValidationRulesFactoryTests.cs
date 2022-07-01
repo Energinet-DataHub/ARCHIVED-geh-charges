@@ -47,7 +47,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Doc
                     It.IsAny<MarketParticipantRole>(),
                     It.IsAny<string>()))
                 .ReturnsAsync(sender);
-            var chargeCommand = new ChargeCommandBuilder().Build();
+            var chargeCommand = new ChargeInformationCommandBuilder().Build();
             var expectedRules = new List<IValidationRule>
             {
                 new CommandSenderMustBeAnExistingMarketParticipantRule(sender),
@@ -79,7 +79,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Doc
             // Arrange
             var charge = chargeBuilder.Build();
             var chargeOperationDto = new ChargeOperationDtoBuilder().WithChargeType(ChargeType.Fee).Build();
-            var chargeCommand = new ChargeCommandBuilder().WithChargeOperation(chargeOperationDto).Build();
+            var chargeCommand = new ChargeInformationCommandBuilder().WithChargeOperation(chargeOperationDto).Build();
             chargeRepository
                 .Setup(r => r.SingleOrNullAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(charge);

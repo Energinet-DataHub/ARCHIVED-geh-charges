@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             var document = new DocumentDtoBuilder()
                 .WithBusinessReasonCode(BusinessReasonCode.UpdateChargeInformation)
                 .Build();
-            var command = new ChargeCommandBuilder().WithDocumentDto(document).Build();
+            var command = new ChargeInformationCommandBuilder().WithDocumentDto(document).Build();
 
             // Act
             await sut.HandleAsync(command).ConfigureAwait(false);

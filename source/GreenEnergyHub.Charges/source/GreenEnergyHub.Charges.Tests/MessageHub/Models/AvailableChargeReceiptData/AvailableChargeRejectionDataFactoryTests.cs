@@ -51,12 +51,12 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             [Frozen] Mock<IAvailableChargeReceiptValidationErrorFactory> availableChargeReceiptValidationErrorFactory,
             List<ChargeOperationDto> chargeOperations,
-            ChargeCommandBuilder chargeCommandBuilder,
+            ChargeInformationCommandBuilder chargeInformationCommandBuilder,
             Instant now,
             AvailableChargeRejectionDataFactory sut)
         {
             // Arrange
-            var chargeCommand = chargeCommandBuilder.WithChargeOperations(chargeOperations).Build();
+            var chargeCommand = chargeInformationCommandBuilder.WithChargeOperations(chargeOperations).Build();
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
             MarketParticipantRepositoryMockBuilder.SetupMarketParticipantRepositoryMock(
                 marketParticipantRepository, meteringPointAdministrator, chargeCommand.Document.Sender);
