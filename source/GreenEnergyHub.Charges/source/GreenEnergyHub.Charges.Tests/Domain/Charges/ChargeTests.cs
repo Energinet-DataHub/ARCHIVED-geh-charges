@@ -480,6 +480,48 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             actualPriceSecondAdded.Price.Should().Be(7.00m);
         }
 
+        [Fact]
+        public void Create_WithEndDate_ThrowsExceptionWithInvalidRule()
+        {
+            // Act / Assert
+            var ex = Assert.Throws<ChargeOperationFailedException>(() => Charge.Create(
+                "id1",
+                "name",
+                "desc",
+                "senderId",
+                Guid.NewGuid(),
+                ChargeType.Fee,
+                Resolution.P1D,
+                TaxIndicator.NoTax,
+                VatClassification.NoVat,
+                false,
+                InstantHelper.GetTodayAtMidnightUtc(),
+                InstantHelper.GetTomorrowAtMidnightUtc()));
+            ex.InvalidRules.Should().Contain(r =>
+                r.ValidationRule.ValidationRuleIdentifier == ValidationRuleIdentifier.CreateChargeIsNotAllowedATerminationDate);
+        }
+
+        [Fact]
+        public void Create_WithNoEndDate_Succeed()
+        {
+            // Act
+            var charge = Charge.Create(
+                "id1",
+                "name",
+                "desc",
+                "senderId",
+                Guid.NewGuid(),
+                ChargeType.Fee,
+                Resolution.P1D,
+                TaxIndicator.NoTax,
+                VatClassification.NoVat,
+                false,
+                InstantHelper.GetTodayAtMidnightUtc());
+
+            // Assert
+            charge.Should().NotBeNull();
+        }
+
         private static List<ChargePeriod> AddTwoPeriods()
         {
             return new List<ChargePeriod>
