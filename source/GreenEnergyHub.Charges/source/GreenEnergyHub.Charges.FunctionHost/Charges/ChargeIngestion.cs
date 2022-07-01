@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
         private readonly IActorContext _actorContext;
 
         public ChargeIngestion(
-            ILogger logger,
+            ILoggerFactory loggerFactory,
             ICorrelationContext correlationContext,
             IChargeInformationCommandBundleHandler chargeInformationCommandBundleHandler,
             IChargePriceCommandBundleHandler chargePriceCommandBundleHandler,
@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             ValidatingMessageExtractor<ChargeCommandBundle> messageExtractor,
             IActorContext actorContext)
         {
-            _logger = logger;
+            _logger = loggerFactory.CreateLogger(nameof(ChargeIngestion));
             _correlationContext = correlationContext;
             _chargeInformationCommandBundleHandler = chargeInformationCommandBundleHandler;
             _chargePriceCommandBundleHandler = chargePriceCommandBundleHandler;

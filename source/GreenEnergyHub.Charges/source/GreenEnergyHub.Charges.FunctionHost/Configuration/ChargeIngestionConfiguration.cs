@@ -38,6 +38,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<SchemaValidatingMessageDeserializer<ChargeCommandBundle>, ChargeCommandDeserializer>();
             serviceCollection.AddScoped<IChargeInformationCommandBundleHandler, ChargeInformationCommandBundleHandler>();
             serviceCollection.AddScoped<IChargeInformationCommandHandler, ChargeInformationCommandHandler>();
+            serviceCollection.AddScoped<IChargePriceCommandBundleHandler, ChargePriceCommandBundleHandler>();
             serviceCollection.AddScoped<IChargePriceCommandHandler, ChargePriceCommandHandler>();
 
             serviceCollection.AddMessaging()
