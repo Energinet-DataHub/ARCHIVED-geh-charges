@@ -33,7 +33,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         {
             _clock = clock;
             _chargeMessageDispatcher = chargeMessageDispatcher;
-            _chargePriceMessageDispatcher = chargePriceMessageDispatcher;
         }
 
         public async Task HandleAsync(ChargeInformationCommand command)
