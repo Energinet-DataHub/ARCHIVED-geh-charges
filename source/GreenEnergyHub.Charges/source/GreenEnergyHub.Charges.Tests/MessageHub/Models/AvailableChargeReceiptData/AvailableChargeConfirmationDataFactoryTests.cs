@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
@@ -49,14 +50,16 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
             var documentDto = acceptedEvent.Command.Document;
             documentDto.Sender.BusinessProcessRole = MarketParticipantRole.GridAccessProvider;
+            var actorId = Guid.NewGuid();
             MarketParticipantRepositoryMockBuilder.SetupMarketParticipantRepositoryMock(
-                marketParticipantRepository, meteringPointAdministrator, documentDto.Sender);
+                marketParticipantRepository, meteringPointAdministrator, documentDto.Sender, actorId);
 
             // Act
             var actualList = await sut.CreateAsync(acceptedEvent);
 
             // Assert
             actualList.Should().HaveCount(3);
+            actualList[0].ActorId.Should().Be(actorId);
             actualList[0].RecipientId.Should().Be(documentDto.Sender.MarketParticipantId);
             actualList[0].RecipientRole.Should().Be(documentDto.Sender.BusinessProcessRole);
             actualList[0].BusinessReasonCode.Should().Be(documentDto.BusinessReasonCode);

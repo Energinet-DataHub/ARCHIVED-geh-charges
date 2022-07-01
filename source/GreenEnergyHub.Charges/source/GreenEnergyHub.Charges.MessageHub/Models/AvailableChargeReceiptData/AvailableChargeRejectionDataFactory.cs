@@ -69,7 +69,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                     chargeOperationDto.Id,
                     DocumentType.RejectRequestChangeOfPriceList, // Will be added to the HTTP MessageType header
                     operationOrder++,
-                    recipient.Id,
+                    recipient.ActorId,
                     GetReasons(input, chargeOperationDto)))
                 .ToList();
         }

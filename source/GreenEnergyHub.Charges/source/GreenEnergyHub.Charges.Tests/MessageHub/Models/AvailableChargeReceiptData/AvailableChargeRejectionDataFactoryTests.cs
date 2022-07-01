@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -58,8 +59,9 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             // Arrange
             var chargeCommand = chargeInformationCommandBuilder.WithChargeOperations(chargeOperations).Build();
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
+            var actorId = Guid.NewGuid();
             MarketParticipantRepositoryMockBuilder.SetupMarketParticipantRepositoryMock(
-                marketParticipantRepository, meteringPointAdministrator, chargeCommand.Document.Sender);
+                marketParticipantRepository, meteringPointAdministrator, chargeCommand.Document.Sender, actorId);
 
             SetupAvailableChargeReceiptValidationErrorFactoryMock(
                 availableChargeReceiptValidationErrorFactory, chargeCommand);
@@ -83,6 +85,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             {
                 var actual = actualList[i1];
                 var chargeCommandDocument = chargeCommand.Document;
+                actual.ActorId.Should().Be(actorId);
                 actual.RecipientId.Should().Be(chargeCommandDocument.Sender.MarketParticipantId);
                 actual.RecipientRole.Should().Be(chargeCommandDocument.Sender.BusinessProcessRole);
                 actual.BusinessReasonCode.Should().Be(chargeCommandDocument.BusinessReasonCode);
@@ -123,7 +126,12 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             var document = rejectedEvent.Command.Document;
             document.Sender.BusinessProcessRole = MarketParticipantRole.GridAccessProvider;
             loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
-            MarketParticipantRepositoryMockBuilder.SetupMarketParticipantRepositoryMock(marketParticipantRepository, meteringPointAdministrator, document.Sender);
+            var actorId = Guid.NewGuid();
+            MarketParticipantRepositoryMockBuilder.SetupMarketParticipantRepositoryMock(
+                marketParticipantRepository,
+                meteringPointAdministrator,
+                document.Sender,
+                actorId);
 
             SetupAvailableChargeReceiptValidationErrorFactoryMock(
                 availableChargeReceiptValidationErrorFactory, rejectedEvent.Command);

@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
@@ -51,8 +52,9 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
             var expectedLinks = acceptedEvent.ChargeLinksCommand.Operations.ToList();
             var documentDto = acceptedEvent.ChargeLinksCommand.Document;
             documentDto.Sender.BusinessProcessRole = marketParticipantRole;
+            var actorId = Guid.NewGuid();
             MarketParticipantRepositoryMockBuilder.SetupMarketParticipantRepositoryMock(
-                marketParticipantRepository, meteringPointAdministrator, documentDto.Sender);
+                marketParticipantRepository, meteringPointAdministrator, documentDto.Sender, actorId);
 
             // Act
             var actualList = await sut.CreateAsync(acceptedEvent);
@@ -61,6 +63,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
             actualList.Should().HaveSameCount(expectedLinks);
             for (var i = 0; i < actualList.Count; i++)
             {
+                actualList[i].ActorId.Should().Be(actorId);
                 actualList[i].RecipientId.Should().Be(documentDto.Sender.MarketParticipantId);
                 actualList[i].RecipientRole.Should().Be(documentDto.Sender.BusinessProcessRole);
                 actualList[i].BusinessReasonCode.Should().Be(documentDto.BusinessReasonCode);
