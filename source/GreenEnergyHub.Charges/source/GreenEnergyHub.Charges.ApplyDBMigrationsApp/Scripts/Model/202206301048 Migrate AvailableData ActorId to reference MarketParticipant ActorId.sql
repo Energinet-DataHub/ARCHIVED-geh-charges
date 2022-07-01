@@ -119,22 +119,22 @@ begin tran
     ------------------------------------------------------------------------------------------------------------------------
     
     alter table MessageHub.AvailableChargeData
-        with check add constraint FK_AvailableChargeData_ActorId foreign key([ActorId])
+        with check add constraint FK_AvailableChargeData_MarketParticipantActorId foreign key([ActorId])
             references Charges.MarketParticipant ([ActorId])
     go
     
     alter table MessageHub.AvailableChargeReceiptData
-        with check add constraint FK_AvailableChargeReceiptData_ActorId foreign key([ActorId])
+        with check add constraint FK_AvailableChargeReceiptData_MarketParticipantActorId foreign key([ActorId])
             references Charges.MarketParticipant ([ActorId])
     go
     
     alter table MessageHub.AvailableChargeLinksData
-        with check add constraint FK_AvailableChargeLinksData_ActorId foreign key([ActorId])
+        with check add constraint FK_AvailableChargeLinksData_MarketParticipantActorId foreign key([ActorId])
             references Charges.MarketParticipant ([ActorId])
     go
     
     alter table MessageHub.AvailableChargeLinksReceiptData
-        with check add constraint FK_AvailableChargeLinksReceiptData_ActorId foreign key([ActorId])
+        with check add constraint FK_AvailableChargeLinksReceiptData_MarketParticipantActorId foreign key([ActorId])
             references Charges.MarketParticipant ([ActorId])
     go
 
