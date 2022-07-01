@@ -16,8 +16,6 @@ using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 using NodaTime;
 
-#pragma warning disable 8618
-
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
 {
     public class ChargeLinkDto : OperationBase

@@ -30,9 +30,7 @@ namespace GreenEnergyHub.Charges.MessageHub.MessageHub
             return availableData.Select(
                     data => new DataAvailableNotificationDto(
                         data.AvailableDataReferenceId,
-#pragma warning disable CS0618
-                        new LegacyActorIdDto(data.RecipientId), // TODO: ActorIdDto(data.ActorId)
-#pragma warning restore CS0618
+                        new ActorIdDto(data.ActorId),
                         new MessageTypeDto(bundleSpecification.GetMessageType(data.BusinessReasonCode)),
                         data.DocumentType.ToString(),
                         DomainOrigin.Charges,
