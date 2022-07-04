@@ -57,7 +57,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                 case BusinessReasonCode.UpdateMasterDataSettlement:
                 default:
                     throw new InvalidOperationException(
-                        $"Could not convert specialized content. Process type not recognized: {processType}");
+                        $"Could not convert specialized content. Process type not supported: {processType}");
             }
         }
 
@@ -75,7 +75,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
             return new ChargeInformationCommandBundle(document, chargeCommands);
         }
 
-        private async Task<ChargeCommandPriceBundle> ParseChargePriceCommandBundleAsync(
+        private async Task<ChargePriceCommandBundle> ParseChargePriceCommandBundleAsync(
             SchemaValidatingReader reader, DocumentDto document)
         {
             var priceOperations = await ParseChargePriceOperationsAsync(reader).ConfigureAwait(false);
@@ -85,7 +85,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                     new ChargePriceCommand(
                         priceOperations.AsEnumerable().Select(dto => dto).ToList()))
                 .ToList();
-            return new ChargeCommandPriceBundle(document, priceCommands);
+            return new ChargePriceCommandBundle(document, priceCommands);
         }
 
         private async Task<List<ChargePriceOperationDto>> ParseChargePriceOperationsAsync(SchemaValidatingReader reader)
@@ -171,6 +171,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                 chargeType,
                 senderProvidedChargeId,
                 chargeOwner,
+                startDateTime,
                 pointsStartTime,
                 pointsEndTime,
                 resolution,

@@ -13,8 +13,8 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using Energinet.DataHub.Core.Messaging.Transport;
 using Energinet.DataHub.Core.SchemaValidation;
+using Energinet.DataHub.Core.SchemaValidation.Extensions;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
@@ -121,6 +121,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocumen
             };
 
             await ParseFieldsAsync(reader, document).ConfigureAwait(false);
+
+            if (reader.HasErrors) throw new SchemaValidationException(reader.CreateErrorResponse());
 
             return document;
         }

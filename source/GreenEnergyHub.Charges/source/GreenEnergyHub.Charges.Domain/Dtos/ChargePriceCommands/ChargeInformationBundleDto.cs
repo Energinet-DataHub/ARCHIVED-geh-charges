@@ -19,9 +19,9 @@ using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands
 {
-    public class ChargeCommandPriceBundle : ChargeCommandBundle
+    public class ChargePriceCommandBundle : ChargeCommandBundle
     {
-        public ChargeCommandPriceBundle(DocumentDto document, IReadOnlyCollection<ChargePriceCommand> commands)
+        public ChargePriceCommandBundle(DocumentDto document, IReadOnlyCollection<ChargePriceCommand> commands)
             : base(document)
         {
             Transaction = Transaction.NewTransaction();

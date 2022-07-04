@@ -12,14 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using Energinet.DataHub.Core.SchemaValidation;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
+using System;
+using Energinet.DataHub.Core.SchemaValidation.Errors;
 
-namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
+namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocument
 {
-    public interface IChargeCommandBundleConverter
+    public class SchemaValidationException : Exception
     {
-        Task<ChargeCommandBundle> ConvertAsync(SchemaValidatingReader reader);
+        public SchemaValidationException(ErrorResponse schemaValidationError)
+        {
+            SchemaValidationError = schemaValidationError;
+        }
+
+        public ErrorResponse SchemaValidationError { get; }
     }
 }

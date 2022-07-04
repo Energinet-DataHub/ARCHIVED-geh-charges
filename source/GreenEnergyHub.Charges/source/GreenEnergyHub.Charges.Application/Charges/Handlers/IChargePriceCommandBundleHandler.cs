@@ -26,7 +26,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         /// <summary>
         /// Synchronously handle the bundle.
         /// </summary>
-        /// <param name="priceBundle">Charges bundle</param>
-        Task HandleAsync(ChargeCommandPriceBundle priceBundle);
+        /// <param name="priceBundle">Bundle of charge price commands</param>
+        Task HandleAsync(ChargePriceCommandBundle priceBundle);
     }
 }
