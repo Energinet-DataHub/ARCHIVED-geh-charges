@@ -30,9 +30,9 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             _chargePriceCommandHandler = chargePriceCommandHandler;
         }
 
-        public async Task HandleAsync(ChargePriceCommandBundle informationBundle)
+        public async Task HandleAsync(ChargePriceCommandBundle priceBundle)
         {
-            foreach (var command in informationBundle.Commands)
+            foreach (var command in priceBundle.Commands)
             {
                 await _chargePriceCommandHandler
                     .HandleAsync(command)

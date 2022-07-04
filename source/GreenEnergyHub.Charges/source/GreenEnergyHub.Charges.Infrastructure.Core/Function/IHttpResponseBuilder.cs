@@ -19,16 +19,39 @@ using Microsoft.Azure.Functions.Worker.Http;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
 {
+    /// <summary>
+    /// Builds http responses
+    /// </summary>
     public interface IHttpResponseBuilder
     {
-        HttpResponseData CreateAcceptedResponse(HttpRequestData request);
+        /// <summary>
+        /// Creates an accepted response
+        /// </summary>
+        /// <param name="requestData"></param>
+        /// <returns>202 Accepted response data</returns>
+        HttpResponseData CreateAcceptedResponse(HttpRequestData requestData);
 
+        /// <summary>
+        /// Creates a bad request response
+        /// </summary>
+        /// <param name="requestData"></param>
+        /// <returns>400 Bad request response data</returns>
         HttpResponseData CreateBadRequestResponse(HttpRequestData requestData);
 
-        Task<HttpResponseData> CreateBadRequestResponseAsync(
-            HttpRequestData request,
-            ErrorResponse errorResponse);
+        /// <summary>
+        /// Creates a bad request response asynchronously
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="errorResponse"></param>
+        /// <returns>A <see cref="Task{TResult}"/> with 400 Bad request response data.</returns>
+        Task<HttpResponseData> CreateBadRequestResponseAsync(HttpRequestData request, ErrorResponse errorResponse);
 
+        /// <summary>
+        /// Creates a bad request response asynchronously
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="code"></param>
+        /// <returns>400 B2B bad request response data</returns>
         HttpResponseData CreateBadRequestB2BResponse(HttpRequestData request, B2BErrorCode code);
     }
 }

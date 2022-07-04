@@ -18,8 +18,17 @@ using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 
 namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
 {
+    /// <summary>
+    /// Converts XML to charge command bundles
+    /// </summary>
     public interface IChargeCommandBundleConverter
     {
+        /// <summary>
+        /// Convert XML to charge command bundle
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <returns>A <see cref="Task{TResult}"/> with a <see cref="ChargeCommandBundle"/>
+        /// as result of the asynchronous operation.</returns>
         Task<ChargeCommandBundle> ConvertAsync(SchemaValidatingReader reader);
     }
 }

@@ -13,10 +13,12 @@
 // limitations under the License.
 
 using System;
+using System.Runtime.Serialization;
 using Energinet.DataHub.Core.SchemaValidation.Errors;
 
 namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocument
 {
+    [Serializable]
     public class SchemaValidationException : Exception
     {
         public SchemaValidationException(ErrorResponse schemaValidationError)
@@ -25,5 +27,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocumen
         }
 
         public ErrorResponse SchemaValidationError { get; }
+
+        protected SchemaValidationException(SerializationInfo serializationInfo, StreamingContext streamingContext)
+            : base(serializationInfo, streamingContext) { }
     }
 }

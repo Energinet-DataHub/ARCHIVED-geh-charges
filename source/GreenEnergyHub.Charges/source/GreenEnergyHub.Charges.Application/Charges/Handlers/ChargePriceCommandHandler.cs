@@ -33,9 +33,9 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             _chargePriceMessageDispatcher = chargePriceMessageDispatcher;
         }
 
-        public async Task HandleAsync(ChargePriceCommand command)
+        public async Task HandleAsync(ChargePriceCommand priceCommand)
         {
-            var priceReceivedEvent = new ChargePriceCommandReceivedEvent(_clock.GetCurrentInstant(), command);
+            var priceReceivedEvent = new ChargePriceCommandReceivedEvent(_clock.GetCurrentInstant(), priceCommand);
             await _chargePriceMessageDispatcher.DispatchAsync(priceReceivedEvent).ConfigureAwait(false);
         }
     }
