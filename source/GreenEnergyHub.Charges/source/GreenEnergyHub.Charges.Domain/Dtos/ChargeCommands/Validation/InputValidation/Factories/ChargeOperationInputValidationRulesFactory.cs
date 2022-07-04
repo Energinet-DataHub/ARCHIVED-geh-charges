@@ -56,13 +56,13 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
             };
 
             rules.AddRange(chargeOperationDto.Points.Any()
-                ? CreateRulesForChargePrice(chargeOperationDto)
+                ? CreateRulesForChargePrice(chargeOperationDto, _zonedDateTimeService)
                 : CreateRulesForChargeInformation(chargeOperationDto));
 
             return rules;
         }
 
-        private static List<IValidationRuleContainer> CreateRulesForChargePrice(ChargeOperationDto chargeOperationDto)
+        private static List<IValidationRuleContainer> CreateRulesForChargePrice(ChargeOperationDto chargeOperationDto, IZonedDateTimeService zonedDateTimeService)
         {
             return new List<IValidationRuleContainer>
             {
@@ -70,6 +70,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
                 CreateRuleContainer(new ChargeTypeTariffPriceCountRule(chargeOperationDto), chargeOperationDto.Id),
                 CreateRuleContainer(new MaximumPriceRule(chargeOperationDto), chargeOperationDto.Id),
                 CreateRuleContainer(new NumberOfPointsMatchTimeIntervalAndResolutionRule(chargeOperationDto), chargeOperationDto.Id),
+                CreateRuleContainer(new PriceListMustStartAndStopAtMidnightValidationRule(zonedDateTimeService, chargeOperationDto), chargeOperationDto.Id),
             };
         }
 
