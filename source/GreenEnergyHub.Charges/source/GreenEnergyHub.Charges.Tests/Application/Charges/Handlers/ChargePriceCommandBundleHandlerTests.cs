@@ -15,7 +15,7 @@
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Tests.Builders.Application;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
@@ -27,20 +27,20 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 {
     [UnitTest]
-    public class ChargeCommandBundleHandlerTests
+    public class ChargePriceCommandBundleHandlerTests
     {
         [Theory]
         [InlineAutoDomainData]
         public async Task HandleAsync_WhenCalledWithMultipleChargeCommands_ShouldCallMultipleTimes(
-            [Frozen] Mock<IChargeInformationCommandHandler> chargeCommandBundleHandler,
-            ChargeInformationCommandBundleHandler sut)
+            [Frozen] Mock<IChargePriceCommandHandler> chargePriceCommandBundleHandler,
+            ChargePriceCommandBundleHandler sut)
         {
             // Arrange
             var document = new DocumentDtoBuilder()
-                .WithBusinessReasonCode(BusinessReasonCode.UpdateChargeInformation)
+                .WithBusinessReasonCode(BusinessReasonCode.UpdateChargePrices)
                 .Build();
-            var commandBuilder = new ChargeInformationCommandBuilder();
-            var bundle = new ChargeBundleDtoBuilder()
+            var commandBuilder = new ChargePriceCommandBuilder();
+            var bundle = new ChargePriceCommandBundleBuilder()
                 .WithDocument(document)
                 .WithCommand(commandBuilder.Build())
                 .WithCommand(commandBuilder.Build())
@@ -51,8 +51,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             await sut.HandleAsync(bundle).ConfigureAwait(false);
 
             // Assert
-            chargeCommandBundleHandler
-                .Verify(v => v.HandleAsync(It.IsAny<ChargeInformationCommand>()), Times.Exactly(3));
+            chargePriceCommandBundleHandler
+                .Verify(v => v.HandleAsync(It.IsAny<ChargePriceCommand>()), Times.Exactly(3));
         }
     }
 }

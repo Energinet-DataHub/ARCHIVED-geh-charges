@@ -18,18 +18,18 @@ using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
 namespace GreenEnergyHub.Charges.Tests.Builders.Application
 {
-    public class ChargeBundleDtoBuilder
+    public class ChargeInformationCommandBundleBuilder
     {
         private readonly List<ChargeInformationCommand> _commands = new();
         private DocumentDto _document = new();
 
-        public ChargeBundleDtoBuilder WithDocument(DocumentDto document)
+        public ChargeInformationCommandBundleBuilder WithDocument(DocumentDto document)
         {
             _document = document;
             return this;
         }
 
-        public ChargeBundleDtoBuilder WithCommand(ChargeInformationCommand command)
+        public ChargeInformationCommandBundleBuilder WithCommand(ChargeInformationCommand command)
         {
             _commands.Add(command);
             return this;
