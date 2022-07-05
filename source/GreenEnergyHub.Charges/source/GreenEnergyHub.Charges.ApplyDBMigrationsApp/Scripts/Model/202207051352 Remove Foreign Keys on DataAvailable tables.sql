@@ -8,19 +8,19 @@ begin tran
     ------------------------------------------------------------------------------------------------------------------------
 
     alter table MessageHub.AvailableChargeData
-    drop constraint FK_AvailableChargeData_ActorId
+    drop constraint FK_AvailableChargeData_MarketParticipantActorId
         go
     
     alter table MessageHub.AvailableChargeReceiptData
-    drop constraint FK_AvailableChargeReceiptData_ActorId
+    drop constraint FK_AvailableChargeReceiptData_MarketParticipantActorId
         go
     
     alter table MessageHub.AvailableChargeLinksData
-    drop constraint FK_AvailableChargeLinksData_ActorId
+    drop constraint FK_AvailableChargeLinksData_MarketParticipantActorId
         go
     
     alter table MessageHub.AvailableChargeLinksReceiptData
-    drop constraint FK_AvailableChargeLinksReceiptData_ActorId
+    drop constraint FK_AvailableChargeLinksReceiptData_MarketParticipantActorId
         go
    
 commit
