@@ -21,6 +21,6 @@ begin tran
     
     alter table MessageHub.AvailableChargeLinksReceiptData
     drop constraint FK_AvailableChargeLinksReceiptData_ActorId
-    go
+        go
    
 commit
