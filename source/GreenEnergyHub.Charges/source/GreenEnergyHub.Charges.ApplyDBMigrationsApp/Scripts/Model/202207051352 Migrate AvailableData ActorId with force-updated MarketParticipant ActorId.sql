@@ -3,8 +3,8 @@ begin tran
  
     ------------------------------------------------------------------------------------------------------------------------
     -- Remove DataAvailable tables' foreign key.
-    -- This is needed for successfully force updating market participants data in Charges through integration events
-    -- from the Market Participant domain)
+    -- This is needed for successfully updating market participants data into the Charges domain by force-pushing
+    -- integration events from the Market Participant domain
     ------------------------------------------------------------------------------------------------------------------------
 
     alter table MessageHub.AvailableChargeData
