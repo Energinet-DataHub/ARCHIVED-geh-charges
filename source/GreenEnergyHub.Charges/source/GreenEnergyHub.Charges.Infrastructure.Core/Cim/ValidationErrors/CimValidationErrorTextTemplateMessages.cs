@@ -63,7 +63,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeTypeIsKnownValidation)]
         public const string ChargeTypeIsKnownValidationErrorText =
-            "Charge type {{ChargeType}} for charge {{DocumentSenderProvidedChargeId}} has wrong value (outside domain)";
+            "Charge type is missing for charge with ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}}";
 
         [ErrorMessageFor(ValidationRuleIdentifier.VatClassificationValidation)]
         public const string VatClassificationValidationErrorText =
