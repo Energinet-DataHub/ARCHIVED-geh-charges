@@ -179,7 +179,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
         {
             return _chargesDatabaseContext
                 .MarketParticipants
-                .Where(mp => mp.BusinessProcessRole == marketParticipantRole)
+                .Where(mp => mp.BusinessProcessRole == marketParticipantRole && mp.IsActive)
                 .SingleAsync();
         }
     }
