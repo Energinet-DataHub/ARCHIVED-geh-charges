@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeIdRequiredValidation)]
         public const string ChargeIdRequiredValidationErrorText =
-            "Identification is missing, charge can not be processed";
+            "No charge ID provided in transaction with ID {{ChargeOperationId}}. Charge ID is required.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.DocumentTypeMustBeRequestChangeOfPriceList)]
         public const string DocumentTypeMustBeRequestChangeOfPriceListErrorText =
