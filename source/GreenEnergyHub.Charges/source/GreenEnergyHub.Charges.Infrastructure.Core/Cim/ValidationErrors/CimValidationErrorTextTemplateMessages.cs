@@ -47,7 +47,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeIdLengthValidation)]
         public const string ChargeIdLengthValidationErrorText =
-            "Charge ID {{DocumentSenderProvidedChargeId}} has a length that exceeds 10";
+            "Charge ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}} has a length that exceeds 10";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeIdRequiredValidation)]
         public const string ChargeIdRequiredValidationErrorText =
