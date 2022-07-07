@@ -36,6 +36,8 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 
         public async Task HandleAsync(BaseIntegrationEvent message)
         {
+            var type = message.GetType();
+            _logger.LogDebug("{MessageType}", type);
             switch (message)
             {
                 case ActorUpdatedIntegrationEvent actorEvent:
