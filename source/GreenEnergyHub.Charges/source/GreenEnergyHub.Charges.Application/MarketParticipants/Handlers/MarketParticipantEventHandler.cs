@@ -14,6 +14,7 @@
 
 using System.Threading.Tasks;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
+using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 {
@@ -21,13 +22,16 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
     {
         private readonly IMarketParticipantPersister _marketParticipantPersister;
         private readonly IGridAreaLinkPersister _gridAreaLinkPersister;
+        private readonly ILogger _logger;
 
         public MarketParticipantEventHandler(
             IMarketParticipantPersister marketParticipantPersister,
-            IGridAreaLinkPersister gridAreaLinkPersister)
+            IGridAreaLinkPersister gridAreaLinkPersister,
+            ILoggerFactory loggerFactory)
         {
             _marketParticipantPersister = marketParticipantPersister;
             _gridAreaLinkPersister = gridAreaLinkPersister;
+            _logger = loggerFactory.CreateLogger(nameof(MarketParticipantEventHandler));
         }
 
         public async Task HandleAsync(BaseIntegrationEvent message)
@@ -46,6 +50,14 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 
                 case GridAreaUpdatedIntegrationEvent gridAreaEvent:
                     {
+                        _logger.LogDebug(
+                            "GridAreaUpdatedIntegrationEvent received with Event Id {Id}, GridAreaId {GridAreaId}, " +
+                            "Name {Name}, Code {Code} and GridAreaLinkId {GridAreaLinkId}.",
+                            gridAreaEvent.Id,
+                            gridAreaEvent.GridAreaId,
+                            gridAreaEvent.Name,
+                            gridAreaEvent.Code,
+                            gridAreaEvent.GridAreaLinkId);
                         var gridAreaUpdatedEvent =
                             MarketParticipantDomainEventMapper.MapFromGridAreaUpdatedIntegrationEvent(gridAreaEvent);
                         await _gridAreaLinkPersister
