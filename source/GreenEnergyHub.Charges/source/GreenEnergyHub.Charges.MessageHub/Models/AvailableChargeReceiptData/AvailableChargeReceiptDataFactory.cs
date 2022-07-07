@@ -22,6 +22,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
+using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 {
@@ -29,13 +30,16 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
         : AvailableDataFactoryBase<AvailableChargeReceiptData, ChargeCommandAcceptedEvent>
     {
         private readonly IMessageMetaDataContext _messageMetaDataContext;
+        private readonly ILogger _logger;
 
         public AvailableChargeReceiptDataFactory(
             IMessageMetaDataContext messageMetaDataContext,
+            ILoggerFactory loggerFactory,
             IMarketParticipantRepository marketParticipantRepository)
             : base(marketParticipantRepository)
         {
             _messageMetaDataContext = messageMetaDataContext;
+            _logger = loggerFactory.CreateLogger(nameof(AvailableChargeReceiptDataFactory));
         }
 
         public override async Task<IReadOnlyList<AvailableChargeReceiptData>> CreateAsync(ChargeCommandAcceptedEvent input)
@@ -63,6 +67,10 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             MarketParticipant recipient,
             int operationOrder)
         {
+            _logger.LogDebug("Recipient.Actor = {ActorId}", recipient.ActorId);
+            _logger.LogDebug("Recipient.Id = {Id}", recipient.Id);
+            _logger.LogDebug("Recipient.B2CActorId = {B2CActorId}", recipient.B2CActorId);
+            _logger.LogDebug("Recipient.Gln = {MarketParticipantId}", recipient.MarketParticipantId);
             return new List<AvailableChargeReceiptData>()
             {
                 new AvailableChargeReceiptData(
@@ -77,7 +85,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                     chargeOperationDto.Id,
                     DocumentType.ConfirmRequestChangeOfPriceList, // Will be added to the HTTP MessageType header
                     operationOrder,
-                    recipient.Id,
+                    recipient.ActorId,
                     new List<AvailableReceiptValidationError>()),
             };
         }

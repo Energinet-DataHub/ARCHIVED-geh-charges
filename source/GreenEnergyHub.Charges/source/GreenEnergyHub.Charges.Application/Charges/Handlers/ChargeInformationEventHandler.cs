@@ -144,7 +144,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             var charge = await _chargeFactory
                 .CreateFromChargeOperationDtoAsync(chargeOperationDto)
                 .ConfigureAwait(false);
-
             await _chargeRepository.AddAsync(charge).ConfigureAwait(false);
         }
 

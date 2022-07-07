@@ -56,6 +56,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
         TransparentInvoicingIsRequired = 42, // VR915 / E0H
         TaxIndicatorIsRequired = 43, // VR916 / E0H
         TerminationDateMustMatchEffectiveDate = 44, // VR917 / E0H
-        PriceListMustStartAndStopAtMidnightValidationRule = 45, // VR919 / E86
+        CreateChargeIsNotAllowedATerminationDate = 45, // VR914 / D14
+        PriceListMustStartAndStopAtMidnightValidationRule = 46, // VR919 / E86
     }
 }

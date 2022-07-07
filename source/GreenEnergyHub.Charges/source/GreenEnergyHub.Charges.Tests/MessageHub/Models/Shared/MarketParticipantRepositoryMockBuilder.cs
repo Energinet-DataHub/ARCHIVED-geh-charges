@@ -24,15 +24,16 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared
         public static void SetupMarketParticipantRepositoryMock(
             Mock<IMarketParticipantRepository> marketParticipantRepository,
             MarketParticipant meteringPointAdministrator,
-            MarketParticipantDto marketParticipantDto)
+            MarketParticipantDto marketParticipantDto,
+            Guid actorId)
         {
             marketParticipantRepository
                 .Setup(r => r.GetMeteringPointAdministratorAsync())
                 .ReturnsAsync(meteringPointAdministrator);
 
             var sender = new MarketParticipant(
-                Guid.NewGuid(),
                 marketParticipantDto.Id,
+                actorId,
                 marketParticipantDto.B2CActorId,
                 marketParticipantDto.MarketParticipantId,
                 true,

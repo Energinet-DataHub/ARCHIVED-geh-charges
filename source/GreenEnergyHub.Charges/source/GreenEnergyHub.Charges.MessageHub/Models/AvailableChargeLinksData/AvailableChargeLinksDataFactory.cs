@@ -96,7 +96,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData
                 operation.EndDateTime.GetValueOrDefault(),
                 DocumentType.NotifyBillingMasterData, // Will be added to the HTTP MessageType header
                 operationOrder,
-                recipient.Id));
+                recipient.ActorId));
         }
 
         private static bool ShouldMakeDataAvailableForGridOwnerOfMeteringPoint(Charge charge)
