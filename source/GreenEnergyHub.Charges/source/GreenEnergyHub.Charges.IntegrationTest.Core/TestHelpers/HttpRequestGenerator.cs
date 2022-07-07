@@ -14,7 +14,6 @@
 
 using System.Net.Http;
 using System.Text;
-using GreenEnergyHub.Charges.TestCore;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
@@ -26,7 +25,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
         {
             var (request, correlationId) = CreateHttpRequest(HttpMethod.Post, endpointUrl);
 
-            var currentInstant = InstantHelper.GetTodayAtMidnightUtc();
+            var currentInstant = SystemClock.Instance.GetCurrentInstant();
             var chargeXml = EmbeddedResourceHelper.GetEmbeddedFile(testFilePath, currentInstant);
             request.Content = new StringContent(chargeXml, Encoding.UTF8, "application/xml");
 
