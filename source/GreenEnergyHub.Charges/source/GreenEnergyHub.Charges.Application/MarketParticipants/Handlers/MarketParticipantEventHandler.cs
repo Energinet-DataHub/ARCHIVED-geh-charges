@@ -52,7 +52,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
                     {
                         _logger.LogDebug(
                             "GridAreaUpdatedIntegrationEvent received with Event Id {Id}, GridAreaId {GridAreaId}, " +
-                            "Name {Name}, Code {Code} and GridAreaLinkId {GridAreaLinkId}",
+                            "Name {Name}, Code {Code} and GridAreaLinkId {GridAreaLinkId}.",
                             gridAreaEvent.Id,
                             gridAreaEvent.GridAreaId,
                             gridAreaEvent.Name,
