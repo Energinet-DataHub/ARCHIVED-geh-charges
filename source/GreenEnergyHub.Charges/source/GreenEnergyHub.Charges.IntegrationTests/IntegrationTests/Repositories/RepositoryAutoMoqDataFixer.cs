@@ -101,7 +101,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 availableChargeData.StartDateTime,
                 availableChargeData.EndDateTime,
                 availableChargeData.DocumentType,
-                availableChargeData.OperationOrder,
+                availableChargeData.OperationOrder);
                 // SeededData.MarketParticipants.SystemOperator.Id);
         }
 

@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -81,7 +82,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.MarketParticipantRegistry.Market
         private MarketParticipant CreateMarketParticipant(Actor actor)
         {
             var businessProcessRole = GetBusinessProcessRole(actor.Roles);
-            return new MarketParticipant(actor.Id, actor.IdentificationNumber, actor.Active, businessProcessRole);
+            return new MarketParticipant(
+                actor.Id,
+                actorId: Guid.Empty, // todo: possible to set?
+                b2CActorId: Guid.Empty, // todo: possible to set?
+                actor.IdentificationNumber,
+                actor.Active,
+                businessProcessRole);
         }
 
         /// <summary>
