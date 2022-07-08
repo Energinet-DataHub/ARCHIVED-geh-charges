@@ -18,10 +18,13 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.ChargeLinks;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.SystemTests.Fixtures;
+using GreenEnergyHub.Iso8601;
 using NodaTime;
+using NodaTime.Testing;
 using Xunit;
 
 namespace GreenEnergyHub.Charges.SystemTests
@@ -63,7 +66,10 @@ namespace GreenEnergyHub.Charges.SystemTests
             using var httpClient = await CreateHttpClientAsync(_authenticationClient);
 
             var currentInstant = SystemClock.Instance.GetCurrentInstant();
-            var xml = EmbeddedResourceHelper.GetEmbeddedFile(ChargeLinkDocument.AnyValid, currentInstant);
+            var xml = EmbeddedResourceHelper.GetEmbeddedFile(
+                ChargeLinkDocument.AnyValid,
+                currentInstant,
+                GetZonedDateTimeService(currentInstant));
 
             var request = new HttpRequestMessage(HttpMethod.Post, "v1.0/cim/requestchangebillingmasterdata")
             {
@@ -85,7 +91,11 @@ namespace GreenEnergyHub.Charges.SystemTests
             using var httpClient = await CreateHttpClientAsync();
 
             var currentInstant = SystemClock.Instance.GetCurrentInstant();
-            var xml = EmbeddedResourceHelper.GetEmbeddedFile(ChargeLinkDocument.AnyValid, currentInstant);
+
+            var xml = EmbeddedResourceHelper.GetEmbeddedFile(
+                ChargeLinkDocument.AnyValid,
+                currentInstant,
+                GetZonedDateTimeService(currentInstant));
 
             var request = new HttpRequestMessage(HttpMethod.Post, "v1.0/cim/requestchangebillingmasterdata")
             {
@@ -117,6 +127,12 @@ namespace GreenEnergyHub.Charges.SystemTests
             }
 
             return httpClient;
+        }
+
+        private static ZonedDateTimeService GetZonedDateTimeService(Instant instant)
+        {
+            var clock = new FakeClock(instant);
+            return new ZonedDateTimeService(clock, new Iso8601ConversionConfiguration("Europe/Copenhagen"));
         }
     }
 }

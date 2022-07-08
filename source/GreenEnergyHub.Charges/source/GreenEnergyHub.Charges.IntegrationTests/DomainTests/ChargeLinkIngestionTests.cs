@@ -18,10 +18,14 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.ChargeLinks;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
+using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.Iso8601;
+using NodaTime.Testing;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
@@ -57,7 +61,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             [Fact]
             public async Task When_RequestIsUnauthenticated_Then_AHttp401UnauthorizedIsReturned()
             {
-                var (request, _) = HttpRequestGenerator.CreateHttpPostRequest(EndpointUrl, ChargeLinkDocument.AnyValid);
+                var (request, _) = HttpRequestGenerator.CreateHttpPostRequest(
+                    EndpointUrl,
+                    ChargeLinkDocument.AnyValid,
+                    GetZonedDateTimeService());
 
                 var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
 
@@ -129,6 +136,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 peekResults.Should().ContainMatch("*ConfirmRequestChangeBillingMasterData_MarketDocument*");
                 peekResults.Should().ContainMatch("*NotifyBillingMasterData_MarketDocument*");
                 peekResults.Should().ContainMatch("*RejectRequestChangeBillingMasterData_MarketDocument*");
+            }
+
+            private static ZonedDateTimeService GetZonedDateTimeService()
+            {
+                var clock = new FakeClock(InstantHelper.GetTodayAtMidnightUtc());
+                return new ZonedDateTimeService(clock, new Iso8601ConversionConfiguration("Europe/Copenhagen"));
             }
         }
     }
