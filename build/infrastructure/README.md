@@ -27,7 +27,6 @@ Information about the settings:
 - `subscription_id` is the service principal object id
 - `sharedresources_keyvault_name` is the name of the key vault holding shared/system-wide secrets
 - `sharedresources_resource_group_name` is the resource group where shared resources like the shared key vault and more is located
-- `notification_email` is your email, used for notifications
 
 If you want to tear down all the resources again simply execute `terraform destroy -auto-approve -var-file="localhost.tfvars"` in the `.working-folder` folder.
 
@@ -127,10 +126,6 @@ This is most likely provided by your enterprise architect or cloud architect or 
 
 If you're deploying the domain as a development environment - i.e. with not dependencies to other domains - then you can choose this for yourself.
 It's possible to use the same resource group as the resource group used for the domain infrastructure.
-
-### - `notification_email`
-
-The email address that should receive notifications of alerts raised by the infrastructure. Use your own for development.
 
 ## Prerequisites
 

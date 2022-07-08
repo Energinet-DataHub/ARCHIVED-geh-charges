@@ -26,7 +26,14 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
             BusinessRoleCode.Ddq => MarketParticipantRole.EnergySupplier,
             BusinessRoleCode.Ddz => MarketParticipantRole.MeteringPointAdministrator,
             BusinessRoleCode.Ez => MarketParticipantRole.SystemOperator,
-            _ => throw new NotImplementedException($"Role {businessRole} is not implemented."),
+            BusinessRoleCode.Ddk => MarketParticipantRole.BalanceResponsibleParty,
+            BusinessRoleCode.Ddx => MarketParticipantRole.ImbalanceSettlementResponsible,
+            BusinessRoleCode.Dea => MarketParticipantRole.MeteredDataAggregator,
+            BusinessRoleCode.Dgl => MarketParticipantRole.MeteredDataAdministrator,
+            BusinessRoleCode.Mdr => MarketParticipantRole.MeteredDataResponsible,
+            BusinessRoleCode.Sts => MarketParticipantRole.EnergyAgency,
+            _ => throw new ArgumentOutOfRangeException(
+                nameof(businessRole), businessRole, $"Role {businessRole} is not implemented"),
         };
     }
 }

@@ -34,18 +34,21 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
         [InlineAutoDomainData]
         public async Task
             HandleAsync_WhenCalledWithActorUpdatedIntegrationEvent_ShouldCallMarketParticipantPersister(
+                Guid actorId,
+                Guid b2CActorId,
+                string gln,
                 [Frozen] Mock<IMarketParticipantPersister> marketParticipantPersister,
                 MarketParticipantEventHandler sut)
         {
             // Assert
             var actorUpdatedIntegrationEvent = new ActorUpdatedIntegrationEvent(
                 Guid.Empty,
+                actorId,
                 Guid.Empty,
-                Guid.Empty,
-                Guid.Empty,
-                string.Empty,
+                b2CActorId,
+                gln,
                 ActorStatus.New,
-                new List<BusinessRoleCode>() { BusinessRoleCode.Ddm },
+                new List<BusinessRoleCode> { BusinessRoleCode.Ddm },
                 new List<EicFunction>(),
                 new List<Guid>(),
                 new List<string>());
@@ -55,7 +58,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
 
             // Assert
             marketParticipantPersister
-                .Verify(v => v.PersistAsync(It.IsAny<MarketParticipantUpdatedEvent>()), Times.Exactly(1));
+                .Verify(v => v.PersistAsync(It.IsAny<MarketParticipantUpdatedEvent>()), Times.Once);
         }
 
         [Theory]
@@ -70,8 +73,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             await sut.HandleAsync(gridAreaUpdatedIntegrationEvent);
 
             // Assert
-            gridAreaPersister
-                .Verify(v => v.PersistAsync(It.IsAny<GridAreaUpdatedEvent>()), Times.Exactly(1));
+            gridAreaPersister.Verify(v => v.PersistAsync(It.IsAny<GridAreaUpdatedEvent>()), Times.Once);
         }
     }
 }

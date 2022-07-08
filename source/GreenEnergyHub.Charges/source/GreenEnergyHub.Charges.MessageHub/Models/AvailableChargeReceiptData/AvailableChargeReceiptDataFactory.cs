@@ -22,6 +22,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
+using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 {
@@ -29,18 +30,22 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
         : AvailableDataFactoryBase<AvailableChargeReceiptData, ChargeCommandAcceptedEvent>
     {
         private readonly IMessageMetaDataContext _messageMetaDataContext;
+        private readonly ILogger _logger;
 
         public AvailableChargeReceiptDataFactory(
             IMessageMetaDataContext messageMetaDataContext,
+            ILoggerFactory loggerFactory,
             IMarketParticipantRepository marketParticipantRepository)
             : base(marketParticipantRepository)
         {
             _messageMetaDataContext = messageMetaDataContext;
+            _logger = loggerFactory.CreateLogger(nameof(AvailableChargeReceiptDataFactory));
         }
 
         public override async Task<IReadOnlyList<AvailableChargeReceiptData>> CreateAsync(ChargeCommandAcceptedEvent input)
         {
-            var recipient = input.Command.Document.Sender; // The original sender is the recipient of the receipt
+            // The original sender is the recipient of the receipt
+            var recipient = await GetRecipientAsync(input.Command.Document.Sender).ConfigureAwait(false);
             var sender = await GetSenderAsync().ConfigureAwait(false);
 
             var availableChargeReceiptData = new List<AvailableChargeReceiptData>();
@@ -59,9 +64,13 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             DocumentDto documentDto,
             ChargeOperationDto chargeOperationDto,
             MarketParticipant sender,
-            MarketParticipantDto recipient,
+            MarketParticipant recipient,
             int operationOrder)
         {
+            _logger.LogDebug("Recipient.Actor = {ActorId}", recipient.ActorId);
+            _logger.LogDebug("Recipient.Id = {Id}", recipient.Id);
+            _logger.LogDebug("Recipient.B2CActorId = {B2CActorId}", recipient.B2CActorId);
+            _logger.LogDebug("Recipient.Gln = {MarketParticipantId}", recipient.MarketParticipantId);
             return new List<AvailableChargeReceiptData>()
             {
                 new AvailableChargeReceiptData(

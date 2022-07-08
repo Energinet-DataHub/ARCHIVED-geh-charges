@@ -18,7 +18,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 {
     public class ChargeNameHasMaximumLengthRule : IValidationRule
     {
-        private const int MaximumChargeNameLength = 50;
+        private const int MaximumChargeNameLength = 132;
         private readonly ChargeOperationDto _chargeOperationDto;
 
         public ChargeNameHasMaximumLengthRule(ChargeOperationDto chargeOperationDto)

@@ -55,17 +55,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
             }
 
             [Theory]
-            [InlineData(BusinessRoleCode.Ddm, ActorStatus.Active)]
+            [InlineData(BusinessRoleCode.Ddm, ActorStatus.Inactive)]
             public async Task When_ReceivingActorIntegrationUpdatedMessage_MarketParticipantIsSavedToDatabase(
                 BusinessRoleCode businessRoleCode, ActorStatus actorStatus)
             {
                 // Arrange
                 const string gln = "1234567890123";
                 var role = MarketParticipantRoleMapper.Map(businessRoleCode);
-                var (message, parentId) = CreateServiceBusMessage(
-                    gln,
-                    actorStatus,
-                    new List<BusinessRoleCode>() { businessRoleCode });
+                var (message, parentId) = CreateServiceBusMessage(gln, actorStatus, new List<BusinessRoleCode> { businessRoleCode });
+
                 await using var context = Fixture.DatabaseManager.CreateDbContext();
 
                 // Act
@@ -73,7 +71,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     () => Fixture.MarketParticipantChangedTopic.SenderClient.SendMessageAsync(message), message.CorrelationId, parentId);
 
                 // Assert
-                await FunctionAsserts.AssertHasExecutedAsync(Fixture.HostManager, nameof(MarketParticipantPersisterEndpoint)).ConfigureAwait(false);
+                await FunctionAsserts.AssertHasExecutedAsync(
+                    Fixture.HostManager, nameof(MarketParticipantPersisterEndpoint)).ConfigureAwait(false);
                 var marketParticipant = context.MarketParticipants.SingleOrDefault(x =>
                     x.MarketParticipantId == gln && x.BusinessProcessRole == role);
                 marketParticipant.Should().NotBeNull();

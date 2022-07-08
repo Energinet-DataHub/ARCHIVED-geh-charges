@@ -48,7 +48,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             await using var chargesWriteDatabaseContext = _databaseManager.CreateDbContext();
             var sut = new MarketParticipantRepository(chargesWriteDatabaseContext);
             var id = Guid.NewGuid();
-            var marketParticipant = new MarketParticipant(id, "00001", true, MarketParticipantRole.GridAccessProvider);
+            var actorId = Guid.NewGuid();
+            var b2CActorId = Guid.NewGuid();
+            var marketParticipant = new MarketParticipant(
+                id, actorId, b2CActorId, "00001", true, MarketParticipantRole.GridAccessProvider);
 
             // Act
             await sut.AddAsync(marketParticipant).ConfigureAwait(false);
@@ -56,9 +59,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
             // Assert
             await using var chargesReadDatabaseContext = _databaseManager.CreateDbContext();
-            var actual =
-                await chargesReadDatabaseContext.MarketParticipants.SingleAsync(mp => mp.Id == marketParticipant.Id);
+            var actual = await chargesReadDatabaseContext.MarketParticipants
+                .SingleAsync(mp => mp.Id == marketParticipant.Id);
             actual.Id.Should().Be(id);
+            actual.ActorId.Should().Be(actorId);
+            actual.B2CActorId.Should().Be(b2CActorId);
             actual.MarketParticipantId.Should().Be("00001");
             actual.IsActive.Should().BeTrue();
             actual.BusinessProcessRole.Should().Be(MarketParticipantRole.GridAccessProvider);
@@ -76,19 +81,19 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         }
 
         [Fact]
-        public async Task SingleOrNullAsync_WhenIdEqualsExistingMarketParticipant_ReturnsMarketParticipant()
+        public async Task SingleOrNullAsync_WhenB2CActorIdEqualsExistingMarketParticipant_ReturnsMarketParticipant()
         {
             // Arrange
             await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
             var sut = new MarketParticipantRepository(chargesDatabaseContext);
-            var existingMarketParticipant = await chargesDatabaseContext.MarketParticipants
-                .SingleAsync(mp => mp.MarketParticipantId == SeededData.MarketParticipant.Inactive8900000000005);
+            var existingMarketParticipant = await chargesDatabaseContext.MarketParticipants.SingleAsync(mp =>
+                    mp.MarketParticipantId == SeededData.MarketParticipants.Inactive8900000000005.Gln);
 
             // Act
-            var actual = await sut.SingleOrNullAsync(existingMarketParticipant.Id);
+            var actual = await sut.SingleOrNullAsync(existingMarketParticipant.B2CActorId ?? Guid.NewGuid());
 
             // Assert
-            actual!.MarketParticipantId.Should().Be(SeededData.MarketParticipant.Inactive8900000000005);
+            actual!.MarketParticipantId.Should().Be(SeededData.MarketParticipants.Inactive8900000000005.Gln);
         }
 
         [Fact]
@@ -99,11 +104,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             var sut = new MarketParticipantRepository(chargesDatabaseContext);
 
             // Act
-            var actual = await sut.SingleOrNullAsync(SeededData.MarketParticipant.Inactive8900000000005);
+            var actual = await sut.SingleOrNullAsync(SeededData.MarketParticipants.Inactive8900000000005.Gln);
 
             // Assert
             actual.Should().NotBeNull();
-            actual!.MarketParticipantId.Should().Be(SeededData.MarketParticipant.Inactive8900000000005);
+            actual!.MarketParticipantId.Should().Be(SeededData.MarketParticipants.Inactive8900000000005.Gln);
         }
 
         [Fact]
@@ -201,7 +206,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             var actual = await sut.GetGridAccessProvidersAsync();
 
             // Assert
-            actual.Should().NotContain(x => x.MarketParticipantId == SeededData.MarketParticipant.Inactive8900000000005);
+            actual.Should().NotContain(x => x.MarketParticipantId == SeededData.MarketParticipants.Inactive8900000000005.Gln);
         }
 
         [Fact]
@@ -283,8 +288,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         {
             // Arrange
             await using var writeDatabaseContext = _databaseManager.CreateDbContext();
+            const string marketParticipantId = SeededData.MarketParticipants.SystemOperator.Gln;
             await AddMarketParticipantToContextAndSaveAsync(
-                "5790000432752",
+                marketParticipantId,
                 MarketParticipantRole.GridAccessProvider,
                 false,
                 writeDatabaseContext);
@@ -293,16 +299,23 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             var sut = new MarketParticipantRepository(readDatabaseContext);
 
             // Act
-            var actual = await sut.GetSystemOperatorOrGridAccessProviderAsync("5790000432752");
+            var actual = await sut.GetSystemOperatorOrGridAccessProviderAsync(marketParticipantId);
 
             // Assert
             actual.BusinessProcessRole.Should().Be(MarketParticipantRole.SystemOperator);
             actual.IsActive.Should().BeTrue();
         }
 
-        private static async Task AddMarketParticipantToContextAndSaveAsync(string marketParticipantId, MarketParticipantRole role, bool isActive, ChargesDatabaseContext context)
+        private static async Task AddMarketParticipantToContextAndSaveAsync(
+            string marketParticipantId, MarketParticipantRole role, bool isActive, ChargesDatabaseContext context)
         {
-            var marketParticipant = new MarketParticipant(Guid.NewGuid(), marketParticipantId, isActive, role);
+            var marketParticipant = new MarketParticipant(
+                id: Guid.NewGuid(),
+                actorId: Guid.NewGuid(),
+                b2CActorId: Guid.NewGuid(),
+                marketParticipantId,
+                isActive,
+                role);
             await context.AddAsync(marketParticipant);
             await context.SaveChangesAsync();
         }

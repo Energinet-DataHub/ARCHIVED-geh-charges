@@ -17,6 +17,7 @@ using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
+using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Categories;
 
@@ -25,14 +26,30 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
     [UnitTest]
     public class MarketParticipantRoleMapperTests
     {
-        [Fact]
-        public void When_ActorIntegrationEvent_Received_Then_Map_BusinessRole_To_MarketParticipantRole()
+        [Theory]
+        [InlineAutoDomainData(BusinessRoleCode.Ddm, MarketParticipantRole.GridAccessProvider)]
+        [InlineAutoDomainData(BusinessRoleCode.Ddq, MarketParticipantRole.EnergySupplier)]
+        [InlineAutoDomainData(BusinessRoleCode.Ddz, MarketParticipantRole.MeteringPointAdministrator)]
+        [InlineAutoDomainData(BusinessRoleCode.Ez, MarketParticipantRole.SystemOperator)]
+        [InlineAutoDomainData(BusinessRoleCode.Ddk, MarketParticipantRole.BalanceResponsibleParty)]
+        [InlineAutoDomainData(BusinessRoleCode.Ddx, MarketParticipantRole.ImbalanceSettlementResponsible)]
+        [InlineAutoDomainData(BusinessRoleCode.Dea, MarketParticipantRole.MeteredDataAggregator)]
+        [InlineAutoDomainData(BusinessRoleCode.Dgl, MarketParticipantRole.MeteredDataAdministrator)]
+        [InlineAutoDomainData(BusinessRoleCode.Mdr, MarketParticipantRole.MeteredDataResponsible)]
+        [InlineAutoDomainData(BusinessRoleCode.Sts, MarketParticipantRole.EnergyAgency)]
+        public void Map_WhenValidBusinessRoleCode_ThenMapsToMarketParticipantRole(
+            BusinessRoleCode businessRoleCode,
+            MarketParticipantRole marketParticipantRole)
         {
-            MarketParticipantRoleMapper.Map(BusinessRoleCode.Ddm).Should().Be(MarketParticipantRole.GridAccessProvider);
-            MarketParticipantRoleMapper.Map(BusinessRoleCode.Ddq).Should().Be(MarketParticipantRole.EnergySupplier);
-            MarketParticipantRoleMapper.Map(BusinessRoleCode.Ddz).Should().Be(MarketParticipantRole.MeteringPointAdministrator);
-            MarketParticipantRoleMapper.Map(BusinessRoleCode.Ez).Should().Be(MarketParticipantRole.SystemOperator);
-            Assert.Throws<NotImplementedException>(() => MarketParticipantRoleMapper.Map(BusinessRoleCode.Ddx));
+            MarketParticipantRoleMapper.Map(businessRoleCode).Should().Be(marketParticipantRole);
+        }
+
+        [Theory]
+        [InlineAutoDomainData(-1)]
+        public void Map_WhenInValidBusinessRoleCode_ThenThrowsArgumentOutOfRangeException(
+            BusinessRoleCode businessRoleCode)
+        {
+            Assert.Throws<ArgumentOutOfRangeException>(() => MarketParticipantRoleMapper.Map(businessRoleCode));
         }
     }
 }

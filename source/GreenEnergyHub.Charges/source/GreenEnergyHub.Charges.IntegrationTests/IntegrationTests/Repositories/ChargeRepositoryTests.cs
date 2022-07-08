@@ -123,7 +123,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             // Arrange => Matching data from seeded test data
             var identifier = new ChargeIdentifier(
                 "EA-001",
-                new Guid("AF450C03-1937-4EA1-BB66-17B6E4AA51F5"),
+                SeededData.MarketParticipants.SystemOperator.Id,
                 ChargeType.Tariff);
 
             // Act
@@ -144,12 +144,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             // Arrange => Matching data from seeded test data
             var firstCharge = await sut.SingleAsync(new ChargeIdentifier(
                 "EA-001",
-                new Guid("AF450C03-1937-4EA1-BB66-17B6E4AA51F5"),
+                SeededData.MarketParticipants.SystemOperator.Id,
                 ChargeType.Tariff));
 
             var secondCharge = await sut.SingleAsync(new ChargeIdentifier(
                 "45013",
-                new Guid("AF450C03-1937-4EA1-BB66-17B6E4AA51F5"),
+                SeededData.MarketParticipants.SystemOperator.Id,
                 ChargeType.Tariff));
 
             // Act
@@ -214,7 +214,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 return;
 
             marketParticipant = new MarketParticipant(
-                Guid.NewGuid(),
+                id: Guid.NewGuid(),
+                actorId: Guid.NewGuid(),
+                b2CActorId: Guid.NewGuid(),
                 MarketParticipantOwnerId,
                 true,
                 MarketParticipantRole.EnergySupplier);

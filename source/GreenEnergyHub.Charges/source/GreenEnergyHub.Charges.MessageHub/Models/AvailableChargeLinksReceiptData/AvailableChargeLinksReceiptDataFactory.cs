@@ -45,9 +45,10 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
             if (AvailableDataFactoryHelper.ShouldSkipAvailableData(acceptedEvent.ChargeLinksCommand))
                 return new List<AvailableChargeLinksReceiptData>();
 
-            // The sender is now the recipient of the receipt
-            var recipient = acceptedEvent.ChargeLinksCommand.Document.Sender;
+            // The original sender is the recipient of the receipt
+            var recipient = await GetRecipientAsync(acceptedEvent.ChargeLinksCommand.Document.Sender).ConfigureAwait(false);
             var sender = await GetSenderAsync().ConfigureAwait(false);
+
             return acceptedEvent.ChargeLinksCommand.ChargeLinksOperations.Select(link =>
                     new AvailableChargeLinksReceiptData(
                         sender.MarketParticipantId,

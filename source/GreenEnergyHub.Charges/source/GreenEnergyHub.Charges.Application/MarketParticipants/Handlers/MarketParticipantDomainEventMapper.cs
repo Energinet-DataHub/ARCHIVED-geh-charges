@@ -12,10 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Linq;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
 using GreenEnergyHub.Charges.Domain.Dtos.GridAreas;
 using GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsUpdatedEvents;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 {
@@ -27,10 +29,21 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
             var isActive = actorUpdatedIntegrationEvent.Status is ActorStatus.Active;
 
             var rolesUsedInChargesDomain = actorUpdatedIntegrationEvent.BusinessRoles
-                .Select(MarketParticipantRoleMapper.Map).ToList();
+                .Select(MarketParticipantRoleMapper.Map)
+                .Intersect(MarketParticipant._validRoles)
+                .ToList();
+
+            if (rolesUsedInChargesDomain.Count > 1)
+            {
+                throw new InvalidOperationException(
+                    $"Only 1 role per market participant with ID '{actorUpdatedIntegrationEvent.Gln}' is allowed, " +
+                    $"the current market participant has {rolesUsedInChargesDomain.Count} roles associated in the " +
+                    $"integration event with id '{actorUpdatedIntegrationEvent.Id}'");
+            }
 
             return new MarketParticipantUpdatedEvent(
                 actorUpdatedIntegrationEvent.ActorId,
+                actorUpdatedIntegrationEvent.ExternalActorId,
                 actorUpdatedIntegrationEvent.Gln,
                 rolesUsedInChargesDomain,
                 isActive,

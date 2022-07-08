@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -28,6 +29,7 @@ using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
+using GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared;
 using GreenEnergyHub.TestHelpers;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -67,9 +69,10 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
 
             var rejectedEvent = new ChargeLinksRejectedEvent(now, chargeLinksCommand, validationErrors);
 
-            marketParticipantRepository
-                .Setup(r => r.GetMeteringPointAdministratorAsync())
-                .ReturnsAsync(meteringPointAdministrator);
+            var actorId = Guid.NewGuid();
+
+            MarketParticipantRepositoryMockBuilder.SetupMarketParticipantRepositoryMock(
+                marketParticipantRepository, meteringPointAdministrator, chargeLinksCommand.Document.Sender, actorId);
 
             SetupAvailableChargeLinksReceiptValidationErrorFactory(
                 availableChargeLinksReceiptValidationErrorFactory, chargeLinksCommand);
@@ -84,6 +87,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
             for (var i1 = 0; i1 < actualList.Count; i1++)
             {
                 var actual = actualList[i1];
+                actual.ActorId.Should().Be(actorId);
                 actual.RecipientId.Should().Be(chargeLinksCommand.Document.Sender.MarketParticipantId);
                 actual.RecipientRole.Should().Be(chargeLinksCommand.Document.Sender.BusinessProcessRole);
                 actual.BusinessReasonCode.Should().Be(chargeLinksCommand.Document.BusinessReasonCode);
@@ -127,9 +131,9 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
             loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
             rejectedEvent.ChargeLinksCommand.Document.Sender.BusinessProcessRole = marketParticipantRole;
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
-            marketParticipantRepository
-                .Setup(r => r.GetMeteringPointAdministratorAsync())
-                .ReturnsAsync(meteringPointAdministrator);
+            var actorId = Guid.NewGuid();
+            MarketParticipantRepositoryMockBuilder.SetupMarketParticipantRepositoryMock(
+                marketParticipantRepository, meteringPointAdministrator, rejectedEvent.ChargeLinksCommand.Document.Sender, actorId);
 
             SetupAvailableChargeLinksReceiptValidationErrorFactory(
                 availableChargeLinksReceiptValidationErrorFactory, rejectedEvent.ChargeLinksCommand);
