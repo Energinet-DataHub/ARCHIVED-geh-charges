@@ -18,7 +18,6 @@ using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using GreenEnergyHub.Charges.Core.DateTime;
-using Microsoft.EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
