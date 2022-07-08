@@ -45,7 +45,7 @@ limitations under the License.
     <cim:mRID>OpId2_{{$isoTimestamp}}</cim:mRID>
     <cim:ChargeGroup>
         <cim:ChargeType>
-            <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">8100000000030</cim:chargeTypeOwner_MarketParticipant.mRID>
+            <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">8100000000029</cim:chargeTypeOwner_MarketParticipant.mRID>
             <cim:type>D03</cim:type>
             <cim:mRID>{{$chargeIdForMultipleOperations}}</cim:mRID>
             <cim:name>Charge tariff day Name2</cim:name>

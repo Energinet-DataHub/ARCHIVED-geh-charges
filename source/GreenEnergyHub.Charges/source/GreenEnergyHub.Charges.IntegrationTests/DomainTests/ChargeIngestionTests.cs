@@ -105,6 +105,27 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             }
 
             [Fact]
+            public async Task WhenChargeOwnerDoesNotMatchSenderId_ThenMessageHubReceivesRejection()
+            {
+                // Arrange
+                var (request, correlationId) = await _authenticatedHttpRequestGenerator
+                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.TariffInvalidChargeOwner);
+                using var eventualChargeCreatedEvent = await Fixture
+                    .ChargeCreatedListener
+                    .ListenForMessageAsync(correlationId)
+                    .ConfigureAwait(false);
+
+                // Act
+                var response = await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+                var responseAsString = await response.Content.ReadAsStringAsync();
+                responseAsString.Should().Contain("<Code>B2B-???</Code>");
+                responseAsString.Should().Contain("The charge owner did not match sender.");
+            }
+
+            [Fact]
             public async Task When_ChargeInformationIsReceived_Then_ChargeCreatedIntegrationEventIsPublished()
             {
                 // Arrange

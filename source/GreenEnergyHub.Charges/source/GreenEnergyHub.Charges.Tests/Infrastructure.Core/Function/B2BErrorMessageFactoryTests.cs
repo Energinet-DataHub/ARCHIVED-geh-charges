@@ -15,6 +15,7 @@
 using System.ComponentModel;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
+using GreenEnergyHub.Charges.TestCore.Attributes;
 using Xunit;
 using Xunit.Categories;
 
@@ -23,15 +24,22 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Function
     [UnitTest]
     public class B2BErrorMessageFactoryTests
     {
-        [Fact]
-        public void Create_WhenFactoryCreateWithValidB2BCode_ReturnCorrectErrorMessage()
+        [Theory]
+        [InlineAutoMoqData(
+            B2BErrorCode.ActorIsNotWhoTheyClaimToBeErrorMessage,
+            "B2B-008",
+            "The sender organization provided in the request body does not match the organization in the bearer token.")]
+        [InlineAutoMoqData(
+            B2BErrorCode.ChargeOwnerDidNotMatchSender,
+            "B2B-???",
+            "The charge owner did not match sender.")]
+        public void Create_WhenFactoryCreateWithValidB2BCode_ReturnCorrectErrorMessage(
+            B2BErrorCode b2BErrorCode,
+            string expectedCode,
+            string expectedMessage)
         {
-            // Arrange
-            var expectedCode = "B2B-008";
-            var expectedMessage = "The sender organization provided in the request body does not match the organization in the bearer token.";
-
             // Act
-            var sut = B2BErrorMessageFactory.Create(B2BErrorCode.ActorIsNotWhoTheyClaimToBeErrorMessage);
+            var sut = B2BErrorMessageFactory.Create(b2BErrorCode);
 
             // Assert
             sut.Code.Should().Be(expectedCode);

@@ -12,11 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using Energinet.DataHub.Core.Messaging.Transport.SchemaValidation;
+using Energinet.DataHub.Core.SchemaValidation.Errors;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
@@ -85,10 +87,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
                 switch (bundle)
                 {
                     case ChargeInformationCommandBundle commandBundle:
+                        CheckSenderMatchesChargeOwner(commandBundle);
                         ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(commandBundle);
                         await _chargeInformationCommandBundleHandler.HandleAsync(commandBundle).ConfigureAwait(false);
                         break;
                     case ChargePriceCommandBundle commandBundle:
+                        CheckSenderMatchesChargeOwner(commandBundle);
                         // This is a temporary fix to support "old" price flow while new is under development
                         await SupportOldFlowAsync(commandBundle).ConfigureAwait(false);
 
@@ -108,6 +112,26 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
                     .CreateBadRequestResponseAsync(request, exception.SchemaValidationError)
                     .ConfigureAwait(false);
             }
+            catch (SenderIsNotChargeOwnerException exception)
+            {
+                _logger.LogError(
+                    exception,
+                    "Owner id for operation did not match sender id");
+                return _httpResponseBuilder
+                    .CreateBadRequestB2BResponse(request, B2BErrorCode.ChargeOwnerDidNotMatchSender);
+            }
+        }
+
+        private void CheckSenderMatchesChargeOwner(ChargeCommandBundle bundle)
+        {
+            var sender = bundle.Document.Sender.ToString();
+            var ownerIds =
+                (from command in bundle.Commands
+                    from operation in command.Operations
+                    select operation.ChargeOwner)
+                .ToList();
+            if (ownerIds.Exists(chargeOwner => chargeOwner != sender))
+                throw new SenderIsNotChargeOwnerException();
         }
 
         private async Task SupportOldFlowAsync(ChargePriceCommandBundle priceCommandBundle)

@@ -16,5 +16,14 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Messages.Command
 {
     public abstract class OperationBase
     {
+        protected OperationBase(string chargeOwner)
+        {
+            ChargeOwner = chargeOwner;
+        }
+
+        /// <summary>
+        ///  Charge Owner, e.g. the GLN or EIC identification number.
+        /// </summary>
+        public string ChargeOwner { get; }
     }
 }

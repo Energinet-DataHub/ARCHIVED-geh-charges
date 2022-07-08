@@ -14,21 +14,17 @@
 
 using System;
 using System.Runtime.Serialization;
-using Energinet.DataHub.Core.SchemaValidation.Errors;
 
 namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocument
 {
     [Serializable]
-    public class SchemaValidationException : Exception
+    public class SenderIsNotChargeOwnerException : Exception
     {
-        public SchemaValidationException(ErrorResponse schemaValidationError)
+        public SenderIsNotChargeOwnerException()
         {
-            SchemaValidationError = schemaValidationError;
         }
 
-        public ErrorResponse SchemaValidationError { get; }
-
-        protected SchemaValidationException(SerializationInfo serializationInfo, StreamingContext streamingContext)
+        protected SenderIsNotChargeOwnerException(SerializationInfo serializationInfo, StreamingContext streamingContext)
             : base(serializationInfo, streamingContext)
         {
         }

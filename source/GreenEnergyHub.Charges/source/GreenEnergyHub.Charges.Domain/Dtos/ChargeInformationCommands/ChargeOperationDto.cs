@@ -45,6 +45,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands
                 Instant? pointsStartInterval,
                 Instant? pointsEndInterval,
                 List<Point> points)
+            : base(chargeOwner)
         {
             Points = new List<Point>();
             Id = id;
@@ -52,7 +53,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands
             ChargeId = chargeId;
             ChargeName = chargeName;
             ChargeDescription = chargeDescription;
-            ChargeOwner = chargeOwner;
             Resolution = resolution;
             PriceResolution = priceResolution;
             TaxIndicator = taxIndicator;
@@ -107,11 +107,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands
         /// Indicates whether the Charge is tax or not.
         /// </summary>
         public TaxIndicator TaxIndicator { get; }
-
-        /// <summary>
-        ///  Charge Owner, e.g. the GLN or EIC identification number.
-        /// </summary>
-        public string ChargeOwner { get; }
 
         public Resolution Resolution { get; }
 

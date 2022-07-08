@@ -26,6 +26,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
                     new B2BErrorMessage(
                         "B2B-008",
                         "The sender organization provided in the request body does not match the organization in the bearer token."),
+                B2BErrorCode.ChargeOwnerDidNotMatchSender =>
+                    new B2BErrorMessage(
+                        "B2B-???",
+                        "The charge owner did not match sender."),
 
                 _ =>
                     throw new InvalidEnumArgumentException($"Provided B2B error code '{code}' is invalid and cannot be mapped."),

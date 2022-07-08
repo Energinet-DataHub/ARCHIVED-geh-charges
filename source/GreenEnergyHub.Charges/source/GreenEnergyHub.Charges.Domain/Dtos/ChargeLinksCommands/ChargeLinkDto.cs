@@ -29,6 +29,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
             int factor,
             string chargeOwner,
             ChargeType chargeType)
+            : base(chargeOwner)
         {
             OperationId = operationId;
             MeteringPointId = meteringPointId;
@@ -36,7 +37,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
             EndDateTime = endDateTime;
             SenderProvidedChargeId = senderProvidedChargeId;
             Factor = factor;
-            ChargeOwner = chargeOwner;
             ChargeType = chargeType;
         }
 
@@ -55,8 +55,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
         public string SenderProvidedChargeId { get; }
 
         public int Factor { get; }
-
-        public string ChargeOwner { get; }
 
         public ChargeType ChargeType { get; }
     }
