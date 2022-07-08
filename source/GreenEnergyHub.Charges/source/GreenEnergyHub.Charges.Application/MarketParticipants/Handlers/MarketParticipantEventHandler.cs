@@ -36,6 +36,8 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 
         public async Task HandleAsync(BaseIntegrationEvent message)
         {
+            var type = message.GetType();
+            _logger.LogInformation("Market Participant integration event received of type {MessageType}", type);
             switch (message)
             {
                 case ActorUpdatedIntegrationEvent actorEvent:
@@ -50,7 +52,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 
                 case GridAreaUpdatedIntegrationEvent gridAreaEvent:
                     {
-                        _logger.LogDebug(
+                        _logger.LogInformation(
                             "GridAreaUpdatedIntegrationEvent received with Event Id {Id}, GridAreaId {GridAreaId}, " +
                             "Name {Name}, Code {Code} and GridAreaLinkId {GridAreaLinkId}.",
                             gridAreaEvent.Id,
