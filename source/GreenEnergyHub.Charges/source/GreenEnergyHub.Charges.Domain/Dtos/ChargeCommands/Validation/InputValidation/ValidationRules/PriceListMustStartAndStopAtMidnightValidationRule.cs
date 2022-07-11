@@ -33,8 +33,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
 
         public bool IsValid => (GetPointsIntervalStartDateTime() is null ||
                                 GetPointsIntervalStartDateTime().GetValueOrDefault().TickOfDay == 0) &&
-                               (GetEndDateTime() is null ||
-                                GetEndDateTime().GetValueOrDefault().TickOfDay == 0);
+                               (GetPointsIntervalEndDateTime() is null ||
+                                GetPointsIntervalEndDateTime().GetValueOrDefault().TickOfDay == 0);
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.PriceListMustStartAndStopAtMidnightValidationRule;
@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
                 : _zonedDateTimeService.GetZonedDateTime(_chargeOperation.PointsStartInterval.GetValueOrDefault());
         }
 
-        private ZonedDateTime? GetEndDateTime()
+        private ZonedDateTime? GetPointsIntervalEndDateTime()
         {
             return _chargeOperation.EndDateTime is null
                 ? null
