@@ -91,11 +91,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeNameHasMaximumLength)]
         public const string ChargeNameHasMaximumLengthErrorText =
-            "Name {{ChargeName}} for charge {{DocumentSenderProvidedChargeId}} has a length that exceeds 50";
+            "Name {{ChargeName}} for charge ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}} has a length that exceeds 132";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeDescriptionHasMaximumLength)]
         public const string ChargeDescriptionHasMaximumLengthErrorText =
-            "Description {{ChargeDescription}} for charge {{DocumentSenderProvidedChargeId}} has a length that exceeds 2048";
+            "Description {{ChargeDescription}} for charge ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}} has a length that exceeds 2048";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeTypeTariffPriceCount)]
         public const string ChargeTypeTariffPriceCountErrorText =
