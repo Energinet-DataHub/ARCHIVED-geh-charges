@@ -35,7 +35,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         [InlineAutoMoqData("2022-12-31T23:00:00Z", "2022-12-31T23:00:00Z", true, "both start and end are normal time, same date is allowed")]
         [InlineAutoMoqData("2022-03-26T23:00:00Z", "2022-03-27T22:00:00Z", true, "start is normal time, end date is DST")]
         [InlineAutoMoqData("2022-10-29T22:00:00Z", "2022-10-30T23:00:00Z", true, "start is DST time, end date is normal time")]
-        [InlineAutoMoqData("2022-10-29T00:00:00Z", "2022-11-01T00:00:00Z", false, "start date is not midnight in DST, end date is not midnight in normal time")]
+        [InlineAutoMoqData("2022-10-29T00:00:00Z", "2022-11-02T23:00:00Z", false, "start date is not midnight in DST")]
+        [InlineAutoMoqData("2022-10-30T23:00:00Z", "2022-11-01T00:00:00Z", false, "end date is not midnight in normal time")]
         public void IsValid_WhenCalledStartAndEndDate_ShouldReturnExpectedResult(
             string startDateISOString,
             string endDateISOString,
