@@ -107,11 +107,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             ArgumentNullException.ThrowIfNull(description);
             ArgumentNullException.ThrowIfNull(senderProvidedChargeId);
 
-            var rules = new List<OperationValidationRuleContainer>
-            {
-                new(new CreateChargeIsNotAllowedATerminationRuleDate(stopDate), operationId),
-                new(new TransparentInvoicingMustBeFalseWhenCreatingFeeRule(type, transparentInvoicing), operationId),
-            };
+            var rules = GenerateCreateValidationRules(operationId, type, transparentInvoicing, stopDate);
             CheckRules(rules);
 
             var chargePeriod = ChargePeriod.Create(
@@ -302,6 +298,15 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             {
                 _periods.RemoveAll(Predicate);
             }
+        }
+
+        private static List<OperationValidationRuleContainer> GenerateCreateValidationRules(string operationId, ChargeType type, TransparentInvoicing transparentInvoicing, Instant? stopDate)
+        {
+            return new List<OperationValidationRuleContainer>
+            {
+                new(new CreateChargeIsNotAllowedATerminationRuleDate(stopDate), operationId),
+                new(new TransparentInvoicingMustBeFalseWhenCreatingFeeRule(type, transparentInvoicing), operationId),
+            };
         }
 
         private IEnumerable<IValidationRuleContainer> GenerateUpdateValidationRules(
