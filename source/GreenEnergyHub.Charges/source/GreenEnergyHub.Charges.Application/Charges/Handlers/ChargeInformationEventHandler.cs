@@ -154,6 +154,8 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 newChargePeriod,
                 chargeOperationDto.TaxIndicator,
                 chargeOperationDto.Resolution,
+                chargeOperationDto.Type,
+                chargeOperationDto.TransparentInvoicing,
                 chargeOperationDto.Id);
         }
 

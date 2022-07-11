@@ -65,6 +65,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.Shared
                 ValidationRuleIdentifier.TaxIndicatorIsRequired => ReasonCode.E0H,
                 ValidationRuleIdentifier.TerminationDateMustMatchEffectiveDate => ReasonCode.E0H,
                 ValidationRuleIdentifier.CreateChargeIsNotAllowedATerminationDate => ReasonCode.D14,
+                ValidationRuleIdentifier.TransparentInvoicingMustBeFalseWhenCreatingFee => ReasonCode.D67,
+                ValidationRuleIdentifier.TransparentInvoicingMustBeFalseWhenUpdatingFee => ReasonCode.D14,
                 _ => throw new NotImplementedException(),
             };
         }

@@ -22,9 +22,11 @@ using GreenEnergyHub.Charges.Tests.Builders.Command;
 using NodaTime;
 using NodaTime.Text;
 using Xunit;
+using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules
 {
+    [UnitTest]
     public class UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateRuleTests
     {
         [Theory]

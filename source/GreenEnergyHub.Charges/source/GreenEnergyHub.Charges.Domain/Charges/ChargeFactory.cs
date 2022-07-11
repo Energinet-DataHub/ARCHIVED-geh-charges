@@ -47,7 +47,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
                 chargeOperationDto.Resolution,
                 chargeOperationDto.TaxIndicator,
                 chargeOperationDto.VatClassification,
-                chargeOperationDto.TransparentInvoicing == TransparentInvoicing.Transparent,
+                chargeOperationDto.TransparentInvoicing,
                 chargeOperationDto.StartDateTime,
                 chargeOperationDto.EndDateTime);
         }
