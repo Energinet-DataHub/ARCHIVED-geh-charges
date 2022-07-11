@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputVali
         {
             return _chargeOperation.PointsStartInterval is null
                 ? null
-                : _zonedDateTimeService.GetZonedDateTime(_chargeOperation.PointsEndInterval.GetValueOrDefault());
+                : _zonedDateTimeService.GetZonedDateTime(_chargeOperation.PointsStartInterval.GetValueOrDefault());
         }
 
         private ZonedDateTime? GetEndDateTime()
