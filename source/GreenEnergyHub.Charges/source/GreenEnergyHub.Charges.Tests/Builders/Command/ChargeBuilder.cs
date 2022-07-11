@@ -107,7 +107,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
                 _resolution,
                 _taxIndicator,
                 VatClassification.Unknown,
-                true,
+                TransparentInvoicing.Transparent,
                 _startDate);
 
             if (_periods.Any())
@@ -120,7 +120,10 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
                             $"Could not create charge periods in {nameof(ChargeBuilder)}. Period must have infinite end date.");
                     }
 
-                    charge.Update(period, _taxIndicator, _resolution, operationId);
+                    var transparentInvoicing = period.TransparentInvoicing
+                        ? TransparentInvoicing.Transparent
+                        : TransparentInvoicing.NonTransparent;
+                    charge.Update(period, _taxIndicator, _resolution, charge.Type, transparentInvoicing, operationId);
                 }
             }
 

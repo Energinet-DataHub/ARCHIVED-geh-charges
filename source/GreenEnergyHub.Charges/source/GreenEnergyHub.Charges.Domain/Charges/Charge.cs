@@ -99,7 +99,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             Resolution resolution,
             TaxIndicator taxIndicator,
             VatClassification vatClassification,
-            bool transparentInvoicing,
+            TransparentInvoicing transparentInvoicing,
             Instant startDate,
             Instant? stopDate = null)
         {
@@ -107,11 +107,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             ArgumentNullException.ThrowIfNull(description);
             ArgumentNullException.ThrowIfNull(senderProvidedChargeId);
 
-            var rules = new List<OperationValidationRuleContainer>
-            {
-                new(
-                    new CreateChargeIsNotAllowedATerminationRuleDate(stopDate), operationId),
-            };
+            var rules = GenerateCreateValidationRules(operationId, type, transparentInvoicing, stopDate);
             CheckRules(rules);
 
             var chargePeriod = ChargePeriod.Create(
@@ -141,9 +137,17 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         /// <param name="newChargePeriod">New Charge Period from update charge request</param>
         /// <param name="taxIndicator">Tax indicator in the update charge request</param>
         /// <param name="resolution">Resolution of the update charge request</param>
+        /// <param name="chargeType">Charge type of the update charge request</param>
+        /// <param name="transparentInvoicing">Transparent invoicing of the update charge request</param>
         /// <param name="operationId">Charge operation id</param>
         /// <exception cref="ArgumentNullException">Throws when <paramref name="newChargePeriod"/> is empty</exception>
-        public void Update(ChargePeriod newChargePeriod, TaxIndicator taxIndicator, Resolution resolution, string operationId)
+        public void Update(
+            ChargePeriod newChargePeriod,
+            TaxIndicator taxIndicator,
+            Resolution resolution,
+            ChargeType chargeType,
+            TransparentInvoicing transparentInvoicing,
+            string operationId)
         {
             ArgumentNullException.ThrowIfNull(newChargePeriod);
             ArgumentNullException.ThrowIfNull(operationId);
@@ -155,7 +159,13 @@ namespace GreenEnergyHub.Charges.Domain.Charges
                 throw new InvalidOperationException("Charge update must not have bound end date.");
             }
 
-            var rules = GenerateRules(newChargePeriod, taxIndicator, resolution, operationId);
+            var rules = GenerateUpdateValidationRules(
+                newChargePeriod,
+                taxIndicator,
+                resolution,
+                chargeType,
+                transparentInvoicing,
+                operationId);
             CheckRules(rules);
 
             var stopDate = _periods.Max(p => p.EndDateTime);
@@ -205,7 +215,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
                     "Cannot cancel stop when new start date is not equal to existing stop date.");
             }
 
-            var rules = GenerateRules(chargePeriod, taxIndicator, resolution, operationId).ToList();
+            var rules = GenerateUpdateAndStopSharedRules(chargePeriod, taxIndicator, resolution, operationId).ToList();
             CheckRules(rules);
 
             _periods.Add(chargePeriod);
@@ -290,7 +300,41 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             }
         }
 
-        private IEnumerable<IValidationRuleContainer> GenerateRules(
+        private static List<OperationValidationRuleContainer> GenerateCreateValidationRules(string operationId, ChargeType type, TransparentInvoicing transparentInvoicing, Instant? stopDate)
+        {
+            return new List<OperationValidationRuleContainer>
+            {
+                new(new CreateChargeIsNotAllowedATerminationRuleDate(stopDate), operationId),
+                new(new TransparentInvoicingMustBeFalseWhenCreatingFeeRule(type, transparentInvoicing), operationId),
+            };
+        }
+
+        private IEnumerable<IValidationRuleContainer> GenerateUpdateValidationRules(
+            ChargePeriod newChargePeriod,
+            TaxIndicator newTaxIndicator,
+            Resolution newResolution,
+            ChargeType chargeType,
+            TransparentInvoicing transparentInvoicing,
+            string operationId)
+        {
+            var updateRules = new List<IValidationRuleContainer>();
+
+            updateRules.AddRange(
+                GenerateUpdateAndStopSharedRules(newChargePeriod, newTaxIndicator, newResolution, operationId));
+
+            var updateSpecificRules = new List<IValidationRuleContainer>
+            {
+                new OperationValidationRuleContainer(
+                    new TransparentInvoicingMustBeFalseWhenUpdatingFeeRule(chargeType, transparentInvoicing),
+                    operationId),
+            };
+
+            updateRules.AddRange(updateSpecificRules);
+
+            return updateRules;
+        }
+
+        private IEnumerable<IValidationRuleContainer> GenerateUpdateAndStopSharedRules(
             ChargePeriod newChargePeriod,
             TaxIndicator newTaxIndicator,
             Resolution newResolution,

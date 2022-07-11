@@ -56,6 +56,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             _priceResolution = Resolution.PT1H;
             _pointsStartInterval = _startDateTime;
             _pointsEndInterval = _endDateTime;
+            _transparentInvoicing = TransparentInvoicing.NonTransparent;
         }
 
         public ChargeOperationDtoBuilder WithDescription(string description)

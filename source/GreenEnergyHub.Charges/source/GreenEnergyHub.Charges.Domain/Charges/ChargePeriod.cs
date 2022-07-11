@@ -101,7 +101,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             string name,
             string description,
             VatClassification vatClassification,
-            bool transparentInvoicing,
+            TransparentInvoicing transparentInvoicing,
             Instant startDateTime,
             Instant endDateTime)
         {
@@ -112,7 +112,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
                 name,
                 description,
                 vatClassification,
-                transparentInvoicing,
+                transparentInvoicing == Charges.TransparentInvoicing.Transparent,
                 startDateTime,
                 endDateTime);
         }

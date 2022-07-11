@@ -189,6 +189,14 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         public const string CreateChargeIsNotAllowedATerminationDateErrorText =
             "Charge ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} for owner {{ChargeOwner}} cannot be stopped as it has never existed.";
 
+        [ErrorMessageFor(ValidationRuleIdentifier.TransparentInvoicingMustBeFalseWhenCreatingFee)]
+        public const string TransparentInvoicingMustBeFalseWhenCreatingFeeErrorText =
+            "Transparent Invoicing of type Fee cannot be set to true for Charge ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}}.</";
+
+        [ErrorMessageFor(ValidationRuleIdentifier.TransparentInvoicingMustBeFalseWhenUpdatingFee)]
+        public const string TransparentInvoicingMustBeFalseWhenUpdatingFeeErrorText =
+            "It is not allowed to change the tax indicator to Tax for charge {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type Fee.";
+
         public const string Unknown = "unknown";
     }
 }

@@ -56,6 +56,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
                 newPeriod,
                 newTax,
                 sut.Resolution,
+                sut.Type,
+                newPeriod.TransparentInvoicing ? TransparentInvoicing.Transparent : TransparentInvoicing.NonTransparent,
                 Guid.NewGuid().ToString()));
             ex.InvalidRules.Should().Contain(r =>
                 r.ValidationRule.ValidationRuleIdentifier == ValidationRuleIdentifier.ChangingTariffTaxValueNotAllowed);
@@ -80,6 +82,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
                 newPeriod,
                 sut.TaxIndicator ? TaxIndicator.Tax : TaxIndicator.NoTax,
                 sut.Resolution,
+                sut.Type,
+                newPeriod.TransparentInvoicing ? TransparentInvoicing.Transparent : TransparentInvoicing.NonTransparent,
                 Guid.NewGuid().ToString());
 
             // Assert
@@ -116,6 +120,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
                 newPeriod,
                 sut.TaxIndicator ? TaxIndicator.Tax : TaxIndicator.NoTax,
                 sut.Resolution,
+                sut.Type,
+                newPeriod.TransparentInvoicing ? TransparentInvoicing.Transparent : TransparentInvoicing.NonTransparent,
                 Guid.NewGuid().ToString());
 
             // Assert
@@ -150,6 +156,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
                 newPeriod,
                 sut.TaxIndicator ? TaxIndicator.Tax : TaxIndicator.NoTax,
                 sut.Resolution,
+                sut.Type,
+                newPeriod.TransparentInvoicing ? TransparentInvoicing.Transparent : TransparentInvoicing.NonTransparent,
                 Guid.NewGuid().ToString());
 
             // Assert
@@ -171,6 +179,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
                 chargePeriod!,
                 sut.TaxIndicator ? TaxIndicator.Tax : TaxIndicator.NoTax,
                 sut.Resolution,
+                sut.Type,
+                TransparentInvoicing.Transparent,
                 It.IsAny<string>()));
         }
 
@@ -197,6 +207,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
                 newPeriod,
                 sut.TaxIndicator ? TaxIndicator.Tax : TaxIndicator.NoTax,
                 sut.Resolution,
+                sut.Type,
+                newPeriod.TransparentInvoicing ? TransparentInvoicing.Transparent : TransparentInvoicing.NonTransparent,
                 Guid.NewGuid().ToString()));
         }
 
@@ -217,6 +229,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
                 newPeriod,
                 sut.TaxIndicator ? TaxIndicator.Tax : TaxIndicator.NoTax,
                 sut.Resolution,
+                sut.Type,
+                newPeriod.TransparentInvoicing ? TransparentInvoicing.Transparent : TransparentInvoicing.NonTransparent,
                 Guid.NewGuid().ToString());
 
             // Assert
@@ -494,7 +508,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
                 Resolution.P1D,
                 TaxIndicator.NoTax,
                 VatClassification.NoVat,
-                false,
+                TransparentInvoicing.NonTransparent,
                 InstantHelper.GetTodayAtMidnightUtc(),
                 InstantHelper.GetTomorrowAtMidnightUtc()));
             ex.InvalidRules.Should().Contain(r =>
@@ -515,7 +529,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
                 Resolution.P1D,
                 TaxIndicator.NoTax,
                 VatClassification.NoVat,
-                false,
+                TransparentInvoicing.NonTransparent,
                 InstantHelper.GetTodayAtMidnightUtc());
 
             // Assert

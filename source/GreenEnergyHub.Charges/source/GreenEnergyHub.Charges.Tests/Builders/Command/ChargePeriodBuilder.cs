@@ -21,7 +21,10 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
     public class ChargePeriodBuilder
     {
         private const string Description = "description";
-        private const bool TransparentInvoicing = false;
+
+        private const TransparentInvoicing TransparentInvoicing =
+            Charges.Domain.Charges.TransparentInvoicing.NonTransparent;
+
         private string _name = "name";
         private Instant _startDateTime = InstantHelper.GetStartDefault();
         private Instant _endDateTime = InstantHelper.GetEndDefault();
