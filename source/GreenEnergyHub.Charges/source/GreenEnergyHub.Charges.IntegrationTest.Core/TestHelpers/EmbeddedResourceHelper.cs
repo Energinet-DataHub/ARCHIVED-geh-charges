@@ -37,11 +37,10 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
             var now = currentInstant.ToString();
             var inThirtyoneDays = currentInstant.Plus(Duration.FromDays(31));
 
-            // cim:timeInterval does not allow seconds.
-            var zonedTime = zonedDateTimeService.GetZonedDateTime(currentInstant);
-            var midnightLocalTime = zonedTime.PlusTicks(-zonedTime.TickOfDay).LocalDateTime;
-            var midnightLocalTime31DaysAhead = midnightLocalTime.PlusDays(31);
-            var midnightLocalTime32DaysAhead = midnightLocalTime.PlusDays(32);
+            var midnightLocalTime31DaysAhead =
+                ConvertCurrentInstantToLocalDateTimeWithDaysAdded(currentInstant, zonedDateTimeService, 31);
+            var midnightLocalTime32DaysAhead =
+                ConvertCurrentInstantToLocalDateTimeWithDaysAdded(currentInstant, zonedDateTimeService, 32);
 
             // cim:createdDateTime and effective date must have seconds
             var ymdhmsTimeInterval = currentInstant.GetCreatedDateTimeFormat();
@@ -69,6 +68,16 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
                 .Replace("{{$isoTimestampPlusOneMonthAndTwoDays}}", inThirtyoneDays.Plus(Duration.FromDays(2)).ToString())
                 .Replace("{{$NextYear}}", DateTime.Now.AddYears(1).Year.ToString())
                 .Replace("{{$ISO8601Timestamp}}", ymdhmsTimeInterval);
+        }
+
+        private static LocalDateTime ConvertCurrentInstantToLocalDateTimeWithDaysAdded(
+            Instant instant,
+            IZonedDateTimeService zonedDateTimeService,
+            int daysToAdd)
+        {
+            var zonedTime = zonedDateTimeService.GetZonedDateTime(instant);
+            var midnightLocalTime = zonedTime.PlusTicks(-zonedTime.TickOfDay).LocalDateTime;
+            return midnightLocalTime.PlusDays(daysToAdd);
         }
 
         private static string ConvertLocalTimeToUtcAsString(IZonedDateTimeService zonedDateTimeService, LocalDateTime localDateTime)
