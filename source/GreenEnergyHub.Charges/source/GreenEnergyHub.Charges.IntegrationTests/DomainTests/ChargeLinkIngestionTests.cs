@@ -64,7 +64,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 var (request, _) = HttpRequestGenerator.CreateHttpPostRequest(
                     EndpointUrl,
                     ChargeLinkDocument.AnyValid,
-                    GetZonedDateTimeService());
+                    ZonedDateTimeServiceHelper.GetZonedDateTimeService(InstantHelper.GetTodayAtMidnightUtc()));
 
                 var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
 
@@ -136,12 +136,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 peekResults.Should().ContainMatch("*ConfirmRequestChangeBillingMasterData_MarketDocument*");
                 peekResults.Should().ContainMatch("*NotifyBillingMasterData_MarketDocument*");
                 peekResults.Should().ContainMatch("*RejectRequestChangeBillingMasterData_MarketDocument*");
-            }
-
-            private static ZonedDateTimeService GetZonedDateTimeService()
-            {
-                var clock = new FakeClock(InstantHelper.GetTodayAtMidnightUtc());
-                return new ZonedDateTimeService(clock, new Iso8601ConversionConfiguration("Europe/Copenhagen"));
             }
         }
     }

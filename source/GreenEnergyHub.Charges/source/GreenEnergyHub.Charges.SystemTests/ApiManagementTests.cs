@@ -69,7 +69,7 @@ namespace GreenEnergyHub.Charges.SystemTests
             var xml = EmbeddedResourceHelper.GetEmbeddedFile(
                 ChargeLinkDocument.AnyValid,
                 currentInstant,
-                GetZonedDateTimeService(currentInstant));
+                ZonedDateTimeServiceHelper.GetZonedDateTimeService(currentInstant));
 
             var request = new HttpRequestMessage(HttpMethod.Post, "v1.0/cim/requestchangebillingmasterdata")
             {
@@ -95,7 +95,7 @@ namespace GreenEnergyHub.Charges.SystemTests
             var xml = EmbeddedResourceHelper.GetEmbeddedFile(
                 ChargeLinkDocument.AnyValid,
                 currentInstant,
-                GetZonedDateTimeService(currentInstant));
+                ZonedDateTimeServiceHelper.GetZonedDateTimeService(currentInstant));
 
             var request = new HttpRequestMessage(HttpMethod.Post, "v1.0/cim/requestchangebillingmasterdata")
             {
@@ -127,12 +127,6 @@ namespace GreenEnergyHub.Charges.SystemTests
             }
 
             return httpClient;
-        }
-
-        private static ZonedDateTimeService GetZonedDateTimeService(Instant instant)
-        {
-            var clock = new FakeClock(instant);
-            return new ZonedDateTimeService(clock, new Iso8601ConversionConfiguration("Europe/Copenhagen"));
         }
     }
 }
