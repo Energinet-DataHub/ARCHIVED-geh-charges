@@ -80,8 +80,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.SharedDtos
 
         /// <summary>
         /// Not used in the charges domain.
-        /// Also known as DEA.
+        /// Also known as TSO.
         /// </summary>
-        MeteredDataAggregator = 10,
+        TransmissionSystemOperator = 11,
     }
 }

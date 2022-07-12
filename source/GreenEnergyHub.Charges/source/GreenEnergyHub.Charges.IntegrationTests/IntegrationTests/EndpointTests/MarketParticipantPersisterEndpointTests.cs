@@ -82,21 +82,20 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
             }
 
             private static (ServiceBusMessage ServiceBusMessage, string ParentId) CreateServiceBusMessage(
-                string gln,
+                string actorNumber,
                 ActorStatus status,
-                List<BusinessRoleCode> businessRoles)
+                IEnumerable<BusinessRoleCode> businessRoles)
             {
                 var actorUpdatedIntegrationEvent = new ActorUpdatedIntegrationEvent(
                     Guid.NewGuid(),
                     Guid.NewGuid(),
                     Guid.NewGuid(),
                     Guid.NewGuid(),
-                    gln,
+                    actorNumber,
                     status,
                     businessRoles,
-                    new List<EicFunction>(),
-                    new List<Guid>(),
-                    new List<string>());
+                    CreateActorMarketRoles());
+
                 var actorUpdatedIntegrationEventParser = new ActorUpdatedIntegrationEventParser();
                 var message = actorUpdatedIntegrationEventParser.Parse(actorUpdatedIntegrationEvent);
 
@@ -107,6 +106,17 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     CorrelationId = correlationId,
                 };
                 return (serviceBusMessage, parentId);
+            }
+
+            private static IEnumerable<ActorMarketRole> CreateActorMarketRoles()
+            {
+                return new List<ActorMarketRole>
+                {
+                    new(EicFunction.GridAccessProvider, new List<ActorGridArea>
+                    {
+                        new(Guid.NewGuid(), new[] { string.Empty }),
+                    }),
+                };
             }
         }
     }

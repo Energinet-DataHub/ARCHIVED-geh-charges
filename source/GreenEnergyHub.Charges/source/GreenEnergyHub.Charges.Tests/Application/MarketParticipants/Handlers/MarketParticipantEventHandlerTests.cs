@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             HandleAsync_WhenCalledWithActorUpdatedIntegrationEvent_ShouldCallMarketParticipantPersister(
                 Guid actorId,
                 Guid b2CActorId,
-                string gln,
+                string actorNumber,
                 [Frozen] Mock<IMarketParticipantPersister> marketParticipantPersister,
                 MarketParticipantEventHandler sut)
         {
@@ -46,12 +46,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
                 actorId,
                 Guid.Empty,
                 b2CActorId,
-                gln,
+                actorNumber,
                 ActorStatus.New,
                 new List<BusinessRoleCode> { BusinessRoleCode.Ddm },
-                new List<EicFunction>(),
-                new List<Guid>(),
-                new List<string>());
+                new List<ActorMarketRole>());
 
             // Act
             await sut.HandleAsync(actorUpdatedIntegrationEvent);
