@@ -16,9 +16,11 @@ using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.Iso8601;
+using GreenEnergyHub.TestHelpers;
 using NodaTime.Testing;
 using NodaTime.Text;
 using Xunit;
@@ -53,6 +55,16 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
             // Act & Assert
             sut.IsValid.Should().Be(expected, reasonText);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeOperationDtoBuilder chargeOperationDtoBuilder)
+        {
+            var chargeOperationDto = chargeOperationDtoBuilder.Build();
+            var zonedDateTimeService = GetZonedDateTimeService();
+            var sut = new PriceListMustStartAndStopAtMidnightValidationRule(zonedDateTimeService, chargeOperationDto);
+            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.PriceListMustStartAndStopAtMidnightValidationRule);
         }
 
         private static ZonedDateTimeService GetZonedDateTimeService()
