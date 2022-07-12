@@ -21,14 +21,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.TestCommon;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.Charges;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.SystemTests.Fixtures;
-using GreenEnergyHub.Iso8601;
 using NodaTime;
-using NodaTime.Testing;
 using Xunit;
 
 namespace GreenEnergyHub.Charges.SystemTests
@@ -66,7 +63,7 @@ namespace GreenEnergyHub.Charges.SystemTests
             var bundleId = Guid.NewGuid().ToString();
 
             var body = EmbeddedResourceHelper
-                .GetEmbeddedFile(ChargeDocument.CreateSubscription, currentInstant, GetZonedDateTimeService(currentInstant))
+                .GetEmbeddedFile(ChargeDocument.CreateSubscription, currentInstant, ZonedDateTimeServiceHelper.GetZonedDateTimeService(currentInstant))
                 .Replace("{{GridAccessProvider}}", Configuration.GridAccessProvider);
 
             var submitRequest = new HttpRequestMessage(HttpMethod.Post, Configuration.ChargeIngestionEndpoint)
@@ -172,12 +169,6 @@ namespace GreenEnergyHub.Charges.SystemTests
                     Authorization = new AuthenticationHeaderValue("Bearer", authenticationResult.AccessToken),
                 },
             };
-        }
-
-        private static ZonedDateTimeService GetZonedDateTimeService(Instant instant)
-        {
-            var clock = new FakeClock(instant);
-            return new ZonedDateTimeService(clock, new Iso8601ConversionConfiguration("Europe/Copenhagen"));
         }
     }
 }
