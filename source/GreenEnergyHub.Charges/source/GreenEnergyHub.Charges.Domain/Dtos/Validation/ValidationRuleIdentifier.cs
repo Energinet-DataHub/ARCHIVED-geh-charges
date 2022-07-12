@@ -57,5 +57,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
         TaxIndicatorIsRequired = 43, // VR916 / E0H
         TerminationDateMustMatchEffectiveDate = 44, // VR917 / E0H
         CreateChargeIsNotAllowedATerminationDate = 45, // VR914 / D14
+        TaxIndicatorMustBeFalseForSubscription = 46, // VR920 / D14
+        TaxIndicatorMustBeFalseForFee = 47, // VR921 / D14
     }
 }
