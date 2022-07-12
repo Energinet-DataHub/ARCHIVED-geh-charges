@@ -130,7 +130,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 peekResults.Should().ContainMatch("*ConfirmRequestChangeBillingMasterData_MarketDocument*");
                 peekResults.Should().ContainMatch("*NotifyBillingMasterData_MarketDocument*");
 
-                // For now ChargeLinkCommandConverter splits all CIM MktActivityRecord into separate ChargeLinkCommands
+                // For now, ChargeLinkCommandConverter splits all CIM MktActivityRecord into separate ChargeLinkCommands
                 // so we do not always receive a rejection due to the parallel handling of commands.
                 if (peekResults.Any(s => s.Contains("RejectRequestChangeBillingMasterData_MarketDocument")))
                     peekResults.Should().ContainMatch("*cannot yet be updated or stopped. The functionality is not implemented yet*");
