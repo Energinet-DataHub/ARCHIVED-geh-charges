@@ -28,23 +28,20 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
         [Theory]
         [AutoDomainData]
         public void MapFromActorIntegrationEvent_ShouldReturnMarketParticipantUpdatedEvent(
-            Guid actorId, Guid b2CActorId, string gln)
+            Guid actorId, Guid b2CActorId, string actorNumber)
         {
             // Arrange
-            var roles = new List<BusinessRoleCode>() { BusinessRoleCode.Ddm };
-            var grids = new List<Guid>() { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() };
+            var businessRoles = new List<BusinessRoleCode> { BusinessRoleCode.Ddm };
 
             var actorUpdatedIntegrationEvent = new ActorUpdatedIntegrationEvent(
                 Guid.Empty,
                 actorId,
                 Guid.Empty,
                 b2CActorId,
-                gln,
+                actorNumber,
                 ActorStatus.Active,
-                roles,
-                new List<EicFunction>(),
-                grids,
-                new List<string>());
+                businessRoles,
+                CreateActorMarketRoles());
 
             // Act
             var actualMarketParticipantUpdatedEvent =
@@ -53,7 +50,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             // Assert
             actualMarketParticipantUpdatedEvent.ActorId.Should().Be(actorId);
             actualMarketParticipantUpdatedEvent.B2CActorId.Should().Be(b2CActorId);
-            actualMarketParticipantUpdatedEvent.MarketParticipantId.Should().Be(gln);
+            actualMarketParticipantUpdatedEvent.MarketParticipantId.Should().Be(actorNumber);
             actualMarketParticipantUpdatedEvent.IsActive.Should().Be(true);
             actualMarketParticipantUpdatedEvent.BusinessProcessRoles.Count.Should().Be(1);
             actualMarketParticipantUpdatedEvent.GridAreas.Count().Should().Be(3);
@@ -65,9 +62,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             Guid actorId, Guid b2CActorId, string gln)
         {
             // Arrange
-            var roles = new List<BusinessRoleCode> { BusinessRoleCode.Ddm, BusinessRoleCode.Ez };
-            var grids = new List<Guid> { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() };
-
+            var businessRoles = new List<BusinessRoleCode> { BusinessRoleCode.Ddm, BusinessRoleCode.Ez };
             var actorUpdatedIntegrationEvent = new ActorUpdatedIntegrationEvent(
                 Guid.Empty,
                 actorId,
@@ -75,10 +70,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
                 b2CActorId,
                 gln,
                 ActorStatus.Active,
-                roles,
-                new List<EicFunction>(),
-                grids,
-                new List<string>());
+                businessRoles,
+                CreateActorMarketRoles());
 
             // Act and Assert
             Assert.Throws<InvalidOperationException>(() => MarketParticipantDomainEventMapper.MapFromActorUpdatedIntegrationEvent(actorUpdatedIntegrationEvent));
@@ -106,6 +99,17 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             // Assert
             actualGridAreaUpdatedEvent.GridAreaId.Should().Be(gridAreaId);
             actualGridAreaUpdatedEvent.GridAreaLinkId.Should().Be(gridAreaLinkId);
+        }
+
+        private static IEnumerable<ActorMarketRole> CreateActorMarketRoles()
+        {
+            return new List<ActorMarketRole>
+            {
+                new(EicFunction.GridAccessProvider, new List<ActorGridArea>
+                {
+                    new(Guid.NewGuid(), new[] { string.Empty }),
+                }),
+            };
         }
     }
 }

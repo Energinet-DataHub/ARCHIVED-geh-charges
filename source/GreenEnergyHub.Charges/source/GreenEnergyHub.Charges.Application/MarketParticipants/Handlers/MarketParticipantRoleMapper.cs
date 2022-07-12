@@ -28,10 +28,10 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
             BusinessRoleCode.Ez => MarketParticipantRole.SystemOperator,
             BusinessRoleCode.Ddk => MarketParticipantRole.BalanceResponsibleParty,
             BusinessRoleCode.Ddx => MarketParticipantRole.ImbalanceSettlementResponsible,
-            BusinessRoleCode.Dea => MarketParticipantRole.MeteredDataAggregator,
             BusinessRoleCode.Dgl => MarketParticipantRole.MeteredDataAdministrator,
             BusinessRoleCode.Mdr => MarketParticipantRole.MeteredDataResponsible,
             BusinessRoleCode.Sts => MarketParticipantRole.EnergyAgency,
+            BusinessRoleCode.Tso => MarketParticipantRole.TransmissionSystemOperator,
             _ => throw new ArgumentOutOfRangeException(
                 nameof(businessRole), businessRole, $"Role {businessRole} is not implemented"),
         };
