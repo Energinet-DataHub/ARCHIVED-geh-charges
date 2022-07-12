@@ -53,7 +53,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             actualMarketParticipantUpdatedEvent.MarketParticipantId.Should().Be(actorNumber);
             actualMarketParticipantUpdatedEvent.IsActive.Should().Be(true);
             actualMarketParticipantUpdatedEvent.BusinessProcessRoles.Count.Should().Be(1);
-            actualMarketParticipantUpdatedEvent.GridAreas.Count().Should().Be(3);
+            actualMarketParticipantUpdatedEvent.GridAreas.Count().Should().Be(2);
         }
 
         [Theory]
@@ -103,20 +103,26 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
 
         private static IEnumerable<ActorMarketRole> CreateActorMarketRoles()
         {
+            var gridAreaIdOne = Guid.NewGuid();
+            var gridAreaIdTwo = Guid.NewGuid();
+
             return new List<ActorMarketRole>
             {
                 new(EicFunction.GridAccessProvider, new List<ActorGridArea>
                 {
-                    CreateActorGridArea(),
-                    CreateActorGridArea(),
-                    CreateActorGridArea(),
+                    CreateActorGridArea(gridAreaIdOne),
+                    CreateActorGridArea(gridAreaIdTwo),
+                }),
+                new(EicFunction.MeteredDataAdministrator, new List<ActorGridArea>
+                {
+                    CreateActorGridArea(gridAreaIdTwo),
                 }),
             };
         }
 
-        private static ActorGridArea CreateActorGridArea()
+        private static ActorGridArea CreateActorGridArea(Guid id)
         {
-            return new ActorGridArea(Guid.NewGuid(), new[] { string.Empty });
+            return new ActorGridArea(id, new List<string>());
         }
     }
 }

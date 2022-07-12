@@ -48,9 +48,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
                 rolesUsedInChargesDomain,
                 isActive,
                 actorUpdatedIntegrationEvent.ActorMarketRoles
-                    .SelectMany(amr => amr.GridAreas
-                        .DistinctBy(i => i.Id)
-                        .Select(ga => ga.Id)));
+                    .SelectMany(amr => amr.GridAreas.Select(ga => ga.Id)).Distinct());
         }
 
         public static GridAreaUpdatedEvent MapFromGridAreaUpdatedIntegrationEvent(
