@@ -107,9 +107,16 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             {
                 new(EicFunction.GridAccessProvider, new List<ActorGridArea>
                 {
-                    new(Guid.NewGuid(), new[] { string.Empty }),
+                    CreateActorGridArea(),
+                    CreateActorGridArea(),
+                    CreateActorGridArea(),
                 }),
             };
+        }
+
+        private static ActorGridArea CreateActorGridArea()
+        {
+            return new ActorGridArea(Guid.NewGuid(), new[] { string.Empty });
         }
     }
 }
