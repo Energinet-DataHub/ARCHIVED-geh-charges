@@ -47,11 +47,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeIdLengthValidation)]
         public const string ChargeIdLengthValidationErrorText =
-            "Charge ID {{DocumentSenderProvidedChargeId}} has a length that exceeds 10";
+            "Charge ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}} has a length that exceeds 10";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeIdRequiredValidation)]
         public const string ChargeIdRequiredValidationErrorText =
-            "Identification is missing, charge can not be processed";
+            "No charge ID provided in transaction with ID {{ChargeOperationId}}. Charge ID is required.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.DocumentTypeMustBeRequestChangeOfPriceList)]
         public const string DocumentTypeMustBeRequestChangeOfPriceListErrorText =
@@ -63,7 +63,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeTypeIsKnownValidation)]
         public const string ChargeTypeIsKnownValidationErrorText =
-            "Charge type {{ChargeType}} for charge {{DocumentSenderProvidedChargeId}} has wrong value (outside domain)";
+            "Charge type is missing for charge with ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}}";
 
         [ErrorMessageFor(ValidationRuleIdentifier.VatClassificationValidation)]
         public const string VatClassificationValidationErrorText =
@@ -91,11 +91,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeNameHasMaximumLength)]
         public const string ChargeNameHasMaximumLengthErrorText =
-            "Name {{ChargeName}} for charge {{DocumentSenderProvidedChargeId}} has a length that exceeds 50";
+            "Name {{ChargeName}} has a length that exceeds 132 for charge ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}}";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeDescriptionHasMaximumLength)]
         public const string ChargeDescriptionHasMaximumLengthErrorText =
-            "Description {{ChargeDescription}} for charge {{DocumentSenderProvidedChargeId}} has a length that exceeds 2048";
+            "Description {{ChargeDescription}} has a length that exceeds 2048 for charge ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}}";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeTypeTariffPriceCount)]
         public const string ChargeTypeTariffPriceCountErrorText =

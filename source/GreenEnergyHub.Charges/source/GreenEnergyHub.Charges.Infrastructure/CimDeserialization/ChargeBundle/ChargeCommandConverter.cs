@@ -118,7 +118,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
 
             while (await reader.AdvanceAsync().ConfigureAwait(false))
             {
-                if (reader.Is(CimChargeCommandConstants.ChargeOwner))
+                if (reader.Is(CimChargeCommandConstants.ChargeOwner) && reader.CanReadValue)
                 {
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                     chargeOwner = content;
@@ -128,20 +128,18 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                     chargeType = ChargeTypeMapper.Map(content);
                 }
-                else if (reader.Is(CimChargeCommandConstants.ChargeId))
+                else if (reader.Is(CimChargeCommandConstants.ChargeId) && reader.CanReadValue)
                 {
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                     senderProvidedChargeId = content;
                 }
-                else if (reader.Is(CimChargeCommandConstants.ChargeName))
+                else if (reader.Is(CimChargeCommandConstants.ChargeName) && reader.CanReadValue)
                 {
-                    if (!reader.CanReadValue) continue;
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                     chargeName = content;
                 }
-                else if (reader.Is(CimChargeCommandConstants.ChargeDescription))
+                else if (reader.Is(CimChargeCommandConstants.ChargeDescription) && reader.CanReadValue)
                 {
-                    if (!reader.CanReadValue) continue;
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                     description = content;
                 }
@@ -160,41 +158,20 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                 {
                     endDateTime = await reader.ReadValueAsNodaTimeAsync().ConfigureAwait(false);
                 }
-                else if (reader.Is(CimChargeCommandConstants.VatClassification))
+                else if (reader.Is(CimChargeCommandConstants.VatClassification) && reader.CanReadValue)
                 {
-                    if (!reader.CanReadValue)
-                    {
-                        vatClassification = VatClassification.Unknown;
-                    }
-                    else
-                    {
-                        var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
-                        vatClassification = VatClassificationMapper.Map(content);
-                    }
+                    var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
+                    vatClassification = VatClassificationMapper.Map(content);
                 }
-                else if (reader.Is(CimChargeCommandConstants.TransparentInvoicing))
+                else if (reader.Is(CimChargeCommandConstants.TransparentInvoicing) && reader.CanReadValue)
                 {
-                    if (!reader.CanReadValue)
-                    {
-                        transparentInvoicing = TransparentInvoicing.Unknown;
-                    }
-                    else
-                    {
-                        var content = await reader.ReadValueAsBoolAsync().ConfigureAwait(false);
-                        transparentInvoicing = TransparentInvoicingMapper.Map(content);
-                    }
+                    var content = await reader.ReadValueAsBoolAsync().ConfigureAwait(false);
+                    transparentInvoicing = TransparentInvoicingMapper.Map(content);
                 }
-                else if (reader.Is(CimChargeCommandConstants.TaxIndicator))
+                else if (reader.Is(CimChargeCommandConstants.TaxIndicator) && reader.CanReadValue)
                 {
-                    if (!reader.CanReadValue)
-                    {
-                        taxIndicator = TaxIndicator.Unknown;
-                    }
-                    else
-                    {
-                        var content = await reader.ReadValueAsBoolAsync().ConfigureAwait(false);
-                        taxIndicator = TaxIndicatorMapper.Map(content);
-                    }
+                    var content = await reader.ReadValueAsBoolAsync().ConfigureAwait(false);
+                    taxIndicator = TaxIndicatorMapper.Map(content);
                 }
                 else if (reader.Is(CimChargeCommandConstants.SeriesPeriod))
                 {

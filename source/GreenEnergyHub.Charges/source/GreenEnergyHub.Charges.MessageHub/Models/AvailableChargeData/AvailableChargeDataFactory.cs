@@ -93,7 +93,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
                     operation.Resolution,
                     DocumentType.NotifyPriceList, // Will be added to the HTTP MessageType header
                     operationOrder,
-                    recipient.Id,
+                    recipient.ActorId,
                     points));
             }
         }
