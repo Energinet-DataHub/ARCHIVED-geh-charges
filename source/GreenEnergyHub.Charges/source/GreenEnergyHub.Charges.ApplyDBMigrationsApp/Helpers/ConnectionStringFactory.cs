@@ -19,7 +19,7 @@ namespace GreenEnergyHub.Charges.ApplyDBMigrationsApp.Helpers
     public static class ConnectionStringFactory
     {
         private const string DefaultConnectionString =
-            "Server=(local); Database=Charges; Trusted_connection=true";
+            "Server=(LocalDB)\\MSSQLLocalDB;Database=Charges;Trusted_connection=true";
 
         public static string GetConnectionString(string[] args)
         {
