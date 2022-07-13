@@ -12,7 +12,7 @@ jobs:
       - name: Login with azure cli
         uses: azure/login@v1
         with:
-          client-id: ${{ secrets.AZURE_SPN_ID }}
+          client-id: ${{ secrets.AZURE_SPN_ID_OIDC }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           
