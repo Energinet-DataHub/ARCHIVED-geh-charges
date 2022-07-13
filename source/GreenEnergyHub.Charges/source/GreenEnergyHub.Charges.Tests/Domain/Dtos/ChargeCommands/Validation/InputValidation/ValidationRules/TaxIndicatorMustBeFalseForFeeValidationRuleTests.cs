@@ -25,12 +25,13 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
 {
     [UnitTest]
-    public class TaxIndicatorIsNotAllowedForSubscriptionValidationRuleTests
+    public class TaxIndicatorMustBeFalseForFeeValidationRuleTests
     {
         [Theory]
-        [InlineAutoMoqData(ChargeType.Fee, TaxIndicator.Tax, true)]
+        [InlineAutoMoqData(ChargeType.Fee, TaxIndicator.Tax, false)]
         [InlineAutoMoqData(ChargeType.Fee, TaxIndicator.NoTax, true)]
-        [InlineAutoMoqData(ChargeType.Subscription, TaxIndicator.Tax, false)]
+        [InlineAutoMoqData(ChargeType.Fee, TaxIndicator.Unknown, false)]
+        [InlineAutoMoqData(ChargeType.Subscription, TaxIndicator.Tax, true)]
         [InlineAutoMoqData(ChargeType.Subscription, TaxIndicator.NoTax, true)]
         [InlineAutoMoqData(ChargeType.Tariff, TaxIndicator.Tax, true)]
         [InlineAutoMoqData(ChargeType.Tariff, TaxIndicator.NoTax, true)]
@@ -45,7 +46,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 .WithChargeType(chargeType)
                 .WithTaxIndicator(taxIndicator).Build();
 
-            var sut = new TaxIndicatorIsNotAllowedForSubscriptionValidationRule(chargeOperationDto);
+            var sut = new TaxIndicatorMustBeFalseForFeeValidationRule(chargeOperationDto);
             sut.IsValid.Should().Be(expected);
         }
 
@@ -53,9 +54,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         [InlineAutoDomainData]
         public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeOperationDtoBuilder builder)
         {
-            var chargeOperationDto = builder.WithChargeType(ChargeType.Subscription).WithTaxIndicator(TaxIndicator.Tax).Build();
-            var sut = new TaxIndicatorIsNotAllowedForSubscriptionValidationRule(chargeOperationDto);
-            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.TaxIndicatorMustBeFalseForSubscription);
+            var chargeOperationDto = builder.WithChargeType(ChargeType.Fee).WithTaxIndicator(TaxIndicator.Tax).Build();
+            var sut = new TaxIndicatorMustBeFalseForFeeValidationRule(chargeOperationDto);
+            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.TaxIndicatorMustBeFalseForFee);
         }
     }
 }

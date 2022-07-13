@@ -17,11 +17,11 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
 {
-    public class TaxIndicatorIsNotAllowedForSubscriptionValidationRule : IValidationRule
+    public class TaxIndicatorMustBeFalseForSubscriptionValidationRule : IValidationRule
     {
         private readonly ChargeOperationDto _chargeOperationDto;
 
-        public TaxIndicatorIsNotAllowedForSubscriptionValidationRule(ChargeOperationDto chargeOperationDto)
+        public TaxIndicatorMustBeFalseForSubscriptionValidationRule(ChargeOperationDto chargeOperationDto)
         {
             _chargeOperationDto = chargeOperationDto;
         }
