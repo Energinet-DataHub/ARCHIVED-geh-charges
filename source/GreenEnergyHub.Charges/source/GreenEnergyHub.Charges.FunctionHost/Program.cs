@@ -27,6 +27,9 @@ namespace GreenEnergyHub.Charges.FunctionHost
     {
         public static void Main()
         {
+            
+            System.Console.WriteLine("Starting...");
+            
             var host = new HostBuilder()
                 .ConfigureFunctionsWorkerDefaults(builder =>
                 {
