@@ -4,7 +4,11 @@ on:
   push:
     branches:
       - sondergaard/azure-login
-      
+
+permissions:
+  id-token: write
+  contents: read
+  
 jobs:
   azure:
     runs-on: windows-latest
