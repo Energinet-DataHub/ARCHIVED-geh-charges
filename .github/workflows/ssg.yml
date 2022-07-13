@@ -1,9 +1,9 @@
 name: Work with azure login
 
 on:
-  push:
+  pull_request:
     branches:
-      - sondergaard/azure-login
+      - main
 
 permissions:
   id-token: write
