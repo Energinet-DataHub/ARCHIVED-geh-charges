@@ -1,0 +1,17 @@
+name: Work with azure login
+
+on:
+  push:
+    branches:
+      - sondergaard/azure-login
+      
+jobs:
+  azure:
+    steps:
+      - name: Login with azure cli
+        run: |
+          az login --service-principal --username "${{ secrets.AZURE_SPN_ID_OIDC }}" --password "${{ secrets.AZURE_SPN_SECRET }}" --tenant "${{ secrets.AZURE_TENANT_ID }}"
+          az account set --subscription "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
+          
+      - name: List accounts
+        run: az account list
