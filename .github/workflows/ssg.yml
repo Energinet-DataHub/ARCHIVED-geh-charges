@@ -22,3 +22,6 @@ jobs:
           
       - name: List keyvault secrets
         run: az keyvault secret list --id https://kv-secrets-u-002.vault.azure.net/
+  
+      - name: List keyvault urls
+        run: az keyvault secret list --id https://kv-datahub-u-002.vault.azure.net/
