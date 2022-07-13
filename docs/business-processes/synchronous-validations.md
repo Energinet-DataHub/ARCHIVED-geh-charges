@@ -1,5 +1,7 @@
 # Charges synchronous validations
 
+Just checking CI. Will close PR again.
+
 The following synchronous validation rules are currently implemented in the charge domain.
 
 **Description**|**Status Code**|**Charge Types**|**Charge Links**|
