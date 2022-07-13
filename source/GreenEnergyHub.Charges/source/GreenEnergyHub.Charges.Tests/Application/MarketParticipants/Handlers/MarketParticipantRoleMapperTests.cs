@@ -33,10 +33,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
         [InlineAutoDomainData(BusinessRoleCode.Ez, MarketParticipantRole.SystemOperator)]
         [InlineAutoDomainData(BusinessRoleCode.Ddk, MarketParticipantRole.BalanceResponsibleParty)]
         [InlineAutoDomainData(BusinessRoleCode.Ddx, MarketParticipantRole.ImbalanceSettlementResponsible)]
-        [InlineAutoDomainData(BusinessRoleCode.Dea, MarketParticipantRole.MeteredDataAggregator)]
         [InlineAutoDomainData(BusinessRoleCode.Dgl, MarketParticipantRole.MeteredDataAdministrator)]
         [InlineAutoDomainData(BusinessRoleCode.Mdr, MarketParticipantRole.MeteredDataResponsible)]
         [InlineAutoDomainData(BusinessRoleCode.Sts, MarketParticipantRole.EnergyAgency)]
+        [InlineAutoDomainData(BusinessRoleCode.Tso, MarketParticipantRole.TransmissionSystemOperator)]
         public void Map_WhenValidBusinessRoleCode_ThenMapsToMarketParticipantRole(
             BusinessRoleCode businessRoleCode,
             MarketParticipantRole marketParticipantRole)
