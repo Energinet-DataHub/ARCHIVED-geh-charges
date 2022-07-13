@@ -10,9 +10,11 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Login with azure cli
-        run: |
-          az login --service-principal --username "${{ secrets.AZURE_SPN_ID_OIDC }}" --password "${{ secrets.AZURE_SPN_SECRET }}" --tenant "${{ secrets.AZURE_TENANT_ID }}"
-          az account set --subscription "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_SPN_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           
       - name: List accounts
         run: az account list
