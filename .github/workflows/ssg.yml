@@ -22,6 +22,15 @@ jobs:
           
       - name: List keyvault secrets
         run: az keyvault secret list --id https://kv-secrets-u-002.vault.azure.net/
+        
+      - name: List keyvault secrets integrationtest
+        run: az keyvault secret list --id https://kv-integrationtest-u-002.vault.azure.net/
+        
+      - name: List keyvault keys https://kv-secrets-u-002.vault.azure.net/
+        run: az keyvault key list --id https://kv-integrationtest-u-002.vault.azure.net/
+        
+      - name: List keyvault keys integrationtest
+        run: az keyvault key list --id https://kv-integrationtest-u-002.vault.azure.net/
   
-      - name: List keyvault urls
+      - name: List keyvault urls 
         run: az keyvault key list --id https://kv-datahub-u-002.vault.azure.net/
