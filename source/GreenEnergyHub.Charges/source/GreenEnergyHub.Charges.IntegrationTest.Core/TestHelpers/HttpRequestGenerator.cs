@@ -14,6 +14,7 @@
 
 using System.Net.Http;
 using System.Text;
+using GreenEnergyHub.Charges.Core.DateTime;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
@@ -21,12 +22,12 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
     public static class HttpRequestGenerator
     {
         public static (HttpRequestMessage Request, string CorrelationId) CreateHttpPostRequest(
-            string endpointUrl, string testFilePath)
+            string endpointUrl, string testFilePath, IZonedDateTimeService zonedDateTimeService)
         {
             var (request, correlationId) = CreateHttpRequest(HttpMethod.Post, endpointUrl);
 
             var currentInstant = SystemClock.Instance.GetCurrentInstant();
-            var chargeXml = EmbeddedResourceHelper.GetEmbeddedFile(testFilePath, currentInstant);
+            var chargeXml = EmbeddedResourceHelper.GetEmbeddedFile(testFilePath, currentInstant, zonedDateTimeService);
             request.Content = new StringContent(chargeXml, Encoding.UTF8, "application/xml");
 
             return (request, correlationId);
