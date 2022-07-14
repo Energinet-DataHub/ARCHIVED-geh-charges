@@ -12,10 +12,7 @@ permissions:
 jobs:
   azure:
     runs-on: ubuntu-latest
-    steps:
-      - name: Install MD5
-        run: sudo apt-get install md5
-    
+    steps:    
       - name: Login with azure cli
         uses: azure/login@v1
         with:
@@ -30,4 +27,4 @@ jobs:
         run: az keyvault secret list --id https://kv-integrationtest-u-002.vault.azure.net/
         
       - name: Get keyvault secret
-        run: az keyvault secret show --id https://kv-integrationtest-u-002.vault.azure.net/secrets/AZURE-SHARED-RESOURCEGROUP | md5
+        run: az keyvault secret show --id https://kv-integrationtest-u-002.vault.azure.net/secrets/AZURE-SHARED-RESOURCEGROUP | shasum | awk '{ print $1 }'
