@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System.Linq;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using NodaTime;
 
@@ -28,7 +28,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents
             _clock = clock;
         }
 
-        public ChargeCommandRejectedEvent CreateEvent(ChargeCommand command, ValidationResult validationResult)
+        public ChargeCommandRejectedEvent CreateEvent(ChargeInformationCommand command, ValidationResult validationResult)
         {
             return new ChargeCommandRejectedEvent(
                 _clock.GetCurrentInstant(),

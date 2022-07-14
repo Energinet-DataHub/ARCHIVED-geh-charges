@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksDataAvailableNotifiedEve
         /// <param name="chargeLinksAcceptedEvent"></param>
         private static string GetMeteringPointIdFromFirstChargeLinkDto(ChargeLinksAcceptedEvent chargeLinksAcceptedEvent)
         {
-            return chargeLinksAcceptedEvent.ChargeLinksCommand.ChargeLinksOperations.First().MeteringPointId;
+            return chargeLinksAcceptedEvent.ChargeLinksCommand.Operations.First().MeteringPointId;
         }
     }
 }

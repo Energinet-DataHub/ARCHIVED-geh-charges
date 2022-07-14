@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         {
             ArgumentNullException.ThrowIfNull(chargeCommandAcceptedEvent);
 
-            foreach (var chargeOperationDto in chargeCommandAcceptedEvent.Command.ChargeOperations)
+            foreach (var chargeOperationDto in chargeCommandAcceptedEvent.Command.Operations)
             {
                 if (chargeCommandAcceptedEvent.Command.Document.BusinessReasonCode == BusinessReasonCode.UpdateChargeInformation)
                 {
