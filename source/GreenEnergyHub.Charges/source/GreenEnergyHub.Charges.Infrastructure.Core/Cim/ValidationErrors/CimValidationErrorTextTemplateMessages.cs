@@ -31,7 +31,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChangingTariffTaxValueNotAllowed)]
         public const string ChangingTariffTaxValueNotAllowedErrorText =
-            "It is not allowed to change the tax indicator to {{ChargeTaxIndicator}} for charge {{DocumentSenderProvidedChargeId}}";
+            "It is not allowed to change the tax indicator to {{ChargeTaxIndicator}} for charge {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}}";
 
         [ErrorMessageFor(ValidationRuleIdentifier.SenderIsMandatoryTypeValidation)]
         public const string SenderIsMandatoryTypeValidationErrorText =
