@@ -183,7 +183,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.TerminationDateMustMatchEffectiveDate)]
         public const string TerminationDateMustMatchEffectiveDateErrorText =
-            "Termination date must match effective date when requesting a stop of charge type {{ChargeType}} with charge ID {{DocumentSenderProvidedChargeId}} for owner.";
+            "Termination date must match effective date when requesting a stop of charge type {{ChargeType}} with charge ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}}";
 
         [ErrorMessageFor(ValidationRuleIdentifier.CreateChargeIsNotAllowedATerminationDate)]
         public const string CreateChargeIsNotAllowedATerminationDateErrorText =
