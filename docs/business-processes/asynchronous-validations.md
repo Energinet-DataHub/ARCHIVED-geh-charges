@@ -43,6 +43,7 @@ The following asynchronous validation rules are currently implemented in the cha
 |VR.915|Transparent invoicing is mandatory|E0H|All|N/A|
 |VR.916|Tax indicator is mandatory|E0H|All|N/A|
 |VR.917|Termination date and effective date must have the same value|E0H|All|N/A|
+|VR.919|The time interval (start and end) of the price series must equal midnight local time, expressed in UTC+0.|E86|All|N/A|
 |VR.920|Tax indicator must be set to false for a subscription|D14|All|N/A|
 |VR.921|Tax indicator must be set to false for a fee|D14|All|N/A|
 

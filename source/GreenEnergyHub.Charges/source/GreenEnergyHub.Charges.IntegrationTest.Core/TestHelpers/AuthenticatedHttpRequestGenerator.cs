@@ -14,16 +14,22 @@
 
 using System.Net.Http;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Authorization;
+using GreenEnergyHub.Iso8601;
+using NodaTime;
+using NodaTime.Testing;
 
 namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
 {
     public class AuthenticatedHttpRequestGenerator
     {
+        private readonly string _localTimeZoneName;
         private readonly BackendAuthenticationClient _backendAuthenticationClient;
 
-        public AuthenticatedHttpRequestGenerator(AuthorizationConfiguration authorizationConfiguration)
+        public AuthenticatedHttpRequestGenerator(AuthorizationConfiguration authorizationConfiguration, string localTimeZoneName)
         {
+            _localTimeZoneName = localTimeZoneName;
             _backendAuthenticationClient = new BackendAuthenticationClient(
                 authorizationConfiguration.BackendAppScope,
                 authorizationConfiguration.ClientCredentialsSettings,
@@ -33,7 +39,9 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
         public async Task<(HttpRequestMessage Request, string CorrelationId)> CreateAuthenticatedHttpPostRequestAsync(
             string endpointUrl, string testFilePath)
         {
-            var (request, correlationId) = HttpRequestGenerator.CreateHttpPostRequest(endpointUrl, testFilePath);
+            var clock = new FakeClock(SystemClock.Instance.GetCurrentInstant());
+            var zonedDateTimeService = new ZonedDateTimeService(clock, new Iso8601ConversionConfiguration(_localTimeZoneName));
+            var (request, correlationId) = HttpRequestGenerator.CreateHttpPostRequest(endpointUrl, testFilePath, zonedDateTimeService);
 
             await AddAuthenticationAsync(request);
 
