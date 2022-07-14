@@ -47,7 +47,10 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
                 "AZURE_SECRETS_KEYVAULT_URL");
             ServiceBusResourceProvider = new ServiceBusResourceProvider(
                 IntegrationTestConfiguration.ServiceBusConnectionString, TestLogger);
+            LocalTimeZoneName = GetValueFromSettingsFile("local.settings.json", "VALUES:LOCAL_TIMEZONENAME");
         }
+
+        public string LocalTimeZoneName { get; }
 
         public ChargesDatabaseManager DatabaseManager { get; }
 
@@ -344,6 +347,14 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
 
             if (!await storage.ExistsAsync())
                 await storage.CreateAsync();
+        }
+
+        private static string GetValueFromSettingsFile(string settingsFileName, string valueName)
+        {
+            return new ConfigurationBuilder()
+                .AddJsonFile(settingsFileName, optional: true)
+                .AddEnvironmentVariables()
+                .Build().GetValue<string>(valueName);
         }
 
         private static string GetBuildConfiguration()

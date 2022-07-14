@@ -24,10 +24,12 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
 {
     public class AuthenticatedHttpRequestGenerator
     {
+        private readonly string _localTimeZoneName;
         private readonly BackendAuthenticationClient _backendAuthenticationClient;
 
-        public AuthenticatedHttpRequestGenerator(AuthorizationConfiguration authorizationConfiguration)
+        public AuthenticatedHttpRequestGenerator(AuthorizationConfiguration authorizationConfiguration, string localTimeZoneName)
         {
+            _localTimeZoneName = localTimeZoneName;
             _backendAuthenticationClient = new BackendAuthenticationClient(
                 authorizationConfiguration.BackendAppScope,
                 authorizationConfiguration.ClientCredentialsSettings,
@@ -38,7 +40,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
             string endpointUrl, string testFilePath)
         {
             var clock = new FakeClock(SystemClock.Instance.GetCurrentInstant());
-            var zonedDateTimeService = new ZonedDateTimeService(clock, new Iso8601ConversionConfiguration("Europe/Copenhagen"));
+            var zonedDateTimeService = new ZonedDateTimeService(clock, new Iso8601ConversionConfiguration(_localTimeZoneName));
             var (request, correlationId) = HttpRequestGenerator.CreateHttpPostRequest(endpointUrl, testFilePath, zonedDateTimeService);
 
             await AddAuthenticationAsync(request);
