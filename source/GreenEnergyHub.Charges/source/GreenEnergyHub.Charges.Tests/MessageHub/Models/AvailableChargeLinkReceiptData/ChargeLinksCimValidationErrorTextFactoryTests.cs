@@ -61,7 +61,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
             ILoggerFactory loggerFactory)
         {
             // Arrange
-            var chargeLinkDto = chargeLinksCommand.ChargeLinksOperations.First();
+            var chargeLinkDto = chargeLinksCommand.Operations.First();
             var validationRuleIdentifiers = (ValidationRuleIdentifier[])Enum.GetValues(typeof(ValidationRuleIdentifier));
             var identifiersForRulesWithExtendedData =
                 ValidationRuleForInterfaceLoader.GetValidationRuleIdentifierForTypes(
@@ -94,7 +94,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
             switch (validationRuleIdentifier)
             {
                 case ValidationRuleIdentifier.SubsequentBundleOperationsFail:
-                    return chargeLinksCommand.ChargeLinksOperations.First().OperationId;
+                    return chargeLinksCommand.Operations.First().OperationId;
                 default:
                     return null;
             }

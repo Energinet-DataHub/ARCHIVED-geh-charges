@@ -20,7 +20,7 @@ using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
         {
             var result = new List<AvailableChargeData>();
 
-            foreach (var chargeOperationDto in input.Command.ChargeOperations.Where(ShouldMakeDataAvailableForActiveGridProviders))
+            foreach (var chargeOperationDto in input.Command.Operations.Where(ShouldMakeDataAvailableForActiveGridProviders))
             {
                 await CreateForOperationAsync(input, chargeOperationDto, result).ConfigureAwait(false);
             }
@@ -68,7 +68,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
                     .Select(x => new AvailableChargeDataPoint(x.Position, x.Price)).ToList();
 
                 var sender = await GetSenderAsync().ConfigureAwait(false);
-                var operationOrder = input.Command.ChargeOperations.ToList().IndexOf(operation);
+                var operationOrder = input.Command.Operations.ToList().IndexOf(operation);
 
                 result.Add(new AvailableChargeData(
                     sender.MarketParticipantId,
