@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.DocumentValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.DocumentValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.TestCore.Attributes;
@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Doc
         {
             // Arrange
             var documentDto = new DocumentDtoBuilder().WithBusinessReasonCode(businessReasonCode).Build();
-            var chargeCommand = new ChargeCommandBuilder().WithDocumentDto(documentDto).Build();
+            var chargeCommand = new ChargeInformationCommandBuilder().WithDocumentDto(documentDto).Build();
 
             // Act
             var sut = new BusinessReasonCodeMustBeUpdateChargeInformationOrChargePricesRule(chargeCommand.Document);
@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Doc
         {
             // Arrange
             var documentDto = new DocumentDtoBuilder().WithBusinessReasonCode(BusinessReasonCode.Unknown).Build();
-            var chargeCommand = new ChargeCommandBuilder().WithDocumentDto(documentDto).Build();
+            var chargeCommand = new ChargeInformationCommandBuilder().WithDocumentDto(documentDto).Build();
 
             // Act
             var sut = new BusinessReasonCodeMustBeUpdateChargeInformationOrChargePricesRule(chargeCommand.Document);

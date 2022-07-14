@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             var availableChargeReceiptData = new List<AvailableChargeReceiptData>();
 
             var operationOrder = 0;
-            foreach (var chargeOperationDto in input.Command.ChargeOperations)
+            foreach (var chargeOperationDto in input.Command.Operations)
             {
                 availableChargeReceiptData.AddRange(CreateAvailableChargeReceiptData(
                     input.Command.Document, chargeOperationDto, sender, recipient, operationOrder++));
