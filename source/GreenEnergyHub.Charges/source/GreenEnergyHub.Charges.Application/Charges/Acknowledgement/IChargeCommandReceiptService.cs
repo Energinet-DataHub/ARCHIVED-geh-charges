@@ -14,7 +14,7 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
@@ -22,9 +22,9 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
 {
     public interface IChargeCommandReceiptService
     {
-        Task RejectAsync(ChargeCommand command, ValidationResult validationResult);
+        Task RejectAsync(ChargeInformationCommand command, ValidationResult validationResult);
 
-        Task AcceptAsync(ChargeCommand command);
+        Task AcceptAsync(ChargeInformationCommand command);
 
         /// <summary>
         /// Send reject receipt containing all invalid operations

@@ -19,7 +19,7 @@ using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Moq;
@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Acknowledgement
         public async Task RejectAsync_WhenCalledWithCommandAndResult_UsesFactoryToCreateEventAndDispatchesIt(
             [Frozen] Mock<IChargeCommandRejectedEventFactory> rejectedEventFactory,
             [Frozen] Mock<IMessageDispatcher<ChargeCommandRejectedEvent>> rejectedEventDispatcher,
-            ChargeCommand command,
+            ChargeInformationCommand command,
             ValidationResult validationResult,
             ChargeCommandRejectedEvent rejectedEvent,
             ChargeCommandReceiptService sut)
@@ -44,7 +44,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Acknowledgement
             // Arrange
             rejectedEventFactory.Setup(
                 f => f.CreateEvent(
-                    It.IsAny<ChargeCommand>(),
+                    It.IsAny<ChargeInformationCommand>(),
                     It.IsAny<ValidationResult>()))
                 .Returns(rejectedEvent);
 
@@ -68,14 +68,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Acknowledgement
         public async Task AcceptAsync_WhenCalledWithCommand_UsesFactoryToCreateEventAndDispatchesIt(
             [Frozen] Mock<IChargeCommandAcceptedEventFactory> acceptedEventFactory,
             [Frozen] Mock<IMessageDispatcher<ChargeCommandAcceptedEvent>> acceptedEventDispatcher,
-            ChargeCommand command,
+            ChargeInformationCommand command,
             ChargeCommandAcceptedEvent acceptedEvent,
             ChargeCommandReceiptService sut)
         {
             // Arrange
             acceptedEventFactory.Setup(
                     f => f.CreateEvent(
-                        It.IsAny<ChargeCommand>()))
+                        It.IsAny<ChargeInformationCommand>()))
                 .Returns(acceptedEvent);
 
             ChargeCommandAcceptedEvent? eventForSerialization = null;

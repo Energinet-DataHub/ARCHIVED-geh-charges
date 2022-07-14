@@ -12,9 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
+
 namespace GreenEnergyHub.Charges.Domain.Dtos.Messages.Command
 {
-    public abstract class CommandBase : MessageBase
+    public abstract class CommandBase
     {
+        public abstract IReadOnlyCollection<OperationBase> Operations { get; }
     }
 }

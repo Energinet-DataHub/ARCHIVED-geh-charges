@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.FunctionHost.Charges;
 using GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub;
@@ -28,7 +29,10 @@ using GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.Charges;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
+using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Iso8601;
+using NodaTime.Testing;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
@@ -49,7 +53,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public RunAsync(ChargesFunctionAppFixture fixture, ITestOutputHelper testOutputHelper)
                 : base(fixture, testOutputHelper)
             {
-                _authenticatedHttpRequestGenerator = new AuthenticatedHttpRequestGenerator(fixture.AuthorizationConfiguration);
+                _authenticatedHttpRequestGenerator = new AuthenticatedHttpRequestGenerator(fixture.AuthorizationConfiguration, Fixture.LocalTimeZoneName);
             }
 
             public Task InitializeAsync()
@@ -69,7 +73,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task When_RequestIsUnauthenticated_Then_AHttp401UnauthorizedIsReturned()
             {
                 var (request, _) = HttpRequestGenerator.CreateHttpPostRequest(
-                    EndpointUrl, ChargeDocument.TariffBundleWithValidAndInvalid);
+                    EndpointUrl, ChargeDocument.TariffBundleWithValidAndInvalid, GetZonedDateTimeService());
 
                 var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
 
@@ -362,6 +366,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // * Expect one for the confirmation (update)
                 var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(updateCorrelationId);
                 peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
+            }
+
+            private static ZonedDateTimeService GetZonedDateTimeService()
+            {
+                var clock = new FakeClock(InstantHelper.GetTodayAtMidnightUtc());
+                return new ZonedDateTimeService(clock, new Iso8601ConversionConfiguration("Europe/Copenhagen"));
             }
         }
     }

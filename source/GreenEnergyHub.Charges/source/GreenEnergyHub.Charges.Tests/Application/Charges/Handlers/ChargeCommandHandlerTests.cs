@@ -15,6 +15,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
+using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
@@ -23,7 +24,6 @@ using GreenEnergyHub.TestHelpers;
 using Moq;
 using Xunit;
 using Xunit.Categories;
-using ChargeCommandHandler = GreenEnergyHub.Charges.Application.Charges.Handlers.ChargeCommandHandler;
 
 namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 {
@@ -34,13 +34,13 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         [InlineAutoDomainData]
         public async Task HandleAsync_WhenCalledWithChargeCommand_ShouldDispatchReceivedEvent(
             [Frozen] Mock<IMessageDispatcher<ChargeCommandReceivedEvent>> chargeEventPublisher,
-            ChargeCommandHandler sut)
+            ChargeInformationCommandHandler sut)
         {
             // Arrange
             var document = new DocumentDtoBuilder()
                 .WithBusinessReasonCode(BusinessReasonCode.UpdateChargeInformation)
                 .Build();
-            var command = new ChargeCommandBuilder().WithDocumentDto(document).Build();
+            var command = new ChargeInformationCommandBuilder().WithDocumentDto(document).Build();
 
             // Act
             await sut.HandleAsync(command).ConfigureAwait(false);

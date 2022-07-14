@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
@@ -43,13 +43,13 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
             _acceptedMessageDispatcher = acceptedMessageDispatcher;
         }
 
-        public async Task RejectAsync(ChargeCommand command, ValidationResult validationResult)
+        public async Task RejectAsync(ChargeInformationCommand command, ValidationResult validationResult)
         {
             var rejectedEvent = _chargeCommandRejectedEventFactory.CreateEvent(command, validationResult);
             await _rejectedMessageDispatcher.DispatchAsync(rejectedEvent).ConfigureAwait(false);
         }
 
-        public async Task AcceptAsync(ChargeCommand command)
+        public async Task AcceptAsync(ChargeInformationCommand command)
         {
             var acceptedEvent = _chargeCommandAcceptedEventFactory.CreateEvent(command);
             await _acceptedMessageDispatcher.DispatchAsync(acceptedEvent).ConfigureAwait(false);
@@ -69,7 +69,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
             if (operationsToBeRejected.Any())
             {
                 await RejectAsync(
-                        new ChargeCommand(document, operationsToBeRejected),
+                        new ChargeInformationCommand(document, operationsToBeRejected),
                         ValidationResult.CreateFailure(rejectionRules))
                     .ConfigureAwait(false);
             }
@@ -87,7 +87,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
             if (operationsToBeConfirmed.Any())
             {
                 await AcceptAsync(
-                    new ChargeCommand(document, operationsToBeConfirmed)).ConfigureAwait(false);
+                    new ChargeInformationCommand(document, operationsToBeConfirmed)).ConfigureAwait(false);
             }
         }
     }

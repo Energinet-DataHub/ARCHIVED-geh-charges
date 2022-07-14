@@ -63,6 +63,9 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared
         [InlineAutoMoqData(ValidationRuleIdentifier.TaxIndicatorIsRequired, ReasonCode.E0H)]
         [InlineAutoMoqData(ValidationRuleIdentifier.TerminationDateMustMatchEffectiveDate, ReasonCode.E0H)]
         [InlineAutoMoqData(ValidationRuleIdentifier.CreateChargeIsNotAllowedATerminationDate, ReasonCode.D14)]
+        [InlineAutoMoqData(ValidationRuleIdentifier.PriceListMustStartAndStopAtMidnightValidationRule, ReasonCode.E86)]
+        [InlineAutoMoqData(ValidationRuleIdentifier.TaxIndicatorMustBeFalseForFee, ReasonCode.D14)]
+        [InlineAutoMoqData(ValidationRuleIdentifier.TaxIndicatorMustBeFalseForSubscription, ReasonCode.D14)]
         public void Create_ReturnsExpectedCode(
             ValidationRuleIdentifier identifier,
             ReasonCode expected,

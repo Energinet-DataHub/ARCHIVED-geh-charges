@@ -15,8 +15,8 @@
 using Energinet.DataHub.Core.Messaging.Transport.SchemaValidation;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
@@ -31,14 +31,15 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<ChargeCommandConverter>();
+            serviceCollection.AddScoped<ChargeCommandBundleConverter>();
             serviceCollection.AddScoped<IHttpResponseBuilder, HttpResponseBuilder>();
             serviceCollection.AddScoped<ValidatingMessageExtractor<ChargeCommandBundle>>();
-            serviceCollection.AddScoped<IChargeCommandConverter, ChargeCommandConverter>();
+            serviceCollection.AddScoped<IChargeCommandBundleConverter, ChargeCommandBundleConverter>();
             serviceCollection.AddScoped<SchemaValidatingMessageDeserializer<ChargeCommandBundle>, ChargeCommandDeserializer>();
-
-            serviceCollection.AddScoped<IChargesBundleHandler, ChargeCommandBundleHandler>();
-            serviceCollection.AddScoped<IChargeCommandHandler, ChargeCommandHandler>();
+            serviceCollection.AddScoped<IChargeInformationCommandBundleHandler, ChargeInformationCommandBundleHandler>();
+            serviceCollection.AddScoped<IChargeInformationCommandHandler, ChargeInformationCommandHandler>();
+            serviceCollection.AddScoped<IChargePriceCommandBundleHandler, ChargePriceCommandBundleHandler>();
+            serviceCollection.AddScoped<IChargePriceCommandHandler, ChargePriceCommandHandler>();
 
             serviceCollection.AddMessaging()
                 .AddInternalMessageDispatcher<ChargeCommandReceivedEvent>(

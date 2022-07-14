@@ -15,8 +15,8 @@
 using System;
 using System.Collections.Generic;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
@@ -35,13 +35,13 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
         [Theory]
         [InlineAutoMoqData]
         public void Create_WithMultipleMergeFields_ReturnsExpectedDescription(
-            ChargeCommandBuilder chargeCommandBuilder,
+            ChargeInformationCommandBuilder chargeInformationCommandBuilder,
             ChargeOperationDto chargeOperationDto,
             CimValidationErrorTextProvider cimValidationErrorTextProvider,
             ILoggerFactory loggerFactory)
         {
             // Arrange
-            var chargeCommand = chargeCommandBuilder.WithChargeOperation(chargeOperationDto).Build();
+            var chargeCommand = chargeInformationCommandBuilder.WithChargeOperation(chargeOperationDto).Build();
             var sut = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
             var rule = new ResolutionTariffValidationRule(chargeOperationDto);
             var validationError = new ValidationError(rule.ValidationRuleIdentifier, null!, null!);
@@ -61,13 +61,13 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
         [Theory]
         [InlineAutoMoqData]
         public void Create_WithPointPosition_ReturnsExpectedDescription(
-            ChargeCommandBuilder chargeCommandBuilder,
+            ChargeInformationCommandBuilder chargeInformationCommandBuilder,
             ChargeOperationDto chargeOperationDto,
             CimValidationErrorTextProvider cimValidationErrorTextProvider,
             ILoggerFactory loggerFactory)
         {
             // Arrange
-            var chargeCommand = chargeCommandBuilder.WithChargeOperation(chargeOperationDto).Build();
+            var chargeCommand = chargeInformationCommandBuilder.WithChargeOperation(chargeOperationDto).Build();
             var sut = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
             var rule = new MaximumPriceRule(chargeOperationDto);
             var triggeredBy = chargeOperationDto.Points[1].Position.ToString();
@@ -93,13 +93,13 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
         public void Create_WithInvalidPointPosition_ReturnsErrorMessage(
             ValidationRuleIdentifier validationRuleIdentifier,
             string? triggeredBy,
-            ChargeCommandBuilder chargeCommandBuilder,
+            ChargeInformationCommandBuilder chargeInformationCommandBuilder,
             ChargeOperationDto chargeOperationDto,
             CimValidationErrorTextProvider cimValidationErrorTextProvider,
             ILoggerFactory loggerFactory)
         {
             // Arrange
-            var chargeCommand = chargeCommandBuilder.WithChargeOperation(chargeOperationDto).Build();
+            var chargeCommand = chargeInformationCommandBuilder.WithChargeOperation(chargeOperationDto).Build();
             var validationError = new ValidationError(validationRuleIdentifier, chargeOperationDto.Id, triggeredBy);
             var sut = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
 
@@ -119,13 +119,13 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
         public void Create_PointPositionAreIgnored_WhenNotApplicable(
             ValidationRuleIdentifier validationRuleIdentifier,
             string? seedTriggeredBy,
-            ChargeCommandBuilder chargeCommandBuilder,
+            ChargeInformationCommandBuilder chargeInformationCommandBuilder,
             ChargeOperationDto chargeOperationDto,
             CimValidationErrorTextProvider cimValidationErrorTextProvider,
             ILoggerFactory loggerFactory)
         {
             // Arrange
-            var chargeCommand = chargeCommandBuilder.WithChargeOperation(chargeOperationDto).Build();
+            var chargeCommand = chargeInformationCommandBuilder.WithChargeOperation(chargeOperationDto).Build();
             var triggeredBy = seedTriggeredBy == "0" ?
                 chargeOperationDto.Points[1].Position.ToString() :
                 seedTriggeredBy;
@@ -145,7 +145,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
         [Theory]
         [InlineAutoMoqData]
         public void Create_MergesAllMergeFields(
-            ChargeCommand chargeCommand,
+            ChargeInformationCommand chargeInformationCommand,
             CimValidationErrorTextProvider cimValidationErrorTextProvider,
             ILoggerFactory loggerFactory)
         {
@@ -159,10 +159,10 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
 
             // Act
             // Assert
-            foreach (var operation in chargeCommand.ChargeOperations)
+            foreach (var operation in chargeInformationCommand.Operations)
             {
                 var chargeOperationDtos = new List<ChargeOperationDto> { operation };
-                var commandWithOperation = new ChargeCommand(chargeCommand.Document, chargeOperationDtos);
+                var commandWithOperation = new ChargeInformationCommand(chargeInformationCommand.Document, chargeOperationDtos);
 
                 foreach (var identifier in validationRuleIdentifiers)
                 {

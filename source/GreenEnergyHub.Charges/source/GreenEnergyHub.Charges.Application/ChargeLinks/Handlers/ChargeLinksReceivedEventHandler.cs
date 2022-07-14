@@ -57,7 +57,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
             var rejectionRules = new List<IValidationRuleContainer>();
             var operationsToBeConfirmed = new List<ChargeLinkDto>();
 
-            var operations = chargeLinksReceivedEvent.ChargeLinksCommand.ChargeLinksOperations.ToArray();
+            var operations = chargeLinksReceivedEvent.ChargeLinksCommand.Operations.ToArray();
 
             for (var i = 0; i < operations.Length; i++)
             {

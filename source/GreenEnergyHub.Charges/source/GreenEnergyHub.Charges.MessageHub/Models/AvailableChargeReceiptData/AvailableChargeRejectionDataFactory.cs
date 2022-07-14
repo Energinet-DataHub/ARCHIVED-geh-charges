@@ -18,7 +18,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
@@ -57,7 +57,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 
             var operationOrder = 0;
 
-            return input.Command.ChargeOperations.Select(chargeOperationDto => new AvailableChargeReceiptData(
+            return input.Command.Operations.Select(chargeOperationDto => new AvailableChargeReceiptData(
                     sender.MarketParticipantId,
                     sender.BusinessProcessRole,
                     recipient.MarketParticipantId,

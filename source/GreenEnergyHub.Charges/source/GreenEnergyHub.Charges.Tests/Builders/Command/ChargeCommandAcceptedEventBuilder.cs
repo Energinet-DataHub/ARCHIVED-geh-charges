@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Tests.Builders.Command
@@ -21,12 +21,12 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
     public class ChargeCommandAcceptedEventBuilder
     {
         private Instant _publishedTime;
-        private ChargeCommand _chargeCommand;
+        private ChargeInformationCommand _chargeInformationCommand;
 
         public ChargeCommandAcceptedEventBuilder()
         {
             _publishedTime = SystemClock.Instance.GetCurrentInstant();
-            _chargeCommand = new ChargeCommandBuilder().Build();
+            _chargeInformationCommand = new ChargeInformationCommandBuilder().Build();
         }
 
         public ChargeCommandAcceptedEventBuilder WithPublishedTime(Instant publishedTime)
@@ -35,15 +35,15 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             return this;
         }
 
-        public ChargeCommandAcceptedEventBuilder WithChargeCommand(ChargeCommand chargeCommand)
+        public ChargeCommandAcceptedEventBuilder WithChargeCommand(ChargeInformationCommand chargeInformationCommand)
         {
-            _chargeCommand = chargeCommand;
+            _chargeInformationCommand = chargeInformationCommand;
             return this;
         }
 
         public ChargeCommandAcceptedEvent Build()
         {
-            return new ChargeCommandAcceptedEvent(_publishedTime, _chargeCommand);
+            return new ChargeCommandAcceptedEvent(_publishedTime, _chargeInformationCommand);
         }
     }
 }
