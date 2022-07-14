@@ -16,7 +16,7 @@ using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
+namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.InputValidation.ValidationRules
 {
     public class PriceListMustStartAndStopAtMidnightValidationRule : IValidationRule
     {
