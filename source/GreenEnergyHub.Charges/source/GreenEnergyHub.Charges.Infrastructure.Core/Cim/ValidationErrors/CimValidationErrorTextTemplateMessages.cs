@@ -67,7 +67,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.VatClassificationValidation)]
         public const string VatClassificationValidationErrorText =
-            "VAT class {{ChargeVatClass}} for charge {{DocumentSenderProvidedChargeId}} has wrong value (outside domain)";
+            "VAT class is missing for charge with ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}}";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ResolutionTariffValidation)]
         public const string ResolutionTariffValidationErrorText =
