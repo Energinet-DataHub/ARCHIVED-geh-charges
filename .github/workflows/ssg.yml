@@ -13,6 +13,9 @@ jobs:
   azure:
     runs-on: ubuntu-latest
     steps:
+      - name: Install MD5
+        run: sudo apt-get install md5
+    
       - name: Login with azure cli
         uses: azure/login@v1
         with:
