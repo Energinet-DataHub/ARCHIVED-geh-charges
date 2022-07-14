@@ -193,6 +193,14 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         public const string PriceListMustStartAndStopAtMidnightErrorText =
             "The time interval (start and end) of the price series must equal midnight local time, expressed in UTC+0 for charge with ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}}.";
 
+        [ErrorMessageFor(ValidationRuleIdentifier.TaxIndicatorMustBeFalseForFee)]
+        public const string TaxIndicatorMustBeFalseForFeeErrorText =
+            "Tax indicator cannot be true for charge ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} as it is of charge type {{ChargeType}}.";
+
+        [ErrorMessageFor(ValidationRuleIdentifier.TaxIndicatorMustBeFalseForSubscription)]
+        public const string TaxIndicatorMustBeFalseForSubscriptionErrorText =
+            "Tax indicator cannot be true for charge ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} as it is of charge type {{ChargeType}}.";
+
         public const string Unknown = "unknown";
     }
 }

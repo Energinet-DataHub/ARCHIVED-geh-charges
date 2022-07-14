@@ -66,6 +66,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.Shared
                 ValidationRuleIdentifier.TerminationDateMustMatchEffectiveDate => ReasonCode.E0H,
                 ValidationRuleIdentifier.CreateChargeIsNotAllowedATerminationDate => ReasonCode.D14,
                 ValidationRuleIdentifier.PriceListMustStartAndStopAtMidnightValidationRule => ReasonCode.E86,
+                ValidationRuleIdentifier.TaxIndicatorMustBeFalseForFee => ReasonCode.D14,
+                ValidationRuleIdentifier.TaxIndicatorMustBeFalseForSubscription => ReasonCode.D14,
                 _ => throw new NotImplementedException(),
             };
         }
