@@ -15,7 +15,7 @@ The following asynchronous validation rules are currently implemented in the cha
 |VR.424|The energy business process of a message must be D08 (Update Charge Prices) or D18 (Update charge information)|D02|All|N/A|
 |VR.440|The identification of a charge is mandatory|E0H|All|N/A|
 |VR.441|The identification of a charge consists of maximal 10 characters|E86|All|N/A|
-|VR.446|The name of a charge consists of maximal 50 characters|E86|All|N/A|
+|VR.446|The name of a charge consists of maximal 132 characters|E86|All|N/A|
 |VR.447|The description of a charge consists of maximal 2048 characters|E86|All|N/A|
 |VR.449|The type of a charge has domain values D01 (Subscription), D02 (Fee), D03 (Tariff)|E86|All|N/A|
 |VR.457|The energy price of a charge consists of maximal 14 digits with format 99999999.999999|E86|All|N/A|
@@ -43,6 +43,8 @@ The following asynchronous validation rules are currently implemented in the cha
 |VR.915|Transparent invoicing is mandatory|E0H|All|N/A|
 |VR.916|Tax indicator is mandatory|E0H|All|N/A|
 |VR.917|Termination date and effective date must have the same value|E0H|All|N/A|
+|VR.920|Tax indicator must be set to false for a subscription|D14|All|N/A|
+|VR.921|Tax indicator must be set to false for a fee|D14|All|N/A|
 
 * VR.152 is not fully implemented. Right now we only validate that it is filled with something
 * VR.679 is not fully implemented. For now it verifies that the charge exist, not checking that the linked period is within the charge's validity period

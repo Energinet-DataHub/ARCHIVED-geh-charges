@@ -125,6 +125,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 typeof(TransparentInvoicingIsRequiredValidationRule),
                 typeof(TaxIndicatorIsRequiredValidationRule),
                 typeof(TerminationDateMustMatchEffectiveDateValidationRule),
+                typeof(TaxIndicatorMustBeFalseForFeeValidationRule),
+                typeof(TaxIndicatorMustBeFalseForSubscriptionValidationRule),
             };
             return expectedRules;
         }
