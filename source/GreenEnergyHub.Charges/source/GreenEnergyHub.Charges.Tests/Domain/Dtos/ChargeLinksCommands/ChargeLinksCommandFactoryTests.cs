@@ -96,13 +96,13 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands
             actual.Document.Sender.MarketParticipantId.Should().Be(systemOperator.MarketParticipantId);
             actual.Document.Recipient.BusinessProcessRole.Should().Be(MarketParticipantRole.MeteringPointAdministrator);
             actual.Document.Recipient.MarketParticipantId.Should().Be(recipient.MarketParticipantId);
-            actual.ChargeLinksOperations.First().SenderProvidedChargeId.Should().Be(charge.SenderProvidedChargeId);
-            actual.ChargeLinksOperations.First().ChargeType.Should().Be(charge.Type);
-            actual.ChargeLinksOperations.First().EndDateTime.Should().Be(defaultChargeLink.EndDateTime);
-            actual.ChargeLinksOperations.First().ChargeOwner.Should().Be(chargeOwner.MarketParticipantId);
-            actual.ChargeLinksOperations.First().MeteringPointId.Should().Be(meteringPoint.MeteringPointId);
-            actual.ChargeLinksOperations.First().StartDateTime.Should().Be(defaultChargeLink.GetStartDateTime(meteringPoint.EffectiveDate));
-            actual.ChargeLinksOperations.First().Factor.Should().Be(1);
+            actual.Operations.First().SenderProvidedChargeId.Should().Be(charge.SenderProvidedChargeId);
+            actual.Operations.First().ChargeType.Should().Be(charge.Type);
+            actual.Operations.First().EndDateTime.Should().Be(defaultChargeLink.EndDateTime);
+            actual.Operations.First().ChargeOwner.Should().Be(chargeOwner.MarketParticipantId);
+            actual.Operations.First().MeteringPointId.Should().Be(meteringPoint.MeteringPointId);
+            actual.Operations.First().StartDateTime.Should().Be(defaultChargeLink.GetStartDateTime(meteringPoint.EffectiveDate));
+            actual.Operations.First().Factor.Should().Be(1);
         }
     }
 }

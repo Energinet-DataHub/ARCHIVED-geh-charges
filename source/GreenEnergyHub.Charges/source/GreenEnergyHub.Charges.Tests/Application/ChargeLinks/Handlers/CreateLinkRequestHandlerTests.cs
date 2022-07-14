@@ -54,7 +54,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             CreateLinkRequestHandler sut)
         {
             // Arrange
-            foreach (var chargeLinkDto in chargeLinksCommand.ChargeLinksOperations)
+            foreach (var chargeLinkDto in chargeLinksCommand.Operations)
             {
                 chargeLinkDto.EndDateTime = null;
             }
@@ -108,7 +108,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             CreateLinkRequestHandler sut)
         {
             // Arrange
-            foreach (var chargeLinkDto in chargeLinksCommand.ChargeLinksOperations)
+            foreach (var chargeLinkDto in chargeLinksCommand.Operations)
             {
                 chargeLinkDto.EndDateTime = null;
             }
@@ -136,7 +136,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             CreateLinkRequestHandler sut)
         {
             // Arrange
-            foreach (var chargeLinkDto in chargeLinksCommand.ChargeLinksOperations)
+            foreach (var chargeLinkDto in chargeLinksCommand.Operations)
             {
                 chargeLinkDto.EndDateTime = null;
             }
@@ -181,7 +181,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             CreateLinkRequestHandler sut)
         {
             // Arrange
-            foreach (var chargeLinkDto in chargeLinksCommand.ChargeLinksOperations)
+            foreach (var chargeLinkDto in chargeLinksCommand.Operations)
             {
                 chargeLinkDto.EndDateTime = null;
             }

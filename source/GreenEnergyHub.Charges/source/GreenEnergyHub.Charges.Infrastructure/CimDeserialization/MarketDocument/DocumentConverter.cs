@@ -13,8 +13,9 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using Energinet.DataHub.Core.Messaging.Transport;
 using Energinet.DataHub.Core.SchemaValidation;
+using Energinet.DataHub.Core.SchemaValidation.Extensions;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using NodaTime;
@@ -30,7 +31,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocumen
             _clock = clock;
         }
 
-        public async Task<IInboundMessage> ConvertAsync(SchemaValidatingReader reader)
+        public async Task<ChargeCommandBundle> ConvertAsync(SchemaValidatingReader reader)
         {
             var document = await ParseDocumentAsync(reader).ConfigureAwait(false);
 
@@ -39,7 +40,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocumen
             return message;
         }
 
-        protected abstract Task<IInboundMessage> ConvertSpecializedContentAsync(SchemaValidatingReader reader, DocumentDto document);
+        protected abstract Task<ChargeCommandBundle> ConvertSpecializedContentAsync(SchemaValidatingReader reader, DocumentDto document);
 
         private static async Task ParseFieldsAsync(SchemaValidatingReader reader, DocumentDto document)
         {
@@ -120,6 +121,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocumen
             };
 
             await ParseFieldsAsync(reader, document).ConfigureAwait(false);
+
+            if (reader.HasErrors) throw new SchemaValidationException(reader.CreateErrorResponse());
 
             return document;
         }

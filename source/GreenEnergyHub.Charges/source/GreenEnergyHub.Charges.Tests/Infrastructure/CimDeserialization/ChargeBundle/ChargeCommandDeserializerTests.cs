@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
         [Theory]
         [InlineAutoMoqData]
         public async Task FromBytesAsync_WhenConvertThrowsException_ShouldRethrow(
-            [Frozen] Mock<IChargeCommandConverter> chargeCommandConverter,
+            [Frozen] Mock<IChargeCommandBundleConverter> chargeCommandConverter,
             ChargeCommandDeserializer sut)
         {
             // Arrange

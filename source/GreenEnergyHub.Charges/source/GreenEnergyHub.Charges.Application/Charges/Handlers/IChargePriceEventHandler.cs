@@ -23,7 +23,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
     public interface IChargePriceEventHandler
     {
         /// <summary>
-        /// Handles the received event as a chargeprice event
+        /// Handles the received event as a charge price event
         /// </summary>
         /// <param name="commandReceivedEvent"></param>
         Task HandleAsync(ChargeCommandReceivedEvent commandReceivedEvent);

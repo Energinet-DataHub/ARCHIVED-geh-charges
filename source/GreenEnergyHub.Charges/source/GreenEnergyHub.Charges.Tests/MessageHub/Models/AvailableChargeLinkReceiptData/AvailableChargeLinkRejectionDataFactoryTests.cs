@@ -61,7 +61,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
             chargeLinksCommand.Document.Sender.BusinessProcessRole = marketParticipantRole;
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
 
-            var validationErrors = chargeLinksCommand.ChargeLinksOperations
+            var validationErrors = chargeLinksCommand.Operations
                 .Reverse() // GetReasons() should provide the correct ValidationError no matter what order they have here
                 .Select(x => new ValidationError(
                     ValidationRuleIdentifier.SenderIsMandatoryTypeValidation, x.OperationId, null))
@@ -95,7 +95,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
                 actual.ReceiptStatus.Should().Be(ReceiptStatus.Rejected);
                 actual.DocumentType.Should().Be(DocumentType.RejectRequestChangeBillingMasterData);
 
-                var expectedChargeLinkDto = chargeLinksCommand.ChargeLinksOperations.ToArray()[i1];
+                var expectedChargeLinkDto = chargeLinksCommand.Operations.ToArray()[i1];
                 actual.OriginalOperationId.Should().Be(expectedChargeLinkDto.OperationId);
                 actual.MeteringPointId.Should().Be(expectedChargeLinkDto.MeteringPointId);
 
