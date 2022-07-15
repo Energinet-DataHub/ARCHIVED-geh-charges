@@ -29,7 +29,7 @@ namespace Azlogin
         /// </summary>
         /// <param name="builder">The configuration builder.</param>
         /// <param name="keyVaultUrl">KeyVault URL eg. https://myexamplekeyvault.vault.azure.net/</param>
-        public static IConfigurationBuilder AddAuthenticatedAzureKeyVault(this IConfigurationBuilder builder, string keyVaultUrl)
+        public static IConfigurationBuilder AddAuthenticatedAzureKeyVault(this IConfigurationBuilder builder, string keyVaultUrl, bool excludeManagedIdentityCredential = false)
         {
             if (string.IsNullOrEmpty(keyVaultUrl))
             {
@@ -38,7 +38,7 @@ namespace Azlogin
 
             var credential = new DefaultAzureCredential(new DefaultAzureCredentialOptions
             {
-                ExcludeManagedIdentityCredential = true,
+                ExcludeManagedIdentityCredential = excludeManagedIdentityCredential,
             });
             builder.AddAzureKeyVault(new Uri(keyVaultUrl), credential);
 

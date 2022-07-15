@@ -31,7 +31,17 @@ jobs:
         with:
           dotnet-version: '6.0.301'
 
-      - name: Run dotnet code
+      - name: Run dotnet code - ExcludeManagedIdentityCredential = true
+        env:
+            ExcludeManagedIdentityCredential: "true"
         run: |
           cd ./source/azlogin
           dotnet run
+
+      - name: Run dotnet code - ExcludeManagedIdentityCredential = false
+        env:
+            ExcludeManagedIdentityCredential: "true"
+        run: |
+          cd ./source/azlogin
+          dotnet run
+

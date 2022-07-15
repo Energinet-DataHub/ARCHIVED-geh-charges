@@ -7,9 +7,13 @@ var envConfiguration = new ConfigurationBuilder()
     .Build();
 
 var keyVaultUrl = envConfiguration.GetValue("AZURE_KEYVAULT_URL");
+var shouldExcludeManagedIdentityCredential = envConfiguration.GetValue("ExcludeManagedIdentityCredential");
+
+if (!bool.TryParse(shouldExcludeManagedIdentityCredential, out var excludeManagedIdentityCredential))
+    excludeManagedIdentityCredential = false;
 
 var keyVaultConfiguration = new ConfigurationBuilder()
-    .AddAuthenticatedAzureKeyVault(keyVaultUrl)
+    .AddAuthenticatedAzureKeyVault(keyVaultUrl, excludeManagedIdentityCredential)
     .Build();
 
 Console.WriteLine("Built configuration from keyvault");
