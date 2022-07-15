@@ -71,15 +71,15 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.ResolutionTariffValidation)]
         public const string ResolutionTariffValidationErrorText =
-            "Period type {{ChargeResolution}} not allowed: The specified resolution for charge with ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}} must be Day or Hour.";
+            "Period type {{ChargeResolution}} not allowed: The resolution must be day or hour for charge ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} as it is of type {{ChargeType}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ResolutionFeeValidation)]
         public const string ResolutionFeeValidationErrorText =
-            "Period type {{ChargeResolution}} not allowed: The specified resolution for charge with ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}} must be Month.";
+            "Period type {{ChargeResolution}} not allowed: The resolution must be month for charge ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} as it is of type {{ChargeType}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ResolutionSubscriptionValidation)]
         public const string ResolutionSubscriptionValidationErrorText =
-            "Period type {{ChargeResolution}} not allowed: The specified resolution for charge with ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}} must be Month.";
+            "Period type {{ChargeResolution}} not allowed: The resolution must be month for charge ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} as it is of type {{ChargeType}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.StartDateTimeRequiredValidation)]
         public const string StartDateTimeRequiredValidationErrorText =
