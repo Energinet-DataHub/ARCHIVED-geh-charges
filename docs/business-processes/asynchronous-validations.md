@@ -46,6 +46,7 @@ The following asynchronous validation rules are currently implemented in the cha
 |VR.919|The time interval (start and end) of the price series must equal midnight local time, expressed in UTC+0.|E86|All|N/A|
 |VR.920|Tax indicator must be set to false for a subscription|D14|All|N/A|
 |VR.921|Tax indicator must be set to false for a fee|D14|All|N/A|
+|VR.922|The identification of a charge operation consists of maximal 36 characters|E86|All|N/A|
 
 * VR.152 is not fully implemented. Right now we only validate that it is filled with something
 * VR.679 is not fully implemented. For now it verifies that the charge exist, not checking that the linked period is within the charge's validity period

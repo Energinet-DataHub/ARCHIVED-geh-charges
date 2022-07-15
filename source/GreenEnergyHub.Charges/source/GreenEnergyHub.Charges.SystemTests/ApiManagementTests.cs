@@ -18,13 +18,10 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.ChargeLinks;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.SystemTests.Fixtures;
-using GreenEnergyHub.Iso8601;
 using NodaTime;
-using NodaTime.Testing;
 using Xunit;
 
 namespace GreenEnergyHub.Charges.SystemTests
