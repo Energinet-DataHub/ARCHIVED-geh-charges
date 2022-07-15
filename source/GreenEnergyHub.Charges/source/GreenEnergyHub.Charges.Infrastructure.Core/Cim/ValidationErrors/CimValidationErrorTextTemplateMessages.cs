@@ -83,7 +83,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.StartDateTimeRequiredValidation)]
         public const string StartDateTimeRequiredValidationErrorText =
-            "Occurrence date is missing for charge {{DocumentSenderProvidedChargeId}}.";
+            "Effective date is missing for charge with ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} for owner {{ChargeOwner}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeOwnerIsRequiredValidation)]
         public const string ChargeOwnerIsRequiredValidationErrorText =
