@@ -103,7 +103,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.MaximumPrice)]
         public const string MaximumPriceErrorText =
-            "Price {{ChargePointPrice}} not allowed: The specified charge price for position {{ChargePointPosition}} is not plausible (too large).";
+            "Price {{ChargePointPrice}} not allowed: The specified charge price for position {{ChargePointPosition}} is not plausible (too large) for charge ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} for owner {{ChargeOwner}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargePriceMaximumDigitsAndDecimals)]
         public const string ChargePriceMaximumDigitsAndDecimalsErrorText =
