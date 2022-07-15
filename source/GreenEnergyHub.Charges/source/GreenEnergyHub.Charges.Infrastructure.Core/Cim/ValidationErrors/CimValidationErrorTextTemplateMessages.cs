@@ -87,7 +87,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeOwnerIsRequiredValidation)]
         public const string ChargeOwnerIsRequiredValidationErrorText =
-            "Owner is missing for charge {{DocumentSenderProvidedChargeId}}.";
+            "Owner is missing for charge with ID {{DocumentSenderProvidedChargeId}} og type {{ChargeType}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeNameHasMaximumLength)]
         public const string ChargeNameHasMaximumLengthErrorText =
