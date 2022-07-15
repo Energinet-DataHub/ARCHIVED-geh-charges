@@ -35,6 +35,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
 
             var actorUpdatedIntegrationEvent = new ActorUpdatedIntegrationEvent(
                 Guid.Empty,
+                DateTime.UtcNow,
                 actorId,
                 Guid.Empty,
                 b2CActorId,
@@ -65,6 +66,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             var businessRoles = new List<BusinessRoleCode> { BusinessRoleCode.Ddm, BusinessRoleCode.Ez };
             var actorUpdatedIntegrationEvent = new ActorUpdatedIntegrationEvent(
                 Guid.Empty,
+                DateTime.UtcNow,
                 actorId,
                 Guid.Empty,
                 b2CActorId,

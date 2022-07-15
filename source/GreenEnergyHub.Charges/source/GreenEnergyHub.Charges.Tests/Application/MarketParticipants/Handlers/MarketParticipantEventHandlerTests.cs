@@ -43,6 +43,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             // Assert
             var actorUpdatedIntegrationEvent = new ActorUpdatedIntegrationEvent(
                 Guid.Empty,
+                DateTime.UtcNow,
                 actorId,
                 Guid.Empty,
                 b2CActorId,
