@@ -35,7 +35,7 @@ limitations under the License.
 
     <ItemGroup>
       <EmbeddedResource Include="Scripts\Model\202201261730 Create tables.sql" />
-      <EmbeddedResource Include="Scripts\Model\202207151427 Increase OriginalOperationId length.sql" />
+      <EmbeddedResource Include="Scripts\Model\202201281340 Increase OriginalOperationId length.sql" />
       <EmbeddedResource Include="Scripts\Model\202202151610 Move charge periods to ChargePeriod table.sql" />
       <EmbeddedResource Include="Scripts\Model\202203090952 Add DocumentType to AvailableData.sql" />
       <EmbeddedResource Include="Scripts\Model\202203231212 Add OperationOrder to AvailableData.sql" />
@@ -54,7 +54,7 @@ limitations under the License.
       <EmbeddedResource Include="Scripts\Test\202201261750 Add test data.sql" />
       <EmbeddedResource Include="Scripts\Model\280320221347 Add unique constraint on Charge Link.sql" />
       <EmbeddedResource Include="Scripts\Test\202206030818 Add test data to gridarealinks.sql" />
-      <EmbeddedResource Include="Scripts\Model\202201281340 Increase OriginalOperationId length.sql" />
+      <EmbeddedResource Include="Scripts\Model\202207151427 Increase OriginalOperationId length.sql" />
     </ItemGroup>
 
 </Project>
