@@ -36,7 +36,10 @@ namespace Azlogin
                 throw new ArgumentException("Value cannot be null or empty.", nameof(keyVaultUrl));
             }
 
-            var credential = new DefaultAzureCredential();
+            var credential = new DefaultAzureCredential(new DefaultAzureCredentialOptions
+            {
+                ExcludeManagedIdentityCredential = true,
+            });
             builder.AddAzureKeyVault(new Uri(keyVaultUrl), credential);
 
             return builder;
