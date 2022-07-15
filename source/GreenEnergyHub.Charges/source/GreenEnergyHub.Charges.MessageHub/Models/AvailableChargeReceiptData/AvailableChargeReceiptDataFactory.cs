@@ -82,7 +82,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                     _messageMetaDataContext.RequestDataTime,
                     Guid.NewGuid(), // ID of each available piece of data must be unique
                     ReceiptStatus.Confirmed,
-                    chargeOperationDto.Id,
+                    chargeOperationDto.Id[..100],
                     DocumentType.ConfirmRequestChangeOfPriceList, // Will be added to the HTTP MessageType header
                     operationOrder,
                     recipient.ActorId,

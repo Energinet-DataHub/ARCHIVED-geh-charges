@@ -71,7 +71,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
                     _messageMetaDataContext.RequestDataTime,
                     Guid.NewGuid(), // ID of each available piece of data must be unique
                     ReceiptStatus.Rejected,
-                    chargeLinkDto.OperationId,
+                    chargeLinkDto.OperationId[..100],
                     chargeLinkDto.MeteringPointId,
                     DocumentType.RejectRequestChangeBillingMasterData, // Will be added to the HTTP MessageType header
                     input.ChargeLinksCommand.Operations.ToList().IndexOf(chargeLinkDto),

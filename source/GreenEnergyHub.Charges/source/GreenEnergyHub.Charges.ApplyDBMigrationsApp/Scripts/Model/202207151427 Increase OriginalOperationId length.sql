@@ -3,9 +3,9 @@
 ------------------------------------------------------------------------------------------------------------------------
 
 ALTER TABLE [MessageHub].[AvailableChargeLinksReceiptData]
-ALTER COLUMN [OriginalOperationId] [nvarchar](36) NOT NULL
+ALTER COLUMN [OriginalOperationId] [nvarchar](100) NOT NULL
 GO
 
 ALTER TABLE [MessageHub].[AvailableChargeReceiptData]
-ALTER COLUMN [OriginalOperationId] [nvarchar](36) NOT NULL
+ALTER COLUMN [OriginalOperationId] [nvarchar](100) NOT NULL
 GO
