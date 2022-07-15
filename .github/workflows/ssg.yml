@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       AZURE_KEYVAULT_URL: ${{ secrets.AZURE_KEYVAULT_URL }}
-      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      # AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
     steps:    
       - name: Login with azure cli
         uses: azure/login@v1
