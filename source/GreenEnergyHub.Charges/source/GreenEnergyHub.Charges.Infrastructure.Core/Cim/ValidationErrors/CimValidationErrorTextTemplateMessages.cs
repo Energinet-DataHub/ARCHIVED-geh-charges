@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeOperationIdRequired)]
         public const string ChargeOperationIdRequiredErrorText =
-            "Identification is missing: transaction can not be processed for document {{DocumentId}}.";
+            "Transaction identification is missing: transaction can not be processed for document {{DocumentId}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeIdLengthValidation)]
         public const string ChargeIdLengthValidationErrorText =
