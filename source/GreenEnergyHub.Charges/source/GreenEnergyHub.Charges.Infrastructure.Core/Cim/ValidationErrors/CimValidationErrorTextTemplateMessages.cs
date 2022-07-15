@@ -87,7 +87,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeOwnerIsRequiredValidation)]
         public const string ChargeOwnerIsRequiredValidationErrorText =
-            "Owner is missing for charge with ID {{DocumentSenderProvidedChargeId}} og type {{ChargeType}}.";
+            "Owner is missing for charge with ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeNameHasMaximumLength)]
         public const string ChargeNameHasMaximumLengthErrorText =
@@ -99,7 +99,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeTypeTariffPriceCount)]
         public const string ChargeTypeTariffPriceCountErrorText =
-            "The number of prices {{ChargePointsCount}} for charge {{DocumentSenderProvidedChargeId}} doesn't match period type {{ChargeResolution}}.";
+            "The number of prices {{ChargePointsCount}} doesn't match period type {{ChargeResolution}} for charge ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} for owner {{ChargeOwner}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.MaximumPrice)]
         public const string MaximumPriceErrorText =
