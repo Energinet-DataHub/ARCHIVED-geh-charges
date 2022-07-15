@@ -12,6 +12,9 @@ permissions:
 jobs:
   azure:
     runs-on: ubuntu-latest
+    env:
+      AZURE_KEYVAULT_URL: ${{ secrets.AZURE_KEYVAULT_URL }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
     steps:    
       - name: Login with azure cli
         uses: azure/login@v1
@@ -20,11 +23,15 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           
-      - name: List keyvault secrets
-        run: az keyvault secret list --id https://kv-secrets-u-002.vault.azure.net/
-        
-      - name: List keyvault secrets integrationtest
-        run: az keyvault secret list --id https://kv-integrationtest-u-002.vault.azure.net/
-        
-      - name: Get keyvault secret
-        run: az keyvault secret show --id https://kv-integrationtest-u-002.vault.azure.net/secrets/AZURE-SHARED-RESOURCEGROUP | shasum | awk '{ print $1 }'
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: '6.0.301'
+
+      - name: Run dotnet code
+        run: |
+          cd ./source/azlogin
+          dotnet run
