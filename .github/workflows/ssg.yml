@@ -40,7 +40,7 @@ jobs:
 
       - name: Run dotnet code - ExcludeManagedIdentityCredential = false
         env:
-            ExcludeManagedIdentityCredential: "true"
+            ExcludeManagedIdentityCredential: "false"
         run: |
           cd ./source/azlogin
           dotnet run
