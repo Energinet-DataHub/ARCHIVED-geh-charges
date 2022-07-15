@@ -18,7 +18,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
 {
     public class ChargeOperationIdLengthValidationRule : IValidationRule
     {
-        private const int ValidLength = 36;
+        private const int MaxValidLength = 36;
 
         private readonly ChargeOperationDto _chargeOperationDto;
 
@@ -29,6 +29,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
 
         public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeOperationIdLengthValidation;
 
-        public bool IsValid => _chargeOperationDto.Id?.Length <= ValidLength;
+        public bool IsValid => _chargeOperationDto.Id?.Length <= MaxValidLength;
     }
 }
