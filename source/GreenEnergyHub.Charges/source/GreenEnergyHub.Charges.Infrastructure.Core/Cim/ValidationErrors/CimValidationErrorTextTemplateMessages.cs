@@ -201,6 +201,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         public const string TaxIndicatorMustBeFalseForSubscriptionErrorText =
             "Tax indicator cannot be true for charge ID {{DocumentSenderProvidedChargeId}} owned by {{ChargeOwner}} as it is of charge type {{ChargeType}}.";
 
+        [ErrorMessageFor(ValidationRuleIdentifier.ChargeOperationIdLengthValidation)]
+        public const string OperationIdLengthValidationErrorText =
+            "The document with ID {{DocumentId}} contains a transaction ID {{ChargeOperationId}} that is longer than the allowed length of 36 characters.";
+
         public const string Unknown = "unknown";
     }
 }

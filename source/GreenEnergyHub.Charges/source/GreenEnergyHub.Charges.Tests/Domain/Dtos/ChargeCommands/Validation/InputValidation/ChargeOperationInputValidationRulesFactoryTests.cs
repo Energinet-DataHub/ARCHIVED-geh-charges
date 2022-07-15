@@ -103,6 +103,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             {
                 typeof(ChargeIdLengthValidationRule),
                 typeof(ChargeIdRequiredValidationRule),
+                typeof(ChargeOperationIdLengthValidationRule),
                 typeof(ChargeOperationIdRequiredRule),
                 typeof(ChargeOwnerIsRequiredValidationRule),
                 typeof(ChargeTypeIsKnownValidationRule),
