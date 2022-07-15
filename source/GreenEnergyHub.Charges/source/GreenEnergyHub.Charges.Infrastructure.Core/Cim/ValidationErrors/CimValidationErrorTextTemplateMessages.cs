@@ -27,27 +27,27 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
     {
         [ErrorMessageFor(ValidationRuleIdentifier.StartDateValidation)]
         public const string StartDateValidationErrorText =
-            "Effective date {{ChargeStartDateTime}} incorrect: The information is not received within the correct time period (either too soon or too late)";
+            "Effective date {{ChargeStartDateTime}} incorrect: The information is not received within the correct time period (either too soon or too late).";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChangingTariffTaxValueNotAllowed)]
         public const string ChangingTariffTaxValueNotAllowedErrorText =
-            "It is not allowed to change the tax indicator to {{ChargeTaxIndicator}} for charge {{DocumentSenderProvidedChargeId}}";
+            "It is not allowed to change the tax indicator to {{ChargeTaxIndicator}} for charge ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} owned by {{ChargeOwner}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.SenderIsMandatoryTypeValidation)]
         public const string SenderIsMandatoryTypeValidationErrorText =
-            "Sender is missing for message {{DocumentId}}";
+            "Sender is missing for message {{DocumentId}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.RecipientIsMandatoryTypeValidation)]
         public const string RecipientIsMandatoryTypeValidationErrorText =
-            "Recipient is missing for message {{DocumentId}}";
+            "Recipient is missing for message {{DocumentId}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeOperationIdRequired)]
         public const string ChargeOperationIdRequiredErrorText =
-            "Identification is missing: transaction can not be processed for document {{DocumentId}}";
+            "Transaction ID is missing: transaction can not be processed for document {{DocumentId}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeIdLengthValidation)]
         public const string ChargeIdLengthValidationErrorText =
-            "Charge ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}} has a length that exceeds 10";
+            "Charge ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} owned by {{ChargeOwner}} has a length that exceeds 10.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeIdRequiredValidation)]
         public const string ChargeIdRequiredValidationErrorText =
@@ -55,99 +55,99 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.DocumentTypeMustBeRequestChangeOfPriceList)]
         public const string DocumentTypeMustBeRequestChangeOfPriceListErrorText =
-            "Document type {{DocumentType}} not allowed together with business reason code {{DocumentBusinessReasonCode}}";
+            "Document type {{DocumentType}} not allowed together with business reason code {{DocumentBusinessReasonCode}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.BusinessReasonCodeMustBeUpdateChargeInformationOrChargePrices)]
         public const string BusinessReasonCodeMustBeUpdateChargeInformationErrorText =
-            "Business reason code {{DocumentBusinessReasonCode}} not allowed together with document type {{DocumentType}}";
+            "Business reason code {{DocumentBusinessReasonCode}} not allowed together with document type {{DocumentType}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeTypeIsKnownValidation)]
         public const string ChargeTypeIsKnownValidationErrorText =
-            "Charge type is missing for charge with ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}}";
+            "Charge type is missing for charge with ID {{DocumentSenderProvidedChargeId}} owned by {{ChargeOwner}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.VatClassificationValidation)]
         public const string VatClassificationValidationErrorText =
-            "VAT class {{ChargeVatClass}} for charge {{DocumentSenderProvidedChargeId}} has wrong value (outside domain)";
+            "VAT class is missing for charge with ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} owned by {{ChargeOwner}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ResolutionTariffValidation)]
         public const string ResolutionTariffValidationErrorText =
-            "Period type {{ChargeResolution}} not allowed: The specified resolution for charge {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} must be Day or Hour";
+            "Period type {{ChargeResolution}} not allowed: The resolution must be day or hour for charge ID {{DocumentSenderProvidedChargeId}} owned by {{ChargeOwner}} as it is of type {{ChargeType}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ResolutionFeeValidation)]
         public const string ResolutionFeeValidationErrorText =
-            "Period type {{ChargeResolution}} not allowed: The specified resolution for charge {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} must be Month";
+            "Period type {{ChargeResolution}} not allowed: The resolution must be month for charge ID {{DocumentSenderProvidedChargeId}} owned by {{ChargeOwner}} as it is of type {{ChargeType}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ResolutionSubscriptionValidation)]
         public const string ResolutionSubscriptionValidationErrorText =
-            "Period type {{ChargeResolution}} not allowed: The specified resolution for charge {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} must be Month";
+            "Period type {{ChargeResolution}} not allowed: The resolution must be month for charge ID {{DocumentSenderProvidedChargeId}} owned by {{ChargeOwner}} as it is of type {{ChargeType}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.StartDateTimeRequiredValidation)]
         public const string StartDateTimeRequiredValidationErrorText =
-            "Occurrence date is missing for charge {{DocumentSenderProvidedChargeId}}";
+            "Effective date is missing for charge with ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} owned by {{ChargeOwner}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeOwnerIsRequiredValidation)]
         public const string ChargeOwnerIsRequiredValidationErrorText =
-            "Owner is missing for charge {{DocumentSenderProvidedChargeId}}";
+            "Owner is missing for charge with ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeNameHasMaximumLength)]
         public const string ChargeNameHasMaximumLengthErrorText =
-            "Name {{ChargeName}} has a length that exceeds 132 for charge ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}}";
+            "Name {{ChargeName}} has a length that exceeds 132 for charge ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} owned by {{ChargeOwner}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeDescriptionHasMaximumLength)]
         public const string ChargeDescriptionHasMaximumLengthErrorText =
-            "Description {{ChargeDescription}} has a length that exceeds 2048 for charge ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}}";
+            "Description {{ChargeDescription}} has a length that exceeds 2048 for charge ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} owned by {{ChargeOwner}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeTypeTariffPriceCount)]
         public const string ChargeTypeTariffPriceCountErrorText =
-            "The number of prices {{ChargePointsCount}} for charge {{DocumentSenderProvidedChargeId}} doesn't match period type {{ChargeResolution}}";
+            "The number of prices {{ChargePointsCount}} doesn't match period type {{ChargeResolution}} for charge ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} owned by {{ChargeOwner}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.MaximumPrice)]
         public const string MaximumPriceErrorText =
-            "Price {{ChargePointPrice}} not allowed: The specified charge price for position {{ChargePointPosition}} is not plausible (too large)";
+            "Price {{ChargePointPrice}} not allowed: The specified charge price for position {{ChargePointPosition}} is not plausible (too large) for charge with ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} owned by {{ChargeOwner}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargePriceMaximumDigitsAndDecimals)]
         public const string ChargePriceMaximumDigitsAndDecimalsErrorText =
-            "Energy price {{ChargePointPrice}} for charge {{DocumentSenderProvidedChargeId}} contains a non-digit character, has a length that exceeds 15 or does not comply with format '99999999.999999'";
+            "Energy price {{ChargePointPrice}} contains a non-digit character, has a length that exceeds 15 or does not comply with format '99999999.999999' for charge with ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} owned by {{ChargeOwner}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.FeeMustHaveSinglePrice)]
         public const string FeeMustHaveSinglePriceErrorText =
-            "The number of prices {{ChargePointsCount}} for charge {{DocumentSenderProvidedChargeId}} doesn't match period type {{ChargeResolution}}";
+            "The number of prices {{ChargePointsCount}} doesn't match period type {{ChargeResolution}} for charge with ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} owned by {{ChargeOwner}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.SubscriptionMustHaveSinglePrice)]
         public const string SubscriptionMustHaveSinglePriceErrorText =
-            "The number of prices {{ChargePointsCount}} for charge {{DocumentSenderProvidedChargeId}} doesn't match period type {{ChargeResolution}}";
+            "The number of prices {{ChargePointsCount}} doesn't match period type {{ChargeResolution}} for charge with ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} owned by {{ChargeOwner}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.CommandSenderMustBeAnExistingMarketParticipant)]
         public const string CommandSenderMustBeAnExistingMarketParticipantErrorText =
-            "Sender {{DocumentSenderId}} for message {{DocumentId}} is currently not an existing market party (company) or not active";
+            "Sender {{DocumentSenderId}} for message {{DocumentId}} is currently not an existing market party (company) or not active.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.MeteringPointDoesNotExist)]
         public const string MeteringPointDoesNotExistValidationErrorText =
-            "GSRN-code {{MeteringPointId}} is unknown: The specified metering point has not been registered in the system on the charge link start date";
+            "GSRN-code {{MeteringPointId}} is unknown: The specified metering point has not been registered in the system on the charge link start date.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeDoesNotExist)]
         public const string ChargeDoesNotExistValidationErrorText =
-            "Charge {{DocumentSenderProvidedChargeId}} not allowed: The charge is not an existing charge on date {{ChargeLinkStartDate}}";
+            "Charge ID {{DocumentSenderProvidedChargeId}} not allowed: The charge is not an existing charge on date {{ChargeLinkStartDate}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeLinkUpdateNotYetSupported)]
         public const string ChargeLinksUpdateNotYetSupportedErrorText =
-            "Charge link for metering point ID {{MeteringPointId}} and Charge with ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}} cannot yet be updated or stopped. The functionality is not implemented yet";
+            "Charge link for metering point ID {{MeteringPointId}} and charge ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} owned by {{ChargeOwner}} cannot yet be updated or stopped. The functionality is not implemented yet.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDate)]
         public const string UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDateErrorText =
-            "Charge ID {{DocumentSenderProvidedChargeId}} has been stopped and thus cannot be updated as per {{ChargeStartDateTime}}.";
+            "Charge ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} owned by {{ChargeOwner}} has been stopped and thus cannot be updated as per {{ChargeStartDateTime}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.SubsequentBundleOperationsFail)]
         public const string ValidationOfPriorOperationInBundleFailedErrorText =
-            "Transaction for Charge ID {{DocumentSenderProvidedChargeId}} is not completed: The request received contained multiple transactions for the same charge, and one of the previous transactions with ID {{TriggeredByOperationId}} failed validation why this transaction with ID {{ChargeOperationId}} is also rejected";
+            "Transaction for Charge ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} owned by {{ChargeOwner}} is not completed: The request received contained multiple transactions for the same charge, and one of the previous transactions with ID {{TriggeredByOperationId}} failed validation why this transaction with ID {{ChargeOperationId}} is also rejected.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.TransparentInvoicingIsNotAllowedForFee)]
         public const string TransparentInvoicingIsNotAllowedForFeeErrorText =
-            "Transparent Invoicing for Charge ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}} cannot be set to true.";
+            "Transparent invoicing cannot be set to true for Charge ID {{DocumentSenderProvidedChargeId}} owned by {{ChargeOwner}} as it is of type {{ChargeType}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeResolutionCanNotBeUpdated)]
         public const string ChargeResolutionCanNotBeUpdatedErrorText =
-            "Period type {{ChargeResolution}} not allowed: The specified resolution for chargetype {{ChargeType}} charge ID {{DocumentSenderProvidedChargeId}} may not be changed. It must have the same period type as when created.";
+            "Changing period type {{ChargeResolution}} not allowed: The resolution may not be changed for charge with ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} owned by {{ChargeOwner}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.RecipientRoleMustBeDdz)]
         public const string RecipientRoleMustBeDdzErrorText =
@@ -155,19 +155,19 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.NumberOfPointsMatchTimeIntervalAndResolution)]
         public const string NumberOfPointsMatchTimeIntervalAndResolutionText =
-            "The number of prices received does not match the expected number of prices given the time interval and resolution provided.";
+            "The number of prices received does not match the expected number of prices given the time interval and resolution provided for charge with ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} owned by {{ChargeOwner}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeNameIsRequired)]
         public const string ChargeNameRequiredErrorText =
-            "Charge name is missing for charge with ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}}.";
+            "Charge name is missing for charge with ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} owned by {{ChargeOwner}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeDescriptionIsRequired)]
         public const string ChargeDescriptionRequiredErrorText =
-            "Charge description is missing for charge with ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}}.";
+            "Charge description is missing for charge with ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} owned by {{ChargeOwner}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ResolutionIsRequired)]
         public const string ResolutionRequiredErrorText =
-            "Resolution is missing for charge with ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}}.";
+            "Resolution is missing for charge with ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} owned by {{ChargeOwner}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeOwnerHasLengthLimits)]
         public const string ChargeOwnerTextLengthRuleText =
@@ -175,31 +175,31 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.TransparentInvoicingIsRequired)]
         public const string TransparentInvoicingIsRequiredErrorText =
-            "Transparent invoicing must be set when calling with BusinessReasonCode D18 for charge type {{ChargeType}} with charge ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}}.";
+            "Transparent invoicing must be set when calling with BusinessReasonCode D18 for charge type {{ChargeType}} with charge ID {{DocumentSenderProvidedChargeId}} owned by {{ChargeOwner}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.TaxIndicatorIsRequired)]
         public const string TaxIndicatorIsRequiredErrorText =
-            "Tax indicator must be set when calling with BusinessReasonCode D18 for charge type {{ChargeType}} with charge ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}}.";
+            "Tax indicator must be set when calling with BusinessReasonCode D18 for charge type {{ChargeType}} with charge ID {{DocumentSenderProvidedChargeId}} owned by {{ChargeOwner}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.TerminationDateMustMatchEffectiveDate)]
         public const string TerminationDateMustMatchEffectiveDateErrorText =
-            "Termination date must match effective date when requesting a stop of charge type {{ChargeType}} with charge ID {{DocumentSenderProvidedChargeId}} for owner.";
+            "Termination date must match effective date when requesting a stop of charge with ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} owned by {{ChargeOwner}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.CreateChargeIsNotAllowedATerminationDate)]
         public const string CreateChargeIsNotAllowedATerminationDateErrorText =
-            "Charge ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} for owner {{ChargeOwner}} cannot be stopped as it has never existed.";
+            "Charge ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} owned by {{ChargeOwner}} cannot be stopped as it has never existed.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.PriceListMustStartAndStopAtMidnightValidationRule)]
         public const string PriceListMustStartAndStopAtMidnightErrorText =
-            "The time interval (start and end) of the price series must equal midnight local time, expressed in UTC+0 for charge with ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} of type {{ChargeType}}.";
+            "The time interval (start and end) of the price series must equal midnight local time, expressed in UTC+0 for charge with ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} owned by {{ChargeOwner}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.TaxIndicatorMustBeFalseForFee)]
         public const string TaxIndicatorMustBeFalseForFeeErrorText =
-            "Tax indicator cannot be true for charge ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} as it is of charge type {{ChargeType}}.";
+            "Tax indicator cannot be true for charge ID {{DocumentSenderProvidedChargeId}} owned by {{ChargeOwner}} as it is of charge type {{ChargeType}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.TaxIndicatorMustBeFalseForSubscription)]
         public const string TaxIndicatorMustBeFalseForSubscriptionErrorText =
-            "Tax indicator cannot be true for charge ID {{DocumentSenderProvidedChargeId}} for owner {{ChargeOwner}} as it is of charge type {{ChargeType}}.";
+            "Tax indicator cannot be true for charge ID {{DocumentSenderProvidedChargeId}} owned by {{ChargeOwner}} as it is of charge type {{ChargeType}}.";
 
         public const string Unknown = "unknown";
     }

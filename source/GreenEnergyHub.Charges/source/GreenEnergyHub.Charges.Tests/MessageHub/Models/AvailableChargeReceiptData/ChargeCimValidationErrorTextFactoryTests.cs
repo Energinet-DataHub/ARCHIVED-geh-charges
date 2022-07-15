@@ -49,7 +49,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             var expected = CimValidationErrorTextTemplateMessages.ResolutionTariffValidationErrorText
                 .Replace("{{ChargeResolution}}", chargeOperationDto.Resolution.ToString())
                 .Replace("{{DocumentSenderProvidedChargeId}}", chargeOperationDto.ChargeId)
-                .Replace("{{ChargeType}}", chargeOperationDto.Type.ToString());
+                .Replace("{{ChargeType}}", chargeOperationDto.Type.ToString())
+                .Replace("{{ChargeOwner}}", chargeOperationDto.ChargeOwner);
 
             // Act
             var actual = sut.Create(validationError, chargeCommand, chargeOperationDto);
@@ -76,7 +77,10 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             var expectedPoint = chargeOperationDto.Points[1];
             var expected = CimValidationErrorTextTemplateMessages.MaximumPriceErrorText
                 .Replace("{{ChargePointPrice}}", expectedPoint.Price.ToString("N"))
-                .Replace("{{ChargePointPosition}}", expectedPoint.Position.ToString());
+                .Replace("{{ChargePointPosition}}", expectedPoint.Position.ToString())
+                .Replace("{{DocumentSenderProvidedChargeId}}", chargeOperationDto.ChargeId)
+                .Replace("{{ChargeType}}", chargeOperationDto.Type.ToString())
+                .Replace("{{ChargeOwner}}", chargeOperationDto.ChargeOwner);
 
             // Act
             var actual = sut.Create(validationError, chargeCommand, chargeOperationDto);

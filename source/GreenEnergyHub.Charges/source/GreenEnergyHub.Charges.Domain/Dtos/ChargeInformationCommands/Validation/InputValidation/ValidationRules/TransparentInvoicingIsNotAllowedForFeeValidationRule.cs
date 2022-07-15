@@ -30,6 +30,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.TransparentInvoicingIsNotAllowedForFee;
 
-        public bool IsValid => _chargeOperationDto.Type != ChargeType.Fee || _chargeOperationDto.TransparentInvoicing == TransparentInvoicing.NonTransparent;
+        public bool IsValid => _chargeOperationDto.Type != ChargeType.Fee ||
+                               _chargeOperationDto.TransparentInvoicing is TransparentInvoicing.NonTransparent
+                                   or TransparentInvoicing.Unknown;
     }
 }

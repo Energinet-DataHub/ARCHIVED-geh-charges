@@ -25,16 +25,18 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared
         [Theory]
         [InlineAutoMoqData(
             CimValidationErrorTextTemplateMessages.VatClassificationValidationErrorText,
-            CimValidationErrorTextToken.ChargeVatClass,
-            CimValidationErrorTextToken.DocumentSenderProvidedChargeId)]
+            CimValidationErrorTextToken.DocumentSenderProvidedChargeId,
+            CimValidationErrorTextToken.ChargeOwner,
+            CimValidationErrorTextToken.ChargeType)]
         public void GetTokens_Returns_ExpectedTokens(
             string errorText,
             CimValidationErrorTextToken token1,
-            CimValidationErrorTextToken token2)
+            CimValidationErrorTextToken token2,
+            CimValidationErrorTextToken token3)
         {
             var actual = CimValidationErrorTextTokenMatcher.GetTokens(errorText);
 
-            actual.Should().Contain(token1).And.Contain(token2);
+            actual.Should().Contain(token1).And.Contain(token2).And.Contain(token3);
         }
     }
 }
