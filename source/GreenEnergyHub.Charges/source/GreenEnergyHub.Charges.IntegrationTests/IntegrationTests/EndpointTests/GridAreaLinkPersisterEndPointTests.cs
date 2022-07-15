@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
-using Energinet.DataHub.MarketParticipant.Integration.Model.Parsers;
+using Energinet.DataHub.MarketParticipant.Integration.Model.Parsers.GridArea;
 using FluentAssertions;
 using GreenEnergyHub.Charges.FunctionHost.MarketParticipant;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;

@@ -88,6 +88,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
             {
                 var actorUpdatedIntegrationEvent = new ActorUpdatedIntegrationEvent(
                     Guid.NewGuid(),
+                    DateTime.UtcNow,
                     Guid.NewGuid(),
                     Guid.NewGuid(),
                     Guid.NewGuid(),

@@ -14,7 +14,6 @@
 
 using System.Collections.Generic;
 using Energinet.DataHub.Core.Messaging.MessageTypes.Common;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
