@@ -38,10 +38,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             await sut.HandleAsync(chargeLinksCommandBundle).ConfigureAwait(false);
 
             // Assert
-            chargeLinksCommandBundle.ChargeLinksCommands.Should().NotBeEmpty();
+            chargeLinksCommandBundle.Commands.Should().NotBeEmpty();
             chargeLinksCommandHandler.Verify(
                 x => x.HandleAsync(It.IsAny<ChargeLinksCommand>()),
-                Times.Exactly(chargeLinksCommandBundle.ChargeLinksCommands.Count));
+                Times.Exactly(chargeLinksCommandBundle.Commands.Count));
         }
     }
 }

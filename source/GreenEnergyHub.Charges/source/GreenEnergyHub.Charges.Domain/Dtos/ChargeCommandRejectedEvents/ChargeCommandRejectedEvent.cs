@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using NodaTime;
@@ -24,7 +24,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents
     {
         public ChargeCommandRejectedEvent(
             Instant publishedTime,
-            ChargeCommand command,
+            ChargeInformationCommand command,
             IEnumerable<ValidationError> validationErrors)
             : base(publishedTime)
         {
@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents
             ValidationErrors = validationErrors;
         }
 
-        public ChargeCommand Command { get; }
+        public ChargeInformationCommand Command { get; }
 
         public IEnumerable<ValidationError> ValidationErrors { get; }
     }

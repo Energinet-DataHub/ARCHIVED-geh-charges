@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -23,21 +24,23 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
 {
     public static class EmbeddedResourceHelper
     {
-        public static string GetEmbeddedFile(string filePath, Instant currentInstant)
+        public static string GetEmbeddedFile(string filePath, Instant currentInstant, IZonedDateTimeService zonedDateTimeService)
         {
             var basePath = Assembly.GetExecutingAssembly().Location;
             var path = Path.Combine(Directory.GetParent(basePath)!.FullName, filePath);
             var fileText = File.ReadAllText(path);
-            return ReplaceMergeFields(currentInstant, fileText);
+            return ReplaceMergeFields(currentInstant, fileText, zonedDateTimeService);
         }
 
-        private static string ReplaceMergeFields(Instant currentInstant, string file)
+        private static string ReplaceMergeFields(Instant currentInstant, string file, IZonedDateTimeService zonedDateTimeService)
         {
             var now = currentInstant.ToString();
             var inThirtyoneDays = currentInstant.Plus(Duration.FromDays(31));
 
-            // cim:timeInterval does not allow seconds.
-            var ymdhmTimeInterval = inThirtyoneDays.GetTimeAndPriceSeriesDateTimeFormat();
+            var midnightLocalTime31DaysAhead =
+                ConvertCurrentInstantToLocalDateTimeWithDaysAdded(currentInstant, zonedDateTimeService, 31);
+            var midnightLocalTime32DaysAhead =
+                ConvertCurrentInstantToLocalDateTimeWithDaysAdded(currentInstant, zonedDateTimeService, 32);
 
             // cim:createdDateTime and effective date must have seconds
             var ymdhmsTimeInterval = currentInstant.GetCreatedDateTimeFormat();
@@ -59,12 +62,28 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
                 .Replace("{{$chargeIdForMultipleOperations}}", chargeIdForMultipleOperations)
                 .Replace("{{$isoTimestamp}}", now)
                 .Replace("{{$isoTimestampPlusOneMonth}}", inThirtyoneDays.ToString())
-                .Replace("{{$YMDHM_TimestampPlusOneMonth}}", ymdhmTimeInterval)
-                .Replace("{{$YMDHM_TimestampPlusOneMonthAndOneDay}}", inThirtyoneDays.Plus(Duration.FromDays(1)).GetTimeAndPriceSeriesDateTimeFormat())
+                .Replace("{{$YMDHM_TimestampPlusOneMonth}}", ConvertLocalTimeToUtcAsString(zonedDateTimeService, midnightLocalTime31DaysAhead))
+                .Replace("{{$YMDHM_TimestampPlusOneMonthAndOneDay}}", ConvertLocalTimeToUtcAsString(zonedDateTimeService, midnightLocalTime32DaysAhead))
                 .Replace("{{$isoTimestampPlusOneMonthAndOneDay}}", inThirtyoneDays.Plus(Duration.FromDays(1)).ToString())
                 .Replace("{{$isoTimestampPlusOneMonthAndTwoDays}}", inThirtyoneDays.Plus(Duration.FromDays(2)).ToString())
                 .Replace("{{$NextYear}}", DateTime.Now.AddYears(1).Year.ToString())
                 .Replace("{{$ISO8601Timestamp}}", ymdhmsTimeInterval);
+        }
+
+        private static LocalDateTime ConvertCurrentInstantToLocalDateTimeWithDaysAdded(
+            Instant instant,
+            IZonedDateTimeService zonedDateTimeService,
+            int daysToAdd)
+        {
+            var zonedTime = zonedDateTimeService.GetZonedDateTime(instant);
+            var midnightLocalTime = zonedTime.PlusTicks(-zonedTime.TickOfDay).LocalDateTime;
+            return midnightLocalTime.PlusDays(daysToAdd);
+        }
+
+        private static string ConvertLocalTimeToUtcAsString(IZonedDateTimeService zonedDateTimeService, LocalDateTime localDateTime)
+        {
+            var zonedDateTime = zonedDateTimeService.GetZonedDateTime(localDateTime, ResolutionStrategy.Leniently);
+            return zonedDateTime.ToInstant().ToString("yyyy-MM-dd\\THH:mm\\Z", CultureInfo.InvariantCulture);
         }
     }
 }

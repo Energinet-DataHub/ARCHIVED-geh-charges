@@ -23,6 +23,7 @@ using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.ChargeLinks;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
+using GreenEnergyHub.Charges.TestCore;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
@@ -41,7 +42,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public RunAsync(ChargesFunctionAppFixture fixture, ITestOutputHelper testOutputHelper)
                 : base(fixture, testOutputHelper)
             {
-                _authenticatedHttpRequestGenerator = new AuthenticatedHttpRequestGenerator(fixture.AuthorizationConfiguration);
+                _authenticatedHttpRequestGenerator = new AuthenticatedHttpRequestGenerator(fixture.AuthorizationConfiguration, Fixture.LocalTimeZoneName);
             }
 
             public Task InitializeAsync()
@@ -58,7 +59,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             [Fact]
             public async Task When_RequestIsUnauthenticated_Then_AHttp401UnauthorizedIsReturned()
             {
-                var (request, _) = HttpRequestGenerator.CreateHttpPostRequest(EndpointUrl, ChargeLinkDocument.AnyValid);
+                var (request, _) = HttpRequestGenerator.CreateHttpPostRequest(
+                    EndpointUrl,
+                    ChargeLinkDocument.AnyValid,
+                    ZonedDateTimeServiceHelper.GetZonedDateTimeService(InstantHelper.GetTodayAtMidnightUtc()));
 
                 var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
 

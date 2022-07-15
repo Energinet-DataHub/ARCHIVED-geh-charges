@@ -61,7 +61,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinksDat
 
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
 
-            var expectedLinks = acceptedEvent.ChargeLinksCommand.ChargeLinksOperations.ToList();
+            var expectedLinks = acceptedEvent.ChargeLinksCommand.Operations.ToList();
 
             // Act
             var actual = await sut.CreateAsync(acceptedEvent);

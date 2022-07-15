@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
         {
             // Arrange
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
-            var expectedLinks = acceptedEvent.ChargeLinksCommand.ChargeLinksOperations.ToList();
+            var expectedLinks = acceptedEvent.ChargeLinksCommand.Operations.ToList();
             var documentDto = acceptedEvent.ChargeLinksCommand.Document;
             documentDto.Sender.BusinessProcessRole = marketParticipantRole;
             var actorId = Guid.NewGuid();
