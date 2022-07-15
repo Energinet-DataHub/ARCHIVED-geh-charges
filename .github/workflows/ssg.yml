@@ -12,6 +12,8 @@ permissions:
 jobs:
   azure:
     runs-on: ubuntu-latest
+    env:
+      AZURE_KEYVAULT_URL: ${{ secrets.AZURE_KEYVAULT_URL }}
     steps:    
       - name: Login with azure cli
         uses: azure/login@v1
@@ -28,3 +30,8 @@ jobs:
         
       - name: Get keyvault secret
         run: az keyvault secret show --id https://kv-integrationtest-u-002.vault.azure.net/secrets/AZURE-SHARED-RESOURCEGROUP | shasum | awk '{ print $1 }'
+
+      - name: Run dotnet code
+        run: |
+          cd source/azlogin
+          dotnet run
