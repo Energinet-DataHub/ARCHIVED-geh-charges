@@ -26,7 +26,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands
     /// <summary>
     /// The ChargeOperationDto class contains the intend of the charge command, e.g. updating an existing charge.
     /// </summary>
-    public class ChargeOperationDto : OperationBase
+    public class ChargeOperationDto : ChargeOperationBase
     {
         public ChargeOperationDto(
                 string id,

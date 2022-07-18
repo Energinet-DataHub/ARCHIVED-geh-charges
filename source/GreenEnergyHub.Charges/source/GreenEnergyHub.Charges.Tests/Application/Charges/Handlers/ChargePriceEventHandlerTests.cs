@@ -24,6 +24,8 @@ using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
@@ -53,8 +55,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             TestMarketParticipant sender,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             ChargeBuilder chargeBuilder,
-            ChargeCommandReceivedEvent receivedEvent,
-            ChargePriceEventHandlerDeprecated sut)
+            ChargePriceCommandReceivedEvent receivedEvent,
+            ChargePriceEventHandler sut)
         {
             // Arrange
             var validationResult = ValidationResult.CreateSuccess();
@@ -93,8 +95,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             TestMarketParticipant sender,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             ChargeBuilder chargeBuilder,
-            ChargeCommandReceivedEvent receivedEvent,
-            ChargePriceEventHandlerDeprecated sut)
+            ChargePriceCommandReceivedEvent receivedEvent,
+            ChargePriceEventHandler sut)
         {
             // Arrange
             var validationResult = GetFailedValidationResult();
@@ -122,10 +124,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         [Theory]
         [InlineAutoMoqData]
         public async Task HandleAsync_IfEventIsNull_ThrowsArgumentNullException(
-            ChargePriceEventHandlerDeprecated sut)
+            ChargePriceEventHandler sut)
         {
             // Arrange
-            ChargeCommandReceivedEvent? receivedEvent = null;
+            ChargePriceCommandReceivedEvent? receivedEvent = null;
 
             // Act / Assert
             await Assert.ThrowsAsync<ArgumentNullException>(() => sut.HandleAsync(receivedEvent!));
@@ -141,7 +143,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             TestMarketParticipant sender,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             ChargeBuilder chargeBuilder,
-            ChargePriceEventHandlerDeprecated sut)
+            ChargePriceEventHandler sut)
         {
             // Arrange
             var validationResult = ValidationResult.CreateSuccess();
@@ -159,7 +161,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             SetupChargeIdentifierFactoryMock(chargeIdentifierFactory);
 
             var chargeCommand = CreateChargeCommandWith24Points();
-            var receivedEvent = new ChargeCommandReceivedEvent(InstantHelper.GetTodayAtMidnightUtc(), chargeCommand);
+            var receivedEvent = new ChargePriceCommandReceivedEvent(InstantHelper.GetTodayAtMidnightUtc(), chargeCommand);
 
             // Act
             await sut.HandleAsync(receivedEvent);
@@ -179,7 +181,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             TestMarketParticipant sender,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             ChargeBuilder chargeBuilder,
-            ChargePriceEventHandlerDeprecated sut)
+            ChargePriceEventHandler sut)
         {
             // Arrange
             var charge = chargeBuilder.WithStopDate(InstantHelper.GetTodayAtMidnightUtc()).Build();
@@ -225,32 +227,29 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             other.Count().Should().Be(0);
         }
 
-        private static ChargeCommandReceivedEvent CreateInvalidOperationBundle()
+        private static ChargePriceCommandReceivedEvent CreateInvalidOperationBundle()
         {
-            var validChargeOperationDto = new ChargeOperationDtoBuilder()
-                .WithDescription("valid")
+            var validChargeOperationDto = new ChargePriceOperationDtoBuilder()
                 .WithPointsInterval(
                     InstantHelper.GetYesterdayAtMidnightUtc(),
                     InstantHelper.GetTodayAtMidnightUtc())
                 .WithPointWithXNumberOfPrices(24)
                 .Build();
-            var invalidChargeOperationDto = new ChargeOperationDtoBuilder()
-                .WithDescription("invalid")
+            var invalidChargeOperationDto = new ChargePriceOperationDtoBuilder()
                 .WithPointsInterval(
                     InstantHelper.GetTodayPlusDaysAtMidnightUtc(1),
                     InstantHelper.GetTodayPlusDaysAtMidnightUtc(2))
                 .WithPointWithXNumberOfPrices(24)
                 .Build();
-            var failedChargeOperationDto = new ChargeOperationDtoBuilder()
-                .WithDescription("failed")
+            var failedChargeOperationDto = new ChargePriceOperationDtoBuilder()
                 .WithPointsInterval(
                     InstantHelper.GetYesterdayAtMidnightUtc(),
                     InstantHelper.GetTodayAtMidnightUtc())
                 .WithPointWithXNumberOfPrices(24)
                 .Build();
-            var chargeCommand = new ChargeInformationCommandBuilder()
+            var chargeCommand = new ChargePriceCommandBuilder()
                 .WithChargeOperations(
-                    new List<ChargeOperationDto>
+                    new List<ChargePriceOperationDto>
                     {
                         validChargeOperationDto,
                         invalidChargeOperationDto,
@@ -258,7 +257,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                         failedChargeOperationDto,
                     })
                 .Build();
-            var receivedEvent = new ChargeCommandReceivedEvent(
+            var receivedEvent = new ChargePriceCommandReceivedEvent(
                 InstantHelper.GetTodayAtMidnightUtc(),
                 chargeCommand);
             return receivedEvent;
@@ -318,7 +317,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                 new List<IValidationRuleContainer> { new DocumentValidationRuleContainer(failedRule.Object) });
         }
 
-        private static ChargeInformationCommand CreateChargeCommandWith24Points()
+        private static ChargePriceCommand CreateChargeCommandWith24Points()
         {
             var points = new List<Point>();
             var price = 0.00M;
@@ -331,12 +330,12 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             var startDate = points.Min(x => x.Time);
             var endDate = points.Max(x => x.Time) + Duration.FromHours(1);
 
-            var operation = new ChargeOperationDtoBuilder()
+            var operation = new ChargePriceOperationDtoBuilder()
                 .WithPointsInterval(startDate, endDate)
                 .WithPoints(points)
                 .Build();
 
-            return new ChargeInformationCommandBuilder()
+            return new ChargePriceCommandBuilder()
                 .WithChargeOperation(operation)
                 .Build();
         }

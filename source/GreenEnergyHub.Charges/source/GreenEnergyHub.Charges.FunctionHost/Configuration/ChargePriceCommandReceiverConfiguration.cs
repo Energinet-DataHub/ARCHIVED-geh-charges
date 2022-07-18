@@ -24,7 +24,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
             // TODO: Change to new ChargePriceEventHandler
-            serviceCollection.AddScoped<IChargePriceEventHandler, ChargePriceEventHandlerDeprecated>();
+            serviceCollection.AddScoped<IChargePriceEventHandler, ChargePriceEventHandler>();
             ConfigureMessaging(serviceCollection);
         }
 

@@ -127,6 +127,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
                 _chargeId,
                 _owner,
                 _startDateTime,
+                _endDateTime,
                 _pointsStartInterval,
                 _pointsEndInterval,
                 _priceResolution,
