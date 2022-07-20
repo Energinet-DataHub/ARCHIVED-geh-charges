@@ -17,17 +17,16 @@ using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 {
-    public class DocumentValidator<TCommand> : IDocumentValidator<TCommand>
-        where TCommand : CommandBase
+    public class DocumentValidator : IDocumentValidator
     {
-        private readonly IDocumentValidationRulesFactory<TCommand> _documentValidationRulesFactory;
+        private readonly IDocumentValidationRulesFactory _documentValidationRulesFactory;
 
-        public DocumentValidator(IDocumentValidationRulesFactory<TCommand> documentValidationRulesFactory)
+        public DocumentValidator(IDocumentValidationRulesFactory documentValidationRulesFactory)
         {
             _documentValidationRulesFactory = documentValidationRulesFactory;
         }
 
-        public async Task<ValidationResult> ValidateAsync(TCommand command)
+        public async Task<ValidationResult> ValidateAsync(CommandBase command)
         {
             var documentValidationResult = await _documentValidationRulesFactory
                 .CreateRulesAsync(command)
