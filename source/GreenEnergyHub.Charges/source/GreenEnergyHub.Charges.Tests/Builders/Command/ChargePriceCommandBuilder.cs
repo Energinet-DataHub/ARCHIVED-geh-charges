@@ -14,16 +14,19 @@
 
 using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
 namespace GreenEnergyHub.Charges.Tests.Builders.Command
 {
    public class ChargePriceCommandBuilder
     {
         private List<ChargePriceOperationDto> _chargePriceOperationDtos;
+        private DocumentDto _documentDto;
 
         public ChargePriceCommandBuilder()
         {
             _chargePriceOperationDtos = new List<ChargePriceOperationDto> { new ChargePriceOperationDtoBuilder().Build() };
+            _documentDto = new DocumentDtoBuilder().Build();
         }
 
         public ChargePriceCommandBuilder WithChargeOperation(ChargePriceOperationDto chargePriceOperationDto)
@@ -39,9 +42,15 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             return this;
         }
 
+        public ChargePriceCommandBuilder WithDocument(DocumentDto document)
+        {
+            _documentDto = document;
+            return this;
+        }
+
         public ChargePriceCommand Build()
         {
-            return new ChargePriceCommand(_chargePriceOperationDtos);
+            return new ChargePriceCommand(_documentDto, _chargePriceOperationDtos);
         }
     }
 }

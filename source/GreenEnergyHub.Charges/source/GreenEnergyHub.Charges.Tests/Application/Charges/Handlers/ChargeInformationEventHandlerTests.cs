@@ -284,7 +284,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
-            [Frozen] Mock<IDocumentValidator<ChargeInformationCommand>> documentValidator,
+            [Frozen] Mock<IDocumentValidator> documentValidator,
             [Frozen] Mock<IInputValidator<ChargeOperationDto>> inputValidator,
             [Frozen] Mock<IChargeCommandReceiptService> receiptService,
             ChargeInformationEventHandler sut)
@@ -353,7 +353,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             [Frozen] Mock<IChargeIdentifierFactory> chargeIdentifierFactory,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
-            [Frozen] Mock<IDocumentValidator<ChargeInformationCommand>> documentValidator,
+            [Frozen] Mock<IDocumentValidator> documentValidator,
             [Frozen] Mock<IInputValidator<ChargeOperationDto>> inputValidator,
             [Frozen] Mock<IChargeCommandReceiptService> receiptService,
             TestMarketParticipant sender,
@@ -510,7 +510,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         }
 
         private static void SetupValidatorsForOperation(
-            Mock<IDocumentValidator<ChargeInformationCommand>> documentValidator,
+            Mock<IDocumentValidator> documentValidator,
             Mock<IInputValidator<ChargeOperationDto>> inputValidator,
             ValidationResult invalidValidationResult)
         {
