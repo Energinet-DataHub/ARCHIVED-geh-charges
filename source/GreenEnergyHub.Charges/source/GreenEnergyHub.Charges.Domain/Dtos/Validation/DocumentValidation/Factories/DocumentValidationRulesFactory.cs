@@ -15,19 +15,18 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.DocumentValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
-using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation.DocumentValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.DocumentValidation.Factories
+namespace GreenEnergyHub.Charges.Domain.Dtos.Validation.DocumentValidation.Factories
 {
-    public class ChargeCommandDocumentValidationRulesFactory : IDocumentValidationRulesFactory
+    public class DocumentValidationRulesFactory : IDocumentValidationRulesFactory
     {
         private readonly IMarketParticipantRepository _marketParticipantRepository;
 
-        public ChargeCommandDocumentValidationRulesFactory(IMarketParticipantRepository marketParticipantRepository)
+        public DocumentValidationRulesFactory(IMarketParticipantRepository marketParticipantRepository)
         {
             _marketParticipantRepository = marketParticipantRepository;
         }
