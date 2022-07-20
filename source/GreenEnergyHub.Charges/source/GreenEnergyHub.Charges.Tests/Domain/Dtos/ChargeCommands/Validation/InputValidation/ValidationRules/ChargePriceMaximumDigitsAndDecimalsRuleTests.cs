@@ -89,7 +89,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
             var expected = CimValidationErrorTextTemplateMessages.ChargePriceMaximumDigitsAndDecimalsErrorText
                             .Replace("{{ChargePointPrice}}", expectedPoint.Price.ToString("N"))
-                            .Replace("{{DocumentSenderProvidedChargeId}}", chargeOperationDto.ChargeId);
+                            .Replace("{{DocumentSenderProvidedChargeId}}", chargeOperationDto.ChargeId)
+                            .Replace("{{ChargeType}}", chargeOperationDto.Type.ToString())
+                            .Replace("{{ChargeOwner}}", chargeOperationDto.ChargeOwner);
             actual.Should().Be(expected);
         }
     }

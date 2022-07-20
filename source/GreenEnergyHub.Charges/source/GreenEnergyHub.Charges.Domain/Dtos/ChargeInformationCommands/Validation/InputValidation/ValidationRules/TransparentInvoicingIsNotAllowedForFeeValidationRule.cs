@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.InputValidation.ValidationRules
@@ -30,6 +29,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.TransparentInvoicingIsNotAllowedForFee;
 
-        public bool IsValid => _chargeOperationDto.Type != ChargeType.Fee || _chargeOperationDto.TransparentInvoicing == TransparentInvoicing.NonTransparent;
+        public bool IsValid => _chargeOperationDto.Type != ChargeType.Fee ||
+                               _chargeOperationDto.TransparentInvoicing is TransparentInvoicing.NonTransparent
+                                   or TransparentInvoicing.Unknown;
     }
 }
