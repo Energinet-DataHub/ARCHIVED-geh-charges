@@ -23,13 +23,11 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
     public class ChargeInformationCommandReceivedEventHandler : IChargeCommandReceivedEventHandler
     {
         private readonly IChargeInformationEventHandler _chargeInformationEventHandler;
-        private readonly IChargePriceEventHandler _chargePriceEventHandler;
         private readonly IDocumentValidator _documentValidator;
         private readonly IChargeCommandReceiptService _chargeCommandReceiptService;
 
-        public ChargeCommandReceivedEventHandler(
+        public ChargeInformationCommandReceivedEventHandler(
             IChargeInformationEventHandler chargeInformationEventHandler,
-            IChargePriceEventHandler chargePriceEventHandler,
             IDocumentValidator documentValidator,
             IChargeCommandReceiptService chargeCommandReceiptService)
         {

@@ -23,12 +23,12 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
     public class ChargePriceCommandReceivedEventHandler : IChargePriceCommandReceivedEventHandler
     {
         private readonly IChargePriceEventHandler _chargePriceEventHandler;
-        private readonly IDocumentValidator<ChargePriceCommand> _documentValidator;
+        private readonly IDocumentValidator _documentValidator;
         private readonly ILogger _logger;
 
         public ChargePriceCommandReceivedEventHandler(
             IChargePriceEventHandler chargePriceEventHandler,
-            IDocumentValidator<ChargePriceCommand> documentValidator,
+            IDocumentValidator documentValidator,
             ILoggerFactory loggerFactory)
         {
             _chargePriceEventHandler = chargePriceEventHandler;
