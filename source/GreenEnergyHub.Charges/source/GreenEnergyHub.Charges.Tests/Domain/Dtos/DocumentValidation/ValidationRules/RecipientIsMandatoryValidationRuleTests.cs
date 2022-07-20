@@ -14,37 +14,36 @@
 
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.DocumentValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation.DocumentValidation.ValidationRules;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.DocumentValidation.ValidationRules
+namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.DocumentValidation.ValidationRules
 {
     [UnitTest]
-    public class SenderIsMandatoryValidationRuleTests
+    public class RecipientIsMandatoryValidationRuleTests
     {
         [Theory]
         [InlineAutoMoqData(null!, false)]
         [InlineAutoMoqData("", false)]
         [InlineAutoMoqData("content", true)]
-        public void SenderIsMandatoryValidationRule_Test(string id, bool expected, ChargeInformationCommand chargeInformationCommand)
+        public void RecipientIsMandatoryValidationRule_Test(string id, bool expected, ChargeInformationCommand command)
         {
-            chargeInformationCommand.Document.Sender.MarketParticipantId = id;
-            var sut = new SenderIsMandatoryTypeValidationRule(chargeInformationCommand.Document);
-            Assert.Equal(expected, sut.IsValid);
+            command.Document.Recipient.MarketParticipantId = id;
+            var sut = new RecipientIsMandatoryTypeValidationRule(command.Document);
             sut.IsValid.Should().Be(expected);
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeInformationCommand chargeInformationCommand)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeInformationCommand command)
         {
-            chargeInformationCommand.Document.Sender.MarketParticipantId = null!;
-            var sut = new SenderIsMandatoryTypeValidationRule(chargeInformationCommand.Document);
-            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.SenderIsMandatoryTypeValidation);
+            command.Document.Recipient.MarketParticipantId = null!;
+            var sut = new RecipientIsMandatoryTypeValidationRule(command.Document);
+            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.RecipientIsMandatoryTypeValidation);
         }
     }
 }

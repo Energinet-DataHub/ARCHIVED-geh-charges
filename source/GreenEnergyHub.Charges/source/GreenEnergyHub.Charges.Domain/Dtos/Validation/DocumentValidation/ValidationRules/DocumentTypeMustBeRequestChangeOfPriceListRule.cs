@@ -13,24 +13,21 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
-using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.DocumentValidation.ValidationRules
+namespace GreenEnergyHub.Charges.Domain.Dtos.Validation.DocumentValidation.ValidationRules
 {
-    public class BusinessReasonCodeMustBeUpdateChargeInformationOrChargePricesRule : IValidationRule
+    public class DocumentTypeMustBeRequestChangeOfPriceListRule : IValidationRule
     {
         private readonly DocumentDto _documentDto;
 
-        public BusinessReasonCodeMustBeUpdateChargeInformationOrChargePricesRule(DocumentDto documentDto)
+        public DocumentTypeMustBeRequestChangeOfPriceListRule(DocumentDto documentDto)
         {
             _documentDto = documentDto;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
-            ValidationRuleIdentifier.BusinessReasonCodeMustBeUpdateChargeInformationOrChargePrices;
+            ValidationRuleIdentifier.DocumentTypeMustBeRequestChangeOfPriceList;
 
-        public bool IsValid =>
-            _documentDto.BusinessReasonCode is BusinessReasonCode.UpdateChargeInformation
-                or BusinessReasonCode.UpdateChargePrices;
+        public bool IsValid => _documentDto.Type == DocumentType.RequestChangeOfPriceList;
     }
 }

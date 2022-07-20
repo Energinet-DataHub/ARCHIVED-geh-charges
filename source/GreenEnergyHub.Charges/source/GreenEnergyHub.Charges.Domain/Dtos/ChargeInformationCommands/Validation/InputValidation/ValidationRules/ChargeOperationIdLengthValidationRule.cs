@@ -12,23 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.DocumentValidation.ValidationRules
+namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.InputValidation.ValidationRules
 {
-    public class DocumentTypeMustBeRequestChangeOfPriceListRule : IValidationRule
+    public class ChargeOperationIdLengthValidationRule : IValidationRule
     {
-        private readonly DocumentDto _documentDto;
+        private const int MaxValidLength = 36;
 
-        public DocumentTypeMustBeRequestChangeOfPriceListRule(DocumentDto documentDto)
+        private readonly ChargeOperationDto _chargeOperationDto;
+
+        public ChargeOperationIdLengthValidationRule(ChargeOperationDto chargeOperationDto)
         {
-            _documentDto = documentDto;
+            _chargeOperationDto = chargeOperationDto;
         }
 
-        public ValidationRuleIdentifier ValidationRuleIdentifier =>
-            ValidationRuleIdentifier.DocumentTypeMustBeRequestChangeOfPriceList;
+        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeOperationIdLengthValidation;
 
-        public bool IsValid => _documentDto.Type == DocumentType.RequestChangeOfPriceList;
+        public bool IsValid => _chargeOperationDto.Id?.Length <= MaxValidLength;
     }
 }

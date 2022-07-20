@@ -21,7 +21,6 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.DocumentValidation.Factories;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.InputValidation.Factories;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
@@ -68,11 +67,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
         private static void ConfigureValidation(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<IDocumentValidationRulesFactory<ChargeInformationCommand>,
-                ChargeCommandDocumentValidationRulesFactory>();
             serviceCollection.AddScoped<IInputValidationRulesFactory<ChargeOperationDto>,
                 ChargeOperationInputValidationRulesFactory>();
-            serviceCollection.AddScoped<IDocumentValidator<ChargeInformationCommand>, DocumentValidator<ChargeInformationCommand>>();
             serviceCollection.AddScoped<IInputValidator<ChargeOperationDto>, InputValidator<ChargeOperationDto>>();
         }
 

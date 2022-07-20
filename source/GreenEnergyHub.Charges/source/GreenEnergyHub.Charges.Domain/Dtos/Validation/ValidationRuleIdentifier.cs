@@ -60,5 +60,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
         PriceListMustStartAndStopAtMidnightValidationRule = 46, // VR919 / E86
         TaxIndicatorMustBeFalseForSubscription = 47, // VR920 / D14
         TaxIndicatorMustBeFalseForFee = 48, // VR921 / D14
+        ChargeOperationIdLengthValidation = 49, // VR922 / E86
     }
 }

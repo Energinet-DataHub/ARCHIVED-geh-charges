@@ -33,8 +33,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Validation
         [InlineAutoDomainData(true)]
         public async Task ValidateAsync_WhenFactoryCreateInvalidRules_ThenInvalidValidationResult(
             bool isValid,
-            [Frozen] Mock<IDocumentValidationRulesFactory<ChargeInformationCommand>> documentValidationRulesFactory,
-            DocumentValidator<ChargeInformationCommand> sut,
+            [Frozen] Mock<IDocumentValidationRulesFactory> documentValidationRulesFactory,
+            DocumentValidator sut,
             ChargeInformationCommand anyInformationCommand)
         {
             // Arrange

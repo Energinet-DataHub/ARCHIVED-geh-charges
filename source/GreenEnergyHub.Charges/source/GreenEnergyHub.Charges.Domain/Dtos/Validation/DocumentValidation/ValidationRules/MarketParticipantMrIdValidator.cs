@@ -12,20 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
-
-namespace GreenEnergyHub.Charges.Application.Charges.Handlers
+namespace GreenEnergyHub.Charges.Domain.Dtos.Validation.DocumentValidation.ValidationRules
 {
-    /// <summary>
-    /// Contract for handling a charge price bundle.
-    /// </summary>
-    public interface IChargePriceCommandBundleHandler
+    public static class MarketParticipantMrIdValidator
     {
-        /// <summary>
-        /// Synchronously handle the bundle.
-        /// </summary>
-        /// <param name="priceBundle">Bundle of charge price commands</param>
-        Task HandleAsync(ChargePriceCommandBundle priceBundle);
+        public static bool IsValid(string? marketParticipantMrId)
+        {
+            return !string.IsNullOrWhiteSpace(marketParticipantMrId);
+        }
     }
 }

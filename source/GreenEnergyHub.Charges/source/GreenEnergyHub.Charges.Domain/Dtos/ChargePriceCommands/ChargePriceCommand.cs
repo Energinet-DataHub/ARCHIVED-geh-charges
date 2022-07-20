@@ -14,15 +14,19 @@
 
 using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands
 {
     public class ChargePriceCommand : CommandBase
     {
-        public ChargePriceCommand(IReadOnlyCollection<ChargePriceOperationDto> operations)
+        public ChargePriceCommand(DocumentDto document, IReadOnlyCollection<ChargePriceOperationDto> operations)
         {
             Operations = operations;
+            Document = document;
         }
+
+        public override DocumentDto Document { get; }
 
         public override IReadOnlyCollection<ChargePriceOperationDto> Operations { get; }
     }

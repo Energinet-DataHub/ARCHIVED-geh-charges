@@ -30,6 +30,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         [Theory]
         [InlineAutoMoqData(ChargeType.Fee, TransparentInvoicing.Transparent, false)]
         [InlineAutoMoqData(ChargeType.Fee, TransparentInvoicing.NonTransparent, true)]
+        [InlineAutoMoqData(ChargeType.Fee, TransparentInvoicing.Unknown, true)]
         [InlineAutoMoqData(ChargeType.Subscription, TransparentInvoicing.Transparent, true)]
         [InlineAutoMoqData(ChargeType.Subscription, TransparentInvoicing.NonTransparent, true)]
         [InlineAutoMoqData(ChargeType.Tariff, TransparentInvoicing.Transparent, true)]

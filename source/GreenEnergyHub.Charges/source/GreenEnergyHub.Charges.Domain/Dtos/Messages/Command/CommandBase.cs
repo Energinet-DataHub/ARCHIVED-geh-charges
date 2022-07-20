@@ -13,11 +13,14 @@
 // limitations under the License.
 
 using System.Collections.Generic;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.Messages.Command
 {
     public abstract class CommandBase
     {
+        public abstract DocumentDto Document { get; }
+
         public abstract IReadOnlyCollection<OperationBase> Operations { get; }
     }
 }
