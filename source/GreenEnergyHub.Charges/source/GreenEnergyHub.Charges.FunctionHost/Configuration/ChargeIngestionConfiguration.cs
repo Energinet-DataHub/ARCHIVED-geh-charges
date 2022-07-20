@@ -17,6 +17,8 @@ using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation.DocumentValidation.Factories;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
@@ -40,6 +42,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IChargeInformationCommandHandler, ChargeInformationCommandHandler>();
             serviceCollection.AddScoped<IChargePriceCommandBundleHandler, ChargePriceCommandBundleHandler>();
             serviceCollection.AddScoped<IChargePriceCommandHandler, ChargePriceCommandHandler>();
+            serviceCollection.AddScoped<IDocumentValidationRulesFactory, DocumentValidationRulesFactory>();
+            serviceCollection.AddScoped<IDocumentValidator, DocumentValidator>();
 
             serviceCollection.AddMessaging()
                 .AddInternalMessageDispatcher<ChargeCommandReceivedEvent>(

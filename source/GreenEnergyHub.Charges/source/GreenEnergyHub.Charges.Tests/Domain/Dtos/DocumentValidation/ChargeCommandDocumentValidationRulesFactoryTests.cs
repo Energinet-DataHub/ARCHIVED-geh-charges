@@ -17,10 +17,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.DocumentValidation.Factories;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.DocumentValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation.DocumentValidation.Factories;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation.DocumentValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
@@ -29,7 +29,7 @@ using Moq;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.DocumentValidation
+namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.DocumentValidation
 {
     [UnitTest]
     public class ChargeCommandDocumentValidationRulesFactoryTests
@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Doc
         public async Task CreateRulesAsync_ShouldContainRulesTest(
             TestMarketParticipant sender,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            ChargeCommandDocumentValidationRulesFactory sut)
+            DocumentValidationRulesFactory sut)
         {
             // Arrange
             marketParticipantRepository
@@ -73,7 +73,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Doc
             TestMarketParticipant sender,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IChargeRepository> chargeRepository,
-            ChargeCommandDocumentValidationRulesFactory sut,
+            DocumentValidationRulesFactory sut,
             ChargeBuilder chargeBuilder)
         {
             // Arrange

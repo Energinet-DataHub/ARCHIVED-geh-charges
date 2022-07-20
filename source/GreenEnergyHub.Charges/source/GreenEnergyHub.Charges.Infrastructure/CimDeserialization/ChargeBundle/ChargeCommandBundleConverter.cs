@@ -83,6 +83,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                 .GroupBy(x => new { x.ChargeId, x.ChargeOwner, x.Type })
                 .Select(group =>
                     new ChargePriceCommand(
+                        document,
                         priceOperations.AsEnumerable().Select(dto => dto).ToList()))
                 .ToList();
             return new ChargePriceCommandBundle(document, priceCommands);

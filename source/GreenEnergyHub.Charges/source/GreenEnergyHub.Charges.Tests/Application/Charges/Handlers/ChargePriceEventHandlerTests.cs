@@ -173,7 +173,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         public async Task HandleAsync_WhenChargeUpdateHasStartDateAfterStopDate_RejectCurrentAndAllSubsequentOperations(
             [Frozen] Mock<IChargeIdentifierFactory> chargeIdentifierFactory,
             [Frozen] Mock<IChargeRepository> chargeRepository,
-            [Frozen] Mock<IDocumentValidator<ChargeInformationCommand>> documentValidator,
+            [Frozen] Mock<IDocumentValidator> documentValidator,
             [Frozen] Mock<IInputValidator<ChargeOperationDto>> inputValidator,
             [Frozen] Mock<IChargeCommandReceiptService> receiptService,
             TestMarketParticipant sender,
@@ -265,7 +265,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         }
 
         private static void SetupValidatorsForOperation(
-            Mock<IDocumentValidator<ChargeInformationCommand>> documentValidator,
+            Mock<IDocumentValidator> documentValidator,
             Mock<IInputValidator<ChargeOperationDto>> inputValidator)
         {
             inputValidator.Setup(v =>

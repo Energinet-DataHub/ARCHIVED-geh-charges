@@ -13,22 +13,20 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
-using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.DocumentValidation.ValidationRules
+namespace GreenEnergyHub.Charges.Domain.Dtos.Validation.DocumentValidation.ValidationRules
 {
-    public class RecipientIsMandatoryTypeValidationRule : IValidationRule
+    public class RecipientMustBeDdzRule : IValidationRule
     {
-        private readonly DocumentDto _documentDto;
+        private readonly MarketParticipantRole _recipientMarketParticipantRole;
 
-        public RecipientIsMandatoryTypeValidationRule(DocumentDto documentDto)
+        public RecipientMustBeDdzRule(DocumentDto documentDto)
         {
-            _documentDto = documentDto;
+            _recipientMarketParticipantRole = documentDto.Recipient.BusinessProcessRole;
         }
 
-        public ValidationRuleIdentifier ValidationRuleIdentifier =>
-            ValidationRuleIdentifier.RecipientIsMandatoryTypeValidation;
+        public bool IsValid => _recipientMarketParticipantRole == MarketParticipantRole.MeteringPointAdministrator;
 
-        public bool IsValid => MarketParticipantMrIdValidator.IsValid(_documentDto.Recipient.MarketParticipantId);
+        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.RecipientRoleMustBeDdz;
     }
 }

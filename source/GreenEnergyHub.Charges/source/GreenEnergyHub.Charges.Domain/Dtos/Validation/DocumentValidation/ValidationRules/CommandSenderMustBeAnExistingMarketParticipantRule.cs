@@ -12,13 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.DocumentValidation.ValidationRules
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
+
+namespace GreenEnergyHub.Charges.Domain.Dtos.Validation.DocumentValidation.ValidationRules
 {
-    public static class MarketParticipantMrIdValidator
+    public class CommandSenderMustBeAnExistingMarketParticipantRule : IValidationRule
     {
-        public static bool IsValid(string? marketParticipantMrId)
+        private readonly MarketParticipant? _sender;
+
+        public CommandSenderMustBeAnExistingMarketParticipantRule(MarketParticipant? sender)
         {
-            return !string.IsNullOrWhiteSpace(marketParticipantMrId);
+            _sender = sender;
         }
+
+        public ValidationRuleIdentifier ValidationRuleIdentifier =>
+            ValidationRuleIdentifier.CommandSenderMustBeAnExistingMarketParticipant;
+
+        public bool IsValid => _sender != null;
     }
 }

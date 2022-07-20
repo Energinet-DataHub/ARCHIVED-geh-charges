@@ -12,15 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
-
-namespace GreenEnergyHub.Charges.Domain.Dtos.Messages.Command
+namespace GreenEnergyHub.Charges.Domain.Dtos.Validation.DocumentValidation.ValidationRules
 {
-    public abstract class CommandBase
+    public static class MarketParticipantMrIdValidator
     {
-        public abstract DocumentDto Document { get; }
-
-        public abstract IReadOnlyCollection<OperationBase> Operations { get; }
+        public static bool IsValid(string? marketParticipantMrId)
+        {
+            return !string.IsNullOrWhiteSpace(marketParticipantMrId);
+        }
     }
 }

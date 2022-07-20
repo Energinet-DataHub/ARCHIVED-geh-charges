@@ -13,9 +13,8 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
-using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.DocumentValidation.ValidationRules
+namespace GreenEnergyHub.Charges.Domain.Dtos.Validation.DocumentValidation.ValidationRules
 {
     public class DocumentTypeMustBeRequestChangeOfPriceListRule : IValidationRule
     {
