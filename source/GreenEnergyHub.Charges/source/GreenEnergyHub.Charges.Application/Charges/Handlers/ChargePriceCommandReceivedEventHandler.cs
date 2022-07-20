@@ -13,10 +13,10 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
@@ -24,16 +24,16 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
     {
         private readonly IChargePriceEventHandler _chargePriceEventHandler;
         private readonly IDocumentValidator<ChargePriceCommand> _documentValidator;
-        private readonly IChargeCommandReceiptService _chargeCommandReceiptService;
+        private readonly ILogger _logger;
 
         public ChargePriceCommandReceivedEventHandler(
             IChargePriceEventHandler chargePriceEventHandler,
             IDocumentValidator<ChargePriceCommand> documentValidator,
-            IChargeCommandReceiptService chargeCommandReceiptService)
+            ILoggerFactory loggerFactory)
         {
             _chargePriceEventHandler = chargePriceEventHandler;
             _documentValidator = documentValidator;
-            _chargeCommandReceiptService = chargeCommandReceiptService;
+            _logger = loggerFactory.CreateLogger(nameof(ChargePriceCommandReceivedEventHandler));
         }
 
         public async Task HandleAsync(ChargePriceCommandReceivedEvent chargePriceCommandReceivedEvent)
@@ -42,8 +42,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 .ValidateAsync(chargePriceCommandReceivedEvent.Command).ConfigureAwait(false);
             if (documentValidationResult.IsFailed)
             {
-                //await _chargeCommandReceiptService
-                //    .RejectAsync(chargePriceCommandReceivedEvent.Command, documentValidationResult).ConfigureAwait(false);
+                _logger.Log(LogLevel.Information, "Charge price command received event failed document validation");
                 return;
             }
 
