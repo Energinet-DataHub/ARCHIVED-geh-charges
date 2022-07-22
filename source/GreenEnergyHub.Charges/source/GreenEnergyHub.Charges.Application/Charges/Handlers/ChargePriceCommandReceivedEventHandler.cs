@@ -14,7 +14,6 @@
 
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using Microsoft.Extensions.Logging;
 

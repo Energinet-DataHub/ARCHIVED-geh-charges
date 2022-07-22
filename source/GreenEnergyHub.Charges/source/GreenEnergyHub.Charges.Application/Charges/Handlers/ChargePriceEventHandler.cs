@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application.Charges.Services;
 using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Charges.Exceptions;
@@ -24,6 +25,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
@@ -33,17 +35,26 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         private readonly IMarketParticipantRepository _marketParticipantRepository;
         private readonly IInputValidator<ChargePriceOperationDto> _inputValidator;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IChargePriceConfirmationService _chargePriceConfirmationService;
+        private readonly IChargePriceRejectionService _chargePriceRejectionService;
+        private readonly IChargePriceNotificationService _chargePriceNotificationService;
 
         public ChargePriceEventHandler(
             IChargeRepository chargeRepository,
             IMarketParticipantRepository marketParticipantRepository,
             IInputValidator<ChargePriceOperationDto> inputValidator,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            IChargePriceConfirmationService chargePriceConfirmationService,
+            IChargePriceRejectionService chargePriceRejectionService,
+            IChargePriceNotificationService chargePriceNotificationService)
         {
             _chargeRepository = chargeRepository;
             _marketParticipantRepository = marketParticipantRepository;
             _inputValidator = inputValidator;
             _unitOfWork = unitOfWork;
+            _chargePriceConfirmationService = chargePriceConfirmationService;
+            _chargePriceRejectionService = chargePriceRejectionService;
+            _chargePriceNotificationService = chargePriceNotificationService;
         }
 
         public async Task HandleAsync(ChargePriceCommandReceivedEvent commandReceivedEvent)
@@ -71,7 +82,16 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 
                 try
                 {
-                    //await HandleOperationAsync(operation, charge).ConfigureAwait(false);
+                    if (charge is null)
+                    {
+                        throw new InvalidOperationException($"Charge ID '{operation.ChargeId}' does not exist.");
+                    }
+
+                    charge.UpdatePrices(
+                        operation.PointsStartInterval,
+                        operation.PointsEndInterval,
+                        operation.Points,
+                        operation.Id);
                 }
                 catch (ChargeOperationFailedException exception)
                 {
@@ -87,37 +107,13 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 operationsToBeConfirmed.Add(operation);
             }
 
-            //ConfirmationRepository
-            //RejectionServiceRepository
-            //NotificationServiceRepository
+            await _chargePriceConfirmationService.SaveConfirmationsAsync(operationsToBeConfirmed).ConfigureAwait(false);
+            await _chargePriceRejectionService.SaveRejectionsAsync(operationsToBeRejected).ConfigureAwait(false);
+            await _chargePriceNotificationService.SaveNotificationsAsync(operationsToBeConfirmed).ConfigureAwait(false);
+            await _chargePriceNotificationService.SaveNotificationsAsync(operationsToBeRejected).ConfigureAwait(false);
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-
-            //var document = commandReceivedEvent.Command.Document;
-            //await _chargeCommandReceiptService.RejectInvalidOperationsAsync(operationsToBeRejected, document, rejectionRules).ConfigureAwait(false);
-            //await _chargeCommandReceiptService.AcceptValidOperationsAsync(operationsToBeConfirmed, document).ConfigureAwait(false);
         }
 
-        //private async Task HandleOperationAsync(ChargePriceOperationDto operation, Charge? charge)
-        //{
-        //    var operationType = GetOperationType(operation, charge);
-        //    switch (operationType)
-        //    {
-        //        case OperationType.Create:
-        //            await HandleCreateEventAsync(operation).ConfigureAwait(false);
-        //            break;
-        //        case OperationType.Update:
-        //            HandleUpdateEvent(charge!, operation);
-        //            break;
-        //        case OperationType.Stop:
-        //            charge!.Stop(operation.EndDateTime);
-        //            break;
-        //        case OperationType.CancelStop:
-        //            HandleCancelStopEvent(charge!, operation);
-        //            break;
-        //        default:
-        //            throw new InvalidOperationException("Could not handle charge command.");
-        //    }
-        //}
         private static void CollectRejectionRules(
             List<IValidationRuleContainer> rejectionRules,
             ValidationResult validationResult,
