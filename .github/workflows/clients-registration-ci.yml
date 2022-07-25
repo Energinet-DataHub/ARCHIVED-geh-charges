@@ -39,7 +39,7 @@ jobs:
     needs: pre_job
     if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
     name: Validate build Clients Registration CI
-    uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci.yml@temporarily_disable_integration_test # TODO: Revert to next version when integration test issue is solved
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci.yml@7.6.0
     with:
       SOLUTION_FILE_PATH: 'source/Energinet.Charges.Libraries/Energinet.DataHub.Charges.Libraries.sln'
       DOTNET_VERSION: '6.0.300'
