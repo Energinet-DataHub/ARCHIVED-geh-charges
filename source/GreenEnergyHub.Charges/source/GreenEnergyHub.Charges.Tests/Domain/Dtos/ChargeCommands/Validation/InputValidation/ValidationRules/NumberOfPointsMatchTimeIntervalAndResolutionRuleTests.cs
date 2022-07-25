@@ -34,7 +34,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         [InlineAutoMoqData(Resolution.P1M, 2022, 1, 1, 23, 2022, 2, 1, 23, 1, "")]
         [InlineAutoMoqData(Resolution.P1M, 2022, 1, 15, 23, 2022, 2, 1, 23, 1, "irregular price series must be allowed")]
         [InlineAutoMoqData(Resolution.PT1H, 2022, 3, 26, 23, 2022, 3, 27, 22, 23, "switching to Daylight Saving Time must be supported")]
+        [InlineAutoMoqData(Resolution.P1D, 2022, 3, 26, 23, 2022, 3, 27, 22, 1, "switching to Daylight Saving Time must be supported")]
+        [InlineAutoMoqData(Resolution.P1M, 2022, 3, 26, 23, 2022, 4, 26, 22, 1, "switching to Daylight Saving Time must be supported")]
         [InlineAutoMoqData(Resolution.PT1H, 2022, 10, 29, 22, 2022, 10, 30, 23, 25, "switching to Normal Time must be supported")]
+        [InlineAutoMoqData(Resolution.P1D, 2022, 10, 29, 22, 2022, 10, 30, 23, 1, "switching to Normal Time must be supported")]
+        [InlineAutoMoqData(Resolution.P1M, 2022, 10, 29, 22, 2022, 11, 30, 23, 1, "switching to Normal Time must be supported")]
         [InlineAutoMoqData(Resolution.P1D, 2022, 1, 1, 23, 2022, 1, 6, 23, 5, "longer price series must be supported")]
         [InlineAutoMoqData(Resolution.P1M, 2022, 1, 1, 23, 2024, 1, 1, 23, 24, "longer price series spanning years must be supported")]
         public void IsValid_WhenCalledWithCorrectNumberOfPrices_ShouldParse(
