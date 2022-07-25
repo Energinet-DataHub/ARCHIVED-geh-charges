@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.Factories
@@ -32,9 +33,16 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.Inpu
         {
             var rules = new List<IValidationRuleContainer>
             {
+                CreateRuleContainer(new MaximumPriceRule(chargePriceOperationDto), chargePriceOperationDto.Id),
             };
 
             return rules;
+        }
+
+        private static IValidationRuleContainer CreateRuleContainer(
+            IValidationRule validationRule, string operationId)
+        {
+            return new OperationValidationRuleContainer(validationRule, operationId);
         }
     }
 }

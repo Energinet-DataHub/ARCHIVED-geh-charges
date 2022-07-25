@@ -108,7 +108,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             }
 
             await _chargePriceConfirmationService.SaveConfirmationsAsync(operationsToBeConfirmed).ConfigureAwait(false);
-            await _chargePriceRejectionService.SaveRejectionsAsync(operationsToBeRejected).ConfigureAwait(false);
+            await _chargePriceRejectionService.SaveRejectionsAsync(operationsToBeRejected, rejectionRules).ConfigureAwait(false);
             await _chargePriceNotificationService.SaveNotificationsAsync(operationsToBeConfirmed).ConfigureAwait(false);
             await _chargePriceNotificationService.SaveNotificationsAsync(operationsToBeRejected).ConfigureAwait(false);
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);

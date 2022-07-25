@@ -90,8 +90,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
                         break;
                     case ChargePriceCommandBundle commandBundle:
                         // This is a temporary fix to support "old" price flow while new is under development
-                        await SupportOldFlowAsync(commandBundle).ConfigureAwait(false);
-
+                        //await SupportOldFlowAsync(commandBundle).ConfigureAwait(false);
                         await _chargePriceCommandBundleHandler.HandleAsync(commandBundle).ConfigureAwait(false);
                         break;
                 }

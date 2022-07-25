@@ -12,9 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Services
@@ -28,10 +31,38 @@ namespace GreenEnergyHub.Charges.Application.Charges.Services
             _logger = loggerFactory.CreateLogger(nameof(ChargePriceConfirmationService));
         }
 
-        public Task SaveRejectionsAsync(List<ChargePriceOperationDto> rejectedPriceOperations)
+        public Task SaveRejectionsAsync(
+            List<ChargePriceOperationDto> rejectedPriceOperations,
+            ValidationResult documentValidationResult)
         {
-            _logger.LogInformation($"{rejectedPriceOperations.Count} rejected price operations was persisted.");
+            foreach (var chargePriceOperationDto in rejectedPriceOperations)
+            {
+                _logger.LogInformation(
+                    $"{chargePriceOperationDto.ChargeId} rejected price operations was persisted. With errors: {PrintInvalidRules(documentValidationResult)}");
+            }
+
             return Task.CompletedTask;
+        }
+
+        public Task SaveRejectionsAsync(
+            List<ChargePriceOperationDto> operationsToBeRejected,
+            List<IValidationRuleContainer> documentValidationResult)
+        {
+            foreach (var chargePriceOperationDto in operationsToBeRejected)
+            {
+                _logger.LogInformation(
+                    $"{chargePriceOperationDto.ChargeId} rejected price operations was persisted. With errors: {PrintInvalidRules(ValidationResult.CreateFailure(documentValidationResult))}");
+            }
+
+            return Task.CompletedTask;
+        }
+
+        private static string PrintInvalidRules(ValidationResult documentValidationResult)
+        {
+            return string.Join(
+                ",",
+                documentValidationResult.InvalidRules.Select(x =>
+                    x.ValidationRule.ValidationRuleIdentifier.ToString()));
         }
     }
 }

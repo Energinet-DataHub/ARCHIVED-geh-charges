@@ -15,11 +15,18 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Services
 {
     public interface IChargePriceRejectionService
     {
-        Task SaveRejectionsAsync(List<ChargePriceOperationDto> rejectedPriceOperations);
+        Task SaveRejectionsAsync(
+            List<ChargePriceOperationDto> rejectedPriceOperations,
+            ValidationResult documentValidationResult);
+
+        Task SaveRejectionsAsync(
+            List<ChargePriceOperationDto> operationsToBeRejected,
+            List<IValidationRuleContainer> documentValidationResult);
     }
 }

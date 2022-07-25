@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Linq;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application.Charges.Services;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using Microsoft.Extensions.Logging;
@@ -23,16 +25,16 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
     {
         private readonly IChargePriceEventHandler _chargePriceEventHandler;
         private readonly IDocumentValidator _documentValidator;
-        private readonly ILogger _logger;
+        private readonly IChargePriceRejectionService _chargePriceRejectionService;
 
         public ChargePriceCommandReceivedEventHandler(
             IChargePriceEventHandler chargePriceEventHandler,
             IDocumentValidator documentValidator,
-            ILoggerFactory loggerFactory)
+            IChargePriceRejectionService chargePriceRejectionService)
         {
             _chargePriceEventHandler = chargePriceEventHandler;
             _documentValidator = documentValidator;
-            _logger = loggerFactory.CreateLogger(nameof(ChargePriceCommandReceivedEventHandler));
+            _chargePriceRejectionService = chargePriceRejectionService;
         }
 
         public async Task HandleAsync(ChargePriceCommandReceivedEvent chargePriceCommandReceivedEvent)
@@ -41,7 +43,9 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 .ValidateAsync(chargePriceCommandReceivedEvent.Command).ConfigureAwait(false);
             if (documentValidationResult.IsFailed)
             {
-                _logger.Log(LogLevel.Information, "Charge price command received event failed document validation");
+                await _chargePriceRejectionService
+                    .SaveRejectionsAsync(chargePriceCommandReceivedEvent.Command.Operations.ToList(), documentValidationResult)
+                    .ConfigureAwait(false);
                 return;
             }
 
