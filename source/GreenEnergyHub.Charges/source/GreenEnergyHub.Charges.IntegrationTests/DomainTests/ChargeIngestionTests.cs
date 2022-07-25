@@ -350,6 +350,75 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 hostLogSnapshot.Any(x => x.Contains("With errors: UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDate")).Should().BeTrue();
             }
 
+            [Fact]
+            public async Task When_SendingChargePriceRequestForExistingFee_Then_AConfirmationIsShouldBeSent()
+            {
+                // Arrange
+                var (request, correlationId) = await _authenticatedHttpRequestGenerator
+                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.TariffPriceSeriesExistingFee);
+                using var eventualChargePriceUpdatedEvent = await Fixture
+                    .ChargePricesUpdatedListener
+                    .ListenForEventsAsync(correlationId, expectedCount: 1)
+                    .ConfigureAwait(false);
+
+                // Act
+                await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                eventualChargePriceUpdatedEvent
+                    .CountdownEvent!
+                    .Wait(TimeSpan.FromSeconds(SecondsToWaitForIntegrationEvents));
+                var hostLogSnapshot = Fixture.HostManager.GetHostLogSnapshot();
+                hostLogSnapshot.Any(x => x.Contains("With errors:")).Should().BeFalse();
+                hostLogSnapshot.Any(x => x.Contains("1 confirmed price operations was persisted.")).Should().BeTrue();
+            }
+
+            [Fact]
+            public async Task When_SendingChargePriceRequestForExistingTariff_Then_AConfirmationIsShouldBeSent()
+            {
+                // Arrange
+                var (request, correlationId) = await _authenticatedHttpRequestGenerator
+                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.TariffPriceSeriesExistingTariff);
+                using var eventualChargePriceUpdatedEvent = await Fixture
+                    .ChargePricesUpdatedListener
+                    .ListenForEventsAsync(correlationId, expectedCount: 1)
+                    .ConfigureAwait(false);
+
+                // Act
+                await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                eventualChargePriceUpdatedEvent
+                    .CountdownEvent!
+                    .Wait(TimeSpan.FromSeconds(SecondsToWaitForIntegrationEvents));
+                var hostLogSnapshot = Fixture.HostManager.GetHostLogSnapshot();
+                hostLogSnapshot.Any(x => x.Contains("With errors:")).Should().BeFalse();
+                hostLogSnapshot.Any(x => x.Contains("1 confirmed price operations was persisted.")).Should().BeTrue();
+            }
+
+            [Fact]
+            public async Task When_SendingChargePriceRequestForExistingSubscription_Then_AConfirmationIsShouldBeSent()
+            {
+                // Arrange
+                var (request, correlationId) = await _authenticatedHttpRequestGenerator
+                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.TariffPriceSeriesExistingSubscription);
+                using var eventualChargePriceUpdatedEvent = await Fixture
+                    .ChargePricesUpdatedListener
+                    .ListenForEventsAsync(correlationId, expectedCount: 1)
+                    .ConfigureAwait(false);
+
+                // Act
+                await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                eventualChargePriceUpdatedEvent
+                    .CountdownEvent!
+                    .Wait(TimeSpan.FromSeconds(SecondsToWaitForIntegrationEvents));
+                var hostLogSnapshot = Fixture.HostManager.GetHostLogSnapshot();
+                hostLogSnapshot.Any(x => x.Contains("With errors:")).Should().BeFalse();
+                hostLogSnapshot.Any(x => x.Contains("1 confirmed price operations was persisted.")).Should().BeTrue();
+            }
+
             private static ZonedDateTimeService GetZonedDateTimeService()
             {
                 var clock = new FakeClock(InstantHelper.GetTodayAtMidnightUtc());

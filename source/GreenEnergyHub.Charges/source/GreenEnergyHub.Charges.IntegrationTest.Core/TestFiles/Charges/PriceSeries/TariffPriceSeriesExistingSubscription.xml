@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright 2020 Energinet DataHub A/S
+
+Licensed under the Apache License, Version 2.0 (the "License2");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<cim:RequestChangeOfPriceList_MarketDocument xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cim="urn:ediel.org:structure:requestchangeofpricelist:0:1" xsi:schemaLocation="urn:ediel.org:structure:requestchangeofpricelist:0:1 urn-ediel-org-structure-requestchangeofpricelist-0-1.xsd">
+    <cim:mRID>DocId{{$isoTimestamp}}</cim:mRID>
+    <cim:type>D10</cim:type>
+    <cim:process.processType>D08</cim:process.processType>
+    <cim:businessSector.type>23</cim:businessSector.type>
+    <cim:sender_MarketParticipant.mRID codingScheme="A10">{{$senderMarketParticipant}}</cim:sender_MarketParticipant.mRID>
+    <cim:sender_MarketParticipant.marketRole.type>DDM</cim:sender_MarketParticipant.marketRole.type>
+    <cim:receiver_MarketParticipant.mRID codingScheme="A10">{{$receiverMarketParticipant}}</cim:receiver_MarketParticipant.mRID>
+    <cim:receiver_MarketParticipant.marketRole.type>DDZ</cim:receiver_MarketParticipant.marketRole.type>
+    <cim:createdDateTime>{{$isoTimestamp}}</cim:createdDateTime>
+    <cim:MktActivityRecord>
+        <cim:mRID>OpId1_{{$isoTimestamp}}</cim:mRID>
+        <cim:ChargeGroup>
+            <cim:ChargeType>
+                <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">{{$senderMarketParticipant}}</cim:chargeTypeOwner_MarketParticipant.mRID>
+                <cim:type>D01</cim:type>
+                <cim:mRID>TestSubscription</cim:mRID>
+                <cim:priceTimeFrame_Period.resolution>P1D</cim:priceTimeFrame_Period.resolution>
+                <cim:effectiveDate>{{$isoTimestampPlusOneMonth}}</cim:effectiveDate>
+                <cim:Series_Period>
+                    <cim:resolution>P1D</cim:resolution>
+                    <cim:timeInterval>
+                        <cim:start>{{$YMDHM_TimestampPlusOneMonth}}</cim:start>
+                        <cim:end>{{$YMDHM_TimestampPlusOneMonthAndOneDay}}</cim:end>
+                    </cim:timeInterval>
+                    <cim:Point>
+                        <cim:position>1</cim:position>
+                        <cim:price.amount>1.001</cim:price.amount>
+                    </cim:Point>
+                </cim:Series_Period>
+            </cim:ChargeType>
+        </cim:ChargeGroup>
+    </cim:MktActivityRecord>
+</cim:RequestChangeOfPriceList_MarketDocument>

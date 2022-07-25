@@ -39,5 +39,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.Charges
         public const string TariffPriceSeriesWithInvalidBusinessReasonCode = "TestFiles/Charges/PriceSeries/TariffPriceSeriesWithInvalidBusinessReasonCode.xml";
         public const string TariffPriceSeriesInvalidMaximumPrice = "TestFiles/Charges/PriceSeries/TariffPriceSeriesInvalidMaximumPrice.xml";
         public const string TariffPriceSeriesInvalidStartAndEndDate = "TestFiles/Charges/PriceSeries/TariffPriceSeriesInvalidStartAndEndDate.xml";
+        public const string TariffPriceSeriesExistingFee = "TestFiles/Charges/PriceSeries/TariffPriceSeriesExistingFee.xml";
+        public const string TariffPriceSeriesExistingTariff = "TestFiles/Charges/PriceSeries/TariffPriceSeriesExistingTariff.xml";
+        public const string TariffPriceSeriesExistingSubscription = "TestFiles/Charges/PriceSeries/TariffPriceSeriesExistingSubscription.xml";
     }
 }
