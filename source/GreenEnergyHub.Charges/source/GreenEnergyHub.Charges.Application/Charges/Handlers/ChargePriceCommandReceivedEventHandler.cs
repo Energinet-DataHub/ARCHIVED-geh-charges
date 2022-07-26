@@ -15,6 +15,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Services;
+using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
@@ -25,15 +26,18 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         private readonly IChargePriceEventHandler _chargePriceEventHandler;
         private readonly IDocumentValidator _documentValidator;
         private readonly IChargePriceRejectionService _chargePriceRejectionService;
+        private readonly IUnitOfWork _unitOfWork;
 
         public ChargePriceCommandReceivedEventHandler(
             IChargePriceEventHandler chargePriceEventHandler,
             IDocumentValidator documentValidator,
-            IChargePriceRejectionService chargePriceRejectionService)
+            IChargePriceRejectionService chargePriceRejectionService,
+            IUnitOfWork unitOfWork)
         {
             _chargePriceEventHandler = chargePriceEventHandler;
             _documentValidator = documentValidator;
             _chargePriceRejectionService = chargePriceRejectionService;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task HandleAsync(ChargePriceCommandReceivedEvent chargePriceCommandReceivedEvent)
@@ -45,6 +49,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 await _chargePriceRejectionService
                     .SaveRejectionsAsync(chargePriceCommandReceivedEvent.Command.Operations.ToList(), documentValidationResult)
                     .ConfigureAwait(false);
+                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                 return;
             }
 
