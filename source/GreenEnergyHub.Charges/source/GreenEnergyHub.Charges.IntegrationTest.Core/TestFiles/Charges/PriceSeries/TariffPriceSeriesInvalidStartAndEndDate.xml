@@ -30,14 +30,14 @@ limitations under the License.
             <cim:ChargeType>
                 <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">{{$senderMarketParticipant}}</cim:chargeTypeOwner_MarketParticipant.mRID>
                 <cim:type>D03</cim:type>
-                <cim:mRID>TestTar002</cim:mRID>
+                <cim:mRID>charge_with_enddate</cim:mRID>
                 <cim:priceTimeFrame_Period.resolution>PT1H</cim:priceTimeFrame_Period.resolution>
                 <cim:effectiveDate>{{$isoTimestampPlusOneMonth}}</cim:effectiveDate>
                 <cim:Series_Period>
                     <cim:resolution>PT1H</cim:resolution>
                     <cim:timeInterval>
-                        <cim:start>{{$YMDHM_TimestampPlusOneMonthAndOneDay}}</cim:start>
-                        <cim:end>{{$YMDHM_TimestampPlusOneMonth}}</cim:end>
+                        <cim:start>{{$YMDHM_TimestampPlusOneMonth}}</cim:start>
+                        <cim:end>{{$YMDHM_TimestampPlusOneMonthAndOneDay}}</cim:end>
                     </cim:timeInterval>
                     <cim:Point>
                         <cim:position>1</cim:position>

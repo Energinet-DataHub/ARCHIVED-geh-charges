@@ -222,7 +222,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             {
                 new(
                     new UpdateChargeMustHaveStartDateBeforeOrOnStopDateRule(
-                        endDate,
+                        _periods.OrderBy(x => x.EndDateTime).Last().EndDateTime,
                         startDate),
                     operationId),
             };
