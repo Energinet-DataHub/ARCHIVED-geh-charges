@@ -23,7 +23,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.Inpu
         private const int PriceUpperBound = 1000000;
         private readonly ChargePriceOperationDto _chargeOperationDto;
 
-        public MaximumPriceRule(ChargePriceOperationDto chargeOperationDto)
+        public MaximumPriceRule(ChargePriceOperationDto chargePriceOperationDto)
         {
             _chargeOperationDto = chargeOperationDto;
         }
