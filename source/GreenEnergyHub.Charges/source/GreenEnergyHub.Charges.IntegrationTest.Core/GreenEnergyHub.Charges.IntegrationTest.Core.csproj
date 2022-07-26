@@ -24,6 +24,15 @@ limitations under the License.
     <LangVersion>9</LangVersion>
     <OutputType>Library</OutputType>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="TestFiles\Charges\PriceSeries\TariffPriceSeriesExistingFee.xml" />
+    <None Remove="TestFiles\Charges\PriceSeries\TariffPriceSeriesExistingSubscription.xml" />
+    <None Remove="TestFiles\Charges\PriceSeries\TariffPriceSeriesExistingTariff.xml" />
+    <None Remove="TestFiles\Charges\PriceSeries\TariffPriceSeriesInvalidMaximumPrice.xml" />
+    <None Remove="TestFiles\Charges\PriceSeries\TariffPriceSeriesInvalidStartAndEndDate.xml" />
+    <None Remove="TestFiles\Charges\PriceSeries\TariffPriceSeriesWithInvalidRecipientType.xml" />
+  </ItemGroup>
   
   <ItemGroup>
     <ProjectReference Include="..\GreenEnergyHub.Charges.ApplyDBMigrationsApp\GreenEnergyHub.Charges.ApplyDBMigrationsApp.csproj" />
@@ -99,6 +108,24 @@ limitations under the License.
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestFiles\Charges\InvalidTariffDocument.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Charges\PriceSeries\TariffPriceSeriesExistingSubscription.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Charges\PriceSeries\TariffPriceSeriesExistingTariff.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Charges\PriceSeries\TariffPriceSeriesExistingFee.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Charges\PriceSeries\TariffPriceSeriesInvalidStartAndEndDate.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Charges\PriceSeries\TariffPriceSeriesInvalidMaximumPrice.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Charges\PriceSeries\TariffPriceSeriesWithInvalidRecipientType.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestFiles\Charges\PriceSeries\TariffPriceSeriesWithInvalidBusinessReasonCode.xml">

@@ -12,20 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
-
-namespace GreenEnergyHub.Charges.Application.Charges.Handlers
+namespace GreenEnergyHub.Charges.Domain.Dtos.Messages.Command
 {
-    /// <summary>
-    /// Handles events for charges with BusinessReasonCode D08
-    /// </summary>
-    public interface IChargePriceEventHandler
+    public abstract class ChargeOperationBase : OperationBase
     {
-        /// <summary>
-        /// Handles the received event as a charge price event
-        /// </summary>
-        /// <param name="commandReceivedEvent"></param>
-        Task HandleAsync(ChargePriceCommandReceivedEvent commandReceivedEvent);
     }
 }

@@ -35,9 +35,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         [InlineAutoDomainData]
         public async Task HandleAsync_WhenBusinessReasonCodeIsUpdateChargePrice_ActivateHandler(
             ChargeCommandReceivedEvent chargeCommandReceivedEvent,
-            [Frozen] Mock<IChargePriceEventHandler> chargeCommandReceivedEventHandlerMock,
+            [Frozen] Mock<IChargeInformationEventHandler> chargeCommandReceivedEventHandlerMock,
             [Frozen] Mock<IDocumentValidator> documentValidator,
-            ChargeCommandReceivedEventHandler sut)
+            ChargeInformationCommandReceivedEventHandler sut)
         {
             // Arrange
             documentValidator
@@ -60,7 +60,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             ChargeCommandReceivedEvent chargeCommandReceivedEvent,
             [Frozen] Mock<IChargeInformationEventHandler> chargeCommandReceivedEventHandlerMock,
             [Frozen] Mock<IDocumentValidator> documentValidator,
-            ChargeCommandReceivedEventHandler sut)
+            ChargeInformationCommandReceivedEventHandler sut)
         {
             // Arrange
             documentValidator
@@ -83,7 +83,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             ChargeCommandReceivedEvent chargeCommandReceivedEvent,
             [Frozen] Mock<IDocumentValidator> documentValidator,
             [Frozen] Mock<IChargeCommandReceiptService> chargeCommandReceiptService,
-            ChargeCommandReceivedEventHandler sut)
+            ChargeInformationCommandReceivedEventHandler sut)
         {
             // Arrange
             documentValidator.Setup(v =>
