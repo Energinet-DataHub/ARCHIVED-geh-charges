@@ -350,12 +350,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 hostLogSnapshot.Any(x => x.Contains("With errors: UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDate")).Should().BeTrue();
             }
 
-            [Fact]
-            public async Task When_SendingChargePriceRequestForExistingFee_Then_AConfirmationIsShouldBeSent()
+            [Theory]
+            [InlineAutoMoqData(ChargeDocument.TariffPriceSeriesExistingFee)]
+            [InlineAutoMoqData(ChargeDocument.TariffPriceSeriesExistingTariff)]
+            [InlineAutoMoqData(ChargeDocument.TariffPriceSeriesExistingSubscription)]
+            public async Task When_SendingChargePriceRequestForExistingFee_Then_AConfirmationIsShouldBeSent(string testFilePath)
             {
                 // Arrange
                 var (request, correlationId) = await _authenticatedHttpRequestGenerator
-                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.TariffPriceSeriesExistingFee);
+                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, testFilePath);
                 using var eventualChargePriceUpdatedEvent = await Fixture
                     .ChargePricesUpdatedListener
                     .ListenForEventsAsync(correlationId, expectedCount: 1)

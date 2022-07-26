@@ -52,10 +52,11 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             [Frozen] Mock<IChargePriceRejectionService> chargePriceRejectionService,
             [Frozen] Mock<IChargePriceConfirmationService> chargePriceConfirmationService,
             ChargeBuilder chargeBuilder,
-            ChargePriceCommandReceivedEvent receivedEvent,
             ChargePriceEventHandler sut)
         {
             // Arrange
+            var chargeCommand = CreateChargeCommandWith24Points();
+            var receivedEvent = new ChargePriceCommandReceivedEvent(InstantHelper.GetTodayAtMidnightUtc(), chargeCommand);
             var validationResult = ValidationResult.CreateSuccess();
             inputValidator
                 .Setup(v => v.Validate(It.IsAny<ChargePriceOperationDto>())).Returns(validationResult);
@@ -73,14 +74,16 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             await sut.HandleAsync(receivedEvent);
 
             // Assert
-            chargePriceRejectionService.Verify(x =>
-                x.SaveRejectionsAsync(
+            chargePriceRejectionService.Verify(
+                x => x.SaveRejectionsAsync(
                     It.Is<List<ChargePriceOperationDto>>(x => x.Count == 0),
-                    It.IsAny<List<IValidationRuleContainer>>()));
-            chargePriceConfirmationService.Verify(x =>
-                x.SaveConfirmationsAsync(
-                    It.Is<List<ChargePriceOperationDto>>(x => x.Count == 3)));
-            unitOfWork.Verify(x => x.SaveChangesAsync(), Times.AtLeastOnce());
+                    It.IsAny<List<IValidationRuleContainer>>()),
+                Times.Once);
+            chargePriceConfirmationService.Verify(
+                x =>
+                    x.SaveConfirmationsAsync(It.Is<List<ChargePriceOperationDto>>(x => x.Count == 1)),
+                Times.Once);
+            unitOfWork.Verify(x => x.SaveChangesAsync(), Times.Once());
         }
 
         [Theory]
