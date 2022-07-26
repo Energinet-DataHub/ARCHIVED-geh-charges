@@ -56,6 +56,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.NumberOfPointsMatchTimeIntervalAndResolution;
 
-        public bool IsValid => _expectedPointCount == _actualPointCount;
+        public bool IsValid =>
+            Convert.ToInt32(Math.Round(_expectedPointCount, MidpointRounding.AwayFromZero)) == _actualPointCount;
     }
 }
