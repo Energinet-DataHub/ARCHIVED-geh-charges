@@ -25,7 +25,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.Inpu
 
         public MaximumPriceRule(ChargePriceOperationDto chargePriceOperationDto)
         {
-            _chargeOperationDto = chargeOperationDto;
+            _chargeOperationDto = chargePriceOperationDto;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.MaximumPrice;
