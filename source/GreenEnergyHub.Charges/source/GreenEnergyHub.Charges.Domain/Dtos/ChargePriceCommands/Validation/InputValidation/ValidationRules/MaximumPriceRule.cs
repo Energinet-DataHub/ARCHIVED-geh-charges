@@ -16,16 +16,16 @@ using System.Linq;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.InputValidation.ValidationRules
+namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.ValidationRules
 {
     public class MaximumPriceRule : IValidationRuleWithExtendedData
     {
-        private const decimal PriceUpperBound = 1000000;
-        private readonly ChargeOperationDto _chargeOperationDto;
+        private const decimal PriceUpperBound = 1000000.0m;
+        private readonly ChargePriceOperationDto _chargeOperationDto;
 
-        public MaximumPriceRule(ChargeOperationDto chargeOperationDto)
+        public MaximumPriceRule(ChargePriceOperationDto chargePriceOperationDto)
         {
-            _chargeOperationDto = chargeOperationDto;
+            _chargeOperationDto = chargePriceOperationDto;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.MaximumPrice;

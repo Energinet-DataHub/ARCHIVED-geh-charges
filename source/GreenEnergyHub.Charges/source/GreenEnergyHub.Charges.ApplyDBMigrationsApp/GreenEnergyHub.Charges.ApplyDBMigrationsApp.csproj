@@ -22,6 +22,10 @@ limitations under the License.
     </PropertyGroup>
 
     <ItemGroup>
+      <None Remove="Scripts\Test\202207251045 Add test price data.sql" />
+    </ItemGroup>
+
+    <ItemGroup>
       <PackageReference Include="dbup-sqlserver" Version="4.5.0" />
       <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.435">
         <PrivateAssets>all</PrivateAssets>
@@ -53,6 +57,7 @@ limitations under the License.
       <EmbeddedResource Include="Scripts\Seed\202203251356 Alter default charges.sql" />
       <EmbeddedResource Include="Scripts\Test\202201261750 Add test data.sql" />
       <EmbeddedResource Include="Scripts\Model\280320221347 Add unique constraint on Charge Link.sql" />
+      <EmbeddedResource Include="Scripts\Test\202207251045 Add test price data.sql" />
       <EmbeddedResource Include="Scripts\Test\202206030818 Add test data to gridarealinks.sql" />
       <EmbeddedResource Include="Scripts\Model\202207151427 Increase OriginalOperationId length.sql" />
     </ItemGroup>

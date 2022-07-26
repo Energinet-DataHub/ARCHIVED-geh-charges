@@ -128,6 +128,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
             var chargeType = ChargeType.Unknown;
             var resolution = Resolution.Unknown;
             Instant startDateTime = default;
+            Instant endDateTime = default;
             Instant pointsStartTime = default;
             Instant pointsEndTime = default;
             var points = new List<Point>();
@@ -153,6 +154,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                 {
                     startDateTime = await reader.ReadValueAsNodaTimeAsync().ConfigureAwait(false);
                 }
+                else if (reader.Is(CimChargeCommandConstants.EndDateTime))
+                {
+                    endDateTime = await reader.ReadValueAsNodaTimeAsync().ConfigureAwait(false);
+                }
                 else if (reader.Is(CimChargeCommandConstants.SeriesPeriod))
                 {
                     var seriesPeriodIntoOperationAsync = await ParseSeriesPeriodIntoOperationAsync(reader, startDateTime).ConfigureAwait(false);
@@ -173,6 +178,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                 senderProvidedChargeId,
                 chargeOwner,
                 startDateTime,
+                endDateTime,
                 pointsStartTime,
                 pointsEndTime,
                 resolution,
