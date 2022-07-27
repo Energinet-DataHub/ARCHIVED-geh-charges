@@ -12,9 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
@@ -24,15 +26,18 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         private readonly IChargeInformationEventHandler _chargeInformationEventHandler;
         private readonly IDocumentValidator _documentValidator;
         private readonly IChargeCommandReceiptService _chargeCommandReceiptService;
+        private readonly IChargePriceEventHandlerDeprecated _chargePriceEventHandlerDeprecated;
 
         public ChargeInformationCommandReceivedEventHandler(
             IChargeInformationEventHandler chargeInformationEventHandler,
             IDocumentValidator documentValidator,
-            IChargeCommandReceiptService chargeCommandReceiptService)
+            IChargeCommandReceiptService chargeCommandReceiptService,
+            IChargePriceEventHandlerDeprecated chargePriceEventHandlerDeprecated)
         {
             _chargeInformationEventHandler = chargeInformationEventHandler;
             _documentValidator = documentValidator;
             _chargeCommandReceiptService = chargeCommandReceiptService;
+            _chargePriceEventHandlerDeprecated = chargePriceEventHandlerDeprecated;
         }
 
         public async Task HandleAsync(ChargeCommandReceivedEvent commandReceivedEvent)
@@ -45,7 +50,18 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 return;
             }
 
-            await _chargeInformationEventHandler.HandleAsync(commandReceivedEvent).ConfigureAwait(false);
+            switch (commandReceivedEvent.Command.Document.BusinessReasonCode)
+            {
+                case BusinessReasonCode.UpdateChargePrices:
+                    await _chargePriceEventHandlerDeprecated.HandleAsync(commandReceivedEvent).ConfigureAwait(false);
+                    break;
+                case BusinessReasonCode.UpdateChargeInformation:
+                    await _chargeInformationEventHandler.HandleAsync(commandReceivedEvent).ConfigureAwait(false);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(
+                        $"Invalid BusinessReasonCode {commandReceivedEvent.Command.Document.BusinessReasonCode}");
+            }
         }
     }
 }
