@@ -62,8 +62,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                 .Setup(v => v.Validate(It.IsAny<ChargePriceOperationDto>())).Returns(validationResult);
             var points = new List<Point>
             {
-                new(0, 1.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(0)),
-                new(0, 2.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(1)),
+                new(1.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(0)),
+                new(2.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(1)),
             };
             var charge = chargeBuilder.WithPoints(points).Build();
             SetupChargeRepository(chargeRepository, charge);
@@ -147,7 +147,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             var price = 99.00M;
             for (var i = 0; i <= 23; i++)
             {
-                points.Add(new Point(1 + i, price + i, InstantHelper.GetTodayAtMidnightUtc() + Duration.FromHours(i)));
+                points.Add(new Point(price + i, InstantHelper.GetTodayAtMidnightUtc() + Duration.FromHours(i)));
             }
 
             var charge = chargeBuilder.WithPoints(points).Build();
@@ -287,7 +287,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             var startTime = InstantHelper.GetTodayAtMidnightUtc();
             for (var i = 0; i <= 23; i++)
             {
-                points.Add(new Point(1 + i, price + i, startTime + Duration.FromHours(i)));
+                points.Add(new Point(price + i, startTime + Duration.FromHours(i)));
             }
 
             var startDate = points.Min(x => x.Time);

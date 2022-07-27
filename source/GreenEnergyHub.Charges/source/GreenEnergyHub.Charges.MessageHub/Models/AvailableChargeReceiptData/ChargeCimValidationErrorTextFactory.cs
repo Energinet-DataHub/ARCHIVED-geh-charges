@@ -14,6 +14,7 @@
 
 using System;
 using System.Linq;
+using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
@@ -147,7 +148,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             try
             {
                 return chargeOperationDto.Points
-                        .Single(p => p.Position == int.Parse(triggeredBy!))
+                        .Single(p => chargeOperationDto.Points.GetPositionOfPoint(p) == int.Parse(triggeredBy!))
                         .Price.ToString("N");
             }
             catch (Exception e)

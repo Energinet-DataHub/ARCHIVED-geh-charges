@@ -52,7 +52,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
         {
             // Arrange
             var chargeOperationDto = new ChargeOperationDtoBuilder()
-                .WithPoint(1, 1)
+                .WithPoint(1)
                 .WithTaxIndicator(TaxIndicator.Tax)
                 .WithTransparentInvoicing(TransparentInvoicing.Transparent)
                 .Build();
@@ -124,7 +124,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
                 .Setup(m => m.GetMeteringPointAdministratorAsync())
                 .ReturnsAsync(new MarketParticipantBuilder().Build());
             var chargeOperationDto = new ChargeOperationDtoBuilder()
-                .WithPoint(1, 1)
+                .WithPoint(1)
                 .WithTaxIndicator(taxIndicator)
                 .WithTransparentInvoicing(TransparentInvoicing.Transparent)
                 .Build();

@@ -56,7 +56,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
 
         private static ChargePriceOperationDto CreateChargeOperationDto(ChargePriceOperationDtoBuilder builder, decimal price)
         {
-            return builder.WithPoint(1, price).Build();
+            return builder.WithPoint(price).Build();
         }
     }
 }
