@@ -13,23 +13,27 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using NodaTime;
 
-namespace GreenEnergyHub.Charges.Application.Charges.Services
+namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceRejectedEvents
 {
-    public interface IChargePriceRejectionService
+    public class ChargePriceRejectedEvent : InternalEventBase
     {
-        Task SaveRejectionsAsync(
-            DocumentDto document,
-            List<ChargePriceOperationDto> rejectedPriceOperations,
-            ValidationResult documentValidationResult);
+        public ChargePriceRejectedEvent(
+            Instant publishedTime,
+            ChargePriceCommand command,
+            IEnumerable<ValidationError> validationErrors)
+            : base(publishedTime)
+        {
+            Command = command;
+            ValidationErrors = validationErrors;
+        }
 
-        Task SaveRejectionsAsync(
-            DocumentDto document,
-            List<ChargePriceOperationDto> operationsToBeRejected,
-            List<IValidationRuleContainer> documentValidationResult);
+        public ChargePriceCommand Command { get; }
+
+        public IEnumerable<ValidationError> ValidationErrors { get; }
     }
 }

@@ -12,24 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Linq;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using NodaTime;
 
-namespace GreenEnergyHub.Charges.Application.Charges.Services
+namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceRejectedEvents
 {
-    public interface IChargePriceRejectionService
+    public class ChargePriceRejectedEventFactory : IChargePriceRejectedEventFactory
     {
-        Task SaveRejectionsAsync(
-            DocumentDto document,
-            List<ChargePriceOperationDto> rejectedPriceOperations,
-            ValidationResult documentValidationResult);
+        private readonly IClock _clock;
 
-        Task SaveRejectionsAsync(
-            DocumentDto document,
-            List<ChargePriceOperationDto> operationsToBeRejected,
-            List<IValidationRuleContainer> documentValidationResult);
+        public ChargePriceRejectedEventFactory(IClock clock)
+        {
+            _clock = clock;
+        }
+
+        public ChargePriceRejectedEvent CreateEvent(ChargePriceCommand command, ValidationResult validationResult)
+        {
+            return new ChargePriceRejectedEvent(
+                _clock.GetCurrentInstant(),
+                command,
+                validationResult.InvalidRules.Select(ValidationErrorFactory.Create()));
+        }
     }
 }
