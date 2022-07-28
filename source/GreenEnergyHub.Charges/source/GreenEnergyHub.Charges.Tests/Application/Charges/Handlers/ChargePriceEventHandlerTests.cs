@@ -195,8 +195,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                     It.IsAny<DocumentDto>(),
                     It.IsAny<List<ChargePriceOperationDto>>(),
                     It.IsAny<List<IValidationRuleContainer>>()))
-                .Callback<IReadOnlyCollection<ChargePriceOperationDto>, IList<IValidationRuleContainer>>(
-                    (_, s) => rejectedRules.AddRange(s));
+                .Callback<DocumentDto, IReadOnlyCollection<ChargePriceOperationDto>, IList<IValidationRuleContainer>>(
+                    (_, _, s) => rejectedRules.AddRange(s));
 
             // Act
             await sut.HandleAsync(receivedEvent);

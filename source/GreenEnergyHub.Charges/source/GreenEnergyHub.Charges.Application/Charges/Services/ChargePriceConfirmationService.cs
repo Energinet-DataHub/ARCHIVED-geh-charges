@@ -23,12 +23,12 @@ namespace GreenEnergyHub.Charges.Application.Charges.Services
 {
     public class ChargePriceConfirmationService : IChargePriceConfirmationService
     {
-        private readonly ChargePriceAcceptedEventFactory _chargePriceAcceptedEventFactory;
+        private readonly IChargePriceAcceptedEventFactory _chargePriceAcceptedEventFactory;
         // private readonly IAvailableDataNotifier<AvailableChargeReceiptData, ChargePriceAcceptedEvent> _availableDataNotifier;
         private readonly ILogger _logger;
 
         public ChargePriceConfirmationService(
-            ChargePriceAcceptedEventFactory chargePriceAcceptedEventFactory,
+            IChargePriceAcceptedEventFactory chargePriceAcceptedEventFactory,
             // IAvailableDataNotifier<AvailableChargeReceiptData, ChargePriceAcceptedEvent> availableDataNotifier,
             ILoggerFactory loggerFactory)
         {

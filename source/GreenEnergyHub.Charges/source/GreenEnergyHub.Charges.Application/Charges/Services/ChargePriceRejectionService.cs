@@ -25,14 +25,14 @@ namespace GreenEnergyHub.Charges.Application.Charges.Services
 {
     public class ChargePriceRejectionService : IChargePriceRejectionService
     {
-        private readonly ChargePriceRejectedEventFactory _chargePriceRejectedEventFactory;
+        private readonly IChargePriceRejectedEventFactory _chargePriceRejectedEventFactory;
         // private readonly IAvailableDataNotifier<AvailableChargeReceiptData, ChargePriceRejectedEvent> _availableDataNotifier;
         private readonly ILogger _logger;
 
         public ChargePriceRejectionService(
             ILoggerFactory loggerFactory,
             // IAvailableDataNotifier<AvailableChargeReceiptData, ChargePriceRejectedEvent> availableDataNotifier,
-            ChargePriceRejectedEventFactory chargePriceRejectedEventFactory)
+            IChargePriceRejectedEventFactory chargePriceRejectedEventFactory)
         {
             _chargePriceRejectedEventFactory = chargePriceRejectedEventFactory;
             // _availableDataNotifier = availableDataNotifier;
