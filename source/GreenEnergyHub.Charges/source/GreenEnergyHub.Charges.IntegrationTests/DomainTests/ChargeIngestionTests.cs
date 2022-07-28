@@ -354,7 +354,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             [InlineAutoMoqData(ChargeDocument.TariffPriceSeriesExistingFee)]
             [InlineAutoMoqData(ChargeDocument.TariffPriceSeriesExistingTariff)]
             [InlineAutoMoqData(ChargeDocument.TariffPriceSeriesExistingSubscription)]
-            public async Task When_SendingChargePriceRequestForExistingFee_Then_AConfirmationIsShouldBeSent(string testFilePath)
+            public async Task When_SendingChargePriceRequestForExistingCharge_Then_AConfirmationIsShouldBeSent(string testFilePath)
             {
                 // Arrange
                 var (request, correlationId) = await _authenticatedHttpRequestGenerator
