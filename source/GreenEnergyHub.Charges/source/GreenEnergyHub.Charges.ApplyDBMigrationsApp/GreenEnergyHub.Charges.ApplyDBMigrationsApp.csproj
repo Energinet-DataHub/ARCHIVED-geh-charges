@@ -22,11 +22,6 @@ limitations under the License.
     </PropertyGroup>
 
     <ItemGroup>
-      <None Remove="Scripts\Model\202207271035 Remove position from ChargePoint.sql" />
-      <None Remove="Scripts\Test\202207251045 Add test price data.sql" />
-    </ItemGroup>
-
-    <ItemGroup>
       <PackageReference Include="dbup-sqlserver" Version="4.5.0" />
       <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.435">
         <PrivateAssets>all</PrivateAssets>
