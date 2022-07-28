@@ -12,17 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
+using NodaTime;
 
-namespace GreenEnergyHub.Charges.Application.Charges.Services
+namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceAcceptedEvents
 {
-    public interface IChargePriceConfirmationService
+    public class ChargePriceAcceptedEventFactory : IChargePriceAcceptedEventFactory
     {
-        Task SaveConfirmationsAsync(
-            DocumentDto document,
-            List<ChargePriceOperationDto> confirmedPriceOperations);
+        private readonly IClock _clock;
+
+        public ChargePriceAcceptedEventFactory(IClock clock)
+        {
+            _clock = clock;
+        }
+
+        public ChargePriceAcceptedEvent CreateEvent(ChargePriceCommand command)
+        {
+            return new ChargePriceAcceptedEvent(
+                _clock.GetCurrentInstant(),
+                command);
+        }
     }
 }

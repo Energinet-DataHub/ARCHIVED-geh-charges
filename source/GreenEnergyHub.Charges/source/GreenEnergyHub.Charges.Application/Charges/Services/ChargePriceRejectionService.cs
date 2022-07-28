@@ -15,13 +15,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceRejectedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
-using GreenEnergyHub.Charges.MessageHub.MessageHub;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Services
@@ -29,47 +26,51 @@ namespace GreenEnergyHub.Charges.Application.Charges.Services
     public class ChargePriceRejectionService : IChargePriceRejectionService
     {
         private readonly ChargePriceRejectedEventFactory _chargePriceRejectedEventFactory;
-        private readonly IAvailableDataNotifier<AvailableChargeReceiptData, ChargePriceRejectedEvent> _availableDataNotifier;
+        // private readonly IAvailableDataNotifier<AvailableChargeReceiptData, ChargePriceRejectedEvent> _availableDataNotifier;
         private readonly ILogger _logger;
 
         public ChargePriceRejectionService(
             ILoggerFactory loggerFactory,
-            ChargePriceRejectedEventFactory chargePriceRejectedEventFactory,
-            IAvailableDataNotifier<AvailableChargeReceiptData, ChargePriceRejectedEvent> availableDataNotifier)
+            // IAvailableDataNotifier<AvailableChargeReceiptData, ChargePriceRejectedEvent> availableDataNotifier,
+            ChargePriceRejectedEventFactory chargePriceRejectedEventFactory)
         {
             _chargePriceRejectedEventFactory = chargePriceRejectedEventFactory;
-            _availableDataNotifier = availableDataNotifier;
+            // _availableDataNotifier = availableDataNotifier;
             _logger = loggerFactory.CreateLogger(nameof(ChargePriceConfirmationService));
         }
 
-        public async Task SaveRejectionsAsync(
+        public Task SaveRejectionsAsync(
             DocumentDto document,
             List<ChargePriceOperationDto> rejectedPriceOperations,
             ValidationResult validationResult)
         {
             var command = new ChargePriceCommand(document, rejectedPriceOperations);
             var rejectedEvent = _chargePriceRejectedEventFactory.CreateEvent(command, validationResult);
-            await _availableDataNotifier.NotifyAsync(rejectedEvent).ConfigureAwait(false);
+            // await _availableDataNotifier.NotifyAsync(rejectedEvent).ConfigureAwait(false);
             foreach (var chargePriceOperationDto in rejectedPriceOperations)
             {
                 _logger.LogInformation(
                     $"{chargePriceOperationDto.ChargeId} rejected price operations was persisted. With errors: {PrintInvalidRules(validationResult)}");
             }
+
+            return Task.CompletedTask;
         }
 
-        public async Task SaveRejectionsAsync(
+        public Task SaveRejectionsAsync(
             DocumentDto document,
             List<ChargePriceOperationDto> operationsToBeRejected,
             List<IValidationRuleContainer> validationResult)
         {
             var command = new ChargePriceCommand(document, operationsToBeRejected);
             var rejectedEvent = _chargePriceRejectedEventFactory.CreateEvent(command, ValidationResult.CreateFailure(validationResult));
-            await _availableDataNotifier.NotifyAsync(rejectedEvent).ConfigureAwait(false);
+            // await _availableDataNotifier.NotifyAsync(rejectedEvent).ConfigureAwait(false);
             foreach (var chargePriceOperationDto in operationsToBeRejected)
             {
                 _logger.LogInformation(
                     $"{chargePriceOperationDto.ChargeId} rejected price operations was persisted. With errors: {PrintInvalidRules(ValidationResult.CreateFailure(validationResult))}");
             }
+
+            return Task.CompletedTask;
         }
 
         private static string PrintInvalidRules(ValidationResult documentValidationResult)

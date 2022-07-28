@@ -21,6 +21,7 @@ using GreenEnergyHub.Charges.Application.Charges.Services;
 using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.TestHelpers;
 using Moq;
@@ -75,6 +76,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             // Assert
             chargePriceRejectionService.Verify(
                 x => x.SaveRejectionsAsync(
+                    It.IsAny<DocumentDto>(),
                     chargePriceCommandReceivedEvent.Command.Operations.ToList(),
                     It.IsAny<ValidationResult>()),
                 Times.Once);

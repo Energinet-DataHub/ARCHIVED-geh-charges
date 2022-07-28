@@ -25,7 +25,6 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
@@ -107,8 +106,13 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 operationsToBeConfirmed.Add(operation);
             }
 
-            await _chargePriceConfirmationService.SaveConfirmationsAsync(operationsToBeConfirmed).ConfigureAwait(false);
-            await _chargePriceRejectionService.SaveRejectionsAsync(operationsToBeRejected, rejectionRules).ConfigureAwait(false);
+            await _chargePriceConfirmationService.SaveConfirmationsAsync(
+                commandReceivedEvent.Command.Document,
+                operationsToBeConfirmed).ConfigureAwait(false);
+            await _chargePriceRejectionService.SaveRejectionsAsync(
+                commandReceivedEvent.Command.Document,
+                operationsToBeRejected,
+                rejectionRules).ConfigureAwait(false);
             await _chargePriceNotificationService.SaveNotificationsAsync(operationsToBeConfirmed).ConfigureAwait(false);
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
         }
