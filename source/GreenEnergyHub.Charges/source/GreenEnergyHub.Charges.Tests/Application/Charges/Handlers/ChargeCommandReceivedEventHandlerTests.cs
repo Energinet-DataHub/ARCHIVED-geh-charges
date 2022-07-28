@@ -33,30 +33,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
     {
         [Theory]
         [InlineAutoDomainData]
-        public async Task HandleAsync_WhenBusinessReasonCodeIsUpdateChargePrice_ActivateHandler(
-            ChargeCommandReceivedEvent chargeCommandReceivedEvent,
-            [Frozen] Mock<IChargePriceEventHandlerDeprecated> chargePriceEventHandlerDeprecated,
-            [Frozen] Mock<IDocumentValidator> documentValidator,
-            ChargeInformationCommandReceivedEventHandler sut)
-        {
-            // Arrange
-            documentValidator
-                .Setup(v => v.ValidateAsync(It.IsAny<ChargeInformationCommand>()))
-                .ReturnsAsync(ValidationResult.CreateSuccess());
-            chargeCommandReceivedEvent.Command.Document.BusinessReasonCode = BusinessReasonCode.UpdateChargePrices;
-
-            // Act
-            await sut.HandleAsync(chargeCommandReceivedEvent);
-
-            // Assert
-            chargePriceEventHandlerDeprecated.Verify(
-                x => x.HandleAsync(chargeCommandReceivedEvent),
-                Times.Once);
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
-        public async Task HandleAsync_WhenBusinessReasonCodeIsUpdateChargeInformation_ActivateHandler(
+        public async Task HandleAsync_WhenReceivingUpdateChargeInformation_ActivateHandler(
             ChargeCommandReceivedEvent chargeCommandReceivedEvent,
             [Frozen] Mock<IChargeInformationEventHandler> chargeCommandReceivedEventHandlerMock,
             [Frozen] Mock<IDocumentValidator> documentValidator,

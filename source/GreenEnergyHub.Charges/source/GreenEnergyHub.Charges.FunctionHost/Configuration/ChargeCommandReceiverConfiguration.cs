@@ -53,7 +53,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IAvailableChargeReceiptValidationErrorFactory,
                 AvailableChargeReceiptValidationErrorFactory>();
             serviceCollection.AddScoped<IChargeCommandReceivedEventHandler, ChargeInformationCommandReceivedEventHandler>();
-            serviceCollection.AddScoped<IChargePriceEventHandlerDeprecated, ChargePriceEventHandlerDeprecated>();
             ConfigureDatabase(serviceCollection);
             ConfigureValidation(serviceCollection);
             ConfigureIso8601Timezones(serviceCollection);
