@@ -12,26 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using NodaTime;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace GreenEnergyHub.Charges.Domain.Charges
 {
-    /// <summary>
-    /// This Point class is used for handling each individual price of charge price list.
-    /// </summary>
-    public class Point
+    public static class PointExtensions
     {
-        public Point(decimal price, Instant time)
+        public static int GetPositionOfPoint(this List<Point> points, Point pointToFindPositionOf)
         {
-            Price = price;
-            Time = time;
+            var index = points.OrderByDescending(point => point.Time).ToList().IndexOf(pointToFindPositionOf);
+            return index + 1;
         }
-
-        public decimal Price { get; }
-
-        /// <summary>
-        /// A point in time, where the price applies.
-        /// </summary>
-        public Instant Time { get; }
     }
 }

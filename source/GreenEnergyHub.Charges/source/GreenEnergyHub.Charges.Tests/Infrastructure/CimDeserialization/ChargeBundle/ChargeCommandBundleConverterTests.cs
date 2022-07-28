@@ -93,10 +93,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
 
             // Points
             actualChargeOperation.Points.Should().HaveCount(2);
-            actualChargeOperation.Points[0].Position.Should().Be(1);
             actualChargeOperation.Points[0].Time.Should().Be(expectedTime);
             actualChargeOperation.Points[0].Price.Should().Be(100m);
-            actualChargeOperation.Points[1].Position.Should().Be(2);
             actualChargeOperation.Points[1].Time.Should().Be(expectedTime);
             actualChargeOperation.Points[1].Price.Should().Be(200m);
 
@@ -200,10 +198,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
 
             // Points
             actualChargeOperation.Points.Should().HaveCount(2);
-            actualChargeOperation.Points[0].Position.Should().Be(1);
             actualChargeOperation.Points[0].Time.Should().Be(expectedTime);
             actualChargeOperation.Points[0].Price.Should().Be(0.536m);
-            actualChargeOperation.Points[1].Position.Should().Be(2);
             actualChargeOperation.Points[1].Time.Should().Be(expectedTime);
             actualChargeOperation.Points[1].Price.Should().Be(14.984m);
 
