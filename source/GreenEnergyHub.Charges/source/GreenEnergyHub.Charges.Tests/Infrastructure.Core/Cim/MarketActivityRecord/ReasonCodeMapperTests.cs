@@ -14,6 +14,7 @@
 
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketActivityRecord;
+using GreenEnergyHub.Charges.MessageHub.AvailableData.Models.Shared;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Xunit;
 using Xunit.Categories;

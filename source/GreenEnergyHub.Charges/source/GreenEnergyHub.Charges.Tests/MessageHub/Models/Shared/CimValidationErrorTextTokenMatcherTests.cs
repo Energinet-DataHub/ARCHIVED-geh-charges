@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using FluentAssertions;
-using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.MessageHub.AvailableData.Models.Shared;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Xunit;

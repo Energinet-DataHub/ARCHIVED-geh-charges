@@ -13,10 +13,10 @@
 // limitations under the License.
 
 using Energinet.DataHub.Core.Messaging.Protobuf;
-using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factories;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
+using GreenEnergyHub.Charges.MessageHub.AvailableData.Messaging;
 using GreenEnergyHub.Charges.Tests.Infrastructure.Messaging;
 using GreenEnergyHub.TestHelpers;
 using Microsoft.Extensions.DependencyInjection;

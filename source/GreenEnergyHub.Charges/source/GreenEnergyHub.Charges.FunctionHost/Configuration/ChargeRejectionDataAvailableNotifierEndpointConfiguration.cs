@@ -14,7 +14,6 @@
 
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
-using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
 using GreenEnergyHub.Charges.MessageHub.AvailableData.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.MessageHub.AvailableData.Models.AvailableData;

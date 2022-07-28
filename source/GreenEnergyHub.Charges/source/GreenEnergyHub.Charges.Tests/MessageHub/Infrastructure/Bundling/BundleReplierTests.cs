@@ -20,7 +20,7 @@ using Energinet.DataHub.MessageHub.Client.Peek;
 using Energinet.DataHub.MessageHub.Client.Storage;
 using Energinet.DataHub.MessageHub.Model.Model;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Application.Messaging;
+using GreenEnergyHub.Charges.MessageHub.AvailableData.Messaging;
 using GreenEnergyHub.Charges.MessageHub.Infrastructure.Bundling;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Moq;

@@ -37,7 +37,7 @@ limitations under the License.
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\GreenEnergyHub.Charges.MessageHub.AvailableData\GreenEnergyHub.Charges.MessageHub.AvailableData.csproj" />
+      <ProjectReference Include="..\GreenEnergyHub.Charges.MessageHub.AvailableData\GreenEnergyHub.Charges.MessageHub.AvailableData.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.Domain\GreenEnergyHub.Charges.Domain.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.Infrastructure.Core\GreenEnergyHub.Charges.Infrastructure.Core.csproj" />
     </ItemGroup>
@@ -47,6 +47,11 @@ limitations under the License.
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Models\AvailableChargeData" />
+      <Folder Include="Models\AvailableChargeLinksData" />
     </ItemGroup>
 
 </Project>

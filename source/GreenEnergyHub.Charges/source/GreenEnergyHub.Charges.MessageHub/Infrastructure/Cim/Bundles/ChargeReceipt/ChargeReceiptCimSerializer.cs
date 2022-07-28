@@ -20,6 +20,7 @@ using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketActivityRecord;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.MessageHub.AvailableData.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.MessageHub.AvailableData.Models.AvailableData;
+using GreenEnergyHub.Charges.MessageHub.AvailableData.Models.Shared;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeReceipt

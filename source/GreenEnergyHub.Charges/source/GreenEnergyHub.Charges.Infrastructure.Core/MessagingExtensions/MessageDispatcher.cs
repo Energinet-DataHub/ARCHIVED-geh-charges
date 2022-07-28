@@ -15,7 +15,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.Messaging.Transport;
-using GreenEnergyHub.Charges.Application.Messaging;
+using GreenEnergyHub.Charges.MessageHub.AvailableData.Messaging;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions
 {

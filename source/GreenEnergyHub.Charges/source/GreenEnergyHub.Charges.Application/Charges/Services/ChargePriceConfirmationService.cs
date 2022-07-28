@@ -24,12 +24,12 @@ namespace GreenEnergyHub.Charges.Application.Charges.Services
     public class ChargePriceConfirmationService : IChargePriceConfirmationService
     {
         private readonly IChargePriceAcceptedEventFactory _chargePriceAcceptedEventFactory;
+
         // private readonly IAvailableDataNotifier<AvailableChargeReceiptData, ChargePriceAcceptedEvent> _availableDataNotifier;
         private readonly ILogger _logger;
 
         public ChargePriceConfirmationService(
             IChargePriceAcceptedEventFactory chargePriceAcceptedEventFactory,
-            // IAvailableDataNotifier<AvailableChargeReceiptData, ChargePriceAcceptedEvent> availableDataNotifier,
             ILoggerFactory loggerFactory)
         {
             _chargePriceAcceptedEventFactory = chargePriceAcceptedEventFactory;
@@ -41,9 +41,15 @@ namespace GreenEnergyHub.Charges.Application.Charges.Services
             DocumentDto document,
             List<ChargePriceOperationDto> confirmedPriceOperations)
         {
+            // await StoreAvailableDataForLaterBundlingAsync(availableData).ConfigureAwait(false);
+            //
+            // await NotifyMessageHubOfAvailableDataAsync(availableData).ConfigureAwait(false);
             var command = new ChargePriceCommand(document, confirmedPriceOperations);
             var acceptedEvent = _chargePriceAcceptedEventFactory.CreateEvent(command);
-            // await _availableDataNotifier.NotifyAsync(acceptedEvent).ConfigureAwait(false);
+            // _availableDataFactory.CreateAsync(acceptedEvent);
+            // if (availableData.Count == 0)
+            //     return;
+            // // await _availableDataNotifier.NotifyAsync(acceptedEvent).ConfigureAwait(false);
             _logger.LogInformation($"{confirmedPriceOperations.Count} confirmed price operations was persisted.");
 
             return Task.CompletedTask;

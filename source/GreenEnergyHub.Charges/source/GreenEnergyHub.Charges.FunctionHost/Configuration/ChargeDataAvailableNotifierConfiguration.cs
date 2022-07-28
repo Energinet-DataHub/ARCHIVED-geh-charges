@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergy.Charges.MessageHub.Models.AvailableChargeData;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.MessageHub.AvailableData.Models.AvailableChargeData;
 using GreenEnergyHub.Charges.MessageHub.AvailableData.Models.AvailableData;

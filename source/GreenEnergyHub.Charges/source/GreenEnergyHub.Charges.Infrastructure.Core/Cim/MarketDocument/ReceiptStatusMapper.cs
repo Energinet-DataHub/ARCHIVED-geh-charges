@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.ComponentModel;
+using GreenEnergyHub.Charges.MessageHub.AvailableData.Models.Shared;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument
 {

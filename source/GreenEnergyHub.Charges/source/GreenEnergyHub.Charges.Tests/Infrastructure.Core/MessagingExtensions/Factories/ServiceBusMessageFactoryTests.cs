@@ -15,8 +15,8 @@
 using System.Linq;
 using AutoFixture.Xunit2;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factories;
+using GreenEnergyHub.Charges.MessageHub.AvailableData.Messaging;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using Xunit;
