@@ -121,7 +121,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands
 
         public Instant? PointsEndInterval { get; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2227", Justification = "JSON deserialization")]
         public List<Point> Points { get; }
     }
 }

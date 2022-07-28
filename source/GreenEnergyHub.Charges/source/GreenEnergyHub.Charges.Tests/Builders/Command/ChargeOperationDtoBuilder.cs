@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
@@ -130,9 +131,9 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             return this;
         }
 
-        public ChargeOperationDtoBuilder WithPoint(int position, decimal price)
+        public ChargeOperationDtoBuilder WithPoint(decimal price)
         {
-            _points.Add(new Point(position, price, _startDateTime));
+            _points.Add(new Point(price, _startDateTime));
             return this;
         }
 
@@ -147,7 +148,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         {
             for (var i = 0; i < numberOfPrices; i++)
             {
-                var point = new Point(i + 1, i * 10, SystemClock.Instance.GetCurrentInstant());
+                var point = new Point(i * 10, GetTimeForPoint(_startDateTime, i));
                 _points.Add(point);
             }
 
@@ -185,6 +186,19 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
                 _pointsStartInterval,
                 _pointsEndInterval,
                 _points);
+        }
+
+        private Instant GetTimeForPoint(Instant startTime, int index)
+        {
+            return _priceResolution switch
+            {
+                Resolution.Unknown => SystemClock.Instance.GetCurrentInstant(),
+                Resolution.PT15M => startTime.Plus(Duration.FromMinutes(15) * (index + 1)),
+                Resolution.PT1H => startTime.Plus(Duration.FromHours(1) * (index + 1)),
+                Resolution.P1D => startTime.Plus(Duration.FromDays(1) * (index + 1)),
+                Resolution.P1M => startTime.Plus(Duration.FromDays(30) * (index + 1)),
+                _ => throw new ArgumentOutOfRangeException(),
+            };
         }
     }
 }

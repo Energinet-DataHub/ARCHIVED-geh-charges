@@ -340,12 +340,12 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             // Arrange
             var points = new List<Point>
             {
-                new(0, decimal.One, InstantHelper.GetTodayPlusDaysAtMidnightUtc(0)),
-                new(0, decimal.One, InstantHelper.GetTodayPlusDaysAtMidnightUtc(1)),
-                new(0, decimal.One, InstantHelper.GetTodayPlusDaysAtMidnightUtc(2)),
-                new(0, decimal.One, InstantHelper.GetTodayPlusDaysAtMidnightUtc(3)),
-                new(0, decimal.One, InstantHelper.GetTodayPlusDaysAtMidnightUtc(4)),
-                new(0, decimal.One, InstantHelper.GetTodayPlusDaysAtMidnightUtc(5)),
+                new(decimal.One, InstantHelper.GetTodayPlusDaysAtMidnightUtc(0)),
+                new(decimal.One, InstantHelper.GetTodayPlusDaysAtMidnightUtc(1)),
+                new(decimal.One, InstantHelper.GetTodayPlusDaysAtMidnightUtc(2)),
+                new(decimal.One, InstantHelper.GetTodayPlusDaysAtMidnightUtc(3)),
+                new(decimal.One, InstantHelper.GetTodayPlusDaysAtMidnightUtc(4)),
+                new(decimal.One, InstantHelper.GetTodayPlusDaysAtMidnightUtc(5)),
             };
             var sut = new ChargeBuilder()
                 .WithStartDate(InstantHelper.GetTodayPlusDaysAtMidnightUtc(0))
@@ -410,16 +410,16 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             // Arrange
             var points = new List<Point>
             {
-                new(0, 1.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(0)),
-                new(0, 2.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(1)),
-                new(0, 3.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(2)),
-                new(0, 4.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(3)),
-                new(0, 5.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(4)),
+                new(1.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(0)),
+                new(2.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(1)),
+                new(3.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(2)),
+                new(4.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(3)),
+                new(5.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(4)),
             };
             var newPrices = new List<Point>
             {
-                new(0, 3.50m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(2)),
-                new(0, 4.50m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(3)),
+                new(3.50m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(2)),
+                new(4.50m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(3)),
             };
 
             var sut = new ChargeBuilder()
@@ -448,16 +448,16 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             // Arrange
             var points = new List<Point>
             {
-                new(0, 1.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(0)),
-                new(0, 2.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(1)),
-                new(0, 3.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(2)),
-                new(0, 4.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(3)),
-                new(0, 5.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(4)),
+                new(1.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(0)),
+                new(2.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(1)),
+                new(3.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(2)),
+                new(4.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(3)),
+                new(5.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(4)),
             };
             var newPrices = new List<Point>
             {
-                new(0, 6.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(5)),
-                new(0, 7.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(6)),
+                new(6.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(5)),
+                new(7.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(6)),
             };
 
             var sut = new ChargeBuilder()

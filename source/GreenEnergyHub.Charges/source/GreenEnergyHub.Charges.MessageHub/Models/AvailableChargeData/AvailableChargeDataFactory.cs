@@ -65,7 +65,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
             foreach (var recipient in activeGridAccessProviders)
             {
                 var points = operation.Points
-                    .Select(x => new AvailableChargeDataPoint(x.Position, x.Price)).ToList();
+                    .Select(point => new AvailableChargeDataPoint(operation.Points.GetPositionOfPoint(point), point.Price)).ToList();
 
                 var sender = await GetSenderAsync().ConfigureAwait(false);
                 var operationOrder = input.Command.Operations.ToList().IndexOf(operation);

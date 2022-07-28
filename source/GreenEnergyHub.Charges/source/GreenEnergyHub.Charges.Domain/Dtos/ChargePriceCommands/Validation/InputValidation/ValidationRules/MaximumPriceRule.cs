@@ -36,7 +36,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.Inpu
         /// This validation rule validates each Price in a list of Point(s). This property
         /// will tell which Point triggered the rule. The Point is identified by Position.
         /// </summary>
-        public string TriggeredBy => _chargeOperationDto.Points.First(point => !Validate(point)).Position.ToString();
+        public string TriggeredBy => _chargeOperationDto.Points
+            .GetPositionOfPoint(_chargeOperationDto.Points.First(point => !Validate(point)))
+            .ToString();
 
         private bool Validate(Point point)
         {

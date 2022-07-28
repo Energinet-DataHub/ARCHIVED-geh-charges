@@ -20,15 +20,8 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
 {
     public class PointBuilder
     {
-        private int _position = 0;
         private Instant _time = InstantHelper.GetStartDefault();
         private decimal _price = 1.00m;
-
-        public PointBuilder WithPosition(int position)
-        {
-            _position = position;
-            return this;
-        }
 
         public PointBuilder WithTime(Instant time)
         {
@@ -45,7 +38,6 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         public Point Build()
         {
             return new Point(
-                _position,
                 _price,
                 _time);
         }

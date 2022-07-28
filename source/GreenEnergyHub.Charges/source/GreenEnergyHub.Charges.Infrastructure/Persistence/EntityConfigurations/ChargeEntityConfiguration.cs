@@ -90,8 +90,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
 
             // This is a database-only column - doesn't exist in domain model as point is not an aggregate
             points.Property<Guid>("Id").ValueGeneratedOnAdd();
-
-            points.Property(p => p.Position);
             points.Property(p => p.Price)
                 .HasPrecision(DecimalPrecisionConstants.Precision, DecimalPrecisionConstants.Scale);
             points.Property(p => p.Time);
