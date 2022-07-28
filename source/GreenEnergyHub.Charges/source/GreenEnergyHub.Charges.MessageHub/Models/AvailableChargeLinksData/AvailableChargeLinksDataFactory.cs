@@ -22,12 +22,12 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
+using GreenEnergyHub.Charges.MessageHub.AvailableData.Models.AvailableData;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData
 {
     public class AvailableChargeLinksDataFactory
-        : AvailableDataFactoryBase<AvailableChargeLinksData, ChargeLinksAcceptedEvent>
+        : AvailableDataFactoryBase<AvailableData.Models.AvailableChargeLinksData.AvailableChargeLinksData, ChargeLinksAcceptedEvent>
     {
         private readonly IMarketParticipantRepository _marketParticipantRepository;
         private readonly IChargeRepository _chargeRepository;
@@ -47,9 +47,9 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData
             _messageMetaDataContext = messageMetaDataContext;
         }
 
-        public override async Task<IReadOnlyList<AvailableChargeLinksData>> CreateAsync(ChargeLinksAcceptedEvent input)
+        public override async Task<IReadOnlyList<AvailableData.Models.AvailableChargeLinksData.AvailableChargeLinksData>> CreateAsync(ChargeLinksAcceptedEvent input)
         {
-            var result = new List<AvailableChargeLinksData>();
+            var result = new List<AvailableData.Models.AvailableChargeLinksData.AvailableChargeLinksData>();
 
             foreach (var chargeLinksOperation in input.ChargeLinksCommand.Operations)
             {
@@ -62,7 +62,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData
         private async Task CreateForOperationsAsync(
             ChargeLinksAcceptedEvent input,
             ChargeLinkDto operation,
-            ICollection<AvailableChargeLinksData> result)
+            ICollection<AvailableData.Models.AvailableChargeLinksData.AvailableChargeLinksData> result)
         {
             // It is the responsibility of the Charge Domain to find the recipient and
             // not considered part of the Create Metering Point orchestration.
@@ -79,7 +79,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData
             var sender = await GetSenderAsync().ConfigureAwait(false);
             if (!ShouldMakeDataAvailableForGridOwnerOfMeteringPoint(charge)) return;
             var operationOrder = input.ChargeLinksCommand.Operations.ToList().IndexOf(operation);
-            result.Add(new AvailableChargeLinksData(
+            result.Add(new AvailableData.Models.AvailableChargeLinksData.AvailableChargeLinksData(
                 sender.MarketParticipantId,
                 sender.BusinessProcessRole,
                 recipient.MarketParticipantId,

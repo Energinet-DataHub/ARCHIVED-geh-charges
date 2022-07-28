@@ -23,11 +23,12 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
+using GreenEnergyHub.Charges.MessageHub.AvailableData.Models.AvailableChargeData;
+using GreenEnergyHub.Charges.MessageHub.AvailableData.Models.AvailableData;
 
-namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
+namespace GreenEnergy.Charges.MessageHub.Models.AvailableChargeData
 {
-    public class AvailableChargeDataFactory : AvailableDataFactoryBase<AvailableChargeData, ChargeCommandAcceptedEvent>
+    public class AvailableChargeDataFactory : AvailableDataFactoryBase<GreenEnergyHub.Charges.MessageHub.AvailableData.Models.AvailableChargeData.AvailableChargeData, ChargeCommandAcceptedEvent>
     {
         private readonly IMarketParticipantRepository _marketParticipantRepository;
         private readonly IMessageMetaDataContext _messageMetaDataContext;
@@ -41,9 +42,9 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
             _messageMetaDataContext = messageMetaDataContext;
         }
 
-        public override async Task<IReadOnlyList<AvailableChargeData>> CreateAsync(ChargeCommandAcceptedEvent input)
+        public override async Task<IReadOnlyList<GreenEnergyHub.Charges.MessageHub.AvailableData.Models.AvailableChargeData.AvailableChargeData>> CreateAsync(ChargeCommandAcceptedEvent input)
         {
-            var result = new List<AvailableChargeData>();
+            var result = new List<GreenEnergyHub.Charges.MessageHub.AvailableData.Models.AvailableChargeData.AvailableChargeData>();
 
             foreach (var chargeOperationDto in input.Command.Operations.Where(ShouldMakeDataAvailableForActiveGridProviders))
             {
@@ -56,7 +57,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
         private async Task CreateForOperationAsync(
             ChargeCommandAcceptedEvent input,
             ChargeOperationDto operation,
-            ICollection<AvailableChargeData> result)
+            ICollection<GreenEnergyHub.Charges.MessageHub.AvailableData.Models.AvailableChargeData.AvailableChargeData> result)
         {
             var activeGridAccessProviders = await _marketParticipantRepository
                 .GetGridAccessProvidersAsync()
@@ -70,7 +71,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
                 var sender = await GetSenderAsync().ConfigureAwait(false);
                 var operationOrder = input.Command.Operations.ToList().IndexOf(operation);
 
-                result.Add(new AvailableChargeData(
+                result.Add(new GreenEnergyHub.Charges.MessageHub.AvailableData.Models.AvailableChargeData.AvailableChargeData(
                     sender.MarketParticipantId,
                     sender.BusinessProcessRole,
                     recipient.MarketParticipantId,

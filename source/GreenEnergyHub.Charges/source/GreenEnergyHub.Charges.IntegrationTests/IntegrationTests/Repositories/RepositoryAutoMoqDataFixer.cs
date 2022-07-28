@@ -14,11 +14,11 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
+using GreenEnergyHub.Charges.MessageHub.AvailableData.Models.AvailableChargeData;
+using GreenEnergyHub.Charges.MessageHub.AvailableData.Models.AvailableChargeLinksData;
+using GreenEnergyHub.Charges.MessageHub.AvailableData.Models.AvailableChargeLinksReceiptData;
+using GreenEnergyHub.Charges.MessageHub.AvailableData.Models.AvailableChargeReceiptData;
+using GreenEnergyHub.Charges.MessageHub.AvailableData.Models.AvailableData;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 {
