@@ -17,7 +17,6 @@ using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.TestCore;
-using Microsoft.EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Tests.Builders.Command
@@ -140,11 +139,11 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         {
             return _priceResolution switch
             {
-                Resolution.Unknown => throw new ArgumentException(),
-                Resolution.PT15M => startTime.PlusMinutes(15 * (index + 1)),
-                Resolution.PT1H => startTime.PlusHours(1 * (index + 1)),
-                Resolution.P1D => startTime.PlusDays(1 * (index + 1)),
-                Resolution.P1M => startTime.PlusMonths(1 * (index + 1)),
+                Resolution.Unknown => SystemClock.Instance.GetCurrentInstant(),
+                Resolution.PT15M => startTime.Plus(Duration.FromMinutes(15) * (index + 1)),
+                Resolution.PT1H => startTime.Plus(Duration.FromHours(1) * (index + 1)),
+                Resolution.P1D => startTime.Plus(Duration.FromDays(1) * (index + 1)),
+                Resolution.P1M => startTime.Plus(Duration.FromDays(30) * (index + 1)),
                 _ => throw new ArgumentOutOfRangeException(),
             };
         }
