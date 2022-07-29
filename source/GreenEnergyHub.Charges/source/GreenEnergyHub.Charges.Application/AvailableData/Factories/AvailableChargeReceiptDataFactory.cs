@@ -15,19 +15,20 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application.Messaging;
+using GreenEnergyHub.Charges.Domain.AvailableData.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.Domain.AvailableData.AvailableData;
 using GreenEnergyHub.Charges.Domain.AvailableData.Shared;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using GreenEnergyHub.Charges.MessageHub.AvailableData.Messaging;
 using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.Application.AvailableData.Factories
 {
     public class AvailableChargeReceiptDataFactory
-        : AvailableDataFactoryBase<Domain.AvailableData.AvailableChargeReceiptData.AvailableChargeReceiptData, ChargeCommandAcceptedEvent>
+        : AvailableDataFactoryBase<AvailableChargeReceiptData, ChargeCommandAcceptedEvent>
     {
         private readonly IMessageMetaDataContext _messageMetaDataContext;
         private readonly ILogger _logger;
@@ -42,13 +43,13 @@ namespace GreenEnergyHub.Charges.Application.AvailableData.Factories
             _logger = loggerFactory.CreateLogger(nameof(AvailableChargeReceiptDataFactory));
         }
 
-        public override async Task<IReadOnlyList<Domain.AvailableData.AvailableChargeReceiptData.AvailableChargeReceiptData>> CreateAsync(ChargeCommandAcceptedEvent input)
+        public override async Task<IReadOnlyList<AvailableChargeReceiptData>> CreateAsync(ChargeCommandAcceptedEvent input)
         {
             // The original sender is the recipient of the receipt
             var recipient = await GetRecipientAsync(input.Command.Document.Sender).ConfigureAwait(false);
             var sender = await GetSenderAsync().ConfigureAwait(false);
 
-            var availableChargeReceiptData = new List<Domain.AvailableData.AvailableChargeReceiptData.AvailableChargeReceiptData>();
+            var availableChargeReceiptData = new List<AvailableChargeReceiptData>();
 
             var operationOrder = 0;
             foreach (var chargeOperationDto in input.Command.Operations)
@@ -60,7 +61,7 @@ namespace GreenEnergyHub.Charges.Application.AvailableData.Factories
             return availableChargeReceiptData;
         }
 
-        private IReadOnlyList<Domain.AvailableData.AvailableChargeReceiptData.AvailableChargeReceiptData> CreateAvailableChargeReceiptData(
+        private IReadOnlyList<AvailableChargeReceiptData> CreateAvailableChargeReceiptData(
             DocumentDto documentDto,
             ChargeOperationDto chargeOperationDto,
             MarketParticipant sender,
@@ -71,9 +72,9 @@ namespace GreenEnergyHub.Charges.Application.AvailableData.Factories
             _logger.LogDebug("Recipient.Id = {Id}", recipient.Id);
             _logger.LogDebug("Recipient.B2CActorId = {B2CActorId}", recipient.B2CActorId);
             _logger.LogDebug("Recipient.Gln = {MarketParticipantId}", recipient.MarketParticipantId);
-            return new List<Domain.AvailableData.AvailableChargeReceiptData.AvailableChargeReceiptData>()
+            return new List<AvailableChargeReceiptData>()
             {
-                new Domain.AvailableData.AvailableChargeReceiptData.AvailableChargeReceiptData(
+                new AvailableChargeReceiptData(
                     sender.MarketParticipantId,
                     sender.BusinessProcessRole,
                     recipient.MarketParticipantId,

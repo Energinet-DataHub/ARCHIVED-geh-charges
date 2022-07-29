@@ -15,8 +15,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.AvailableData.Factories;
+using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Domain.AvailableData.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.Domain.AvailableData.AvailableData;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
@@ -28,33 +30,38 @@ namespace GreenEnergyHub.Charges.Application.Charges.Services
     {
         private readonly IChargePriceAcceptedEventFactory _chargePriceAcceptedEventFactory;
         private readonly IAvailableDataRepository<AvailableChargeReceiptData> _availableChargeReceiptRepository;
-        // private readonly AvailableChargePriceReceiptDataFactory _availableChargePriceReceiptDataFactory;
+        private readonly IAvailableDataFactory<AvailableChargeReceiptData, ChargePriceAcceptedEvent> _availableChargePriceReceiptDataFactory;
+        private readonly IMessageDispatcher<ChargePriceAcceptedEvent> _acceptedMessageDispatcher;
 
-        // private readonly IAvailableDataNotifier<AvailableChargeReceiptData, ChargePriceAcceptedEvent> _availableDataNotifier;
         private readonly ILogger _logger;
 
         public ChargePriceConfirmationService(
             IChargePriceAcceptedEventFactory chargePriceAcceptedEventFactory,
             IAvailableDataRepository<AvailableChargeReceiptData> availableChargeReceiptRepository,
-            // AvailableChargePriceReceiptDataFactory availableChargePriceReceiptDataFactory,
+            IAvailableDataFactory<AvailableChargeReceiptData, ChargePriceAcceptedEvent> availableChargePriceReceiptDataFactory,
+            IMessageDispatcher<ChargePriceAcceptedEvent> acceptedMessageDispatcher,
             ILoggerFactory loggerFactory)
         {
             _chargePriceAcceptedEventFactory = chargePriceAcceptedEventFactory;
             _availableChargeReceiptRepository = availableChargeReceiptRepository;
-            // _availableChargePriceReceiptDataFactory = availableChargePriceReceiptDataFactory;
+            _availableChargePriceReceiptDataFactory = availableChargePriceReceiptDataFactory;
+            _acceptedMessageDispatcher = acceptedMessageDispatcher;
             _logger = loggerFactory.CreateLogger(nameof(ChargePriceConfirmationService));
         }
 
-        public Task SaveConfirmationsAsync(
+        public async Task SaveConfirmationsAsync(
             DocumentDto document,
             List<ChargePriceOperationDto> confirmedPriceOperations)
         {
-            // var command = new ChargePriceCommand(document, confirmedPriceOperations);
-            // var acceptedEvent = _chargePriceAcceptedEventFactory.CreateEvent(command);
-            // var availableData = await _availableChargePriceReceiptDataFactory.CreateAsync(acceptedEvent).ConfigureAwait(false);
-            // await _availableChargeReceiptRepository.StoreAsync(availableData).ConfigureAwait(false);
+            var command = new ChargePriceCommand(document, confirmedPriceOperations);
+            var acceptedEvent = _chargePriceAcceptedEventFactory.CreateEvent(command);
+            var availableData = await _availableChargePriceReceiptDataFactory.CreateAsync(acceptedEvent).ConfigureAwait(false);
+            await _availableChargeReceiptRepository.AddAsync(availableData).ConfigureAwait(false);
+
+            //TODO: Add acceptedevent to a list and send them after UnitOfWork instead of here, this is just for proof that it will go through the tests
+            //TODO: After outbox is implemented, no events should be dispatched and the above TODO is about to be deleted
+            await _acceptedMessageDispatcher.DispatchAsync(acceptedEvent).ConfigureAwait(false);
             _logger.LogInformation($"{confirmedPriceOperations.Count} confirmed price operations was persisted.");
-            return Task.CompletedTask;
         }
     }
 }

@@ -17,7 +17,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.Domain.AvailableData.AvailableChargeData
+namespace GreenEnergyHub.Charges.Application.AvailableData.Factories
 {
     public interface IAvailableChargeDataFactory
     {

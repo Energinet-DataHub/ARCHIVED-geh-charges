@@ -16,7 +16,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.Messaging.Transport;
 
-namespace GreenEnergyHub.Charges.MessageHub.AvailableData.Messaging
+namespace GreenEnergyHub.Charges.Application.Messaging
 {
     public interface IMessageDispatcher<in TOutboundMessage>
         where TOutboundMessage : IOutboundMessage

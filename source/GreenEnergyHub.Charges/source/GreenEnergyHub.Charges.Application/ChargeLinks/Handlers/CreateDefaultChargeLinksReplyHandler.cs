@@ -14,8 +14,8 @@
 
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkReplier;
+using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksDataAvailableNotifiedEvents;
-using GreenEnergyHub.Charges.MessageHub.AvailableData.Messaging;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {

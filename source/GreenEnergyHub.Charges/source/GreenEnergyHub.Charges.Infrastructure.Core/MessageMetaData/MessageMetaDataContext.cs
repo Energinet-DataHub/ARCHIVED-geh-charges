@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System;
-using GreenEnergyHub.Charges.MessageHub.AvailableData.Messaging;
+using GreenEnergyHub.Charges.Application.Messaging;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData

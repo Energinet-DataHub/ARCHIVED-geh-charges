@@ -14,8 +14,8 @@
 
 using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using Energinet.DataHub.Core.Messaging.Transport;
+using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
-using GreenEnergyHub.Charges.MessageHub.AvailableData.Messaging;
 using GreenEnergyHub.Json;
 using Microsoft.Extensions.DependencyInjection;
 

@@ -13,9 +13,9 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
-using GreenEnergyHub.Charges.MessageHub.AvailableData.Messaging;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers

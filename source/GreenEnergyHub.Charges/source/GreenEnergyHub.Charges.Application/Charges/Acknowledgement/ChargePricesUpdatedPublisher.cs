@@ -14,8 +14,8 @@
 
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Factories;
+using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
-using GreenEnergyHub.Charges.MessageHub.AvailableData.Messaging;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
 {
