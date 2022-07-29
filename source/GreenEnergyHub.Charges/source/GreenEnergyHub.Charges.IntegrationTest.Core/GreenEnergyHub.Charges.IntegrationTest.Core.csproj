@@ -26,6 +26,7 @@ limitations under the License.
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="TestFiles\Charges\PriceSeries\TariffPriceSeriesDzUpdateTax.xml" />
     <None Remove="TestFiles\Charges\PriceSeries\TariffPriceSeriesExistingFee.xml" />
     <None Remove="TestFiles\Charges\PriceSeries\TariffPriceSeriesExistingSubscription.xml" />
     <None Remove="TestFiles\Charges\PriceSeries\TariffPriceSeriesExistingTariff.xml" />
@@ -108,6 +109,9 @@ limitations under the License.
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestFiles\Charges\InvalidTariffDocument.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Charges\PriceSeries\TariffPriceSeriesDzUpdateTax.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestFiles\Charges\PriceSeries\TariffPriceSeriesExistingSubscription.xml">

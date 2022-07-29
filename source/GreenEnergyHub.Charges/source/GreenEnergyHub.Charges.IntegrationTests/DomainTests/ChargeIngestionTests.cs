@@ -462,6 +462,30 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 hostLogSnapshot.Any(x => x.Contains("1 confirmed price operations was persisted.")).Should().BeTrue();
             }
 
+            [Fact]
+            public async Task WhenChargeTaxIsUpdatedByDz_()
+            {
+                var (request, correlationId) = await _authenticatedHttpRequestGenerator
+                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.TariffPriceSeriesDzUpdateTax);
+                using var eventualChargePriceUpdatedEvent = await Fixture
+                    .ChargePricesUpdatedListener
+                    .ListenForEventsAsync(correlationId, expectedCount: 1)
+                    .ConfigureAwait(false);
+
+                // Act
+                var response = await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                var responseAsString = await response.Content.ReadAsStringAsync();
+                response.StatusCode.Should().Be(HttpStatusCode.Accepted);
+                var isChargePricesUpdatedReceived = eventualChargePriceUpdatedEvent
+                    .CountdownEvent!
+                    .Wait(TimeSpan.FromSeconds(SecondsToWaitForIntegrationEvents));
+                isChargePricesUpdatedReceived.Should().BeTrue();
+                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 6);
+                peekResults.Should().ContainMatch("*NotifyPriceList_MarketDocument*");
+            }
+
             private static ZonedDateTimeService GetZonedDateTimeService()
             {
                 var clock = new FakeClock(InstantHelper.GetTodayAtMidnightUtc());
