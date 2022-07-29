@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using FluentAssertions;
-using GreenEnergyHub.Charges.MessageHub.AvailableData.Models.Shared;
+using GreenEnergyHub.Charges.Domain.AvailableData.Shared;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Xunit;
 

@@ -14,7 +14,7 @@
 
 using System.IO;
 using FluentAssertions;
-using GreenEnergyHub.Charges.MessageHub.AvailableData.Models.AvailableChargeLinksData;
+using GreenEnergyHub.Charges.Domain.AvailableData.AvailableChargeLinksData;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification.ChargeLinks;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.TestFiles;

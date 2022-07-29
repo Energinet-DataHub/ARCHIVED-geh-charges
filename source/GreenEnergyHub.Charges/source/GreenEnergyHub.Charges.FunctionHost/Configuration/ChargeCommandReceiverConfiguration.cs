@@ -12,10 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using GreenEnergyHub.Charges.Application.AvailableData.Factories;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Core.Currency;
 using GreenEnergyHub.Charges.Core.DateTime;
+using GreenEnergyHub.Charges.Domain.AvailableData.AvailableChargeReceiptData;
+using GreenEnergyHub.Charges.Domain.AvailableData.AvailableData;
+using GreenEnergyHub.Charges.Domain.AvailableData.Shared;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
@@ -28,9 +32,6 @@ using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Core.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
-using GreenEnergyHub.Charges.MessageHub.AvailableData.Models.AvailableChargeReceiptData;
-using GreenEnergyHub.Charges.MessageHub.AvailableData.Models.AvailableData;
-using GreenEnergyHub.Charges.MessageHub.AvailableData.Models.Shared;
 using GreenEnergyHub.Iso8601;
 using Microsoft.Extensions.DependencyInjection;
 

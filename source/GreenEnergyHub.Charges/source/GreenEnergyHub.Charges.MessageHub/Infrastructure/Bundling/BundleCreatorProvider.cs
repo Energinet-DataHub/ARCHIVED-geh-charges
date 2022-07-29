@@ -16,11 +16,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Energinet.DataHub.MessageHub.Model.Model;
-using GreenEnergyHub.Charges.MessageHub.AvailableData.Models.AvailableChargeData;
-using GreenEnergyHub.Charges.MessageHub.AvailableData.Models.AvailableChargeLinksData;
-using GreenEnergyHub.Charges.MessageHub.AvailableData.Models.AvailableChargeLinksReceiptData;
-using GreenEnergyHub.Charges.MessageHub.AvailableData.Models.AvailableChargeReceiptData;
-using GreenEnergyHub.Charges.MessageHub.AvailableData.Models.AvailableData;
+using GreenEnergyHub.Charges.Domain.AvailableData.AvailableChargeData;
+using GreenEnergyHub.Charges.Domain.AvailableData.AvailableChargeLinksData;
+using GreenEnergyHub.Charges.Domain.AvailableData.AvailableChargeLinksReceiptData;
+using GreenEnergyHub.Charges.Domain.AvailableData.AvailableChargeReceiptData;
+using GreenEnergyHub.Charges.Domain.AvailableData.AvailableData;
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
 
 namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Bundling

@@ -15,7 +15,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Energinet.DataHub.MessageHub.Model.Model;
-using GreenEnergyHub.Charges.MessageHub.AvailableData.Models.AvailableData;
+using GreenEnergyHub.Charges.Domain.AvailableData.AvailableData;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification;
 
 namespace GreenEnergyHub.Charges.MessageHub.MessageHub

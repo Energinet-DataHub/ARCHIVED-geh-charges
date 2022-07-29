@@ -15,11 +15,11 @@
 using System;
 using System.Collections.Generic;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Application.AvailableData.Factories;
+using GreenEnergyHub.Charges.Domain.AvailableData.Shared;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
-using GreenEnergyHub.Charges.MessageHub.AvailableData.Models.AvailableChargeReceiptData;
-using GreenEnergyHub.Charges.MessageHub.AvailableData.Models.Shared;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.Charges.Tests.TestCore;

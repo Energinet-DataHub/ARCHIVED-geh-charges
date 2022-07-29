@@ -15,6 +15,11 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.AvailableData.AvailableChargeData;
+using GreenEnergyHub.Charges.Domain.AvailableData.AvailableChargeLinksData;
+using GreenEnergyHub.Charges.Domain.AvailableData.AvailableChargeLinksReceiptData;
+using GreenEnergyHub.Charges.Domain.AvailableData.AvailableChargeReceiptData;
+using GreenEnergyHub.Charges.Domain.AvailableData.AvailableData;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
@@ -47,6 +52,20 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence
 
         public DbSet<ChargeLink> ChargeLinks { get; private set; }
 
+        public new DbSet<TAvailableData> Set<TAvailableData>()
+            where TAvailableData : AvailableDataBase
+        {
+            return base.Set<TAvailableData>();
+        }
+
+        public DbSet<AvailableChargeData> AvailableChargeData { get; private set; }
+
+        public DbSet<AvailableChargeReceiptData> AvailableChargeReceiptData { get; private set; }
+
+        public DbSet<AvailableChargeLinksData> AvailableChargeLinksData { get; private set; }
+
+        public DbSet<AvailableChargeLinksReceiptData> AvailableChargeLinkReceiptData { get; private set; }
+
         public Task<int> SaveChangesAsync()
            => base.SaveChangesAsync();
 
@@ -62,7 +81,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence
             modelBuilder.ApplyConfiguration(new MarketParticipantEntityConfiguration());
             modelBuilder.ApplyConfiguration(new MeteringPointEntityConfiguration());
             modelBuilder.ApplyConfiguration(new GridAreaLinkEntityConfiguration());
-
+            modelBuilder.ApplyConfiguration(new AvailableChargeDataConfiguration());
+            modelBuilder.ApplyConfiguration(new AvailableChargeReceiptDataConfiguration());
+            modelBuilder.ApplyConfiguration(new AvailableChargeLinksDataConfiguration());
+            modelBuilder.ApplyConfiguration(new AvailableChargeLinkReceiptDataConfiguration());
             base.OnModelCreating(modelBuilder);
         }
     }

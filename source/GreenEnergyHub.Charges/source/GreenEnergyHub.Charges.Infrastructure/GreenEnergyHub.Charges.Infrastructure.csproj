@@ -28,7 +28,6 @@ limitations under the License.
       <ProjectReference Include="..\GreenEnergyHub.Charges.Application\GreenEnergyHub.Charges.Application.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.Domain\GreenEnergyHub.Charges.Domain.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.Infrastructure.Core\GreenEnergyHub.Charges.Infrastructure.Core.csproj" />
-      <ProjectReference Include="..\GreenEnergyHub.Charges.MessageHub.AvailableData\GreenEnergyHub.Charges.MessageHub.AvailableData.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -36,6 +35,7 @@ limitations under the License.
       <PackageReference Include="Energinet.DataHub.Core.Messaging.Protobuf" Version="2.0.0" />
       <PackageReference Include="Energinet.DataHub.MarketParticipant.Integration.Model" Version="2.3.0" />
       <PackageReference Include="Energinet.DataHub.Core.SchemaValidation" Version="1.0.11" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.3" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.3" />
       <PackageReference Include="Google.Protobuf" Version="3.21.2" />
       <PackageReference Include="Grpc.Tools" Version="2.47.0" PrivateAssets="All" />

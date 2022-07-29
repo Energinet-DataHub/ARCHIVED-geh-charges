@@ -13,10 +13,10 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.AvailableData.AvailableChargeLinksReceiptData;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksRejectionEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
-using GreenEnergyHub.Charges.MessageHub.AvailableData.Models.AvailableChargeLinksReceiptData;
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
 using Microsoft.Azure.Functions.Worker;
 

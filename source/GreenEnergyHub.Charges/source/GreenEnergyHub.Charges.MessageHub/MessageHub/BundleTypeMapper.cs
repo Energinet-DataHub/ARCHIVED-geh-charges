@@ -15,7 +15,7 @@
 using System;
 using System.ComponentModel;
 using Energinet.DataHub.MessageHub.Model.Model;
-using GreenEnergyHub.Charges.MessageHub.AvailableData.Models.AvailableData;
+using GreenEnergyHub.Charges.Domain.AvailableData.AvailableData;
 
 namespace GreenEnergyHub.Charges.MessageHub.MessageHub
 {

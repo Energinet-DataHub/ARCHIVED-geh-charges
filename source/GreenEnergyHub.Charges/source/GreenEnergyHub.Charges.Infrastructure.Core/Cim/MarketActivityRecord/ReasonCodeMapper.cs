@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.MessageHub.AvailableData.Models.Shared;
+using GreenEnergyHub.Charges.Domain.AvailableData.Shared;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketActivityRecord
 {

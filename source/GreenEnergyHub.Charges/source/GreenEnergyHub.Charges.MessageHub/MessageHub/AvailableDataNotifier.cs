@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using Energinet.DataHub.MessageHub.Client.DataAvailable;
 using Energinet.DataHub.MessageHub.Model.Model;
-using GreenEnergyHub.Charges.MessageHub.AvailableData.Models.AvailableData;
+using GreenEnergyHub.Charges.Domain.AvailableData.AvailableData;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification;
 
 namespace GreenEnergyHub.Charges.MessageHub.MessageHub

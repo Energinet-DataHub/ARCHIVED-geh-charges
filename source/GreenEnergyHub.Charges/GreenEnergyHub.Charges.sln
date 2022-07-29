@@ -46,8 +46,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Charges.Syst
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenEnergyHub.Charges.IntegrationTest.Core", "source\GreenEnergyHub.Charges.IntegrationTest.Core\GreenEnergyHub.Charges.IntegrationTest.Core.csproj", "{0A95D547-67D4-4C8A-8DBF-D6E8B9667CFD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenEnergyHub.Charges.MessageHub.AvailableData", "source\GreenEnergyHub.Charges.MessageHub.AvailableData\GreenEnergyHub.Charges.MessageHub.AvailableData.csproj", "{53CDD3A0-8737-4214-B756-E3FBA9839AB2}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -126,10 +124,6 @@ Global
 		{0A95D547-67D4-4C8A-8DBF-D6E8B9667CFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A95D547-67D4-4C8A-8DBF-D6E8B9667CFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A95D547-67D4-4C8A-8DBF-D6E8B9667CFD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{53CDD3A0-8737-4214-B756-E3FBA9839AB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{53CDD3A0-8737-4214-B756-E3FBA9839AB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{53CDD3A0-8737-4214-B756-E3FBA9839AB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{53CDD3A0-8737-4214-B756-E3FBA9839AB2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

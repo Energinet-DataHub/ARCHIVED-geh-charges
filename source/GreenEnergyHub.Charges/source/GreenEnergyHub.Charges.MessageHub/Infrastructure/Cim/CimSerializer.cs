@@ -18,9 +18,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using GreenEnergyHub.Charges.Domain.AvailableData.AvailableData;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
-using GreenEnergyHub.Charges.MessageHub.AvailableData.Models.AvailableData;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim

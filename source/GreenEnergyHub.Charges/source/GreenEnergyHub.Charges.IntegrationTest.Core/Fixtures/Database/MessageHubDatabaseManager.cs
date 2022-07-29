@@ -16,7 +16,7 @@ using System;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.Database;
 using GreenEnergyHub.Charges.ApplyDBMigrationsApp.Helpers;
-using GreenEnergyHub.Charges.MessageHub.AvailableData.Persistence;
+using GreenEnergyHub.Charges.MessageHub.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database

@@ -13,9 +13,9 @@
 // limitations under the License.
 
 using System;
+using GreenEnergyHub.Charges.Domain.AvailableData.AvailableChargeData;
+using GreenEnergyHub.Charges.Domain.AvailableData.AvailableData;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
-using GreenEnergyHub.Charges.MessageHub.AvailableData.Models.AvailableChargeData;
-using GreenEnergyHub.Charges.MessageHub.AvailableData.Models.AvailableData;
 
 namespace GreenEnergyHub.Charges.MessageHub.BundleSpecification.Charges
 {

@@ -13,6 +13,11 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.AvailableData.AvailableChargeData;
+using GreenEnergyHub.Charges.Domain.AvailableData.AvailableChargeLinksData;
+using GreenEnergyHub.Charges.Domain.AvailableData.AvailableChargeLinksReceiptData;
+using GreenEnergyHub.Charges.Domain.AvailableData.AvailableChargeReceiptData;
+using GreenEnergyHub.Charges.Domain.AvailableData.AvailableData;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
@@ -36,6 +41,29 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence
         DbSet<ChargeLink> ChargeLinks { get; }
 
         DbSet<DefaultChargeLink> DefaultChargeLinks { get; }
+
+        DbSet<TAvailableData> Set<TAvailableData>()
+            where TAvailableData : AvailableDataBase;
+
+        /// <summary>
+        /// AvailableChargeData available in the database.
+        /// </summary>
+        DbSet<AvailableChargeData> AvailableChargeData { get; }
+
+        /// <summary>
+        /// AvailableChargeReceiptData available in the database
+        /// </summary>
+        DbSet<AvailableChargeReceiptData> AvailableChargeReceiptData { get; }
+
+        /// <summary>
+        /// AvailableChargeLinksData available in the database.
+        /// </summary>
+        DbSet<AvailableChargeLinksData> AvailableChargeLinksData { get; }
+
+        /// <summary>
+        /// AvailableChargeLinkReceiptData available in the database
+        /// </summary>
+        DbSet<AvailableChargeLinksReceiptData> AvailableChargeLinkReceiptData { get; }
 
         /// <summary>
         /// Saves changes to the database.

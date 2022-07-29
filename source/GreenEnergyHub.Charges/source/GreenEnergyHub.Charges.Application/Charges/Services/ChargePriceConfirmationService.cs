@@ -14,6 +14,9 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application.AvailableData.Factories;
+using GreenEnergyHub.Charges.Domain.AvailableData.AvailableChargeReceiptData;
+using GreenEnergyHub.Charges.Domain.AvailableData.AvailableData;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
@@ -24,16 +27,21 @@ namespace GreenEnergyHub.Charges.Application.Charges.Services
     public class ChargePriceConfirmationService : IChargePriceConfirmationService
     {
         private readonly IChargePriceAcceptedEventFactory _chargePriceAcceptedEventFactory;
+        private readonly IAvailableDataRepository<AvailableChargeReceiptData> _availableChargeReceiptRepository;
+        // private readonly AvailableChargePriceReceiptDataFactory _availableChargePriceReceiptDataFactory;
 
         // private readonly IAvailableDataNotifier<AvailableChargeReceiptData, ChargePriceAcceptedEvent> _availableDataNotifier;
         private readonly ILogger _logger;
 
         public ChargePriceConfirmationService(
             IChargePriceAcceptedEventFactory chargePriceAcceptedEventFactory,
+            IAvailableDataRepository<AvailableChargeReceiptData> availableChargeReceiptRepository,
+            // AvailableChargePriceReceiptDataFactory availableChargePriceReceiptDataFactory,
             ILoggerFactory loggerFactory)
         {
             _chargePriceAcceptedEventFactory = chargePriceAcceptedEventFactory;
-            // _availableDataNotifier = availableDataNotifier;
+            _availableChargeReceiptRepository = availableChargeReceiptRepository;
+            // _availableChargePriceReceiptDataFactory = availableChargePriceReceiptDataFactory;
             _logger = loggerFactory.CreateLogger(nameof(ChargePriceConfirmationService));
         }
 
@@ -41,17 +49,11 @@ namespace GreenEnergyHub.Charges.Application.Charges.Services
             DocumentDto document,
             List<ChargePriceOperationDto> confirmedPriceOperations)
         {
-            // await StoreAvailableDataForLaterBundlingAsync(availableData).ConfigureAwait(false);
-            //
-            // await NotifyMessageHubOfAvailableDataAsync(availableData).ConfigureAwait(false);
-            var command = new ChargePriceCommand(document, confirmedPriceOperations);
-            var acceptedEvent = _chargePriceAcceptedEventFactory.CreateEvent(command);
-            // _availableDataFactory.CreateAsync(acceptedEvent);
-            // if (availableData.Count == 0)
-            //     return;
-            // // await _availableDataNotifier.NotifyAsync(acceptedEvent).ConfigureAwait(false);
+            // var command = new ChargePriceCommand(document, confirmedPriceOperations);
+            // var acceptedEvent = _chargePriceAcceptedEventFactory.CreateEvent(command);
+            // var availableData = await _availableChargePriceReceiptDataFactory.CreateAsync(acceptedEvent).ConfigureAwait(false);
+            // await _availableChargeReceiptRepository.StoreAsync(availableData).ConfigureAwait(false);
             _logger.LogInformation($"{confirmedPriceOperations.Count} confirmed price operations was persisted.");
-
             return Task.CompletedTask;
         }
     }

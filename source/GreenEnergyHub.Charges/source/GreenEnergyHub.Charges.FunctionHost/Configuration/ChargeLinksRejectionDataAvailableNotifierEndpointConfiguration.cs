@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using GreenEnergyHub.Charges.Application.AvailableData.Factories;
+using GreenEnergyHub.Charges.Domain.AvailableData.AvailableChargeLinksReceiptData;
+using GreenEnergyHub.Charges.Domain.AvailableData.AvailableData;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksRejectionEvents;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
-using GreenEnergyHub.Charges.MessageHub.AvailableData.Models.AvailableChargeLinksReceiptData;
-using GreenEnergyHub.Charges.MessageHub.AvailableData.Models.AvailableData;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification.ChargeLinks;
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
