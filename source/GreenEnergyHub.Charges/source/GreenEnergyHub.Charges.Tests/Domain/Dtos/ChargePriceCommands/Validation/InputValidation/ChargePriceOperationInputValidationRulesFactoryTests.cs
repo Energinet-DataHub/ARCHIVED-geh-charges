@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
             ChargePriceOperationInputValidationRulesFactory sut)
         {
             // Arrange
-            var chargeOperationDto = new ChargePriceOperationDtoBuilder().WithPoint(0, 1.00m).Build();
+            var chargeOperationDto = new ChargePriceOperationDtoBuilder().WithPoint(1.00m).Build();
             var expectedRulesTypes = GetExpectedRulesForChargePriceOperation().ToList();
 
             // Act

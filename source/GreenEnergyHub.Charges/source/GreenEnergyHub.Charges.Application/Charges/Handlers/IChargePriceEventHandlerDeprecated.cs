@@ -12,26 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using NodaTime;
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 
-namespace GreenEnergyHub.Charges.Domain.Charges
+namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
-    /// <summary>
-    /// This Point class is used for handling each individual price of charge price list.
-    /// </summary>
-    public class Point
+    public interface IChargePriceEventHandlerDeprecated
     {
-        public Point(decimal price, Instant time)
-        {
-            Price = price;
-            Time = time;
-        }
-
-        public decimal Price { get; }
-
-        /// <summary>
-        /// A point in time, where the price applies.
-        /// </summary>
-        public Instant Time { get; }
+        Task HandleAsync(ChargeCommandReceivedEvent commandReceivedEvent);
     }
 }

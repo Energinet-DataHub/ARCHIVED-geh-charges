@@ -81,7 +81,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
             var priceOperations = await ParseChargePriceOperationsAsync(reader).ConfigureAwait(false);
             var priceCommands = priceOperations
                 .GroupBy(x => new { x.ChargeId, x.ChargeOwner, x.Type })
-                .Select(group =>
+                .Select(_ =>
                     new ChargePriceCommand(
                         document,
                         priceOperations.AsEnumerable().Select(dto => dto).ToList()))
@@ -428,7 +428,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                 }
             }
 
-            return new Point(position, price, time);
+            return new Point(price, time);
         }
     }
 }

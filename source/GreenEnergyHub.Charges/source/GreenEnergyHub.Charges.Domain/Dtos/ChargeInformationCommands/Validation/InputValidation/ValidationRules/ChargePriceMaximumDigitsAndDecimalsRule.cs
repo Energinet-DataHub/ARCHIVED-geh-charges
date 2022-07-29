@@ -39,8 +39,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
         /// This validation rule validates each Price in a list of Point(s). This property
         /// will tell which Point triggered the rule. The Point is identified by Position.
         /// </summary>
-        public string TriggeredBy => _chargeOperationDto.Points
-            .First(point => !PointIsValid(point)).Position.ToString();
+        public string TriggeredBy => _chargeOperationDto
+            .Points.GetPositionOfPoint(
+                _chargeOperationDto.Points.First(point => !PointIsValid(point))).ToString();
 
         private bool PointIsValid(Point point)
         {
