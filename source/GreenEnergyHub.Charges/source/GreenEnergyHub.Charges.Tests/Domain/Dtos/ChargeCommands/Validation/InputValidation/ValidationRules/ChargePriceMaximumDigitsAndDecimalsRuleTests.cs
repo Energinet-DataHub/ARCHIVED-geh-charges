@@ -15,6 +15,7 @@
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.AvailableData.Factories;
 using GreenEnergyHub.Charges.Domain.AvailableData.Shared;
+using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.TestCore.Attributes;
@@ -41,7 +42,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             ChargeOperationDtoBuilder builder)
         {
             // Arrange
-            var chargeOperationDto = builder.WithPoint(1, price).Build();
+            var chargeOperationDto = builder.WithPoint(price).Build();
 
             // Act
             var sut = new ChargePriceMaximumDigitsAndDecimalsRule(chargeOperationDto);
@@ -54,7 +55,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         [InlineAutoDomainData]
         public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeOperationDtoBuilder builder)
         {
-            var invalidChargeOperationDto = builder.WithPoint(1, 123456789m).Build();
+            var invalidChargeOperationDto = builder.WithPoint(123456789m).Build();
             var sut = new ChargePriceMaximumDigitsAndDecimalsRule(invalidChargeOperationDto);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChargePriceMaximumDigitsAndDecimals);
         }
@@ -67,13 +68,13 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         {
             // Arrange
             var chargeOperationDto = new ChargeOperationDtoBuilder()
-                .WithPoint(1, 123456789m)
+                .WithPoint(123456789m)
                 .Build();
             var invalidCommand = new ChargeInformationCommandBuilder()
                 .WithChargeOperation(chargeOperationDto)
                 .Build();
             var expectedPoint = chargeOperationDto.Points[0];
-            var triggeredBy = expectedPoint.Position.ToString();
+            var triggeredBy = chargeOperationDto.Points.GetPositionOfPoint(expectedPoint).ToString();
 
             var sutRule = new ChargePriceMaximumDigitsAndDecimalsRule(chargeOperationDto);
             var validationError =

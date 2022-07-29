@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.AvailableData.Factories;
 using GreenEnergyHub.Charges.Domain.AvailableData.Shared;
+using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
@@ -71,13 +72,13 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             var chargeCommand = chargeInformationCommandBuilder.WithChargeOperation(chargeOperationDto).Build();
             var sut = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
             var rule = new MaximumPriceRule(chargeOperationDto);
-            var triggeredBy = chargeOperationDto.Points[1].Position.ToString();
+            var triggeredBy = chargeOperationDto.Points.GetPositionOfPoint(chargeOperationDto.Points[1]).ToString();
             var validationError = new ValidationError(rule.ValidationRuleIdentifier, chargeOperationDto.Id, triggeredBy);
 
             var expectedPoint = chargeOperationDto.Points[1];
             var expected = CimValidationErrorTextTemplateMessages.MaximumPriceErrorText
                 .Replace("{{ChargePointPrice}}", expectedPoint.Price.ToString("N"))
-                .Replace("{{ChargePointPosition}}", expectedPoint.Position.ToString())
+                .Replace("{{ChargePointPosition}}", chargeOperationDto.Points.GetPositionOfPoint(expectedPoint).ToString())
                 .Replace("{{DocumentSenderProvidedChargeId}}", chargeOperationDto.ChargeId)
                 .Replace("{{ChargeType}}", chargeOperationDto.Type.ToString())
                 .Replace("{{ChargeOwner}}", chargeOperationDto.ChargeOwner);
@@ -131,7 +132,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             // Arrange
             var chargeCommand = chargeInformationCommandBuilder.WithChargeOperation(chargeOperationDto).Build();
             var triggeredBy = seedTriggeredBy == "0" ?
-                chargeOperationDto.Points[1].Position.ToString() :
+                chargeOperationDto.Points.GetPositionOfPoint(chargeOperationDto.Points[1]).ToString() :
                 seedTriggeredBy;
             var validationError = new ValidationError(validationRuleIdentifier, chargeOperationDto.Id, triggeredBy);
 
@@ -191,9 +192,9 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             return validationRuleIdentifier switch
             {
                 ValidationRuleIdentifier.ChargePriceMaximumDigitsAndDecimals =>
-                    chargeOperationDto.Points[0].Position.ToString(),
+                    chargeOperationDto.Points.GetPositionOfPoint(chargeOperationDto.Points[0]).ToString(),
                 ValidationRuleIdentifier.MaximumPrice =>
-                    chargeOperationDto.Points[1].Position.ToString(),
+                    chargeOperationDto.Points.GetPositionOfPoint(chargeOperationDto.Points[1]).ToString(),
                 ValidationRuleIdentifier.SubsequentBundleOperationsFail =>
                     chargeOperationDto.Id,
                 _ => null,

@@ -16,6 +16,7 @@ using System;
 using System.Linq;
 using GreenEnergyHub.Charges.Domain.AvailableData.AvailableData;
 using GreenEnergyHub.Charges.Domain.AvailableData.Shared;
+using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using Microsoft.Extensions.Logging;
@@ -146,7 +147,7 @@ namespace GreenEnergyHub.Charges.Application.AvailableData.Factories
             try
             {
                 return chargeOperationDto.Points
-                        .Single(p => p.Position == int.Parse(triggeredBy!))
+                        .Single(p => chargeOperationDto.Points.GetPositionOfPoint(p) == int.Parse(triggeredBy!))
                         .Price.ToString("N");
             }
             catch (Exception e)

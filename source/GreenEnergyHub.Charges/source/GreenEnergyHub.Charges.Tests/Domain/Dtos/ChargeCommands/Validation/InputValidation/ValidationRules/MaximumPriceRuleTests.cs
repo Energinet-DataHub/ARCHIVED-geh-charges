@@ -15,6 +15,7 @@
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.AvailableData.Factories;
 using GreenEnergyHub.Charges.Domain.AvailableData.Shared;
+using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
@@ -66,12 +67,12 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         {
             // Arrange
             var chargeOperationDto = new ChargeOperationDtoBuilder()
-                .WithPoint(1, LargestValidPrice)
-                .WithPoint(2, SmallestInvalidPrice)
+                .WithPoint(LargestValidPrice)
+                .WithPoint(SmallestInvalidPrice)
                 .Build();
             var invalidCommand = new ChargeInformationCommandBuilder().WithChargeOperation(chargeOperationDto).Build();
             var expectedPoint = chargeOperationDto.Points[1];
-            var triggeredBy = expectedPoint.Position.ToString();
+            var triggeredBy = chargeOperationDto.Points.GetPositionOfPoint(expectedPoint).ToString();
 
             // Act & arrange
             var sutRule = new MaximumPriceRule(chargeOperationDto);
@@ -96,7 +97,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         private static ChargeOperationDto CreateChargeOperationDto(ChargeOperationDtoBuilder builder, decimal price)
         {
-            return builder.WithPoint(1, price).Build();
+            return builder.WithPoint(price).Build();
         }
     }
 }
