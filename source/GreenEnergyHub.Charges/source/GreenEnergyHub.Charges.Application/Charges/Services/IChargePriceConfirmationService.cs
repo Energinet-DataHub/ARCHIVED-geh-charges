@@ -15,11 +15,14 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Services
 {
     public interface IChargePriceConfirmationService
     {
-        Task SaveConfirmationsAsync(List<ChargePriceOperationDto> confirmedPriceOperations);
+        Task SaveConfirmationsAsync(
+            DocumentDto document,
+            List<ChargePriceOperationDto> confirmedPriceOperations);
     }
 }

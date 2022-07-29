@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.IO;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Domain.AvailableData.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification.Charges;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.TestFiles;
 using Xunit;
@@ -43,7 +44,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.Charges
             var confirmationMessageWeightInBytes = (long)ChargeConfirmationBundleSpecification.MessageWeight * 1000;
 
             // Act
-            var xmlSizeInBytes = new System.IO.FileInfo(FilesForCalculatingBundleSize.WorstCaseChargeReceipt).Length;
+            var xmlSizeInBytes = new FileInfo(FilesForCalculatingBundleSize.WorstCaseChargeReceipt).Length;
 
             // Assert
             xmlSizeInBytes.Should().BeLessOrEqualTo(confirmationMessageWeightInBytes);

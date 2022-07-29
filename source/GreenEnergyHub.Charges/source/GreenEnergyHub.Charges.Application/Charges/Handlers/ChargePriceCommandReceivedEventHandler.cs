@@ -47,7 +47,10 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             if (documentValidationResult.IsFailed)
             {
                 await _chargePriceRejectionService
-                    .SaveRejectionsAsync(chargePriceCommandReceivedEvent.Command.Operations.ToList(), documentValidationResult)
+                    .SaveRejectionsAsync(
+                        chargePriceCommandReceivedEvent.Command.Document,
+                        chargePriceCommandReceivedEvent.Command.Operations.ToList(),
+                        documentValidationResult)
                     .ConfigureAwait(false);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                 return;

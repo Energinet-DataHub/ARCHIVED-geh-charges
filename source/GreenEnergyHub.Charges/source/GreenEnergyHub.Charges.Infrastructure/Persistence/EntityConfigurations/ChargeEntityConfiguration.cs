@@ -14,7 +14,6 @@
 
 using System;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Infrastructure.Core.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

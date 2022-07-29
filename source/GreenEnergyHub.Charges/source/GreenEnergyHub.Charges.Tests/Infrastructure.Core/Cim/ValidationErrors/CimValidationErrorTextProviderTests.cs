@@ -13,8 +13,8 @@
 // limitations under the License.
 
 using System;
+using GreenEnergyHub.Charges.Domain.AvailableData.Shared;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
-using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Xunit;
 

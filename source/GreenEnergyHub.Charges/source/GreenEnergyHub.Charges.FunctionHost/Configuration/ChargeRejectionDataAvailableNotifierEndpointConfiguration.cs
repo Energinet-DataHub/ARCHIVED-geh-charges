@@ -12,16 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using GreenEnergyHub.Charges.Application.AvailableData.Factories;
+using GreenEnergyHub.Charges.Domain.AvailableData.AvailableChargeReceiptData;
+using GreenEnergyHub.Charges.Domain.AvailableData.AvailableData;
+using GreenEnergyHub.Charges.Domain.AvailableData.Shared;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
-using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification.Charges;
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
-using GreenEnergyHub.Charges.MessageHub.Models.Shared;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration

@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using GreenEnergyHub.Charges.Domain.AvailableData.AvailableChargeReceiptData;
+using GreenEnergyHub.Charges.Domain.AvailableData.AvailableData;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 
 namespace GreenEnergyHub.Charges.MessageHub.BundleSpecification.Charges
 {

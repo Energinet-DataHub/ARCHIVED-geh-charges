@@ -14,9 +14,9 @@
 
 using System;
 using System.Collections.Generic;
+using GreenEnergyHub.Charges.Domain.AvailableData.AvailableChargeData;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Tests.Builders.MessageHub

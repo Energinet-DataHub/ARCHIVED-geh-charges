@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
+using GreenEnergyHub.Charges.Domain.AvailableData.AvailableData;
 
 namespace GreenEnergyHub.Charges.MessageHub.MessageHub
 {

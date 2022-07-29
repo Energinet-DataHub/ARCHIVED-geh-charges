@@ -13,11 +13,11 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
+using GreenEnergyHub.Charges.Domain.AvailableData.AvailableChargeData;
+using GreenEnergyHub.Charges.Domain.AvailableData.AvailableChargeLinksData;
+using GreenEnergyHub.Charges.Domain.AvailableData.AvailableChargeLinksReceiptData;
+using GreenEnergyHub.Charges.Domain.AvailableData.AvailableChargeReceiptData;
+using GreenEnergyHub.Charges.Domain.AvailableData.AvailableData;
 using Microsoft.EntityFrameworkCore;
 
 namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Persistence

@@ -17,11 +17,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using Energinet.DataHub.MessageHub.Model.Model;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Domain.AvailableData.AvailableData;
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using Xunit;
 using Xunit.Categories;
-using Enum = System.Enum;
 
 namespace GreenEnergyHub.Charges.Tests.MessageHub.MessageHub
 {

@@ -12,12 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using GreenEnergyHub.Charges.Application.AvailableData.Factories;
+using GreenEnergyHub.Charges.Domain.AvailableData.AvailableChargeReceiptData;
+using GreenEnergyHub.Charges.Domain.AvailableData.AvailableData;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceAcceptedEvents;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification.Charges;
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
@@ -38,6 +40,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection
                 .AddScoped<BundleSpecification<AvailableChargeReceiptData, ChargeCommandAcceptedEvent>,
                     ChargeConfirmationBundleSpecification>();
+            serviceCollection
+                .AddScoped<IAvailableDataFactory<AvailableChargeReceiptData, ChargePriceAcceptedEvent>,
+                    AvailableChargePriceReceiptDataFactory>();
         }
     }
 }

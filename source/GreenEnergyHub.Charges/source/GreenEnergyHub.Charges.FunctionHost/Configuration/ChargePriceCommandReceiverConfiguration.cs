@@ -14,9 +14,11 @@
 
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Application.Charges.Services;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.Factories;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceRejectedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,6 +39,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IChargePriceConfirmationService, ChargePriceConfirmationService>();
             serviceCollection.AddScoped<IChargePriceRejectionService, ChargePriceRejectionService>();
             serviceCollection.AddScoped<IChargePriceNotificationService, ChargePriceNotificationService>();
+            serviceCollection.AddScoped<IChargePriceAcceptedEventFactory, ChargePriceAcceptedEventFactory>();
+            serviceCollection.AddScoped<IChargePriceRejectedEventFactory, ChargePriceRejectedEventFactory>();
         }
 
         private static void ConfigureMessaging(IServiceCollection serviceCollection)

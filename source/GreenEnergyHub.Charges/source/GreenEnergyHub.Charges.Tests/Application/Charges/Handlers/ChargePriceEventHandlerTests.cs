@@ -24,6 +24,7 @@ using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.TestCore;
@@ -76,12 +77,13 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             // Assert
             chargePriceRejectionService.Verify(
                 x => x.SaveRejectionsAsync(
+                    It.IsAny<DocumentDto>(),
                     It.Is<List<ChargePriceOperationDto>>(x => x.Count == 0),
                     It.IsAny<List<IValidationRuleContainer>>()),
                 Times.Once);
             chargePriceConfirmationService.Verify(
                 x =>
-                    x.SaveConfirmationsAsync(It.Is<List<ChargePriceOperationDto>>(x => x.Count == 1)),
+                    x.SaveConfirmationsAsync(receivedEvent.Command.Document, It.Is<List<ChargePriceOperationDto>>(x => x.Count == 1)),
                 Times.Once);
             unitOfWork.Verify(x => x.SaveChangesAsync(), Times.Once());
         }
@@ -113,6 +115,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             // Assert
             chargePriceRejectionService.Verify(x =>
                 x.SaveRejectionsAsync(
+                    It.IsAny<DocumentDto>(),
                     It.Is<List<ChargePriceOperationDto>>(x => x.Count == 3),
                     It.IsAny<List<IValidationRuleContainer>>()));
         }
@@ -189,10 +192,11 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             var rejectedRules = new List<IValidationRuleContainer>();
             chargePriceRejectionService
                 .Setup(s => s.SaveRejectionsAsync(
+                    It.IsAny<DocumentDto>(),
                     It.IsAny<List<ChargePriceOperationDto>>(),
                     It.IsAny<List<IValidationRuleContainer>>()))
-                .Callback<IReadOnlyCollection<ChargePriceOperationDto>, IList<IValidationRuleContainer>>(
-                    (_, s) => rejectedRules.AddRange(s));
+                .Callback<DocumentDto, IReadOnlyCollection<ChargePriceOperationDto>, IList<IValidationRuleContainer>>(
+                    (_, _, s) => rejectedRules.AddRange(s));
 
             // Act
             await sut.HandleAsync(receivedEvent);
@@ -200,6 +204,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             // Assert
             chargePriceConfirmationService.Verify(x =>
                 x.SaveConfirmationsAsync(
+                    It.IsAny<DocumentDto>(),
                     It.Is<List<ChargePriceOperationDto>>(x => x.Count == 1)));
             var invalid = rejectedRules.Where(vr =>
                 vr.ValidationRule.ValidationRuleIdentifier == ValidationRuleIdentifier.UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDate);

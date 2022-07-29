@@ -12,11 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceRejectedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using Microsoft.Extensions.Logging;
 
@@ -24,34 +25,49 @@ namespace GreenEnergyHub.Charges.Application.Charges.Services
 {
     public class ChargePriceRejectionService : IChargePriceRejectionService
     {
+        private readonly IChargePriceRejectedEventFactory _chargePriceRejectedEventFactory;
+        // private readonly IAvailableDataNotifier<AvailableChargeReceiptData, ChargePriceRejectedEvent> _availableDataNotifier;
         private readonly ILogger _logger;
 
-        public ChargePriceRejectionService(ILoggerFactory loggerFactory)
+        public ChargePriceRejectionService(
+            ILoggerFactory loggerFactory,
+            // IAvailableDataNotifier<AvailableChargeReceiptData, ChargePriceRejectedEvent> availableDataNotifier,
+            IChargePriceRejectedEventFactory chargePriceRejectedEventFactory)
         {
+            _chargePriceRejectedEventFactory = chargePriceRejectedEventFactory;
+            // _availableDataNotifier = availableDataNotifier;
             _logger = loggerFactory.CreateLogger(nameof(ChargePriceConfirmationService));
         }
 
         public Task SaveRejectionsAsync(
+            DocumentDto document,
             List<ChargePriceOperationDto> rejectedPriceOperations,
-            ValidationResult documentValidationResult)
+            ValidationResult validationResult)
         {
+            var command = new ChargePriceCommand(document, rejectedPriceOperations);
+            var rejectedEvent = _chargePriceRejectedEventFactory.CreateEvent(command, validationResult);
+            // await _availableDataNotifier.NotifyAsync(rejectedEvent).ConfigureAwait(false);
             foreach (var chargePriceOperationDto in rejectedPriceOperations)
             {
                 _logger.LogInformation(
-                    $"{chargePriceOperationDto.ChargeId} rejected price operations was persisted. With errors: {PrintInvalidRules(documentValidationResult)}");
+                    $"{chargePriceOperationDto.ChargeId} rejected price operations was persisted. With errors: {PrintInvalidRules(validationResult)}");
             }
 
             return Task.CompletedTask;
         }
 
         public Task SaveRejectionsAsync(
+            DocumentDto document,
             List<ChargePriceOperationDto> operationsToBeRejected,
-            List<IValidationRuleContainer> documentValidationResult)
+            List<IValidationRuleContainer> validationResult)
         {
+            var command = new ChargePriceCommand(document, operationsToBeRejected);
+            var rejectedEvent = _chargePriceRejectedEventFactory.CreateEvent(command, ValidationResult.CreateFailure(validationResult));
+            // await _availableDataNotifier.NotifyAsync(rejectedEvent).ConfigureAwait(false);
             foreach (var chargePriceOperationDto in operationsToBeRejected)
             {
                 _logger.LogInformation(
-                    $"{chargePriceOperationDto.ChargeId} rejected price operations was persisted. With errors: {PrintInvalidRules(ValidationResult.CreateFailure(documentValidationResult))}");
+                    $"{chargePriceOperationDto.ChargeId} rejected price operations was persisted. With errors: {PrintInvalidRules(ValidationResult.CreateFailure(validationResult))}");
             }
 
             return Task.CompletedTask;

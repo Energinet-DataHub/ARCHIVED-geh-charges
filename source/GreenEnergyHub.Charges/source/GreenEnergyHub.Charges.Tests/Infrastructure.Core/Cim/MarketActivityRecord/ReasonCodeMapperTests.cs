@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using GreenEnergyHub.Charges.Domain.AvailableData.Shared;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketActivityRecord;
 using GreenEnergyHub.Charges.TestCore.Attributes;

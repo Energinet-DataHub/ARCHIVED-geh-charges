@@ -14,9 +14,8 @@
 
 using System;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Domain.AvailableData.Shared;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
-using GreenEnergyHub.Charges.Infrastructure.Core.Cim;
-using GreenEnergyHub.Charges.MessageHub.Models.Shared;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Xunit;
 

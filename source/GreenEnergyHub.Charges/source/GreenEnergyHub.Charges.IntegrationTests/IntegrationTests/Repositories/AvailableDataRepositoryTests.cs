@@ -17,9 +17,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Domain.AvailableData.AvailableChargeData;
+using GreenEnergyHub.Charges.Domain.AvailableData.AvailableData;
+using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.MessageHub;
 using NodaTime;
@@ -27,12 +28,12 @@ using Xunit;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 {
-    public abstract class AvailableDataRepositoryTests<TAvailableData> : IClassFixture<MessageHubDatabaseFixture>
+    public abstract class AvailableDataRepositoryTests<TAvailableData> : IClassFixture<ChargesDatabaseFixture>
         where TAvailableData : AvailableDataBase
     {
-        private readonly MessageHubDatabaseManager _databaseManager;
+        private readonly ChargesDatabaseManager _databaseManager;
 
-        protected AvailableDataRepositoryTests(MessageHubDatabaseFixture fixture)
+        protected AvailableDataRepositoryTests(ChargesDatabaseFixture fixture)
         {
             _databaseManager = fixture.DatabaseManager;
         }
