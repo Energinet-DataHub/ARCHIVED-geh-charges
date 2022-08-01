@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         [InlineAutoMoqData(ChargeType.Fee, TaxIndicator.NoTax, true)]
         [InlineAutoMoqData(ChargeType.Subscription, TaxIndicator.Tax, false)]
         [InlineAutoMoqData(ChargeType.Subscription, TaxIndicator.NoTax, true)]
-        [InlineAutoMoqData(ChargeType.Subscription, TaxIndicator.Unknown, false)]
+        [InlineAutoMoqData(ChargeType.Subscription, TaxIndicator.Unknown, true)]
         [InlineAutoMoqData(ChargeType.Tariff, TaxIndicator.Tax, true)]
         [InlineAutoMoqData(ChargeType.Tariff, TaxIndicator.NoTax, true)]
         [InlineAutoMoqData(ChargeType.Unknown, TaxIndicator.NoTax, true)]
