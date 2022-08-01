@@ -29,7 +29,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.TaxIndicatorMustBeFalseForSubscription;
 
-        public bool IsValid => _chargeOperationDto.Type != ChargeType.Subscription ||
+        public bool IsValid => _chargeOperationDto.Type is not ChargeType.Subscription ||
                                _chargeOperationDto.TaxIndicator is TaxIndicator.NoTax
                                    or TaxIndicator.Unknown;
     }
