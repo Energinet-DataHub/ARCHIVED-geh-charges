@@ -17,7 +17,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Services;
-using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Charges.Exceptions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.BusinessValidation.ValidationRules;
@@ -34,7 +33,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         private readonly IChargeRepository _chargeRepository;
         private readonly IMarketParticipantRepository _marketParticipantRepository;
         private readonly IInputValidator<ChargePriceOperationDto> _inputValidator;
-        private readonly IUnitOfWork _unitOfWork;
         private readonly IChargePriceConfirmationService _chargePriceConfirmationService;
         private readonly IChargePriceRejectionService _chargePriceRejectionService;
         private readonly IChargePriceNotificationService _chargePriceNotificationService;
@@ -44,7 +42,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             IChargeRepository chargeRepository,
             IMarketParticipantRepository marketParticipantRepository,
             IInputValidator<ChargePriceOperationDto> inputValidator,
-            IUnitOfWork unitOfWork,
             IChargePriceConfirmationService chargePriceConfirmationService,
             IChargePriceRejectionService chargePriceRejectionService,
             IChargePriceNotificationService chargePriceNotificationService,
@@ -53,7 +50,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             _chargeRepository = chargeRepository;
             _marketParticipantRepository = marketParticipantRepository;
             _inputValidator = inputValidator;
-            _unitOfWork = unitOfWork;
             _chargePriceConfirmationService = chargePriceConfirmationService;
             _chargePriceRejectionService = chargePriceRejectionService;
             _chargePriceNotificationService = chargePriceNotificationService;
