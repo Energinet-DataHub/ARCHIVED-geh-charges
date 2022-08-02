@@ -47,10 +47,9 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
                 "AZURE_SECRETS_KEYVAULT_URL");
             ServiceBusResourceProvider = new ServiceBusResourceProvider(
                 IntegrationTestConfiguration.ServiceBusConnectionString, TestLogger);
-            LocalTimeZoneName = GetValueFromSettingsFile("local.settings.json", "VALUES:LOCAL_TIMEZONENAME");
         }
 
-        public string LocalTimeZoneName { get; }
+        public string LocalTimeZoneName { get; } = "Europe/Copenhagen";
 
         public ChargesDatabaseManager DatabaseManager { get; }
 
@@ -108,7 +107,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.AppInsightsInstrumentationKey, IntegrationTestConfiguration.ApplicationInsightsInstrumentationKey);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.AzureWebJobsStorage, "UseDevelopmentStorage=true");
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.Currency, "DKK");
-            Environment.SetEnvironmentVariable(EnvironmentSettingNames.LocalTimeZoneName, "Europe/Copenhagen");
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.LocalTimeZoneName, LocalTimeZoneName);
         }
 
         /// <inheritdoc/>
@@ -347,14 +346,6 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
 
             if (!await storage.ExistsAsync())
                 await storage.CreateAsync();
-        }
-
-        private static string GetValueFromSettingsFile(string settingsFileName, string valueName)
-        {
-            return new ConfigurationBuilder()
-                .AddJsonFile(settingsFileName, optional: true)
-                .AddEnvironmentVariables()
-                .Build().GetValue<string>(valueName);
         }
 
         private static string GetBuildConfiguration()
