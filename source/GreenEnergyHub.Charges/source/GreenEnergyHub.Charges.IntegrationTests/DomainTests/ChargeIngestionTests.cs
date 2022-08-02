@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
         [Collection(nameof(ChargesFunctionAppCollectionFixture))]
         public class RunAsync : FunctionAppTestBase<ChargesFunctionAppFixture>, IAsyncLifetime
         {
-            private readonly AuthenticatedHttpRequestGenerator _authenticatedHttpRequestGenerator;
+            private AuthenticatedHttpRequestGenerator _authenticatedHttpRequestGenerator;
 
             public RunAsync(ChargesFunctionAppFixture fixture, ITestOutputHelper testOutputHelper)
                 : base(fixture, testOutputHelper)
