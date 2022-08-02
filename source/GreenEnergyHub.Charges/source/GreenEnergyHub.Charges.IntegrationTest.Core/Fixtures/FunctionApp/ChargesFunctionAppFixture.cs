@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
                 IntegrationTestConfiguration.ServiceBusConnectionString, TestLogger);
         }
 
-        public string LocalTimeZoneName { get; private set; } = string.Empty;
+        public string LocalTimeZoneName { get; } = "Europe/Copenhagen";
 
         public ChargesDatabaseManager DatabaseManager { get; }
 
@@ -107,20 +107,12 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.AppInsightsInstrumentationKey, IntegrationTestConfiguration.ApplicationInsightsInstrumentationKey);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.AzureWebJobsStorage, "UseDevelopmentStorage=true");
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.Currency, "DKK");
-
-            // TODO: Notice we set the time zone here, so we "override" any "local.settings" configuration.
-            // Its unclear to me why we would want to read it from "local.settings" in tests. If that is not necessary we could just set the property "LocalTimeZoneName" to this value.
-            Environment.SetEnvironmentVariable(EnvironmentSettingNames.LocalTimeZoneName, "Europe/Copenhagen");
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.LocalTimeZoneName, LocalTimeZoneName);
         }
 
         /// <inheritdoc/>
         protected override async Task OnInitializeFunctionAppDependenciesAsync(IConfiguration localSettingsSnapshot)
         {
-            // TODO: We can retrieve a setting from local settings OR environment variable using the following.
-            // This is generally only necessary if we cannot have the value in a const; typically either because its secret and we don't want to check it in,
-            // or because the local value and the build agent value are different.
-            LocalTimeZoneName = localSettingsSnapshot.GetValue<string>(EnvironmentSettingNames.LocalTimeZoneName);
-
             AzuriteManager.StartAzurite();
 
             // => Service Bus
