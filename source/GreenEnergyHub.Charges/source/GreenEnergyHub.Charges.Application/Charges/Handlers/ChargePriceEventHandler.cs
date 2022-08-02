@@ -25,7 +25,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using NodaTime;
+using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
@@ -38,6 +38,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         private readonly IChargePriceConfirmationService _chargePriceConfirmationService;
         private readonly IChargePriceRejectionService _chargePriceRejectionService;
         private readonly IChargePriceNotificationService _chargePriceNotificationService;
+        private readonly ILogger _logger;
 
         public ChargePriceEventHandler(
             IChargeRepository chargeRepository,
@@ -46,7 +47,8 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             IUnitOfWork unitOfWork,
             IChargePriceConfirmationService chargePriceConfirmationService,
             IChargePriceRejectionService chargePriceRejectionService,
-            IChargePriceNotificationService chargePriceNotificationService)
+            IChargePriceNotificationService chargePriceNotificationService,
+            ILoggerFactory loggerFactory)
         {
             _chargeRepository = chargeRepository;
             _marketParticipantRepository = marketParticipantRepository;
@@ -55,6 +57,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             _chargePriceConfirmationService = chargePriceConfirmationService;
             _chargePriceRejectionService = chargePriceRejectionService;
             _chargePriceNotificationService = chargePriceNotificationService;
+            _logger = loggerFactory.CreateLogger(nameof(ChargePriceEventHandler));
         }
 
         public async Task HandleAsync(ChargePriceCommandReceivedEvent commandReceivedEvent)
@@ -110,7 +113,12 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             await _chargePriceConfirmationService.SaveConfirmationsAsync(operationsToBeConfirmed).ConfigureAwait(false);
             await _chargePriceRejectionService.SaveRejectionsAsync(operationsToBeRejected, rejectionRules).ConfigureAwait(false);
             await _chargePriceNotificationService.SaveNotificationsAsync(operationsToBeConfirmed).ConfigureAwait(false);
-            await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+
+            // With story 1411 below log entry will be replaced with 'await _unitOfWork.SaveChangesAsync().ConfigureAwait(false)';
+            foreach (var operation in operationsToBeConfirmed)
+            {
+                _logger.LogInformation("At this point, price(s) will be persisted for operation with Id {Id}", operation.Id);
+            }
         }
 
         private static void CollectRejectionRules(
