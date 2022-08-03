@@ -4,9 +4,10 @@
 
 DECLARE @provider8100000000016 UNIQUEIDENTIFIER = '75ED087C-5A15-4D30-8711-FCD509A8D559';
 DECLARE @provider8100000000023 UNIQUEIDENTIFIER = '369F2216-2237-454A-9C4F-BAB34726BFE4';
-DECLARE @provider8100000000030 UNIQUEIDENTIFIER = 'ed6c94f3-24a8-43b3-913d-bf7513390a32';
+DECLARE @provider8100000000030 UNIQUEIDENTIFIER = 'e009b9b2-edce-4f74-b466-98d0bbb0a94a';
 DECLARE @provider8900000000005 UNIQUEIDENTIFIER = 'DBDEEEB4-F3C0-4503-8F3C-655DD69D730A';
 DECLARE @provider8510000000013 UNIQUEIDENTIFIER = 'a977c279-8d9a-469b-be26-94b18b0e7dbb';
+DECLARE @provider8510000000015 UNIQUEIDENTIFIER = '90f6f4e5-8073-4842-b33e-c59e9f4a8c3f';
 
 INSERT INTO [Charges].[MarketParticipant] VALUES (NEWID(),'8100000000108', 1, 1);
 INSERT INTO [Charges].[MarketParticipant] VALUES (NEWID(),'8100000000115', 1, 1);
@@ -21,6 +22,7 @@ INSERT INTO [Charges].[MarketParticipant] VALUES (@provider8100000000030,'810000
 INSERT INTO [Charges].[MarketParticipant] VALUES (@provider8900000000005,'8900000000005', 2, 0);
 -- System operator has already been seeded in script 'Add default charges owner'
 INSERT INTO [Charges].[MarketParticipant] VALUES (NEWID(),'5790001330552', 7, 1);
+INSERT INTO [Charges].[MarketParticipant] VALUES (@provider8510000000015,'8510000000015', 1, 1);
 
 ------------------------------------------------------------------------------------------------------------------------
 -- Add grid areas

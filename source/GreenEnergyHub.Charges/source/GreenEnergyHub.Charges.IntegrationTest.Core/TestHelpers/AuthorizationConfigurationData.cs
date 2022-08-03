@@ -12,11 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using GreenEnergyHub.Charges.IntegrationTest.Core.Authorization;
+
 namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
 {
     public static class AuthorizationConfigurationData
     {
+        public const string Environment = "u001";
+
         public const string SystemOperator = "endk-tso";
         public const string GridAccessProvider8100000000030 = "volt";
+
+        private const string LocalSettingsJsonFilename = "integrationtest.local.settings.json";
+        private const string AzureSecretsKeyVaultUrlKey = "AZURE_SECRETS_KEYVAULT_URL";
+
+        public static AuthorizationConfiguration CreateAuthorizationConfiguration(string clientName)
+        {
+            return new AuthorizationConfiguration(
+                clientName,
+                Environment,
+                LocalSettingsJsonFilename,
+                AzureSecretsKeyVaultUrlKey);
+        }
     }
 }

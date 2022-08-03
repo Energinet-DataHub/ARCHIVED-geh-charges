@@ -90,11 +90,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
 
         public void SetAuthorizationConfiguration(string clientName)
         {
-            AuthorizationConfiguration = new AuthorizationConfiguration(
-                clientName,
-                "u002",
-                "integrationtest.local.settings.json",
-                "AZURE_SECRETS_KEYVAULT_URL");
+            AuthorizationConfiguration = AuthorizationConfigurationData.CreateAuthorizationConfiguration(clientName);
         }
 
         /// <inheritdoc/>
@@ -300,11 +296,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
 
         private AuthorizationConfiguration UseDefaultAuthorizationConfiguration()
         {
-            return new AuthorizationConfiguration(
-                AuthorizationConfigurationData.GridAccessProvider8100000000030,
-                "u002",
-                "integrationtest.local.settings.json",
-                "AZURE_SECRETS_KEYVAULT_URL");
+            return AuthorizationConfigurationData.CreateAuthorizationConfiguration(AuthorizationConfigurationData
+                .GridAccessProvider8100000000030);
         }
 
         private async Task InitializeMessageHubAsync()
