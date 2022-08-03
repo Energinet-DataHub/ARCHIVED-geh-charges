@@ -72,7 +72,7 @@ DECLARE @chargeId3 UNIQUEIDENTIFIER = NEWID()
 DECLARE @chargeId4 UNIQUEIDENTIFIER = NEWID()
 DECLARE @meteringPointId VARCHAR(50)
 
-SELECT @chargeOwnerId = Id FROM charges.marketparticipant WHERE marketparticipantid = '8100000000030'
+SELECT @chargeOwnerId = Id FROM charges.marketparticipant WHERE marketparticipantid = '5790000432752'
 
 INSERT INTO charges.charge VALUES (@chargeId, 'TestTariff', 3, @chargeOwnerId, 0, 2, 0, 'Description...', 'Grid Access Provider test tariff', 1, '1999-12-31 23:00:00', '9999-12-31 23:59:59')
 INSERT INTO charges.charge VALUES (@chargeId2, 'TestTar002', 3, @chargeOwnerId, 0, 2, 1, 'Description...', 'Grid Access Provider test tariff2', 2, '1999-12-31 23:00:00', '9999-12-31 23:59:59')

@@ -31,6 +31,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.Charges
         public const string BundleWithTwoOperationsForSameTariffSecondOpViolatingVr903
             = "TestFiles/Charges/BundleWithTwoOperationsForSameTariffSecondOpViolatingVr903.xml";
 
+        public const string TariffSystemOperatorCreate = "TestFiles/Charges/TariffSystemOperatorCreate.xml";
+
         public const string TariffHourlyPricesSample = "TestFiles/Charges/Samples/TariffHourlyPricesSample.xml";
         public const string FeeMonthlyPriceSample = "TestFiles/Charges/Samples/FeeMonthlyPriceSample.xml";
         public const string SubscriptionMonthlyPriceSample = "TestFiles/Charges/Samples/SubscriptionMonthlyPriceSample.xml";
@@ -42,5 +44,6 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.Charges
         public const string TariffPriceSeriesExistingFee = "TestFiles/Charges/PriceSeries/TariffPriceSeriesExistingFee.xml";
         public const string TariffPriceSeriesExistingTariff = "TestFiles/Charges/PriceSeries/TariffPriceSeriesExistingTariff.xml";
         public const string TariffPriceSeriesExistingSubscription = "TestFiles/Charges/PriceSeries/TariffPriceSeriesExistingSubscription.xml";
+        public const string TariffPriceSeriesTariffFromSystemOperator = "TestFiles/Charges/PriceSeries/TariffPriceSeriesTariffFromSystemOperator.xml";
     }
 }
