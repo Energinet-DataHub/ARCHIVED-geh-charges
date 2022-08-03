@@ -17,7 +17,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Services;
-using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Charges.Exceptions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.BusinessValidation.ValidationRules;
@@ -25,7 +24,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using NodaTime;
+using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
@@ -34,27 +33,27 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         private readonly IChargeRepository _chargeRepository;
         private readonly IMarketParticipantRepository _marketParticipantRepository;
         private readonly IInputValidator<ChargePriceOperationDto> _inputValidator;
-        private readonly IUnitOfWork _unitOfWork;
         private readonly IChargePriceConfirmationService _chargePriceConfirmationService;
         private readonly IChargePriceRejectionService _chargePriceRejectionService;
         private readonly IChargePriceNotificationService _chargePriceNotificationService;
+        private readonly ILogger _logger;
 
         public ChargePriceEventHandler(
             IChargeRepository chargeRepository,
             IMarketParticipantRepository marketParticipantRepository,
             IInputValidator<ChargePriceOperationDto> inputValidator,
-            IUnitOfWork unitOfWork,
             IChargePriceConfirmationService chargePriceConfirmationService,
             IChargePriceRejectionService chargePriceRejectionService,
-            IChargePriceNotificationService chargePriceNotificationService)
+            IChargePriceNotificationService chargePriceNotificationService,
+            ILoggerFactory loggerFactory)
         {
             _chargeRepository = chargeRepository;
             _marketParticipantRepository = marketParticipantRepository;
             _inputValidator = inputValidator;
-            _unitOfWork = unitOfWork;
             _chargePriceConfirmationService = chargePriceConfirmationService;
             _chargePriceRejectionService = chargePriceRejectionService;
             _chargePriceNotificationService = chargePriceNotificationService;
+            _logger = loggerFactory.CreateLogger(nameof(ChargePriceEventHandler));
         }
 
         public async Task HandleAsync(ChargePriceCommandReceivedEvent commandReceivedEvent)
@@ -110,7 +109,12 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             await _chargePriceConfirmationService.SaveConfirmationsAsync(operationsToBeConfirmed).ConfigureAwait(false);
             await _chargePriceRejectionService.SaveRejectionsAsync(operationsToBeRejected, rejectionRules).ConfigureAwait(false);
             await _chargePriceNotificationService.SaveNotificationsAsync(operationsToBeConfirmed).ConfigureAwait(false);
-            await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+
+            // With story 1411 below log entry will be replaced with 'await _unitOfWork.SaveChangesAsync().ConfigureAwait(false)';
+            foreach (var operation in operationsToBeConfirmed)
+            {
+                _logger.LogInformation("At this point, price(s) will be persisted for operation with Id {Id}", operation.Id);
+            }
         }
 
         private static void CollectRejectionRules(
