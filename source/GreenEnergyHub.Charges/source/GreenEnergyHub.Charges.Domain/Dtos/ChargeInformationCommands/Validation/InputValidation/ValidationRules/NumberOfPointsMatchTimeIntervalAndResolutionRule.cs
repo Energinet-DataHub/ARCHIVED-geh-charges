@@ -45,6 +45,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
                 Resolution.PT1H => interval.Duration.TotalHours,
                 Resolution.P1D => interval.Duration.TotalDays,
                 Resolution.P1M =>
+
                     // https://stackoverflow.com/a/4639057
                     ((_endTime.InUtc().Year - _startTime.InUtc().Year) * 12) + _endTime.InUtc().Month -
                     _startTime.InUtc().Month != 0 ?
