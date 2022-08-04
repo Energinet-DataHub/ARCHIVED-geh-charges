@@ -76,7 +76,8 @@ namespace GreenEnergyHub.Charges.SystemTests.Fixtures
         /// </summary>
         private static IConfigurationRoot BuildKeyVaultConfigurationRoot(string keyVaultUrl)
         {
-            var credential = new DefaultAzureCredential();
+            // Authenticate using Visual Studio if possible; otherwise use the Azure CLI to authenticate.
+            var credential = new ChainedTokenCredential(new VisualStudioCredential(), new AzureCliCredential());
 
             return new ConfigurationBuilder()
                 .AddAzureKeyVault(new Uri(keyVaultUrl), credential)
