@@ -390,10 +390,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             }
 
             [Theory]
-            [InlineAutoMoqData(ChargeDocument.TariffPriceSeriesExistingFee)]
-            [InlineAutoMoqData(ChargeDocument.TariffPriceSeriesExistingTariff)]
-            [InlineAutoMoqData(ChargeDocument.TariffPriceSeriesExistingSubscription)]
-            public async Task When_SendingChargePriceRequestForExistingFee_Then_AConfirmationIsShouldBeSent(string testFilePath)
+            [InlineAutoMoqData(ChargeDocument.PriceSeriesExistingFee)]
+            [InlineAutoMoqData(ChargeDocument.PriceSeriesExistingTariff)]
+            [InlineAutoMoqData(ChargeDocument.PriceSeriesExistingSubscription)]
+            public async Task When_SendingChargePriceRequestForExistingCharge_Then_AConfirmationIsShouldBeSent(string testFilePath)
             {
                 // Arrange
                 var (request, correlationId) = await _authenticatedHttpRequestGenerator
@@ -421,7 +421,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             {
                 // Arrange
                 var (request, correlationId) = await _authenticatedHttpRequestGenerator
-                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.TariffPriceSeriesExistingTariff);
+                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.PriceSeriesExistingTariff);
                 using var eventualChargePriceUpdatedEvent = await Fixture
                     .ChargePricesUpdatedListener
                     .ListenForEventsAsync(correlationId, expectedCount: 1)
@@ -444,7 +444,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             {
                 // Arrange
                 var (request, correlationId) = await _authenticatedHttpRequestGenerator
-                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.TariffPriceSeriesExistingSubscription);
+                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.PriceSeriesExistingSubscription);
                 using var eventualChargePriceUpdatedEvent = await Fixture
                     .ChargePricesUpdatedListener
                     .ListenForEventsAsync(correlationId, expectedCount: 1)
