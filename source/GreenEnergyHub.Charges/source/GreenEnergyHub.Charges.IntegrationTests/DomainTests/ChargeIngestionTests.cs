@@ -46,12 +46,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
         [Collection(nameof(ChargesFunctionAppCollectionFixture))]
         public class RunAsync : FunctionAppTestBase<ChargesFunctionAppFixture>, IAsyncLifetime
         {
-            private AuthenticatedHttpRequestGenerator _authenticatedHttpRequestGenerator;
+            private readonly AuthenticatedHttpRequestGenerator _authenticatedHttpRequestGenerator;
 
             public RunAsync(ChargesFunctionAppFixture fixture, ITestOutputHelper testOutputHelper)
                 : base(fixture, testOutputHelper)
             {
-                _authenticatedHttpRequestGenerator = new AuthenticatedHttpRequestGenerator(fixture.AuthorizationConfiguration, Fixture.LocalTimeZoneName);
+                _authenticatedHttpRequestGenerator = new AuthenticatedHttpRequestGenerator(fixture, Fixture.LocalTimeZoneName);
             }
 
             public Task InitializeAsync()
@@ -239,7 +239,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task Given_BundleWithMultipleOperationsForSameCharge_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply()
             {
                 // Arrange
-                SetupAuthorizationConfigurationWithNewActor(AuthorizationConfigurationData.GridAccessProvider8100000000030);
                 var (request, correlationId) = await _authenticatedHttpRequestGenerator
                     .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.BundleWithMultipleOperationsForSameTariff);
 
@@ -263,7 +262,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task Given_BundleWithTwoOperationsForSameTariffSecondOpViolatingVR903_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply()
             {
                 // Arrange
-                SetupAuthorizationConfigurationWithNewActor(AuthorizationConfigurationData.GridAccessProvider8100000000030);
                 var (request, correlationId) = await _authenticatedHttpRequestGenerator
                     .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.BundleWithTwoOperationsForSameTariffSecondOpViolatingVr903);
 
@@ -467,9 +465,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             [Fact]
             public async Task WhenChargeTaxIsCreatedBySystemOperator_ANotificationShouldBeReceivedByActiveGridAccessProviders()
             {
-                SetupAuthorizationConfigurationWithNewActor(AuthorizationConfigurationData.SystemOperator);
                 var (request, correlationId) = await _authenticatedHttpRequestGenerator
-                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.TariffSystemOperatorCreate);
+                    .CreateAuthenticatedHttpPostRequestAsync(
+                        EndpointUrl,
+                        ChargeDocument.TariffSystemOperatorCreate,
+                        AuthorizationConfigurationData.SystemOperator);
 
                 // Act
                 await Fixture.HostManager.HttpClient.SendAsync(request);
@@ -487,9 +487,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             [Fact(Skip = "Disabled until Charge Price flow is fully functional as the current SupportOldFlowAsync sets Tax to TaxIndicator.Unknown which means no Grid access provider will get notified.")]
             public async Task WhenChargeTaxPricesAreUpdatedBySystemOperator_ANotificationShouldBeReceivedByActiveGridAccessProviders()
             {
-                SetupAuthorizationConfigurationWithNewActor(AuthorizationConfigurationData.SystemOperator);
                 var (request, correlationId) = await _authenticatedHttpRequestGenerator
-                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.TariffPriceSeriesTariffFromSystemOperator);
+                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.TariffPriceSeriesTariffFromSystemOperator, AuthorizationConfigurationData.SystemOperator);
 
                 // Act
                 await Fixture.HostManager.HttpClient.SendAsync(request);
@@ -502,13 +501,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 peekResults.Should().ContainMatch("*8100000000016*");
                 peekResults.Should().ContainMatch("*8100000000023*");
                 peekResults.Should().NotContainMatch("*8900000000005*");
-            }
-
-            private void SetupAuthorizationConfigurationWithNewActor(string clientName)
-            {
-                Fixture.SetAuthorizationConfiguration(clientName);
-                _authenticatedHttpRequestGenerator =
-                    new AuthenticatedHttpRequestGenerator(Fixture.AuthorizationConfiguration, Fixture.LocalTimeZoneName);
             }
 
             private static ZonedDateTimeService GetZonedDateTimeService()
