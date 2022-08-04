@@ -465,8 +465,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             [Fact]
             public async Task WhenChargeTaxIsCreatedBySystemOperator_ANotificationShouldBeReceivedByActiveGridAccessProviders()
             {
-                Fixture.SetAuthorizationConfiguration(AuthorizationConfigurationData.SystemOperator);
-                _authenticatedHttpRequestGenerator = new AuthenticatedHttpRequestGenerator(Fixture.AuthorizationConfiguration, Fixture.LocalTimeZoneName);
+                SetupAuthorizationConfigurationWithNewActor(AuthorizationConfigurationData.SystemOperator);
                 var (request, correlationId) = await _authenticatedHttpRequestGenerator
                     .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.TariffSystemOperatorCreate);
 
@@ -486,8 +485,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             [Fact(Skip = "Disabled until Charge Price flow is fully functional as the current SupportOldFlowAsync sets Tax to TaxIndicator.Unknown which means no Grid access provider will get notified.")]
             public async Task WhenChargeTaxPricesAreUpdatedBySystemOperator_ANotificationShouldBeReceivedByActiveGridAccessProviders()
             {
-                Fixture.SetAuthorizationConfiguration(AuthorizationConfigurationData.SystemOperator);
-                _authenticatedHttpRequestGenerator = new AuthenticatedHttpRequestGenerator(Fixture.AuthorizationConfiguration, Fixture.LocalTimeZoneName);
+                SetupAuthorizationConfigurationWithNewActor(AuthorizationConfigurationData.SystemOperator);
                 var (request, correlationId) = await _authenticatedHttpRequestGenerator
                     .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.TariffPriceSeriesTariffFromSystemOperator);
 
@@ -502,6 +500,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 peekResults.Should().ContainMatch("*8100000000016*");
                 peekResults.Should().ContainMatch("*8100000000023*");
                 peekResults.Should().NotContainMatch("*8900000000005*");
+            }
+
+            private void SetupAuthorizationConfigurationWithNewActor(string clientName)
+            {
+                Fixture.SetAuthorizationConfiguration(clientName);
+                _authenticatedHttpRequestGenerator =
+                    new AuthenticatedHttpRequestGenerator(Fixture.AuthorizationConfiguration, Fixture.LocalTimeZoneName);
             }
 
             private static ZonedDateTimeService GetZonedDateTimeService()
