@@ -488,7 +488,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task WhenChargeTaxPricesAreUpdatedBySystemOperator_ANotificationShouldBeReceivedByActiveGridAccessProviders()
             {
                 var (request, correlationId) = await _authenticatedHttpRequestGenerator
-                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.TariffPriceSeriesTariffFromSystemOperator, AuthorizationConfigurationData.SystemOperator);
+                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.PriceSeriesTariffFromSystemOperator, AuthorizationConfigurationData.SystemOperator);
 
                 // Act
                 await Fixture.HostManager.HttpClient.SendAsync(request);

@@ -101,16 +101,16 @@ limitations under the License.
     <Content Include="TestFiles\Charges\InvalidTariffDocument.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestFiles\Charges\PriceSeries\TariffPriceSeriesExistingSubscription.xml">
+    <Content Include="TestFiles\Charges\PriceSeries\PriceSeriesExistingSubscription.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestFiles\Charges\PriceSeries\TariffPriceSeriesTariffFromSystemOperator.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestFiles\Charges\PriceSeries\TariffPriceSeriesExistingTariff.xml">
+    <Content Include="TestFiles\Charges\PriceSeries\PriceSeriesExistingTariff.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestFiles\Charges\PriceSeries\TariffPriceSeriesExistingFee.xml">
+    <Content Include="TestFiles\Charges\PriceSeries\PriceSeriesExistingFee.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestFiles\Charges\PriceSeries\TariffPriceSeriesInvalidStartAndEndDate.xml">
