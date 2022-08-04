@@ -20,7 +20,6 @@ using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Application.Charges.Services;
-using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
@@ -30,6 +29,8 @@ using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.Charges.Tests.Builders.Testables;
+using GreenEnergyHub.TestHelpers;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NodaTime;
 using Xunit;
@@ -42,17 +43,18 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
     {
         [Theory]
         [InlineAutoMoqData]
-        public async Task HandleAsync_WhenValidationSucceed_StoreAndConfirmCommand(
+        public async Task HandleAsync_WhenValidationSucceed_CallsConfirmServiceAndLogsThatPricesArePersisted(
             [Frozen] Mock<IChargeIdentifierFactory> chargeIdentifierFactory,
             [Frozen] Mock<IInputValidator<ChargePriceOperationDto>> inputValidator,
             [Frozen] Mock<IChargeRepository> chargeRepository,
-            [Frozen] Mock<IUnitOfWork> unitOfWork,
             TestMarketParticipant sender,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IChargePriceRejectionService> chargePriceRejectionService,
             [Frozen] Mock<IChargePriceConfirmationService> chargePriceConfirmationService,
-            ChargeBuilder chargeBuilder,
-            ChargePriceEventHandler sut)
+            [Frozen] Mock<IChargePriceNotificationService> chargePriceNotificationService,
+            [Frozen] Mock<ILoggerFactory> loggerFactory,
+            Mock<ILogger> logger,
+            ChargeBuilder chargeBuilder)
         {
             // Arrange
             var chargeCommand = CreateChargeCommandWith24Points();
@@ -70,6 +72,17 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             SetupMarketParticipantRepository(marketParticipantRepository, sender);
             SetupChargeIdentifierFactoryMock(chargeIdentifierFactory);
 
+            loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
+
+            var sut = new ChargePriceEventHandler(
+                chargeRepository.Object,
+                marketParticipantRepository.Object,
+                inputValidator.Object,
+                chargePriceConfirmationService.Object,
+                chargePriceRejectionService.Object,
+                chargePriceNotificationService.Object,
+                loggerFactory.Object);
+
             // Act
             await sut.HandleAsync(receivedEvent);
 
@@ -83,7 +96,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                 x =>
                     x.SaveConfirmationsAsync(It.Is<List<ChargePriceOperationDto>>(x => x.Count == 1)),
                 Times.Once);
-            unitOfWork.Verify(x => x.SaveChangesAsync(), Times.Once());
+
+            var expectedMessage = $"At this point, price(s) will be persisted for operation with Id {receivedEvent.Command.Operations.First().Id}";
+            logger.VerifyLoggerWasCalled(expectedMessage, LogLevel.Information);
         }
 
         [Theory]
