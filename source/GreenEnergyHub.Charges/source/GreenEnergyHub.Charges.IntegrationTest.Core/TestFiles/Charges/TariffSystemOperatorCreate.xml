@@ -23,18 +23,18 @@ limitations under the License.
     <cim:sender_MarketParticipant.marketRole.type>EZ</cim:sender_MarketParticipant.marketRole.type>
     <cim:receiver_MarketParticipant.mRID codingScheme="A10">5790001330552</cim:receiver_MarketParticipant.mRID>
     <cim:receiver_MarketParticipant.marketRole.type>DDZ</cim:receiver_MarketParticipant.marketRole.type>
-    <cim:createdDateTime>2021-12-17T09:30:47Z</cim:createdDateTime>
+    <cim:createdDateTime>{{$isoTimestamp}}</cim:createdDateTime>
     <cim:MktActivityRecord>
         <cim:mRID>36251480</cim:mRID>
         <cim:ChargeGroup>
             <cim:ChargeType>
-                <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">8100000000030</cim:chargeTypeOwner_MarketParticipant.mRID>
+                <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">5790000432752</cim:chargeTypeOwner_MarketParticipant.mRID>
                 <cim:type>D03</cim:type>
-                <cim:mRID>SOCharge</cim:mRID>
-                <cim:name>System operator charge Tariff day Name 1</cim:name>
+                <cim:mRID>SYOCharge</cim:mRID>
+                <cim:name>System operator tax tariff day</cim:name>
                 <cim:description>The charge description 1</cim:description>
                 <cim:priceTimeFrame_Period.resolution>P1D</cim:priceTimeFrame_Period.resolution>
-                <cim:effectiveDate>2022-10-31T23:00:00Z</cim:effectiveDate>
+                <cim:effectiveDate>{{$YMDHM_TimestampPlusOneMonth}}</cim:effectiveDate>
                 <cim:VATPayer>D01</cim:VATPayer>
                 <cim:transparentInvoicing>false</cim:transparentInvoicing>
                 <cim:taxIndicator>true</cim:taxIndicator>
