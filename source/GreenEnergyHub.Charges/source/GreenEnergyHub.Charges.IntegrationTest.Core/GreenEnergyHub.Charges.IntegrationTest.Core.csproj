@@ -128,7 +128,7 @@ limitations under the License.
     <Content Include="TestFiles\Charges\PriceSeries\TariffPriceSeries.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestFiles\Charges\TariffSystemOperatorCreate.xml">
+    <Content Include="TestFiles\Charges\TaxTariffSystemOperatorCreate.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestFiles\Charges\TariffBundleWithCreateAndUpdate.xml">
