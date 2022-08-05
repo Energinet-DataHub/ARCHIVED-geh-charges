@@ -34,7 +34,7 @@ limitations under the License.
                 <cim:name>System operator tax tariff day</cim:name>
                 <cim:description>The charge description 1</cim:description>
                 <cim:priceTimeFrame_Period.resolution>P1D</cim:priceTimeFrame_Period.resolution>
-                <cim:effectiveDate>{{$YMDHM_TimestampPlusOneMonth}}</cim:effectiveDate>
+                <cim:effectiveDate>{{$isoTimestampPlusOneMonth}}</cim:effectiveDate>
                 <cim:VATPayer>D01</cim:VATPayer>
                 <cim:transparentInvoicing>false</cim:transparentInvoicing>
                 <cim:taxIndicator>true</cim:taxIndicator>
