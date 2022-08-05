@@ -22,11 +22,11 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
     public class AvailableChargeReceiptValidationErrorFactory : IAvailableChargeReceiptValidationErrorFactory
     {
         private readonly ICimValidationErrorCodeFactory _cimValidationErrorCodeFactory;
-        private readonly ICimValidationErrorTextFactory<ChargeInformationCommand, ChargeOperationDto> _cimValidationErrorTextFactory;
+        private readonly ICimValidationErrorTextFactory<ChargeInformationCommand, ChargeInformationOperationDto> _cimValidationErrorTextFactory;
 
         public AvailableChargeReceiptValidationErrorFactory(
             ICimValidationErrorCodeFactory cimValidationErrorCodeFactory,
-            ICimValidationErrorTextFactory<ChargeInformationCommand, ChargeOperationDto> cimValidationErrorTextFactory)
+            ICimValidationErrorTextFactory<ChargeInformationCommand, ChargeInformationOperationDto> cimValidationErrorTextFactory)
         {
             _cimValidationErrorCodeFactory = cimValidationErrorCodeFactory;
             _cimValidationErrorTextFactory = cimValidationErrorTextFactory;
@@ -35,10 +35,10 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
         public AvailableReceiptValidationError Create(
             ValidationError validationError,
             ChargeInformationCommand command,
-            ChargeOperationDto chargeOperationDto)
+            ChargeInformationOperationDto chargeInformationOperationDto)
         {
             var reasonCode = _cimValidationErrorCodeFactory.Create(validationError.ValidationRuleIdentifier);
-            var reasonText = _cimValidationErrorTextFactory.Create(validationError, command, chargeOperationDto);
+            var reasonText = _cimValidationErrorTextFactory.Create(validationError, command, chargeInformationOperationDto);
 
             return new AvailableReceiptValidationError(reasonCode, reasonText);
         }

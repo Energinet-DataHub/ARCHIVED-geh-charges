@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.Inpu
         {
             var rules = new List<IValidationRuleContainer>
             {
-                CreateRuleContainer(new MaximumPriceRule(chargePriceOperationDto), chargePriceOperationDto.Id),
+                CreateRuleContainer(new MaximumPriceRule(chargePriceOperationDto), chargePriceOperationDto.OperationId),
             };
 
             return rules;

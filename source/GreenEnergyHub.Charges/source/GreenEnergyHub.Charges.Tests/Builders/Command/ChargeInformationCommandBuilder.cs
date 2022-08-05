@@ -20,12 +20,12 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
 {
    public class ChargeInformationCommandBuilder
     {
-        private List<ChargeOperationDto> _chargeOperationDtos;
+        private List<ChargeInformationOperationDto> _chargeOperationDtos;
         private DocumentDto _documentDto;
 
         public ChargeInformationCommandBuilder()
         {
-            _chargeOperationDtos = new List<ChargeOperationDto> { new ChargeOperationDtoBuilder().Build() };
+            _chargeOperationDtos = new List<ChargeInformationOperationDto> { new ChargeOperationDtoBuilder().Build() };
             _documentDto = new DocumentDtoBuilder().Build();
         }
 
@@ -35,14 +35,14 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             return this;
         }
 
-        public ChargeInformationCommandBuilder WithChargeOperation(ChargeOperationDto chargeOperationDto)
+        public ChargeInformationCommandBuilder WithChargeOperation(ChargeInformationOperationDto chargeInformationOperationDto)
         {
             _chargeOperationDtos.Clear();
-            _chargeOperationDtos.Add(chargeOperationDto);
+            _chargeOperationDtos.Add(chargeInformationOperationDto);
             return this;
         }
 
-        public ChargeInformationCommandBuilder WithChargeOperations(List<ChargeOperationDto> chargeOperationDtos)
+        public ChargeInformationCommandBuilder WithChargeOperations(List<ChargeInformationOperationDto> chargeOperationDtos)
         {
             _chargeOperationDtos = chargeOperationDtos;
             return this;

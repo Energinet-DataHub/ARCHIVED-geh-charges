@@ -16,19 +16,20 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.InputValidation.ValidationRules
 {
-    public class ChargeDescriptionHasMaximumLengthRule : IValidationRule
+    public class ChargeOwnerMustMatchSenderRule : IValidationRule
     {
-        private const int MaximumChargeDescriptionLength = 2048;
+        private const int MinimumChargeOwnerLength = 13;
+        private const int MaximumChargeOwnerLength = 16;
         private readonly ChargeInformationOperationDto _chargeInformationOperationDto;
 
-        public ChargeDescriptionHasMaximumLengthRule(ChargeInformationOperationDto chargeInformationOperationDto)
+        public ChargeOwnerMustMatchSenderRule(ChargeInformationOperationDto chargeInformationOperationDto)
         {
             _chargeInformationOperationDto = chargeInformationOperationDto;
         }
 
-        public ValidationRuleIdentifier ValidationRuleIdentifier =>
-            ValidationRuleIdentifier.ChargeDescriptionHasMaximumLength;
+        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeOwnerHasLengthLimits;
 
-        public bool IsValid => _chargeInformationOperationDto.ChargeDescription.Length <= MaximumChargeDescriptionLength;
+        public bool IsValid =>
+            _chargeInformationOperationDto.ChargeOwner.Length is >= MinimumChargeOwnerLength and <= MaximumChargeOwnerLength;
     }
 }

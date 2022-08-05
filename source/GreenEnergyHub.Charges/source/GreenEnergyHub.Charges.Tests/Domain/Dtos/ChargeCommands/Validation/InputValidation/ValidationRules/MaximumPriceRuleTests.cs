@@ -78,7 +78,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             var sutRule = new MaximumPriceRule(chargeOperationDto);
             var sutFactory = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
             var actual = sutFactory.Create(
-                new ValidationError(validationRuleIdentifier, chargeOperationDto.Id, triggeredBy),
+                new ValidationError(validationRuleIdentifier, chargeOperationDto.OperationId, triggeredBy),
                 invalidCommand,
                 chargeOperationDto);
 
@@ -89,13 +89,13 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             var expected = CimValidationErrorTextTemplateMessages.MaximumPriceErrorText
                 .Replace("{{ChargePointPrice}}", expectedPoint.Price.ToString("N"))
                 .Replace("{{ChargePointPosition}}", triggeredBy)
-                .Replace("{{DocumentSenderProvidedChargeId}}", chargeOperationDto.ChargeId)
-                .Replace("{{ChargeType}}", chargeOperationDto.Type.ToString())
+                .Replace("{{DocumentSenderProvidedChargeId}}", chargeOperationDto.SenderProvidedChargeId)
+                .Replace("{{ChargeType}}", chargeOperationDto.ChargeType.ToString())
                 .Replace("{{ChargeOwner}}", chargeOperationDto.ChargeOwner);
             actual.Should().Be(expected);
         }
 
-        private static ChargeOperationDto CreateChargeOperationDto(ChargeOperationDtoBuilder builder, decimal price)
+        private static ChargeInformationOperationDto CreateChargeOperationDto(ChargeOperationDtoBuilder builder, decimal price)
         {
             return builder.WithPoint(price).Build();
         }

@@ -28,22 +28,22 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         [Theory]
         [InlineAutoData]
         public void Validate_WhenValidatingChargeCommand_ReturnsChargeCommandValidationResult(
-            Mock<IInputValidationRulesFactory<ChargeOperationDto>> chargeOperationInputValidationRulesFactory,
-            ChargeOperationDto chargeOperationDto)
+            Mock<IInputValidationRulesFactory<ChargeInformationOperationDto>> chargeOperationInputValidationRulesFactory,
+            ChargeInformationOperationDto chargeInformationOperationDto)
         {
             // Arrange
             var invalidRule = new OperationValidationRuleContainer(
                 new TestValidationRule(false, ValidationRuleIdentifier.StartDateValidation),
-                chargeOperationDto.Id);
+                chargeInformationOperationDto.OperationId);
             var invalidRules = new List<IValidationRuleContainer> { invalidRule };
             var invalidRuleSet = ValidationRuleSet.FromRules(invalidRules);
             chargeOperationInputValidationRulesFactory
-                .Setup(c => c.CreateRules(It.IsAny<ChargeOperationDto>()))
+                .Setup(c => c.CreateRules(It.IsAny<ChargeInformationOperationDto>()))
                 .Returns(invalidRuleSet);
-            var sut = new InputValidator<ChargeOperationDto>(chargeOperationInputValidationRulesFactory.Object);
+            var sut = new InputValidator<ChargeInformationOperationDto>(chargeOperationInputValidationRulesFactory.Object);
 
             // Act
-            var result = sut.Validate(chargeOperationDto);
+            var result = sut.Validate(chargeInformationOperationDto);
 
             // Assert
             Assert.IsType<ValidationResult>(result);

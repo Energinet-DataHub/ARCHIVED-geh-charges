@@ -97,7 +97,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                     x.SaveConfirmationsAsync(It.Is<List<ChargePriceOperationDto>>(x => x.Count == 1)),
                 Times.Once);
 
-            var expectedMessage = $"At this point, price(s) will be persisted for operation with Id {receivedEvent.Command.Operations.First().Id}";
+            var expectedMessage = $"At this point, price(s) will be persisted for operation with Id {receivedEvent.Command.Operations.First().OperationId}";
             logger.VerifyLoggerWasCalled(expectedMessage, LogLevel.Information);
         }
 

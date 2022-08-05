@@ -82,9 +82,9 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
                 actual[i].RecipientRole.Should().Be(gridAccessProvider[i].BusinessProcessRole);
                 actual[i].BusinessReasonCode.Should().Be(acceptedEvent.Command.Document.BusinessReasonCode);
                 actual[i].RequestDateTime.Should().Be(now);
-                actual[i].ChargeId.Should().Be(operation.ChargeId);
+                actual[i].ChargeId.Should().Be(operation.SenderProvidedChargeId);
                 actual[i].ChargeOwner.Should().Be(operation.ChargeOwner);
-                actual[i].ChargeType.Should().Be(operation.Type);
+                actual[i].ChargeType.Should().Be(operation.ChargeType);
                 actual[i].ChargeName.Should().Be(operation.ChargeName);
                 actual[i].ChargeDescription.Should().Be(operation.ChargeDescription);
                 actual[i].StartDateTime.Should().Be(operation.StartDateTime);
@@ -157,7 +157,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
                 .ReturnsAsync(meteringPointAdministrator);
             var chargeCommand = chargeInformationCommandBuilder
                 .WithChargeOperations(
-                    new List<ChargeOperationDto>
+                    new List<ChargeInformationOperationDto>
                     {
                         new ChargeOperationDtoBuilder().WithTaxIndicator(TaxIndicator.Tax)
                             .WithTransparentInvoicing(TransparentInvoicing.Transparent).Build(),

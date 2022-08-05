@@ -18,15 +18,15 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
 {
     public class TerminationDateMustMatchEffectiveDateValidationRule : IValidationRule
     {
-        private readonly ChargeOperationDto _chargeOperationDto;
+        private readonly ChargeInformationOperationDto _chargeInformationOperationDto;
 
-        public TerminationDateMustMatchEffectiveDateValidationRule(ChargeOperationDto chargeOperationDto)
+        public TerminationDateMustMatchEffectiveDateValidationRule(ChargeInformationOperationDto chargeInformationOperationDto)
         {
-            _chargeOperationDto = chargeOperationDto;
+            _chargeInformationOperationDto = chargeInformationOperationDto;
         }
 
-        public bool IsValid => _chargeOperationDto.EndDateTime is null ||
-                               _chargeOperationDto.EndDateTime == _chargeOperationDto.StartDateTime;
+        public bool IsValid => _chargeInformationOperationDto.EndDateTime is null ||
+                               _chargeInformationOperationDto.EndDateTime == _chargeInformationOperationDto.StartDateTime;
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.TerminationDateMustMatchEffectiveDate;
