@@ -46,12 +46,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
         [Collection(nameof(ChargesFunctionAppCollectionFixture))]
         public class RunAsync : FunctionAppTestBase<ChargesFunctionAppFixture>, IAsyncLifetime
         {
-            private readonly AuthenticatedHttpRequestGenerator _authenticatedHttpRequestGenerator;
-
             public RunAsync(ChargesFunctionAppFixture fixture, ITestOutputHelper testOutputHelper)
                 : base(fixture, testOutputHelper)
             {
-                _authenticatedHttpRequestGenerator = new AuthenticatedHttpRequestGenerator(fixture, Fixture.LocalTimeZoneName);
             }
 
             public Task InitializeAsync()
@@ -82,8 +79,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task Given_NewMessage_When_SenderIdDoesNotMatchAuthenticatedId_Then_ShouldReturnErrorMessage()
             {
                 // Arrange
-                var (request, _) = await _authenticatedHttpRequestGenerator
-                    .CreateAuthenticatedHttpPostRequestAsync(
+                var (request, _) =
+                    await Fixture.GetAuthenticatedHttpRequestGenerator(AuthorizationConfigurationData.GridAccessProvider8100000000030)
+                        .CreateAuthenticatedHttpPostRequestAsync(
                         EndpointUrl, ChargeDocument.ChargeDocumentWhereSenderIdDoNotMatchAuthorizedActorId);
 
                 // Act
@@ -99,7 +97,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             [Fact]
             public async Task When_ChargeIsReceived_Then_AHttp202ResponseWithEmptyBodyIsReturned()
             {
-                var request = await _authenticatedHttpRequestGenerator
+                var request =
+                    await Fixture.GetAuthenticatedHttpRequestGenerator(AuthorizationConfigurationData.GridAccessProvider8100000000030)
                     .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.AnyValid);
 
                 var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request.Request);
@@ -113,7 +112,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task When_ChargeInformationIsReceived_Then_ChargeCreatedIntegrationEventIsPublished()
             {
                 // Arrange
-                var (request, correlationId) = await _authenticatedHttpRequestGenerator
+                var (request, correlationId) =
+                    await Fixture.GetAuthenticatedHttpRequestGenerator(AuthorizationConfigurationData.GridAccessProvider8100000000030)
                     .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.TariffBundleWithCreateAndUpdate);
                 using var eventualChargeCreatedEvent = await Fixture
                     .ChargeCreatedListener
@@ -134,7 +134,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task When_ChargePricesAreReceived_Then_ChargePricesUpdatedIntegrationEventsArePublished()
             {
                 // Arrange
-                var (request, correlationId) = await _authenticatedHttpRequestGenerator
+                var (request, correlationId) =
+                    await Fixture.GetAuthenticatedHttpRequestGenerator(AuthorizationConfigurationData.GridAccessProvider8100000000030)
                     .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.TariffPriceSeries);
                 using var eventualChargePriceUpdatedEvent = await Fixture
                     .ChargePricesUpdatedListener
@@ -156,7 +157,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task When_ChargePricesAreReceived_Then_ChargePriceCommandReceiverEndpointIsTriggered()
             {
                 // Arrange
-                var (request, correlationId) = await _authenticatedHttpRequestGenerator
+                var (request, correlationId) =
+                    await Fixture.GetAuthenticatedHttpRequestGenerator(AuthorizationConfigurationData.GridAccessProvider8100000000030)
                     .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.TariffPriceSeries);
                 using var eventualChargePriceUpdatedEvent = await Fixture
                     .ChargePricesUpdatedListener
@@ -178,7 +180,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task Given_NewTaxBundleTariffWithPrices_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply()
             {
                 // Arrange
-                var (request, correlationId) = await _authenticatedHttpRequestGenerator
+                var (request, correlationId) =
+                    await Fixture.GetAuthenticatedHttpRequestGenerator(AuthorizationConfigurationData.GridAccessProvider8100000000030)
                     .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.TariffBundleWithValidAndInvalid);
 
                 // Act
@@ -205,7 +208,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 string testFilePath)
             {
                 // Arrange
-                var (request, correlationId) = await _authenticatedHttpRequestGenerator
+                var (request, correlationId) =
+                    await Fixture.GetAuthenticatedHttpRequestGenerator(AuthorizationConfigurationData.GridAccessProvider8100000000030)
                     .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, testFilePath);
 
                 // Act
@@ -223,7 +227,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 string testFilePath)
             {
                 // Arrange
-                var (request, correlationId) = await _authenticatedHttpRequestGenerator
+                var (request, correlationId) =
+                    await Fixture.GetAuthenticatedHttpRequestGenerator(AuthorizationConfigurationData.GridAccessProvider8100000000030)
                     .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, testFilePath);
 
                 // Act
@@ -239,7 +244,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task Given_BundleWithMultipleOperationsForSameCharge_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply()
             {
                 // Arrange
-                var (request, correlationId) = await _authenticatedHttpRequestGenerator
+                var (request, correlationId) =
+                    await Fixture.GetAuthenticatedHttpRequestGenerator(AuthorizationConfigurationData.GridAccessProvider8100000000030)
                     .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.BundleWithMultipleOperationsForSameTariff);
 
                 // Act
@@ -262,7 +268,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task Given_BundleWithTwoOperationsForSameTariffSecondOpViolatingVR903_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply()
             {
                 // Arrange
-                var (request, correlationId) = await _authenticatedHttpRequestGenerator
+                var (request, correlationId) =
+                    await Fixture.GetAuthenticatedHttpRequestGenerator(AuthorizationConfigurationData.GridAccessProvider8100000000030)
                     .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.BundleWithTwoOperationsForSameTariffSecondOpViolatingVr903);
 
                 // Act
@@ -285,7 +292,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             {
                 // Arrange
                 var testFilePath = ChargeDocument.TariffPriceSeriesWithInvalidBusinessReasonCode;
-                var (request, _) = await _authenticatedHttpRequestGenerator
+                var (request, _) =
+                    await Fixture.GetAuthenticatedHttpRequestGenerator(AuthorizationConfigurationData.GridAccessProvider8100000000030)
                     .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, testFilePath);
 
                 // Act
@@ -302,14 +310,16 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task Given_UpdateRequest_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply()
             {
                 // Arrange - Create
-                var (createReq, correlationId) = await _authenticatedHttpRequestGenerator
+                var (createReq, correlationId) =
+                    await Fixture.GetAuthenticatedHttpRequestGenerator(AuthorizationConfigurationData.GridAccessProvider8100000000030)
                     .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.CreateTariff);
                 var response = await Fixture.HostManager.HttpClient.SendAsync(createReq);
                 response.StatusCode.Should().Be(HttpStatusCode.Accepted);
                 await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId);
 
                 // Arrange - Update
-                var (updateReq, updateCorrelationId) = await _authenticatedHttpRequestGenerator
+                var (updateReq, updateCorrelationId) =
+                    await Fixture.GetAuthenticatedHttpRequestGenerator(AuthorizationConfigurationData.GridAccessProvider8100000000030)
                     .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.UpdateTariff);
 
                 // Act
@@ -327,7 +337,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task When_ChargePriceRequestFailsDocumentValidation_Then_ARejectionShouldBeSent()
             {
                 // Arrange
-                var (request, correlationId) = await _authenticatedHttpRequestGenerator
+                var (request, correlationId) =
+                    await Fixture.GetAuthenticatedHttpRequestGenerator(AuthorizationConfigurationData.GridAccessProvider8100000000030)
                     .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.TariffPriceSeriesWithInvalidRecipientType);
                 using var eventualChargePriceUpdatedEvent = await Fixture
                     .ChargePricesUpdatedListener
@@ -349,7 +360,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task When_ChargePriceRequestFailsInputValidation_Then_ARejectionShouldBeSent()
             {
                 // Arrange
-                var (request, correlationId) = await _authenticatedHttpRequestGenerator
+                var (request, correlationId) =
+                    await Fixture.GetAuthenticatedHttpRequestGenerator(AuthorizationConfigurationData.GridAccessProvider8100000000030)
                     .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.TariffPriceSeriesInvalidMaximumPrice);
                 using var eventualChargePriceUpdatedEvent = await Fixture
                     .ChargePricesUpdatedListener
@@ -371,7 +383,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task When_ChargePriceRequestFailsBusinessValidation_Then_ARejectionShouldBeSent()
             {
                 // Arrange
-                var (request, correlationId) = await _authenticatedHttpRequestGenerator
+                var (request, correlationId) =
+                    await Fixture.GetAuthenticatedHttpRequestGenerator(AuthorizationConfigurationData.GridAccessProvider8100000000030)
                     .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.TariffPriceSeriesInvalidStartAndEndDate);
                 using var eventualChargePriceUpdatedEvent = await Fixture
                     .ChargePricesUpdatedListener
@@ -396,7 +409,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task When_SendingChargePriceRequestForExistingCharge_Then_AConfirmationIsShouldBeSent(string testFilePath)
             {
                 // Arrange
-                var (request, correlationId) = await _authenticatedHttpRequestGenerator
+                var (request, correlationId) =
+                    await Fixture.GetAuthenticatedHttpRequestGenerator(AuthorizationConfigurationData.GridAccessProvider8100000000030)
                     .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, testFilePath);
                 using var eventualChargePriceUpdatedEvent = await Fixture
                     .ChargePricesUpdatedListener
@@ -420,7 +434,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task When_SendingChargePriceRequestForExistingTariff_Then_AConfirmationIsShouldBeSent()
             {
                 // Arrange
-                var (request, correlationId) = await _authenticatedHttpRequestGenerator
+                var (request, correlationId) =
+                    await Fixture.GetAuthenticatedHttpRequestGenerator(AuthorizationConfigurationData.GridAccessProvider8100000000030)
                     .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.PriceSeriesExistingTariff);
                 using var eventualChargePriceUpdatedEvent = await Fixture
                     .ChargePricesUpdatedListener
@@ -443,7 +458,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task When_SendingChargePriceRequestForExistingSubscription_Then_AConfirmationIsShouldBeSent()
             {
                 // Arrange
-                var (request, correlationId) = await _authenticatedHttpRequestGenerator
+                var (request, correlationId) =
+                    await Fixture.GetAuthenticatedHttpRequestGenerator(AuthorizationConfigurationData.GridAccessProvider8100000000030)
                     .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.PriceSeriesExistingSubscription);
                 using var eventualChargePriceUpdatedEvent = await Fixture
                     .ChargePricesUpdatedListener
@@ -465,11 +481,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             [Fact]
             public async Task WhenTaxTaxIsCreatedBySystemOperator_ANotificationShouldBeReceivedByActiveGridAccessProviders()
             {
-                var (request, correlationId) = await _authenticatedHttpRequestGenerator
-                    .CreateAuthenticatedHttpPostRequestAsync(
-                        EndpointUrl,
-                        ChargeDocument.TariffSystemOperatorCreate,
-                        AuthorizationConfigurationData.SystemOperator);
+                var (request, correlationId) =
+                    await Fixture.GetAuthenticatedHttpRequestGenerator(AuthorizationConfigurationData.SystemOperator)
+                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.TariffSystemOperatorCreate);
 
                 // Act
                 await Fixture.HostManager.HttpClient.SendAsync(request);
@@ -489,8 +503,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             [Fact(Skip = "Disabled until Charge Price flow is fully functional as the current SupportOldFlowAsync sets Tax to TaxIndicator.Unknown which means no Grid access provider will get notified.")]
             public async Task WhenTaxTariffPricesAreUpdatedBySystemOperator_ANotificationShouldBeReceivedByActiveGridAccessProviders()
             {
-                var (request, correlationId) = await _authenticatedHttpRequestGenerator
-                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.PriceSeriesTariffFromSystemOperator, AuthorizationConfigurationData.SystemOperator);
+                var (request, correlationId) =
+                    await Fixture.GetAuthenticatedHttpRequestGenerator(AuthorizationConfigurationData.GridAccessProvider8100000000030)
+                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.PriceSeriesTariffFromSystemOperator);
 
                 // Act
                 await Fixture.HostManager.HttpClient.SendAsync(request);
