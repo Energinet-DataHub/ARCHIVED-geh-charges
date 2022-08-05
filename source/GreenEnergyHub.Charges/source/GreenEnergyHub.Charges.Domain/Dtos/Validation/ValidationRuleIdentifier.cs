@@ -61,5 +61,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
         TaxIndicatorMustBeFalseForSubscription = 47, // VR920 / D14
         TaxIndicatorMustBeFalseForFee = 48, // VR921 / D14
         ChargeOperationIdLengthValidation = 49, // VR922 / E86
+        SenderMustMatchChargeOwners = 50, // TODO: VR??? / ??
     }
 }

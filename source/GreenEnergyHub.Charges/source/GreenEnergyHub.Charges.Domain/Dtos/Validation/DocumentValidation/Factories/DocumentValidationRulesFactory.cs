@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
@@ -37,7 +38,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation.DocumentValidation.Facto
             var document = command.Document;
             ArgumentNullException.ThrowIfNull(document);
 
+            var chargeOwners = command.Operations.Select(o => o.ChargeOwner);
             var rules = await GetRulesForDocumentAsync(document).ConfigureAwait(false);
+            rules.Add(new DocumentValidationRuleContainer(new SenderMustMatchChargeOwnersRule(document, chargeOwners)));
 
             return ValidationRuleSet.FromRules(rules);
         }
