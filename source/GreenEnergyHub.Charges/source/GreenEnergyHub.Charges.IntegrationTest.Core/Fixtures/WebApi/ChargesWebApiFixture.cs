@@ -16,6 +16,7 @@ using System;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Authorization;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
+using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.WebApi;
 using Microsoft.Extensions.Configuration;
 
@@ -26,11 +27,9 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.WebApi
         public ChargesWebApiFixture()
         {
             DatabaseManager = new ChargesDatabaseManager();
-            AuthorizationConfiguration = new AuthorizationConfiguration(
-                "volt",
-                "u002",
-                "integrationtest.local.settings.json",
-                "AZURE_SECRETS_KEYVAULT_URL");
+            AuthorizationConfiguration =
+                AuthorizationConfigurationData.CreateAuthorizationConfiguration(AuthorizationConfigurationData
+                    .GridAccessProvider8100000000030);
         }
 
         public ChargesDatabaseManager DatabaseManager { get; }

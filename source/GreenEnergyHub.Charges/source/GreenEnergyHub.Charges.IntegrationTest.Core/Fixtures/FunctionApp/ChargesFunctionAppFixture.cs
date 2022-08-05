@@ -29,6 +29,7 @@ using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Authorization;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon;
+using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using Microsoft.Extensions.Configuration;
 
 namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
@@ -40,11 +41,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             AzuriteManager = new AzuriteManager();
             IntegrationTestConfiguration = new IntegrationTestConfiguration();
             DatabaseManager = new ChargesDatabaseManager();
-            AuthorizationConfiguration = new AuthorizationConfiguration(
-                "volt",
-                "u002",
-                "integrationtest.local.settings.json",
-                "AZURE_SECRETS_KEYVAULT_URL");
+            AuthorizationConfiguration = UseDefaultAuthorizationConfiguration();
             ServiceBusResourceProvider = new ServiceBusResourceProvider(
                 IntegrationTestConfiguration.ServiceBusConnectionString, TestLogger);
         }
@@ -83,13 +80,18 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
         [NotNull]
         public TopicResource? ChargeLinksAcceptedTopic { get; private set; }
 
-        public AuthorizationConfiguration AuthorizationConfiguration { get; }
+        public AuthorizationConfiguration AuthorizationConfiguration { get; private set; }
 
         private AzuriteManager AzuriteManager { get; }
 
         private IntegrationTestConfiguration IntegrationTestConfiguration { get; }
 
         private ServiceBusResourceProvider ServiceBusResourceProvider { get; }
+
+        public void SetAuthorizationConfiguration(string clientName)
+        {
+            AuthorizationConfiguration = AuthorizationConfigurationData.CreateAuthorizationConfiguration(clientName);
+        }
 
         /// <inheritdoc/>
         protected override void OnConfigureHostSettings(FunctionAppHostSettings hostSettings)
@@ -290,6 +292,12 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
 
             // => Database
             await DatabaseManager.DeleteDatabaseAsync();
+        }
+
+        private static AuthorizationConfiguration UseDefaultAuthorizationConfiguration()
+        {
+            return AuthorizationConfigurationData.CreateAuthorizationConfiguration(AuthorizationConfigurationData
+                .GridAccessProvider8100000000030);
         }
 
         private async Task InitializeMessageHubAsync()
