@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading.Tasks;
 using Azure.Storage.Blobs;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
@@ -41,12 +42,11 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             AzuriteManager = new AzuriteManager();
             IntegrationTestConfiguration = new IntegrationTestConfiguration();
             DatabaseManager = new ChargesDatabaseManager();
-            AuthorizationConfiguration = UseDefaultAuthorizationConfiguration();
+            AuthorizationConfigurations = CreateAuthorizationConfigurations();
+            AuthenticatedHttpRequestGenerators = CreateAuthenticatedHttpRequestGenerators();
             ServiceBusResourceProvider = new ServiceBusResourceProvider(
                 IntegrationTestConfiguration.ServiceBusConnectionString, TestLogger);
         }
-
-        public string LocalTimeZoneName { get; } = "Europe/Copenhagen";
 
         public ChargesDatabaseManager DatabaseManager { get; }
 
@@ -80,18 +80,20 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
         [NotNull]
         public TopicResource? ChargeLinksAcceptedTopic { get; private set; }
 
-        public AuthorizationConfiguration AuthorizationConfiguration { get; private set; }
+        public AuthenticatedHttpRequestGenerator GetAuthenticatedHttpRequestGenerator(string clientName) =>
+            AuthenticatedHttpRequestGenerators.Single(x => x.ClientName == clientName);
+
+        private List<AuthorizationConfiguration> AuthorizationConfigurations { get; set; }
+
+        private List<AuthenticatedHttpRequestGenerator> AuthenticatedHttpRequestGenerators { get; set; }
+
+        private string LocalTimeZoneName { get; } = "Europe/Copenhagen";
 
         private AzuriteManager AzuriteManager { get; }
 
         private IntegrationTestConfiguration IntegrationTestConfiguration { get; }
 
         private ServiceBusResourceProvider ServiceBusResourceProvider { get; }
-
-        public void SetAuthorizationConfiguration(string clientName)
-        {
-            AuthorizationConfiguration = AuthorizationConfigurationData.CreateAuthorizationConfiguration(clientName);
-        }
 
         /// <inheritdoc/>
         protected override void OnConfigureHostSettings(FunctionAppHostSettings hostSettings)
@@ -126,8 +128,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.DataHubSenderConnectionString, ServiceBusResourceProvider.ConnectionString);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.DataHubListenerConnectionString, ServiceBusResourceProvider.ConnectionString);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.DataHubManagerConnectionString, ServiceBusResourceProvider.ConnectionString);
-            Environment.SetEnvironmentVariable(EnvironmentSettingNames.B2CTenantId, AuthorizationConfiguration.B2cTenantId);
-            Environment.SetEnvironmentVariable(EnvironmentSettingNames.BackendServiceAppId, AuthorizationConfiguration.BackendAppId);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.B2CTenantId, AuthorizationConfigurations.First().B2cTenantId);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.BackendServiceAppId, AuthorizationConfigurations.First().BackendAppId);
 
             ChargeLinksAcceptedTopic = await ServiceBusResourceProvider
                 .BuildTopic(ChargesServiceBusResourceNames.ChargeLinksAcceptedTopicKey)
@@ -294,10 +296,22 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             await DatabaseManager.DeleteDatabaseAsync();
         }
 
-        private static AuthorizationConfiguration UseDefaultAuthorizationConfiguration()
+        private static List<AuthorizationConfiguration> CreateAuthorizationConfigurations()
         {
-            return AuthorizationConfigurationData.CreateAuthorizationConfiguration(AuthorizationConfigurationData
-                .GridAccessProvider8100000000030);
+            return new List<AuthorizationConfiguration>()
+            {
+                AuthorizationConfigurationData.CreateAuthorizationConfiguration(AuthorizationConfigurationData
+                    .GridAccessProvider8100000000030),
+                AuthorizationConfigurationData.CreateAuthorizationConfiguration(AuthorizationConfigurationData
+                    .SystemOperator),
+            };
+        }
+
+        private List<AuthenticatedHttpRequestGenerator> CreateAuthenticatedHttpRequestGenerators()
+        {
+            return AuthorizationConfigurations
+                .Select(ac => new AuthenticatedHttpRequestGenerator(ac, LocalTimeZoneName))
+                .ToList();
         }
 
         private async Task InitializeMessageHubAsync()

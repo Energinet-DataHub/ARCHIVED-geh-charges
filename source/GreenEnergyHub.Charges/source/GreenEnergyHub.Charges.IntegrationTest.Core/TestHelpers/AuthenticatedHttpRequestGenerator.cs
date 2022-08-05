@@ -15,7 +15,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Core.DateTime;
-using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
+using GreenEnergyHub.Charges.IntegrationTest.Core.Authorization;
 using GreenEnergyHub.Iso8601;
 using NodaTime;
 using NodaTime.Testing;
@@ -24,19 +24,21 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
 {
     public class AuthenticatedHttpRequestGenerator
     {
-        private readonly ChargesFunctionAppFixture _fixture;
+        private readonly AuthorizationConfiguration _authorizationConfiguration;
         private readonly string _localTimeZoneName;
 
-        public AuthenticatedHttpRequestGenerator(ChargesFunctionAppFixture fixture, string localTimeZoneName)
+        public string ClientName { get; }
+
+        public AuthenticatedHttpRequestGenerator(AuthorizationConfiguration authorizationConfiguration, string localTimeZoneName)
         {
-            _fixture = fixture;
+            _authorizationConfiguration = authorizationConfiguration;
+            ClientName = _authorizationConfiguration.ClientName;
             _localTimeZoneName = localTimeZoneName;
         }
 
         public async Task<(HttpRequestMessage Request, string CorrelationId)> CreateAuthenticatedHttpPostRequestAsync(
-            string endpointUrl, string testFilePath, string clientName = AuthorizationConfigurationData.GridAccessProvider8100000000030)
+            string endpointUrl, string testFilePath)
         {
-            _fixture.SetAuthorizationConfiguration(clientName);
             var clock = new FakeClock(SystemClock.Instance.GetCurrentInstant());
             var zonedDateTimeService = new ZonedDateTimeService(clock, new Iso8601ConversionConfiguration(_localTimeZoneName));
             var (request, correlationId) = HttpRequestGenerator.CreateHttpPostRequest(endpointUrl, testFilePath, zonedDateTimeService);
@@ -49,9 +51,9 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
         private async Task AddAuthenticationAsync(HttpRequestMessage request)
         {
             var backendAuthenticationClient = new BackendAuthenticationClient(
-                _fixture.AuthorizationConfiguration.BackendAppScope,
-                _fixture.AuthorizationConfiguration.ClientCredentialsSettings,
-                _fixture.AuthorizationConfiguration.B2cTenantId);
+                _authorizationConfiguration.BackendAppScope,
+                _authorizationConfiguration.ClientCredentialsSettings,
+                _authorizationConfiguration.B2cTenantId);
             var authenticationResult = await backendAuthenticationClient.GetAuthenticationTokenAsync();
             request.Headers.Add("Authorization", $"Bearer {authenticationResult.AccessToken}");
         }
