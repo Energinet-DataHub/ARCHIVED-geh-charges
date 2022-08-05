@@ -83,14 +83,14 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 {
                     if (charge is null)
                     {
-                        throw new InvalidOperationException($"Charge ID '{operation.ChargeId}' does not exist.");
+                        throw new InvalidOperationException($"Charge ID '{operation.SenderProvidedChargeId}' does not exist.");
                     }
 
                     charge.UpdatePrices(
                         operation.PointsStartInterval,
                         operation.PointsEndInterval,
                         operation.Points,
-                        operation.Id);
+                        operation.OperationId);
                 }
                 catch (ChargeOperationFailedException exception)
                 {
@@ -113,7 +113,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             // With story 1411 below log entry will be replaced with 'await _unitOfWork.SaveChangesAsync().ConfigureAwait(false)';
             foreach (var operation in operationsToBeConfirmed)
             {
-                _logger.LogInformation("At this point, price(s) will be persisted for operation with Id {Id}", operation.Id);
+                _logger.LogInformation("At this point, price(s) will be persisted for operation with Id {Id}", operation.OperationId);
             }
         }
 
@@ -127,7 +127,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             rejectionRules.AddRange(operationsToBeRejected.Skip(1)
                 .Select(subsequentOperation =>
                     new OperationValidationRuleContainer(
-                        new PreviousOperationsMustBeValidRule(operation.Id), subsequentOperation.Id)));
+                        new PreviousOperationsMustBeValidRule(operation.OperationId), subsequentOperation.OperationId)));
         }
 
         private async Task<Charge?> GetChargeAsync(ChargePriceOperationDto chargeOperationDto)
@@ -137,9 +137,9 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 .ConfigureAwait(false);
 
             var chargeIdentifier = new ChargeIdentifier(
-                chargeOperationDto.ChargeId,
+                chargeOperationDto.SenderProvidedChargeId,
                 marketParticipant.Id,
-                chargeOperationDto.Type);
+                chargeOperationDto.ChargeType);
             return await _chargeRepository.SingleOrNullAsync(chargeIdentifier).ConfigureAwait(false);
         }
     }
