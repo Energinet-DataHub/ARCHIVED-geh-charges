@@ -104,9 +104,6 @@ limitations under the License.
     <Content Include="TestFiles\Charges\PriceSeries\PriceSeriesExistingSubscription.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestFiles\Charges\PriceSeries\PriceSeriesTaxTariffSystemOperator.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="TestFiles\Charges\PriceSeries\PriceSeriesExistingTariff.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -126,9 +123,6 @@ limitations under the License.
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestFiles\Charges\PriceSeries\TariffPriceSeries.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestFiles\Charges\TaxTariffSystemOperatorCreate.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestFiles\Charges\TariffBundleWithCreateAndUpdate.xml">
