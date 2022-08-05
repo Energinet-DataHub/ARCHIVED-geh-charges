@@ -294,7 +294,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             await DatabaseManager.DeleteDatabaseAsync();
         }
 
-        private AuthorizationConfiguration UseDefaultAuthorizationConfiguration()
+        private static AuthorizationConfiguration UseDefaultAuthorizationConfiguration()
         {
             return AuthorizationConfigurationData.CreateAuthorizationConfiguration(AuthorizationConfigurationData
                 .GridAccessProvider8100000000030);
