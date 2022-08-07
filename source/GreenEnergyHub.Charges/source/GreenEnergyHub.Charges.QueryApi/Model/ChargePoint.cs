@@ -33,8 +33,6 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
         [Column(TypeName = "decimal(14, 6)")]
         public decimal Price { get; set; }
 
-        public int Position { get; set; }
-
         [ForeignKey(nameof(ChargeId))]
         [InverseProperty("ChargePoints")]
         public virtual Charge Charge { get; set; }

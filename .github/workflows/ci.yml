@@ -27,10 +27,9 @@ jobs:
 
   # Build and test solution, and publish coverage report
   dotnet_solution_ci:
-    uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci.yml@temporarily_disable_integration_test # TODO: Revert to next version when integration test issue is solved
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci.yml@7.7.0
     with:
       SOLUTION_FILE_PATH: 'source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln'
-      DOTNET_VERSION: '6.0.300'
       USE_AZURE_FUNCTIONS_TOOLS: true
       PREPARE_OUTPUTS: true
     secrets:
@@ -41,7 +40,7 @@ jobs:
       AZURE_SECRETS_KEYVAULT_URL: ${{ secrets.AZURE_SECRETS_KEYVAULT_URL }}
 
   terraform_validate:
-    uses: Energinet-DataHub/.github/.github/workflows/terraform-validate.yml@7.6.0
+    uses: Energinet-DataHub/.github/.github/workflows/terraform-validate.yml@7.7.0
     with:
       TERRAFORM_WORKING_DIR_PATH: './build/infrastructure/main'
       TERRAFORM_VERSION: '1.2.2'
@@ -53,7 +52,7 @@ jobs:
       terraform_validate,
       dotnet_solution_ci
     ]
-    uses: Energinet-DataHub/.github/.github/workflows/create-prerelease.yml@7.6.0
+    uses: Energinet-DataHub/.github/.github/workflows/create-prerelease.yml@7.7.0
     with:
       CALLER_REPOSITORY_PATH: Energinet-DataHub/geh-charges
     secrets:

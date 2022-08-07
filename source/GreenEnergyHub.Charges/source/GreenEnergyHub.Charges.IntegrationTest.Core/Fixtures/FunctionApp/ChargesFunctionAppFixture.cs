@@ -29,6 +29,7 @@ using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Authorization;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon;
+using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using Microsoft.Extensions.Configuration;
 
 namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
@@ -41,17 +42,12 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             IntegrationTestConfiguration = new IntegrationTestConfiguration();
             ChargesDatabaseManager = new ChargesDatabaseManager();
             MessageHubDatabaseManager = new MessageHubDatabaseManager(ChargesDatabaseManager.ConnectionString);
-            AuthorizationConfiguration = new AuthorizationConfiguration(
-                "volt",
-                "u002",
-                "integrationtest.local.settings.json",
-                "AZURE_SECRETS_KEYVAULT_URL");
+            AuthorizationConfiguration = UseDefaultAuthorizationConfiguration();
             ServiceBusResourceProvider = new ServiceBusResourceProvider(
                 IntegrationTestConfiguration.ServiceBusConnectionString, TestLogger);
-            LocalTimeZoneName = GetValueFromSettingsFile("local.settings.json", "VALUES:LOCAL_TIMEZONENAME");
         }
 
-        public string LocalTimeZoneName { get; }
+        public string LocalTimeZoneName { get; } = "Europe/Copenhagen";
 
         public ChargesDatabaseManager ChargesDatabaseManager { get; }
 
@@ -87,13 +83,18 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
         [NotNull]
         public TopicResource? ChargeLinksAcceptedTopic { get; private set; }
 
-        public AuthorizationConfiguration AuthorizationConfiguration { get; }
+        public AuthorizationConfiguration AuthorizationConfiguration { get; private set; }
 
         private AzuriteManager AzuriteManager { get; }
 
         private IntegrationTestConfiguration IntegrationTestConfiguration { get; }
 
         private ServiceBusResourceProvider ServiceBusResourceProvider { get; }
+
+        public void SetAuthorizationConfiguration(string clientName)
+        {
+            AuthorizationConfiguration = AuthorizationConfigurationData.CreateAuthorizationConfiguration(clientName);
+        }
 
         /// <inheritdoc/>
         protected override void OnConfigureHostSettings(FunctionAppHostSettings hostSettings)
@@ -111,7 +112,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.AppInsightsInstrumentationKey, IntegrationTestConfiguration.ApplicationInsightsInstrumentationKey);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.AzureWebJobsStorage, "UseDevelopmentStorage=true");
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.Currency, "DKK");
-            Environment.SetEnvironmentVariable(EnvironmentSettingNames.LocalTimeZoneName, "Europe/Copenhagen");
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.LocalTimeZoneName, LocalTimeZoneName);
         }
 
         /// <inheritdoc/>
@@ -296,6 +297,12 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             await ChargesDatabaseManager.DeleteDatabaseAsync();
         }
 
+        private static AuthorizationConfiguration UseDefaultAuthorizationConfiguration()
+        {
+            return AuthorizationConfigurationData.CreateAuthorizationConfiguration(AuthorizationConfigurationData
+                .GridAccessProvider8100000000030);
+        }
+
         private async Task InitializeMessageHubAsync()
         {
             var messageHubDataAvailableQueue = await ServiceBusResourceProvider
@@ -350,14 +357,6 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
 
             if (!await storage.ExistsAsync())
                 await storage.CreateAsync();
-        }
-
-        private static string GetValueFromSettingsFile(string settingsFileName, string valueName)
-        {
-            return new ConfigurationBuilder()
-                .AddJsonFile(settingsFileName, optional: true)
-                .AddEnvironmentVariables()
-                .Build().GetValue<string>(valueName);
         }
 
         private static string GetBuildConfiguration()

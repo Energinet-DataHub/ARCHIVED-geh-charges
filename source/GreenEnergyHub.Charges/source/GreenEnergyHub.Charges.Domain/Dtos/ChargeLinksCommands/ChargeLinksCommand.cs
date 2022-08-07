@@ -28,7 +28,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
             Operations = operations;
         }
 
-        public DocumentDto Document { get; }
+        public override DocumentDto Document { get; }
 
         public override IReadOnlyCollection<ChargeLinkDto> Operations { get; }
     }

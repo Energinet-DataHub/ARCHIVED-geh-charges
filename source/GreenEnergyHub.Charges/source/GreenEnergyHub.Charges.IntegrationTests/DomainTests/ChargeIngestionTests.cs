@@ -53,7 +53,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public RunAsync(ChargesFunctionAppFixture fixture, ITestOutputHelper testOutputHelper)
                 : base(fixture, testOutputHelper)
             {
-                _authenticatedHttpRequestGenerator = new AuthenticatedHttpRequestGenerator(fixture.AuthorizationConfiguration, Fixture.LocalTimeZoneName);
+                _authenticatedHttpRequestGenerator = new AuthenticatedHttpRequestGenerator(fixture, Fixture.LocalTimeZoneName);
             }
 
             public Task InitializeAsync()
@@ -366,6 +366,188 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // * Expect one for the confirmation (update)
                 var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(updateCorrelationId);
                 peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
+            }
+
+            [Fact]
+            public async Task When_ChargePriceRequestFailsDocumentValidation_Then_ARejectionShouldBeSent()
+            {
+                // Arrange
+                var (request, correlationId) = await _authenticatedHttpRequestGenerator
+                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.TariffPriceSeriesWithInvalidRecipientType);
+                using var eventualChargePriceUpdatedEvent = await Fixture
+                    .ChargePricesUpdatedListener
+                    .ListenForEventsAsync(correlationId, expectedCount: 1)
+                    .ConfigureAwait(false);
+
+                // Act
+                await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                eventualChargePriceUpdatedEvent
+                    .CountdownEvent!
+                    .Wait(TimeSpan.FromSeconds(SecondsToWaitForIntegrationEvents));
+                var hostLogSnapshot = Fixture.HostManager.GetHostLogSnapshot();
+                hostLogSnapshot.Any(x => x.Contains("With errors: RecipientRoleMustBeDdz")).Should().BeTrue();
+            }
+
+            [Fact]
+            public async Task When_ChargePriceRequestFailsInputValidation_Then_ARejectionShouldBeSent()
+            {
+                // Arrange
+                var (request, correlationId) = await _authenticatedHttpRequestGenerator
+                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.TariffPriceSeriesInvalidMaximumPrice);
+                using var eventualChargePriceUpdatedEvent = await Fixture
+                    .ChargePricesUpdatedListener
+                    .ListenForEventsAsync(correlationId, expectedCount: 1)
+                    .ConfigureAwait(false);
+
+                // Act
+                await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                eventualChargePriceUpdatedEvent
+                    .CountdownEvent!
+                    .Wait(TimeSpan.FromSeconds(SecondsToWaitForIntegrationEvents));
+                var hostLogSnapshot = Fixture.HostManager.GetHostLogSnapshot();
+                hostLogSnapshot.Any(x => x.Contains("With errors: MaximumPrice")).Should().BeTrue();
+            }
+
+            [Fact]
+            public async Task When_ChargePriceRequestFailsBusinessValidation_Then_ARejectionShouldBeSent()
+            {
+                // Arrange
+                var (request, correlationId) = await _authenticatedHttpRequestGenerator
+                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.TariffPriceSeriesInvalidStartAndEndDate);
+                using var eventualChargePriceUpdatedEvent = await Fixture
+                    .ChargePricesUpdatedListener
+                    .ListenForEventsAsync(correlationId, expectedCount: 1)
+                    .ConfigureAwait(false);
+
+                // Act
+                await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                eventualChargePriceUpdatedEvent
+                    .CountdownEvent!
+                    .Wait(TimeSpan.FromSeconds(SecondsToWaitForIntegrationEvents));
+                var hostLogSnapshot = Fixture.HostManager.GetHostLogSnapshot();
+                hostLogSnapshot.Any(x => x.Contains("With errors: UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDate")).Should().BeTrue();
+            }
+
+            [Theory]
+            [InlineAutoMoqData(ChargeDocument.PriceSeriesExistingFee)]
+            [InlineAutoMoqData(ChargeDocument.PriceSeriesExistingTariff)]
+            [InlineAutoMoqData(ChargeDocument.PriceSeriesExistingSubscription)]
+            public async Task When_SendingChargePriceRequestForExistingCharge_Then_AConfirmationIsShouldBeSent(string testFilePath)
+            {
+                // Arrange
+                var (request, correlationId) = await _authenticatedHttpRequestGenerator
+                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, testFilePath);
+                using var eventualChargePriceUpdatedEvent = await Fixture
+                    .ChargePricesUpdatedListener
+                    .ListenForEventsAsync(correlationId, expectedCount: 1)
+                    .ConfigureAwait(false);
+
+                // Act
+                await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                eventualChargePriceUpdatedEvent
+                    .CountdownEvent!
+                    .Wait(TimeSpan.FromSeconds(SecondsToWaitForIntegrationEvents));
+                var hostLogSnapshot = Fixture.HostManager.GetHostLogSnapshot();
+                hostLogSnapshot.Any(x => x.Contains("With errors:")).Should().BeFalse();
+                hostLogSnapshot.Any(x => x.Contains("1 confirmed price operations was persisted.")).Should().BeTrue();
+                hostLogSnapshot.Any(x => x.Contains("1 notifications was persisted.")).Should().BeTrue();
+            }
+
+            [Fact]
+            public async Task When_SendingChargePriceRequestForExistingTariff_Then_AConfirmationIsShouldBeSent()
+            {
+                // Arrange
+                var (request, correlationId) = await _authenticatedHttpRequestGenerator
+                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.PriceSeriesExistingTariff);
+                using var eventualChargePriceUpdatedEvent = await Fixture
+                    .ChargePricesUpdatedListener
+                    .ListenForEventsAsync(correlationId, expectedCount: 1)
+                    .ConfigureAwait(false);
+
+                // Act
+                await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                eventualChargePriceUpdatedEvent
+                    .CountdownEvent!
+                    .Wait(TimeSpan.FromSeconds(SecondsToWaitForIntegrationEvents));
+                var hostLogSnapshot = Fixture.HostManager.GetHostLogSnapshot();
+                hostLogSnapshot.Any(x => x.Contains("With errors:")).Should().BeFalse();
+                hostLogSnapshot.Any(x => x.Contains("1 confirmed price operations was persisted.")).Should().BeTrue();
+            }
+
+            [Fact]
+            public async Task When_SendingChargePriceRequestForExistingSubscription_Then_AConfirmationIsShouldBeSent()
+            {
+                // Arrange
+                var (request, correlationId) = await _authenticatedHttpRequestGenerator
+                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.PriceSeriesExistingSubscription);
+                using var eventualChargePriceUpdatedEvent = await Fixture
+                    .ChargePricesUpdatedListener
+                    .ListenForEventsAsync(correlationId, expectedCount: 1)
+                    .ConfigureAwait(false);
+
+                // Act
+                await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                eventualChargePriceUpdatedEvent
+                    .CountdownEvent!
+                    .Wait(TimeSpan.FromSeconds(SecondsToWaitForIntegrationEvents));
+                var hostLogSnapshot = Fixture.HostManager.GetHostLogSnapshot();
+                hostLogSnapshot.Any(x => x.Contains("With errors:")).Should().BeFalse();
+                hostLogSnapshot.Any(x => x.Contains("1 confirmed price operations was persisted.")).Should().BeTrue();
+            }
+
+            [Fact]
+            public async Task WhenTaxTaxIsCreatedBySystemOperator_ANotificationShouldBeReceivedByActiveGridAccessProviders()
+            {
+                var (request, correlationId) = await _authenticatedHttpRequestGenerator
+                    .CreateAuthenticatedHttpPostRequestAsync(
+                        EndpointUrl,
+                        ChargeDocument.TariffSystemOperatorCreate,
+                        AuthorizationConfigurationData.SystemOperator);
+
+                // Act
+                await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 4);
+                peekResults.Should().NotContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
+                peekResults.Should().ContainMatch("*NotifyPriceList_MarketDocument*");
+                peekResults.Should().ContainMatch("*8100000000030*");
+                peekResults.Should().ContainMatch("*8100000000016*");
+                peekResults.Should().ContainMatch("*8100000000023*");
+                peekResults.Should().NotContainMatch("*8900000000005*");
+                peekResults.Should().ContainMatch("*<cim:process.processType>D18</cim:process.processType>*");
+                peekResults.Should().NotContainMatch("*<cim:process.processType>D08</cim:process.processType>*");
+            }
+
+            [Fact(Skip = "Disabled until Charge Price flow is fully functional as the current SupportOldFlowAsync sets Tax to TaxIndicator.Unknown which means no Grid access provider will get notified.")]
+            public async Task WhenTaxTariffPricesAreUpdatedBySystemOperator_ANotificationShouldBeReceivedByActiveGridAccessProviders()
+            {
+                var (request, correlationId) = await _authenticatedHttpRequestGenerator
+                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.PriceSeriesTariffFromSystemOperator, AuthorizationConfigurationData.SystemOperator);
+
+                // Act
+                await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 4);
+                peekResults.Should().NotContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
+                peekResults.Should().ContainMatch("*NotifyPriceList_MarketDocument*");
+                peekResults.Should().ContainMatch("*8100000000030*");
+                peekResults.Should().ContainMatch("*8100000000016*");
+                peekResults.Should().ContainMatch("*8100000000023*");
+                peekResults.Should().NotContainMatch("*8900000000005*");
             }
 
             private static ZonedDateTimeService GetZonedDateTimeService()

@@ -44,11 +44,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
                 Resolution.PT15M => interval.Duration.TotalMinutes / 15,
                 Resolution.PT1H => interval.Duration.TotalHours,
                 Resolution.P1D => interval.Duration.TotalDays,
-                Resolution.P1M =>
-
-                    // https://stackoverflow.com/a/4639057
-                    ((_endTime.InUtc().Year - _startTime.InUtc().Year) * 12) + _endTime.InUtc().Month -
-                    _startTime.InUtc().Month,
+                Resolution.P1M => TotalMonths(),
                 _ => throw new ArgumentOutOfRangeException(nameof(priceResolution)),
             };
         }
@@ -56,6 +52,15 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.NumberOfPointsMatchTimeIntervalAndResolution;
 
-        public bool IsValid => _expectedPointCount == _actualPointCount;
+        public bool IsValid =>
+            Convert.ToInt32(Math.Round(_expectedPointCount, MidpointRounding.AwayFromZero)) == _actualPointCount;
+
+        private int TotalMonths()
+        {
+            // https://stackoverflow.com/a/4639057
+            var months = ((_endTime.InUtc().Year - _startTime.InUtc().Year) * 12) + _endTime.InUtc().Month -
+                         _startTime.InUtc().Month;
+            return months != 0 ? months : 1;
+        }
     }
 }

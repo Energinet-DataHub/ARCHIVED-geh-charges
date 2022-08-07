@@ -29,7 +29,7 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
-    public class ChargePriceEventHandlerDeprecated : IChargePriceEventHandler
+    public class ChargePriceEventHandlerDeprecated : IChargePriceEventHandlerDeprecated
     {
         private readonly IInputValidator<ChargeOperationDto> _inputValidator;
         private readonly IMarketParticipantRepository _marketParticipantRepository;

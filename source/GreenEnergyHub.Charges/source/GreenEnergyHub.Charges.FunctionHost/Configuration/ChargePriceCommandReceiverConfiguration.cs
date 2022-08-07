@@ -13,7 +13,11 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
+using GreenEnergyHub.Charges.Application.Charges.Services;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.Factories;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -23,9 +27,16 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            // TODO: Change to new ChargePriceEventHandler
-            serviceCollection.AddScoped<IChargePriceEventHandler, ChargePriceEventHandlerDeprecated>();
+            serviceCollection.AddScoped<IChargePriceCommandReceivedEventHandler, ChargePriceCommandReceivedEventHandler>();
+            serviceCollection.AddScoped<IChargePriceEventHandler, ChargePriceEventHandler>();
+            serviceCollection
+                .AddScoped<IInputValidator<ChargePriceOperationDto>, InputValidator<ChargePriceOperationDto>>();
             ConfigureMessaging(serviceCollection);
+            serviceCollection.AddScoped<IInputValidationRulesFactory<ChargePriceOperationDto>,
+                ChargePriceOperationInputValidationRulesFactory>();
+            serviceCollection.AddScoped<IChargePriceConfirmationService, ChargePriceConfirmationService>();
+            serviceCollection.AddScoped<IChargePriceRejectionService, ChargePriceRejectionService>();
+            serviceCollection.AddScoped<IChargePriceNotificationService, ChargePriceNotificationService>();
         }
 
         private static void ConfigureMessaging(IServiceCollection serviceCollection)

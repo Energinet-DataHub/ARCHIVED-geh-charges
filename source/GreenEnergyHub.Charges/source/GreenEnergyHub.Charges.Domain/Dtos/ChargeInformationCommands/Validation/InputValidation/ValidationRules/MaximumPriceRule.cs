@@ -20,7 +20,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
 {
     public class MaximumPriceRule : IValidationRuleWithExtendedData
     {
-        private const int PriceUpperBound = 1000000;
+        private const decimal PriceUpperBound = 1000000;
         private readonly ChargeOperationDto _chargeOperationDto;
 
         public MaximumPriceRule(ChargeOperationDto chargeOperationDto)
@@ -36,7 +36,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
         /// This validation rule validates each Price in a list of Point(s). This property
         /// will tell which Point triggered the rule. The Point is identified by Position.
         /// </summary>
-        public string TriggeredBy => _chargeOperationDto.Points.First(point => !Validate(point)).Position.ToString();
+        public string TriggeredBy => _chargeOperationDto.Points
+            .GetPositionOfPoint(_chargeOperationDto.Points.First(point => !Validate(point)))
+            .ToString();
 
         private bool Validate(Point point)
         {

@@ -18,8 +18,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
     /// <summary>
-    /// Delegates a charge depending on if it contains
-    /// Charge Prices or Charge information.
+    /// Handles document validation of the charge information.
     /// </summary>
     public interface IChargeCommandReceivedEventHandler
     {

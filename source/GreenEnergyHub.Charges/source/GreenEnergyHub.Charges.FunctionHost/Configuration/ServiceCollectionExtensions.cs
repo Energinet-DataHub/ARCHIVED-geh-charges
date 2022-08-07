@@ -31,7 +31,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         private static readonly string[] _functionNamesToExclude =
         {
             "HealthCheck",
-            "SynchronizeFromMarketParticipantRegistry",
         };
 
         /// <summary>

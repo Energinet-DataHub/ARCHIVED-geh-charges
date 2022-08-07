@@ -35,9 +35,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         [InlineAutoDomainData]
         public async Task HandleAsync_WhenBusinessReasonCodeIsUpdateChargePrice_ActivateHandler(
             ChargeCommandReceivedEvent chargeCommandReceivedEvent,
-            [Frozen] Mock<IChargePriceEventHandler> chargeCommandReceivedEventHandlerMock,
-            [Frozen] Mock<IDocumentValidator<ChargeInformationCommand>> documentValidator,
-            ChargeCommandReceivedEventHandler sut)
+            [Frozen] Mock<IChargePriceEventHandlerDeprecated> chargePriceEventHandlerDeprecated,
+            [Frozen] Mock<IDocumentValidator> documentValidator,
+            ChargeInformationCommandReceivedEventHandler sut)
         {
             // Arrange
             documentValidator
@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             await sut.HandleAsync(chargeCommandReceivedEvent);
 
             // Assert
-            chargeCommandReceivedEventHandlerMock.Verify(
+            chargePriceEventHandlerDeprecated.Verify(
                 x => x.HandleAsync(chargeCommandReceivedEvent),
                 Times.Once);
         }
@@ -59,8 +59,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         public async Task HandleAsync_WhenBusinessReasonCodeIsUpdateChargeInformation_ActivateHandler(
             ChargeCommandReceivedEvent chargeCommandReceivedEvent,
             [Frozen] Mock<IChargeInformationEventHandler> chargeCommandReceivedEventHandlerMock,
-            [Frozen] Mock<IDocumentValidator<ChargeInformationCommand>> documentValidator,
-            ChargeCommandReceivedEventHandler sut)
+            [Frozen] Mock<IDocumentValidator> documentValidator,
+            ChargeInformationCommandReceivedEventHandler sut)
         {
             // Arrange
             documentValidator
@@ -81,9 +81,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         [InlineAutoDomainData]
         public async Task HandleAsync_WhenDocumentValidationFails_ShouldCallReject(
             ChargeCommandReceivedEvent chargeCommandReceivedEvent,
-            [Frozen] Mock<IDocumentValidator<ChargeInformationCommand>> documentValidator,
+            [Frozen] Mock<IDocumentValidator> documentValidator,
             [Frozen] Mock<IChargeCommandReceiptService> chargeCommandReceiptService,
-            ChargeCommandReceivedEventHandler sut)
+            ChargeInformationCommandReceivedEventHandler sut)
         {
             // Arrange
             documentValidator.Setup(v =>
