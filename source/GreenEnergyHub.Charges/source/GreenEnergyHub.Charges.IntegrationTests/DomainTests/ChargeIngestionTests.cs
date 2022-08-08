@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public RunAsync(ChargesFunctionAppFixture fixture, ITestOutputHelper testOutputHelper)
                 : base(fixture, testOutputHelper)
             {
-                _authenticatedHttpRequestGenerator = new AuthenticatedHttpRequestGenerator(fixture.AuthorizationConfiguration, Fixture.LocalTimeZoneName);
+                _authenticatedHttpRequestGenerator = new AuthenticatedHttpRequestGenerator(fixture, Fixture.LocalTimeZoneName);
             }
 
             public Task InitializeAsync()
@@ -460,6 +460,49 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 var hostLogSnapshot = Fixture.HostManager.GetHostLogSnapshot();
                 hostLogSnapshot.Any(x => x.Contains("With errors:")).Should().BeFalse();
                 hostLogSnapshot.Any(x => x.Contains("1 confirmed price operations was persisted.")).Should().BeTrue();
+            }
+
+            [Fact]
+            public async Task WhenTaxTaxIsCreatedBySystemOperator_ANotificationShouldBeReceivedByActiveGridAccessProviders()
+            {
+                var (request, correlationId) = await _authenticatedHttpRequestGenerator
+                    .CreateAuthenticatedHttpPostRequestAsync(
+                        EndpointUrl,
+                        ChargeDocument.TariffSystemOperatorCreate,
+                        AuthorizationConfigurationData.SystemOperator);
+
+                // Act
+                await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 4);
+                peekResults.Should().NotContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
+                peekResults.Should().ContainMatch("*NotifyPriceList_MarketDocument*");
+                peekResults.Should().ContainMatch("*8100000000030*");
+                peekResults.Should().ContainMatch("*8100000000016*");
+                peekResults.Should().ContainMatch("*8100000000023*");
+                peekResults.Should().NotContainMatch("*8900000000005*");
+                peekResults.Should().ContainMatch("*<cim:process.processType>D18</cim:process.processType>*");
+                peekResults.Should().NotContainMatch("*<cim:process.processType>D08</cim:process.processType>*");
+            }
+
+            [Fact(Skip = "Disabled until Charge Price flow is fully functional as the current SupportOldFlowAsync sets Tax to TaxIndicator.Unknown which means no Grid access provider will get notified.")]
+            public async Task WhenTaxTariffPricesAreUpdatedBySystemOperator_ANotificationShouldBeReceivedByActiveGridAccessProviders()
+            {
+                var (request, correlationId) = await _authenticatedHttpRequestGenerator
+                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.PriceSeriesTariffFromSystemOperator, AuthorizationConfigurationData.SystemOperator);
+
+                // Act
+                await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 4);
+                peekResults.Should().NotContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
+                peekResults.Should().ContainMatch("*NotifyPriceList_MarketDocument*");
+                peekResults.Should().ContainMatch("*8100000000030*");
+                peekResults.Should().ContainMatch("*8100000000016*");
+                peekResults.Should().ContainMatch("*8100000000023*");
+                peekResults.Should().NotContainMatch("*8900000000005*");
             }
 
             private static ZonedDateTimeService GetZonedDateTimeService()

@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
 
         private ZonedDateTime? GetPointsIntervalEndDateTime()
         {
-            return _chargeOperation.EndDateTime is null
+            return _chargeOperation.PointsEndInterval is null
                 ? null
                 : _zonedDateTimeService.GetZonedDateTime(_chargeOperation.PointsEndInterval.GetValueOrDefault());
         }
