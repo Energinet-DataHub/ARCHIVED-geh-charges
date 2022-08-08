@@ -14,6 +14,7 @@
 
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -72,8 +73,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             {
                 // Arrange
                 var (request, _) =
-                    await Fixture.GetAuthenticatedHttpRequestGenerator(AuthorizationConfigurationData.GridAccessProvider8100000000030)
-                    .CreateAuthenticatedHttpPostRequestAsync(
+                    await GetAuthenticatedRequestForGridAccessProvider(
                         EndpointUrl, ChargeLinkDocument.ChargeLinkDocumentWhereSenderIdDoNotMatchAuthorizedActorId);
 
                 // Act
@@ -90,11 +90,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             [Fact]
             public async Task When_ChargeLinkIsReceived_Then_AHttp202ResponseWithEmptyBodyIsReturned()
             {
-                var result =
-                    await Fixture.GetAuthenticatedHttpRequestGenerator(AuthorizationConfigurationData.GridAccessProvider8100000000030)
-                        .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeLinkDocument.AnyValid);
+                var (request, _) =
+                    await GetAuthenticatedRequestForGridAccessProvider(EndpointUrl, ChargeLinkDocument.AnyValid);
 
-                var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(result.Request);
+                var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request);
                 var responseBody = await actualResponse.Content.ReadAsStringAsync();
 
                 actualResponse.StatusCode.Should().Be(HttpStatusCode.Accepted);
@@ -105,12 +104,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task When_InvalidChargeLinkIsReceived_Then_AHttp400ResponseIsReturned()
             {
                 // Arrange
-                var result =
-                    await Fixture.GetAuthenticatedHttpRequestGenerator(AuthorizationConfigurationData.GridAccessProvider8100000000030)
-                        .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeLinkDocument.InvalidSchema);
+                var (request, _) =
+                    await GetAuthenticatedRequestForGridAccessProvider(EndpointUrl, ChargeLinkDocument.InvalidSchema);
 
                 // Act
-                var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(result.Request);
+                var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Assert
                 actualResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -123,8 +121,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             {
                 // Arrange
                 var (request, correlationId) =
-                    await Fixture.GetAuthenticatedHttpRequestGenerator(AuthorizationConfigurationData.GridAccessProvider8100000000030)
-                        .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeLinkDocument.TaxWithCreateAndUpdateDueToOverLappingPeriod);
+                    await GetAuthenticatedRequestForGridAccessProvider(
+                        EndpointUrl,
+                        ChargeLinkDocument.TaxWithCreateAndUpdateDueToOverLappingPeriod);
 
                 // Act
                 await Fixture.HostManager.HttpClient.SendAsync(request);
@@ -140,6 +139,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // so we do not always receive a rejection due to the parallel handling of commands.
                 if (peekResults.Any(s => s.Contains("RejectRequestChangeBillingMasterData_MarketDocument")))
                     peekResults.Should().ContainMatch("*cannot yet be updated or stopped. The functionality is not implemented yet*");
+            }
+
+            private async Task<(HttpRequestMessage Request, string CorrelationId)> GetAuthenticatedRequestForGridAccessProvider(string endpoint, string testFilePath)
+            {
+                var (request, correlationId) =
+                    await Fixture.GetAuthenticatedHttpRequestGenerator(AuthorizationConfigurationData.GridAccessProvider8100000000030)
+                        .CreateAuthenticatedHttpPostRequestAsync(endpoint, testFilePath);
+
+                return (request, correlationId);
             }
         }
     }
