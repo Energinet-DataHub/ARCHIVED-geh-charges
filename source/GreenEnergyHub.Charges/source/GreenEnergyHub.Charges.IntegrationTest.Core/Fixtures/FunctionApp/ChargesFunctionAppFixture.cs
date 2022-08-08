@@ -249,6 +249,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             await chargePricesUpdatedListener.AddTopicSubscriptionListenerAsync(chargePricesUpdatedTopic.Name, ChargesServiceBusResourceNames.ChargePricesUpdatedSubscriptionName);
             ChargePricesUpdatedListener = new ServiceBusTestListener(chargePricesUpdatedListener);
 
+            await AuthenticateHttpRequestGenerators();
+
             await InitializeMessageHubAsync();
 
             await SetUpRequestResponseLoggingAsync();
@@ -305,6 +307,14 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
                 AuthorizationConfigurationData.CreateAuthorizationConfiguration(AuthorizationConfigurationData
                     .SystemOperator),
             };
+        }
+
+        private async Task AuthenticateHttpRequestGenerators()
+        {
+            foreach (var authenticatedHttpRequestGenerator in AuthenticatedHttpRequestGenerators)
+            {
+                await authenticatedHttpRequestGenerator.AddAuthenticationAsync();
+            }
         }
 
         private List<AuthenticatedHttpRequestGenerator> CreateAuthenticatedHttpRequestGenerators()

@@ -17,8 +17,9 @@ using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Authorization;
 using GreenEnergyHub.Iso8601;
-using NodaTime;
+using Microsoft.Identity.Client;
 using NodaTime.Testing;
+using SystemClock = NodaTime.SystemClock;
 
 namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
 {
@@ -29,6 +30,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
 
         public string ClientName { get; }
 
+        private AuthenticationResult? AuthenticationResult { get; set; }
+
         public AuthenticatedHttpRequestGenerator(AuthorizationConfiguration authorizationConfiguration, string localTimeZoneName)
         {
             _authorizationConfiguration = authorizationConfiguration;
@@ -36,26 +39,25 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
             _localTimeZoneName = localTimeZoneName;
         }
 
-        public async Task<(HttpRequestMessage Request, string CorrelationId)> CreateAuthenticatedHttpPostRequestAsync(
+        public async Task AddAuthenticationAsync()
+        {
+            var backendAuthenticationClient = new BackendAuthenticationClient(
+                _authorizationConfiguration.BackendAppScope,
+                _authorizationConfiguration.ClientCredentialsSettings,
+                _authorizationConfiguration.B2cTenantId);
+            AuthenticationResult = await backendAuthenticationClient.GetAuthenticationTokenAsync();
+        }
+
+        public (HttpRequestMessage Request, string CorrelationId) CreateAuthenticatedHttpPostRequest(
             string endpointUrl, string testFilePath)
         {
             var clock = new FakeClock(SystemClock.Instance.GetCurrentInstant());
             var zonedDateTimeService = new ZonedDateTimeService(clock, new Iso8601ConversionConfiguration(_localTimeZoneName));
             var (request, correlationId) = HttpRequestGenerator.CreateHttpPostRequest(endpointUrl, testFilePath, zonedDateTimeService);
 
-            await AddAuthenticationAsync(request);
+            request.Headers.Add("Authorization", $"Bearer {AuthenticationResult!.AccessToken}");
 
             return (request, correlationId);
-        }
-
-        private async Task AddAuthenticationAsync(HttpRequestMessage request)
-        {
-            var backendAuthenticationClient = new BackendAuthenticationClient(
-                _authorizationConfiguration.BackendAppScope,
-                _authorizationConfiguration.ClientCredentialsSettings,
-                _authorizationConfiguration.B2cTenantId);
-            var authenticationResult = await backendAuthenticationClient.GetAuthenticationTokenAsync();
-            request.Headers.Add("Authorization", $"Bearer {authenticationResult.AccessToken}");
         }
     }
 }
