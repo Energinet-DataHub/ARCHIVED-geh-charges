@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using FluentAssertions;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation.DocumentValidation.ValidationRules;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using Xunit;
@@ -24,18 +25,27 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.DocumentValidation.Validation
     public class SenderMustMatchChargeOwnersRuleTest
     {
         [Theory]
-        [InlineData("senderId", "senderId", true)]
-        [InlineData("senderId", "invalidSenderId", false)]
+        [InlineData("senderId", "senderId", "senderId", true)]
+        [InlineData("senderId", "senderId", "invalidSenderId", false)]
         public void GivenSenderMustMatchChargeOwnersRule_ThenSenderMustMatchChargeOwnersToBeValid(
             string senderId,
-            string chargeOwner,
+            string chargeOwnerOne,
+            string chargeOwnerTwo,
             bool isValid)
         {
             var marketParticipant = new MarketParticipantDtoBuilder().WithId(senderId).Build();
             var document = new DocumentDtoBuilder().WithSender(marketParticipant).Build();
-            var owners = new[] { chargeOwner, chargeOwner, chargeOwner };
+            var owners = new[] { chargeOwnerOne, chargeOwnerTwo };
             var sut = new SenderMustMatchChargeOwnersRule(document, owners);
             sut.IsValid.Should().Be(isValid);
+        }
+
+        [Fact]
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo()
+        {
+            var document = new DocumentDtoBuilder().Build();
+            var sut = new SenderMustMatchChargeOwnersRule(document, new[] { "senderId", });
+            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.SenderMustMatchChargeOwners);
         }
     }
 }
