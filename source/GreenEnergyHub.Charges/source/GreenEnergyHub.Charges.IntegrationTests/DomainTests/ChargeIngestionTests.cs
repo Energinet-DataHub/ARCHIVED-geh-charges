@@ -471,8 +471,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task WhenTaxTaxIsCreatedBySystemOperator_ANotificationShouldBeReceivedByActiveGridAccessProviders()
             {
                 var (request, correlationId) =
-                    await Fixture.GetAuthenticatedHttpRequestGenerator(AuthorizationConfigurationData.SystemOperator)
-                    .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.TariffSystemOperatorCreate);
+                    await GetAuthenticatedRequestForSystemOperator(EndpointUrl, ChargeDocument.TariffSystemOperatorCreate);
 
                 // Act
                 await Fixture.HostManager.HttpClient.SendAsync(request);
@@ -514,6 +513,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             {
                 var (request, correlationId) =
                     await Fixture.GetAuthenticatedHttpRequestGenerator(AuthorizationConfigurationData.GridAccessProvider8100000000030)
+                        .CreateAuthenticatedHttpPostRequestAsync(endpoint, testFilePath);
+
+                return (request, correlationId);
+            }
+
+            private async Task<(HttpRequestMessage Request, string CorrelationId)> GetAuthenticatedRequestForSystemOperator(string endpoint, string testFilePath)
+            {
+                var (request, correlationId) =
+                    await Fixture.GetAuthenticatedHttpRequestGenerator(AuthorizationConfigurationData.SystemOperator)
                         .CreateAuthenticatedHttpPostRequestAsync(endpoint, testFilePath);
 
                 return (request, correlationId);
