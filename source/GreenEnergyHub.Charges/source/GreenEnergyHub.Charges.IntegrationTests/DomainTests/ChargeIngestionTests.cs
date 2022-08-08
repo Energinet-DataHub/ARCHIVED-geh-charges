@@ -492,7 +492,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task WhenTaxTariffPricesAreUpdatedBySystemOperator_ANotificationShouldBeReceivedByActiveGridAccessProviders()
             {
                 var (request, correlationId) =
-                    await GetAuthenticatedRequestForGridAccessProvider(
+                    await GetAuthenticatedRequestForSystemOperator(
                         EndpointUrl,
                         ChargeDocument.PriceSeriesTariffFromSystemOperator);
 
