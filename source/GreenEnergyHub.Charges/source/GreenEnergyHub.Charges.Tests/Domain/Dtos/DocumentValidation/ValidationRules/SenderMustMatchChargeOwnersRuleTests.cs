@@ -22,7 +22,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.DocumentValidation.ValidationRules
 {
     [UnitTest]
-    public class SenderMustMatchChargeOwnersRuleTest
+    public class SenderMustMatchChargeOwnersRuleTests
     {
         [Theory]
         [InlineData("senderId", "senderId", "senderId", true)]
