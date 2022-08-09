@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -38,7 +37,9 @@ namespace GreenEnergyHub.Charges.Application.Charges.Services
             foreach (var chargePriceOperationDto in rejectedPriceOperations)
             {
                 _logger.LogInformation(
-                    $"{chargePriceOperationDto.ChargeId} rejected price operations was persisted. With errors: {PrintInvalidRules(documentValidationResult)}");
+                    "{ChargeId} rejected price operations was persisted. With errors: {invalidRules}",
+                    chargePriceOperationDto.ChargeId,
+                    PrintInvalidRules(documentValidationResult));
             }
 
             return Task.CompletedTask;
@@ -51,7 +52,9 @@ namespace GreenEnergyHub.Charges.Application.Charges.Services
             foreach (var chargePriceOperationDto in operationsToBeRejected)
             {
                 _logger.LogInformation(
-                    $"{chargePriceOperationDto.ChargeId} rejected price operations was persisted. With errors: {PrintInvalidRules(ValidationResult.CreateFailure(documentValidationResult))}");
+                    "{ChargeId} rejected price operations was persisted. With errors: {invalidRules}",
+                    chargePriceOperationDto.ChargeId,
+                    PrintInvalidRules(ValidationResult.CreateFailure(documentValidationResult)));
             }
 
             return Task.CompletedTask;
