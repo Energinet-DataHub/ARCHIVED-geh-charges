@@ -125,6 +125,8 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             List<ChargePriceOperationDto> operationsToBeRejected,
             List<IValidationRuleContainer> rejectionRules)
         {
+            if (!operationsToBeRejected.Any()) return;
+
             var sender = commandReceivedEvent.Command.Document.Sender;
             var rejectEvent = new OperationsRejectedEvent(
                 operationsToBeRejected,
