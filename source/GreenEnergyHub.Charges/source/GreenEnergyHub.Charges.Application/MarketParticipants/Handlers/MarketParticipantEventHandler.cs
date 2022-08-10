@@ -42,8 +42,28 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
             {
                 case ActorUpdatedIntegrationEvent actorEvent:
                     {
+                        foreach (var role in actorEvent.BusinessRoles)
+                        {
+                            _logger.LogInformation(
+                                "ActorUpdatedIntegrationEvent Id {id} contains Actor Number {GLN} with role: {role}",
+                                actorEvent.Id,
+                                actorEvent.ActorNumber,
+                                role.ToString());
+                        }
+
                         var marketParticipantUpdatedEvent =
                             MarketParticipantDomainEventMapper.MapFromActorUpdatedIntegrationEvent(actorEvent);
+
+                        foreach (var role in marketParticipantUpdatedEvent.BusinessProcessRoles)
+                        {
+                            _logger.LogInformation(
+                                "ActorUpdatedIntegrationEvent Id {id} has been mapped to Charges' internal " +
+                                "MarketParticipantUpdatedEvent for GLN {GLN} with role {role}, which is a valid role in Charges.",
+                                actorEvent.Id,
+                                marketParticipantUpdatedEvent.MarketParticipantId,
+                                role.ToString());
+                        }
+
                         await _marketParticipantPersister
                             .PersistAsync(marketParticipantUpdatedEvent)
                             .ConfigureAwait(false);
