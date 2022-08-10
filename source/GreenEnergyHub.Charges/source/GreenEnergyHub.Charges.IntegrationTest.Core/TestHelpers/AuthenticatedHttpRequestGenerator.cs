@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Core.DateTime;
@@ -51,11 +52,13 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
         public (HttpRequestMessage Request, string CorrelationId) CreateAuthenticatedHttpPostRequest(
             string endpointUrl, string testFilePath)
         {
+            ArgumentNullException.ThrowIfNull(AuthenticationResult);
+
             var clock = new FakeClock(SystemClock.Instance.GetCurrentInstant());
             var zonedDateTimeService = new ZonedDateTimeService(clock, new Iso8601ConversionConfiguration(_localTimeZoneName));
             var (request, correlationId) = HttpRequestGenerator.CreateHttpPostRequest(endpointUrl, testFilePath, zonedDateTimeService);
 
-            request.Headers.Add("Authorization", $"Bearer {AuthenticationResult!.AccessToken}");
+            request.Headers.Add("Authorization", $"Bearer {AuthenticationResult.AccessToken}");
 
             return (request, correlationId);
         }
