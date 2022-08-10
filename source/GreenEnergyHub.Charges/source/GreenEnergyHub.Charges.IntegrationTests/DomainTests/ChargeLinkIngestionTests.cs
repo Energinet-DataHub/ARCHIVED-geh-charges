@@ -76,8 +76,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // Arrange
                 var (request, _) =
                     _gridAccessProviderAuthenticatedHttpRequestGenerator.CreateAuthenticatedHttpPostRequest(
-                        EndpointUrl,
-                        ChargeLinkDocument.ChargeLinkDocumentWhereSenderIdDoNotMatchAuthorizedActorId);
+                        EndpointUrl, ChargeLinkDocument.ChargeLinkDocumentWhereSenderIdDoNotMatchAuthorizedActorId);
 
                 // Act
                 var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
@@ -95,8 +94,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             {
                 var (request, _) =
                     _gridAccessProviderAuthenticatedHttpRequestGenerator.CreateAuthenticatedHttpPostRequest(
-                        EndpointUrl,
-                        ChargeLinkDocument.AnyValid);
+                        EndpointUrl, ChargeLinkDocument.AnyValid);
 
                 var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request);
                 var responseBody = await actualResponse.Content.ReadAsStringAsync();
@@ -111,8 +109,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // Arrange
                 var (request, _) =
                     _gridAccessProviderAuthenticatedHttpRequestGenerator.CreateAuthenticatedHttpPostRequest(
-                        EndpointUrl,
-                        ChargeLinkDocument.InvalidSchema);
+                        EndpointUrl, ChargeLinkDocument.InvalidSchema);
 
                 // Act
                 var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request);
@@ -129,8 +126,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // Arrange
                 var (request, correlationId) =
                     _gridAccessProviderAuthenticatedHttpRequestGenerator.CreateAuthenticatedHttpPostRequest(
-                        EndpointUrl,
-                        ChargeLinkDocument.TaxWithCreateAndUpdateDueToOverLappingPeriod);
+                        EndpointUrl, ChargeLinkDocument.TaxWithCreateAndUpdateDueToOverLappingPeriod);
 
                 // Act
                 await Fixture.HostManager.HttpClient.SendAsync(request);
