@@ -49,6 +49,9 @@ namespace GreenEnergyHub.Charges.FunctionHost
             SharedConfiguration.ConfigureServices(serviceCollection);
             HealthCheckConfiguration.ConfigureServices(serviceCollection);
 
+            // Outbox messages
+            OutboxConfiguration.ConfigureServices(serviceCollection);
+
             // Charges
             ChargeIngestionConfiguration.ConfigureServices(serviceCollection);
             ChargeCommandReceiverConfiguration.ConfigureServices(serviceCollection);

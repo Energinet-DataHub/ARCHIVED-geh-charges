@@ -12,12 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Application.Charges.Events;
-
-namespace GreenEnergyHub.Charges.Application.Charges.Services
+namespace GreenEnergyHub.Charges.Infrastructure.Outbox
 {
-    public interface IChargePriceRejectionService
+    public enum OutboxEventType
     {
-        public void SaveRejections(OperationsRejectedEvent operationsRejectedEvent);
+        ChargeOperationRejected,
     }
 }

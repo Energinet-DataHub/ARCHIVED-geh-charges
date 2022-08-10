@@ -12,12 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Application.Charges.Events;
+using GreenEnergyHub.Charges.Infrastructure.Outbox;
 
-namespace GreenEnergyHub.Charges.Application.Charges.Services
+namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
 {
-    public interface IChargePriceRejectionService
+    public class OutboxMessageRepository : IOutboxMessageRepository
     {
-        public void SaveRejections(OperationsRejectedEvent operationsRejectedEvent);
+        private readonly IChargesDatabaseContext _chargesDatabaseContext;
+
+        public OutboxMessageRepository(IChargesDatabaseContext chargesDatabaseContext)
+        {
+            _chargesDatabaseContext = chargesDatabaseContext;
+        }
+
+        public void Add(OutboxMessage outboxMessage)
+        {
+            _chargesDatabaseContext.OutboxMessages.Add(outboxMessage);
+        }
     }
 }

@@ -21,6 +21,7 @@ using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
 using GreenEnergyHub.Charges.Domain.GridAreaLinks;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
+using GreenEnergyHub.Charges.Infrastructure.Outbox;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations;
 using Microsoft.EntityFrameworkCore;
 
@@ -47,6 +48,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence
 
         public DbSet<ChargeLink> ChargeLinks { get; private set; }
 
+        public DbSet<OutboxMessage> OutboxMessages { get; private set; }
+
         public Task<int> SaveChangesAsync()
            => base.SaveChangesAsync();
 
@@ -62,6 +65,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence
             modelBuilder.ApplyConfiguration(new MarketParticipantEntityConfiguration());
             modelBuilder.ApplyConfiguration(new MeteringPointEntityConfiguration());
             modelBuilder.ApplyConfiguration(new GridAreaLinkEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new OutboxMessageEntityConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

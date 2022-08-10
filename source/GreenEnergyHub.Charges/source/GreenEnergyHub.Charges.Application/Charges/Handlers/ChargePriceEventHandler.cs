@@ -16,7 +16,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Application.Charges.Services;
+using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Charges.Exceptions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.BusinessValidation.ValidationRules;
@@ -86,11 +88,12 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                         throw new InvalidOperationException($"Charge ID '{operation.ChargeId}' does not exist.");
                     }
 
-                    charge.UpdatePrices(
-                        operation.PointsStartInterval,
-                        operation.PointsEndInterval,
-                        operation.Points,
-                        operation.Id);
+                    // Temporary stop saving prices in "new flow"
+                    // charge.UpdatePrices(
+                    //     operation.PointsStartInterval,
+                    //     operation.PointsEndInterval,
+                    //     operation.Points,
+                    //     operation.Id);
                 }
                 catch (ChargeOperationFailedException exception)
                 {
@@ -107,7 +110,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             }
 
             await _chargePriceConfirmationService.SaveConfirmationsAsync(operationsToBeConfirmed).ConfigureAwait(false);
-            await _chargePriceRejectionService.SaveRejectionsAsync(operationsToBeRejected, rejectionRules).ConfigureAwait(false);
+            RaiseRejectedEvent(commandReceivedEvent, operationsToBeRejected, rejectionRules);
             await _chargePriceNotificationService.SaveNotificationsAsync(operationsToBeConfirmed).ConfigureAwait(false);
 
             // With story 1411 below log entry will be replaced with 'await _unitOfWork.SaveChangesAsync().ConfigureAwait(false)';
@@ -115,6 +118,20 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             {
                 _logger.LogInformation("At this point, price(s) will be persisted for operation with Id {Id}", operation.Id);
             }
+        }
+
+        private void RaiseRejectedEvent(
+            ChargePriceCommandReceivedEvent commandReceivedEvent,
+            List<ChargePriceOperationDto> operationsToBeRejected,
+            List<IValidationRuleContainer> rejectionRules)
+        {
+            var sender = commandReceivedEvent.Command.Document.Sender;
+            var rejectEvent = new OperationsRejectedEvent(
+                operationsToBeRejected,
+                sender.MarketParticipantId,
+                sender.BusinessProcessRole,
+                rejectionRules);
+            _chargePriceRejectionService.SaveRejections(rejectEvent);
         }
 
         private static void CollectRejectionRules(

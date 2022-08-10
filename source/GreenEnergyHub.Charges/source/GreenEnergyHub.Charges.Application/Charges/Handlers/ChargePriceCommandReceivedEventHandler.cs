@@ -12,11 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Application.Charges.Services;
 using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
@@ -46,14 +49,24 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 .ValidateAsync(chargePriceCommandReceivedEvent.Command).ConfigureAwait(false);
             if (documentValidationResult.IsFailed)
             {
-                await _chargePriceRejectionService
-                    .SaveRejectionsAsync(chargePriceCommandReceivedEvent.Command.Operations.ToList(), documentValidationResult)
-                    .ConfigureAwait(false);
-                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+                RaiseRejectedEvent(chargePriceCommandReceivedEvent, documentValidationResult.InvalidRules.ToList());
                 return;
             }
 
             await _chargePriceEventHandler.HandleAsync(chargePriceCommandReceivedEvent).ConfigureAwait(false);
+        }
+
+        private void RaiseRejectedEvent(
+            ChargePriceCommandReceivedEvent commandReceivedEvent,
+            List<IValidationRuleContainer> rejectionRules)
+        {
+            var sender = commandReceivedEvent.Command.Document.Sender;
+            var rejectEvent = new OperationsRejectedEvent(
+                commandReceivedEvent.Command.Operations,
+                sender.MarketParticipantId,
+                sender.BusinessProcessRole,
+                rejectionRules);
+            _chargePriceRejectionService.SaveRejections(rejectEvent);
         }
     }
 }
