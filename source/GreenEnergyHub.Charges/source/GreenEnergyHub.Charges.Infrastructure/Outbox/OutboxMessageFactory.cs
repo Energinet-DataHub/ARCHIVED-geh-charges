@@ -42,7 +42,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Outbox
             return new OutboxMessage(
                 data,
                 _correlationContext.AsTraceContext(),
-                operationsRejectedEvent.GetType(),
+                operationsRejectedEvent.GetType().ToString(),
                 _clock.GetCurrentInstant());
         }
     }

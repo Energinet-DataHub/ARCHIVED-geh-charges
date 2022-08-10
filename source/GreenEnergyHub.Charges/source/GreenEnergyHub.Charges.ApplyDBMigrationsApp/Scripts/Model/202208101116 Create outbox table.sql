@@ -9,7 +9,7 @@ GO
 -- Tables
 ------------------------------------------------------------------------------------------------------------------------
 
-CREATE TABLE [dbo].[OutboxMessage](
+CREATE TABLE [Charges].[OutboxMessage](
     [Id] [uniqueidentifier] NOT NULL,
     [Type] [nvarchar](255) NOT NULL,
     [Data] [nvarchar](max) NOT NULL,
