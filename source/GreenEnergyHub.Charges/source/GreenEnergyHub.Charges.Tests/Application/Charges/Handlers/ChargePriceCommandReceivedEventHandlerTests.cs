@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
+using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Application.Charges.Services;
 using GreenEnergyHub.Charges.Application.Persistence;
@@ -54,33 +55,29 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             unitOfWork.Verify(x => x.SaveChangesAsync(), Times.Never);
         }
 
-        // [Theory]
-        // [InlineAutoDomainData]
-        // public async Task HandleAsync_WhenDocumentValidationFails_ShouldCallReject(
-        //     ChargePriceCommandReceivedEvent chargePriceCommandReceivedEvent,
-        //     [Frozen] Mock<IDocumentValidator> documentValidator,
-        //     [Frozen] Mock<IChargePriceEventHandler> chargePriceEventHandler,
-        //     [Frozen] Mock<IChargePriceRejectionService> chargePriceRejectionService,
-        //     [Frozen] Mock<IUnitOfWork> unitOfWork,
-        //     ChargePriceCommandReceivedEventHandler sut)
-        // {
-        //     // Arrange
-        //     documentValidator.Setup(v =>
-        //             v.ValidateAsync(It.IsAny<ChargePriceCommand>()))
-        //         .ReturnsAsync(ValidationResult.CreateFailure(GetFailedValidationResult()));
-        //
-        //     // Act
-        //     await sut.HandleAsync(chargePriceCommandReceivedEvent);
-        //
-        //     // Assert
-        //     chargePriceRejectionService.Verify(
-        //         x => x.SaveRejectionsAsync(
-        //             chargePriceCommandReceivedEvent.Command.Operations.ToList(),
-        //             It.IsAny<ValidationResult>()),
-        //         Times.Once);
-        //     chargePriceEventHandler.Verify(x => x.HandleAsync(chargePriceCommandReceivedEvent), Times.Never);
-        //     unitOfWork.Verify(x => x.SaveChangesAsync(), Times.Once);
-        // }
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task HandleAsync_WhenDocumentValidationFails_ShouldCallReject(
+            ChargePriceCommandReceivedEvent chargePriceCommandReceivedEvent,
+            [Frozen] Mock<IDocumentValidator> documentValidator,
+            [Frozen] Mock<IChargePriceEventHandler> chargePriceEventHandler,
+            [Frozen] Mock<IChargePriceRejectionService> chargePriceRejectionService,
+            ChargePriceCommandReceivedEventHandler sut)
+        {
+            // Arrange
+            documentValidator.Setup(v =>
+                    v.ValidateAsync(It.IsAny<ChargePriceCommand>()))
+                .ReturnsAsync(ValidationResult.CreateFailure(GetFailedValidationResult()));
+
+            // Act
+            await sut.HandleAsync(chargePriceCommandReceivedEvent);
+
+            // Assert
+            chargePriceRejectionService.Verify(
+                x => x.SaveRejections(It.IsAny<OperationsRejectedEvent>()), Times.Once);
+            chargePriceEventHandler.Verify(x => x.HandleAsync(chargePriceCommandReceivedEvent), Times.Never);
+        }
+
         private static List<IValidationRuleContainer> GetFailedValidationResult()
         {
             var failedRule = new Mock<IValidationRule>();
