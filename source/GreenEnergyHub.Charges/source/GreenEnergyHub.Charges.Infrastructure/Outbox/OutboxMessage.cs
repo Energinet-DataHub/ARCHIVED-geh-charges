@@ -22,19 +22,19 @@ namespace GreenEnergyHub.Charges.Infrastructure.Outbox
         public OutboxMessage(string data, string correlationId, Type type, Instant creationDate)
         {
             Id = Guid.NewGuid();
+            Type = type;
             Data = data;
             CorrelationId = correlationId;
-            Type = type;
             CreationDate = creationDate;
         }
 
-        public Guid Id { get; set; }
-
-        public string Data { get; set; }
-
-        public string CorrelationId { get; }
+        public Guid Id { get; }
 
         public Type Type { get; }
+
+        public string Data { get; }
+
+        public string CorrelationId { get; }
 
         public Instant CreationDate { get; }
 
