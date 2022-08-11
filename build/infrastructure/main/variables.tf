@@ -50,6 +50,6 @@ variable enable_health_check_alerts {
 }
 
 variable access_token {
-  type          = bool
+  type          = string
   description   = "Temp: access token."
 }
