@@ -19,7 +19,7 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands
 {
-    public class ChargePriceOperationDto : ChargeOperationBase
+    public class ChargePriceOperationDto : OperationBase
     {
         public ChargePriceOperationDto(
             string id,

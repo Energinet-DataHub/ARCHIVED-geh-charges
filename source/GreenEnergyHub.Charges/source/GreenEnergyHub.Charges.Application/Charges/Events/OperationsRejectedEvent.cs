@@ -22,7 +22,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Events
     public class OperationsRejectedEvent
     {
         public OperationsRejectedEvent(
-            IReadOnlyCollection<ChargeOperationBase> rejectedOperations,
+            IReadOnlyCollection<OperationBase> rejectedOperations,
             string marketParticipantId,
             MarketParticipantRole businessProcessRole,
             List<IValidationRuleContainer> rejectionRules)
@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Events
             RejectionRules = rejectionRules;
         }
 
-        public IReadOnlyCollection<ChargeOperationBase> RejectedOperations { get; }
+        public IReadOnlyCollection<OperationBase> RejectedOperations { get; }
 
         public string MarketParticipantId { get; }
 
