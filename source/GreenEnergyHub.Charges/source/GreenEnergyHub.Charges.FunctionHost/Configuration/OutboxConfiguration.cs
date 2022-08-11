@@ -24,6 +24,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         {
             serviceCollection.AddScoped<OutboxMessageFactory>();
             serviceCollection.AddScoped<IOutboxMessageRepository, OutboxMessageRepository>();
+            // serviceCollection.AddScoped<IAvailableDataNotifier<AvailableChargeReceiptData, OperationsRejectedEvent>,
+            //     AvailableDataNotifier<AvailableChargeReceiptData, OperationsRejectedEvent>>();
+            // serviceCollection.AddScoped<IAvailableDataNotificationFactory<AvailableChargeReceiptData>,
+            //     AvailableDataNotificationFactory<AvailableChargeReceiptData>>();
+            // serviceCollection.AddScoped<BundleSpecification<AvailableChargeReceiptData, OperationsRejectedEvent>,
+            //     ChargeRejectionBundleSpecification>();
         }
     }
 }

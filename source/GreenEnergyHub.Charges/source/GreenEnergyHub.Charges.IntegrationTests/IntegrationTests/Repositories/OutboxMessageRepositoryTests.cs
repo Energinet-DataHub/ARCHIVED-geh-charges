@@ -19,6 +19,7 @@ using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.TestHelpers;
 using Microsoft.EntityFrameworkCore;
+using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
@@ -40,13 +41,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         [Theory]
         [AutoDomainData]
         public async Task Add_WhenOutboxMessageProvided_OutboxMessageIsAdded(
-            OutboxMessageBuilder outboxMessageBuilder)
+            OutboxMessageBuilder outboxMessageBuilder,
+            IClock clock)
         {
             // Arrange
             var outboxMessage = outboxMessageBuilder.Build();
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
 
-            var sut = new OutboxMessageRepository(chargesDatabaseWriteContext);
+            var sut = new OutboxMessageRepository(chargesDatabaseWriteContext, clock);
 
             // Act
             sut.Add(outboxMessage);

@@ -18,6 +18,16 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
 {
     public interface IOutboxMessageRepository
     {
+        /// <summary>
+        /// Todo: Document me!
+        /// </summary>
+        /// <param name="operationsRejectedEvent"></param>
         public void Add(OutboxMessage operationsRejectedEvent);
+
+        /// <summary>
+        /// Todo: Document me!
+        /// </summary>
+        /// <returns>OutboxMessage</returns>
+        OutboxMessage? GetNext();
     }
 }
