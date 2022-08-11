@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             IntegrationTestConfiguration = new IntegrationTestConfiguration();
             DatabaseManager = new ChargesDatabaseManager();
             AuthorizationConfigurations = CreateAuthorizationConfigurations();
-            AuthenticatedHttpRequestGenerators = CreateAuthenticatedHttpRequestGenerators();
+            AuthenticatedHttpRequestGenerators = CreateAuthenticatedHttpRequestGenerators(AuthorizationConfigurations);
             ServiceBusResourceProvider = new ServiceBusResourceProvider(
                 IntegrationTestConfiguration.ServiceBusConnectionString, TestLogger);
         }
@@ -83,9 +83,9 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
         public AuthenticatedHttpRequestGenerator GetAuthenticatedHttpRequestGenerator(string clientName) =>
             AuthenticatedHttpRequestGenerators.Single(x => x.ClientName == clientName);
 
-        private List<AuthorizationConfiguration> AuthorizationConfigurations { get; set; }
+        private IEnumerable<AuthorizationConfiguration> AuthorizationConfigurations { get; set; }
 
-        private List<AuthenticatedHttpRequestGenerator> AuthenticatedHttpRequestGenerators { get; set; }
+        private IEnumerable<AuthenticatedHttpRequestGenerator> AuthenticatedHttpRequestGenerators { get; set; }
 
         private string LocalTimeZoneName { get; } = "Europe/Copenhagen";
 
@@ -317,9 +317,10 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             }
         }
 
-        private List<AuthenticatedHttpRequestGenerator> CreateAuthenticatedHttpRequestGenerators()
+        private IEnumerable<AuthenticatedHttpRequestGenerator> CreateAuthenticatedHttpRequestGenerators(
+            IEnumerable<AuthorizationConfiguration> authorizationConfigurations)
         {
-            return AuthorizationConfigurations
+            return authorizationConfigurations
                 .Select(ac => new AuthenticatedHttpRequestGenerator(ac, LocalTimeZoneName))
                 .ToList();
         }
