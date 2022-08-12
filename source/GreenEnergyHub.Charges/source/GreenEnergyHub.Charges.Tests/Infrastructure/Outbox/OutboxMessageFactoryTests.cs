@@ -14,7 +14,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Albedo;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.Charges.Events;
@@ -26,7 +25,6 @@ using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.Json;
 using GreenEnergyHub.TestHelpers;
-using Microsoft.OpenApi.Validations;
 using NodaTime;
 using Xunit;
 using Xunit.Categories;
