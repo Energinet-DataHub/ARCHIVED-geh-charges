@@ -48,8 +48,3 @@ variable enable_health_check_alerts {
   type          = bool
   description   = "Specify if health check alerts for Azure Functions and App Services should be enabled."
 }
-
-variable access_token {
-  type          = string
-  description   = "Temp: access token."
-}
