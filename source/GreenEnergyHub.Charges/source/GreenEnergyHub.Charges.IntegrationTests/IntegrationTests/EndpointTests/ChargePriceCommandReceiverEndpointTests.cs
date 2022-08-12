@@ -73,14 +73,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
                     () => Fixture.PriceCommandReceivedTopic.SenderClient.SendMessageAsync(message),
                     correlationId,
-                    $"00-{correlationId}-b7ad6b7169203331-02");
+                    $"00-{correlationId}-b7ad6b7169203331-00");
 
                 await FunctionAsserts.AssertHasExecutedAsync(
                     Fixture.HostManager, nameof(ChargePriceCommandReceiverEndpoint));
 
                 // Assert
                 await using var context = Fixture.DatabaseManager.CreateDbContext();
-                var actualOutboxMessage = context.OutboxMessages.Single(x => x.CorrelationId == correlationId);
+                var actualOutboxMessage = context.OutboxMessages.Single(x => x.CorrelationTraceContext.Contains($"{correlationId}"));
                 actualOutboxMessage.Type.Should().Be(OperationsRejectedEventType);
             }
 

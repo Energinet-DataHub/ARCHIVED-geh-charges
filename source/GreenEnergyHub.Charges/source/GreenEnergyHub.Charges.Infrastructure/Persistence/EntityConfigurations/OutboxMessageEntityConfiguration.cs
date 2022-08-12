@@ -30,7 +30,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
             builder.Property(x => x.Id).ValueGeneratedNever();
             builder.Property(x => x.Data);
             builder.Property(x => x.Type);
-            builder.Property(x => x.CorrelationId);
+            builder.Property(x => x.CorrelationTraceContext);
             builder.Property(x => x.CreationDate);
             builder.Property(x => x.ProcessedDate);
         }

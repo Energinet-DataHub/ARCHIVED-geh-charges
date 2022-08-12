@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Outbox
             var data = _jsonSerializer.Serialize(operationsRejectedEvent);
             return new OutboxMessage(
                 data,
-                _correlationContext.Id,
+                _correlationContext.AsTraceContext(),
                 operationsRejectedEvent.GetType().ToString(),
                 _clock.GetCurrentInstant());
         }

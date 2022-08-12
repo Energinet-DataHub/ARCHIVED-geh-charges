@@ -19,12 +19,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.Outbox
 {
     public class OutboxMessage
     {
-        public OutboxMessage(string data, string correlationId, string type, Instant creationDate)
+        public OutboxMessage(string data, string correlationTraceContext, string type, Instant creationDate)
         {
             Id = Guid.NewGuid();
             Type = type;
             Data = data;
-            CorrelationId = correlationId;
+            CorrelationTraceContext = correlationTraceContext;
             CreationDate = creationDate;
         }
 
@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Outbox
 
         public string Data { get; }
 
-        public string CorrelationId { get; }
+        public string CorrelationTraceContext { get; }
 
         public Instant CreationDate { get; }
 
