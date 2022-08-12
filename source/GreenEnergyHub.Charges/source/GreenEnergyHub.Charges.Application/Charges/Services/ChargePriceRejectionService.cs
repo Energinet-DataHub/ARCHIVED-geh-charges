@@ -38,7 +38,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Services
             foreach (var chargePriceOperationDto in rejectedPriceOperations)
             {
                 _logger.LogInformation(
-                    "{SenderProvidedChargeId} rejected price operations was persisted. With errors: {Errors}",
+                    "{ChargeId} rejected price operations was persisted. With errors: {invalidRules}",
                     chargePriceOperationDto.SenderProvidedChargeId,
                     PrintInvalidRules(documentValidationResult));
             }
@@ -53,7 +53,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Services
             foreach (var chargePriceOperationDto in operationsToBeRejected)
             {
                 _logger.LogInformation(
-                    "{SenderProvidedChargeId} rejected price operations was persisted. With errors: {Errors}",
+                    "{ChargeId} rejected price operations was persisted. With errors: {invalidRules}",
                     chargePriceOperationDto.SenderProvidedChargeId,
                     PrintInvalidRules(ValidationResult.CreateFailure(documentValidationResult)));
             }
