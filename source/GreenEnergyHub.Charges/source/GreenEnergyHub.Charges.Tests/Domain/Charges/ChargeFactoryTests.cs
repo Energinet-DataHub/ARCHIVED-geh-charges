@@ -37,11 +37,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
         public async Task CreateFromCommandAsync_Charge_HasNoNullsOrEmptyCollections(
             TestMarketParticipant owner,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            ChargeOperationDtoBuilder chargeOperationDtoBuilder,
+            ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder,
             ChargeFactory sut)
         {
             // Arrange
-            var chargeOperationDto = chargeOperationDtoBuilder.Build();
+            var chargeOperationDto = chargeInformationOperationDtoBuilder.Build();
             marketParticipantRepository
                 .Setup(repo => repo.SingleOrNullAsync(
                     chargeOperationDto.ChargeOwner))

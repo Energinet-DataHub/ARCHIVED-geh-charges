@@ -56,9 +56,6 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.DocumentValidation
                 new RecipientIsMandatoryTypeValidationRule(chargeCommand.Document),
                 new SenderIsMandatoryTypeValidationRule(chargeCommand.Document),
                 new RecipientMustBeDdzRule(chargeCommand.Document),
-                new SenderMustMatchChargeOwnersRule(
-                    chargeCommand.Document,
-                    chargeCommand.Operations.Select(c => c.ChargeOwner)),
             };
 
             // Act
@@ -81,7 +78,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.DocumentValidation
         {
             // Arrange
             var charge = chargeBuilder.Build();
-            var chargeOperationDto = new ChargeOperationDtoBuilder().WithChargeType(ChargeType.Fee).Build();
+            var chargeOperationDto = new ChargeInformationOperationDtoBuilder().WithChargeType(ChargeType.Fee).Build();
             var chargeCommand = new ChargeInformationCommandBuilder().WithChargeOperation(chargeOperationDto).Build();
             chargeRepository
                 .Setup(r => r.SingleOrNullAsync(It.IsAny<ChargeIdentifier>()))
@@ -100,14 +97,13 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.DocumentValidation
             var actualRules = actual.GetRules().Select(r => r.ValidationRule.GetType()).ToList();
 
             // Assert
-            Assert.Equal(7, actual.GetRules().Count); // This assert is added to ensure that when the rule set is expanded, the test gets attention as well.
+            Assert.Equal(6, actual.GetRules().Count); // This assert is added to ensure that when the rule set is expanded, the test gets attention as well.
             Assert.Contains(typeof(CommandSenderMustBeAnExistingMarketParticipantRule), actualRules);
             Assert.Contains(typeof(BusinessReasonCodeMustBeUpdateChargeInformationOrChargePricesRule), actualRules);
             Assert.Contains(typeof(DocumentTypeMustBeRequestChangeOfPriceListRule), actualRules);
             Assert.Contains(typeof(RecipientIsMandatoryTypeValidationRule), actualRules);
             Assert.Contains(typeof(SenderIsMandatoryTypeValidationRule), actualRules);
             Assert.Contains(typeof(RecipientMustBeDdzRule), actualRules);
-            Assert.Contains(typeof(SenderMustMatchChargeOwnersRule), actualRules);
         }
     }
 }

@@ -15,6 +15,7 @@
 using System.Collections.Generic;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.TestHelpers;
@@ -45,11 +46,13 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Validation
             };
             var validationRuleSet = ValidationRuleSet.FromRules(rules);
             inputValidationRulesFactory
-                .Setup(f => f.CreateRules(It.IsAny<ChargeInformationOperationDto>()))
+                .Setup(f => f.CreateRules(
+                    It.IsAny<ChargeInformationOperationDto>(),
+                    It.IsAny<DocumentDto>()))
                 .Returns(validationRuleSet);
 
             // Act
-            var actual = sut.Validate(chargeInformationOperationDto);
+            var actual = sut.Validate(chargeInformationOperationDto, It.IsAny<DocumentDto>());
 
             // Assert
             var shouldFail = !isValid;

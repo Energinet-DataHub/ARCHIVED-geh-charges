@@ -61,6 +61,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             ArgumentNullException.ThrowIfNull(commandReceivedEvent);
 
             var operations = commandReceivedEvent.Command.Operations.ToArray();
+            var document = commandReceivedEvent.Command.Document;
             var operationsToBeRejected = new List<ChargePriceOperationDto>();
             var rejectionRules = new List<IValidationRuleContainer>();
             var operationsToBeConfirmed = new List<ChargePriceOperationDto>();
@@ -69,7 +70,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             {
                 var operation = operations[i];
 
-                var inputValidationResult = _inputValidator.Validate(operation);
+                var inputValidationResult = _inputValidator.Validate(operation, document);
                 if (inputValidationResult.IsFailed)
                 {
                     operationsToBeRejected = operations[i..].ToList();

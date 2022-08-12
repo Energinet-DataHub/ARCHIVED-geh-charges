@@ -56,6 +56,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             ArgumentNullException.ThrowIfNull(commandReceivedEvent);
 
             var operations = commandReceivedEvent.Command.Operations.ToArray();
+            var document = commandReceivedEvent.Command.Document;
             var operationsToBeRejected = new List<ChargeInformationOperationDto>();
             var rejectionRules = new List<IValidationRuleContainer>();
             var operationsToBeConfirmed = new List<ChargeInformationOperationDto>();
@@ -76,7 +77,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                     throw new InvalidOperationException($"Charge ID '{operation.SenderProvidedChargeId}' does not exist.");
                 }
 
-                var validationResult = _inputValidator.Validate(operation);
+                var validationResult = _inputValidator.Validate(operation, document);
                 if (validationResult.IsFailed)
                 {
                     operationsToBeRejected = operations[i..].ToList();
@@ -107,7 +108,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             }
 
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-            var document = commandReceivedEvent.Command.Document;
             await _chargeCommandReceiptService.RejectInvalidOperationsAsync(operationsToBeRejected, document, rejectionRules).ConfigureAwait(false);
             await _chargeCommandReceiptService.AcceptValidOperationsAsync(operationsToBeConfirmed, document).ConfigureAwait(false);
         }

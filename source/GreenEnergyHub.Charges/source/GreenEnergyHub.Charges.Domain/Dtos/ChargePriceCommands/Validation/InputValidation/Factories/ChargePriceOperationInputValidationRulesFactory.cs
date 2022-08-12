@@ -16,24 +16,27 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation.DocumentValidation.ValidationRules;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.Factories
 {
     public class ChargePriceOperationInputValidationRulesFactory : IInputValidationRulesFactory<ChargePriceOperationDto>
     {
-        public IValidationRuleSet CreateRules(ChargePriceOperationDto operation)
+        public IValidationRuleSet CreateRules(ChargePriceOperationDto operation, DocumentDto document)
         {
             ArgumentNullException.ThrowIfNull(operation);
-            var rules = GetRulesForOperation(operation);
+            var rules = GetRulesForOperation(operation, document);
             return ValidationRuleSet.FromRules(rules.ToList());
         }
 
-        private IEnumerable<IValidationRuleContainer> GetRulesForOperation(ChargePriceOperationDto chargePriceOperationDto)
+        private IEnumerable<IValidationRuleContainer> GetRulesForOperation(ChargePriceOperationDto chargePriceOperationDto, DocumentDto document)
         {
             var rules = new List<IValidationRuleContainer>
             {
                 CreateRuleContainer(new MaximumPriceRule(chargePriceOperationDto), chargePriceOperationDto.OperationId),
+                CreateRuleContainer(new ChargeOwnerMustMatchSenderRule(document.Sender.MarketParticipantId, chargePriceOperationDto.ChargeOwner), chargePriceOperationDto.OperationId),
             };
 
             return rules;

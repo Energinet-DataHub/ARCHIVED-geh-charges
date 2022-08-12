@@ -17,7 +17,9 @@ using System.Collections.Generic;
 using System.Linq;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.InputValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation.DocumentValidation.ValidationRules;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.InputValidation.Factories
@@ -35,14 +37,14 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
             _clock = clock;
         }
 
-        public IValidationRuleSet CreateRules(ChargeInformationOperationDto informationOperation)
+        public IValidationRuleSet CreateRules(ChargeInformationOperationDto informationOperation, DocumentDto document)
         {
             ArgumentNullException.ThrowIfNull(informationOperation);
-            var rules = GetRulesForOperation(informationOperation);
+            var rules = GetRulesForOperation(informationOperation, document);
             return ValidationRuleSet.FromRules(rules.ToList());
         }
 
-        private IEnumerable<IValidationRuleContainer> GetRulesForOperation(ChargeInformationOperationDto chargeInformationOperationDto)
+        private IEnumerable<IValidationRuleContainer> GetRulesForOperation(ChargeInformationOperationDto chargeInformationOperationDto, DocumentDto document)
         {
             var rules = new List<IValidationRuleContainer>
             {
@@ -54,16 +56,27 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
                 CreateRuleContainer(new ChargeTypeIsKnownValidationRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
                 CreateRuleContainer(new StartDateTimeRequiredValidationRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
                 CreateRuleContainer(new ChargeOwnerTextLengthRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
+                CreateRuleContainer(new ChargeOwnerMustMatchSenderRule(document.Sender.MarketParticipantId, chargeInformationOperationDto.ChargeOwner), chargeInformationOperationDto.OperationId),
             };
 
-            rules.AddRange(chargeInformationOperationDto.Points.Any()
-                ? CreateRulesForChargePrice(chargeInformationOperationDto, _zonedDateTimeService)
-                : CreateRulesForChargeInformation(chargeInformationOperationDto));
+            switch (document.BusinessReasonCode)
+            {
+                case BusinessReasonCode.UpdateChargeInformation:
+                    rules.AddRange(CreateRulesForChargeInformation(chargeInformationOperationDto));
+                    break;
+                case BusinessReasonCode.UpdateChargePrices:
+                    rules.AddRange(CreateRulesForChargePrice(chargeInformationOperationDto));
+                    break;
+                case BusinessReasonCode.Unknown:
+                case BusinessReasonCode.UpdateMasterDataSettlement:
+                default:
+                    throw new ArgumentOutOfRangeException($"Could not create input validation rules for business reason code: {document.BusinessReasonCode}");
+            }
 
             return rules;
         }
 
-        private static List<IValidationRuleContainer> CreateRulesForChargePrice(ChargeInformationOperationDto chargeInformationOperationDto, IZonedDateTimeService zonedDateTimeService)
+        private List<IValidationRuleContainer> CreateRulesForChargePrice(ChargeInformationOperationDto chargeInformationOperationDto)
         {
             return new List<IValidationRuleContainer>
             {
@@ -71,7 +84,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
                 CreateRuleContainer(new ChargeTypeTariffPriceCountRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
                 CreateRuleContainer(new MaximumPriceRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
                 CreateRuleContainer(new NumberOfPointsMatchTimeIntervalAndResolutionRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
-                CreateRuleContainer(new PriceListMustStartAndStopAtMidnightValidationRule(zonedDateTimeService, chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
+                CreateRuleContainer(new PriceListMustStartAndStopAtMidnightValidationRule(_zonedDateTimeService, chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
             };
         }
 

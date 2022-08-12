@@ -23,6 +23,7 @@ using GreenEnergyHub.Charges.Application.Charges.Services;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.TestCore;
@@ -61,7 +62,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             var receivedEvent = new ChargePriceCommandReceivedEvent(InstantHelper.GetTodayAtMidnightUtc(), chargeCommand);
             var validationResult = ValidationResult.CreateSuccess();
             inputValidator
-                .Setup(v => v.Validate(It.IsAny<ChargePriceOperationDto>())).Returns(validationResult);
+                .Setup(v => v.Validate(It.IsAny<ChargePriceOperationDto>(), It.IsAny<DocumentDto>())).Returns(validationResult);
             var points = new List<Point>
             {
                 new(1.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(0)),
@@ -116,7 +117,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         {
             // Arrange
             var validationResult = GetFailedValidationResult();
-            inputValidator.Setup(v => v.Validate(It.IsAny<ChargePriceOperationDto>())).Returns(validationResult);
+            inputValidator.Setup(v => v.Validate(It.IsAny<ChargePriceOperationDto>(), It.IsAny<DocumentDto>())).Returns(validationResult);
             var charge = chargeBuilder.Build();
             SetupChargeRepository(chargeRepository, charge);
             SetupMarketParticipantRepository(marketParticipantRepository, sender);
@@ -157,7 +158,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         {
             // Arrange
             var validationResult = ValidationResult.CreateSuccess();
-            inputValidator.Setup(v => v.Validate(It.IsAny<ChargePriceOperationDto>())).Returns(validationResult);
+            inputValidator.Setup(v => v.Validate(It.IsAny<ChargePriceOperationDto>(), It.IsAny<DocumentDto>())).Returns(validationResult);
             var points = new List<Point>();
             var price = 99.00M;
             for (var i = 0; i <= 23; i++)
@@ -200,7 +201,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                 .ReturnsAsync(charge);
             SetupMarketParticipantRepository(marketParticipantRepository, sender);
             inputValidator.Setup(v =>
-                v.Validate(It.IsAny<ChargePriceOperationDto>())).Returns(ValidationResult.CreateSuccess());
+                v.Validate(It.IsAny<ChargePriceOperationDto>(), It.IsAny<DocumentDto>())).Returns(ValidationResult.CreateSuccess());
             var rejectedRules = new List<IValidationRuleContainer>();
             chargePriceRejectionService
                 .Setup(s => s.SaveRejectionsAsync(

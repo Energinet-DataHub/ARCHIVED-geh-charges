@@ -12,26 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using System.Linq;
-using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
-
 namespace GreenEnergyHub.Charges.Domain.Dtos.Validation.DocumentValidation.ValidationRules
 {
-    public class SenderMustMatchChargeOwnersRule : IValidationRule
+    public class ChargeOwnerMustMatchSenderRule : IValidationRule
     {
-        private readonly DocumentDto _documentDto;
-        private readonly IEnumerable<string> _chargeOwners;
+        private readonly string _sender;
+        private readonly string _chargeOwner;
 
-        public SenderMustMatchChargeOwnersRule(DocumentDto documentDto, IEnumerable<string> chargeOwners)
+        public ChargeOwnerMustMatchSenderRule(string sender, string chargeOwner)
         {
-            _documentDto = documentDto;
-            _chargeOwners = chargeOwners;
+            _sender = sender;
+            _chargeOwner = chargeOwner;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
-            ValidationRuleIdentifier.SenderMustMatchChargeOwners;
+            ValidationRuleIdentifier.ChargeOwnerMustMatchSender;
 
-        public bool IsValid => _chargeOwners.All(chargeOwner => chargeOwner == _documentDto.Sender.MarketParticipantId);
+        public bool IsValid => _chargeOwner == _sender;
     }
 }

@@ -15,6 +15,7 @@
 using System.Collections.Generic;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using Moq;
 using Xunit;
@@ -28,6 +29,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         [Theory]
         [InlineAutoData]
         public void Validate_WhenValidatingChargeCommand_ReturnsChargeCommandValidationResult(
+            DocumentDto document,
             Mock<IInputValidationRulesFactory<ChargeInformationOperationDto>> chargeOperationInputValidationRulesFactory,
             ChargeInformationOperationDto chargeInformationOperationDto)
         {
@@ -38,12 +40,14 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             var invalidRules = new List<IValidationRuleContainer> { invalidRule };
             var invalidRuleSet = ValidationRuleSet.FromRules(invalidRules);
             chargeOperationInputValidationRulesFactory
-                .Setup(c => c.CreateRules(It.IsAny<ChargeInformationOperationDto>()))
+                .Setup(c => c.CreateRules(
+                    It.IsAny<ChargeInformationOperationDto>(),
+                    document))
                 .Returns(invalidRuleSet);
             var sut = new InputValidator<ChargeInformationOperationDto>(chargeOperationInputValidationRulesFactory.Object);
 
             // Act
-            var result = sut.Validate(chargeInformationOperationDto);
+            var result = sut.Validate(chargeInformationOperationDto, document);
 
             // Assert
             Assert.IsType<ValidationResult>(result);

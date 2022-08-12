@@ -227,21 +227,21 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 
         private static ChargeCommandReceivedEvent CreateInvalidOperationBundle()
         {
-            var validChargeOperationDto = new ChargeOperationDtoBuilder()
+            var validChargeOperationDto = new ChargeInformationOperationDtoBuilder()
                 .WithDescription("valid")
                 .WithPointsInterval(
                     InstantHelper.GetYesterdayAtMidnightUtc(),
                     InstantHelper.GetTodayAtMidnightUtc())
                 .WithPointWithXNumberOfPrices(24)
                 .Build();
-            var invalidChargeOperationDto = new ChargeOperationDtoBuilder()
+            var invalidChargeOperationDto = new ChargeInformationOperationDtoBuilder()
                 .WithDescription("invalid")
                 .WithPointsInterval(
                     InstantHelper.GetTodayPlusDaysAtMidnightUtc(1),
                     InstantHelper.GetTodayPlusDaysAtMidnightUtc(2))
                 .WithPointWithXNumberOfPrices(24)
                 .Build();
-            var failedChargeOperationDto = new ChargeOperationDtoBuilder()
+            var failedChargeOperationDto = new ChargeInformationOperationDtoBuilder()
                 .WithDescription("failed")
                 .WithPointsInterval(
                     InstantHelper.GetYesterdayAtMidnightUtc(),
@@ -268,10 +268,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             Mock<IDocumentValidator> documentValidator,
             Mock<IInputValidator<ChargeInformationOperationDto>> inputValidator)
         {
-            inputValidator.Setup(v =>
-                v.Validate(It.IsAny<ChargeInformationOperationDto>())).Returns(ValidationResult.CreateSuccess());
-            documentValidator.Setup(v =>
-                v.ValidateAsync(It.IsAny<ChargeInformationCommand>())).ReturnsAsync(ValidationResult.CreateSuccess());
+            inputValidator
+                .Setup(v => v.Validate(
+                    It.IsAny<ChargeInformationOperationDto>(),
+                    It.IsAny<DocumentDto>()))
+                .Returns(ValidationResult.CreateSuccess());
+            documentValidator
+                .Setup(v => v.ValidateAsync(It.IsAny<ChargeInformationCommand>()))
+                .ReturnsAsync(ValidationResult.CreateSuccess());
         }
 
         private static void SetupMarketParticipantRepository(
@@ -279,14 +283,18 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             TestMarketParticipant marketParticipant)
         {
             marketParticipantRepository
-                .Setup(r => r.GetSystemOperatorOrGridAccessProviderAsync(It.IsAny<string>()))
+                .Setup(r => r.GetSystemOperatorOrGridAccessProviderAsync(
+                    It.IsAny<string>()))
                 .ReturnsAsync(marketParticipant);
         }
 
         private static void SetupChargeIdentifierFactoryMock(Mock<IChargeIdentifierFactory> chargeIdentifierFactory)
         {
             chargeIdentifierFactory
-                .Setup(x => x.CreateAsync(It.IsAny<string>(), It.IsAny<ChargeType>(), It.IsAny<string>()))
+                .Setup(x => x.CreateAsync(
+                    It.IsAny<string>(),
+                    It.IsAny<ChargeType>(),
+                    It.IsAny<string>()))
                 .ReturnsAsync(It.IsAny<ChargeIdentifier>());
         }
 
@@ -304,8 +312,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             Mock<IBusinessValidator<ChargeInformationOperationDto>> businessValidator,
             ValidationResult validationResult)
         {
-            inputValidator.Setup(v => v.Validate(It.IsAny<ChargeInformationOperationDto>())).Returns(validationResult);
-            businessValidator.Setup(v => v.ValidateAsync(It.IsAny<ChargeInformationOperationDto>()))
+            inputValidator
+                .Setup(v => v.Validate(
+                    It.IsAny<ChargeInformationOperationDto>(),
+                    It.IsAny<DocumentDto>()))
+                .Returns(validationResult);
+            businessValidator
+                .Setup(v => v.ValidateAsync(
+                    It.IsAny<ChargeInformationOperationDto>()))
                 .Returns(Task.FromResult(validationResult));
         }
 
@@ -331,7 +345,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             var startDate = points.Min(x => x.Time);
             var endDate = points.Max(x => x.Time) + Duration.FromHours(1);
 
-            var operation = new ChargeOperationDtoBuilder()
+            var operation = new ChargeInformationOperationDtoBuilder()
                 .WithPointsInterval(startDate, endDate)
                 .WithPoints(points)
                 .Build();

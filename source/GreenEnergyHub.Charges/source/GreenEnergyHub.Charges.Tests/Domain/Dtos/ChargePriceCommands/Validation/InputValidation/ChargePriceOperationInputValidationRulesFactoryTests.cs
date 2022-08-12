@@ -19,7 +19,9 @@ using System.Reflection;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.Factories;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation.DocumentValidation.ValidationRules;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.MessageHub.Models.Shared;
 using GreenEnergyHub.Charges.TestCore.Attributes;
@@ -35,14 +37,16 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
         [Theory]
         [InlineAutoMoqData]
         public void CreateRules_WhenOperationContainsPoints_ShouldContainRules(
+            DocumentDtoBuilder documentDtoBuilder,
             ChargePriceOperationInputValidationRulesFactory sut)
         {
             // Arrange
+            var document = documentDtoBuilder.WithBusinessReasonCode(BusinessReasonCode.UpdateChargePrices).Build();
             var chargeOperationDto = new ChargePriceOperationDtoBuilder().WithPoint(1.00m).Build();
             var expectedRulesTypes = GetExpectedRulesForChargePriceOperation().ToList();
 
             // Act
-            var actualRuleTypes = sut.CreateRules(chargeOperationDto)
+            var actualRuleTypes = sut.CreateRules(chargeOperationDto, document)
                 .GetRules().Select(r => r.ValidationRule.GetType()).ToList();
 
             // Assert
@@ -52,15 +56,17 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
         [Theory]
         [InlineAutoMoqData]
         public void CreateRules_WhenOperationContainsNoPoints_ShouldContainRules(
+            DocumentDtoBuilder documentDtoBuilder,
             ChargePriceOperationInputValidationRulesFactory sut)
         {
             // Arrange
+            var document = documentDtoBuilder.WithBusinessReasonCode(BusinessReasonCode.UpdateChargePrices).Build();
             var chargeOperationDto = new ChargePriceOperationDtoBuilder().Build();
             var expectedRulesTypes = GetExpectedRulesForChargePriceOperation()
                 .OrderBy(r => r.FullName);
 
             // Act
-            var actualRuleTypes = sut.CreateRules(chargeOperationDto).GetRules()
+            var actualRuleTypes = sut.CreateRules(chargeOperationDto, document).GetRules()
                 .Select(r => r.ValidationRule.GetType())
                 .OrderBy(r => r.FullName)
                 .ToList();
@@ -75,7 +81,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
             ChargePriceOperationInputValidationRulesFactory sut)
         {
             // Act & Assert
-            Assert.Throws<ArgumentNullException>(() => sut.CreateRules(null!));
+            Assert.Throws<ArgumentNullException>(() => sut.CreateRules(null!, null!));
         }
 
         [Theory]
@@ -84,13 +90,15 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
         public void CreateRulesForChargeCommand_AllRulesThatNeedTriggeredByForErrorMessage_MustImplementIValidationRuleWithExtendedData(
             CimValidationErrorTextToken cimValidationErrorTextToken,
             ChargePriceOperationInputValidationRulesFactory sut,
+            DocumentDtoBuilder documentDtoBuilder,
             ChargePriceOperationDtoBuilder chargeOperationDtoBuilder)
         {
             // Arrange
+            var document = documentDtoBuilder.WithBusinessReasonCode(BusinessReasonCode.UpdateChargePrices).Build();
             var chargeOperationDto = chargeOperationDtoBuilder.Build();
 
             // Act
-            var validationRules = sut.CreateRules(chargeOperationDto).GetRules();
+            var validationRules = sut.CreateRules(chargeOperationDto, document).GetRules();
 
             // Assert
             AssertAllRulesThatNeedTriggeredByForErrorMessageImplementsIValidationRuleWithExtendedData(
@@ -102,6 +110,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
             return new List<Type>
             {
                 typeof(MaximumPriceRule),
+                typeof(ChargeOwnerMustMatchSenderRule),
             };
         }
 

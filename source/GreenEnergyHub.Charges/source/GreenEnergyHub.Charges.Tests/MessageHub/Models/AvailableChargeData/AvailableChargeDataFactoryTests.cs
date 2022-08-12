@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
             AvailableChargeDataFactory sut)
         {
             // Arrange
-            var chargeOperationDto = new ChargeOperationDtoBuilder()
+            var chargeOperationDto = new ChargeInformationOperationDtoBuilder()
                 .WithPoint(1)
                 .WithTaxIndicator(TaxIndicator.Tax)
                 .WithTransparentInvoicing(TransparentInvoicing.Transparent)
@@ -123,7 +123,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
             marketParticipantRepository
                 .Setup(m => m.GetMeteringPointAdministratorAsync())
                 .ReturnsAsync(new MarketParticipantBuilder().Build());
-            var chargeOperationDto = new ChargeOperationDtoBuilder()
+            var chargeOperationDto = new ChargeInformationOperationDtoBuilder()
                 .WithPoint(1)
                 .WithTaxIndicator(taxIndicator)
                 .WithTransparentInvoicing(TransparentInvoicing.Transparent)
@@ -159,11 +159,11 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
                 .WithChargeOperations(
                     new List<ChargeInformationOperationDto>
                     {
-                        new ChargeOperationDtoBuilder().WithTaxIndicator(TaxIndicator.Tax)
+                        new ChargeInformationOperationDtoBuilder().WithTaxIndicator(TaxIndicator.Tax)
                             .WithTransparentInvoicing(TransparentInvoicing.Transparent).Build(),
-                        new ChargeOperationDtoBuilder().WithTaxIndicator(TaxIndicator.Tax)
+                        new ChargeInformationOperationDtoBuilder().WithTaxIndicator(TaxIndicator.Tax)
                             .WithTransparentInvoicing(TransparentInvoicing.Transparent).Build(),
-                        new ChargeOperationDtoBuilder().WithTaxIndicator(TaxIndicator.Tax)
+                        new ChargeInformationOperationDtoBuilder().WithTaxIndicator(TaxIndicator.Tax)
                             .WithTransparentInvoicing(TransparentInvoicing.Transparent).Build(),
                     })
                 .Build();

@@ -40,7 +40,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation.DocumentValidation.Facto
 
             var chargeOwners = command.Operations.Select(o => o.ChargeOwner);
             var rules = await GetRulesForDocumentAsync(document).ConfigureAwait(false);
-            rules.Add(new DocumentValidationRuleContainer(new SenderMustMatchChargeOwnersRule(document, chargeOwners)));
 
             return ValidationRuleSet.FromRules(rules);
         }

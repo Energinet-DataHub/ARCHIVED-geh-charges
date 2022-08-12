@@ -37,8 +37,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         public const string SenderIsMandatoryTypeValidationErrorText =
             "Sender is missing for message {{DocumentId}}.";
 
-        [ErrorMessageFor(ValidationRuleIdentifier.SenderMustMatchChargeOwners)]
-        public const string SenderMustMatchChargeOwnersErrorText =
+        [ErrorMessageFor(ValidationRuleIdentifier.ChargeOwnerMustMatchSender)]
+        public const string ChargeOwnerMustMatchSenderErrorText =
             "The specified charge type owner {{ChargeOwner}} do not match sender {{DocumentSenderId}} and is therefore not authorized to change charge id {{DocumentSenderProvidedChargeId}} of type {{ChargeType}}";
 
         [ErrorMessageFor(ValidationRuleIdentifier.RecipientIsMandatoryTypeValidation)]

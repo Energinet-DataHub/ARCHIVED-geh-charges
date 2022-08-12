@@ -22,21 +22,19 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.DocumentValidation.ValidationRules
 {
     [UnitTest]
-    public class SenderMustMatchChargeOwnersRuleTests
+    public class ChargeOwnerMustMatchSenderRuleTests
     {
         [Theory]
-        [InlineData("senderId", "senderId", "senderId", true)]
-        [InlineData("senderId", "senderId", "invalidSenderId", false)]
-        public void GivenSenderMustMatchChargeOwnersRule_ThenSenderMustMatchChargeOwnersToBeValid(
+        [InlineData("senderId", "senderId", true)]
+        [InlineData("senderId", "ownerId", false)]
+        public void GivenChargeOwnerMustMatchSenderRule_ThenChargeOwnerMustMatchSenderToBeValid(
             string senderId,
-            string chargeOwnerOne,
-            string chargeOwnerTwo,
+            string chargeOwner,
             bool isValid)
         {
             var marketParticipant = new MarketParticipantDtoBuilder().WithId(senderId).Build();
             var document = new DocumentDtoBuilder().WithSender(marketParticipant).Build();
-            var owners = new[] { chargeOwnerOne, chargeOwnerTwo };
-            var sut = new SenderMustMatchChargeOwnersRule(document, owners);
+            var sut = new ChargeOwnerMustMatchSenderRule(document.Sender.MarketParticipantId, chargeOwner);
             sut.IsValid.Should().Be(isValid);
         }
 
@@ -44,8 +42,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.DocumentValidation.Validation
         public void ValidationRuleIdentifier_ShouldBe_EqualTo()
         {
             var document = new DocumentDtoBuilder().Build();
-            var sut = new SenderMustMatchChargeOwnersRule(document, new[] { "senderId", });
-            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.SenderMustMatchChargeOwners);
+            var sut = new ChargeOwnerMustMatchSenderRule(document.Sender.MarketParticipantId, "senderId");
+            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChargeOwnerMustMatchSender);
         }
     }
 }
