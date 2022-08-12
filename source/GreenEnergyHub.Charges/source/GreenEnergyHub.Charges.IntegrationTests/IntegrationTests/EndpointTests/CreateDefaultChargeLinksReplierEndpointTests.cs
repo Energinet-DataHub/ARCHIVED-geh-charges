@@ -58,7 +58,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
             public async Task When_ChargeLinksAcceptedEvent_Then_CreateLinkReply()
             {
                 // Arrange
-                await using var context = Fixture.DatabaseManager.CreateDbContext();
+                await using var context = Fixture.ChargesDatabaseManager.CreateDbContext();
                 var charge = await context.Charges.FirstAsync();
                 var marketParticipant = await context.MarketParticipants.SingleAsync(mp => mp.Id == charge.OwnerId);
                 var links = new List<ChargeLinkDto>

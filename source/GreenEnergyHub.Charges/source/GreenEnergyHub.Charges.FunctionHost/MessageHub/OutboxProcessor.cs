@@ -23,14 +23,14 @@ using Microsoft.Azure.Functions.Worker;
 
 namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
 {
-    public class OutboxProcessor
+    public class OutboxProcessorEndpoint
     {
-        private const string FunctionName = nameof(OutboxProcessor);
+        private const string FunctionName = nameof(OutboxProcessorEndpoint);
         private readonly IOutboxMessageRepository _outboxMessageRepository;
         private readonly IAvailableDataNotifier<AvailableChargeReceiptData, OperationsRejectedEvent> _availableDataNotifier;
         private readonly IJsonSerializer _jsonSerializer;
 
-        public OutboxProcessor(
+        public OutboxProcessorEndpoint(
             IOutboxMessageRepository outboxMessageRepository,
             IAvailableDataNotifier<AvailableChargeReceiptData, OperationsRejectedEvent> availableDataNotifier,
             IJsonSerializer jsonSerializer)

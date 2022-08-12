@@ -40,7 +40,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
         {
             AzuriteManager = new AzuriteManager();
             IntegrationTestConfiguration = new IntegrationTestConfiguration();
-            DatabaseManager = new ChargesDatabaseManager();
+            ChargesDatabaseManager = new ChargesDatabaseManager();
+            MessageHubDatabaseManager = new MessageHubDatabaseManager(ChargesDatabaseManager.ConnectionString);
             AuthorizationConfiguration = UseDefaultAuthorizationConfiguration();
             ServiceBusResourceProvider = new ServiceBusResourceProvider(
                 IntegrationTestConfiguration.ServiceBusConnectionString, TestLogger);
@@ -48,7 +49,9 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
 
         public string LocalTimeZoneName { get; } = "Europe/Copenhagen";
 
-        public ChargesDatabaseManager DatabaseManager { get; }
+        public ChargesDatabaseManager ChargesDatabaseManager { get; }
+
+        public MessageHubDatabaseManager MessageHubDatabaseManager { get; }
 
         [NotNull]
         public ServiceBusTestListener? ChargeCreatedListener { get; private set; }
@@ -255,16 +258,16 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             await SetUpRequestResponseLoggingAsync();
 
             // => Database
-            await DatabaseManager.CreateDatabaseAsync();
+            await ChargesDatabaseManager.CreateDatabaseAsync();
 
             // Overwrites the setting so the function app uses the database we have control of in the test
             Environment.SetEnvironmentVariable(
                 EnvironmentSettingNames.ChargeDbConnectionString,
-                DatabaseManager.ConnectionString);
+                ChargesDatabaseManager.ConnectionString);
 
             // Only market participant registry thing being tested is connectivity
             // - so for now we just cheat and provide another connection string
-            var marketParticipantRegistryConnectionString = DatabaseManager.ConnectionString;
+            var marketParticipantRegistryConnectionString = ChargesDatabaseManager.ConnectionString;
             Environment.SetEnvironmentVariable(
                 EnvironmentSettingNames.MarketParticipantRegistryDbConnectionString,
                 marketParticipantRegistryConnectionString);
@@ -294,7 +297,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             await ServiceBusResourceProvider.DisposeAsync();
 
             // => Database
-            await DatabaseManager.DeleteDatabaseAsync();
+            await ChargesDatabaseManager.DeleteDatabaseAsync();
         }
 
         private static AuthorizationConfiguration UseDefaultAuthorizationConfiguration()

@@ -12,17 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using System.Linq;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Application.Charges.Events;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
-using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Outbox;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
-using GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.Json;
 using GreenEnergyHub.TestHelpers;
 using NodaTime;
@@ -40,20 +33,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Outbox
             JsonSerializer jsonSerializer,
             IClock clock,
             ICorrelationContext context,
-            ChargePriceOperationDtoBuilder builder)
+            OperationsRejectedEventBuilder operationBuilder)
         {
-            var operationList = new List<ChargePriceOperationDto> { builder.Build() };
-            var rejectionRulesList = new List<IValidationRuleContainer>
-            {
-                new OperationValidationRuleContainer(
-                    new TestValidationRule(false, ValidationRuleIdentifier.MaximumPrice),
-                    operationList.First().Id),
-            };
-            var rejectedEvent = new OperationsRejectedEvent(
-                operationList,
-                "1337",
-                MarketParticipantRole.GridAccessProvider,
-                rejectionRulesList);
+            var rejectedEvent = operationBuilder.Build();
 
             var factory = new OutboxMessageFactory(jsonSerializer, clock, context);
 

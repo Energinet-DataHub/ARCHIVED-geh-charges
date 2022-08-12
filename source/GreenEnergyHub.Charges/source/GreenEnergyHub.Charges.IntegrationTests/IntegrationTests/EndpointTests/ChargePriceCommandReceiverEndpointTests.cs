@@ -79,7 +79,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     Fixture.HostManager, nameof(ChargePriceCommandReceiverEndpoint));
 
                 // Assert
-                await using var context = Fixture.DatabaseManager.CreateDbContext();
+                await using var context = Fixture.ChargesDatabaseManager.CreateDbContext();
                 var actualOutboxMessage = context.OutboxMessages.Single(x => x.CorrelationTraceContext.Contains($"{correlationId}"));
                 actualOutboxMessage.Type.Should().Be(OperationsRejectedEventType);
             }

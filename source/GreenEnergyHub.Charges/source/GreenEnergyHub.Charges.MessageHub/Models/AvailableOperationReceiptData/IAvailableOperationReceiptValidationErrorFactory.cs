@@ -12,24 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 
-namespace GreenEnergyHub.Charges.Application.Charges.Events
+namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableOperationReceiptData
 {
-    public class OperationsRejectedEvent
+    public interface IAvailableOperationReceiptValidationErrorFactory
     {
-        public OperationsRejectedEvent(
+        AvailableReceiptValidationError Create(
+            ValidationError validationError,
             ChargePriceCommand command,
-            IEnumerable<ValidationError> validationErrors)
-        {
-            Command = command;
-            ValidationErrors = validationErrors;
-        }
-
-        public ChargePriceCommand Command { get; }
-
-        public IEnumerable<ValidationError> ValidationErrors { get; }
+            ChargePriceOperationDto chargePriceOperationDto);
     }
 }

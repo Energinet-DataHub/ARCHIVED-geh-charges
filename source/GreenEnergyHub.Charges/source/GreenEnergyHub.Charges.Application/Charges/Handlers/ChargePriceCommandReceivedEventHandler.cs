@@ -55,12 +55,12 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             ChargePriceCommandReceivedEvent commandReceivedEvent,
             List<IValidationRuleContainer> rejectionRules)
         {
-            var sender = commandReceivedEvent.Command.Document.Sender;
+            var validationResult = ValidationResult.CreateFailure(rejectionRules);
+
             var rejectEvent = new OperationsRejectedEvent(
-                commandReceivedEvent.Command.Operations,
-                sender.MarketParticipantId,
-                sender.BusinessProcessRole,
-                rejectionRules);
+                commandReceivedEvent.Command,
+                validationResult.InvalidRules.Select(ValidationErrorFactory.Create()));
+
             _chargePriceRejectionService.SaveRejections(rejectEvent);
         }
     }

@@ -18,26 +18,27 @@ using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Application.Messaging;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
+using GreenEnergyHub.Charges.MessageHub.Models.Shared;
 using Microsoft.Extensions.Logging;
 
-namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
+namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableOperationReceiptData
 {
     public class AvailableOperationRejectionsFactory :
-        AvailableDataFactoryBase<AvailableChargeReceiptData, OperationsRejectedEvent>
+        AvailableDataFactoryBase<AvailableChargeReceiptData.AvailableChargeReceiptData, OperationsRejectedEvent>
     {
         private readonly IMessageMetaDataContext _messageMetaDataContext;
-        private readonly IAvailableChargeReceiptValidationErrorFactory _availableChargeReceiptValidationErrorFactory;
+        private readonly IAvailableOperationReceiptValidationErrorFactory _availableChargeReceiptValidationErrorFactory;
         private readonly ILogger _logger;
 
         public AvailableOperationRejectionsFactory(
             IMessageMetaDataContext messageMetaDataContext,
-            IAvailableChargeReceiptValidationErrorFactory availableChargeReceiptValidationErrorFactory,
+            IAvailableOperationReceiptValidationErrorFactory availableChargeReceiptValidationErrorFactory,
             IMarketParticipantRepository marketParticipantRepository,
             ILoggerFactory loggerFactory)
             : base(marketParticipantRepository)
@@ -47,7 +48,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             _logger = loggerFactory.CreateLogger(nameof(AvailableChargeRejectionDataFactory));
         }
 
-        public override async Task<IReadOnlyList<AvailableChargeReceiptData>> CreateAsync(OperationsRejectedEvent input)
+        public override async Task<IReadOnlyList<AvailableChargeReceiptData.AvailableChargeReceiptData>> CreateAsync(OperationsRejectedEvent input)
         {
             LogValidationErrors(input);
 
@@ -57,7 +58,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 
             var operationOrder = 0;
 
-            return input.RejectedOperations.Select(chargeOperationDto => new AvailableChargeReceiptData(
+            return input.Command.Operations.Select(operationDto => new AvailableChargeReceiptData.AvailableChargeReceiptData(
                     sender.MarketParticipantId,
                     sender.BusinessProcessRole,
                     recipient.MarketParticipantId,
@@ -66,32 +67,31 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                     _messageMetaDataContext.RequestDataTime,
                     Guid.NewGuid(), // ID of each available piece of data must be unique
                     ReceiptStatus.Rejected,
-                    chargeOperationDto.Id[..Math.Min(chargeOperationDto.Id.Length, 100)],
+                    operationDto.Id[..Math.Min(operationDto.Id.Length, 100)],
                     DocumentType.RejectRequestChangeOfPriceList, // Will be added to the HTTP MessageType header
                     operationOrder++,
                     recipient.ActorId,
-                    GetReasons(input, chargeOperationDto)))
+                    GetReasons(input, operationDto)))
                 .ToList();
         }
 
         private void LogValidationErrors(OperationsRejectedEvent rejectedEvent)
         {
-            // var errorMessage = ValidationErrorLogMessageBuilder.BuildErrorMessage(
-            //     rejectedEvent.Command.Document,
-            //     rejectedEvent.ValidationErrors);
-            //
-            // _logger.LogError("ValidationErrors for {ErrorMessage}", errorMessage);
+            var errorMessage = ValidationErrorLogMessageBuilder.BuildErrorMessage(
+                rejectedEvent.Command.Document,
+                rejectedEvent.ValidationErrors);
+            _logger.LogError("ValidationErrors for {ErrorMessage}", errorMessage);
         }
 
         private List<AvailableReceiptValidationError> GetReasons(
-            ChargeCommandRejectedEvent input,
-            ChargeOperationDto chargeOperationDto)
+            OperationsRejectedEvent input,
+            ChargePriceOperationDto operationDto)
         {
             return input
                 .ValidationErrors
-                .Where(ve => ve.OperationId == chargeOperationDto.Id || string.IsNullOrWhiteSpace(ve.OperationId))
+                .Where(ve => ve.OperationId == operationDto.Id || string.IsNullOrWhiteSpace(ve.OperationId))
                 .Select(validationError => _availableChargeReceiptValidationErrorFactory
-                    .Create(validationError, input.Command, chargeOperationDto))
+                    .Create(validationError, input.Command, operationDto))
                 .ToList();
         }
     }

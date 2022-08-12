@@ -18,7 +18,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Application.Charges.Services;
-using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Charges.Exceptions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.BusinessValidation.ValidationRules;
@@ -126,13 +125,13 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             List<IValidationRuleContainer> rejectionRules)
         {
             if (!operationsToBeRejected.Any()) return;
+            var chargePriceCommand = new ChargePriceCommand(commandReceivedEvent.Command.Document, operationsToBeRejected);
+            var validationResult = ValidationResult.CreateFailure(rejectionRules);
 
-            var sender = commandReceivedEvent.Command.Document.Sender;
             var rejectEvent = new OperationsRejectedEvent(
-                operationsToBeRejected,
-                sender.MarketParticipantId,
-                sender.BusinessProcessRole,
-                rejectionRules);
+                chargePriceCommand,
+                validationResult.InvalidRules.Select(ValidationErrorFactory.Create()));
+
             _chargePriceRejectionService.SaveRejections(rejectEvent);
         }
 
