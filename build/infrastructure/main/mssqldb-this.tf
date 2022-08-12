@@ -27,7 +27,7 @@ module "mssqldb_charges" {
   log_analytics_workspace_id  = data.azurerm_key_vault_secret.log_shared_id.value
   sql_server_name             = data.azurerm_mssql_server.mssqlsrv.name
   developer_ad_group_name     = "SEC-A-GreenForce-DevelopmentTeamAzure"
-  hosts                       = [
+  applicationHosts            = [
     module.func_functionhost.name, 
     module.app_webapi.name
   ]
