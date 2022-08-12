@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.JsonSerialization;
 using GreenEnergyHub.Charges.Application.Messaging;
-using GreenEnergyHub.Json;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Middleware;
 
@@ -48,7 +49,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData
 
             if (session != null)
             {
-                var sessionData = _jsonSerializer.Deserialize<Dictionary<string, object>>(session.ToString());
+                var sessionData = _jsonSerializer.Deserialize<Dictionary<string, object>>(session.ToString() ??
+                    throw new InvalidOperationException("session as string is null"));
                 return sessionData["SessionId"].ToString()!;
             }
 
@@ -61,7 +63,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData
 
             if (metadata != null)
             {
-                var eventMetadata = _jsonSerializer.Deserialize<MessageMetadata>(metadata.ToString());
+                var eventMetadata = _jsonSerializer.Deserialize<MessageMetadata>(metadata.ToString() ??
+                                    throw new InvalidOperationException("metadata as string is null"));
                 return eventMetadata;
             }
 
