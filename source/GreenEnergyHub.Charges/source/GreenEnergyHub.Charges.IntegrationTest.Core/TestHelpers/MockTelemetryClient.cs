@@ -59,12 +59,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
         private static TelemetryClient Create()
         {
             var mockTelemetryChannel = new MockTelemetryChannel();
-            var mockTelemetryConfig = new TelemetryConfiguration
-            {
-                TelemetryChannel = mockTelemetryChannel,
-                InstrumentationKey = Guid.NewGuid().ToString(),
-            };
-
+            var mockTelemetryConfig = new TelemetryConfiguration { TelemetryChannel = mockTelemetryChannel };
             var mockTelemetryClient = new TelemetryClient(mockTelemetryConfig);
             return mockTelemetryClient;
         }
