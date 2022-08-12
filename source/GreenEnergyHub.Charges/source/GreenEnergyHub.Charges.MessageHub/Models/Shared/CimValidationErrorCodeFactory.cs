@@ -69,7 +69,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.Shared
                 ValidationRuleIdentifier.TaxIndicatorMustBeFalseForFee => ReasonCode.D14,
                 ValidationRuleIdentifier.TaxIndicatorMustBeFalseForSubscription => ReasonCode.D14,
                 ValidationRuleIdentifier.ChargeOperationIdLengthValidation => ReasonCode.E86,
-                ValidationRuleIdentifier.SenderMustMatchChargeOwners => ReasonCode.E99, // TODO: Find correct reason code
+                ValidationRuleIdentifier.SenderMustMatchChargeOwners => ReasonCode.E0I,
                 _ => throw new NotImplementedException(),
             };
         }

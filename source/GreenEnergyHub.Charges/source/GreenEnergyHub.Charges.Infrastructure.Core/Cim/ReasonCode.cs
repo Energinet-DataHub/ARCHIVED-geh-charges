@@ -111,6 +111,5 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim
         E91 = 191,
         E97 = 197,
         E98 = 198,
-        E99 = 999, // TODO: Find correct reason code
     }
 }
