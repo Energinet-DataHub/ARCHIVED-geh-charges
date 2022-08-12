@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
@@ -22,7 +22,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Events
     public class OperationsRejectedEvent
     {
         public OperationsRejectedEvent(
-            IReadOnlyCollection<OperationBase> rejectedOperations,
+            IReadOnlyCollection<ChargePriceOperationDto> rejectedOperations,
             string marketParticipantId,
             MarketParticipantRole businessProcessRole,
             List<IValidationRuleContainer> rejectionRules)
@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Events
             RejectionRules = rejectionRules;
         }
 
-        public IReadOnlyCollection<OperationBase> RejectedOperations { get; }
+        public IReadOnlyCollection<ChargePriceOperationDto> RejectedOperations { get; }
 
         public string MarketParticipantId { get; }
 
