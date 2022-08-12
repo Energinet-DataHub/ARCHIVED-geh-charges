@@ -109,7 +109,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Function
         private static ICorrelationContext CreateCorrelationContext()
         {
             var correlationContext = new CorrelationContext();
-            correlationContext.SetParentId("parentId");
             correlationContext.SetId("id");
             return correlationContext;
         }

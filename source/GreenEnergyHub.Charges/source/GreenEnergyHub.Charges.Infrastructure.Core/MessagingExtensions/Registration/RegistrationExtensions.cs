@@ -16,7 +16,6 @@ using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using Energinet.DataHub.Core.Messaging.Transport;
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
-using GreenEnergyHub.Json;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration
@@ -28,7 +27,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registr
             services.AddScoped<ICorrelationContext, CorrelationContext>();
             services.AddScoped<IMessageMetaDataContext, MessageMetaDataContext>();
             services.AddScoped<MessageExtractor>();
-            services.AddSingleton<IJsonSerializer, JsonSerializer>();
             return new MessagingRegistrator(services);
         }
 
