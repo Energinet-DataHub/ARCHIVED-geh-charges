@@ -27,6 +27,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Outbox
     [UnitTest]
     public class OutboxMessageFactoryTests
     {
+        private const string OperationsRejectedEventType = "GreenEnergyHub.Charges.Application.Charges.Events.OperationsRejectedEvent";
+
         [Theory]
         [AutoDomainData]
         public void WhenOperationsRejectedEvent_ReturnsOutboxMessage_WithSerializedData(
@@ -35,13 +37,20 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Outbox
             ICorrelationContext context,
             OperationsRejectedEventBuilder operationBuilder)
         {
+            // Arrange
             var rejectedEvent = operationBuilder.Build();
-
             var factory = new OutboxMessageFactory(jsonSerializer, clock, context);
 
+            // Act
             var message = factory.CreateFrom(rejectedEvent);
 
-            message.Should().NotBeNull();
+            // Assert
+            message.Id.Should().NotBeEmpty();
+            message.Type.Should().Be(OperationsRejectedEventType);
+            message.Data.Should().NotBeNullOrEmpty();
+            message.CorrelationTraceContext.Should().Be(context.AsTraceContext());
+            message.CreationDate.Should().NotBeNull();
+            message.ProcessedDate.Should().BeNull();
         }
     }
 }
