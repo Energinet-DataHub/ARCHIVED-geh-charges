@@ -14,7 +14,7 @@
 
 using System;
 using Azure.Messaging.ServiceBus;
-using Energinet.DataHub.Core.App.FunctionApp.FunctionTelemetryScope;
+using Energinet.DataHub.Core.App.FunctionApp.Middleware;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using Energinet.DataHub.Core.JsonSerialization;
 using Energinet.DataHub.Core.Logging.RequestResponseMiddleware.Storage;
