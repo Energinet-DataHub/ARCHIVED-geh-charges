@@ -50,7 +50,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
                 .Build();
 
             // Act (implicit)
-            var sut = new StartDateValidationRule(chargeOperationDto.StartDateTime, zonedDateTimeService, clock);
+            var sut = new StartDateValidationRule(chargeOperationDto.StartDate, zonedDateTimeService, clock);
 
             // Assert
             sut.IsValid.Should().Be(expected);
@@ -65,7 +65,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             var zonedDateTimeService = new ZonedDateTimeService(clock, new Iso8601ConversionConfiguration("Europe/Copenhagen"));
 
             // Act (implicit)
-            var sut = new StartDateValidationRule(chargeOperationDto.StartDateTime, zonedDateTimeService, clock);
+            var sut = new StartDateValidationRule(chargeOperationDto.StartDate, zonedDateTimeService, clock);
 
             // Assert
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.StartDateValidation);

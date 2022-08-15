@@ -40,8 +40,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCreatedEvents
         private static ChargeLinkPeriod ChargeLinkPeriod(ChargeLinkDto chargeLinkDto)
         {
             return new ChargeLinkPeriod(
-                chargeLinkDto.StartDateTime,
-                chargeLinkDto.EndDateTime.TimeOrEndDefault(),
+                chargeLinkDto.StartDate,
+                chargeLinkDto.EndDate.TimeOrEndDefault(),
                 chargeLinkDto.Factor);
         }
     }

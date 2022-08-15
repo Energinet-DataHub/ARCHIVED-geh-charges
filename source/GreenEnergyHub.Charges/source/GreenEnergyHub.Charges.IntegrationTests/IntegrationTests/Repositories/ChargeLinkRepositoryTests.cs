@@ -107,8 +107,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             return new ChargeLink(
                 ids.ChargeId,
                 ids.MeteringPointId,
-                chargeLink.StartDateTime,
-                chargeLink.EndDateTime,
+                chargeLink.StartDate,
+                chargeLink.EndDate,
                 chargeLink.Factor);
         }
 

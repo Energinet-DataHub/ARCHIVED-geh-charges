@@ -13,17 +13,26 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.Charges;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.Messages.Command
 {
     public abstract class OperationBase
     {
-        protected OperationBase(string operationId, ChargeType chargeType, string senderProvidedChargeId, string chargeOwner)
+        protected OperationBase(
+            string operationId,
+            ChargeType chargeType,
+            string senderProvidedChargeId,
+            string chargeOwner,
+            Instant startDate,
+            Instant? endDate)
         {
             OperationId = operationId;
             ChargeType = chargeType;
             SenderProvidedChargeId = senderProvidedChargeId;
             ChargeOwner = chargeOwner;
+            StartDate = startDate;
+            EndDate = endDate;
         }
 
         /// <summary>
@@ -46,5 +55,15 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Messages.Command
         /// Example: EA-001
         /// </summary>
         public string SenderProvidedChargeId { get; }
+
+        /// <summary>
+        /// Valid from, of a charge operation. Also known as Effective Date.
+        /// </summary>
+        public Instant StartDate { get; }
+
+        /// <summary>
+        /// Valid to, of a charge operation. Also known as Termination Date.
+        /// </summary>
+        public Instant? EndDate { get; }
     }
 }

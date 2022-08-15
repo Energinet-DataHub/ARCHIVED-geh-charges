@@ -36,6 +36,14 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.Inpu
             var rules = new List<IValidationRuleContainer>
             {
                 CreateRuleContainer(new MaximumPriceRule(chargePriceOperationDto), chargePriceOperationDto.OperationId),
+                CreateRuleContainer(new ChargeIdLengthValidationRule(chargePriceOperationDto), chargePriceOperationDto.OperationId),
+                CreateRuleContainer(new ChargeIdRequiredValidationRule(chargePriceOperationDto), chargePriceOperationDto.OperationId),
+                CreateRuleContainer(new ChargeOperationIdRequiredRule(chargePriceOperationDto), chargePriceOperationDto.OperationId),
+                CreateRuleContainer(new ChargeOperationIdLengthValidationRule(chargePriceOperationDto), chargePriceOperationDto.OperationId),
+                CreateRuleContainer(new ChargeOwnerIsRequiredValidationRule(chargePriceOperationDto), chargePriceOperationDto.OperationId),
+                CreateRuleContainer(new ChargeTypeIsKnownValidationRule(chargePriceOperationDto), chargePriceOperationDto.OperationId),
+                CreateRuleContainer(new StartDateTimeRequiredValidationRule(chargePriceOperationDto), chargePriceOperationDto.OperationId),
+                CreateRuleContainer(new ChargeOwnerTextLengthRule(chargePriceOperationDto), chargePriceOperationDto.OperationId),
                 CreateRuleContainer(new ChargeOwnerMustMatchSenderRule(document.Sender.MarketParticipantId, chargePriceOperationDto.ChargeOwner), chargePriceOperationDto.OperationId),
             };
 

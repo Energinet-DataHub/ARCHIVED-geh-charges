@@ -40,12 +40,12 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands
                 TaxIndicator taxIndicator,
                 TransparentInvoicing transparentInvoicing,
                 VatClassification vatClassification,
-                Instant startDateTime,
-                Instant? endDateTime,
+                Instant startDate,
+                Instant? endDate,
                 Instant? pointsStartInterval,
                 Instant? pointsEndInterval,
                 List<Point> points)
-            : base(operationId, chargeType, senderProvidedChargeId, chargeOwner)
+            : base(operationId, chargeType, senderProvidedChargeId, chargeOwner, startDate, endDate)
         {
             Points = new List<Point>();
             ChargeName = chargeName;
@@ -55,8 +55,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands
             TaxIndicator = taxIndicator;
             TransparentInvoicing = transparentInvoicing;
             VatClassification = vatClassification;
-            StartDateTime = startDateTime;
-            EndDateTime = endDateTime;
             PointsStartInterval = pointsStartInterval;
             PointsEndInterval = pointsEndInterval;
             Points = points;
@@ -68,16 +66,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands
         public string ChargeName { get; }
 
         public string ChargeDescription { get; }
-
-        /// <summary>
-        /// Valid from, of a charge price list. Also known as Effective Date.
-        /// </summary>
-        public Instant StartDateTime { get; }
-
-        /// <summary>
-        /// Valid to, of a charge price list.
-        /// </summary>
-        public Instant? EndDateTime { get; }
 
         public VatClassification VatClassification { get; }
 

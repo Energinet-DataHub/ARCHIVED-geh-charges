@@ -13,23 +13,23 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.InputValidation.ValidationRules
+namespace GreenEnergyHub.Charges.Domain.Dtos.Validation.InputValidation
 {
     public class ChargeTypeIsKnownValidationRule : IValidationRule
     {
-        private readonly ChargeInformationOperationDto _chargeInformationOperationDto;
+        private readonly OperationBase _operation;
 
-        public ChargeTypeIsKnownValidationRule(ChargeInformationOperationDto chargeInformationOperationDto)
+        public ChargeTypeIsKnownValidationRule(OperationBase operation)
         {
-            _chargeInformationOperationDto = chargeInformationOperationDto;
+            _operation = operation;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.ChargeTypeIsKnownValidation;
 
-        public bool IsValid => _chargeInformationOperationDto.ChargeType
+        public bool IsValid => _operation.ChargeType
             is ChargeType.Fee or ChargeType.Subscription or ChargeType.Tariff;
     }
 }

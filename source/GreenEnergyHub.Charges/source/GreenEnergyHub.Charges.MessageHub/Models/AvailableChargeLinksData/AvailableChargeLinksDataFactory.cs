@@ -92,8 +92,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData
                 operation.ChargeType,
                 operation.MeteringPointId,
                 operation.Factor,
-                operation.StartDateTime,
-                operation.EndDateTime.GetValueOrDefault(),
+                operation.StartDate,
+                operation.EndDate.GetValueOrDefault(),
                 DocumentType.NotifyBillingMasterData, // Will be added to the HTTP MessageType header
                 operationOrder,
                 recipient.ActorId));

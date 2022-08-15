@@ -138,7 +138,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
 
             var sut = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
             var expected = CimValidationErrorTextTemplateMessages.StartDateValidationErrorText
-                .Replace("{{ChargeStartDateTime}}", chargeInformationOperationDto.StartDateTime.ToString());
+                .Replace("{{ChargeStartDateTime}}", chargeInformationOperationDto.StartDate.ToString());
 
             // Act
             var actual = sut.Create(validationError, chargeCommand, chargeInformationOperationDto);

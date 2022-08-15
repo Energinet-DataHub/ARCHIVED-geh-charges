@@ -80,8 +80,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinksDat
                 actual[i].ChargeType.Should().Be(expectedLinks[i].ChargeType);
                 actual[i].MeteringPointId.Should().Be(expectedLinks[i].MeteringPointId);
                 actual[i].Factor.Should().Be(expectedLinks[i].Factor);
-                actual[i].StartDateTime.Should().Be(expectedLinks[i].StartDateTime);
-                actual[i].EndDateTime.Should().Be(expectedLinks[i].EndDateTime.GetValueOrDefault());
+                actual[i].StartDateTime.Should().Be(expectedLinks[i].StartDate);
+                actual[i].EndDateTime.Should().Be(expectedLinks[i].EndDate.GetValueOrDefault());
             }
         }
 

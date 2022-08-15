@@ -25,8 +25,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
             _chargeInformationOperationDto = chargeInformationOperationDto;
         }
 
-        public bool IsValid => _chargeInformationOperationDto.EndDateTime is null ||
-                               _chargeInformationOperationDto.EndDateTime == _chargeInformationOperationDto.StartDateTime;
+        public bool IsValid => _chargeInformationOperationDto.EndDate is null ||
+                               _chargeInformationOperationDto.EndDate == _chargeInformationOperationDto.StartDate;
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.TerminationDateMustMatchEffectiveDate;

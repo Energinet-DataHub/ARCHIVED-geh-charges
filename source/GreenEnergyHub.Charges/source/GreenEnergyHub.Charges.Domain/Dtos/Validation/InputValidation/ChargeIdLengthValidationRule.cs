@@ -12,23 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.InputValidation.ValidationRules
+namespace GreenEnergyHub.Charges.Domain.Dtos.Validation.InputValidation
 {
     public class ChargeIdLengthValidationRule : IValidationRule
     {
         private const int MaxValidLength = 10;
 
-        private readonly ChargeInformationOperationDto _chargeInformationOperationDto;
+        private readonly OperationBase _operation;
 
-        public ChargeIdLengthValidationRule(ChargeInformationOperationDto chargeInformationOperationDto)
+        public ChargeIdLengthValidationRule(OperationBase operation)
         {
-            _chargeInformationOperationDto = chargeInformationOperationDto;
+            _operation = operation;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeIdLengthValidation;
 
-        public bool IsValid => _chargeInformationOperationDto.SenderProvidedChargeId?.Length <= MaxValidLength;
+        public bool IsValid => _operation.SenderProvidedChargeId?.Length <= MaxValidLength;
     }
 }

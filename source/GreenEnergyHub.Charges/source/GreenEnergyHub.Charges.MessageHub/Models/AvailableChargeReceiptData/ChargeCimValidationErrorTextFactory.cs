@@ -100,7 +100,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                 CimValidationErrorTextToken.ChargeResolution =>
                     chargeInformationOperationDto.Resolution.ToString(),
                 CimValidationErrorTextToken.ChargeStartDateTime =>
-                    chargeInformationOperationDto.StartDateTime.ToString(),
+                    chargeInformationOperationDto.StartDate.ToString(),
                 CimValidationErrorTextToken.ChargeTaxIndicator =>
                     chargeInformationOperationDto.TaxIndicator.ToString(),
                 CimValidationErrorTextToken.ChargeType =>

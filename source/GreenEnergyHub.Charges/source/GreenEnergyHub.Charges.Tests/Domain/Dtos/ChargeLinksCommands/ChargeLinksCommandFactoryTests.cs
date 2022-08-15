@@ -98,10 +98,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands
             actual.Document.Recipient.MarketParticipantId.Should().Be(recipient.MarketParticipantId);
             actual.Operations.First().SenderProvidedChargeId.Should().Be(charge.SenderProvidedChargeId);
             actual.Operations.First().ChargeType.Should().Be(charge.Type);
-            actual.Operations.First().EndDateTime.Should().Be(defaultChargeLink.EndDateTime);
+            actual.Operations.First().EndDate.Should().Be(defaultChargeLink.EndDateTime);
             actual.Operations.First().ChargeOwner.Should().Be(chargeOwner.MarketParticipantId);
             actual.Operations.First().MeteringPointId.Should().Be(meteringPoint.MeteringPointId);
-            actual.Operations.First().StartDateTime.Should().Be(defaultChargeLink.GetStartDateTime(meteringPoint.EffectiveDate));
+            actual.Operations.First().StartDate.Should().Be(defaultChargeLink.GetStartDateTime(meteringPoint.EffectiveDate));
             actual.Operations.First().Factor.Should().Be(1);
         }
     }

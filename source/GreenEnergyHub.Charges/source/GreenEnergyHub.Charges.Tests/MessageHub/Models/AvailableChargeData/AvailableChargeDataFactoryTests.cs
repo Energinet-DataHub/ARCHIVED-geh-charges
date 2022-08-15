@@ -87,8 +87,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
                 actual[i].ChargeType.Should().Be(operation.ChargeType);
                 actual[i].ChargeName.Should().Be(operation.ChargeName);
                 actual[i].ChargeDescription.Should().Be(operation.ChargeDescription);
-                actual[i].StartDateTime.Should().Be(operation.StartDateTime);
-                actual[i].EndDateTime.Should().Be(operation.EndDateTime.TimeOrEndDefault());
+                actual[i].StartDateTime.Should().Be(operation.StartDate);
+                actual[i].EndDateTime.Should().Be(operation.EndDate.TimeOrEndDefault());
                 actual[i].VatClassification.Should().Be(operation.VatClassification);
                 actual[i].TaxIndicator.Should().Be(true);
                 actual[i].TransparentInvoicing.Should().Be(true);
