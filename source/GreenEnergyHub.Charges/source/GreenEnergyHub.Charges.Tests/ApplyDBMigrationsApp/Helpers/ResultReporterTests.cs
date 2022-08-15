@@ -15,7 +15,7 @@
 // The following can be used again on the other side of the first event publish PR
 using System;
 using System.Collections.Generic;
-using DbUp.Engine;
+using DbUp.Reboot.Engine;
 using GreenEnergyHub.Charges.ApplyDBMigrationsApp.Helpers;
 using GreenEnergyHub.TestHelpers;
 using Moq;

@@ -22,7 +22,7 @@ limitations under the License.
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="dbup-sqlserver" Version="4.5.0" />
+      <PackageReference Include="DbUp.Reboot.SqlServer" Version="1.2.0" />
       <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.435">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
