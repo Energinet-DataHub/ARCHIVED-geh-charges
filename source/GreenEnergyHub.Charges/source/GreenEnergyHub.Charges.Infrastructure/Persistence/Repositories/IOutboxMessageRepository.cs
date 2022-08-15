@@ -16,16 +16,19 @@ using GreenEnergyHub.Charges.Infrastructure.Outbox;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
 {
+    /// <summary>
+    /// Contract defining the capabilities of the infrastructure component facilitating interaction with the outbox data store.
+    /// </summary>
     public interface IOutboxMessageRepository
     {
         /// <summary>
-        /// Todo: Document me!
+        /// Add an <see cref="OutboxMessage"/>.
         /// </summary>
-        /// <param name="operationsRejectedEvent"></param>
-        public void Add(OutboxMessage operationsRejectedEvent);
+        /// <param name="outboxMessage"></param>
+        public void Add(OutboxMessage outboxMessage);
 
         /// <summary>
-        /// Todo: Document me!
+        /// Get the next <see cref="OutboxMessage"/> to be processed.
         /// </summary>
         /// <returns>OutboxMessage</returns>
         OutboxMessage? GetNext();
