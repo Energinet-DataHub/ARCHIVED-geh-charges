@@ -37,6 +37,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Authorization
             string azureSecretsKeyVaultUrlKey)
         {
             // Team name and environment is required to get client-id and client-secret for integration tests
+            ClientName = clientName;
             Environment = environment;
             RootConfiguration = BuildKeyVaultConfigurationRoot(localSettingsJsonFilename);
             SecretsConfiguration = BuildSecretsKeyVaultConfiguration(RootConfiguration.GetValue<string>(azureSecretsKeyVaultUrlKey));
@@ -56,6 +57,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Authorization
             ApiManagementBaseAddress = SecretsConfiguration.GetValue<Uri>(BuildApiManagementEnvironmentSecretName(Environment, "host-url"));
             FrontendOpenIdUrl = SecretsConfiguration.GetValue<string>(BuildB2CFrontendOpenIdUrl(Environment));
         }
+
+        public string ClientName { get; }
 
         public IEnumerable<string> FrontendAppScope { get; }
 
