@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeOwnerMustMatchSender)]
         public const string ChargeOwnerMustMatchSenderErrorText =
-            "The specified charge type owner {{ChargeOwner}} do not match sender {{DocumentSenderId}} and is therefore not authorized to change charge id {{DocumentSenderProvidedChargeId}} of type {{ChargeType}}";
+            "The specified charge owner {{ChargeOwner}} do not match sender {{DocumentSenderId}} and is therefore not authorized to change charge id {{DocumentSenderProvidedChargeId}} of type {{ChargeType}}";
 
         [ErrorMessageFor(ValidationRuleIdentifier.RecipientIsMandatoryTypeValidation)]
         public const string RecipientIsMandatoryTypeValidationErrorText =
