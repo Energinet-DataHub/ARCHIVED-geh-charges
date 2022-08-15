@@ -35,10 +35,10 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableOperationReceiptData
         public AvailableReceiptValidationError Create(
             ValidationError validationError,
             ChargePriceCommand command,
-            ChargePriceOperationDto operationDto)
+            ChargePriceOperationDto chargePriceOperationDto)
         {
             var reasonCode = _cimValidationErrorCodeFactory.Create(validationError.ValidationRuleIdentifier);
-            var reasonText = _cimValidationErrorTextFactory.Create(validationError, command, operationDto);
+            var reasonText = _cimValidationErrorTextFactory.Create(validationError, command, chargePriceOperationDto);
 
             return new AvailableReceiptValidationError(reasonCode, reasonText);
         }
