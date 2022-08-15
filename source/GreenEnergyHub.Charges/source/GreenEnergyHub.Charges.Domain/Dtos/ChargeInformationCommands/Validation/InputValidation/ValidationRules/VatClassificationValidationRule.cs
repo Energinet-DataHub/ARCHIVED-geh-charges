@@ -19,17 +19,17 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
 {
     public class VatClassificationValidationRule : IValidationRule
     {
-        private readonly ChargeOperationDto _chargeOperationDto;
+        private readonly ChargeInformationOperationDto _chargeInformationOperationDto;
 
-        public VatClassificationValidationRule(ChargeOperationDto chargeOperationDto)
+        public VatClassificationValidationRule(ChargeInformationOperationDto chargeInformationOperationDto)
         {
-            _chargeOperationDto = chargeOperationDto;
+            _chargeInformationOperationDto = chargeInformationOperationDto;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.VatClassificationValidation;
 
-        public bool IsValid => _chargeOperationDto.VatClassification
+        public bool IsValid => _chargeInformationOperationDto.VatClassification
             is VatClassification.NoVat
             or VatClassification.Vat25;
     }

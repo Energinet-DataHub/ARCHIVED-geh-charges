@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 {
@@ -25,8 +26,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
         /// <summary>
         /// Input validation of operation/>.
         /// </summary>
-        /// <param name="operation">The message to validate.</param>
+        /// <param name="operation">The operation to validate.</param>
+        /// <param name="document">Document information for operation to validate.</param>
         /// <returns>The validation result.</returns>
-        ValidationResult Validate(TOperation operation);
+        ValidationResult Validate(TOperation operation, DocumentDto document);
     }
 }

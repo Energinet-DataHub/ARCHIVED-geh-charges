@@ -34,16 +34,16 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void VatClassificationValidationRule_Test(
             VatClassification vatClassification,
             bool expected,
-            ChargeOperationDtoBuilder chargeOperationDtoBuilder)
+            ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder)
         {
-            var chargeOperationDto = chargeOperationDtoBuilder.WithVatClassification(vatClassification).Build();
+            var chargeOperationDto = chargeInformationOperationDtoBuilder.WithVatClassification(vatClassification).Build();
             var sut = new VatClassificationValidationRule(chargeOperationDto);
             sut.IsValid.Should().Be(expected);
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeOperationDtoBuilder builder)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeInformationOperationDtoBuilder builder)
         {
             var chargeOperationDto = builder.WithVatClassification(VatClassification.Vat25).Build();
             var sut = new VatClassificationValidationRule(chargeOperationDto);
