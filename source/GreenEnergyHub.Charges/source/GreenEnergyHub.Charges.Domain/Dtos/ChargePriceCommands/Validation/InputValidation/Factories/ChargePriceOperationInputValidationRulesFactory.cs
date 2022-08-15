@@ -18,7 +18,7 @@ using System.Linq;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
-using GreenEnergyHub.Charges.Domain.Dtos.Validation.DocumentValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation.InputValidation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.Factories
 {

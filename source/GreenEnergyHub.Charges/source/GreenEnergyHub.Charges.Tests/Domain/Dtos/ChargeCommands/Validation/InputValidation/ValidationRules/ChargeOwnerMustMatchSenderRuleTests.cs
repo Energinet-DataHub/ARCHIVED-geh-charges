@@ -15,11 +15,12 @@
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation.DocumentValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation.InputValidation;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.DocumentValidation.ValidationRules
+namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
 {
     [UnitTest]
     public class ChargeOwnerMustMatchSenderRuleTests
