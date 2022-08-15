@@ -24,7 +24,7 @@ using SystemClock = NodaTime.SystemClock;
 
 namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
 {
-    public class AuthenticatedHttpRequestGenerator
+    public class AuthorizedHttpRequestGenerator
     {
         private readonly AuthorizationConfiguration _authorizationConfiguration;
         private readonly string _localTimeZoneName;
@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
 
         private AuthenticationResult? AuthenticationResult { get; set; }
 
-        public AuthenticatedHttpRequestGenerator(AuthorizationConfiguration authorizationConfiguration, string localTimeZoneName)
+        public AuthorizedHttpRequestGenerator(AuthorizationConfiguration authorizationConfiguration, string localTimeZoneName)
         {
             _authorizationConfiguration = authorizationConfiguration;
             ClientName = _authorizationConfiguration.ClientName;
@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
             AuthenticationResult = await backendAuthenticationClient.GetAuthenticationTokenAsync();
         }
 
-        public (HttpRequestMessage Request, string CorrelationId) CreateAuthenticatedHttpPostRequest(
+        public (HttpRequestMessage Request, string CorrelationId) CreateAuthorizedHttpPostRequest(
             string endpointUrl, string testFilePath)
         {
             ArgumentNullException.ThrowIfNull(AuthenticationResult);

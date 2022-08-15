@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             IntegrationTestConfiguration = new IntegrationTestConfiguration();
             DatabaseManager = new ChargesDatabaseManager();
             AuthorizationConfigurations = CreateAuthorizationConfigurations();
-            AuthenticatedHttpRequestGenerators = CreateAuthenticatedHttpRequestGenerators(AuthorizationConfigurations);
+            AuthorizedHttpRequestGenerators = CreateAuthorizedHttpRequestGenerators(AuthorizationConfigurations);
             ServiceBusResourceProvider = new ServiceBusResourceProvider(
                 IntegrationTestConfiguration.ServiceBusConnectionString, TestLogger);
         }
@@ -80,12 +80,12 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
         [NotNull]
         public TopicResource? ChargeLinksAcceptedTopic { get; private set; }
 
-        public AuthenticatedHttpRequestGenerator GetAuthenticatedHttpRequestGenerator(string clientName) =>
-            AuthenticatedHttpRequestGenerators.Single(x => x.ClientName == clientName);
+        public AuthorizedHttpRequestGenerator GetAuthorizedHttpRequestGenerator(string clientName) =>
+            AuthorizedHttpRequestGenerators.Single(x => x.ClientName == clientName);
 
-        private IEnumerable<AuthorizationConfiguration> AuthorizationConfigurations { get; set; }
+        private IEnumerable<AuthorizationConfiguration> AuthorizationConfigurations { get; }
 
-        private IEnumerable<AuthenticatedHttpRequestGenerator> AuthenticatedHttpRequestGenerators { get; set; }
+        private IEnumerable<AuthorizedHttpRequestGenerator> AuthorizedHttpRequestGenerators { get; }
 
         private string LocalTimeZoneName { get; } = "Europe/Copenhagen";
 
@@ -311,17 +311,17 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
 
         private async Task AuthenticateHttpRequestGenerators()
         {
-            foreach (var authenticatedHttpRequestGenerator in AuthenticatedHttpRequestGenerators)
+            foreach (var authenticatedHttpRequestGenerator in AuthorizedHttpRequestGenerators)
             {
                 await authenticatedHttpRequestGenerator.AddAuthenticationAsync();
             }
         }
 
-        private IEnumerable<AuthenticatedHttpRequestGenerator> CreateAuthenticatedHttpRequestGenerators(
+        private IEnumerable<AuthorizedHttpRequestGenerator> CreateAuthorizedHttpRequestGenerators(
             IEnumerable<AuthorizationConfiguration> authorizationConfigurations)
         {
             return authorizationConfigurations
-                .Select(ac => new AuthenticatedHttpRequestGenerator(ac, LocalTimeZoneName))
+                .Select(ac => new AuthorizedHttpRequestGenerator(ac, LocalTimeZoneName))
                 .ToList();
         }
 
