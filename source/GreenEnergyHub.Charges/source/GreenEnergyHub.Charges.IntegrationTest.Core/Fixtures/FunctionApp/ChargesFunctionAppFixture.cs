@@ -298,7 +298,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             await DatabaseManager.DeleteDatabaseAsync();
         }
 
-        private static List<AuthorizationConfiguration> CreateAuthorizationConfigurations()
+        private static IEnumerable<AuthorizationConfiguration> CreateAuthorizationConfigurations()
         {
             return new List<AuthorizationConfiguration>()
             {
