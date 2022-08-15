@@ -26,12 +26,12 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
         private readonly int _actualPointCount;
         private double _expectedPointCount;
 
-        public NumberOfPointsMatchTimeIntervalAndResolutionRule(ChargeOperationDto chargeOperationDto)
+        public NumberOfPointsMatchTimeIntervalAndResolutionRule(ChargeInformationOperationDto chargeInformationOperationDto)
         {
-            _startTime = chargeOperationDto.PointsStartInterval.GetValueOrDefault();
-            _endTime = chargeOperationDto.PointsEndInterval.GetValueOrDefault();
-            SetExpectedPointCount(chargeOperationDto.PriceResolution);
-            _actualPointCount = chargeOperationDto.Points.Count;
+            _startTime = chargeInformationOperationDto.PointsStartInterval.GetValueOrDefault();
+            _endTime = chargeInformationOperationDto.PointsEndInterval.GetValueOrDefault();
+            SetExpectedPointCount(chargeInformationOperationDto.PriceResolution);
+            _actualPointCount = chargeInformationOperationDto.Points.Count;
         }
 
         private void SetExpectedPointCount(Resolution priceResolution)

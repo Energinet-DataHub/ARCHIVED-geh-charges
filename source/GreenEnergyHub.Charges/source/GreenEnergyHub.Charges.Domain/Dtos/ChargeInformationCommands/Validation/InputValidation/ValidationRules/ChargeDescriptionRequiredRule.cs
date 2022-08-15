@@ -18,14 +18,14 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
 {
     public class ChargeDescriptionRequiredRule : IValidationRule
     {
-        private readonly ChargeOperationDto _chargeOperationDto;
+        private readonly ChargeInformationOperationDto _chargeInformationOperationDto;
 
-        public ChargeDescriptionRequiredRule(ChargeOperationDto chargeOperationDto)
+        public ChargeDescriptionRequiredRule(ChargeInformationOperationDto chargeInformationOperationDto)
         {
-            _chargeOperationDto = chargeOperationDto;
+            _chargeInformationOperationDto = chargeInformationOperationDto;
         }
 
-        public bool IsValid => string.IsNullOrWhiteSpace(_chargeOperationDto.ChargeDescription) is false;
+        public bool IsValid => string.IsNullOrWhiteSpace(_chargeInformationOperationDto.ChargeDescription) is false;
 
         public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeDescriptionIsRequired;
     }

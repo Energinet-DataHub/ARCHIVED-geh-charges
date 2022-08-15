@@ -23,7 +23,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands
     // ChargeCommand integrity is null checked by ChargeCommandNullChecker
     public class ChargeInformationCommand : CommandBase
     {
-        public ChargeInformationCommand(DocumentDto document, IReadOnlyCollection<ChargeOperationDto> operations)
+        public ChargeInformationCommand(DocumentDto document, IReadOnlyCollection<ChargeInformationOperationDto> operations)
         {
             Document = document;
             Operations = operations;
@@ -31,6 +31,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands
 
         public override DocumentDto Document { get; }
 
-        public override IReadOnlyCollection<ChargeOperationDto> Operations { get; }
+        public override IReadOnlyCollection<ChargeInformationOperationDto> Operations { get; }
     }
 }

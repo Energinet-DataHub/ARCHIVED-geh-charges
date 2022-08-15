@@ -19,18 +19,18 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
 {
     public class TransparentInvoicingIsNotAllowedForFeeValidationRule : IValidationRule
     {
-        private readonly ChargeOperationDto _chargeOperationDto;
+        private readonly ChargeInformationOperationDto _chargeInformationOperationDto;
 
-        public TransparentInvoicingIsNotAllowedForFeeValidationRule(ChargeOperationDto chargeOperationDto)
+        public TransparentInvoicingIsNotAllowedForFeeValidationRule(ChargeInformationOperationDto chargeInformationOperationDto)
         {
-            _chargeOperationDto = chargeOperationDto;
+            _chargeInformationOperationDto = chargeInformationOperationDto;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.TransparentInvoicingIsNotAllowedForFee;
 
-        public bool IsValid => _chargeOperationDto.Type != ChargeType.Fee ||
-                               _chargeOperationDto.TransparentInvoicing is TransparentInvoicing.NonTransparent
+        public bool IsValid => _chargeInformationOperationDto.ChargeType != ChargeType.Fee ||
+                               _chargeInformationOperationDto.TransparentInvoicing is TransparentInvoicing.NonTransparent
                                    or TransparentInvoicing.Unknown;
     }
 }

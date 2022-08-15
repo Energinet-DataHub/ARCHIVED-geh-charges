@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 {
@@ -26,9 +27,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
             _inputValidationRulesFactory = inputValidationRulesFactory;
         }
 
-        public ValidationResult Validate(TOperation operation)
+        public ValidationResult Validate(TOperation operation, DocumentDto document)
         {
-            var ruleSet = _inputValidationRulesFactory.CreateRules(operation);
+            var ruleSet = _inputValidationRulesFactory.CreateRules(operation, document);
             return ruleSet.Validate();
         }
     }

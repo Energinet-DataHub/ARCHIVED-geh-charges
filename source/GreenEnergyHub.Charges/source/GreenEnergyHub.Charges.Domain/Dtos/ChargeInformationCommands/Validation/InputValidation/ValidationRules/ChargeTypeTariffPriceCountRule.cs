@@ -24,11 +24,11 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
         private const int PricePointsRequiredInP1M = 1;
         private const int PricePointsRequiredInPt1H = 23;
         private const int PricePointsRequiredInPt15M = 92;
-        private readonly ChargeOperationDto _chargeOperationDto;
+        private readonly ChargeInformationOperationDto _chargeInformationOperationDto;
 
-        public ChargeTypeTariffPriceCountRule(ChargeOperationDto chargeOperationDto)
+        public ChargeTypeTariffPriceCountRule(ChargeInformationOperationDto chargeInformationOperationDto)
         {
-            _chargeOperationDto = chargeOperationDto;
+            _chargeInformationOperationDto = chargeInformationOperationDto;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeTypeTariffPriceCount;
@@ -38,17 +38,17 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
         private bool Validate()
         {
             // Allow master data only requests.
-            if (_chargeOperationDto.Points.Count == 0) return true;
+            if (_chargeInformationOperationDto.Points.Count == 0) return true;
 
-            if (_chargeOperationDto.Type == ChargeType.Tariff)
+            if (_chargeInformationOperationDto.ChargeType == ChargeType.Tariff)
             {
-                return _chargeOperationDto.PriceResolution switch
+                return _chargeInformationOperationDto.PriceResolution switch
                 {
-                    Resolution.PT15M => _chargeOperationDto.Points.Count >= PricePointsRequiredInPt15M,
-                    Resolution.PT1H => _chargeOperationDto.Points.Count >= PricePointsRequiredInPt1H,
-                    Resolution.P1D => _chargeOperationDto.Points.Count >= PricePointsRequiredInP1D,
-                    Resolution.P1M => _chargeOperationDto.Points.Count >= PricePointsRequiredInP1M,
-                    _ => throw new ArgumentException(nameof(_chargeOperationDto.PriceResolution)),
+                    Resolution.PT15M => _chargeInformationOperationDto.Points.Count >= PricePointsRequiredInPt15M,
+                    Resolution.PT1H => _chargeInformationOperationDto.Points.Count >= PricePointsRequiredInPt1H,
+                    Resolution.P1D => _chargeInformationOperationDto.Points.Count >= PricePointsRequiredInP1D,
+                    Resolution.P1M => _chargeInformationOperationDto.Points.Count >= PricePointsRequiredInP1M,
+                    _ => throw new ArgumentException(nameof(_chargeInformationOperationDto.PriceResolution)),
                 };
             }
 

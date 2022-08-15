@@ -17,12 +17,14 @@ using System.Collections.Generic;
 using System.Linq;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.InputValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation.InputValidation;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.InputValidation.Factories
 {
-    public class ChargeOperationInputValidationRulesFactory : IInputValidationRulesFactory<ChargeOperationDto>
+    public class ChargeOperationInputValidationRulesFactory : IInputValidationRulesFactory<ChargeInformationOperationDto>
     {
         private readonly IClock _clock;
         private readonly IZonedDateTimeService _zonedDateTimeService;
@@ -35,74 +37,85 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
             _clock = clock;
         }
 
-        public IValidationRuleSet CreateRules(ChargeOperationDto operation)
+        public IValidationRuleSet CreateRules(ChargeInformationOperationDto informationOperation, DocumentDto document)
         {
-            ArgumentNullException.ThrowIfNull(operation);
-            var rules = GetRulesForOperation(operation);
+            ArgumentNullException.ThrowIfNull(informationOperation);
+            var rules = GetRulesForOperation(informationOperation, document);
             return ValidationRuleSet.FromRules(rules.ToList());
         }
 
-        private IEnumerable<IValidationRuleContainer> GetRulesForOperation(ChargeOperationDto chargeOperationDto)
+        private IEnumerable<IValidationRuleContainer> GetRulesForOperation(ChargeInformationOperationDto chargeInformationOperationDto, DocumentDto document)
         {
             var rules = new List<IValidationRuleContainer>
             {
-                CreateRuleContainer(new ChargeIdLengthValidationRule(chargeOperationDto), chargeOperationDto.Id),
-                CreateRuleContainer(new ChargeIdRequiredValidationRule(chargeOperationDto), chargeOperationDto.Id),
-                CreateRuleContainer(new ChargeOperationIdRequiredRule(chargeOperationDto), chargeOperationDto.Id),
-                CreateRuleContainer(new ChargeOperationIdLengthValidationRule(chargeOperationDto), chargeOperationDto.Id),
-                CreateRuleContainer(new ChargeOwnerIsRequiredValidationRule(chargeOperationDto), chargeOperationDto.Id),
-                CreateRuleContainer(new ChargeTypeIsKnownValidationRule(chargeOperationDto), chargeOperationDto.Id),
-                CreateRuleContainer(new StartDateTimeRequiredValidationRule(chargeOperationDto), chargeOperationDto.Id),
-                CreateRuleContainer(new ChargeOwnerTextLengthRule(chargeOperationDto), chargeOperationDto.Id),
+                CreateRuleContainer(new ChargeIdLengthValidationRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
+                CreateRuleContainer(new ChargeIdRequiredValidationRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
+                CreateRuleContainer(new ChargeOperationIdRequiredRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
+                CreateRuleContainer(new ChargeOperationIdLengthValidationRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
+                CreateRuleContainer(new ChargeOwnerIsRequiredValidationRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
+                CreateRuleContainer(new ChargeTypeIsKnownValidationRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
+                CreateRuleContainer(new StartDateTimeRequiredValidationRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
+                CreateRuleContainer(new ChargeOwnerTextLengthRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
+                CreateRuleContainer(new ChargeOwnerMustMatchSenderRule(document.Sender.MarketParticipantId, chargeInformationOperationDto.ChargeOwner), chargeInformationOperationDto.OperationId),
             };
 
-            rules.AddRange(chargeOperationDto.Points.Any()
-                ? CreateRulesForChargePrice(chargeOperationDto, _zonedDateTimeService)
-                : CreateRulesForChargeInformation(chargeOperationDto));
+            switch (document.BusinessReasonCode)
+            {
+                case BusinessReasonCode.UpdateChargeInformation:
+                    rules.AddRange(CreateRulesForChargeInformation(chargeInformationOperationDto));
+                    break;
+                case BusinessReasonCode.UpdateChargePrices:
+                    rules.AddRange(CreateRulesForChargePrice(chargeInformationOperationDto));
+                    break;
+                case BusinessReasonCode.Unknown:
+                case BusinessReasonCode.UpdateMasterDataSettlement:
+                default:
+                    throw new ArgumentOutOfRangeException($"Could not create input validation rules for business reason code: {document.BusinessReasonCode}");
+            }
 
             return rules;
         }
 
-        private static List<IValidationRuleContainer> CreateRulesForChargePrice(ChargeOperationDto chargeOperationDto, IZonedDateTimeService zonedDateTimeService)
+        private List<IValidationRuleContainer> CreateRulesForChargePrice(ChargeInformationOperationDto chargeInformationOperationDto)
         {
             return new List<IValidationRuleContainer>
             {
-                CreateRuleContainer(new ChargePriceMaximumDigitsAndDecimalsRule(chargeOperationDto), chargeOperationDto.Id),
-                CreateRuleContainer(new ChargeTypeTariffPriceCountRule(chargeOperationDto), chargeOperationDto.Id),
-                CreateRuleContainer(new MaximumPriceRule(chargeOperationDto), chargeOperationDto.Id),
-                CreateRuleContainer(new NumberOfPointsMatchTimeIntervalAndResolutionRule(chargeOperationDto), chargeOperationDto.Id),
-                CreateRuleContainer(new PriceListMustStartAndStopAtMidnightValidationRule(zonedDateTimeService, chargeOperationDto), chargeOperationDto.Id),
+                CreateRuleContainer(new ChargePriceMaximumDigitsAndDecimalsRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
+                CreateRuleContainer(new ChargeTypeTariffPriceCountRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
+                CreateRuleContainer(new MaximumPriceRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
+                CreateRuleContainer(new NumberOfPointsMatchTimeIntervalAndResolutionRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
+                CreateRuleContainer(new PriceListMustStartAndStopAtMidnightValidationRule(_zonedDateTimeService, chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
             };
         }
 
-        private List<IValidationRuleContainer> CreateRulesForChargeInformation(ChargeOperationDto chargeOperationDto)
+        private List<IValidationRuleContainer> CreateRulesForChargeInformation(ChargeInformationOperationDto chargeInformationOperationDto)
         {
             return new List<IValidationRuleContainer>
             {
-                CreateRuleContainer(new ResolutionFeeValidationRule(chargeOperationDto), chargeOperationDto.Id),
-                CreateRuleContainer(new ResolutionSubscriptionValidationRule(chargeOperationDto), chargeOperationDto.Id),
-                CreateRuleContainer(new ResolutionTariffValidationRule(chargeOperationDto), chargeOperationDto.Id),
-                CreateRuleContainer(new ChargeNameHasMaximumLengthRule(chargeOperationDto), chargeOperationDto.Id),
-                CreateRuleContainer(new ChargeDescriptionHasMaximumLengthRule(chargeOperationDto), chargeOperationDto.Id),
-                CreateRuleContainer(new VatClassificationValidationRule(chargeOperationDto), chargeOperationDto.Id),
-                CreateRuleContainer(new TransparentInvoicingIsNotAllowedForFeeValidationRule(chargeOperationDto), chargeOperationDto.Id),
-                CreateRuleContainer(new ChargePriceMaximumDigitsAndDecimalsRule(chargeOperationDto), chargeOperationDto.Id),
-                CreateRuleContainer(new ChargeTypeTariffPriceCountRule(chargeOperationDto), chargeOperationDto.Id),
-                CreateRuleContainer(new MaximumPriceRule(chargeOperationDto), chargeOperationDto.Id),
+                CreateRuleContainer(new ResolutionFeeValidationRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
+                CreateRuleContainer(new ResolutionSubscriptionValidationRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
+                CreateRuleContainer(new ResolutionTariffValidationRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
+                CreateRuleContainer(new ChargeNameHasMaximumLengthRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
+                CreateRuleContainer(new ChargeDescriptionHasMaximumLengthRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
+                CreateRuleContainer(new VatClassificationValidationRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
+                CreateRuleContainer(new TransparentInvoicingIsNotAllowedForFeeValidationRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
+                CreateRuleContainer(new ChargePriceMaximumDigitsAndDecimalsRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
+                CreateRuleContainer(new ChargeTypeTariffPriceCountRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
+                CreateRuleContainer(new MaximumPriceRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
                 CreateRuleContainer(
                     new StartDateValidationRule(
-                        chargeOperationDto.StartDateTime,
+                        chargeInformationOperationDto.StartDateTime,
                         _zonedDateTimeService,
                         _clock),
-                    chargeOperationDto.Id),
-                CreateRuleContainer(new ChargeNameRequiredRule(chargeOperationDto), chargeOperationDto.Id),
-                CreateRuleContainer(new ChargeDescriptionRequiredRule(chargeOperationDto), chargeOperationDto.Id),
-                CreateRuleContainer(new ResolutionIsRequiredRule(chargeOperationDto), chargeOperationDto.Id),
-                CreateRuleContainer(new TransparentInvoicingIsRequiredValidationRule(chargeOperationDto), chargeOperationDto.Id),
-                CreateRuleContainer(new TaxIndicatorIsRequiredValidationRule(chargeOperationDto), chargeOperationDto.Id),
-                CreateRuleContainer(new TerminationDateMustMatchEffectiveDateValidationRule(chargeOperationDto), chargeOperationDto.Id),
-                CreateRuleContainer(new TaxIndicatorMustBeFalseForFeeValidationRule(chargeOperationDto), chargeOperationDto.Id),
-                CreateRuleContainer(new TaxIndicatorMustBeFalseForSubscriptionValidationRule(chargeOperationDto), chargeOperationDto.Id),
+                    chargeInformationOperationDto.OperationId),
+                CreateRuleContainer(new ChargeNameRequiredRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
+                CreateRuleContainer(new ChargeDescriptionRequiredRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
+                CreateRuleContainer(new ResolutionIsRequiredRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
+                CreateRuleContainer(new TransparentInvoicingIsRequiredValidationRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
+                CreateRuleContainer(new TaxIndicatorIsRequiredValidationRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
+                CreateRuleContainer(new TerminationDateMustMatchEffectiveDateValidationRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
+                CreateRuleContainer(new TaxIndicatorMustBeFalseForFeeValidationRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
+                CreateRuleContainer(new TaxIndicatorMustBeFalseForSubscriptionValidationRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
             };
         }
 
