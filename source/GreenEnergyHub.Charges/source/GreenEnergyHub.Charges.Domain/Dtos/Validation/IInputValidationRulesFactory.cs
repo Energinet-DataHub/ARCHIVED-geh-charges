@@ -13,12 +13,13 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 {
     public interface IInputValidationRulesFactory<in TOperation>
         where TOperation : OperationBase
     {
-        IValidationRuleSet CreateRules(TOperation operation);
+        IValidationRuleSet CreateRules(TOperation operation, DocumentDto document);
     }
 }

@@ -34,25 +34,25 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void ChargeIdLengthValidationRule_Test(
             string chargeId,
             bool expected,
-            ChargeOperationDtoBuilder chargeOperationDtoBuilder)
+            ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder)
         {
-            var chargeOperationDto = chargeOperationDtoBuilder.WithChargeId(chargeId).Build();
+            var chargeOperationDto = chargeInformationOperationDtoBuilder.WithChargeId(chargeId).Build();
             var sut = new ChargeIdLengthValidationRule(chargeOperationDto);
             sut.IsValid.Should().Be(expected);
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeOperationDtoBuilder chargeOperationDtoBuilder)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder)
         {
-            var invalidChargeOperationDto = CreateInvalidChargeOperationDto(chargeOperationDtoBuilder);
+            var invalidChargeOperationDto = CreateInvalidChargeOperationDto(chargeInformationOperationDtoBuilder);
             var sut = new ChargeIdLengthValidationRule(invalidChargeOperationDto);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChargeIdLengthValidation);
         }
 
-        private static ChargeOperationDto CreateInvalidChargeOperationDto(ChargeOperationDtoBuilder chargeOperationDtoBuilder)
+        private static ChargeInformationOperationDto CreateInvalidChargeOperationDto(ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder)
         {
-            return chargeOperationDtoBuilder.WithChargeId("this charge id is to long").Build();
+            return chargeInformationOperationDtoBuilder.WithChargeId("this charge id is to long").Build();
         }
     }
 }

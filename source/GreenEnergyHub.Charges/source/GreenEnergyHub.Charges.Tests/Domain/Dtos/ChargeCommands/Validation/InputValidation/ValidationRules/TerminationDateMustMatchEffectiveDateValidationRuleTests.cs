@@ -27,10 +27,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
     {
         [Theory]
         [InlineAutoMoqData]
-        public void IsValid_WhenEndDateIsEmpty_ShouldParseValidation(ChargeOperationDtoBuilder chargeOperationDtoBuilder)
+        public void IsValid_WhenEndDateIsEmpty_ShouldParseValidation(ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder)
         {
             // Arrange
-            var dto = chargeOperationDtoBuilder.WithEndDateTime(null).Build();
+            var dto = chargeInformationOperationDtoBuilder.WithEndDateTime(null).Build();
             var sut = new TerminationDateMustMatchEffectiveDateValidationRule(dto);
 
             // Assert
@@ -39,11 +39,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [InlineAutoMoqData]
-        public void IsValid_WhenEndDateIsTheSameAsStartDate_ShouldParseValidation(ChargeOperationDtoBuilder chargeOperationDtoBuilder)
+        public void IsValid_WhenEndDateIsTheSameAsStartDate_ShouldParseValidation(ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder)
         {
             // Arrange
             var instant = SystemClock.Instance.GetCurrentInstant();
-            var dto = chargeOperationDtoBuilder.WithStartDateTime(instant).WithEndDateTime(instant).Build();
+            var dto = chargeInformationOperationDtoBuilder.WithStartDateTime(instant).WithEndDateTime(instant).Build();
             var sut = new TerminationDateMustMatchEffectiveDateValidationRule(dto);
 
             // Assert
@@ -52,10 +52,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [InlineAutoMoqData]
-        public void IsValid_WhenEndDateIsDifferentFromStartDate_ShouldFailValidation(ChargeOperationDtoBuilder chargeOperationDtoBuilder)
+        public void IsValid_WhenEndDateIsDifferentFromStartDate_ShouldFailValidation(ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder)
         {
             // Arrange
-            var dto = chargeOperationDtoBuilder.Build();
+            var dto = chargeInformationOperationDtoBuilder.Build();
             var sut = new TerminationDateMustMatchEffectiveDateValidationRule(dto);
 
             // Assert

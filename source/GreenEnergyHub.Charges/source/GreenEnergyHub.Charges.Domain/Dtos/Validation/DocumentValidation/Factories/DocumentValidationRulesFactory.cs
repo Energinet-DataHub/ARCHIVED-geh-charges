@@ -38,7 +38,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation.DocumentValidation.Facto
             ArgumentNullException.ThrowIfNull(document);
 
             var rules = await GetRulesForDocumentAsync(document).ConfigureAwait(false);
-
             return ValidationRuleSet.FromRules(rules);
         }
 

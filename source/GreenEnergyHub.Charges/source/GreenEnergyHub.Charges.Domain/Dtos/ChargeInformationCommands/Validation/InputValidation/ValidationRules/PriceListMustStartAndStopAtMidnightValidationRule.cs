@@ -21,14 +21,14 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
     public class PriceListMustStartAndStopAtMidnightValidationRule : IValidationRule
     {
         private readonly IZonedDateTimeService _zonedDateTimeService;
-        private readonly ChargeOperationDto _chargeOperation;
+        private readonly ChargeInformationOperationDto _chargeInformationOperation;
 
         public PriceListMustStartAndStopAtMidnightValidationRule(
             IZonedDateTimeService zonedDateTimeService,
-            ChargeOperationDto chargeOperation)
+            ChargeInformationOperationDto chargeInformationOperation)
         {
             _zonedDateTimeService = zonedDateTimeService;
-            _chargeOperation = chargeOperation;
+            _chargeInformationOperation = chargeInformationOperation;
         }
 
         public bool IsValid => (GetPointsIntervalStartDateTime() is null ||
@@ -41,16 +41,16 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
 
         private ZonedDateTime? GetPointsIntervalStartDateTime()
         {
-            return _chargeOperation.PointsStartInterval is null
+            return _chargeInformationOperation.PointsStartInterval is null
                 ? null
-                : _zonedDateTimeService.GetZonedDateTime(_chargeOperation.PointsStartInterval.GetValueOrDefault());
+                : _zonedDateTimeService.GetZonedDateTime(_chargeInformationOperation.PointsStartInterval.GetValueOrDefault());
         }
 
         private ZonedDateTime? GetPointsIntervalEndDateTime()
         {
-            return _chargeOperation.PointsEndInterval is null
+            return _chargeInformationOperation.PointsEndInterval is null
                 ? null
-                : _zonedDateTimeService.GetZonedDateTime(_chargeOperation.PointsEndInterval.GetValueOrDefault());
+                : _zonedDateTimeService.GetZonedDateTime(_chargeInformationOperation.PointsEndInterval.GetValueOrDefault());
         }
     }
 }

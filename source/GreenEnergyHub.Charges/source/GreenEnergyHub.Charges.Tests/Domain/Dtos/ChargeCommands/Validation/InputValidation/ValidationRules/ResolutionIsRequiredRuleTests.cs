@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void IsValid_WhenCalled_ShouldReturnExpectedValue(
         Resolution resolution,
         bool expectedResult,
-        ChargeOperationDtoBuilder builder)
+        ChargeInformationOperationDtoBuilder builder)
         {
             var dto = builder.WithResolution(resolution).Build();
             var sut = new ResolutionIsRequiredRule(dto);

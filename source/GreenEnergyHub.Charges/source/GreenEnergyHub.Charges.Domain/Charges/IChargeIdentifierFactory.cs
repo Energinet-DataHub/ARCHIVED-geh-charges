@@ -23,7 +23,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
     public interface IChargeIdentifierFactory
     {
         /// <summary>
-        /// Factory method to create ChargeIdentifier from <see cref="ChargeOperationDto"/>
+        /// Factory method to create ChargeIdentifier from <see cref="ChargeInformationOperationDto"/>
         /// </summary>
         /// <param name="chargeId"></param>
         /// <param name="chargeType"></param>

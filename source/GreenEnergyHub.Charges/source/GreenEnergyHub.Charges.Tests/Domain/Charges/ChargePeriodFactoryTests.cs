@@ -28,10 +28,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
         [Theory]
         [InlineAutoDomainData]
         public void CreateFromChargeOperationDto_ChargePeriod_HasNoNullsOrEmptyCollections(
-            ChargeOperationDto chargeOperationDto,
+            ChargeInformationOperationDto chargeInformationOperationDto,
             ChargePeriodFactory sut)
         {
-            var actual = sut.CreateFromChargeOperationDto(chargeOperationDto);
+            var actual = sut.CreateFromChargeOperationDto(chargeInformationOperationDto);
 
             actual.Should().NotContainNullEnumerable();
         }

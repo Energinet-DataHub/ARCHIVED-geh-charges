@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             [Frozen] Mock<IAvailableChargeReceiptValidationErrorFactory> availableChargeReceiptValidationErrorFactory,
-            List<ChargeOperationDto> chargeOperations,
+            List<ChargeInformationOperationDto> chargeOperations,
             ChargeInformationCommandBuilder chargeInformationCommandBuilder,
             Instant now,
             AvailableChargeRejectionDataFactory sut)
@@ -68,7 +68,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
 
             var validationErrors = chargeCommand.Operations
                 .Reverse() // GetReasons() should provide the correct ValidationError no matter what order they have here
-                .Select(x => new ValidationError(ValidationRuleIdentifier.SenderIsMandatoryTypeValidation, x.Id, null))
+                .Select(x => new ValidationError(ValidationRuleIdentifier.SenderIsMandatoryTypeValidation, x.OperationId, null))
                 .ToList();
 
             var chargeCommandRejectedEvent =
@@ -94,10 +94,10 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
                 actual.DocumentType.Should().Be(DocumentType.RejectRequestChangeOfPriceList);
 
                 var expectedChargeOperationDto = chargeCommand.Operations.ToArray()[i1];
-                actual.OriginalOperationId.Should().Be(expectedChargeOperationDto.Id);
+                actual.OriginalOperationId.Should().Be(expectedChargeOperationDto.OperationId);
 
                 var actualValidationErrors = actual.ValidationErrors.ToList();
-                var expectedValidationErrors = validationErrors.Where(x => x.OperationId == expectedChargeOperationDto.Id);
+                var expectedValidationErrors = validationErrors.Where(x => x.OperationId == expectedChargeOperationDto.OperationId);
                 actual.ValidationErrors.Should().HaveSameCount(expectedValidationErrors);
                 actual.OperationOrder.Should().BeGreaterThan(operationOrder);
                 operationOrder = actual.OperationOrder;
@@ -159,8 +159,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
         {
             // fake error code and text
             availableChargeReceiptValidationErrorFactory
-                .Setup(f => f.Create(It.IsAny<ValidationError>(), chargeInformationCommand, It.IsAny<ChargeOperationDto>()))
-                .Returns<ValidationError, ChargeInformationCommand, ChargeOperationDto>((validationError, _, _) =>
+                .Setup(f => f.Create(It.IsAny<ValidationError>(), chargeInformationCommand, It.IsAny<ChargeInformationOperationDto>()))
+                .Returns<ValidationError, ChargeInformationCommand, ChargeInformationOperationDto>((validationError, _, _) =>
                     new AvailableReceiptValidationError(
                         ReasonCode.D01, validationError.ValidationRuleIdentifier.ToString()));
         }

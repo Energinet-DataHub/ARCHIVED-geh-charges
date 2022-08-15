@@ -12,9 +12,39 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using GreenEnergyHub.Charges.Domain.Charges;
+
 namespace GreenEnergyHub.Charges.Domain.Dtos.Messages.Command
 {
     public abstract class OperationBase
     {
+        protected OperationBase(string operationId, ChargeType chargeType, string senderProvidedChargeId, string chargeOwner)
+        {
+            OperationId = operationId;
+            ChargeType = chargeType;
+            SenderProvidedChargeId = senderProvidedChargeId;
+            ChargeOwner = chargeOwner;
+        }
+
+        /// <summary>
+        /// Contains a unique ID for the specific Charge OperationId, provided by the sender.
+        /// </summary>
+        public string OperationId { get; }
+
+        /// <summary>
+        /// Type of charge, i.e. Tariff, Fee or Subscription
+        /// </summary>
+        public ChargeType ChargeType { get; }
+
+        /// <summary>
+        ///  Charge Owner, e.g. the GLN or EIC identification number.
+        /// </summary>
+        public string ChargeOwner { get; }
+
+        /// <summary>
+        /// Unique ID of a charge (Note, unique per market participants).
+        /// Example: EA-001
+        /// </summary>
+        public string SenderProvidedChargeId { get; }
     }
 }
