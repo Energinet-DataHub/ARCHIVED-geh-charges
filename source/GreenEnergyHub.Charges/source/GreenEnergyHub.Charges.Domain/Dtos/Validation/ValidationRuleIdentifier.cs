@@ -37,8 +37,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
         ChargeTypeTariffPriceCount = 22, // VR507-1 / E87
         MaximumPrice = 23, // VR509-1, VR509-2 / E90
         ChargePriceMaximumDigitsAndDecimals = 24, // VR457 / E86
-        FeeMustHaveSinglePrice = 25, // VR507-2 / E87
-        SubscriptionMustHaveSinglePrice = 26, // VR507-2 / E87
         CommandSenderMustBeAnExistingMarketParticipant = 27, // VR152 / D02
         MeteringPointDoesNotExist = 29, // VR200 / E10
         ChargeDoesNotExist = 30, // VR679 / E0I
