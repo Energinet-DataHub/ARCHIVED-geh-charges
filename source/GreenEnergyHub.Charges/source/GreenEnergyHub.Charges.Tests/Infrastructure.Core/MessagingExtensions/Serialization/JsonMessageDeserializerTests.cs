@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions.S
         ///
         /// The test suffers from a few weaknesses regarding the following assumptions about the messaging framework:
         /// * It is assumed that transport uses JSON serialized UTF8 strings converted to byte[]
-        /// * It is assumed that it uses <see cref="GreenEnergyHub.Json.JsonSerializer.DeserializeAsync"/> for deserialization
+        /// * It is assumed that it uses <see cref="Energinet.DataHub.Core.JsonSerialization.JsonSerializer.DeserializeAsync"/> for deserialization
         /// </summary>
         [Theory]
         [MemberData(nameof(Messages))]
