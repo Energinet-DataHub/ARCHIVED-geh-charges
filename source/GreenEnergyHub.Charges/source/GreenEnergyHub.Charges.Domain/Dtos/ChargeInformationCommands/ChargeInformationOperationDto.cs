@@ -26,12 +26,12 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands
     /// <summary>
     /// The ChargeOperationDto class contains the intend of the charge command, e.g. updating an existing charge.
     /// </summary>
-    public class ChargeOperationDto : ChargeOperationBase
+    public class ChargeInformationOperationDto : OperationBase
     {
-        public ChargeOperationDto(
-                string id,
-                ChargeType type,
-                string chargeId,
+        public ChargeInformationOperationDto(
+                string operationId,
+                ChargeType chargeType,
+                string senderProvidedChargeId,
                 string chargeName,
                 string chargeDescription,
                 string chargeOwner,
@@ -45,14 +45,11 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands
                 Instant? pointsStartInterval,
                 Instant? pointsEndInterval,
                 List<Point> points)
+            : base(operationId, chargeType, senderProvidedChargeId, chargeOwner)
         {
             Points = new List<Point>();
-            Id = id;
-            Type = type;
-            ChargeId = chargeId;
             ChargeName = chargeName;
             ChargeDescription = chargeDescription;
-            ChargeOwner = chargeOwner;
             Resolution = resolution;
             PriceResolution = priceResolution;
             TaxIndicator = taxIndicator;
@@ -64,19 +61,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands
             PointsEndInterval = pointsEndInterval;
             Points = points;
         }
-
-        /// <summary>
-        /// Contains a unique ID for the specific Charge OperationId, provided by the sender.
-        /// </summary>
-        public string Id { get; }
-
-        /// <summary>
-        /// Unique ID of a charge (Note, unique per market participants).
-        /// Example: EA-001
-        /// </summary>
-        public string ChargeId { get; }
-
-        public ChargeType Type { get; }
 
         /// <summary>
         /// The charge name
@@ -107,11 +91,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands
         /// Indicates whether the Charge is tax or not.
         /// </summary>
         public TaxIndicator TaxIndicator { get; }
-
-        /// <summary>
-        ///  Charge Owner, e.g. the GLN or EIC identification number.
-        /// </summary>
-        public string ChargeOwner { get; }
 
         public Resolution Resolution { get; }
 

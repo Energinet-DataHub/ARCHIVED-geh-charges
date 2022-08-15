@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             [Frozen] Mock<IChargePublisher> chargeSender,
             [Frozen] Mock<IChargePricesUpdatedPublisher> chargePricesUpdatedSender,
             DocumentDtoBuilder documentDtoBuilder,
-            List<ChargeOperationDto> chargeOperations,
+            List<ChargeInformationOperationDto> chargeOperations,
             ChargeInformationCommandBuilder chargeInformationCommandBuilder,
             ChargeCommandAcceptedEventBuilder chargeCommandAcceptedEventBuilder,
             ChargeIntegrationEventsPublisher sut)
@@ -50,8 +50,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             await sut.PublishAsync(acceptedEvent).ConfigureAwait(false);
 
             // Assert
-            chargeSender.Verify(x => x.PublishChargeCreatedAsync(It.IsAny<ChargeOperationDto>()), Times.Never);
-            chargePricesUpdatedSender.Verify(x => x.PublishChargePricesAsync(It.IsAny<ChargeOperationDto>()), Times.Exactly(3));
+            chargeSender.Verify(x => x.PublishChargeCreatedAsync(It.IsAny<ChargeInformationOperationDto>()), Times.Never);
+            chargePricesUpdatedSender.Verify(x => x.PublishChargePricesAsync(It.IsAny<ChargeInformationOperationDto>()), Times.Exactly(3));
         }
 
         [Theory]
@@ -73,8 +73,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             await sut.PublishAsync(acceptedEvent).ConfigureAwait(false);
 
             // Assert
-            chargeSender.Verify(x => x.PublishChargeCreatedAsync(It.IsAny<ChargeOperationDto>()), Times.Once);
-            chargePricesUpdatedSender.Verify(x => x.PublishChargePricesAsync(It.IsAny<ChargeOperationDto>()), Times.Never);
+            chargeSender.Verify(x => x.PublishChargeCreatedAsync(It.IsAny<ChargeInformationOperationDto>()), Times.Once);
+            chargePricesUpdatedSender.Verify(x => x.PublishChargePricesAsync(It.IsAny<ChargeInformationOperationDto>()), Times.Never);
         }
     }
 }

@@ -19,18 +19,18 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
 {
     public class TaxIndicatorMustBeFalseForSubscriptionValidationRule : IValidationRule
     {
-        private readonly ChargeOperationDto _chargeOperationDto;
+        private readonly ChargeInformationOperationDto _chargeInformationOperationDto;
 
-        public TaxIndicatorMustBeFalseForSubscriptionValidationRule(ChargeOperationDto chargeOperationDto)
+        public TaxIndicatorMustBeFalseForSubscriptionValidationRule(ChargeInformationOperationDto chargeInformationOperationDto)
         {
-            _chargeOperationDto = chargeOperationDto;
+            _chargeInformationOperationDto = chargeInformationOperationDto;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.TaxIndicatorMustBeFalseForSubscription;
 
-        public bool IsValid => _chargeOperationDto.Type is not ChargeType.Subscription ||
-                               _chargeOperationDto.TaxIndicator is TaxIndicator.NoTax
+        public bool IsValid => _chargeInformationOperationDto.ChargeType is not ChargeType.Subscription ||
+                               _chargeInformationOperationDto.TaxIndicator is TaxIndicator.NoTax
                                    or TaxIndicator.Unknown;
     }
 }

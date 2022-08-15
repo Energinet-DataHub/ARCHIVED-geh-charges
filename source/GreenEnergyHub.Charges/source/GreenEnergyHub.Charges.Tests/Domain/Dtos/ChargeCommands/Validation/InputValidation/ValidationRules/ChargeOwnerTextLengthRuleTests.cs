@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             string chargeOwner,
             bool expectedResult,
             string reason,
-            ChargeOperationDtoBuilder builder)
+            ChargeInformationOperationDtoBuilder builder)
         {
             // Arrange
             var dto = builder.WithOwner(chargeOwner).Build();

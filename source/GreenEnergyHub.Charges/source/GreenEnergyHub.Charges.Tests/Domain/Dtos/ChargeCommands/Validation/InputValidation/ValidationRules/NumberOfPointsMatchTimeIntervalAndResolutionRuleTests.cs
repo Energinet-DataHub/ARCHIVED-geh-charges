@@ -60,7 +60,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             var start = Instant.FromUtc(startYear, startMonth, startDay, startHour, 0);
             var end = Instant.FromUtc(endYear, endMonth, endDay, endHour, 0);
 
-            var dto = new ChargeOperationDtoBuilder()
+            var dto = new ChargeInformationOperationDtoBuilder()
                 .WithPriceResolution(resolution)
                 .WithPointWithXNumberOfPrices(expectedNumberOfPoints)
                 .WithPointsInterval(start, end)
@@ -79,7 +79,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void IsValid_WhenCalledWithUnknownPriceResolution_ShouldThrowArgumentException()
         {
             // Arrange
-            var dto = new ChargeOperationDtoBuilder().WithPriceResolution(Resolution.Unknown).Build();
+            var dto = new ChargeInformationOperationDtoBuilder().WithPriceResolution(Resolution.Unknown).Build();
 
             // Act
             Action act = () =>
@@ -95,7 +95,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void IsValid_WhenCalledWithNonExistingPriceResolution_ShouldThrowArgumentOutOfRangeException()
         {
             // Arrange
-            var dto = new ChargeOperationDtoBuilder().WithPriceResolution((Resolution)99).Build();
+            var dto = new ChargeInformationOperationDtoBuilder().WithPriceResolution((Resolution)99).Build();
 
             // Act
             Action act = () =>

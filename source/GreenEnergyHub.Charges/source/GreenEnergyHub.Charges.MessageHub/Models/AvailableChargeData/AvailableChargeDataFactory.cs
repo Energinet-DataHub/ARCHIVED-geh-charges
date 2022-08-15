@@ -55,7 +55,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
 
         private async Task CreateForOperationAsync(
             ChargeCommandAcceptedEvent input,
-            ChargeOperationDto operation,
+            ChargeInformationOperationDto informationOperation,
             ICollection<AvailableChargeData> result)
         {
             var activeGridAccessProviders = await _marketParticipantRepository
@@ -64,11 +64,11 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
 
             foreach (var recipient in activeGridAccessProviders)
             {
-                var points = operation.Points
-                    .Select(point => new AvailableChargeDataPoint(operation.Points.GetPositionOfPoint(point), point.Price)).ToList();
+                var points = informationOperation.Points
+                    .Select(point => new AvailableChargeDataPoint(informationOperation.Points.GetPositionOfPoint(point), point.Price)).ToList();
 
                 var sender = await GetSenderAsync().ConfigureAwait(false);
-                var operationOrder = input.Command.Operations.ToList().IndexOf(operation);
+                var operationOrder = input.Command.Operations.ToList().IndexOf(informationOperation);
 
                 result.Add(new AvailableChargeData(
                     sender.MarketParticipantId,
@@ -78,17 +78,17 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
                     input.Command.Document.BusinessReasonCode,
                     _messageMetaDataContext.RequestDataTime,
                     Guid.NewGuid(), // ID of each available piece of data must be unique
-                    operation.ChargeId,
-                    operation.ChargeOwner,
-                    operation.Type,
-                    operation.ChargeName,
-                    operation.ChargeDescription,
-                    operation.StartDateTime,
-                    operation.EndDateTime.TimeOrEndDefault(),
-                    operation.VatClassification,
-                    operation.TaxIndicator == TaxIndicator.Tax,
-                    operation.TransparentInvoicing == TransparentInvoicing.Transparent,
-                    operation.Resolution,
+                    informationOperation.SenderProvidedChargeId,
+                    informationOperation.ChargeOwner,
+                    informationOperation.ChargeType,
+                    informationOperation.ChargeName,
+                    informationOperation.ChargeDescription,
+                    informationOperation.StartDateTime,
+                    informationOperation.EndDateTime.TimeOrEndDefault(),
+                    informationOperation.VatClassification,
+                    informationOperation.TaxIndicator == TaxIndicator.Tax,
+                    informationOperation.TransparentInvoicing == TransparentInvoicing.Transparent,
+                    informationOperation.Resolution,
                     DocumentType.NotifyPriceList, // Will be added to the HTTP MessageType header
                     operationOrder,
                     recipient.ActorId,
@@ -96,11 +96,11 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
             }
         }
 
-        private static bool ShouldMakeDataAvailableForActiveGridProviders(ChargeOperationDto chargeOperationDto)
+        private static bool ShouldMakeDataAvailableForActiveGridProviders(ChargeInformationOperationDto chargeInformationOperationDto)
         {
             // We only need to notify grid providers if the charge includes tax which are the
             // only charges they do not maintain themselves
-            return chargeOperationDto.TaxIndicator == TaxIndicator.Tax;
+            return chargeInformationOperationDto.TaxIndicator == TaxIndicator.Tax;
         }
     }
 }

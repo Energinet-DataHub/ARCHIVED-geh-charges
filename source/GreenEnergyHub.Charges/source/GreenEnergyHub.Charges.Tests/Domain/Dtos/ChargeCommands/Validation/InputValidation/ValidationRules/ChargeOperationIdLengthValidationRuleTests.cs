@@ -33,18 +33,18 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void OperationIdLengthValidationRule_Test(
             string operationId,
             bool expected,
-            ChargeOperationDtoBuilder chargeOperationDtoBuilder)
+            ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder)
         {
-            var chargeOperationDto = chargeOperationDtoBuilder.WithChargeOperationId(operationId).Build();
+            var chargeOperationDto = chargeInformationOperationDtoBuilder.WithChargeOperationId(operationId).Build();
             var sut = new ChargeOperationIdLengthValidationRule(chargeOperationDto);
             sut.IsValid.Should().Be(expected);
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeOperationDtoBuilder chargeOperationDtoBuilder)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder)
         {
-            var invalidChargeOperationDto = chargeOperationDtoBuilder.Build();
+            var invalidChargeOperationDto = chargeInformationOperationDtoBuilder.Build();
             var sut = new ChargeOperationIdLengthValidationRule(invalidChargeOperationDto);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChargeOperationIdLengthValidation);
         }

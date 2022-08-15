@@ -15,6 +15,7 @@
 using System.Collections.Generic;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.TestHelpers;
@@ -32,24 +33,26 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Validation
         [InlineAutoDomainData(true)]
         public void Validate_WhenFactoryCreateInvalidRules_ThenInvalidValidationResult(
             bool isValid,
-            [Frozen] Mock<IInputValidationRulesFactory<ChargeOperationDto>> inputValidationRulesFactory,
-            InputValidator<ChargeOperationDto> sut,
-            ChargeOperationDto chargeOperationDto)
+            [Frozen] Mock<IInputValidationRulesFactory<ChargeInformationOperationDto>> inputValidationRulesFactory,
+            InputValidator<ChargeInformationOperationDto> sut,
+            ChargeInformationOperationDto chargeInformationOperationDto)
         {
             // Arrange
             var testValidationRule = new TestValidationRule(isValid, ValidationRuleIdentifier.StartDateValidation);
             var rules = new List<IValidationRuleContainer>
             {
-                new OperationValidationRuleContainer(testValidationRule, chargeOperationDto.Id),
-                new OperationValidationRuleContainer(testValidationRule, chargeOperationDto.Id),
+                new OperationValidationRuleContainer(testValidationRule, chargeInformationOperationDto.OperationId),
+                new OperationValidationRuleContainer(testValidationRule, chargeInformationOperationDto.OperationId),
             };
             var validationRuleSet = ValidationRuleSet.FromRules(rules);
             inputValidationRulesFactory
-                .Setup(f => f.CreateRules(It.IsAny<ChargeOperationDto>()))
+                .Setup(f => f.CreateRules(
+                    It.IsAny<ChargeInformationOperationDto>(),
+                    It.IsAny<DocumentDto>()))
                 .Returns(validationRuleSet);
 
             // Act
-            var actual = sut.Validate(chargeOperationDto);
+            var actual = sut.Validate(chargeInformationOperationDto, It.IsAny<DocumentDto>());
 
             // Assert
             var shouldFail = !isValid;

@@ -32,9 +32,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void VatClassificationValidationRule_Test(
             TransparentInvoicing transparentInvoicing,
             bool expected,
-            ChargeOperationDtoBuilder chargeOperationDtoBuilder)
+            ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder)
         {
-            var chargeOperationDto = chargeOperationDtoBuilder.WithTransparentInvoicing(transparentInvoicing).Build();
+            var chargeOperationDto = chargeInformationOperationDtoBuilder.WithTransparentInvoicing(transparentInvoicing).Build();
             var sut = new TransparentInvoicingIsRequiredValidationRule(chargeOperationDto);
             sut.IsValid.Should().Be(expected);
         }

@@ -37,11 +37,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
         public async Task CreateFromCommandAsync_Charge_HasNoNullsOrEmptyCollections(
             TestMarketParticipant owner,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            ChargeOperationDtoBuilder chargeOperationDtoBuilder,
+            ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder,
             ChargeFactory sut)
         {
             // Arrange
-            var chargeOperationDto = chargeOperationDtoBuilder.Build();
+            var chargeOperationDto = chargeInformationOperationDtoBuilder.Build();
             marketParticipantRepository
                 .Setup(repo => repo.SingleOrNullAsync(
                     chargeOperationDto.ChargeOwner))
@@ -59,7 +59,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
         public async Task CreateFromCommandAsync_WhenOwnerIsNull_ThrowsException(
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
-            ChargeOperationDto chargeOperationDto,
+            ChargeInformationOperationDto chargeInformationOperationDto,
             ChargeFactory sut)
         {
             // Arrange
@@ -70,12 +70,12 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
                 .ReturnsAsync((MarketParticipant?)null);
 
             chargePeriodFactory
-                .Setup(f => f.CreateFromChargeOperationDto(It.IsAny<ChargeOperationDto>()))
+                .Setup(f => f.CreateFromChargeOperationDto(It.IsAny<ChargeInformationOperationDto>()))
                 .Returns(chargePeriod);
 
             // Act & Assert
             await Assert.ThrowsAsync<InvalidOperationException>(() =>
-                sut.CreateFromChargeOperationDtoAsync(chargeOperationDto));
+                sut.CreateFromChargeOperationDtoAsync(chargeInformationOperationDto));
         }
     }
 }

@@ -23,25 +23,25 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
     {
         private const int MaximumDigitsInPrice = 8;
         private const int MaximumDecimalsInPrice = 6;
-        private readonly ChargeOperationDto _chargeOperationDto;
+        private readonly ChargeInformationOperationDto _chargeInformationOperationDto;
 
-        public ChargePriceMaximumDigitsAndDecimalsRule(ChargeOperationDto chargeOperationDto)
+        public ChargePriceMaximumDigitsAndDecimalsRule(ChargeInformationOperationDto chargeInformationOperationDto)
         {
-            _chargeOperationDto = chargeOperationDto;
+            _chargeInformationOperationDto = chargeInformationOperationDto;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.ChargePriceMaximumDigitsAndDecimals;
 
-        public bool IsValid => _chargeOperationDto.Points.All(PointIsValid);
+        public bool IsValid => _chargeInformationOperationDto.Points.All(PointIsValid);
 
         /// <summary>
         /// This validation rule validates each Price in a list of Point(s). This property
         /// will tell which Point triggered the rule. The Point is identified by Position.
         /// </summary>
-        public string TriggeredBy => _chargeOperationDto
+        public string TriggeredBy => _chargeInformationOperationDto
             .Points.GetPositionOfPoint(
-                _chargeOperationDto.Points.First(point => !PointIsValid(point))).ToString();
+                _chargeInformationOperationDto.Points.First(point => !PointIsValid(point))).ToString();
 
         private bool PointIsValid(Point point)
         {
