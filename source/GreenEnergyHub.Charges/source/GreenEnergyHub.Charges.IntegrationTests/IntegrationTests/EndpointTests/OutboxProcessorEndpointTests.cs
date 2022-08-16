@@ -13,26 +13,22 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using AutoFixture.Xunit2;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using FluentAssertions;
-using FluentAssertions.Common;
+using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.FunctionHost.MessageHub;
 using GreenEnergyHub.Charges.Infrastructure.Outbox;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon;
-using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
-using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.Json;
 using Microsoft.EntityFrameworkCore;
-using Moq;
+using NodaTime;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
-using IClock = NodaTime.IClock;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 {
@@ -60,29 +56,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 return Task.CompletedTask;
             }
 
-            [Theory]
-            [InlineAutoMoqData]
-            public async Task When_OutboxProcessor_ReadsAnOutboxMessage_PersistsAvailableData(
-                [Frozen] Mock<ICorrelationContext> correlationContext,
-                ICorrelationContext context,
-                JsonSerializer jsonSerializer,
-                IClock clock,
-                OperationsRejectedEventBuilder builder,
-                ChargePriceCommandBuilder priceCommandBuilder,
-                ChargePriceOperationDtoBuilder operationDtoBuilder)
+            [Fact]
+            public async Task When_OutboxProcessor_ReadsAnOutboxMessage_PersistsAvailableData()
             {
                 // Arrange
-                await using var chargesDatabaseContext = Fixture.ChargesDatabaseManager.CreateDbContext();
                 await using var messageHubDatabaseContext = Fixture.MessageHubDatabaseManager.CreateDbContext();
-                var correlationId = CorrelationIdGenerator.Create();
-                correlationContext.Setup(x => x.AsTraceContext()).Returns(correlationId);
-                var chargePriceDto = operationDtoBuilder.WithPoint(1.00m).Build();
-                var chargePriceCommand = priceCommandBuilder.WithChargeOperation(chargePriceDto).Build();
-                var rejectEvent = builder.WithChargeCommand(chargePriceCommand).Build();
-                var factory = new OutboxMessageFactory(jsonSerializer, clock, context);
-                var outboxMessage = factory.CreateFrom(rejectEvent);
-                chargesDatabaseContext.OutboxMessages.Add(outboxMessage);
-                await chargesDatabaseContext.SaveChangesAsync();
+                var operationsRejectedEvent = await CreateAndPersistOutboxMessage();
 
                 // Act
                 await FunctionAsserts.AssertHasExecutedAsync(
@@ -90,7 +69,32 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
                 // Assert
                 var actualAvailableDataReceipt = await messageHubDatabaseContext.AvailableChargeReceiptData.FirstAsync();
-                actualAvailableDataReceipt.RecipientId.Should().Be(rejectEvent.Command.Document.Sender.MarketParticipantId);
+                actualAvailableDataReceipt.RecipientId.Should().Be(operationsRejectedEvent.Command.Document.Sender.MarketParticipantId);
+            }
+
+            private async Task<OperationsRejectedEvent> CreateAndPersistOutboxMessage()
+            {
+                await using var chargesDatabaseContext = Fixture.ChargesDatabaseManager.CreateDbContext();
+                var correlationContext = CreateCorrelationContext();
+                var jsonSerializer = new JsonSerializer();
+                var outboxMessageFactory = new OutboxMessageFactory(jsonSerializer, SystemClock.Instance, correlationContext);
+                var chargePriceOperationDto = new ChargePriceOperationDtoBuilder().WithPoint(1.00m).Build();
+                var chargePriceCommand = new ChargePriceCommandBuilder().WithChargeOperation(chargePriceOperationDto).Build();
+                var operationsRejectedEvent = new OperationsRejectedEventBuilder().WithChargeCommand(chargePriceCommand).Build();
+
+                var outboxMessage = outboxMessageFactory.CreateFrom(operationsRejectedEvent);
+                chargesDatabaseContext.OutboxMessages.Add(outboxMessage);
+                await chargesDatabaseContext.SaveChangesAsync();
+
+                return operationsRejectedEvent;
+            }
+
+            private static CorrelationContext CreateCorrelationContext()
+            {
+                var correlationContext = new CorrelationContext();
+                correlationContext.SetId("id");
+                correlationContext.SetParentId("parentId");
+                return correlationContext;
             }
         }
     }
