@@ -87,7 +87,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                         throw new InvalidOperationException($"Charge ID '{operation.ChargeId}' does not exist.");
                     }
 
-                    // Temporary stop saving prices in "new flow"
+                    // Todo: Temporarily stop saving prices in "new flow"
                     // charge.UpdatePrices(
                     //     operation.PointsStartInterval,
                     //     operation.PointsEndInterval,
