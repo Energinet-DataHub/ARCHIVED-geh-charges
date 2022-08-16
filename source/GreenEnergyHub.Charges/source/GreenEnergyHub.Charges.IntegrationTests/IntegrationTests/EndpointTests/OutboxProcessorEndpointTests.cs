@@ -12,19 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
+using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.FunctionHost.MessageHub;
 using GreenEnergyHub.Charges.Infrastructure.Outbox;
+using GreenEnergyHub.Charges.Infrastructure.Persistence;
+using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
+using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
+using GreenEnergyHub.Charges.MessageHub.MessageHub;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.Json;
+using Microsoft.Azure.Functions.Worker;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 using NodaTime;
 using Xunit;
 using Xunit.Abstractions;
@@ -38,11 +48,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
         [Collection(nameof(ChargesFunctionAppCollectionFixture))]
         public class RunAsync : FunctionAppTestBase<ChargesFunctionAppFixture>, IAsyncLifetime
         {
+            private readonly ChargesDatabaseManager _databaseManager;
+
             public RunAsync(
                 ChargesFunctionAppFixture fixture,
                 ITestOutputHelper testOutputHelper)
                 : base(fixture, testOutputHelper)
             {
+                _databaseManager = fixture.ChargesDatabaseManager;
             }
 
             public Task DisposeAsync()
@@ -72,9 +85,52 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 actualAvailableDataReceipt.RecipientId.Should().Be(operationsRejectedEvent.Command.Document.Sender.MarketParticipantId);
             }
 
+            [Theory]
+            [InlineAutoMoqData]
+            public async Task GivenOutputProcessorEndpoint_WhenFailsFirstAttempt_ThenRetryNext(
+                Mock<IAvailableDataNotifier<AvailableChargeReceiptData, OperationsRejectedEvent>> availableDataNotifier,
+                JsonSerializer jsonSerializer,
+                TimerInfo timerInfo,
+                Mock<IClock> clock,
+                Instant now)
+            {
+                // Arrange
+                await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
+                await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
+                var unitOfWork = new UnitOfWork(chargesDatabaseWriteContext);
+                clock.Setup(c => c.GetCurrentInstant()).Returns(now);
+                var outboxMessage = CreateOutboxMessage(now);
+                var outboxRepository = new OutboxMessageRepository(chargesDatabaseWriteContext, clock.Object);
+                chargesDatabaseWriteContext.OutboxMessages.Add(outboxMessage);
+                await chargesDatabaseWriteContext.SaveChangesAsync();
+                var sut = new OutboxProcessorEndpoint(
+                    outboxRepository,
+                    availableDataNotifier.Object,
+                    jsonSerializer,
+                    clock.Object,
+                    unitOfWork);
+
+                availableDataNotifier
+                    .Setup(adn =>
+                        adn.NotifyAsync(It.IsAny<OperationsRejectedEvent>()))
+                    .ThrowsAsync(new Exception());
+
+                await Assert.ThrowsAsync<Exception>(() => sut.RunAsync(timerInfo));
+
+                availableDataNotifier
+                    .Setup(adn =>
+                        adn.NotifyAsync(It.IsAny<OperationsRejectedEvent>()))
+                    .Returns(Task.CompletedTask);
+
+                await sut.RunAsync(timerInfo);
+
+                outboxMessage = chargesDatabaseReadContext.OutboxMessages.First();
+                outboxMessage.ProcessedDate.Should().Be(now);
+            }
+
             private async Task<OperationsRejectedEvent> CreateAndPersistOutboxMessage()
             {
-                await using var chargesDatabaseContext = Fixture.ChargesDatabaseManager.CreateDbContext();
+                await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
                 var correlationContext = CreateCorrelationContext();
                 var jsonSerializer = new JsonSerializer();
                 var outboxMessageFactory = new OutboxMessageFactory(jsonSerializer, SystemClock.Instance, correlationContext);
@@ -87,6 +143,18 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 await chargesDatabaseContext.SaveChangesAsync();
 
                 return operationsRejectedEvent;
+            }
+
+            private OutboxMessage CreateOutboxMessage(Instant now)
+            {
+                var jsonSerializer = new JsonSerializer();
+                var rejectedEvent = new OperationsRejectedEventBuilder().Build();
+                var data = jsonSerializer.Serialize(rejectedEvent);
+                return new OutboxMessageBuilder()
+                    .WithData(data)
+                    .WithType(rejectedEvent.GetType().ToString())
+                    .WithCreationDate(now)
+                    .Build();
             }
 
             private static CorrelationContext CreateCorrelationContext()

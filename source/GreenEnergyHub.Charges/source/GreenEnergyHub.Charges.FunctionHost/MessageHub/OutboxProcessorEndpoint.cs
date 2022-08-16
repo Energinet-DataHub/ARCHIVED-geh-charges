@@ -50,8 +50,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
 
         [Function(FunctionName)]
         public async Task RunAsync(
-            [TimerTrigger("*/10 * * * * *")] TimerInfo timerInfo,
-            FunctionContext context)
+            [TimerTrigger("*/10 * * * * *")] TimerInfo timerInfo)
         {
             OutboxMessage? outboxMessage;
 

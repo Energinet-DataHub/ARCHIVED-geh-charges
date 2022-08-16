@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System.Linq;
-using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Infrastructure.Outbox;
 using NodaTime;
 
@@ -42,13 +41,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
             return _chargesDatabaseContext.OutboxMessages
                 .OrderBy(message => message.CreationDate)
                 .FirstOrDefault(message => !message.ProcessedDate.HasValue);
-        }
-
-        public Task MarkProcessedAsync(OutboxMessage outboxMessage)
-        {
-            var processedMessage = _chargesDatabaseContext.OutboxMessages.Single(message => message.Id == outboxMessage.Id);
-            processedMessage.SetProcessed(_clock.GetCurrentInstant());
-            return _chargesDatabaseContext.SaveChangesAsync();
         }
     }
 }

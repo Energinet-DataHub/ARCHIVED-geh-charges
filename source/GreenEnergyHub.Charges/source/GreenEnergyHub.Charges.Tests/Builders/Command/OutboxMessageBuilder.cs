@@ -20,12 +20,31 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
 {
     public class OutboxMessageBuilder
     {
-        private readonly Instant _createDate = InstantHelper.GetTodayAtMidnightUtc();
+        private Instant _creationDate = InstantHelper.GetTodayAtMidnightUtc();
+        private string _data = string.Empty;
+        private string _type = string.Empty;
+
+        public OutboxMessageBuilder WithData(string data)
+        {
+            _data = data;
+            return this;
+        }
+
+        public OutboxMessageBuilder WithType(string type)
+        {
+            _type = type;
+            return this;
+        }
+
+        public OutboxMessageBuilder WithCreationDate(Instant creationDate)
+        {
+            _creationDate = creationDate;
+            return this;
+        }
 
         public OutboxMessage Build()
         {
-            var outboxMessage = new OutboxMessage("testData", "correlationId", "type", _createDate);
-
+            var outboxMessage = new OutboxMessage(_data, "correlationId", _type, _creationDate);
             return outboxMessage;
         }
     }
