@@ -12,10 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification;
@@ -23,10 +21,8 @@ using GreenEnergyHub.Charges.MessageHub.BundleSpecification.Charges;
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableOperationReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.Shared;
 using Microsoft.Extensions.DependencyInjection;
-using AvailableChargeReceiptValidationErrorFactory = GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData.AvailableChargeReceiptValidationErrorFactory;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
@@ -48,17 +44,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 AvailableDataNotificationFactory<AvailableChargeReceiptData>>();
             serviceCollection.AddScoped<BundleSpecification<AvailableChargeReceiptData, ChargeCommandRejectedEvent>,
                 ChargeRejectionBundleSpecification>();
-
-            serviceCollection.AddScoped<IAvailableDataNotifier<AvailableChargeReceiptData, OperationsRejectedEvent>,
-                AvailableDataNotifier<AvailableChargeReceiptData, OperationsRejectedEvent>>();
-            serviceCollection.AddScoped<IAvailableDataFactory<AvailableChargeReceiptData, OperationsRejectedEvent>,
-                AvailableOperationRejectionsFactory>();
-            serviceCollection.AddScoped<IAvailableOperationReceiptValidationErrorFactory,
-                AvailableOperationReceiptValidationErrorFactory>();
-            serviceCollection.AddScoped<ICimValidationErrorTextFactory<ChargePriceCommand, ChargePriceOperationDto>,
-                OperationCimValidationErrorTextFactory>();
-            serviceCollection.AddScoped<BundleSpecification<AvailableChargeReceiptData, OperationsRejectedEvent>,
-                OperationsRejectionBundleSpecification>();
 
             serviceCollection
                 .AddMessaging()

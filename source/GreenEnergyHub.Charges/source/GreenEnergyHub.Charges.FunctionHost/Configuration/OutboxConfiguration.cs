@@ -12,8 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using GreenEnergyHub.Charges.Application.Charges.Events;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Infrastructure.Outbox;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
+using GreenEnergyHub.Charges.MessageHub.BundleSpecification;
+using GreenEnergyHub.Charges.MessageHub.BundleSpecification.Charges;
+using GreenEnergyHub.Charges.MessageHub.MessageHub;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableOperationReceiptData;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
@@ -24,12 +32,16 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         {
             serviceCollection.AddScoped<OutboxMessageFactory>();
             serviceCollection.AddScoped<IOutboxMessageRepository, OutboxMessageRepository>();
-            // serviceCollection.AddScoped<IAvailableDataNotifier<AvailableChargeReceiptData, OperationsRejectedEvent>,
-            //     AvailableDataNotifier<AvailableChargeReceiptData, OperationsRejectedEvent>>();
-            // serviceCollection.AddScoped<IAvailableDataNotificationFactory<AvailableChargeReceiptData>,
-            //     AvailableDataNotificationFactory<AvailableChargeReceiptData>>();
-            // serviceCollection.AddScoped<BundleSpecification<AvailableChargeReceiptData, OperationsRejectedEvent>,
-            //     ChargeRejectionBundleSpecification>();
+            serviceCollection.AddScoped<IAvailableDataNotifier<AvailableChargeReceiptData, OperationsRejectedEvent>,
+                AvailableDataNotifier<AvailableChargeReceiptData, OperationsRejectedEvent>>();
+            serviceCollection.AddScoped<IAvailableDataFactory<AvailableChargeReceiptData, OperationsRejectedEvent>,
+                AvailableOperationRejectionsFactory>();
+            serviceCollection.AddScoped<IAvailableOperationReceiptValidationErrorFactory,
+                AvailableOperationReceiptValidationErrorFactory>();
+            serviceCollection.AddScoped<ICimValidationErrorTextFactory<ChargePriceCommand, ChargePriceOperationDto>,
+                OperationCimValidationErrorTextFactory>();
+            serviceCollection.AddScoped<BundleSpecification<AvailableChargeReceiptData, OperationsRejectedEvent>,
+                OperationsRejectionBundleSpecification>();
         }
     }
 }
