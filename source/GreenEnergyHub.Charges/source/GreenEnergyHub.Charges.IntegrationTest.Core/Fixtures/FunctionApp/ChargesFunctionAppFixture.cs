@@ -31,7 +31,9 @@ using GreenEnergyHub.Charges.IntegrationTest.Core.Authorization;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
+using Microsoft.Azure.Amqp.Serialization;
 using Microsoft.Extensions.Configuration;
+using Moq;
 
 namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
 {
@@ -42,8 +44,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             AzuriteManager = new AzuriteManager();
             IntegrationTestConfiguration = new IntegrationTestConfiguration();
             DatabaseManager = new ChargesDatabaseManager();
-            AuthorizationConfigurations = CreateAuthorizationConfigurations();
-            AuthorizedHttpRequestGenerators = CreateAuthorizedHttpRequestGenerators(AuthorizationConfigurations);
+            AuthorizationConfiguration = CreateAuthorizationConfiguration();
+            AuthorizedHttpRequestGenerators = CreateAuthorizedHttpRequestGenerators(AuthorizationConfiguration.TestClients);
             ServiceBusResourceProvider = new ServiceBusResourceProvider(
                 IntegrationTestConfiguration.ServiceBusConnectionString, TestLogger);
         }
@@ -81,9 +83,9 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
         public TopicResource? ChargeLinksAcceptedTopic { get; private set; }
 
         public AuthorizedHttpRequestGenerator GetAuthorizedHttpRequestGenerator(string clientName) =>
-            AuthorizedHttpRequestGenerators.Single(x => x.ClientName == clientName);
+            AuthorizedHttpRequestGenerators.Single(x => x.TestClient.ClientName == clientName);
 
-        private IEnumerable<AuthorizationConfiguration> AuthorizationConfigurations { get; }
+        private AuthorizationConfiguration AuthorizationConfiguration { get; }
 
         private IEnumerable<AuthorizedHttpRequestGenerator> AuthorizedHttpRequestGenerators { get; }
 
@@ -128,8 +130,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.DataHubSenderConnectionString, ServiceBusResourceProvider.ConnectionString);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.DataHubListenerConnectionString, ServiceBusResourceProvider.ConnectionString);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.DataHubManagerConnectionString, ServiceBusResourceProvider.ConnectionString);
-            Environment.SetEnvironmentVariable(EnvironmentSettingNames.B2CTenantId, AuthorizationConfigurations.First().B2cTenantId);
-            Environment.SetEnvironmentVariable(EnvironmentSettingNames.BackendServiceAppId, AuthorizationConfigurations.First().BackendAppId);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.B2CTenantId, AuthorizationConfiguration.B2cTenantId);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.BackendServiceAppId, AuthorizationConfiguration.BackendAppId);
 
             ChargeLinksAcceptedTopic = await ServiceBusResourceProvider
                 .BuildTopic(ChargesServiceBusResourceNames.ChargeLinksAcceptedTopicKey)
@@ -298,30 +300,26 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             await DatabaseManager.DeleteDatabaseAsync();
         }
 
-        private static IEnumerable<AuthorizationConfiguration> CreateAuthorizationConfigurations()
+        private static AuthorizationConfiguration CreateAuthorizationConfiguration()
         {
-            return new List<AuthorizationConfiguration>()
-            {
-                AuthorizationConfigurationData.CreateAuthorizationConfiguration(AuthorizationConfigurationData
-                    .GridAccessProvider8100000000030),
-                AuthorizationConfigurationData.CreateAuthorizationConfiguration(AuthorizationConfigurationData
-                    .SystemOperator),
-            };
+            return AuthorizationConfigurationData.CreateAuthorizationConfiguration();
         }
 
         private async Task AuthenticateHttpRequestGenerators()
         {
-            foreach (var authenticatedHttpRequestGenerator in AuthorizedHttpRequestGenerators)
+            foreach (var generator in AuthorizedHttpRequestGenerators)
             {
-                await authenticatedHttpRequestGenerator.AddAuthenticationAsync();
+                await generator.AddAuthenticationAsync(
+                    AuthorizationConfiguration.BackendAppScope,
+                    AuthorizationConfiguration.B2cTenantId);
             }
         }
 
         private IEnumerable<AuthorizedHttpRequestGenerator> CreateAuthorizedHttpRequestGenerators(
-            IEnumerable<AuthorizationConfiguration> authorizationConfigurations)
+            IEnumerable<TestClient> testClients)
         {
-            return authorizationConfigurations
-                .Select(ac => new AuthorizedHttpRequestGenerator(ac, LocalTimeZoneName))
+            return testClients
+                .Select(testClient => new AuthorizedHttpRequestGenerator(testClient, LocalTimeZoneName))
                 .ToList();
         }
 

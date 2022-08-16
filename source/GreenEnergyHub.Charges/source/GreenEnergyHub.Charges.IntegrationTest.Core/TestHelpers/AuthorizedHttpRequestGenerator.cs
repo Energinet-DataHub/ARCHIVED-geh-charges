@@ -13,10 +13,10 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Core.DateTime;
-using GreenEnergyHub.Charges.IntegrationTest.Core.Authorization;
 using GreenEnergyHub.Iso8601;
 using Microsoft.Identity.Client;
 using NodaTime.Testing;
@@ -26,26 +26,24 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
 {
     public class AuthorizedHttpRequestGenerator
     {
-        private readonly AuthorizationConfiguration _authorizationConfiguration;
         private readonly string _localTimeZoneName;
 
-        public string ClientName { get; }
+        public TestClient TestClient { get; }
 
         private AuthenticationResult? AuthenticationResult { get; set; }
 
-        public AuthorizedHttpRequestGenerator(AuthorizationConfiguration authorizationConfiguration, string localTimeZoneName)
+        public AuthorizedHttpRequestGenerator(TestClient testClient, string localTimeZoneName)
         {
-            _authorizationConfiguration = authorizationConfiguration;
-            ClientName = _authorizationConfiguration.ClientName;
+            TestClient = testClient;
             _localTimeZoneName = localTimeZoneName;
         }
 
-        public async Task AddAuthenticationAsync()
+        public async Task AddAuthenticationAsync(IEnumerable<string> backendAppScope, string b2CTenantId)
         {
             var backendAuthenticationClient = new BackendAuthenticationClient(
-                _authorizationConfiguration.BackendAppScope,
-                _authorizationConfiguration.ClientCredentialsSettings,
-                _authorizationConfiguration.B2cTenantId);
+                backendAppScope,
+                TestClient.ClientCredentialsSettings,
+                b2CTenantId);
             AuthenticationResult = await backendAuthenticationClient.GetAuthenticationTokenAsync();
         }
 
