@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
         /// <param name="clientId">Client ID</param>
         /// <param name="clientSecret">Client secret</param>
         /// <returns>Settings for 'test client app'</returns>
-        public static ClientCredentialsSettings RetrieveB2CTestClientSettings(string clientName, string clientId, string clientSecret)
+        private static ClientCredentialsSettings RetrieveB2CTestClientSettings(string clientName, string clientId, string clientSecret)
         {
             if (string.IsNullOrWhiteSpace(clientName))
                 throw new ArgumentException($"'{nameof(clientName)}' cannot be null or whitespace.", nameof(clientName));
@@ -45,12 +45,12 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
             return new ClientCredentialsSettings(clientId, clientSecret);
         }
 
+        public ClientCredentialsSettings ClientCredentialsSettings { get; }
+
         public string ClientName { get; }
 
-        public string TeamClientId { get; }
+        private string TeamClientId { get; }
 
-        public string TeamClientSecret { get; }
-
-        public ClientCredentialsSettings ClientCredentialsSettings { get; }
+        private string TeamClientSecret { get; }
     }
 }
