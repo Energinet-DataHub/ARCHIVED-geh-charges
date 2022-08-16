@@ -110,7 +110,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Authorization
             foreach (var clientName in clientNames)
             {
                 if (string.IsNullOrEmpty(clientName))
-                    throw new ArgumentException($"'{nameof(clientName)}' cannot be null or whitespace.", nameof(clientName));
+                    throw new ArgumentException("clientName cannot be null or whitespace.");
 
                 testClients.Add(new TestClient(
                     clientName,
