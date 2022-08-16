@@ -13,13 +13,15 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using Energinet.DataHub.Core.JsonSerialization;
 using GreenEnergyHub.Charges.Application.Charges.Events;
+using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Infrastructure.Outbox;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
+using GreenEnergyHub.Json;
 using Microsoft.Azure.Functions.Worker;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
 {
@@ -29,15 +31,21 @@ namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
         private readonly IOutboxMessageRepository _outboxMessageRepository;
         private readonly IAvailableDataNotifier<AvailableChargeReceiptData, OperationsRejectedEvent> _availableDataNotifier;
         private readonly IJsonSerializer _jsonSerializer;
+        private readonly IClock _clock;
+        private readonly IUnitOfWork _unitOfWork;
 
         public OutboxProcessorEndpoint(
             IOutboxMessageRepository outboxMessageRepository,
             IAvailableDataNotifier<AvailableChargeReceiptData, OperationsRejectedEvent> availableDataNotifier,
-            IJsonSerializer jsonSerializer)
+            IJsonSerializer jsonSerializer,
+            IClock clock,
+            IUnitOfWork unitOfWork)
         {
             _outboxMessageRepository = outboxMessageRepository;
             _availableDataNotifier = availableDataNotifier;
             _jsonSerializer = jsonSerializer;
+            _clock = clock;
+            _unitOfWork = unitOfWork;
         }
 
         [Function(FunctionName)]
@@ -51,13 +59,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
             {
                 var operationsRejectedEvent = _jsonSerializer.Deserialize<OperationsRejectedEvent>(outboxMessage.Data);
                 await _availableDataNotifier.NotifyAsync(operationsRejectedEvent).ConfigureAwait(false);
-                await Task.CompletedTask.ConfigureAwait(false);
+                outboxMessage.SetProcessed(_clock.GetCurrentInstant());
+                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             }
-
-            // Fetch new outbox messages
-            // Create data available
-            // Notify message hub
-            // Mark outbox message processed
         }
     }
 }

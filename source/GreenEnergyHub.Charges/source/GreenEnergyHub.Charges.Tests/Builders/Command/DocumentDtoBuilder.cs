@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         {
             _id = "id";
             _recipient = new MarketParticipantDto { MarketParticipantId = "5790001330552", BusinessProcessRole = MarketParticipantRole.MeteringPointAdministrator };
-            _sender = new MarketParticipantDto { MarketParticipantId = "0", BusinessProcessRole = MarketParticipantRole.GridAccessProvider };
+            _sender = new MarketParticipantDto { MarketParticipantId = "8100000000030", BusinessProcessRole = MarketParticipantRole.GridAccessProvider };
         }
 
         public DocumentDtoBuilder WithDocumentId(string id)
