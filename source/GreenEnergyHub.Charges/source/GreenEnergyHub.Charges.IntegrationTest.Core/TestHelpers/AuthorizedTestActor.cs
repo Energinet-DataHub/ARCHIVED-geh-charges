@@ -16,11 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Core.DateTime;
-using GreenEnergyHub.Iso8601;
 using Microsoft.Identity.Client;
-using NodaTime.Testing;
-using SystemClock = NodaTime.SystemClock;
 
 namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
 {
