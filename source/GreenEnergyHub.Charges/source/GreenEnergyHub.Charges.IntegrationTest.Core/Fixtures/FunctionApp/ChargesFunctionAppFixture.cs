@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             IntegrationTestConfiguration = new IntegrationTestConfiguration();
             DatabaseManager = new ChargesDatabaseManager();
             AuthorizationConfiguration = CreateAuthorizationConfiguration();
-            AuthorizedHttpRequestGenerators = CreateAuthorizedHttpRequestGenerators(AuthorizationConfiguration.TestClients);
+            AuthorizedTestActors = CreateAuthorizedTestActors(AuthorizationConfiguration.TestClients);
             ServiceBusResourceProvider = new ServiceBusResourceProvider(
                 IntegrationTestConfiguration.ServiceBusConnectionString, TestLogger);
         }
@@ -82,12 +82,12 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
         [NotNull]
         public TopicResource? ChargeLinksAcceptedTopic { get; private set; }
 
-        public AuthorizedHttpRequestGenerator GetAuthorizedHttpRequestGenerator(string clientName) =>
-            AuthorizedHttpRequestGenerators.Single(x => x.TestClient.ClientName == clientName);
+        public AuthorizedTestActor GetAuthorizedTestActor(string clientName) =>
+            AuthorizedTestActors.Single(x => x.TestClient.ClientName == clientName);
 
         private AuthorizationConfiguration AuthorizationConfiguration { get; }
 
-        private IEnumerable<AuthorizedHttpRequestGenerator> AuthorizedHttpRequestGenerators { get; }
+        private IEnumerable<AuthorizedTestActor> AuthorizedTestActors { get; }
 
         private string LocalTimeZoneName { get; } = "Europe/Copenhagen";
 
@@ -251,7 +251,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             await chargePricesUpdatedListener.AddTopicSubscriptionListenerAsync(chargePricesUpdatedTopic.Name, ChargesServiceBusResourceNames.ChargePricesUpdatedSubscriptionName);
             ChargePricesUpdatedListener = new ServiceBusTestListener(chargePricesUpdatedListener);
 
-            await AuthenticateHttpRequestGenerators();
+            await AcquireTokenForTestActors();
 
             await InitializeMessageHubAsync();
 
@@ -305,21 +305,21 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             return AuthorizationConfigurationData.CreateAuthorizationConfiguration();
         }
 
-        private async Task AuthenticateHttpRequestGenerators()
+        private async Task AcquireTokenForTestActors()
         {
-            foreach (var generator in AuthorizedHttpRequestGenerators)
+            foreach (var testActor in AuthorizedTestActors)
             {
-                await generator.AddAuthenticationAsync(
+                await testActor.AddAuthenticationAsync(
                     AuthorizationConfiguration.BackendAppScope,
                     AuthorizationConfiguration.B2cTenantId);
             }
         }
 
-        private IEnumerable<AuthorizedHttpRequestGenerator> CreateAuthorizedHttpRequestGenerators(
+        private IEnumerable<AuthorizedTestActor> CreateAuthorizedTestActors(
             IEnumerable<TestClient> testClients)
         {
             return testClients
-                .Select(testClient => new AuthorizedHttpRequestGenerator(testClient, LocalTimeZoneName))
+                .Select(testClient => new AuthorizedTestActor(testClient, LocalTimeZoneName))
                 .ToList();
         }
 

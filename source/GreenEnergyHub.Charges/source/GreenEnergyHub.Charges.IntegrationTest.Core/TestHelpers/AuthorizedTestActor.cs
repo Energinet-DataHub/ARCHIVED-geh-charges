@@ -24,7 +24,7 @@ using SystemClock = NodaTime.SystemClock;
 
 namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
 {
-    public class AuthorizedHttpRequestGenerator
+    public class AuthorizedTestActor
     {
         private readonly string _localTimeZoneName;
 
@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
 
         private AuthenticationResult? AuthenticationResult { get; set; }
 
-        public AuthorizedHttpRequestGenerator(TestClient testClient, string localTimeZoneName)
+        public AuthorizedTestActor(TestClient testClient, string localTimeZoneName)
         {
             TestClient = testClient;
             _localTimeZoneName = localTimeZoneName;
