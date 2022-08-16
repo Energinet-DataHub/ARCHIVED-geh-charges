@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System;
-using DbUp.Reboot.Engine;
+using DbUp.Engine;
 
 namespace GreenEnergyHub.Charges.ApplyDBMigrationsApp.Helpers
 {

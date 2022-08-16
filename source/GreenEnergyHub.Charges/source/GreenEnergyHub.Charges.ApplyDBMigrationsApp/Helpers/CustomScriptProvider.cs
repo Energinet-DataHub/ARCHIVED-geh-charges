@@ -16,9 +16,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using DbUp.Reboot.Engine;
-using DbUp.Reboot.Engine.Transactions;
-using DbUp.Reboot.ScriptProviders;
+using DbUp.Engine;
+using DbUp.Engine.Transactions;
+using DbUp.ScriptProviders;
 
 namespace GreenEnergyHub.Charges.ApplyDBMigrationsApp.Helpers
 {
