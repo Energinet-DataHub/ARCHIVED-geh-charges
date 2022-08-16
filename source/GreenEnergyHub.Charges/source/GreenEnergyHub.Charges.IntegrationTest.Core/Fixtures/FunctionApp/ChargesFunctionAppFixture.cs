@@ -306,6 +306,14 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             return AuthorizationConfigurationData.CreateAuthorizationConfiguration();
         }
 
+        private IEnumerable<AuthorizedTestActor> CreateAuthorizedTestActors(
+            IEnumerable<TestClient> testClients)
+        {
+            return testClients
+                .Select(testClient => new AuthorizedTestActor(testClient, LocalTimeZoneName))
+                .ToList();
+        }
+
         private async Task AcquireTokenForTestActors()
         {
             foreach (var testActor in AuthorizedTestActors)
@@ -314,14 +322,6 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
                     AuthorizationConfiguration.BackendAppScope,
                     AuthorizationConfiguration.B2cTenantId);
             }
-        }
-
-        private IEnumerable<AuthorizedTestActor> CreateAuthorizedTestActors(
-            IEnumerable<TestClient> testClients)
-        {
-            return testClients
-                .Select(testClient => new AuthorizedTestActor(testClient, LocalTimeZoneName))
-                .ToList();
         }
 
         private AuthorizedTestActor SetTestActor(string testActorName)
