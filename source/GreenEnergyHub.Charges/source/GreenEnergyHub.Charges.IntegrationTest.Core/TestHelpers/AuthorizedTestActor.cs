@@ -47,16 +47,21 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
             AuthenticationResult = await backendAuthenticationClient.GetAuthenticationTokenAsync();
         }
 
-        public (HttpRequestMessage Request, string CorrelationId) CreateAuthorizedHttpPostRequest(
-            string endpointUrl, string testFilePath)
+        public (HttpRequestMessage Request, string CorrelationId) PrepareHttpPostRequestWithAuthorization(
+            string endpointUrl,
+            string testFilePath)
         {
+            ArgumentNullException.ThrowIfNull(endpointUrl);
+            ArgumentNullException.ThrowIfNull(testFilePath);
             ArgumentNullException.ThrowIfNull(AuthenticationResult);
+            ArgumentNullException.ThrowIfNull(_localTimeZoneName);
 
-            var clock = new FakeClock(SystemClock.Instance.GetCurrentInstant());
-            var zonedDateTimeService = new ZonedDateTimeService(clock, new Iso8601ConversionConfiguration(_localTimeZoneName));
-            var (request, correlationId) = HttpRequestGenerator.CreateHttpPostRequest(endpointUrl, testFilePath, zonedDateTimeService);
-
-            request.Headers.Add("Authorization", $"Bearer {AuthenticationResult.AccessToken}");
+            var (request, correlationId) =
+                HttpRequestGenerator.CreateHttpPostRequestWithAuthorization(
+                    endpointUrl,
+                    testFilePath,
+                    AuthenticationResult.AccessToken,
+                    _localTimeZoneName);
 
             return (request, correlationId);
         }
