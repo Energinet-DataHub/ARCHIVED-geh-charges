@@ -31,9 +31,7 @@ using GreenEnergyHub.Charges.IntegrationTest.Core.Authorization;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
-using Microsoft.Azure.Amqp.Serialization;
 using Microsoft.Extensions.Configuration;
-using Moq;
 
 namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
 {
@@ -46,6 +44,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             DatabaseManager = new ChargesDatabaseManager();
             AuthorizationConfiguration = CreateAuthorizationConfiguration();
             AuthorizedTestActors = CreateAuthorizedTestActors(AuthorizationConfiguration.TestClients);
+            AsSystemOperator = SetTestActor(AuthorizationConfigurationData.SystemOperator);
+            AsGridAccessProvider = SetTestActor(AuthorizationConfigurationData.GridAccessProvider8100000000030);
             ServiceBusResourceProvider = new ServiceBusResourceProvider(
                 IntegrationTestConfiguration.ServiceBusConnectionString, TestLogger);
         }
@@ -82,8 +82,9 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
         [NotNull]
         public TopicResource? ChargeLinksAcceptedTopic { get; private set; }
 
-        public AuthorizedTestActor GetAuthorizedTestActor(string clientName) =>
-            AuthorizedTestActors.Single(x => x.TestClient.ClientName == clientName);
+        public AuthorizedTestActor AsGridAccessProvider { get; private set; }
+
+        public AuthorizedTestActor AsSystemOperator { get; private set; }
 
         private AuthorizationConfiguration AuthorizationConfiguration { get; }
 
@@ -321,6 +322,11 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             return testClients
                 .Select(testClient => new AuthorizedTestActor(testClient, LocalTimeZoneName))
                 .ToList();
+        }
+
+        private AuthorizedTestActor SetTestActor(string testActorName)
+        {
+            return AuthorizedTestActors.Single(a => a.TestClient.ClientName == testActorName);
         }
 
         private async Task InitializeMessageHubAsync()
