@@ -27,7 +27,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Outbox
     [UnitTest]
     public class OutboxMessageFactoryTests
     {
-        private const string OperationsRejectedEventType = "GreenEnergyHub.Charges.Application.Charges.Events.OperationsRejectedEvent";
+        private const string OperationsRejectedEventType = "GreenEnergyHub.Charges.Application.Charges.Events.ChargePriceOperationsRejectedEvent";
 
         [Theory]
         [AutoDomainData]

@@ -89,7 +89,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 
             // Assert
             chargePriceRejectionService.Verify(
-                x => x.SaveRejections(It.IsAny<OperationsRejectedEvent>()),
+                x => x.SaveRejections(It.IsAny<ChargePriceOperationsRejectedEvent>()),
                 Times.Never);
             chargePriceConfirmationService.Verify(
                 x =>
@@ -126,7 +126,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 
             // Assert
             chargePriceRejectionService.Verify(
-                x => x.SaveRejections(It.IsAny<OperationsRejectedEvent>()), Times.Once);
+                x => x.SaveRejections(It.IsAny<ChargePriceOperationsRejectedEvent>()), Times.Once);
         }
 
         [Theory]

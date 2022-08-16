@@ -88,7 +88,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
             [Theory]
             [InlineAutoMoqData]
             public async Task GivenOutputProcessorEndpoint_WhenFailsFirstAttempt_ThenRetryNext(
-                Mock<IAvailableDataNotifier<AvailableChargeReceiptData, OperationsRejectedEvent>> availableDataNotifier,
+                Mock<IAvailableDataNotifier<AvailableChargeReceiptData, ChargePriceOperationsRejectedEvent>> availableDataNotifier,
                 JsonSerializer jsonSerializer,
                 TimerInfo timerInfo,
                 Mock<IClock> clock,
@@ -112,14 +112,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
                 availableDataNotifier
                     .Setup(adn =>
-                        adn.NotifyAsync(It.IsAny<OperationsRejectedEvent>()))
+                        adn.NotifyAsync(It.IsAny<ChargePriceOperationsRejectedEvent>()))
                     .ThrowsAsync(new Exception());
 
                 await Assert.ThrowsAsync<Exception>(() => sut.RunAsync(timerInfo));
 
                 availableDataNotifier
                     .Setup(adn =>
-                        adn.NotifyAsync(It.IsAny<OperationsRejectedEvent>()))
+                        adn.NotifyAsync(It.IsAny<ChargePriceOperationsRejectedEvent>()))
                     .Returns(Task.CompletedTask);
 
                 await sut.RunAsync(timerInfo);
@@ -128,7 +128,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 outboxMessage.ProcessedDate.Should().Be(now);
             }
 
-            private async Task<OperationsRejectedEvent> CreateAndPersistOutboxMessage()
+            private async Task<ChargePriceOperationsRejectedEvent> CreateAndPersistOutboxMessage()
             {
                 await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
                 var correlationContext = CreateCorrelationContext();

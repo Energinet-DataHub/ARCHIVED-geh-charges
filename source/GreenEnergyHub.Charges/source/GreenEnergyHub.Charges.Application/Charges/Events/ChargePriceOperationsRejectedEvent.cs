@@ -18,9 +18,9 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Events
 {
-    public class OperationsRejectedEvent
+    public class ChargePriceOperationsRejectedEvent
     {
-        public OperationsRejectedEvent(
+        public ChargePriceOperationsRejectedEvent(
             ChargePriceCommand command,
             IEnumerable<ValidationError> validationErrors)
         {

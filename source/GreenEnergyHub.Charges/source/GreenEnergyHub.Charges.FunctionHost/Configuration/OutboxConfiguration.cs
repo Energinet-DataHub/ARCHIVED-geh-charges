@@ -32,15 +32,15 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         {
             serviceCollection.AddScoped<OutboxMessageFactory>();
             serviceCollection.AddScoped<IOutboxMessageRepository, OutboxMessageRepository>();
-            serviceCollection.AddScoped<IAvailableDataNotifier<AvailableChargeReceiptData, OperationsRejectedEvent>,
-                AvailableDataNotifier<AvailableChargeReceiptData, OperationsRejectedEvent>>();
-            serviceCollection.AddScoped<IAvailableDataFactory<AvailableChargeReceiptData, OperationsRejectedEvent>,
+            serviceCollection.AddScoped<IAvailableDataNotifier<AvailableChargeReceiptData, ChargePriceOperationsRejectedEvent>,
+                AvailableDataNotifier<AvailableChargeReceiptData, ChargePriceOperationsRejectedEvent>>();
+            serviceCollection.AddScoped<IAvailableDataFactory<AvailableChargeReceiptData, ChargePriceOperationsRejectedEvent>,
                 AvailableOperationRejectionsFactory>();
             serviceCollection.AddScoped<IAvailableOperationReceiptValidationErrorFactory,
                 AvailableOperationReceiptValidationErrorFactory>();
             serviceCollection.AddScoped<ICimValidationErrorTextFactory<ChargePriceCommand, ChargePriceOperationDto>,
                 OperationCimValidationErrorTextFactory>();
-            serviceCollection.AddScoped<BundleSpecification<AvailableChargeReceiptData, OperationsRejectedEvent>,
+            serviceCollection.AddScoped<BundleSpecification<AvailableChargeReceiptData, ChargePriceOperationsRejectedEvent>,
                 OperationsRejectionBundleSpecification>();
         }
     }

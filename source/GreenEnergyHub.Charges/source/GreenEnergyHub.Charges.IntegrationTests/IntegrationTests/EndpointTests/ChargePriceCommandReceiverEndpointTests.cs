@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
         [Collection(nameof(ChargesFunctionAppCollectionFixture))]
         public class RunAsync : FunctionAppTestBase<ChargesFunctionAppFixture>, IAsyncLifetime
         {
-            private const string OperationsRejectedEventType = "GreenEnergyHub.Charges.Application.Charges.Events.OperationsRejectedEvent";
+            private const string OperationsRejectedEventType = "GreenEnergyHub.Charges.Application.Charges.Events.ChargePriceOperationsRejectedEvent";
 
             public RunAsync(ChargesFunctionAppFixture fixture, ITestOutputHelper testOutputHelper)
                 : base(fixture, testOutputHelper)

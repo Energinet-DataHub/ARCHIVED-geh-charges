@@ -57,7 +57,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         {
             var validationResult = ValidationResult.CreateFailure(rejectionRules);
 
-            var rejectEvent = new OperationsRejectedEvent(
+            var rejectEvent = new ChargePriceOperationsRejectedEvent(
                 commandReceivedEvent.Command,
                 validationResult.InvalidRules.Select(ValidationErrorFactory.Create()));
 

@@ -32,9 +32,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Services
             _outboxMessageFactory = outboxMessageFactory;
         }
 
-        public void SaveRejections(OperationsRejectedEvent operationsRejectedEvent)
+        public void SaveRejections(ChargePriceOperationsRejectedEvent chargePriceOperationsRejectedEvent)
         {
-            var outboxMessage = _outboxMessageFactory.CreateFrom(operationsRejectedEvent);
+            var outboxMessage = _outboxMessageFactory.CreateFrom(chargePriceOperationsRejectedEvent);
             _outboxMessageRepository.Add(outboxMessage);
         }
     }

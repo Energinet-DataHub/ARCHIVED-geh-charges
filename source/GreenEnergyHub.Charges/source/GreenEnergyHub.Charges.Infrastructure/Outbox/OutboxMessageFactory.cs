@@ -35,13 +35,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Outbox
             _correlationContext = correlationContext;
         }
 
-        public OutboxMessage CreateFrom(OperationsRejectedEvent operationsRejectedEvent)
+        public OutboxMessage CreateFrom(ChargePriceOperationsRejectedEvent chargePriceOperationsRejectedEvent)
         {
-            var data = _jsonSerializer.Serialize(operationsRejectedEvent);
+            var data = _jsonSerializer.Serialize(chargePriceOperationsRejectedEvent);
             return new OutboxMessage(
                 data,
                 _correlationContext.AsTraceContext(),
-                operationsRejectedEvent.GetType().ToString(),
+                chargePriceOperationsRejectedEvent.GetType().ToString(),
                 _clock.GetCurrentInstant());
         }
     }

@@ -74,7 +74,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 
             // Assert
             chargePriceRejectionService.Verify(
-                x => x.SaveRejections(It.IsAny<OperationsRejectedEvent>()), Times.Once);
+                x => x.SaveRejections(It.IsAny<ChargePriceOperationsRejectedEvent>()), Times.Once);
             chargePriceEventHandler.Verify(x => x.HandleAsync(chargePriceCommandReceivedEvent), Times.Never);
         }
 

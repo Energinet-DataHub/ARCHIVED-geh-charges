@@ -29,14 +29,14 @@ namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
     {
         private const string FunctionName = nameof(OutboxProcessorEndpoint);
         private readonly IOutboxMessageRepository _outboxMessageRepository;
-        private readonly IAvailableDataNotifier<AvailableChargeReceiptData, OperationsRejectedEvent> _availableDataNotifier;
+        private readonly IAvailableDataNotifier<AvailableChargeReceiptData, ChargePriceOperationsRejectedEvent> _availableDataNotifier;
         private readonly IJsonSerializer _jsonSerializer;
         private readonly IClock _clock;
         private readonly IUnitOfWork _unitOfWork;
 
         public OutboxProcessorEndpoint(
             IOutboxMessageRepository outboxMessageRepository,
-            IAvailableDataNotifier<AvailableChargeReceiptData, OperationsRejectedEvent> availableDataNotifier,
+            IAvailableDataNotifier<AvailableChargeReceiptData, ChargePriceOperationsRejectedEvent> availableDataNotifier,
             IJsonSerializer jsonSerializer,
             IClock clock,
             IUnitOfWork unitOfWork)
@@ -56,7 +56,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
 
             while ((outboxMessage = _outboxMessageRepository.GetNext()) != null)
             {
-                var operationsRejectedEvent = _jsonSerializer.Deserialize<OperationsRejectedEvent>(outboxMessage.Data);
+                var operationsRejectedEvent = _jsonSerializer.Deserialize<ChargePriceOperationsRejectedEvent>(outboxMessage.Data);
                 await _availableDataNotifier.NotifyAsync(operationsRejectedEvent).ConfigureAwait(false);
                 outboxMessage.SetProcessed(_clock.GetCurrentInstant());
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
