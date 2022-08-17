@@ -17,6 +17,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application.Charges.Events;
+using GreenEnergyHub.Charges.Application.Charges.Factories;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Application.Charges.Services;
 using GreenEnergyHub.Charges.Application.Persistence;
@@ -62,12 +63,18 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             [Frozen] Mock<IDocumentValidator> documentValidator,
             [Frozen] Mock<IChargePriceEventHandler> chargePriceEventHandler,
             [Frozen] Mock<IChargePriceRejectionService> chargePriceRejectionService,
-            ChargePriceCommandReceivedEventHandler sut)
+            [Frozen] Mock<IChargePriceOperationsRejectedEventFactory> chargePriceOperationRejectedEventFactory,
+            ChargePriceCommandReceivedEventHandler sut,
+            ChargePriceOperationsRejectedEvent chargePriceRejectedEvent)
         {
             // Arrange
             documentValidator.Setup(v =>
                     v.ValidateAsync(It.IsAny<ChargePriceCommand>()))
                 .ReturnsAsync(ValidationResult.CreateFailure(GetFailedValidationResult()));
+
+            chargePriceOperationRejectedEventFactory.Setup(c =>
+                    c.Create(It.IsAny<ChargePriceCommand>(), It.IsAny<IEnumerable<ValidationError>>()))
+                .Returns(chargePriceRejectedEvent);
 
             // Act
             await sut.HandleAsync(chargePriceCommandReceivedEvent);

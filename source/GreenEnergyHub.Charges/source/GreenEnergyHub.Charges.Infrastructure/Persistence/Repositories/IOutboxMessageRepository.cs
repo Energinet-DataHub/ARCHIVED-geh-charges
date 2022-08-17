@@ -17,7 +17,7 @@ using GreenEnergyHub.Charges.Infrastructure.Outbox;
 namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
 {
     /// <summary>
-    /// Contract defining the capabilities of the infrastructure component facilitating interaction with the outbox data store.
+    /// Contract defining the capabilities of the infrastructure component facilitating interaction with the outbox message data store.
     /// </summary>
     public interface IOutboxMessageRepository
     {

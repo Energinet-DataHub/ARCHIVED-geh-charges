@@ -15,6 +15,7 @@
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Application.Persistence;
+using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Outbox;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
@@ -25,16 +26,16 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
 {
-    public class OutboxProcessorEndpoint
+    public class OutboxMessageProcessorEndpoint
     {
-        private const string FunctionName = nameof(OutboxProcessorEndpoint);
+        private const string FunctionName = nameof(OutboxMessageProcessorEndpoint);
         private readonly IOutboxMessageRepository _outboxMessageRepository;
         private readonly IAvailableDataNotifier<AvailableChargeReceiptData, ChargePriceOperationsRejectedEvent> _availableDataNotifier;
         private readonly IJsonSerializer _jsonSerializer;
         private readonly IClock _clock;
         private readonly IUnitOfWork _unitOfWork;
 
-        public OutboxProcessorEndpoint(
+        public OutboxMessageProcessorEndpoint(
             IOutboxMessageRepository outboxMessageRepository,
             IAvailableDataNotifier<AvailableChargeReceiptData, ChargePriceOperationsRejectedEvent> availableDataNotifier,
             IJsonSerializer jsonSerializer,
@@ -50,7 +51,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
 
         [Function(FunctionName)]
         public async Task RunAsync(
-            [TimerTrigger("*/10 * * * * *")] TimerInfo timerInfo)
+            [TimerTrigger(TimerTriggerTimeConstants.Every10Seconds)] TimerInfo timerInfo)
         {
             OutboxMessage? outboxMessage;
 

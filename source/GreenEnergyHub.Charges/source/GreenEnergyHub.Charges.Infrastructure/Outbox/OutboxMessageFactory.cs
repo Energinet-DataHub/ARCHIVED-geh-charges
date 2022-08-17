@@ -19,7 +19,7 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Outbox
 {
-    public class OutboxMessageFactory
+    public class OutboxMessageFactory : IOutboxMessageFactory
     {
         private readonly IJsonSerializer _jsonSerializer;
         private readonly IClock _clock;
@@ -38,7 +38,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Outbox
         public OutboxMessage CreateFrom(ChargePriceOperationsRejectedEvent chargePriceOperationsRejectedEvent)
         {
             var data = _jsonSerializer.Serialize(chargePriceOperationsRejectedEvent);
-            return new OutboxMessage(
+            return OutboxMessage.Create(
                 data,
                 _correlationContext.AsTraceContext(),
                 chargePriceOperationsRejectedEvent.GetType().ToString(),

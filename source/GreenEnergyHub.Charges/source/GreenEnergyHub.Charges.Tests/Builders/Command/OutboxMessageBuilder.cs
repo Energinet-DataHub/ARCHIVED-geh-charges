@@ -44,7 +44,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
 
         public OutboxMessage Build()
         {
-            var outboxMessage = new OutboxMessage(_data, "correlationId", _type, _creationDate);
+            var outboxMessage = OutboxMessage.Create(_data, "correlationId", _type, _creationDate);
             return outboxMessage;
         }
     }

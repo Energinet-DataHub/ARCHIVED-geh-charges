@@ -26,7 +26,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
-    internal static class OutboxConfiguration
+    internal static class OutboxProcessorConfiguration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
