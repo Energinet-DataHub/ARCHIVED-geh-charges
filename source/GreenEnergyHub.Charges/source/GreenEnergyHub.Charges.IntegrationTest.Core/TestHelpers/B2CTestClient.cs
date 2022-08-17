@@ -24,25 +24,20 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
             string teamClientId,
             string teamClientSecret)
         {
+            if (string.IsNullOrWhiteSpace(clientName))
+                throw new ArgumentException($"'{nameof(clientName)}' cannot be null or whitespace.", nameof(clientName));
+            if (string.IsNullOrWhiteSpace(teamClientId))
+                throw new ArgumentException($"'{nameof(teamClientId)}' cannot be null or whitespace.", nameof(teamClientId));
+            if (string.IsNullOrWhiteSpace(teamClientSecret))
+                throw new ArgumentException($"'{nameof(teamClientSecret)}' cannot be null or whitespace.", nameof(teamClientSecret));
+
             ClientName = clientName;
-            ClientCredentialsSettings = RetrieveB2CTestClientSettings(clientName, teamClientId, teamClientSecret);
+            ClientCredentialsSettings = new ClientCredentialsSettings(teamClientId, teamClientSecret);
         }
 
         /// <summary>
-        /// Retrieve B2C test client settings necessary for acquiring an access token for a given 'test client app' in the configured environment.
+        /// B2C test client settings necessary for acquiring an access token for a given 'test client app' in the configured environment.
         /// </summary>
-        /// <param name="clientName">Team name or shorthand.</param>
-        /// <param name="clientId">Client ID</param>
-        /// <param name="clientSecret">Client secret</param>
-        /// <returns>Settings for 'test client app'</returns>
-        private static ClientCredentialsSettings RetrieveB2CTestClientSettings(string clientName, string clientId, string clientSecret)
-        {
-            if (string.IsNullOrWhiteSpace(clientName))
-                throw new ArgumentException($"'{nameof(clientName)}' cannot be null or whitespace.", nameof(clientName));
-
-            return new ClientCredentialsSettings(clientId, clientSecret);
-        }
-
         public ClientCredentialsSettings ClientCredentialsSettings { get; }
 
         public string ClientName { get; }
