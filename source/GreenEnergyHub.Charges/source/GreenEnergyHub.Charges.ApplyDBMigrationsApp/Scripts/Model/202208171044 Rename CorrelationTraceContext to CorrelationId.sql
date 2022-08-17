@@ -2,6 +2,4 @@
 -- Rename column
 ------------------------------------------------------------------------------------------------------------------------
 
-ALTER TABLE OutboxMessage
-    RENAME COLUMN CorrelationTraceContext TO CorrelationId;
-GO
+EXEC SP_RENAME 'Charges.OutboxMessage.CorrelationTraceContext', 'Charges.OutboxMessage.OutboxMessage.CorrelationId', 'COLUMN'
