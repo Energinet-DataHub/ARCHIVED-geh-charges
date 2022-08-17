@@ -16,6 +16,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
+using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using FluentAssertions;
@@ -98,6 +99,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 [Frozen] Mock<IClock> clock,
                 JsonSerializer jsonSerializer,
                 TimerInfo timerInfo,
+                CorrelationContext correlationContext,
                 Instant now)
             {
                 // Arrange
@@ -114,6 +116,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     availableDataNotifier.Object,
                     jsonSerializer,
                     clock.Object,
+                    correlationContext,
                     unitOfWork);
 
                 // Act & Assert

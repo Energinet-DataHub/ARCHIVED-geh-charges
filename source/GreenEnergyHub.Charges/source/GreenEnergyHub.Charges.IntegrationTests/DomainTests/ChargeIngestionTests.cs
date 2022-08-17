@@ -22,6 +22,7 @@ using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.FunctionHost.Charges;
+using GreenEnergyHub.Charges.FunctionHost.MessageHub;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.Charges;
@@ -329,20 +330,20 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // Arrange
                 var (request, correlationId) = await _authenticatedHttpRequestGenerator
                     .CreateAuthenticatedHttpPostRequestAsync(EndpointUrl, ChargeDocument.TariffPriceSeriesWithInvalidRecipientType);
-                using var eventualChargePriceUpdatedEvent = await Fixture
-                    .ChargePricesUpdatedListener
-                    .ListenForEventsAsync(correlationId, expectedCount: 1)
-                    .ConfigureAwait(false);
 
                 // Act
-                await Fixture.HostManager.HttpClient.SendAsync(request);
+                var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Assert
-                eventualChargePriceUpdatedEvent
-                    .CountdownEvent!
-                    .Wait(TimeSpan.FromSeconds(SecondsToWaitForIntegrationEvents));
+                actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
+                //await FunctionAsserts.AssertHasExecutedAsync(Fixture.HostManager, nameof(OutboxProcessorEndpoint));
 
-                // TODO: Assert rejection through MessageHub
+                // We expect one peek results for the rejection
+                var peekResult = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId);
+                peekResult.Should().ContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
+                peekResult.Should().NotContainMatch("*NotifyPriceList_MarketDocument*");
+                peekResult.Should().ContainMatch("*<cim:process.processType>D08</cim:process.processType>*");
+                peekResult.Should().NotContainMatch("*<cim:process.processType>D18</cim:process.processType>*");
             }
 
             [Fact]

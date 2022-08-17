@@ -81,8 +81,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     Fixture.HostManager, nameof(ChargePriceCommandReceiverEndpoint));
 
                 // Assert
-                var actualOutboxMessage = context.OutboxMessages.Single(x => x.CorrelationTraceContext.Contains($"{correlationId}"));
-                actualOutboxMessage.Type.Should().Be(_operationsRejectedEventType);
+                var actualOutboxMessage = context.OutboxMessages.Single(x => x.CorrelationId.Contains(correlationId));
+                actualOutboxMessage.Type.Should().Be(OperationsRejectedEventType);
             }
 
             private static ChargePriceCommandReceivedEvent CreateInvalidChargePriceCommandReceivedEvent(
