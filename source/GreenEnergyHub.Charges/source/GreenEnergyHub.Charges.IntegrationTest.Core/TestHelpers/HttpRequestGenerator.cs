@@ -21,38 +21,32 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
 {
     public static class HttpRequestGenerator
     {
-        public static (HttpRequestMessage Request, string CorrelationId) CreateHttpPostRequest(
+        public static HttpRequestMessage CreateHttpPostRequest(
             string endpointUrl, string testFilePath, IZonedDateTimeService zonedDateTimeService)
         {
-            var (request, correlationId) = CreateHttpRequest(HttpMethod.Post, endpointUrl);
+            var request = CreateHttpRequest(HttpMethod.Post, endpointUrl);
 
             var currentInstant = SystemClock.Instance.GetCurrentInstant();
             var chargeXml = EmbeddedResourceHelper.GetEmbeddedFile(testFilePath, currentInstant, zonedDateTimeService);
             request.Content = new StringContent(chargeXml, Encoding.UTF8, "application/xml");
 
-            return (request, correlationId);
+            return request;
         }
 
-        public static (HttpRequestMessage Request, string CorrelationId) CreateHttpGetRequest(string endpointUrl)
+        public static HttpRequestMessage CreateHttpGetRequest(string endpointUrl)
         {
             return CreateHttpRequest(HttpMethod.Get, endpointUrl);
         }
 
-        public static (HttpRequestMessage Request, string CorrelationId) CreateHttpPutRequest(string endpointUrl)
+        public static HttpRequestMessage CreateHttpPutRequest(string endpointUrl)
         {
             return CreateHttpRequest(HttpMethod.Put, endpointUrl);
         }
 
-        private static (HttpRequestMessage Request, string CorrelationId) CreateHttpRequest(
-            HttpMethod httpMethod,
-            string endpointUrl)
+        private static HttpRequestMessage CreateHttpRequest(HttpMethod httpMethod, string endpointUrl)
         {
             var request = new HttpRequestMessage(httpMethod, endpointUrl);
-
-            var correlationId = CorrelationIdGenerator.Create();
-            request.ConfigureTraceContext(correlationId);
-
-            return (request, correlationId);
+            return request;
         }
     }
 }

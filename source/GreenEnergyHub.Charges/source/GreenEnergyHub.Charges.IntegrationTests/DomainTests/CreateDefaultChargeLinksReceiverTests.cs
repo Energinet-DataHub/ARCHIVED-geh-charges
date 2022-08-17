@@ -100,7 +100,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 return Task.CompletedTask;
             }
 
-            private ServiceBusMessage CreateServiceBusMessage(
+            private static ServiceBusMessage CreateServiceBusMessage(
                 string meteringPointId, string replyToQueueName, out string correlationId, out string parentId)
             {
                 correlationId = CorrelationIdGenerator.Create();
@@ -120,6 +120,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                     ApplicationProperties =
                     {
                         new KeyValuePair<string, object>("ReplyTo", replyToQueueName),
+                        new KeyValuePair<string, object>("OperationCorrelationId", correlationId),
                         new KeyValuePair<string, object>(Constants.ServiceBusIdentityKey, actor),
                     },
                 };

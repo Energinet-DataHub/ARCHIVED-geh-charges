@@ -40,10 +40,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task When_RequestingUnknownEndpoint_Then_ReturnStatusNotFound()
             {
                 // Arrange
-                var result = HttpRequestGenerator.CreateHttpGetRequest("api/unknown");
+                var request = HttpRequestGenerator.CreateHttpGetRequest("api/unknown");
 
                 // Act
-                var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(result.Request);
+                var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Assert
                 actualResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);

@@ -42,6 +42,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factori
                     ApplicationProperties =
                     {
                         new KeyValuePair<string, object>("ReplyTo", _messageMetaDataContext.ReplyTo),
+                        new KeyValuePair<string, object>("OperationCorrelationId", _correlationContext.Id),
+                        // Todo: Integration test, set:
+                        // MessageTypeName = "
+                        // MessageVersionName
+                        // TimeStampName = "Op
+                        // CorrelationIdName =
+                        // EventIdentifierName
                     },
                 };
             }
@@ -49,6 +56,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factori
             return new ServiceBusMessage(data)
             {
                 CorrelationId = _correlationContext.Id,
+                ApplicationProperties =
+                {
+                    new KeyValuePair<string, object>("OperationCorrelationId", _correlationContext.Id),
+                },
             };
         }
 

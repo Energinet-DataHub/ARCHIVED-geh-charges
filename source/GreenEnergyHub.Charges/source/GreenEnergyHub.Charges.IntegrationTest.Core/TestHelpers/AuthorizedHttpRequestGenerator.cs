@@ -54,11 +54,13 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
         {
             ArgumentNullException.ThrowIfNull(AuthenticationResult);
 
+            var correlationId = CorrelationIdGenerator.Create();
             var clock = new FakeClock(SystemClock.Instance.GetCurrentInstant());
             var zonedDateTimeService = new ZonedDateTimeService(clock, new Iso8601ConversionConfiguration(_localTimeZoneName));
-            var (request, correlationId) = HttpRequestGenerator.CreateHttpPostRequest(endpointUrl, testFilePath, zonedDateTimeService);
+            var request = HttpRequestGenerator.CreateHttpPostRequest(endpointUrl, testFilePath, zonedDateTimeService);
 
             request.Headers.Add("Authorization", $"Bearer {AuthenticationResult.AccessToken}");
+            request.Headers.Add("Correlation-ID", correlationId); // APIM generates this header on incoming HTTP-messages - in production it is actually the Context.RequestID
 
             return (request, correlationId);
         }
