@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using GreenEnergyHub.Charges.Application.Charges.Factories;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Application.Charges.Services;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
@@ -38,6 +39,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IChargePriceConfirmationService, ChargePriceConfirmationService>();
             serviceCollection.AddScoped<IChargePriceRejectionService, ChargePriceRejectionService>();
             serviceCollection.AddScoped<IChargePriceNotificationService, ChargePriceNotificationService>();
+            serviceCollection.AddScoped<IChargePriceOperationsRejectedEventFactory, ChargePriceOperationsRejectedEventFactory>();
         }
 
         private static void ConfigureMessaging(IServiceCollection serviceCollection)

@@ -30,7 +30,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<OutboxMessageFactory>();
+            serviceCollection.AddScoped<IOutboxMessageFactory, OutboxMessageFactory>();
             serviceCollection.AddScoped<IOutboxMessageRepository, OutboxMessageRepository>();
             serviceCollection.AddScoped<IAvailableDataNotifier<AvailableChargeReceiptData, ChargePriceOperationsRejectedEvent>,
                 AvailableDataNotifier<AvailableChargeReceiptData, ChargePriceOperationsRejectedEvent>>();
