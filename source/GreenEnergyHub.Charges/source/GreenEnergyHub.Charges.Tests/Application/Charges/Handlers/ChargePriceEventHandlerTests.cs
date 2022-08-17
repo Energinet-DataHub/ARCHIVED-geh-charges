@@ -123,7 +123,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             var charge = chargeBuilder.Build();
 
             chargePriceOperationsRejectedEventFactory
-                .Setup(c => c.Create(It.IsAny<ChargePriceCommand>(), It.IsAny<IEnumerable<ValidationError>>()))
+                .Setup(c => c.Create(It.IsAny<ChargePriceCommand>(), It.IsAny<ValidationResult>()))
                 .Returns(chargePriceRejectedEvent);
             SetupChargeRepository(chargeRepository, charge);
             SetupMarketParticipantRepository(marketParticipantRepository, sender);

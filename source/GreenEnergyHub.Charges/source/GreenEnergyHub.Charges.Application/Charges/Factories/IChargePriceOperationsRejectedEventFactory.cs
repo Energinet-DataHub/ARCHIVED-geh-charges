@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
 using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
@@ -23,6 +22,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Factories
     {
         ChargePriceOperationsRejectedEvent Create(
             ChargePriceCommand command,
-            IEnumerable<ValidationError> validationErrors);
+            ValidationResult validationResult);
     }
 }

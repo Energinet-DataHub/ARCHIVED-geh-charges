@@ -19,7 +19,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Services
     public interface IChargePriceRejectionService
     {
         /// <summary>
-        /// Saves an chargePriceOperationsRejectedEvent into OutboxMessage
+        /// Saves rejected operations to Outbox
         /// </summary>
         /// <param name="chargePriceOperationsRejectedEvent"></param>
         public void SaveRejections(ChargePriceOperationsRejectedEvent chargePriceOperationsRejectedEvent);

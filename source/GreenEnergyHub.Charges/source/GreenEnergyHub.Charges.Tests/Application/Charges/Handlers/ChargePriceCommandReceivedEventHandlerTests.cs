@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application.Charges.Events;
@@ -73,7 +72,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                 .ReturnsAsync(ValidationResult.CreateFailure(GetFailedValidationResult()));
 
             chargePriceOperationRejectedEventFactory.Setup(c =>
-                    c.Create(It.IsAny<ChargePriceCommand>(), It.IsAny<IEnumerable<ValidationError>>()))
+                    c.Create(It.IsAny<ChargePriceCommand>(), It.IsAny<ValidationResult>()))
                 .Returns(chargePriceRejectedEvent);
 
             // Act
