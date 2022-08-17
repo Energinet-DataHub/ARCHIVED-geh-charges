@@ -15,6 +15,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoFixture.Xunit2;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
@@ -33,7 +34,6 @@ using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.Json;
 using Microsoft.Azure.Functions.Worker;
-using Microsoft.EntityFrameworkCore;
 using Moq;
 using NodaTime;
 using Xunit;
@@ -70,28 +70,34 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
             }
 
             [Fact]
-            public async Task When_OutboxProcessor_ReadsAnOutboxMessage_PersistsAvailableData()
+            public async Task GivenOutboxProcessorEndpoint_WhenOutboxMessageIsRead_AvailableDataIsPersisted()
             {
                 // Arrange
+                await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
                 await using var messageHubDatabaseContext = Fixture.MessageHubDatabaseManager.CreateDbContext();
-                var operationsRejectedEvent = await CreateAndPersistOutboxMessage();
+                await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
+                var operationsRejectedEvent = CreateChargePriceOperationsRejectedEvent();
+                var outboxMessage = await PersistToOutboxMessage(chargesDatabaseWriteContext, operationsRejectedEvent);
 
                 // Act
                 await FunctionAsserts.AssertHasExecutedAsync(
                     Fixture.HostManager, nameof(OutboxProcessorEndpoint));
 
                 // Assert
-                var actualAvailableDataReceipt = await messageHubDatabaseContext.AvailableChargeReceiptData.FirstAsync();
+                var actualAvailableDataReceipt = messageHubDatabaseContext.AvailableChargeReceiptData
+                    .Single(x => x.OriginalOperationId == operationsRejectedEvent.Command.Operations.First().Id);
                 actualAvailableDataReceipt.RecipientId.Should().Be(operationsRejectedEvent.Command.Document.Sender.MarketParticipantId);
+                var processedOutboxMessage = chargesDatabaseReadContext.OutboxMessages.Single(x => x.Id == outboxMessage.Id);
+                processedOutboxMessage.ProcessedDate.Should().NotBeNull();
             }
 
             [Theory]
             [InlineAutoMoqData]
-            public async Task GivenOutputProcessorEndpoint_WhenFailsFirstAttempt_ThenRetryNext(
+            public async Task GivenOutboxProcessorEndpoint_WhenFailsFirstAttempt_ThenRetryNext(
+                [Frozen] Mock<IClock> clock,
                 Mock<IAvailableDataNotifier<AvailableChargeReceiptData, OperationsRejectedEvent>> availableDataNotifier,
                 JsonSerializer jsonSerializer,
                 TimerInfo timerInfo,
-                Mock<IClock> clock,
                 Instant now)
             {
                 // Arrange
@@ -110,6 +116,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     clock.Object,
                     unitOfWork);
 
+                // Act & Assert
                 availableDataNotifier
                     .Setup(adn =>
                         adn.NotifyAsync(It.IsAny<OperationsRejectedEvent>()))
@@ -124,25 +131,28 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
                 await sut.RunAsync(timerInfo);
 
-                outboxMessage = chargesDatabaseReadContext.OutboxMessages.First();
+                outboxMessage = chargesDatabaseReadContext.OutboxMessages.Single(x => x.Id == outboxMessage.Id);
                 outboxMessage.ProcessedDate.Should().Be(now);
             }
 
-            private async Task<OperationsRejectedEvent> CreateAndPersistOutboxMessage()
+            private static OperationsRejectedEvent CreateChargePriceOperationsRejectedEvent()
             {
-                await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
+                var chargePriceOperation =
+                    new ChargePriceOperationDtoBuilder().WithChargePriceOperationId(Guid.NewGuid().ToString()).Build();
+                var chargeCommand = new ChargePriceCommandBuilder().WithChargeOperation(chargePriceOperation).Build();
+                var operationsRejectedEvent = new OperationsRejectedEventBuilder().WithChargeCommand(chargeCommand).Build();
+                return operationsRejectedEvent;
+            }
+
+            private async Task<OutboxMessage> PersistToOutboxMessage(ChargesDatabaseContext context, OperationsRejectedEvent operationsRejectedEvent)
+            {
                 var correlationContext = CreateCorrelationContext();
                 var jsonSerializer = new JsonSerializer();
                 var outboxMessageFactory = new OutboxMessageFactory(jsonSerializer, SystemClock.Instance, correlationContext);
-                var chargePriceOperationDto = new ChargePriceOperationDtoBuilder().WithPoint(1.00m).Build();
-                var chargePriceCommand = new ChargePriceCommandBuilder().WithChargeOperation(chargePriceOperationDto).Build();
-                var operationsRejectedEvent = new OperationsRejectedEventBuilder().WithChargeCommand(chargePriceCommand).Build();
-
                 var outboxMessage = outboxMessageFactory.CreateFrom(operationsRejectedEvent);
-                chargesDatabaseContext.OutboxMessages.Add(outboxMessage);
-                await chargesDatabaseContext.SaveChangesAsync();
-
-                return operationsRejectedEvent;
+                context.OutboxMessages.Add(outboxMessage);
+                await context.SaveChangesAsync();
+                return outboxMessage;
             }
 
             private OutboxMessage CreateOutboxMessage(Instant now)
