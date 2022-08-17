@@ -253,7 +253,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             await chargePricesUpdatedListener.AddTopicSubscriptionListenerAsync(chargePricesUpdatedTopic.Name, ChargesServiceBusResourceNames.ChargePricesUpdatedSubscriptionName);
             ChargePricesUpdatedListener = new ServiceBusTestListener(chargePricesUpdatedListener);
 
-            await AcquireTokenForTestActors();
+            await AcquireTokenForTestActorsAsync();
 
             await InitializeMessageHubAsync();
 
@@ -315,7 +315,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
                 .ToList();
         }
 
-        private async Task AcquireTokenForTestActors()
+        private async Task AcquireTokenForTestActorsAsync()
         {
             foreach (var testActor in AuthorizedTestActors)
             {
