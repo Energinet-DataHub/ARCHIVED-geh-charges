@@ -30,7 +30,7 @@ using Microsoft.Extensions.Logging;
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableOperationReceiptData
 {
     public class AvailableOperationRejectionsFactory :
-        AvailableDataFactoryBase<AvailableChargeReceiptData.AvailableChargeReceiptData, OperationsRejectedEvent>
+        AvailableDataFactoryBase<AvailableChargeReceiptData.AvailableChargeReceiptData, ChargePriceOperationsRejectedEvent>
     {
         private readonly IMessageMetaDataContext _messageMetaDataContext;
         private readonly IAvailableOperationReceiptValidationErrorFactory _availableChargeReceiptValidationErrorFactory;
@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableOperationReceiptData
             _logger = loggerFactory.CreateLogger(nameof(AvailableChargeRejectionDataFactory));
         }
 
-        public override async Task<IReadOnlyList<AvailableChargeReceiptData.AvailableChargeReceiptData>> CreateAsync(OperationsRejectedEvent input)
+        public override async Task<IReadOnlyList<AvailableChargeReceiptData.AvailableChargeReceiptData>> CreateAsync(ChargePriceOperationsRejectedEvent input)
         {
             LogValidationErrors(input);
 
@@ -75,7 +75,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableOperationReceiptData
                 .ToList();
         }
 
-        private void LogValidationErrors(OperationsRejectedEvent rejectedEvent)
+        private void LogValidationErrors(ChargePriceOperationsRejectedEvent rejectedEvent)
         {
             var errorMessage = ValidationErrorLogMessageBuilder.BuildErrorMessage(
                 rejectedEvent.Command.Document,
@@ -84,7 +84,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableOperationReceiptData
         }
 
         private List<AvailableReceiptValidationError> GetReasons(
-            OperationsRejectedEvent input,
+            ChargePriceOperationsRejectedEvent input,
             ChargePriceOperationDto operationDto)
         {
             return input

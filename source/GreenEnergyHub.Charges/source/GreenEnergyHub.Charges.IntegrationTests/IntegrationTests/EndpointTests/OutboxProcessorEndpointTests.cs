@@ -81,7 +81,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
                 // Act
                 await FunctionAsserts.AssertHasExecutedAsync(
-                    Fixture.HostManager, nameof(OutboxProcessorEndpoint));
+                    Fixture.HostManager, nameof(OutboxMessageProcessorEndpoint));
 
                 // Assert
                 var actualAvailableDataReceipt = messageHubDatabaseContext.AvailableChargeReceiptData
@@ -93,9 +93,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
             [Theory]
             [InlineAutoMoqData]
-            public async Task GivenOutboxProcessorEndpoint_WhenFailsFirstAttempt_ThenRetryNext(
+            public async Task GivenOutputProcessorEndpoint_WhenFailsFirstAttempt_ThenRetryNext(
+                Mock<IAvailableDataNotifier<AvailableChargeReceiptData, ChargePriceOperationsRejectedEvent>> availableDataNotifier,
                 [Frozen] Mock<IClock> clock,
-                Mock<IAvailableDataNotifier<AvailableChargeReceiptData, OperationsRejectedEvent>> availableDataNotifier,
                 JsonSerializer jsonSerializer,
                 TimerInfo timerInfo,
                 CorrelationContext correlationContext,
@@ -110,7 +110,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 var outboxRepository = new OutboxMessageRepository(chargesDatabaseWriteContext, clock.Object);
                 chargesDatabaseWriteContext.OutboxMessages.Add(outboxMessage);
                 await chargesDatabaseWriteContext.SaveChangesAsync();
-                var sut = new OutboxProcessorEndpoint(
+                var sut = new OutboxMessageProcessorEndpoint(
                     outboxRepository,
                     availableDataNotifier.Object,
                     jsonSerializer,
@@ -121,14 +121,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 // Act & Assert
                 availableDataNotifier
                     .Setup(adn =>
-                        adn.NotifyAsync(It.IsAny<OperationsRejectedEvent>()))
+                        adn.NotifyAsync(It.IsAny<ChargePriceOperationsRejectedEvent>()))
                     .ThrowsAsync(new Exception());
 
                 await Assert.ThrowsAsync<Exception>(() => sut.RunAsync(timerInfo));
 
                 availableDataNotifier
                     .Setup(adn =>
-                        adn.NotifyAsync(It.IsAny<OperationsRejectedEvent>()))
+                        adn.NotifyAsync(It.IsAny<ChargePriceOperationsRejectedEvent>()))
                     .Returns(Task.CompletedTask);
 
                 await sut.RunAsync(timerInfo);
@@ -137,7 +137,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 outboxMessage.ProcessedDate.Should().Be(now);
             }
 
-            private static OperationsRejectedEvent CreateChargePriceOperationsRejectedEvent()
+            private static ChargePriceOperationsRejectedEvent CreateChargePriceOperationsRejectedEvent()
             {
                 var chargePriceOperation =
                     new ChargePriceOperationDtoBuilder().WithChargePriceOperationId(Guid.NewGuid().ToString()).Build();
@@ -146,7 +146,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 return operationsRejectedEvent;
             }
 
-            private async Task<OutboxMessage> PersistToOutboxMessage(ChargesDatabaseContext context, OperationsRejectedEvent operationsRejectedEvent)
+            private async Task<OutboxMessage> PersistToOutboxMessage(ChargesDatabaseContext context, ChargePriceOperationsRejectedEvent operationsRejectedEvent)
             {
                 var correlationContext = CreateCorrelationContext();
                 var jsonSerializer = new JsonSerializer();

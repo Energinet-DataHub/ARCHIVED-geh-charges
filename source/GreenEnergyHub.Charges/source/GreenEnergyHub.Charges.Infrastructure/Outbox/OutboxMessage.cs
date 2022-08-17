@@ -19,7 +19,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Outbox
 {
     public class OutboxMessage
     {
-        public OutboxMessage(string data, string correlationId, string type, Instant creationDate)
+        private OutboxMessage(string data, string correlationId, string type, Instant creationDate)
         {
             Id = Guid.NewGuid();
             Type = type;
@@ -39,6 +39,15 @@ namespace GreenEnergyHub.Charges.Infrastructure.Outbox
         public Instant CreationDate { get; }
 
         public Instant? ProcessedDate { get; private set; }
+
+        public static OutboxMessage Create(string data, string correlationId, string type, Instant creationDate)
+        {
+            return new OutboxMessage(
+                data,
+                correlationId,
+                type,
+                creationDate);
+        }
 
         public void SetProcessed(Instant when)
         {

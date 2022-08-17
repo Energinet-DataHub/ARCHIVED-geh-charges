@@ -23,7 +23,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<OutboxMessage> builder)
         {
-            if (builder == null) throw new ArgumentNullException(nameof(builder));
+            ArgumentNullException.ThrowIfNull(builder);
 
             builder.ToTable(nameof(OutboxMessage));
             builder.HasKey(x => x.Id);

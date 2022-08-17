@@ -38,7 +38,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
         public async Task CreateAsync_WhenCalledWithRejectedEvent_ReturnsAvailableData(
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
-            OperationsRejectedEvent rejectedEvent,
+            ChargePriceOperationsRejectedEvent rejectedEvent,
             MarketParticipant meteringPointAdministrator,
             Instant now,
             AvailableOperationRejectionsFactory sut)

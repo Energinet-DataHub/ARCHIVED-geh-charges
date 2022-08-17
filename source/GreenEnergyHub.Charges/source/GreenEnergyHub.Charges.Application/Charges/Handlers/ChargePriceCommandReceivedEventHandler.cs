@@ -15,7 +15,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.Charges.Events;
+using GreenEnergyHub.Charges.Application.Charges.Factories;
 using GreenEnergyHub.Charges.Application.Charges.Services;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
@@ -27,15 +27,18 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         private readonly IChargePriceEventHandler _chargePriceEventHandler;
         private readonly IDocumentValidator _documentValidator;
         private readonly IChargePriceRejectionService _chargePriceRejectionService;
+        private readonly IChargePriceOperationsRejectedEventFactory _chargePriceOperationsRejectedEventFactory;
 
         public ChargePriceCommandReceivedEventHandler(
             IChargePriceEventHandler chargePriceEventHandler,
             IDocumentValidator documentValidator,
-            IChargePriceRejectionService chargePriceRejectionService)
+            IChargePriceRejectionService chargePriceRejectionService,
+            IChargePriceOperationsRejectedEventFactory chargePriceOperationsRejectedEventFactory)
         {
             _chargePriceEventHandler = chargePriceEventHandler;
             _documentValidator = documentValidator;
             _chargePriceRejectionService = chargePriceRejectionService;
+            _chargePriceOperationsRejectedEventFactory = chargePriceOperationsRejectedEventFactory;
         }
 
         public async Task HandleAsync(ChargePriceCommandReceivedEvent chargePriceCommandReceivedEvent)
@@ -57,11 +60,11 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         {
             var validationResult = ValidationResult.CreateFailure(rejectionRules);
 
-            var rejectEvent = new OperationsRejectedEvent(
+            var rejectedEvent = _chargePriceOperationsRejectedEventFactory.Create(
                 commandReceivedEvent.Command,
                 validationResult.InvalidRules.Select(ValidationErrorFactory.Create()));
 
-            _chargePriceRejectionService.SaveRejections(rejectEvent);
+            _chargePriceRejectionService.SaveRejections(rejectedEvent);
         }
     }
 }

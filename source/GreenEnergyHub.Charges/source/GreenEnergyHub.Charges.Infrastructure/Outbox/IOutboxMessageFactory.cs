@@ -14,14 +14,10 @@
 
 using GreenEnergyHub.Charges.Application.Charges.Events;
 
-namespace GreenEnergyHub.Charges.Application.Charges.Services
+namespace GreenEnergyHub.Charges.Infrastructure.Outbox
 {
-    public interface IChargePriceRejectionService
+    public interface IOutboxMessageFactory
     {
-        /// <summary>
-        /// Saves an chargePriceOperationsRejectedEvent into OutboxMessage
-        /// </summary>
-        /// <param name="chargePriceOperationsRejectedEvent"></param>
-        public void SaveRejections(ChargePriceOperationsRejectedEvent chargePriceOperationsRejectedEvent);
+        OutboxMessage CreateFrom(ChargePriceOperationsRejectedEvent chargePriceOperationsRejectedEvent);
     }
 }

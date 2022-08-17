@@ -22,19 +22,19 @@ namespace GreenEnergyHub.Charges.Infrastructure.Services
     public class ChargePriceRejectionService : IChargePriceRejectionService
     {
         private readonly IOutboxMessageRepository _outboxMessageRepository;
-        private readonly OutboxMessageFactory _outboxMessageFactory;
+        private readonly IOutboxMessageFactory _outboxMessageFactory;
 
         public ChargePriceRejectionService(
             IOutboxMessageRepository outboxMessageRepository,
-            OutboxMessageFactory outboxMessageFactory)
+            IOutboxMessageFactory outboxMessageFactory)
         {
             _outboxMessageRepository = outboxMessageRepository;
             _outboxMessageFactory = outboxMessageFactory;
         }
 
-        public void SaveRejections(OperationsRejectedEvent operationsRejectedEvent)
+        public void SaveRejections(ChargePriceOperationsRejectedEvent chargePriceOperationsRejectedEvent)
         {
-            var outboxMessage = _outboxMessageFactory.CreateFrom(operationsRejectedEvent);
+            var outboxMessage = _outboxMessageFactory.CreateFrom(chargePriceOperationsRejectedEvent);
             _outboxMessageRepository.Add(outboxMessage);
         }
     }

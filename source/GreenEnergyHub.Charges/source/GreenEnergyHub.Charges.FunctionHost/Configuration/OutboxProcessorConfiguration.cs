@@ -26,21 +26,21 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
-    internal static class OutboxConfiguration
+    internal static class OutboxProcessorConfiguration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<OutboxMessageFactory>();
             serviceCollection.AddScoped<IOutboxMessageRepository, OutboxMessageRepository>();
-            serviceCollection.AddScoped<IAvailableDataNotifier<AvailableChargeReceiptData, OperationsRejectedEvent>,
-                AvailableDataNotifier<AvailableChargeReceiptData, OperationsRejectedEvent>>();
-            serviceCollection.AddScoped<IAvailableDataFactory<AvailableChargeReceiptData, OperationsRejectedEvent>,
+            serviceCollection.AddScoped<IAvailableDataNotifier<AvailableChargeReceiptData, ChargePriceOperationsRejectedEvent>,
+                AvailableDataNotifier<AvailableChargeReceiptData, ChargePriceOperationsRejectedEvent>>();
+            serviceCollection.AddScoped<IAvailableDataFactory<AvailableChargeReceiptData, ChargePriceOperationsRejectedEvent>,
                 AvailableOperationRejectionsFactory>();
             serviceCollection.AddScoped<IAvailableOperationReceiptValidationErrorFactory,
                 AvailableOperationReceiptValidationErrorFactory>();
             serviceCollection.AddScoped<ICimValidationErrorTextFactory<ChargePriceCommand, ChargePriceOperationDto>,
                 OperationCimValidationErrorTextFactory>();
-            serviceCollection.AddScoped<BundleSpecification<AvailableChargeReceiptData, OperationsRejectedEvent>,
+            serviceCollection.AddScoped<BundleSpecification<AvailableChargeReceiptData, ChargePriceOperationsRejectedEvent>,
                 OperationsRejectionBundleSpecification>();
         }
     }

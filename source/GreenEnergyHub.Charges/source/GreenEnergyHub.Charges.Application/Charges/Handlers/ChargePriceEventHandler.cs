@@ -16,7 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.Charges.Events;
+using GreenEnergyHub.Charges.Application.Charges.Factories;
 using GreenEnergyHub.Charges.Application.Charges.Services;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Charges.Exceptions;
@@ -38,6 +38,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         private readonly IChargePriceRejectionService _chargePriceRejectionService;
         private readonly IChargePriceNotificationService _chargePriceNotificationService;
         private readonly ILogger _logger;
+        private readonly IChargePriceOperationsRejectedEventFactory _chargePriceOperationsRejectedEventFactory;
 
         public ChargePriceEventHandler(
             IChargeRepository chargeRepository,
@@ -46,7 +47,8 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             IChargePriceConfirmationService chargePriceConfirmationService,
             IChargePriceRejectionService chargePriceRejectionService,
             IChargePriceNotificationService chargePriceNotificationService,
-            ILoggerFactory loggerFactory)
+            ILoggerFactory loggerFactory,
+            IChargePriceOperationsRejectedEventFactory chargePriceOperationsRejectedEventFactory)
         {
             _chargeRepository = chargeRepository;
             _marketParticipantRepository = marketParticipantRepository;
@@ -54,6 +56,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             _chargePriceConfirmationService = chargePriceConfirmationService;
             _chargePriceRejectionService = chargePriceRejectionService;
             _chargePriceNotificationService = chargePriceNotificationService;
+            _chargePriceOperationsRejectedEventFactory = chargePriceOperationsRejectedEventFactory;
             _logger = loggerFactory.CreateLogger(nameof(ChargePriceEventHandler));
         }
 
@@ -128,11 +131,11 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             var chargePriceCommand = new ChargePriceCommand(commandReceivedEvent.Command.Document, operationsToBeRejected);
             var validationResult = ValidationResult.CreateFailure(rejectionRules);
 
-            var rejectEvent = new OperationsRejectedEvent(
+            var rejectedEvent = _chargePriceOperationsRejectedEventFactory.Create(
                 chargePriceCommand,
                 validationResult.InvalidRules.Select(ValidationErrorFactory.Create()));
 
-            _chargePriceRejectionService.SaveRejections(rejectEvent);
+            _chargePriceRejectionService.SaveRejections(rejectedEvent);
         }
 
         private static void CollectRejectionRules(

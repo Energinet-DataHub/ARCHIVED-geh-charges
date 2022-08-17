@@ -12,24 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.Validation;
-
-namespace GreenEnergyHub.Charges.Application.Charges.Events
+namespace GreenEnergyHub.Charges.FunctionHost.Common
 {
-    public class OperationsRejectedEvent
+    public static class TimerTriggerTimeConstants
     {
-        public OperationsRejectedEvent(
-            ChargePriceCommand command,
-            IEnumerable<ValidationError> validationErrors)
-        {
-            Command = command;
-            ValidationErrors = validationErrors;
-        }
-
-        public ChargePriceCommand Command { get; }
-
-        public IEnumerable<ValidationError> ValidationErrors { get; }
+        public const string Every10Seconds = "*/10 * * * * *";
     }
 }

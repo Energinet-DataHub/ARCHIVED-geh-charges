@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Application.Persistence;
+using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Outbox;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
@@ -26,19 +27,19 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
 {
-    public class OutboxProcessorEndpoint
+    public class OutboxMessageProcessorEndpoint
     {
-        private const string FunctionName = nameof(OutboxProcessorEndpoint);
+        private const string FunctionName = nameof(OutboxMessageProcessorEndpoint);
         private readonly IOutboxMessageRepository _outboxMessageRepository;
-        private readonly IAvailableDataNotifier<AvailableChargeReceiptData, OperationsRejectedEvent> _availableDataNotifier;
+        private readonly IAvailableDataNotifier<AvailableChargeReceiptData, ChargePriceOperationsRejectedEvent> _availableDataNotifier;
         private readonly IJsonSerializer _jsonSerializer;
         private readonly IClock _clock;
         private readonly ICorrelationContext _correlationContext;
         private readonly IUnitOfWork _unitOfWork;
 
-        public OutboxProcessorEndpoint(
+        public OutboxMessageProcessorEndpoint(
             IOutboxMessageRepository outboxMessageRepository,
-            IAvailableDataNotifier<AvailableChargeReceiptData, OperationsRejectedEvent> availableDataNotifier,
+            IAvailableDataNotifier<AvailableChargeReceiptData, ChargePriceOperationsRejectedEvent> availableDataNotifier,
             IJsonSerializer jsonSerializer,
             IClock clock,
             ICorrelationContext correlationContext,
@@ -54,14 +55,14 @@ namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
 
         [Function(FunctionName)]
         public async Task RunAsync(
-            [TimerTrigger("*/10 * * * * *")] TimerInfo timerInfo)
+            [TimerTrigger(TimerTriggerTimeConstants.Every10Seconds)] TimerInfo timerInfo)
         {
             OutboxMessage? outboxMessage;
 
             while ((outboxMessage = _outboxMessageRepository.GetNext()) != null)
             {
+                var operationsRejectedEvent = _jsonSerializer.Deserialize<ChargePriceOperationsRejectedEvent>(outboxMessage.Data);
                 _correlationContext.SetId(outboxMessage.CorrelationId);
-                var operationsRejectedEvent = _jsonSerializer.Deserialize<OperationsRejectedEvent>(outboxMessage.Data);
                 await _availableDataNotifier.NotifyAsync(operationsRejectedEvent).ConfigureAwait(false);
                 outboxMessage.SetProcessed(_clock.GetCurrentInstant());
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);

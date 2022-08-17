@@ -12,16 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using GreenEnergyHub.Charges.Application.Charges.Events;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
-namespace GreenEnergyHub.Charges.Application.Charges.Services
+namespace GreenEnergyHub.Charges.Application.Charges.Factories
 {
-    public interface IChargePriceRejectionService
+    public class ChargePriceOperationsRejectedEventFactory : IChargePriceOperationsRejectedEventFactory
     {
-        /// <summary>
-        /// Saves an chargePriceOperationsRejectedEvent into OutboxMessage
-        /// </summary>
-        /// <param name="chargePriceOperationsRejectedEvent"></param>
-        public void SaveRejections(ChargePriceOperationsRejectedEvent chargePriceOperationsRejectedEvent);
+        public ChargePriceOperationsRejectedEvent Create(
+            ChargePriceCommand command,
+            IEnumerable<ValidationError> validationErrors)
+        {
+            return new ChargePriceOperationsRejectedEvent(command, validationErrors);
+        }
     }
 }
