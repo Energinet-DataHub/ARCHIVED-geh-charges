@@ -83,9 +83,9 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
         [NotNull]
         public TopicResource? ChargeLinksAcceptedTopic { get; private set; }
 
-        public AuthorizedTestActor AsGridAccessProvider { get; private set; }
+        public AuthorizedTestActor AsGridAccessProvider { get; }
 
-        public AuthorizedTestActor AsSystemOperator { get; private set; }
+        public AuthorizedTestActor AsSystemOperator { get; }
 
         private AuthorizationConfiguration AuthorizationConfiguration { get; }
 
