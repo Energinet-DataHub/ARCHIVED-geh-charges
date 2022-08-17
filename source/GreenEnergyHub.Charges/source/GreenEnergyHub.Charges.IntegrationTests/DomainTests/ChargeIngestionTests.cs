@@ -487,7 +487,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             }
 
             [Fact]
-            public async Task WhenTaxTaxIsCreatedBySystemOperator_ANotificationShouldBeReceivedByActiveGridAccessProviders()
+            public async Task WhenTaxTariffIsCreatedBySystemOperator_ANotificationShouldBeReceivedByActiveGridAccessProviders()
             {
                 var (request, correlationId) =
                     _systemOperatorAuthorizedHttpRequestGenerator.CreateAuthorizedHttpPostRequest(
