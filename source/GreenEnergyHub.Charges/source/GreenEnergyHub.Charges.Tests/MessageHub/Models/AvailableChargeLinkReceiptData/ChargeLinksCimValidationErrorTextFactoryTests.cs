@@ -34,20 +34,20 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
         [InlineAutoMoqData]
         public void Create_WhenTwoMergeFields_ReturnsExpectedDescription(
             ChargeLinksCommand chargeLinksCommand,
-            ChargeLinkDto chargeLinkDto,
+            ChargeLinkOperationDto chargeLinkOperationDto,
             CimValidationErrorTextProvider cimValidationErrorTextProvider,
             ILoggerFactory loggerFactory)
         {
             // Arrange
             var validationError = new ValidationError(
-                ValidationRuleIdentifier.MeteringPointDoesNotExist, chargeLinkDto.SenderProvidedChargeId, null!);
+                ValidationRuleIdentifier.MeteringPointDoesNotExist, chargeLinkOperationDto.SenderProvidedChargeId, null!);
             var sut = new ChargeLinksCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
             var expected = CimValidationErrorTextTemplateMessages.MeteringPointDoesNotExistValidationErrorText
-                .Replace("{{MeteringPointId}}", chargeLinkDto.MeteringPointId)
-                .Replace("{{ChargeLinkStartDate}}", chargeLinkDto.StartDateTime.ToString());
+                .Replace("{{MeteringPointId}}", chargeLinkOperationDto.MeteringPointId)
+                .Replace("{{ChargeLinkStartDate}}", chargeLinkOperationDto.StartDateTime.ToString());
 
             // Act
-            var actual = sut.Create(validationError, chargeLinksCommand, chargeLinkDto);
+            var actual = sut.Create(validationError, chargeLinksCommand, chargeLinkOperationDto);
 
             // Assert
             actual.Should().Be(expected);

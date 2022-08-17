@@ -20,9 +20,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation.InputValidation
     {
         private const int MinimumChargeOwnerLength = 13;
         private const int MaximumChargeOwnerLength = 16;
-        private readonly OperationBase _operation;
+        private readonly ChargeOperation _operation;
 
-        public ChargeOwnerTextLengthRule(OperationBase operation)
+        public ChargeOwnerTextLengthRule(ChargeOperation operation)
         {
             _operation = operation;
         }

@@ -56,7 +56,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             CreateLinkRequestHandler sut)
         {
             // Arrange
-            var chargeLinks = new List<ChargeLinkDto> { chargeLinkDtoBuilder.WithEndDate(null).Build(), };
+            var chargeLinks = new List<ChargeLinkOperationDto> { chargeLinkDtoBuilder.WithEndDate(null).Build(), };
             var chargeLinksCommand = chargeLinksCommandBuilder.WithChargeLinks(chargeLinks).Build();
 
             messageMetaDataContext.Setup(m => m.IsReplyToSet()).Returns(true);

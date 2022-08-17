@@ -17,10 +17,10 @@ using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.Messages.Command
 {
-    public abstract class CommandBase
+    public abstract class ChargeCommand
     {
         public abstract DocumentDto Document { get; }
 
-        public abstract IReadOnlyCollection<OperationBase> Operations { get; }
+        public abstract IReadOnlyCollection<ChargeOperation> Operations { get; }
     }
 }

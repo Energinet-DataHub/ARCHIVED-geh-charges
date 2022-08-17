@@ -31,20 +31,20 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.Inpu
             return ValidationRuleSet.FromRules(rules.ToList());
         }
 
-        private IEnumerable<IValidationRuleContainer> GetRulesForOperation(ChargePriceOperationDto chargePriceOperationDto, DocumentDto document)
+        private IEnumerable<IValidationRuleContainer> GetRulesForOperation(ChargePriceOperationDto operation, DocumentDto document)
         {
             var rules = new List<IValidationRuleContainer>
             {
-                CreateRuleContainer(new MaximumPriceRule(chargePriceOperationDto), chargePriceOperationDto.OperationId),
-                CreateRuleContainer(new ChargeIdLengthValidationRule(chargePriceOperationDto), chargePriceOperationDto.OperationId),
-                CreateRuleContainer(new ChargeIdRequiredValidationRule(chargePriceOperationDto), chargePriceOperationDto.OperationId),
-                CreateRuleContainer(new ChargeOperationIdRequiredRule(chargePriceOperationDto), chargePriceOperationDto.OperationId),
-                CreateRuleContainer(new ChargeOperationIdLengthValidationRule(chargePriceOperationDto), chargePriceOperationDto.OperationId),
-                CreateRuleContainer(new ChargeOwnerIsRequiredValidationRule(chargePriceOperationDto), chargePriceOperationDto.OperationId),
-                CreateRuleContainer(new ChargeTypeIsKnownValidationRule(chargePriceOperationDto), chargePriceOperationDto.OperationId),
-                CreateRuleContainer(new StartDateTimeRequiredValidationRule(chargePriceOperationDto), chargePriceOperationDto.OperationId),
-                CreateRuleContainer(new ChargeOwnerTextLengthRule(chargePriceOperationDto), chargePriceOperationDto.OperationId),
-                CreateRuleContainer(new ChargeOwnerMustMatchSenderRule(document.Sender.MarketParticipantId, chargePriceOperationDto.ChargeOwner), chargePriceOperationDto.OperationId),
+                CreateRuleContainer(new MaximumPriceRule(operation), operation.OperationId),
+                CreateRuleContainer(new ChargeIdLengthValidationRule(operation), operation.OperationId),
+                CreateRuleContainer(new ChargeIdRequiredValidationRule(operation), operation.OperationId),
+                CreateRuleContainer(new ChargeOperationIdRequiredRule(operation), operation.OperationId),
+                CreateRuleContainer(new ChargeOperationIdLengthValidationRule(operation), operation.OperationId),
+                CreateRuleContainer(new ChargeOwnerIsRequiredValidationRule(operation), operation.OperationId),
+                CreateRuleContainer(new ChargeTypeIsKnownValidationRule(operation), operation.OperationId),
+                CreateRuleContainer(new StartDateTimeRequiredValidationRule(operation), operation.OperationId),
+                CreateRuleContainer(new ChargeOwnerTextLengthRule(operation), operation.OperationId),
+                CreateRuleContainer(new ChargeOwnerMustMatchSenderRule(document.Sender.MarketParticipantId, operation.ChargeOwner), operation.OperationId),
             };
 
             return rules;

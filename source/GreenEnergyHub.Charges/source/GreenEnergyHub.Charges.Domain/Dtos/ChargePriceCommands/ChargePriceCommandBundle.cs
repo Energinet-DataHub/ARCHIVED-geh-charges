@@ -28,6 +28,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands
             Commands = commands;
         }
 
-        public IReadOnlyCollection<ChargePriceCommand> Commands { get; }
+        public override IReadOnlyCollection<ChargePriceCommand> Commands { get; }
     }
 }

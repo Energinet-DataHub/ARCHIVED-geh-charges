@@ -19,14 +19,10 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands
 {
-    // Non-nullable member is uninitialized is ignored
-    // Only properties which is allowed to be null is nullable
-    // ChargeEvent integrity is null checked by ChargeCommandNullChecker
-
     /// <summary>
     /// The ChargeOperationDto class contains the intend of the charge command, e.g. updating an existing charge.
     /// </summary>
-    public class ChargeInformationOperationDto : OperationBase
+    public class ChargeInformationOperationDto : ChargeOperation
     {
         public ChargeInformationOperationDto(
                 string operationId,

@@ -18,9 +18,9 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
 {
-    public class ChargeLinkDto : OperationBase
+    public class ChargeLinkOperationDto : ChargeOperation
     {
-        public ChargeLinkDto(
+        public ChargeLinkOperationDto(
             string operationId,
             string meteringPointId,
             Instant startDateTime,

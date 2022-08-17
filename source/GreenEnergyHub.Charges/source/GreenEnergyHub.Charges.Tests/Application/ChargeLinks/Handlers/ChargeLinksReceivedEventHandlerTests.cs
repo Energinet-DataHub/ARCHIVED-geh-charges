@@ -57,7 +57,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             [Frozen] Mock<IChargeLinksReceiptService> chargeLinksReceiptService,
             [Frozen] Mock<IChargeLinkFactory> chargeLinkFactory,
             [Frozen] Mock<IChargeLinksAcceptedEventFactory> chargeLinkCommandAcceptedEventFactory,
-            [Frozen] Mock<IBusinessValidator<ChargeLinkDto>> businessValidator,
+            [Frozen] Mock<IBusinessValidator<ChargeLinkOperationDto>> businessValidator,
             ChargeLinkDtoBuilder linksDtoBuilder,
             ChargeLinksCommandBuilder linksCommandBuilder,
             ChargeLinksAcceptedEvent chargeLinksAcceptedEvent,
@@ -65,7 +65,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
         {
             // Arrange
             var chargeLink = CreateChargeLink();
-            var links = new List<ChargeLinkDto> { linksDtoBuilder.Build() };
+            var links = new List<ChargeLinkOperationDto> { linksDtoBuilder.Build() };
             var chargeLinksCommand = linksCommandBuilder.WithChargeLinks(links).Build();
             var chargeLinksReceivedEvent = new ChargeLinksReceivedEvent(Instant.MinValue, chargeLinksCommand);
 
@@ -84,18 +84,18 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
         public async Task HandleAsync_WhenCalledWithInvalidChargeLinksCommand_ShouldDispatchRejectedEvent(
             [Frozen] Mock<IChargeLinksReceiptService> chargeLinksReceiptService,
             [Frozen] Mock<IChargeLinkFactory> chargeLinkFactory,
-            [Frozen] Mock<IBusinessValidator<ChargeLinkDto>> businessValidator,
+            [Frozen] Mock<IBusinessValidator<ChargeLinkOperationDto>> businessValidator,
             ChargeLinkDtoBuilder linksDtoBuilder,
             ChargeLinksCommandBuilder linksCommandBuilder,
             ChargeLinksReceivedEventHandler sut)
         {
             // Arrange
             var chargeLink = CreateChargeLink();
-            var links = new List<ChargeLinkDto> { linksDtoBuilder.Build() };
+            var links = new List<ChargeLinkOperationDto> { linksDtoBuilder.Build() };
             var chargeLinksCommand = linksCommandBuilder.WithChargeLinks(links).Build();
             var chargeLinksReceivedEvent = new ChargeLinksReceivedEvent(Instant.MinValue, chargeLinksCommand);
             chargeLinkFactory
-                .Setup(x => x.CreateAsync(It.IsAny<ChargeLinkDto>()))
+                .Setup(x => x.CreateAsync(It.IsAny<ChargeLinkOperationDto>()))
                 .ReturnsAsync(chargeLink);
 
             SetupErroneousValidator(businessValidator);
@@ -114,8 +114,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
         public async Task HandleAsync_WhenCalledWithInvalidChargeLinksCommand_ShouldRejectedAllSubsequentOperations(
             [Frozen] Mock<IChargeLinksReceiptService> chargeLinksReceiptService,
             [Frozen] Mock<IChargeLinkFactory> chargeLinkFactory,
-            [Frozen] Mock<IBusinessValidator<ChargeLinkDto>> businessValidator,
-            List<ChargeLinkDto> chargeLinkDtos,
+            [Frozen] Mock<IBusinessValidator<ChargeLinkOperationDto>> businessValidator,
+            List<ChargeLinkOperationDto> chargeLinkDtos,
             ChargeLinksCommandBuilder linksCommandBuilder,
             ChargeLinksReceivedEventHandler sut)
         {
@@ -124,7 +124,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             var chargeLinksCommand = linksCommandBuilder.WithChargeLinks(chargeLinkDtos).Build();
             var chargeLinksReceivedEvent = new ChargeLinksReceivedEvent(Instant.MinValue, chargeLinksCommand);
             chargeLinkFactory
-                .Setup(x => x.CreateAsync(It.IsAny<ChargeLinkDto>()))
+                .Setup(x => x.CreateAsync(It.IsAny<ChargeLinkOperationDto>()))
                 .ReturnsAsync(chargeLink);
             SetupErroneousValidator(businessValidator);
 
@@ -155,15 +155,15 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             return fixture.Create<ChargeLink>();
         }
 
-        private static void SetupSuccessfulValidator(Mock<IBusinessValidator<ChargeLinkDto>> businessValidator)
+        private static void SetupSuccessfulValidator(Mock<IBusinessValidator<ChargeLinkOperationDto>> businessValidator)
         {
-            businessValidator.Setup(x => x.ValidateAsync(It.IsAny<ChargeLinkDto>()))
+            businessValidator.Setup(x => x.ValidateAsync(It.IsAny<ChargeLinkOperationDto>()))
                 .ReturnsAsync(ValidationResult.CreateSuccess());
         }
 
-        private static void SetupErroneousValidator(Mock<IBusinessValidator<ChargeLinkDto>> businessValidator)
+        private static void SetupErroneousValidator(Mock<IBusinessValidator<ChargeLinkOperationDto>> businessValidator)
         {
-            businessValidator.Setup(x => x.ValidateAsync(It.IsAny<ChargeLinkDto>()))
+            businessValidator.Setup(x => x.ValidateAsync(It.IsAny<ChargeLinkOperationDto>()))
                 .ReturnsAsync(ValidationResult.CreateFailure(new List<IValidationRuleContainer>
                 {
                     new OperationValidationRuleContainer(
@@ -179,7 +179,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             ChargeLink chargeLink)
         {
             chargeLinkFactory
-                .Setup(x => x.CreateAsync(It.IsAny<ChargeLinkDto>()))
+                .Setup(x => x.CreateAsync(It.IsAny<ChargeLinkOperationDto>()))
                 .ReturnsAsync(chargeLink);
 
             chargeLinkCommandAcceptedEventFactory
