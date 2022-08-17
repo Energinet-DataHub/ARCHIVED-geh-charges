@@ -19,6 +19,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 {
     public interface IDocumentValidationRulesFactory
     {
-        Task<IValidationRuleSet> CreateRulesAsync(CommandBase command);
+        Task<IValidationRuleSet> CreateRulesAsync(ChargeCommand command);
     }
 }

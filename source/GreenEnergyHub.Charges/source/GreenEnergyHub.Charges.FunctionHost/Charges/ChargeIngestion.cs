@@ -126,7 +126,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
                         TaxIndicator.Unknown,
                         TransparentInvoicing.Unknown,
                         VatClassification.Unknown,
-                        priceOperation.StartDate,
+                        priceOperation.StartDateTime,
                         null,
                         priceOperation.PointsStartInterval,
                         priceOperation.PointsEndInterval,
