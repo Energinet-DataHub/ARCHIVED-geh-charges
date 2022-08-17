@@ -25,15 +25,15 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
         public ChargeLink(
             Guid chargeId,
             Guid meteringPointId,
-            Instant startDate,
-            Instant endDate,
+            Instant startDateTime,
+            Instant endDateTime,
             int factor)
         {
             Id = Guid.NewGuid();
             ChargeId = chargeId;
             MeteringPointId = meteringPointId;
-            StartDate = startDate;
-            EndDate = endDate;
+            StartDateTime = startDateTime;
+            EndDateTime = endDateTime;
             Factor = factor;
         }
 
@@ -53,9 +53,9 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
         /// </summary>
         public Guid MeteringPointId { get; }
 
-        public Instant StartDate { get; }
+        public Instant StartDateTime { get; }
 
-        public Instant EndDate { get; }
+        public Instant EndDateTime { get; }
 
         public int Factor { get; }
     }

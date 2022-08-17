@@ -175,7 +175,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             var validationResult = ValidationResult.CreateSuccess();
             SetupValidators(inputValidator, validationResult);
             var newPeriod = chargePeriodBuilder
-                .WithStartDateTime(updateOperationDto.StartDate)
+                .WithStartDateTime(updateOperationDto.StartDateTime)
                 .Build();
             SetupMarketParticipantRepository(marketParticipantRepository, sender);
             SetupChargeIdentifierFactoryMock(chargeIdentifierFactory);
@@ -454,7 +454,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             {
                 var period = new ChargePeriodBuilder()
                     .WithName(operation.ChargeName)
-                    .WithStartDateTime(operation.StartDate)
+                    .WithStartDateTime(operation.StartDateTime)
                     .Build();
                 chargePeriodFactory
                     .Setup(r => r.CreateFromChargeOperationDto(operation))

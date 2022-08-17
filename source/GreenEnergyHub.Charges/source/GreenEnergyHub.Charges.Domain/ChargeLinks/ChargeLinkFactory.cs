@@ -53,8 +53,8 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
             var chargeLink = new ChargeLink(
                 charge.Id,
                 meteringPoint.Id,
-                dto.StartDate,
-                dto.EndDate.TimeOrEndDefault(),
+                dto.StartDateTime,
+                dto.EndDateTime.TimeOrEndDefault(),
                 dto.Factor);
 
             return chargeLink;

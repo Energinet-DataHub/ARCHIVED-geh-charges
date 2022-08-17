@@ -25,8 +25,8 @@ namespace GreenEnergyHub.Charges.Application.Charges.Factories
                 chargeInformationOperationDto.SenderProvidedChargeId,
                 chargeInformationOperationDto.ChargeType,
                 chargeInformationOperationDto.ChargeOwner,
-                chargeInformationOperationDto.StartDate,
-                chargeInformationOperationDto.EndDate.GetValueOrDefault(),
+                chargeInformationOperationDto.StartDateTime,
+                chargeInformationOperationDto.EndDateTime.GetValueOrDefault(),
                 chargeInformationOperationDto.Points);
         }
     }

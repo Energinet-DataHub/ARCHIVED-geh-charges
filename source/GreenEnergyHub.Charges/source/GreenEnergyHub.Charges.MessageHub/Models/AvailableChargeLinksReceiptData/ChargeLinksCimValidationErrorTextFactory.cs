@@ -79,13 +79,13 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
             return token switch
             {
                 CimValidationErrorTextToken.ChargeLinkStartDate =>
-                    chargeLinkDto.StartDate.ToString(),
+                    chargeLinkDto.StartDateTime.ToString(),
                 CimValidationErrorTextToken.ChargeOperationId =>
                     chargeLinkDto.OperationId,
                 CimValidationErrorTextToken.ChargeOwner =>
                     chargeLinkDto.ChargeOwner,
                 CimValidationErrorTextToken.ChargeStartDateTime =>
-                    chargeLinkDto.StartDate.ToString(),
+                    chargeLinkDto.StartDateTime.ToString(),
                 CimValidationErrorTextToken.ChargeType =>
                     chargeLinkDto.ChargeType.ToString(),
                 CimValidationErrorTextToken.DocumentSenderProvidedChargeId =>

@@ -37,8 +37,8 @@ namespace GreenEnergyHub.Charges.Application.Charges.Factories
                 _currencyConfigurationIso4217.Currency,
                 chargeInformationOperationDto.Resolution,
                 chargeInformationOperationDto.TaxIndicator == TaxIndicator.Tax,
-                chargeInformationOperationDto.StartDate,
-                chargeInformationOperationDto.EndDate.GetValueOrDefault());
+                chargeInformationOperationDto.StartDateTime,
+                chargeInformationOperationDto.EndDateTime.GetValueOrDefault());
         }
     }
 }

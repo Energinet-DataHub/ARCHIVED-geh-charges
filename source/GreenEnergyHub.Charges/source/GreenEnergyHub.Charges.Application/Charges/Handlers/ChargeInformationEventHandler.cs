@@ -128,7 +128,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                     HandleUpdateEvent(charge!, informationOperation);
                     break;
                 case OperationType.Stop:
-                    charge!.Stop(informationOperation.EndDate);
+                    charge!.Stop(informationOperation.EndDateTime);
                     break;
                 case OperationType.CancelStop:
                     HandleCancelStopEvent(charge!, informationOperation);
@@ -173,13 +173,13 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 return OperationType.Create;
             }
 
-            if (chargeInformationOperationDto.StartDate == chargeInformationOperationDto.EndDate)
+            if (chargeInformationOperationDto.StartDateTime == chargeInformationOperationDto.EndDateTime)
             {
                 return OperationType.Stop;
             }
 
             var latestChargePeriod = charge.Periods.OrderByDescending(p => p.StartDateTime).First();
-            return chargeInformationOperationDto.StartDate == latestChargePeriod.EndDateTime
+            return chargeInformationOperationDto.StartDateTime == latestChargePeriod.EndDateTime
                 ? OperationType.CancelStop
                 : OperationType.Update;
         }

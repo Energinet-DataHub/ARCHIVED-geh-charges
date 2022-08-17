@@ -26,13 +26,13 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands
             ChargeType chargeType,
             string senderProvidedChargeId,
             string chargeOwner,
-            Instant startDate,
-            Instant? endDate,
+            Instant startDateTime,
+            Instant? endDateTime,
             Instant pointsStartInterval,
             Instant pointsEndInterval,
             Resolution resolution,
             List<Point> points)
-            : base(operationId, chargeType, senderProvidedChargeId, chargeOwner, startDate, endDate)
+            : base(operationId, chargeType, senderProvidedChargeId, chargeOwner, startDateTime, endDateTime)
         {
             Resolution = resolution;
             PointsStartInterval = pointsStartInterval;

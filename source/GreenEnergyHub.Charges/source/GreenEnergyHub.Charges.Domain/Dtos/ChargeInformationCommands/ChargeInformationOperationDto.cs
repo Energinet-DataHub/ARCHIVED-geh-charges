@@ -40,12 +40,12 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands
                 TaxIndicator taxIndicator,
                 TransparentInvoicing transparentInvoicing,
                 VatClassification vatClassification,
-                Instant startDate,
-                Instant? endDate,
+                Instant startDateTime,
+                Instant? endDateTime,
                 Instant? pointsStartInterval,
                 Instant? pointsEndInterval,
                 List<Point> points)
-            : base(operationId, chargeType, senderProvidedChargeId, chargeOwner, startDate, endDate)
+            : base(operationId, chargeType, senderProvidedChargeId, chargeOwner, startDateTime, endDateTime)
         {
             Points = new List<Point>();
             ChargeName = chargeName;

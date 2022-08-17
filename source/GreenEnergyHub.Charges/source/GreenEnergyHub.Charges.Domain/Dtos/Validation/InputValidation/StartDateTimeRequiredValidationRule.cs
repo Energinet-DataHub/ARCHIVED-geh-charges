@@ -29,6 +29,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation.InputValidation
             ValidationRuleIdentifier.StartDateTimeRequiredValidation;
 
         // Instant is a struct, so to ensure caller supplied it, we check if it has the default value.
-        public bool IsValid => _operation.StartDate != default;
+        public bool IsValid => _operation.StartDateTime != default;
     }
 }

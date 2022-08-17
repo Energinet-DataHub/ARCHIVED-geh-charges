@@ -33,8 +33,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
             ChargeLinkDto chargeLinkDto,
             IReadOnlyCollection<ChargeLink> existingChargeLinks)
         {
-            _newLinkStartDate = chargeLinkDto.StartDate;
-            _newLinkEndDate = chargeLinkDto.EndDate;
+            _newLinkStartDate = chargeLinkDto.StartDateTime;
+            _newLinkEndDate = chargeLinkDto.EndDateTime;
             _existingChargeLinks = existingChargeLinks;
         }
 
@@ -50,8 +50,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
         private bool IsOverlapping(ChargeLink existingLink)
         {
             // See https://stackoverflow.com/questions/325933/determine-whether-two-date-ranges-overlap
-            var isOverlapping = (_newLinkEndDate == null || existingLink.StartDate < _newLinkEndDate)
-                                && _newLinkStartDate < existingLink.EndDate;
+            var isOverlapping = (_newLinkEndDate == null || existingLink.StartDateTime < _newLinkEndDate)
+                                && _newLinkStartDate < existingLink.EndDateTime;
 
             return isOverlapping;
         }

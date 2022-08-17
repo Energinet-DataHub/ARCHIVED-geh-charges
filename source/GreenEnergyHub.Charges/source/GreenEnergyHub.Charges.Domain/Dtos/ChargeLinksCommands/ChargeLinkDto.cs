@@ -23,13 +23,13 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
         public ChargeLinkDto(
             string operationId,
             string meteringPointId,
-            Instant startDate,
-            Instant? endDate,
+            Instant startDateTime,
+            Instant? endDateTime,
             string senderProvidedChargeId,
             int factor,
             string chargeOwner,
             ChargeType chargeType)
-            : base(operationId, chargeType, senderProvidedChargeId, chargeOwner, startDate, endDate)
+            : base(operationId, chargeType, senderProvidedChargeId, chargeOwner, startDateTime, endDateTime)
         {
             MeteringPointId = meteringPointId;
             Factor = factor;

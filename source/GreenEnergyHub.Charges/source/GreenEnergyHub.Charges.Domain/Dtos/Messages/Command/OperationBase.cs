@@ -24,15 +24,15 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Messages.Command
             ChargeType chargeType,
             string senderProvidedChargeId,
             string chargeOwner,
-            Instant startDate,
-            Instant? endDate)
+            Instant startDateTime,
+            Instant? endDateTime)
         {
             OperationId = operationId;
             ChargeType = chargeType;
             SenderProvidedChargeId = senderProvidedChargeId;
             ChargeOwner = chargeOwner;
-            StartDate = startDate;
-            EndDate = endDate;
+            StartDateTime = startDateTime;
+            EndDateTime = endDateTime;
         }
 
         /// <summary>
@@ -59,11 +59,11 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Messages.Command
         /// <summary>
         /// Valid from, of a charge operation. Also known as Effective Date.
         /// </summary>
-        public Instant StartDate { get; }
+        public Instant StartDateTime { get; }
 
         /// <summary>
         /// Valid to, of a charge operation. Also known as Termination Date.
         /// </summary>
-        public Instant? EndDate { get; }
+        public Instant? EndDateTime { get; }
     }
 }

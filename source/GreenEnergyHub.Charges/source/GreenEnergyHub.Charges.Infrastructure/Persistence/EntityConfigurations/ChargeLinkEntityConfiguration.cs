@@ -29,8 +29,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
             builder.Property(c => c.ChargeId);
             builder.Property(c => c.MeteringPointId);
             builder.Property(c => c.Factor);
-            builder.Property(c => c.StartDate);
-            builder.Property(c => c.EndDate);
+            builder.Property(c => c.StartDateTime);
+            builder.Property(c => c.EndDateTime);
         }
     }
 }

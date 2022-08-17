@@ -83,9 +83,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             actualChargeOperation.ChargeName.Should().Be("Elafgift 2019");
             actualChargeOperation.ChargeDescription.Should().Be("Dette er elafgiftssatsten for 2019");
             actualChargeOperation.Resolution.Should().Be(Resolution.PT1H);
-            actualChargeOperation.StartDate.Should()
+            actualChargeOperation.StartDateTime.Should()
                 .Be(InstantPattern.ExtendedIso.Parse("2020-12-17T23:00:00Z").Value);
-            actualChargeOperation.EndDate.Should()
+            actualChargeOperation.EndDateTime.Should()
                 .Be(InstantPattern.ExtendedIso.Parse("2031-12-17T23:00:00Z").Value);
             actualChargeOperation.VatClassification.Should().Be(VatClassification.Vat25);
             actualChargeOperation.TransparentInvoicing.Should().Be(TransparentInvoicing.Transparent);
@@ -146,8 +146,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             actualChargeOperation.ChargeName.Should().Be("Test 888");
             actualChargeOperation.ChargeDescription.Should().Be("Description 888");
             actualChargeOperation.Resolution.Should().Be(Resolution.PT15M);
-            actualChargeOperation.StartDate.Should().Be(expectedTime);
-            actualChargeOperation.EndDate.Should().BeNull();
+            actualChargeOperation.StartDateTime.Should().Be(expectedTime);
+            actualChargeOperation.EndDateTime.Should().BeNull();
             actualChargeOperation.VatClassification.Should().Be(VatClassification.NoVat);
             actualChargeOperation.TransparentInvoicing.Should().Be(TransparentInvoicing.NonTransparent);
             actualChargeOperation.TaxIndicator.Should().Be(TaxIndicator.NoTax);
@@ -250,8 +250,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             actualFirstChargeOperationDto.ChargeName.Should().Be("Charge Tariff day Name 1");
             actualFirstChargeOperationDto.ChargeDescription.Should().Be("The charge description 1");
             actualFirstChargeOperationDto.Resolution.Should().Be(Resolution.P1D);
-            actualFirstChargeOperationDto.StartDate.Should().Be(expectedTime);
-            actualFirstChargeOperationDto.EndDate.Should().BeNull();
+            actualFirstChargeOperationDto.StartDateTime.Should().Be(expectedTime);
+            actualFirstChargeOperationDto.EndDateTime.Should().BeNull();
             actualFirstChargeOperationDto.VatClassification.Should().Be(VatClassification.NoVat);
             actualFirstChargeOperationDto.TransparentInvoicing.Should().Be(TransparentInvoicing.NonTransparent);
             actualFirstChargeOperationDto.TaxIndicator.Should().Be(TaxIndicator.Tax);
@@ -268,8 +268,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             actualSecondChargeOperationDto.ChargeName.Should().Be("Charge Tariff day Name 2");
             actualSecondChargeOperationDto.ChargeDescription.Should().Be("The charge description 2");
             actualSecondChargeOperationDto.Resolution.Should().Be(Resolution.P1D);
-            actualSecondChargeOperationDto.StartDate.Should().Be(expectedTime);
-            actualSecondChargeOperationDto.EndDate.Should().BeNull();
+            actualSecondChargeOperationDto.StartDateTime.Should().Be(expectedTime);
+            actualSecondChargeOperationDto.EndDateTime.Should().BeNull();
             actualSecondChargeOperationDto.VatClassification.Should().Be(VatClassification.Vat25);
             actualSecondChargeOperationDto.TransparentInvoicing.Should().Be(TransparentInvoicing.Transparent);
             actualSecondChargeOperationDto.TaxIndicator.Should().Be(TaxIndicator.NoTax);

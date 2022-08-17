@@ -44,7 +44,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
             var sut = new ChargeLinksCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
             var expected = CimValidationErrorTextTemplateMessages.MeteringPointDoesNotExistValidationErrorText
                 .Replace("{{MeteringPointId}}", chargeLinkDto.MeteringPointId)
-                .Replace("{{ChargeLinkStartDate}}", chargeLinkDto.StartDate.ToString());
+                .Replace("{{ChargeLinkStartDate}}", chargeLinkDto.StartDateTime.ToString());
 
             // Act
             var actual = sut.Create(validationError, chargeLinksCommand, chargeLinkDto);

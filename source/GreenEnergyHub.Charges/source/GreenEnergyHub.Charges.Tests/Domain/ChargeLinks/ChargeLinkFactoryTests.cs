@@ -63,8 +63,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.ChargeLinks
             actual.ChargeId.Should().Be(expectedCharge.Id);
             actual.MeteringPointId.Should().Be(expectedMeteringPoint.Id);
             actual.Factor.Should().Be(chargeLinkDto.Factor);
-            actual.StartDate.Should().Be(chargeLinkDto.StartDate);
-            actual.EndDate.Should().Be(chargeLinkDto.EndDate!.Value);
+            actual.StartDateTime.Should().Be(chargeLinkDto.StartDateTime);
+            actual.EndDateTime.Should().Be(chargeLinkDto.EndDateTime!.Value);
         }
 
         [Theory]
