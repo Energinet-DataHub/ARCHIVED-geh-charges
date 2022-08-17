@@ -18,9 +18,9 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
 {
-    public class ChargeLinkDto : OperationBase
+    public class ChargeLinkOperationDto : ChargeOperation
     {
-        public ChargeLinkDto(
+        public ChargeLinkOperationDto(
             string operationId,
             string meteringPointId,
             Instant startDateTime,
@@ -29,19 +29,13 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
             int factor,
             string chargeOwner,
             ChargeType chargeType)
-            : base(operationId, chargeType, senderProvidedChargeId, chargeOwner)
+            : base(operationId, chargeType, senderProvidedChargeId, chargeOwner, startDateTime, endDateTime)
         {
             MeteringPointId = meteringPointId;
-            StartDateTime = startDateTime;
-            EndDateTime = endDateTime;
             Factor = factor;
         }
 
         public string MeteringPointId { get; }
-
-        public Instant StartDateTime { get; }
-
-        public Instant? EndDateTime { get; set; }
 
         public int Factor { get; }
     }

@@ -117,7 +117,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
             ChargeLinksCommandBusinessValidationRulesFactory sut)
         {
             // Arrange
-            ChargeLinkDto? chargeLinkDto = null;
+            ChargeLinkOperationDto? chargeLinkDto = null;
 
             // Act / Assert
             await Assert.ThrowsAsync<ArgumentNullException>(
@@ -139,10 +139,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
 
         private static void SetupMeteringPointRepositoryMock(
             Mock<IMeteringPointRepository> repository,
-            ChargeLinkDto chargeLinkDto,
+            ChargeLinkOperationDto chargeLinkOperationDto,
             MeteringPoint? meteringPoint)
         {
-            repository.Setup(r => r.GetOrNullAsync(chargeLinkDto.MeteringPointId)).ReturnsAsync(meteringPoint);
+            repository.Setup(r => r.GetOrNullAsync(chargeLinkOperationDto.MeteringPointId)).ReturnsAsync(meteringPoint);
         }
     }
 }

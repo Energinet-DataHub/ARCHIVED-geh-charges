@@ -31,7 +31,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation.DocumentValidation.Facto
             _marketParticipantRepository = marketParticipantRepository;
         }
 
-        public async Task<IValidationRuleSet> CreateRulesAsync(CommandBase command)
+        public async Task<IValidationRuleSet> CreateRulesAsync(ChargeCommand command)
         {
             ArgumentNullException.ThrowIfNull(command);
             var document = command.Document;

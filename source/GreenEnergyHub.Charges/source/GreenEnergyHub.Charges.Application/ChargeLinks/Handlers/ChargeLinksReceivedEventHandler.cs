@@ -32,14 +32,14 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
         private readonly IChargeLinksReceiptService _chargeLinksReceiptService;
         private readonly IChargeLinkFactory _chargeLinkFactory;
         private readonly IChargeLinksRepository _chargeLinksRepository;
-        private readonly IBusinessValidator<ChargeLinkDto> _businessValidator;
+        private readonly IBusinessValidator<ChargeLinkOperationDto> _businessValidator;
         private readonly IUnitOfWork _unitOfWork;
 
         public ChargeLinksReceivedEventHandler(
             IChargeLinksReceiptService chargeLinksReceiptService,
             IChargeLinkFactory chargeLinkFactory,
             IChargeLinksRepository chargeLinksRepository,
-            IBusinessValidator<ChargeLinkDto> businessValidator,
+            IBusinessValidator<ChargeLinkOperationDto> businessValidator,
             IUnitOfWork unitOfWork)
         {
             _chargeLinksReceiptService = chargeLinksReceiptService;
@@ -53,11 +53,11 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
         {
             ArgumentNullException.ThrowIfNull(chargeLinksReceivedEvent);
 
-            var operationsToBeRejected = new List<ChargeLinkDto>();
+            var operationsToBeRejected = new List<ChargeLinkOperationDto>();
             var rejectionRules = new List<IValidationRuleContainer>();
-            var operationsToBeConfirmed = new List<ChargeLinkDto>();
+            var operationsToBeConfirmed = new List<ChargeLinkOperationDto>();
 
-            var operations = chargeLinksReceivedEvent.ChargeLinksCommand.Operations.ToArray();
+            var operations = chargeLinksReceivedEvent.Command.Operations.ToArray();
 
             for (var i = 0; i < operations.Length; i++)
             {
@@ -82,19 +82,19 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
 
-            var document = chargeLinksReceivedEvent.ChargeLinksCommand.Document;
+            var document = chargeLinksReceivedEvent.Command.Document;
             await RejectInvalidOperationsAsync(operationsToBeRejected, document, rejectionRules).ConfigureAwait(false);
             await AcceptValidOperationsAsync(operationsToBeConfirmed, document).ConfigureAwait(false);
         }
 
-        private async Task HandleCreateEventAsync(ChargeLinkDto chargeLinkDto)
+        private async Task HandleCreateEventAsync(ChargeLinkOperationDto chargeLinkOperationDto)
         {
-            var chargeLinks = await _chargeLinkFactory.CreateAsync(chargeLinkDto).ConfigureAwait(false);
+            var chargeLinks = await _chargeLinkFactory.CreateAsync(chargeLinkOperationDto).ConfigureAwait(false);
             await _chargeLinksRepository.AddAsync(chargeLinks).ConfigureAwait(false);
         }
 
         private async Task RejectInvalidOperationsAsync(
-            IReadOnlyCollection<ChargeLinkDto> operationsToBeRejected,
+            IReadOnlyCollection<ChargeLinkOperationDto> operationsToBeRejected,
             DocumentDto document,
             IList<IValidationRuleContainer> rejectionRules)
         {
@@ -108,7 +108,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
         }
 
         private async Task AcceptValidOperationsAsync(
-            IReadOnlyCollection<ChargeLinkDto> operationsToBeConfirmed,
+            IReadOnlyCollection<ChargeLinkOperationDto> operationsToBeConfirmed,
             DocumentDto document)
         {
             if (operationsToBeConfirmed.Any())

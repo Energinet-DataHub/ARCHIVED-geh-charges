@@ -19,14 +19,10 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands
 {
-    // Non-nullable member is uninitialized is ignored
-    // Only properties which is allowed to be null is nullable
-    // ChargeEvent integrity is null checked by ChargeCommandNullChecker
-
     /// <summary>
     /// The ChargeOperationDto class contains the intend of the charge command, e.g. updating an existing charge.
     /// </summary>
-    public class ChargeInformationOperationDto : OperationBase
+    public class ChargeInformationOperationDto : ChargeOperation
     {
         public ChargeInformationOperationDto(
                 string operationId,
@@ -45,7 +41,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands
                 Instant? pointsStartInterval,
                 Instant? pointsEndInterval,
                 List<Point> points)
-            : base(operationId, chargeType, senderProvidedChargeId, chargeOwner)
+            : base(operationId, chargeType, senderProvidedChargeId, chargeOwner, startDateTime, endDateTime)
         {
             Points = new List<Point>();
             ChargeName = chargeName;
@@ -55,8 +51,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands
             TaxIndicator = taxIndicator;
             TransparentInvoicing = transparentInvoicing;
             VatClassification = vatClassification;
-            StartDateTime = startDateTime;
-            EndDateTime = endDateTime;
             PointsStartInterval = pointsStartInterval;
             PointsEndInterval = pointsEndInterval;
             Points = points;
@@ -68,16 +62,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands
         public string ChargeName { get; }
 
         public string ChargeDescription { get; }
-
-        /// <summary>
-        /// Valid from, of a charge price list. Also known as Effective Date.
-        /// </summary>
-        public Instant StartDateTime { get; }
-
-        /// <summary>
-        /// Valid to, of a charge price list.
-        /// </summary>
-        public Instant? EndDateTime { get; }
 
         public VatClassification VatClassification { get; }
 

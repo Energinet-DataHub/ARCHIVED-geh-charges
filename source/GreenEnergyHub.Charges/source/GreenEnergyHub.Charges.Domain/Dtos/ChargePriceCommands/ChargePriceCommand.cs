@@ -18,7 +18,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands
 {
-    public class ChargePriceCommand : CommandBase
+    public class ChargePriceCommand : ChargeCommand
     {
         public ChargePriceCommand(DocumentDto document, IReadOnlyCollection<ChargePriceOperationDto> operations)
         {
