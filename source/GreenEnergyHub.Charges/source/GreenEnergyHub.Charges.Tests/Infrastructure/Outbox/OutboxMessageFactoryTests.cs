@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Outbox
             message.Id.Should().NotBeEmpty();
             message.Type.Should().Be(OperationsRejectedEventType);
             message.Data.Should().NotBeNullOrEmpty();
-            message.CorrelationTraceContext.Should().Be(context.AsTraceContext());
+            message.CorrelationId.Should().Be(context.Id);
             message.CreationDate.Should().NotBeNull();
             message.ProcessedDate.Should().BeNull();
         }

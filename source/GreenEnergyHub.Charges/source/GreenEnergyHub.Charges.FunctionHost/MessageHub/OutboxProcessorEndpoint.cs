@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Infrastructure.Outbox;
@@ -32,6 +33,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
         private readonly IAvailableDataNotifier<AvailableChargeReceiptData, OperationsRejectedEvent> _availableDataNotifier;
         private readonly IJsonSerializer _jsonSerializer;
         private readonly IClock _clock;
+        private readonly ICorrelationContext _correlationContext;
         private readonly IUnitOfWork _unitOfWork;
 
         public OutboxProcessorEndpoint(
@@ -39,12 +41,14 @@ namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
             IAvailableDataNotifier<AvailableChargeReceiptData, OperationsRejectedEvent> availableDataNotifier,
             IJsonSerializer jsonSerializer,
             IClock clock,
+            ICorrelationContext correlationContext,
             IUnitOfWork unitOfWork)
         {
             _outboxMessageRepository = outboxMessageRepository;
             _availableDataNotifier = availableDataNotifier;
             _jsonSerializer = jsonSerializer;
             _clock = clock;
+            _correlationContext = correlationContext;
             _unitOfWork = unitOfWork;
         }
 
@@ -56,6 +60,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
 
             while ((outboxMessage = _outboxMessageRepository.GetNext()) != null)
             {
+                _correlationContext.SetId(outboxMessage.CorrelationId);
                 var operationsRejectedEvent = _jsonSerializer.Deserialize<OperationsRejectedEvent>(outboxMessage.Data);
                 await _availableDataNotifier.NotifyAsync(operationsRejectedEvent).ConfigureAwait(false);
                 outboxMessage.SetProcessed(_clock.GetCurrentInstant());

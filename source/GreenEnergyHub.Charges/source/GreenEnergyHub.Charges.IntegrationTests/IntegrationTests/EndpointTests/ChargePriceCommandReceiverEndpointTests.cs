@@ -80,7 +80,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
                 // Assert
                 await using var context = Fixture.ChargesDatabaseManager.CreateDbContext();
-                var actualOutboxMessage = context.OutboxMessages.Single(x => x.CorrelationTraceContext.Contains($"{correlationId}"));
+                var actualOutboxMessage = context.OutboxMessages.Single(x => x.CorrelationId.Contains($"{correlationId}"));
                 actualOutboxMessage.Type.Should().Be(OperationsRejectedEventType);
             }
 

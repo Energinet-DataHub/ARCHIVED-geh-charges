@@ -98,6 +98,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 Mock<IAvailableDataNotifier<AvailableChargeReceiptData, OperationsRejectedEvent>> availableDataNotifier,
                 JsonSerializer jsonSerializer,
                 TimerInfo timerInfo,
+                CorrelationContext correlationContext,
                 Instant now)
             {
                 // Arrange
@@ -114,6 +115,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     availableDataNotifier.Object,
                     jsonSerializer,
                     clock.Object,
+                    correlationContext,
                     unitOfWork);
 
                 // Act & Assert

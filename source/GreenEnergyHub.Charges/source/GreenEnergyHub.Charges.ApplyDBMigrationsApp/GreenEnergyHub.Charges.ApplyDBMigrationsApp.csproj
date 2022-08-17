@@ -49,6 +49,7 @@ limitations under the License.
       <EmbeddedResource Include="Scripts\Model\202207051352 Remove Foreign Keys on DataAvailable tables.sql" />
       <EmbeddedResource Include="Scripts\Model\202207271035 Remove position from ChargePoint.sql" />
       <EmbeddedResource Include="Scripts\Model\202208101116 Create outbox table.sql" />
+      <EmbeddedResource Include="Scripts\Model\202208171044 Rename CorrelationTraceContext to CorrelationId.sql" />
       <EmbeddedResource Include="Scripts\Seed\202201261740 Add default charges owner.sql" />
       <EmbeddedResource Include="Scripts\Seed\202201261741 Add default charges.sql" />
       <EmbeddedResource Include="Scripts\Seed\202201261742 Add default charge links.sql" />
