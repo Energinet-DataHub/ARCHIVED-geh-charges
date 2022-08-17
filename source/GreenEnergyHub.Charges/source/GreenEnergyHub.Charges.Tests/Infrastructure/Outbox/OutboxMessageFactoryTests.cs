@@ -14,6 +14,7 @@
 
 using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Infrastructure.Outbox;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.Json;
@@ -27,11 +28,11 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Outbox
     [UnitTest]
     public class OutboxMessageFactoryTests
     {
-        private const string OperationsRejectedEventType = "GreenEnergyHub.Charges.Application.Charges.Events.ChargePriceOperationsRejectedEvent";
+        private static readonly string _operationsRejectedEventType = typeof(ChargePriceOperationsRejectedEvent).FullName!;
 
         [Theory]
         [AutoDomainData]
-        public void WhenOperationsRejectedEvent_ReturnsOutboxMessage_WithSerializedData(
+        public void CreateFrom_GivenOperationsRejectedEvent_OutboxMessageWithSerializedDataIsReturned(
             JsonSerializer jsonSerializer,
             IClock clock,
             ICorrelationContext context,
@@ -46,7 +47,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Outbox
 
             // Assert
             message.Id.Should().NotBeEmpty();
-            message.Type.Should().Be(OperationsRejectedEventType);
+            message.Type.Should().Be(_operationsRejectedEventType);
             message.Data.Should().NotBeNullOrEmpty();
             message.CorrelationTraceContext.Should().Be(context.AsTraceContext());
             message.CreationDate.Should().NotBeNull();

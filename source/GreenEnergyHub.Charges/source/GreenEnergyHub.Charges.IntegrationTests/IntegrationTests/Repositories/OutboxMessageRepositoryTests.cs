@@ -47,7 +47,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             // Arrange
             var outboxMessage = outboxMessageBuilder.Build();
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-
             var sut = new OutboxMessageRepository(chargesDatabaseWriteContext, clock);
 
             // Act

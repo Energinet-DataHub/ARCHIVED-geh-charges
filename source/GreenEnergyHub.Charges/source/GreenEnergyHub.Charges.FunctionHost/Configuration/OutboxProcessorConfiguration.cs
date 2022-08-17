@@ -36,10 +36,10 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 AvailableDataNotifier<AvailableChargeReceiptData, ChargePriceOperationsRejectedEvent>>();
             serviceCollection.AddScoped<IAvailableDataFactory<AvailableChargeReceiptData, ChargePriceOperationsRejectedEvent>,
                 AvailableOperationRejectionsFactory>();
-            serviceCollection.AddScoped<IAvailableOperationReceiptValidationErrorFactory,
-                AvailableOperationReceiptValidationErrorFactory>();
+            serviceCollection.AddScoped<IAvailableChargePriceReceiptValidationErrorFactory,
+                AvailableChargePriceReceiptValidationErrorFactory>();
             serviceCollection.AddScoped<ICimValidationErrorTextFactory<ChargePriceCommand, ChargePriceOperationDto>,
-                OperationCimValidationErrorTextFactory>();
+                ChargePriceCimValidationErrorTextFactory>();
             serviceCollection.AddScoped<BundleSpecification<AvailableChargeReceiptData, ChargePriceOperationsRejectedEvent>,
                 OperationsRejectionBundleSpecification>();
         }

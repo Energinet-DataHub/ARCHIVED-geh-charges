@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
         {
             // Arrange
             var chargeCommand = chargePriceCommandBuilder.WithChargeOperation(chargeOperationDto).Build();
-            var sut = new OperationCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
+            var sut = new ChargePriceCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
             var validationError = new ValidationError(ValidationRuleIdentifier.DocumentTypeMustBeRequestChangeOfPriceList, null, null);
 
             var expected = CimValidationErrorTextTemplateMessages.DocumentTypeMustBeRequestChangeOfPriceListErrorText
@@ -64,7 +64,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
         {
             // Arrange
             var chargeCommand = chargePriceCommandBuilder.WithChargeOperation(chargePriceOperationDto).Build();
-            var sut = new OperationCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
+            var sut = new ChargePriceCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
             var triggeredBy = chargePriceOperationDto.Points.GetPositionOfPoint(chargePriceOperationDto.Points[1]).ToString();
             var validationError = new ValidationError(ValidationRuleIdentifier.MaximumPrice, chargePriceOperationDto.Id, triggeredBy);
 
@@ -99,7 +99,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
             // Arrange
             var chargeCommand = chargePriceCommandBuilder.WithChargeOperation(chargePriceOperationDto).Build();
             var validationError = new ValidationError(validationRuleIdentifier, chargePriceOperationDto.Id, triggeredBy);
-            var sut = new OperationCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
+            var sut = new ChargePriceCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
 
             // Act
             var actual = sut.Create(validationError, chargeCommand, chargePriceOperationDto);
@@ -124,7 +124,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
                 ValidationRuleForInterfaceLoader.GetValidationRuleIdentifierForTypes(
                     DomainAssemblyHelper.GetDomainAssembly(), typeof(IValidationRuleWithExtendedData));
 
-            var sut = new OperationCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
+            var sut = new ChargePriceCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
 
             // Act
             // Assert

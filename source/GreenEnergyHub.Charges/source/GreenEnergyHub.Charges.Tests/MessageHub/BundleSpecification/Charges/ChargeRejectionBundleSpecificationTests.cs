@@ -15,20 +15,18 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using GreenEnergyHub.Charges.Infrastructure.Core.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification.Charges;
 using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim;
 using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeReceipt;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.TestCore.TestHelpers;
 using GreenEnergyHub.Charges.Tests.TestFiles;
 using Moq;
 using NodaTime;
@@ -41,7 +39,6 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.Charges
     public class ChargeRejectionBundleSpecificationTests
     {
         private const string MaxLengthId = "00000000000000000000000000000000000";
-        private const int MaxTextLengthInTest = 10000;
 
         [Theory]
         [InlineAutoMoqData(0)]
@@ -117,38 +114,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.Charges
                 DocumentType.RejectRequestChangeOfPriceList,
                 0,
                 Guid.NewGuid(),
-                GetReasons(noOfReasons));
-        }
-
-        private List<AvailableReceiptValidationError> GetReasons(int noOfReasons)
-        {
-            var reasons = new List<AvailableReceiptValidationError>();
-
-            for (var i = 0; i < noOfReasons; i++)
-            {
-                reasons.Add(GetReason());
-            }
-
-            return reasons;
-        }
-
-        private AvailableReceiptValidationError GetReason()
-        {
-            var text = CreateStringOfRandomLength();
-            return new AvailableReceiptValidationError(ReasonCode.D01, text);
-        }
-
-        private static string CreateStringOfRandomLength()
-        {
-            var builder = new StringBuilder();
-            var randomizer = new Random();
-            var length = randomizer.Next(0, MaxTextLengthInTest);
-            for (var i = 0; i < length; i++)
-            {
-                builder.Append('0');
-            }
-
-            return builder.ToString();
+                AvailableReceiptValidationErrorGenerator.CreateReasons(noOfReasons));
         }
     }
 }

@@ -15,17 +15,15 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
-using GreenEnergyHub.Charges.Infrastructure.Core.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification.Charges;
 using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeReceipt;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.TestCore.TestHelpers;
 using GreenEnergyHub.Charges.Tests.TestFiles;
 using NodaTime;
 using Xunit;
@@ -36,8 +34,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.Charges
     [UnitTest]
     public class OperationsRejectionBundleSpecificationTests
     {
-        private const string MaxLengthId = "00000000000000000000000000000000000";
-        private const int MaxTextLengthInTest = 10000;
+        private const string MaxLengthId = "1_______10________20________3012345";
 
         [Theory]
         [InlineAutoMoqData(0)]
@@ -66,7 +63,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.Charges
             var actual = sut.GetMessageWeight(availableData);
 
             // Assert
-            actual.Should().BeGreaterOrEqualTo((int)stream.Length / 1000); // It is kilobyte, but uses 1000 instead of 1024
+            var streamWeightInKilobytes = (int)stream.Length / 1000; // It is kilobyte, but uses 1000 instead of 1024
+            actual.Should().BeGreaterOrEqualTo(streamWeightInKilobytes);
         }
 
         [Fact]
@@ -97,38 +95,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.Charges
                 DocumentType.RejectRequestChangeOfPriceList,
                 0,
                 Guid.NewGuid(),
-                GetReasons(noOfReasons));
-        }
-
-        private List<AvailableReceiptValidationError> GetReasons(int noOfReasons)
-        {
-            var reasons = new List<AvailableReceiptValidationError>();
-
-            for (var i = 0; i < noOfReasons; i++)
-            {
-                reasons.Add(GetReason());
-            }
-
-            return reasons;
-        }
-
-        private AvailableReceiptValidationError GetReason()
-        {
-            var text = CreateStringOfRandomLength();
-            return new AvailableReceiptValidationError(ReasonCode.D01, text);
-        }
-
-        private static string CreateStringOfRandomLength()
-        {
-            var builder = new StringBuilder();
-            var randomizer = new Random();
-            var length = randomizer.Next(0, MaxTextLengthInTest);
-            for (var i = 0; i < length; i++)
-            {
-                builder.Append('0');
-            }
-
-            return builder.ToString();
+                AvailableReceiptValidationErrorGenerator.CreateReasons(noOfReasons));
         }
     }
 }

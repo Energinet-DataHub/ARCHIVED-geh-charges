@@ -63,7 +63,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
         public MessageHubSimulation? MessageHubMock { get; private set; }
 
         [NotNull]
-        public TopicResource? PriceCommandReceivedTopic { get; private set; }
+        public TopicResource? ChargePriceCommandReceivedTopic { get; private set; }
 
         [NotNull]
         public TopicResource? ChargeLinksReceivedTopic { get; private set; }
@@ -178,7 +178,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
                 .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.CommandReceivedSubscriptionName)
                 .CreateAsync();
 
-            PriceCommandReceivedTopic = await ServiceBusResourceProvider
+            ChargePriceCommandReceivedTopic = await ServiceBusResourceProvider
                 .BuildTopic(ChargesServiceBusResourceNames.PriceCommandReceivedTopicKey)
                 .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.PriceCommandReceivedTopicName)
                 .AddSubscription(ChargesServiceBusResourceNames.PriceCommandReceivedSubscriptionName)

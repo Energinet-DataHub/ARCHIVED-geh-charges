@@ -24,17 +24,17 @@ using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableOperationReceiptData
 {
-    public class OperationCimValidationErrorTextFactory : ICimValidationErrorTextFactory<ChargePriceCommand, ChargePriceOperationDto>
+    public class ChargePriceCimValidationErrorTextFactory : ICimValidationErrorTextFactory<ChargePriceCommand, ChargePriceOperationDto>
     {
         private readonly ICimValidationErrorTextProvider _cimValidationErrorTextProvider;
         private readonly ILogger _logger;
 
-        public OperationCimValidationErrorTextFactory(
+        public ChargePriceCimValidationErrorTextFactory(
             ICimValidationErrorTextProvider cimValidationErrorTextProvider,
             ILoggerFactory loggerFactory)
         {
             _cimValidationErrorTextProvider = cimValidationErrorTextProvider;
-            _logger = loggerFactory.CreateLogger(nameof(OperationCimValidationErrorTextFactory));
+            _logger = loggerFactory.CreateLogger(nameof(ChargePriceCimValidationErrorTextFactory));
         }
 
         public string Create(

@@ -12,17 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.Validation;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
+using System;
+using System.Text;
 
-namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableOperationReceiptData
+namespace GreenEnergyHub.Charges.TestCore.TestHelpers
 {
-    public interface IAvailableOperationReceiptValidationErrorFactory
+    public static class StringGenerator
     {
-        AvailableReceiptValidationError Create(
-            ValidationError validationError,
-            ChargePriceCommand command,
-            ChargePriceOperationDto chargePriceOperationDto);
+        public static string CreateStringOfRandomLength(int maxLength)
+        {
+            var builder = new StringBuilder();
+            var randomizer = new Random();
+            var length = randomizer.Next(0, maxLength);
+            for (var i = 0; i < length; i++)
+            {
+                builder.Append('0');
+            }
+
+            return builder.ToString();
+        }
     }
 }

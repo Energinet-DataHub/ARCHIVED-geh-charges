@@ -33,18 +33,18 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableOperationReceiptData
         AvailableDataFactoryBase<AvailableChargeReceiptData.AvailableChargeReceiptData, ChargePriceOperationsRejectedEvent>
     {
         private readonly IMessageMetaDataContext _messageMetaDataContext;
-        private readonly IAvailableOperationReceiptValidationErrorFactory _availableChargeReceiptValidationErrorFactory;
+        private readonly IAvailableChargePriceReceiptValidationErrorFactory _availableChargePriceReceiptValidationErrorFactory;
         private readonly ILogger _logger;
 
         public AvailableOperationRejectionsFactory(
             IMessageMetaDataContext messageMetaDataContext,
-            IAvailableOperationReceiptValidationErrorFactory availableChargeReceiptValidationErrorFactory,
+            IAvailableChargePriceReceiptValidationErrorFactory availableChargePriceReceiptValidationErrorFactory,
             IMarketParticipantRepository marketParticipantRepository,
             ILoggerFactory loggerFactory)
             : base(marketParticipantRepository)
         {
             _messageMetaDataContext = messageMetaDataContext;
-            _availableChargeReceiptValidationErrorFactory = availableChargeReceiptValidationErrorFactory;
+            _availableChargePriceReceiptValidationErrorFactory = availableChargePriceReceiptValidationErrorFactory;
             _logger = loggerFactory.CreateLogger(nameof(AvailableChargeRejectionDataFactory));
         }
 
@@ -90,7 +90,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableOperationReceiptData
             return input
                 .ValidationErrors
                 .Where(ve => ve.OperationId == operationDto.Id || string.IsNullOrWhiteSpace(ve.OperationId))
-                .Select(validationError => _availableChargeReceiptValidationErrorFactory
+                .Select(validationError => _availableChargePriceReceiptValidationErrorFactory
                     .Create(validationError, input.Command, operationDto))
                 .ToList();
         }

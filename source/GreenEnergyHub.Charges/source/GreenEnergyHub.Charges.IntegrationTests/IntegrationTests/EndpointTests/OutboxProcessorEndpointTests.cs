@@ -16,7 +16,6 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
-using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using FluentAssertions;
@@ -31,6 +30,7 @@ using GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
+using GreenEnergyHub.Charges.TestCore.TestHelpers;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.Json;
 using Microsoft.Azure.Functions.Worker;
@@ -146,7 +146,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
             private async Task<OutboxMessage> PersistToOutboxMessage(ChargesDatabaseContext context, ChargePriceOperationsRejectedEvent operationsRejectedEvent)
             {
-                var correlationContext = CreateCorrelationContext();
+                var correlationContext = CorrelationContextGenerator.Create();
                 var jsonSerializer = new JsonSerializer();
                 var outboxMessageFactory = new OutboxMessageFactory(jsonSerializer, SystemClock.Instance, correlationContext);
                 var outboxMessage = outboxMessageFactory.CreateFrom(operationsRejectedEvent);
@@ -165,14 +165,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     .WithType(rejectedEvent.GetType().ToString())
                     .WithCreationDate(now)
                     .Build();
-            }
-
-            private static CorrelationContext CreateCorrelationContext()
-            {
-                var correlationContext = new CorrelationContext();
-                correlationContext.SetId("id");
-                correlationContext.SetParentId("parentId");
-                return correlationContext;
             }
         }
     }

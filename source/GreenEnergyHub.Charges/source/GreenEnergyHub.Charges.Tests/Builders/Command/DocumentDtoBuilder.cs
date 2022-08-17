@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
+using GreenEnergyHub.Charges.TestCore;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Tests.Builders.Command
@@ -31,8 +32,8 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         public DocumentDtoBuilder()
         {
             _id = "id";
-            _recipient = new MarketParticipantDto { MarketParticipantId = "5790001330552", BusinessProcessRole = MarketParticipantRole.MeteringPointAdministrator };
-            _sender = new MarketParticipantDto { MarketParticipantId = "8100000000030", BusinessProcessRole = MarketParticipantRole.GridAccessProvider };
+            _recipient = new MarketParticipantDto { MarketParticipantId = SeededData.MarketParticipants.MeteringPointAdministrator.Gln, BusinessProcessRole = MarketParticipantRole.MeteringPointAdministrator };
+            _sender = new MarketParticipantDto { MarketParticipantId = SeededData.GridAreaLink.Provider8100000000030.MarketParticipantId, BusinessProcessRole = MarketParticipantRole.GridAccessProvider };
         }
 
         public DocumentDtoBuilder WithDocumentId(string id)

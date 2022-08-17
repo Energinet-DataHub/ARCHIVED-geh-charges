@@ -19,12 +19,12 @@ using GreenEnergyHub.Charges.MessageHub.Models.Shared;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableOperationReceiptData
 {
-    public class AvailableOperationReceiptValidationErrorFactory : IAvailableOperationReceiptValidationErrorFactory
+    public class AvailableChargePriceReceiptValidationErrorFactory : IAvailableChargePriceReceiptValidationErrorFactory
     {
         private readonly ICimValidationErrorCodeFactory _cimValidationErrorCodeFactory;
         private readonly ICimValidationErrorTextFactory<ChargePriceCommand, ChargePriceOperationDto> _cimValidationErrorTextFactory;
 
-        public AvailableOperationReceiptValidationErrorFactory(
+        public AvailableChargePriceReceiptValidationErrorFactory(
             ICimValidationErrorCodeFactory cimValidationErrorCodeFactory,
             ICimValidationErrorTextFactory<ChargePriceCommand, ChargePriceOperationDto> cimValidationErrorTextFactory)
         {

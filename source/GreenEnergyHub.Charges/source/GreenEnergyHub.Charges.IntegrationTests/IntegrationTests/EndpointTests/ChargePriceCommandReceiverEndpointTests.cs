@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Charges;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
@@ -40,7 +41,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
         [Collection(nameof(ChargesFunctionAppCollectionFixture))]
         public class RunAsync : FunctionAppTestBase<ChargesFunctionAppFixture>, IAsyncLifetime
         {
-            private const string OperationsRejectedEventType = "GreenEnergyHub.Charges.Application.Charges.Events.ChargePriceOperationsRejectedEvent";
+            private static readonly string _operationsRejectedEventType = typeof(ChargePriceOperationsRejectedEvent).FullName!;
 
             public RunAsync(ChargesFunctionAppFixture fixture, ITestOutputHelper testOutputHelper)
                 : base(fixture, testOutputHelper)
@@ -60,18 +61,19 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
             [Theory]
             [InlineAutoMoqData]
-            public async Task When_ChargePriceCommandReceivedEvent_FailsValidation_PersistsRejectedEvent(
+            public async Task ChargePriceCommandReceivedEvent_WhenValidationFails_PersistsRejectedEvent(
                 ChargePriceCommandBuilder commandBuilder,
                 ChargePriceOperationDtoBuilder operationDtoBuilder)
             {
                 // Arrange
+                await using var context = Fixture.ChargesDatabaseManager.CreateDbContext();
                 var invalidChargePriceCommandReceivedEvent = CreateInvalidChargePriceCommandReceivedEvent(commandBuilder, operationDtoBuilder);
                 var correlationId = CorrelationIdGenerator.Create();
                 var message = CreateServiceBusMessage(invalidChargePriceCommandReceivedEvent, correlationId);
 
                 // Act
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
-                    () => Fixture.PriceCommandReceivedTopic.SenderClient.SendMessageAsync(message),
+                    () => Fixture.ChargePriceCommandReceivedTopic.SenderClient.SendMessageAsync(message),
                     correlationId,
                     $"00-{correlationId}-b7ad6b7169203331-00");
 
@@ -79,9 +81,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     Fixture.HostManager, nameof(ChargePriceCommandReceiverEndpoint));
 
                 // Assert
-                await using var context = Fixture.ChargesDatabaseManager.CreateDbContext();
                 var actualOutboxMessage = context.OutboxMessages.Single(x => x.CorrelationTraceContext.Contains($"{correlationId}"));
-                actualOutboxMessage.Type.Should().Be(OperationsRejectedEventType);
+                actualOutboxMessage.Type.Should().Be(_operationsRejectedEventType);
             }
 
             private static ChargePriceCommandReceivedEvent CreateInvalidChargePriceCommandReceivedEvent(
