@@ -25,8 +25,6 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
             string teamClientSecret)
         {
             ClientName = clientName;
-            TeamClientId = teamClientId;
-            TeamClientSecret = teamClientSecret;
             ClientCredentialsSettings = RetrieveB2CTestClientSettings(clientName, teamClientId, teamClientSecret);
         }
 
@@ -48,9 +46,5 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
         public ClientCredentialsSettings ClientCredentialsSettings { get; }
 
         public string ClientName { get; }
-
-        private string TeamClientId { get; }
-
-        private string TeamClientSecret { get; }
     }
 }
