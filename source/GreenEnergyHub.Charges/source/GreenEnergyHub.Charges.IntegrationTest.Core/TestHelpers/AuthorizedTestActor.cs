@@ -24,13 +24,13 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
     {
         private readonly string _localTimeZoneName;
 
-        public TestClient TestClient { get; }
+        public B2CTestClient B2CTestClient { get; }
 
         private AuthenticationResult? AuthenticationResult { get; set; }
 
-        public AuthorizedTestActor(TestClient testClient, string localTimeZoneName)
+        public AuthorizedTestActor(B2CTestClient b2CTestClient, string localTimeZoneName)
         {
-            TestClient = testClient;
+            B2CTestClient = b2CTestClient;
             _localTimeZoneName = localTimeZoneName;
         }
 
@@ -38,7 +38,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
         {
             var backendAuthenticationClient = new BackendAuthenticationClient(
                 backendAppScope,
-                TestClient.ClientCredentialsSettings,
+                B2CTestClient.ClientCredentialsSettings,
                 b2CTenantId);
             AuthenticationResult = await backendAuthenticationClient.GetAuthenticationTokenAsync();
         }

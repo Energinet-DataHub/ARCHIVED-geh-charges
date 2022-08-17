@@ -41,7 +41,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Authorization
             Environment = environment;
             RootConfiguration = BuildKeyVaultConfigurationRoot(localSettingsJsonFilename);
             SecretsConfiguration = BuildSecretsKeyVaultConfiguration(RootConfiguration.GetValue<string>(azureSecretsKeyVaultUrlKey));
-            TestClients = CreateTestClients(clientNames);
+            B2CTestClients = CreateB2CTestClients(clientNames);
             B2cTenantId = SecretsConfiguration.GetValue<string>(BuildB2CEnvironmentSecretName(Environment, "tenant-id"));
             var backendAppId = SecretsConfiguration.GetValue<string>(BuildB2CEnvironmentSecretName(Environment, "backend-app-id"));
             var frontendAppId = SecretsConfiguration.GetValue<string>(BuildB2CEnvironmentSecretName(Environment, "frontend-app-id"));
@@ -55,7 +55,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Authorization
             FrontendOpenIdUrl = SecretsConfiguration.GetValue<string>(BuildB2CFrontendOpenIdUrl(Environment));
         }
 
-        public IEnumerable<TestClient> TestClients { get; }
+        public IEnumerable<B2CTestClient> B2CTestClients { get; }
 
         public IEnumerable<string> FrontendAppScope { get; }
 
@@ -96,23 +96,23 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Authorization
         public Uri ApiManagementBaseAddress { get; }
 
         /// <summary>
-        /// Create a list of 'test client apps' each with own settings necessary to acquire an access token in a configured environment.
+        /// Create a list of 'B2C test client apps' each with own settings necessary to acquire an access token in a configured environment.
         /// </summary>
         /// <param name="clientNames">List of team names or shorthands</param>
-        /// <returns>A list of test clients apps</returns>
+        /// <returns>A list of B2C test clients apps</returns>
         /// <exception cref="ArgumentException">When string value is null or whitespace</exception>
-        private IEnumerable<TestClient> CreateTestClients(IEnumerable<string> clientNames)
+        private IEnumerable<B2CTestClient> CreateB2CTestClients(IEnumerable<string> clientNames)
         {
             ArgumentNullException.ThrowIfNull(clientNames);
 
-            var testClients = new List<TestClient>();
+            var testClients = new List<B2CTestClient>();
 
             foreach (var clientName in clientNames)
             {
                 if (string.IsNullOrEmpty(clientName))
                     throw new ArgumentException("clientName cannot be null or whitespace.");
 
-                testClients.Add(new TestClient(
+                testClients.Add(new B2CTestClient(
                     clientName,
                     SecretsConfiguration.GetValue<string>(BuildB2CTeamSecretName(Environment, clientName, "client-id")),
                     SecretsConfiguration.GetValue<string>(BuildB2CTeamSecretName(Environment, clientName, "client-secret"))));

@@ -17,9 +17,9 @@ using GreenEnergyHub.Charges.IntegrationTest.Core.Authorization;
 
 namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
 {
-    public class TestClient
+    public class B2CTestClient
     {
-        public TestClient(
+        public B2CTestClient(
             string clientName,
             string teamClientId,
             string teamClientSecret)

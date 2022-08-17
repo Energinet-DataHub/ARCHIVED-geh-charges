@@ -41,7 +41,7 @@ namespace GreenEnergyHub.Charges.SystemTests
 
             _authenticationClient = new BackendAuthenticationClient(
                 Configuration.AuthorizationConfiguration.BackendAppScope,
-                Configuration.AuthorizationConfiguration.TestClients.First(tc => tc.ClientName == "endk-ddm3").ClientCredentialsSettings,
+                Configuration.AuthorizationConfiguration.B2CTestClients.First(tc => tc.ClientName == "endk-ddm3").ClientCredentialsSettings,
                 Configuration.AuthorizationConfiguration.B2cTenantId);
         }
 

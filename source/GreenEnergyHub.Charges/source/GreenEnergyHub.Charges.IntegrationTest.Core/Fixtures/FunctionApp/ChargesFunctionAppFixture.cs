@@ -43,7 +43,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             IntegrationTestConfiguration = new IntegrationTestConfiguration();
             DatabaseManager = new ChargesDatabaseManager();
             AuthorizationConfiguration = CreateAuthorizationConfiguration();
-            AuthorizedTestActors = CreateAuthorizedTestActors(AuthorizationConfiguration.TestClients);
+            AuthorizedTestActors = CreateAuthorizedTestActors(AuthorizationConfiguration.B2CTestClients);
+            AsSystemOperator = SetTestActor(AuthorizationConfigurationData.SystemOperator);
             AsSystemOperator = SetTestActor(AuthorizationConfigurationData.SystemOperator);
             AsGridAccessProvider = SetTestActor(AuthorizationConfigurationData.GridAccessProvider8100000000030);
             ServiceBusResourceProvider = new ServiceBusResourceProvider(
@@ -307,10 +308,10 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
         }
 
         private IEnumerable<AuthorizedTestActor> CreateAuthorizedTestActors(
-            IEnumerable<TestClient> testClients)
+            IEnumerable<B2CTestClient> b2CTestClients)
         {
-            return testClients
-                .Select(testClient => new AuthorizedTestActor(testClient, LocalTimeZoneName))
+            return b2CTestClients
+                .Select(b2CTestClient => new AuthorizedTestActor(b2CTestClient, LocalTimeZoneName))
                 .ToList();
         }
 
@@ -326,7 +327,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
 
         private AuthorizedTestActor SetTestActor(string testActorName)
         {
-            return AuthorizedTestActors.Single(a => a.TestClient.ClientName == testActorName);
+            return AuthorizedTestActors.Single(a => a.B2CTestClient.ClientName == testActorName);
         }
 
         private async Task InitializeMessageHubAsync()
