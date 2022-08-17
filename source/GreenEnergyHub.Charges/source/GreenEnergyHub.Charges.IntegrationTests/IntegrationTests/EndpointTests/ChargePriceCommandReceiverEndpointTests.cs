@@ -82,7 +82,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
                 // Assert
                 var actualOutboxMessage = context.OutboxMessages.Single(x => x.CorrelationId.Contains(correlationId));
-                actualOutboxMessage.Type.Should().Be(OperationsRejectedEventType);
+                actualOutboxMessage.Type.Should().Be(_operationsRejectedEventType);
             }
 
             private static ChargePriceCommandReceivedEvent CreateInvalidChargePriceCommandReceivedEvent(
