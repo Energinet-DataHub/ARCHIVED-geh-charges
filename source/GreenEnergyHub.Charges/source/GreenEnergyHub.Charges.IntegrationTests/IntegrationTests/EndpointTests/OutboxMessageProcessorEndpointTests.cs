@@ -71,7 +71,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
             }
 
             [Fact]
-            public async Task GivenOutboxProcessorEndpoint_WhenOutboxMessageIsRead_AvailableDataIsPersisted()
+            public async Task RunAsync_WhenOutboxMessageIsRead_AvailableDataIsPersisted_AndProcessedDateIsSet()
             {
                 // Arrange
                 await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
