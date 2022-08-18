@@ -15,7 +15,6 @@
 using System;
 using System.Net.Http;
 using System.Text;
-using Azure.Core;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Iso8601;
 using NodaTime;
