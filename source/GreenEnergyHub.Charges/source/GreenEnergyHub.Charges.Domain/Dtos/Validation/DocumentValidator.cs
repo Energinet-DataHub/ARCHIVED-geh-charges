@@ -26,7 +26,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
             _documentValidationRulesFactory = documentValidationRulesFactory;
         }
 
-        public async Task<ValidationResult> ValidateAsync(CommandBase command)
+        public async Task<ValidationResult> ValidateAsync(ChargeCommand command)
         {
             var documentValidationResult = await _documentValidationRulesFactory
                 .CreateRulesAsync(command)

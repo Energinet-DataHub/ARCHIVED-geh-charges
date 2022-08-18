@@ -61,7 +61,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 await using var context = Fixture.DatabaseManager.CreateDbContext();
                 var charge = await context.Charges.FirstAsync();
                 var marketParticipant = await context.MarketParticipants.SingleAsync(mp => mp.Id == charge.OwnerId);
-                var links = new List<ChargeLinkDto>
+                var links = new List<ChargeLinkOperationDto>
                 {
                     new ChargeLinkDtoBuilder()
                         .WithCharge(charge.SenderProvidedChargeId, charge.Type, marketParticipant.MarketParticipantId)

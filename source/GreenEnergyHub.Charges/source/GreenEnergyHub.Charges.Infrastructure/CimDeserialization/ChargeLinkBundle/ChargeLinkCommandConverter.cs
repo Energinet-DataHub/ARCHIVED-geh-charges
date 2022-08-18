@@ -65,7 +65,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeLinkBun
             SchemaValidatingReader reader,
             DocumentDto document)
         {
-            var chargeLinkDtos = new List<ChargeLinkDto>();
+            var chargeLinkDtos = new List<ChargeLinkOperationDto>();
             var operationId = string.Empty;
             string meteringPointId = null!;
 
@@ -97,12 +97,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeLinkBun
             return new ChargeLinksCommand(document, chargeLinkDtos);
         }
 
-        private static async Task<ChargeLinkDto> ParseChargeGroupIntoChargeLinkDtoAsync(
+        private static async Task<ChargeLinkOperationDto> ParseChargeGroupIntoChargeLinkDtoAsync(
             SchemaValidatingReader reader,
             string operationId,
             string meteringPointId)
         {
-            ChargeLinkDto? chargeLinkDto = null;
+            ChargeLinkOperationDto? chargeLinkDto = null;
             do
             {
                 if (reader.Is(CimChargeLinkCommandConstants.ChargeType))
@@ -120,7 +120,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeLinkBun
             return chargeLinkDto!;
         }
 
-        private static async Task<ChargeLinkDto> ParseChargeTypeElementIntoChargeLinkDtoAsync(
+        private static async Task<ChargeLinkOperationDto> ParseChargeTypeElementIntoChargeLinkDtoAsync(
             SchemaValidatingReader reader,
             string operationId,
             string meteringPointId)
@@ -169,7 +169,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeLinkBun
             }
             while (await reader.AdvanceAsync().ConfigureAwait(false));
 
-            return new ChargeLinkDto(
+            return new ChargeLinkOperationDto(
                 operationId,
                 meteringPointId,
                 startDateTime,
