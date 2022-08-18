@@ -32,7 +32,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.Charges
 {
     [UnitTest]
-    public class OperationsRejectionBundleSpecificationTests
+    public class ChargePriceRejectionBundleSpecificationTests
     {
         private const string MaxLengthId = "1_______10________20________3012345";
 
@@ -44,7 +44,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.Charges
         public async Task GetMessageWeight_WhenCalled_ReturnedWeightIsHigherThanSerializedStream(
             int noOfReasons,
             ChargeReceiptCimSerializer serializer,
-            OperationsRejectionBundleSpecification sut)
+            ChargePriceRejectionBundleSpecification sut)
         {
             // Arrange
             var availableData = GetRejection(noOfReasons);
@@ -71,7 +71,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.Charges
         public void SizeOfMaximumDocumentWithoutReasons_ShouldNotExceedDefinedWeight()
         {
             // Arrange
-            var confirmationMessageWeightInBytes = (long)OperationsRejectionBundleSpecification.RejectionWeight * 1000;
+            var confirmationMessageWeightInBytes = (long)ChargePriceRejectionBundleSpecification.RejectionWeight * 1000;
 
             // Act
             var xmlSizeInBytes = new FileInfo(FilesForCalculatingBundleSize.WorstCaseChargeReceipt).Length;
@@ -80,7 +80,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.Charges
             xmlSizeInBytes.Should().BeLessOrEqualTo(confirmationMessageWeightInBytes);
         }
 
-        private AvailableChargeReceiptData GetRejection(int noOfReasons)
+        private static AvailableChargeReceiptData GetRejection(int noOfReasons)
         {
             return new AvailableChargeReceiptData(
                 "senderId",

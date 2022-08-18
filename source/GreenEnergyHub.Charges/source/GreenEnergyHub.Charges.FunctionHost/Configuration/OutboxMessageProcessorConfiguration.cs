@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<ICimValidationErrorTextFactory<ChargePriceCommand, ChargePriceOperationDto>,
                 ChargePriceCimValidationErrorTextFactory>();
             serviceCollection.AddScoped<BundleSpecification<AvailableChargeReceiptData, ChargePriceOperationsRejectedEvent>,
-                OperationsRejectionBundleSpecification>();
+                ChargePriceRejectionBundleSpecification>();
         }
     }
 }

@@ -147,7 +147,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 return operationsRejectedEvent;
             }
 
-            private async Task<OutboxMessage> PersistToOutboxMessage(ChargesDatabaseContext context, ChargePriceOperationsRejectedEvent operationsRejectedEvent)
+            private static async Task<OutboxMessage> PersistToOutboxMessage(ChargesDatabaseContext context, ChargePriceOperationsRejectedEvent operationsRejectedEvent)
             {
                 var correlationContext = CorrelationContextGenerator.Create();
                 var jsonSerializer = new JsonSerializer();
@@ -158,7 +158,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 return outboxMessage;
             }
 
-            private OutboxMessage CreateOutboxMessage(Instant now)
+            private static OutboxMessage CreateOutboxMessage(Instant now)
             {
                 var jsonSerializer = new JsonSerializer();
                 var rejectedEvent = new ChargePriceOperationsRejectedEventBuilder().Build();

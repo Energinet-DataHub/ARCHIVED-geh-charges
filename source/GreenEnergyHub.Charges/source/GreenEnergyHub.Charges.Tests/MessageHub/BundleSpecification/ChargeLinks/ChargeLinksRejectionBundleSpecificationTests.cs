@@ -96,7 +96,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.ChargeLink
             xmlSizeInBytes.Should().BeLessOrEqualTo(confirmationMessageWeightInBytes);
         }
 
-        private AvailableChargeLinksReceiptData GetRejection(int noOfReasons)
+        private static AvailableChargeLinksReceiptData GetRejection(int noOfReasons)
         {
             return new AvailableChargeLinksReceiptData(
                 DataHubSenderId,
