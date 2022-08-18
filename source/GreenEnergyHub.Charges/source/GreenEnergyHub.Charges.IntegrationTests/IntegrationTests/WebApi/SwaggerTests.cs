@@ -43,9 +43,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
             : base(chargesWebApiFixture, testOutputHelper)
         {
             _client = factory.CreateClient();
+            var clientCredentialsSettings = chargesWebApiFixture.AuthorizationConfiguration.B2CTestClients
+                .First(tc => tc.ClientName == AuthorizationConfigurationData.GridAccessProvider8100000000030)
+                .ClientCredentialsSettings;
+
             _authenticationClient = new BackendAuthenticationClient(
                 chargesWebApiFixture.AuthorizationConfiguration.BackendAppScope,
-                chargesWebApiFixture.AuthorizationConfiguration.B2CTestClients.First(tc => tc.ClientName == AuthorizationConfigurationData.GridAccessProvider8100000000030).ClientCredentialsSettings,
+                clientCredentialsSettings,
                 chargesWebApiFixture.AuthorizationConfiguration.B2cTenantId);
         }
 
