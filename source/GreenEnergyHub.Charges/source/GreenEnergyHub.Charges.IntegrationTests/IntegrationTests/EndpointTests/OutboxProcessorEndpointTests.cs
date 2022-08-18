@@ -108,7 +108,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 var unitOfWork = new UnitOfWork(chargesDatabaseWriteContext);
                 clock.Setup(c => c.GetCurrentInstant()).Returns(now);
                 var outboxMessage = CreateOutboxMessage(now);
-                var outboxRepository = new OutboxMessageRepository(chargesDatabaseWriteContext, clock.Object);
+                var outboxRepository = new OutboxMessageRepository(chargesDatabaseWriteContext);
                 chargesDatabaseWriteContext.OutboxMessages.Add(outboxMessage);
                 await chargesDatabaseWriteContext.SaveChangesAsync();
                 var sut = new OutboxMessageProcessorEndpoint(

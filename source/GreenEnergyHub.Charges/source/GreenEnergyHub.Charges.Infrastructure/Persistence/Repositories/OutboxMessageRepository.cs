@@ -14,21 +14,16 @@
 
 using System.Linq;
 using GreenEnergyHub.Charges.Infrastructure.Outbox;
-using NodaTime;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
 {
     public class OutboxMessageRepository : IOutboxMessageRepository
     {
         private readonly IChargesDatabaseContext _chargesDatabaseContext;
-        private readonly IClock _clock;
 
-        public OutboxMessageRepository(
-            IChargesDatabaseContext chargesDatabaseContext,
-            IClock clock)
+        public OutboxMessageRepository(IChargesDatabaseContext chargesDatabaseContext)
         {
             _chargesDatabaseContext = chargesDatabaseContext;
-            _clock = clock;
         }
 
         public void Add(OutboxMessage outboxMessage)

@@ -14,7 +14,6 @@
 
 using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation.InputValidation;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using Xunit;
