@@ -43,8 +43,10 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             IntegrationTestConfiguration = new IntegrationTestConfiguration();
             ChargesDatabaseManager = new ChargesDatabaseManager();
             MessageHubDatabaseManager = new MessageHubDatabaseManager(ChargesDatabaseManager.ConnectionString);
-            AuthorizationConfigurations = CreateAuthorizationConfigurations();
-            AuthorizedHttpRequestGenerators = CreateAuthorizedHttpRequestGenerators(AuthorizationConfigurations);
+            AuthorizationConfiguration = AuthorizationConfigurationData.CreateAuthorizationConfiguration();
+            AuthorizedTestActors = CreateAuthorizedTestActors(AuthorizationConfiguration.B2CTestClients);
+            AsSystemOperator = SetTestActor(AuthorizationConfigurationData.SystemOperator);
+            AsGridAccessProvider = SetTestActor(AuthorizationConfigurationData.GridAccessProvider8100000000030);
             ServiceBusResourceProvider = new ServiceBusResourceProvider(
                 IntegrationTestConfiguration.ServiceBusConnectionString, TestLogger);
         }
@@ -86,12 +88,13 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
         [NotNull]
         public TopicResource? ChargeLinksAcceptedTopic { get; private set; }
 
-        public AuthorizedHttpRequestGenerator GetAuthorizedHttpRequestGenerator(string clientName) =>
-            AuthorizedHttpRequestGenerators.Single(x => x.ClientName == clientName);
+        public AuthorizedTestActor AsGridAccessProvider { get; }
 
-        private IEnumerable<AuthorizationConfiguration> AuthorizationConfigurations { get; }
+        public AuthorizedTestActor AsSystemOperator { get; }
 
-        private IEnumerable<AuthorizedHttpRequestGenerator> AuthorizedHttpRequestGenerators { get; }
+        private AuthorizationConfiguration AuthorizationConfiguration { get; }
+
+        private IEnumerable<AuthorizedTestActor> AuthorizedTestActors { get; }
 
         private string LocalTimeZoneName { get; } = "Europe/Copenhagen";
 
@@ -134,8 +137,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.DataHubSenderConnectionString, ServiceBusResourceProvider.ConnectionString);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.DataHubListenerConnectionString, ServiceBusResourceProvider.ConnectionString);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.DataHubManagerConnectionString, ServiceBusResourceProvider.ConnectionString);
-            Environment.SetEnvironmentVariable(EnvironmentSettingNames.B2CTenantId, AuthorizationConfigurations.First().B2cTenantId);
-            Environment.SetEnvironmentVariable(EnvironmentSettingNames.BackendServiceAppId, AuthorizationConfigurations.First().BackendAppId);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.B2CTenantId, AuthorizationConfiguration.B2CTenantId);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.BackendServiceAppId, AuthorizationConfiguration.BackendAppId);
 
             ChargeLinksAcceptedTopic = await ServiceBusResourceProvider
                 .BuildTopic(ChargesServiceBusResourceNames.ChargeLinksAcceptedTopicKey)
@@ -255,7 +258,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             await chargePricesUpdatedListener.AddTopicSubscriptionListenerAsync(chargePricesUpdatedTopic.Name, ChargesServiceBusResourceNames.ChargePricesUpdatedSubscriptionName);
             ChargePricesUpdatedListener = new ServiceBusTestListener(chargePricesUpdatedListener);
 
-            await AuthenticateHttpRequestGenerators();
+            await AcquireTokenForTestActorsAsync();
 
             await InitializeMessageHubAsync();
 
@@ -304,31 +307,27 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             await ChargesDatabaseManager.DeleteDatabaseAsync();
         }
 
-        private static IEnumerable<AuthorizationConfiguration> CreateAuthorizationConfigurations()
+        private IEnumerable<AuthorizedTestActor> CreateAuthorizedTestActors(
+            IEnumerable<B2CTestClient> b2CTestClients)
         {
-            return new List<AuthorizationConfiguration>()
-            {
-                AuthorizationConfigurationData.CreateAuthorizationConfiguration(AuthorizationConfigurationData
-                    .GridAccessProvider8100000000030),
-                AuthorizationConfigurationData.CreateAuthorizationConfiguration(AuthorizationConfigurationData
-                    .SystemOperator),
-            };
+            return b2CTestClients
+                .Select(b2CTestClient => new AuthorizedTestActor(b2CTestClient, LocalTimeZoneName))
+                .ToList();
         }
 
-        private async Task AuthenticateHttpRequestGenerators()
+        private async Task AcquireTokenForTestActorsAsync()
         {
-            foreach (var authenticatedHttpRequestGenerator in AuthorizedHttpRequestGenerators)
+            foreach (var testActor in AuthorizedTestActors)
             {
-                await authenticatedHttpRequestGenerator.AddAuthenticationAsync();
+                await testActor.AddAuthenticationAsync(
+                    AuthorizationConfiguration.BackendAppScope,
+                    AuthorizationConfiguration.B2CTenantId);
             }
         }
 
-        private IEnumerable<AuthorizedHttpRequestGenerator> CreateAuthorizedHttpRequestGenerators(
-            IEnumerable<AuthorizationConfiguration> authorizationConfigurations)
+        private AuthorizedTestActor SetTestActor(string testActorName)
         {
-            return authorizationConfigurations
-                .Select(ac => new AuthorizedHttpRequestGenerator(ac, LocalTimeZoneName))
-                .ToList();
+            return AuthorizedTestActors.Single(a => a.B2CTestClient.ClientName == testActorName);
         }
 
         private async Task InitializeMessageHubAsync()
