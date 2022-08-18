@@ -30,6 +30,10 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
 
         public AuthorizedTestActor(B2CTestClient b2CTestClient, string localTimeZoneName)
         {
+            ArgumentNullException.ThrowIfNull(b2CTestClient);
+            if (string.IsNullOrWhiteSpace(localTimeZoneName))
+                throw new ArgumentException($"'{nameof(localTimeZoneName)}' cannot be null or whitespace.", nameof(localTimeZoneName));
+
             B2CTestClient = b2CTestClient;
             _localTimeZoneName = localTimeZoneName;
         }
