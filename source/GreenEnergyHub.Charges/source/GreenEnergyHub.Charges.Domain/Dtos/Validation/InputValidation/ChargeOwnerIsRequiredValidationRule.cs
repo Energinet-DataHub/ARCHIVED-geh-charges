@@ -12,21 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.InputValidation.ValidationRules
+namespace GreenEnergyHub.Charges.Domain.Dtos.Validation.InputValidation
 {
-    public class ChargeOperationIdRequiredRule : IValidationRule
+    public class ChargeOwnerIsRequiredValidationRule : IValidationRule
     {
-        private readonly ChargeOperationDto _chargeOperationDto;
+        private readonly ChargeOperation _operation;
 
-        public ChargeOperationIdRequiredRule(ChargeOperationDto chargeOperationDto)
+        public ChargeOwnerIsRequiredValidationRule(ChargeOperation operation)
         {
-            _chargeOperationDto = chargeOperationDto;
+            _operation = operation;
         }
 
-        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeOperationIdRequired;
+        public ValidationRuleIdentifier ValidationRuleIdentifier =>
+            ValidationRuleIdentifier.ChargeOwnerIsRequiredValidation;
 
-        public bool IsValid => !string.IsNullOrWhiteSpace(_chargeOperationDto.Id);
+        public bool IsValid => !string.IsNullOrWhiteSpace(_operation.ChargeOwner);
     }
 }

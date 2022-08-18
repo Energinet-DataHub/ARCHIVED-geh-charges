@@ -15,6 +15,7 @@
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation.InputValidation;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.TestHelpers;
@@ -34,7 +35,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void ChargeOperationIdRequiredRule_Test(
             string chargeOperationId,
             bool expected,
-            ChargeOperationDtoBuilder builder)
+            ChargeInformationOperationDtoBuilder builder)
         {
             var chargeOperationDto = builder.WithChargeOperationId(chargeOperationId).Build();
             var sut = new ChargeOperationIdRequiredRule(chargeOperationDto);
@@ -43,7 +44,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeOperationDtoBuilder builder)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeInformationOperationDtoBuilder builder)
         {
             var invalidChargeOperationDto = builder.WithChargeOperationId(string.Empty).Build();
             var sut = new ChargeOperationIdRequiredRule(invalidChargeOperationDto);

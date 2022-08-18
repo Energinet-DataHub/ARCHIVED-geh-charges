@@ -44,12 +44,12 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             string endDateISOString,
             bool expected,
             string reasonText,
-            ChargeOperationDtoBuilder chargeOperationDtoBuilder)
+            ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder)
         {
             // Arrange
             var startDate = InstantPattern.General.Parse(startDateISOString).Value;
             var endDate = InstantPattern.General.Parse(endDateISOString).Value;
-            var dto = chargeOperationDtoBuilder.WithPointsInterval(startDate, endDate).Build();
+            var dto = chargeInformationOperationDtoBuilder.WithPointsInterval(startDate, endDate).Build();
             var zonedDateTimeService = GetZonedDateTimeService();
             var sut = new PriceListMustStartAndStopAtMidnightValidationRule(zonedDateTimeService, dto);
 
@@ -59,9 +59,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeOperationDtoBuilder chargeOperationDtoBuilder)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder)
         {
-            var chargeOperationDto = chargeOperationDtoBuilder.Build();
+            var chargeOperationDto = chargeInformationOperationDtoBuilder.Build();
             var zonedDateTimeService = GetZonedDateTimeService();
             var sut = new PriceListMustStartAndStopAtMidnightValidationRule(zonedDateTimeService, chargeOperationDto);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.PriceListMustStartAndStopAtMidnightValidationRule);

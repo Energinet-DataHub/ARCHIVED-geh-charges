@@ -12,9 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.Messages.Command
+namespace GreenEnergyHub.Charges.Domain.Dtos.Validation.InputValidation
 {
-    public abstract class OperationBase
+    public class ChargeOwnerMustMatchSenderRule : IValidationRule
     {
+        private readonly string _sender;
+        private readonly string _chargeOwner;
+
+        public ChargeOwnerMustMatchSenderRule(string sender, string chargeOwner)
+        {
+            _sender = sender;
+            _chargeOwner = chargeOwner;
+        }
+
+        public ValidationRuleIdentifier ValidationRuleIdentifier =>
+            ValidationRuleIdentifier.ChargeOwnerMustMatchSender;
+
+        public bool IsValid => _chargeOwner == _sender;
     }
 }

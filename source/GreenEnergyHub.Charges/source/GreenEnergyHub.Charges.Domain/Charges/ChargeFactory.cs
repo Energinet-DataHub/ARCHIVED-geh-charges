@@ -28,28 +28,28 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             _marketParticipantRepository = marketParticipantRepository;
         }
 
-        public async Task<Charge> CreateFromChargeOperationDtoAsync(ChargeOperationDto chargeOperationDto)
+        public async Task<Charge> CreateFromChargeOperationDtoAsync(ChargeInformationOperationDto chargeInformationOperationDto)
         {
             var owner = await _marketParticipantRepository
-                .SingleOrNullAsync(chargeOperationDto.ChargeOwner)
+                .SingleOrNullAsync(chargeInformationOperationDto.ChargeOwner)
                 .ConfigureAwait(false);
 
             if (owner == null)
-                throw new InvalidOperationException($"Market participant '{chargeOperationDto.ChargeOwner}' does not exist.");
+                throw new InvalidOperationException($"Market participant '{chargeInformationOperationDto.ChargeOwner}' does not exist.");
 
             return Charge.Create(
-                chargeOperationDto.Id,
-                chargeOperationDto.ChargeName,
-                chargeOperationDto.ChargeDescription,
-                chargeOperationDto.ChargeId,
+                chargeInformationOperationDto.OperationId,
+                chargeInformationOperationDto.ChargeName,
+                chargeInformationOperationDto.ChargeDescription,
+                chargeInformationOperationDto.SenderProvidedChargeId,
                 owner.Id,
-                chargeOperationDto.Type,
-                chargeOperationDto.Resolution,
-                chargeOperationDto.TaxIndicator,
-                chargeOperationDto.VatClassification,
-                chargeOperationDto.TransparentInvoicing == TransparentInvoicing.Transparent,
-                chargeOperationDto.StartDateTime,
-                chargeOperationDto.EndDateTime);
+                chargeInformationOperationDto.ChargeType,
+                chargeInformationOperationDto.Resolution,
+                chargeInformationOperationDto.TaxIndicator,
+                chargeInformationOperationDto.VatClassification,
+                chargeInformationOperationDto.TransparentInvoicing == TransparentInvoicing.Transparent,
+                chargeInformationOperationDto.StartDateTime,
+                chargeInformationOperationDto.EndDateTime);
         }
     }
 }

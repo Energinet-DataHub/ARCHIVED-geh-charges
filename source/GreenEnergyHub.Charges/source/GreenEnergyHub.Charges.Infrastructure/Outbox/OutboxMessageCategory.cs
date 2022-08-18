@@ -16,6 +16,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Outbox
 {
     public enum OutboxEventType
     {
-        ChargeOperationRejected,
+        ChargeOperationRejected, // TODO: Not in use - delete?
     }
 }

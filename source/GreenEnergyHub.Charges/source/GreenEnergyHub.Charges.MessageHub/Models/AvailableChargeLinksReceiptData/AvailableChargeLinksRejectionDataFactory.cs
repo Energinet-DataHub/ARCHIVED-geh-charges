@@ -54,27 +54,27 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
         {
             LogValidationErrors(input);
 
-            if (AvailableDataFactoryHelper.ShouldSkipAvailableData(input.ChargeLinksCommand))
+            if (AvailableDataFactoryHelper.ShouldSkipAvailableData(input.Command))
                 return new List<AvailableChargeLinksReceiptData>();
 
             // The original sender is the recipient of the receipt
-            var recipient = await GetRecipientAsync(input.ChargeLinksCommand.Document.Sender).ConfigureAwait(false);
+            var recipient = await GetRecipientAsync(input.Command.Document.Sender).ConfigureAwait(false);
             var sender = await GetSenderAsync().ConfigureAwait(false);
 
-            return input.ChargeLinksCommand.Operations.Select(chargeLinkDto =>
+            return input.Command.Operations.Select(chargeLinkDto =>
                 new AvailableChargeLinksReceiptData(
                     sender.MarketParticipantId,
                     sender.BusinessProcessRole,
                     recipient.MarketParticipantId,
                     recipient.BusinessProcessRole,
-                    input.ChargeLinksCommand.Document.BusinessReasonCode,
+                    input.Command.Document.BusinessReasonCode,
                     _messageMetaDataContext.RequestDataTime,
                     Guid.NewGuid(), // ID of each available piece of data must be unique
                     ReceiptStatus.Rejected,
                     chargeLinkDto.OperationId[..Math.Min(chargeLinkDto.OperationId.Length, 100)],
                     chargeLinkDto.MeteringPointId,
                     DocumentType.RejectRequestChangeBillingMasterData, // Will be added to the HTTP MessageType header
-                    input.ChargeLinksCommand.Operations.ToList().IndexOf(chargeLinkDto),
+                    input.Command.Operations.ToList().IndexOf(chargeLinkDto),
                     recipient.ActorId,
                     GetReasons(input, chargeLinkDto)))
                 .ToList();
@@ -83,7 +83,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
         private void LogValidationErrors(ChargeLinksRejectedEvent rejectedEvent)
         {
             var errorMessage = ValidationErrorLogMessageBuilder.BuildErrorMessage(
-                rejectedEvent.ChargeLinksCommand.Document,
+                rejectedEvent.Command.Document,
                 rejectedEvent.ValidationErrors);
 
             _logger.LogError("ValidationErrors for {ErrorMessage}", errorMessage);
@@ -91,13 +91,13 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
 
         private List<AvailableReceiptValidationError> GetReasons(
             ChargeLinksRejectedEvent input,
-            ChargeLinkDto chargeLinkDto)
+            ChargeLinkOperationDto chargeLinkOperationDto)
         {
             return input
                 .ValidationErrors
-                .Where(ve => ve.OperationId == chargeLinkDto.OperationId || string.IsNullOrWhiteSpace(ve.OperationId))
+                .Where(ve => ve.OperationId == chargeLinkOperationDto.OperationId || string.IsNullOrWhiteSpace(ve.OperationId))
                 .Select(validationError => _availableChargeLinksReceiptValidationErrorFactory
-                    .Create(validationError, input.ChargeLinksCommand, chargeLinkDto))
+                    .Create(validationError, input.Command, chargeLinkOperationDto))
                 .ToList();
         }
     }

@@ -15,6 +15,7 @@
 using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.InputValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation.InputValidation;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using Xunit;
 using Xunit.Categories;
@@ -33,7 +34,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             string chargeOwner,
             bool expectedResult,
             string reason,
-            ChargeOperationDtoBuilder builder)
+            ChargeInformationOperationDtoBuilder builder)
         {
             // Arrange
             var dto = builder.WithOwner(chargeOwner).Build();

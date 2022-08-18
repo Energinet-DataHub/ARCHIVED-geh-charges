@@ -16,24 +16,35 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation.InputValidation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.Factories
 {
     public class ChargePriceOperationInputValidationRulesFactory : IInputValidationRulesFactory<ChargePriceOperationDto>
     {
-        public IValidationRuleSet CreateRules(ChargePriceOperationDto operation)
+        public IValidationRuleSet CreateRules(ChargePriceOperationDto operation, DocumentDto document)
         {
             ArgumentNullException.ThrowIfNull(operation);
-            var rules = GetRulesForOperation(operation);
+            var rules = GetRulesForOperation(operation, document);
             return ValidationRuleSet.FromRules(rules.ToList());
         }
 
-        private IEnumerable<IValidationRuleContainer> GetRulesForOperation(ChargePriceOperationDto chargePriceOperationDto)
+        private IEnumerable<IValidationRuleContainer> GetRulesForOperation(ChargePriceOperationDto operation, DocumentDto document)
         {
             var rules = new List<IValidationRuleContainer>
             {
-                CreateRuleContainer(new MaximumPriceRule(chargePriceOperationDto), chargePriceOperationDto.Id),
+                CreateRuleContainer(new MaximumPriceRule(operation), operation.OperationId),
+                CreateRuleContainer(new ChargeIdLengthValidationRule(operation), operation.OperationId),
+                CreateRuleContainer(new ChargeIdRequiredValidationRule(operation), operation.OperationId),
+                CreateRuleContainer(new ChargeOperationIdRequiredRule(operation), operation.OperationId),
+                CreateRuleContainer(new ChargeOperationIdLengthValidationRule(operation), operation.OperationId),
+                CreateRuleContainer(new ChargeOwnerIsRequiredValidationRule(operation), operation.OperationId),
+                CreateRuleContainer(new ChargeTypeIsKnownValidationRule(operation), operation.OperationId),
+                CreateRuleContainer(new StartDateTimeRequiredValidationRule(operation), operation.OperationId),
+                CreateRuleContainer(new ChargeOwnerTextLengthRule(operation), operation.OperationId),
+                CreateRuleContainer(new ChargeOwnerMustMatchSenderRule(document.Sender.MarketParticipantId, operation.ChargeOwner), operation.OperationId),
             };
 
             return rules;

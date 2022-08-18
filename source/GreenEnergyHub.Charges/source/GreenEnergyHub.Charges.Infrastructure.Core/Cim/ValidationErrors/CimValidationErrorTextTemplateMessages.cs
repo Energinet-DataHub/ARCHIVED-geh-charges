@@ -37,6 +37,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         public const string SenderIsMandatoryTypeValidationErrorText =
             "Sender is missing for message {{DocumentId}}.";
 
+        [ErrorMessageFor(ValidationRuleIdentifier.ChargeOwnerMustMatchSender)]
+        public const string ChargeOwnerMustMatchSenderErrorText =
+            "The specified charge owner {{ChargeOwner}} do not match sender {{DocumentSenderId}} and is therefore not authorized to change charge id {{DocumentSenderProvidedChargeId}} of type {{ChargeType}}";
+
         [ErrorMessageFor(ValidationRuleIdentifier.RecipientIsMandatoryTypeValidation)]
         public const string RecipientIsMandatoryTypeValidationErrorText =
             "Recipient is missing for message {{DocumentId}}.";
@@ -108,14 +112,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         [ErrorMessageFor(ValidationRuleIdentifier.ChargePriceMaximumDigitsAndDecimals)]
         public const string ChargePriceMaximumDigitsAndDecimalsErrorText =
             "Energy price {{ChargePointPrice}} contains a non-digit character, has a length that exceeds 15 or does not comply with format '99999999.999999' for charge with ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} owned by {{ChargeOwner}}.";
-
-        [ErrorMessageFor(ValidationRuleIdentifier.FeeMustHaveSinglePrice)]
-        public const string FeeMustHaveSinglePriceErrorText =
-            "The number of prices {{ChargePointsCount}} doesn't match period type {{ChargeResolution}} for charge with ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} owned by {{ChargeOwner}}.";
-
-        [ErrorMessageFor(ValidationRuleIdentifier.SubscriptionMustHaveSinglePrice)]
-        public const string SubscriptionMustHaveSinglePriceErrorText =
-            "The number of prices {{ChargePointsCount}} doesn't match period type {{ChargeResolution}} for charge with ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} owned by {{ChargeOwner}}.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.CommandSenderMustBeAnExistingMarketParticipant)]
         public const string CommandSenderMustBeAnExistingMarketParticipantErrorText =

@@ -114,10 +114,10 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             var document = priceCommandBundle.Document;
             var chargeInformationCommands = priceCommandBundle.Commands
                 .Select(priceCommand => priceCommand.Operations
-                    .Select(priceOperation => new ChargeOperationDto(
-                        priceOperation.Id,
-                        priceOperation.Type,
-                        priceOperation.ChargeId,
+                    .Select(priceOperation => new ChargeInformationOperationDto(
+                        priceOperation.OperationId,
+                        priceOperation.ChargeType,
+                        priceOperation.SenderProvidedChargeId,
                         string.Empty,
                         string.Empty,
                         priceOperation.ChargeOwner,
@@ -126,7 +126,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
                         TaxIndicator.Unknown,
                         TransparentInvoicing.Unknown,
                         VatClassification.Unknown,
-                        priceOperation.StartDate,
+                        priceOperation.StartDateTime,
                         null,
                         priceOperation.PointsStartInterval,
                         priceOperation.PointsEndInterval,

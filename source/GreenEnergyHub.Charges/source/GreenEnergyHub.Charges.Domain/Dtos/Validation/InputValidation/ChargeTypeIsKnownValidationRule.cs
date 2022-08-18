@@ -12,23 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.InputValidation.ValidationRules
+namespace GreenEnergyHub.Charges.Domain.Dtos.Validation.InputValidation
 {
-    public class StartDateTimeRequiredValidationRule : IValidationRule
+    public class ChargeTypeIsKnownValidationRule : IValidationRule
     {
-        private readonly ChargeOperationDto _chargeOperationDto;
+        private readonly ChargeOperation _operation;
 
-        public StartDateTimeRequiredValidationRule(ChargeOperationDto chargeOperationDto)
+        public ChargeTypeIsKnownValidationRule(ChargeOperation operation)
         {
-            _chargeOperationDto = chargeOperationDto;
+            _operation = operation;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
-            ValidationRuleIdentifier.StartDateTimeRequiredValidation;
+            ValidationRuleIdentifier.ChargeTypeIsKnownValidation;
 
-        // Instant is a struct, so to ensure caller supplied it, we check if it has the default value.
-        public bool IsValid => _chargeOperationDto.StartDateTime != default;
+        public bool IsValid => _operation.ChargeType
+            is ChargeType.Fee or ChargeType.Subscription or ChargeType.Tariff;
     }
 }
