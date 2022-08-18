@@ -12,15 +12,38 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Net.Http;
 using System.Text;
 using GreenEnergyHub.Charges.Core.DateTime;
+using GreenEnergyHub.Iso8601;
 using NodaTime;
+using NodaTime.Testing;
 
 namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
 {
     public static class HttpRequestGenerator
     {
+        public static (HttpRequestMessage Request, string CorrelationId) CreateHttpPostRequestWithAuthorization(
+            string endpointUrl,
+            string testFilePath,
+            string accessToken,
+            string localTimeZoneName)
+        {
+            ArgumentNullException.ThrowIfNull(endpointUrl);
+            ArgumentNullException.ThrowIfNull(testFilePath);
+            ArgumentNullException.ThrowIfNull(accessToken);
+            ArgumentNullException.ThrowIfNull(localTimeZoneName);
+
+            var clock = new FakeClock(SystemClock.Instance.GetCurrentInstant());
+            var zonedDateTimeService = new ZonedDateTimeService(clock, new Iso8601ConversionConfiguration(localTimeZoneName));
+            var (request, correlationId) = CreateHttpPostRequest(endpointUrl, testFilePath, zonedDateTimeService);
+
+            request.Headers.Add("Authorization", $"Bearer {accessToken}");
+
+            return (request, correlationId);
+        }
+
         public static (HttpRequestMessage Request, string CorrelationId) CreateHttpPostRequest(
             string endpointUrl, string testFilePath, IZonedDateTimeService zonedDateTimeService)
         {
