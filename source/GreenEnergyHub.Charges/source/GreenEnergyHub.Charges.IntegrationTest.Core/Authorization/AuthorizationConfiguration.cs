@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.Configuration;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using Microsoft.Extensions.Configuration;
@@ -105,20 +106,12 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Authorization
         {
             ArgumentNullException.ThrowIfNull(clientNames);
 
-            var testClients = new List<B2CTestClient>();
-
-            foreach (var clientName in clientNames)
-            {
-                if (string.IsNullOrEmpty(clientName))
-                    throw new ArgumentException("clientName cannot be null or whitespace.");
-
-                testClients.Add(new B2CTestClient(
-                    clientName,
-                    SecretsConfiguration.GetValue<string>(BuildB2CTeamSecretName(Environment, clientName, "client-id")),
-                    SecretsConfiguration.GetValue<string>(BuildB2CTeamSecretName(Environment, clientName, "client-secret"))));
-            }
-
-            return testClients;
+            return clientNames
+                .Select(clientName => new B2CTestClient(
+                        clientName,
+                        SecretsConfiguration.GetValue<string>(BuildB2CTeamSecretName(Environment, clientName, "client-id")),
+                        SecretsConfiguration.GetValue<string>(BuildB2CTeamSecretName(Environment, clientName, "client-secret"))))
+                .ToList();
         }
 
         /// <summary>
