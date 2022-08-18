@@ -44,7 +44,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 {
     [IntegrationTest]
-    public class OutboxProcessorEndpointTests
+    public class OutboxMessageProcessorEndpointTests
     {
         [Collection(nameof(ChargesFunctionAppCollectionFixture))]
         public class RunAsync : FunctionAppTestBase<ChargesFunctionAppFixture>, IAsyncLifetime
