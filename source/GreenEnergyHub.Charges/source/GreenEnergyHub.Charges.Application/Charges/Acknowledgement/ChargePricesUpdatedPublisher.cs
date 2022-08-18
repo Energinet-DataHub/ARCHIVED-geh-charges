@@ -32,9 +32,9 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
             _chargePricesUpdatedEventFactory = chargePricesUpdatedEventFactory;
         }
 
-        public async Task PublishChargePricesAsync(ChargeOperationDto chargeOperationDto)
+        public async Task PublishChargePricesAsync(ChargeInformationOperationDto chargeInformationOperationDto)
         {
-            var prices = _chargePricesUpdatedEventFactory.Create(chargeOperationDto);
+            var prices = _chargePricesUpdatedEventFactory.Create(chargeInformationOperationDto);
             await _messagePricesDispatcher.DispatchAsync(prices).ConfigureAwait(false);
         }
     }

@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void IsValid_WhenLessThan8DigitsAnd6Decimals_IsValid(
             decimal price,
             bool expected,
-            ChargeOperationDtoBuilder builder)
+            ChargeInformationOperationDtoBuilder builder)
         {
             // Arrange
             var chargeOperationDto = builder.WithPoint(price).Build();
@@ -53,7 +53,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeOperationDtoBuilder builder)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeInformationOperationDtoBuilder builder)
         {
             var invalidChargeOperationDto = builder.WithPoint(123456789m).Build();
             var sut = new ChargePriceMaximumDigitsAndDecimalsRule(invalidChargeOperationDto);
@@ -67,7 +67,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             CimValidationErrorTextProvider cimValidationErrorTextProvider)
         {
             // Arrange
-            var chargeOperationDto = new ChargeOperationDtoBuilder()
+            var chargeOperationDto = new ChargeInformationOperationDtoBuilder()
                 .WithPoint(123456789m)
                 .Build();
             var invalidCommand = new ChargeInformationCommandBuilder()
@@ -78,7 +78,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
             var sutRule = new ChargePriceMaximumDigitsAndDecimalsRule(chargeOperationDto);
             var validationError =
-                new ValidationError(sutRule.ValidationRuleIdentifier, chargeOperationDto.Id, triggeredBy);
+                new ValidationError(sutRule.ValidationRuleIdentifier, chargeOperationDto.OperationId, triggeredBy);
             var sutFactory = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
 
             // Act
@@ -90,8 +90,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
             var expected = CimValidationErrorTextTemplateMessages.ChargePriceMaximumDigitsAndDecimalsErrorText
                             .Replace("{{ChargePointPrice}}", expectedPoint.Price.ToString("N"))
-                            .Replace("{{DocumentSenderProvidedChargeId}}", chargeOperationDto.ChargeId)
-                            .Replace("{{ChargeType}}", chargeOperationDto.Type.ToString())
+                            .Replace("{{DocumentSenderProvidedChargeId}}", chargeOperationDto.SenderProvidedChargeId)
+                            .Replace("{{ChargeType}}", chargeOperationDto.ChargeType.ToString())
                             .Replace("{{ChargeOwner}}", chargeOperationDto.ChargeOwner);
             actual.Should().Be(expected);
         }

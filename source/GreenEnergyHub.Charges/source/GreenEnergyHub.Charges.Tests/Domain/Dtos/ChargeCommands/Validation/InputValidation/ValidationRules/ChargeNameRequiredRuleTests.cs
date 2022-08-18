@@ -26,7 +26,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
     {
         [Theory]
         [InlineAutoMoqData]
-        public void IsValid_WhenChargeNameIsValid_ShouldReturnTrue(ChargeOperationDtoBuilder builder)
+        public void IsValid_WhenChargeNameIsValid_ShouldReturnTrue(ChargeInformationOperationDtoBuilder builder)
         {
             // Arrange
             var dto = builder.WithChargeName("Valid name").Build();
@@ -38,7 +38,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [InlineAutoMoqData]
-        public void IsValid_WhenChargeNameIsNull_ShouldReturnFalse(ChargeOperationDtoBuilder builder)
+        public void IsValid_WhenChargeNameIsNull_ShouldReturnFalse(ChargeInformationOperationDtoBuilder builder)
         {
             // Arrange
             var dto = builder.WithChargeName(null!).Build();
@@ -50,7 +50,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [InlineAutoMoqData]
-        public void IsValid_WhenChargeNameIsEmpty_ShouldReturnFalse(ChargeOperationDtoBuilder builder)
+        public void IsValid_WhenChargeNameIsEmpty_ShouldReturnFalse(ChargeInformationOperationDtoBuilder builder)
         {
             // Arrange
             var dto = builder.WithChargeName(string.Empty).Build();
@@ -62,7 +62,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [InlineAutoMoqData]
-        public void IsValid_WhenChargeNameIsAllWhitespace_ShouldReturnFalse(ChargeOperationDtoBuilder builder)
+        public void IsValid_WhenChargeNameIsAllWhitespace_ShouldReturnFalse(ChargeInformationOperationDtoBuilder builder)
         {
             // Arrange
             var dto = builder.WithChargeName("       ").Build();

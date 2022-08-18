@@ -19,14 +19,14 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
 {
     public class ResolutionIsRequiredRule : IValidationRule
     {
-        private readonly ChargeOperationDto _chargeOperationDto;
+        private readonly ChargeInformationOperationDto _chargeInformationOperationDto;
 
-        public ResolutionIsRequiredRule(ChargeOperationDto chargeOperationDto)
+        public ResolutionIsRequiredRule(ChargeInformationOperationDto chargeInformationOperationDto)
         {
-            _chargeOperationDto = chargeOperationDto;
+            _chargeInformationOperationDto = chargeInformationOperationDto;
         }
 
-        public bool IsValid => _chargeOperationDto.Resolution is not Resolution.Unknown;
+        public bool IsValid => _chargeInformationOperationDto.Resolution is not Resolution.Unknown;
 
         public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ResolutionIsRequired;
     }

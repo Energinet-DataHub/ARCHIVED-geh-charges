@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         public void IsValid_WhenStartDateIsWithinInterval_IsTrue(
             int daysOffset,
             bool expected,
-            [Frozen] ChargeOperationDtoBuilder builder)
+            [Frozen] ChargeInformationOperationDtoBuilder builder)
         {
             // Arrange
             var effectiveDate = InstantHelper.GetTodayPlusDaysAtMidnightUtc(daysOffset);
@@ -58,7 +58,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeOperationDtoBuilder builder, IClock clock)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeInformationOperationDtoBuilder builder, IClock clock)
         {
             // Arrange
             var chargeOperationDto = builder.WithStartDateTime(InstantHelper.GetEndDefault()).Build();

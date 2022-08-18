@@ -23,6 +23,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
         AvailableReceiptValidationError Create(
             ValidationError validationError,
             ChargeLinksCommand command,
-            ChargeLinkDto chargeLinkDto);
+            ChargeLinkOperationDto chargeLinkOperationDto);
     }
 }

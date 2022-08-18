@@ -66,7 +66,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
         {
             var chargeOperationsAsync = await ParseChargeInformationOperationsAsync(reader).ConfigureAwait(false);
             var chargeCommands = chargeOperationsAsync
-                .GroupBy(x => new { x.ChargeId, x.ChargeOwner, x.Type })
+                .GroupBy(x => new { x.SenderProvidedChargeId, x.ChargeOwner, Type = x.ChargeType })
                 .Select(chargeOperationDtoGroup =>
                     new ChargeInformationCommand(
                         document,
@@ -80,7 +80,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
         {
             var priceOperations = await ParseChargePriceOperationsAsync(reader).ConfigureAwait(false);
             var priceCommands = priceOperations
-                .GroupBy(x => new { x.ChargeId, x.ChargeOwner, x.Type })
+                .GroupBy(x => new { x.SenderProvidedChargeId, x.ChargeOwner, Type = x.ChargeType })
                 .Select(_ =>
                     new ChargePriceCommand(
                         document,
@@ -185,9 +185,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                 points);
         }
 
-        private async Task<List<ChargeOperationDto>> ParseChargeInformationOperationsAsync(SchemaValidatingReader reader)
+        private async Task<List<ChargeInformationOperationDto>> ParseChargeInformationOperationsAsync(SchemaValidatingReader reader)
         {
-            var operations = new List<ChargeOperationDto>();
+            var operations = new List<ChargeInformationOperationDto>();
             var operationId = string.Empty;
 
             while (await reader.AdvanceAsync().ConfigureAwait(false))
@@ -206,9 +206,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
             return operations;
         }
 
-        private async Task<ChargeOperationDto> ParseChargeGroupIntoOperationAsync(SchemaValidatingReader reader, string operationId)
+        private async Task<ChargeInformationOperationDto> ParseChargeGroupIntoOperationAsync(SchemaValidatingReader reader, string operationId)
         {
-            ChargeOperationDto? operation = null;
+            ChargeInformationOperationDto? operation = null;
             while (await reader.AdvanceAsync().ConfigureAwait(false))
             {
                 if (reader.Is(CimChargeCommandConstants.ChargeTypeElement))
@@ -226,7 +226,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
             return operation!;
         }
 
-        private async Task<ChargeOperationDto> ParseChargeTypeElementIntoOperationAsync(SchemaValidatingReader reader, string operationId)
+        private async Task<ChargeInformationOperationDto> ParseChargeTypeElementIntoOperationAsync(SchemaValidatingReader reader, string operationId)
         {
             var chargeOwner = string.Empty;
             var chargeType = ChargeType.Unknown;
@@ -315,7 +315,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                 }
             }
 
-            return new ChargeOperationDto(
+            return new ChargeInformationOperationDto(
                 operationId,
                 chargeType,
                 senderProvidedChargeId,

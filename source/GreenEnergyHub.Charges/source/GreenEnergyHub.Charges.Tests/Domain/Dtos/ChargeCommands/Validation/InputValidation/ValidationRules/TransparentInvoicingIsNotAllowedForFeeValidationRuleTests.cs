@@ -41,9 +41,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             ChargeType chargeType,
             TransparentInvoicing transparentInvoicing,
             bool expected,
-            ChargeOperationDtoBuilder chargeOperationDtoBuilder)
+            ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder)
         {
-            var chargeOperationDto = chargeOperationDtoBuilder
+            var chargeOperationDto = chargeInformationOperationDtoBuilder
                 .WithChargeType(chargeType)
                 .WithTransparentInvoicing(transparentInvoicing).Build();
 
@@ -53,7 +53,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeOperationDtoBuilder builder)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeInformationOperationDtoBuilder builder)
         {
             var chargeOperationDto = builder.WithTransparentInvoicing(TransparentInvoicing.Transparent).Build();
             var sut = new TransparentInvoicingIsNotAllowedForFeeValidationRule(chargeOperationDto);

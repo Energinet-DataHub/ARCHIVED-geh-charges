@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
             _chargeIdentifierFactory = chargeIdentifierFactory;
         }
 
-        public async Task<ChargeLink> CreateAsync(ChargeLinkDto dto)
+        public async Task<ChargeLink> CreateAsync(ChargeLinkOperationDto dto)
         {
             ArgumentNullException.ThrowIfNull(dto);
 

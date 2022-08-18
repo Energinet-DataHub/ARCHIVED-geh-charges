@@ -42,27 +42,27 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
         public override async Task<IReadOnlyList<AvailableChargeLinksReceiptData>> CreateAsync(
             ChargeLinksAcceptedEvent acceptedEvent)
         {
-            if (AvailableDataFactoryHelper.ShouldSkipAvailableData(acceptedEvent.ChargeLinksCommand))
+            if (AvailableDataFactoryHelper.ShouldSkipAvailableData(acceptedEvent.Command))
                 return new List<AvailableChargeLinksReceiptData>();
 
             // The original sender is the recipient of the receipt
-            var recipient = await GetRecipientAsync(acceptedEvent.ChargeLinksCommand.Document.Sender).ConfigureAwait(false);
+            var recipient = await GetRecipientAsync(acceptedEvent.Command.Document.Sender).ConfigureAwait(false);
             var sender = await GetSenderAsync().ConfigureAwait(false);
 
-            return acceptedEvent.ChargeLinksCommand.Operations.Select(link =>
+            return acceptedEvent.Command.Operations.Select(link =>
                     new AvailableChargeLinksReceiptData(
                         sender.MarketParticipantId,
                         sender.BusinessProcessRole,
                         recipient.MarketParticipantId,
                         recipient.BusinessProcessRole,
-                        acceptedEvent.ChargeLinksCommand.Document.BusinessReasonCode,
+                        acceptedEvent.Command.Document.BusinessReasonCode,
                         _messageMetaDataContext.RequestDataTime,
                         Guid.NewGuid(), // ID of each available piece of data must be unique
                         ReceiptStatus.Confirmed,
                         link.OperationId[..Math.Min(link.OperationId.Length, 100)],
                         link.MeteringPointId,
                         DocumentType.ConfirmRequestChangeBillingMasterData, // Will be added to the HTTP MessageType header
-                        acceptedEvent.ChargeLinksCommand.Operations.ToList().IndexOf(link),
+                        acceptedEvent.Command.Operations.ToList().IndexOf(link),
                         recipient.ActorId,
                         new List<AvailableReceiptValidationError>()))
                 .ToList();

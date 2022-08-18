@@ -12,15 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.Messages.Command
+namespace GreenEnergyHub.Charges.Domain.Dtos.Validation.InputValidation
 {
-    public abstract class CommandBase
+    public class ChargeOperationIdRequiredRule : IValidationRule
     {
-        public abstract DocumentDto Document { get; }
+        private readonly ChargeOperation _operation;
 
-        public abstract IReadOnlyCollection<OperationBase> Operations { get; }
+        public ChargeOperationIdRequiredRule(ChargeOperation operation)
+        {
+            _operation = operation;
+        }
+
+        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeOperationIdRequired;
+
+        public bool IsValid => !string.IsNullOrWhiteSpace(_operation.OperationId);
     }
 }
