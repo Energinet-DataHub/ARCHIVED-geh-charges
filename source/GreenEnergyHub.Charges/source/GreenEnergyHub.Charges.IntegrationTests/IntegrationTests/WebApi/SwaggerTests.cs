@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -42,10 +43,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
             : base(chargesWebApiFixture, testOutputHelper)
         {
             _client = factory.CreateClient();
+            var clientCredentialsSettings = chargesWebApiFixture.AuthorizationConfiguration.B2CTestClients
+                .First(tc => tc.ClientName == AuthorizationConfigurationData.GridAccessProvider8100000000030)
+                .ClientCredentialsSettings;
+
             _authenticationClient = new BackendAuthenticationClient(
                 chargesWebApiFixture.AuthorizationConfiguration.BackendAppScope,
-                chargesWebApiFixture.AuthorizationConfiguration.ClientCredentialsSettings,
-                chargesWebApiFixture.AuthorizationConfiguration.B2cTenantId);
+                clientCredentialsSettings,
+                chargesWebApiFixture.AuthorizationConfiguration.B2CTenantId);
         }
 
         public async Task InitializeAsync()
