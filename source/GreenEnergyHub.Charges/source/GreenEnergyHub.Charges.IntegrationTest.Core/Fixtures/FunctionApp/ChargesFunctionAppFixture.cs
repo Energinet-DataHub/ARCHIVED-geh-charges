@@ -42,7 +42,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             AzuriteManager = new AzuriteManager();
             IntegrationTestConfiguration = new IntegrationTestConfiguration();
             DatabaseManager = new ChargesDatabaseManager();
-            AuthorizationConfiguration = CreateAuthorizationConfiguration();
+            AuthorizationConfiguration = AuthorizationConfigurationData.CreateAuthorizationConfiguration();
             AuthorizedTestActors = CreateAuthorizedTestActors(AuthorizationConfiguration.B2CTestClients);
             AsSystemOperator = SetTestActor(AuthorizationConfigurationData.SystemOperator);
             AsGridAccessProvider = SetTestActor(AuthorizationConfigurationData.GridAccessProvider8100000000030);
@@ -299,11 +299,6 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
 
             // => Database
             await DatabaseManager.DeleteDatabaseAsync();
-        }
-
-        private static AuthorizationConfiguration CreateAuthorizationConfiguration()
-        {
-            return AuthorizationConfigurationData.CreateAuthorizationConfiguration();
         }
 
         private IEnumerable<AuthorizedTestActor> CreateAuthorizedTestActors(
