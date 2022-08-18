@@ -64,7 +64,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
             actualList[0].RequestDateTime.Should().Be(now);
             actualList[0].ReceiptStatus.Should().Be(ReceiptStatus.Rejected);
             actualList[0].DocumentType.Should().Be(DocumentType.RejectRequestChangeOfPriceList);
-            actualList[0].OriginalOperationId.Should().Be(rejectedEvent.Command.Operations.First().Id);
+            actualList[0].OriginalOperationId.Should().Be(rejectedEvent.Command.Operations.First().OperationId);
             actualList[0].ValidationErrors.Should().BeEmpty();
             var expectedList = actualList.OrderBy(x => x.OperationOrder);
             actualList.SequenceEqual(expectedList).Should().BeTrue();

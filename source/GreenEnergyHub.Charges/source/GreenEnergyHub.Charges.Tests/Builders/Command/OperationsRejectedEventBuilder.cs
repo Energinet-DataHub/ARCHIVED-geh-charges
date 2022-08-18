@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
                 {
                     new ValidationError(
                         ValidationRuleIdentifier.MaximumPrice,
-                        _chargePriceCommand.Operations.First().Id,
+                        _chargePriceCommand.Operations.First().OperationId,
                         string.Empty),
                 };
             }

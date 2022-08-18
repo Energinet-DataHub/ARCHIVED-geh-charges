@@ -16,6 +16,7 @@ using System;
 using System.Linq;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
@@ -78,7 +79,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableOperationReceiptData
 
         private string GetDataForToken(
             CimValidationErrorTextToken token,
-            ChargePriceCommand command,
+            ChargeCommand command,
             ChargePriceOperationDto operationDto,
             string? triggeredBy)
         {
@@ -96,7 +97,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableOperationReceiptData
                 CimValidationErrorTextToken.ChargeResolution =>
                     operationDto.Resolution.ToString(),
                 CimValidationErrorTextToken.ChargeType =>
-                    operationDto.Type.ToString(),
+                    operationDto.ChargeType.ToString(),
                 CimValidationErrorTextToken.DocumentBusinessReasonCode =>
                     command.Document.BusinessReasonCode.ToString(),
                 CimValidationErrorTextToken.DocumentId =>
@@ -104,13 +105,13 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableOperationReceiptData
                 CimValidationErrorTextToken.DocumentSenderId =>
                     command.Document.Sender.MarketParticipantId,
                 CimValidationErrorTextToken.DocumentSenderProvidedChargeId =>
-                    operationDto.ChargeId,
+                    operationDto.SenderProvidedChargeId,
                 CimValidationErrorTextToken.DocumentType =>
                     command.Document.Type.ToString(),
                 CimValidationErrorTextToken.TriggeredByOperationId =>
                     GetOperationIdFromTriggeredBy(triggeredBy),
                 CimValidationErrorTextToken.ChargeOperationId =>
-                    operationDto.Id,
+                    operationDto.OperationId,
                 CimValidationErrorTextToken.DocumentRecipientBusinessProcessRole =>
                     command.Document.Recipient.BusinessProcessRole.ToString(),
                 _ => CimValidationErrorTextTemplateMessages.Unknown,
@@ -118,17 +119,17 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableOperationReceiptData
             };
         }
 
-        private string GetPosition(ChargePriceOperationDto operationDto,  string? triggeredBy)
+        private string GetPosition(ChargeOperation operationDto,  string? triggeredBy)
         {
             var parsed = int.TryParse(triggeredBy, out var position);
             if (!string.IsNullOrWhiteSpace(triggeredBy) && parsed && position > 0)
                 return triggeredBy;
 
             var errorMessage = $"Invalid position ({triggeredBy}) for charge with " +
-                               $"id: {operationDto.ChargeId}," +
-                               $"type: {operationDto.Type}," +
+                               $"id: {operationDto.SenderProvidedChargeId}," +
+                               $"type: {operationDto.ChargeType}," +
                                $"owner: {operationDto.ChargeOwner}";
-            _logger.LogError("Invalid position: {errorMessage}", errorMessage);
+            _logger.LogError("Invalid position: {ErrorMessage}", errorMessage);
 
             return CimValidationErrorTextTemplateMessages.Unknown;
         }
@@ -143,7 +144,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableOperationReceiptData
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Price not found {errorMessage}", $"by position: {triggeredBy}");
+                _logger.LogError(e, "Price not found {ErrorMessage}", $"by position: {triggeredBy}");
 
                 return CimValidationErrorTextTemplateMessages.Unknown;
             }

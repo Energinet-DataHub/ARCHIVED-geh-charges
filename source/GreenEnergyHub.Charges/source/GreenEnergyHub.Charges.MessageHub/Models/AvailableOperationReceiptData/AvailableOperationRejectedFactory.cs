@@ -67,7 +67,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableOperationReceiptData
                     _messageMetaDataContext.RequestDataTime,
                     Guid.NewGuid(), // ID of each available piece of data must be unique
                     ReceiptStatus.Rejected,
-                    operationDto.Id[..Math.Min(operationDto.Id.Length, 100)],
+                    operationDto.OperationId[..Math.Min(operationDto.OperationId.Length, 100)],
                     DocumentType.RejectRequestChangeOfPriceList, // Will be added to the HTTP MessageType header
                     operationOrder++,
                     recipient.ActorId,
@@ -89,7 +89,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableOperationReceiptData
         {
             return input
                 .ValidationErrors
-                .Where(ve => ve.OperationId == operationDto.Id || string.IsNullOrWhiteSpace(ve.OperationId))
+                .Where(ve => ve.OperationId == operationDto.OperationId || string.IsNullOrWhiteSpace(ve.OperationId))
                 .Select(validationError => _availableChargePriceReceiptValidationErrorFactory
                     .Create(validationError, input.Command, operationDto))
                 .ToList();
