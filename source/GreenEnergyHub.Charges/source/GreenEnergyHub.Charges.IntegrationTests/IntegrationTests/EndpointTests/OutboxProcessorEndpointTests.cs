@@ -143,7 +143,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 var chargePriceOperation =
                     new ChargePriceOperationDtoBuilder().WithChargePriceOperationId(Guid.NewGuid().ToString()).Build();
                 var chargeCommand = new ChargePriceCommandBuilder().WithChargeOperation(chargePriceOperation).Build();
-                var operationsRejectedEvent = new OperationsRejectedEventBuilder().WithChargeCommand(chargeCommand).Build();
+                var operationsRejectedEvent = new ChargePriceOperationsRejectedEventBuilder().WithChargeCommand(chargeCommand).Build();
                 return operationsRejectedEvent;
             }
 
@@ -161,7 +161,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
             private OutboxMessage CreateOutboxMessage(Instant now)
             {
                 var jsonSerializer = new JsonSerializer();
-                var rejectedEvent = new OperationsRejectedEventBuilder().Build();
+                var rejectedEvent = new ChargePriceOperationsRejectedEventBuilder().Build();
                 var data = jsonSerializer.Serialize(rejectedEvent);
                 return new OutboxMessageBuilder()
                     .WithData(data)
