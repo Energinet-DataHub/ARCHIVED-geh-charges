@@ -18,8 +18,17 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Factories
 {
+    /// <summary>
+    /// Factory for creating <see cref="ChargePriceOperationsRejectedEvent"/>
+    /// </summary>
     public interface IChargePriceOperationsRejectedEventFactory
     {
+        /// <summary>
+        /// Factory method for creating <see cref="ChargePriceOperationsRejectedEvent"/>
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="validationResult"></param>
+        /// <returns><see cref="ChargePriceOperationsRejectedEvent"/></returns>
         ChargePriceOperationsRejectedEvent Create(
             ChargePriceCommand command,
             ValidationResult validationResult);

@@ -16,8 +16,16 @@ using GreenEnergyHub.Charges.Application.Charges.Events;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Outbox
 {
+    /// <summary>
+    /// Factory for creating <see cref="OutboxMessage"/>
+    /// </summary>
     public interface IOutboxMessageFactory
     {
+        /// <summary>
+        /// Factory method for creating <see cref="OutboxMessage"/>
+        /// </summary>
+        /// <param name="chargePriceOperationsRejectedEvent"></param>
+        /// <returns><see cref="OutboxMessage"/></returns>
         OutboxMessage CreateFrom(ChargePriceOperationsRejectedEvent chargePriceOperationsRejectedEvent);
     }
 }
