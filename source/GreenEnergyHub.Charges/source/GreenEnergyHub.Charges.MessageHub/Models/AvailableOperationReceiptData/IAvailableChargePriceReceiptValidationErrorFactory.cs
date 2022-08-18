@@ -18,8 +18,18 @@ using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableOperationReceiptData
 {
+    /// <summary>
+    /// Factory for creating <see cref="AvailableReceiptValidationError"/>
+    /// </summary>
     public interface IAvailableChargePriceReceiptValidationErrorFactory
     {
+        /// <summary>
+        /// Factory method for creating <see cref="AvailableReceiptValidationError"/>
+        /// </summary>
+        /// <param name="validationError"></param>
+        /// <param name="command"></param>
+        /// <param name="chargePriceOperationDto"></param>
+        /// <returns><see cref="AvailableReceiptValidationError"/></returns>
         AvailableReceiptValidationError Create(
             ValidationError validationError,
             ChargePriceCommand command,
