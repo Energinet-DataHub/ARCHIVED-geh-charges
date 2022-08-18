@@ -45,7 +45,6 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             AuthorizationConfiguration = CreateAuthorizationConfiguration();
             AuthorizedTestActors = CreateAuthorizedTestActors(AuthorizationConfiguration.B2CTestClients);
             AsSystemOperator = SetTestActor(AuthorizationConfigurationData.SystemOperator);
-            AsSystemOperator = SetTestActor(AuthorizationConfigurationData.SystemOperator);
             AsGridAccessProvider = SetTestActor(AuthorizationConfigurationData.GridAccessProvider8100000000030);
             ServiceBusResourceProvider = new ServiceBusResourceProvider(
                 IntegrationTestConfiguration.ServiceBusConnectionString, TestLogger);
