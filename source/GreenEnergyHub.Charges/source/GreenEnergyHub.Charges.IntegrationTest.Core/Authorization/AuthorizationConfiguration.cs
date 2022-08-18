@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Authorization
             RootConfiguration = BuildKeyVaultConfigurationRoot(localSettingsJsonFilename);
             SecretsConfiguration = BuildSecretsKeyVaultConfiguration(RootConfiguration.GetValue<string>(azureSecretsKeyVaultUrlKey));
             B2CTestClients = CreateB2CTestClients(clientNames);
-            B2cTenantId = SecretsConfiguration.GetValue<string>(BuildB2CEnvironmentSecretName(Environment, "tenant-id"));
+            B2CTenantId = SecretsConfiguration.GetValue<string>(BuildB2CEnvironmentSecretName(Environment, "tenant-id"));
             var backendAppId = SecretsConfiguration.GetValue<string>(BuildB2CEnvironmentSecretName(Environment, "backend-app-id"));
             var frontendAppId = SecretsConfiguration.GetValue<string>(BuildB2CEnvironmentSecretName(Environment, "frontend-app-id"));
             BackendAppScope = new[] { $"{backendAppId}/.default" };
@@ -84,7 +84,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Authorization
         /// <summary>
         /// The B2C tenant id in the configured environment.
         /// </summary>
-        public string B2cTenantId { get; }
+        public string B2CTenantId { get; }
 
         /// <summary>
         /// The scope for which we must request an access token, to be authorized by the API Management.

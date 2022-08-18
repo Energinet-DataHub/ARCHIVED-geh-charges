@@ -50,7 +50,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
             _authenticationClient = new BackendAuthenticationClient(
                 chargesWebApiFixture.AuthorizationConfiguration.BackendAppScope,
                 clientCredentialsSettings,
-                chargesWebApiFixture.AuthorizationConfiguration.B2cTenantId);
+                chargesWebApiFixture.AuthorizationConfiguration.B2CTenantId);
         }
 
         public async Task InitializeAsync()
