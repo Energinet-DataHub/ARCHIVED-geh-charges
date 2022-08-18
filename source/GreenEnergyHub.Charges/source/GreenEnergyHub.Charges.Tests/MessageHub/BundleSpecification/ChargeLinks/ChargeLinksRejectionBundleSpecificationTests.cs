@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.ChargeLink
     public class ChargeLinksRejectionBundleSpecificationTests
     {
         private const string DataHubSenderId = "5790001330552";
-        private const string MaxLengthId = "00000000000000000000000000000000000";
+        private const string MaxLengthId = "1_______10________20________3012345";
 
         [Theory]
         [InlineAutoMoqData(0)]

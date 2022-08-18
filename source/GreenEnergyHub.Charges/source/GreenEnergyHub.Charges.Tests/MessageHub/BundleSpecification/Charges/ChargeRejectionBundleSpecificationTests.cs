@@ -38,7 +38,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.Charges
     [UnitTest]
     public class ChargeRejectionBundleSpecificationTests
     {
-        private const string MaxLengthId = "00000000000000000000000000000000000";
+        private const string MaxLengthId = "1_______10________20________3012345";
 
         [Theory]
         [InlineAutoMoqData(0)]
