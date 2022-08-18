@@ -31,7 +31,7 @@ using Xunit;
 
 namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationReceiptData
 {
-    public class AvailableOperationRejectionsFactoryTests
+    public class AvailableChargePriceOperationRejectionsFactoryTests
     {
         [Theory]
         [InlineAutoMoqData]
@@ -41,7 +41,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
             ChargePriceOperationsRejectedEvent rejectedEvent,
             MarketParticipant meteringPointAdministrator,
             Instant now,
-            AvailableOperationRejectionsFactory sut)
+            AvailableChargePriceOperationRejectionsFactory sut)
         {
             // Arrange
             var documentDto = rejectedEvent.Command.Document;

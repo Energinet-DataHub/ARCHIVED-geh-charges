@@ -17,6 +17,7 @@ using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableOperationReceiptData;
@@ -146,7 +147,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
         }
 
         private static string? GetTriggeredBy(
-            ChargePriceCommand chargePriceCommand,
+            ChargeCommand chargePriceCommand,
             ValidationRuleIdentifier validationRuleIdentifier)
         {
             switch (validationRuleIdentifier)

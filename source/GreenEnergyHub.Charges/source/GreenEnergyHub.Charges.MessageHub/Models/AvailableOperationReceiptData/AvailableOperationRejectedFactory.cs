@@ -29,14 +29,14 @@ using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableOperationReceiptData
 {
-    public class AvailableOperationRejectionsFactory :
+    public class AvailableChargePriceOperationRejectionsFactory :
         AvailableDataFactoryBase<AvailableChargeReceiptData.AvailableChargeReceiptData, ChargePriceOperationsRejectedEvent>
     {
         private readonly IMessageMetaDataContext _messageMetaDataContext;
         private readonly IAvailableChargePriceReceiptValidationErrorFactory _availableChargePriceReceiptValidationErrorFactory;
         private readonly ILogger _logger;
 
-        public AvailableOperationRejectionsFactory(
+        public AvailableChargePriceOperationRejectionsFactory(
             IMessageMetaDataContext messageMetaDataContext,
             IAvailableChargePriceReceiptValidationErrorFactory availableChargePriceReceiptValidationErrorFactory,
             IMarketParticipantRepository marketParticipantRepository,
