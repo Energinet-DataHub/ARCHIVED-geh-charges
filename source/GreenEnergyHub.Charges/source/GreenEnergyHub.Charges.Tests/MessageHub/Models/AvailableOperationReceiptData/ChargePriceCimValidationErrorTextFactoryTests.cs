@@ -28,7 +28,7 @@ using Xunit;
 
 namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationReceiptData
 {
-    public class OperationCimValidationErrorTextFactoryTests
+    public class ChargePriceCimValidationErrorTextFactoryTests
     {
         [Theory]
         [InlineAutoMoqData]

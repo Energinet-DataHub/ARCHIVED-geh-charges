@@ -20,24 +20,24 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Tests.Builders.Command
 {
-    public class OperationsRejectedEventBuilder
+    public class ChargePriceOperationsRejectedEventBuilder
     {
         private ChargePriceCommand _chargePriceCommand;
         private IEnumerable<ValidationError> _validationErrors;
 
-        public OperationsRejectedEventBuilder()
+        public ChargePriceOperationsRejectedEventBuilder()
         {
             _chargePriceCommand = new ChargePriceCommandBuilder().Build();
             _validationErrors = new List<ValidationError>();
         }
 
-        public OperationsRejectedEventBuilder WithChargeCommand(ChargePriceCommand chargePriceCommand)
+        public ChargePriceOperationsRejectedEventBuilder WithChargeCommand(ChargePriceCommand chargePriceCommand)
         {
             _chargePriceCommand = chargePriceCommand;
             return this;
         }
 
-        public OperationsRejectedEventBuilder WithValidationErrors(IEnumerable<ValidationError> validationErrors)
+        public ChargePriceOperationsRejectedEventBuilder WithValidationErrors(IEnumerable<ValidationError> validationErrors)
         {
             _validationErrors = validationErrors;
             return this;

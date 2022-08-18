@@ -36,10 +36,10 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Outbox
             JsonSerializer jsonSerializer,
             IClock clock,
             ICorrelationContext context,
-            OperationsRejectedEventBuilder operationBuilder)
+            ChargePriceOperationsRejectedEventBuilder chargePriceOperationBuilder)
         {
             // Arrange
-            var rejectedEvent = operationBuilder.Build();
+            var rejectedEvent = chargePriceOperationBuilder.Build();
             var factory = new OutboxMessageFactory(jsonSerializer, clock, context);
 
             // Act
