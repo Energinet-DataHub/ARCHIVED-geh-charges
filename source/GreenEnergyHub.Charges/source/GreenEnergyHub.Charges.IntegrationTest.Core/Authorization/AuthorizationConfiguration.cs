@@ -104,8 +104,6 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Authorization
         /// <exception cref="ArgumentException">When string value is null or whitespace</exception>
         private IEnumerable<B2CTestClient> CreateB2CTestClients(IEnumerable<string> clientNames)
         {
-            ArgumentNullException.ThrowIfNull(clientNames);
-
             return clientNames
                 .Select(clientName => new B2CTestClient(
                         clientName,
