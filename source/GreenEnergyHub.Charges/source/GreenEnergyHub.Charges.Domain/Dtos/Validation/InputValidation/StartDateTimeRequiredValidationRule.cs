@@ -12,23 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.InputValidation.ValidationRules
+namespace GreenEnergyHub.Charges.Domain.Dtos.Validation.InputValidation
 {
     public class StartDateTimeRequiredValidationRule : IValidationRule
     {
-        private readonly ChargeInformationOperationDto _chargeInformationOperationDto;
+        private readonly ChargeOperation _operation;
 
-        public StartDateTimeRequiredValidationRule(ChargeInformationOperationDto chargeInformationOperationDto)
+        public StartDateTimeRequiredValidationRule(ChargeOperation operation)
         {
-            _chargeInformationOperationDto = chargeInformationOperationDto;
+            _operation = operation;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.StartDateTimeRequiredValidation;
 
         // Instant is a struct, so to ensure caller supplied it, we check if it has the default value.
-        public bool IsValid => _chargeInformationOperationDto.StartDateTime != default;
+        public bool IsValid => _operation.StartDateTime != default;
     }
 }

@@ -45,8 +45,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.Shared
                 ValidationRuleIdentifier.ChargeTypeTariffPriceCount => ReasonCode.E87,
                 ValidationRuleIdentifier.MaximumPrice => ReasonCode.E90,
                 ValidationRuleIdentifier.ChargePriceMaximumDigitsAndDecimals => ReasonCode.E86,
-                ValidationRuleIdentifier.FeeMustHaveSinglePrice => ReasonCode.E87,
-                ValidationRuleIdentifier.SubscriptionMustHaveSinglePrice => ReasonCode.E87,
                 ValidationRuleIdentifier.CommandSenderMustBeAnExistingMarketParticipant => ReasonCode.D02,
                 ValidationRuleIdentifier.MeteringPointDoesNotExist => ReasonCode.E10,
                 ValidationRuleIdentifier.ChargeDoesNotExist => ReasonCode.E0I,

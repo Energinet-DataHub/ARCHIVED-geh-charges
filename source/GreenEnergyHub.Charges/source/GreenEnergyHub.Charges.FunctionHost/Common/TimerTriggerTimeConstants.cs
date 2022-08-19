@@ -12,15 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
-
-namespace GreenEnergyHub.Charges.Domain.Dtos.Messages.Command
+namespace GreenEnergyHub.Charges.FunctionHost.Common
 {
-    public abstract class CommandBase
+    public static class TimerTriggerTimeConstants
     {
-        public abstract DocumentDto Document { get; }
-
-        public abstract IReadOnlyCollection<OperationBase> Operations { get; }
+        public const string Every10Seconds = "*/10 * * * * *";
     }
 }

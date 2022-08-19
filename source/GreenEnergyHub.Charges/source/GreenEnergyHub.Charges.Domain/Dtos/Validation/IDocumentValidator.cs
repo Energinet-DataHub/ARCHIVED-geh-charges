@@ -24,6 +24,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
         /// </summary>
         /// <param name="command">The command to validate.</param>
         /// <returns>The validation result.</returns>
-        Task<ValidationResult> ValidateAsync(CommandBase command);
+        Task<ValidationResult> ValidateAsync(ChargeCommand command);
     }
 }

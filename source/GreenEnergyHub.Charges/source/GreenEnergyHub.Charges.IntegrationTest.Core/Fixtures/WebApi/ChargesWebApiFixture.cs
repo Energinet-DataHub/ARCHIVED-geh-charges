@@ -28,8 +28,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.WebApi
         {
             DatabaseManager = new ChargesDatabaseManager();
             AuthorizationConfiguration =
-                AuthorizationConfigurationData.CreateAuthorizationConfiguration(AuthorizationConfigurationData
-                    .GridAccessProvider8100000000030);
+                AuthorizationConfigurationData.CreateAuthorizationConfiguration();
         }
 
         public ChargesDatabaseManager DatabaseManager { get; }

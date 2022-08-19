@@ -41,9 +41,9 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             return this;
         }
 
-        public ChargeLinkDto Build()
+        public ChargeLinkOperationDto Build()
         {
-            return new ChargeLinkDto(
+            return new ChargeLinkOperationDto(
                 Guid.NewGuid().ToString("N"),
                 _meteringPointId,
                 _startDate,

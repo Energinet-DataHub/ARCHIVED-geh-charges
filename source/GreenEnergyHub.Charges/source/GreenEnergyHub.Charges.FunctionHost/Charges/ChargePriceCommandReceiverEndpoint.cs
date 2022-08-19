@@ -14,6 +14,7 @@
 
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
+using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
@@ -26,13 +27,16 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
         private const string FunctionName = nameof(ChargePriceCommandReceiverEndpoint);
         private readonly IChargePriceCommandReceivedEventHandler _chargePriceCommandReceivedEventHandler;
         private readonly JsonMessageDeserializer<ChargePriceCommandReceivedEvent> _deserializer;
+        private readonly IUnitOfWork _unitOfWork;
 
         public ChargePriceCommandReceiverEndpoint(
             IChargePriceCommandReceivedEventHandler chargePriceCommandReceivedEventHandler,
-            JsonMessageDeserializer<ChargePriceCommandReceivedEvent> deserializer)
+            JsonMessageDeserializer<ChargePriceCommandReceivedEvent> deserializer,
+            IUnitOfWork unitOfWork)
         {
             _chargePriceCommandReceivedEventHandler = chargePriceCommandReceivedEventHandler;
             _deserializer = deserializer;
+            _unitOfWork = unitOfWork;
         }
 
         [Function(FunctionName)]
@@ -49,6 +53,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
 
             await _chargePriceCommandReceivedEventHandler.HandleAsync(chargePriceCommandReceivedEvent)
                 .ConfigureAwait(false);
+
+            await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
         }
     }
 }

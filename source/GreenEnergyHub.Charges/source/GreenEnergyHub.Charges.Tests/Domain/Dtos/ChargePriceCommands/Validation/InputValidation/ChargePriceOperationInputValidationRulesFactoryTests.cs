@@ -110,6 +110,14 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
             return new List<Type>
             {
                 typeof(MaximumPriceRule),
+                typeof(ChargeIdLengthValidationRule),
+                typeof(ChargeIdRequiredValidationRule),
+                typeof(ChargeOperationIdRequiredRule),
+                typeof(ChargeOperationIdLengthValidationRule),
+                typeof(ChargeOwnerIsRequiredValidationRule),
+                typeof(ChargeTypeIsKnownValidationRule),
+                typeof(StartDateTimeRequiredValidationRule),
+                typeof(ChargeOwnerTextLengthRule),
                 typeof(ChargeOwnerMustMatchSenderRule),
             };
         }

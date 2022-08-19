@@ -14,7 +14,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.Configuration;
+using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using Microsoft.Extensions.Configuration;
 
 namespace GreenEnergyHub.Charges.IntegrationTest.Core.Authorization
@@ -31,17 +33,17 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Authorization
     public class AuthorizationConfiguration
     {
         public AuthorizationConfiguration(
-            string clientName,
+            IEnumerable<string> clientNames,
             string environment,
             string localSettingsJsonFilename,
             string azureSecretsKeyVaultUrlKey)
         {
             // Team name and environment is required to get client-id and client-secret for integration tests
-            ClientName = clientName;
             Environment = environment;
             RootConfiguration = BuildKeyVaultConfigurationRoot(localSettingsJsonFilename);
             SecretsConfiguration = BuildSecretsKeyVaultConfiguration(RootConfiguration.GetValue<string>(azureSecretsKeyVaultUrlKey));
-            B2cTenantId = SecretsConfiguration.GetValue<string>(BuildB2CEnvironmentSecretName(Environment, "tenant-id"));
+            B2CTestClients = CreateB2CTestClients(clientNames);
+            B2CTenantId = SecretsConfiguration.GetValue<string>(BuildB2CEnvironmentSecretName(Environment, "tenant-id"));
             var backendAppId = SecretsConfiguration.GetValue<string>(BuildB2CEnvironmentSecretName(Environment, "backend-app-id"));
             var frontendAppId = SecretsConfiguration.GetValue<string>(BuildB2CEnvironmentSecretName(Environment, "frontend-app-id"));
             BackendAppScope = new[] { $"{backendAppId}/.default" };
@@ -49,16 +51,12 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Authorization
 
             BackendAppId = SecretsConfiguration.GetValue<string>(BuildB2CBackendAppId(Environment));
             FrontendAppId = SecretsConfiguration.GetValue<string>(BuildB2CFrontendAppId(Environment));
-            var teamClientId = SecretsConfiguration.GetValue<string>(BuildB2CTeamSecretName(Environment, clientName, "client-id"));
-            var teamClientSecret = SecretsConfiguration.GetValue<string>(BuildB2CTeamSecretName(Environment, clientName, "client-secret"));
-
-            ClientCredentialsSettings = RetrieveB2CTeamClientSettings(clientName, teamClientId, teamClientSecret);
 
             ApiManagementBaseAddress = SecretsConfiguration.GetValue<Uri>(BuildApiManagementEnvironmentSecretName(Environment, "host-url"));
             FrontendOpenIdUrl = SecretsConfiguration.GetValue<string>(BuildB2CFrontendOpenIdUrl(Environment));
         }
 
-        public string ClientName { get; }
+        public IEnumerable<B2CTestClient> B2CTestClients { get; }
 
         public IEnumerable<string> FrontendAppScope { get; }
 
@@ -73,6 +71,9 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Authorization
 
         public IConfigurationRoot RootConfiguration { get; }
 
+        /// <summary>
+        /// Can be used to extract secrets from the Key Vault.
+        /// </summary>
         public IConfigurationRoot SecretsConfiguration { get; }
 
         /// <summary>
@@ -83,7 +84,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Authorization
         /// <summary>
         /// The B2C tenant id in the configured environment.
         /// </summary>
-        public string B2cTenantId { get; }
+        public string B2CTenantId { get; }
 
         /// <summary>
         /// The scope for which we must request an access token, to be authorized by the API Management.
@@ -95,26 +96,20 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Authorization
         /// </summary>
         public Uri ApiManagementBaseAddress { get; }
 
-        public ClientCredentialsSettings ClientCredentialsSettings { get; }
-
-        // /// <summary>
-        // /// Can be used to extract secrets from the Key Vault.
-        // /// </summary>
-        // private IConfigurationRoot KeyVaultConfiguration { get; }
-
         /// <summary>
-        /// Retrieve B2C team client settings necessary for acquiring an access token for a given 'team client app' in the configured environment.
+        /// Create a list of 'B2C test client apps' each with own settings necessary to acquire an access token in a configured environment.
         /// </summary>
-        /// <param name="team">Team name or shorthand.</param>
-        /// <param name="clientId">Client ID</param>
-        /// <param name="clientSecret">Client secret</param>
-        /// <returns>Settings for 'team client app'</returns>
-        public static ClientCredentialsSettings RetrieveB2CTeamClientSettings(string team, string clientId, string clientSecret)
+        /// <param name="clientNames">List of team names or shorthands</param>
+        /// <returns>A list of B2C test clients apps</returns>
+        /// <exception cref="ArgumentException">When string value is null or whitespace</exception>
+        private IEnumerable<B2CTestClient> CreateB2CTestClients(IEnumerable<string> clientNames)
         {
-            if (string.IsNullOrWhiteSpace(team))
-                throw new ArgumentException($"'{nameof(team)}' cannot be null or whitespace.", nameof(team));
-
-            return new ClientCredentialsSettings(clientId, clientSecret);
+            return clientNames
+                .Select(clientName => new B2CTestClient(
+                        clientName,
+                        SecretsConfiguration.GetValue<string>(BuildB2CTeamSecretName(Environment, clientName, "client-id")),
+                        SecretsConfiguration.GetValue<string>(BuildB2CTeamSecretName(Environment, clientName, "client-secret"))))
+                .ToList();
         }
 
         /// <summary>
