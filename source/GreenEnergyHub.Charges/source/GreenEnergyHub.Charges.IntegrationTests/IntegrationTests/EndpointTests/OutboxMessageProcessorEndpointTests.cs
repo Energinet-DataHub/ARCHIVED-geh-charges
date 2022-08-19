@@ -105,12 +105,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 // Arrange
                 await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
                 await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
-                var unitOfWork = new UnitOfWork(chargesDatabaseWriteContext);
+
                 clock.Setup(c => c.GetCurrentInstant()).Returns(now);
-                var outboxMessage = CreateOutboxMessage(now);
+                var operationsRejectedEvent = CreateChargePriceOperationsRejectedEvent();
+                var outboxMessage = await PersistToOutboxMessage(chargesDatabaseWriteContext, operationsRejectedEvent);
+
+                var unitOfWork = new UnitOfWork(chargesDatabaseWriteContext);
                 var outboxRepository = new OutboxMessageRepository(chargesDatabaseWriteContext);
-                chargesDatabaseWriteContext.OutboxMessages.Add(outboxMessage);
-                await chargesDatabaseWriteContext.SaveChangesAsync();
                 var sut = new OutboxMessageProcessorEndpoint(
                     outboxRepository,
                     availableDataNotifier.Object,
@@ -156,18 +157,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 context.OutboxMessages.Add(outboxMessage);
                 await context.SaveChangesAsync();
                 return outboxMessage;
-            }
-
-            private static OutboxMessage CreateOutboxMessage(Instant now)
-            {
-                var jsonSerializer = new JsonSerializer();
-                var rejectedEvent = new ChargePriceOperationsRejectedEventBuilder().Build();
-                var data = jsonSerializer.Serialize(rejectedEvent);
-                return new OutboxMessageBuilder()
-                    .WithData(data)
-                    .WithType(rejectedEvent.GetType().ToString())
-                    .WithCreationDate(now)
-                    .Build();
             }
         }
     }
