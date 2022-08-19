@@ -374,7 +374,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 peekResult.Should().ContainMatch("*<cim:code>E90</cim:code>*");
             }
 
-            [Fact]
+            // TODO: Reenable test as soon as business rules are validated
+            [Fact(Skip = "Not able to validate business rules, because UpdatePrices is commented out and therefore rules are never validated.")]
             public async Task When_ChargePriceRequestFailsBusinessValidation_Then_ARejectionShouldBeSent()
             {
                 // Arrange
@@ -388,13 +389,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // Assert
                 actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
 
-                // TODO: not able to validate businessrules, because UpdatePrices is commented out and therefore rules are never validated.
-                // var peekResult = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId);
-                // peekResult.Should().ContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
-                // peekResult.Should().NotContainMatch("*NotifyPriceList_MarketDocument*");
-                // peekResult.Should().ContainMatch("*<cim:process.processType>D08</cim:process.processType>*");
-                // peekResult.Should().NotContainMatch("*<cim:process.processType>D18</cim:process.processType>*");
-                // peekResult.Should().ContainMatch("*<cim:code>E86</cim:code>*");
+                var peekResult = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId);
+                peekResult.Should().ContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
+                peekResult.Should().NotContainMatch("*NotifyPriceList_MarketDocument*");
+                peekResult.Should().ContainMatch("*<cim:process.processType>D08</cim:process.processType>*");
+                peekResult.Should().NotContainMatch("*<cim:process.processType>D18</cim:process.processType>*");
+                peekResult.Should().ContainMatch("*<cim:code>E86</cim:code>*");
             }
 
             [Theory]
