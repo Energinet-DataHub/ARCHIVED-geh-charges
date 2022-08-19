@@ -14,11 +14,15 @@
 
 using System.Threading.Tasks;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Infrastructure.Outbox;
+using GreenEnergyHub.Charges.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
+using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.TestHelpers;
 using Microsoft.EntityFrameworkCore;
+using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
@@ -57,6 +61,40 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 .SingleAsync(x => x.Id == outboxMessage.Id);
 
             actual.Should().BeEquivalentTo(outboxMessage);
+        }
+
+        [Theory]
+        [AutoDomainData]
+        public async Task GetNext_WhenMultipleOutboxMessageProvided_ThenGetTheEarliestOutboxMessage(OutboxMessageBuilder outboxMessageBuilder)
+        {
+            // Arrange
+            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
+            await AddOutboxMessageToContextAndSaveAsync(chargesDatabaseWriteContext, outboxMessageBuilder, InstantHelper.GetYesterdayAtMidnightUtc(), true);
+            await AddOutboxMessageToContextAndSaveAsync(chargesDatabaseWriteContext, outboxMessageBuilder, InstantHelper.GetTomorrowAtMidnightUtc(), false);
+            var expected = await AddOutboxMessageToContextAndSaveAsync(chargesDatabaseWriteContext, outboxMessageBuilder, InstantHelper.GetTodayAtMidnightUtc(), false);
+
+            var sut = new OutboxMessageRepository(chargesDatabaseWriteContext);
+
+            // Act
+            var actual = sut.GetNext();
+
+            // Assert
+            actual.Should().BeEquivalentTo(expected);
+        }
+
+        private static async Task<OutboxMessage> AddOutboxMessageToContextAndSaveAsync(
+            ChargesDatabaseContext chargesDatabaseWriteContext,
+            OutboxMessageBuilder outboxMessageBuilder,
+            Instant instant,
+            bool isProcessed)
+        {
+            var outboxMessage = outboxMessageBuilder.WithCreationDate(instant).Build();
+            if (isProcessed)
+                outboxMessage.SetProcessed(InstantHelper.GetTodayAtMidnightUtc());
+
+            chargesDatabaseWriteContext.OutboxMessages.Add(outboxMessage);
+            await chargesDatabaseWriteContext.SaveChangesAsync();
+            return outboxMessage;
         }
     }
 }
