@@ -65,7 +65,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
         [Theory]
         [AutoDomainData]
-        public async Task GetNext_WhenMultipleOutboxMessageProvided_ThenGetTheEarliestOutboxMessage(OutboxMessageBuilder outboxMessageBuilder)
+        public async Task GetNext_WhenMultipleOutboxMessagesExists_ThenReturnTheEarliestAndNotProcessedOutboxMessage(OutboxMessageBuilder outboxMessageBuilder)
         {
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
