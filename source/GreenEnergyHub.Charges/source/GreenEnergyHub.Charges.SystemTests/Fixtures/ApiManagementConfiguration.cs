@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using Azure.Identity;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.Configuration;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Authorization;
 using Microsoft.Extensions.Configuration;
@@ -76,8 +77,10 @@ namespace GreenEnergyHub.Charges.SystemTests.Fixtures
         /// </summary>
         private static IConfigurationRoot BuildKeyVaultConfigurationRoot(string keyVaultUrl)
         {
+            var credential = new ChainedTokenCredential(new VisualStudioCodeCredential(), new AzureCliCredential());
+
             return new ConfigurationBuilder()
-                .AddAuthenticatedAzureKeyVault(keyVaultUrl)
+                .AddAzureKeyVault(new Uri(keyVaultUrl), credential)
                 .Build();
         }
 
