@@ -43,7 +43,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.Inpu
                 CreateRuleContainer(new ChargeOwnerIsRequiredValidationRule(operation), operation.OperationId),
                 CreateRuleContainer(new ChargeTypeIsKnownValidationRule(operation), operation.OperationId),
                 CreateRuleContainer(new StartDateTimeRequiredValidationRule(operation), operation.OperationId),
-                CreateRuleContainer(new ChargeOwnerTextLengthRule(operation), operation.OperationId),
                 CreateRuleContainer(new ChargeOwnerMustMatchSenderRule(document.Sender.MarketParticipantId, operation.ChargeOwner), operation.OperationId),
             };
 
