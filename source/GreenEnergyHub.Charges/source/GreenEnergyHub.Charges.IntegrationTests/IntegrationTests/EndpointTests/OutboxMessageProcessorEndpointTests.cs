@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
+using Energinet.DataHub.Core.JsonSerialization;
 using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.Charges.Events;
@@ -33,7 +34,6 @@ using GreenEnergyHub.Charges.MessageHub.MessageHub;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.TestCore.TestHelpers;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
-using GreenEnergyHub.Json;
 using Microsoft.Azure.Functions.Worker;
 using Moq;
 using NodaTime;
@@ -122,15 +122,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
                 // Act & Assert
                 availableDataNotifier
-                    .Setup(adn =>
-                        adn.NotifyAsync(It.IsAny<ChargePriceOperationsRejectedEvent>()))
+                    .Setup(adn => adn.NotifyAsync(It.IsAny<ChargePriceOperationsRejectedEvent>()))
                     .ThrowsAsync(new Exception());
 
                 await Assert.ThrowsAsync<Exception>(() => sut.RunAsync(timerInfo));
 
                 availableDataNotifier
-                    .Setup(adn =>
-                        adn.NotifyAsync(It.IsAny<ChargePriceOperationsRejectedEvent>()))
+                    .Setup(adn => adn.NotifyAsync(It.IsAny<ChargePriceOperationsRejectedEvent>()))
                     .Returns(Task.CompletedTask);
 
                 await sut.RunAsync(timerInfo);

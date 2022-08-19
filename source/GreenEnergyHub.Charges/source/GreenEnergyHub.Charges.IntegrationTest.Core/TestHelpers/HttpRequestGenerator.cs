@@ -37,14 +37,16 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
 
             var clock = new FakeClock(SystemClock.Instance.GetCurrentInstant());
             var zonedDateTimeService = new ZonedDateTimeService(clock, new Iso8601ConversionConfiguration(localTimeZoneName));
-            var (request, correlationId) = CreateHttpPostRequest(endpointUrl, testFilePath, zonedDateTimeService);
+            var request = CreateHttpPostRequest(endpointUrl, testFilePath, zonedDateTimeService);
+            var correlationId = CorrelationIdGenerator.Create();
 
             request.Headers.Add("Authorization", $"Bearer {accessToken}");
+            request.Headers.Add("Correlation-Id", correlationId);
 
             return (request, correlationId);
         }
 
-        public static (HttpRequestMessage Request, string CorrelationId) CreateHttpPostRequest(
+        public static HttpRequestMessage CreateHttpPostRequest(
             string endpointUrl, string testFilePath, IZonedDateTimeService zonedDateTimeService)
         {
             var request = CreateHttpRequest(HttpMethod.Post, endpointUrl);
