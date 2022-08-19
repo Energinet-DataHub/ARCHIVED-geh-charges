@@ -74,7 +74,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             try
             {
                 // Arrange
-                await Fixture.DatabaseManager.DeleteDatabaseAsync();
+                await Fixture.ChargesDatabaseManager.DeleteDatabaseAsync();
                 var requestMessage = HttpRequestGenerator.CreateHttpGetRequest("api/monitor/ready");
 
                 // Act
@@ -88,7 +88,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             }
             finally
             {
-                await Fixture.DatabaseManager.CreateDatabaseAsync();
+                await Fixture.ChargesDatabaseManager.CreateDatabaseAsync();
 
                 // Apparently we cannot connect just after we have created the database again.
                 // We have tried to wait here until we can connect, but still the health check fails.

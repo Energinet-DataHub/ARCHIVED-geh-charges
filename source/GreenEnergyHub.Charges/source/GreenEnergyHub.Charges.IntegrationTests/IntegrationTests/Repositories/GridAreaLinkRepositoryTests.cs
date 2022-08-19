@@ -18,6 +18,7 @@ using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.GridAreaLinks;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
+using GreenEnergyHub.Charges.TestCore;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 using Xunit.Categories;

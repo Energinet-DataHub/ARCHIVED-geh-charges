@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application.Charges.Factories;
 using GreenEnergyHub.Charges.Application.Charges.Services;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Charges.Exceptions;
@@ -37,6 +38,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         private readonly IChargePriceRejectionService _chargePriceRejectionService;
         private readonly IChargePriceNotificationService _chargePriceNotificationService;
         private readonly ILogger _logger;
+        private readonly IChargePriceOperationsRejectedEventFactory _chargePriceOperationsRejectedEventFactory;
 
         public ChargePriceEventHandler(
             IChargeRepository chargeRepository,
@@ -45,7 +47,8 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             IChargePriceConfirmationService chargePriceConfirmationService,
             IChargePriceRejectionService chargePriceRejectionService,
             IChargePriceNotificationService chargePriceNotificationService,
-            ILoggerFactory loggerFactory)
+            ILoggerFactory loggerFactory,
+            IChargePriceOperationsRejectedEventFactory chargePriceOperationsRejectedEventFactory)
         {
             _chargeRepository = chargeRepository;
             _marketParticipantRepository = marketParticipantRepository;
@@ -53,6 +56,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             _chargePriceConfirmationService = chargePriceConfirmationService;
             _chargePriceRejectionService = chargePriceRejectionService;
             _chargePriceNotificationService = chargePriceNotificationService;
+            _chargePriceOperationsRejectedEventFactory = chargePriceOperationsRejectedEventFactory;
             _logger = loggerFactory.CreateLogger(nameof(ChargePriceEventHandler));
         }
 
@@ -87,11 +91,12 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                         throw new InvalidOperationException($"Charge ID '{operation.SenderProvidedChargeId}' does not exist.");
                     }
 
-                    charge.UpdatePrices(
-                        operation.PointsStartInterval,
-                        operation.PointsEndInterval,
-                        operation.Points,
-                        operation.OperationId);
+                    // Todo: Temporarily stop saving prices in "new flow"
+                    // charge.UpdatePrices(
+                    //     operation.PointsStartInterval,
+                    //     operation.PointsEndInterval,
+                    //     operation.Points,
+                    //     operation.OperationId);
                 }
                 catch (ChargeOperationFailedException exception)
                 {
@@ -108,7 +113,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             }
 
             await _chargePriceConfirmationService.SaveConfirmationsAsync(operationsToBeConfirmed).ConfigureAwait(false);
-            await _chargePriceRejectionService.SaveRejectionsAsync(operationsToBeRejected, rejectionRules).ConfigureAwait(false);
+            RaiseRejectedEvent(commandReceivedEvent, operationsToBeRejected, rejectionRules);
             await _chargePriceNotificationService.SaveNotificationsAsync(operationsToBeConfirmed).ConfigureAwait(false);
 
             // With story 1411 below log entry will be replaced with 'await _unitOfWork.SaveChangesAsync().ConfigureAwait(false)';
@@ -116,6 +121,21 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             {
                 _logger.LogInformation("At this point, price(s) will be persisted for operation with Id {Id}", operation.OperationId);
             }
+        }
+
+        private void RaiseRejectedEvent(
+            ChargePriceCommandReceivedEvent commandReceivedEvent,
+            List<ChargePriceOperationDto> operationsToBeRejected,
+            List<IValidationRuleContainer> rejectionRules)
+        {
+            if (!operationsToBeRejected.Any()) return;
+            var chargePriceCommand = new ChargePriceCommand(commandReceivedEvent.Command.Document, operationsToBeRejected);
+            var validationResult = ValidationResult.CreateFailure(rejectionRules);
+
+            var rejectedEvent = _chargePriceOperationsRejectedEventFactory.Create(
+                chargePriceCommand, validationResult);
+
+            _chargePriceRejectionService.SaveRejections(rejectedEvent);
         }
 
         private static void CollectRejectionRules(

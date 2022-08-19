@@ -48,6 +48,7 @@ limitations under the License.
       <EmbeddedResource Include="Scripts\Model\202206301048 Migrate AvailableData ActorId to reference MarketParticipant ActorId.sql" />
       <EmbeddedResource Include="Scripts\Model\202207051352 Remove Foreign Keys on DataAvailable tables.sql" />
       <EmbeddedResource Include="Scripts\Model\202207271035 Remove position from ChargePoint.sql" />
+      <EmbeddedResource Include="Scripts\Model\202208101116 Create OutboxMessage table.sql" />
       <EmbeddedResource Include="Scripts\Seed\202201261740 Add default charges owner.sql" />
       <EmbeddedResource Include="Scripts\Seed\202201261741 Add default charges.sql" />
       <EmbeddedResource Include="Scripts\Seed\202201261742 Add default charge links.sql" />
