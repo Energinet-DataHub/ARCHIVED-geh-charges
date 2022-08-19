@@ -93,7 +93,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
                 actual.OriginalOperationId.Should().Be(expectedChargeOperationDto.OperationId);
 
                 var actualValidationErrors = actual.ValidationErrors.ToList();
-                var expectedValidationErrors = validationErrors.Where(x => x.OperationId == expectedChargeOperationDto.OperationId);
+                var expectedValidationErrors =
+                    validationErrors.Where(x => x.OperationId == expectedChargeOperationDto.OperationId);
                 actual.ValidationErrors.Should().HaveSameCount(expectedValidationErrors);
                 actual.OperationOrder.Should().BeGreaterThan(operationOrder);
                 operationOrder = actual.OperationOrder;
@@ -107,59 +108,6 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
             }
         }
 
-        // [Theory]
-        // [InlineAutoMoqData]
-        // public async Task CreateAsync_WhenCalledWithRejectedEvent_ReturnsAvailableData(
-        //     [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-        //     [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
-        //     [Frozen] Mock<IAvailableChargePriceReceiptValidationErrorFactory> availableChargePriceReceiptValidationErrorFactory,
-        //     ChargePriceOperationsRejectedEvent rejectedEvent,
-        //     TestMeteringPointAdministrator meteringPointAdministrator,
-        //     Instant now,
-        //     AvailableChargePriceOperationRejectionsFactory sut)
-        // {
-        //     // Arrange
-        //     var documentDto = rejectedEvent.Command.Document;
-        //     documentDto.Sender.BusinessProcessRole = MarketParticipantRole.GridAccessProvider;
-        //     var actorId = Guid.NewGuid();
-        //     MarketParticipantRepositoryMockBuilder.SetupMarketParticipantRepositoryMock(
-        //         marketParticipantRepository, meteringPointAdministrator, documentDto.Sender, actorId);
-        //     SetupAvailablePriceReceiptValidationErrorFactoryMock(
-        //         availableChargePriceReceiptValidationErrorFactory, rejectedEvent.Command);
-        //     messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
-        //     var validationErrors = chargePriceCommand.Operations
-        //         .Reverse() // GetReasons() should provide the correct ValidationError no matter what order they have here
-        //         .Select(x => new ValidationError(ValidationRuleIdentifier.SenderIsMandatoryTypeValidation, x.OperationId, null))
-        //         .ToList();
-        //
-        //     // Act
-        //     var actualList = await sut.CreateAsync(rejectedEvent);
-        //
-        //     // Assert
-        //     actualList.Should().HaveCount(3);
-        //     actualList[0].ActorId.Should().Be(actorId);
-        //     actualList[0].RecipientId.Should().Be(documentDto.Sender.MarketParticipantId);
-        //     actualList[0].RecipientRole.Should().Be(documentDto.Sender.BusinessProcessRole);
-        //     actualList[0].BusinessReasonCode.Should().Be(documentDto.BusinessReasonCode);
-        //     actualList[0].RequestDateTime.Should().Be(now);
-        //     actualList[0].ReceiptStatus.Should().Be(ReceiptStatus.Rejected);
-        //     actualList[0].DocumentType.Should().Be(DocumentType.RejectRequestChangeOfPriceList);
-        //     actualList[0].OriginalOperationId.Should().Be(rejectedEvent.Command.Operations.First().OperationId);
-        //     var expectedList = actualList.OrderBy(x => x.OperationOrder);
-        //     actualList.SequenceEqual(expectedList).Should().BeTrue();
-        //     var actualValidationErrors = actualList[0].ValidationErrors.ToList();
-        //     var expectedValidationErrors = validationErrors.Where(x => x.OperationId == expectedChargeOperationDto.OperationId);
-        //     actual.ValidationErrors.Should().HaveSameCount(expectedValidationErrors);
-        //     actual.OperationOrder.Should().BeGreaterThan(operationOrder);
-        //     operationOrder = actual.OperationOrder;
-        //
-        //     for (var i2 = 0; i2 < actualValidationErrors.Count; i2++)
-        //     {
-        //         var expectedText = validationErrors[i2].ValidationRuleIdentifier.ToString();
-        //         actualValidationErrors[i2].Text.Should().Be(expectedText);
-        //         actualValidationErrors[i2].ReasonCode.ToString().Should().NotBeNullOrWhiteSpace();
-        //     }
-        // }
         private static void SetupAvailablePriceReceiptValidationErrorFactoryMock(
             Mock<IAvailableChargePriceReceiptValidationErrorFactory> availablePriceReceiptValidationErrorFactory,
             ChargePriceCommand chargePriceCommand)
