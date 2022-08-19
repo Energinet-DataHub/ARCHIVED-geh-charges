@@ -1,5 +1,9 @@
 # Energinet.DataHub.Charges.Clients Release notes
 
+## Version 3.0.7
+
+Removed duplicate NuGet package reference
+
 ## Version 3.0.6
 
 Updated NuGet packages

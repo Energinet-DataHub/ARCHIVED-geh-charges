@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -38,10 +39,14 @@ namespace GreenEnergyHub.Charges.SystemTests
         {
             Configuration = configuration;
 
+            var clientCredentialsSettings = Configuration.AuthorizationConfiguration.B2CTestClients
+                .First(tc => tc.ClientName == "endk-ddm3")
+                .ClientCredentialsSettings;
+
             _authenticationClient = new BackendAuthenticationClient(
                 Configuration.AuthorizationConfiguration.BackendAppScope,
-                Configuration.AuthorizationConfiguration.ClientCredentialsSettings,
-                Configuration.AuthorizationConfiguration.B2cTenantId);
+                clientCredentialsSettings,
+                Configuration.AuthorizationConfiguration.B2CTenantId);
         }
 
         private ApiManagementConfiguration Configuration { get; }

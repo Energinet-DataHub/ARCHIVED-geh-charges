@@ -39,15 +39,15 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IChargeLinkFactory, ChargeLinkFactory>();
             serviceCollection.AddSingleton<IChargeLinksAcceptedEventFactory, ChargeLinksAcceptedEventFactory>();
             serviceCollection.AddScoped<IChargeLinksRepository, ChargeLinksRepository>();
-            serviceCollection.AddScoped<IBusinessValidationRulesFactory<ChargeLinkDto>,
+            serviceCollection.AddScoped<IBusinessValidationRulesFactory<ChargeLinkOperationDto>,
                 ChargeLinksCommandBusinessValidationRulesFactory>();
             serviceCollection.AddScoped<IChargeLinksReceiptService, ChargeLinksReceiptService>();
             serviceCollection.AddScoped<IChargeLinksRejectedEventFactory, ChargeLinksRejectedEventFactory>();
-            serviceCollection.AddScoped<IBusinessValidator<ChargeLinkDto>,
-                BusinessValidator<ChargeLinkDto>>();
+            serviceCollection.AddScoped<IBusinessValidator<ChargeLinkOperationDto>,
+                BusinessValidator<ChargeLinkOperationDto>>();
             serviceCollection.AddScoped<IAvailableChargeLinksReceiptValidationErrorFactory,
                 AvailableChargeLinksReceiptValidationErrorFactory>();
-            serviceCollection.AddScoped<ICimValidationErrorTextFactory<ChargeLinksCommand, ChargeLinkDto>,
+            serviceCollection.AddScoped<ICimValidationErrorTextFactory<ChargeLinksCommand, ChargeLinkOperationDto>,
                 ChargeLinksCimValidationErrorTextFactory>();
 
             serviceCollection.AddMessaging()

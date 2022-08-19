@@ -18,11 +18,11 @@ using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
 {
-    public class ChargeLinksCommand : CommandBase
+    public class ChargeLinksCommand : ChargeCommand
     {
         public ChargeLinksCommand(
             DocumentDto document,
-            IReadOnlyCollection<ChargeLinkDto> operations)
+            IReadOnlyCollection<ChargeLinkOperationDto> operations)
         {
             Document = document;
             Operations = operations;
@@ -30,6 +30,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
 
         public override DocumentDto Document { get; }
 
-        public override IReadOnlyCollection<ChargeLinkDto> Operations { get; }
+        public override IReadOnlyCollection<ChargeLinkOperationDto> Operations { get; }
     }
 }

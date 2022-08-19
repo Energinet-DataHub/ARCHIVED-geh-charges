@@ -18,7 +18,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 {
     public interface IInputValidationRulesFactory<in TOperation>
-        where TOperation : OperationBase
+        where TOperation : ChargeOperation
     {
         IValidationRuleSet CreateRules(TOperation operation, DocumentDto document);
     }

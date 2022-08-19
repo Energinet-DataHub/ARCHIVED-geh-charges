@@ -18,10 +18,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands
 {
-    // Non-nullable member is uninitialized is ignored
-    // Only properties which is allowed to be null is nullable
-    // ChargeCommand integrity is null checked by ChargeCommandNullChecker
-    public class ChargeInformationCommand : CommandBase
+    public class ChargeInformationCommand : ChargeCommand
     {
         public ChargeInformationCommand(DocumentDto document, IReadOnlyCollection<ChargeInformationOperationDto> operations)
         {

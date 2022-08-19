@@ -20,14 +20,14 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents
 {
     public class ChargeLinksAcceptedEvent : InternalEventBase
     {
-        public ChargeLinksCommand ChargeLinksCommand { get; }
+        public ChargeLinksCommand Command { get; }
 
         public ChargeLinksAcceptedEvent(
-            ChargeLinksCommand chargeLinksCommand,
+            ChargeLinksCommand command,
             Instant publishedTime)
             : base(publishedTime)
         {
-            ChargeLinksCommand = chargeLinksCommand;
+            Command = command;
         }
     }
 }

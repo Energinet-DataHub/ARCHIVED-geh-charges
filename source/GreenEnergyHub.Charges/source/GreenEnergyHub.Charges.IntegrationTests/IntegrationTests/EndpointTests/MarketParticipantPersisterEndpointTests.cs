@@ -64,7 +64,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 var role = MarketParticipantRoleMapper.Map(businessRoleCode);
                 var (message, parentId) = CreateServiceBusMessage(gln, actorStatus, new List<BusinessRoleCode> { businessRoleCode });
 
-                await using var context = Fixture.DatabaseManager.CreateDbContext();
+                await using var context = Fixture.ChargesDatabaseManager.CreateDbContext();
 
                 // Act
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(

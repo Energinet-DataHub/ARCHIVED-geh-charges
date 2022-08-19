@@ -61,7 +61,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinksDat
 
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
 
-            var expectedLinks = acceptedEvent.ChargeLinksCommand.Operations.ToList();
+            var expectedLinks = acceptedEvent.Command.Operations.ToList();
 
             // Act
             var actual = await sut.CreateAsync(acceptedEvent);
@@ -73,7 +73,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinksDat
                 actual[i].Should().NotContainNullEnumerable();
                 actual[i].RecipientId.Should().Be(gridAccessProvider.MarketParticipantId);
                 actual[i].RecipientRole.Should().Be(gridAccessProvider.BusinessProcessRole);
-                actual[i].BusinessReasonCode.Should().Be(acceptedEvent.ChargeLinksCommand.Document.BusinessReasonCode);
+                actual[i].BusinessReasonCode.Should().Be(acceptedEvent.Command.Document.BusinessReasonCode);
                 actual[i].RequestDateTime.Should().Be(now);
                 actual[i].ChargeId.Should().Be(expectedLinks[i].SenderProvidedChargeId);
                 actual[i].ChargeOwner.Should().Be(expectedLinks[i].ChargeOwner);

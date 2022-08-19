@@ -12,21 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Linq;
+using GreenEnergyHub.Charges.Application.Charges.Events;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.InputValidation.ValidationRules
+namespace GreenEnergyHub.Charges.Application.Charges.Factories
 {
-    public class ChargeIdRequiredValidationRule : IValidationRule
+    public class ChargePriceOperationsRejectedEventFactory : IChargePriceOperationsRejectedEventFactory
     {
-        private readonly ChargeInformationOperationDto _chargeInformationOperationDto;
-
-        public ChargeIdRequiredValidationRule(ChargeInformationOperationDto chargeInformationOperationDto)
+        public ChargePriceOperationsRejectedEvent Create(
+            ChargePriceCommand command,
+            ValidationResult validationResult)
         {
-            _chargeInformationOperationDto = chargeInformationOperationDto;
+            var validationErrors = validationResult.InvalidRules.Select(ValidationErrorFactory.Create());
+            return new ChargePriceOperationsRejectedEvent(command, validationErrors);
         }
-
-        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeIdRequiredValidation;
-
-        public bool IsValid => !string.IsNullOrWhiteSpace(_chargeInformationOperationDto.SenderProvidedChargeId);
     }
 }
