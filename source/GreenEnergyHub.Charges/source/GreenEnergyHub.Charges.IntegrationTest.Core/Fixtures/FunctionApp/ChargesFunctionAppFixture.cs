@@ -41,7 +41,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
         {
             AzuriteManager = new AzuriteManager();
             IntegrationTestConfiguration = new IntegrationTestConfiguration();
-            DatabaseManager = new ChargesDatabaseManager();
+            ChargesDatabaseManager = new ChargesDatabaseManager();
+            MessageHubDatabaseManager = new MessageHubDatabaseManager(ChargesDatabaseManager.ConnectionString);
             AuthorizationConfiguration = AuthorizationConfigurationData.CreateAuthorizationConfiguration();
             AuthorizedTestActors = CreateAuthorizedTestActors(AuthorizationConfiguration.B2CTestClients);
             AsSystemOperator = SetTestActor(AuthorizationConfigurationData.SystemOperator);
@@ -50,7 +51,9 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
                 IntegrationTestConfiguration.ServiceBusConnectionString, TestLogger);
         }
 
-        public ChargesDatabaseManager DatabaseManager { get; }
+        public ChargesDatabaseManager ChargesDatabaseManager { get; }
+
+        public MessageHubDatabaseManager MessageHubDatabaseManager { get; }
 
         [NotNull]
         public ServiceBusTestListener? ChargeCreatedListener { get; private set; }
@@ -60,6 +63,9 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
 
         [NotNull]
         public MessageHubSimulation? MessageHubMock { get; private set; }
+
+        [NotNull]
+        public TopicResource? ChargePriceCommandReceivedTopic { get; private set; }
 
         [NotNull]
         public TopicResource? ChargeLinksReceivedTopic { get; private set; }
@@ -177,7 +183,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
                 .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.CommandReceivedSubscriptionName)
                 .CreateAsync();
 
-            var priceCommandReceivedTopic = await ServiceBusResourceProvider
+            ChargePriceCommandReceivedTopic = await ServiceBusResourceProvider
                 .BuildTopic(ChargesServiceBusResourceNames.PriceCommandReceivedTopicKey)
                 .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.PriceCommandReceivedTopicName)
                 .AddSubscription(ChargesServiceBusResourceNames.PriceCommandReceivedSubscriptionName)
@@ -259,16 +265,16 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             await SetUpRequestResponseLoggingAsync();
 
             // => Database
-            await DatabaseManager.CreateDatabaseAsync();
+            await ChargesDatabaseManager.CreateDatabaseAsync();
 
             // Overwrites the setting so the function app uses the database we have control of in the test
             Environment.SetEnvironmentVariable(
                 EnvironmentSettingNames.ChargeDbConnectionString,
-                DatabaseManager.ConnectionString);
+                ChargesDatabaseManager.ConnectionString);
 
             // Only market participant registry thing being tested is connectivity
             // - so for now we just cheat and provide another connection string
-            var marketParticipantRegistryConnectionString = DatabaseManager.ConnectionString;
+            var marketParticipantRegistryConnectionString = ChargesDatabaseManager.ConnectionString;
             Environment.SetEnvironmentVariable(
                 EnvironmentSettingNames.MarketParticipantRegistryDbConnectionString,
                 marketParticipantRegistryConnectionString);
@@ -298,7 +304,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             await ServiceBusResourceProvider.DisposeAsync();
 
             // => Database
-            await DatabaseManager.DeleteDatabaseAsync();
+            await ChargesDatabaseManager.DeleteDatabaseAsync();
         }
 
         private IEnumerable<AuthorizedTestActor> CreateAuthorizedTestActors(

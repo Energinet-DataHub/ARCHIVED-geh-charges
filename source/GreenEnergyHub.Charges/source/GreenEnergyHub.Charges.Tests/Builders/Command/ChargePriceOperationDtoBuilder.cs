@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.TestCore;
@@ -122,6 +123,11 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
 
         public ChargePriceOperationDto Build()
         {
+            if (!_points.Any())
+            {
+                _points.Add(new Point(1.00m, _startDateTime));
+            }
+
             return new ChargePriceOperationDto(
                 _operationId,
                 _chargeType,

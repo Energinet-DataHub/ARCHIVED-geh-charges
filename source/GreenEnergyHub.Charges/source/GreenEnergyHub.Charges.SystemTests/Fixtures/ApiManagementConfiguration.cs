@@ -14,7 +14,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.Configuration;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Authorization;
 using Microsoft.Extensions.Configuration;

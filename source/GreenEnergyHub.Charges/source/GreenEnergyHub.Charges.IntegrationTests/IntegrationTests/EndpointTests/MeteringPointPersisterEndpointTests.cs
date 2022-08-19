@@ -83,7 +83,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
             {
                 // Arrange
                 var meteringPointId = RandomString(20);
-                await using var chargeDbContext = Fixture.DatabaseManager.CreateDbContext();
+                await using var chargeDbContext = Fixture.ChargesDatabaseManager.CreateDbContext();
                 var message = CreateServiceBusMessage(
                     chargeDbContext,
                     meteringPointId,
@@ -98,7 +98,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
                 // Assert
                 await FunctionAsserts.AssertHasExecutedAsync(Fixture.HostManager, nameof(MeteringPointPersisterEndpoint)).ConfigureAwait(false);
-                await using var context = Fixture.DatabaseManager.CreateDbContext();
+                await using var context = Fixture.ChargesDatabaseManager.CreateDbContext();
                 var meteringPoint = context.MeteringPoints.SingleOrDefault(x => x.MeteringPointId == meteringPointId);
                 meteringPoint.Should().NotBeNull();
 

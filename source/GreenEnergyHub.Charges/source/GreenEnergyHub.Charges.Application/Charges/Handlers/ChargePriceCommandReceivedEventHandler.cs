@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application.Charges.Factories;
 using GreenEnergyHub.Charges.Application.Charges.Services;
-using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
@@ -26,18 +27,18 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         private readonly IChargePriceEventHandler _chargePriceEventHandler;
         private readonly IDocumentValidator _documentValidator;
         private readonly IChargePriceRejectionService _chargePriceRejectionService;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IChargePriceOperationsRejectedEventFactory _chargePriceOperationsRejectedEventFactory;
 
         public ChargePriceCommandReceivedEventHandler(
             IChargePriceEventHandler chargePriceEventHandler,
             IDocumentValidator documentValidator,
             IChargePriceRejectionService chargePriceRejectionService,
-            IUnitOfWork unitOfWork)
+            IChargePriceOperationsRejectedEventFactory chargePriceOperationsRejectedEventFactory)
         {
             _chargePriceEventHandler = chargePriceEventHandler;
             _documentValidator = documentValidator;
             _chargePriceRejectionService = chargePriceRejectionService;
-            _unitOfWork = unitOfWork;
+            _chargePriceOperationsRejectedEventFactory = chargePriceOperationsRejectedEventFactory;
         }
 
         public async Task HandleAsync(ChargePriceCommandReceivedEvent chargePriceCommandReceivedEvent)
@@ -46,14 +47,23 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 .ValidateAsync(chargePriceCommandReceivedEvent.Command).ConfigureAwait(false);
             if (documentValidationResult.IsFailed)
             {
-                await _chargePriceRejectionService
-                    .SaveRejectionsAsync(chargePriceCommandReceivedEvent.Command.Operations.ToList(), documentValidationResult)
-                    .ConfigureAwait(false);
-                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+                RaiseRejectedEvent(chargePriceCommandReceivedEvent, documentValidationResult.InvalidRules.ToList());
                 return;
             }
 
             await _chargePriceEventHandler.HandleAsync(chargePriceCommandReceivedEvent).ConfigureAwait(false);
+        }
+
+        private void RaiseRejectedEvent(
+            ChargePriceCommandReceivedEvent commandReceivedEvent,
+            List<IValidationRuleContainer> rejectionRules)
+        {
+            var validationResult = ValidationResult.CreateFailure(rejectionRules);
+
+            var rejectedEvent = _chargePriceOperationsRejectedEventFactory.Create(
+                commandReceivedEvent.Command, validationResult);
+
+            _chargePriceRejectionService.SaveRejections(rejectedEvent);
         }
     }
 }

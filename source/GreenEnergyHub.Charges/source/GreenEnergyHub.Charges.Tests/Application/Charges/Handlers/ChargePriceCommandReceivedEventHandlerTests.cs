@@ -13,9 +13,10 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
+using GreenEnergyHub.Charges.Application.Charges.Events;
+using GreenEnergyHub.Charges.Application.Charges.Factories;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Application.Charges.Services;
 using GreenEnergyHub.Charges.Application.Persistence;
@@ -61,25 +62,26 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             [Frozen] Mock<IDocumentValidator> documentValidator,
             [Frozen] Mock<IChargePriceEventHandler> chargePriceEventHandler,
             [Frozen] Mock<IChargePriceRejectionService> chargePriceRejectionService,
-            [Frozen] Mock<IUnitOfWork> unitOfWork,
-            ChargePriceCommandReceivedEventHandler sut)
+            [Frozen] Mock<IChargePriceOperationsRejectedEventFactory> chargePriceOperationRejectedEventFactory,
+            ChargePriceCommandReceivedEventHandler sut,
+            ChargePriceOperationsRejectedEvent chargePriceRejectedEvent)
         {
             // Arrange
             documentValidator.Setup(v =>
                     v.ValidateAsync(It.IsAny<ChargePriceCommand>()))
                 .ReturnsAsync(ValidationResult.CreateFailure(GetFailedValidationResult()));
 
+            chargePriceOperationRejectedEventFactory.Setup(c =>
+                    c.Create(It.IsAny<ChargePriceCommand>(), It.IsAny<ValidationResult>()))
+                .Returns(chargePriceRejectedEvent);
+
             // Act
             await sut.HandleAsync(chargePriceCommandReceivedEvent);
 
             // Assert
             chargePriceRejectionService.Verify(
-                x => x.SaveRejectionsAsync(
-                    chargePriceCommandReceivedEvent.Command.Operations.ToList(),
-                    It.IsAny<ValidationResult>()),
-                Times.Once);
+                x => x.SaveRejections(It.IsAny<ChargePriceOperationsRejectedEvent>()), Times.Once);
             chargePriceEventHandler.Verify(x => x.HandleAsync(chargePriceCommandReceivedEvent), Times.Never);
-            unitOfWork.Verify(x => x.SaveChangesAsync(), Times.Once);
         }
 
         private static List<IValidationRuleContainer> GetFailedValidationResult()

@@ -12,21 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Application.Charges.Events;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Services
 {
     public interface IChargePriceRejectionService
     {
-        Task SaveRejectionsAsync(
-            List<ChargePriceOperationDto> rejectedPriceOperations,
-            ValidationResult documentValidationResult);
-
-        Task SaveRejectionsAsync(
-            List<ChargePriceOperationDto> operationsToBeRejected,
-            List<IValidationRuleContainer> documentValidationResult);
+        /// <summary>
+        /// Saves rejected operations to Outbox
+        /// </summary>
+        /// <param name="chargePriceOperationsRejectedEvent"></param>
+        public void SaveRejections(ChargePriceOperationsRejectedEvent chargePriceOperationsRejectedEvent);
     }
 }
