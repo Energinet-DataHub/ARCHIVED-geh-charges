@@ -165,10 +165,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         public const string ResolutionRequiredErrorText =
             "Resolution is missing for charge with ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} owned by {{ChargeOwner}}.";
 
-        [ErrorMessageFor(ValidationRuleIdentifier.ChargeOwnerHasLengthLimits)]
-        public const string ChargeOwnerTextLengthRuleText =
-            "Charge owner for type {{ChargeType}} with charge ID {{DocumentSenderProvidedChargeId}} must have a length of 13 or 16.";
-
         [ErrorMessageFor(ValidationRuleIdentifier.TransparentInvoicingIsRequired)]
         public const string TransparentInvoicingIsRequiredErrorText =
             "Transparent invoicing must be set when calling with BusinessReasonCode D18 for charge type {{ChargeType}} with charge ID {{DocumentSenderProvidedChargeId}} owned by {{ChargeOwner}}.";
