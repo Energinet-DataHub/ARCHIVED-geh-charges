@@ -150,7 +150,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             await Assert.ThrowsAsync<ArgumentNullException>(() => sut.HandleAsync(receivedEvent!));
         }
 
-        [Theory]
+        // TODO: Reenable or redo test as soon as chargeprice flow is storing prices
+        [Theory(Skip = "Disabled until Charge Price flow is fully functional as the current SupportOldFlowAsync stores the price series")]
         [InlineAutoMoqData]
         public async Task HandleAsync_WhenPriceSeriesWithResolutionPT1H_StorePriceSeries(
             [Frozen] Mock<IChargeIdentifierFactory> chargeIdentifierFactory,
