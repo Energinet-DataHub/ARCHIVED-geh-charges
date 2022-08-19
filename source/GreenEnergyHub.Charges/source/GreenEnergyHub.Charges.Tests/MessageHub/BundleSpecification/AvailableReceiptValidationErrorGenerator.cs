@@ -15,8 +15,9 @@
 using System.Collections.Generic;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
+using GreenEnergyHub.Charges.TestCore.TestHelpers;
 
-namespace GreenEnergyHub.Charges.TestCore.TestHelpers
+namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification
 {
     public static class AvailableReceiptValidationErrorGenerator
     {
