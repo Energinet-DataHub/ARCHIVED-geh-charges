@@ -69,6 +69,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         {
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
+            // The previous test adds data to the database that we need to remove.
+            await RemoveAllExistingOutboxMessages(chargesDatabaseWriteContext);
             await AddOutboxMessageToContextAndSaveAsync(chargesDatabaseWriteContext, outboxMessageBuilder, InstantHelper.GetYesterdayAtMidnightUtc(), true);
             await AddOutboxMessageToContextAndSaveAsync(chargesDatabaseWriteContext, outboxMessageBuilder, InstantHelper.GetTomorrowAtMidnightUtc(), false);
             var expected = await AddOutboxMessageToContextAndSaveAsync(chargesDatabaseWriteContext, outboxMessageBuilder, InstantHelper.GetTodayAtMidnightUtc(), false);
@@ -80,6 +82,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
             // Assert
             actual.Should().BeEquivalentTo(expected);
+        }
+
+        private static async Task RemoveAllExistingOutboxMessages(ChargesDatabaseContext chargesDatabaseWriteContext)
+        {
+            var oldOutboxMessages = chargesDatabaseWriteContext.OutboxMessages;
+            chargesDatabaseWriteContext.OutboxMessages.RemoveRange(oldOutboxMessages);
+            await chargesDatabaseWriteContext.SaveChangesAsync();
         }
 
         private static async Task<OutboxMessage> AddOutboxMessageToContextAndSaveAsync(
