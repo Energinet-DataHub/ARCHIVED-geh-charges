@@ -374,6 +374,30 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 peekResult.Should().ContainMatch("*<cim:code>E90</cim:code>*");
             }
 
+            [Fact]
+            public async Task When_BundledChargePriceRequestForSameCharge_FirstOperationFailsInputValidation_Then_ARejectionIsAlsoSentForSubsequentOperation()
+            {
+                // Arrange
+                var (request, correlationId) =
+                    Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
+                        EndpointUrl, ChargeDocument.BundledTariffPriceSeriesFirstOperationInvalidMaximumPrice);
+
+                // Act
+                var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
+                var peekResult = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 2);
+                foreach (var result in peekResult)
+                {
+                    result.Should().Contain("RejectRequestChangeOfPriceList_MarketDocument");
+                    result.Should().Contain("<cim:process.processType>D08</cim:process.processType>");
+                }
+
+                peekResult[0]!.Should().Contain("<cim:code>E90</cim:code>");
+                peekResult[1]!.Should().Contain("<cim:code>D14</cim:code>");
+            }
+
             // TODO: Reenable test as soon as business rules are validated
             [Fact(Skip = "Not able to validate business rules, because UpdatePrices is commented out and therefore rules are never validated.")]
             public async Task When_ChargePriceRequestFailsBusinessValidation_Then_ARejectionShouldBeSent()
@@ -425,7 +449,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 hostLogSnapshot.Any(x => x.Contains("1 notifications was persisted.")).Should().BeTrue();
             }
 
-            [Fact(Skip = "This should be enabled, when businessvalidations is done")]
+            [Fact]
             public async Task When_SendingChargePriceRequestForExistingTariff_Then_AConfirmationIsShouldBeSent()
             {
                 // Arrange
