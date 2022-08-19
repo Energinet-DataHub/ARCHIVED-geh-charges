@@ -425,7 +425,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 hostLogSnapshot.Any(x => x.Contains("1 notifications was persisted.")).Should().BeTrue();
             }
 
-            [Fact]
+            [Fact(Skip = "This should be enabled, when businessvalidations is done")]
             public async Task When_SendingChargePriceRequestForExistingTariff_Then_AConfirmationIsShouldBeSent()
             {
                 // Arrange
