@@ -50,15 +50,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             {
                 // Arrange
                 var meteringPointId = "571313180000000029";
-                var request = CreateServiceBusMessage(
-                    meteringPointId,
-                    Fixture.CreateLinkReplyQueue.Name,
-                    out var correlationId,
-                    out var parentId);
+                var (message, correlationId) = CreateServiceBusMessage(meteringPointId, Fixture.CreateLinkReplyQueue.Name);
 
                 // Act
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
-                    () => Fixture.CreateLinkRequestQueue.SenderClient.SendMessageAsync(request), correlationId, parentId);
+                    () => Fixture.CreateLinkRequestQueue.SenderClient.SendMessageAsync(message), correlationId);
 
                 // Assert
                 await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId);
@@ -71,11 +67,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 string meteringPointId)
             {
                 // Arrange
-                var request = CreateServiceBusMessage(
-                    meteringPointId,
-                    Fixture.CreateLinkReplyQueue.Name,
-                    out var correlationId,
-                    out var parentId);
+                var (message, correlationId) = CreateServiceBusMessage(meteringPointId, Fixture.CreateLinkReplyQueue.Name);
 
                 using var isMessageReceived = await Fixture.CreateLinkReplyQueueListener
                     .ListenForMessageAsync(correlationId)
@@ -83,7 +75,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
                 // Act
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
-                    () => Fixture.CreateLinkRequestQueue.SenderClient.SendMessageAsync(request), correlationId, parentId);
+                    () => Fixture.CreateLinkRequestQueue.SenderClient.SendMessageAsync(message), correlationId);
 
                 // Assert
                 var isMessageReceivedByQueue = isMessageReceived.MessageAwaiter!.Wait(TimeSpan.FromSeconds(60));
@@ -101,12 +93,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 return Task.CompletedTask;
             }
 
-            private static ServiceBusMessage CreateServiceBusMessage(
-                string meteringPointId, string replyToQueueName, out string correlationId, out string parentId)
+            private static (ServiceBusMessage ServiceBusMessage, string CorrelationId) CreateServiceBusMessage(
+                string meteringPointId, string replyToQueueName)
             {
-                correlationId = CorrelationIdGenerator.Create();
+                var correlationId = CorrelationIdGenerator.Create();
                 var message = new CreateDefaultChargeLinks { MeteringPointId = meteringPointId };
-                parentId = $"00-{correlationId}-b7ad6b7169203331-01";
 
                 var actor = JsonSerializer.Serialize(new Actor(
                     SeededData.GridAreaLink.Provider8100000000030.Id,
@@ -125,7 +116,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                         new KeyValuePair<string, object>(Constants.ServiceBusIdentityKey, actor),
                     },
                 };
-                return serviceBusMessage;
+                return (serviceBusMessage, correlationId);
             }
         }
     }

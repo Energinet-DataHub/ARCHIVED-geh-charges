@@ -73,9 +73,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
                 // Act
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
-                    () => Fixture.ChargePriceCommandReceivedTopic.SenderClient.SendMessageAsync(message),
-                    correlationId,
-                    $"00-{correlationId}-b7ad6b7169203331-00");
+                    () => Fixture.ChargePriceCommandReceivedTopic.SenderClient.SendMessageAsync(message), correlationId);
 
                 await FunctionAsserts.AssertHasExecutedAsync(
                     Fixture.HostManager, nameof(ChargePriceCommandReceiverEndpoint));
@@ -97,7 +95,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
             private static ServiceBusMessage CreateServiceBusMessage(ChargePriceCommandReceivedEvent command, string correlationId)
             {
-                var applicationProperties = new Dictionary<string, string>();
+                var applicationProperties = new Dictionary<string, string> { { "OperationCorrelationId", correlationId } };
                 var message = ServiceBusMessageGenerator.CreateWithJsonContent(
                     command, applicationProperties, correlationId);
 

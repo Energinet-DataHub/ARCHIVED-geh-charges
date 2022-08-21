@@ -34,10 +34,10 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
         /// This code is based on our FunctionTelemetryScopeMiddleware.
         /// </summary>
         public static async Task WrappedOperationWithTelemetryDependencyInformationAsync(
-            Func<Task> action, string correlationId, string parentId)
+            Func<Task> action, string correlationId)
         {
             var telemetryClient = Create();
-            var operation = telemetryClient.StartOperation<DependencyTelemetry>("MyTest", correlationId, parentId);
+            var operation = telemetryClient.StartOperation<DependencyTelemetry>("MyTest", correlationId);
             operation.Telemetry.Type = "Function";
             try
             {
