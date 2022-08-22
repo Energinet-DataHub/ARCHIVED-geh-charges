@@ -353,13 +353,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 peekResult.Should().ContainMatch("*<cim:code>E55</cim:code>*");
             }
 
-            [Fact]
-            public async Task When_ChargePriceRequestFailsInputValidation_Then_ARejectionShouldBeSent()
+            [Theory]
+            [InlineData(ChargeDocument.TariffPriceSeriesInvalidMaximumPrice)]
+            [InlineData(ChargeDocument.TariffPriceSeriesInvalidNumberOfPoints)]
+            public async Task When_ChargePriceRequestFailsInputValidation_Then_ARejectionShouldBeSent(string testFilePath)
             {
                 // Arrange
                 var (request, correlationId) =
                     Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
-                        EndpointUrl, ChargeDocument.TariffPriceSeriesInvalidMaximumPrice);
+                        EndpointUrl, testFilePath);
 
                 // Act
                 var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
