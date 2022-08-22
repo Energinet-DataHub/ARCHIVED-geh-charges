@@ -25,7 +25,7 @@ limitations under the License.
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="6.0.2" />
-    <PackageReference Include="AspNetCore.HealthChecks.AzureServiceBus" Version="6.0.3" />
+    <PackageReference Include="AspNetCore.HealthChecks.AzureServiceBus" Version="6.0.4" />
     <PackageReference Include="Energinet.DataHub.Core.App.Common.Security" Version="4.1.0" />
     <PackageReference Include="Energinet.DataHub.Core.App.FunctionApp" Version="5.0.0" />
     <PackageReference Include="Energinet.DataHub.Core.Logging" Version="2.2.0" />
