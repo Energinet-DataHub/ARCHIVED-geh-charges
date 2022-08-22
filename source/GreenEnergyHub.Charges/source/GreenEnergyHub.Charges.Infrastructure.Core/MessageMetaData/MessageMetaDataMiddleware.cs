@@ -42,7 +42,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData
             await next(context).ConfigureAwait(false);
         }
 
-        private string? GetSessionId(FunctionContext context)
+        private static string? GetSessionId(FunctionContext context)
         {
             context.BindingContext.BindingData.TryGetValue("SessionId", out var session);
             return (string?)session;
