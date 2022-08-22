@@ -45,5 +45,6 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.Charges
         public const string PriceSeriesExistingTariff = "TestFiles/Charges/PriceSeries/PriceSeriesExistingTariff.xml";
         public const string PriceSeriesExistingSubscription = "TestFiles/Charges/PriceSeries/PriceSeriesExistingSubscription.xml";
         public const string PriceSeriesTariffFromSystemOperator = "TestFiles/Charges/PriceSeries/PriceSeriesTariffFromSystemOperator.xml";
+        public const string BundledTariffPriceSeriesFirstOperationInvalidMaximumPrice = "TestFiles/Charges/PriceSeries/BundledTariffPriceSeriesFirstOperationInvalidMaximumPrice.xml";
     }
 }

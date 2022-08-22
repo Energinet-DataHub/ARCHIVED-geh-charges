@@ -14,8 +14,8 @@
 
 using System;
 using System.Reflection;
-using DbUp;
-using DbUp.Engine;
+using DbUp.Reboot;
+using DbUp.Reboot.Engine;
 
 namespace GreenEnergyHub.Charges.ApplyDBMigrationsApp.Helpers
 {

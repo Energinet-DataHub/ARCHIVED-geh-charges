@@ -13,6 +13,8 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
+using Azure.Identity;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.Configuration;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Authorization;
 using Microsoft.Extensions.Configuration;
@@ -38,7 +40,7 @@ namespace GreenEnergyHub.Charges.SystemTests.Fixtures
             Environment = Root.GetValue<string>("ENVIRONMENT_SHORT") +
                           Root.GetValue<string>("ENVIRONMENT_INSTANCE");
 
-            var clientName = Root.GetValue<string>("CLIENT_NAME");
+            var clientNames = new List<string> { Root.GetValue<string>("CLIENT_NAME") };
 
             var keyVaultUrl = Root.GetValue<string>(azureSecretsKeyVaultUrlKey);
             KeyVaultConfiguration = BuildKeyVaultConfigurationRoot(keyVaultUrl);
@@ -47,7 +49,7 @@ namespace GreenEnergyHub.Charges.SystemTests.Fixtures
                 BuildApiManagementEnvironmentSecretName(Environment, "host-url"));
 
             AuthorizationConfiguration = new AuthorizationConfiguration(
-                clientName, Environment, systemtestLocalSettingsJson, azureSecretsKeyVaultUrlKey);
+                clientNames, Environment, systemtestLocalSettingsJson, azureSecretsKeyVaultUrlKey);
         }
 
         /// <summary>
@@ -75,8 +77,10 @@ namespace GreenEnergyHub.Charges.SystemTests.Fixtures
         /// </summary>
         private static IConfigurationRoot BuildKeyVaultConfigurationRoot(string keyVaultUrl)
         {
+            var credential = new ChainedTokenCredential(new VisualStudioCodeCredential(), new AzureCliCredential());
+
             return new ConfigurationBuilder()
-                .AddAuthenticatedAzureKeyVault(keyVaultUrl)
+                .AddAzureKeyVault(new Uri(keyVaultUrl), credential)
                 .Build();
         }
 

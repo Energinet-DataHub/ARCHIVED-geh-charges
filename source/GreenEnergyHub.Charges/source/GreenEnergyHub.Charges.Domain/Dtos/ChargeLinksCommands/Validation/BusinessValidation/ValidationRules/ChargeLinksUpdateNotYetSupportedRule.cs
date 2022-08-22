@@ -30,11 +30,11 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Busi
         private readonly IReadOnlyCollection<ChargeLink> _existingChargeLinks;
 
         public ChargeLinksUpdateNotYetSupportedRule(
-            ChargeLinkDto chargeLinkDto,
+            ChargeLinkOperationDto operation,
             IReadOnlyCollection<ChargeLink> existingChargeLinks)
         {
-            _newLinkStartDate = chargeLinkDto.StartDateTime;
-            _newLinkEndDate = chargeLinkDto.EndDateTime;
+            _newLinkStartDate = operation.StartDateTime;
+            _newLinkEndDate = operation.EndDateTime;
             _existingChargeLinks = existingChargeLinks;
         }
 

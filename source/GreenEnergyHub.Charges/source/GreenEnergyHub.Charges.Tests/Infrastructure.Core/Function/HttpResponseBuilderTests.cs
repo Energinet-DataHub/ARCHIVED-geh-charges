@@ -20,12 +20,12 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using Energinet.DataHub.Core.SchemaValidation;
 using Energinet.DataHub.Core.SchemaValidation.Errors;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.TestCore.TestHelpers;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Moq;
@@ -42,7 +42,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Function
         public void CreateAcceptedResponse_Creates_AcceptedResponseWithCorrelationId(FunctionContext executionContext)
         {
             // Arrange
-            var correlationContext = CreateCorrelationContext();
+            var correlationContext = CorrelationContextGenerator.Create();
             var sut = new HttpResponseBuilder(correlationContext);
             var httpRequestData = CreateHttpRequestData(executionContext, "GET", "test", "http://localhost?Id=1");
 
@@ -62,7 +62,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Function
             FunctionContext executionContext)
         {
             // Arrange
-            var correlationContext = CreateCorrelationContext();
+            var correlationContext = CorrelationContextGenerator.Create();
             var sut = new HttpResponseBuilder(correlationContext);
             var httpRequestData = CreateHttpRequestData(executionContext, "GET", "error", "http://localhost?Id=2");
             var schemaValidationError = new SchemaValidationError(1, 1, "some error");
@@ -86,7 +86,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Function
             // Arrange
             const string expectedCode = "B2B-008";
             const string expectedMessage = "The sender organization provided in the request body does not match the organization in the bearer token.";
-            var correlationContext = CreateCorrelationContext();
+            var correlationContext = CorrelationContextGenerator.Create();
             var sut = new HttpResponseBuilder(correlationContext);
             var httpRequestData = CreateHttpRequestData(executionContext, "POST", "test", "http://localhost?Id=3");
 
@@ -104,14 +104,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Function
             var xmlMessage = XDocument.Load(responseData.Body);
             xmlMessage.Element("Code")?.Value.Should().Be(expectedCode);
             xmlMessage.Element("Message")?.Value.Should().Be(expectedMessage);
-        }
-
-        private static ICorrelationContext CreateCorrelationContext()
-        {
-            var correlationContext = new CorrelationContext();
-            correlationContext.SetParentId("parentId");
-            correlationContext.SetId("id");
-            return correlationContext;
         }
 
         private static HttpRequestData CreateHttpRequestData(

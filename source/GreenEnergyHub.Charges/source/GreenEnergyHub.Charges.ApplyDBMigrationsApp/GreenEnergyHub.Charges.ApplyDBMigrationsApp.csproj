@@ -22,7 +22,6 @@ limitations under the License.
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="dbup-sqlserver" Version="4.6.0" />
       <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.435">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -48,6 +47,7 @@ limitations under the License.
       <EmbeddedResource Include="Scripts\Model\202206301048 Migrate AvailableData ActorId to reference MarketParticipant ActorId.sql" />
       <EmbeddedResource Include="Scripts\Model\202207051352 Remove Foreign Keys on DataAvailable tables.sql" />
       <EmbeddedResource Include="Scripts\Model\202207271035 Remove position from ChargePoint.sql" />
+      <EmbeddedResource Include="Scripts\Model\202208101116 Create OutboxMessage table.sql" />
       <EmbeddedResource Include="Scripts\Seed\202201261740 Add default charges owner.sql" />
       <EmbeddedResource Include="Scripts\Seed\202201261741 Add default charges.sql" />
       <EmbeddedResource Include="Scripts\Seed\202201261742 Add default charge links.sql" />
@@ -57,6 +57,10 @@ limitations under the License.
       <EmbeddedResource Include="Scripts\Test\202207251045 Add test price data.sql" />
       <EmbeddedResource Include="Scripts\Test\202206030818 Add test data to gridarealinks.sql" />
       <EmbeddedResource Include="Scripts\Model\202207151427 Increase OriginalOperationId length.sql" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="DbUp.Reboot.SqlServer" Version="1.2.0" />
     </ItemGroup>
 
 </Project>

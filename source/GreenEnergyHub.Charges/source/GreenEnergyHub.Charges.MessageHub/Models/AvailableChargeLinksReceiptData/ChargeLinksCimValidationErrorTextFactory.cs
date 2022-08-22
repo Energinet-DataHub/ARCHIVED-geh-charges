@@ -21,7 +21,7 @@ using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData
 {
-    public class ChargeLinksCimValidationErrorTextFactory : ICimValidationErrorTextFactory<ChargeLinksCommand, ChargeLinkDto>
+    public class ChargeLinksCimValidationErrorTextFactory : ICimValidationErrorTextFactory<ChargeLinksCommand, ChargeLinkOperationDto>
     {
         private readonly ICimValidationErrorTextProvider _cimValidationErrorTextProvider;
         private readonly ILogger _logger;
@@ -37,24 +37,24 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
         public string Create(
             ValidationError validationError,
             ChargeLinksCommand command,
-            ChargeLinkDto chargeLinkDto)
+            ChargeLinkOperationDto chargeLinkOperationDto)
         {
-            return GetMergedErrorMessage(validationError, chargeLinkDto);
+            return GetMergedErrorMessage(validationError, chargeLinkOperationDto);
         }
 
         private string GetMergedErrorMessage(
             ValidationError validationError,
-            ChargeLinkDto chargeLinkDto)
+            ChargeLinkOperationDto chargeLinkOperationDto)
         {
             var errorTextTemplate = _cimValidationErrorTextProvider
                 .GetCimValidationErrorText(validationError.ValidationRuleIdentifier);
 
-            return MergeErrorText(errorTextTemplate, chargeLinkDto, validationError.TriggeredBy);
+            return MergeErrorText(errorTextTemplate, chargeLinkOperationDto, validationError.TriggeredBy);
         }
 
         private string MergeErrorText(
             string errorTextTemplate,
-            ChargeLinkDto chargeLinkDto,
+            ChargeLinkOperationDto chargeLinkOperationDto,
             string? triggeredBy)
         {
             var tokens = CimValidationErrorTextTokenMatcher.GetTokens(errorTextTemplate);
@@ -63,7 +63,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
 
             foreach (var token in tokens)
             {
-                var data = GetDataForToken(token, chargeLinkDto, triggeredBy);
+                var data = GetDataForToken(token, chargeLinkOperationDto, triggeredBy);
                 mergedErrorText = mergedErrorText.Replace("{{" + token + "}}", data);
             }
 
@@ -72,26 +72,26 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
 
         private string GetDataForToken(
             CimValidationErrorTextToken token,
-            ChargeLinkDto chargeLinkDto,
+            ChargeLinkOperationDto chargeLinkOperationDto,
             string? triggeredBy)
         {
             // Please keep sorted by CimValidationErrorTextToken
             return token switch
             {
                 CimValidationErrorTextToken.ChargeLinkStartDate =>
-                    chargeLinkDto.StartDateTime.ToString(),
+                    chargeLinkOperationDto.StartDateTime.ToString(),
                 CimValidationErrorTextToken.ChargeOperationId =>
-                    chargeLinkDto.OperationId,
+                    chargeLinkOperationDto.OperationId,
                 CimValidationErrorTextToken.ChargeOwner =>
-                    chargeLinkDto.ChargeOwner,
+                    chargeLinkOperationDto.ChargeOwner,
                 CimValidationErrorTextToken.ChargeStartDateTime =>
-                    chargeLinkDto.StartDateTime.ToString(),
+                    chargeLinkOperationDto.StartDateTime.ToString(),
                 CimValidationErrorTextToken.ChargeType =>
-                    chargeLinkDto.ChargeType.ToString(),
+                    chargeLinkOperationDto.ChargeType.ToString(),
                 CimValidationErrorTextToken.DocumentSenderProvidedChargeId =>
-                    chargeLinkDto.SenderProvidedChargeId,
+                    chargeLinkOperationDto.SenderProvidedChargeId,
                 CimValidationErrorTextToken.MeteringPointId =>
-                    chargeLinkDto.MeteringPointId,
+                    chargeLinkOperationDto.MeteringPointId,
                 CimValidationErrorTextToken.TriggeredByOperationId =>
                     GetOperationIdFromTriggeredBy(triggeredBy),
                 _ => CimValidationErrorTextTemplateMessages.Unknown,
