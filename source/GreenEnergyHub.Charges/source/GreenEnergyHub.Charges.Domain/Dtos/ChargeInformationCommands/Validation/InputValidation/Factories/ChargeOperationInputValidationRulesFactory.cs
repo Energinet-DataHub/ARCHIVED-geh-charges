@@ -55,7 +55,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
                 CreateRuleContainer(new ChargeOwnerIsRequiredValidationRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
                 CreateRuleContainer(new ChargeTypeIsKnownValidationRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
                 CreateRuleContainer(new StartDateTimeRequiredValidationRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
-                CreateRuleContainer(new ChargeOwnerTextLengthRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
                 CreateRuleContainer(new ChargeOwnerMustMatchSenderRule(document.Sender.MarketParticipantId, chargeInformationOperationDto.ChargeOwner), chargeInformationOperationDto.OperationId),
             };
 
