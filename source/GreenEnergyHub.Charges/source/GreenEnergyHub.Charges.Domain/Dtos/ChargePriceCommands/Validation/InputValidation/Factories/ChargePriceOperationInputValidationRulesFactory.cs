@@ -16,12 +16,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using GreenEnergyHub.Charges.Core.DateTime;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation.InputValidation;
-using MaximumPriceRule = GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.ValidationRules.MaximumPriceRule;
-using NumberOfPointsMatchTimeIntervalAndResolutionRule = GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.ValidationRules.NumberOfPointsMatchTimeIntervalAndResolutionRule;
-using PriceListMustStartAndStopAtMidnightValidationRule = GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.ValidationRules.PriceListMustStartAndStopAtMidnightValidationRule;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.Factories
 {
@@ -45,17 +43,19 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.Inpu
         {
             var rules = new List<IValidationRuleContainer>
             {
-                CreateRuleContainer(new MaximumPriceRule(operation), operation.OperationId),
                 CreateRuleContainer(new ChargeIdLengthValidationRule(operation), operation.OperationId),
                 CreateRuleContainer(new ChargeIdRequiredValidationRule(operation), operation.OperationId),
                 CreateRuleContainer(new ChargeOperationIdRequiredRule(operation), operation.OperationId),
                 CreateRuleContainer(new ChargeOperationIdLengthValidationRule(operation), operation.OperationId),
                 CreateRuleContainer(new ChargeOwnerIsRequiredValidationRule(operation), operation.OperationId),
-                CreateRuleContainer(new ChargeTypeIsKnownValidationRule(operation), operation.OperationId),
-                CreateRuleContainer(new StartDateTimeRequiredValidationRule(operation), operation.OperationId),
                 CreateRuleContainer(new ChargeOwnerMustMatchSenderRule(document.Sender.MarketParticipantId, operation.ChargeOwner), operation.OperationId),
+                CreateRuleContainer(new ChargeTypeIsKnownValidationRule(operation), operation.OperationId),
+                CreateRuleContainer(new ChargeTypeTariffPriceCountRule(operation), operation.OperationId),
+                CreateRuleContainer(new ChargePriceMaximumDigitsAndDecimalsRule(operation), operation.OperationId),
+                CreateRuleContainer(new MaximumPriceRule(operation), operation.OperationId),
                 CreateRuleContainer(new NumberOfPointsMatchTimeIntervalAndResolutionRule(operation), operation.OperationId),
                 CreateRuleContainer(new PriceListMustStartAndStopAtMidnightValidationRule(_zonedDateTimeService, operation), operation.OperationId),
+                CreateRuleContainer(new StartDateTimeRequiredValidationRule(operation), operation.OperationId),
             };
 
             return rules;
