@@ -16,7 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Factories;
-using GreenEnergyHub.Charges.Application.Charges.Services;
+using GreenEnergyHub.Charges.Application.Common.Services;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
@@ -26,19 +26,19 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
     {
         private readonly IChargePriceEventHandler _chargePriceEventHandler;
         private readonly IDocumentValidator _documentValidator;
-        private readonly IChargePriceRejectionService _chargePriceRejectionService;
-        private readonly IChargePriceOperationsRejectedEventFactory _chargePriceOperationsRejectedEventFactory;
+        private readonly IDomainEventPublisher _domainEventPublisher;
+        private readonly IChargeEventFactory _chargeEventFactory;
 
         public ChargePriceCommandReceivedEventHandler(
             IChargePriceEventHandler chargePriceEventHandler,
             IDocumentValidator documentValidator,
-            IChargePriceRejectionService chargePriceRejectionService,
-            IChargePriceOperationsRejectedEventFactory chargePriceOperationsRejectedEventFactory)
+            IDomainEventPublisher domainEventPublisher,
+            IChargeEventFactory chargeEventFactory)
         {
             _chargePriceEventHandler = chargePriceEventHandler;
             _documentValidator = documentValidator;
-            _chargePriceRejectionService = chargePriceRejectionService;
-            _chargePriceOperationsRejectedEventFactory = chargePriceOperationsRejectedEventFactory;
+            _domainEventPublisher = domainEventPublisher;
+            _chargeEventFactory = chargeEventFactory;
         }
 
         public async Task HandleAsync(ChargePriceCommandReceivedEvent chargePriceCommandReceivedEvent)
@@ -56,14 +56,16 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 
         private void RaiseRejectedEvent(
             ChargePriceCommandReceivedEvent commandReceivedEvent,
-            List<IValidationRuleContainer> rejectionRules)
+            IList<IValidationRuleContainer> rejectionRules)
         {
             var validationResult = ValidationResult.CreateFailure(rejectionRules);
 
-            var rejectedEvent = _chargePriceOperationsRejectedEventFactory.Create(
-                commandReceivedEvent.Command, validationResult);
+            var rejectedEvent = _chargeEventFactory.CreatePriceRejectedEvent(
+                commandReceivedEvent.Command.Document,
+                commandReceivedEvent.Command.Operations,
+                validationResult);
 
-            _chargePriceRejectionService.SaveRejections(rejectedEvent);
+            _domainEventPublisher.Publish(rejectedEvent);
         }
     }
 }

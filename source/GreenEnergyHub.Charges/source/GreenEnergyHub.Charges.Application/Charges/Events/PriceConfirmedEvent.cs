@@ -13,13 +13,21 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
-namespace GreenEnergyHub.Charges.Application.Charges.Services
+namespace GreenEnergyHub.Charges.Application.Charges.Events
 {
-    public interface IChargePriceNotificationService
+    public class PriceConfirmedEvent
     {
-        Task SaveNotificationsAsync(List<ChargePriceOperationDto> priceOperationNotifications);
+        public PriceConfirmedEvent(DocumentDto document, IReadOnlyCollection<ChargePriceOperationDto> operations)
+        {
+            Document = document;
+            Operations = operations;
+        }
+
+        public DocumentDto Document { get; }
+
+        public IReadOnlyCollection<ChargePriceOperationDto> Operations { get; }
     }
 }

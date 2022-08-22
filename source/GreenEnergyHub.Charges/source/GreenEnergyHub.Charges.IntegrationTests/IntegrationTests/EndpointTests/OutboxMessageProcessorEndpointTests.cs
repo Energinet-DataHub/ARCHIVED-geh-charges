@@ -95,7 +95,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
             [Theory]
             [InlineAutoMoqData]
             public async Task GivenOutputProcessorEndpoint_WhenFailsFirstAttempt_ThenRetryNext(
-                Mock<IAvailableDataNotifier<AvailableChargeReceiptData, ChargePriceOperationsRejectedEvent>> availableDataNotifier,
+                Mock<IAvailableDataNotifier<AvailableChargeReceiptData, PriceRejectedEvent>> availableDataNotifier,
                 [Frozen] Mock<IClock> clock,
                 JsonSerializer jsonSerializer,
                 TimerInfo timerInfo,
@@ -123,14 +123,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 // Act & Assert
                 availableDataNotifier
                     .Setup(adn =>
-                        adn.NotifyAsync(It.IsAny<ChargePriceOperationsRejectedEvent>()))
+                        adn.NotifyAsync(It.IsAny<PriceRejectedEvent>()))
                     .ThrowsAsync(new Exception());
 
                 await Assert.ThrowsAsync<Exception>(() => sut.RunAsync(timerInfo));
 
                 availableDataNotifier
                     .Setup(adn =>
-                        adn.NotifyAsync(It.IsAny<ChargePriceOperationsRejectedEvent>()))
+                        adn.NotifyAsync(It.IsAny<PriceRejectedEvent>()))
                     .Returns(Task.CompletedTask);
 
                 await sut.RunAsync(timerInfo);
@@ -139,7 +139,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 outboxMessage.ProcessedDate.Should().Be(now);
             }
 
-            private static ChargePriceOperationsRejectedEvent CreateChargePriceOperationsRejectedEvent()
+            private static PriceRejectedEvent CreateChargePriceOperationsRejectedEvent()
             {
                 var chargePriceOperation =
                     new ChargePriceOperationDtoBuilder().WithChargePriceOperationId(Guid.NewGuid().ToString()).Build();
@@ -148,12 +148,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 return operationsRejectedEvent;
             }
 
-            private static async Task<OutboxMessage> PersistToOutboxMessage(ChargesDatabaseContext context, ChargePriceOperationsRejectedEvent operationsRejectedEvent)
+            private static async Task<OutboxMessage> PersistToOutboxMessage(ChargesDatabaseContext context, PriceRejectedEvent rejectedEvent)
             {
                 var correlationContext = CorrelationContextGenerator.Create();
                 var jsonSerializer = new JsonSerializer();
                 var outboxMessageFactory = new OutboxMessageFactory(jsonSerializer, SystemClock.Instance, correlationContext);
-                var outboxMessage = outboxMessageFactory.CreateFrom(operationsRejectedEvent);
+                var outboxMessage = outboxMessageFactory.CreateFrom(rejectedEvent);
                 context.OutboxMessages.Add(outboxMessage);
                 await context.SaveChangesAsync();
                 return outboxMessage;

@@ -12,21 +12,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using System.Linq;
 using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Factories
 {
-    public class ChargePriceOperationsRejectedEventFactory : IChargePriceOperationsRejectedEventFactory
+    public class ChargeEventFactory : IChargeEventFactory
     {
-        public ChargePriceOperationsRejectedEvent Create(
-            ChargePriceCommand command,
+        public PriceRejectedEvent CreatePriceRejectedEvent(
+            DocumentDto document,
+            IReadOnlyCollection<ChargePriceOperationDto> operations,
             ValidationResult validationResult)
         {
-            var validationErrors = validationResult.InvalidRules.Select(ValidationErrorFactory.Create());
-            return new ChargePriceOperationsRejectedEvent(command, validationErrors);
+            var validationErrors = validationResult.InvalidRules
+                .Select(ValidationErrorFactory.Create());
+            return new PriceRejectedEvent(document, operations, validationErrors);
+        }
+
+        public PriceConfirmedEvent CreatePriceConfirmedEvent(
+            DocumentDto document,
+            IReadOnlyCollection<ChargePriceOperationDto> operations)
+        {
+            return new PriceConfirmedEvent(document, operations);
         }
     }
 }

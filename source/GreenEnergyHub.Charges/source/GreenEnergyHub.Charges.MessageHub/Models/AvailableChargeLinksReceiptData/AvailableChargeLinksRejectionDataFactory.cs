@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application.Common.Helpers;
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksRejectionEvents;
@@ -52,8 +53,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
         public override async Task<IReadOnlyList<AvailableChargeLinksReceiptData>> CreateAsync(
             ChargeLinksRejectedEvent input)
         {
-            LogValidationErrors(input);
-
             if (AvailableDataFactoryHelper.ShouldSkipAvailableData(input.Command))
                 return new List<AvailableChargeLinksReceiptData>();
 
@@ -80,15 +79,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
                 .ToList();
         }
 
-        private void LogValidationErrors(ChargeLinksRejectedEvent rejectedEvent)
-        {
-            var errorMessage = ValidationErrorLogMessageBuilder.BuildErrorMessage(
-                rejectedEvent.Command.Document,
-                rejectedEvent.ValidationErrors);
-
-            _logger.LogError("ValidationErrors for {ErrorMessage}", errorMessage);
-        }
-
         private List<AvailableReceiptValidationError> GetReasons(
             ChargeLinksRejectedEvent input,
             ChargeLinkOperationDto chargeLinkOperationDto)
@@ -97,7 +87,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
                 .ValidationErrors
                 .Where(ve => ve.OperationId == chargeLinkOperationDto.OperationId || string.IsNullOrWhiteSpace(ve.OperationId))
                 .Select(validationError => _availableChargeLinksReceiptValidationErrorFactory
-                    .Create(validationError, input.Command, chargeLinkOperationDto))
+                    .Create(validationError, input.Command.Document, chargeLinkOperationDto))
                 .ToList();
         }
     }

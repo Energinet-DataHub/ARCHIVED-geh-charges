@@ -15,14 +15,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Factories;
-using GreenEnergyHub.Charges.Application.Charges.Services;
+using GreenEnergyHub.Charges.Application.Common.Helpers;
+using GreenEnergyHub.Charges.Application.Common.Services;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Charges.Exceptions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using Microsoft.Extensions.Logging;
@@ -34,29 +37,23 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         private readonly IChargeRepository _chargeRepository;
         private readonly IMarketParticipantRepository _marketParticipantRepository;
         private readonly IInputValidator<ChargePriceOperationDto> _inputValidator;
-        private readonly IChargePriceConfirmationService _chargePriceConfirmationService;
-        private readonly IChargePriceRejectionService _chargePriceRejectionService;
-        private readonly IChargePriceNotificationService _chargePriceNotificationService;
+        private readonly IDomainEventPublisher _domainEventPublisher;
         private readonly ILogger _logger;
-        private readonly IChargePriceOperationsRejectedEventFactory _chargePriceOperationsRejectedEventFactory;
+        private readonly IChargeEventFactory _chargeEventFactory;
 
         public ChargePriceEventHandler(
             IChargeRepository chargeRepository,
             IMarketParticipantRepository marketParticipantRepository,
             IInputValidator<ChargePriceOperationDto> inputValidator,
-            IChargePriceConfirmationService chargePriceConfirmationService,
-            IChargePriceRejectionService chargePriceRejectionService,
-            IChargePriceNotificationService chargePriceNotificationService,
+            IDomainEventPublisher domainEventPublisher,
             ILoggerFactory loggerFactory,
-            IChargePriceOperationsRejectedEventFactory chargePriceOperationsRejectedEventFactory)
+            IChargeEventFactory chargeEventFactory)
         {
             _chargeRepository = chargeRepository;
             _marketParticipantRepository = marketParticipantRepository;
             _inputValidator = inputValidator;
-            _chargePriceConfirmationService = chargePriceConfirmationService;
-            _chargePriceRejectionService = chargePriceRejectionService;
-            _chargePriceNotificationService = chargePriceNotificationService;
-            _chargePriceOperationsRejectedEventFactory = chargePriceOperationsRejectedEventFactory;
+            _domainEventPublisher = domainEventPublisher;
+            _chargeEventFactory = chargeEventFactory;
             _logger = loggerFactory.CreateLogger(nameof(ChargePriceEventHandler));
         }
 
@@ -112,9 +109,8 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 operationsToBeConfirmed.Add(operation);
             }
 
-            await _chargePriceConfirmationService.SaveConfirmationsAsync(operationsToBeConfirmed).ConfigureAwait(false);
-            RaiseRejectedEvent(commandReceivedEvent, operationsToBeRejected, rejectionRules);
-            await _chargePriceNotificationService.SaveNotificationsAsync(operationsToBeConfirmed).ConfigureAwait(false);
+            HandleConfirmations(document, operationsToBeConfirmed);
+            HandleRejections(operationsToBeRejected, rejectionRules, document);
 
             // With story 1411 below log entry will be replaced with 'await _unitOfWork.SaveChangesAsync().ConfigureAwait(false)';
             foreach (var operation in operationsToBeConfirmed)
@@ -123,19 +119,54 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             }
         }
 
+        private void HandleConfirmations(
+            DocumentDto document,
+            IReadOnlyCollection<ChargePriceOperationDto> operationsToBeConfirmed)
+        {
+            if (!operationsToBeConfirmed.Any()) return;
+            RaiseConfirmedEvent(document, operationsToBeConfirmed);
+        }
+
+        private void HandleRejections(
+            IReadOnlyCollection<ChargePriceOperationDto> operationsToBeRejected,
+            IList<IValidationRuleContainer> rejectionRules,
+            DocumentDto document)
+        {
+            ArgumentNullException.ThrowIfNull(operationsToBeRejected);
+            ArgumentNullException.ThrowIfNull(rejectionRules);
+
+            if (!operationsToBeRejected.Any()) return;
+
+            var errorMessage = ValidationErrorLogMessageBuilder.BuildErrorMessage(document, rejectionRules);
+            _logger.LogError("ValidationErrors for {ErrorMessage}", errorMessage);
+
+            RaiseRejectedEvent(document, operationsToBeRejected, rejectionRules);
+        }
+
+        private void RaiseConfirmedEvent(
+            DocumentDto document,
+            IReadOnlyCollection<ChargePriceOperationDto> operationsToBeConfirmed)
+        {
+            if (!operationsToBeConfirmed.Any()) return;
+            var confirmedEvent = _chargeEventFactory.CreatePriceConfirmedEvent(document, operationsToBeConfirmed);
+            _domainEventPublisher.Publish(confirmedEvent);
+        }
+
         private void RaiseRejectedEvent(
-            ChargePriceCommandReceivedEvent commandReceivedEvent,
-            List<ChargePriceOperationDto> operationsToBeRejected,
-            List<IValidationRuleContainer> rejectionRules)
+            DocumentDto document,
+            IReadOnlyCollection<ChargePriceOperationDto> operationsToBeRejected,
+            IList<IValidationRuleContainer> rejectionRules)
         {
             if (!operationsToBeRejected.Any()) return;
-            var chargePriceCommand = new ChargePriceCommand(commandReceivedEvent.Command.Document, operationsToBeRejected);
+
             var validationResult = ValidationResult.CreateFailure(rejectionRules);
 
-            var rejectedEvent = _chargePriceOperationsRejectedEventFactory.Create(
-                chargePriceCommand, validationResult);
+            var rejectedEvent = _chargeEventFactory.CreatePriceRejectedEvent(
+                document,
+                operationsToBeRejected,
+                validationResult);
 
-            _chargePriceRejectionService.SaveRejections(rejectedEvent);
+            _domainEventPublisher.Publish(rejectedEvent);
         }
 
         private static void CollectRejectionRules(
@@ -144,6 +175,8 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             IEnumerable<ChargePriceOperationDto> operationsToBeRejected,
             ChargePriceOperationDto operation)
         {
+            ArgumentNullException.ThrowIfNull(operation);
+
             rejectionRules.AddRange(validationResult.InvalidRules);
             rejectionRules.AddRange(operationsToBeRejected.Skip(1)
                 .Select(subsequentOperation =>

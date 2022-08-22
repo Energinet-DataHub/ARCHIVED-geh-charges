@@ -14,21 +14,26 @@
 
 using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Events
 {
-    public class ChargePriceOperationsRejectedEvent
+    public class PriceRejectedEvent
     {
-        public ChargePriceOperationsRejectedEvent(
-            ChargePriceCommand command,
+        public PriceRejectedEvent(
+            DocumentDto document,
+            IReadOnlyCollection<ChargePriceOperationDto> operations,
             IEnumerable<ValidationError> validationErrors)
         {
-            Command = command;
+            Document = document;
+            Operations = operations;
             ValidationErrors = validationErrors;
         }
 
-        public ChargePriceCommand Command { get; }
+        public DocumentDto Document { get; }
+
+        public IReadOnlyCollection<ChargePriceOperationDto> Operations { get; }
 
         public IEnumerable<ValidationError> ValidationErrors { get; }
     }

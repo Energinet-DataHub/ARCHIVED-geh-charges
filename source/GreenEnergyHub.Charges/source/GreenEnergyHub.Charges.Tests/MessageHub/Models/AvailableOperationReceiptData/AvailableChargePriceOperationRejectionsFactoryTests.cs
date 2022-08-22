@@ -68,7 +68,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
                 .ToList();
 
             var chargePriceOperationsRejectedEvent =
-                new ChargePriceOperationsRejectedEvent(chargePriceCommand, validationErrors);
+                new PriceRejectedEvent(chargePriceCommand, validationErrors);
 
             // Act
             var actualList = await sut.CreateAsync(chargePriceOperationsRejectedEvent);

@@ -28,7 +28,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Outbox
     [UnitTest]
     public class OutboxMessageFactoryTests
     {
-        private static readonly string _operationsRejectedEventType = typeof(ChargePriceOperationsRejectedEvent).FullName!;
+        private static readonly string _operationsRejectedEventType = typeof(PriceRejectedEvent).FullName!;
 
         [Theory]
         [AutoDomainData]

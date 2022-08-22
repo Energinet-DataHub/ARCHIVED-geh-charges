@@ -20,7 +20,7 @@ using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Application.Charges.Factories;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
-using GreenEnergyHub.Charges.Application.Charges.Services;
+using GreenEnergyHub.Charges.Application.Common.Services;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
@@ -51,11 +51,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             [Frozen] Mock<IChargeRepository> chargeRepository,
             TestMarketParticipant sender,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            [Frozen] Mock<IChargePriceRejectionService> chargePriceRejectionService,
-            [Frozen] Mock<IChargePriceConfirmationService> chargePriceConfirmationService,
-            [Frozen] Mock<IChargePriceNotificationService> chargePriceNotificationService,
+            [Frozen] Mock<IDomainEventPublisher> domainEventPublisher,
             [Frozen] Mock<ILoggerFactory> loggerFactory,
-            [Frozen] Mock<IChargePriceOperationsRejectedEventFactory> chargePriceOperationsRejectedEventFactory,
+            [Frozen] Mock<IChargeEventFactory> chargePriceOperationsRejectedEventFactory,
             Mock<ILogger> logger,
             ChargeBuilder chargeBuilder)
         {
@@ -81,9 +79,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                 chargeRepository.Object,
                 marketParticipantRepository.Object,
                 inputValidator.Object,
-                chargePriceConfirmationService.Object,
-                chargePriceRejectionService.Object,
-                chargePriceNotificationService.Object,
+                domainEventPublisher.Object,
                 loggerFactory.Object,
                 chargePriceOperationsRejectedEventFactory.Object);
 
@@ -91,12 +87,12 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             await sut.HandleAsync(receivedEvent);
 
             // Assert
-            chargePriceRejectionService.Verify(
-                x => x.SaveRejections(It.IsAny<ChargePriceOperationsRejectedEvent>()),
+            domainEventPublisher.Verify(
+                x => x.Publish(It.IsAny<PriceRejectedEvent>()),
                 Times.Never);
-            chargePriceConfirmationService.Verify(
+            domainEventPublisher.Verify(
                 x =>
-                    x.SaveConfirmationsAsync(It.Is<List<ChargePriceOperationDto>>(y => y.Count == 1)),
+                    x.Publish(It.Is<List<PriceConfirmedEvent>>(y => y.Count == 1)),
                 Times.Once);
 
             var expectedMessage = $"At this point, price(s) will be persisted for operation with Id {receivedEvent.Command.Operations.First().OperationId}";
@@ -110,12 +106,12 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             [Frozen] Mock<IInputValidator<ChargePriceOperationDto>> inputValidator,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            [Frozen] Mock<IChargePriceRejectionService> chargePriceRejectionService,
-            [Frozen] Mock<IChargePriceOperationsRejectedEventFactory> chargePriceOperationsRejectedEventFactory,
+            [Frozen] Mock<IDomainEventPublisher> chargePriceRejectionService,
+            [Frozen] Mock<IChargeEventFactory> chargeEventFactory,
             TestMarketParticipant sender,
             ChargeBuilder chargeBuilder,
             ChargePriceCommandReceivedEvent receivedEvent,
-            ChargePriceOperationsRejectedEvent chargePriceRejectedEvent,
+            PriceRejectedEvent priceRejectedEvent,
             ChargePriceEventHandler sut)
         {
             // Arrange
@@ -123,9 +119,12 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             inputValidator.Setup(v => v.Validate(It.IsAny<ChargePriceOperationDto>(), It.IsAny<DocumentDto>())).Returns(validationResult);
             var charge = chargeBuilder.Build();
 
-            chargePriceOperationsRejectedEventFactory
-                .Setup(c => c.Create(It.IsAny<ChargePriceCommand>(), It.IsAny<ValidationResult>()))
-                .Returns(chargePriceRejectedEvent);
+            chargeEventFactory
+                .Setup(c => c.CreatePriceRejectedEvent(
+                    It.IsAny<DocumentDto>(),
+                    It.IsAny<List<ChargePriceOperationDto>>(),
+                    It.IsAny<ValidationResult>()))
+                .Returns(priceRejectedEvent);
             SetupChargeRepository(chargeRepository, charge);
             SetupMarketParticipantRepository(marketParticipantRepository, sender);
             SetupChargeIdentifierFactoryMock(chargeIdentifierFactory);
@@ -135,7 +134,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 
             // Assert
             chargePriceRejectionService.Verify(
-                x => x.SaveRejections(It.IsAny<ChargePriceOperationsRejectedEvent>()), Times.Once);
+                x => x.Publish(It.IsAny<PriceRejectedEvent>()), Times.Once);
         }
 
         [Theory]

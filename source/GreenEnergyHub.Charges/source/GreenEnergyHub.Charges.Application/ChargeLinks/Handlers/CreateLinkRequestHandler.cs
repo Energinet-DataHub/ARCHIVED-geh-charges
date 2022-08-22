@@ -71,7 +71,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
                 var errorMessage = $"Could not handle request CreateDefaultChargeLinks on metering point with id: " +
                                    $"{createDefaultChargeLinksRequest.MeteringPointId} and " +
                                    $"correlation id: {_correlationIdContext.Id}";
-                _logger.LogError("The reply queue name was absent or empty: {errorMessage}", errorMessage);
+                _logger.LogError("The reply queue name was absent or empty: {ErrorMessage}", errorMessage);
 
                 throw new ArgumentNullException(nameof(_messageMetaDataContext.ReplyTo));
             }

@@ -15,28 +15,33 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application.Common.Helpers;
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
 {
     public class ChargeCommandReceiptService : IChargeCommandReceiptService
     {
+        private readonly ILogger _logger;
         private readonly IChargeCommandRejectedEventFactory _chargeCommandRejectedEventFactory;
         private readonly IChargeCommandAcceptedEventFactory _chargeCommandAcceptedEventFactory;
         private readonly IMessageDispatcher<ChargeCommandRejectedEvent> _rejectedMessageDispatcher;
         private readonly IMessageDispatcher<ChargeCommandAcceptedEvent> _acceptedMessageDispatcher;
 
         public ChargeCommandReceiptService(
+            ILogger logger,
             IChargeCommandRejectedEventFactory chargeCommandRejectedEventFactory,
             IChargeCommandAcceptedEventFactory chargeCommandAcceptedEventFactory,
             IMessageDispatcher<ChargeCommandRejectedEvent> rejectedMessageDispatcher,
             IMessageDispatcher<ChargeCommandAcceptedEvent> acceptedMessageDispatcher)
         {
+            _logger = logger;
             _chargeCommandRejectedEventFactory = chargeCommandRejectedEventFactory;
             _chargeCommandAcceptedEventFactory = chargeCommandAcceptedEventFactory;
             _rejectedMessageDispatcher = rejectedMessageDispatcher;
@@ -66,6 +71,8 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
             DocumentDto document,
             IList<IValidationRuleContainer> rejectionRules)
         {
+            LogValidationErrors(document, rejectionRules);
+
             if (operationsToBeRejected.Any())
             {
                 await RejectAsync(
@@ -89,6 +96,15 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
                 await AcceptAsync(
                     new ChargeInformationCommand(document, operationsToBeConfirmed)).ConfigureAwait(false);
             }
+        }
+
+        private void LogValidationErrors(DocumentDto document, IEnumerable<IValidationRuleContainer> invalidRules)
+        {
+            var errorMessage = ValidationErrorLogMessageBuilder.BuildErrorMessage(
+                document,
+                invalidRules);
+
+            _logger.LogError("ValidationErrors for {ErrorMessage}", errorMessage);
         }
     }
 }

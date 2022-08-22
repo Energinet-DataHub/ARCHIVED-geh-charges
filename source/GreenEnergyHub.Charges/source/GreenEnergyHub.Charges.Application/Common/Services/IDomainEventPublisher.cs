@@ -12,16 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Application.Charges.Events;
-
-namespace GreenEnergyHub.Charges.Application.Charges.Services
+namespace GreenEnergyHub.Charges.Application.Common.Services
 {
-    public interface IChargePriceRejectionService
+    public interface IDomainEventPublisher
     {
         /// <summary>
-        /// Saves rejected operations to Outbox
+        /// Publisher for raising domain events
         /// </summary>
-        /// <param name="chargePriceOperationsRejectedEvent"></param>
-        public void SaveRejections(ChargePriceOperationsRejectedEvent chargePriceOperationsRejectedEvent);
+        /// <param name="domainEvent"></param>
+        public void Publish<T>(T domainEvent);
     }
 }

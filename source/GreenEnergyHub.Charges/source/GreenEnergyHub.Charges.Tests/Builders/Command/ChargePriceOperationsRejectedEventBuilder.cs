@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             return this;
         }
 
-        public ChargePriceOperationsRejectedEvent Build()
+        public PriceRejectedEvent Build()
         {
             if (!_validationErrors.Any())
             {
@@ -56,7 +56,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
                 };
             }
 
-            return new ChargePriceOperationsRejectedEvent(_chargePriceCommand, _validationErrors);
+            return new PriceRejectedEvent(_chargePriceCommand, _validationErrors);
         }
     }
 }

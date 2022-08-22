@@ -15,6 +15,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Application.Common.Helpers;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.BusinessValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.MessageHub.Models.Shared;
@@ -34,14 +37,20 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared
         {
             // Arrange
             var documentDto = BuildDocumentDto(documentDtoBuilder);
-            var validationErrors = BuildValidationErrors();
+            var invalidRules = new List<IValidationRuleContainer>()
+            {
+                new OperationValidationRuleContainer(
+                    new ChargeMustExistRule(null), "operationId1"),
+                new OperationValidationRuleContainer(
+                    new PreviousOperationsMustBeValidRule("operationId1"), "operationId2"),
+            };
 
             var expected = $"document Id {documentDto.Id} with Type {documentDto.Type} from GLN {documentDto.Sender.MarketParticipantId}:\r\n" +
-                            $"- ValidationRuleIdentifier: {validationErrors.First().ValidationRuleIdentifier}\r\n" +
-                            $"- ValidationRuleIdentifier: {validationErrors.Last().ValidationRuleIdentifier}\r\n";
+                            $"- ValidationRuleIdentifier: {invalidRules.First().ValidationRule.ValidationRuleIdentifier}\r\n" +
+                            $"- ValidationRuleIdentifier: {invalidRules.Last().ValidationRule.ValidationRuleIdentifier}\r\n";
 
             // Act
-            var actual = ValidationErrorLogMessageBuilder.BuildErrorMessage(documentDto, validationErrors);
+            var actual = ValidationErrorLogMessageBuilder.BuildErrorMessage(documentDto, invalidRules);
 
             // Assert
             actual.Should().Be(expected);
@@ -59,16 +68,6 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared
                 })
                 .Build();
             return documentDto;
-        }
-
-        private static List<ValidationError> BuildValidationErrors()
-        {
-            var validationErrors = new List<ValidationError>
-            {
-                new(ValidationRuleIdentifier.ChargeDoesNotExist, null, null),
-                new(ValidationRuleIdentifier.SubsequentBundleOperationsFail, null, null),
-            };
-            return validationErrors;
         }
     }
 }

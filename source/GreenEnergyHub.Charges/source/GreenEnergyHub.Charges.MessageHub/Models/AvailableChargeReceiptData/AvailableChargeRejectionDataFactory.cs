@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application.Common.Helpers;
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
@@ -49,8 +50,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 
         public override async Task<IReadOnlyList<AvailableChargeReceiptData>> CreateAsync(ChargeCommandRejectedEvent input)
         {
-            LogValidationErrors(input);
-
             // The original sender is the recipient of the receipt
             var recipient = await GetRecipientAsync(input.Command.Document.Sender).ConfigureAwait(false);
             var sender = await GetSenderAsync().ConfigureAwait(false);
@@ -74,15 +73,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                 .ToList();
         }
 
-        private void LogValidationErrors(ChargeCommandRejectedEvent rejectedEvent)
-        {
-            var errorMessage = ValidationErrorLogMessageBuilder.BuildErrorMessage(
-                rejectedEvent.Command.Document,
-                rejectedEvent.ValidationErrors);
-
-            _logger.LogError("ValidationErrors for {ErrorMessage}", errorMessage);
-        }
-
         private List<AvailableReceiptValidationError> GetReasons(
             ChargeCommandRejectedEvent input,
             ChargeInformationOperationDto chargeInformationOperationDto)
@@ -91,7 +81,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                 .ValidationErrors
                 .Where(ve => ve.OperationId == chargeInformationOperationDto.OperationId || string.IsNullOrWhiteSpace(ve.OperationId))
                 .Select(validationError => _availableChargeReceiptValidationErrorFactory
-                    .Create(validationError, input.Command, chargeInformationOperationDto))
+                    .Create(validationError, input.Command.Document, chargeInformationOperationDto))
                 .ToList();
         }
     }

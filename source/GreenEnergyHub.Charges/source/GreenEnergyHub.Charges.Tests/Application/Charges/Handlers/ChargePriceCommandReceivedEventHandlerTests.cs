@@ -18,10 +18,11 @@ using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Application.Charges.Factories;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
-using GreenEnergyHub.Charges.Application.Charges.Services;
+using GreenEnergyHub.Charges.Application.Common.Services;
 using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.TestHelpers;
 using Moq;
@@ -61,26 +62,29 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             ChargePriceCommandReceivedEvent chargePriceCommandReceivedEvent,
             [Frozen] Mock<IDocumentValidator> documentValidator,
             [Frozen] Mock<IChargePriceEventHandler> chargePriceEventHandler,
-            [Frozen] Mock<IChargePriceRejectionService> chargePriceRejectionService,
-            [Frozen] Mock<IChargePriceOperationsRejectedEventFactory> chargePriceOperationRejectedEventFactory,
+            [Frozen] Mock<IDomainEventPublisher> chargePriceRejectionService,
+            [Frozen] Mock<IChargeEventFactory> chargeEventFactory,
             ChargePriceCommandReceivedEventHandler sut,
-            ChargePriceOperationsRejectedEvent chargePriceRejectedEvent)
+            PriceRejectedEvent priceRejectedEvent)
         {
             // Arrange
             documentValidator.Setup(v =>
                     v.ValidateAsync(It.IsAny<ChargePriceCommand>()))
                 .ReturnsAsync(ValidationResult.CreateFailure(GetFailedValidationResult()));
 
-            chargePriceOperationRejectedEventFactory.Setup(c =>
-                    c.Create(It.IsAny<ChargePriceCommand>(), It.IsAny<ValidationResult>()))
-                .Returns(chargePriceRejectedEvent);
+            chargeEventFactory
+                .Setup(c => c.CreatePriceRejectedEvent(
+                    It.IsAny<DocumentDto>(),
+                    It.IsAny<List<ChargePriceOperationDto>>(),
+                    It.IsAny<ValidationResult>()))
+                .Returns(priceRejectedEvent);
 
             // Act
             await sut.HandleAsync(chargePriceCommandReceivedEvent);
 
             // Assert
             chargePriceRejectionService.Verify(
-                x => x.SaveRejections(It.IsAny<ChargePriceOperationsRejectedEvent>()), Times.Once);
+                x => x.Publish(It.IsAny<PriceRejectedEvent>()), Times.Once);
             chargePriceEventHandler.Verify(x => x.HandleAsync(chargePriceCommandReceivedEvent), Times.Never);
         }
 
