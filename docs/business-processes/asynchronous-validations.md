@@ -40,7 +40,6 @@ The following asynchronous validation rules are currently implemented in the cha
 |VR.910|Charge name is mandatory|E0H|All|N/A|
 |VR.911|Charge description is mandatory|E0H|All|N/A|
 |VR.912|Resolution is mandatory|E0H|All|N/A|
-|VR.913|When sending a charge (D08 or D18) the Charge Owner must have a length between 13 (GLN) and 16 (EIC).|E86|All|N/A|
 |VR.915|Transparent invoicing is mandatory|E0H|All|N/A|
 |VR.916|Tax indicator is mandatory|E0H|All|N/A|
 |VR.917|Termination date and effective date must have the same value|E0H|All|N/A|

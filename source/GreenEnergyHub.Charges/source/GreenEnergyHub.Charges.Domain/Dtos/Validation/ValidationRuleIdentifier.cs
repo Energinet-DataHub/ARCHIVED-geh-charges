@@ -50,7 +50,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
         ChargeNameIsRequired = 38, // VR910 / E0H
         ChargeDescriptionIsRequired = 39, // VR911 / E0H
         ResolutionIsRequired = 40, // VR912 / E0H
-        ChargeOwnerHasLengthLimits = 41, // VR913 / E86
         TransparentInvoicingIsRequired = 42, // VR915 / E0H
         TaxIndicatorIsRequired = 43, // VR916 / E0H
         TerminationDateMustMatchEffectiveDate = 44, // VR917 / E0H
