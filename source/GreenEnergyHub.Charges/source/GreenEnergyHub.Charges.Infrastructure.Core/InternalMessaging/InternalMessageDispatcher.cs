@@ -15,11 +15,11 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.JsonSerialization;
 using Energinet.DataHub.Core.Messaging.Transport;
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factories;
-using GreenEnergyHub.Json;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.InternalMessaging
 {
