@@ -17,7 +17,7 @@ resource "null_resource" "create_hosts_as_db_readers_and_writers" {
   }
 
   provisioner "local-exec" {
-    command     = "${path.module}/scripts/create-hosts-as-readers-and-writers.ps1 -sqlServerName \"${var.sql_server_name}\" -databaseName \"${azurerm_mssql_database.this.name}\" -applicationHosts \"${module.func_functionhost.name}\""
+    command     = "${path.module}/scripts/create-hosts-as-readers-and-writers.ps1 -sqlServerName \"${data.azurerm_mssql_server.mssqlsrv.name}\" -databaseName \"${module.mssqldb_charges.name}\" -applicationHosts \"${module.func_functionhost.name}\""
     interpreter = ["pwsh", "-Command"]
   }
   depends_on = [
