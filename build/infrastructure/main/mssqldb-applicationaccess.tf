@@ -11,18 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-resource "null_resource" "create_hosts_as_db_readers_and_writers" {
-  triggers = {
-    always_run = "${timestamp()}"
-  }
-
-  provisioner "local-exec" {
-    command     = "${path.module}/scripts/create-hosts-as-readers-and-writers.ps1 -sqlServerName \"${data.azurerm_mssql_server.mssqlsrv.name}\" -databaseName \"${module.mssqldb_charges.name}\" -applicationHosts \"${module.func_functionhost.name}, ${module.app_webapi.name}\""
-    interpreter = ["pwsh", "-Command"]
-  }
-  depends_on = [
-      module.mssqldb_charges,
-      module.func_functionhost,
-      module.app_webapi
-    ]
+module "mssql_database_application_access" {
+  source                  = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/mssql-database-application-access?ref=7.1.0"
+  
+  sql_server_name         = data.azurerm_mssql_server.mssqlsrv.name
+  database_name           = module.mssqldb_charges.name
+  application_hosts_names = "${module.func_functionhost.name}, ${module.app_webapi.name}"
 }
