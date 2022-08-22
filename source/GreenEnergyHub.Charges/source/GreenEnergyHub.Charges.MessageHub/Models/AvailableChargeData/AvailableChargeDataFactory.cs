@@ -105,7 +105,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
             // Issue: 1411: New Price Flow: #3 Accept/reject/notify and persist
             var isRelevantForPriceFlow =
                 documentDto.BusinessReasonCode == BusinessReasonCode.UpdateChargePrices
-                && chargeInformationOperationDto.Type == ChargeType.Tariff;
+                && chargeInformationOperationDto.ChargeType == ChargeType.Tariff;
 
             // We only need to notify grid providers if the charge includes tax which are the
             // only charges they do not maintain themselves
