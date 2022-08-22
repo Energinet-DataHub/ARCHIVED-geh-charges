@@ -114,6 +114,12 @@ limitations under the License.
     <Content Include="TestFiles\Charges\PriceSeries\PriceSeriesExistingFee.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="TestFiles\Charges\PriceSeries\TariffPriceSeriesInvalidNumberOfPointsMatchTimeIntervalAndResolution.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Charges\PriceSeries\TariffPriceSeriesInvalidPointsStart.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestFiles\Charges\PriceSeries\TariffPriceSeriesInvalidStartAndEndDate.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
