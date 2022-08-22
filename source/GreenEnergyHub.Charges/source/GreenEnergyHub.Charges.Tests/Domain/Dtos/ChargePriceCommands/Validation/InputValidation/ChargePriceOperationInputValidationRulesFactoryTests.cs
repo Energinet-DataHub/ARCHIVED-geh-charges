@@ -118,6 +118,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
                 typeof(ChargeTypeIsKnownValidationRule),
                 typeof(StartDateTimeRequiredValidationRule),
                 typeof(ChargeOwnerMustMatchSenderRule),
+                typeof(ChargeTypeTariffPriceCountRule),
+                typeof(NumberOfPointsMatchTimeIntervalAndResolutionRule),
+                typeof(ChargePriceMaximumDigitsAndDecimalsRule),
+                typeof(PriceListMustStartAndStopAtMidnightValidationRule),
             };
         }
 
