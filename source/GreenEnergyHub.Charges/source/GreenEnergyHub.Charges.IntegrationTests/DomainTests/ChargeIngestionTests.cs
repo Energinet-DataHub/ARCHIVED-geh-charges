@@ -354,9 +354,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             }
 
             [Theory]
-            [InlineData(ChargeDocument.TariffPriceSeriesInvalidMaximumPrice)]
-            [InlineData(ChargeDocument.TariffPriceSeriesInvalidNumberOfPoints)]
-            public async Task When_ChargePriceRequestFailsInputValidation_Then_ARejectionShouldBeSent(string testFilePath)
+            [InlineData(ChargeDocument.TariffPriceSeriesInvalidMaximumPrice, "*<cim:code>E90</cim:code>*")]
+            [InlineData(ChargeDocument.TariffPriceSeriesInvalidNumberOfPoints, "*<cim:code>E87</cim:code>*")]
+            public async Task When_ChargePriceRequestFailsInputValidation_Then_ARejectionShouldBeSent(
+                string testFilePath,
+                string expectedErrorCode)
             {
                 // Arrange
                 var (request, correlationId) =
@@ -373,7 +375,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 peekResult.Should().NotContainMatch("*NotifyPriceList_MarketDocument*");
                 peekResult.Should().ContainMatch("*<cim:process.processType>D08</cim:process.processType>*");
                 peekResult.Should().NotContainMatch("*<cim:process.processType>D18</cim:process.processType>*");
-                peekResult.Should().ContainMatch("*<cim:code>E90</cim:code>*");
+                peekResult.Should().ContainMatch(expectedErrorCode);
             }
 
             [Fact]
