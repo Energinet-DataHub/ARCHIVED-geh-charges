@@ -22,6 +22,7 @@ limitations under the License.
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="dbup-sqlserver" Version="4.5.0" />
       <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.435">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -57,10 +58,6 @@ limitations under the License.
       <EmbeddedResource Include="Scripts\Test\202207251045 Add test price data.sql" />
       <EmbeddedResource Include="Scripts\Test\202206030818 Add test data to gridarealinks.sql" />
       <EmbeddedResource Include="Scripts\Model\202207151427 Increase OriginalOperationId length.sql" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Include="DbUp.Reboot.SqlServer" Version="1.2.0" />
     </ItemGroup>
 
 </Project>
