@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation.InputValidation;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.TestHelpers;
@@ -29,24 +30,31 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         [Theory]
         [InlineAutoMoqData("1_________10________20________123456", true)]
         [InlineAutoMoqData("1_________10________20________1234567", false)]
-        [InlineAutoMoqData(null!, false)]
         public void OperationIdLengthValidationRule_Test(
             string operationId,
             bool expected,
-            ChargeOperationDtoBuilder chargeOperationDtoBuilder)
+            ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder)
         {
-            var chargeOperationDto = chargeOperationDtoBuilder.WithChargeOperationId(operationId).Build();
+            var chargeOperationDto = chargeInformationOperationDtoBuilder.WithChargeOperationId(operationId).Build();
             var sut = new ChargeOperationIdLengthValidationRule(chargeOperationDto);
             sut.IsValid.Should().Be(expected);
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeOperationDtoBuilder chargeOperationDtoBuilder)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder)
         {
-            var invalidChargeOperationDto = chargeOperationDtoBuilder.Build();
+            var invalidChargeOperationDto = chargeInformationOperationDtoBuilder.Build();
             var sut = new ChargeOperationIdLengthValidationRule(invalidChargeOperationDto);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChargeOperationIdLengthValidation);
+        }
+
+        [Fact]
+        public void GivenChargeOperationIdLengthValidationRule_WhenOperationIdIsNull_ThenThrowException()
+        {
+            var chargeOperationDto = new ChargeInformationOperationDtoBuilder().WithChargeOperationId(null!).Build();
+            var sut = new ChargeOperationIdLengthValidationRule(chargeOperationDto);
+            Assert.Throws<NullReferenceException>(() => sut.IsValid);
         }
     }
 }

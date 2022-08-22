@@ -28,13 +28,13 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksDataAvailableNotifiedEve
 
         /// <summary>
         /// Charge links received through ChargeLinksIngestion will only contain a single
-        /// <see cref="ChargeLinkDto"/> and for charge links created from default charge links we only
-        /// notify once, hence we can get meteringPointId from the first <see cref="ChargeLinkDto"/>.
+        /// <see cref="ChargeLinkOperationDto"/> and for charge links created from default charge links we only
+        /// notify once, hence we can get meteringPointId from the first <see cref="ChargeLinkOperationDto"/>.
         /// </summary>
         /// <param name="chargeLinksAcceptedEvent"></param>
         private static string GetMeteringPointIdFromFirstChargeLinkDto(ChargeLinksAcceptedEvent chargeLinksAcceptedEvent)
         {
-            return chargeLinksAcceptedEvent.ChargeLinksCommand.Operations.First().MeteringPointId;
+            return chargeLinksAcceptedEvent.Command.Operations.First().MeteringPointId;
         }
     }
 }

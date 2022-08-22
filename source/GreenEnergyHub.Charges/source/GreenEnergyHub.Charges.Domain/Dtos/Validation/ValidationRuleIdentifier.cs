@@ -37,8 +37,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
         ChargeTypeTariffPriceCount = 22, // VR507-1 / E87
         MaximumPrice = 23, // VR509-1, VR509-2 / E90
         ChargePriceMaximumDigitsAndDecimals = 24, // VR457 / E86
-        FeeMustHaveSinglePrice = 25, // VR507-2 / E87
-        SubscriptionMustHaveSinglePrice = 26, // VR507-2 / E87
         CommandSenderMustBeAnExistingMarketParticipant = 27, // VR152 / D02
         MeteringPointDoesNotExist = 29, // VR200 / E10
         ChargeDoesNotExist = 30, // VR679 / E0I
@@ -52,7 +50,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
         ChargeNameIsRequired = 38, // VR910 / E0H
         ChargeDescriptionIsRequired = 39, // VR911 / E0H
         ResolutionIsRequired = 40, // VR912 / E0H
-        ChargeOwnerHasLengthLimits = 41, // VR913 / E86
         TransparentInvoicingIsRequired = 42, // VR915 / E0H
         TaxIndicatorIsRequired = 43, // VR916 / E0H
         TerminationDateMustMatchEffectiveDate = 44, // VR917 / E0H
@@ -61,5 +58,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
         TaxIndicatorMustBeFalseForSubscription = 47, // VR920 / D14
         TaxIndicatorMustBeFalseForFee = 48, // VR921 / D14
         ChargeOperationIdLengthValidation = 49, // VR922 / E86
+        ChargeOwnerMustMatchSender = 50, // VR513 / E0I
     }
 }

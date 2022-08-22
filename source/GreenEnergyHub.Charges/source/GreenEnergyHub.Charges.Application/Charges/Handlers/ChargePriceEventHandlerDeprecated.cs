@@ -31,14 +31,14 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
     public class ChargePriceEventHandlerDeprecated : IChargePriceEventHandlerDeprecated
     {
-        private readonly IInputValidator<ChargeOperationDto> _inputValidator;
+        private readonly IInputValidator<ChargeInformationOperationDto> _inputValidator;
         private readonly IMarketParticipantRepository _marketParticipantRepository;
         private readonly IChargeRepository _chargeRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IChargeCommandReceiptService _chargeCommandReceiptService;
 
         public ChargePriceEventHandlerDeprecated(
-            IInputValidator<ChargeOperationDto> inputValidator,
+            IInputValidator<ChargeInformationOperationDto> inputValidator,
             IMarketParticipantRepository marketParticipantRepository,
             IChargeRepository chargeRepository,
             IUnitOfWork unitOfWork,
@@ -56,9 +56,10 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             ArgumentNullException.ThrowIfNull(commandReceivedEvent);
 
             var operations = commandReceivedEvent.Command.Operations.ToArray();
-            var operationsToBeRejected = new List<ChargeOperationDto>();
+            var document = commandReceivedEvent.Command.Document;
+            var operationsToBeRejected = new List<ChargeInformationOperationDto>();
             var rejectionRules = new List<IValidationRuleContainer>();
-            var operationsToBeConfirmed = new List<ChargeOperationDto>();
+            var operationsToBeConfirmed = new List<ChargeInformationOperationDto>();
 
             for (var i = 0; i < operations.Length; i++)
             {
@@ -73,10 +74,10 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 var charge = await GetChargeAsync(operation).ConfigureAwait(false);
                 if (charge is null)
                 {
-                    throw new InvalidOperationException($"Charge ID '{operation.ChargeId}' does not exist.");
+                    throw new InvalidOperationException($"Charge ID '{operation.SenderProvidedChargeId}' does not exist.");
                 }
 
-                var validationResult = _inputValidator.Validate(operation);
+                var validationResult = _inputValidator.Validate(operation, document);
                 if (validationResult.IsFailed)
                 {
                     operationsToBeRejected = operations[i..].ToList();
@@ -90,7 +91,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                         (Instant)operation.PointsStartInterval,
                         (Instant)operation.PointsEndInterval,
                         operation.Points,
-                        operation.Id);
+                        operation.OperationId);
                 }
                 catch (ChargeOperationFailedException exception)
                 {
@@ -107,7 +108,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             }
 
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-            var document = commandReceivedEvent.Command.Document;
             await _chargeCommandReceiptService.RejectInvalidOperationsAsync(operationsToBeRejected, document, rejectionRules).ConfigureAwait(false);
             await _chargeCommandReceiptService.AcceptValidOperationsAsync(operationsToBeConfirmed, document).ConfigureAwait(false);
         }
@@ -115,26 +115,26 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         private static void CollectRejectionRules(
             List<IValidationRuleContainer> rejectionRules,
             ValidationResult validationResult,
-            IEnumerable<ChargeOperationDto> operationsToBeRejected,
-            ChargeOperationDto operation)
+            IEnumerable<ChargeInformationOperationDto> operationsToBeRejected,
+            ChargeInformationOperationDto informationOperation)
         {
             rejectionRules.AddRange(validationResult.InvalidRules);
             rejectionRules.AddRange(operationsToBeRejected.Skip(1)
                 .Select(_ =>
                     new OperationValidationRuleContainer(
-                        new PreviousOperationsMustBeValidRule(operation.Id), operation.Id)));
+                        new PreviousOperationsMustBeValidRule(informationOperation.OperationId), informationOperation.OperationId)));
         }
 
-        private async Task<Charge?> GetChargeAsync(ChargeOperationDto operation)
+        private async Task<Charge?> GetChargeAsync(ChargeInformationOperationDto informationOperation)
         {
             var marketParticipant = await _marketParticipantRepository
-                .GetSystemOperatorOrGridAccessProviderAsync(operation.ChargeOwner)
+                .GetSystemOperatorOrGridAccessProviderAsync(informationOperation.ChargeOwner)
                 .ConfigureAwait(false);
 
             var chargeIdentifier = new ChargeIdentifier(
-                operation.ChargeId,
+                informationOperation.SenderProvidedChargeId,
                 marketParticipant.Id,
-                operation.Type);
+                informationOperation.ChargeType);
             return await _chargeRepository.SingleOrNullAsync(chargeIdentifier).ConfigureAwait(false);
         }
     }

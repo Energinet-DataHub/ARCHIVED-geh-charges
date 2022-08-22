@@ -76,10 +76,10 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
 
             // Charge operation
             var actualChargeOperation = actual.Operations.First();
-            actualChargeOperation.Id.Should().Be("36251478");
+            actualChargeOperation.OperationId.Should().Be("36251478");
             actualChargeOperation.ChargeOwner.Should().Be("5799999925698");
-            actualChargeOperation.Type.Should().Be(ChargeType.Tariff);
-            actualChargeOperation.ChargeId.Should().Be("253C");
+            actualChargeOperation.ChargeType.Should().Be(ChargeType.Tariff);
+            actualChargeOperation.SenderProvidedChargeId.Should().Be("253C");
             actualChargeOperation.ChargeName.Should().Be("Elafgift 2019");
             actualChargeOperation.ChargeDescription.Should().Be("Dette er elafgiftssatsten for 2019");
             actualChargeOperation.Resolution.Should().Be(Resolution.PT1H);
@@ -139,10 +139,10 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
 
             // Charge operation
             var actualChargeOperation = actual.Operations.First();
-            actualChargeOperation.Id.Should().Be("36251479");
+            actualChargeOperation.OperationId.Should().Be("36251479");
             actualChargeOperation.ChargeOwner.Should().Be("5799999925699");
-            actualChargeOperation.Type.Should().Be(ChargeType.Fee);
-            actualChargeOperation.ChargeId.Should().Be("888");
+            actualChargeOperation.ChargeType.Should().Be(ChargeType.Fee);
+            actualChargeOperation.SenderProvidedChargeId.Should().Be("888");
             actualChargeOperation.ChargeName.Should().Be("Test 888");
             actualChargeOperation.ChargeDescription.Should().Be("Description 888");
             actualChargeOperation.Resolution.Should().Be(Resolution.PT15M);
@@ -189,10 +189,10 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
 
             // Charge operation, should only be partially filled
             var actualChargeOperation = actual.Operations.First();
-            actualChargeOperation.Id.Should().Be("36251480");
+            actualChargeOperation.OperationId.Should().Be("36251480");
             actualChargeOperation.ChargeOwner.Should().Be("5799999925600");
-            actualChargeOperation.Type.Should().Be(ChargeType.Subscription);
-            actualChargeOperation.ChargeId.Should().Be("444");
+            actualChargeOperation.ChargeType.Should().Be(ChargeType.Subscription);
+            actualChargeOperation.SenderProvidedChargeId.Should().Be("444");
             actualChargeOperation.PointsStartInterval.Should().Be(expectedStartInterval);
             actualChargeOperation.PointsEndInterval.Should().Be(expectedEndInterval);
 
@@ -242,11 +242,11 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             // Assert
 
             // Charge operation
-            var actualFirstChargeCommand = actual.Commands.Single(x => x.Operations.Any(y => y.Id == "36251480"));
+            var actualFirstChargeCommand = actual.Commands.Single(x => x.Operations.Any(y => y.OperationId == "36251480"));
             var actualFirstChargeOperationDto = actualFirstChargeCommand.Operations.First();
             actualFirstChargeOperationDto.ChargeOwner.Should().Be("8100000000030");
-            actualFirstChargeOperationDto.Type.Should().Be(ChargeType.Tariff);
-            actualFirstChargeOperationDto.ChargeId.Should().Be("ChId1234567890");
+            actualFirstChargeOperationDto.ChargeType.Should().Be(ChargeType.Tariff);
+            actualFirstChargeOperationDto.SenderProvidedChargeId.Should().Be("ChId1234567890");
             actualFirstChargeOperationDto.ChargeName.Should().Be("Charge Tariff day Name 1");
             actualFirstChargeOperationDto.ChargeDescription.Should().Be("The charge description 1");
             actualFirstChargeOperationDto.Resolution.Should().Be(Resolution.P1D);
@@ -260,11 +260,11 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             actualFirstChargeOperationDto.Points.Should().HaveCount(1);
             actualFirstChargeOperationDto.Points.First().Price.Should().Be(150.001m);
 
-            var actualSecondChargeCommand = actual.Commands.Single(x => x.Operations.Any(y => y.Id == "36251481"));
+            var actualSecondChargeCommand = actual.Commands.Single(x => x.Operations.Any(y => y.OperationId == "36251481"));
             var actualSecondChargeOperationDto = actualSecondChargeCommand.Operations.First();
             actualSecondChargeOperationDto.ChargeOwner.Should().Be("8100000000030");
-            actualSecondChargeOperationDto.Type.Should().Be(ChargeType.Tariff);
-            actualSecondChargeOperationDto.ChargeId.Should().Be("ChId1234567891");
+            actualSecondChargeOperationDto.ChargeType.Should().Be(ChargeType.Tariff);
+            actualSecondChargeOperationDto.SenderProvidedChargeId.Should().Be("ChId1234567891");
             actualSecondChargeOperationDto.ChargeName.Should().Be("Charge Tariff day Name 2");
             actualSecondChargeOperationDto.ChargeDescription.Should().Be("The charge description 2");
             actualSecondChargeOperationDto.Resolution.Should().Be(Resolution.P1D);
@@ -302,10 +302,10 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             // Assert - Grouping of operations for same unique charge is correctly done
             actual.Commands.Should().HaveCount(3);
             var chargeCommandWithTwoOperations = actual.Commands.Single(x =>
-                x.Operations.Any(y => y.Id == "Operation1"));
+                x.Operations.Any(y => y.OperationId == "Operation1"));
             chargeCommandWithTwoOperations.Operations.Should().HaveCount(2);
-            chargeCommandWithTwoOperations.Operations.Should().Contain(x => x.Id == "Operation1");
-            chargeCommandWithTwoOperations.Operations.Should().Contain(x => x.Id == "Operation4");
+            chargeCommandWithTwoOperations.Operations.Should().Contain(x => x.OperationId == "Operation1");
+            chargeCommandWithTwoOperations.Operations.Should().Contain(x => x.OperationId == "Operation4");
         }
 
         private static SchemaValidatingReader GetReaderAndArrangeTest(

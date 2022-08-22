@@ -85,7 +85,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands.Validatio
             sut.IsValid.Should().BeTrue();
         }
 
-        private static ChargeLinkDto CreateChargeLinkDto(string meteringPointId, string newStartDate, string? newEndDate)
+        private static ChargeLinkOperationDto CreateChargeLinkDto(string meteringPointId, string newStartDate, string? newEndDate)
         {
             var startDate = InstantPattern.General.Parse(newStartDate).Value;
             Instant? endDateTime = newEndDate == null ? null : InstantPattern.General.Parse(newEndDate).Value;

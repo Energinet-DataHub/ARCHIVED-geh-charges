@@ -42,9 +42,9 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             Type = DocumentType.RequestChangeBillingMasterData,
         };
 
-        private List<ChargeLinkDto> _links = new();
+        private List<ChargeLinkOperationDto> _links = new();
 
-        public ChargeLinksCommandBuilder WithChargeLinks(List<ChargeLinkDto> links)
+        public ChargeLinksCommandBuilder WithChargeLinks(List<ChargeLinkOperationDto> links)
         {
             _links = links;
             return this;

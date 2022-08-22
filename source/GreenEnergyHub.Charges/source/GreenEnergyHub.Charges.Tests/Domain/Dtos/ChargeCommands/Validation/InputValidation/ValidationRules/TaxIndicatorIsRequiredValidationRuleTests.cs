@@ -32,9 +32,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void IsValid_WhenCalled_ShouldReturnExpectedValue(
             TaxIndicator taxIndicator,
             bool expected,
-            ChargeOperationDtoBuilder chargeOperationDtoBuilder)
+            ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder)
         {
-            var chargeOperationDto = chargeOperationDtoBuilder.WithTaxIndicator(taxIndicator).Build();
+            var chargeOperationDto = chargeInformationOperationDtoBuilder.WithTaxIndicator(taxIndicator).Build();
             var sut = new TaxIndicatorIsRequiredValidationRule(chargeOperationDto);
             sut.IsValid.Should().Be(expected);
         }

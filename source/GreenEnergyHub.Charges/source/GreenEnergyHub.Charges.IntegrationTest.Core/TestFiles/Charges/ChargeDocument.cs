@@ -41,10 +41,13 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.Charges
         public const string TariffPriceSeriesWithInvalidRecipientType = "TestFiles/Charges/PriceSeries/TariffPriceSeriesWithInvalidRecipientType.xml";
         public const string TariffPriceSeriesWithInvalidBusinessReasonCode = "TestFiles/Charges/PriceSeries/TariffPriceSeriesWithInvalidBusinessReasonCode.xml";
         public const string TariffPriceSeriesInvalidMaximumPrice = "TestFiles/Charges/PriceSeries/TariffPriceSeriesInvalidMaximumPrice.xml";
+        public const string TariffPriceSeriesInvalidNumberOfPoints = "TestFiles/Charges/PriceSeries/TariffPriceSeriesInvalidNumberOfPointsMatchTimeIntervalAndResolution.xml";
+        public const string TariffPriceSeriesInvalidPointsStart = "TestFiles/Charges/PriceSeries/TariffPriceSeriesInvalidPointsStart.xml";
         public const string TariffPriceSeriesInvalidStartAndEndDate = "TestFiles/Charges/PriceSeries/TariffPriceSeriesInvalidStartAndEndDate.xml";
         public const string PriceSeriesExistingFee = "TestFiles/Charges/PriceSeries/PriceSeriesExistingFee.xml";
         public const string PriceSeriesExistingTariff = "TestFiles/Charges/PriceSeries/PriceSeriesExistingTariff.xml";
         public const string PriceSeriesExistingSubscription = "TestFiles/Charges/PriceSeries/PriceSeriesExistingSubscription.xml";
         public const string PriceSeriesTariffFromSystemOperator = "TestFiles/Charges/PriceSeries/PriceSeriesTariffFromSystemOperator.xml";
+        public const string BundledTariffPriceSeriesFirstOperationInvalidMaximumPrice = "TestFiles/Charges/PriceSeries/BundledTariffPriceSeriesFirstOperationInvalidMaximumPrice.xml";
     }
 }

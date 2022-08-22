@@ -49,8 +49,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
         {
             // Arrange
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
-            var expectedLinks = acceptedEvent.ChargeLinksCommand.Operations.ToList();
-            var documentDto = acceptedEvent.ChargeLinksCommand.Document;
+            var expectedLinks = acceptedEvent.Command.Operations.ToList();
+            var documentDto = acceptedEvent.Command.Document;
             documentDto.Sender.BusinessProcessRole = marketParticipantRole;
             var actorId = Guid.NewGuid();
             MarketParticipantRepositoryMockBuilder.SetupMarketParticipantRepositoryMock(
@@ -83,7 +83,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
             AvailableChargeLinksReceiptDataFactory sut)
         {
             // Arrange
-            acceptedEvent.ChargeLinksCommand.Document.Sender.BusinessProcessRole = MarketParticipantRole.SystemOperator;
+            acceptedEvent.Command.Document.Sender.BusinessProcessRole = MarketParticipantRole.SystemOperator;
 
             // Act
             var actualList = await sut.CreateAsync(acceptedEvent);

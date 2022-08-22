@@ -19,17 +19,17 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
 {
     public class TaxIndicatorIsRequiredValidationRule : IValidationRule
     {
-        private readonly ChargeOperationDto _chargeOperationDto;
+        private readonly ChargeInformationOperationDto _chargeInformationOperationDto;
 
-        public TaxIndicatorIsRequiredValidationRule(ChargeOperationDto chargeOperationDto)
+        public TaxIndicatorIsRequiredValidationRule(ChargeInformationOperationDto chargeInformationOperationDto)
         {
-            _chargeOperationDto = chargeOperationDto;
+            _chargeInformationOperationDto = chargeInformationOperationDto;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.TaxIndicatorIsRequired;
 
-        public bool IsValid => _chargeOperationDto.TaxIndicator
+        public bool IsValid => _chargeInformationOperationDto.TaxIndicator
             is TaxIndicator.NoTax
             or TaxIndicator.Tax;
     }

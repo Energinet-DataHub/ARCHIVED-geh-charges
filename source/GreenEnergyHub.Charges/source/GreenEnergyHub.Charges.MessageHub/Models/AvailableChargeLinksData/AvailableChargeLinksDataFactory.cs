@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData
         {
             var result = new List<AvailableChargeLinksData>();
 
-            foreach (var chargeLinksOperation in input.ChargeLinksCommand.Operations)
+            foreach (var chargeLinksOperation in input.Command.Operations)
             {
                 await CreateForOperationsAsync(input, chargeLinksOperation, result).ConfigureAwait(false);
             }
@@ -61,7 +61,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData
 
         private async Task CreateForOperationsAsync(
             ChargeLinksAcceptedEvent input,
-            ChargeLinkDto operation,
+            ChargeLinkOperationDto operation,
             ICollection<AvailableChargeLinksData> result)
         {
             // It is the responsibility of the Charge Domain to find the recipient and
@@ -78,13 +78,13 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData
             var charge = await _chargeRepository.SingleAsync(chargeIdentifier).ConfigureAwait(false);
             var sender = await GetSenderAsync().ConfigureAwait(false);
             if (!ShouldMakeDataAvailableForGridOwnerOfMeteringPoint(charge)) return;
-            var operationOrder = input.ChargeLinksCommand.Operations.ToList().IndexOf(operation);
+            var operationOrder = input.Command.Operations.ToList().IndexOf(operation);
             result.Add(new AvailableChargeLinksData(
                 sender.MarketParticipantId,
                 sender.BusinessProcessRole,
                 recipient.MarketParticipantId,
                 recipient.BusinessProcessRole,
-                input.ChargeLinksCommand.Document.BusinessReasonCode,
+                input.Command.Document.BusinessReasonCode,
                 _messageMetaDataContext.RequestDataTime,
                 Guid.NewGuid(), // ID of each available piece of data must be unique
                 operation.SenderProvidedChargeId,

@@ -19,6 +19,7 @@ using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
 using GreenEnergyHub.Charges.Domain.GridAreaLinks;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
+using GreenEnergyHub.Charges.Infrastructure.Outbox;
 using Microsoft.EntityFrameworkCore;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Persistence
@@ -36,6 +37,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence
         DbSet<ChargeLink> ChargeLinks { get; }
 
         DbSet<DefaultChargeLink> DefaultChargeLinks { get; }
+
+        DbSet<OutboxMessage> OutboxMessages { get; }
 
         /// <summary>
         /// Saves changes to the database.

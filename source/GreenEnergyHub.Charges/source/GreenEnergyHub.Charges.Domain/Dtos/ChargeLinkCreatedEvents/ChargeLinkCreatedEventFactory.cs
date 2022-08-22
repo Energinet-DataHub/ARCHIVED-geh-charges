@@ -21,28 +21,28 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCreatedEvents
 {
     public class ChargeLinkCreatedEventFactory : IChargeLinkCreatedEventFactory
     {
-        public IReadOnlyCollection<ChargeLinkCreatedEvent> CreateEvents(ChargeLinksCommand command)
+        public IReadOnlyCollection<ChargeLinkCreatedEvent> CreateEvents(ChargeLinksCommand chargeCommand)
         {
-            return command.Operations.Select(ChargeLinkCreatedEvent).ToList();
+            return chargeCommand.Operations.Select(ChargeLinkCreatedEvent).ToList();
         }
 
-        private static ChargeLinkCreatedEvent ChargeLinkCreatedEvent(ChargeLinkDto chargeLinkDto)
+        private static ChargeLinkCreatedEvent ChargeLinkCreatedEvent(ChargeLinkOperationDto chargeLinkOperationDto)
         {
             return new ChargeLinkCreatedEvent(
-                chargeLinkDto.OperationId,
-                chargeLinkDto.MeteringPointId,
-                chargeLinkDto.SenderProvidedChargeId,
-                chargeLinkDto.ChargeType,
-                chargeLinkDto.ChargeOwner,
-                ChargeLinkPeriod(chargeLinkDto));
+                chargeLinkOperationDto.OperationId,
+                chargeLinkOperationDto.MeteringPointId,
+                chargeLinkOperationDto.SenderProvidedChargeId,
+                chargeLinkOperationDto.ChargeType,
+                chargeLinkOperationDto.ChargeOwner,
+                ChargeLinkPeriod(chargeLinkOperationDto));
         }
 
-        private static ChargeLinkPeriod ChargeLinkPeriod(ChargeLinkDto chargeLinkDto)
+        private static ChargeLinkPeriod ChargeLinkPeriod(ChargeLinkOperationDto chargeLinkOperationDto)
         {
             return new ChargeLinkPeriod(
-                chargeLinkDto.StartDateTime,
-                chargeLinkDto.EndDateTime.TimeOrEndDefault(),
-                chargeLinkDto.Factor);
+                chargeLinkOperationDto.StartDateTime,
+                chargeLinkOperationDto.EndDateTime.TimeOrEndDefault(),
+                chargeLinkOperationDto.Factor);
         }
     }
 }

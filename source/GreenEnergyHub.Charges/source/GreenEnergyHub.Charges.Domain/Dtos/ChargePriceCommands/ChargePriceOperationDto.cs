@@ -19,45 +19,31 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands
 {
-    public class ChargePriceOperationDto : ChargeOperationBase
+    /// <summary>
+    /// The ChargePriceOperationDto class contains the price series for a charge.
+    /// </summary>
+    public class ChargePriceOperationDto : ChargeOperation
     {
         public ChargePriceOperationDto(
-            string id,
-            ChargeType type,
-            string chargeId,
+            string operationId,
+            ChargeType chargeType,
+            string senderProvidedChargeId,
             string chargeOwner,
-            Instant startDate,
+            Instant startDateTime,
             Instant? endDateTime,
             Instant pointsStartInterval,
             Instant pointsEndInterval,
             Resolution resolution,
             List<Point> points)
+            : base(operationId, chargeType, senderProvidedChargeId, chargeOwner, startDateTime, endDateTime)
         {
-            Id = id;
-            Type = type;
-            ChargeId = chargeId;
-            ChargeOwner = chargeOwner;
             Resolution = resolution;
-            StartDate = startDate;
-            EndDateTime = endDateTime;
             PointsStartInterval = pointsStartInterval;
             PointsEndInterval = pointsEndInterval;
             Points = points;
         }
 
-        public string Id { get; }
-
-        public ChargeType Type { get; }
-
-        public string ChargeId { get; }
-
-        public string ChargeOwner { get; }
-
         public Resolution Resolution { get; }
-
-        public Instant StartDate { get; }
-
-        public Instant? EndDateTime { get; }
 
         public Instant PointsStartInterval { get; }
 

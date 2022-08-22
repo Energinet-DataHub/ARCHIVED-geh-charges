@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using GreenEnergyHub.Charges.Application.Charges.Factories;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Application.Charges.Services;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
@@ -19,6 +20,8 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.Factories;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
+using GreenEnergyHub.Charges.Infrastructure.Outbox;
+using GreenEnergyHub.Charges.Infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
@@ -27,6 +30,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
+            serviceCollection.AddScoped<IOutboxMessageFactory, OutboxMessageFactory>();
             serviceCollection.AddScoped<IChargePriceCommandReceivedEventHandler, ChargePriceCommandReceivedEventHandler>();
             serviceCollection.AddScoped<IChargePriceEventHandler, ChargePriceEventHandler>();
             serviceCollection
@@ -37,6 +41,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IChargePriceConfirmationService, ChargePriceConfirmationService>();
             serviceCollection.AddScoped<IChargePriceRejectionService, ChargePriceRejectionService>();
             serviceCollection.AddScoped<IChargePriceNotificationService, ChargePriceNotificationService>();
+            serviceCollection.AddScoped<IChargePriceOperationsRejectedEventFactory, ChargePriceOperationsRejectedEventFactory>();
         }
 
         private static void ConfigureMessaging(IServiceCollection serviceCollection)

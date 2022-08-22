@@ -45,8 +45,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.Shared
                 ValidationRuleIdentifier.ChargeTypeTariffPriceCount => ReasonCode.E87,
                 ValidationRuleIdentifier.MaximumPrice => ReasonCode.E90,
                 ValidationRuleIdentifier.ChargePriceMaximumDigitsAndDecimals => ReasonCode.E86,
-                ValidationRuleIdentifier.FeeMustHaveSinglePrice => ReasonCode.E87,
-                ValidationRuleIdentifier.SubscriptionMustHaveSinglePrice => ReasonCode.E87,
                 ValidationRuleIdentifier.CommandSenderMustBeAnExistingMarketParticipant => ReasonCode.D02,
                 ValidationRuleIdentifier.MeteringPointDoesNotExist => ReasonCode.E10,
                 ValidationRuleIdentifier.ChargeDoesNotExist => ReasonCode.E0I,
@@ -60,7 +58,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.Shared
                 ValidationRuleIdentifier.ChargeNameIsRequired => ReasonCode.E0H,
                 ValidationRuleIdentifier.ChargeDescriptionIsRequired => ReasonCode.E0H,
                 ValidationRuleIdentifier.ResolutionIsRequired => ReasonCode.E0H,
-                ValidationRuleIdentifier.ChargeOwnerHasLengthLimits => ReasonCode.E86,
                 ValidationRuleIdentifier.TransparentInvoicingIsRequired => ReasonCode.E0H,
                 ValidationRuleIdentifier.TaxIndicatorIsRequired => ReasonCode.E0H,
                 ValidationRuleIdentifier.TerminationDateMustMatchEffectiveDate => ReasonCode.E0H,
@@ -69,6 +66,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.Shared
                 ValidationRuleIdentifier.TaxIndicatorMustBeFalseForFee => ReasonCode.D14,
                 ValidationRuleIdentifier.TaxIndicatorMustBeFalseForSubscription => ReasonCode.D14,
                 ValidationRuleIdentifier.ChargeOperationIdLengthValidation => ReasonCode.E86,
+                ValidationRuleIdentifier.ChargeOwnerMustMatchSender => ReasonCode.E0I,
                 _ => throw new NotImplementedException(),
             };
         }

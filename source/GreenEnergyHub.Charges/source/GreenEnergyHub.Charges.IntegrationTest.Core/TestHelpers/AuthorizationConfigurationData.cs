@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Authorization;
 
 namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
@@ -26,10 +27,12 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
         private const string LocalSettingsJsonFilename = "integrationtest.local.settings.json";
         private const string AzureSecretsKeyVaultUrlKey = "AZURE_SECRETS_KEYVAULT_URL";
 
-        public static AuthorizationConfiguration CreateAuthorizationConfiguration(string clientName)
+        public static AuthorizationConfiguration CreateAuthorizationConfiguration()
         {
+            var clientNames = new List<string> { SystemOperator, GridAccessProvider8100000000030 };
+
             return new AuthorizationConfiguration(
-                clientName,
+                clientNames,
                 Environment,
                 LocalSettingsJsonFilename,
                 AzureSecretsKeyVaultUrlKey);

@@ -74,7 +74,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
                         defaultChargeLink => defaultChargeLink,
                         defaultChargeLink => charges.Single(c => defaultChargeLink.ChargeId == c.Id));
 
-            var chargeLinks = defChargeAndCharge.Select(pair => new ChargeLinkDto(
+            var chargeLinks = defChargeAndCharge.Select(pair => new ChargeLinkOperationDto(
                     Guid.NewGuid().ToString(), // When creating default charge links, the TSO starts a new operation, which is why a new OperationId is provided.
                     meteringPoint.MeteringPointId,
                     pair.Key.GetStartDateTime(meteringPoint.EffectiveDate),
@@ -95,7 +95,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
 
         private async Task<ChargeLinksCommand> CreateChargeLinksCommandAsync(
             MarketParticipant systemOperator,
-            List<ChargeLinkDto> chargeLinks)
+            List<ChargeLinkOperationDto> chargeLinks)
         {
             var currentTime = _clock.GetCurrentInstant();
             var meteringPointAdministrator = await _marketParticipantRepository

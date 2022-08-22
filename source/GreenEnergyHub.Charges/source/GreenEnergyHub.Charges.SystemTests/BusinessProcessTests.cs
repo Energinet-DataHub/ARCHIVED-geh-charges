@@ -42,10 +42,14 @@ namespace GreenEnergyHub.Charges.SystemTests
         {
             Configuration = new BusinessProcessConfiguration();
 
+            var clientCredentialsSettings = Configuration.AuthorizationConfiguration.B2CTestClients
+                .First(tc => tc.ClientName == "endk-ddm3")
+                .ClientCredentialsSettings;
+
             _authenticationClient = new BackendAuthenticationClient(
                 Configuration.AuthorizationConfiguration.BackendAppScope,
-                Configuration.AuthorizationConfiguration.ClientCredentialsSettings,
-                Configuration.AuthorizationConfiguration.B2cTenantId);
+                clientCredentialsSettings,
+                Configuration.AuthorizationConfiguration.B2CTenantId);
         }
 
         private BusinessProcessConfiguration Configuration { get; }

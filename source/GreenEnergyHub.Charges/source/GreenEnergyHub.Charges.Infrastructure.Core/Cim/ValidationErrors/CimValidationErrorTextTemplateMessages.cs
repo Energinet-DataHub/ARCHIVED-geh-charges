@@ -37,6 +37,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         public const string SenderIsMandatoryTypeValidationErrorText =
             "Sender is missing for message {{DocumentId}}.";
 
+        [ErrorMessageFor(ValidationRuleIdentifier.ChargeOwnerMustMatchSender)]
+        public const string ChargeOwnerMustMatchSenderErrorText =
+            "The specified charge owner {{ChargeOwner}} do not match sender {{DocumentSenderId}} and is therefore not authorized to change charge id {{DocumentSenderProvidedChargeId}} of type {{ChargeType}}";
+
         [ErrorMessageFor(ValidationRuleIdentifier.RecipientIsMandatoryTypeValidation)]
         public const string RecipientIsMandatoryTypeValidationErrorText =
             "Recipient is missing for message {{DocumentId}}.";
@@ -109,14 +113,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         public const string ChargePriceMaximumDigitsAndDecimalsErrorText =
             "Energy price {{ChargePointPrice}} contains a non-digit character, has a length that exceeds 15 or does not comply with format '99999999.999999' for charge with ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} owned by {{ChargeOwner}}.";
 
-        [ErrorMessageFor(ValidationRuleIdentifier.FeeMustHaveSinglePrice)]
-        public const string FeeMustHaveSinglePriceErrorText =
-            "The number of prices {{ChargePointsCount}} doesn't match period type {{ChargeResolution}} for charge with ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} owned by {{ChargeOwner}}.";
-
-        [ErrorMessageFor(ValidationRuleIdentifier.SubscriptionMustHaveSinglePrice)]
-        public const string SubscriptionMustHaveSinglePriceErrorText =
-            "The number of prices {{ChargePointsCount}} doesn't match period type {{ChargeResolution}} for charge with ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} owned by {{ChargeOwner}}.";
-
         [ErrorMessageFor(ValidationRuleIdentifier.CommandSenderMustBeAnExistingMarketParticipant)]
         public const string CommandSenderMustBeAnExistingMarketParticipantErrorText =
             "Sender {{DocumentSenderId}} for message {{DocumentId}} is currently not an existing market party (company) or not active.";
@@ -168,10 +164,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         [ErrorMessageFor(ValidationRuleIdentifier.ResolutionIsRequired)]
         public const string ResolutionRequiredErrorText =
             "Resolution is missing for charge with ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} owned by {{ChargeOwner}}.";
-
-        [ErrorMessageFor(ValidationRuleIdentifier.ChargeOwnerHasLengthLimits)]
-        public const string ChargeOwnerTextLengthRuleText =
-            "Charge owner for type {{ChargeType}} with charge ID {{DocumentSenderProvidedChargeId}} must have a length of 13 or 16.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.TransparentInvoicingIsRequired)]
         public const string TransparentInvoicingIsRequiredErrorText =

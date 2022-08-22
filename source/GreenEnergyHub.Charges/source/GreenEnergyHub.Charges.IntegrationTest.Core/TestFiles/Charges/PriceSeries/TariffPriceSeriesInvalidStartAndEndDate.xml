@@ -30,7 +30,7 @@ limitations under the License.
             <cim:ChargeType>
                 <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">{{$senderMarketParticipant}}</cim:chargeTypeOwner_MarketParticipant.mRID>
                 <cim:type>D03</cim:type>
-                <cim:mRID>charge_with_enddate</cim:mRID>
+                <cim:mRID>chg-end</cim:mRID>
                 <cim:priceTimeFrame_Period.resolution>PT1H</cim:priceTimeFrame_Period.resolution>
                 <cim:effectiveDate>{{$isoTimestampPlusOneMonth}}</cim:effectiveDate>
                 <cim:Series_Period>
