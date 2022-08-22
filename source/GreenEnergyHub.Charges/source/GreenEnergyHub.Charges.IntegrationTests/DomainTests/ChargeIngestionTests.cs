@@ -317,8 +317,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
                 await using var chargesDatabaseContext = Fixture.ChargesDatabaseManager.CreateDbContext();
                 await using var messageHubDatabaseContext = Fixture.MessageHubDatabaseManager.CreateDbContext();
-                var (request, _) = await _authenticatedHttpRequestGenerator
-                    .CreateAuthenticatedHttpPostRequestAsync(
+                var (request, _) =
+                    Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
                         EndpointUrl, ChargeDocument.TariffPriceSeries);
 
                 // Act
