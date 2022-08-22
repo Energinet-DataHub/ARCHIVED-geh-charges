@@ -356,6 +356,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             [Theory]
             [InlineData(ChargeDocument.TariffPriceSeriesInvalidMaximumPrice, "*<cim:code>E90</cim:code>*")]
             [InlineData(ChargeDocument.TariffPriceSeriesInvalidNumberOfPoints, "*<cim:code>E87</cim:code>*")]
+            [InlineData(ChargeDocument.TariffPriceSeriesInvalidPointsStart, "*<cim:code>E86</cim:code>*")]
             public async Task When_ChargePriceRequestFailsInputValidation_Then_ARejectionShouldBeSent(
                 string testFilePath,
                 string expectedErrorCode)

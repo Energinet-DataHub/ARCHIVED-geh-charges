@@ -15,16 +15,25 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation.InputValidation;
 using MaximumPriceRule = GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.ValidationRules.MaximumPriceRule;
 using NumberOfPointsMatchTimeIntervalAndResolutionRule = GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.ValidationRules.NumberOfPointsMatchTimeIntervalAndResolutionRule;
+using PriceListMustStartAndStopAtMidnightValidationRule = GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.ValidationRules.PriceListMustStartAndStopAtMidnightValidationRule;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.Factories
 {
     public class ChargePriceOperationInputValidationRulesFactory : IInputValidationRulesFactory<ChargePriceOperationDto>
     {
+        private readonly IZonedDateTimeService _zonedDateTimeService;
+
+        public ChargePriceOperationInputValidationRulesFactory(IZonedDateTimeService zonedDateTimeService)
+        {
+            _zonedDateTimeService = zonedDateTimeService;
+        }
+
         public IValidationRuleSet CreateRules(ChargePriceOperationDto operation, DocumentDto document)
         {
             ArgumentNullException.ThrowIfNull(operation);
@@ -46,6 +55,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.Inpu
                 CreateRuleContainer(new StartDateTimeRequiredValidationRule(operation), operation.OperationId),
                 CreateRuleContainer(new ChargeOwnerMustMatchSenderRule(document.Sender.MarketParticipantId, operation.ChargeOwner), operation.OperationId),
                 CreateRuleContainer(new NumberOfPointsMatchTimeIntervalAndResolutionRule(operation), operation.OperationId),
+                CreateRuleContainer(new PriceListMustStartAndStopAtMidnightValidationRule(_zonedDateTimeService, operation), operation.OperationId),
             };
 
             return rules;
