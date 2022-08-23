@@ -139,7 +139,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 var byteArray = message.ToByteArray();
                 var serviceBusMessage = new ServiceBusMessage(byteArray) { CorrelationId = correlationId };
                 serviceBusMessage.ApplicationProperties.Add("OperationTimestamp", date.ToUniversalTime());
-                serviceBusMessage.ApplicationProperties.Add("OperationCorrelationId", "1bf1b76337f14b78badc248a3289d021");
+                serviceBusMessage.ApplicationProperties.Add("OperationCorrelationId", correlationId);
                 serviceBusMessage.ApplicationProperties.Add("MessageVersion", 1);
                 serviceBusMessage.ApplicationProperties.Add("MessageType", "MeteringPointCreated");
                 serviceBusMessage.ApplicationProperties.Add("EventIdentification", "2542ed0d242e46b68b8b803e93ffbf7b");
