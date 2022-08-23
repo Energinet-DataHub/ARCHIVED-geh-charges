@@ -20,7 +20,7 @@ using NodaTime;
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands
 {
     /// <summary>
-    /// The ChargeOperationDto class contains the intend of the charge command, e.g. updating an existing charge.
+    /// The ChargeInformationOperationDto class contains the intend of the charge command, e.g. updating an existing charge.
     /// </summary>
     public class ChargeInformationOperationDto : ChargeOperation
     {
