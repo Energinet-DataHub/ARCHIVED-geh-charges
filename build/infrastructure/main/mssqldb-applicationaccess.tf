@@ -16,7 +16,10 @@ module "mssql_database_application_access" {
   
   sql_server_name         = data.azurerm_mssql_server.mssqlsrv.name
   database_name           = module.mssqldb_charges.name
-  application_hosts_names = "${module.func_functionhost.name}, ${module.app_webapi.name}"
+  application_hosts_names = [
+                              module.func_functionhost.name,
+                              module.app_webapi.name
+                            ]
 
   depends_on = [
     module.func_functionhost,
