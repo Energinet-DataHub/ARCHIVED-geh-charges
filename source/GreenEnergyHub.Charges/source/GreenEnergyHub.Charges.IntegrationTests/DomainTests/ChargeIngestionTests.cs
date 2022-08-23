@@ -189,9 +189,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // Assert
                 actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
 
-                const int milliseconds = 5000;
-                await Task.Delay(milliseconds);
-
                 // We expect six peek results:
                 // * two confirmations
                 // * one rejection (ChargeIdLengthValidation)
