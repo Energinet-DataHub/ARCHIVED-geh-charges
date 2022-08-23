@@ -21,8 +21,8 @@ module "mssql_database_application_access" {
                               module.app_webapi.name
                             ]
 
-  depends_on = [
-    module.func_functionhost,
-    module.app_webapi,
-  ]
+  depends_on              = [
+                              module.func_functionhost,
+                              module.app_webapi,
+                            ]
 }
