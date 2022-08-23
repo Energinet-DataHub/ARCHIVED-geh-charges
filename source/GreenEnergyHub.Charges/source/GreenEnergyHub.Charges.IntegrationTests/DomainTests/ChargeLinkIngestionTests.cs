@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.ChargeLinks;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
@@ -129,16 +130,19 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Assert
-                // We expect 3 message types in the MessageHub, one for the receipt,
-                // one for the charge link itself and one rejected
-                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 3, Fixture.TestLogger.TestOutputHelper!);
-                peekResults.Should().ContainMatch("*ConfirmRequestChangeBillingMasterData_MarketDocument*");
-                peekResults.Should().ContainMatch("*NotifyBillingMasterData_MarketDocument*");
+                using (new AssertionScope())
+                {
+                    // We expect 3 message types in the MessageHub, one for the receipt,
+                    // one for the charge link itself and one rejected
+                    var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 3);
+                    peekResults.Should().ContainMatch("*ConfirmRequestChangeBillingMasterData_MarketDocument*");
+                    peekResults.Should().ContainMatch("*NotifyBillingMasterData_MarketDocument*");
 
-                // For now, ChargeLinkCommandConverter splits all CIM MktActivityRecord into separate ChargeLinkCommands
-                // so we do not always receive a rejection due to the parallel handling of commands.
-                if (peekResults.Any(s => s.Contains("RejectRequestChangeBillingMasterData_MarketDocument")))
-                    peekResults.Should().ContainMatch("*cannot yet be updated or stopped. The functionality is not implemented yet*");
+                    // For now, ChargeLinkCommandConverter splits all CIM MktActivityRecord into separate ChargeLinkCommands
+                    // so we do not always receive a rejection due to the parallel handling of commands.
+                    if (peekResults.Any(s => s.Contains("RejectRequestChangeBillingMasterData_MarketDocument")))
+                        peekResults.Should().ContainMatch("*cannot yet be updated or stopped. The functionality is not implemented yet*");
+                }
             }
         }
     }
