@@ -355,8 +355,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
                 ChargesServiceBusResourceNames.MessageHubStorageConnectionString,
                 ChargesServiceBusResourceNames.MessageHubStorageContainerName);
 
-            messageHubSimulationConfig.PeekTimeout = TimeSpan.FromSeconds(20.0);
-            messageHubSimulationConfig.WaitTimeout = TimeSpan.FromSeconds(20.0);
+            messageHubSimulationConfig.PeekTimeout = TimeSpan.FromSeconds(30.0);
+            messageHubSimulationConfig.WaitTimeout = TimeSpan.FromSeconds(30.0);
 
             MessageHubMock = new MessageHubSimulation(messageHubSimulationConfig);
         }
