@@ -43,11 +43,10 @@ on:
 env:
   # Conditions
   PUSH_PACKAGES: ${{ github.event_name != 'pull_request' }}
-  # TODO: Delete?
   # Variables necessary to manage Azure resources for tests (similar to local use of 'integrationtest.local.settings.json')
   AZURE_KEYVAULT_URL: ${{ secrets.AZURE_KEYVAULT_URL }}
-  # # Set value used by 'AzuriteManager'
-  # AzuriteBlobFolderPath: '${{ github.workspace }}\node_modules\.bin\'
+  # Set value used by 'AzuriteManager'
+  AzuriteBlobFolderPath: '${{ github.workspace }}\node_modules\.bin\'
   # # Overrides settings in 'functionhost.settings.json'
   # FunctionAppHostPath: '${{ github.workspace }}\node_modules\azure-functions-core-tools\bin\func.dll'
 
