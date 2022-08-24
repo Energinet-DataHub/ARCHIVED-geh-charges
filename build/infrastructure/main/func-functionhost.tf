@@ -72,7 +72,6 @@ module "func_functionhost" {
     INTEGRATIONEVENT_SENDER_CONNECTION_STRING                       = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-send-connection-string)"
     INTEGRATIONEVENT_LISTENER_CONNECTION_STRING                     = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-listen-connection-string)"
     INTEGRATIONEVENT_MANAGER_CONNECTION_STRING                      = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-manage-connection-string)"
-    MARKET_PARTICIPANT_REGISTRY_CONNECTION_STRING                   = local.MS_MARKET_PARTICIPANT_REGISTRY_CONNECTION_STRING
 
     # Message Hub
     MESSAGEHUB_STORAGE_CONNECTION_STRING                            = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=st-marketres-primary-connection-string)"
