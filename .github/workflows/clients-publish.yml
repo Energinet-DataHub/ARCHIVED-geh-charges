@@ -47,8 +47,6 @@ env:
   AZURE_KEYVAULT_URL: ${{ secrets.AZURE_KEYVAULT_URL }}
   # Set value used by 'AzuriteManager'
   AzuriteBlobFolderPath: '${{ github.workspace }}\node_modules\.bin\'
-  # # Overrides settings in 'functionhost.settings.json'
-  # FunctionAppHostPath: '${{ github.workspace }}\node_modules\azure-functions-core-tools\bin\func.dll'
 
 permissions:
   id-token: write
