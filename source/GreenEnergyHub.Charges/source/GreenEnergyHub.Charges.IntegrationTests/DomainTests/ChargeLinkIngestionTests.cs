@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.ChargeLinks;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
@@ -129,6 +130,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Assert
+                using var assertionScope = new AssertionScope();
                 // We expect 3 message types in the MessageHub, one for the receipt,
                 // one for the charge link itself and one rejected
                 var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 3);
