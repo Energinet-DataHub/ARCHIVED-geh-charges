@@ -23,15 +23,16 @@ on:
 jobs:
   # Markdown, links and spell checking
   ci_base:
-    uses: Energinet-DataHub/.github/.github/workflows/ci-base.yml@7.6.0
+    uses: Energinet-DataHub/.github/.github/workflows/ci-base.yml@v8
 
   # Build and test solution, and publish coverage report
   dotnet_solution_ci:
-    uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci.yml@7.7.0
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci.yml@8.1.0
     with:
       SOLUTION_FILE_PATH: 'source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln'
       USE_AZURE_FUNCTIONS_TOOLS: true
       PREPARE_OUTPUTS: true
+      CODE_COVERAGE_FLAGS: business
     secrets:
       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
       AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
@@ -40,7 +41,7 @@ jobs:
       AZURE_SECRETS_KEYVAULT_URL: ${{ secrets.AZURE_SECRETS_KEYVAULT_URL }}
 
   terraform_validate:
-    uses: Energinet-DataHub/.github/.github/workflows/terraform-validate.yml@7.7.0
+    uses: Energinet-DataHub/.github/.github/workflows/terraform-validate.yml@v8
     with:
       TERRAFORM_WORKING_DIR_PATH: './build/infrastructure/main'
       TERRAFORM_VERSION: '1.2.2'
@@ -52,7 +53,7 @@ jobs:
       terraform_validate,
       dotnet_solution_ci
     ]
-    uses: Energinet-DataHub/.github/.github/workflows/create-prerelease.yml@7.7.0
+    uses: Energinet-DataHub/.github/.github/workflows/create-prerelease.yml@v8
     with:
       CALLER_REPOSITORY_PATH: Energinet-DataHub/geh-charges
     secrets:

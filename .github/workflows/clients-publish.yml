@@ -75,8 +75,7 @@ jobs:
         uses: Energinet-DataHub/.github/.github/actions/dotnet-solution-build-and-test@v8
         with:
           SOLUTION_FILE_PATH: './source/Energinet.Charges.Libraries/Energinet.DataHub.Charges.Libraries.sln'
-          # TODO: Add flag?
-          # CODE_COVERAGE_FLAGS: <flag-name>
+          CODE_COVERAGE_FLAGS: clientlibraries
           AZURE_KEYVAULT_URL: ${{ secrets.AZURE_KEYVAULT_URL }}
           AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
           AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
