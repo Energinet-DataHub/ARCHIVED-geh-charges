@@ -14,6 +14,7 @@
 
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
@@ -21,6 +22,8 @@ using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.Charges.Events;
+using GreenEnergyHub.Charges.Application.Messaging;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 using GreenEnergyHub.Charges.FunctionHost.MessageHub;
 using GreenEnergyHub.Charges.Infrastructure.Outbox;
 using GreenEnergyHub.Charges.Infrastructure.Persistence;
@@ -95,8 +98,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
             [Theory]
             [InlineAutoMoqData]
             public async Task GivenOutputProcessorEndpoint_WhenFailsFirstAttempt_ThenRetryNext(
-                Mock<IAvailableDataNotifier<AvailableChargeReceiptData, ChargePriceOperationsRejectedEvent>> availableDataNotifier,
                 [Frozen] Mock<IClock> clock,
+                Mock<IMessageDispatcher<ChargePriceOperationsRejectedEvent>> dispatcher,
                 JsonSerializer jsonSerializer,
                 TimerInfo timerInfo,
                 CorrelationContext correlationContext,
@@ -114,25 +117,23 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 var outboxRepository = new OutboxMessageRepository(chargesDatabaseWriteContext);
                 var sut = new OutboxMessageProcessorEndpoint(
                     outboxRepository,
-                    availableDataNotifier.Object,
                     jsonSerializer,
                     clock.Object,
                     correlationContext,
+                    dispatcher.Object,
                     unitOfWork);
 
                 // Act & Assert
-                availableDataNotifier
-                    .Setup(adn =>
-                        adn.NotifyAsync(It.IsAny<ChargePriceOperationsRejectedEvent>()))
-                    .ThrowsAsync(new Exception());
+                dispatcher.Setup(d => d.DispatchAsync(
+                        It.IsAny<ChargePriceOperationsRejectedEvent>(),
+                        It.IsAny<CancellationToken>())).Throws<Exception>();
 
                 await Assert.ThrowsAsync<Exception>(() => sut.RunAsync(timerInfo));
 
-                availableDataNotifier
-                    .Setup(adn =>
-                        adn.NotifyAsync(It.IsAny<ChargePriceOperationsRejectedEvent>()))
-                    .Returns(Task.CompletedTask);
-
+                dispatcher.Setup(d => d.DispatchAsync(
+                        It.IsAny<ChargePriceOperationsRejectedEvent>(),
+                        It.IsAny<CancellationToken>()))
+                    .Callback<ChargePriceOperationsRejectedEvent, CancellationToken>((_, _) => { });
                 await sut.RunAsync(timerInfo);
 
                 outboxMessage = chargesDatabaseReadContext.OutboxMessages.Single(x => x.Id == outboxMessage.Id);

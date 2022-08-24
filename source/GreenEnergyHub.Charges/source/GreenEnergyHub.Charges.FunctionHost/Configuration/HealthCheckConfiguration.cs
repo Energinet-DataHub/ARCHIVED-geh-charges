@@ -150,6 +150,17 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                         EnvironmentSettingNames.DomainEventManagerConnectionString),
                     topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandAcceptedTopicName),
                     subscriptionName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandAcceptedSubscriptionName))
+                // .AddAzureServiceBusTopic(
+                //     name: "ChargePriceOperationRejectedTopicExists",
+                //     connectionString: EnvironmentHelper.GetEnv(
+                //         EnvironmentSettingNames.DomainEventManagerConnectionString),
+                //     topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargePriceRejectedTopicName))
+                // .AddAzureServiceBusSubscription(
+                //     name: "ChargePriceOperationsRejectedSubscriptionExists",
+                //     connectionString: EnvironmentHelper.GetEnv(
+                //         EnvironmentSettingNames.DomainEventManagerConnectionString),
+                //     topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargePriceRejectedTopicName),
+                //     subscriptionName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargePriceRejectedSubscriptionName))
 
                 // Used by ChargeDataAvailableNotifierEndpoint
                 .AddAzureServiceBusSubscription(
