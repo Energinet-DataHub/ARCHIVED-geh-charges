@@ -11,48 +11,106 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-name: Publish Clients to Nuget.org
+
+name: Publish Clients and Clients.Registration to Nuget.org
 
 on:
+  # Build, test, pack and publish release packages
+  # Only executed if Clients or Clients.Registration packages content or build scripts has changed; not if solution file, documentation or tests has changed
   push:
     branches:
       - main
     paths:
       - source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/**
+      - source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients.Registration/**
       - .github/workflows/clients-publish.yml
-      - .github/actions/dotnet-publish-nuget/**
+  # Build, test, pack
+  # Executed if Libraries folder, dependencies or build scripts has changed; including if documentation or tests has changed
   # The purpose of the pull-request trigger is to have the PR gate verify that the NuGet package version number
   # isn't already published - in order to avoid breaking main
   pull_request:
-      branches:
-        - main
-      paths:
-      - source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/**
+    branches:
+      - main
+    paths:
+      - source/Energinet.Charges.Libraries/**
+      - source/Shared/GreenEnergyHub/source/GreenEnergyHub.TestHelpers/**
+      - source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.TestCore/**
       - .github/workflows/clients-publish.yml
-      - .github/actions/dotnet-publish-nuget/**
+  # Build, test, pack and publish prerelease packages
+  # Executed if manually triggered
   workflow_dispatch: {}
 
 env:
-  DOTNET_VERSION: '6.0.300'
-  CSPROJ_FILE_PATH: 'source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/Energinet.DataHub.Charges.Clients.csproj'
-  BINARY_PATH: 'source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/bin/Release/*.nupkg'
+  # Conditions
+  PUSH_PACKAGES: ${{ github.event_name != 'pull_request' }}
+  # TODO: Delete?
+  # # Variables necessary to manage Azure resources for tests (similar to local use of 'integrationtest.local.settings.json')
+  # AZURE_KEYVAULT_URL: ${{ secrets.AZURE_KEYVAULT_URL }}
+  # # Set value used by 'AzuriteManager'
+  # AzuriteBlobFolderPath: '${{ github.workspace }}\node_modules\.bin\'
+  # # Overrides settings in 'functionhost.settings.json'
+  # FunctionAppHostPath: '${{ github.workspace }}\node_modules\azure-functions-core-tools\bin\func.dll'
+
+permissions:
+  id-token: write
+  contents: read
 
 jobs:
+
   build_and_publish:
-    runs-on: ubuntu-latest
-    name: Publish to nuget feed
-    permissions:
-      contents: read
-      packages: write
+
+    runs-on: windows-2022
+    name: Publish bundle to NuGet.org
+
+    environment: CI
+
     steps:
       - name: Checkout repository
-        uses: actions/checkout@master
+        uses: Energinet-DataHub/.github/.github/actions/nuget-checkout-repository@v8
 
-      - name: Pack and publish nuget package
-        uses: ./.github/actions/dotnet-publish-nuget
+      - name: Setup dotnet and tools
+        uses: Energinet-DataHub/.github/.github/actions/dotnet-setup-and-tools@v8
         with:
-          dotnet_version: ${{ env.DOTNET_VERSION }}
-          csproj_file_path: ${{ env.CSPROJ_FILE_PATH }}
-          binary_path: ${{ env.BINARY_PATH }}
-          nuget_token: ${{ secrets.NUGET_TOKEN }}
-          nuget_recurse_path: source/Energinet.Charges.Libraries
+          USE_AZURE_FUNCTIONS_TOOLS: 'true'
+          NODE_VERSION: '16'
+          AZURITE_VERSION: '3.15.0'
+          AZURE_FUNCTIONS_CORE_TOOLS_VERSION: '4.0.3971'
+
+      - name: Build and test solution
+        uses: Energinet-DataHub/.github/.github/actions/dotnet-solution-build-and-test@v8
+        with:
+          SOLUTION_FILE_PATH: './source/Energinet.Charges.Libraries/Energinet.DataHub.Charges.Libraries.sln'
+          # TODO: Add flag?
+          # CODE_COVERAGE_FLAGS: <flag-name>
+          AZURE_KEYVAULT_URL: ${{ secrets.AZURE_KEYVAULT_URL }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          AZURE_SPN_ID: ${{ secrets.AZURE_SPN_ID_OIDC }}
+
+      - name: Pack Clients project
+        uses: Energinet-DataHub/.github/.github/actions/nuget-project-pack@v8
+        with:
+          PROJECT_PATH: './source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/Energinet.DataHub.Charges.Clients.csproj'
+
+      - name: Pack Clients.Registration project
+        uses: Energinet-DataHub/.github/.github/actions/nuget-project-pack@v8
+        with:
+          PROJECT_PATH: './source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients.Registration/Energinet.DataHub.Charges.Clients.Registration.csproj'
+
+
+      - name: Package content or build has changed
+        id: changed-content
+        uses: tj-actions/changed-files@v17.2
+        with:
+          files: |
+            source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/**/*.*
+            source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients.Registration/**/*.*
+            .github/workflows/clients-publish.yml
+
+      - name: Assert versions of NuGet packages and push them to NuGet.org
+        uses: Energinet-DataHub/.github/.github/actions/nuget-packages-assert-and-push@v8
+        with:
+          PUSH_PACKAGES: ${{ env.PUSH_PACKAGES }}
+          CONTENT_CHANGED: ${{ steps.changed-content.outputs.any_changed }}
+          NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
+          NUPKG_RECURSE_PATH: 'source/Energinet.Charges.Libraries/source'
