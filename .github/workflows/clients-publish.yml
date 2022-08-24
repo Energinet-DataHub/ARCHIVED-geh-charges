@@ -97,7 +97,6 @@ jobs:
         with:
           PROJECT_PATH: './source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients.Registration/Energinet.DataHub.Charges.Clients.Registration.csproj'
 
-
       - name: Package content or build has changed
         id: changed-content
         uses: tj-actions/changed-files@v17.2
