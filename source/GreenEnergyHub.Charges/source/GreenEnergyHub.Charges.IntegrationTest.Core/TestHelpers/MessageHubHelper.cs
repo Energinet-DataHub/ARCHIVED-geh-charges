@@ -20,7 +20,6 @@ using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Energinet.DataHub.MessageHub.IntegrationTesting;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
-using Xunit.Abstractions;
 
 namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
 {
@@ -32,8 +31,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
         public static async Task<List<string>> AssertPeekReceivesRepliesAsync(
             this MessageHubSimulation messageHub,
             string correlationId,
-            int noOfMessageTypes,
-            ITestOutputHelper testOutputHelper)
+            int noOfMessageTypes = 1)
         {
             var noOfReceivedMessages = 0;
             var peekResults = new List<string>();
@@ -48,7 +46,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
                 catch (Exception ex) when (ex is TaskCanceledException or TimeoutException)
                 {
                     var error = $"MessageHub received only {noOfReceivedMessages} of {noOfMessageTypes} expected messages!";
-                    testOutputHelper.WriteLine(error);
+                    throw new InvalidOperationException(error, ex);
                 }
                 finally
                 {
