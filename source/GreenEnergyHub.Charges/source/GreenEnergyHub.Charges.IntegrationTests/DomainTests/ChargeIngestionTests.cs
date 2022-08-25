@@ -418,16 +418,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 peekResult[1].Should().Contain("<cim:code>D14</cim:code>");
             }
 
-            /// <summary>
-            /// Submits a charge price request with 3 price series, where
-            /// ChargeID: TestSub
-            /// ChargeType: D01 (subscription)
-            /// ChargeOwner for 1st and 3rd price series: 8100000000030
-            /// ChargeOwner for 2nd price series: 5790001330551
-            /// Expected result:
-            /// 1st and 3rd price series confirmed
-            /// 2nd price series rejected due to mismatching owner
-            /// </summary>
             [Fact]
             public async Task When_BundledChargePriceRequestWhere2ndOperationHasMismatchingOwner_Then_2ndOperationIsRejected_And_1stAnd3rdOperationAccepted()
             {
@@ -441,8 +431,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
                 // Assert
                 using var assertionScope = new AssertionScope();
-
                 actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
+
+                // We expect 3 peek results:
+                // * two confirmations (for 1st and 3rd operation)
+                // * one rejection (for 2nd operation due mismatching charge owner)
                 var peekResult = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 3);
 
                 peekResult.Count(s => s.Contains("ConfirmRequestChangeOfPriceList_MarketDocument")).Should().Be(2);
