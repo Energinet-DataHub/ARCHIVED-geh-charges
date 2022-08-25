@@ -97,7 +97,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
             private static ServiceBusMessage CreateServiceBusMessage(ChargePriceCommandReceivedEvent command, string correlationId)
             {
-                var applicationProperties = new Dictionary<string, string>();
+                var applicationProperties = new Dictionary<string, string> { { "OperationCorrelationId", correlationId } };
                 var message = ServiceBusMessageGenerator.CreateWithJsonContent(
                     command, applicationProperties, correlationId);
 

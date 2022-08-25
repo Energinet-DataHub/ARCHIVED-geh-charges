@@ -92,6 +92,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
                 var applicationProperties = new Dictionary<string, string>
                 {
+                    { "OperationCorrelationId", correlationId },
                     { "ReplyTo", Fixture.CreateLinkReplyQueue.Name },
                 };
 

@@ -44,15 +44,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData
 
         private string? GetSessionId(FunctionContext context)
         {
-            context.BindingContext.BindingData.TryGetValue("MessageSession", out var session);
-
-            if (session != null)
-            {
-                var sessionData = _jsonSerializer.Deserialize<Dictionary<string, object>>(session.ToString());
-                return sessionData["SessionId"].ToString()!;
-            }
-
-            return null;
+            context.BindingContext.BindingData.TryGetValue("SessionId", out var session);
+            return (string?)session;
         }
 
         private MessageMetadata GetMessageMetaData(FunctionContext context)

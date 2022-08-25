@@ -106,7 +106,12 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Bundling
                 var creatorProvider = new BundleCreatorProvider(bundleCreators);
                 var messageType = $"{bundleType}_{businessReasonCode}";
                 var request = new DataBundleRequestDto(
-                    Guid.NewGuid(), Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), new MessageTypeDto(messageType));
+                    Guid.NewGuid(),
+                    Guid.NewGuid().ToString(),
+                    Guid.NewGuid().ToString(),
+                    new MessageTypeDto(messageType),
+                    ResponseFormat.Xml,
+                    1.0);
 
                 var actual = creatorProvider.Get(request);
 

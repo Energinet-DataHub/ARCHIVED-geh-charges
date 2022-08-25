@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.Core.App.FunctionApp.FunctionTelemetryScope;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using Energinet.DataHub.Core.Logging.RequestResponseMiddleware;
-using GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub;
 using GreenEnergyHub.Charges.FunctionHost.Configuration;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
