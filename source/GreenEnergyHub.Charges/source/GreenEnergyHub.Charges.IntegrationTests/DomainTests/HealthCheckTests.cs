@@ -40,10 +40,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
         public async Task When_RequestLivenessStatus_Then_ResponseIsOkAndHealthy()
         {
             // Arrange
-            var requestMessage = HttpRequestGenerator.CreateHttpGetRequest("api/monitor/live");
+            var request = HttpRequestGenerator.CreateHttpGetRequest("api/monitor/live");
 
             // Act
-            var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(requestMessage.Request);
+            var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request);
 
             // Assert
             actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -56,10 +56,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
         public async Task When_RequestReadinessStatus_Then_ResponseIsOkAndHealthy()
         {
             // Arrange
-            var requestMessage = HttpRequestGenerator.CreateHttpGetRequest("api/monitor/ready");
+            var request = HttpRequestGenerator.CreateHttpGetRequest("api/monitor/ready");
 
             // Act
-            var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(requestMessage.Request);
+            var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request);
 
             // Assert
             actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -75,10 +75,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             {
                 // Arrange
                 await Fixture.ChargesDatabaseManager.DeleteDatabaseAsync();
-                var requestMessage = HttpRequestGenerator.CreateHttpGetRequest("api/monitor/ready");
+                var request = HttpRequestGenerator.CreateHttpGetRequest("api/monitor/ready");
 
                 // Act
-                var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(requestMessage.Request);
+                var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Assert
                 actualResponse.StatusCode.Should().Be(HttpStatusCode.ServiceUnavailable);

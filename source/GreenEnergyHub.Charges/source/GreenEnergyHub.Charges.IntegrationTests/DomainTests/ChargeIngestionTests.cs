@@ -68,7 +68,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             [Fact]
             public async Task When_RequestIsUnauthenticated_Then_AHttp401UnauthorizedIsReturned()
             {
-                var (request, _) = HttpRequestGenerator.CreateHttpPostRequest(
+                var request = HttpRequestGenerator.CreateHttpPostRequest(
                     EndpointUrl, ChargeDocument.TariffBundleWithValidAndInvalid, GetZonedDateTimeService());
 
                 var actual = await Fixture.HostManager.HttpClient.SendAsync(request);

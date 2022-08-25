@@ -13,8 +13,8 @@
 // limitations under the License.
 
 using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
+using Energinet.DataHub.Core.JsonSerialization;
 using GreenEnergyHub.Charges.Application.Charges.Events;
-using GreenEnergyHub.Json;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Outbox
