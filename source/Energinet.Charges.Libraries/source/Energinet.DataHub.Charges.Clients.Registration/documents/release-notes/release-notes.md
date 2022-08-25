@@ -1,5 +1,9 @@
 # Energinet.DataHub.Charges.Clients.Registrations Release notes
 
+## Version 3.0.9
+
+Updated NuGet packages
+
 ## Version 3.0.8
 
 Bumped because workflow file was updated.
