@@ -9,7 +9,6 @@ flag_management:
       paths:
       - source/Energinet.Charges.Libraries
 
-
 # https://docs.codecov.com/docs/ignoring-paths
 # Following will be ignored no matter which flag is used
 ignore:
