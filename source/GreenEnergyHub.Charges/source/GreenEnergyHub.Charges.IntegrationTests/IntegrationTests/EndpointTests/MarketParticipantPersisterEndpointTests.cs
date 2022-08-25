@@ -96,7 +96,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     CreateActorMarketRoles());
 
                 var actorUpdatedIntegrationEventParser = new ActorUpdatedIntegrationEventParser();
-                var message = actorUpdatedIntegrationEventParser.Parse(actorUpdatedIntegrationEvent);
+                var message = actorUpdatedIntegrationEventParser.ParseToSharedIntegrationEvent(actorUpdatedIntegrationEvent);
 
                 var correlationId = CorrelationIdGenerator.Create();
                 var serviceBusMessage = new ServiceBusMessage(message) { CorrelationId = correlationId };
