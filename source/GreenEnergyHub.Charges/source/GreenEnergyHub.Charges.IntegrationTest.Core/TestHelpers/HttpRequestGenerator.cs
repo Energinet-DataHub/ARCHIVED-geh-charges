@@ -41,7 +41,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
             var correlationId = CorrelationIdGenerator.Create();
 
             request.Headers.Add("Authorization", $"Bearer {accessToken}");
-            request.Headers.Add("Correlation-Id", correlationId);
+            request.Headers.Add("CorrelationId", correlationId);
 
             return (request, correlationId);
         }
