@@ -278,13 +278,6 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             Environment.SetEnvironmentVariable(
                 EnvironmentSettingNames.ChargeDbConnectionString,
                 ChargesDatabaseManager.ConnectionString);
-
-            // Only market participant registry thing being tested is connectivity
-            // - so for now we just cheat and provide another connection string
-            var marketParticipantRegistryConnectionString = ChargesDatabaseManager.ConnectionString;
-            Environment.SetEnvironmentVariable(
-                EnvironmentSettingNames.MarketParticipantRegistryDbConnectionString,
-                marketParticipantRegistryConnectionString);
         }
 
         /// <inheritdoc/>

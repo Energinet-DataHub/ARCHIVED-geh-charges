@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
@@ -24,6 +25,13 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.Inpu
 {
     public class ChargePriceOperationInputValidationRulesFactory : IInputValidationRulesFactory<ChargePriceOperationDto>
     {
+        private readonly IZonedDateTimeService _zonedDateTimeService;
+
+        public ChargePriceOperationInputValidationRulesFactory(IZonedDateTimeService zonedDateTimeService)
+        {
+            _zonedDateTimeService = zonedDateTimeService;
+        }
+
         public IValidationRuleSet CreateRules(ChargePriceOperationDto operation, DocumentDto document)
         {
             ArgumentNullException.ThrowIfNull(operation);
@@ -35,16 +43,19 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.Inpu
         {
             var rules = new List<IValidationRuleContainer>
             {
-                CreateRuleContainer(new MaximumPriceRule(operation), operation.OperationId),
                 CreateRuleContainer(new ChargeIdLengthValidationRule(operation), operation.OperationId),
                 CreateRuleContainer(new ChargeIdRequiredValidationRule(operation), operation.OperationId),
                 CreateRuleContainer(new ChargeOperationIdRequiredRule(operation), operation.OperationId),
                 CreateRuleContainer(new ChargeOperationIdLengthValidationRule(operation), operation.OperationId),
                 CreateRuleContainer(new ChargeOwnerIsRequiredValidationRule(operation), operation.OperationId),
-                CreateRuleContainer(new ChargeTypeIsKnownValidationRule(operation), operation.OperationId),
-                CreateRuleContainer(new StartDateTimeRequiredValidationRule(operation), operation.OperationId),
-                CreateRuleContainer(new ChargeOwnerTextLengthRule(operation), operation.OperationId),
                 CreateRuleContainer(new ChargeOwnerMustMatchSenderRule(document.Sender.MarketParticipantId, operation.ChargeOwner), operation.OperationId),
+                CreateRuleContainer(new ChargeTypeIsKnownValidationRule(operation), operation.OperationId),
+                CreateRuleContainer(new ChargeTypeTariffPriceCountRule(operation), operation.OperationId),
+                CreateRuleContainer(new ChargePriceMaximumDigitsAndDecimalsRule(operation), operation.OperationId),
+                CreateRuleContainer(new MaximumPriceRule(operation), operation.OperationId),
+                CreateRuleContainer(new NumberOfPointsMatchTimeIntervalAndResolutionRule(operation), operation.OperationId),
+                CreateRuleContainer(new PriceListMustStartAndStopAtMidnightValidationRule(_zonedDateTimeService, operation), operation.OperationId),
+                CreateRuleContainer(new StartDateTimeRequiredValidationRule(operation), operation.OperationId),
             };
 
             return rules;
