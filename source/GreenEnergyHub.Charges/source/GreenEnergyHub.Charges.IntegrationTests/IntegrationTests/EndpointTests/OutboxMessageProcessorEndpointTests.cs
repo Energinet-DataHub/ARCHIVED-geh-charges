@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
@@ -21,6 +22,7 @@ using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.Charges.Events;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.FunctionHost.MessageHub;
 using GreenEnergyHub.Charges.Infrastructure.Outbox;
 using GreenEnergyHub.Charges.Infrastructure.Persistence;
@@ -86,8 +88,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
                 // Assert
                 var actualAvailableDataReceipt = messageHubDatabaseContext.AvailableChargeReceiptData
-                    .Single(x => x.OriginalOperationId == operationsRejectedEvent.Command.Operations.First().OperationId);
-                actualAvailableDataReceipt.RecipientId.Should().Be(operationsRejectedEvent.Command.Document.Sender.MarketParticipantId);
+                    .Single(x => x.OriginalOperationId == operationsRejectedEvent.Operations.First().OperationId);
+                actualAvailableDataReceipt.RecipientId.Should().Be(operationsRejectedEvent.Document.Sender.MarketParticipantId);
                 var processedOutboxMessage = chargesDatabaseReadContext.OutboxMessages.Single(x => x.Id == outboxMessage.Id);
                 processedOutboxMessage.ProcessedDate.Should().NotBeNull();
             }
@@ -142,9 +144,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
             private static PriceRejectedEvent CreateChargePriceOperationsRejectedEvent()
             {
                 var chargePriceOperation =
-                    new ChargePriceOperationDtoBuilder().WithChargePriceOperationId(Guid.NewGuid().ToString()).Build();
-                var chargeCommand = new ChargePriceCommandBuilder().WithChargeOperation(chargePriceOperation).Build();
-                var operationsRejectedEvent = new ChargePriceOperationsRejectedEventBuilder().WithChargeCommand(chargeCommand).Build();
+                    new ChargePriceOperationDtoBuilder()
+                        .WithChargePriceOperationId(Guid.NewGuid().ToString())
+                        .Build();
+                var operations = new List<ChargePriceOperationDto> { chargePriceOperation };
+                var operationsRejectedEvent = new PriceRejectedEventBuilder()
+                    .WithOperations(operations)
+                    .Build();
                 return operationsRejectedEvent;
             }
 

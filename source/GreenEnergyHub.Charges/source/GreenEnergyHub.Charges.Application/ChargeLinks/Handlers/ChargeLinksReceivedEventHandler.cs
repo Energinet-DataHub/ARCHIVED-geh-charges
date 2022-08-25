@@ -103,7 +103,8 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
             DocumentDto document,
             IList<IValidationRuleContainer> rejectionRules)
         {
-            LogValidationErrors(document, rejectionRules);
+            var errorMessage = ValidationErrorLogMessageBuilder.BuildErrorMessage(document, rejectionRules);
+            _logger.LogError("ValidationErrors for {ErrorMessage}", errorMessage);
 
             if (operationsToBeRejected.Any())
             {
@@ -124,15 +125,6 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
                         new ChargeLinksCommand(document, operationsToBeConfirmed))
                     .ConfigureAwait(false);
             }
-        }
-
-        private void LogValidationErrors(DocumentDto document, IList<IValidationRuleContainer> invalidRules)
-        {
-            var errorMessage = ValidationErrorLogMessageBuilder.BuildErrorMessage(
-                document,
-                invalidRules);
-
-            _logger.LogError("ValidationErrors for {ErrorMessage}", errorMessage);
         }
     }
 }

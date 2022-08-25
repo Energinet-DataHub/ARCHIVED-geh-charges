@@ -15,11 +15,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Application.Charges.Factories;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
+using GreenEnergyHub.Charges.Application.Common.Helpers;
 using GreenEnergyHub.Charges.Application.Common.Services;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
@@ -29,6 +31,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.TestCore.TestHelpers;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.Charges.Tests.Builders.Testables;
 using GreenEnergyHub.TestHelpers;
@@ -53,11 +56,13 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IDomainEventPublisher> domainEventPublisher,
             [Frozen] Mock<ILoggerFactory> loggerFactory,
-            [Frozen] Mock<IChargeEventFactory> chargePriceOperationsRejectedEventFactory,
+            [Frozen] Mock<IChargeEventFactory> chargeEventFactory,
             Mock<ILogger> logger,
-            ChargeBuilder chargeBuilder)
+            ChargeBuilder chargeBuilder,
+            PriceConfirmedEventBuilder confirmedEventBuilder)
         {
             // Arrange
+            var priceConfirmedEvent = confirmedEventBuilder.Build();
             var chargeCommand = CreateChargeCommandWith24Points();
             var receivedEvent = new ChargePriceCommandReceivedEvent(InstantHelper.GetTodayAtMidnightUtc(), chargeCommand);
             var validationResult = ValidationResult.CreateSuccess();
@@ -74,6 +79,11 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             SetupChargeIdentifierFactoryMock(chargeIdentifierFactory);
 
             loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
+            chargeEventFactory
+                .Setup(c => c.CreatePriceConfirmedEvent(
+                    It.IsAny<DocumentDto>(),
+                    It.IsAny<IReadOnlyCollection<ChargePriceOperationDto>>()))
+                .Returns(priceConfirmedEvent);
 
             var sut = new ChargePriceEventHandler(
                 chargeRepository.Object,
@@ -81,21 +91,19 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                 inputValidator.Object,
                 domainEventPublisher.Object,
                 loggerFactory.Object,
-                chargePriceOperationsRejectedEventFactory.Object);
+                chargeEventFactory.Object);
 
             // Act
             await sut.HandleAsync(receivedEvent);
 
             // Assert
-            domainEventPublisher.Verify(
-                x => x.Publish(It.IsAny<PriceRejectedEvent>()),
-                Times.Never);
-            domainEventPublisher.Verify(
-                x =>
-                    x.Publish(It.Is<List<PriceConfirmedEvent>>(y => y.Count == 1)),
-                Times.Once);
+            domainEventPublisher
+                .Verify(x => x.Publish(It.IsAny<PriceRejectedEvent>()), Times.Never);
+            domainEventPublisher
+                .Verify(x => x.Publish(priceConfirmedEvent), Times.Once);
 
-            var expectedMessage = $"At this point, price(s) will be persisted for operation with Id {receivedEvent.Command.Operations.First().OperationId}";
+            var operationId = receivedEvent.Command.Operations.First().OperationId;
+            var expectedMessage = $"At this point, price(s) will be persisted for operation with Id {operationId}";
             logger.VerifyLoggerWasCalled(expectedMessage, LogLevel.Information);
         }
 
@@ -115,7 +123,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             ChargePriceEventHandler sut)
         {
             // Arrange
-            var validationResult = GetFailedValidationResult();
+            var validationResult = GetFailedValidationResult(It.IsAny<ValidationRuleIdentifier>());
             inputValidator.Setup(v => v.Validate(It.IsAny<ChargePriceOperationDto>(), It.IsAny<DocumentDto>())).Returns(validationResult);
             var charge = chargeBuilder.Build();
 
@@ -135,6 +143,54 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             // Assert
             chargePriceRejectionService.Verify(
                 x => x.Publish(It.IsAny<PriceRejectedEvent>()), Times.Once);
+        }
+
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task GiveHandleAsync_WhenValidationFails_ThenValidationErrorsAreLogged(
+            Mock<ILoggerFactory> loggerFactory,
+            Mock<IInputValidator<ChargePriceOperationDto>> inputValidator,
+            Mock<IDomainEventPublisher> domainEventPublisher,
+            Mock<IChargeEventFactory> chargeEventFactory,
+            Mock<ILogger> logger,
+            PriceRejectedEvent rejectedEvent,
+            ChargePriceCommandReceivedEvent commandReceivedEvent)
+        {
+            // Arrange
+            loggerFactory.Setup(l => l.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
+            var document = commandReceivedEvent.Command.Document;
+            var validationResult = GetFailedValidationResult(
+                ValidationRuleIdentifier.BusinessReasonCodeMustBeUpdateChargeInformationOrChargePrices);
+            var expectedMessage = TestStringGenerator.CreateExpectedErrorMessage(
+                document.Id,
+                document.Type.ToString(),
+                document.Sender.MarketParticipantId,
+                ValidationRuleIdentifier.BusinessReasonCodeMustBeUpdateChargeInformationOrChargePrices.ToString(),
+                commandReceivedEvent.Command.Operations.Count - 1);
+            inputValidator
+                .Setup(v => v.Validate(
+                    It.IsAny<ChargePriceOperationDto>(),
+                    It.IsAny<DocumentDto>()))
+                .Returns(validationResult);
+            chargeEventFactory
+                .Setup(c => c.CreatePriceRejectedEvent(
+                    It.IsAny<DocumentDto>(),
+                    It.IsAny<IReadOnlyCollection<ChargePriceOperationDto>>(),
+                    It.IsAny<ValidationResult>()))
+                .Returns(rejectedEvent);
+            var sut = new ChargePriceEventHandler(
+                It.IsAny<IChargeRepository>(),
+                It.IsAny<IMarketParticipantRepository>(),
+                inputValidator.Object,
+                domainEventPublisher.Object,
+                loggerFactory.Object,
+                chargeEventFactory.Object);
+
+            // Act
+            await sut.HandleAsync(commandReceivedEvent);
+
+            // Assert
+            logger.VerifyLoggerWasCalled(expectedMessage, LogLevel.Error);
         }
 
         [Theory]
@@ -199,7 +255,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         private static void SetupChargeIdentifierFactoryMock(Mock<IChargeIdentifierFactory> chargeIdentifierFactory)
         {
             chargeIdentifierFactory
-                .Setup(x => x.CreateAsync(It.IsAny<string>(), It.IsAny<ChargeType>(), It.IsAny<string>()))
+                .Setup(x => x.CreateAsync(
+                    It.IsAny<string>(),
+                    It.IsAny<ChargeType>(),
+                    It.IsAny<string>()))
                 .ReturnsAsync(It.IsAny<ChargeIdentifier>());
         }
 
@@ -212,10 +271,11 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                 .ReturnsAsync(charge);
         }
 
-        private static ValidationResult GetFailedValidationResult()
+        private static ValidationResult GetFailedValidationResult(ValidationRuleIdentifier validationRuleIdentifier)
         {
             var failedRule = new Mock<IValidationRule>();
             failedRule.Setup(r => r.IsValid).Returns(false);
+            failedRule.Setup(r => r.ValidationRuleIdentifier).Returns(validationRuleIdentifier);
 
             return ValidationResult.CreateFailure(
                 new List<IValidationRuleContainer> { new DocumentValidationRuleContainer(failedRule.Object) });

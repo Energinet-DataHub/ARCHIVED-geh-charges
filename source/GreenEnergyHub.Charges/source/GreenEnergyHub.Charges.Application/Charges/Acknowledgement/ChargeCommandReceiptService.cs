@@ -71,7 +71,10 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
             DocumentDto document,
             IList<IValidationRuleContainer> rejectionRules)
         {
-            LogValidationErrors(document, rejectionRules);
+            var errorMessage = ValidationErrorLogMessageBuilder.BuildErrorMessage(
+                document,
+                rejectionRules);
+            _logger.LogError("ValidationErrors for {ErrorMessage}", errorMessage);
 
             if (operationsToBeRejected.Any())
             {
@@ -96,15 +99,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
                 await AcceptAsync(
                     new ChargeInformationCommand(document, operationsToBeConfirmed)).ConfigureAwait(false);
             }
-        }
-
-        private void LogValidationErrors(DocumentDto document, IEnumerable<IValidationRuleContainer> invalidRules)
-        {
-            var errorMessage = ValidationErrorLogMessageBuilder.BuildErrorMessage(
-                document,
-                invalidRules);
-
-            _logger.LogError("ValidationErrors for {ErrorMessage}", errorMessage);
         }
     }
 }

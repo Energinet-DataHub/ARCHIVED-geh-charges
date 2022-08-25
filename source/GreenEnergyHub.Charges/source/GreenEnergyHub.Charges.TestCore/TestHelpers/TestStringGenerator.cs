@@ -17,7 +17,7 @@ using System.Text;
 
 namespace GreenEnergyHub.Charges.TestCore.TestHelpers
 {
-    public static class StringGenerator
+    public static class TestStringGenerator
     {
         public static string CreateStringOfRandomLength(int maxLength)
         {
@@ -30,6 +30,26 @@ namespace GreenEnergyHub.Charges.TestCore.TestHelpers
             }
 
             return builder.ToString();
+        }
+
+        public static string CreateExpectedErrorMessage(
+            string documentId,
+            string documentType,
+            string gln,
+            string validationRuleIdentifier,
+            int numberOfSubsequentErrors)
+        {
+            var expectedMessageBuilder = new StringBuilder();
+
+            expectedMessageBuilder.AppendLine($"ValidationErrors for document Id {documentId} with Type {documentType} from GLN {gln}:");
+            expectedMessageBuilder.AppendLine($"- ValidationRuleIdentifier: {validationRuleIdentifier}");
+
+            for (var i = 0; i < numberOfSubsequentErrors; i++)
+            {
+                expectedMessageBuilder.AppendLine("- ValidationRuleIdentifier: SubsequentBundleOperationsFail");
+            }
+
+            return expectedMessageBuilder.ToString();
         }
     }
 }

@@ -16,28 +16,31 @@ using System.Collections.Generic;
 using System.Linq;
 using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Tests.Builders.Command
 {
-    public class ChargePriceOperationsRejectedEventBuilder
+    public class PriceRejectedEventBuilder
     {
-        private ChargePriceCommand _chargePriceCommand;
+        private DocumentDto _document;
+        private IReadOnlyCollection<ChargePriceOperationDto> _operations;
         private IEnumerable<ValidationError> _validationErrors;
 
-        public ChargePriceOperationsRejectedEventBuilder()
+        public PriceRejectedEventBuilder()
         {
-            _chargePriceCommand = new ChargePriceCommandBuilder().Build();
+            _document = new DocumentDtoBuilder().Build();
+            _operations = new List<ChargePriceOperationDto>() { new ChargePriceOperationDtoBuilder().Build() };
             _validationErrors = new List<ValidationError>();
         }
 
-        public ChargePriceOperationsRejectedEventBuilder WithChargeCommand(ChargePriceCommand chargePriceCommand)
+        public PriceRejectedEventBuilder WithOperations(List<ChargePriceOperationDto> operations)
         {
-            _chargePriceCommand = chargePriceCommand;
+            _operations = operations;
             return this;
         }
 
-        public ChargePriceOperationsRejectedEventBuilder WithValidationErrors(IEnumerable<ValidationError> validationErrors)
+        public PriceRejectedEventBuilder WithValidationErrors(IEnumerable<ValidationError> validationErrors)
         {
             _validationErrors = validationErrors;
             return this;
@@ -51,12 +54,12 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
                 {
                     new ValidationError(
                         ValidationRuleIdentifier.MaximumPrice,
-                        _chargePriceCommand.Operations.First().OperationId,
+                        _operations.First().OperationId,
                         string.Empty),
                 };
             }
 
-            return new PriceRejectedEvent(_chargePriceCommand, _validationErrors);
+            return new PriceRejectedEvent(_document, _operations, _validationErrors);
         }
     }
 }

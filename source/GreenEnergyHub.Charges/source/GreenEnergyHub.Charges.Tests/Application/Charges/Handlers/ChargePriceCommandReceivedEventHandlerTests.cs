@@ -12,7 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application.Charges.Events;
@@ -22,9 +25,14 @@ using GreenEnergyHub.Charges.Application.Common.Services;
 using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Tests.Builders.Command;
+using GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.TestHelpers;
+using Microsoft.Extensions.Azure;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 using Xunit.Categories;
@@ -65,17 +73,19 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             [Frozen] Mock<IDomainEventPublisher> chargePriceRejectionService,
             [Frozen] Mock<IChargeEventFactory> chargeEventFactory,
             ChargePriceCommandReceivedEventHandler sut,
-            PriceRejectedEvent priceRejectedEvent)
+            PriceRejectedEventBuilder priceRejectedEventBuilder)
         {
             // Arrange
+            var priceRejectedEvent = priceRejectedEventBuilder.Build();
             documentValidator.Setup(v =>
                     v.ValidateAsync(It.IsAny<ChargePriceCommand>()))
-                .ReturnsAsync(ValidationResult.CreateFailure(GetFailedValidationResult()));
+                .ReturnsAsync(ValidationResult.CreateFailure(GetFailedValidationResult(
+                    ValidationRuleIdentifier.BusinessReasonCodeMustBeUpdateChargeInformationOrChargePrices)));
 
             chargeEventFactory
                 .Setup(c => c.CreatePriceRejectedEvent(
                     It.IsAny<DocumentDto>(),
-                    It.IsAny<List<ChargePriceOperationDto>>(),
+                    It.IsAny<IReadOnlyCollection<ChargePriceOperationDto>>(),
                     It.IsAny<ValidationResult>()))
                 .Returns(priceRejectedEvent);
 
@@ -84,14 +94,50 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 
             // Assert
             chargePriceRejectionService.Verify(
-                x => x.Publish(It.IsAny<PriceRejectedEvent>()), Times.Once);
+                x => x.Publish(priceRejectedEvent), Times.Once);
             chargePriceEventHandler.Verify(x => x.HandleAsync(chargePriceCommandReceivedEvent), Times.Never);
         }
 
-        private static List<IValidationRuleContainer> GetFailedValidationResult()
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task GivenHandleAsync_WhenValidationFails_ShouldLogValidationErrors(
+            [Frozen] Mock<ILogger> logger,
+            [Frozen] Mock<IDocumentValidator> documentValidator,
+            [Frozen] Mock<IChargeEventFactory> chargeEventFactory,
+            PriceRejectedEvent rejectedEvent,
+            ChargePriceCommandReceivedEvent chargePriceCommandReceivedEvent,
+            ChargePriceCommandReceivedEventHandler sut)
+        {
+            // Arrange
+            var document = chargePriceCommandReceivedEvent.Command.Document;
+            var expectedMessage =
+                $"ValidationErrors for document Id {document.Id} with Type {document.Type} from GLN {document.Sender.MarketParticipantId}:\r\n" +
+                "- ValidationRuleIdentifier: BusinessReasonCodeMustBeUpdateChargeInformationOrChargePrices\r\n";
+
+            chargeEventFactory
+                .Setup(c => c.CreatePriceRejectedEvent(
+                    It.IsAny<DocumentDto>(),
+                    It.IsAny<IReadOnlyCollection<ChargePriceOperationDto>>(),
+                    It.IsAny<ValidationResult>()))
+                .Returns(rejectedEvent);
+            documentValidator
+                .Setup(d => d.ValidateAsync(It.IsAny<ChargeCommand>()))
+                .ReturnsAsync(
+                    ValidationResult.CreateFailure(GetFailedValidationResult(
+                        ValidationRuleIdentifier.BusinessReasonCodeMustBeUpdateChargeInformationOrChargePrices)));
+
+            // Act
+            await sut.HandleAsync(chargePriceCommandReceivedEvent);
+
+            // Assert
+            logger.VerifyLoggerWasCalled(expectedMessage, LogLevel.Error);
+        }
+
+        private static List<IValidationRuleContainer> GetFailedValidationResult(ValidationRuleIdentifier validationRuleIdentifier)
         {
             var failedRule = new Mock<IValidationRule>();
             failedRule.Setup(r => r.IsValid).Returns(false);
+            failedRule.Setup(r => r.ValidationRuleIdentifier).Returns(validationRuleIdentifier);
 
             return new List<IValidationRuleContainer> { new DocumentValidationRuleContainer(failedRule.Object) };
         }

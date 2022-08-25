@@ -16,25 +16,30 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Factories;
+using GreenEnergyHub.Charges.Application.Common.Helpers;
 using GreenEnergyHub.Charges.Application.Common.Services;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
     public class ChargePriceCommandReceivedEventHandler : IChargePriceCommandReceivedEventHandler
     {
+        private readonly ILogger _logger;
         private readonly IChargePriceEventHandler _chargePriceEventHandler;
         private readonly IDocumentValidator _documentValidator;
         private readonly IDomainEventPublisher _domainEventPublisher;
         private readonly IChargeEventFactory _chargeEventFactory;
 
         public ChargePriceCommandReceivedEventHandler(
+            ILogger logger,
             IChargePriceEventHandler chargePriceEventHandler,
             IDocumentValidator documentValidator,
             IDomainEventPublisher domainEventPublisher,
             IChargeEventFactory chargeEventFactory)
         {
+            _logger = logger;
             _chargePriceEventHandler = chargePriceEventHandler;
             _documentValidator = documentValidator;
             _domainEventPublisher = domainEventPublisher;
@@ -58,6 +63,11 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             ChargePriceCommandReceivedEvent commandReceivedEvent,
             IList<IValidationRuleContainer> rejectionRules)
         {
+            var errorMessage = ValidationErrorLogMessageBuilder.BuildErrorMessage(
+                commandReceivedEvent.Command.Document,
+                rejectionRules);
+            _logger.LogError("ValidationErrors for {ErrorMessage}", errorMessage);
+
             var validationResult = ValidationResult.CreateFailure(rejectionRules);
 
             var rejectedEvent = _chargeEventFactory.CreatePriceRejectedEvent(
