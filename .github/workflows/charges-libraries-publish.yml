@@ -23,7 +23,7 @@ on:
     paths:
       - source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/**
       - source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients.Registration/**
-      - .github/workflows/clients-publish.yml
+      - .github/workflows/charges-libraries-publish.yml
   # Build, test, pack
   # Executed if Libraries folder, dependencies or build scripts has changed; including if documentation or tests has changed
   # The purpose of the pull-request trigger is to have the PR gate verify that the NuGet package version number
@@ -35,7 +35,7 @@ on:
       - source/Energinet.Charges.Libraries/**
       - source/Shared/GreenEnergyHub/source/GreenEnergyHub.TestHelpers/**
       - source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.TestCore/**
-      - .github/workflows/clients-publish.yml
+      - .github/workflows/charges-libraries-publish.yml
   # Build, test, pack and publish prerelease packages
   # Executed if manually triggered
   workflow_dispatch: {}
@@ -98,7 +98,7 @@ jobs:
           files: |
             source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/**/*.*
             source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients.Registration/**/*.*
-            .github/workflows/clients-publish.yml
+            .github/workflows/charges-libraries-publish.yml
 
       - name: Assert versions of NuGet packages and push them to NuGet.org
         uses: Energinet-DataHub/.github/.github/actions/nuget-packages-assert-and-push@v8
