@@ -111,7 +111,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Bundling
                     IdempotencyId: Guid.NewGuid().ToString(),
                     new MessageTypeDto(messageType),
                     ResponseFormat.Xml,
-                    1.0);
+                    ResponseVersion: 1.0);
 
                 var actual = creatorProvider.Get(request);
 
