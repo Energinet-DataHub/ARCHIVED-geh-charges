@@ -22,7 +22,6 @@ namespace GreenEnergyHub.Charges.TestCore.TestHelpers
         {
             var correlationContext = new CorrelationContext();
             correlationContext.SetId(id);
-            correlationContext.SetParentId("parentId");
             return correlationContext;
         }
     }
