@@ -40,6 +40,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
             var (request, correlationId) = CreateHttpPostRequest(endpointUrl, testFilePath, zonedDateTimeService);
 
             request.Headers.Add("Authorization", $"Bearer {accessToken}");
+            request.Headers.Add("Correlation-Id", correlationId);
 
             return (request, correlationId);
         }
