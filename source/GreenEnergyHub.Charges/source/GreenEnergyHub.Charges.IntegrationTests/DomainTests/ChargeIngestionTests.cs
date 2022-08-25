@@ -418,6 +418,40 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 peekResult[1].Should().Contain("<cim:code>D14</cim:code>");
             }
 
+            /// <summary>
+            /// Submits a charge price request with 3 price series, where
+            /// ChargeID: TestSub
+            /// ChargeType: D01 (subscription)
+            /// ChargeOwner for 1st and 3rd price series: 8100000000030
+            /// ChargeOwner for 2nd price series: 5790001330551
+            /// Expected result:
+            /// 1st and 3rd price series confirmed
+            /// 2nd price series rejected due to mismatching owner
+            /// </summary>
+            [Fact]
+            public async Task When_BundledChargePriceRequestWhere2ndOperationHasMismatchingOwner_Then_2ndOperationIsRejected_And_1stAnd3rdOperationAccepted()
+            {
+                // Arrange
+                var (request, correlationId) =
+                    Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
+                        EndpointUrl, ChargeDocument.BundledSubscriptionPriceSeriesSecondOperationChargeOwnerMismatch);
+
+                // Act
+                var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                using var assertionScope = new AssertionScope();
+
+                actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
+                var peekResult = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 3);
+
+                peekResult.Count(s => s.Contains("ConfirmRequestChangeOfPriceList_MarketDocument")).Should().Be(2);
+
+                var rejection = peekResult.Single(s => s.Contains("RejectRequestChangeOfPriceList_MarketDocument"));
+                rejection.Should().Contain("<cim:process.processType>D08</cim:process.processType>");
+                rejection.Should().Contain("<cim:code>E0I</cim:code>");
+            }
+
             // TODO: Reenable test as soon as business rules are validated
             [Fact(Skip = "Not able to validate business rules, because UpdatePrices is commented out and therefore rules are never validated.")]
             public async Task When_ChargePriceRequestFailsBusinessValidation_Then_ARejectionShouldBeSent()
