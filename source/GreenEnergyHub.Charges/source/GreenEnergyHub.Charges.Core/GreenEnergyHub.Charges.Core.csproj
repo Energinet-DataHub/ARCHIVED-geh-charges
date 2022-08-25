@@ -36,7 +36,6 @@ limitations under the License.
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\iso8601\GreenEnergyHub.Iso8601\GreenEnergyHub.Iso8601.csproj" />
-      <ProjectReference Include="..\..\..\Shared\GreenEnergyHub\source\GreenEnergyHub.Json\GreenEnergyHub.Json.csproj" />
     </ItemGroup>
 
 </Project>

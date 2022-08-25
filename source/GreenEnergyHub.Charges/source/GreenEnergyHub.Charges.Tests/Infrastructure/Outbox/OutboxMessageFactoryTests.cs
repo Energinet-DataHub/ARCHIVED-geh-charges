@@ -13,11 +13,11 @@
 // limitations under the License.
 
 using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
+using Energinet.DataHub.Core.JsonSerialization;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Infrastructure.Outbox;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
-using GreenEnergyHub.Json;
 using GreenEnergyHub.TestHelpers;
 using NodaTime;
 using Xunit;
