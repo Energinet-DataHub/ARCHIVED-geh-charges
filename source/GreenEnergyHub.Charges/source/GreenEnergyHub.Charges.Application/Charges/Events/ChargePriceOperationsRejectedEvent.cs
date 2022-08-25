@@ -14,15 +14,19 @@
 
 using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Events
 {
-    public class ChargePriceOperationsRejectedEvent
+    public class ChargePriceOperationsRejectedEvent : InternalEventBase
     {
         public ChargePriceOperationsRejectedEvent(
+            Instant publishedTime,
             ChargePriceCommand command,
             IEnumerable<ValidationError> validationErrors)
+            : base(publishedTime)
         {
             Command = command;
             ValidationErrors = validationErrors;
