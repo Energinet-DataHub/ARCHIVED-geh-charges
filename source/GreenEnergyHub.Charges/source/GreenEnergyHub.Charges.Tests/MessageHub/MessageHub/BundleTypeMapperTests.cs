@@ -99,9 +99,9 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.MessageHub
                     RequestId: Guid.NewGuid(),
                     DataAvailableNotificationReferenceId: Guid.NewGuid().ToString(),
                     IdempotencyId: Guid.NewGuid().ToString(),
-                new MessageTypeDto(messageType),
-                ResponseFormat.Xml,
-                ResponseVersion: 1.0);
+                    new MessageTypeDto(messageType),
+                    ResponseFormat.Xml,
+                    ResponseVersion: 1.0);
         }
     }
 }
