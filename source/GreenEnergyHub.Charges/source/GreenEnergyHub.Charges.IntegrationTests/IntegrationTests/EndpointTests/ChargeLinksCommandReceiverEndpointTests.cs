@@ -86,22 +86,20 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 var links = new List<ChargeLinkOperationDto> { link };
                 var command = chargeLinksCommandBuilder.WithChargeLinks(links).Build();
                 var correlationIdOne = CorrelationIdGenerator.Create();
-                var parentIdOne = $"00-{correlationIdOne}-b7ad6b7169203331-02";
                 var messageOne = CreateServiceBusMessage(command, correlationIdOne);
 
                 // Act
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
-                    () => Fixture.ChargeLinksReceivedTopic.SenderClient.SendMessageAsync(messageOne), correlationIdOne, parentIdOne);
+                    () => Fixture.ChargeLinksReceivedTopic.SenderClient.SendMessageAsync(messageOne), correlationIdOne);
 
                 await FunctionAsserts.AssertHasExecutedAsync(
                     Fixture.HostManager, nameof(ChargeLinkConfirmationDataAvailableNotifierEndpoint));
 
                 var correlationIdTwo = CorrelationIdGenerator.Create();
-                var parentIdTwo = $"00-{correlationIdTwo}-b7ad6b7169203331-02";
                 var messageTwo = CreateServiceBusMessage(command, correlationIdTwo);
 
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
-                    () => Fixture.ChargeLinksReceivedTopic.SenderClient.SendMessageAsync(messageTwo), correlationIdTwo, parentIdTwo);
+                    () => Fixture.ChargeLinksReceivedTopic.SenderClient.SendMessageAsync(messageTwo), correlationIdTwo);
 
                 // Assert
                 await FunctionAsserts.AssertHasExecutedAsync(

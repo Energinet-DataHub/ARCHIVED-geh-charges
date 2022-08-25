@@ -14,8 +14,8 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.JsonSerialization;
 using GreenEnergyHub.Charges.Application.Messaging;
-using GreenEnergyHub.Json;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Middleware;
 
@@ -54,7 +54,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData
 
             if (metadata != null)
             {
-                var eventMetadata = _jsonSerializer.Deserialize<MessageMetadata>(metadata.ToString());
+                var eventMetadata = _jsonSerializer.Deserialize<MessageMetadata>(metadata.ToString()!);
                 return eventMetadata;
             }
 
