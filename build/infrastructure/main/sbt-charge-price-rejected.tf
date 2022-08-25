@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-module "sbt_charege_price_rejected" {
+module "sbt_charge_price_rejected" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic?ref=7.0.0"
 
   name                = "charge-price-rejected"

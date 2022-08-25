@@ -68,7 +68,7 @@ module "func_functionhost" {
     MARKET_PARTICIPANT_CHANGED_TOPIC_NAME                           = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbt-market-participant-changed-name)"
     MARKET_PARTICIPANT_CHANGED_SUBSCRIPTION_NAME                    = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbs-market-participant-changed-to-charges-name)"
     CHARGE_PRICE_REJECTED_TOPIC_NAME                                = module.sbt_charge_price_rejected.name
-    CHARGE_PRICE_SUBSCRIPTION_NAME                                  = "charge-price-rejected"
+    CHARGE_PRICE_REJECTED_SUBSCRIPTION_NAME                         = "charge-price-rejected"
     
     # Shared resources
     INTEGRATIONEVENT_SENDER_CONNECTION_STRING                       = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-send-connection-string)"

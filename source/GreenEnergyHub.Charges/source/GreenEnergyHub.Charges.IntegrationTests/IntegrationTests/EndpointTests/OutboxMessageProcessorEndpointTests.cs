@@ -23,7 +23,7 @@ using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Application.Messaging;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
+using GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub;
 using GreenEnergyHub.Charges.FunctionHost.MessageHub;
 using GreenEnergyHub.Charges.Infrastructure.Outbox;
 using GreenEnergyHub.Charges.Infrastructure.Persistence;
@@ -32,8 +32,6 @@ using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
-using GreenEnergyHub.Charges.MessageHub.MessageHub;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.TestCore.TestHelpers;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.Json;
@@ -85,7 +83,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
                 // Act
                 await FunctionAsserts.AssertHasExecutedAsync(
-                    Fixture.HostManager, nameof(OutboxMessageProcessorEndpoint));
+                    Fixture.HostManager, nameof(ChargePriceRejectedDataAvailableNotifierEndpoint));
 
                 // Assert
                 var actualAvailableDataReceipt = messageHubDatabaseContext.AvailableChargeReceiptData
