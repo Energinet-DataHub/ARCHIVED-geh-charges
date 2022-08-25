@@ -96,10 +96,12 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.MessageHub
         private DataBundleRequestDto GetDataBundleRequestDtoWithMessageType(string messageType)
         {
             return new DataBundleRequestDto(
-                Guid.NewGuid(),
-                Guid.NewGuid().ToString(),
-                Guid.NewGuid().ToString(),
-                new MessageTypeDto(messageType));
+                    RequestId: Guid.NewGuid(),
+                    DataAvailableNotificationReferenceId: Guid.NewGuid().ToString(),
+                    IdempotencyId: Guid.NewGuid().ToString(),
+                    new MessageTypeDto(messageType),
+                    ResponseFormat.Xml,
+                    ResponseVersion: 1.0);
         }
     }
 }

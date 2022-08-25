@@ -16,17 +16,28 @@ using System.Linq;
 using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Factories
 {
     public class ChargePriceOperationsRejectedEventFactory : IChargePriceOperationsRejectedEventFactory
     {
+        private readonly IClock _clock;
+
+        public ChargePriceOperationsRejectedEventFactory(IClock clock)
+        {
+            _clock = clock;
+        }
+
         public ChargePriceOperationsRejectedEvent Create(
             ChargePriceCommand command,
             ValidationResult validationResult)
         {
             var validationErrors = validationResult.InvalidRules.Select(ValidationErrorFactory.Create());
-            return new ChargePriceOperationsRejectedEvent(command, validationErrors);
+            return new ChargePriceOperationsRejectedEvent(
+                _clock.GetCurrentInstant(),
+                command,
+                validationErrors);
         }
     }
 }
