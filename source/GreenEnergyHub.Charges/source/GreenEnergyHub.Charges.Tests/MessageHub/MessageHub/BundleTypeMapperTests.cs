@@ -101,7 +101,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.MessageHub
                     IdempotencyId: Guid.NewGuid().ToString(),
                 new MessageTypeDto(messageType),
                 ResponseFormat.Xml,
-                1.0);
+                ResponseVersion: 1.0);
         }
     }
 }
