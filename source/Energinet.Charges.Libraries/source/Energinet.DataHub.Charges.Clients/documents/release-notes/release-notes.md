@@ -1,5 +1,9 @@
 # Energinet.DataHub.Charges.Clients Release notes
 
+## Version 3.0.8
+
+Bumped because workflow file was updated.
+
 ## Version 3.0.7
 
 Removed duplicate NuGet package reference
