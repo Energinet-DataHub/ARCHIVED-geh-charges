@@ -113,7 +113,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                     {
                         new KeyValuePair<string, object>("OperationCorrelationId", correlationId),
                         new KeyValuePair<string, object>("ReplyTo", replyToQueueName),
-                        new KeyValuePair<string, object>("OperationCorrelationId", correlationId),
                         new KeyValuePair<string, object>(Constants.ServiceBusIdentityKey, actor),
                     },
                 };
