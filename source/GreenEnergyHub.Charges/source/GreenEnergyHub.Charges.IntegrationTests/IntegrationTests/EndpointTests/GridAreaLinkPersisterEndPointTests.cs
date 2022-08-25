@@ -83,13 +83,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     PriceAreaCode.DK1,
                     id);
                 var gridAreaUpdatedIntegrationEventParser = new GridAreaUpdatedIntegrationEventParser();
-                var message = gridAreaUpdatedIntegrationEventParser.Parse(gridAreaIntegrationEvent);
+                var message = gridAreaUpdatedIntegrationEventParser.ParseToSharedIntegrationEvent(gridAreaIntegrationEvent);
 
                 var correlationId = CorrelationIdGenerator.Create();
-                var serviceBusMessage = new ServiceBusMessage(message)
-                {
-                    CorrelationId = correlationId,
-                };
+                var serviceBusMessage = new ServiceBusMessage(message) { CorrelationId = correlationId };
 
                 return serviceBusMessage;
             }
