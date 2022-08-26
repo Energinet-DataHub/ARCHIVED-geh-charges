@@ -12,12 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
+using Energinet.DataHub.Core.JsonSerialization;
 using Energinet.DataHub.Core.Messaging.Transport;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
-using GreenEnergyHub.Json;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using Xunit;
@@ -31,12 +30,12 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions.S
         [Theory]
         [InlineAutoDomainData]
         public async Task ToBytesAsync_WhenCalledWIthOutboundMessage_CallsNeededComponents(
-            [NotNull] [Frozen] Mock<IJsonOutboundMapperFactory> mapperFactory,
-            [NotNull] [Frozen] Mock<IJsonSerializer> jsonSerializer,
-            [NotNull] Mock<IJsonOutboundMapper> mapper,
-            [NotNull] Mock<IOutboundMessage> message,
-            [NotNull] string stringResult,
-            [NotNull] JsonMessageSerializer sut)
+            [Frozen] Mock<IJsonOutboundMapperFactory> mapperFactory,
+            [Frozen] Mock<IJsonSerializer> jsonSerializer,
+            Mock<IJsonOutboundMapper> mapper,
+            Mock<IOutboundMessage> message,
+            string stringResult,
+            JsonMessageSerializer sut)
         {
             // Arrange
             mapperFactory

@@ -62,13 +62,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 // Arrange
                 const string gln = "1234567890123";
                 var role = MarketParticipantRoleMapper.Map(businessRoleCode);
-                var (message, parentId) = CreateServiceBusMessage(gln, actorStatus, new List<BusinessRoleCode> { businessRoleCode });
+                var message = CreateServiceBusMessage(gln, actorStatus, new List<BusinessRoleCode> { businessRoleCode });
 
                 await using var context = Fixture.ChargesDatabaseManager.CreateDbContext();
 
                 // Act
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
-                    () => Fixture.MarketParticipantChangedTopic.SenderClient.SendMessageAsync(message), message.CorrelationId, parentId);
+                    () => Fixture.MarketParticipantChangedTopic.SenderClient.SendMessageAsync(message), message.CorrelationId);
 
                 // Assert
                 await FunctionAsserts.AssertHasExecutedAsync(
@@ -81,10 +81,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 Fixture.HostManager.ClearHostLog();
             }
 
-            private static (ServiceBusMessage ServiceBusMessage, string ParentId) CreateServiceBusMessage(
-                string actorNumber,
-                ActorStatus status,
-                IEnumerable<BusinessRoleCode> businessRoles)
+            private static ServiceBusMessage CreateServiceBusMessage(
+                string actorNumber, ActorStatus status, IEnumerable<BusinessRoleCode> businessRoles)
             {
                 var actorUpdatedIntegrationEvent = new ActorUpdatedIntegrationEvent(
                     Guid.NewGuid(),
@@ -98,15 +96,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     CreateActorMarketRoles());
 
                 var actorUpdatedIntegrationEventParser = new ActorUpdatedIntegrationEventParser();
-                var message = actorUpdatedIntegrationEventParser.Parse(actorUpdatedIntegrationEvent);
+                var message = actorUpdatedIntegrationEventParser.ParseToSharedIntegrationEvent(actorUpdatedIntegrationEvent);
 
                 var correlationId = CorrelationIdGenerator.Create();
-                var parentId = $"00-{correlationId}-b7ad6b7169203332-01";
-                var serviceBusMessage = new ServiceBusMessage(message)
-                {
-                    CorrelationId = correlationId,
-                };
-                return (serviceBusMessage, parentId);
+                var serviceBusMessage = new ServiceBusMessage(message) { CorrelationId = correlationId };
+
+                return serviceBusMessage;
             }
 
             private static IEnumerable<ActorMarketRole> CreateActorMarketRoles()

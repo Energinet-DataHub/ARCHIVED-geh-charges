@@ -68,7 +68,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             [Fact]
             public async Task When_RequestIsUnauthenticated_Then_AHttp401UnauthorizedIsReturned()
             {
-                var (request, _) = HttpRequestGenerator.CreateHttpPostRequest(
+                var request = HttpRequestGenerator.CreateHttpPostRequest(
                     EndpointUrl, ChargeDocument.TariffBundleWithValidAndInvalid, GetZonedDateTimeService());
 
                 var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
@@ -416,6 +416,33 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
                 peekResult[0].Should().Contain("<cim:code>E90</cim:code>");
                 peekResult[1].Should().Contain("<cim:code>D14</cim:code>");
+            }
+
+            [Fact]
+            public async Task When_BundledChargePriceRequestWhere2ndOperationHasMismatchingOwner_Then_2ndOperationIsRejected_And_1stAnd3rdOperationAccepted()
+            {
+                // Arrange
+                var (request, correlationId) =
+                    Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
+                        EndpointUrl, ChargeDocument.BundledSubscriptionPriceSeriesSecondOperationChargeOwnerMismatch);
+
+                // Act
+                var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                using var assertionScope = new AssertionScope();
+                actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
+
+                // We expect 3 peek results:
+                // * two confirmations (for 1st and 3rd operation)
+                // * one rejection (for 2nd operation due mismatching charge owner)
+                var peekResult = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 3);
+
+                peekResult.Count(s => s.Contains("ConfirmRequestChangeOfPriceList_MarketDocument")).Should().Be(2);
+
+                var rejection = peekResult.Single(s => s.Contains("RejectRequestChangeOfPriceList_MarketDocument"));
+                rejection.Should().Contain("<cim:process.processType>D08</cim:process.processType>");
+                rejection.Should().Contain("<cim:code>E0I</cim:code>");
             }
 
             // TODO: Reenable test as soon as business rules are validated

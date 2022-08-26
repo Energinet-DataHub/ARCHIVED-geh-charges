@@ -14,7 +14,8 @@
 
 using System;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
-using GreenEnergyHub.Json;
+using Energinet.DataHub.Core.JsonSerialization;
+using GreenEnergyHub.Charges.Application.Charges.Events;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Outbox
