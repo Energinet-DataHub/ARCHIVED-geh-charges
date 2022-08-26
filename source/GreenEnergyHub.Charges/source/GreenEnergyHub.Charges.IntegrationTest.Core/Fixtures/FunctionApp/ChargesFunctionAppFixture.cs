@@ -197,6 +197,13 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
                 .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.CommandRejectedSubscriptionName)
                 .CreateAsync();
 
+            var chargePriceOperationsRejectedTopic = await ServiceBusResourceProvider
+                .BuildTopic(ChargesServiceBusResourceNames.ChargePriceRejectedTopicKey)
+                .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.ChargePriceRejectedTopicName)
+                .AddSubscription(ChargesServiceBusResourceNames.ChargePriceRejectedSubscriptionName)
+                .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargePriceRejectedSubscriptionName)
+                .CreateAsync();
+
             CreateLinkRequestQueue = await ServiceBusResourceProvider
                 .BuildQueue(ChargesServiceBusResourceNames.CreateLinksRequestQueueKey)
                 .SetEnvironmentVariableToQueueName(EnvironmentSettingNames.CreateLinksRequestQueueName)
@@ -271,13 +278,6 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             Environment.SetEnvironmentVariable(
                 EnvironmentSettingNames.ChargeDbConnectionString,
                 ChargesDatabaseManager.ConnectionString);
-
-            // Only market participant registry thing being tested is connectivity
-            // - so for now we just cheat and provide another connection string
-            var marketParticipantRegistryConnectionString = ChargesDatabaseManager.ConnectionString;
-            Environment.SetEnvironmentVariable(
-                EnvironmentSettingNames.MarketParticipantRegistryDbConnectionString,
-                marketParticipantRegistryConnectionString);
         }
 
         /// <inheritdoc/>
@@ -362,8 +362,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
                 ChargesServiceBusResourceNames.MessageHubStorageConnectionString,
                 ChargesServiceBusResourceNames.MessageHubStorageContainerName);
 
-            messageHubSimulationConfig.PeekTimeout = TimeSpan.FromSeconds(20.0);
-            messageHubSimulationConfig.WaitTimeout = TimeSpan.FromSeconds(20.0);
+            messageHubSimulationConfig.PeekTimeout = TimeSpan.FromSeconds(30.0);
+            messageHubSimulationConfig.WaitTimeout = TimeSpan.FromSeconds(30.0);
 
             MessageHubMock = new MessageHubSimulation(messageHubSimulationConfig);
         }

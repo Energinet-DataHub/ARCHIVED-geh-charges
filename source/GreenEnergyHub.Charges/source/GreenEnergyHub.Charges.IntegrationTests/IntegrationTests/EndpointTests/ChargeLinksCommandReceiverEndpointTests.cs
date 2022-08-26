@@ -113,7 +113,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 var chargeLinksAcceptedEvent = new ChargeLinksAcceptedEvent(
                     command, Instant.FromDateTimeUtc(DateTime.UtcNow));
 
-                var applicationProperties = new Dictionary<string, string>();
+                var applicationProperties = new Dictionary<string, string> { { "OperationCorrelationId", correlationId } };
                 var message = ServiceBusMessageGenerator.CreateWithJsonContent(
                     chargeLinksAcceptedEvent, applicationProperties, correlationId);
 

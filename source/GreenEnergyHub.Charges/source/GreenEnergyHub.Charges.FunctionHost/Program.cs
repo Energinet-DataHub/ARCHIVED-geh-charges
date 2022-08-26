@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.Core.App.FunctionApp.FunctionTelemetryScope;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using Energinet.DataHub.Core.Logging.RequestResponseMiddleware;
@@ -59,6 +60,7 @@ namespace GreenEnergyHub.Charges.FunctionHost
             ChargeConfirmationDataAvailableNotifierEndpointConfiguration.ConfigureServices(serviceCollection);
             ChargeRejectionDataAvailableNotifierEndpointConfiguration.ConfigureServices(serviceCollection);
             ChargeDataAvailableNotifierConfiguration.ConfigureServices(serviceCollection);
+            ChargePriceRejectedDataAvailableNotifierEndpointConfiguration.ConfigureServices(serviceCollection);
             ChargeIntegrationEventsPublisherEndpointConfiguration.ConfigureServices(serviceCollection);
 
             // Charge links

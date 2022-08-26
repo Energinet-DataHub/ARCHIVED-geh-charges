@@ -13,15 +13,10 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Application.Charges.Events;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
+using GreenEnergyHub.Charges.FunctionHost.Common;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
+using GreenEnergyHub.Charges.Infrastructure.Core.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
-using GreenEnergyHub.Charges.MessageHub.BundleSpecification;
-using GreenEnergyHub.Charges.MessageHub.BundleSpecification.Charges;
-using GreenEnergyHub.Charges.MessageHub.MessageHub;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableOperationReceiptData;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
@@ -31,16 +26,17 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<IOutboxMessageRepository, OutboxMessageRepository>();
-            serviceCollection.AddScoped<IAvailableDataNotifier<AvailableChargeReceiptData, PriceRejectedEvent>,
-                AvailableDataNotifier<AvailableChargeReceiptData, PriceRejectedEvent>>();
-            serviceCollection.AddScoped<IAvailableDataFactory<AvailableChargeReceiptData, PriceRejectedEvent>,
-                AvailableChargePriceOperationRejectionsFactory>();
-            serviceCollection.AddScoped<IAvailableChargePriceReceiptValidationErrorFactory,
-                AvailableChargePriceReceiptValidationErrorFactory>();
-            serviceCollection.AddScoped<ICimValidationErrorTextFactory<ChargePriceOperationDto>,
-                ChargePriceCimValidationErrorTextFactory>();
-            serviceCollection.AddScoped<BundleSpecification<AvailableChargeReceiptData, PriceRejectedEvent>,
-                ChargePriceRejectionBundleSpecification>();
+            ConfigureMessaging(serviceCollection);
+        }
+
+        private static void ConfigureMessaging(IServiceCollection serviceCollection)
+        {
+            serviceCollection
+                .AddMessaging()
+                .AddInternalMessageExtractor<PriceRejectedEvent>()
+                .AddInternalMessageDispatcher<PriceRejectedEvent>(
+                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
+                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargePriceRejectedTopicName));
         }
     }
 }

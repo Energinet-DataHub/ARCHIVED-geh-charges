@@ -13,7 +13,6 @@
     "INTEGRATIONEVENT_LISTENER_CONNECTION_STRING": "<sb listener connection string for integration events (without EntityPath)>",
     "INTEGRATIONEVENT_MANAGER_CONNECTION_STRING": "<sb manager connection string for integration events (without EntityPath)>",
     "INTEGRATIONEVENT_SENDER_CONNECTION_STRING": "<sb sender connection string for integration events (without EntityPath)>",
-    "MARKET_PARTICIPANT_REGISTRY_CONNECTION_STRING": "<market participant registry database connection string>",
     "MESSAGEHUB_STORAGE_CONNECTION_STRING": "<connection string for writing to the Message Hub storage account for bundles>",
     "REQUEST_RESPONSE_LOGGING_CONNECTION_STRING": "<connection string for logging request and response to storage>",
     "B2C_TENANT_ID": "<Azure B2C tenant id>",
@@ -67,6 +66,10 @@
     // Internal, charge, rejected
     "COMMAND_REJECTED_TOPIC_NAME": "command-rejected",
     "COMMAND_REJECTED_SUBSCRIPTION_NAME": "command-rejected",
+
+    // Internal, charge price, rejected
+    "CHARGE_PRICE_REJECTED_TOPIC_NAME": "charge-price-rejected",
+    "CHARGE_PRICE_REJECTED_SUBSCRIPTION_NAME": "charge-price-rejected",
 
     // Internal, charge links, received
     "CHARGE_LINKS_RECEIVED_TOPIC_NAME": "links-command-received",

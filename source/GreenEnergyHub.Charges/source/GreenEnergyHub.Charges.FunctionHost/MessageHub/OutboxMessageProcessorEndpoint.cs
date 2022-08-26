@@ -15,12 +15,11 @@
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using GreenEnergyHub.Charges.Application.Charges.Events;
+using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Outbox;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
-using GreenEnergyHub.Charges.MessageHub.MessageHub;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Json;
 using Microsoft.Azure.Functions.Worker;
 using NodaTime;
@@ -31,25 +30,25 @@ namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
     {
         private const string FunctionName = nameof(OutboxMessageProcessorEndpoint);
         private readonly IOutboxMessageRepository _outboxMessageRepository;
-        private readonly IAvailableDataNotifier<AvailableChargeReceiptData, PriceRejectedEvent> _availableDataNotifier;
         private readonly IJsonSerializer _jsonSerializer;
         private readonly IClock _clock;
         private readonly ICorrelationContext _correlationContext;
+        private readonly IMessageDispatcher<PriceRejectedEvent> _chargePriceOperationsRejectedMessageDispatcher;
         private readonly IUnitOfWork _unitOfWork;
 
         public OutboxMessageProcessorEndpoint(
             IOutboxMessageRepository outboxMessageRepository,
-            IAvailableDataNotifier<AvailableChargeReceiptData, PriceRejectedEvent> availableDataNotifier,
             IJsonSerializer jsonSerializer,
             IClock clock,
             ICorrelationContext correlationContext,
+            IMessageDispatcher<PriceRejectedEvent> chargePriceOperationsRejectedMessageDispatcher,
             IUnitOfWork unitOfWork)
         {
             _outboxMessageRepository = outboxMessageRepository;
-            _availableDataNotifier = availableDataNotifier;
             _jsonSerializer = jsonSerializer;
             _clock = clock;
             _correlationContext = correlationContext;
+            _chargePriceOperationsRejectedMessageDispatcher = chargePriceOperationsRejectedMessageDispatcher;
             _unitOfWork = unitOfWork;
         }
 
@@ -63,7 +62,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
             {
                 var operationsRejectedEvent = _jsonSerializer.Deserialize<PriceRejectedEvent>(outboxMessage.Data);
                 _correlationContext.SetId(outboxMessage.CorrelationId);
-                await _availableDataNotifier.NotifyAsync(operationsRejectedEvent).ConfigureAwait(false);
+                await _chargePriceOperationsRejectedMessageDispatcher
+                    .DispatchAsync(operationsRejectedEvent).ConfigureAwait(false);
                 outboxMessage.SetProcessed(_clock.GetCurrentInstant());
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             }

@@ -18,11 +18,19 @@ using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Factories
 {
     public class ChargeEventFactory : IChargeEventFactory
     {
+        private readonly IClock _clock;
+
+        public PriceRejectedEventFactory(IClock clock)
+        {
+            _clock = clock;
+        }
+
         public PriceRejectedEvent CreatePriceRejectedEvent(
             DocumentDto document,
             IReadOnlyCollection<ChargePriceOperationDto> operations,
@@ -30,14 +38,21 @@ namespace GreenEnergyHub.Charges.Application.Charges.Factories
         {
             var validationErrors = validationResult.InvalidRules
                 .Select(ValidationErrorFactory.Create());
-            return new PriceRejectedEvent(document, operations, validationErrors);
+            return new PriceRejectedEvent(
+                _clock.GetCurrentInstant(),
+                document,
+                operations,
+                validationErrors);
         }
 
         public PriceConfirmedEvent CreatePriceConfirmedEvent(
             DocumentDto document,
             IReadOnlyCollection<ChargePriceOperationDto> operations)
         {
-            return new PriceConfirmedEvent(document, operations);
+            return new PriceConfirmedEvent(
+                _clock.GetCurrentInstant(),
+                document,
+                operations);
         }
     }
 }

@@ -18,17 +18,20 @@ using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Tests.Builders.Command
 {
     public class PriceRejectedEventBuilder
     {
+        private Instant _publishedTime;
         private DocumentDto _document;
         private IReadOnlyCollection<ChargePriceOperationDto> _operations;
         private IEnumerable<ValidationError> _validationErrors;
 
         public PriceRejectedEventBuilder()
         {
+            _publishedTime = SystemClock.Instance.GetCurrentInstant();
             _document = new DocumentDtoBuilder().Build();
             _operations = new List<ChargePriceOperationDto>() { new ChargePriceOperationDtoBuilder().Build() };
             _validationErrors = new List<ValidationError>();
@@ -59,7 +62,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
                 };
             }
 
-            return new PriceRejectedEvent(_document, _operations, _validationErrors);
+            return new PriceRejectedEvent(_publishedTime, _document, _operations, _validationErrors);
         }
     }
 }
