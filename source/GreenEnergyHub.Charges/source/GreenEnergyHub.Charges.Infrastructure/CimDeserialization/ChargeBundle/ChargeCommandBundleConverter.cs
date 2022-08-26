@@ -81,10 +81,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
             var priceOperations = await ParseChargePriceOperationsAsync(reader).ConfigureAwait(false);
             var priceCommands = priceOperations
                 .GroupBy(x => new { x.SenderProvidedChargeId, x.ChargeOwner, Type = x.ChargeType })
-                .Select(_ =>
+                .Select(chargePriceOperationDtoGroup =>
                     new ChargePriceCommand(
                         document,
-                        priceOperations.AsEnumerable().Select(dto => dto).ToList()))
+                        chargePriceOperationDtoGroup.AsEnumerable().Select(dto => dto).ToList()))
                 .ToList();
             return new ChargePriceCommandBundle(document, priceCommands);
         }

@@ -14,13 +14,17 @@
 
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
+using Energinet.DataHub.Core.JsonSerialization;
 using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.Charges.Events;
+using GreenEnergyHub.Charges.Application.Messaging;
+using GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub;
 using GreenEnergyHub.Charges.FunctionHost.MessageHub;
 using GreenEnergyHub.Charges.Infrastructure.Outbox;
 using GreenEnergyHub.Charges.Infrastructure.Persistence;
@@ -29,11 +33,8 @@ using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
-using GreenEnergyHub.Charges.MessageHub.MessageHub;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.TestCore.TestHelpers;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
-using GreenEnergyHub.Json;
 using Microsoft.Azure.Functions.Worker;
 using Moq;
 using NodaTime;
@@ -82,7 +83,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
                 // Act
                 await FunctionAsserts.AssertHasExecutedAsync(
-                    Fixture.HostManager, nameof(OutboxMessageProcessorEndpoint));
+                    Fixture.HostManager, nameof(ChargePriceRejectedDataAvailableNotifierEndpoint));
 
                 // Assert
                 var actualAvailableDataReceipt = messageHubDatabaseContext.AvailableChargeReceiptData
@@ -95,8 +96,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
             [Theory]
             [InlineAutoMoqData]
             public async Task GivenOutputProcessorEndpoint_WhenFailsFirstAttempt_ThenRetryNext(
-                Mock<IAvailableDataNotifier<AvailableChargeReceiptData, ChargePriceOperationsRejectedEvent>> availableDataNotifier,
                 [Frozen] Mock<IClock> clock,
+                Mock<IMessageDispatcher<ChargePriceOperationsRejectedEvent>> dispatcher,
                 JsonSerializer jsonSerializer,
                 TimerInfo timerInfo,
                 CorrelationContext correlationContext,
@@ -114,25 +115,24 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 var outboxRepository = new OutboxMessageRepository(chargesDatabaseWriteContext);
                 var sut = new OutboxMessageProcessorEndpoint(
                     outboxRepository,
-                    availableDataNotifier.Object,
                     jsonSerializer,
                     clock.Object,
                     correlationContext,
+                    dispatcher.Object,
                     unitOfWork);
 
                 // Act & Assert
-                availableDataNotifier
-                    .Setup(adn =>
-                        adn.NotifyAsync(It.IsAny<ChargePriceOperationsRejectedEvent>()))
-                    .ThrowsAsync(new Exception());
+                dispatcher.Setup(d => d.DispatchAsync(
+                        It.IsAny<ChargePriceOperationsRejectedEvent>(),
+                        It.IsAny<CancellationToken>()))
+                    .Throws<Exception>();
 
                 await Assert.ThrowsAsync<Exception>(() => sut.RunAsync(timerInfo));
 
-                availableDataNotifier
-                    .Setup(adn =>
-                        adn.NotifyAsync(It.IsAny<ChargePriceOperationsRejectedEvent>()))
-                    .Returns(Task.CompletedTask);
-
+                dispatcher.Setup(d => d.DispatchAsync(
+                        It.IsAny<ChargePriceOperationsRejectedEvent>(),
+                        It.IsAny<CancellationToken>()))
+                    .Callback<ChargePriceOperationsRejectedEvent, CancellationToken>((_, _) => { });
                 await sut.RunAsync(timerInfo);
 
                 outboxMessage = chargesDatabaseReadContext.OutboxMessages.Single(x => x.Id == outboxMessage.Id);

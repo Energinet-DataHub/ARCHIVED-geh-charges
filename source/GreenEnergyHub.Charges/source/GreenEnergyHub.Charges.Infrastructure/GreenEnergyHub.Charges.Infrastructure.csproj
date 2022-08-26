@@ -31,10 +31,10 @@ limitations under the License.
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Energinet.DataHub.Core.Schemas" Version="1.0.10" />
-      <PackageReference Include="Energinet.DataHub.Core.Messaging.Protobuf" Version="2.0.0" />
-      <PackageReference Include="Energinet.DataHub.MarketParticipant.Integration.Model" Version="2.3.0" />
-      <PackageReference Include="Energinet.DataHub.Core.SchemaValidation" Version="1.0.11" />
+      <PackageReference Include="Energinet.DataHub.Core.Schemas" Version="2.1.0" />
+      <PackageReference Include="Energinet.DataHub.Core.Messaging.Protobuf" Version="2.1.0" />
+      <PackageReference Include="Energinet.DataHub.MarketParticipant.Integration.Model" Version="2.5.0" />
+      <PackageReference Include="Energinet.DataHub.Core.SchemaValidation" Version="1.0.13" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.3" />
       <PackageReference Include="Google.Protobuf" Version="3.21.4" />
       <PackageReference Include="Grpc.Tools" Version="2.47.0" PrivateAssets="All" />

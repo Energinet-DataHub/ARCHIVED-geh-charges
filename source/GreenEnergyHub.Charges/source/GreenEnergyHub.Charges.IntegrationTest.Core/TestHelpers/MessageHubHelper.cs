@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Energinet.DataHub.MessageHub.IntegrationTesting;
+using FluentAssertions;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
 
 namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
@@ -36,6 +37,9 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
             var noOfReceivedMessages = 0;
             var peekResults = new List<string>();
 
+            var expected = $"MessageHub received all {noOfMessageTypes} expected messages.";
+            var actual = expected;
+
             for (var i = 0; i < noOfMessageTypes; i++)
             {
                 try
@@ -45,14 +49,15 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
                 }
                 catch (Exception ex) when (ex is TaskCanceledException or TimeoutException)
                 {
-                    var error = $"MessageHub received only {noOfReceivedMessages} of {noOfMessageTypes} expected messages!";
-                    throw new InvalidOperationException(error, ex);
+                    actual = $"MessageHub received only {noOfReceivedMessages} of {noOfMessageTypes} expected messages!";
                 }
                 finally
                 {
                     messageHub.Clear();
                 }
             }
+
+            actual.Should().Be(expected);
 
             return peekResults;
         }

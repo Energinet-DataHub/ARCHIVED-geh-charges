@@ -67,6 +67,10 @@
     "COMMAND_REJECTED_TOPIC_NAME": "command-rejected",
     "COMMAND_REJECTED_SUBSCRIPTION_NAME": "command-rejected",
 
+    // Internal, charge price, rejected
+    "CHARGE_PRICE_REJECTED_TOPIC_NAME": "charge-price-rejected",
+    "CHARGE_PRICE_REJECTED_SUBSCRIPTION_NAME": "charge-price-rejected",
+
     // Internal, charge links, received
     "CHARGE_LINKS_RECEIVED_TOPIC_NAME": "links-command-received",
     "CHARGE_LINKS_RECEIVED_SUBSCRIPTION_NAME": "links-command-received-receiver",

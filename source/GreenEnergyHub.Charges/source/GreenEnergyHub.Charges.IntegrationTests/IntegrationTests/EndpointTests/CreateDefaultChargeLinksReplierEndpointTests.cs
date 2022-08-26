@@ -69,7 +69,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 };
                 var command = new ChargeLinksCommandBuilder().WithChargeLinks(links).Build();
                 var correlationId = CorrelationIdGenerator.Create();
-                var parentId = $"00-{correlationId}-b7ad6b7169203331-02";
                 var message = CreateServiceBusMessage(command, correlationId);
 
                 using var isMessageReceived = await Fixture.CreateLinkReplyQueueListener
@@ -78,7 +77,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
                 // Act
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
-                    () => Fixture.ChargeLinksAcceptedTopic.SenderClient.SendMessageAsync(message), correlationId, parentId);
+                    () => Fixture.ChargeLinksAcceptedTopic.SenderClient.SendMessageAsync(message), correlationId);
 
                 // Assert
                 var isMessageReceivedByQueue = isMessageReceived.MessageAwaiter!.Wait(TimeSpan.FromSeconds(60));
@@ -92,6 +91,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
                 var applicationProperties = new Dictionary<string, string>
                 {
+                    { "OperationCorrelationId", correlationId },
                     { "ReplyTo", Fixture.CreateLinkReplyQueue.Name },
                 };
 

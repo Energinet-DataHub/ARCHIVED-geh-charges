@@ -19,12 +19,12 @@ using System.Threading.Tasks;
 using AutoFixture;
 using AutoFixture.AutoMoq;
 using AutoFixture.Kernel;
+using Energinet.DataHub.Core.JsonSerialization;
 using Energinet.DataHub.Core.Messaging.Transport;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
 using GreenEnergyHub.Charges.Tests.TestCore;
-using GreenEnergyHub.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using Xunit.Categories;
@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions.S
         ///
         /// The test suffers from a few weaknesses regarding the following assumptions about the messaging framework:
         /// * It is assumed that transport uses JSON serialized UTF8 strings converted to byte[]
-        /// * It is assumed that it uses <see cref="GreenEnergyHub.Json.JsonSerializer.DeserializeAsync"/> for deserialization
+        /// * It is assumed that it uses <see cref="Energinet.DataHub.Core.JsonSerialization.JsonSerializer.DeserializeAsync"/> for deserialization
         /// </summary>
         [Theory]
         [MemberData(nameof(Messages))]

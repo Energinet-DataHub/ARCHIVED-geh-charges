@@ -58,11 +58,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 // Arrange
                 await using var context = Fixture.ChargesDatabaseManager.CreateDbContext();
                 var id = Guid.NewGuid();
-                var (message, parentId) = CreateServiceBusMessage(id);
+                var message = CreateServiceBusMessage(id);
 
                 // Act
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
-                    () => Fixture.MarketParticipantChangedTopic.SenderClient.SendMessageAsync(message), message.CorrelationId, parentId);
+                    () => Fixture.MarketParticipantChangedTopic.SenderClient.SendMessageAsync(message), message.CorrelationId);
 
                 // Assert
                 await FunctionAsserts.AssertHasExecutedAsync(Fixture.HostManager, nameof(MarketParticipantPersisterEndpoint)).ConfigureAwait(false);
@@ -73,8 +73,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 Fixture.HostManager.ClearHostLog();
             }
 
-            private static (ServiceBusMessage ServiceBusMessage, string ParentId)
-                CreateServiceBusMessage(Guid id)
+            private static ServiceBusMessage CreateServiceBusMessage(Guid id)
             {
                 var gridAreaIntegrationEvent = new GridAreaUpdatedIntegrationEvent(
                     Guid.NewGuid(),
@@ -84,15 +83,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     PriceAreaCode.DK1,
                     id);
                 var gridAreaUpdatedIntegrationEventParser = new GridAreaUpdatedIntegrationEventParser();
-                var message = gridAreaUpdatedIntegrationEventParser.Parse(gridAreaIntegrationEvent);
+                var message = gridAreaUpdatedIntegrationEventParser.ParseToSharedIntegrationEvent(gridAreaIntegrationEvent);
 
                 var correlationId = CorrelationIdGenerator.Create();
-                var serviceBusMessage = new ServiceBusMessage(message)
-                {
-                    CorrelationId = correlationId,
-                };
-                var parentId = $"00-{correlationId}-b7ad6b7169203333-01";
-                return (serviceBusMessage, parentId);
+                var serviceBusMessage = new ServiceBusMessage(message) { CorrelationId = correlationId };
+
+                return serviceBusMessage;
             }
         }
     }

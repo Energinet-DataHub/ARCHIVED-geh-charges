@@ -84,17 +84,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 // Arrange
                 var meteringPointId = RandomString(20);
                 await using var chargeDbContext = Fixture.ChargesDatabaseManager.CreateDbContext();
-                var message = CreateServiceBusMessage(
+                var (message, correlationId) = CreateServiceBusMessage(
                     chargeDbContext,
                     meteringPointId,
                     meteringPointType,
-                    settlementMethod,
-                    out var correlationId,
-                    out var parentId);
+                    settlementMethod);
 
                 // Act
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
-                    () => Fixture.MeteringPointCreatedTopic.SenderClient.SendMessageAsync(message), correlationId, parentId);
+                    () => Fixture.MeteringPointCreatedTopic.SenderClient.SendMessageAsync(message), correlationId);
 
                 // Assert
                 await FunctionAsserts.AssertHasExecutedAsync(Fixture.HostManager, nameof(MeteringPointPersisterEndpoint)).ConfigureAwait(false);
@@ -106,26 +104,26 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 Fixture.HostManager.ClearHostLog();
             }
 
-            private static readonly Random MyRandom = new Random();
+            private static readonly Random _myRandom = new();
 
-            public static string RandomString(int length)
+            private static string RandomString(int length)
             {
                 const string chars = "0123456789";
-                return new string(Enumerable.Repeat(chars, length)
-                    .Select(s => s[MyRandom.Next(s.Length)]).ToArray());
+                var stringsOfRandomLength = new string(Enumerable.Repeat(chars, length)
+                    .Select(s => s[_myRandom.Next(s.Length)])
+                    .ToArray());
+                return stringsOfRandomLength;
             }
 
-            private static ServiceBusMessage CreateServiceBusMessage(
+            private static (ServiceBusMessage ServiceBusMessage, string CorrelationId) CreateServiceBusMessage(
                 IChargesDatabaseContext chargesDatabaseContext,
                 string meteringPointId,
                 MeteringPointType meteringPointType,
-                SettlementMethod settlementMethod,
-                out string correlationId,
-                out string parentId)
+                SettlementMethod settlementMethod)
             {
                 var gridAreaLinkId = chargesDatabaseContext.GridAreaLinks.First().Id;
                 var date = new DateTime(2021, 1, 2, 3, 4, 5, DateTimeKind.Utc);
-                correlationId = CorrelationIdGenerator.Create();
+                var correlationId = CorrelationIdGenerator.Create();
                 var message = new MeteringPointCreated
                 {
                     MeteringPointId = meteringPointId,
@@ -137,19 +135,16 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     MeteringMethod = MeteringMethod.MmPhysical,
                     SettlementMethod = settlementMethod,
                 };
-                parentId = $"00-{correlationId}-b7ad6b7169203331-01";
 
                 var byteArray = message.ToByteArray();
-                var serviceBusMessage = new ServiceBusMessage(byteArray)
-                {
-                    CorrelationId = correlationId,
-                };
+                var serviceBusMessage = new ServiceBusMessage(byteArray) { CorrelationId = correlationId };
                 serviceBusMessage.ApplicationProperties.Add("OperationTimestamp", date.ToUniversalTime());
                 serviceBusMessage.ApplicationProperties.Add("OperationCorrelationId", correlationId);
                 serviceBusMessage.ApplicationProperties.Add("MessageVersion", 1);
                 serviceBusMessage.ApplicationProperties.Add("MessageType", "MeteringPointCreated");
                 serviceBusMessage.ApplicationProperties.Add("EventIdentification", "2542ed0d242e46b68b8b803e93ffbf7b");
-                return serviceBusMessage;
+
+                return (serviceBusMessage, correlationId);
             }
         }
     }

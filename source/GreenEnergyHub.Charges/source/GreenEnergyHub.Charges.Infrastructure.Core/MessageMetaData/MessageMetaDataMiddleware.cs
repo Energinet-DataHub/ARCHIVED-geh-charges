@@ -14,8 +14,8 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.JsonSerialization;
 using GreenEnergyHub.Charges.Application.Messaging;
-using GreenEnergyHub.Json;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Middleware;
 
@@ -42,17 +42,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData
             await next(context).ConfigureAwait(false);
         }
 
-        private string? GetSessionId(FunctionContext context)
+        private static string? GetSessionId(FunctionContext context)
         {
-            context.BindingContext.BindingData.TryGetValue("MessageSession", out var session);
-
-            if (session != null)
-            {
-                var sessionData = _jsonSerializer.Deserialize<Dictionary<string, object>>(session.ToString());
-                return sessionData["SessionId"].ToString()!;
-            }
-
-            return null;
+            context.BindingContext.BindingData.TryGetValue("SessionId", out var session);
+            return (string?)session;
         }
 
         private MessageMetadata GetMessageMetaData(FunctionContext context)
@@ -61,7 +54,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData
 
             if (metadata != null)
             {
-                var eventMetadata = _jsonSerializer.Deserialize<MessageMetadata>(metadata.ToString());
+                var eventMetadata = _jsonSerializer.Deserialize<MessageMetadata>(metadata.ToString()!);
                 return eventMetadata;
             }
 
