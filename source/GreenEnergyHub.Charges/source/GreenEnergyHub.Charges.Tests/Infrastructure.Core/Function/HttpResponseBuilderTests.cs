@@ -50,7 +50,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Function
             var responseData = sut.CreateAcceptedResponse(httpRequestData);
 
             // Assert
-            const string correlationIdKey = "CorrelationId";
+            const string correlationIdKey = HttpRequestHeaderConstants.CorrelationId;
             responseData.Headers.Should().ContainKey(correlationIdKey);
             responseData.Headers.First(x => x.Key == correlationIdKey).Value.First().Should().Be(correlationContext.Id);
             responseData.StatusCode.Should().Be(HttpStatusCode.Accepted);
@@ -72,7 +72,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Function
             var responseData = await sut.CreateBadRequestResponseAsync(httpRequestData, errorResponse);
 
             // Assert
-            const string correlationIdKey = "CorrelationId";
+            const string correlationIdKey = HttpRequestHeaderConstants.CorrelationId;
             responseData.Headers.Should().ContainKey(correlationIdKey);
             responseData.Headers.First(x => x.Key == correlationIdKey).Value.First().Should().Be(correlationContext.Id);
             responseData.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -94,7 +94,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Function
             var responseData = sut.CreateBadRequestB2BResponse(httpRequestData, B2BErrorCode.ActorIsNotWhoTheyClaimToBeErrorMessage);
 
             // Assert
-            const string correlationIdKey = "CorrelationId";
+            const string correlationIdKey = HttpRequestHeaderConstants.CorrelationId;
             responseData.Headers.Should().ContainKey(correlationIdKey);
             responseData.Headers
                 .First(x => x.Key == correlationIdKey).Value
