@@ -140,7 +140,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
                     It.IsAny<ValidationError>(),
                     It.IsAny<DocumentDto>(),
                     It.IsAny<ChargeLinkOperationDto>()))
-                .Returns<ValidationError, ChargeLinksCommand, ChargeLinkOperationDto>((validationError, _, _) =>
+                .Returns<ValidationError, DocumentDto, ChargeLinkOperationDto>((validationError, _, _) =>
                     new AvailableReceiptValidationError(
                         ReasonCode.D01, validationError.ValidationRuleIdentifier.ToString()));
         }

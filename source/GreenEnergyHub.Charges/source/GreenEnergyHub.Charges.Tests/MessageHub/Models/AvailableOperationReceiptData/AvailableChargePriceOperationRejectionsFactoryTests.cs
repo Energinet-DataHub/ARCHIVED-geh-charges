@@ -48,13 +48,14 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             [Frozen] Mock<IAvailableChargePriceReceiptValidationErrorFactory> availableChargePriceReceiptValidationErrorFactory,
             IReadOnlyCollection<ChargePriceOperationDto> chargePriceOperations,
-            DocumentDto document,
+            DocumentDtoBuilder documentDtoBuilder,
             Instant now,
             AvailableChargePriceOperationRejectionsFactory sut)
         {
             // Arrange
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
             var actorId = Guid.NewGuid();
+            var document = documentDtoBuilder.WithBusinessReasonCode(BusinessReasonCode.UpdateChargePrices).Build();
             MarketParticipantRepositoryMockBuilder.SetupMarketParticipantRepositoryMock(
                 marketParticipantRepository, meteringPointAdministrator, document.Sender, actorId);
 
@@ -113,7 +114,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
             // fake error code and text
             availablePriceReceiptValidationErrorFactory
                 .Setup(f => f.Create(It.IsAny<ValidationError>(), document, It.IsAny<ChargePriceOperationDto>()))
-                .Returns<ValidationError, ChargePriceCommand, ChargePriceOperationDto>((validationError, _, _) =>
+                .Returns<ValidationError, DocumentDto, ChargePriceOperationDto>((validationError, _, _) =>
                     new AvailableReceiptValidationError(
                         ReasonCode.D01, validationError.ValidationRuleIdentifier.ToString()));
         }

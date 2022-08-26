@@ -35,12 +35,16 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
         [Theory]
         [InlineAutoMoqData]
         public void Create_WithMultipleMergeFields_ReturnsExpectedDescription(
-            DocumentDto document,
+            DocumentDtoBuilder documentDtoBuilder,
             CimValidationErrorTextProvider cimValidationErrorTextProvider,
             ChargePriceOperationDto chargeOperationDto,
             ILoggerFactory loggerFactory)
         {
             // Arrange
+            var document = documentDtoBuilder
+                .WithDocumentType(DocumentType.NotifyPriceList)
+                .WithBusinessReasonCode(BusinessReasonCode.UpdateChargePrices)
+                .Build();
             var sut = new ChargePriceCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
             var validationError = new ValidationError(ValidationRuleIdentifier.DocumentTypeMustBeRequestChangeOfPriceList, null, null);
 

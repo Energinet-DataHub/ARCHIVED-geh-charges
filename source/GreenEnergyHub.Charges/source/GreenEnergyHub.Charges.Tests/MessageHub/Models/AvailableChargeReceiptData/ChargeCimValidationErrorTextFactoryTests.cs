@@ -167,7 +167,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
                     var triggeredBy = GetTriggeredBy(operation, identifier);
                     var validationError = new ValidationError(identifier, operation.OperationId, triggeredBy);
 
-                    var actual = sut.Create(validationError, It.IsAny<DocumentDto>(), operation);
+                    var actual = sut.Create(validationError, chargeInformationCommand.Document, operation);
 
                     actual.Should().NotBeNullOrWhiteSpace();
                     actual.Should().NotContain("{");

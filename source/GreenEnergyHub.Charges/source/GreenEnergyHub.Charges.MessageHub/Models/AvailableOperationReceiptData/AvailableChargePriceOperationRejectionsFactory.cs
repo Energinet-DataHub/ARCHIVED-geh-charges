@@ -54,7 +54,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableOperationReceiptData
             // The original sender is the recipient of the receipt
             var recipient = await GetRecipientAsync(input.Document.Sender).ConfigureAwait(false);
             var sender = await GetSenderAsync().ConfigureAwait(false);
-            var businessReasonCode = ParseBusinessReasonCode(input.GetType());
+            var businessReasonCode = ParseBusinessReasonCode(input);
 
             var operationOrder = 0;
 
