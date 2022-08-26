@@ -18,16 +18,20 @@ using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.TestCore;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Tests.Builders.Command
 {
     public class PriceConfirmedEventBuilder
     {
+        private Instant _publishedTime;
         private DocumentDto _document;
         private IReadOnlyCollection<ChargePriceOperationDto> _operations;
 
         public PriceConfirmedEventBuilder()
         {
+            _publishedTime = SystemClock.Instance.GetCurrentInstant();
             _document = new DocumentDtoBuilder().Build();
             _operations = new List<ChargePriceOperationDto>() { new ChargePriceOperationDtoBuilder().Build() };
         }
@@ -40,7 +44,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
 
         public PriceConfirmedEvent Build()
         {
-            return new PriceConfirmedEvent(_document, _operations);
+            return new PriceConfirmedEvent(_publishedTime, _document, _operations);
         }
     }
 }

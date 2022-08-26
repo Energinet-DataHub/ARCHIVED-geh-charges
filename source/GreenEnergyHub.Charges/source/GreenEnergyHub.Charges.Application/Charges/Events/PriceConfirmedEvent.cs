@@ -15,13 +15,20 @@
 using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Events
 {
     public class PriceConfirmedEvent
     {
-        public PriceConfirmedEvent(DocumentDto document, IReadOnlyCollection<ChargePriceOperationDto> operations)
+        private readonly Instant _publishedTime;
+
+        public PriceConfirmedEvent(
+            Instant publishedTime,
+            DocumentDto document,
+            IReadOnlyCollection<ChargePriceOperationDto> operations)
         {
+            _publishedTime = publishedTime;
             Document = document;
             Operations = operations;
         }

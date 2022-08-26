@@ -14,6 +14,7 @@
 
 using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification.Charges;
@@ -29,20 +30,20 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<IAvailableDataNotifier<AvailableChargeReceiptData, ChargePriceOperationsRejectedEvent>,
-                AvailableDataNotifier<AvailableChargeReceiptData, ChargePriceOperationsRejectedEvent>>();
-            serviceCollection.AddScoped<IAvailableDataFactory<AvailableChargeReceiptData, ChargePriceOperationsRejectedEvent>,
+            serviceCollection.AddScoped<IAvailableDataNotifier<AvailableChargeReceiptData, PriceRejectedEvent>,
+                AvailableDataNotifier<AvailableChargeReceiptData, PriceRejectedEvent>>();
+            serviceCollection.AddScoped<IAvailableDataFactory<AvailableChargeReceiptData, PriceRejectedEvent>,
                 AvailableChargePriceOperationRejectionsFactory>();
             serviceCollection.AddScoped<IAvailableChargePriceReceiptValidationErrorFactory,
                 AvailableChargePriceReceiptValidationErrorFactory>();
-            serviceCollection.AddScoped<ICimValidationErrorTextFactory<ChargePriceCommand, ChargePriceOperationDto>,
+            serviceCollection.AddScoped<ICimValidationErrorTextFactory<ChargePriceOperationDto>,
                 ChargePriceCimValidationErrorTextFactory>();
-            serviceCollection.AddScoped<BundleSpecification<AvailableChargeReceiptData, ChargePriceOperationsRejectedEvent>,
+            serviceCollection.AddScoped<BundleSpecification<AvailableChargeReceiptData, PriceRejectedEvent>,
                 ChargePriceRejectionBundleSpecification>();
 
             serviceCollection
                 .AddMessaging()
-                .AddInternalMessageExtractor<ChargePriceOperationsRejectedEvent>();
+                .AddInternalMessageExtractor<PriceRejectedEvent>();
         }
     }
 }

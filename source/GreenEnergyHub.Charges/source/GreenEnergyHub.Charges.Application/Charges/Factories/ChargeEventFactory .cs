@@ -26,7 +26,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Factories
     {
         private readonly IClock _clock;
 
-        public PriceRejectedEventFactory(IClock clock)
+        public ChargeEventFactory(IClock clock)
         {
             _clock = clock;
         }
