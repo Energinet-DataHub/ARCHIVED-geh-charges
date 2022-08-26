@@ -29,26 +29,15 @@ limitations under the License.
 		<cim:ChargeGroup>
 			<cim:ChargeType>
 				<cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">{{$senderMarketParticipant}}</cim:chargeTypeOwner_MarketParticipant.mRID>
-				<cim:type>D01</cim:type>
-				<cim:mRID>SubId01</cim:mRID>
-				<cim:name>Charge Subscription Name</cim:name>
-				<cim:description>Subscription description</cim:description>
-				<cim:priceTimeFrame_Period.resolution>P1M</cim:priceTimeFrame_Period.resolution>
-				<cim:effectiveDate>2022-05-31T22:00:00Z</cim:effectiveDate>
+				<cim:type>D03</cim:type>
+				<cim:mRID>TariffId01</cim:mRID>
+				<cim:name>Charge Tariff Hourly Name</cim:name>
+				<cim:description>Tariff description</cim:description>
+				<cim:priceTimeFrame_Period.resolution>PT1H</cim:priceTimeFrame_Period.resolution>
+				<cim:effectiveDate>2022-07-31T22:00:00Z</cim:effectiveDate>
 				<cim:VATPayer>D01</cim:VATPayer>
 				<cim:transparentInvoicing>false</cim:transparentInvoicing>
 				<cim:taxIndicator>false</cim:taxIndicator>
-				<cim:Series_Period>
-					<cim:resolution>P1M</cim:resolution>
-					<cim:timeInterval>
-						<cim:start>2022-05-31T22:00Z</cim:start>
-						<cim:end>2022-06-30T22:00Z</cim:end>
-					</cim:timeInterval>
-					<cim:Point>
-						<cim:position>1</cim:position>
-						<cim:price.amount>200.001</cim:price.amount>
-					</cim:Point>
-				</cim:Series_Period>
 			</cim:ChargeType>
 		</cim:ChargeGroup>
 	</cim:MktActivityRecord>
