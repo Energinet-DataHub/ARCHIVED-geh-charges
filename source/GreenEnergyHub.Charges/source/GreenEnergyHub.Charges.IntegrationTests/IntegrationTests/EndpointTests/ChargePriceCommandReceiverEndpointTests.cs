@@ -21,7 +21,9 @@ using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 using GreenEnergyHub.Charges.FunctionHost.Charges;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
@@ -61,13 +63,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
             [Theory]
             [InlineAutoMoqData]
-            public async Task ChargePriceCommandReceivedEvent_WhenValidationFails_PersistsRejectedEvent(
+            public async Task RunAsync_WhenValidationFails_PersistsRejectedEvent(
                 ChargePriceCommandBuilder commandBuilder,
                 ChargePriceOperationDtoBuilder operationDtoBuilder)
             {
                 // Arrange
                 await using var context = Fixture.ChargesDatabaseManager.CreateDbContext();
-                var invalidChargePriceCommandReceivedEvent = CreateInvalidChargePriceCommandReceivedEvent(commandBuilder, operationDtoBuilder);
+                var invalidChargePriceCommandReceivedEvent = CreateInvalidChargePriceCommandReceivedEvent(
+                    commandBuilder, operationDtoBuilder);
                 var correlationId = CorrelationIdGenerator.Create();
                 var message = CreateServiceBusMessage(invalidChargePriceCommandReceivedEvent, correlationId);
 
@@ -93,11 +96,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 return chargePriceReceivedEvent;
             }
 
-            private static ServiceBusMessage CreateServiceBusMessage(ChargePriceCommandReceivedEvent command, string correlationId)
+            private static ServiceBusMessage CreateServiceBusMessage(IInternalEvent internalEvent, string correlationId)
             {
-                var applicationProperties = new Dictionary<string, string> { { "OperationCorrelationId", correlationId } };
+                var applicationProperties = new Dictionary<string, string>
+                {
+                    { MessageMetaDataConstants.CorrelationId, correlationId },
+                };
                 var message = ServiceBusMessageGenerator.CreateWithJsonContent(
-                    command, applicationProperties, correlationId);
+                    internalEvent, applicationProperties, correlationId);
 
                 return message;
             }
