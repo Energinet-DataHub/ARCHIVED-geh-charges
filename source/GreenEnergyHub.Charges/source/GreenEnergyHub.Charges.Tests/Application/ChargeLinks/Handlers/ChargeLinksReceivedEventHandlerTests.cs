@@ -22,6 +22,7 @@ using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Services;
+using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
@@ -154,11 +155,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
         [Theory]
         [InlineAutoMoqData]
         public async Task GivenHandleAsync_WhenValidationFails_ShouldLogValidationErrors(
-            [Frozen] Mock<ILoggerFactory> loggerFactory,
-            [Frozen] Mock<IBusinessValidator<ChargeLinkOperationDto>> businessValidator,
-            [Frozen] Mock<ILogger> logger,
-            ChargeLinksReceivedEvent receivedEvent,
-            ChargeLinksReceivedEventHandler sut)
+            Mock<ILoggerFactory> loggerFactory,
+            Mock<ILogger> logger,
+            Mock<IChargeLinksReceiptService> chargeLinksReceiptService,
+            Mock<IChargeLinkFactory> chargeLinkFactory,
+            Mock<IChargeLinksRepository> chargeLinksRepository,
+            Mock<IBusinessValidator<ChargeLinkOperationDto>> businessValidator,
+            Mock<IUnitOfWork> unitOfWork,
+            ChargeLinksReceivedEvent receivedEvent)
         {
             // Arrange
             var document = receivedEvent.Command.Document;
@@ -173,6 +177,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             businessValidator
                 .Setup(b => b.ValidateAsync(It.IsAny<ChargeLinkOperationDto>()))
                 .ReturnsAsync(GetFailedValidationResult(ValidationRuleIdentifier.StartDateValidation));
+
+            var sut = new ChargeLinksReceivedEventHandler(
+                loggerFactory.Object,
+                chargeLinksReceiptService.Object,
+                chargeLinkFactory.Object,
+                chargeLinksRepository.Object,
+                businessValidator.Object,
+                unitOfWork.Object);
 
             // Act
             await sut.HandleAsync(receivedEvent);

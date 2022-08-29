@@ -96,13 +96,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         [Theory]
         [InlineAutoDomainData]
         public async Task GivenHandleAsync_WhenValidationFails_ShouldLogValidationErrors(
-            [Frozen] Mock<ILoggerFactory> loggerFactory,
-            [Frozen] Mock<ILogger> logger,
-            [Frozen] Mock<IDocumentValidator> documentValidator,
-            [Frozen] Mock<IChargeEventFactory> chargeEventFactory,
+            Mock<ILoggerFactory> loggerFactory,
+            Mock<ILogger> logger,
+            Mock<IDocumentValidator> documentValidator,
+            Mock<IChargeEventFactory> chargeEventFactory,
+            Mock<IChargePriceEventHandler> chargePriceEventHandler,
+            Mock<IDomainEventPublisher> domainEventPublisher,
             PriceRejectedEvent rejectedEvent,
-            ChargePriceCommandReceivedEvent chargePriceCommandReceivedEvent,
-            ChargePriceCommandReceivedEventHandler sut)
+            ChargePriceCommandReceivedEvent chargePriceCommandReceivedEvent)
         {
             // Arrange
             var document = chargePriceCommandReceivedEvent.Command.Document;
@@ -122,6 +123,13 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                 .ReturnsAsync(
                     ValidationResult.CreateFailure(GetFailedValidationResult(
                         ValidationRuleIdentifier.BusinessReasonCodeMustBeUpdateChargeInformationOrChargePrices)));
+
+            var sut = new ChargePriceCommandReceivedEventHandler(
+                loggerFactory.Object,
+                chargePriceEventHandler.Object,
+                documentValidator.Object,
+                domainEventPublisher.Object,
+                chargeEventFactory.Object);
 
             // Act
             await sut.HandleAsync(chargePriceCommandReceivedEvent);
