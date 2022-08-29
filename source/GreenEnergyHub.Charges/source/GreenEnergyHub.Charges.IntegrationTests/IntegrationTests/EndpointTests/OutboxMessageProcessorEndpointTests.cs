@@ -74,7 +74,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
             }
 
             [Fact]
-            public async Task RunAsync_WhenOutboxMessageIsRead_AvailableDataIsPersisted_AndProcessedDateIsSet()
+            public async Task RunAsync_WhenRejectedOutboxMessageIsRead_AvailableDataIsPersisted_AndProcessedDateIsSet()
             {
                 // Arrange
                 await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
@@ -91,6 +91,28 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 var actualAvailableDataReceipt = messageHubDatabaseContext.AvailableChargeReceiptData
                     .Single(x => x.OriginalOperationId == operationsRejectedEvent.Operations.First().OperationId);
                 actualAvailableDataReceipt.RecipientId.Should().Be(operationsRejectedEvent.Document.Sender.MarketParticipantId);
+                var processedOutboxMessage = chargesDatabaseReadContext.OutboxMessages.Single(x => x.Id == outboxMessage.Id);
+                processedOutboxMessage.ProcessedDate.Should().NotBeNull();
+            }
+
+            [Fact]
+            public async Task RunAsync_WhenConfirmedOutboxMessageIsRead_AvailableDataIsPersisted_AndProcessedDateIsSet()
+            {
+                // Arrange
+                await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
+                await using var messageHubDatabaseContext = Fixture.MessageHubDatabaseManager.CreateDbContext();
+                await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
+                var operationsConfirmedEvent = CreateChargePriceOperationsConfirmedEvent();
+                var outboxMessage = await PersistToOutboxMessage(chargesDatabaseWriteContext, operationsConfirmedEvent);
+
+                // Act
+                await FunctionAsserts.AssertHasExecutedAsync(
+                    Fixture.HostManager, nameof(ChargePriceConfirmedDataAvailableNotifierEndpoint));
+
+                // Assert
+                var actualAvailableDataReceipt = messageHubDatabaseContext.AvailableChargeReceiptData
+                    .Single(x => x.OriginalOperationId == operationsConfirmedEvent.Operations.First().OperationId);
+                actualAvailableDataReceipt.RecipientId.Should().Be(operationsConfirmedEvent.Document.Sender.MarketParticipantId);
                 var processedOutboxMessage = chargesDatabaseReadContext.OutboxMessages.Single(x => x.Id == outboxMessage.Id);
                 processedOutboxMessage.ProcessedDate.Should().NotBeNull();
             }
@@ -153,12 +175,25 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 return operationsRejectedEvent;
             }
 
-            private static async Task<OutboxMessage> PersistToOutboxMessage(ChargesDatabaseContext context, PriceRejectedEvent rejectedEvent)
+            private static PriceConfirmedEvent CreateChargePriceOperationsConfirmedEvent()
+            {
+                var chargePriceOperation =
+                    new ChargePriceOperationDtoBuilder()
+                        .WithChargePriceOperationId(Guid.NewGuid().ToString())
+                        .Build();
+                var operations = new List<ChargePriceOperationDto> { chargePriceOperation };
+                var operationsConfirmedEvent = new PriceConfirmedEventBuilder()
+                    .WithOperations(operations)
+                    .Build();
+                return operationsConfirmedEvent;
+            }
+
+            private static async Task<OutboxMessage> PersistToOutboxMessage<T>(ChargesDatabaseContext context, T domainEvent)
             {
                 var correlationContext = CorrelationContextGenerator.Create();
                 var jsonSerializer = new JsonSerializer();
                 var outboxMessageFactory = new OutboxMessageFactory(jsonSerializer, SystemClock.Instance, correlationContext);
-                var outboxMessage = outboxMessageFactory.CreateFrom(rejectedEvent);
+                var outboxMessage = outboxMessageFactory.CreateFrom(domainEvent);
                 context.OutboxMessages.Add(outboxMessage);
                 await context.SaveChangesAsync();
                 return outboxMessage;

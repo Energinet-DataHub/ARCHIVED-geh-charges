@@ -22,15 +22,15 @@ using Microsoft.Azure.Functions.Worker;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
 {
-    public class ChargePriceRejectedDataAvailableNotifierEndpoint
+    public class ChargePriceConfirmedDataAvailableNotifierEndpoint
     {
-        private const string FunctionName = nameof(ChargePriceRejectedDataAvailableNotifierEndpoint);
-        private readonly IAvailableDataNotifier<AvailableChargeReceiptData, PriceRejectedEvent> _availableDataNotifier;
-        private readonly JsonMessageDeserializer<PriceRejectedEvent> _deserializer;
+        private const string FunctionName = nameof(ChargePriceConfirmedDataAvailableNotifierEndpoint);
+        private readonly IAvailableDataNotifier<AvailableChargeReceiptData, PriceConfirmedEvent> _availableDataNotifier;
+        private readonly JsonMessageDeserializer<PriceConfirmedEvent> _deserializer;
 
-        public ChargePriceRejectedDataAvailableNotifierEndpoint(
-            IAvailableDataNotifier<AvailableChargeReceiptData, PriceRejectedEvent> availableDataNotifier,
-            JsonMessageDeserializer<PriceRejectedEvent> deserializer)
+        public ChargePriceConfirmedDataAvailableNotifierEndpoint(
+            IAvailableDataNotifier<AvailableChargeReceiptData, PriceConfirmedEvent> availableDataNotifier,
+            JsonMessageDeserializer<PriceConfirmedEvent> deserializer)
         {
             _availableDataNotifier = availableDataNotifier;
             _deserializer = deserializer;
@@ -39,14 +39,14 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
         [Function(FunctionName)]
         public async Task RunAsync(
             [ServiceBusTrigger(
-                "%" + EnvironmentSettingNames.ChargePriceRejectedTopicName + "%",
-                "%" + EnvironmentSettingNames.ChargePriceRejectedSubscriptionName + "%",
+                "%" + EnvironmentSettingNames.ChargePriceConfirmedTopicName + "%",
+                "%" + EnvironmentSettingNames.ChargePriceConfirmedSubscriptionName + "%",
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             byte[] message)
         {
-            var chargePriceOperationsRejectedEvent = (PriceRejectedEvent)await _deserializer
+            var chargePriceOperationsConfirmedEvent = (PriceConfirmedEvent)await _deserializer
                 .FromBytesAsync(message).ConfigureAwait(false);
-            await _availableDataNotifier.NotifyAsync(chargePriceOperationsRejectedEvent).ConfigureAwait(false);
+            await _availableDataNotifier.NotifyAsync(chargePriceOperationsConfirmedEvent).ConfigureAwait(false);
         }
     }
 }
