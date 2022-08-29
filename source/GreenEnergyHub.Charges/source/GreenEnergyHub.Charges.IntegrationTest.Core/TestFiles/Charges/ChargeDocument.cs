@@ -39,6 +39,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.Charges
         public const string ChargePriceSeriesSubscriptionMonthlySample = "TestFiles/Charges/Samples/ChargePriceSeriesSubscriptionMonthlySample.xml";
         public const string ChargePriceSeriesFeeMonthlySample = "TestFiles/Charges/Samples/ChargePriceSeriesFeeMonthlySample.xml";
         public const string ChargePriceSeriesTariffHourlySample = "TestFiles/Charges/Samples/ChargePriceSeriesTariffHourlySample.xml";
+        public const string BundledChargePriceSeriesSample = "TestFiles/Charges/Samples/BundledChargePriceSeriesSample.xml";
         public const string TariffPriceSeries = "TestFiles/Charges/PriceSeries/TariffPriceSeries.xml";
         public const string TariffPriceSeriesWithInvalidRecipientType = "TestFiles/Charges/PriceSeries/TariffPriceSeriesWithInvalidRecipientType.xml";
         public const string TariffPriceSeriesWithInvalidBusinessReasonCode = "TestFiles/Charges/PriceSeries/TariffPriceSeriesWithInvalidBusinessReasonCode.xml";
