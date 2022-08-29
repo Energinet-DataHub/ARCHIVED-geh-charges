@@ -35,13 +35,13 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
         private readonly IMessageDispatcher<ChargeCommandAcceptedEvent> _acceptedMessageDispatcher;
 
         public ChargeCommandReceiptService(
-            ILogger logger,
+            ILoggerFactory loggerFactory,
             IChargeCommandRejectedEventFactory chargeCommandRejectedEventFactory,
             IChargeCommandAcceptedEventFactory chargeCommandAcceptedEventFactory,
             IMessageDispatcher<ChargeCommandRejectedEvent> rejectedMessageDispatcher,
             IMessageDispatcher<ChargeCommandAcceptedEvent> acceptedMessageDispatcher)
         {
-            _logger = logger;
+            _logger = loggerFactory.CreateLogger(nameof(ChargeCommandReceiptService));
             _chargeCommandRejectedEventFactory = chargeCommandRejectedEventFactory;
             _chargeCommandAcceptedEventFactory = chargeCommandAcceptedEventFactory;
             _rejectedMessageDispatcher = rejectedMessageDispatcher;

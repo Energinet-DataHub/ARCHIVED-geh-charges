@@ -39,14 +39,14 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
         private readonly IUnitOfWork _unitOfWork;
 
         public ChargeLinksReceivedEventHandler(
-            ILogger logger,
+            ILoggerFactory loggerFactory,
             IChargeLinksReceiptService chargeLinksReceiptService,
             IChargeLinkFactory chargeLinkFactory,
             IChargeLinksRepository chargeLinksRepository,
             IBusinessValidator<ChargeLinkOperationDto> businessValidator,
             IUnitOfWork unitOfWork)
         {
-            _logger = logger;
+            _logger = loggerFactory.CreateLogger(nameof(ChargeLinksReceivedEventHandler));
             _chargeLinksReceiptService = chargeLinksReceiptService;
             _chargeLinkFactory = chargeLinkFactory;
             _chargeLinksRepository = chargeLinksRepository;

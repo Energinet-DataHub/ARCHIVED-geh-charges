@@ -33,13 +33,13 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         private readonly IChargeEventFactory _chargeEventFactory;
 
         public ChargePriceCommandReceivedEventHandler(
-            ILogger logger,
+            ILoggerFactory loggerFactory,
             IChargePriceEventHandler chargePriceEventHandler,
             IDocumentValidator documentValidator,
             IDomainEventPublisher domainEventPublisher,
             IChargeEventFactory chargeEventFactory)
         {
-            _logger = logger;
+            _logger = loggerFactory.CreateLogger(nameof(ChargePriceCommandReceivedEventHandler));
             _chargePriceEventHandler = chargePriceEventHandler;
             _documentValidator = documentValidator;
             _domainEventPublisher = domainEventPublisher;
@@ -67,7 +67,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 commandReceivedEvent.Command.Document,
                 rejectionRules);
             _logger.LogError("ValidationErrors for {ErrorMessage}", errorMessage);
-
             var validationResult = ValidationResult.CreateFailure(rejectionRules);
 
             var rejectedEvent = _chargeEventFactory.CreatePriceRejectedEvent(

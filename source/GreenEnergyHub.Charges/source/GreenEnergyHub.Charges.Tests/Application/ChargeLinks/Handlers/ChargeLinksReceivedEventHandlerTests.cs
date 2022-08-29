@@ -154,9 +154,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
         [Theory]
         [InlineAutoMoqData]
         public async Task GivenHandleAsync_WhenValidationFails_ShouldLogValidationErrors(
-            [Frozen] Mock<ILogger> logger,
+            [Frozen] Mock<ILoggerFactory> loggerFactory,
             [Frozen] Mock<IBusinessValidator<ChargeLinkOperationDto>> businessValidator,
             ChargeLinksReceivedEvent receivedEvent,
+            Mock<ILogger> logger,
             ChargeLinksReceivedEventHandler sut)
         {
             // Arrange
@@ -168,6 +169,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
                 ValidationRuleIdentifier.StartDateValidation.ToString(),
                 receivedEvent.Command.Operations.Count - 1);
 
+            loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
             businessValidator
                 .Setup(b => b.ValidateAsync(It.IsAny<ChargeLinkOperationDto>()))
                 .ReturnsAsync(GetFailedValidationResult(ValidationRuleIdentifier.StartDateValidation));
