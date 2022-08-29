@@ -14,7 +14,7 @@
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
 {
-    public class HttpRequestHeaderConstants
+    public static class HttpRequestHeaderConstants
     {
         public const string Authorization = "Authorization";
         public const string CorrelationId = "CorrelationId";

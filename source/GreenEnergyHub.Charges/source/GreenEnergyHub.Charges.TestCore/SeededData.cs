@@ -63,7 +63,7 @@ namespace GreenEnergyHub.Charges.TestCore
             public static class Provider8100000000030
             {
                 public const string MarketParticipantId = "8100000000030";
-                public static readonly Guid Id = new("ed6c94f3-24a8-43b3-913d-bf7513390a32");
+                public static readonly Guid Id = new("e009b9b2-edce-4f74-b466-98d0bbb0a94a");
                 public static readonly Guid GridAreaId = new("cb655a73-090e-4352-b93d-c66a875ca5a0");
             }
 

@@ -29,15 +29,10 @@ namespace GreenEnergyHub.Charges.Application.Charges.Factories
             _clock = clock;
         }
 
-        public ChargePriceOperationsRejectedEvent Create(
-            ChargePriceCommand command,
-            ValidationResult validationResult)
+        public ChargePriceOperationsRejectedEvent Create(ChargePriceCommand command, ValidationResult validationResult)
         {
             var validationErrors = validationResult.InvalidRules.Select(ValidationErrorFactory.Create());
-            return new ChargePriceOperationsRejectedEvent(
-                _clock.GetCurrentInstant(),
-                command,
-                validationErrors);
+            return new ChargePriceOperationsRejectedEvent(_clock.GetCurrentInstant(), command, validationErrors);
         }
     }
 }
