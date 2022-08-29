@@ -202,10 +202,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             }
 
             [Theory]
-            [InlineAutoMoqData(ChargeDocument.SubscriptionMonthlyPriceSample)]
-            [InlineAutoMoqData(ChargeDocument.FeeMonthlyPriceSample)]
-            [InlineAutoMoqData(ChargeDocument.TariffHourlyPricesSample)]
-            public async Task Given_ChargeInformationExampleFileWithPrices_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply(
+            [InlineAutoMoqData(ChargeDocument.ChargeInformationSubscriptionMonthlySample)]
+            [InlineAutoMoqData(ChargeDocument.ChargeInformationFeeMonthlySample)]
+            [InlineAutoMoqData(ChargeDocument.ChargeInformationTariffHourlySample)]
+            [InlineAutoMoqData(ChargeDocument.BundledChargeInformationSample)]
+            public async Task Given_ChargeInformationSampleFile_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply(
                 string testFilePath)
             {
                 // Arrange
@@ -226,8 +227,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             }
 
             [Theory]
-            [InlineAutoMoqData(ChargeDocument.TariffPriceSeries)]
-            public async Task Given_ChargePricesExampleFileWithPrices_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply(
+            [InlineAutoMoqData(ChargeDocument.ChargePriceSeriesSubscriptionMonthlySample)]
+            [InlineAutoMoqData(ChargeDocument.ChargePriceSeriesFeeMonthlySample)]
+            [InlineAutoMoqData(ChargeDocument.ChargePriceSeriesTariffHourlySample)]
+            [InlineAutoMoqData(ChargeDocument.BundledChargePriceSeriesSample)]
+            public async Task Given_ChargePriceSample_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply(
                 string testFilePath)
             {
                 // Arrange
