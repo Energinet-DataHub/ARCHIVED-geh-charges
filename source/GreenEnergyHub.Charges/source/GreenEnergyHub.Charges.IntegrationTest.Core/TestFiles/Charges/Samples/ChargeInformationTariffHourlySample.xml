@@ -19,16 +19,16 @@ limitations under the License.
 	<cim:type>D10</cim:type>
 	<cim:process.processType>D18</cim:process.processType>
 	<cim:businessSector.type>23</cim:businessSector.type>
-	<cim:sender_MarketParticipant.mRID codingScheme="A10">{{$senderMarketParticipant}}</cim:sender_MarketParticipant.mRID>
+	<cim:sender_MarketParticipant.mRID codingScheme="A10">8100000000030</cim:sender_MarketParticipant.mRID>
 	<cim:sender_MarketParticipant.marketRole.type>DDM</cim:sender_MarketParticipant.marketRole.type>
-	<cim:receiver_MarketParticipant.mRID codingScheme="A10">{{$receiverMarketParticipant}}</cim:receiver_MarketParticipant.mRID>
+	<cim:receiver_MarketParticipant.mRID codingScheme="A10">5790001330552</cim:receiver_MarketParticipant.mRID>
 	<cim:receiver_MarketParticipant.marketRole.type>DDZ</cim:receiver_MarketParticipant.marketRole.type>
-	<cim:createdDateTime>{{$ISO8601Timestamp}}</cim:createdDateTime>
+	<cim:createdDateTime>2022-08-29T05:56:34Z</cim:createdDateTime>
 	<cim:MktActivityRecord>
 		<cim:mRID>OperationId00001</cim:mRID>
 		<cim:ChargeGroup>
 			<cim:ChargeType>
-				<cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">{{$senderMarketParticipant}}</cim:chargeTypeOwner_MarketParticipant.mRID>
+				<cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">8100000000030</cim:chargeTypeOwner_MarketParticipant.mRID>
 				<cim:type>D03</cim:type>
 				<cim:mRID>TariffId01</cim:mRID>
 				<cim:name>Charge Tariff Hourly Name</cim:name>
