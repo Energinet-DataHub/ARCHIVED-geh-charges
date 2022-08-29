@@ -494,8 +494,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                     .Wait(TimeSpan.FromSeconds(SecondsToWaitForIntegrationEvents));
                 var hostLogSnapshot = Fixture.HostManager.GetHostLogSnapshot();
                 hostLogSnapshot.Any(x => x.Contains("With errors:")).Should().BeFalse();
-                hostLogSnapshot.Any(x => x.Contains("1 confirmed price operations was persisted.")).Should().BeTrue();
-                hostLogSnapshot.Any(x => x.Contains("1 notifications was persisted.")).Should().BeTrue();
+                hostLogSnapshot.Any(x => x.Contains("1 confirmed price operations was persisted")).Should().BeTrue();
+                hostLogSnapshot.Any(x => x.Contains("1 notifications was persisted")).Should().BeTrue();
             }
 
             [Fact]
@@ -519,7 +519,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                     .Wait(TimeSpan.FromSeconds(SecondsToWaitForIntegrationEvents));
                 var hostLogSnapshot = Fixture.HostManager.GetHostLogSnapshot();
                 hostLogSnapshot.Any(x => x.Contains("With errors:")).Should().BeFalse();
-                hostLogSnapshot.Any(x => x.Contains("1 confirmed price operations was persisted.")).Should().BeTrue();
+                hostLogSnapshot.Any(x => x.Contains("1 confirmed price operations was persisted")).Should().BeTrue();
             }
 
             [Fact]
@@ -543,7 +543,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                     .Wait(TimeSpan.FromSeconds(SecondsToWaitForIntegrationEvents));
                 var hostLogSnapshot = Fixture.HostManager.GetHostLogSnapshot();
                 hostLogSnapshot.Any(x => x.Contains("With errors:")).Should().BeFalse();
-                hostLogSnapshot.Any(x => x.Contains("1 confirmed price operations was persisted.")).Should().BeTrue();
+                hostLogSnapshot.Any(x => x.Contains("1 confirmed price operations was persisted")).Should().BeTrue();
             }
 
             [Fact]
