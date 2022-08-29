@@ -73,8 +73,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
                 actual.RecipientRole.Should().Be(document.Sender.BusinessProcessRole);
                 actual.BusinessReasonCode.Should().Be(document.BusinessReasonCode);
                 actual.RequestDateTime.Should().Be(now);
-                actual.ReceiptStatus.Should().Be(ReceiptStatus.Rejected);
-                actual.DocumentType.Should().Be(DocumentType.RejectRequestChangeOfPriceList);
+                actual.ReceiptStatus.Should().Be(ReceiptStatus.Confirmed);
+                actual.DocumentType.Should().Be(DocumentType.ConfirmRequestChangeOfPriceList);
 
                 var expectedChargeOperationDto = chargePriceOperations.ToArray()[i1];
                 actual.OriginalOperationId.Should().Be(expectedChargeOperationDto.OperationId);
