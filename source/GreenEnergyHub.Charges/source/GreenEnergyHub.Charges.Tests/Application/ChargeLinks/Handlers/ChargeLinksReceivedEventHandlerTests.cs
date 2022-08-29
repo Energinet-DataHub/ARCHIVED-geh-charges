@@ -156,8 +156,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
         public async Task GivenHandleAsync_WhenValidationFails_ShouldLogValidationErrors(
             [Frozen] Mock<ILoggerFactory> loggerFactory,
             [Frozen] Mock<IBusinessValidator<ChargeLinkOperationDto>> businessValidator,
+            [Frozen] Mock<ILogger> logger,
             ChargeLinksReceivedEvent receivedEvent,
-            Mock<ILogger> logger,
             ChargeLinksReceivedEventHandler sut)
         {
             // Arrange

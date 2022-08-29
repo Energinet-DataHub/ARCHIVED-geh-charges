@@ -97,9 +97,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         [InlineAutoDomainData]
         public async Task GivenHandleAsync_WhenValidationFails_ShouldLogValidationErrors(
             [Frozen] Mock<ILoggerFactory> loggerFactory,
+            [Frozen] Mock<ILogger> logger,
             [Frozen] Mock<IDocumentValidator> documentValidator,
             [Frozen] Mock<IChargeEventFactory> chargeEventFactory,
-            Mock<ILogger> logger,
             PriceRejectedEvent rejectedEvent,
             ChargePriceCommandReceivedEvent chargePriceCommandReceivedEvent,
             ChargePriceCommandReceivedEventHandler sut)
