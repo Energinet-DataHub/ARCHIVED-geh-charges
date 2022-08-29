@@ -7,6 +7,7 @@ All process flows within the Charges domain will be gathered here.
 |<b>[Charge Price List Flow](#Charge-Price-List-Flow)</b>|
 |   - [Persist Charge](#Persist-Charge)|
 |   - [Persist Charge Prices](#Persist-Charge-Prices)|
+|   - [Irregular Price Series](#Irregular-Price-series)|
 |<b>[Charge Link Flow](#Charge-Link-Flow)<b>|
 <br>
 
@@ -34,6 +35,17 @@ Note, stopping a charge results in a removal of any registered prices from the s
 The rule set for persisting charge prices.
 
 ![Persist charge prices](images/PersistingChargePricesRuleSet_ProcessFlow.png)
+
+<br>
+
+### Irregular Price Series
+
+An 'irregular price series' is a Charge Price Request (D08) containing a price series for charge with a monthly resolution, where the start time is **not** the first of the month, but during the month, and the end time of that particular price is the first of the following month.
+
+The rule set for persisting irregular price series is no different than the normal way of persisting charge prices.
+Provided below are some examples of how persistence of irregular price series will look like.
+
+![Irregular Price Series Examples](images/Irregular_PriceSeries_Examples.png)
 
 <br>
 
