@@ -24,6 +24,7 @@ limitations under the License.
     <LangVersion>9</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="AspNetCore.HealthChecks.AzureStorage" Version="6.1.1" />
     <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="6.0.2" />
     <PackageReference Include="AspNetCore.HealthChecks.AzureServiceBus" Version="6.0.4" />
     <PackageReference Include="Energinet.DataHub.Core.App.Common.Security" Version="6.0.0" />
