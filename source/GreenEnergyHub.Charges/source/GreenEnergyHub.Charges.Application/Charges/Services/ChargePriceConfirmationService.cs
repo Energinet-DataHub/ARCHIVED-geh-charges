@@ -31,7 +31,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Services
         public Task SaveConfirmationsAsync(List<ChargePriceOperationDto> confirmedPriceOperations)
         {
             _logger.LogInformation(
-                "{confirmedPriceOperationsCount} confirmed price operations was persisted.",
+                "{ConfirmedPriceOperationsCount} confirmed price operations was persisted",
                 confirmedPriceOperations.Count);
 
             return Task.CompletedTask;

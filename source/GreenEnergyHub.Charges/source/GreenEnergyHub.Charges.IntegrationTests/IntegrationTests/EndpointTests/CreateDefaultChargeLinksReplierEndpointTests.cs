@@ -20,6 +20,7 @@ using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
@@ -91,8 +92,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
                 var applicationProperties = new Dictionary<string, string>
                 {
-                    { "OperationCorrelationId", correlationId },
-                    { "ReplyTo", Fixture.CreateLinkReplyQueue.Name },
+                    { MessageMetaDataConstants.CorrelationId, correlationId },
+                    { MessageMetaDataConstants.ReplyTo, Fixture.CreateLinkReplyQueue.Name },
                 };
 
                 var message = ServiceBusMessageGenerator.CreateWithJsonContent(
