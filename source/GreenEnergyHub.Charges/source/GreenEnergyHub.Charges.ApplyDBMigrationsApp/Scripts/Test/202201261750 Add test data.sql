@@ -74,7 +74,7 @@ SELECT @chargeOwnerId = Id FROM charges.marketparticipant WHERE marketparticipan
 
 INSERT INTO charges.charge VALUES (@chargeId, 'TestTariff', 3, @chargeOwnerId, 0, 2, 0, 'Description...', 'Grid Access Provider test tariff', 1, '2021-12-31 23:00:00', '9999-12-31 23:59:59')
 INSERT INTO charges.charge VALUES (@chargeId2, 'TestTar002', 3, @chargeOwnerId, 0, 2, 1, 'Description...', 'Grid Access Provider test tariff2', 2, '2021-12-31 23:00:00', '9999-12-31 23:59:59')
-INSERT INTO charges.charge VALUES (@chargeId3, 'TestFee', 2, @chargeOwnerId, 0, 3, 0, 'Description...', 'Grid Access Provider test fee', 2, '2021-12-31 23:00:00', '9999-12-31 23:59:59')
+INSERT INTO charges.charge VALUES (@chargeId3, 'TestFee', 2, @chargeOwnerId, 0, 4, 0, 'Description...', 'Grid Access Provider test fee', 2, '2021-12-31 23:00:00', '9999-12-31 23:59:59')
 INSERT INTO charges.charge VALUES (@chargeId4, 'TestSub', 1, @chargeOwnerId, 0, 4, 0, 'Description...', 'Grid Access Provider test subscription', 2, '2021-12-31 23:00:00', '9999-12-31 23:59:59')
 
 /* Charge EA-001a is a copy of EA-001, but with 8100000000030 as owner.
