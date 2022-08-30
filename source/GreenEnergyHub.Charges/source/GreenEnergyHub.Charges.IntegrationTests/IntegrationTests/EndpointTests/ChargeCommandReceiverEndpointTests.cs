@@ -127,7 +127,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     .Build();
 
                 var startDateTime = InstantPattern.ExtendedIso.Parse("2021-12-31T23:00:00Z").Value;
-                /*var pointsEndTime = InstantPattern.ExtendedIso.Parse("2022-02-02T23:00:00Z").Value;*/
 
                 var operation = operationDtoBuilder
                     .WithOwner(ownerId)
@@ -140,9 +139,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     .WithVatClassification(VatClassification.NoVat)
                     .WithChargeName("Grid Access Provider test tariff")
                     .WithDescription("Description...")
-                    /*.WithPriceResolution(Resolution.P1D)
-                    .WithPointsInterval(pointsStartDateTime, pointsEndTime)
-                    .WithStartDateTime(pointsStartDateTime)*/
                     .Build();
                 var priceCommand = commandBuilder
                     .WithDocumentDto(document)
