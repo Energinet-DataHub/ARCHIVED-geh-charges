@@ -233,7 +233,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
         }
 
         [Fact]
-        public void StopCharge_WhenStopDateEqualsSingleExistingChargePeriodStartDate_RemovePeriod()
+        public void StopCharge_WhenStopDateEqualsSingleExistingChargePeriodStartDate_ThenPeriodHasMatchingStartAndEndDate()
         {
             // Arrange
             var dayAfterTomorrow = InstantHelper.GetTodayPlusDaysAtMidnightUtc(2);
@@ -243,7 +243,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             sut.Stop(dayAfterTomorrow);
 
             // Assert
-            sut.Periods.Count.Should().Be(0);
+            sut.Periods.Count.Should().Be(1);
+            var period = sut.Periods.Single();
+            period.StartDateTime.Should().Be(period.EndDateTime);
         }
 
         [Fact]
@@ -310,6 +312,24 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
 
             // Act & Assert
             Assert.Throws<InvalidOperationException>(() => sut.Stop(stopDate));
+        }
+
+        [Fact]
+        public void StopCharge_WhenStopEqualsExistingStopDate_ThenNothingHappens()
+        {
+            // Arrange
+            var sut = new ChargeBuilder()
+                .WithStartDate(InstantHelper.GetTodayAtMidnightUtc())
+                .WithStopDate(InstantHelper.GetTodayPlusDaysAtMidnightUtc(5))
+                .Build();
+
+            // Act
+            sut.Stop(InstantHelper.GetTodayPlusDaysAtMidnightUtc(5));
+
+            // Act & Assert
+            sut.Periods.Should().HaveCount(1);
+            sut.Periods.Single().StartDateTime.Should().Be(InstantHelper.GetTodayAtMidnightUtc());
+            sut.Periods.Single().EndDateTime.Should().Be(InstantHelper.GetTodayPlusDaysAtMidnightUtc(5));
         }
 
         [Fact]
