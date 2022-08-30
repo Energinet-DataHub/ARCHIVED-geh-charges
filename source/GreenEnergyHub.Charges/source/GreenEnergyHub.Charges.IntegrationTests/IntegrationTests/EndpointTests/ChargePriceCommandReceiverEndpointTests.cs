@@ -95,7 +95,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
             [Theory]
             [InlineAutoMoqData]
-            public async Task RunAsync_WhenChargeIsNotChanged_ConfirmationEventIsRaised(
+            public async Task RunAsync_WhenPriceSeriesIsNotChanged_ConfirmationEventIsRaised(
                 ChargePriceCommandBuilder commandBuilder,
                 DocumentDtoBuilder documentDtoBuilder,
                 ChargePriceOperationDtoBuilder operationDtoBuilder)

@@ -140,12 +140,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     .WithChargeName("Grid Access Provider test tariff")
                     .WithDescription("Description...")
                     .Build();
-                var priceCommand = commandBuilder
+                var chargeCommand = commandBuilder
                     .WithDocumentDto(document)
                     .WithChargeOperation(operation)
                     .Build();
                 var chargeInformationReceivedEvent = new ChargeCommandReceivedEvent(
-                    Instant.FromDateTimeUtc(DateTime.UtcNow), priceCommand);
+                    Instant.FromDateTimeUtc(DateTime.UtcNow), chargeCommand);
 
                 return chargeInformationReceivedEvent;
             }
