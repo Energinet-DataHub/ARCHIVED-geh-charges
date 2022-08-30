@@ -69,7 +69,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
 
         private void AddCorrelationIdToHeaders(HttpResponseData httpResponseData)
         {
-            httpResponseData.Headers.Add("CorrelationId", _correlationContext.Id);
+            httpResponseData.Headers.Add(HttpRequestHeaderConstants.CorrelationId, _correlationContext.Id);
         }
     }
 }

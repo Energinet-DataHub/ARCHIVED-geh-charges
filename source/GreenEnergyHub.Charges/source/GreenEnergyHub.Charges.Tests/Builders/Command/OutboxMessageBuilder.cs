@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using GreenEnergyHub.Charges.Infrastructure.Outbox;
 using GreenEnergyHub.Charges.TestCore;
 using NodaTime;
@@ -44,7 +45,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
 
         public OutboxMessage Build()
         {
-            var outboxMessage = OutboxMessage.Create(_data, "correlationId", _type, _creationDate);
+            var outboxMessage = OutboxMessage.Create(_data, Guid.NewGuid().ToString(), _type, _creationDate);
             return outboxMessage;
         }
     }

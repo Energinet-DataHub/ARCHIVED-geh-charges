@@ -16,6 +16,7 @@ using System.Linq;
 using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.Messaging;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factories;
 using GreenEnergyHub.TestHelpers;
 using Moq;
@@ -53,7 +54,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions.F
             var actual = sut.CreateInternalMessage(data);
 
             // Assert
-            actual.ApplicationProperties.First(x => x.Key == "ReplyTo").Value.Should().Be(replyTo);
+            actual.ApplicationProperties.First(x => x.Key == MessageMetaDataConstants.ReplyTo).Value.Should().Be(replyTo);
         }
     }
 }
