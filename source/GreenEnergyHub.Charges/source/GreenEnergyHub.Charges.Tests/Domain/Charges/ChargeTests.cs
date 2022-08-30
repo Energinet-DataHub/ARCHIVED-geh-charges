@@ -410,6 +410,37 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
         }
 
         [Fact]
+        public void CancelStop_WhenSingleChargePeriodExistsWithMatchingStartAndEndDate_ThenAddNewPeriod()
+        {
+            // Arrange
+            var startAndStopDate = InstantHelper.GetTodayAtMidnightUtc();
+            var sut = new ChargeBuilder()
+                .WithStartDate(startAndStopDate)
+                .WithStopDate(startAndStopDate)
+                .WithName("StoppedOnCreationDate")
+                .Build();
+
+            var cancelStopPeriod = new ChargePeriodBuilder()
+                .WithStartDateTime(startAndStopDate)
+                .WithName("CancelledStopPeriod")
+                .Build();
+
+            // Act
+            sut.CancelStop(
+                cancelStopPeriod,
+                sut.TaxIndicator ? TaxIndicator.Tax : TaxIndicator.NoTax,
+                sut.Resolution,
+                Guid.NewGuid().ToString());
+
+            // Assert
+            sut.Periods.Should().HaveCount(1);
+            var period = sut.Periods.Single();
+            period.Name.Should().Be("CancelledStopPeriod");
+            period.StartDateTime.Should().Be(startAndStopDate);
+            period.EndDateTime.Should().Be(InstantHelper.GetEndDefault());
+        }
+
+        [Fact]
         public void CancelStop_WhenChargeNotStopped_ThenThrowException()
         {
             // Arrange

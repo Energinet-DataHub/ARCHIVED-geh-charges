@@ -208,6 +208,10 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             var rules = GenerateRules(chargePeriod, taxIndicator, resolution, operationId).ToList();
             CheckRules(rules);
 
+            // Handles the case where a charge was created and subsequently stopped the same date
+            if (existingLastPeriod.StartDateTime == existingLastPeriod.EndDateTime)
+                _periods.Remove(existingLastPeriod);
+
             _periods.Add(chargePeriod);
         }
 
