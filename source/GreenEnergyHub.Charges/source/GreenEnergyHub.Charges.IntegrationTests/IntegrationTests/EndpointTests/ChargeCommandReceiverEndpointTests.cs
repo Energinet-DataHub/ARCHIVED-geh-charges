@@ -14,19 +14,17 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using FluentAssertions;
-using FluentAssertions.Execution;
-using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.FunctionHost.Charges;
+using GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon;
@@ -45,13 +43,11 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 {
     [IntegrationTest]
-    public class ChargePriceCommandReceiverEndpointTests
+    public class ChargeCommandReceiverEndpointTests
     {
         [Collection(nameof(ChargesFunctionAppCollectionFixture))]
         public class RunAsync : FunctionAppTestBase<ChargesFunctionAppFixture>, IAsyncLifetime
         {
-            private static readonly string _operationsRejectedEventType = typeof(ChargePriceOperationsRejectedEvent).FullName!;
-
             public RunAsync(ChargesFunctionAppFixture fixture, ITestOutputHelper testOutputHelper)
                 : base(fixture, testOutputHelper)
             {
@@ -70,35 +66,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
             [Theory]
             [InlineAutoMoqData]
-            public async Task RunAsync_WhenValidationFails_PersistsRejectedEvent(
-                ChargePriceCommandBuilder commandBuilder,
-                ChargePriceOperationDtoBuilder operationDtoBuilder)
-            {
-                // Arrange
-                await using var context = Fixture.ChargesDatabaseManager.CreateDbContext();
-                var invalidChargePriceCommandReceivedEvent = CreateInvalidChargePriceCommandReceivedEvent(
-                    commandBuilder, operationDtoBuilder);
-                var correlationId = CorrelationIdGenerator.Create();
-                var message = CreateServiceBusMessage(invalidChargePriceCommandReceivedEvent, correlationId);
-
-                // Act
-                await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
-                    () => Fixture.ChargePriceCommandReceivedTopic.SenderClient.SendMessageAsync(message), correlationId);
-
-                await FunctionAsserts.AssertHasExecutedAsync(
-                    Fixture.HostManager, nameof(ChargePriceCommandReceiverEndpoint));
-
-                // Assert
-                var actualOutboxMessage = context.OutboxMessages.Single(x => x.CorrelationId.Contains(correlationId));
-                actualOutboxMessage.Type.Should().Be(_operationsRejectedEventType);
-            }
-
-            [Theory]
-            [InlineAutoMoqData]
-            public async Task RunAsync_WhenPriceSeriesIsNotChanged_ConfirmationEventIsRaised(
-                ChargePriceCommandBuilder commandBuilder,
+            public async Task RunAsync_WhenChargeIsNotChanged_ConfirmationEventIsRaised(
+                ChargeInformationCommandBuilder commandBuilder,
                 DocumentDtoBuilder documentDtoBuilder,
-                ChargePriceOperationDtoBuilder operationDtoBuilder)
+                ChargeInformationOperationDtoBuilder operationDtoBuilder)
             {
                 // Arrange
                 var ownerId = SeededData.GridAreaLink.Provider8100000000030.Id;
@@ -111,38 +82,28 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 var expectedCharge = await expectedChargeContext.Charges.FirstAsync(
                     GetChargePredicate(chargeId, ownerId, chargeType));
 
-                var chargePriceCommandReceivedEvent = CreateChargePriceCommandReceivedEvent(
+                var chargeCommandReceivedEvent = CreateChargeCommandReceivedEvent(
                     commandBuilder, documentDtoBuilder, operationDtoBuilder, chargeId, ownerGln, chargeType);
                 var correlationId = CorrelationIdGenerator.Create();
-                var message = CreateServiceBusMessage(chargePriceCommandReceivedEvent, correlationId);
+                var message = CreateServiceBusMessage(chargeCommandReceivedEvent, correlationId);
 
                 // Act
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
-                    () => Fixture.ChargePriceCommandReceivedTopic.SenderClient.SendMessageAsync(message), correlationId);
+                    () => Fixture.ChargeCommandReceivedTopic.SenderClient.SendMessageAsync(message), correlationId);
 
                 await FunctionAsserts.AssertHasExecutedAsync(
-                    Fixture.HostManager, nameof(ChargePriceCommandReceiverEndpoint));
+                    Fixture.HostManager, nameof(ChargeCommandReceiverEndpoint));
+
+                await FunctionAsserts.AssertHasExecutedAsync(
+                    Fixture.HostManager, nameof(ChargeConfirmationDataAvailableNotifierEndpoint));
 
                 // Assert
                 await using var actualChargeContext = Fixture.ChargesDatabaseManager.CreateDbContext();
                 var actualCharge = await actualChargeContext.Charges.FirstAsync(
                     GetChargePredicate(chargeId, ownerId, chargeType));
 
-                using var assertionScope = new AssertionScope();
-                actualCharge.Should().BeEquivalentTo(expectedCharge);
-                var actualOutboxMessage = await actualChargeContext.OutboxMessages
-                    .SingleOrDefaultAsync(x => x.CorrelationId.Contains(correlationId));
-                actualOutboxMessage.Should().BeNull();
-            }
-
-            private static ChargePriceCommandReceivedEvent CreateInvalidChargePriceCommandReceivedEvent(
-                ChargePriceCommandBuilder commandBuilder, ChargePriceOperationDtoBuilder operationDtoBuilder)
-            {
-                var invalidOperation = operationDtoBuilder.WithPoint(123456789m).Build();
-                var priceCommand = commandBuilder.WithChargeOperation(invalidOperation).Build();
-                var chargePriceReceivedEvent = new ChargePriceCommandReceivedEvent(
-                    Instant.FromDateTimeUtc(DateTime.UtcNow), priceCommand);
-                return chargePriceReceivedEvent;
+                actualCharge.Should().BeEquivalentTo(expectedCharge, options => options.Excluding(x => x.Periods));
+                actualCharge.Periods.Should().BeEquivalentTo(expectedCharge.Periods, o => o.Excluding(s => s.Id));
             }
 
             private static Expression<Func<Charge, bool>> GetChargePredicate(
@@ -152,37 +113,41 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     x.OwnerId == ownerId &&
                     x.Type == chargeType;
 
-            private static ChargePriceCommandReceivedEvent CreateChargePriceCommandReceivedEvent(
-                ChargePriceCommandBuilder commandBuilder,
+            private static ChargeCommandReceivedEvent CreateChargeCommandReceivedEvent(
+                ChargeInformationCommandBuilder commandBuilder,
                 DocumentDtoBuilder documentDtoBuilder,
-                ChargePriceOperationDtoBuilder operationDtoBuilder,
+                ChargeInformationOperationDtoBuilder operationDtoBuilder,
                 string chargeId,
                 string ownerId,
                 ChargeType chargeType)
             {
                 var document = documentDtoBuilder
-                    .WithBusinessReasonCode(BusinessReasonCode.UpdateChargePrices)
+                    .WithBusinessReasonCode(BusinessReasonCode.UpdateChargeInformation)
                     .WithDocumentType(DocumentType.RequestChangeOfPriceList)
                     .Build();
 
-                var pointsStartDateTime = InstantPattern.ExtendedIso.Parse("2022-02-01T23:00:00Z").Value;
-                var pointsEndTime = InstantPattern.ExtendedIso.Parse("2022-02-02T23:00:00Z").Value;
+                var startDateTime = InstantPattern.ExtendedIso.Parse("2021-12-31T23:00:00Z").Value;
 
                 var operation = operationDtoBuilder
                     .WithOwner(ownerId)
                     .WithChargeId(chargeId)
                     .WithChargeType(chargeType)
-                    .WithPriceResolution(Resolution.P1D)
-                    .WithPointsInterval(pointsStartDateTime, pointsEndTime)
-                    .WithStartDateTime(pointsStartDateTime)
+                    .WithTransparentInvoicing(TransparentInvoicing.NonTransparent)
+                    .WithStartDateTime(startDateTime)
+                    .WithEndDateTime(null)
+                    .WithTaxIndicator(TaxIndicator.NoTax)
+                    .WithVatClassification(VatClassification.NoVat)
+                    .WithChargeName("Grid Access Provider test tariff")
+                    .WithDescription("Description...")
                     .Build();
-                var priceCommand = commandBuilder
-                    .WithDocument(document)
+                var chargeCommand = commandBuilder
+                    .WithDocumentDto(document)
                     .WithChargeOperation(operation)
                     .Build();
-                var chargePriceReceivedEvent = new ChargePriceCommandReceivedEvent(
-                    Instant.FromDateTimeUtc(DateTime.UtcNow), priceCommand);
-                return chargePriceReceivedEvent;
+                var chargeInformationReceivedEvent = new ChargeCommandReceivedEvent(
+                    Instant.FromDateTimeUtc(DateTime.UtcNow), chargeCommand);
+
+                return chargeInformationReceivedEvent;
             }
 
             private static ServiceBusMessage CreateServiceBusMessage(IInternalEvent internalEvent, string correlationId)

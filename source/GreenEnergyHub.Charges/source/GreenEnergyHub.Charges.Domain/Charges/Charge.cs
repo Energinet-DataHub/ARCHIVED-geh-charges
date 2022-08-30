@@ -208,6 +208,8 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             var rules = GenerateRules(chargePeriod, taxIndicator, resolution, operationId).ToList();
             CheckRules(rules);
 
+            RemovePeriodIfChargeWasCreatedAndSubsequentlyStoppedOnSameDate(existingLastPeriod);
+
             _periods.Add(chargePeriod);
         }
 
@@ -275,19 +277,23 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 
             _periods.Remove(previousPeriod);
 
-            if (stopDate == previousPeriod.StartDateTime) return;
-
             var newPreviousPeriod = previousPeriod.WithEndDate(stopDate);
             _periods.Add(newPreviousPeriod);
         }
 
         private void RemoveAllSubsequentPeriods(Instant date)
         {
-            bool Predicate(ChargePeriod p) => p.StartDateTime >= date;
+            bool Predicate(ChargePeriod p) => p.EndDateTime > date;
             if (_periods.Any(Predicate))
             {
                 _periods.RemoveAll(Predicate);
             }
+        }
+
+        private void RemovePeriodIfChargeWasCreatedAndSubsequentlyStoppedOnSameDate(ChargePeriod existingLastPeriod)
+        {
+            if (existingLastPeriod.StartDateTime == existingLastPeriod.EndDateTime)
+                _periods.Remove(existingLastPeriod);
         }
 
         private IEnumerable<IValidationRuleContainer> GenerateRules(

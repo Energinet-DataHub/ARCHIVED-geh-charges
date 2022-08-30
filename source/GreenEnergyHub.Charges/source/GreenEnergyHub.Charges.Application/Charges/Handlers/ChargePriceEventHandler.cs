@@ -23,6 +23,7 @@ using GreenEnergyHub.Charges.Domain.Charges.Exceptions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using Microsoft.Extensions.Logging;
@@ -125,8 +126,8 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 
         private void RaiseRejectedEvent(
             ChargePriceCommandReceivedEvent commandReceivedEvent,
-            List<ChargePriceOperationDto> operationsToBeRejected,
-            List<IValidationRuleContainer> rejectionRules)
+            IReadOnlyCollection<ChargePriceOperationDto> operationsToBeRejected,
+            IList<IValidationRuleContainer> rejectionRules)
         {
             if (!operationsToBeRejected.Any()) return;
             var chargePriceCommand = new ChargePriceCommand(commandReceivedEvent.Command.Document, operationsToBeRejected);
@@ -142,7 +143,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             List<IValidationRuleContainer> rejectionRules,
             ValidationResult validationResult,
             IEnumerable<ChargePriceOperationDto> operationsToBeRejected,
-            ChargePriceOperationDto operation)
+            ChargeOperation operation)
         {
             rejectionRules.AddRange(validationResult.InvalidRules);
             rejectionRules.AddRange(operationsToBeRejected.Skip(1)
@@ -151,7 +152,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                         new PreviousOperationsMustBeValidRule(operation.OperationId), subsequentOperation.OperationId)));
         }
 
-        private async Task<Charge?> GetChargeAsync(ChargePriceOperationDto chargeOperationDto)
+        private async Task<Charge?> GetChargeAsync(ChargeOperation chargeOperationDto)
         {
             var marketParticipant = await _marketParticipantRepository
                 .GetSystemOperatorOrGridAccessProviderAsync(chargeOperationDto.ChargeOwner)
