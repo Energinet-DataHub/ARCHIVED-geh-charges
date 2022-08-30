@@ -35,6 +35,7 @@ using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
+using NodaTime.Text;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
@@ -101,7 +102,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 var actualCharge = await actualChargeContext.Charges.FirstAsync(
                     GetChargePredicate(chargeId, ownerId, chargeType));
 
-                actualCharge.Should().BeEquivalentTo(expectedCharge);
+                actualCharge.Should().BeEquivalentTo(expectedCharge, options => options.Excluding(x => x.Periods));
+                actualCharge.Periods.Should().BeEquivalentTo(expectedCharge.Periods, o => o.Excluding(s => s.Id));
             }
 
             private static Expression<Func<Charge, bool>> GetChargePredicate(
@@ -124,13 +126,20 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     .WithDocumentType(DocumentType.RequestChangeOfPriceList)
                     .Build();
 
-                /*var pointsStartDateTime = InstantPattern.ExtendedIso.Parse("2020-02-01T23:00:00Z").Value;
-                var pointsEndTime = InstantPattern.ExtendedIso.Parse("2020-02-02T23:00:00Z").Value;*/
+                var startDateTime = InstantPattern.ExtendedIso.Parse("2021-12-31T23:00:00Z").Value;
+                /*var pointsEndTime = InstantPattern.ExtendedIso.Parse("2022-02-02T23:00:00Z").Value;*/
 
                 var operation = operationDtoBuilder
                     .WithOwner(ownerId)
                     .WithChargeId(chargeId)
                     .WithChargeType(chargeType)
+                    .WithTransparentInvoicing(TransparentInvoicing.NonTransparent)
+                    .WithStartDateTime(startDateTime)
+                    .WithEndDateTime(null)
+                    .WithTaxIndicator(TaxIndicator.NoTax)
+                    .WithVatClassification(VatClassification.NoVat)
+                    .WithChargeName("Grid Access Provider test tariff")
+                    .WithDescription("Description...")
                     /*.WithPriceResolution(Resolution.P1D)
                     .WithPointsInterval(pointsStartDateTime, pointsEndTime)
                     .WithStartDateTime(pointsStartDateTime)*/

@@ -165,8 +165,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     .WithDocumentType(DocumentType.RequestChangeOfPriceList)
                     .Build();
 
-                var pointsStartDateTime = InstantPattern.ExtendedIso.Parse("2020-02-01T23:00:00Z").Value;
-                var pointsEndTime = InstantPattern.ExtendedIso.Parse("2020-02-02T23:00:00Z").Value;
+                var pointsStartDateTime = InstantPattern.ExtendedIso.Parse("2022-02-01T23:00:00Z").Value;
+                var pointsEndTime = InstantPattern.ExtendedIso.Parse("2022-02-02T23:00:00Z").Value;
 
                 var operation = operationDtoBuilder
                     .WithOwner(ownerId)
