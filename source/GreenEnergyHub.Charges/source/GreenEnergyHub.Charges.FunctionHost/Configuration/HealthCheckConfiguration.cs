@@ -32,6 +32,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                     name: "ChargeDb",
                     connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeDbConnectionString));
 
+            // Azure Function Storage Account
+            ConfigureStorageAccountCharges(serviceCollection);
+
             // Integration events
             ConfigureIntegrationEventsCharges(serviceCollection);
             ConfigureIntegrationEventsChargeLinks(serviceCollection);
@@ -42,6 +45,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             ConfigureDomainEventsCharges(serviceCollection);
             ConfigureDomainEventsChargeLinks(serviceCollection);
             ConfigureDomainEventsDefaultChargeLinks(serviceCollection);
+        }
+
+        private static void ConfigureStorageAccountCharges(IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddHealthChecks()
+                .AddAzureBlobStorage(EnvironmentHelper.GetEnv(EnvironmentSettingNames.AzureWebJobsStorage));
         }
 
         private static void ConfigureIntegrationEventsCharges(IServiceCollection serviceCollection)
