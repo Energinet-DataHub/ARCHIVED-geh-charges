@@ -31,33 +31,33 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
         private readonly ILogger _logger;
         private readonly IChargeCommandRejectedEventFactory _chargeCommandRejectedEventFactory;
         private readonly IChargeCommandAcceptedEventFactory _chargeCommandAcceptedEventFactory;
-        private readonly IMessageDispatcher<ChargeCommandRejectedEvent> _rejectedMessageDispatcher;
-        private readonly IMessageDispatcher<ChargeCommandAcceptedEvent> _acceptedMessageDispatcher;
+        private readonly IInternalEventDispatcher<ChargeCommandAcceptedEvent> _chargeLinksAcceptedEventDispatcher;
+        private readonly IInternalEventDispatcher<ChargeCommandRejectedEvent> _chargeLinksRejectedEventDispatcher;
 
         public ChargeCommandReceiptService(
             ILoggerFactory loggerFactory,
             IChargeCommandRejectedEventFactory chargeCommandRejectedEventFactory,
             IChargeCommandAcceptedEventFactory chargeCommandAcceptedEventFactory,
-            IMessageDispatcher<ChargeCommandRejectedEvent> rejectedMessageDispatcher,
-            IMessageDispatcher<ChargeCommandAcceptedEvent> acceptedMessageDispatcher)
+            IInternalEventDispatcher<ChargeCommandAcceptedEvent> chargeLinksAcceptedEventDispatcher,
+            IInternalEventDispatcher<ChargeCommandRejectedEvent> chargeLinksRejectedEventDispatcher)
         {
             _logger = loggerFactory.CreateLogger(nameof(ChargeCommandReceiptService));
             _chargeCommandRejectedEventFactory = chargeCommandRejectedEventFactory;
             _chargeCommandAcceptedEventFactory = chargeCommandAcceptedEventFactory;
-            _rejectedMessageDispatcher = rejectedMessageDispatcher;
-            _acceptedMessageDispatcher = acceptedMessageDispatcher;
+            _chargeLinksAcceptedEventDispatcher = chargeLinksAcceptedEventDispatcher;
+            _chargeLinksRejectedEventDispatcher = chargeLinksRejectedEventDispatcher;
         }
 
         public async Task RejectAsync(ChargeInformationCommand command, ValidationResult validationResult)
         {
             var rejectedEvent = _chargeCommandRejectedEventFactory.CreateEvent(command, validationResult);
-            await _rejectedMessageDispatcher.DispatchAsync(rejectedEvent).ConfigureAwait(false);
+            await _chargeLinksRejectedEventDispatcher.DispatchAsync(rejectedEvent).ConfigureAwait(false);
         }
 
         public async Task AcceptAsync(ChargeInformationCommand command)
         {
             var acceptedEvent = _chargeCommandAcceptedEventFactory.CreateEvent(command);
-            await _acceptedMessageDispatcher.DispatchAsync(acceptedEvent).ConfigureAwait(false);
+            await _chargeLinksAcceptedEventDispatcher.DispatchAsync(acceptedEvent).ConfigureAwait(false);
         }
 
         /// <summary>

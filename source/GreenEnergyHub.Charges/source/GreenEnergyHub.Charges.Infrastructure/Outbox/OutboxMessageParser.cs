@@ -12,31 +12,39 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.IO;
+using System;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.JsonSerialization;
+using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization
+namespace GreenEnergyHub.Charges.Infrastructure.Outbox
 {
-    public class JsonMessageDeserializer<TInternalEvent>
-      where TInternalEvent : InternalEvent
+    public class OutboxMessageParser : IOutboxMessageParser
     {
         private readonly IJsonSerializer _jsonSerializer;
 
-        public JsonMessageDeserializer(IJsonSerializer jsonSerializer)
+        public OutboxMessageParser(IJsonSerializer jsonSerializer)
         {
             _jsonSerializer = jsonSerializer;
         }
 
-        public async Task<InternalEvent> FromBytesAsync(byte[] data)
+        public InternalEvent Parse(string outboxMessageType, string data)
         {
-            var stream = new MemoryStream(data);
-            await using (stream.ConfigureAwait(false))
+            var type = Type.GetType(outboxMessageType);
+
+            if (type == typeof(PriceRejectedEvent))
             {
-                return (TInternalEvent)await _jsonSerializer.DeserializeAsync(
-                    stream, typeof(TInternalEvent)).ConfigureAwait(false);
+                return _jsonSerializer.Deserialize<PriceRejectedEvent>(data);
             }
+
+            if (type == typeof(PriceConfirmedEvent))
+            {
+                return _jsonSerializer.Deserialize<PriceConfirmedEvent>(data);
+            }
+
+            throw new ArgumentOutOfRangeException($"Could not parse outbox event of type: {outboxMessageType} with data {data}");
         }
     }
 }

@@ -30,8 +30,6 @@ using Energinet.DataHub.MessageHub.Model.Peek;
 using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkReplier;
 using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 using GreenEnergyHub.Charges.Domain.GridAreaLinks;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
@@ -152,11 +150,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.ConfigureProtobufReception();
 
             serviceCollection.SendProtobuf<ChargeCreated>();
-            serviceCollection.AddMessaging()
-                .AddInternalMessageExtractor<ChargeCommandAcceptedEvent>()
-                .AddExternalMessageDispatcher<ChargeLinksReceivedEvent>(
-                EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
-                EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksReceivedTopicName));
         }
 
         private static void ConfigureSharedCim(IServiceCollection serviceCollection)

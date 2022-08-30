@@ -36,9 +36,10 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<SchemaValidatingMessageDeserializer<ChargeLinksCommandBundle>, ChargeLinkCommandDeserializer>();
             serviceCollection.AddScoped<IChargeLinksCommandBundleHandler, ChargeLinksCommandBundleHandler>();
             serviceCollection.AddScoped<IChargeLinksCommandHandler, ChargeLinksCommandHandler>();
+
             serviceCollection
                 .AddMessaging()
-                .AddInternalMessageDispatcher<ChargeLinksReceivedEvent>(
+                .AddInternalEventDispatcher<ChargeLinksReceivedEvent>(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksReceivedTopicName));
         }

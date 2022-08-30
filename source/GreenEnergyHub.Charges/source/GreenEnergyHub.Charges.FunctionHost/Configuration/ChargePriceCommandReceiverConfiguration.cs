@@ -44,9 +44,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
         private static void ConfigureMessaging(IServiceCollection serviceCollection)
         {
-            serviceCollection
-                .AddMessaging()
-                .AddInternalMessageExtractor<ChargePriceCommandReceivedEvent>();
+            serviceCollection.AddMessaging();
         }
     }
 }

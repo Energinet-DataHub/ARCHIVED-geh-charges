@@ -22,14 +22,14 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
     public class ChargeLinksDataAvailableNotifiedPublisher : IChargeLinksDataAvailableNotifiedPublisher
     {
-        private readonly IMessageDispatcher<ChargeLinksDataAvailableNotifiedEvent> _messageDispatcher;
+        private readonly IInternalEventDispatcher<ChargeLinksDataAvailableNotifiedEvent> _internalEventDispatcher;
         private readonly IChargeLinksDataAvailableNotifiedEventFactory _chargeLinksDataAvailableNotifiedEventFactory;
 
         public ChargeLinksDataAvailableNotifiedPublisher(
-            IMessageDispatcher<ChargeLinksDataAvailableNotifiedEvent> messageDispatcher,
+            IInternalEventDispatcher<ChargeLinksDataAvailableNotifiedEvent> internalEventDispatcher,
             IChargeLinksDataAvailableNotifiedEventFactory chargeLinksDataAvailableNotifiedEventFactory)
         {
-            _messageDispatcher = messageDispatcher;
+            _internalEventDispatcher = internalEventDispatcher;
             _chargeLinksDataAvailableNotifiedEventFactory = chargeLinksDataAvailableNotifiedEventFactory;
         }
 
@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 
             var chargeLinksDataAvailableNotifiedEvent =
                 _chargeLinksDataAvailableNotifiedEventFactory.Create(chargeLinksAcceptedEvent);
-            await _messageDispatcher.DispatchAsync(chargeLinksDataAvailableNotifiedEvent).ConfigureAwait(false);
+            await _internalEventDispatcher.DispatchAsync(chargeLinksDataAvailableNotifiedEvent).ConfigureAwait(false);
         }
     }
 }

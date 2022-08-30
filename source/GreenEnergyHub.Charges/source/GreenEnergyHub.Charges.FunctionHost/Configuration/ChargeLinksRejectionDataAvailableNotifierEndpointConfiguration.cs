@@ -40,9 +40,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 .AddScoped<BundleSpecification<AvailableChargeLinksReceiptData, ChargeLinksRejectedEvent>,
                     ChargeLinksRejectionBundleSpecification>();
 
-            serviceCollection
-                .AddMessaging()
-                .AddInternalMessageExtractor<ChargeLinksRejectedEvent>();
+            serviceCollection.AddMessaging();
         }
     }
 }

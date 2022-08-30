@@ -13,14 +13,13 @@
 // limitations under the License.
 
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.JsonSerialization;
-using Energinet.DataHub.Core.Messaging.Transport;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization
 {
-    public class JsonMessageSerializer : MessageSerializer
+    public class JsonMessageSerializer
     {
         private readonly IJsonOutboundMapperFactory _mapperFactory;
         private readonly IJsonSerializer _jsonSerializer;
@@ -31,7 +30,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Seriali
             _jsonSerializer = jsonSerializer;
         }
 
-        public override Task<byte[]> ToBytesAsync(IOutboundMessage message, CancellationToken cancellationToken = default)
+        public Task<byte[]> ToBytesAsync(InternalEvent message)
         {
             var dto = GetDto(message);
 
@@ -40,7 +39,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Seriali
             return Task.FromResult(result);
         }
 
-        private object GetDto(IOutboundMessage message)
+        private object GetDto(InternalEvent message)
         {
             var mapper = _mapperFactory.GetMapper(message);
             return mapper.Convert(message);

@@ -12,15 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Threading;
+using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization
+namespace GreenEnergyHub.Charges.Application.Messaging
 {
-    public class NoMapper : IJsonOutboundMapper
+    public interface IInternalEventDispatcher<in TInternalEvent>
+        where TInternalEvent : InternalEvent
     {
-        public object Convert(InternalEvent message)
-        {
-            return message;
-        }
+        public Task DispatchAsync(TInternalEvent internalEvent, CancellationToken cancellationToken = default);
     }
 }

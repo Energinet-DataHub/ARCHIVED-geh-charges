@@ -14,6 +14,7 @@
 
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
+using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Core.Currency;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
@@ -92,11 +93,10 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         {
             serviceCollection
                 .AddMessaging()
-                .AddInternalMessageExtractor<ChargeCommandReceivedEvent>()
-                .AddInternalMessageDispatcher<ChargeCommandAcceptedEvent>(
+                .AddInternalEventDispatcher<ChargeCommandAcceptedEvent>(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandAcceptedTopicName))
-                .AddInternalMessageDispatcher<ChargeCommandRejectedEvent>(
+                .AddInternalEventDispatcher<ChargeCommandRejectedEvent>(
                     EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
                     EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandRejectedTopicName));
         }

@@ -16,23 +16,23 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.JsonSerialization;
-using Energinet.DataHub.Core.Messaging.Transport;
 using GreenEnergyHub.Charges.Application.Messaging;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factories;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.InternalMessaging
 {
-    public class InternalMessageDispatcher<TOutboundMessage> : IMessageDispatcher<TOutboundMessage>
-    where TOutboundMessage : IOutboundMessage
+    public class InternalEventDispatcher<TInternalEvent> : IInternalEventDispatcher<TInternalEvent>
+        where TInternalEvent : InternalEvent
     {
         private readonly IJsonSerializer _jsonSerializer;
-        private readonly IServiceBusSender<TOutboundMessage> _serviceBusSender;
+        private readonly IInternalServiceBusSender<TInternalEvent> _serviceBusSender;
         private readonly IServiceBusMessageFactory _serviceBusMessageFactory;
 
-        public InternalMessageDispatcher(
+        public InternalEventDispatcher(
             IJsonSerializer jsonSerializer,
-            IServiceBusSender<TOutboundMessage> serviceBusSender,
+            IInternalServiceBusSender<TInternalEvent> serviceBusSender,
             IServiceBusMessageFactory serviceBusMessageFactory)
         {
             _jsonSerializer = jsonSerializer;
@@ -40,10 +40,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.InternalMessaging
             _serviceBusMessageFactory = serviceBusMessageFactory;
         }
 
-        public async Task DispatchAsync(TOutboundMessage message, CancellationToken cancellationToken = default)
+        public async Task DispatchAsync(TInternalEvent internalEvent, CancellationToken cancellationToken = default)
         {
-            if (message == null) throw new ArgumentNullException(nameof(message));
-            var data = _jsonSerializer.Serialize(message);
+            if (internalEvent == null) throw new ArgumentNullException(nameof(internalEvent));
+            var data = _jsonSerializer.Serialize(internalEvent);
             var serviceBusMessage = _serviceBusMessageFactory.CreateInternalMessage(data);
             await _serviceBusSender.Instance.SendMessageAsync(serviceBusMessage, cancellationToken).ConfigureAwait(false);
         }

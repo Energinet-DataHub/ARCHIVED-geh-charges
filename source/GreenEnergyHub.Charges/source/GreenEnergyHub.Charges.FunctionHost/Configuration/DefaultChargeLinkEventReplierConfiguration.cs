@@ -25,9 +25,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         {
             serviceCollection.AddScoped<ICreateDefaultChargeLinksReplyHandler, CreateDefaultChargeLinksReplyHandler>();
             serviceCollection.AddScoped<IChargeLinksDataAvailableNotifiedEventFactory, ChargeLinksDataAvailableNotifiedEventFactory>();
-            serviceCollection
-                .AddMessaging()
-                .AddInternalMessageExtractor<ChargeLinksDataAvailableNotifiedEvent>();
+
+            serviceCollection.AddMessaging();
         }
     }
 }

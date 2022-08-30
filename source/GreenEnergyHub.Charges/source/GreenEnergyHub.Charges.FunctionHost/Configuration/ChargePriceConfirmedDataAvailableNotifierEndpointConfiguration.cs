@@ -13,7 +13,9 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Application.Charges.Events;
+using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
+using GreenEnergyHub.Charges.Infrastructure.Core.Registration;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification.Charges;
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
@@ -37,7 +39,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
             serviceCollection
                 .AddMessaging()
-                .AddInternalMessageExtractor<PriceConfirmedEvent>();
+                .AddInternalEventDispatcher<PriceConfirmedEvent>(
+                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
+                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargePriceConfirmedTopicName));
         }
     }
 }

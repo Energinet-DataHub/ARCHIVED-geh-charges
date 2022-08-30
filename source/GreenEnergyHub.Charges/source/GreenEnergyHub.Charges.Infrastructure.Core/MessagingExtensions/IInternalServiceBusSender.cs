@@ -12,15 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Azure.Messaging.ServiceBus;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization
+namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions
 {
-    public class NoMapper : IJsonOutboundMapper
+    // ReSharper disable once UnusedTypeParameter
+    // - Type parameter is necessary in order to distinguish instances during resolution of types in dependency container
+    public interface IInternalServiceBusSender<TInternalEvent>
+        where TInternalEvent : InternalEvent
     {
-        public object Convert(InternalEvent message)
-        {
-            return message;
-        }
+        ServiceBusSender Instance { get; }
     }
 }

@@ -22,7 +22,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
     public static class ServiceBusMessageGenerator
     {
         public static ServiceBusMessage CreateWithJsonContent(
-            IInternalEvent internalEvent,
+            InternalEvent internalEvent,
             Dictionary<string, string> applicationProperties,
             string correlationId)
         {

@@ -21,7 +21,7 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Events
 {
-    public class PriceRejectedEvent : InternalEventBase
+    public class PriceRejectedEvent : InternalEvent
     {
         public PriceRejectedEvent(
             Instant publishedTime,

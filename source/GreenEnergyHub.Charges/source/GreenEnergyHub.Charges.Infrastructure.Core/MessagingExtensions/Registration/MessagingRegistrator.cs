@@ -15,6 +15,7 @@
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Core.Messaging.Transport;
 using GreenEnergyHub.Charges.Application.Messaging;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 using GreenEnergyHub.Charges.Infrastructure.Core.InternalMessaging;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,20 +39,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registr
             where TInboundMessage : IInboundMessage
         {
             _services.AddScoped<MessageExtractor<TInboundMessage>>();
-            _services.AddScoped<MessageDeserializer<TInboundMessage>, JsonMessageDeserializer<TInboundMessage>>();
-
-            return this;
-        }
-
-        /// <summary>
-        /// Register services required to resolve a <see cref="MessageExtractor{TInboundMessage}"/>.
-        /// Which is intended to extract a message from inside of the Charges domain.
-        /// </summary>
-        public MessagingRegistrator AddInternalMessageExtractor<TInboundMessage>()
-            where TInboundMessage : IInboundMessage
-        {
-            _services.AddScoped<JsonMessageDeserializer<TInboundMessage>>();
-
             return this;
         }
 
@@ -83,21 +70,20 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registr
         /// Register services required to resolve a <see cref="IMessageDispatcher{TInboundMessage}"/>.
         /// Which is used when sending messages within of the Charges domain.
         /// </summary>
-        public MessagingRegistrator AddInternalMessageDispatcher<TOutboundMessage>(
+        public MessagingRegistrator AddInternalEventDispatcher<TInternalEvent>(
             string serviceBusConnectionString,
             string serviceBusTopicName)
-            where TOutboundMessage : IOutboundMessage
+            where TInternalEvent : InternalEvent
         {
-            _services.AddScoped<IMessageDispatcher<TOutboundMessage>, InternalMessageDispatcher<TOutboundMessage>>();
-            _services.AddScoped<Channel<TOutboundMessage>, ServiceBusChannel<TOutboundMessage>>();
+            _services.AddScoped<IInternalEventDispatcher<InternalEvent>, InternalEventDispatcher<InternalEvent>>();
 
             // Must be a singleton as per documentation of ServiceBusClient and ServiceBusSender
-            _services.AddSingleton<IServiceBusSender<TOutboundMessage>>(
+            _services.AddSingleton<IInternalServiceBusSender<TInternalEvent>>(
                 _ =>
                 {
                     var client = new ServiceBusClient(serviceBusConnectionString);
                     var instance = client.CreateSender(serviceBusTopicName);
-                    return new ServiceBusSender<TOutboundMessage>(instance);
+                    return new InternalServiceBusSender<TInternalEvent>(instance);
                 });
 
             return this;

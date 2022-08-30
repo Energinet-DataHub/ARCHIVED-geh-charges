@@ -12,15 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
+using NodaTime;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization
+namespace GreenEnergyHub.Charges.Domain.Dtos.Messages.Events
 {
-    public class NoMapper : IJsonOutboundMapper
+    public abstract class ExternalEvent : MessageBase, IEvent
     {
-        public object Convert(InternalEvent message)
+        protected ExternalEvent(Instant publishedTime)
         {
-            return message;
+            PublishedTime = publishedTime;
         }
+
+        public Instant PublishedTime { get; }
     }
 }

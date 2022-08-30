@@ -26,6 +26,7 @@ using FluentAssertions;
 using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 using GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub;
 using GreenEnergyHub.Charges.FunctionHost.MessageHub;
 using GreenEnergyHub.Charges.Infrastructure.Outbox;
@@ -121,8 +122,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
             [InlineAutoMoqData]
             public async Task GivenOutputProcessorEndpoint_WhenFailsFirstAttempt_ThenRetryNext(
                 [Frozen] Mock<IClock> clock,
-                Mock<IMessageDispatcher<PriceRejectedEvent>> dispatcher,
-                JsonSerializer jsonSerializer,
+                Mock<IInternalEventDispatcher<InternalEvent>> dispatcher,
+                Mock<IOutboxMessageParser> outboxMessageParser,
+                PriceConfirmedEvent confirmedEvent,
                 TimerInfo timerInfo,
                 CorrelationContext correlationContext,
                 Instant now)
@@ -132,6 +134,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
 
                 clock.Setup(c => c.GetCurrentInstant()).Returns(now);
+                outboxMessageParser
+                    .Setup(o => o.Parse(It.IsAny<string>(), It.IsAny<string>()))
+                    .Returns(confirmedEvent);
                 var operationsRejectedEvent = CreateChargePriceOperationsRejectedEvent();
                 var outboxMessage = await PersistToOutboxMessage(chargesDatabaseWriteContext, operationsRejectedEvent);
 
@@ -139,7 +144,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 var outboxRepository = new OutboxMessageRepository(chargesDatabaseWriteContext);
                 var sut = new OutboxMessageProcessorEndpoint(
                     outboxRepository,
-                    jsonSerializer,
+                    outboxMessageParser.Object,
                     clock.Object,
                     correlationContext,
                     dispatcher.Object,
