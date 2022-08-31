@@ -44,7 +44,7 @@ A charge owner may want to submit a charge price request (D08) containing a pric
 
 Currently an irregular price series is only relevant for charges with a monthly resolution (P1M), such as fees and subscriptions.
 
-The rule set for persisting irregular price series is no different than the normal way of persisting charge prices, nevertheless a list of irregular price series persistence scenarios and their expected outcome can be found [here](images/Irregular_PriceSeries_Examples.png).
+The rule set for persisting irregular price series is no different than the normal way of persisting charge prices, nevertheless a list of irregular price series persistence scenarios and their expected outcome can be found [here](images/Persisting_Irregular_PriceSeries_Examples.png).
 
 <br>
 
