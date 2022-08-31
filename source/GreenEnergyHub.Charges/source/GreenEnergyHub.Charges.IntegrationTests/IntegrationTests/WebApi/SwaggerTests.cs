@@ -16,6 +16,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.FunctionApp.TestCommon.Configuration.B2C;
 using FluentAssertions;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.WebApi;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
@@ -34,7 +35,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
         IAsyncLifetime
     {
         private readonly HttpClient _client;
-        private readonly BackendAuthenticationClient _authenticationClient;
+        private readonly B2CAppAuthenticationClient _authenticationClient;
 
         public SwaggerTests(
             ChargesWebApiFixture chargesWebApiFixture,
@@ -43,14 +44,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
             : base(chargesWebApiFixture, testOutputHelper)
         {
             _client = factory.CreateClient();
-            var clientCredentialsSettings = chargesWebApiFixture.AuthorizationConfiguration.B2CTestClients
-                .First(tc => tc.ClientName == AuthorizationConfigurationData.GridAccessProvider8100000000030)
-                .ClientCredentialsSettings;
 
-            _authenticationClient = new BackendAuthenticationClient(
-                chargesWebApiFixture.AuthorizationConfiguration.BackendAppScope,
-                clientCredentialsSettings,
-                chargesWebApiFixture.AuthorizationConfiguration.B2CTenantId);
+            var clientApp = chargesWebApiFixture.AuthorizationConfiguration
+                .ClientApps[AuthorizationConfigurationData.GridAccessProvider8100000000030];
+
+            _authenticationClient = new B2CAppAuthenticationClient(
+                chargesWebApiFixture.AuthorizationConfiguration.TenantId,
+                chargesWebApiFixture.AuthorizationConfiguration.BackendApp,
+                clientApp);
         }
 
         public async Task InitializeAsync()

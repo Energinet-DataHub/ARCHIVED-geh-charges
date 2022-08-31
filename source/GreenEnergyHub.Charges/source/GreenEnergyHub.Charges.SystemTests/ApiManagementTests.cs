@@ -18,6 +18,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.FunctionApp.TestCommon.Configuration.B2C;
 using FluentAssertions;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.ChargeLinks;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
@@ -33,20 +34,18 @@ namespace GreenEnergyHub.Charges.SystemTests
     [Collection(nameof(SystemTestCollectionFixture))]
     public class ApiManagementTests : IClassFixture<ApiManagementConfiguration>
     {
-        private readonly BackendAuthenticationClient _authenticationClient;
+        private readonly B2CAppAuthenticationClient _authenticationClient;
 
         public ApiManagementTests(ApiManagementConfiguration configuration)
         {
             Configuration = configuration;
 
-            var clientCredentialsSettings = Configuration.AuthorizationConfiguration.B2CTestClients
-                .First(tc => tc.ClientName == "endk-ddm3")
-                .ClientCredentialsSettings;
+            var clientApp = Configuration.AuthorizationConfiguration.ClientApps["endk-ddm3"];
 
-            _authenticationClient = new BackendAuthenticationClient(
-                Configuration.AuthorizationConfiguration.BackendAppScope,
-                clientCredentialsSettings,
-                Configuration.AuthorizationConfiguration.B2CTenantId);
+            _authenticationClient = new B2CAppAuthenticationClient(
+                Configuration.AuthorizationConfiguration.TenantId,
+                Configuration.AuthorizationConfiguration.BackendApp,
+                clientApp);
         }
 
         private ApiManagementConfiguration Configuration { get; }
@@ -115,11 +114,11 @@ namespace GreenEnergyHub.Charges.SystemTests
         /// Create a http client. Will add an access token if <paramref name="confidentialClientApp"/> is specified.
         /// </summary>
         /// <param name="confidentialClientApp">If not null: an access token is acquired using the client, and set in the authorization header of the http client.</param>
-        private async Task<HttpClient> CreateHttpClientAsync(BackendAuthenticationClient? confidentialClientApp = null)
+        private async Task<HttpClient> CreateHttpClientAsync(B2CAppAuthenticationClient? confidentialClientApp = null)
         {
             var httpClient = new HttpClient
             {
-                BaseAddress = Configuration.ApiManagementBaseAddress,
+                BaseAddress = Configuration.AuthorizationConfiguration.ApiManagementBaseAddress,
             };
 
             if (confidentialClientApp != null)

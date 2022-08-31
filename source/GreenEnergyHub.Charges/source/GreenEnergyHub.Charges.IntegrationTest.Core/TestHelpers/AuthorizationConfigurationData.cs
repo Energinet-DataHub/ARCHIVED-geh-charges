@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Collections.Generic;
+using Energinet.DataHub.Core.FunctionApp.TestCommon.Configuration.B2C;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Authorization;
 
 namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
@@ -24,18 +25,14 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
         public const string SystemOperator = "endk-tso";
         public const string GridAccessProvider8100000000030 = "volt";
 
-        private const string LocalSettingsJsonFilename = "integrationtest.local.settings.json";
-        private const string AzureSecretsKeyVaultUrlKey = "AZURE_SECRETS_KEYVAULT_URL";
-
-        public static AuthorizationConfiguration CreateAuthorizationConfiguration()
+        public static B2CAuthorizationConfiguration CreateAuthorizationConfiguration()
         {
             var clientNames = new List<string> { SystemOperator, GridAccessProvider8100000000030 };
 
-            return new AuthorizationConfiguration(
-                clientNames,
+            return new B2CAuthorizationConfiguration(
+                usedForSystemTests: false,
                 Environment,
-                LocalSettingsJsonFilename,
-                AzureSecretsKeyVaultUrlKey);
+                clientNames);
         }
     }
 }
