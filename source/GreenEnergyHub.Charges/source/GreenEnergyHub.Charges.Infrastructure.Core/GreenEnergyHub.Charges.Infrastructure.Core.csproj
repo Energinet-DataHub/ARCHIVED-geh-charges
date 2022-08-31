@@ -25,7 +25,7 @@ limitations under the License.
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Energinet.DataHub.Core.App.FunctionApp" Version="6.0.0" />
+      <PackageReference Include="Energinet.DataHub.Core.App.FunctionApp" Version="7.0.0-alpha-225" />
       <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.10.0" />
       <PackageReference Include="Energinet.DataHub.Core.Messaging" Version="2.1.1" />
       <PackageReference Include="Energinet.DataHub.Core.Messaging.Protobuf" Version="2.1.1" />

@@ -22,9 +22,9 @@ limitations under the License.
 
   <ItemGroup>
     <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="6.0.2" />
-    <PackageReference Include="Energinet.DataHub.Core.App.Common" Version="6.0.0" />
-    <PackageReference Include="Energinet.DataHub.Core.App.Common.Security" Version="6.0.0" />
-    <PackageReference Include="Energinet.DataHub.Core.App.WebApp" Version="6.0.0" />
+    <PackageReference Include="Energinet.DataHub.Core.App.Common" Version="7.0.0-alpha-225" />
+    <PackageReference Include="Energinet.DataHub.Core.App.Common.Security" Version="7.0.0-alpha-225" />
+    <PackageReference Include="Energinet.DataHub.Core.App.WebApp" Version="7.0.0-alpha-225" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />

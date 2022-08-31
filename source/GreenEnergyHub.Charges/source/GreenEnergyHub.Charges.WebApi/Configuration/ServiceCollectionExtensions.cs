@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.IdentityModel.Tokens.Jwt;
 using Energinet.DataHub.Core.App.Common.Abstractions.Identity;
 using Energinet.DataHub.Core.App.Common.Abstractions.Security;
 using Energinet.DataHub.Core.App.Common.Identity;
@@ -19,6 +20,10 @@ using Energinet.DataHub.Core.App.Common.Security;
 using Energinet.DataHub.Core.App.WebApp.Middleware;
 using GreenEnergyHub.Charges.Infrastructure.Core.Registration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.IdentityModel.Protocols;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Microsoft.IdentityModel.Tokens;
 
 namespace GreenEnergyHub.Charges.WebApi.Configuration
 {
@@ -28,16 +33,26 @@ namespace GreenEnergyHub.Charges.WebApi.Configuration
         /// Adds registrations of JwtTokenMiddleware and corresponding dependencies.
         /// </summary>
         /// <param name="serviceCollection">ServiceCollection container</param>
-        public static void AddJwtTokenSecurity(this IServiceCollection serviceCollection)
+        /// <param name="metadataAddress">OpenID Configuration URL used for acquiring metadata</param>
+        /// <param name="audience">Audience used for validation of JWT token</param>
+        public static void AddJwtTokenSecurity(this IServiceCollection serviceCollection, string metadataAddress, string audience)
         {
-            var address = EnvironmentHelper.GetEnv(EnvironmentSettingNames.FrontEndOpenIdUrl);
-            var audience = EnvironmentHelper.GetEnv(EnvironmentSettingNames.FrontEndServiceAppId);
+            serviceCollection.TryAddSingleton<ISecurityTokenValidator, JwtSecurityTokenHandler>();
+            serviceCollection.TryAddSingleton<IConfigurationManager<OpenIdConnectConfiguration>>(_ =>
+                new ConfigurationManager<OpenIdConnectConfiguration>(
+                    metadataAddress,
+                    new OpenIdConnectConfigurationRetriever()));
 
-            serviceCollection.AddScoped<JwtTokenMiddleware>();
-            serviceCollection.AddScoped<IJwtTokenValidator, JwtTokenValidator>();
-            serviceCollection.AddScoped<IClaimsPrincipalAccessor, ClaimsPrincipalAccessor>();
-            serviceCollection.AddScoped<ClaimsPrincipalContext>();
-            serviceCollection.AddScoped(_ => new OpenIdSettings(address, audience));
+            serviceCollection.TryAddScoped<IJwtTokenValidator>(sp =>
+                new JwtTokenValidator(
+                    sp.GetRequiredService<ISecurityTokenValidator>(),
+                    sp.GetRequiredService<IConfigurationManager<OpenIdConnectConfiguration>>(),
+                    audience));
+
+            serviceCollection.TryAddScoped<IClaimsPrincipalAccessor, ClaimsPrincipalAccessor>();
+            serviceCollection.TryAddScoped<ClaimsPrincipalContext>();
+
+            serviceCollection.TryAddScoped<JwtTokenMiddleware>();
         }
     }
 }
