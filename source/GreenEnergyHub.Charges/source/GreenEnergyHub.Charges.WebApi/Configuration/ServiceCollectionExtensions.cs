@@ -36,22 +36,22 @@ namespace GreenEnergyHub.Charges.WebApi.Configuration
         /// <param name="audience">Audience used for validation of JWT token</param>
         public static IServiceCollection AddJwtTokenSecurity(this IServiceCollection services, string metadataAddress, string audience)
         {
-            services.TryAddSingleton<ISecurityTokenValidator, JwtSecurityTokenHandler>();
-            services.TryAddSingleton<IConfigurationManager<OpenIdConnectConfiguration>>(_ =>
+            services.AddSingleton<ISecurityTokenValidator, JwtSecurityTokenHandler>();
+            services.AddSingleton<IConfigurationManager<OpenIdConnectConfiguration>>(_ =>
                 new ConfigurationManager<OpenIdConnectConfiguration>(
                     metadataAddress,
                     new OpenIdConnectConfigurationRetriever()));
 
-            services.TryAddScoped<IJwtTokenValidator>(sp =>
+            services.AddScoped<IJwtTokenValidator>(sp =>
                 new JwtTokenValidator(
                     sp.GetRequiredService<ISecurityTokenValidator>(),
                     sp.GetRequiredService<IConfigurationManager<OpenIdConnectConfiguration>>(),
                     audience));
 
-            services.TryAddScoped<ClaimsPrincipalContext>();
-            services.TryAddScoped<IClaimsPrincipalAccessor, ClaimsPrincipalAccessor>();
+            services.AddScoped<ClaimsPrincipalContext>();
+            services.AddScoped<IClaimsPrincipalAccessor, ClaimsPrincipalAccessor>();
 
-            services.TryAddScoped<JwtTokenMiddleware>();
+            services.AddScoped<JwtTokenMiddleware>();
 
             return services;
         }
