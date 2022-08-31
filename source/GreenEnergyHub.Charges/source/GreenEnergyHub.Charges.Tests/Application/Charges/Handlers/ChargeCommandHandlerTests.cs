@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         [Theory]
         [InlineAutoDomainData]
         public async Task HandleAsync_WhenCalledWithChargeCommand_ShouldDispatchReceivedEvent(
-            [Frozen] Mock<IInternalMessageDispatcher<ChargeCommandReceivedEvent>> chargeEventPublisher,
+            [Frozen] Mock<IMessageDispatcher<ChargeCommandReceivedEvent>> chargeEventPublisher,
             ChargeInformationCommandHandler sut)
         {
             // Arrange
@@ -49,7 +49,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             chargeEventPublisher.Verify(
                 x => x.DispatchAsync(
                     It.Is<ChargeCommandReceivedEvent>(localEvent => localEvent.Command == command),
-                    "ChargeCommandReceived",
                     It.IsAny<CancellationToken>()),
                 Times.Once);
         }

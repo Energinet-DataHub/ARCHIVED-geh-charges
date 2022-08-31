@@ -28,14 +28,14 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
     {
         private readonly IChargeCommandRejectedEventFactory _chargeCommandRejectedEventFactory;
         private readonly IChargeCommandAcceptedEventFactory _chargeCommandAcceptedEventFactory;
-        private readonly IInternalMessageDispatcher<ChargeCommandRejectedEvent> _rejectedMessageDispatcher;
-        private readonly IInternalMessageDispatcher<ChargeCommandAcceptedEvent> _acceptedMessageDispatcher;
+        private readonly IMessageDispatcher<ChargeCommandRejectedEvent> _rejectedMessageDispatcher;
+        private readonly IMessageDispatcher<ChargeCommandAcceptedEvent> _acceptedMessageDispatcher;
 
         public ChargeCommandReceiptService(
             IChargeCommandRejectedEventFactory chargeCommandRejectedEventFactory,
             IChargeCommandAcceptedEventFactory chargeCommandAcceptedEventFactory,
-            IInternalMessageDispatcher<ChargeCommandRejectedEvent> rejectedMessageDispatcher,
-            IInternalMessageDispatcher<ChargeCommandAcceptedEvent> acceptedMessageDispatcher)
+            IMessageDispatcher<ChargeCommandRejectedEvent> rejectedMessageDispatcher,
+            IMessageDispatcher<ChargeCommandAcceptedEvent> acceptedMessageDispatcher)
         {
             _chargeCommandRejectedEventFactory = chargeCommandRejectedEventFactory;
             _chargeCommandAcceptedEventFactory = chargeCommandAcceptedEventFactory;
@@ -46,13 +46,13 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
         public async Task RejectAsync(ChargeInformationCommand command, ValidationResult validationResult)
         {
             var rejectedEvent = _chargeCommandRejectedEventFactory.CreateEvent(command, validationResult);
-            await _rejectedMessageDispatcher.DispatchAsync(rejectedEvent, "ChargeInformationCommandRejected").ConfigureAwait(false);
+            await _rejectedMessageDispatcher.DispatchAsync(rejectedEvent).ConfigureAwait(false);
         }
 
         public async Task AcceptAsync(ChargeInformationCommand command)
         {
             var acceptedEvent = _chargeCommandAcceptedEventFactory.CreateEvent(command);
-            await _acceptedMessageDispatcher.DispatchAsync(acceptedEvent, "ChargeInformationCommandAccepted").ConfigureAwait(false);
+            await _acceptedMessageDispatcher.DispatchAsync(acceptedEvent).ConfigureAwait(false);
         }
 
         /// <summary>

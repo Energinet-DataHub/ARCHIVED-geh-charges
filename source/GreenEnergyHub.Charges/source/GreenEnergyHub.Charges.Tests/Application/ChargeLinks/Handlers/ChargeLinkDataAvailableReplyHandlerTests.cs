@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
         [Theory]
         [InlineAutoMoqData]
         public async Task ReplyAsync_WhenCalledAndReplyIsSetIsTrue_ShouldDispatchMessage(
-            [Frozen] Mock<IInternalMessageDispatcher<ChargeLinksDataAvailableNotifiedEvent>> messageDispatcher,
+            [Frozen] Mock<IMessageDispatcher<ChargeLinksDataAvailableNotifiedEvent>> messageDispatcher,
             [Frozen] Mock<IChargeLinksDataAvailableNotifiedEventFactory> defaultChargeLinksCreatedEventFactory,
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             ChargeLinksAcceptedEvent chargeLinksAcceptedEvent,
@@ -66,7 +66,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
                 x => x.Create(chargeLinksAcceptedEvent), Times.Once);
             messageDispatcher.Verify(
                 expression: x =>
-                    x.DispatchAsync(It.IsAny<ChargeLinksDataAvailableNotifiedEvent>(), "ChargeLinksDataAvailableNotified", CancellationToken.None),
+                    x.DispatchAsync(It.IsAny<ChargeLinksDataAvailableNotifiedEvent>(), CancellationToken.None),
                 Times.Once);
         }
 
