@@ -88,7 +88,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registr
             string serviceBusTopicName)
             where TOutboundMessage : IOutboundMessage
         {
-            _services.AddScoped<IMessageDispatcher<TOutboundMessage>, InternalMessageDispatcher<TOutboundMessage>>();
+            _services.AddScoped<IInternalMessageDispatcher<TOutboundMessage>, InternalMessageDispatcher<TOutboundMessage>>();
             _services.AddScoped<Channel<TOutboundMessage>, ServiceBusChannel<TOutboundMessage>>();
 
             // Must be a singleton as per documentation of ServiceBusClient and ServiceBusSender

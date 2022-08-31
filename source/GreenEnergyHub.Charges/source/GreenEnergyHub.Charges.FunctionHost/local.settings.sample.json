@@ -49,42 +49,33 @@
     // Integration, request response logging
     "REQUEST_RESPONSE_LOGGING_CONTAINER_NAME": "marketoplogs",
 
+    // Internal, charge
+    "CHARGES_TOPIC_NAME": "charges",
+
     // Internal, charge, received
-    "COMMAND_RECEIVED_TOPIC_NAME": "command-received",
     "COMMAND_RECEIVED_SUBSCRIPTION_NAME": "command-received",
 
     // Internal, charge price, received
-    "PRICE_COMMAND_RECEIVED_TOPIC_NAME": "price-command-received",
     "PRICE_COMMAND_RECEIVED_SUBSCRIPTION_NAME": "price-command-received",
 
     // Internal, charge, accepted
-    "COMMAND_ACCEPTED_TOPIC_NAME": "command-accepted",
     "CHARGEACCEPTED_SUB_DATAAVAILABLENOTIFIER": "chargeaccepted-sub-dataavailablenotifier",
     "COMMAND_ACCEPTED_SUBSCRIPTION_NAME": "command-accepted",
     "COMMAND_ACCEPTED_RECEIVER_SUBSCRIPTION_NAME": "charge-command-accepted-receiver",
 
     // Internal, charge, rejected
-    "COMMAND_REJECTED_TOPIC_NAME": "command-rejected",
     "COMMAND_REJECTED_SUBSCRIPTION_NAME": "command-rejected",
 
-    // Internal, charge price, rejected
-    "CHARGE_PRICE_REJECTED_TOPIC_NAME": "charge-price-rejected",
-    "CHARGE_PRICE_REJECTED_SUBSCRIPTION_NAME": "charge-price-rejected",
-
     // Internal, charge links, received
-    "CHARGE_LINKS_RECEIVED_TOPIC_NAME": "links-command-received",
     "CHARGE_LINKS_RECEIVED_SUBSCRIPTION_NAME": "links-command-received-receiver",
 
     // Internal, charge links, accepted
-    "CHARGE_LINKS_ACCEPTED_TOPIC_NAME": "links-command-accepted",
-    "CHARGE_LINKS_REJECTED_TOPIC_NAME": "links-command-rejected",
     "CHARGE_LINKS_REJECTED_SUBSCRIPTION_NAME": "links-command-rejected",
     "CHARGE_LINKS_ACCEPTED_SUB_CONFIRMATION_NOTIFIER": "charge-links-accepted-sub-confirmation-notifier",
     "CHARGE_LINKS_ACCEPTED_SUB_DATA_AVAILABLE_NOTIFIER": "charge-links-accepted-sub-data-available-notifier",
     "CHARGE_LINKS_ACCEPTED_SUB_EVENT_PUBLISHER": "charge-links-accepted-sub-event-publisher",
     "CHARGE_LINKS_ACCEPTED_SUB_REPLIER": "charge-links-accepted-sub-replier",
     "CREATE_LINKS_MESSAGES_REQUEST_QUEUE_NAME": "create-links-messages-request",
-    "DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_TOPIC_NAME": "default-charge-links-available",
     "DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_SUBSCRIPTION_NAME": "default-charge-links-available-notified"
   }
 }

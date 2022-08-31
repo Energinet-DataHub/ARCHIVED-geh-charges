@@ -109,57 +109,57 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                     name: "ChargeCommandReceivedTopicExists",
                     connectionString: EnvironmentHelper.GetEnv(
                         EnvironmentSettingNames.DomainEventManagerConnectionString),
-                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandReceivedTopicName))
+                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesTopicName))
                 .AddAzureServiceBusSubscription(
                     name: "ChargeCommandReceivedSubscriptionExists",
                     connectionString: EnvironmentHelper.GetEnv(
                         EnvironmentSettingNames.DomainEventManagerConnectionString),
-                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandReceivedTopicName),
+                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesTopicName),
                     subscriptionName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandReceivedSubscriptionName))
                 .AddAzureServiceBusTopic(
                     name: "ChargePriceCommandReceivedTopicExists",
                     connectionString: EnvironmentHelper.GetEnv(
                         EnvironmentSettingNames.DomainEventManagerConnectionString),
-                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.PriceCommandReceivedTopicName))
+                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesTopicName))
                 .AddAzureServiceBusSubscription(
                     name: "ChargePriceCommandReceivedSubscriptionExists",
                     connectionString: EnvironmentHelper.GetEnv(
                         EnvironmentSettingNames.DomainEventManagerConnectionString),
-                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.PriceCommandReceivedTopicName),
+                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesTopicName),
                     subscriptionName: EnvironmentHelper.GetEnv(
                         EnvironmentSettingNames.PriceCommandReceivedSubscriptionName))
                 .AddAzureServiceBusTopic(
                     name: "ChargeCommandRejectedTopicExists",
                     connectionString: EnvironmentHelper.GetEnv(
                         EnvironmentSettingNames.DomainEventManagerConnectionString),
-                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandRejectedTopicName))
+                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesTopicName))
                 .AddAzureServiceBusSubscription(
                     name: "ChargeCommandRejectedSubscriptionExists",
                     connectionString: EnvironmentHelper.GetEnv(
                         EnvironmentSettingNames.DomainEventManagerConnectionString),
-                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandRejectedTopicName),
+                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesTopicName),
                     subscriptionName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandRejectedSubscriptionName))
                 .AddAzureServiceBusTopic(
                     name: "ChargeCommandAcceptedTopicExists",
                     connectionString: EnvironmentHelper.GetEnv(
                         EnvironmentSettingNames.DomainEventManagerConnectionString),
-                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandAcceptedTopicName))
+                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesTopicName))
                 .AddAzureServiceBusSubscription(
                     name: "ChargeCommandAcceptedSubscriptionExists",
                     connectionString: EnvironmentHelper.GetEnv(
                         EnvironmentSettingNames.DomainEventManagerConnectionString),
-                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandAcceptedTopicName),
+                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesTopicName),
                     subscriptionName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandAcceptedSubscriptionName))
                 .AddAzureServiceBusTopic(
                     name: "ChargePriceOperationRejectedTopicExists",
                     connectionString: EnvironmentHelper.GetEnv(
                         EnvironmentSettingNames.DomainEventManagerConnectionString),
-                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargePriceRejectedTopicName))
+                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesTopicName))
                 .AddAzureServiceBusSubscription(
                     name: "ChargePriceOperationsRejectedSubscriptionExists",
                     connectionString: EnvironmentHelper.GetEnv(
                         EnvironmentSettingNames.DomainEventManagerConnectionString),
-                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargePriceRejectedTopicName),
+                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesTopicName),
                     subscriptionName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargePriceRejectedSubscriptionName))
 
                 // Used by ChargeDataAvailableNotifierEndpoint
@@ -167,7 +167,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                     name: "ChargeCommandDataAvailableNotifierSubscriptionExists",
                     connectionString: EnvironmentHelper.GetEnv(
                         EnvironmentSettingNames.DomainEventManagerConnectionString),
-                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandAcceptedTopicName),
+                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesTopicName),
                     subscriptionName: EnvironmentHelper.GetEnv(
                         EnvironmentSettingNames.ChargeAcceptedSubDataAvailableNotifier))
 
@@ -176,7 +176,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                     name: "ChargeCommandAcceptedReceiverSubscriptionExists",
                     connectionString: EnvironmentHelper.GetEnv(
                         EnvironmentSettingNames.DomainEventManagerConnectionString),
-                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandAcceptedTopicName),
+                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesTopicName),
                     subscriptionName: EnvironmentHelper.GetEnv(
                         EnvironmentSettingNames.CommandAcceptedReceiverSubscriptionName));
         }
@@ -187,44 +187,44 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 .AddAzureServiceBusTopic(
                 name: "ChargeLinksAcceptedTopicExists",
                 connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventManagerConnectionString),
-                topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksAcceptedTopicName))
+                topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesTopicName))
             .AddAzureServiceBusSubscription(
                 name: "ChargeLinksAcceptedReplierSubscriptionExists",
                 connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventManagerConnectionString),
-                topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksAcceptedTopicName),
+                topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesTopicName),
                 subscriptionName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksAcceptedReplier))
             .AddAzureServiceBusSubscription(
                 name: "ChargeLinksAcceptedEventPublisherSubscriptionExists",
                 connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventManagerConnectionString),
-                topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksAcceptedTopicName),
+                topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesTopicName),
                 subscriptionName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksAcceptedSubEventPublisher))
             .AddAzureServiceBusSubscription(
                 name: "ChargeLinksAcceptedDataAvailableNotifierSubscriptionExists",
                 connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventManagerConnectionString),
-                topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksAcceptedTopicName),
+                topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesTopicName),
                 subscriptionName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksAcceptedSubDataAvailableNotifier))
             .AddAzureServiceBusSubscription(
                 name: "ChargeLinksAcceptedConfirmationNotifierSubscriptionExists",
                 connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventManagerConnectionString),
-                topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksAcceptedTopicName),
+                topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesTopicName),
                 subscriptionName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksAcceptedSubConfirmationNotifier))
             .AddAzureServiceBusTopic(
                 name: "ChargeLinksRejectedTopicExists",
                 connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventManagerConnectionString),
-                topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksRejectedTopicName))
+                topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesTopicName))
             .AddAzureServiceBusSubscription(
                 name: "ChargeLinksRejectedSubscriptionExists",
                 connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventManagerConnectionString),
-                topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksRejectedTopicName),
+                topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesTopicName),
                 subscriptionName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksRejectedSubscriptionName))
             .AddAzureServiceBusTopic(
                 name: "ChargeLinksReceivedTopicExists",
                 connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventManagerConnectionString),
-                topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksReceivedTopicName))
+                topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesTopicName))
             .AddAzureServiceBusSubscription(
                 name: "ChargeLinksReceivedSubscriptionExists",
                 connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventManagerConnectionString),
-                topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksReceivedTopicName),
+                topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesTopicName),
                 subscriptionName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksReceivedSubscriptionName));
         }
 

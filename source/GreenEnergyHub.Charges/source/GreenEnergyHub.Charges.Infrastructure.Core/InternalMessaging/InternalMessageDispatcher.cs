@@ -23,7 +23,7 @@ using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factories;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.InternalMessaging
 {
-    public class InternalMessageDispatcher<TOutboundMessage> : IMessageDispatcher<TOutboundMessage>
+    public class InternalMessageDispatcher<TOutboundMessage> : IInternalMessageDispatcher<TOutboundMessage>
     where TOutboundMessage : IOutboundMessage
     {
         private readonly IJsonSerializer _jsonSerializer;
@@ -40,11 +40,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.InternalMessaging
             _serviceBusMessageFactory = serviceBusMessageFactory;
         }
 
-        public async Task DispatchAsync(TOutboundMessage message, CancellationToken cancellationToken = default)
+        public async Task DispatchAsync(TOutboundMessage message, string subject, CancellationToken cancellationToken = default)
         {
             if (message == null) throw new ArgumentNullException(nameof(message));
             var data = _jsonSerializer.Serialize(message);
-            var serviceBusMessage = _serviceBusMessageFactory.CreateInternalMessage(data);
+            var serviceBusMessage = _serviceBusMessageFactory.CreateInternalMessage(data, subject);
             await _serviceBusSender.Instance.SendMessageAsync(serviceBusMessage, cancellationToken).ConfigureAwait(false);
         }
     }

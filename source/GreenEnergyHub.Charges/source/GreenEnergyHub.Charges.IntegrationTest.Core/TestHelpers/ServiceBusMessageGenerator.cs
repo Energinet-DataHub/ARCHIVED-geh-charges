@@ -24,13 +24,15 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
         public static ServiceBusMessage CreateWithJsonContent(
             IInternalEvent internalEvent,
             Dictionary<string, string> applicationProperties,
-            string correlationId)
+            string correlationId,
+            string subject)
         {
             var jsonSerializer = new JsonSerializer();
             var body = jsonSerializer.Serialize(internalEvent);
 
             var serviceBusMessage = new ServiceBusMessage(body)
             {
+                Subject = subject,
                 CorrelationId = correlationId,
             };
 

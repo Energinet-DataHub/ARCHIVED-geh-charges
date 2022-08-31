@@ -79,11 +79,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 var invalidChargePriceCommandReceivedEvent = CreateInvalidChargePriceCommandReceivedEvent(
                     commandBuilder, operationDtoBuilder);
                 var correlationId = CorrelationIdGenerator.Create();
-                var message = CreateServiceBusMessage(invalidChargePriceCommandReceivedEvent, correlationId);
+                var message = CreateServiceBusMessage(invalidChargePriceCommandReceivedEvent, correlationId, "ChargePriceCommand");
 
                 // Act
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
-                    () => Fixture.ChargePriceCommandReceivedTopic.SenderClient.SendMessageAsync(message), correlationId);
+                    () => Fixture.ChargesTopic.SenderClient.SendMessageAsync(message), correlationId);
 
                 await FunctionAsserts.AssertHasExecutedAsync(
                     Fixture.HostManager, nameof(ChargePriceCommandReceiverEndpoint));
@@ -114,11 +114,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 var chargePriceCommandReceivedEvent = CreateChargePriceCommandReceivedEvent(
                     commandBuilder, documentDtoBuilder, operationDtoBuilder, chargeId, ownerGln, chargeType);
                 var correlationId = CorrelationIdGenerator.Create();
-                var message = CreateServiceBusMessage(chargePriceCommandReceivedEvent, correlationId);
+                var message = CreateServiceBusMessage(chargePriceCommandReceivedEvent, correlationId, "ChargePriceCommand");
 
                 // Act
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
-                    () => Fixture.ChargePriceCommandReceivedTopic.SenderClient.SendMessageAsync(message), correlationId);
+                    () => Fixture.ChargesTopic.SenderClient.SendMessageAsync(message), correlationId);
 
                 await FunctionAsserts.AssertHasExecutedAsync(
                     Fixture.HostManager, nameof(ChargePriceCommandReceiverEndpoint));
@@ -185,14 +185,17 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 return chargePriceReceivedEvent;
             }
 
-            private static ServiceBusMessage CreateServiceBusMessage(IInternalEvent internalEvent, string correlationId)
+            private static ServiceBusMessage CreateServiceBusMessage(
+                IInternalEvent internalEvent,
+                string correlationId,
+                string subject)
             {
                 var applicationProperties = new Dictionary<string, string>
                 {
                     { MessageMetaDataConstants.CorrelationId, correlationId },
                 };
                 var message = ServiceBusMessageGenerator.CreateWithJsonContent(
-                    internalEvent, applicationProperties, correlationId);
+                    internalEvent, applicationProperties, correlationId, subject);
 
                 return message;
             }

@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions.F
             messageMetaDataContext.Setup(m => m.IsReplyToSet()).Returns(true);
 
             // Act
-            var actual = sut.CreateInternalMessage(data);
+            var actual = sut.CreateInternalMessage(data, "FakeSubject");
 
             // Assert
             actual.ApplicationProperties.First(x => x.Key == MessageMetaDataConstants.ReplyTo).Value.Should().Be(replyTo);

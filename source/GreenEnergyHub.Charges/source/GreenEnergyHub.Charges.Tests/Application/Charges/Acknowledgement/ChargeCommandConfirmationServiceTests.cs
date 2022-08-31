@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Acknowledgement
         [AutoMoqData]
         public async Task RejectAsync_WhenCalledWithCommandAndResult_UsesFactoryToCreateEventAndDispatchesIt(
             [Frozen] Mock<IChargeCommandRejectedEventFactory> rejectedEventFactory,
-            [Frozen] Mock<IMessageDispatcher<ChargeCommandRejectedEvent>> rejectedEventDispatcher,
+            [Frozen] Mock<IInternalMessageDispatcher<ChargeCommandRejectedEvent>> rejectedEventDispatcher,
             ChargeInformationCommand command,
             ValidationResult validationResult,
             ChargeCommandRejectedEvent rejectedEvent,
@@ -52,9 +52,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Acknowledgement
             rejectedEventDispatcher.Setup(
                     d => d.DispatchAsync(
                         It.IsAny<ChargeCommandRejectedEvent>(),
+                        "ChargeInformationCommandRejected",
                         It.IsAny<CancellationToken>()))
-                .Callback<ChargeCommandRejectedEvent, CancellationToken>(
-                    (e, _) => eventForSerialization = e);
+                .Callback<ChargeCommandRejectedEvent, string, CancellationToken>(
+                    (e, _, _) => eventForSerialization = e);
 
             // Act
             await sut.RejectAsync(command, validationResult).ConfigureAwait(false);
@@ -67,7 +68,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Acknowledgement
         [AutoMoqData]
         public async Task AcceptAsync_WhenCalledWithCommand_UsesFactoryToCreateEventAndDispatchesIt(
             [Frozen] Mock<IChargeCommandAcceptedEventFactory> acceptedEventFactory,
-            [Frozen] Mock<IMessageDispatcher<ChargeCommandAcceptedEvent>> acceptedEventDispatcher,
+            [Frozen] Mock<IInternalMessageDispatcher<ChargeCommandAcceptedEvent>> acceptedEventDispatcher,
             ChargeInformationCommand command,
             ChargeCommandAcceptedEvent acceptedEvent,
             ChargeCommandReceiptService sut)
@@ -82,9 +83,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Acknowledgement
             acceptedEventDispatcher.Setup(
                     d => d.DispatchAsync(
                         It.IsAny<ChargeCommandAcceptedEvent>(),
+                        "ChargeInformationCommandAccepted",
                         It.IsAny<CancellationToken>()))
-                .Callback<ChargeCommandAcceptedEvent, CancellationToken>(
-                    (e, _) => eventForSerialization = e);
+                .Callback<ChargeCommandAcceptedEvent, string, CancellationToken>(
+                    (e, _, _) => eventForSerialization = e);
 
             // Act
             await sut.AcceptAsync(command).ConfigureAwait(false);

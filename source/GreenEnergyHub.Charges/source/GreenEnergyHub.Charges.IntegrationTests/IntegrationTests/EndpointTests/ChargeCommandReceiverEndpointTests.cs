@@ -85,11 +85,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 var chargeCommandReceivedEvent = CreateChargeCommandReceivedEvent(
                     commandBuilder, documentDtoBuilder, operationDtoBuilder, chargeId, ownerGln, chargeType);
                 var correlationId = CorrelationIdGenerator.Create();
-                var message = CreateServiceBusMessage(chargeCommandReceivedEvent, correlationId);
+                var message = CreateServiceBusMessage(chargeCommandReceivedEvent, correlationId, "ChargeCommandReceived");
 
                 // Act
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
-                    () => Fixture.ChargeCommandReceivedTopic.SenderClient.SendMessageAsync(message), correlationId);
+                    () => Fixture.ChargesTopic.SenderClient.SendMessageAsync(message), correlationId);
 
                 await FunctionAsserts.AssertHasExecutedAsync(
                     Fixture.HostManager, nameof(ChargeCommandReceiverEndpoint));
@@ -150,14 +150,17 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 return chargeInformationReceivedEvent;
             }
 
-            private static ServiceBusMessage CreateServiceBusMessage(IInternalEvent internalEvent, string correlationId)
+            private static ServiceBusMessage CreateServiceBusMessage(
+                IInternalEvent internalEvent,
+                string correlationId,
+                string subject)
             {
                 var applicationProperties = new Dictionary<string, string>
                 {
                     { MessageMetaDataConstants.CorrelationId, correlationId },
                 };
                 var message = ServiceBusMessageGenerator.CreateWithJsonContent(
-                    internalEvent, applicationProperties, correlationId);
+                    internalEvent, applicationProperties, correlationId, subject);
 
                 return message;
             }

@@ -41,7 +41,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
         [Function(FunctionName)]
         public async Task RunAsync(
             [ServiceBusTrigger(
-                "%" + EnvironmentSettingNames.MarketParticipantChangedTopicName + "%",
+                "%" + EnvironmentSettingNames.ChargesTopicName + "%",
                 "%" + EnvironmentSettingNames.MarketParticipantChangedSubscriptionName + "%",
                 Connection = EnvironmentSettingNames.DataHubListenerConnectionString)]
             byte[] message)

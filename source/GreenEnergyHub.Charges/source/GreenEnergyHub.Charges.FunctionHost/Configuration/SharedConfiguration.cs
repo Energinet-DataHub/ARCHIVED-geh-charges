@@ -156,7 +156,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 .AddInternalMessageExtractor<ChargeCommandAcceptedEvent>()
                 .AddExternalMessageDispatcher<ChargeLinksReceivedEvent>(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
-                EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksReceivedTopicName));
+                EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesTopicName));
         }
 
         private static void ConfigureSharedCim(IServiceCollection serviceCollection)

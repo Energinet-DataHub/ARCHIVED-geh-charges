@@ -70,7 +70,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 };
                 var command = new ChargeLinksCommandBuilder().WithChargeLinks(links).Build();
                 var correlationId = CorrelationIdGenerator.Create();
-                var message = CreateServiceBusMessage(command, correlationId);
+                var message = CreateServiceBusMessage(command, correlationId, "ChargeLinksAccepted");
 
                 using var isMessageReceived = await Fixture.CreateLinkReplyQueueListener
                     .ListenForMessageAsync(correlationId)
@@ -78,14 +78,17 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
                 // Act
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
-                    () => Fixture.ChargeLinksAcceptedTopic.SenderClient.SendMessageAsync(message), correlationId);
+                    () => Fixture.ChargesTopic.SenderClient.SendMessageAsync(message), correlationId);
 
                 // Assert
                 var isMessageReceivedByQueue = isMessageReceived.MessageAwaiter!.Wait(TimeSpan.FromSeconds(60));
                 isMessageReceivedByQueue.Should().BeTrue();
             }
 
-            private ServiceBusMessage CreateServiceBusMessage(ChargeLinksCommand command, string correlationId)
+            private ServiceBusMessage CreateServiceBusMessage(
+                ChargeLinksCommand command,
+                string correlationId,
+                string subject)
             {
                 var chargeLinksAcceptedEvent = new ChargeLinksAcceptedEvent(
                     command, Instant.FromDateTimeUtc(DateTime.UtcNow));
@@ -97,7 +100,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 };
 
                 var message = ServiceBusMessageGenerator.CreateWithJsonContent(
-                    chargeLinksAcceptedEvent, applicationProperties, correlationId);
+                    chargeLinksAcceptedEvent, applicationProperties, correlationId, subject);
 
                 return message;
             }

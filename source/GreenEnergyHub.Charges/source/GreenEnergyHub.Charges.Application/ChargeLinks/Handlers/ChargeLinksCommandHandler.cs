@@ -22,11 +22,11 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
     public class ChargeLinksCommandHandler : IChargeLinksCommandHandler
     {
-        private readonly IMessageDispatcher<ChargeLinksReceivedEvent> _messageDispatcher;
+        private readonly IInternalMessageDispatcher<ChargeLinksReceivedEvent> _messageDispatcher;
         private readonly IClock _clock;
 
         public ChargeLinksCommandHandler(
-            IMessageDispatcher<ChargeLinksReceivedEvent> messageDispatcher,
+            IInternalMessageDispatcher<ChargeLinksReceivedEvent> messageDispatcher,
             IClock clock)
         {
             _messageDispatcher = messageDispatcher;
@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
                 _clock.GetCurrentInstant(),
                 command);
 
-            await _messageDispatcher.DispatchAsync(receivedEvent).ConfigureAwait(false);
+            await _messageDispatcher.DispatchAsync(receivedEvent, "ChargeLinksCommandReceived").ConfigureAwait(false);
         }
     }
 }

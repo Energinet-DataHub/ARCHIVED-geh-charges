@@ -33,12 +33,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factori
             _messageMetaDataContext = messageMetaDataContext;
         }
 
-        public ServiceBusMessage CreateInternalMessage(string data)
+        public ServiceBusMessage CreateInternalMessage(string data, string subject)
         {
             if (_messageMetaDataContext.IsReplyToSet())
             {
                 return new ServiceBusMessage(data)
                 {
+                    Subject = subject,
                     CorrelationId = _correlationContext.Id,
                     ApplicationProperties =
                     {
