@@ -31,7 +31,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Services
         public Task SaveNotificationsAsync(List<ChargePriceOperationDto> priceOperationNotifications)
         {
             _logger.LogInformation(
-                "{priceOperationNotificationsCount} notifications was persisted.",
+                "{PriceOperationNotificationsCount} notifications was persisted",
                 priceOperationNotifications.Count);
             return Task.CompletedTask;
         }

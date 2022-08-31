@@ -65,6 +65,9 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
         public MessageHubSimulation? MessageHubMock { get; private set; }
 
         [NotNull]
+        public TopicResource? ChargeCommandReceivedTopic { get; private set; }
+
+        [NotNull]
         public TopicResource? ChargePriceCommandReceivedTopic { get; private set; }
 
         [NotNull]
@@ -176,7 +179,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
                 .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargeAcceptedSubDataAvailableNotifier)
                 .CreateAsync();
 
-            var commandReceivedTopic = await ServiceBusResourceProvider
+            ChargeCommandReceivedTopic = await ServiceBusResourceProvider
                 .BuildTopic(ChargesServiceBusResourceNames.CommandReceivedTopicKey)
                 .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.CommandReceivedTopicName)
                 .AddSubscription(ChargesServiceBusResourceNames.CommandReceivedSubscriptionName)

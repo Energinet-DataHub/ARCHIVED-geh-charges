@@ -21,6 +21,7 @@ using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using FluentAssertions;
 using Google.Protobuf;
 using GreenEnergyHub.Charges.FunctionHost.MeteringPoint;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon;
@@ -138,11 +139,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
                 var byteArray = message.ToByteArray();
                 var serviceBusMessage = new ServiceBusMessage(byteArray) { CorrelationId = correlationId };
-                serviceBusMessage.ApplicationProperties.Add("OperationTimestamp", date.ToUniversalTime());
-                serviceBusMessage.ApplicationProperties.Add("OperationCorrelationId", correlationId);
-                serviceBusMessage.ApplicationProperties.Add("MessageVersion", 1);
-                serviceBusMessage.ApplicationProperties.Add("MessageType", "MeteringPointCreated");
-                serviceBusMessage.ApplicationProperties.Add("EventIdentification", "2542ed0d242e46b68b8b803e93ffbf7b");
+                serviceBusMessage.ApplicationProperties.Add(MessageMetaDataConstants.OperationTimestamp, date.ToUniversalTime());
+                serviceBusMessage.ApplicationProperties.Add(MessageMetaDataConstants.CorrelationId, correlationId);
+                serviceBusMessage.ApplicationProperties.Add(MessageMetaDataConstants.MessageVersion, 1);
+                serviceBusMessage.ApplicationProperties.Add(MessageMetaDataConstants.MessageType, "MeteringPointCreated");
+                serviceBusMessage.ApplicationProperties.Add(MessageMetaDataConstants.EventIdentification, "2542ed0d242e46b68b8b803e93ffbf7b");
 
                 return (serviceBusMessage, correlationId);
             }

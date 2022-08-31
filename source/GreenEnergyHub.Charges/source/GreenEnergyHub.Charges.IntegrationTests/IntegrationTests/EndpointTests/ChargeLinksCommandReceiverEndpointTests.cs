@@ -21,6 +21,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
@@ -111,7 +112,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 var chargeLinksAcceptedEvent = new ChargeLinksAcceptedEvent(
                     command, Instant.FromDateTimeUtc(DateTime.UtcNow));
 
-                var applicationProperties = new Dictionary<string, string> { { "OperationCorrelationId", correlationId } };
+                var applicationProperties = new Dictionary<string, string>
+                {
+                    { MessageMetaDataConstants.CorrelationId, correlationId },
+                };
                 var message = ServiceBusMessageGenerator.CreateWithJsonContent(
                     chargeLinksAcceptedEvent, applicationProperties, correlationId);
 
