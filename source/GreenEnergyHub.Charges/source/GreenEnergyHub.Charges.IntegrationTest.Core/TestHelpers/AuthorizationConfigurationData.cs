@@ -14,7 +14,6 @@
 
 using System.Collections.Generic;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.Configuration.B2C;
-using GreenEnergyHub.Charges.IntegrationTest.Core.Authorization;
 
 namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
 {
