@@ -35,14 +35,16 @@ The rule set for persisting charge prices.
 
 <br>
 
-### Irregular Price Series
+#### <b>Irregular Price Series</b>
 
-An 'irregular price series' is a Charge Price Request (D08) containing a price series for charge with a monthly resolution, where the start time is **not** the first of the month, but during the month, and the end time of that particular price is the first of the following month.
+A charge owner may want to submit a charge price request (D08) containing a price series for monthly (resolution) charge, where the price series' start and end date time values do <b>not</b> equal the first of a month. Such a price series is to be known as an <b>irregular price series</b> and it may be relevant when the charge owner wants to:
 
-The rule set for persisting irregular price series is no different than the normal way of persisting charge prices.
-Provided below are some examples of how persistence of irregular price series will look like.
+- change the monthly charge price during the month
+- submit a price up to the charge's stop date, which may be during a month
 
-![Irregular Price Series Examples](images/Irregular_PriceSeries_Examples.png)
+Currently an irregular price series is only relevant for charges with a monthly resolution (P1M), such as fees and subscriptions.
+
+The rule set for persisting irregular price series is no different than the normal way of persisting charge prices, nevertheless a list of irregular price series persistence scenarios and their expected outcome can be found [here](images/Irregular_PriceSeries_Examples.png).
 
 <br>
 
