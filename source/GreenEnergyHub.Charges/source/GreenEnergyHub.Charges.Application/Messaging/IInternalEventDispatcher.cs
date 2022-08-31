@@ -18,9 +18,8 @@ using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 
 namespace GreenEnergyHub.Charges.Application.Messaging
 {
-    public interface IInternalEventDispatcher<in TInternalEvent>
-        where TInternalEvent : InternalEvent
+    public interface IInternalEventDispatcher
     {
-        public Task DispatchAsync(TInternalEvent internalEvent, CancellationToken cancellationToken = default);
+        Task DispatchAsync(InternalEvent internalEvent, CancellationToken cancellationToken = default);
     }
 }

@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         [Theory]
         [InlineAutoDomainData]
         public async Task HandleAsync_WhenCalledWithChargeCommand_ShouldDispatchReceivedEvent(
-            [Frozen] Mock<IInternalEventDispatcher<ChargeCommandReceivedEvent>> chargeEventPublisher,
+            [Frozen] Mock<IInternalEventDispatcher> chargeEventPublisher,
             ChargeInformationCommandHandler sut)
         {
             // Arrange

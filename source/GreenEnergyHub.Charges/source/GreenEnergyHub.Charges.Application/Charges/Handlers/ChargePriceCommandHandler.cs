@@ -23,11 +23,11 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
     public class ChargePriceCommandHandler : IChargePriceCommandHandler
     {
         private readonly IClock _clock;
-        private readonly IInternalEventDispatcher<ChargePriceCommandReceivedEvent> _internalEventDispatcher;
+        private readonly IInternalEventDispatcher _internalEventDispatcher;
 
         public ChargePriceCommandHandler(
             IClock clock,
-            IInternalEventDispatcher<ChargePriceCommandReceivedEvent> internalEventDispatcher)
+            IInternalEventDispatcher internalEventDispatcher)
         {
             _clock = clock;
             _internalEventDispatcher = internalEventDispatcher;

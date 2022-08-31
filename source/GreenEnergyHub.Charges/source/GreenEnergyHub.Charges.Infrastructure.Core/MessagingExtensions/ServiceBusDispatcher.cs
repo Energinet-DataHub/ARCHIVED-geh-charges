@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Threading;
+using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
-using Energinet.DataHub.Core.Messaging.Transport;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions
 {
@@ -24,14 +24,18 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions
     /// being dispatched/send.
     /// </summary>
     // ReSharper disable once UnusedTypeParameter - Generic type parameter is needed
-    public class InternalServiceBusSender<TInternalEvent> : IInternalServiceBusSender<TInternalEvent>
-        where TInternalEvent : InternalEvent
+    public class ServiceBusDispatcher : IServiceBusDispatcher
     {
-        public InternalServiceBusSender(ServiceBusSender instance)
+        private readonly ServiceBusSender _instance;
+
+        public ServiceBusDispatcher(ServiceBusSender instance)
         {
-            Instance = instance;
+            _instance = instance;
         }
 
-        public ServiceBusSender Instance { get; }
+        public async Task DispatchAsync(ServiceBusMessage serviceBusMessage, CancellationToken cancellationToken = default)
+        {
+            await _instance.SendMessageAsync(serviceBusMessage, cancellationToken).ConfigureAwait(false);
+        }
     }
 }

@@ -49,14 +49,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 AvailableChargeLinksReceiptValidationErrorFactory>();
             serviceCollection.AddScoped<ICimValidationErrorTextFactory<ChargeLinkOperationDto>,
                 ChargeLinksCimValidationErrorTextFactory>();
-
-            serviceCollection.AddMessaging()
-                .AddInternalEventDispatcher<ChargeLinksAcceptedEvent>(
-                EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
-                EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksAcceptedTopicName))
-                .AddInternalEventDispatcher<ChargeLinksRejectedEvent>(
-                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
-                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksRejectedTopicName));
         }
     }
 }

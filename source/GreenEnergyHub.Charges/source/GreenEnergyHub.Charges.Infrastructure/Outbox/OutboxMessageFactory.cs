@@ -39,12 +39,14 @@ namespace GreenEnergyHub.Charges.Infrastructure.Outbox
         public OutboxMessage CreateFrom<T>(T domainEvent)
         {
             ArgumentNullException.ThrowIfNull(domainEvent);
+            var typeName = domainEvent.GetType().FullName;
+            ArgumentNullException.ThrowIfNull(typeName);
 
             var data = _jsonSerializer.Serialize(domainEvent);
             return OutboxMessage.Create(
                 data,
                 _correlationContext.Id,
-                domainEvent.GetType().ToString(),
+                typeName,
                 _clock.GetCurrentInstant());
         }
     }

@@ -49,22 +49,5 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions.R
             var dispatcher = provider.GetService<IMessageDispatcher<TestMessage>>();
             Assert.NotNull(dispatcher);
         }
-
-        [Fact]
-        public void AddMessageExtractor_AllowsResolvingAMessageExtractor()
-        {
-            // Arrange
-            var services = new ServiceCollection();
-
-            // Act
-            services
-                .AddMessaging()
-                .AddExternalMessageExtractor<TestMessage>();
-
-            // Assert
-            var provider = services.BuildServiceProvider();
-            var dispatcher = provider.GetService<MessageExtractor<TestMessage>>();
-            Assert.NotNull(dispatcher);
-        }
     }
 }

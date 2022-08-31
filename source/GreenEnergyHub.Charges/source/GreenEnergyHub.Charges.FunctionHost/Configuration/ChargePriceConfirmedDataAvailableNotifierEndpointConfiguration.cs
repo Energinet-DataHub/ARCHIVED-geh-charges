@@ -36,12 +36,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 AvailableChargePriceOperationConfirmationsFactory>();
             serviceCollection.AddScoped<BundleSpecification<AvailableChargeReceiptData, PriceConfirmedEvent>,
                 ChargePriceConfirmationBundleSpecification>();
-
-            serviceCollection
-                .AddMessaging()
-                .AddInternalEventDispatcher<PriceConfirmedEvent>(
-                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
-                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargePriceConfirmedTopicName));
         }
     }
 }

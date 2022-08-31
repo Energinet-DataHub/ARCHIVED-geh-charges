@@ -43,12 +43,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection
                 .AddScoped<BundleSpecification<AvailableChargeLinksData, ChargeLinksAcceptedEvent>,
                     ChargeLinksBundleSpecification>();
-
-            serviceCollection
-                .AddMessaging()
-                .AddInternalEventDispatcher<ChargeLinksDataAvailableNotifiedEvent>(
-                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
-                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName));
         }
     }
 }

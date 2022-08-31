@@ -13,8 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Text.Json;
-using System.Threading.Tasks;
 using Energinet.DataHub.Core.JsonSerialization;
 using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
@@ -32,16 +30,15 @@ namespace GreenEnergyHub.Charges.Infrastructure.Outbox
 
         public InternalEvent Parse(string outboxMessageType, string data)
         {
-            var type = Type.GetType(outboxMessageType);
-
-            if (type == typeof(PriceRejectedEvent))
+            if (outboxMessageType == typeof(PriceRejectedEvent).FullName)
             {
-                return _jsonSerializer.Deserialize<PriceRejectedEvent>(data);
+                var obj = _jsonSerializer.Deserialize(data, typeof(PriceRejectedEvent));
+                return (PriceRejectedEvent)obj;
             }
 
-            if (type == typeof(PriceConfirmedEvent))
+            if (outboxMessageType == typeof(PriceConfirmedEvent).FullName)
             {
-                return _jsonSerializer.Deserialize<PriceConfirmedEvent>(data);
+                return (PriceConfirmedEvent)_jsonSerializer.Deserialize(data, typeof(PriceConfirmedEvent));
             }
 
             throw new ArgumentOutOfRangeException($"Could not parse outbox event of type: {outboxMessageType} with data {data}");

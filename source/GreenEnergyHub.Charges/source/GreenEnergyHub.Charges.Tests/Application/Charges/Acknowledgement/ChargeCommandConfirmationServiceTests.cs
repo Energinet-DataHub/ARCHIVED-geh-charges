@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Acknowledgement
         [AutoMoqData]
         public async Task RejectAsync_WhenCalledWithCommandAndResult_UsesFactoryToCreateEventAndDispatchesIt(
             [Frozen] Mock<IChargeCommandRejectedEventFactory> rejectedEventFactory,
-            [Frozen] Mock<IInternalEventDispatcher<ChargeCommandRejectedEvent>> internalEventDispatcher,
+            [Frozen] Mock<IInternalEventDispatcher> internalEventDispatcher,
             ChargeInformationCommand command,
             ValidationResult validationResult,
             ChargeCommandRejectedEvent rejectedEvent,
@@ -67,7 +67,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Acknowledgement
         [AutoMoqData]
         public async Task AcceptAsync_WhenCalledWithCommand_UsesFactoryToCreateEventAndDispatchesIt(
             [Frozen] Mock<IChargeCommandAcceptedEventFactory> acceptedEventFactory,
-            [Frozen] Mock<IInternalEventDispatcher<ChargeCommandAcceptedEvent>> internalEventDispatcher,
+            [Frozen] Mock<IInternalEventDispatcher> internalEventDispatcher,
             ChargeInformationCommand command,
             ChargeCommandAcceptedEvent acceptedEvent,
             ChargeCommandReceiptService sut)

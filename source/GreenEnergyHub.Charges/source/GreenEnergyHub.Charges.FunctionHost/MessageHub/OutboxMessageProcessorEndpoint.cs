@@ -12,15 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
-using Energinet.DataHub.Core.JsonSerialization;
-using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Application.Persistence;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 using GreenEnergyHub.Charges.FunctionHost.Common;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
+using GreenEnergyHub.Charges.Infrastructure.Core.InternalMessaging;
 using GreenEnergyHub.Charges.Infrastructure.Outbox;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using Microsoft.Azure.Functions.Worker;
@@ -35,7 +33,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
         private readonly IOutboxMessageParser _outboxMessageParser;
         private readonly IClock _clock;
         private readonly ICorrelationContext _correlationContext;
-        private readonly IInternalEventDispatcher<InternalEvent> _internalEventDispatcher;
+        private readonly IInternalEventDispatcher _internalEventDispatcher;
         private readonly IUnitOfWork _unitOfWork;
 
         public OutboxMessageProcessorEndpoint(
@@ -43,7 +41,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
             IOutboxMessageParser outboxMessageParser,
             IClock clock,
             ICorrelationContext correlationContext,
-            IInternalEventDispatcher<InternalEvent> internalEventDispatcher,
+            IInternalEventDispatcher internalEventDispatcher,
             IUnitOfWork unitOfWork)
         {
             _outboxMessageRepository = outboxMessageRepository;
@@ -56,7 +54,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
 
         [Function(FunctionName)]
         public async Task RunAsync(
-            [TimerTrigger(TimerTriggerTimeConstants.Every10Seconds)] TimerInfo timerInfo)
+            [TimerTrigger(TimerTriggerTimeConstants.Every10Seconds)] TimerInfo timerInfo,
+            CancellationToken cancellationToken)
         {
             OutboxMessage? outboxMessage;
 
@@ -64,7 +63,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
             {
                 var internalEvent = _outboxMessageParser.Parse(outboxMessage.Type, outboxMessage.Data);
                 _correlationContext.SetId(outboxMessage.CorrelationId);
-                await _internalEventDispatcher.DispatchAsync(internalEvent).ConfigureAwait(false);
+                await _internalEventDispatcher.DispatchAsync(internalEvent, cancellationToken).ConfigureAwait(false);
                 outboxMessage.SetProcessed(_clock.GetCurrentInstant());
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             }

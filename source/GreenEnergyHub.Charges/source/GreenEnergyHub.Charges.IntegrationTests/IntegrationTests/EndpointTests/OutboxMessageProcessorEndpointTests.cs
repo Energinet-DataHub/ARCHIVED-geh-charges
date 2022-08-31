@@ -82,13 +82,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 await using var messageHubDatabaseContext = Fixture.MessageHubDatabaseManager.CreateDbContext();
                 await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
                 var operationsRejectedEvent = CreateChargePriceOperationsRejectedEvent();
-                var outboxMessage = await PersistToOutboxMessage(chargesDatabaseWriteContext, operationsRejectedEvent);
 
                 // Act
+                var outboxMessage = await PersistToOutboxMessage(chargesDatabaseWriteContext, operationsRejectedEvent);
+
+                // Assert
                 await FunctionAsserts.AssertHasExecutedAsync(
                     Fixture.HostManager, nameof(ChargePriceRejectedDataAvailableNotifierEndpoint));
 
-                // Assert
                 var actualAvailableDataReceipt = messageHubDatabaseContext.AvailableChargeReceiptData
                     .Single(x => x.OriginalOperationId == operationsRejectedEvent.Operations.First().OperationId);
                 actualAvailableDataReceipt.RecipientId.Should().Be(operationsRejectedEvent.Document.Sender.MarketParticipantId);
@@ -104,13 +105,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 await using var messageHubDatabaseContext = Fixture.MessageHubDatabaseManager.CreateDbContext();
                 await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
                 var operationsConfirmedEvent = CreateChargePriceOperationsConfirmedEvent();
-                var outboxMessage = await PersistToOutboxMessage(chargesDatabaseWriteContext, operationsConfirmedEvent);
 
                 // Act
-                await FunctionAsserts.AssertHasExecutedAsync(
-                    Fixture.HostManager, nameof(ChargePriceConfirmedDataAvailableNotifierEndpoint));
+                var outboxMessage = await PersistToOutboxMessage(chargesDatabaseWriteContext, operationsConfirmedEvent);
 
                 // Assert
+                await FunctionAsserts.AssertHasExecutedAsync(
+                    Fixture.HostManager, nameof(OutboxMessageProcessorEndpoint));
+                await FunctionAsserts.AssertHasExecutedAsync(
+                    Fixture.HostManager, nameof(ChargePriceConfirmedDataAvailableNotifierEndpoint));
                 var actualAvailableDataReceipt = messageHubDatabaseContext.AvailableChargeReceiptData
                     .Single(x => x.OriginalOperationId == operationsConfirmedEvent.Operations.First().OperationId);
                 actualAvailableDataReceipt.RecipientId.Should().Be(operationsConfirmedEvent.Document.Sender.MarketParticipantId);
@@ -122,9 +125,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
             [InlineAutoMoqData]
             public async Task GivenOutputProcessorEndpoint_WhenFailsFirstAttempt_ThenRetryNext(
                 [Frozen] Mock<IClock> clock,
-                Mock<IInternalEventDispatcher<InternalEvent>> dispatcher,
-                Mock<IOutboxMessageParser> outboxMessageParser,
-                PriceConfirmedEvent confirmedEvent,
+                [Frozen] Mock<IInternalEventDispatcher> dispatcher,
+                [Frozen] Mock<IOutboxMessageParser> outboxMessageParser,
+                PriceRejectedEventBuilder rejectedEventBuilder,
                 TimerInfo timerInfo,
                 CorrelationContext correlationContext,
                 Instant now)
@@ -133,10 +136,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
                 await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
 
+                var rejectedEvent = rejectedEventBuilder.Build();
                 clock.Setup(c => c.GetCurrentInstant()).Returns(now);
                 outboxMessageParser
                     .Setup(o => o.Parse(It.IsAny<string>(), It.IsAny<string>()))
-                    .Returns(confirmedEvent);
+                    .Returns(rejectedEvent);
                 var operationsRejectedEvent = CreateChargePriceOperationsRejectedEvent();
                 var outboxMessage = await PersistToOutboxMessage(chargesDatabaseWriteContext, operationsRejectedEvent);
 
@@ -152,19 +156,45 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
                 // Act & Assert
                 dispatcher.Setup(d => d.DispatchAsync(
-                        It.IsAny<PriceRejectedEvent>(),
+                        It.IsAny<InternalEvent>(),
                         It.IsAny<CancellationToken>())).Throws<Exception>();
 
-                await Assert.ThrowsAsync<Exception>(() => sut.RunAsync(timerInfo));
+                await Assert.ThrowsAsync<Exception>(() => sut.RunAsync(timerInfo, CancellationToken.None));
 
                 dispatcher.Setup(d => d.DispatchAsync(
-                        It.IsAny<PriceRejectedEvent>(),
+                        It.IsAny<InternalEvent>(),
                         It.IsAny<CancellationToken>()))
-                    .Callback<PriceRejectedEvent, CancellationToken>((_, _) => { });
-                await sut.RunAsync(timerInfo);
+                    .Callback<InternalEvent, CancellationToken>((_, _) => { });
+                await sut.RunAsync(timerInfo, CancellationToken.None);
 
                 outboxMessage = chargesDatabaseReadContext.OutboxMessages.Single(x => x.Id == outboxMessage.Id);
                 outboxMessage.ProcessedDate.Should().Be(now);
+            }
+
+            [Fact]
+            public async Task GivenNewRejectedEvent_WhenRunAsync_ThenRejectedEventIsProcessed()
+            {
+                // Arrange
+                var messageType = typeof(PriceRejectedEvent).FullName!;
+                await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
+                await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
+                var jsonSerializer = new JsonSerializer();
+                var rejectedEvent = new PriceRejectedEventBuilder().Build();
+                var type = messageType;
+                var serializedEvent = jsonSerializer.Serialize(rejectedEvent);
+                var outboxMessage = new OutboxMessageBuilder().WithType(type).WithData(serializedEvent).Build();
+                chargesDatabaseWriteContext.OutboxMessages.Add(outboxMessage);
+                await chargesDatabaseWriteContext.SaveChangesAsync();
+                outboxMessage.ProcessedDate.Should().BeNull();
+
+                // Act
+                await FunctionAsserts.AssertHasExecutedAsync(
+                    Fixture.HostManager, nameof(OutboxMessageProcessorEndpoint));
+
+                // Assert
+                var processedOutboxMessage = chargesDatabaseReadContext.OutboxMessages.Single(x => x.Id == outboxMessage.Id);
+                processedOutboxMessage.ProcessedDate.Should().NotBeNull();
+                processedOutboxMessage.Type.Should().Be(messageType);
             }
 
             private static PriceRejectedEvent CreateChargePriceOperationsRejectedEvent()

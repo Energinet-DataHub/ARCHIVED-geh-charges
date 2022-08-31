@@ -17,6 +17,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using GreenEnergyHub.Charges.Infrastructure.Core.Registration;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification.Charges;
@@ -42,11 +43,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 ChargePriceCimValidationErrorTextFactory>();
             serviceCollection.AddScoped<BundleSpecification<AvailableChargeReceiptData, PriceRejectedEvent>,
                 ChargePriceRejectionBundleSpecification>();
-
-            serviceCollection.AddMessaging()
-                .AddInternalEventDispatcher<PriceConfirmedEvent>(
-                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
-                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargePriceRejectedTopicName));
+            serviceCollection.AddScoped<JsonMessageDeserializer<PriceRejectedEvent>>();
         }
     }
 }

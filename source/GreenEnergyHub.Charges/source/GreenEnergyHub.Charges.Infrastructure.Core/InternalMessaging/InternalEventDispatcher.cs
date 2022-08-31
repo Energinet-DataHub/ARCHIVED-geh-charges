@@ -23,16 +23,15 @@ using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factories;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.InternalMessaging
 {
-    public class InternalEventDispatcher<TInternalEvent> : IInternalEventDispatcher<TInternalEvent>
-        where TInternalEvent : InternalEvent
+    public class InternalEventDispatcher : IInternalEventDispatcher
     {
         private readonly IJsonSerializer _jsonSerializer;
-        private readonly IInternalServiceBusSender<TInternalEvent> _serviceBusSender;
+        private readonly IServiceBusDispatcher _serviceBusSender;
         private readonly IServiceBusMessageFactory _serviceBusMessageFactory;
 
         public InternalEventDispatcher(
             IJsonSerializer jsonSerializer,
-            IInternalServiceBusSender<TInternalEvent> serviceBusSender,
+            IServiceBusDispatcher serviceBusSender,
             IServiceBusMessageFactory serviceBusMessageFactory)
         {
             _jsonSerializer = jsonSerializer;
@@ -40,12 +39,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.InternalMessaging
             _serviceBusMessageFactory = serviceBusMessageFactory;
         }
 
-        public async Task DispatchAsync(TInternalEvent internalEvent, CancellationToken cancellationToken = default)
+        public async Task DispatchAsync(InternalEvent internalEvent, CancellationToken cancellationToken = default)
         {
             if (internalEvent == null) throw new ArgumentNullException(nameof(internalEvent));
             var data = _jsonSerializer.Serialize(internalEvent);
             var serviceBusMessage = _serviceBusMessageFactory.CreateInternalMessage(data);
-            await _serviceBusSender.Instance.SendMessageAsync(serviceBusMessage, cancellationToken).ConfigureAwait(false);
+            await _serviceBusSender.DispatchAsync(serviceBusMessage, cancellationToken).ConfigureAwait(false);
         }
     }
 }

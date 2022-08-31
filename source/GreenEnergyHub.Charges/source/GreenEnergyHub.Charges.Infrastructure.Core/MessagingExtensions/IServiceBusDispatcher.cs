@@ -12,16 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Threading;
+using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions
 {
     // ReSharper disable once UnusedTypeParameter
     // - Type parameter is necessary in order to distinguish instances during resolution of types in dependency container
-    public interface IInternalServiceBusSender<TInternalEvent>
-        where TInternalEvent : InternalEvent
+    public interface IServiceBusDispatcher
     {
-        ServiceBusSender Instance { get; }
+        public Task DispatchAsync(ServiceBusMessage serviceBusMessage, CancellationToken cancellationToken = default);
     }
 }

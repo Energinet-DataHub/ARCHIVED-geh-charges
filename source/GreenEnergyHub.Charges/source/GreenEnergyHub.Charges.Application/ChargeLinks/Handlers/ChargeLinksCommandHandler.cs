@@ -22,11 +22,11 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
     public class ChargeLinksCommandHandler : IChargeLinksCommandHandler
     {
-        private readonly IInternalEventDispatcher<ChargeLinksReceivedEvent> _internalEventDispatcher;
+        private readonly IInternalEventDispatcher _internalEventDispatcher;
         private readonly IClock _clock;
 
         public ChargeLinksCommandHandler(
-            IInternalEventDispatcher<ChargeLinksReceivedEvent> internalEventDispatcher,
+            IInternalEventDispatcher internalEventDispatcher,
             IClock clock)
         {
             _internalEventDispatcher = internalEventDispatcher;

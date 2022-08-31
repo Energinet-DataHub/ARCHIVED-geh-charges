@@ -22,11 +22,11 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
     public class ChargeLinksDataAvailableNotifiedPublisher : IChargeLinksDataAvailableNotifiedPublisher
     {
-        private readonly IInternalEventDispatcher<ChargeLinksDataAvailableNotifiedEvent> _internalEventDispatcher;
+        private readonly IInternalEventDispatcher _internalEventDispatcher;
         private readonly IChargeLinksDataAvailableNotifiedEventFactory _chargeLinksDataAvailableNotifiedEventFactory;
 
         public ChargeLinksDataAvailableNotifiedPublisher(
-            IInternalEventDispatcher<ChargeLinksDataAvailableNotifiedEvent> internalEventDispatcher,
+            IInternalEventDispatcher internalEventDispatcher,
             IChargeLinksDataAvailableNotifiedEventFactory chargeLinksDataAvailableNotifiedEventFactory)
         {
             _internalEventDispatcher = internalEventDispatcher;

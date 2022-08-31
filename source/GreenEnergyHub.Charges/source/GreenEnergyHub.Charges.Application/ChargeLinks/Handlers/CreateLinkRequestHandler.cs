@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
     {
         private readonly IDefaultChargeLinkRepository _defaultChargeLinkRepository;
         private readonly IChargeLinksCommandFactory _chargeLinksCommandFactory;
-        private readonly IInternalEventDispatcher<ChargeLinksReceivedEvent> _internalEventDispatcher;
+        private readonly IInternalEventDispatcher _internalEventDispatcher;
         private readonly IClock _clock;
         private readonly IMeteringPointRepository _meteringPointRepository;
         private readonly ICreateDefaultChargeLinksReplier _createDefaultChargeLinksReplier;
@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
         public CreateLinkRequestHandler(
             IDefaultChargeLinkRepository defaultChargeLinkRepository,
             IChargeLinksCommandFactory chargeLinksCommandFactory,
-            IInternalEventDispatcher<ChargeLinksReceivedEvent> internalEventDispatcher,
+            IInternalEventDispatcher internalEventDispatcher,
             IClock clock,
             IMeteringPointRepository meteringPointRepository,
             ICreateDefaultChargeLinksReplier createDefaultChargeLinksReplier,
