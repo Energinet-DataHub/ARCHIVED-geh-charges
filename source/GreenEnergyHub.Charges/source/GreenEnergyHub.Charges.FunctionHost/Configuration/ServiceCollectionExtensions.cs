@@ -39,31 +39,33 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         /// <summary>
         /// Adds registrations of JwtTokenMiddleware and corresponding dependencies.
         /// </summary>
-        /// <param name="serviceCollection">ServiceCollection container</param>
+        /// <param name="services">ServiceCollection container</param>
         /// <param name="metadataAddress">OpenID Configuration URL used for acquiring metadata</param>
         /// <param name="audience">Audience used for validation of JWT token</param>
-        public static void AddJwtTokenSecurity(this IServiceCollection serviceCollection, string metadataAddress, string audience)
+        public static IServiceCollection AddJwtTokenSecurity(this IServiceCollection services, string metadataAddress, string audience)
         {
-            serviceCollection.TryAddSingleton<ISecurityTokenValidator, JwtSecurityTokenHandler>();
-            serviceCollection.TryAddSingleton<IConfigurationManager<OpenIdConnectConfiguration>>(_ =>
+            services.TryAddSingleton<ISecurityTokenValidator, JwtSecurityTokenHandler>();
+            services.TryAddSingleton<IConfigurationManager<OpenIdConnectConfiguration>>(_ =>
                 new ConfigurationManager<OpenIdConnectConfiguration>(
                     metadataAddress,
                     new OpenIdConnectConfigurationRetriever()));
 
-            serviceCollection.TryAddScoped<IJwtTokenValidator>(sp =>
+            services.TryAddScoped<IJwtTokenValidator>(sp =>
                 new JwtTokenValidator(
                     sp.GetRequiredService<ISecurityTokenValidator>(),
                     sp.GetRequiredService<IConfigurationManager<OpenIdConnectConfiguration>>(),
                     audience));
 
-            serviceCollection.TryAddScoped<IClaimsPrincipalAccessor, ClaimsPrincipalAccessor>();
-            serviceCollection.TryAddScoped<ClaimsPrincipalContext>();
+            services.TryAddScoped<ClaimsPrincipalContext>();
+            services.TryAddScoped<IClaimsPrincipalAccessor, ClaimsPrincipalAccessor>();
 
-            serviceCollection.TryAddScoped<JwtTokenMiddleware>(sp =>
+            services.TryAddScoped<JwtTokenMiddleware>(sp =>
                 new JwtTokenMiddleware(
                     sp.GetRequiredService<ClaimsPrincipalContext>(),
                     sp.GetRequiredService<IJwtTokenValidator>(),
                     _functionNamesToExclude));
+
+            return services;
         }
 
         /// <summary>
