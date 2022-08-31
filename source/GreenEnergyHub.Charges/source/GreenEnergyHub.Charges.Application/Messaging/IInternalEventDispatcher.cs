@@ -20,6 +20,6 @@ namespace GreenEnergyHub.Charges.Application.Messaging
 {
     public interface IInternalEventDispatcher
     {
-        Task DispatchAsync(InternalEvent internalEvent, CancellationToken cancellationToken = default);
+        Task DispatchAsync<T>(T internalEvent, CancellationToken cancellationToken = default);
     }
 }

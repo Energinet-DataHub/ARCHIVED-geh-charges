@@ -17,7 +17,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.JsonSerialization;
 using GreenEnergyHub.Charges.Application.Messaging;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factories;
 
@@ -39,7 +38,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.InternalMessaging
             _serviceBusMessageFactory = serviceBusMessageFactory;
         }
 
-        public async Task DispatchAsync(InternalEvent internalEvent, CancellationToken cancellationToken = default)
+        public async Task DispatchAsync<T>(T internalEvent, CancellationToken cancellationToken = default)
         {
             if (internalEvent == null) throw new ArgumentNullException(nameof(internalEvent));
             var data = _jsonSerializer.Serialize(internalEvent);
