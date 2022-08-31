@@ -83,6 +83,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 // Assert
                 var isMessageReceivedByQueue = isMessageReceived.MessageAwaiter!.Wait(TimeSpan.FromSeconds(20));
                 isMessageReceivedByQueue.Should().BeTrue();
+                isMessageReceived.ApplicationProperties![MessageMetaDataConstants.CorrelationId]
+                    .Should().Be(correlationId);
             }
 
             private ServiceBusMessage CreateServiceBusMessage(ChargeLinksCommand command, string correlationId)
