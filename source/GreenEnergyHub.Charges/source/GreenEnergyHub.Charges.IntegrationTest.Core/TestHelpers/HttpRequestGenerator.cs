@@ -16,6 +16,7 @@ using System;
 using System.Net.Http;
 using System.Text;
 using GreenEnergyHub.Charges.Core.DateTime;
+using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using GreenEnergyHub.Iso8601;
 using NodaTime;
 using NodaTime.Testing;
@@ -40,8 +41,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
             var request = CreateHttpPostRequest(endpointUrl, testFilePath, zonedDateTimeService);
             var correlationId = CorrelationIdGenerator.Create();
 
-            request.Headers.Add("Authorization", $"Bearer {accessToken}");
-            request.Headers.Add("CorrelationId", correlationId);
+            request.Headers.Add(HttpRequestHeaderConstants.Authorization, $"Bearer {accessToken}");
+            request.Headers.Add(HttpRequestHeaderConstants.CorrelationId, correlationId);
 
             return (request, correlationId);
         }
