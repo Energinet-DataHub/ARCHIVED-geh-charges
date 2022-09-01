@@ -13,9 +13,9 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.FunctionApp.TestCommon.Configuration.B2C;
 using Microsoft.Identity.Client;
 
 namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
@@ -24,26 +24,27 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
     {
         private readonly string _localTimeZoneName;
 
-        public B2CTestClient B2CTestClient { get; }
+        public B2CClientAppSettings B2CClientAppSettings { get; }
 
         private AuthenticationResult? AuthenticationResult { get; set; }
 
-        public AuthorizedTestActor(B2CTestClient b2CTestClient, string localTimeZoneName)
+        public AuthorizedTestActor(B2CClientAppSettings b2cClientAppSettings, string localTimeZoneName)
         {
-            ArgumentNullException.ThrowIfNull(b2CTestClient);
+            ArgumentNullException.ThrowIfNull(b2cClientAppSettings);
             if (string.IsNullOrWhiteSpace(localTimeZoneName))
                 throw new ArgumentException($"'{nameof(localTimeZoneName)}' cannot be null or whitespace.", nameof(localTimeZoneName));
 
-            B2CTestClient = b2CTestClient;
+            B2CClientAppSettings = b2cClientAppSettings;
             _localTimeZoneName = localTimeZoneName;
         }
 
-        public async Task AddAuthenticationAsync(IEnumerable<string> backendAppScope, string b2CTenantId)
+        public async Task AddAuthenticationAsync(string b2cTenantId, B2CAppSettings backendAppSettings)
         {
-            var backendAuthenticationClient = new BackendAuthenticationClient(
-                backendAppScope,
-                B2CTestClient.ClientCredentialsSettings,
-                b2CTenantId);
+            var backendAuthenticationClient = new B2CAppAuthenticationClient(
+                b2cTenantId,
+                backendAppSettings,
+                B2CClientAppSettings);
+
             AuthenticationResult = await backendAuthenticationClient.GetAuthenticationTokenAsync();
         }
 

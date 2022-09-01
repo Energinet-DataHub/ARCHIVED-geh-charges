@@ -22,12 +22,12 @@ using Azure.Storage.Blobs;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.Azurite;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.Configuration;
+using Energinet.DataHub.Core.FunctionApp.TestCommon.Configuration.B2C;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.FunctionAppHost;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ListenerMock;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ResourceProvider;
 using Energinet.DataHub.MessageHub.IntegrationTesting;
 using GreenEnergyHub.Charges.FunctionHost.Common;
-using GreenEnergyHub.Charges.IntegrationTest.Core.Authorization;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
@@ -44,7 +44,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             ChargesDatabaseManager = new ChargesDatabaseManager();
             MessageHubDatabaseManager = new MessageHubDatabaseManager(ChargesDatabaseManager.ConnectionString);
             AuthorizationConfiguration = AuthorizationConfigurationData.CreateAuthorizationConfiguration();
-            AuthorizedTestActors = CreateAuthorizedTestActors(AuthorizationConfiguration.B2CTestClients);
+            AuthorizedTestActors = CreateAuthorizedTestActors(AuthorizationConfiguration.ClientApps);
             AsSystemOperator = SetTestActor(AuthorizationConfigurationData.SystemOperator);
             AsGridAccessProvider = SetTestActor(AuthorizationConfigurationData.GridAccessProvider8100000000030);
             ServiceBusResourceProvider = new ServiceBusResourceProvider(
@@ -95,7 +95,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
 
         public AuthorizedTestActor AsSystemOperator { get; }
 
-        private AuthorizationConfiguration AuthorizationConfiguration { get; }
+        private B2CAuthorizationConfiguration AuthorizationConfiguration { get; }
 
         private IEnumerable<AuthorizedTestActor> AuthorizedTestActors { get; }
 
@@ -140,8 +140,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.DataHubSenderConnectionString, ServiceBusResourceProvider.ConnectionString);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.DataHubListenerConnectionString, ServiceBusResourceProvider.ConnectionString);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.DataHubManagerConnectionString, ServiceBusResourceProvider.ConnectionString);
-            Environment.SetEnvironmentVariable(EnvironmentSettingNames.B2CTenantId, AuthorizationConfiguration.B2CTenantId);
-            Environment.SetEnvironmentVariable(EnvironmentSettingNames.BackendServiceAppId, AuthorizationConfiguration.BackendAppId);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.B2CTenantId, AuthorizationConfiguration.TenantId);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.BackendServiceAppId, AuthorizationConfiguration.BackendApp.AppId);
 
             ChargeLinksAcceptedTopic = await ServiceBusResourceProvider
                 .BuildTopic(ChargesServiceBusResourceNames.ChargeLinksAcceptedTopicKey)
@@ -311,10 +311,10 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
         }
 
         private IEnumerable<AuthorizedTestActor> CreateAuthorizedTestActors(
-            IEnumerable<B2CTestClient> b2CTestClients)
+            IReadOnlyDictionary<string, B2CClientAppSettings> b2cClientAppSettings)
         {
-            return b2CTestClients
-                .Select(b2CTestClient => new AuthorizedTestActor(b2CTestClient, LocalTimeZoneName))
+            return b2cClientAppSettings
+                .Select(kv => new AuthorizedTestActor(kv.Value, LocalTimeZoneName))
                 .ToList();
         }
 
@@ -323,14 +323,14 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             foreach (var testActor in AuthorizedTestActors)
             {
                 await testActor.AddAuthenticationAsync(
-                    AuthorizationConfiguration.BackendAppScope,
-                    AuthorizationConfiguration.B2CTenantId);
+                    AuthorizationConfiguration.TenantId,
+                    AuthorizationConfiguration.BackendApp);
             }
         }
 
         private AuthorizedTestActor SetTestActor(string testActorName)
         {
-            return AuthorizedTestActors.Single(a => a.B2CTestClient.ClientName == testActorName);
+            return AuthorizedTestActors.Single(a => a.B2CClientAppSettings.Name == testActorName);
         }
 
         private async Task InitializeMessageHubAsync()

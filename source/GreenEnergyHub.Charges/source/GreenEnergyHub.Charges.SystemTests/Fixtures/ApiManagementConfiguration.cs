@@ -12,10 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Collections.Generic;
-using Energinet.DataHub.Core.FunctionApp.TestCommon.Configuration;
-using GreenEnergyHub.Charges.IntegrationTest.Core.Authorization;
+using Energinet.DataHub.Core.FunctionApp.TestCommon.Configuration.B2C;
 using Microsoft.Extensions.Configuration;
 
 namespace GreenEnergyHub.Charges.SystemTests.Fixtures
@@ -33,57 +31,21 @@ namespace GreenEnergyHub.Charges.SystemTests.Fixtures
     {
         public ApiManagementConfiguration()
         {
-            const string azureSecretsKeyVaultUrlKey = "AZURE_SYSTEMTESTS_KEYVAULT_URL";
-            const string systemtestLocalSettingsJson = "systemtest.local.settings.json";
-
-            Environment = Root.GetValue<string>("ENVIRONMENT_SHORT") +
-                          Root.GetValue<string>("ENVIRONMENT_INSTANCE");
+            var environment =
+                Root.GetValue<string>("ENVIRONMENT_SHORT") +
+                Root.GetValue<string>("ENVIRONMENT_INSTANCE");
 
             var clientNames = new List<string> { Root.GetValue<string>("CLIENT_NAME") };
 
-            var keyVaultUrl = Root.GetValue<string>(azureSecretsKeyVaultUrlKey);
-            KeyVaultConfiguration = BuildKeyVaultConfigurationRoot(keyVaultUrl);
-
-            ApiManagementBaseAddress = KeyVaultConfiguration.GetValue<Uri>(
-                BuildApiManagementEnvironmentSecretName(Environment, "host-url"));
-
-            AuthorizationConfiguration = new AuthorizationConfiguration(
-                clientNames, Environment, systemtestLocalSettingsJson, azureSecretsKeyVaultUrlKey);
+            AuthorizationConfiguration = new B2CAuthorizationConfiguration(
+                usedForSystemTests: true,
+                environment,
+                clientNames);
         }
-
-        /// <summary>
-        /// Environment short name with instance indication.
-        /// </summary>
-        public string Environment { get; }
-
-        /// <summary>
-        /// The base address for the API Management in the configured environment.
-        /// </summary>
-        public Uri ApiManagementBaseAddress { get; }
 
         /// <summary>
         /// Configuration for Azure Authorization
         /// </summary>
-        public AuthorizationConfiguration AuthorizationConfiguration { get; }
-
-        /// <summary>
-        /// Can be used to extract secrets from the Key Vault.
-        /// </summary>
-        private IConfigurationRoot KeyVaultConfiguration { get; }
-
-        /// <summary>
-        /// Load settings from key vault.
-        /// </summary>
-        private static IConfigurationRoot BuildKeyVaultConfigurationRoot(string keyVaultUrl)
-        {
-            return new ConfigurationBuilder()
-                .AddAuthenticatedAzureKeyVault(keyVaultUrl)
-                .Build();
-        }
-
-        private static string BuildApiManagementEnvironmentSecretName(string environment, string secret)
-        {
-            return $"APIM-{environment}-{secret}";
-        }
+        public B2CAuthorizationConfiguration AuthorizationConfiguration { get; }
     }
 }
