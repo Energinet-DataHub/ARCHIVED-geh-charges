@@ -41,7 +41,7 @@ limitations under the License.
         <PackageReference Include="AutoFixture" Version="4.17.0" />
         <PackageReference Include="AutoFixture.AutoMoq" Version="4.17.0" />
         <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.9.0" />
-        <PackageReference Include="Energinet.DataHub.Core.FunctionApp.TestCommon" Version="3.3.0-alpha-260" />
+        <PackageReference Include="Energinet.DataHub.Core.FunctionApp.TestCommon" Version="3.3.0" />
         <PackageReference Include="Energinet.DataHub.MessageHub.Client" Version="3.0.3" />
         <PackageReference Include="Energinet.DataHub.MessageHub.IntegrationTesting" Version="3.0.3" />
         <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
