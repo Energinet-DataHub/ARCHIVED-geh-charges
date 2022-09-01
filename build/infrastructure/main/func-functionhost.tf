@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 module "func_functionhost" {
-  source                                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/function-app?ref=7.0.0"
+  source                                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/function-app?ref=8.2.0"
 
   name                                      = "functionhost"
   project_name                              = var.domain_name_short
@@ -31,6 +31,16 @@ module "func_functionhost" {
   health_check_alert_enabled                = var.enable_health_check_alerts
   dotnet_framework_version                  = "6"
   use_dotnet_isolated_runtime               = true
+  role_assignments                          = [
+      {
+        resource_id           = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=st-market-operator-logs-id)"
+        role_definition_name  = "Storage Blob Data Contributor"
+      },
+      {
+        resource_id           = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=st-market-operator-response-id)"
+        role_definition_name  = "Storage Blob Data Contributor"
+      }
+    ]
   app_settings                              = {
     LOCAL_TIMEZONENAME                                              = "Europe/Copenhagen"
     CURRENCY                                                        = "DKK"
