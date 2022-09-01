@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using Energinet.DataHub.Charges.Clients.DefaultChargeLink;
@@ -40,24 +39,24 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
         public async Task SendAsync_WhenAnyArgumentIsNull_ThrowsArgumentNullException(
             string meteringPointId,
             string correlationId,
-            [NotNull] [Frozen] Mock<IServiceBusRequestSenderProvider> serviceBusRequestSenderProviderMock)
+            [Frozen] Mock<IServiceBusRequestSenderProvider> serviceBusRequestSenderProviderMock)
         {
             // Arrange
-            var createDefaultChargeLinksDto = meteringPointId != null ? new RequestDefaultChargeLinksForMeteringPointDto(meteringPointId) : null;
+            var createDefaultChargeLinksDto = new RequestDefaultChargeLinksForMeteringPointDto(meteringPointId);
 
             var sut = new DefaultChargeLinkClient(serviceBusRequestSenderProviderMock.Object);
 
             // Act + Assert
             await Assert.ThrowsAsync<ArgumentNullException>(() => sut
-                .CreateDefaultChargeLinksRequestAsync(createDefaultChargeLinksDto!, correlationId))
+                .CreateDefaultChargeLinksRequestAsync(createDefaultChargeLinksDto, correlationId))
                 .ConfigureAwait(false);
         }
 
         [Theory]
         [InlineAutoDomainData]
         public async Task CreateDefaultChargeLinksRequestAsync_WhenInputIsValid_SendsMessage(
-            [NotNull] [Frozen] Mock<IServiceBusRequestSenderProvider> serviceBusRequestSenderProviderMock,
-            [NotNull] [Frozen] Mock<IServiceBusRequestSender> serviceBusRequestSenderMock)
+            [Frozen] Mock<IServiceBusRequestSenderProvider> serviceBusRequestSenderProviderMock,
+            [Frozen] Mock<IServiceBusRequestSender> serviceBusRequestSenderMock)
         {
             // Arrange
             serviceBusRequestSenderProviderMock.Setup(x => x

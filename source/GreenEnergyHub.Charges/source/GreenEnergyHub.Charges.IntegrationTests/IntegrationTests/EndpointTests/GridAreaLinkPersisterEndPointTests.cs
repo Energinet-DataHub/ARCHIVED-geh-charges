@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
@@ -21,6 +22,7 @@ using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Parsers.GridArea;
 using FluentAssertions;
 using GreenEnergyHub.Charges.FunctionHost.MarketParticipant;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
@@ -86,7 +88,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 var message = gridAreaUpdatedIntegrationEventParser.ParseToSharedIntegrationEvent(gridAreaIntegrationEvent);
 
                 var correlationId = CorrelationIdGenerator.Create();
-                var serviceBusMessage = new ServiceBusMessage(message) { CorrelationId = correlationId };
+                var serviceBusMessage = new ServiceBusMessage(message)
+                {
+                    CorrelationId = correlationId,
+                    ApplicationProperties =
+                    {
+                        new KeyValuePair<string, object>(MessageMetaDataConstants.CorrelationId, correlationId),
+                    },
+                };
 
                 return serviceBusMessage;
             }
