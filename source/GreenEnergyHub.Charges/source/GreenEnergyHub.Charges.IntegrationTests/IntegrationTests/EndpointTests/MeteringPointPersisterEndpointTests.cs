@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
@@ -138,12 +139,18 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 };
 
                 var byteArray = message.ToByteArray();
-                var serviceBusMessage = new ServiceBusMessage(byteArray) { CorrelationId = correlationId };
-                serviceBusMessage.ApplicationProperties.Add(MessageMetaDataConstants.OperationTimestamp, date.ToUniversalTime());
-                serviceBusMessage.ApplicationProperties.Add(MessageMetaDataConstants.CorrelationId, correlationId);
-                serviceBusMessage.ApplicationProperties.Add(MessageMetaDataConstants.MessageVersion, 1);
-                serviceBusMessage.ApplicationProperties.Add(MessageMetaDataConstants.MessageType, "MeteringPointCreated");
-                serviceBusMessage.ApplicationProperties.Add(MessageMetaDataConstants.EventIdentification, "2542ed0d242e46b68b8b803e93ffbf7b");
+                var serviceBusMessage = new ServiceBusMessage(byteArray)
+                {
+                    CorrelationId = correlationId,
+                    ApplicationProperties =
+                    {
+                        new KeyValuePair<string, object>(MessageMetaDataConstants.OperationTimestamp, date.ToUniversalTime()),
+                        new KeyValuePair<string, object>(MessageMetaDataConstants.CorrelationId, correlationId),
+                        new KeyValuePair<string, object>(MessageMetaDataConstants.MessageVersion, 1),
+                        new KeyValuePair<string, object>(MessageMetaDataConstants.MessageType, "MeteringPointCreated"),
+                        new KeyValuePair<string, object>(MessageMetaDataConstants.EventIdentification, "2542ed0d242e46b68b8b803e93ffbf7b"),
+                    },
+                };
 
                 return (serviceBusMessage, correlationId);
             }
