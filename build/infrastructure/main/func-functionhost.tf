@@ -33,11 +33,11 @@ module "func_functionhost" {
   use_dotnet_isolated_runtime               = true
   role_assignments                          = [
       {
-        resource_id           = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=st-market-operator-logs-id)"
+        resource_id           = data.azurerm_key_vault_secret.st_market_operator_logs_id.value
         role_definition_name  = "Storage Blob Data Contributor"
       },
       {
-        resource_id           = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=st-market-operator-response-id)"
+        resource_id           = data.azurerm_key_vault_secret.st_market_operator_response_id.value
         role_definition_name  = "Storage Blob Data Contributor"
       }
     ]
