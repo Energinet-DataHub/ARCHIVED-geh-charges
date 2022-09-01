@@ -52,9 +52,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
         }
 
         [Function(FunctionName)]
-        public async Task RunAsync(
-            [TimerTrigger(TimerTriggerTimeConstants.Every10Seconds)] TimerInfo timerInfo,
-            CancellationToken cancellationToken)
+        public async Task RunAsync([TimerTrigger(TimerTriggerTimeConstants.Every10Seconds)] TimerInfo timerInfo)
         {
             OutboxMessage? outboxMessage;
 
@@ -62,7 +60,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
             {
                 var internalEvent = _outboxMessageParser.Parse(outboxMessage.Type, outboxMessage.Data);
                 _correlationContext.SetId(outboxMessage.CorrelationId);
-                await _internalEventDispatcher.DispatchAsync(internalEvent, cancellationToken).ConfigureAwait(false);
+                await _internalEventDispatcher.DispatchAsync(internalEvent).ConfigureAwait(false);
                 outboxMessage.SetProcessed(_clock.GetCurrentInstant());
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             }

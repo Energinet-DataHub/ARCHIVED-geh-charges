@@ -159,13 +159,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                         It.IsAny<InternalEvent>(),
                         It.IsAny<CancellationToken>())).Throws<Exception>();
 
-                await Assert.ThrowsAsync<Exception>(() => sut.RunAsync(timerInfo, CancellationToken.None));
+                await Assert.ThrowsAsync<Exception>(() => sut.RunAsync(timerInfo));
 
                 dispatcher.Setup(d => d.DispatchAsync(
                         It.IsAny<InternalEvent>(),
                         It.IsAny<CancellationToken>()))
                     .Callback<InternalEvent, CancellationToken>((_, _) => { });
-                await sut.RunAsync(timerInfo, CancellationToken.None);
+                await sut.RunAsync(timerInfo);
 
                 outboxMessage = chargesDatabaseReadContext.OutboxMessages.Single(x => x.Id == outboxMessage.Id);
                 outboxMessage.ProcessedDate.Should().Be(now);
