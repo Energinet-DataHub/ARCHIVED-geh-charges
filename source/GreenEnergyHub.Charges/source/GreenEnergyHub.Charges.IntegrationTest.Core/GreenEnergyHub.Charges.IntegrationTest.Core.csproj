@@ -24,18 +24,18 @@ limitations under the License.
     <LangVersion>9</LangVersion>
     <OutputType>Library</OutputType>
   </PropertyGroup>
-  
+
   <ItemGroup>
     <ProjectReference Include="..\GreenEnergyHub.Charges.ApplyDBMigrationsApp\GreenEnergyHub.Charges.ApplyDBMigrationsApp.csproj" />
     <ProjectReference Include="..\GreenEnergyHub.Charges.FunctionHost\GreenEnergyHub.Charges.FunctionHost.csproj" />
     <ProjectReference Include="..\GreenEnergyHub.Charges.WebApi\GreenEnergyHub.Charges.WebApi.csproj" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <PackageReference Include="AutoFixture" Version="4.17.0" />
     <PackageReference Include="AutoFixture.AutoMoq" Version="4.17.0" />
     <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.10.0" />
-    <PackageReference Include="Energinet.DataHub.Core.FunctionApp.TestCommon" Version="3.2.2" />
+    <PackageReference Include="Energinet.DataHub.Core.FunctionApp.TestCommon" Version="3.3.0" />
     <PackageReference Include="Energinet.DataHub.MessageHub.Client" Version="3.0.4" />
     <PackageReference Include="Energinet.DataHub.MessageHub.IntegrationTesting" Version="3.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
@@ -69,7 +69,7 @@ limitations under the License.
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
-  
+
   <ItemGroup>
     <Content Include="TestFiles\ChargeLinks\ChargeLinkDocumentWhereSenderIdDoNotMatchAuthorizedActorId.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

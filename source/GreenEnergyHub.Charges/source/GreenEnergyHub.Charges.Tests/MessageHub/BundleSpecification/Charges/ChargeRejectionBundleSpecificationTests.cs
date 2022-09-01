@@ -26,7 +26,6 @@ using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim;
 using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeReceipt;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Charges.TestCore.TestHelpers;
 using GreenEnergyHub.Charges.Tests.TestFiles;
 using Moq;
 using NodaTime;

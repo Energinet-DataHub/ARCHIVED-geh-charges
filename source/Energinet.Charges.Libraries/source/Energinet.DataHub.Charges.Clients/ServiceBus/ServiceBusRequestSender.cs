@@ -35,7 +35,11 @@ namespace Energinet.DataHub.Charges.Clients.ServiceBus
             await _serviceBusSender.SendMessageAsync(new ServiceBusMessage
             {
                 Body = new BinaryData(data),
-                ApplicationProperties = { new KeyValuePair<string, object>("ReplyTo", _replyToQueueName) },
+                ApplicationProperties =
+                {
+                    new KeyValuePair<string, object>("ReplyTo", _replyToQueueName),
+                    new KeyValuePair<string, object>("OperationCorrelationId", correlationId),
+                },
                 CorrelationId = correlationId,
             }).ConfigureAwait(false);
         }

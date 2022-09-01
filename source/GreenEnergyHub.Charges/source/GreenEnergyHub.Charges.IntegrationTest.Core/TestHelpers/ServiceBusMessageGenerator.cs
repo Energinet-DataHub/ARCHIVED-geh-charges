@@ -29,11 +29,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
             var jsonSerializer = new JsonSerializer();
             var body = jsonSerializer.Serialize(internalEvent);
 
-            var serviceBusMessage = new ServiceBusMessage(body)
-            {
-                CorrelationId = correlationId,
-            };
-
+            var serviceBusMessage = new ServiceBusMessage(body) { CorrelationId = correlationId };
             foreach (var applicationProperty in applicationProperties)
             {
                 serviceBusMessage.ApplicationProperties.Add(applicationProperty.Key, applicationProperty.Value);

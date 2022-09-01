@@ -36,6 +36,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon
                 {
                     result.Body = receivedMessage.Body;
                     result.CorrelationId = receivedMessage.CorrelationId;
+                    result.ApplicationProperties = receivedMessage.ApplicationProperties;
                     return Task.CompletedTask;
                 }).ConfigureAwait(false);
             return result;
