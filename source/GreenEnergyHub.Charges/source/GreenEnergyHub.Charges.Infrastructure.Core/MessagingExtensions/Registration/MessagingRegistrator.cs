@@ -14,9 +14,12 @@
 
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Core.Messaging.Transport;
+using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Application.Messaging;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 using GreenEnergyHub.Charges.Infrastructure.Core.InternalMessaging;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
+using GreenEnergyHub.Charges.Infrastructure.Core.Registration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration
@@ -59,20 +62,15 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registr
         /// Which is used when sending messages within of the Charges domain.
         /// </summary>
         public MessagingRegistrator AddInternalEventDispatcher(
-            string serviceBusConnectionString,
-            string internalServiceBusTopicName)
+            ServiceBusEventMapper serviceBusEventMapper,
+            ServiceBusClient serviceBusClient)
         {
             _services.AddScoped<IInternalEventDispatcher, InternalEventDispatcher>();
             _services.AddScoped<IServiceBusDispatcher, ServiceBusDispatcher>();
 
             // Must be a singleton as per documentation of ServiceBusClient and ServiceBusSender
             _services.AddSingleton<IServiceBusDispatcher>(
-                _ =>
-                {
-                    var client = new ServiceBusClient(serviceBusConnectionString);
-                    var instance = client.CreateSender(internalServiceBusTopicName);
-                    return new ServiceBusDispatcher(instance);
-                });
+                _ => new ServiceBusDispatcher(serviceBusClient, serviceBusEventMapper));
 
             return this;
         }

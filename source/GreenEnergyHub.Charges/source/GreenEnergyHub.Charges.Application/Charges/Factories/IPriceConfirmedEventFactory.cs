@@ -16,35 +16,21 @@ using System.Collections.Generic;
 using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
-using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Factories
 {
     /// <summary>
-    /// Factory for creating <see cref="PriceRejectedEvent"/>
+    /// Factory for creating <see cref="PriceConfirmedEvent"/>
     /// </summary>
-    public interface IChargeEventFactory
+    public interface IPriceConfirmedEventFactory
     {
-        /// <summary>
-        /// Factory method for creating <see cref="PriceRejectedEvent"/> based on rejected operations and
-        /// corresponding validation results.
-        /// </summary>
-        /// <param name="document">Document containing information about market participant causing the event</param>
-        /// <param name="operations">Operations to be rejected</param>
-        /// <param name="validationResult">Validation results containing reasons for rejection</param>
-        /// <returns><see cref="PriceRejectedEvent"/></returns>
-        PriceRejectedEvent CreatePriceRejectedEvent(
-            DocumentDto document,
-            IReadOnlyCollection<ChargePriceOperationDto> operations,
-            ValidationResult validationResult);
-
         /// <summary>
         /// Factory method for creating <see cref="PriceConfirmedEvent"/> based on confirmed operations
         /// </summary>
         /// <param name="document">Document containing information about market participant causing the event</param>
         /// <param name="operations">Operations to be confirmed</param>
         /// <returns><see cref="PriceRejectedEvent"/></returns>
-        PriceConfirmedEvent CreatePriceConfirmedEvent(
+        PriceConfirmedEvent Create(
             DocumentDto document,
             IReadOnlyCollection<ChargePriceOperationDto> operations);
     }

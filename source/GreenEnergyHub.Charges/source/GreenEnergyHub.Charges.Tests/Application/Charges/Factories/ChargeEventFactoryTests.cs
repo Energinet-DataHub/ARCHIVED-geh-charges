@@ -34,12 +34,12 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Factories
             DocumentDtoBuilder documentDtoBuilder,
             ChargePriceOperationDtoBuilder chargePriceOperationDtoBuilder,
             ValidationResult validationResult,
-            ChargeEventFactory sut)
+            PriceRejectedEventFactory sut)
         {
             // Act
             var document = documentDtoBuilder.Build();
             var operations = new List<ChargePriceOperationDto> { chargePriceOperationDtoBuilder.Build() };
-            var actual = sut.CreatePriceRejectedEvent(document, operations, validationResult);
+            var actual = sut.Create(document, operations, validationResult);
 
             // Assert
             actual.Should().NotContainNullEnumerable();
@@ -50,12 +50,12 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Factories
         public void GivenCreatePriceConfirmationEvent_WhenValidConfirmation_HasNoNullsOrEmptyCollections(
             DocumentDtoBuilder documentDtoBuilder,
             ChargePriceOperationDtoBuilder chargePriceOperationDtoBuilder,
-            ChargeEventFactory sut)
+            PriceConfirmedEventFactory sut)
         {
             // Act
             var document = documentDtoBuilder.Build();
             var operations = new List<ChargePriceOperationDto> { chargePriceOperationDtoBuilder.Build() };
-            var actual = sut.CreatePriceConfirmedEvent(document, operations);
+            var actual = sut.Create(document, operations);
 
             // Assert
             actual.Should().NotContainNullEnumerable();

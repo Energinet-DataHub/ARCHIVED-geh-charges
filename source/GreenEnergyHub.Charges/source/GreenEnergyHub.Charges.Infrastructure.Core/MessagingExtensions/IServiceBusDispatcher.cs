@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
@@ -22,6 +23,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions
     // - Type parameter is necessary in order to distinguish instances during resolution of types in dependency container
     public interface IServiceBusDispatcher
     {
-        public Task DispatchAsync(ServiceBusMessage serviceBusMessage, CancellationToken cancellationToken = default);
+        public Task DispatchAsync(ServiceBusMessage serviceBusMessage, Type eventType, CancellationToken cancellationToken = default);
     }
 }

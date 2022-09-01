@@ -39,7 +39,8 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         private readonly IInputValidator<ChargePriceOperationDto> _inputValidator;
         private readonly IDomainEventPublisher _domainEventPublisher;
         private readonly ILogger _logger;
-        private readonly IChargeEventFactory _chargeEventFactory;
+        private readonly IPriceConfirmedEventFactory _priceConfirmedEventFactory;
+        private readonly IPriceRejectedEventFactory _priceRejectedEventFactory;
 
         public ChargePriceEventHandler(
             IChargeRepository chargeRepository,
@@ -47,13 +48,15 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             IInputValidator<ChargePriceOperationDto> inputValidator,
             IDomainEventPublisher domainEventPublisher,
             ILoggerFactory loggerFactory,
-            IChargeEventFactory chargeEventFactory)
+            IPriceConfirmedEventFactory priceConfirmedEventFactory,
+            IPriceRejectedEventFactory priceRejectedEventFactory)
         {
             _chargeRepository = chargeRepository;
             _marketParticipantRepository = marketParticipantRepository;
             _inputValidator = inputValidator;
             _domainEventPublisher = domainEventPublisher;
-            _chargeEventFactory = chargeEventFactory;
+            _priceConfirmedEventFactory = priceConfirmedEventFactory;
+            _priceRejectedEventFactory = priceRejectedEventFactory;
             _logger = loggerFactory.CreateLogger(nameof(ChargePriceEventHandler));
         }
 
@@ -148,7 +151,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             IReadOnlyCollection<ChargePriceOperationDto> operationsToBeConfirmed)
         {
             if (!operationsToBeConfirmed.Any()) return;
-            var confirmedEvent = _chargeEventFactory.CreatePriceConfirmedEvent(document, operationsToBeConfirmed);
+            var confirmedEvent = _priceConfirmedEventFactory.Create(document, operationsToBeConfirmed);
             _domainEventPublisher.Publish(confirmedEvent);
         }
 
@@ -158,14 +161,8 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             IList<IValidationRuleContainer> rejectionRules)
         {
             if (!operationsToBeRejected.Any()) return;
-
             var validationResult = ValidationResult.CreateFailure(rejectionRules);
-
-            var rejectedEvent = _chargeEventFactory.CreatePriceRejectedEvent(
-                document,
-                operationsToBeRejected,
-                validationResult);
-
+            var rejectedEvent = _priceRejectedEventFactory.Create(document, operationsToBeRejected, validationResult);
             _domainEventPublisher.Publish(rejectedEvent);
         }
 

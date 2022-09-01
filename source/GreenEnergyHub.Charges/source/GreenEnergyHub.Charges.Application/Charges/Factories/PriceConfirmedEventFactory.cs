@@ -22,30 +22,16 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Factories
 {
-    public class ChargeEventFactory : IChargeEventFactory
+    public class PriceConfirmedEventFactory : IPriceConfirmedEventFactory
     {
         private readonly IClock _clock;
 
-        public ChargeEventFactory(IClock clock)
+        public PriceConfirmedEventFactory(IClock clock)
         {
             _clock = clock;
         }
 
-        public PriceRejectedEvent CreatePriceRejectedEvent(
-            DocumentDto document,
-            IReadOnlyCollection<ChargePriceOperationDto> operations,
-            ValidationResult validationResult)
-        {
-            var validationErrors = validationResult.InvalidRules
-                .Select(ValidationErrorFactory.Create());
-            return new PriceRejectedEvent(
-                _clock.GetCurrentInstant(),
-                document,
-                operations,
-                validationErrors);
-        }
-
-        public PriceConfirmedEvent CreatePriceConfirmedEvent(
+        public PriceConfirmedEvent Create(
             DocumentDto document,
             IReadOnlyCollection<ChargePriceOperationDto> operations)
         {

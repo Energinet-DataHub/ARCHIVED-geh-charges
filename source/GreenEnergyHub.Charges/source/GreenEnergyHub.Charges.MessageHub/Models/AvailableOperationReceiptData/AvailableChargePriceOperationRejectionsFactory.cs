@@ -49,12 +49,12 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableOperationReceiptData
             _logger = loggerFactory.CreateLogger(nameof(AvailableChargeRejectionDataFactory));
         }
 
-        public override async Task<IReadOnlyList<AvailableChargeReceiptData.AvailableChargeReceiptData>> CreateAsync(PriceRejectedEvent input)
+        public override async Task<IReadOnlyList<AvailableChargeReceiptData.AvailableChargeReceiptData>> CreateAsync(
+            PriceRejectedEvent input)
         {
             // The original sender is the recipient of the receipt
             var recipient = await GetRecipientAsync(input.Document.Sender).ConfigureAwait(false);
             var sender = await GetSenderAsync().ConfigureAwait(false);
-            var businessReasonCode = ParseBusinessReasonCode(input);
 
             var operationOrder = 0;
 
@@ -63,7 +63,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableOperationReceiptData
                     sender.BusinessProcessRole,
                     recipient.MarketParticipantId,
                     recipient.BusinessProcessRole,
-                    businessReasonCode,
+                    BusinessReasonCode.UpdateChargePrices,
                     _messageMetaDataContext.RequestDataTime,
                     Guid.NewGuid(), // ID of each available piece of data must be unique
                     ReceiptStatus.Rejected,
@@ -73,19 +73,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableOperationReceiptData
                     recipient.ActorId,
                     GetReasons(input, operationDto)))
                 .ToList();
-        }
-
-        private BusinessReasonCode ParseBusinessReasonCode(object eventType)
-        {
-            switch (eventType)
-            {
-                case PriceRejectedEvent:
-                case PriceConfirmedEvent:
-                    return BusinessReasonCode.UpdateChargePrices;
-                default:
-                    throw new ArgumentOutOfRangeException(
-                        $"Could not parse business reason code from event type: {eventType}");
-            }
         }
 
         private List<AvailableReceiptValidationError> GetReasons(

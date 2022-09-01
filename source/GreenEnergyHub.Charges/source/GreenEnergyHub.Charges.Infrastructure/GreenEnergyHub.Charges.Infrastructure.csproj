@@ -99,8 +99,4 @@ limitations under the License.
         <Link>Contracts\Public\CreateDefaultChargeLinksReply\CreateDefaultChargeLinksReply.proto</Link>
       </Content>
     </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Events" />
-    </ItemGroup>
 </Project>

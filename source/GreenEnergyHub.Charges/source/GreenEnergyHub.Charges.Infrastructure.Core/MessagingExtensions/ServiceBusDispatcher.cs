@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
@@ -26,16 +27,20 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions
     // ReSharper disable once UnusedTypeParameter - Generic type parameter is needed
     public class ServiceBusDispatcher : IServiceBusDispatcher
     {
-        private readonly ServiceBusSender _instance;
+        private readonly ServiceBusClient _serviceBusClient;
+        private readonly ServiceBusEventMapper _serviceBusEventMapper;
 
-        public ServiceBusDispatcher(ServiceBusSender instance)
+        public ServiceBusDispatcher(ServiceBusClient serviceBusClient, ServiceBusEventMapper serviceBusEventMapper)
         {
-            _instance = instance;
+            _serviceBusClient = serviceBusClient;
+            _serviceBusEventMapper = serviceBusEventMapper;
         }
 
-        public async Task DispatchAsync(ServiceBusMessage serviceBusMessage, CancellationToken cancellationToken = default)
+        public async Task DispatchAsync(ServiceBusMessage serviceBusMessage, Type eventType, CancellationToken cancellationToken = default)
         {
-            await _instance.SendMessageAsync(serviceBusMessage, cancellationToken).ConfigureAwait(false);
+            var eventMetadata = _serviceBusEventMapper.GetByType(eventType);
+            var sender = _serviceBusClient.CreateSender(eventMetadata.TopicName);
+            await sender.SendMessageAsync(serviceBusMessage, cancellationToken).ConfigureAwait(false);
         }
     }
 }

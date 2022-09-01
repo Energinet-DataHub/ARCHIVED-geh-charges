@@ -20,6 +20,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.Factories;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using GreenEnergyHub.Charges.Infrastructure.Outbox;
 using GreenEnergyHub.Charges.Infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -39,7 +40,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IInputValidationRulesFactory<ChargePriceOperationDto>,
                 ChargePriceOperationInputValidationRulesFactory>();
             serviceCollection.AddScoped<IDomainEventPublisher, DomainEventPublisher>();
-            serviceCollection.AddScoped<IChargeEventFactory, ChargeEventFactory>();
+            serviceCollection.AddScoped<IPriceConfirmedEventFactory, PriceConfirmedEventFactory>();
+            serviceCollection.AddScoped<IPriceRejectedEventFactory, PriceRejectedEventFactory>();
+            serviceCollection.AddScoped<JsonMessageDeserializer<ChargePriceCommandReceivedEvent>>();
         }
 
         private static void ConfigureMessaging(IServiceCollection serviceCollection)

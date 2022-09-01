@@ -30,20 +30,20 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         private readonly IChargePriceEventHandler _chargePriceEventHandler;
         private readonly IDocumentValidator _documentValidator;
         private readonly IDomainEventPublisher _domainEventPublisher;
-        private readonly IChargeEventFactory _chargeEventFactory;
+        private readonly IPriceRejectedEventFactory _priceRejectedEventFactory;
 
         public ChargePriceCommandReceivedEventHandler(
             ILoggerFactory loggerFactory,
             IChargePriceEventHandler chargePriceEventHandler,
             IDocumentValidator documentValidator,
             IDomainEventPublisher domainEventPublisher,
-            IChargeEventFactory chargeEventFactory)
+            IPriceRejectedEventFactory priceRejectedEventFactory)
         {
             _logger = loggerFactory.CreateLogger(nameof(ChargePriceCommandReceivedEventHandler));
             _chargePriceEventHandler = chargePriceEventHandler;
             _documentValidator = documentValidator;
             _domainEventPublisher = domainEventPublisher;
-            _chargeEventFactory = chargeEventFactory;
+            _priceRejectedEventFactory = priceRejectedEventFactory;
         }
 
         public async Task HandleAsync(ChargePriceCommandReceivedEvent chargePriceCommandReceivedEvent)
@@ -69,7 +69,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             _logger.LogError("ValidationErrors for {ErrorMessage}", errorMessage);
             var validationResult = ValidationResult.CreateFailure(rejectionRules);
 
-            var rejectedEvent = _chargeEventFactory.CreatePriceRejectedEvent(
+            var rejectedEvent = _priceRejectedEventFactory.Create(
                 commandReceivedEvent.Command.Document,
                 commandReceivedEvent.Command.Operations,
                 validationResult);

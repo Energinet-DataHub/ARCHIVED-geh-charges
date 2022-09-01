@@ -166,7 +166,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
         {
             // Arrange
             var document = receivedEvent.Command.Document;
-            var expectedMessage = TestStringGenerator.CreateExpectedErrorMessage(
+            var expectedMessage = ErrorTextGenerator.CreateExpectedErrorMessage(
                 document.Id,
                 document.Type.ToString(),
                 document.Sender.MarketParticipantId,
