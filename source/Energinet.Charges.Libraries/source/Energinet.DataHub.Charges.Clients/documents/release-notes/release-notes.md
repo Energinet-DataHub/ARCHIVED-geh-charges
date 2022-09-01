@@ -1,5 +1,9 @@
 # Energinet.DataHub.Charges.Clients Release notes
 
+## Version 3.0.10
+
+Added custom property `OperationCorrelationId` to `ServiceBusRequestSender`
+
 ## Version 3.0.9
 
 Updated NuGet packages

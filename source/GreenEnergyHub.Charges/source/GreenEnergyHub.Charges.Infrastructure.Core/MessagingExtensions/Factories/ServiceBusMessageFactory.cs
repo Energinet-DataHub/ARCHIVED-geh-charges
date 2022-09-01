@@ -60,7 +60,14 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factori
 
         public ServiceBusMessage CreateExternalMessage(byte[] data)
         {
-            return new ServiceBusMessage(data) { CorrelationId = _correlationContext.Id, };
+            return new ServiceBusMessage(data)
+            {
+                CorrelationId = _correlationContext.Id,
+                ApplicationProperties =
+                {
+                    new KeyValuePair<string, object>(MessageMetaDataConstants.CorrelationId, _correlationContext.Id),
+                },
+            };
         }
     }
 }

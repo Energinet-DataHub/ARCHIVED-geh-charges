@@ -84,6 +84,7 @@ namespace Energinet.DataHub.Charges.Clients.IntegrationTests.DefaultChargeLink
                 var isMessageReceived = result.IsMessageReceivedEvent!.Wait(TimeSpan.FromSeconds(5));
 
                 isMessageReceived.Should().BeTrue();
+                result.ApplicationProperties!["OperationCorrelationId"].Should().Be(correlationId);
                 result.CorrelationId.Should().Be(correlationId);
                 result.Body.Should().NotBeNull();
             }
