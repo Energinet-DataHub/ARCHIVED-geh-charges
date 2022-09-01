@@ -42,13 +42,13 @@ data "azurerm_key_vault_secret" "mssql_market_participant_database_name" {
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
 }
 
-data "azurerm_key_vault_secret" "messagehub_storage_connection_string" {
-  name         = "st-marketres-primary-connection-string"
+data "azurerm_key_vault_secret" "st_market_operator_logs_id" {
+  name         = "st-market-operator-logs-id"
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
 }
 
-data "azurerm_key_vault_secret" "messagehub_storage_container" {
-  name         = "st-marketres-postofficereply-container-name"
+data "azurerm_key_vault_secret" "st_market_operator_response_id" {
+  name         = "st-market-operator-response-id"
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
 }
 
