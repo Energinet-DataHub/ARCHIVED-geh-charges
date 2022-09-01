@@ -2,7 +2,7 @@
 
 ## Version 3.0.10
 
-Bumped due to Clients package change 
+Bumped due to Clients package change
 
 ## Version 3.0.9
 
