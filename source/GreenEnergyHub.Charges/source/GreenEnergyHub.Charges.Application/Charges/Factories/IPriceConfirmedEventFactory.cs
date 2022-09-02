@@ -29,7 +29,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Factories
         /// </summary>
         /// <param name="document">Document containing information about market participant causing the event</param>
         /// <param name="operations">Operations to be confirmed</param>
-        /// <returns><see cref="PriceRejectedEvent"/></returns>
+        /// <returns><see cref="PriceConfirmedEvent"/></returns>
         PriceConfirmedEvent Create(
             DocumentDto document,
             IReadOnlyCollection<ChargePriceOperationDto> operations);

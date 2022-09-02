@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using Energinet.DataHub.Core.JsonSerialization;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.Charges.Events;
@@ -32,12 +31,12 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Outbox
             // Arrange
             var jsonSerializer = new JsonSerializer();
             var rejectedEvent = new PriceRejectedEventBuilder().Build();
-            var messageTypeString = "GreenEnergyHub.Charges.Application.Charges.Events.PriceRejectedEvent";
+            var messageTypeString = typeof(PriceRejectedEvent).FullName;
             var serializedEvent = jsonSerializer.Serialize(rejectedEvent);
             var sut = new OutboxMessageParser(jsonSerializer);
 
             // Act
-            var actual = sut.Parse(messageTypeString, serializedEvent);
+            var actual = sut.Parse(messageTypeString!, serializedEvent);
 
             // Assert
             actual.Should().BeOfType(typeof(PriceRejectedEvent));
@@ -48,13 +47,13 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Outbox
         {
             // Arrange
             var jsonSerializer = new JsonSerializer();
-            var rejectedEvent = new PriceConfirmedEventBuilder().Build();
-            var messageTypeString = "GreenEnergyHub.Charges.Application.Charges.Events.PriceConfirmedEvent";
-            var serializedEvent = jsonSerializer.Serialize(rejectedEvent);
+            var confirmedEvent = new PriceConfirmedEventBuilder().Build();
+            var messageTypeString = typeof(PriceConfirmedEvent).FullName;
+            var serializedEvent = jsonSerializer.Serialize(confirmedEvent);
             var sut = new OutboxMessageParser(jsonSerializer);
 
             // Act
-            var actual = sut.Parse(messageTypeString, serializedEvent);
+            var actual = sut.Parse(messageTypeString!, serializedEvent);
 
             // Assert
             actual.Should().BeOfType(typeof(PriceConfirmedEvent));

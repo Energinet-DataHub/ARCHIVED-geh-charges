@@ -25,6 +25,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.TestCore.TestHelpers;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.TestHelpers;
 using Microsoft.Extensions.Logging;
@@ -107,9 +108,12 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         {
             // Arrange
             var document = chargePriceCommandReceivedEvent.Command.Document;
-            var expectedMessage =
-                $"ValidationErrors for document Id {document.Id} with Type {document.Type} from GLN {document.Sender.MarketParticipantId}:\r\n" +
-                "- ValidationRuleIdentifier: BusinessReasonCodeMustBeUpdateChargeInformationOrChargePrices\r\n";
+            var expectedMessage = ErrorTextGenerator.CreateExpectedErrorMessage(
+                document.Id,
+                document.Type.ToString(),
+                document.Sender.MarketParticipantId,
+                ValidationRuleIdentifier.BusinessReasonCodeMustBeUpdateChargeInformationOrChargePrices.ToString(),
+                0);
 
             loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
             priceRejectedEventFactory

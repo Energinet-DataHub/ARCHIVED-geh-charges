@@ -94,6 +94,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     .Single(x => x.OriginalOperationId == operationsRejectedEvent.Operations.First().OperationId);
                 actualAvailableDataReceipt.RecipientId.Should().Be(operationsRejectedEvent.Document.Sender.MarketParticipantId);
                 var processedOutboxMessage = chargesDatabaseReadContext.OutboxMessages.Single(x => x.Id == outboxMessage.Id);
+                processedOutboxMessage.Should().BeEquivalentTo(outboxMessage, om => om.Excluding(p => p.ProcessedDate));
                 processedOutboxMessage.ProcessedDate.Should().NotBeNull();
             }
 
@@ -118,6 +119,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     .Single(x => x.OriginalOperationId == operationsConfirmedEvent.Operations.First().OperationId);
                 actualAvailableDataReceipt.RecipientId.Should().Be(operationsConfirmedEvent.Document.Sender.MarketParticipantId);
                 var processedOutboxMessage = chargesDatabaseReadContext.OutboxMessages.Single(x => x.Id == outboxMessage.Id);
+                processedOutboxMessage.Should().BeEquivalentTo(outboxMessage, om => om.Excluding(p => p.ProcessedDate));
                 processedOutboxMessage.ProcessedDate.Should().NotBeNull();
             }
 
@@ -193,6 +195,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
                 // Assert
                 var processedOutboxMessage = chargesDatabaseReadContext.OutboxMessages.Single(x => x.Id == outboxMessage.Id);
+                processedOutboxMessage.Should().BeEquivalentTo(outboxMessage, om => om.Excluding(p => p.ProcessedDate));
                 processedOutboxMessage.ProcessedDate.Should().NotBeNull();
                 processedOutboxMessage.Type.Should().Be(messageType);
             }

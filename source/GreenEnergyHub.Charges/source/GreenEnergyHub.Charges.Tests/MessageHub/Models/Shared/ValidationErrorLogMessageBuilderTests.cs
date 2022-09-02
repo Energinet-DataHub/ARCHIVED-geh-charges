@@ -20,7 +20,6 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.Bu
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
-using GreenEnergyHub.Charges.MessageHub.Models.Shared;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
@@ -37,7 +36,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared
         {
             // Arrange
             var documentDto = BuildDocumentDto(documentDtoBuilder);
-            var invalidRules = new List<IValidationRuleContainer>()
+            var violatedRules = new List<IValidationRuleContainer>()
             {
                 new OperationValidationRuleContainer(
                     new ChargeMustExistRule(null), "operationId1"),
@@ -46,11 +45,11 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared
             };
 
             var expected = $"document Id {documentDto.Id} with Type {documentDto.Type} from GLN {documentDto.Sender.MarketParticipantId}:\r\n" +
-                            $"- ValidationRuleIdentifier: {invalidRules.First().ValidationRule.ValidationRuleIdentifier}\r\n" +
-                            $"- ValidationRuleIdentifier: {invalidRules.Last().ValidationRule.ValidationRuleIdentifier}\r\n";
+                            $"- ValidationRuleIdentifier: {violatedRules.First().ValidationRule.ValidationRuleIdentifier}\r\n" +
+                            $"- ValidationRuleIdentifier: {violatedRules.Last().ValidationRule.ValidationRuleIdentifier}\r\n";
 
             // Act
-            var actual = ValidationErrorLogMessageBuilder.BuildErrorMessage(documentDto, invalidRules);
+            var actual = ValidationErrorLogMessageBuilder.BuildErrorMessage(documentDto, violatedRules);
 
             // Assert
             actual.Should().Be(expected);
