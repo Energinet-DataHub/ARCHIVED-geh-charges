@@ -88,6 +88,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
                 // Assert
                 await FunctionAsserts.AssertHasExecutedAsync(
+                    Fixture.HostManager, nameof(OutboxMessageProcessorEndpoint));
+                await FunctionAsserts.AssertHasExecutedAsync(
                     Fixture.HostManager, nameof(ChargePriceRejectedDataAvailableNotifierEndpoint));
 
                 var actualAvailableDataReceipt = messageHubDatabaseContext.AvailableChargeReceiptData
