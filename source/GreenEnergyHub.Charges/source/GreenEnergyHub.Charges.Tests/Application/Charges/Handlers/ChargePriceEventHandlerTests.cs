@@ -147,7 +147,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task GiveHandleAsync_WhenValidationFails_ThenValidationErrorsAreLogged(
+        public async Task GivenHandleAsync_WhenValidationFails_ThenValidationErrorsAreLogged(
             Mock<ILoggerFactory> loggerFactory,
             Mock<IInputValidator<ChargePriceOperationDto>> inputValidator,
             Mock<IDomainEventPublisher> domainEventPublisher,
