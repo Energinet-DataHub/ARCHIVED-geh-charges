@@ -79,10 +79,10 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.MessageHub
                 Times.Once);
 
             dataAvailableNotificationSender.Verify(
-                d => d.SendAsync(
+                d => d.SendBatchAsync(
                     correlationId,
-                    It.IsAny<DataAvailableNotificationDto>()),
-                Times.Exactly(notifications.Count));
+                    It.IsAny<IReadOnlyCollection<DataAvailableNotificationDto>>()),
+                Times.Once);
         }
 
         [Theory]
