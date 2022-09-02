@@ -35,6 +35,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksDataAvailableNotifiedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksRejectionEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
@@ -272,8 +273,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         private static ServiceBusEventMapper CreateInternalServiceBusEventMapper()
         {
             var mapper = new ServiceBusEventMapper();
-            mapper.Add(typeof(PriceConfirmedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargePriceConfirmedTopicName));
-            mapper.Add(typeof(PriceRejectedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargePriceRejectedTopicName));
             mapper.Add(typeof(ChargeCommandReceivedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandReceivedTopicName));
             mapper.Add(typeof(ChargeCommandAcceptedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandAcceptedTopicName));
             mapper.Add(typeof(ChargeCommandRejectedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandRejectedTopicName));
@@ -281,6 +280,10 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             mapper.Add(typeof(ChargeLinksReceivedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksReceivedTopicName));
             mapper.Add(typeof(ChargeLinksRejectedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksRejectedTopicName));
             mapper.Add(typeof(ChargePriceCommandReceivedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.PriceCommandReceivedTopicName));
+            mapper.Add(typeof(ChargeLinksDataAvailableNotifiedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName));
+            mapper.Add(typeof(PriceConfirmedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargePriceConfirmedTopicName));
+            mapper.Add(typeof(PriceRejectedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargePriceRejectedTopicName));
+
             return mapper;
         }
     }
