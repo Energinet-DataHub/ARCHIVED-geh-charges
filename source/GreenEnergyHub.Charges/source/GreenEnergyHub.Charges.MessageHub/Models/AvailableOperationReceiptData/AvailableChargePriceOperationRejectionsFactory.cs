@@ -17,16 +17,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Events;
-using GreenEnergyHub.Charges.Application.Common.Helpers;
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
-using GreenEnergyHub.Charges.MessageHub.Models.Shared;
-using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableOperationReceiptData
 {
@@ -35,18 +31,15 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableOperationReceiptData
     {
         private readonly IMessageMetaDataContext _messageMetaDataContext;
         private readonly IAvailableChargePriceReceiptValidationErrorFactory _availableChargePriceReceiptValidationErrorFactory;
-        private readonly ILogger _logger;
 
         public AvailableChargePriceOperationRejectionsFactory(
             IMessageMetaDataContext messageMetaDataContext,
             IAvailableChargePriceReceiptValidationErrorFactory availableChargePriceReceiptValidationErrorFactory,
-            IMarketParticipantRepository marketParticipantRepository,
-            ILoggerFactory loggerFactory)
+            IMarketParticipantRepository marketParticipantRepository)
             : base(marketParticipantRepository)
         {
             _messageMetaDataContext = messageMetaDataContext;
             _availableChargePriceReceiptValidationErrorFactory = availableChargePriceReceiptValidationErrorFactory;
-            _logger = loggerFactory.CreateLogger(nameof(AvailableChargeRejectionDataFactory));
         }
 
         public override async Task<IReadOnlyList<AvailableChargeReceiptData.AvailableChargeReceiptData>> CreateAsync(

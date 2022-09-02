@@ -28,6 +28,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableData
         /// Creates an error text by replacing occurrences of the
         /// placeholder texts with values from the TCommand/>.
         /// </summary>
-        string Create(ValidationError validationError, DocumentDto command, TOperation operation);
+        string Create(ValidationError validationError, DocumentDto document, TOperation operation);
     }
 }

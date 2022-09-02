@@ -16,7 +16,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.Common.Helpers;
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksRejectionEvents;
@@ -25,7 +24,6 @@ using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using GreenEnergyHub.Charges.MessageHub.Models.Shared;
-using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData
 {
@@ -33,7 +31,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
         : AvailableDataFactoryBase<AvailableChargeLinksReceiptData, ChargeLinksRejectedEvent>
     {
         private readonly IMessageMetaDataContext _messageMetaDataContext;
-        private readonly ILogger _logger;
 
         private readonly IAvailableChargeLinksReceiptValidationErrorFactory
             _availableChargeLinksReceiptValidationErrorFactory;
@@ -41,13 +38,11 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
         public AvailableChargeLinksRejectionDataFactory(
             IMessageMetaDataContext messageMetaDataContext,
             IAvailableChargeLinksReceiptValidationErrorFactory availableChargeLinksReceiptValidationErrorFactory,
-            IMarketParticipantRepository marketParticipantRepository,
-            ILoggerFactory loggerFactory)
+            IMarketParticipantRepository marketParticipantRepository)
             : base(marketParticipantRepository)
         {
             _messageMetaDataContext = messageMetaDataContext;
             _availableChargeLinksReceiptValidationErrorFactory = availableChargeLinksReceiptValidationErrorFactory;
-            _logger = loggerFactory.CreateLogger(nameof(AvailableChargeLinksRejectionDataFactory));
         }
 
         public override async Task<IReadOnlyList<AvailableChargeLinksReceiptData>> CreateAsync(
