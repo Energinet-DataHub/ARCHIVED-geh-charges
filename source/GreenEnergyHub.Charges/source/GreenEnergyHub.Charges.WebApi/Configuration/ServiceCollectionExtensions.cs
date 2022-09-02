@@ -20,6 +20,7 @@ using Energinet.DataHub.Core.App.Common.Security;
 using Energinet.DataHub.Core.App.WebApp.Middleware;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
@@ -44,6 +45,7 @@ namespace GreenEnergyHub.Charges.WebApi.Configuration
 
             services.AddScoped<IJwtTokenValidator>(sp =>
                 new JwtTokenValidator(
+                    sp.GetRequiredService<ILogger<JwtTokenValidator>>(),
                     sp.GetRequiredService<ISecurityTokenValidator>(),
                     sp.GetRequiredService<IConfigurationManager<OpenIdConnectConfiguration>>(),
                     audience));
