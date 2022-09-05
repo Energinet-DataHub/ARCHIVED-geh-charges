@@ -24,7 +24,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon
     {
         public static async Task AssertHasExecutedAsync(FunctionAppHostManager hostManager, string functionName)
         {
-            var waitTimespan = TimeSpan.FromSeconds(15);
+            var waitTimespan = TimeSpan.FromSeconds(60);
 
             var functionExecuted = await Awaiter
                 .TryWaitUntilConditionAsync(
