@@ -74,7 +74,12 @@ namespace GreenEnergyHub.Charges.MessageHub.MessageHub
         private async Task NotifyMessageHubOfAvailableDataAsync(IReadOnlyList<TAvailableData> availableData)
         {
             var notifications = CreateNotifications(availableData);
-            await _dataAvailableNotificationSender.SendBatchAsync(_correlationContext.Id, notifications);
+
+            var dataAvailableNotificationSenderTasks = notifications
+                .Select(notification => _dataAvailableNotificationSender.SendAsync(_correlationContext.Id, notification));
+
+            await Task.WhenAll(dataAvailableNotificationSenderTasks).ConfigureAwait(false);
+            //Todo: call sendbatchasync await _dataAvailableNotificationSender.SendBatchAsync(_correlationContext.Id, notifications);
         }
 
         private IReadOnlyList<DataAvailableNotificationDto> CreateNotifications(

@@ -19,6 +19,7 @@ using AutoFixture.Xunit2;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using Energinet.DataHub.MessageHub.Client.DataAvailable;
 using Energinet.DataHub.MessageHub.Model.Model;
+using FluentAssertions;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification;
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
@@ -78,10 +79,16 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.MessageHub
                     It.IsAny<IBundleSpecification<AvailableDataBase>>()),
                 Times.Once);
 
+            // Todo: use SendBatchAsync insted of SendAsync
+            // dataAvailableNotificationSender.Verify(
+            //     d => d.SendBatchAsync(
+            //         correlationId,
+            //         It.IsAny<IReadOnlyCollection<DataAvailableNotificationDto>>()),
+            //     Times.Once);
             dataAvailableNotificationSender.Verify(
-                d => d.SendBatchAsync(
+                d => d.SendAsync(
                     correlationId,
-                    It.IsAny<IReadOnlyCollection<DataAvailableNotificationDto>>()),
+                    It.IsAny<DataAvailableNotificationDto>()),
                 Times.Once);
         }
 
@@ -91,10 +98,10 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.MessageHub
             [Frozen] Mock<IAvailableDataFactory<AvailableDataBase, object>> availableDataFactory,
             [Frozen] Mock<IAvailableDataRepository<AvailableDataBase>> availableDataRepository,
             object input,
+            List<AvailableDataBase> emptyList,
             AvailableDataNotifier<AvailableDataBase, object> sut)
         {
             // Arrange
-            var emptyList = new List<AvailableDataBase>();
             availableDataFactory.Setup(
                     f => f.CreateAsync(input))
                 .ReturnsAsync(emptyList);
@@ -107,6 +114,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.MessageHub
                 f => f.CreateAsync(input),
                 Times.Once);
 
+            emptyList.Should().BeEmpty();
             availableDataRepository.Verify(
                 r => r.StoreAsync(
                     It.IsAny<IEnumerable<AvailableDataBase>>()),
