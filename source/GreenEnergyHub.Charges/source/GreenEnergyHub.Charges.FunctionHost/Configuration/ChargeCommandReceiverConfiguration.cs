@@ -55,7 +55,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IAvailableChargeReceiptValidationErrorFactory,
                 AvailableChargeReceiptValidationErrorFactory>();
             serviceCollection.AddScoped<IChargeCommandReceivedEventHandler, ChargeInformationCommandReceivedEventHandler>();
-            serviceCollection.AddScoped<IChargePriceEventHandlerDeprecated, ChargePriceEventHandlerDeprecated>();
             serviceCollection.AddScoped<JsonMessageDeserializer<ChargeCommandReceivedEvent>>();
             ConfigureDatabase(serviceCollection);
             ConfigureValidation(serviceCollection);

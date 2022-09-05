@@ -130,7 +130,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 isChargeCreatedReceived.Should().BeTrue();
             }
 
-            [Fact]
+            // TODO: Reenable when new price flow raise integration events (story #1562)
+            [Fact(Skip = "Not implemented")]
             public async Task When_ChargePricesAreReceived_Then_ChargePricesUpdatedIntegrationEventsArePublished()
             {
                 // Arrange
@@ -497,7 +498,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 peekResult.Should().NotContainMatch("*<cim:process.processType>D18</cim:process.processType>*");
             }
 
-            [Fact]
+            // TODO: Reenable when new price flow send notifications (story #1561)
+            [Fact(Skip = "Not implemented")]
             public async Task When_SendingChargePriceRequestForExistingTariff_Then_AConfirmationIsShouldBeSent()
             {
                 // Arrange
