@@ -484,22 +484,17 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 var (request, correlationId) =
                     Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
                         EndpointUrl, testFilePath);
-                using var eventualChargePriceUpdatedEvent = await Fixture
-                    .ChargePricesUpdatedListener
-                    .ListenForEventsAsync(correlationId, expectedCount: 1)
-                    .ConfigureAwait(false);
-
                 // Act
-                await Fixture.HostManager.HttpClient.SendAsync(request);
+                var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Assert
-                eventualChargePriceUpdatedEvent
-                    .CountdownEvent!
-                    .Wait(TimeSpan.FromSeconds(SecondsToWaitForIntegrationEvents));
-                var hostLogSnapshot = Fixture.HostManager.GetHostLogSnapshot();
-                hostLogSnapshot.Any(x => x.Contains("With errors:")).Should().BeFalse();
-                hostLogSnapshot.Any(x => x.Contains("1 confirmed price operations was persisted")).Should().BeTrue();
-                hostLogSnapshot.Any(x => x.Contains("1 notifications was persisted")).Should().BeTrue();
+                using var assertionScope = new AssertionScope();
+                actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
+                var peekResult = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId);
+                peekResult.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
+                peekResult.Should().NotContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
+                peekResult.Should().ContainMatch("*<cim:process.processType>D08</cim:process.processType>*");
+                peekResult.Should().NotContainMatch("*<cim:process.processType>D18</cim:process.processType>*");
             }
 
             [Fact]
@@ -509,21 +504,19 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 var (request, correlationId) =
                     Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
                         EndpointUrl, ChargeDocument.PriceSeriesExistingTariff);
-                using var eventualChargePriceUpdatedEvent = await Fixture
-                    .ChargePricesUpdatedListener
-                    .ListenForEventsAsync(correlationId, expectedCount: 1)
-                    .ConfigureAwait(false);
 
                 // Act
-                await Fixture.HostManager.HttpClient.SendAsync(request);
+                var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Assert
-                eventualChargePriceUpdatedEvent
-                    .CountdownEvent!
-                    .Wait(TimeSpan.FromSeconds(SecondsToWaitForIntegrationEvents));
-                var hostLogSnapshot = Fixture.HostManager.GetHostLogSnapshot();
-                hostLogSnapshot.Any(x => x.Contains("With errors:")).Should().BeFalse();
-                hostLogSnapshot.Any(x => x.Contains("1 confirmed price operations was persisted")).Should().BeTrue();
+                using var assertionScope = new AssertionScope();
+                actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
+                var peekResult = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 2);
+                peekResult.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
+                peekResult.Should().NotContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
+                peekResult.Should().ContainMatch("*NotifyPriceList_MarketDocument*");
+                peekResult.Should().ContainMatch("*<cim:process.processType>D08</cim:process.processType>*");
+                peekResult.Should().NotContainMatch("*<cim:process.processType>D18</cim:process.processType>*");
             }
 
             [Fact]
@@ -533,21 +526,19 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 var (request, correlationId) =
                     Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
                         EndpointUrl, ChargeDocument.PriceSeriesExistingSubscription);
-                using var eventualChargePriceUpdatedEvent = await Fixture
-                    .ChargePricesUpdatedListener
-                    .ListenForEventsAsync(correlationId, expectedCount: 1)
-                    .ConfigureAwait(false);
 
                 // Act
-                await Fixture.HostManager.HttpClient.SendAsync(request);
+                var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Assert
-                eventualChargePriceUpdatedEvent
-                    .CountdownEvent!
-                    .Wait(TimeSpan.FromSeconds(SecondsToWaitForIntegrationEvents));
-                var hostLogSnapshot = Fixture.HostManager.GetHostLogSnapshot();
-                hostLogSnapshot.Any(x => x.Contains("With errors:")).Should().BeFalse();
-                hostLogSnapshot.Any(x => x.Contains("1 confirmed price operations was persisted")).Should().BeTrue();
+                using var assertionScope = new AssertionScope();
+                actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
+                var peekResult = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId);
+                peekResult.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
+                peekResult.Should().NotContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
+                peekResult.Should().NotContainMatch("*NotifyPriceList_MarketDocument*");
+                peekResult.Should().ContainMatch("*<cim:process.processType>D08</cim:process.processType>*");
+                peekResult.Should().NotContainMatch("*<cim:process.processType>D18</cim:process.processType>*");
             }
 
             [Fact]
@@ -562,7 +553,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
                 // Assert
                 using var assertionScope = new AssertionScope();
-
                 var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 4);
                 peekResults.Should().NotContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
                 peekResults.Should().ContainMatch("*NotifyPriceList_MarketDocument*");

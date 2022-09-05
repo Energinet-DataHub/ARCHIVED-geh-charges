@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.Core.Messaging.Transport;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization
 {
@@ -26,6 +26,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Seriali
         /// </summary>
         /// <param name="message">Outbound message to convert</param>
         /// <returns>DTO that can be used in JSON serialization</returns>
-        public object Convert(IOutboundMessage message);
+        public object Convert(InternalEvent message);
     }
 }

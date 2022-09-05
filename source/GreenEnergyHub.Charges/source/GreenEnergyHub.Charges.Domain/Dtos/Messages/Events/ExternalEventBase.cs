@@ -12,24 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Text;
+using NodaTime;
 
-namespace GreenEnergyHub.Charges.TestCore.TestHelpers
+namespace GreenEnergyHub.Charges.Domain.Dtos.Messages.Events
 {
-    public static class StringGenerator
+    public abstract class ExternalEvent : MessageBase, IEvent
     {
-        public static string CreateStringOfRandomLength(int maxLength)
+        protected ExternalEvent(Instant publishedTime)
         {
-            var builder = new StringBuilder();
-            var randomizer = new Random();
-            var length = randomizer.Next(0, maxLength);
-            for (var i = 0; i < length; i++)
-            {
-                builder.Append('0');
-            }
-
-            return builder.ToString();
+            PublishedTime = publishedTime;
         }
+
+        public Instant PublishedTime { get; }
     }
 }

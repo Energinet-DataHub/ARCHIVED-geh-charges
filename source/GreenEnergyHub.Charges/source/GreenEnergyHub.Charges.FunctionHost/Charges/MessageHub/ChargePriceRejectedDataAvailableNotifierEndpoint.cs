@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
@@ -26,12 +25,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
     public class ChargePriceRejectedDataAvailableNotifierEndpoint
     {
         private const string FunctionName = nameof(ChargePriceRejectedDataAvailableNotifierEndpoint);
-        private readonly IAvailableDataNotifier<AvailableChargeReceiptData, ChargePriceOperationsRejectedEvent> _availableDataNotifier;
-        private readonly JsonMessageDeserializer<ChargePriceOperationsRejectedEvent> _deserializer;
+        private readonly IAvailableDataNotifier<AvailableChargeReceiptData, PriceRejectedEvent> _availableDataNotifier;
+        private readonly JsonMessageDeserializer<PriceRejectedEvent> _deserializer;
 
         public ChargePriceRejectedDataAvailableNotifierEndpoint(
-            IAvailableDataNotifier<AvailableChargeReceiptData, ChargePriceOperationsRejectedEvent> availableDataNotifier,
-            JsonMessageDeserializer<ChargePriceOperationsRejectedEvent> deserializer)
+            IAvailableDataNotifier<AvailableChargeReceiptData, PriceRejectedEvent> availableDataNotifier,
+            JsonMessageDeserializer<PriceRejectedEvent> deserializer)
         {
             _availableDataNotifier = availableDataNotifier;
             _deserializer = deserializer;
@@ -45,7 +44,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             byte[] message)
         {
-            var chargePriceOperationsRejectedEvent = (ChargePriceOperationsRejectedEvent)await _deserializer
+            var chargePriceOperationsRejectedEvent = (PriceRejectedEvent)await _deserializer
                 .FromBytesAsync(message).ConfigureAwait(false);
             await _availableDataNotifier.NotifyAsync(chargePriceOperationsRejectedEvent).ConfigureAwait(false);
         }

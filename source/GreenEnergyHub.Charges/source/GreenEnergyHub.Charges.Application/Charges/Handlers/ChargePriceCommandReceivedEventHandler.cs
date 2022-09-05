@@ -16,29 +16,34 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Factories;
-using GreenEnergyHub.Charges.Application.Charges.Services;
+using GreenEnergyHub.Charges.Application.Common.Helpers;
+using GreenEnergyHub.Charges.Application.Common.Services;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
     public class ChargePriceCommandReceivedEventHandler : IChargePriceCommandReceivedEventHandler
     {
+        private readonly ILogger _logger;
         private readonly IChargePriceEventHandler _chargePriceEventHandler;
         private readonly IDocumentValidator _documentValidator;
-        private readonly IChargePriceRejectionService _chargePriceRejectionService;
-        private readonly IChargePriceOperationsRejectedEventFactory _chargePriceOperationsRejectedEventFactory;
+        private readonly IDomainEventPublisher _domainEventPublisher;
+        private readonly IPriceRejectedEventFactory _priceRejectedEventFactory;
 
         public ChargePriceCommandReceivedEventHandler(
+            ILoggerFactory loggerFactory,
             IChargePriceEventHandler chargePriceEventHandler,
             IDocumentValidator documentValidator,
-            IChargePriceRejectionService chargePriceRejectionService,
-            IChargePriceOperationsRejectedEventFactory chargePriceOperationsRejectedEventFactory)
+            IDomainEventPublisher domainEventPublisher,
+            IPriceRejectedEventFactory priceRejectedEventFactory)
         {
+            _logger = loggerFactory.CreateLogger(nameof(ChargePriceCommandReceivedEventHandler));
             _chargePriceEventHandler = chargePriceEventHandler;
             _documentValidator = documentValidator;
-            _chargePriceRejectionService = chargePriceRejectionService;
-            _chargePriceOperationsRejectedEventFactory = chargePriceOperationsRejectedEventFactory;
+            _domainEventPublisher = domainEventPublisher;
+            _priceRejectedEventFactory = priceRejectedEventFactory;
         }
 
         public async Task HandleAsync(ChargePriceCommandReceivedEvent chargePriceCommandReceivedEvent)
@@ -56,14 +61,20 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 
         private void RaiseRejectedEvent(
             ChargePriceCommandReceivedEvent commandReceivedEvent,
-            List<IValidationRuleContainer> rejectionRules)
+            IList<IValidationRuleContainer> rejectionRules)
         {
+            var errorMessage = ValidationErrorLogMessageBuilder.BuildErrorMessage(
+                commandReceivedEvent.Command.Document,
+                rejectionRules);
+            _logger.LogError("ValidationErrors for {ErrorMessage}", errorMessage);
             var validationResult = ValidationResult.CreateFailure(rejectionRules);
 
-            var rejectedEvent = _chargePriceOperationsRejectedEventFactory.Create(
-                commandReceivedEvent.Command, validationResult);
+            var rejectedEvent = _priceRejectedEventFactory.Create(
+                commandReceivedEvent.Command.Document,
+                commandReceivedEvent.Command.Operations,
+                validationResult);
 
-            _chargePriceRejectionService.SaveRejections(rejectedEvent);
+            _domainEventPublisher.Publish(rejectedEvent);
         }
     }
 }

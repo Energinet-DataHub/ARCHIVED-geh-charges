@@ -15,24 +15,29 @@
 using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Events
 {
-    public class ChargePriceOperationsRejectedEvent : InternalEventBase
+    public class PriceRejectedEvent : InternalEvent
     {
-        public ChargePriceOperationsRejectedEvent(
+        public PriceRejectedEvent(
             Instant publishedTime,
-            ChargePriceCommand command,
+            DocumentDto document,
+            IReadOnlyCollection<ChargePriceOperationDto> operations,
             IEnumerable<ValidationError> validationErrors)
             : base(publishedTime)
         {
-            Command = command;
+            Document = document;
+            Operations = operations;
             ValidationErrors = validationErrors;
         }
 
-        public ChargePriceCommand Command { get; }
+        public DocumentDto Document { get; }
+
+        public IReadOnlyCollection<ChargePriceOperationDto> Operations { get; }
 
         public IEnumerable<ValidationError> ValidationErrors { get; }
     }

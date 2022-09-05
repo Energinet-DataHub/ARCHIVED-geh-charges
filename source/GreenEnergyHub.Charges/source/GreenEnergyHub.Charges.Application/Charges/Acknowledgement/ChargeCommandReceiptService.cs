@@ -15,44 +15,46 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application.Common.Helpers;
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
 {
     public class ChargeCommandReceiptService : IChargeCommandReceiptService
     {
+        private readonly ILogger _logger;
         private readonly IChargeCommandRejectedEventFactory _chargeCommandRejectedEventFactory;
         private readonly IChargeCommandAcceptedEventFactory _chargeCommandAcceptedEventFactory;
-        private readonly IMessageDispatcher<ChargeCommandRejectedEvent> _rejectedMessageDispatcher;
-        private readonly IMessageDispatcher<ChargeCommandAcceptedEvent> _acceptedMessageDispatcher;
+        private readonly IInternalEventDispatcher _internalEventDispatcher;
 
         public ChargeCommandReceiptService(
+            ILoggerFactory loggerFactory,
             IChargeCommandRejectedEventFactory chargeCommandRejectedEventFactory,
             IChargeCommandAcceptedEventFactory chargeCommandAcceptedEventFactory,
-            IMessageDispatcher<ChargeCommandRejectedEvent> rejectedMessageDispatcher,
-            IMessageDispatcher<ChargeCommandAcceptedEvent> acceptedMessageDispatcher)
+            IInternalEventDispatcher internalEventDispatcher)
         {
+            _logger = loggerFactory.CreateLogger(nameof(ChargeCommandReceiptService));
             _chargeCommandRejectedEventFactory = chargeCommandRejectedEventFactory;
             _chargeCommandAcceptedEventFactory = chargeCommandAcceptedEventFactory;
-            _rejectedMessageDispatcher = rejectedMessageDispatcher;
-            _acceptedMessageDispatcher = acceptedMessageDispatcher;
+            _internalEventDispatcher = internalEventDispatcher;
         }
 
         public async Task RejectAsync(ChargeInformationCommand command, ValidationResult validationResult)
         {
             var rejectedEvent = _chargeCommandRejectedEventFactory.CreateEvent(command, validationResult);
-            await _rejectedMessageDispatcher.DispatchAsync(rejectedEvent).ConfigureAwait(false);
+            await _internalEventDispatcher.DispatchAsync(rejectedEvent).ConfigureAwait(false);
         }
 
         public async Task AcceptAsync(ChargeInformationCommand command)
         {
             var acceptedEvent = _chargeCommandAcceptedEventFactory.CreateEvent(command);
-            await _acceptedMessageDispatcher.DispatchAsync(acceptedEvent).ConfigureAwait(false);
+            await _internalEventDispatcher.DispatchAsync(acceptedEvent).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -66,6 +68,11 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
             DocumentDto document,
             IList<IValidationRuleContainer> rejectionRules)
         {
+            var errorMessage = ValidationErrorLogMessageBuilder.BuildErrorMessage(
+                document,
+                rejectionRules);
+            _logger.LogError("ValidationErrors for {ErrorMessage}", errorMessage);
+
             if (operationsToBeRejected.Any())
             {
                 await RejectAsync(

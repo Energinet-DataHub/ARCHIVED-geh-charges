@@ -16,12 +16,14 @@ using System;
 using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.TestCore;
 using Microsoft.Extensions.Logging;
+using Moq;
 using Xunit;
 using Xunit.Categories;
 
@@ -33,7 +35,6 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
         [Theory]
         [InlineAutoMoqData]
         public void Create_WhenTwoMergeFields_ReturnsExpectedDescription(
-            ChargeLinksCommand chargeLinksCommand,
             ChargeLinkOperationDto chargeLinkOperationDto,
             CimValidationErrorTextProvider cimValidationErrorTextProvider,
             ILoggerFactory loggerFactory)
@@ -47,7 +48,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
                 .Replace("{{ChargeLinkStartDate}}", chargeLinkOperationDto.StartDateTime.ToString());
 
             // Act
-            var actual = sut.Create(validationError, chargeLinksCommand, chargeLinkOperationDto);
+            var actual = sut.Create(validationError, It.IsAny<DocumentDto>(), chargeLinkOperationDto);
 
             // Assert
             actual.Should().Be(expected);
@@ -73,10 +74,13 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
             // Assert
             foreach (var validationRuleIdentifier in validationRuleIdentifiers)
             {
-                var triggeredBy = GetTriggeredBy(chargeLinksCommand, validationRuleIdentifier);
+                string? triggeredBy = null;
+                if (validationRuleIdentifier == ValidationRuleIdentifier.SubsequentBundleOperationsFail)
+                    triggeredBy = chargeLinksCommand.Operations.First().OperationId;
+
                 var actual = sut.Create(
                     new ValidationError(validationRuleIdentifier, chargeLinkDto.OperationId, triggeredBy),
-                    chargeLinksCommand,
+                    It.IsAny<DocumentDto>(),
                     chargeLinkDto);
 
                 actual.Should().NotBeNullOrWhiteSpace();
@@ -85,18 +89,6 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
 
                 if (identifiersForRulesWithExtendedData.Contains(validationRuleIdentifier) && triggeredBy != null)
                     actual.Should().NotContain("unknown");
-            }
-        }
-
-        private static string? GetTriggeredBy(
-            ChargeLinksCommand chargeLinksCommand, ValidationRuleIdentifier validationRuleIdentifier)
-        {
-            switch (validationRuleIdentifier)
-            {
-                case ValidationRuleIdentifier.SubsequentBundleOperationsFail:
-                    return chargeLinksCommand.Operations.First().OperationId;
-                default:
-                    return null;
             }
         }
     }

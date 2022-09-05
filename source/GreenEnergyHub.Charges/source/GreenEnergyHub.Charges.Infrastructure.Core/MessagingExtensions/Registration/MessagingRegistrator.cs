@@ -14,9 +14,12 @@
 
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Core.Messaging.Transport;
+using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Application.Messaging;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 using GreenEnergyHub.Charges.Infrastructure.Core.InternalMessaging;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
+using GreenEnergyHub.Charges.Infrastructure.Core.Registration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration
@@ -28,31 +31,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registr
         internal MessagingRegistrator(IServiceCollection services)
         {
             _services = services;
-        }
-
-        /// <summary>
-        /// Register services required to resolve a <see cref="MessageExtractor{TInboundMessage}"/>.
-        /// Which is intended to extract a message outside of the Charges domain.
-        /// </summary>
-        public MessagingRegistrator AddExternalMessageExtractor<TInboundMessage>()
-            where TInboundMessage : IInboundMessage
-        {
-            _services.AddScoped<MessageExtractor<TInboundMessage>>();
-            _services.AddScoped<MessageDeserializer<TInboundMessage>, JsonMessageDeserializer<TInboundMessage>>();
-
-            return this;
-        }
-
-        /// <summary>
-        /// Register services required to resolve a <see cref="MessageExtractor{TInboundMessage}"/>.
-        /// Which is intended to extract a message from inside of the Charges domain.
-        /// </summary>
-        public MessagingRegistrator AddInternalMessageExtractor<TInboundMessage>()
-            where TInboundMessage : IInboundMessage
-        {
-            _services.AddScoped<JsonMessageDeserializer<TInboundMessage>>();
-
-            return this;
         }
 
         /// <summary>
@@ -80,25 +58,19 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registr
         }
 
         /// <summary>
-        /// Register services required to resolve a <see cref="IMessageDispatcher{TInboundMessage}"/>.
+        /// Register services required to resolve a <see cref="IInternalEventDispatcher"/>.
         /// Which is used when sending messages within of the Charges domain.
         /// </summary>
-        public MessagingRegistrator AddInternalMessageDispatcher<TOutboundMessage>(
-            string serviceBusConnectionString,
-            string serviceBusTopicName)
-            where TOutboundMessage : IOutboundMessage
+        public MessagingRegistrator AddInternalEventDispatcher(
+            ServiceBusEventMapper serviceBusEventMapper,
+            ServiceBusClient serviceBusClient)
         {
-            _services.AddScoped<IMessageDispatcher<TOutboundMessage>, InternalMessageDispatcher<TOutboundMessage>>();
-            _services.AddScoped<Channel<TOutboundMessage>, ServiceBusChannel<TOutboundMessage>>();
+            _services.AddScoped<IInternalEventDispatcher, InternalEventDispatcher>();
+            _services.AddScoped<IServiceBusDispatcher, ServiceBusDispatcher>();
 
             // Must be a singleton as per documentation of ServiceBusClient and ServiceBusSender
-            _services.AddSingleton<IServiceBusSender<TOutboundMessage>>(
-                _ =>
-                {
-                    var client = new ServiceBusClient(serviceBusConnectionString);
-                    var instance = client.CreateSender(serviceBusTopicName);
-                    return new ServiceBusSender<TOutboundMessage>(instance);
-                });
+            _services.AddSingleton<IServiceBusDispatcher>(
+                _ => new ServiceBusDispatcher(serviceBusClient, serviceBusEventMapper));
 
             return this;
         }

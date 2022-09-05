@@ -12,20 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Application.Charges.Events;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Outbox
 {
     /// <summary>
-    /// Factory for creating <see cref="OutboxMessage"/>
+    /// Parser for outbox messages
     /// </summary>
-    public interface IOutboxMessageFactory
+    public interface IOutboxMessageParser
     {
         /// <summary>
-        /// Factory method for creating <see cref="OutboxMessage"/>
+        /// Parse data from outbox message using the message type to deliver an event of the correct type
         /// </summary>
-        /// <param name="chargePriceOperationsRejectedEvent"></param>
-        /// <returns><see cref="OutboxMessage"/></returns>
-        OutboxMessage CreateFrom(ChargePriceOperationsRejectedEvent chargePriceOperationsRejectedEvent);
+        /// <param name="outboxMessageType"></param>
+        /// <param name="data"></param>
+        /// <returns>an internal event matching outboxMessageType</returns>
+        public InternalEvent Parse(string outboxMessageType, string data);
     }
 }

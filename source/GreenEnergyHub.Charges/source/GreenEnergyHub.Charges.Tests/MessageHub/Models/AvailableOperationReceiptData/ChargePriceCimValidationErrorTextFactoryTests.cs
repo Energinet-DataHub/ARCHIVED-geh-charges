@@ -18,6 +18,7 @@ using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableOperationReceiptData;
@@ -34,22 +35,25 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
         [Theory]
         [InlineAutoMoqData]
         public void Create_WithMultipleMergeFields_ReturnsExpectedDescription(
-            ChargePriceCommandBuilder chargePriceCommandBuilder,
+            DocumentDtoBuilder documentDtoBuilder,
             CimValidationErrorTextProvider cimValidationErrorTextProvider,
             ChargePriceOperationDto chargeOperationDto,
             ILoggerFactory loggerFactory)
         {
             // Arrange
-            var chargeCommand = chargePriceCommandBuilder.WithChargeOperation(chargeOperationDto).Build();
+            var document = documentDtoBuilder
+                .WithDocumentType(DocumentType.NotifyPriceList)
+                .WithBusinessReasonCode(BusinessReasonCode.UpdateChargePrices)
+                .Build();
             var sut = new ChargePriceCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
             var validationError = new ValidationError(ValidationRuleIdentifier.DocumentTypeMustBeRequestChangeOfPriceList, null, null);
 
             var expected = CimValidationErrorTextTemplateMessages.DocumentTypeMustBeRequestChangeOfPriceListErrorText
-                .Replace("{{DocumentType}}", chargeCommand.Document.Type.ToString())
-                .Replace("{{DocumentBusinessReasonCode}}", chargeCommand.Document.BusinessReasonCode.ToString());
+                .Replace("{{DocumentType}}", document.Type.ToString())
+                .Replace("{{DocumentBusinessReasonCode}}", document.BusinessReasonCode.ToString());
 
             // Act
-            var actual = sut.Create(validationError, chargeCommand, chargeOperationDto);
+            var actual = sut.Create(validationError, document, chargeOperationDto);
 
             // Assert
             actual.Should().Be(expected);
@@ -58,13 +62,13 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
         [Theory]
         [InlineAutoMoqData]
         public void Create_WithPointPosition_ReturnsExpectedDescription(
-            ChargePriceCommandBuilder chargePriceCommandBuilder,
+            DocumentDto documentDto,
             ChargePriceOperationDto chargePriceOperationDto,
             CimValidationErrorTextProvider cimValidationErrorTextProvider,
             ILoggerFactory loggerFactory)
         {
             // Arrange
-            var chargeCommand = chargePriceCommandBuilder.WithChargeOperation(chargePriceOperationDto).Build();
+            // var chargeCommand = chargePriceCommandBuilder.WithChargeOperation(chargePriceOperationDto).Build();
             var sut = new ChargePriceCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
             var triggeredBy = chargePriceOperationDto.Points.GetPositionOfPoint(chargePriceOperationDto.Points[1]).ToString();
             var validationError = new ValidationError(ValidationRuleIdentifier.MaximumPrice, chargePriceOperationDto.OperationId, triggeredBy);
@@ -78,7 +82,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
                 .Replace("{{ChargeOwner}}", chargePriceOperationDto.ChargeOwner);
 
             // Act
-            var actual = sut.Create(validationError, chargeCommand, chargePriceOperationDto);
+            var actual = sut.Create(validationError, documentDto, chargePriceOperationDto);
 
             // Assert
             actual.Should().Be(expected);
@@ -92,18 +96,17 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
         public void Create_WithInvalidPointPosition_ReturnsErrorMessage(
             ValidationRuleIdentifier validationRuleIdentifier,
             string? triggeredBy,
-            ChargePriceCommandBuilder chargePriceCommandBuilder,
+            DocumentDto document,
             ChargePriceOperationDto chargePriceOperationDto,
             CimValidationErrorTextProvider cimValidationErrorTextProvider,
             ILoggerFactory loggerFactory)
         {
             // Arrange
-            var chargeCommand = chargePriceCommandBuilder.WithChargeOperation(chargePriceOperationDto).Build();
             var validationError = new ValidationError(validationRuleIdentifier, chargePriceOperationDto.OperationId, triggeredBy);
             var sut = new ChargePriceCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
 
             // Act
-            var actual = sut.Create(validationError, chargeCommand, chargePriceOperationDto);
+            var actual = sut.Create(validationError, document, chargePriceOperationDto);
 
             // Assert
             actual.ToLower().Should().Contain($"price {CimValidationErrorTextTemplateMessages.Unknown}");
@@ -114,12 +117,12 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
         [Theory]
         [InlineAutoMoqData]
         public void Create_MergesAllMergeFields(
-            ChargePriceCommand chargePriceCommand,
+            DocumentDto document,
+            ChargePriceOperationDto chargePriceOperationDto,
             CimValidationErrorTextProvider cimValidationErrorTextProvider,
             ILoggerFactory loggerFactory)
         {
             // Arrange
-            var chargePriceOperationDto = chargePriceCommand.Operations.First();
             var validationRuleIdentifiers = (ValidationRuleIdentifier[])Enum.GetValues(typeof(ValidationRuleIdentifier));
             var identifiersForRulesWithExtendedData =
                 ValidationRuleForInterfaceLoader.GetValidationRuleIdentifierForTypes(
@@ -131,10 +134,13 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
             // Assert
             foreach (var validationRuleIdentifier in validationRuleIdentifiers)
             {
-                var triggeredBy = GetTriggeredBy(chargePriceCommand, validationRuleIdentifier);
+                string? triggeredBy = null;
+                if (validationRuleIdentifier == ValidationRuleIdentifier.SubsequentBundleOperationsFail)
+                    triggeredBy = chargePriceOperationDto.OperationId;
+
                 var actual = sut.Create(
                     new ValidationError(validationRuleIdentifier, null, triggeredBy),
-                    chargePriceCommand,
+                    document,
                     chargePriceOperationDto);
 
                 actual.Should().NotBeNullOrWhiteSpace();
@@ -143,19 +149,6 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
 
                 if (identifiersForRulesWithExtendedData.Contains(validationRuleIdentifier) && triggeredBy != null)
                     actual.Should().NotContain("unknown");
-            }
-        }
-
-        private static string? GetTriggeredBy(
-            ChargeCommand chargePriceCommand,
-            ValidationRuleIdentifier validationRuleIdentifier)
-        {
-            switch (validationRuleIdentifier)
-            {
-                case ValidationRuleIdentifier.SubsequentBundleOperationsFail:
-                    return chargePriceCommand.Operations.First().OperationId;
-                default:
-                    return null;
             }
         }
     }

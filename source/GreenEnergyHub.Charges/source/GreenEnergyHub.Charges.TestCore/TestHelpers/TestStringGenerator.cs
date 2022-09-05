@@ -12,14 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
+using System;
+using System.Text;
 
-namespace GreenEnergyHub.Charges.Application.Charges.Services
+namespace GreenEnergyHub.Charges.TestCore.TestHelpers
 {
-    public interface IChargePriceNotificationService
+    public static class TestStringGenerator
     {
-        Task SaveNotificationsAsync(List<ChargePriceOperationDto> priceOperationNotifications);
+        public static string CreateStringOfRandomLength(int maxLength)
+        {
+            var builder = new StringBuilder();
+            var randomizer = new Random();
+            var length = randomizer.Next(0, maxLength);
+            for (var i = 0; i < length; i++)
+            {
+                builder.Append('0');
+            }
+
+            return builder.ToString();
+        }
     }
 }

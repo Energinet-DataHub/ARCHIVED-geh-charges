@@ -12,12 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.Messages.Events
+namespace GreenEnergyHub.Charges.Application.Common.Services
 {
-    /// <summary>
-    /// Contract for events.
-    /// </summary>
-    public interface IInternalEvent : IEvent
+    public interface IDomainEventPublisher
     {
+        /// <summary>
+        /// Publisher for raising domain events
+        /// </summary>
+        /// <param name="domainEvent"></param>
+        public void Publish<T>(T domainEvent);
     }
 }

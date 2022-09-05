@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
-using Energinet.DataHub.Core.Messaging.Transport;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using GreenEnergyHub.TestHelpers;
 using Moq;
@@ -28,7 +28,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions.S
         [Theory]
         [InlineAutoDomainData]
         public void Convert_WhenCalled_ReturnsInput(
-            [NotNull] Mock<IOutboundMessage> input,
+            [NotNull] Mock<InternalEvent> input,
             [NotNull] NoMapper sut)
         {
             // Act

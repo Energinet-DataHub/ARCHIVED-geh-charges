@@ -12,16 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Application.Charges.Events;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Azure.Messaging.ServiceBus;
 
-namespace GreenEnergyHub.Charges.Application.Charges.Services
+namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions
 {
-    public interface IChargePriceRejectionService
+    // ReSharper disable once UnusedTypeParameter
+    // - Type parameter is necessary in order to distinguish instances during resolution of types in dependency container
+    public interface IServiceBusDispatcher
     {
-        /// <summary>
-        /// Saves rejected operations to Outbox
-        /// </summary>
-        /// <param name="chargePriceOperationsRejectedEvent"></param>
-        public void SaveRejections(ChargePriceOperationsRejectedEvent chargePriceOperationsRejectedEvent);
+        public Task DispatchAsync(ServiceBusMessage serviceBusMessage, Type eventType, CancellationToken cancellationToken = default);
     }
 }

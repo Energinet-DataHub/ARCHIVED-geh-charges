@@ -14,6 +14,7 @@
 
 using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification.Charges;
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
@@ -36,6 +37,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection
                 .AddScoped<BundleSpecification<AvailableChargeData, ChargeCommandAcceptedEvent>,
                     ChargeBundleSpecification>();
+            serviceCollection.AddScoped<JsonMessageDeserializer<ChargeCommandAcceptedEvent>>();
 
             // serviceCollection.AddScoped<IAvailableDataNotifier<AvailableChargePriceData, PriceConfirmedEvent>,
             //     AvailableDataNotifier<AvailableChargePriceData, PriceConfirmedEvent>>();

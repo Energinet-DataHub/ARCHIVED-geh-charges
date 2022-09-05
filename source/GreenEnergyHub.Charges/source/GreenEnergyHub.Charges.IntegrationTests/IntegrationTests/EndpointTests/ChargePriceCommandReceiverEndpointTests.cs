@@ -24,7 +24,6 @@ using FluentAssertions.Execution;
 using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.FunctionHost.Charges;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
@@ -50,7 +49,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
         [Collection(nameof(ChargesFunctionAppCollectionFixture))]
         public class RunAsync : FunctionAppTestBase<ChargesFunctionAppFixture>, IAsyncLifetime
         {
-            private static readonly string _operationsRejectedEventType = typeof(ChargePriceOperationsRejectedEvent).FullName!;
+            private static readonly string _operationsRejectedEventType = typeof(PriceRejectedEvent).FullName!;
 
             public RunAsync(ChargesFunctionAppFixture fixture, ITestOutputHelper testOutputHelper)
                 : base(fixture, testOutputHelper)
@@ -185,7 +184,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 return chargePriceReceivedEvent;
             }
 
-            private static ServiceBusMessage CreateServiceBusMessage(IInternalEvent internalEvent, string correlationId)
+            private static ServiceBusMessage CreateServiceBusMessage<T>(T internalEvent, string correlationId)
             {
                 var applicationProperties = new Dictionary<string, string>
                 {

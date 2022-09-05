@@ -14,12 +14,13 @@
 
 using GreenEnergyHub.Charges.Application.Charges.Factories;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
-using GreenEnergyHub.Charges.Application.Charges.Services;
+using GreenEnergyHub.Charges.Application.Common.Services;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.Factories;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using GreenEnergyHub.Charges.Infrastructure.Outbox;
 using GreenEnergyHub.Charges.Infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,7 +31,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<IOutboxMessageFactory, OutboxMessageFactory>();
+            serviceCollection.AddScoped<OutboxMessageFactory>();
             serviceCollection.AddScoped<IChargePriceCommandReceivedEventHandler, ChargePriceCommandReceivedEventHandler>();
             serviceCollection.AddScoped<IChargePriceEventHandler, ChargePriceEventHandler>();
             serviceCollection
@@ -38,17 +39,15 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             ConfigureMessaging(serviceCollection);
             serviceCollection.AddScoped<IInputValidationRulesFactory<ChargePriceOperationDto>,
                 ChargePriceOperationInputValidationRulesFactory>();
-            serviceCollection.AddScoped<IChargePriceConfirmationService, ChargePriceConfirmationService>();
-            serviceCollection.AddScoped<IChargePriceRejectionService, ChargePriceRejectionService>();
-            serviceCollection.AddScoped<IChargePriceNotificationService, ChargePriceNotificationService>();
-            serviceCollection.AddScoped<IChargePriceOperationsRejectedEventFactory, ChargePriceOperationsRejectedEventFactory>();
+            serviceCollection.AddScoped<IDomainEventPublisher, DomainEventPublisher>();
+            serviceCollection.AddScoped<IPriceConfirmedEventFactory, PriceConfirmedEventFactory>();
+            serviceCollection.AddScoped<IPriceRejectedEventFactory, PriceRejectedEventFactory>();
+            serviceCollection.AddScoped<JsonMessageDeserializer<ChargePriceCommandReceivedEvent>>();
         }
 
         private static void ConfigureMessaging(IServiceCollection serviceCollection)
         {
-            serviceCollection
-                .AddMessaging()
-                .AddInternalMessageExtractor<ChargePriceCommandReceivedEvent>();
+            serviceCollection.AddMessaging();
         }
     }
 }

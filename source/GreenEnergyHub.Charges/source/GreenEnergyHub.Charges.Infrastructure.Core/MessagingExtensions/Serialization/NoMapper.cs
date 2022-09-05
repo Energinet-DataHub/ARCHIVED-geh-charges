@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.Core.Messaging.Transport;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization
 {
     public class NoMapper : IJsonOutboundMapper
     {
-        public object Convert(IOutboundMessage message)
+        public object Convert(InternalEvent message)
         {
             return message;
         }
