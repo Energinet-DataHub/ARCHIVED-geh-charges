@@ -12,8 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Linq;
 using AutoFixture.Xunit2;
+using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
+using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
@@ -30,12 +33,18 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions.F
     {
         [Theory]
         [InlineAutoDomainData]
-        public void ExternalMessage_DoesNotContain_ReplyTo(
-            byte[] data,
-            ServiceBusMessageFactory sut)
+        public void ExternalMessage_Message_DoesNotContainReplyTo(byte[] data, ServiceBusMessageFactory sut)
         {
             var actual = sut.CreateExternalMessage(data);
             actual.ReplyTo.Should().BeNull();
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public void ExternalMessage_Message_ShouldNotYetContainSubject(byte[] data, ServiceBusMessageFactory sut)
+        {
+            var actual = sut.CreateExternalMessage(data);
+            actual.Subject.Should().BeNull();
         }
 
         [Theory]
@@ -55,6 +64,54 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions.F
 
             // Assert
             actual.ApplicationProperties.First(x => x.Key == MessageMetaDataConstants.ReplyTo).Value.Should().Be(replyTo);
+        }
+
+        [Theory]
+        [InlineAutoMoqData("replyTo", true)]
+        [InlineAutoMoqData(null!, false)]
+        public void InternalMessage_DoesContain_Subject(
+            string replyTo,
+            bool replyToSet,
+            [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
+            string data,
+            ServiceBusMessageFactory sut)
+        {
+            // Arrange
+            const string subject = "FakeSubject";
+            messageMetaDataContext.Setup(m => m.ReplyTo).Returns(replyTo);
+            messageMetaDataContext.Setup(m => m.IsReplyToSet()).Returns(replyToSet);
+
+            // Act
+            var actual = sut.CreateInternalMessage(data, subject);
+
+            // Assert
+            actual.Subject.Should().Be(subject);
+        }
+
+        [Theory]
+        [InlineAutoMoqData("replyTo", true)]
+        [InlineAutoMoqData(null!, false)]
+        public void InternalMessage_DoesContain_OperationCorrelationId(
+            string replyTo,
+            bool replyToSet,
+            [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
+            [Frozen] Mock<ICorrelationContext> correlationContext,
+            string data,
+            ServiceBusMessageFactory sut)
+        {
+            // Arrange
+            const string subject = "FakeSubject";
+            messageMetaDataContext.Setup(m => m.ReplyTo).Returns(replyTo);
+            messageMetaDataContext.Setup(m => m.IsReplyToSet()).Returns(replyToSet);
+            correlationContext.Setup(c => c.Id).Returns(Guid.NewGuid().ToString);
+
+            // Act
+            var actual = sut.CreateInternalMessage(data, subject);
+
+            // Assert
+            actual.ApplicationProperties
+                .First(x => x.Key == MessageMetaDataConstants.CorrelationId).Value
+                .Should().Be(correlationContext.Object.Id);
         }
     }
 }

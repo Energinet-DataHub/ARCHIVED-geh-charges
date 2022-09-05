@@ -36,6 +36,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             ConfigureIntegrationEventsCharges(serviceCollection);
             ConfigureIntegrationEventsChargeLinks(serviceCollection);
             ConfigureIntegrationEventsMeteringPointDomain(serviceCollection);
+            ConfigureIntegrationEventsMarketParticipantDomain(serviceCollection);
             ConfigureIntegrationEventsMessageHub(serviceCollection);
 
             // Domain events
@@ -84,6 +85,20 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                     name: "CreateLinksRequestQueueExists",
                     connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubManagerConnectionString),
                     queueName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.CreateLinksRequestQueueName));
+        }
+
+        private static void ConfigureIntegrationEventsMarketParticipantDomain(IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddHealthChecks()
+                .AddAzureServiceBusTopic(
+                    name: "MarketParticipantChangedTopicExists",
+                    connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubManagerConnectionString),
+                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.MarketParticipantChangedTopicName))
+                .AddAzureServiceBusSubscription(
+                    name: "MarketParticipantChangedSubscriptionExists",
+                    connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubManagerConnectionString),
+                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.MarketParticipantChangedTopicName),
+                    subscriptionName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.MarketParticipantChangedSubscriptionName));
         }
 
         private static void ConfigureIntegrationEventsMessageHub(IServiceCollection serviceCollection)

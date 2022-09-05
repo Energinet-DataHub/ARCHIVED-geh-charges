@@ -20,6 +20,7 @@ using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.BusinessValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 using GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
@@ -87,7 +88,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 var links = new List<ChargeLinkOperationDto> { link };
                 var command = chargeLinksCommandBuilder.WithChargeLinks(links).Build();
                 var correlationIdOne = CorrelationIdGenerator.Create();
-                var messageOne = CreateServiceBusMessage(command, correlationIdOne, "ChargeLinksUpdate");
+                var messageOne = CreateServiceBusMessage(command, correlationIdOne, nameof(ChargeLinksReceivedEvent));
 
                 // Act
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
@@ -97,7 +98,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     Fixture.HostManager, nameof(ChargeLinkConfirmationDataAvailableNotifierEndpoint));
 
                 var correlationIdTwo = CorrelationIdGenerator.Create();
-                var messageTwo = CreateServiceBusMessage(command, correlationIdTwo, "ChargeLinksUpdate");
+                var messageTwo = CreateServiceBusMessage(command, correlationIdTwo, nameof(ChargeLinksReceivedEvent));
 
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
                     () => Fixture.ChargesTopic.SenderClient.SendMessageAsync(messageTwo), correlationIdTwo);
