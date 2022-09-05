@@ -45,6 +45,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
         public const string RequestResponseLoggingContainerName = "marketoplogs";
 
         // Integration, marketparticipants domain
+        public const string MarketParticipantChangedTopicKey = "market-participant-changed";
         public const string MarketParticipantChangedSubscriptionName = "market-participant-changed-to-charges";
 
         // Internal, charge

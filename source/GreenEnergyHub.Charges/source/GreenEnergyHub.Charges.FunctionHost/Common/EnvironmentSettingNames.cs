@@ -60,6 +60,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
         public const string RequestResponseLoggingContainerName = "REQUEST_RESPONSE_LOGGING_CONTAINER_NAME";
 
         // Integration, marketparticipant/actor domain
+        public const string MarketParticipantChangedTopicName = "MARKET_PARTICIPANT_CHANGED_TOPIC_NAME";
         public const string MarketParticipantChangedSubscriptionName = "MARKET_PARTICIPANT_CHANGED_SUBSCRIPTION_NAME";
 
         // Internal, charge
