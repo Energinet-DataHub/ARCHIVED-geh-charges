@@ -143,7 +143,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.BackendServiceAppId, AuthorizationConfiguration.BackendAppId);
 
             ChargesTopic = await ServiceBusResourceProvider
-                .BuildTopic(ChargesServiceBusResourceNames.ChargeLinksAcceptedTopicKey)
+                .BuildTopic(ChargesServiceBusResourceNames.ChargeTopicKey)
                 .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.ChargesTopicName)
                 .AddSubscription(ChargesServiceBusResourceNames.CommandReceivedSubscriptionName)
                 .AddSubjectFilter(nameof(ChargeCommandReceivedEvent))
@@ -216,7 +216,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
                 .CreateAsync();
 
             await ServiceBusResourceProvider
-                .BuildTopic(ChargesServiceBusResourceNames.DefaultChargeLinksDataAvailableNotifiedTopicKey)
+                .BuildTopic(ChargesServiceBusResourceNames.ChargeTopicKey)
                 .SetEnvironmentVariableToTopicName(EnvironmentSettingNames
                     .DefaultChargeLinksDataAvailableNotifiedTopicName)
                 .AddSubscription(ChargesServiceBusResourceNames.DefaultChargeLinksDataAvailableNotifiedSubscriptionName)
