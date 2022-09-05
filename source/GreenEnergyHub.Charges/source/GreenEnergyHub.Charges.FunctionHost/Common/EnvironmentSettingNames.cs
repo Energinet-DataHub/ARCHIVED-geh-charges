@@ -48,11 +48,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
         public const string MeteringPointCreatedTopicName = "METERING_POINT_CREATED_TOPIC_NAME";
         public const string MeteringPointCreatedSubscriptionName = "METERING_POINT_CREATED_SUBSCRIPTION_NAME";
         public const string CreateLinksRequestQueueName = "CREATE_LINKS_REQUEST_QUEUE_NAME";
-        public const string DefaultChargeLinksDataAvailableNotifiedTopicName =
-            "DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_TOPIC_NAME";
-
-        public const string DefaultChargeLinksDataAvailableNotifiedSubscription =
-            "DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_SUBSCRIPTION_NAME";
 
         // Integration, message hub
         public const string MessageHubDataAvailableQueue = "MESSAGEHUB_DATAAVAILABLE_QUEUE";
@@ -68,7 +63,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
         public const string MarketParticipantChangedSubscriptionName = "MARKET_PARTICIPANT_CHANGED_SUBSCRIPTION_NAME";
 
         // Internal, charge
-        public const string ChargesTopicName = "CHARGES_TOPIC_NAME";
+        public const string ChargesDomainEventTopicName = "CHARGES_TOPIC_NAME";
 
         // Internal, charge, received
         public const string CommandReceivedSubscriptionName = "COMMAND_RECEIVED_SUBSCRIPTION_NAME";
@@ -95,6 +90,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
         public const string ChargeLinksAcceptedSubDataAvailableNotifier = "CHARGE_LINKS_ACCEPTED_SUB_DATA_AVAILABLE_NOTIFIER";
         public const string ChargeLinksAcceptedSubEventPublisher = "CHARGE_LINKS_ACCEPTED_SUB_EVENT_PUBLISHER";
         public const string ChargeLinksAcceptedReplier = "CHARGE_LINKS_ACCEPTED_SUB_REPLIER";
+        public const string DefaultChargeLinksDataAvailableNotifiedSubscription =
+            "DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_SUBSCRIPTION_NAME";
 
         // Internal, charge links, rejected
         public const string ChargeLinksRejectedSubscriptionName = "CHARGE_LINKS_REJECTED_SUBSCRIPTION_NAME";

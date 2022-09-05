@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
         public const string MarketParticipantChangedSubscriptionName = "market-participant-changed-to-charges";
 
         // Internal, charge
-        public const string ChargeTopicKey = "charges";
+        public const string ChargeTopicKey = "charges-domain-events";
 
         // Internal, charge, received
         public const string CommandReceivedSubscriptionName = "command-received";

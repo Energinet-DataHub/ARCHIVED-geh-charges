@@ -85,7 +85,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 var chargeCommandReceivedEvent = CreateChargeCommandReceivedEvent(
                     commandBuilder, documentDtoBuilder, operationDtoBuilder, chargeId, ownerGln, chargeType);
                 var correlationId = CorrelationIdGenerator.Create();
-                var message = CreateServiceBusMessage(chargeCommandReceivedEvent, correlationId, "ChargeCommandReceived");
+                var message = CreateServiceBusMessage(chargeCommandReceivedEvent, correlationId, nameof(ChargeCommandReceivedEvent));
 
                 // Act
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(

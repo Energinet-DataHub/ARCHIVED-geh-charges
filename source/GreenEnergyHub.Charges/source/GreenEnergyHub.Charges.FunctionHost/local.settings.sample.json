@@ -50,7 +50,7 @@
     "REQUEST_RESPONSE_LOGGING_CONTAINER_NAME": "marketoplogs",
 
     // Internal, charge
-    "CHARGES_TOPIC_NAME": "charges",
+    "CHARGES_TOPIC_NAME": "charges-domain-events",
 
     // Internal, charge, received
     "COMMAND_RECEIVED_SUBSCRIPTION_NAME": "command-received",
