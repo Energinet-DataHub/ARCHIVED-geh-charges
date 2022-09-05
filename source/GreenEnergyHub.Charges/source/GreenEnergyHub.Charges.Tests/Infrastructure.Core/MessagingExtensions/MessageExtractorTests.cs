@@ -32,14 +32,15 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions
     [UnitTest]
     public class MessageExtractorTests
     {
-        // [Fact]
-        // public void Constructor_WhenDeserializerIsNull_ThrowsArgumentNullException()
-        // {
-        //     JsonMessageDeserializer<IInboundMessage>? deserializer = null;
-        //
-        //     Assert.Throws<ArgumentNullException>(
-        //         () => new MessageExtractor<IInboundMessage>(deserializer!));
-        // }
+        [Fact]
+        public void Constructor_WhenDeserializerIsNull_ThrowsArgumentNullException()
+        {
+            MessageDeserializer<IInboundMessage>? deserializer = null;
+
+            Assert.Throws<ArgumentNullException>(
+                () => new MessageExtractor<IInboundMessage>(deserializer!));
+        }
+
         [Theory]
         [InlineAutoMoqData]
         public async Task ExtractAsync_WhenGivenNullArray_ThrowsArgumentNullException(
@@ -52,32 +53,33 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions
                 .ConfigureAwait(false);
         }
 
-        // [Theory]
-        // [InlineAutoMoqData]
-        // public async Task ExtractAsync_WhenGivenByteArray_CallsDeserializerAndReturnsResult(
-        //     [Frozen] Mock<JsonMessageDeserializer<InternalEvent>> deserializer,
-        //     byte[] data,
-        //     InternalEvent message)
-        // {
-        //     // Arrange
-        //     byte[]? deserializeBytes = null;
-        //     deserializer.Setup(
-        //             s => s.FromBytesAsync(
-        //                 It.IsAny<byte[]>(),
-        //                 It.IsAny<CancellationToken>()))
-        //         .Returns(Task.FromResult(message))
-        //         .Callback<byte[], CancellationToken>(
-        //             (calledData, _) => deserializeBytes = calledData);
-        //
-        //     var sut = new MessageExtractor<InternalEvent>(deserializer.Object);
-        //
-        //     // Act
-        //     var result = await sut.ExtractAsync(data).ConfigureAwait(false);
-        //
-        //     // Assert
-        //     Assert.Equal(deserializeBytes, data);
-        //     Assert.Equal(message, result);
-        // }
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task ExtractAsync_WhenGivenByteArray_CallsDeserializerAndReturnsResult(
+            [Frozen] Mock<MessageDeserializer<IInboundMessage>> deserializer,
+            byte[] data,
+            IInboundMessage message)
+        {
+            // Arrange
+            byte[]? deserializeBytes = null;
+            deserializer.Setup(
+                    s => s.FromBytesAsync(
+                        It.IsAny<byte[]>(),
+                        It.IsAny<CancellationToken>()))
+                .Returns(Task.FromResult(message))
+                .Callback<byte[], CancellationToken>(
+                    (calledData, _) => deserializeBytes = calledData);
+
+            var sut = new MessageExtractor<IInboundMessage>(deserializer.Object);
+
+            // Act
+            var result = await sut.ExtractAsync(data).ConfigureAwait(false);
+
+            // Assert
+            Assert.Equal(deserializeBytes, data);
+            Assert.Equal(message, result);
+        }
+
         [Theory]
         [InlineAutoMoqData]
         public async Task ExtractAsync_WhenGivenNullStream_ThrowsArgumentNullException(
@@ -90,32 +92,32 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions
                 .ConfigureAwait(false);
         }
 
-        // [Theory]
-        // [InlineAutoMoqData]
-        // public async Task ExtractAsync_WhenGivenStream_CallsDeserializerAndReturnsResult(
-        //     [Frozen] Mock<JsonMessageDeserializer<IInboundMessage>> deserializer,
-        //     IInboundMessage message)
-        // {
-        //     // Arrange
-        //     await using var stream = new MemoryStream();
-        //
-        //     var calledDeserializer = false;
-        //     deserializer.Setup(
-        //             s => s.FromBytesAsync(
-        //                 It.IsAny<byte[]>(),
-        //                 It.IsAny<CancellationToken>()))
-        //         .Returns(Task.FromResult(message))
-        //         .Callback<byte[], CancellationToken>(
-        //             (_, _) => calledDeserializer = true);
-        //
-        //     var sut = new MessageExtractor<IInboundMessage>(deserializer.Object);
-        //
-        //     // Act
-        //     var result = await sut.ExtractAsync(stream).ConfigureAwait(false);
-        //
-        //     // Assert
-        //     Assert.True(calledDeserializer);
-        //     Assert.Equal(message, result);
-        // }
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task ExtractAsync_WhenGivenStream_CallsDeserializerAndReturnsResult(
+            [Frozen] Mock<MessageDeserializer<IInboundMessage>> deserializer,
+            IInboundMessage message)
+        {
+            // Arrange
+            await using var stream = new MemoryStream();
+
+            var calledDeserializer = false;
+            deserializer.Setup(
+                    s => s.FromBytesAsync(
+                        It.IsAny<byte[]>(),
+                        It.IsAny<CancellationToken>()))
+                .Returns(Task.FromResult(message))
+                .Callback<byte[], CancellationToken>(
+                    (_, _) => calledDeserializer = true);
+
+            var sut = new MessageExtractor<IInboundMessage>(deserializer.Object);
+
+            // Act
+            var result = await sut.ExtractAsync(stream).ConfigureAwait(false);
+
+            // Assert
+            Assert.True(calledDeserializer);
+            Assert.Equal(message, result);
+        }
     }
 }
