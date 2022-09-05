@@ -46,7 +46,7 @@ limitations under the License.
         <PackageReference Include="Energinet.DataHub.MessageHub.IntegrationTesting" Version="3.1.0" />
         <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.8" />
-        <PackageReference Include="Microsoft.Azure.Management.ServiceBus" Version="3.0.0" />
+        <PackageReference Include="Microsoft.Azure.Management.ServiceBus" Version="5.0.0" />
         <PackageReference Include="Microsoft.Azure.WebJobs.Extensions" Version="4.0.1" />
         <PackageReference Include="Microsoft.Azure.WebJobs.Host.TestCommon" Version="3.0.30" />
         <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
@@ -69,7 +69,7 @@ limitations under the License.
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Update="Microsoft.VisualStudio.Threading.Analyzers" Version="17.2.32">
+        <PackageReference Update="Microsoft.VisualStudio.Threading.Analyzers" Version="17.3.44">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
