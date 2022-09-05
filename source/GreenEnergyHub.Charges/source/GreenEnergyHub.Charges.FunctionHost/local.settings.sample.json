@@ -68,7 +68,7 @@
 
     // Internal, charge price, rejected
     "CHARGE_PRICE_REJECTED_SUBSCRIPTION_NAME": "charge-price-rejected",
-    
+
     // Internal, charge links, received
     "CHARGE_LINKS_RECEIVED_SUBSCRIPTION_NAME": "links-command-received-receiver",
 
