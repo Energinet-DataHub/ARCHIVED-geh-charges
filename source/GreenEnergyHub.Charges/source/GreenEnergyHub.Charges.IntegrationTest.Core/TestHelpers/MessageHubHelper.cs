@@ -34,7 +34,6 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
             string correlationId,
             int noOfMessageTypes = 1)
         {
-            var noOfReceivedMessages = 0;
             var peekResults = new List<string>();
 
             var expected = $"MessageHub received all {noOfMessageTypes} expected messages.";
@@ -45,11 +44,10 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
                 try
                 {
                     peekResults.Add(await WaitForDataAvailableAndPeek(messageHub, correlationId));
-                    noOfReceivedMessages++;
                 }
                 catch (Exception ex) when (ex is TaskCanceledException or TimeoutException)
                 {
-                    actual = $"MessageHub received only {noOfReceivedMessages} of {noOfMessageTypes} expected messages!";
+                    actual = $"MessageHub received only {i} of {noOfMessageTypes} expected messages!";
                 }
                 finally
                 {
