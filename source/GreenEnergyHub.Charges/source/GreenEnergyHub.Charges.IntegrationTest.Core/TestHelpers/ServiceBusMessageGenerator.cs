@@ -35,7 +35,6 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
                 Subject = subject,
                 CorrelationId = correlationId,
             };
-
             foreach (var applicationProperty in applicationProperties)
             {
                 serviceBusMessage.ApplicationProperties.Add(applicationProperty.Key, applicationProperty.Value);

@@ -2,13 +2,11 @@
 
 All process flows within the Charges domain will be gathered here.
 
-| Process flows |
-|-------------------|
-|<b>[Charge Price List Flow](#Charge-Price-List-Flow)</b>|
-|   - [Persist Charge](#Persist-Charge)|
-|   - [Persist Charge Prices](#Persist-Charge-Prices)|
-|<b>[Charge Link Flow](#Charge-Link-Flow)<b>|
-<br>
+- [Charge Price List Flow](#Charge-Price-List-Flow)
+    - [Persist Charge Information](#Persist-Charge-Information)
+    - [Persist Charge Prices](#Persist-Charge-Prices)
+        - [Irregular Price Series](#Irregular-Price-Series)
+- [Charge Link Flow](#Charge-Link-Flow)
 
 ## Charge Price List Flow
 
@@ -17,7 +15,7 @@ It also shows the micro services involved along with the activities they perform
 
 ![Charge flow](images/ChargePriceListProcessFlow.png)
 
-### Persist Charge
+### Persist Charge Information
 
 The below process flow depicts the rule set applied in the `ChargeCommandReceiverEndpoint` for persisting incoming charges in the SQL database.  
 It documents the different persistence paths the system takes given circumstances like charge already exists (same Charge ID, type and owner), whether it is an update or stop operation, and whether a stop already exists on the charge's timeline and if this stop is being cancelled or not.
@@ -26,7 +24,7 @@ The rule set was built upon the scenarios listed [here](images/PersistingCharges
 
 Note, stopping a charge results in a removal of any registered prices from the stop date and forwards.
 
-![Persist charge](images/PersistingChargesRuleSet_ProcessFlow.png)
+![Persist charge information](images/PersistingChargesRuleSet_ProcessFlow.png)
 <br>
 
 ### Persist Charge Prices
@@ -34,6 +32,19 @@ Note, stopping a charge results in a removal of any registered prices from the s
 The rule set for persisting charge prices.
 
 ![Persist charge prices](images/PersistingChargePricesRuleSet_ProcessFlow.png)
+
+<br>
+
+#### <b>Irregular Price Series</b>
+
+A charge owner may want to submit a charge price request (D08) containing a price series for monthly (resolution) charge, where the price series' start and end date time values do <b>not</b> equal the first of a month. Such a price series is to be known as an <b>irregular price series</b> and it may be relevant when the charge owner wants to:
+
+- change the monthly charge price during the month
+- submit a price up to the charge's stop date, which may be during a month
+
+Currently an irregular price series is only relevant for charges with a monthly resolution (P1M), such as fees and subscriptions.
+
+The rule set for persisting irregular price series is no different than the normal way of persisting charge prices, nevertheless a list of irregular price series persistence scenarios and their expected outcome can be found [here](images/Persisting_Irregular_PriceSeries_Examples.png).
 
 <br>
 
