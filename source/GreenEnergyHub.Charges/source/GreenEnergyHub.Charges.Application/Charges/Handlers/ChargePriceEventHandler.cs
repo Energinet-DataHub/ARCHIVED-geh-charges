@@ -91,12 +91,11 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                         throw new InvalidOperationException($"Charge ID '{operation.SenderProvidedChargeId}' does not exist.");
                     }
 
-                    // Todo: Temporarily stop saving prices in "new flow"
-                    // charge.UpdatePrices(
-                    //     operation.PointsStartInterval,
-                    //     operation.PointsEndInterval,
-                    //     operation.Points,
-                    //     operation.OperationId);
+                    charge.UpdatePrices(
+                        operation.PointsStartInterval,
+                        operation.PointsEndInterval,
+                        operation.Points,
+                        operation.OperationId);
                 }
                 catch (ChargeOperationFailedException exception)
                 {
@@ -114,12 +113,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 
             HandleConfirmations(document, operationsToBeConfirmed);
             HandleRejections(operationsToBeRejected, rejectionRules, document);
-
-            // With story 1411 below log entry will be replaced with 'await _unitOfWork.SaveChangesAsync().ConfigureAwait(false)';
-            foreach (var operation in operationsToBeConfirmed)
-            {
-                _logger.LogInformation("At this point, price(s) will be persisted for operation with Id {Id}", operation.OperationId);
-            }
         }
 
         private void HandleConfirmations(

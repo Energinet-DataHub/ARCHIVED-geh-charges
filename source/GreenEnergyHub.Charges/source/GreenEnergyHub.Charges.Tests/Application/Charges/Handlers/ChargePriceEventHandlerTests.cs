@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
     {
         [Theory]
         [InlineAutoMoqData]
-        public async Task HandleAsync_WhenValidationSucceed_CallsConfirmServiceAndLogsThatPricesArePersisted(
+        public async Task HandleAsync_WhenValidationSucceed_ThenConfirmedEventPublished(
             [Frozen] Mock<IChargeIdentifierFactory> chargeIdentifierFactory,
             [Frozen] Mock<IInputValidator<ChargePriceOperationDto>> inputValidator,
             [Frozen] Mock<IChargeRepository> chargeRepository,
@@ -101,15 +101,11 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                 .Verify(x => x.Publish(It.IsAny<PriceRejectedEvent>()), Times.Never);
             domainEventPublisher
                 .Verify(x => x.Publish(priceConfirmedEvent), Times.Once);
-
-            var operationId = receivedEvent.Command.Operations.First().OperationId;
-            var expectedMessage = $"At this point, price(s) will be persisted for operation with Id {operationId}";
-            logger.VerifyLoggerWasCalled(expectedMessage, LogLevel.Information);
         }
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task HandleAsync_WhenValidationFails_RejectsEvent(
+        public async Task HandleAsync_WhenValidationFails_ThenRejectedEventRaised(
             [Frozen] Mock<IChargeIdentifierFactory> chargeIdentifierFactory,
             [Frozen] Mock<IInputValidator<ChargePriceOperationDto>> inputValidator,
             [Frozen] Mock<IChargeRepository> chargeRepository,
@@ -205,44 +201,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 
             // Act / Assert
             await Assert.ThrowsAsync<ArgumentNullException>(() => sut.HandleAsync(receivedEvent!));
-        }
-
-        // TODO: Reenable or redo test as soon as chargeprice flow is storing prices
-        [Theory(Skip = "Disabled until Charge Price flow is fully functional as the current SupportOldFlowAsync stores the price series")]
-        [InlineAutoMoqData]
-        public async Task HandleAsync_WhenPriceSeriesWithResolutionPT1H_StorePriceSeries(
-            [Frozen] Mock<IChargeIdentifierFactory> chargeIdentifierFactory,
-            [Frozen] Mock<IInputValidator<ChargePriceOperationDto>> inputValidator,
-            [Frozen] Mock<IChargeRepository> chargeRepository,
-            TestMarketParticipant sender,
-            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            ChargeBuilder chargeBuilder,
-            ChargePriceEventHandler sut)
-        {
-            // Arrange
-            var validationResult = ValidationResult.CreateSuccess();
-            inputValidator.Setup(v => v.Validate(It.IsAny<ChargePriceOperationDto>(), It.IsAny<DocumentDto>())).Returns(validationResult);
-            var points = new List<Point>();
-            var price = 99.00M;
-            for (var i = 0; i <= 23; i++)
-            {
-                points.Add(new Point(price + i, InstantHelper.GetTodayAtMidnightUtc() + Duration.FromHours(i)));
-            }
-
-            var charge = chargeBuilder.WithPoints(points).Build();
-            SetupChargeRepository(chargeRepository, charge);
-            SetupMarketParticipantRepository(marketParticipantRepository, sender);
-            SetupChargeIdentifierFactoryMock(chargeIdentifierFactory);
-
-            var chargeCommand = CreateChargeCommandWith24Points();
-            var receivedEvent = new ChargePriceCommandReceivedEvent(InstantHelper.GetTodayAtMidnightUtc(), chargeCommand);
-
-            // Act
-            await sut.HandleAsync(receivedEvent);
-
-            // Assert
-            // charge.Points.Count.Should().Be(24);
-            // TODO: assert that points are updated to those created in CreateChargeCommandWith24Points()
         }
 
         private static void SetupMarketParticipantRepository(
