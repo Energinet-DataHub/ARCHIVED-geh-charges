@@ -14,75 +14,176 @@
 
 module "sbt_charges" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic?ref=8.1.0"
-
   name                = "charges"
   namespace_id        = module.sb_charges.id
+  project_name        = var.domain_name_short
+}
 
-  subscriptions       = [
-    {
-      name                = "command-received"
-      max_delivery_count  = 1
-      correlation_filter  = "ChargeCommandReceivedEvent"
-    },
-    {
-      name                = "charge-command-accepted-receiver"
-      max_delivery_count  = 1
-      correlation_filter  = "ChargeCommandAcceptedEvent"
-    },
-    {
-      name                = "chargeaccepted-sub-dataavailablenotifier"
-      max_delivery_count  = 1
-      correlation_filter  = "ChargeCommandAcceptedEvent"
-    },
-    {
-      name                = "command-accepted"
-      max_delivery_count  = 1
-      correlation_filter  = "ChargeCommandAcceptedEvent"
-    },
-    {
-      name                = "command-rejected"
-      max_delivery_count  = 1
-      correlation_filter  = "ChargeCommandRejectedEvent"
-    },
-    {
-      name                = "default-charge-links-available-notified"
-      max_delivery_count  = 1
-      correlation_filter  = "ChargeLinksDataAvailableNotifiedEvent"
-    },
-    {
-      name                = "charge-links-accepted-sub-event-publisher"
-      max_delivery_count  = 1
-      correlation_filter  = "ChargeLinksAcceptedEvent"
-    },
-    {
-      name                = "charge-links-accepted-sub-data-available-notifier"
-      max_delivery_count  = 1
-      correlation_filter  = "ChargeLinksAcceptedEvent"
-    },
-    {
-      name                = "charge-links-accepted-sub-confirmation-notifier"
-      max_delivery_count  = 1
-      correlation_filter  = "ChargeLinksAcceptedEvent"
-    },
-    {
-      name                = "links-command-received-receiver"
-      max_delivery_count  = 1
-      correlation_filter  = "ChargeLinksReceivedEvent"
-    },
-    {
-      name                = "links-command-rejected"
-      max_delivery_count  = 1
-      correlation_filter  = "ChargeLinksRejectedEvent"
-    },
-    {
-      name                = "price-command-received"
-      max_delivery_count  = 1
-      correlation_filter  = "ChargePriceCommandReceivedEvent"
-    },
-    {
-      name                = "charge-price-rejected"
-      max_delivery_count  = 1
-      correlation_filter  = "ChargePriceOperationsRejectedEvent"
-    },
-  ]
+module "sbts_charges_command_received" {
+  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v8"
+  name                = "command-received"
+  project_name        = var.project_name
+  topic_id            = module.sbt_charges.id
+  max_delivery_count  = 1
+  correlation_filter  = {
+    properties     = {
+      "Subject" = "ChargeCommandReceivedEvent"
+    }
+  }
+}
+
+module "sbts_charges_charge_command_accepted_receiver" {
+  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v8"
+  name                = "charge-command-accepted-receiver"
+  project_name        = var.project_name
+  topic_id            = module.sbt_charges.id
+  max_delivery_count  = 1
+  correlation_filter  = {
+    properties     = {
+      "Subject" = "ChargeCommandAcceptedEvent"
+    }
+  }
+}
+
+module "sbts_charges_chargeaccepted_sub_dataavailablenotifier" {
+  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v8"
+  name                = "chargeaccepted-sub-dataavailablenotifier"
+  project_name        = var.project_name
+  topic_id            = module.sbt_charges.id
+  max_delivery_count  = 1
+  correlation_filter  = {
+    properties     = {
+      "Subject" = "ChargeCommandAcceptedEvent"
+    }
+  }
+}
+
+module "sbts_charges_command_accepted" {
+  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v8"
+  name                = "command-accepted"
+  project_name        = var.project_name
+  topic_id            = module.sbt_charges.id
+  max_delivery_count  = 1
+  correlation_filter  = {
+    properties     = {
+      "Subject" = "ChargeCommandAcceptedEvent"
+    }
+  }
+}
+
+module "sbts_command_rejected" {
+  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v8"
+  name                = "command-rejected"
+  project_name        = var.project_name
+  topic_id            = module.sbt_charges.id
+  max_delivery_count  = 1
+  correlation_filter  = {
+    properties     = {
+      "Subject" = "ChargeCommandRejectedEvent"
+    }
+  }
+}
+
+module "sbts_default_charge_links_available_notified" {
+  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v8"
+  name                = "default-charge-links-available-notified"
+  project_name        = var.project_name
+  topic_id            = module.sbt_charges.id
+  max_delivery_count  = 1
+  correlation_filter  = {
+    properties     = {
+      "Subject" = "ChargeLinksDataAvailableNotifiedEvent"
+    }
+  }
+}
+
+module "sbts_charge_links_accepted_sub_event_publisher" {
+  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v8"
+  name                = "charge-links-accepted-sub-event-publisher"
+  project_name        = var.project_name
+  topic_id            = module.sbt_charges.id
+  max_delivery_count  = 1
+  correlation_filter  = {
+    properties     = {
+      "Subject" = "ChargeLinksAcceptedEvent"
+    }
+  }
+}
+
+module "sbts_charge_links_accepted_sub_data_available_notifier" {
+  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v8"
+  name                = "charge-links-accepted-sub-data-available-notifier"
+  project_name        = var.project_name
+  topic_id            = module.sbt_charges.id
+  max_delivery_count  = 1
+  correlation_filter  = {
+    properties     = {
+      "Subject" = "ChargeLinksAcceptedEvent"
+    }
+  }
+}
+
+module "sbts_charge_links_accepted_sub_confirmation_notifier" {
+  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v8"
+  name                = "charge-links-accepted-sub-confirmation-notifier"
+  project_name        = var.project_name
+  topic_id            = module.sbt_charges.id
+  max_delivery_count  = 1
+  correlation_filter  = {
+    properties     = {
+      "Subject" = "ChargeLinksAcceptedEvent"
+    }
+  }
+}
+
+module "sbts_links_command_received_receiver" {
+  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v8"
+  name                = "links-command-received-receiver"
+  project_name        = var.project_name
+  topic_id            = module.sbt_charges.id
+  max_delivery_count  = 1
+  correlation_filter  = {
+    properties     = {
+      "Subject" = "ChargeLinksReceivedEvent"
+    }
+  }
+}
+
+module "sbts_links_command_rejected" {
+  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v8"
+  name                = "links-command-rejected"
+  project_name        = var.project_name
+  topic_id            = module.sbt_charges.id
+  max_delivery_count  = 1
+  correlation_filter  = {
+    properties     = {
+      "Subject" = "ChargeLinksRejectedEvent"
+    }
+  }
+}
+
+module "sbts_price_command_received" {
+  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v8"
+  name                = "price-command-received"
+  project_name        = var.project_name
+  topic_id            = module.sbt_charges.id
+  max_delivery_count  = 1
+  correlation_filter  = {
+    properties     = {
+      "Subject" = "ChargePriceCommandReceivedEvent"
+    }
+  }
+}
+
+module "sbts_charge_price_rejected" {
+  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v8"
+  name                = "charge-price-rejected"
+  project_name        = var.project_name
+  topic_id            = module.sbt_charges.id
+  max_delivery_count  = 1
+  correlation_filter  = {
+    properties     = {
+      "Subject" = "ChargePriceOperationsRejectedEvent"
+    }
+  }
 }
