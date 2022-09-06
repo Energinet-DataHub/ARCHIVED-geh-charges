@@ -1,5 +1,9 @@
 # Energinet.DataHub.Charges.Clients.Registrations Release notes
 
+## Version 3.0.12
+
+Bumped due to Clients package change
+
 ## Version 3.0.11
 
 Updated NuGet packages
