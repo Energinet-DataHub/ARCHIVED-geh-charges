@@ -79,17 +79,11 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.MessageHub
                     It.IsAny<IBundleSpecification<AvailableDataBase>>()),
                 Times.Once);
 
-            // Todo: use SendBatchAsync insted of SendAsync
-            // dataAvailableNotificationSender.Verify(
-            //     d => d.SendBatchAsync(
-            //         correlationId,
-            //         It.IsAny<IReadOnlyCollection<DataAvailableNotificationDto>>()),
-            //     Times.Once);
             dataAvailableNotificationSender.Verify(
                 d => d.SendAsync(
                     correlationId,
                     It.IsAny<DataAvailableNotificationDto>()),
-                Times.Once);
+                Times.Exactly(notifications.Count));
         }
 
         [Theory]
@@ -98,10 +92,10 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.MessageHub
             [Frozen] Mock<IAvailableDataFactory<AvailableDataBase, object>> availableDataFactory,
             [Frozen] Mock<IAvailableDataRepository<AvailableDataBase>> availableDataRepository,
             object input,
-            List<AvailableDataBase> emptyList,
             AvailableDataNotifier<AvailableDataBase, object> sut)
         {
             // Arrange
+            var emptyList = new List<AvailableDataBase>();
             availableDataFactory.Setup(
                     f => f.CreateAsync(input))
                 .ReturnsAsync(emptyList);

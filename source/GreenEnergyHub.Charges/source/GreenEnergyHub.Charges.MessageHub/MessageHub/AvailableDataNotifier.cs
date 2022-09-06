@@ -79,7 +79,6 @@ namespace GreenEnergyHub.Charges.MessageHub.MessageHub
                 .Select(notification => _dataAvailableNotificationSender.SendAsync(_correlationContext.Id, notification));
 
             await Task.WhenAll(dataAvailableNotificationSenderTasks).ConfigureAwait(false);
-            //Todo: call sendbatchasync await _dataAvailableNotificationSender.SendBatchAsync(_correlationContext.Id, notifications);
         }
 
         private IReadOnlyList<DataAvailableNotificationDto> CreateNotifications(
