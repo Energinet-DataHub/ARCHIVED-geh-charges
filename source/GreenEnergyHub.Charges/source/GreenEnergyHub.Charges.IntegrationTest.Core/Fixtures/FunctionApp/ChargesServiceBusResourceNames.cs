@@ -52,33 +52,32 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
         public const string ChargesDomainEventsTopicKey = "charges-domain-events";
 
         // Internal, charge, received
-        public const string CommandReceivedSubscriptionName = "command-received";
+        public const string ChargeCommandReceivedSubscriptionName = "charge-command-received";
 
         // Internal, charge price, received
-        public const string PriceCommandReceivedSubscriptionName = "price-command-received";
+        public const string ChargePriceCommandReceivedSubscriptionName = "charge-price-command-received";
 
         // Internal, charge, accepted
-        public const string ChargeAcceptedSubDataAvailableNotifier = "chargeaccepted-sub-dataavailablenotifier";
-        public const string CommandAcceptedSubscriptionName = "command-accepted";
-        public const string CommandAcceptedReceiverSubscriptionName = "charge-command-accepted-receiver";
+        public const string ChargeAcceptedDataAvailableSubscriptionName = "charge-accepted-dataavailable";
+        public const string ChargeCommandAcceptedSubscriptionName = "charge-command-accepted";
+        public const string ChargeCommandAcceptedPublishSubscriptionName = "charge-command-accepted-publish";
 
         // Internal, charge, rejected
-        public const string CommandRejectedSubscriptionName = "command-rejected";
+        public const string ChargeCommandRejectedSubscriptionName = "charge-command-rejected";
 
         // Internal, charge price operations, rejected
-        public const string ChargePriceRejectedSubscriptionName = "charge-price-rejected";
+        public const string ChargePriceCommandRejectedSubscriptionName = "charge-price-command-rejected";
 
         // Internal, charge links, received
-        public const string ChargeLinksReceivedSubscriptionName = "links-command-received-receiver";
+        public const string ChargeLinksCommandReceivedSubscriptionName = "charge-links-command-received";
 
         // Internal, charge links, rejected
-        public const string ChargeLinksRejectedSubscriptionName = "links-command-rejected";
+        public const string ChargeLinksCommandRejectedSubscriptionName = "charge-links-command-rejected";
 
         // Internal, charge links, accepted
-        public const string ChargeLinksAcceptedConfirmationNotifierSubscriptionName = "charge-links-accepted-sub-confirmation-notifier";
-        public const string ChargeLinksAcceptedDataAvailableNotifierSubscriptionName = "charge-links-accepted-sub-data-available-notifier";
-        public const string ChargeLinksAcceptedEventPublisherSubscriptionName = "charge-links-accepted-sub-event-publisher";
-        public const string ChargeLinksAcceptedEventReplierSubscriptionName = "charge-links-accepted-sub-replier";
-        public const string DefaultChargeLinksDataAvailableNotifiedSubscriptionName = "default-charge-links-available-notified";
+        public const string ChargeLinksAcceptedConfirmationSubscriptionName = "charge-links-accepted-confirmation";
+        public const string ChargeLinksAcceptedDataAvailableSubscriptionName = "charge-links-accepted-dataavailable";
+        public const string ChargeLinksAcceptedPublishSubscriptionName = "charge-links-accepted-publish";
+        public const string DefaultChargeLinksDataAvailableSubscriptionName = "default-charge-links-dataavailable";
     }
 }
