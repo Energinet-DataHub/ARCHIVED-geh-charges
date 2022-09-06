@@ -110,8 +110,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
             private static ServiceBusMessage CreateServiceBusMessage(ChargeLinksCommand command, string correlationId)
             {
-                var chargeLinksAcceptedEvent = new ChargeLinksAcceptedEvent(
-                    command, Instant.FromDateTimeUtc(DateTime.UtcNow));
+                var chargeLinksAcceptedEvent = new ChargeLinksReceivedEvent(
+                    Instant.FromDateTimeUtc(DateTime.UtcNow), command);
 
                 var applicationProperties = new Dictionary<string, string>
                 {
