@@ -89,7 +89,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
         public TopicResource? MarketParticipantChangedTopic { get; private set; }
 
         [NotNull]
-        public TopicResource? ChargesTopic { get; private set; }
+        public TopicResource? ChargesDomainEventTopic { get; private set; }
 
         public AuthorizedTestActor AsGridAccessProvider { get; }
 
@@ -144,8 +144,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.BackendServiceAppId, AuthorizationConfiguration.BackendApp.AppId);
 
             // Domain events
-            ChargesTopic = await ServiceBusResourceProvider
-                .BuildTopic(ChargesServiceBusResourceNames.ChargeTopicKey)
+            ChargesDomainEventTopic = await ServiceBusResourceProvider
+                .BuildTopic(ChargesServiceBusResourceNames.ChargesDomainEventsTopicKey)
                     .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.ChargesDomainEventTopicName)
 
                 .AddSubscription(ChargesServiceBusResourceNames.CommandReceivedSubscriptionName)
@@ -172,7 +172,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
                 .AddSubscription(ChargesServiceBusResourceNames.CommandAcceptedReceiverSubscriptionName)
                     .AddSubjectFilter(nameof(ChargeCommandAcceptedEvent))
                     .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.CommandAcceptedReceiverSubscriptionName)
-                .AddSubscription(ChargesServiceBusResourceNames.ChargeAcceptedSubDataAvailableNotifier) // TODO rename to CommandAcceptedSubDataAvailableNotifier?
+                .AddSubscription(ChargesServiceBusResourceNames.ChargeAcceptedSubDataAvailableNotifier)
                     .AddSubjectFilter(nameof(ChargeCommandAcceptedEvent))
                     .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargeAcceptedSubDataAvailableNotifier)
 
@@ -205,7 +205,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
                 .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.MarketParticipantChangedSubscriptionName)
                 .CreateAsync();
 
-            var chargeLinkCreatedTopic = await ServiceBusResourceProvider // TODO: variable not in use?
+            await ServiceBusResourceProvider
                 .BuildTopic(ChargesServiceBusResourceNames.ChargeLinksCreatedTopicKey)
                 .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.ChargeLinksCreatedTopicName)
                 .CreateAsync();
