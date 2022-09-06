@@ -145,7 +145,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
 
             // Domain events
             ChargesDomainEventTopic = await ServiceBusResourceProvider
-                .BuildTopic(ChargesServiceBusResourceNames.ChargeTopicKey)
+                .BuildTopic(ChargesServiceBusResourceNames.ChargesDomainEventsTopicKey)
                     .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.ChargesDomainEventTopicName)
 
                 .AddSubscription(ChargesServiceBusResourceNames.CommandReceivedSubscriptionName)
