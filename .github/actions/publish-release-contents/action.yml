@@ -11,7 +11,15 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 name: 'Publish release content'
+
+#
+# This action is called from the 'create-prerelease.yml' file.
+#
+# All content in the RELEASE_FOLDER_PATH will be uploaded as a prerelease.
+#
+
 inputs:
   RELEASE_FOLDER_PATH:
     required: true
@@ -30,20 +38,8 @@ runs:
         cp -fR ${{ inputs.REPO_FOLDER_PATH }}/build/infrastructure/env ${{ inputs.RELEASE_FOLDER_PATH }}/infrastructure/env 2>/dev/null || :
         cp -fR ${{ inputs.REPO_FOLDER_PATH }}/build/infrastructure/modules ${{ inputs.RELEASE_FOLDER_PATH }}/infrastructure/modules 2>/dev/null || :
 
-    - name: Publish Functionhost to release folder
-      uses: actions/download-artifact@v2
+    - name: Publish dotnet artifact to release folder
+      uses: actions/download-artifact@v3
       with:
-        name: functionhost
-        path: ${{ inputs.RELEASE_FOLDER_PATH }}/functions/functionhost
-
-    - name: Publish Web API to release folder
-      uses: actions/download-artifact@v2
-      with:
-        name: webapi
-        path: ${{ inputs.RELEASE_FOLDER_PATH }}/functions/webapi
-
-    - name: Publish Database Migration to release folder
-      uses: actions/download-artifact@v2
-      with:
-        name: databasemigration
-        path: ${{ inputs.RELEASE_FOLDER_PATH }}/migration/databasemigration
+        name: dotnet
+        path: ${{ inputs.RELEASE_FOLDER_PATH }}

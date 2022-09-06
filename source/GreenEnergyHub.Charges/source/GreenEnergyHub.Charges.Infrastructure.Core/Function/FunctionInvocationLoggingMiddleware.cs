@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Middleware;
@@ -24,7 +23,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
     {
         private readonly ILoggerFactory _loggerFactory;
 
-        public FunctionInvocationLoggingMiddleware([NotNull] ILoggerFactory loggerFactory)
+        public FunctionInvocationLoggingMiddleware(ILoggerFactory loggerFactory)
         {
             _loggerFactory = loggerFactory;
         }
@@ -34,9 +33,17 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
             var functionEndpointName = context.FunctionDefinition.Name;
             var logger = _loggerFactory.CreateLogger(functionEndpointName);
 
-            logger.LogInformation("Function {FunctionName} started to process a request with invocation ID {InvocationId}", functionEndpointName, context.InvocationId);
+            logger.LogInformation(
+                "Function {FunctionName} started to process a request with invocation ID {InvocationId}",
+                functionEndpointName,
+                context.InvocationId);
+
             await next(context).ConfigureAwait(false);
-            logger.LogInformation("Function {FunctionName} ended to process a request with invocation ID {InvocationId}", functionEndpointName, context.InvocationId);
+
+            logger.LogInformation(
+                "Function {FunctionName} ended to process a request with invocation ID {InvocationId}",
+                functionEndpointName,
+                context.InvocationId);
         }
     }
 }

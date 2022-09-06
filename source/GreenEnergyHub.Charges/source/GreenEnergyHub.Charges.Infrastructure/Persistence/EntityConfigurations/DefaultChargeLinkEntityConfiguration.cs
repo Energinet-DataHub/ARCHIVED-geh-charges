@@ -16,14 +16,16 @@ using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
+namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
 {
     public class DefaultChargeLinkEntityConfiguration : IEntityTypeConfiguration<DefaultChargeLink>
     {
         public void Configure(EntityTypeBuilder<DefaultChargeLink> builder)
         {
             builder.ToTable(nameof(DefaultChargeLink));
+
             builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id).ValueGeneratedNever();
 
             builder.Property(x => x.ChargeId);
             builder.Property(x => x.MeteringPointType);

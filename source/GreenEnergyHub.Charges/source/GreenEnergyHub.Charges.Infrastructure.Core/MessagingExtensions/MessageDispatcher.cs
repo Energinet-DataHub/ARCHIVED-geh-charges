@@ -12,17 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.Messaging.Transport;
+using GreenEnergyHub.Charges.Application.Messaging;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions
 {
     public class MessageDispatcher<TOutboundMessage> : MessageDispatcher, IMessageDispatcher<TOutboundMessage>
         where TOutboundMessage : IOutboundMessage
     {
-        public MessageDispatcher([NotNull] MessageSerializer serializer, [NotNull] Channel<TOutboundMessage> channel)
+        public MessageDispatcher(MessageSerializer serializer, Channel<TOutboundMessage> channel)
             : base(serializer, channel)
         {
         }

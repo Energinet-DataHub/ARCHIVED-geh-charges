@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableData
@@ -25,25 +25,35 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableData
     public abstract class AvailableDataBase
     {
         protected AvailableDataBase(
+            string senderId,
+            MarketParticipantRole senderRole,
             string recipientId,
             MarketParticipantRole recipientRole,
             BusinessReasonCode businessReasonCode,
             Instant requestDateTime,
-            Guid availableDataReferenceId)
+            Guid availableDataReferenceId,
+            DocumentType documentType,
+            int operationOrder,
+            Guid actorId)
         {
             Id = Guid.NewGuid();
+            SenderId = senderId;
+            SenderRole = senderRole;
             RecipientId = recipientId;
             RecipientRole = recipientRole;
             BusinessReasonCode = businessReasonCode;
             RequestDateTime = requestDateTime;
             AvailableDataReferenceId = availableDataReferenceId;
+            DocumentType = documentType;
+            OperationOrder = operationOrder;
+            ActorId = actorId;
         }
 
-        protected AvailableDataBase(string recipientId)
+        // ReSharper disable once UnusedMember.Local - needed by persistence
+        protected AvailableDataBase()
         {
-            Id = Guid.NewGuid();
-            RecipientId = recipientId;
-            AvailableDataReferenceId = Guid.NewGuid();
+            SenderId = null!;
+            RecipientId = null!;
         }
 
         /// <summary>
@@ -51,6 +61,13 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableData
         /// ready for shipping when the market participant peeks
         /// </summary>
         public Guid Id { get; }
+
+        /// <summary>
+        /// The ID of the sender of this piece of data.
+        /// </summary>
+        public string SenderId { get; }
+
+        public MarketParticipantRole SenderRole { get; }
 
         /// <summary>
         /// The ID of the recipient this piece of data is meant for
@@ -68,5 +85,11 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableData
         /// The ID will later be used to fetch the data on a peek operation for the MessageHub
         /// </summary>
         public Guid AvailableDataReferenceId { get; }
+
+        public DocumentType DocumentType { get; }
+
+        public int OperationOrder { get; }
+
+        public Guid ActorId { get; }
     }
 }

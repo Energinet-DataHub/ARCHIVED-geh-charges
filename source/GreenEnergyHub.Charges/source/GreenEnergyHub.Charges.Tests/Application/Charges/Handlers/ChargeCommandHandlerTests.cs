@@ -12,19 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
-using GreenEnergyHub.Charges.Application;
+using GreenEnergyHub.Charges.Application.Charges.Handlers;
+using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
-using GreenEnergyHub.Charges.Tests.Builders;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
+using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using Xunit;
 using Xunit.Categories;
-using ChargeCommandHandler = GreenEnergyHub.Charges.Application.Charges.Handlers.ChargeCommandHandler;
 
 namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 {
@@ -33,22 +32,25 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
     {
         [Theory]
         [InlineAutoDomainData]
-        public async Task ChangeOfChargesTransactionHandler_WhenCalled_ShouldCallPublisher(
-            [NotNull] [Frozen] Mock<IMessageDispatcher<ChargeCommandReceivedEvent>> localEventPublisher,
-            [NotNull] ChargeCommandHandler sut)
+        public async Task HandleAsync_WhenCalledWithChargeCommand_ShouldDispatchReceivedEvent(
+            [Frozen] Mock<IMessageDispatcher<ChargeCommandReceivedEvent>> chargeEventPublisher,
+            ChargeInformationCommandHandler sut)
         {
             // Arrange
-            var transaction = new ChargeCommandBuilder().Build();
+            var document = new DocumentDtoBuilder()
+                .WithBusinessReasonCode(BusinessReasonCode.UpdateChargeInformation)
+                .Build();
+            var command = new ChargeInformationCommandBuilder().WithDocumentDto(document).Build();
 
             // Act
-            await sut.HandleAsync(transaction).ConfigureAwait(false);
+            await sut.HandleAsync(command).ConfigureAwait(false);
 
             // Assert
-            localEventPublisher.Verify(
+            chargeEventPublisher.Verify(
                 x => x.DispatchAsync(
-                    It.Is<ChargeCommandReceivedEvent>(
-                        localEvent => localEvent.Command == transaction),
-                    It.IsAny<CancellationToken>()));
+                    It.Is<ChargeCommandReceivedEvent>(localEvent => localEvent.Command == command),
+                    It.IsAny<CancellationToken>()),
+                Times.Once);
         }
     }
 }

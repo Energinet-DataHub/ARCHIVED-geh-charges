@@ -1,5 +1,87 @@
 # Energinet.DataHub.Charges.Clients Release notes
 
+## Version 3.0.11
+
+Updated NuGet packages
+
+## Version 3.0.10
+
+Added custom property `OperationCorrelationId` to `ServiceBusRequestSender`
+
+## Version 3.0.9
+
+Updated NuGet packages
+
+## Version 3.0.8
+
+Bumped because workflow file was updated.
+
+## Version 3.0.7
+
+Removed duplicate NuGet package reference
+
+## Version 3.0.6
+
+Updated NuGet packages
+
+## Version 3.0.5
+
+Updated NuGet packages
+
+## Version 3.0.4
+
+Bumped because workflow file was updated.
+
+## Version 3.0.3
+
+Bumped to latest .Net SDK version 6.0.300 and updated NuGet packages
+
+## Version 3.0.2
+
+Updated NuGet packages
+
+## Version 3.0.1
+
+Updated NuGet packages
+
+## Version 3.0.0
+
+.NET 6 and Azure Function v4 upgrades
+
+## Version 2.0.4
+
+Updated Energinet.DataHub.Core NuGet packages
+
+## Version 2.0.3
+
+Updated NuGet packages
+
+## Version 2.0.2
+
+`IChargeLinksClient` Charges.Clients exposes `ChargeLinkV1Dto`
+
+## Version 2.0.1
+
+`ChargeLinksClientFactory` has been updated to provide a `IChargeLinksClient` with token forwarding
+
+## Version 2.0.0
+
+`IChargeLinksClient` has been updated to use version 2 of the underlying API.
+This is a breaking change. Only the UUID charge owner ID of charge owners are now returned in result.
+Other attributes of actors must be read from the actor register.
+
+## Version 1.0.25
+
+Updated NuGet packages
+
+## Version 1.0.24
+
+Removed local settings to the unused resources earlier used to request the creation of messages
+
+## Version 1.0.23
+
+Updated NuGet packages
+
 ## Version 1.0.22
 
 `ChargeLinkClient` uses `JsonStringEnumConverter` to handle `enum` passed as string

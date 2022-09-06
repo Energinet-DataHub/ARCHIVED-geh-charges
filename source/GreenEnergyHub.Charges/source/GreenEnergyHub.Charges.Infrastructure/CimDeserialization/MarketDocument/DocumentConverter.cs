@@ -13,8 +13,9 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using Energinet.DataHub.Core.Messaging.Transport;
 using Energinet.DataHub.Core.SchemaValidation;
+using Energinet.DataHub.Core.SchemaValidation.Extensions;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using NodaTime;
@@ -30,7 +31,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocumen
             _clock = clock;
         }
 
-        public async Task<IInboundMessage> ConvertAsync(SchemaValidatingReader reader)
+        public async Task<ChargeCommandBundle> ConvertAsync(SchemaValidatingReader reader)
         {
             var document = await ParseDocumentAsync(reader).ConfigureAwait(false);
 
@@ -39,11 +40,14 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocumen
             return message;
         }
 
-        protected abstract Task<IInboundMessage> ConvertSpecializedContentAsync(SchemaValidatingReader reader, DocumentDto document);
+        protected abstract Task<ChargeCommandBundle> ConvertSpecializedContentAsync(SchemaValidatingReader reader, DocumentDto document);
 
         private static async Task ParseFieldsAsync(SchemaValidatingReader reader, DocumentDto document)
         {
             var hasReadRoot = false;
+
+            document.Sender.MarketParticipantId = string.Empty;
+            document.Recipient.MarketParticipantId = string.Empty;
 
             while (await reader.AdvanceAsync().ConfigureAwait(false))
             {
@@ -73,8 +77,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocumen
                 }
                 else if (reader.Is(CimMarketDocumentConstants.SenderId))
                 {
+                    if (!reader.CanReadValue) continue;
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
-                    document.Sender.Id = content;
+                    document.Sender.MarketParticipantId = content;
                 }
                 else if (reader.Is(CimMarketDocumentConstants.SenderBusinessProcessRole))
                 {
@@ -83,8 +88,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocumen
                 }
                 else if (reader.Is(CimMarketDocumentConstants.RecipientId))
                 {
+                    if (!reader.CanReadValue) continue;
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
-                    document.Recipient.Id = content;
+                    document.Recipient.MarketParticipantId = content;
                 }
                 else if (reader.Is(CimMarketDocumentConstants.RecipientBusinessProcessRole))
                 {
@@ -115,6 +121,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocumen
             };
 
             await ParseFieldsAsync(reader, document).ConfigureAwait(false);
+
+            if (reader.HasErrors) throw new SchemaValidationException(reader.CreateErrorResponse());
 
             return document;
         }

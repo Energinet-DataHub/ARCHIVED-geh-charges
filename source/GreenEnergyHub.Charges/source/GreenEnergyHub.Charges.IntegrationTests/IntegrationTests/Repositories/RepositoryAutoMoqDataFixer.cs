@@ -15,10 +15,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinkReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
+using GreenEnergyHub.Charges.TestCore;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 {
@@ -28,7 +29,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             List<AvailableDataBase> availableList)
         {
             return availableList
-                .Select(receipt => (AvailableDataBase)GetAvailableDataBasedOn((dynamic)receipt))
+                .Select(availableData => (AvailableDataBase)GetAvailableDataBasedOn((dynamic)availableData))
                 .ToList();
         }
 
@@ -40,6 +41,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         private static AvailableChargeData GetAvailableDataBasedOn(AvailableChargeData availableChargeData)
         {
             return new AvailableChargeData(
+                availableChargeData.SenderId.Substring(0, 34),
+                availableChargeData.SenderRole,
                 availableChargeData.RecipientId.Substring(0, 34),
                 availableChargeData.RecipientRole,
                 availableChargeData.BusinessReasonCode,
@@ -56,6 +59,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 availableChargeData.TaxIndicator,
                 availableChargeData.TransparentInvoicing,
                 availableChargeData.Resolution,
+                availableChargeData.DocumentType,
+                availableChargeData.OperationOrder,
+                SeededData.MarketParticipants.SystemOperator.Id,
                 availableChargeData.Points.ToList());
         }
 
@@ -63,6 +69,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             AvailableChargeReceiptData availableChargeReceiptData)
         {
             return new AvailableChargeReceiptData(
+                availableChargeReceiptData.SenderId.Substring(0, 34),
+                availableChargeReceiptData.SenderRole,
                 availableChargeReceiptData.RecipientId.Substring(0, 34),
                 availableChargeReceiptData.RecipientRole,
                 availableChargeReceiptData.BusinessReasonCode,
@@ -70,12 +78,17 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 availableChargeReceiptData.AvailableDataReferenceId,
                 availableChargeReceiptData.ReceiptStatus,
                 availableChargeReceiptData.OriginalOperationId.Substring(0, 34),
+                availableChargeReceiptData.DocumentType,
+                availableChargeReceiptData.OperationOrder,
+                SeededData.MarketParticipants.SystemOperator.Id,
                 availableChargeReceiptData.ValidationErrors.ToList());
         }
 
         private static AvailableChargeLinksData GetAvailableDataBasedOn(AvailableChargeLinksData availableChargeData)
         {
             return new AvailableChargeLinksData(
+                availableChargeData.SenderId.Substring(0, 34),
+                availableChargeData.SenderRole,
                 availableChargeData.RecipientId.Substring(0, 34),
                 availableChargeData.RecipientRole,
                 availableChargeData.BusinessReasonCode,
@@ -87,22 +100,30 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 availableChargeData.MeteringPointId.Substring(0, 49),
                 availableChargeData.Factor,
                 availableChargeData.StartDateTime,
-                availableChargeData.EndDateTime);
+                availableChargeData.EndDateTime,
+                availableChargeData.DocumentType,
+                availableChargeData.OperationOrder,
+                SeededData.MarketParticipants.SystemOperator.Id);
         }
 
-        private static AvailableChargeLinkReceiptData GetAvailableDataBasedOn(
-            AvailableChargeLinkReceiptData availableChargeLinkReceiptData)
+        private static AvailableChargeLinksReceiptData GetAvailableDataBasedOn(
+            AvailableChargeLinksReceiptData availableChargeLinksReceiptData)
         {
-            return new AvailableChargeLinkReceiptData(
-                availableChargeLinkReceiptData.RecipientId.Substring(0, 34),
-                availableChargeLinkReceiptData.RecipientRole,
-                availableChargeLinkReceiptData.BusinessReasonCode,
-                availableChargeLinkReceiptData.RequestDateTime,
-                availableChargeLinkReceiptData.AvailableDataReferenceId,
-                availableChargeLinkReceiptData.ReceiptStatus,
-                availableChargeLinkReceiptData.OriginalOperationId.Substring(0, 34),
-                availableChargeLinkReceiptData.MeteringPointId.Substring(0, 49),
-                availableChargeLinkReceiptData.ReasonCodes.ToList());
+            return new AvailableChargeLinksReceiptData(
+                availableChargeLinksReceiptData.SenderId.Substring(0, 34),
+                availableChargeLinksReceiptData.SenderRole,
+                availableChargeLinksReceiptData.RecipientId.Substring(0, 34),
+                availableChargeLinksReceiptData.RecipientRole,
+                availableChargeLinksReceiptData.BusinessReasonCode,
+                availableChargeLinksReceiptData.RequestDateTime,
+                availableChargeLinksReceiptData.AvailableDataReferenceId,
+                availableChargeLinksReceiptData.ReceiptStatus,
+                availableChargeLinksReceiptData.OriginalOperationId.Substring(0, 34),
+                availableChargeLinksReceiptData.MeteringPointId.Substring(0, 49),
+                availableChargeLinksReceiptData.DocumentType,
+                availableChargeLinksReceiptData.OperationOrder,
+                SeededData.MarketParticipants.SystemOperator.Id,
+                availableChargeLinksReceiptData.ValidationErrors.ToList());
         }
     }
 }

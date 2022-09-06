@@ -13,7 +13,9 @@
 // limitations under the License.
 
 using System.Net;
+using System.Text;
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using Energinet.DataHub.Core.SchemaValidation.Errors;
 using Energinet.DataHub.Core.SchemaValidation.Extensions;
 using Microsoft.Azure.Functions.Worker.Http;
@@ -22,18 +24,52 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
 {
     public sealed class HttpResponseBuilder : IHttpResponseBuilder
     {
-        public async Task<HttpResponseData> CreateAcceptedResponseAsync<T>(HttpRequestData request, T response)
+        private readonly ICorrelationContext _correlationContext;
+
+        public HttpResponseBuilder(ICorrelationContext correlationContext)
         {
-            var httpResponse = request.CreateResponse(HttpStatusCode.Accepted);
-            await httpResponse.WriteAsJsonAsync(response).ConfigureAwait(false);
+            _correlationContext = correlationContext;
+        }
+
+        public HttpResponseData CreateAcceptedResponse(HttpRequestData requestData)
+        {
+            return CreateResponse(requestData, HttpStatusCode.Accepted);
+        }
+
+        public HttpResponseData CreateBadRequestResponse(HttpRequestData requestData)
+        {
+            return CreateResponse(requestData, HttpStatusCode.BadRequest);
+        }
+
+        public async Task<HttpResponseData> CreateBadRequestResponseAsync(
+            HttpRequestData request, ErrorResponse errorResponse)
+        {
+            var httpResponse = request.CreateResponse(HttpStatusCode.BadRequest);
+            AddCorrelationIdToHeaders(httpResponse);
+            await errorResponse.WriteAsXmlAsync(httpResponse.Body).ConfigureAwait(false);
             return httpResponse;
         }
 
-        public async Task<HttpResponseData> CreateBadRequestResponseAsync(HttpRequestData request, ErrorResponse response)
+        public HttpResponseData CreateBadRequestB2BResponse(HttpRequestData request, B2BErrorCode code)
         {
             var httpResponse = request.CreateResponse(HttpStatusCode.BadRequest);
-            await response.WriteAsXmlAsync(httpResponse.Body).ConfigureAwait(false);
+            AddCorrelationIdToHeaders(httpResponse);
+            var errorMessage = B2BErrorMessageFactory.Create(code);
+            var unauthorizedRequest = errorMessage.WriteAsXmlString();
+            httpResponse.WriteString(unauthorizedRequest, Encoding.UTF8);
             return httpResponse;
+        }
+
+        private HttpResponseData CreateResponse(HttpRequestData request, HttpStatusCode httpStatusCode)
+        {
+            var httpResponseData = request.CreateResponse(httpStatusCode);
+            AddCorrelationIdToHeaders(httpResponseData);
+            return httpResponseData;
+        }
+
+        private void AddCorrelationIdToHeaders(HttpResponseData httpResponseData)
+        {
+            httpResponseData.Headers.Add(HttpRequestHeaderConstants.CorrelationId, _correlationContext.Id);
         }
     }
 }

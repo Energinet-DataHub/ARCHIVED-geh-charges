@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Infrastructure.Context
+namespace GreenEnergyHub.Charges.Infrastructure.Persistence
 {
     public static class DatabaseSchemaNames
     {

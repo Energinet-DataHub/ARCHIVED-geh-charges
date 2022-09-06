@@ -12,14 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules;
-using GreenEnergyHub.Charges.Tests.Builders;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.BusinessValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.TestHelpers;
+using Moq;
 using Xunit;
 using Xunit.Categories;
 
@@ -29,39 +27,25 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
     public class ChangingTariffTaxValueNotAllowedRuleTests
     {
         [Theory]
-        [InlineAutoDomainData]
-        public void IsValid_WhenTaxIndicatorInCommandDoesNotMatchCharge_IsFalse(
-            ChargeCommandBuilder builder,
-            Charge charge)
-        {
-            var invalidCommand = CreateInvalidCommand(builder, charge);
-            var sut = new ChangingTariffTaxValueNotAllowedRule(invalidCommand, charge);
-            Assert.False(sut.IsValid);
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
+        [InlineAutoDomainData(TaxIndicator.Tax, true, true)]
+        [InlineAutoDomainData(TaxIndicator.Tax, false, false)]
+        [InlineAutoDomainData(TaxIndicator.NoTax, false, true)]
         public void IsValid_WhenTaxIndicatorInCommandMatches_IsTrue(
-            ChargeCommandBuilder builder,
-            Charge charge)
+            TaxIndicator newTaxIndicator,
+            bool existingTaxIndicator,
+            bool expected)
         {
-            var command = builder.WithTaxIndicator(charge.TaxIndicator).Build();
-            var sut = new ChangingTariffTaxValueNotAllowedRule(command, charge);
-            Assert.True(sut.IsValid);
+            var sut = new ChangingTariffTaxValueNotAllowedRule(newTaxIndicator, existingTaxIndicator);
+            sut.IsValid.Should().Be(expected);
         }
 
-        [Theory]
-        [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder builder, Charge charge)
+        [Fact]
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo()
         {
-            var invalidCommand = CreateInvalidCommand(builder, charge);
-            var sut = new ChangingTariffTaxValueNotAllowedRule(invalidCommand, charge);
+            var sut = new ChangingTariffTaxValueNotAllowedRule(
+                It.IsAny<TaxIndicator>(),
+                It.IsAny<bool>());
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChangingTariffTaxValueNotAllowed);
-        }
-
-        private static ChargeCommand CreateInvalidCommand(ChargeCommandBuilder builder, Charge charge)
-        {
-            return builder.WithTaxIndicator(!charge.TaxIndicator).Build();
         }
     }
 }

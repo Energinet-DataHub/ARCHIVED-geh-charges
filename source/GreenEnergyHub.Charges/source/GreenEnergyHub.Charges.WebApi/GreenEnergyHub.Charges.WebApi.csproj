@@ -1,4 +1,4 @@
-<!--
+﻿<!--
 Copyright 2020 Energinet DataHub A/S
 
 Licensed under the Apache License, Version 2.0 (the "License2");
@@ -16,30 +16,45 @@ limitations under the License.
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <UserSecretsId>393f2d1b-e8a5-4883-86ff-cbf59f4c75da</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EntityFrameworkCore.SqlServer.NodaTime" Version="5.0.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\GreenEnergyHub.Charges.Domain\GreenEnergyHub.Charges.Domain.csproj" />
-    <ProjectReference Include="..\GreenEnergyHub.Charges.QueryApi\GreenEnergyHub.Charges.QueryApi.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.261">
+    <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="6.0.2" />
+    <PackageReference Include="Energinet.DataHub.Core.App.Common" Version="7.0.0" />
+    <PackageReference Include="Energinet.DataHub.Core.App.Common.Security" Version="7.0.0" />
+    <PackageReference Include="Energinet.DataHub.Core.App.WebApp" Version="7.0.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.OData" Version="8.0.11" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+    <PackageReference Update="Microsoft.VisualStudio.Threading.Analyzers" Version="17.3.44">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\..\Contracts\ChargeLink\ChargeLinkDto.cs">
-      <Link>Dtos\ChargeLink\ChargeLinkDto.cs</Link>
+    <ProjectReference Include="..\GreenEnergyHub.Charges.Domain\GreenEnergyHub.Charges.Domain.csproj" />
+    <ProjectReference Include="..\GreenEnergyHub.Charges.Infrastructure.Core\GreenEnergyHub.Charges.Infrastructure.Core.csproj" />
+    <ProjectReference Include="..\GreenEnergyHub.Charges.QueryApi\GreenEnergyHub.Charges.QueryApi.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.435">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\..\Contracts\ChargeLink\ChargeLinkV1Dto.cs">
+      <Link>Dtos\ChargeLink\ChargeLinkV1Dto.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Contracts\ChargeLink\ChargeLinkV2Dto.cs">
+      <Link>Dtos\ChargeLink\ChargeLinkV2Dto.cs</Link>
     </Compile>
     <Compile Include="..\..\..\Contracts\Charge\ChargeType.cs">
       <Link>Dtos\Charge\ChargeType.cs</Link>

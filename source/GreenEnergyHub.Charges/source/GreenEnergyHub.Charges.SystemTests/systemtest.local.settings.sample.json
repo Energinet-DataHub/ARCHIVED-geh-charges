@@ -1,0 +1,15 @@
+﻿{
+  // Use this on developer machine to toggle tests while developing them.
+  // Should be set 'true' using an environment variable on the build agent, to run these after deployment.
+  "SYSTEMFACT_SKIP": true,
+
+  // This key vault must contain B2C information that allows us to retrieve an access token from API Management tests.
+  "AZURE_SYSTEMTESTS_KEYVAULT_URL": "<System tests key vault url>",
+
+  // The following settings are used to determine the secrets names needed for the API Management tests.
+  "ENVIRONMENT_SHORT": "<short name of environment; e.g. 'u'>",
+  "ENVIRONMENT_INSTANCE": "<instance number of environment; e.g. '001'>",
+  "CLIENT_NAME": "<client name part of the kv secret in u-002, e.g. 'endk-ddm3' for 'B2C-u001-endk-ddm3-client-id'>'",
+  "GRID_ACCESS_PROVIDER": "<valid grid access provider id, **OBS!** must match client name>",
+  "CHARGES_DOMAIN_BASEADDRESS": "<Charges domain base address - used by e.g. health check in system test>"
+}

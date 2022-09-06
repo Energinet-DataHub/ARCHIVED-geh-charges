@@ -14,7 +14,7 @@
 
 using System;
 using System.Collections.Generic;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using NodaTime;
@@ -30,6 +30,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
     public class AvailableChargeReceiptData : AvailableDataBase
     {
         public AvailableChargeReceiptData(
+            string senderId,
+            MarketParticipantRole senderRole,
             string recipientId,
             MarketParticipantRole recipientRole,
             BusinessReasonCode businessReasonCode,
@@ -37,31 +39,40 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             Guid availableDataReferenceId,
             ReceiptStatus receiptStatus,
             string originalOperationId,
-            List<AvailableChargeReceiptValidationError> validationErrors)
-            : base(recipientId, recipientRole, businessReasonCode, requestDateTime, availableDataReferenceId)
+            DocumentType documentType,
+            int operationOrder,
+            Guid actorId,
+            List<AvailableReceiptValidationError> validationErrors)
+            : base(
+                senderId,
+                senderRole,
+                recipientId,
+                recipientRole,
+                businessReasonCode,
+                requestDateTime,
+                availableDataReferenceId,
+                documentType,
+                operationOrder,
+                actorId)
         {
             ReceiptStatus = receiptStatus;
             OriginalOperationId = originalOperationId;
             _validationErrors = validationErrors;
         }
 
-        /// <summary>
-        /// Used implicitly by persistence.
-        /// </summary>
-        // ReSharper disable once UnusedMember.Local
-        private AvailableChargeReceiptData(string recipientId, string originalOperationId)
-            : base(recipientId)
+        // ReSharper disable once UnusedMember.Local - Used implicitly by persistence
+        private AvailableChargeReceiptData()
         {
-            OriginalOperationId = originalOperationId;
-            _validationErrors = new List<AvailableChargeReceiptValidationError>();
+            OriginalOperationId = null!;
+            _validationErrors = new List<AvailableReceiptValidationError>();
         }
 
         public ReceiptStatus ReceiptStatus { get; }
 
         public string OriginalOperationId { get; }
 
-        private readonly List<AvailableChargeReceiptValidationError> _validationErrors;
+        private readonly List<AvailableReceiptValidationError> _validationErrors;
 
-        public IReadOnlyCollection<AvailableChargeReceiptValidationError> ValidationErrors => _validationErrors.AsReadOnly();
+        public IReadOnlyCollection<AvailableReceiptValidationError> ValidationErrors => _validationErrors.AsReadOnly();
     }
 }

@@ -18,13 +18,14 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
-using GreenEnergyHub.Charges.Domain.Configuration;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim;
 using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeReceipt;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.TestHelpers;
 using Moq;
@@ -47,13 +48,13 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
         public async Task SerializeAsync_WhenCalled_StreamHasSerializedResult(
             ReceiptStatus receiptStatus,
             string expectedFilePath,
-            [Frozen] Mock<IHubSenderConfiguration> hubSenderConfiguration,
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IClock> clock,
             [Frozen] Mock<ICimIdProvider> cimIdProvider,
             ChargeReceiptCimSerializer sut)
         {
             // Arrange
-            SetupMocks(hubSenderConfiguration, clock, cimIdProvider);
+            SetupMocks(marketParticipantRepository, clock, cimIdProvider);
             await using var stream = new MemoryStream();
 
             var expected = EmbeddedStreamHelper.GetEmbeddedStreamAsString(
@@ -67,6 +68,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
                 receipts,
                 stream,
                 BusinessReasonCode.UpdateChargeInformation,
+                "5790001330552",
+                MarketParticipantRole.MeteringPointAdministrator,
                 RecipientId,
                 MarketParticipantRole.GridAccessProvider);
 
@@ -79,12 +82,12 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
         [Theory(Skip = "Manually run test to save the generated file to disk")]
         [InlineAutoDomainData]
         public async Task SerializeAsync_WhenCalled_SaveSerializedStream(
-            [Frozen] Mock<IHubSenderConfiguration> hubSenderConfiguration,
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IClock> clock,
             [Frozen] Mock<ICimIdProvider> cimIdProvider,
             ChargeReceiptCimSerializer sut)
         {
-            SetupMocks(hubSenderConfiguration, clock, cimIdProvider);
+            SetupMocks(marketParticipantRepository, clock, cimIdProvider);
 
             var receipts = GetReceipts(ReceiptStatus.Rejected, clock.Object);
 
@@ -94,6 +97,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
                 receipts,
                 stream,
                 BusinessReasonCode.UpdateChargeInformation,
+                "senderId",
+                MarketParticipantRole.MeteringPointAdministrator,
                 RecipientId,
                 MarketParticipantRole.GridAccessProvider);
 
@@ -103,13 +108,19 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
         }
 
         private void SetupMocks(
-            Mock<IHubSenderConfiguration> hubSenderConfiguration,
+            Mock<IMarketParticipantRepository> marketParticipantRepository,
             Mock<IClock> clock,
             Mock<ICimIdProvider> cimIdProvider)
         {
-            hubSenderConfiguration
-                .Setup(h => h.GetSenderMarketParticipant())
-                .Returns(new MarketParticipant(Guid.NewGuid(), "5790001330552", true, new[] { MarketParticipantRole.MeteringPointAdministrator }));
+            marketParticipantRepository
+                .Setup(r => r.GetMeteringPointAdministratorAsync())
+                .ReturnsAsync(new MarketParticipant(
+                    id: Guid.NewGuid(),
+                    actorId: Guid.NewGuid(),
+                    b2CActorId: Guid.NewGuid(),
+                    "5790001330552",
+                    true,
+                    MarketParticipantRole.MeteringPointAdministrator));
 
             var currentTime = Instant.FromUtc(2021, 10, 12, 13, 37, 43).PlusNanoseconds(4);
             clock.Setup(c => c.GetCurrentInstant()).Returns(currentTime);
@@ -132,6 +143,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
         private AvailableChargeReceiptData GetReceipt(int no, ReceiptStatus receiptStatus, IClock clock)
         {
             return new AvailableChargeReceiptData(
+                "senderId",
+                MarketParticipantRole.MeteringPointAdministrator,
                 RecipientId,
                 MarketParticipantRole.GridAccessProvider,
                 BusinessReasonCode.UpdateChargeInformation,
@@ -139,19 +152,29 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
                 Guid.NewGuid(),
                 receiptStatus,
                 "OriginalOperationId" + no,
+                GetDocumentType(receiptStatus),
+                0,
+                Guid.NewGuid(),
                 GetReasonCodes(no));
         }
 
-        private List<AvailableChargeReceiptValidationError> GetReasonCodes(int no)
+        private DocumentType GetDocumentType(ReceiptStatus receiptStatus)
         {
-            var reasonCodes = new List<AvailableChargeReceiptValidationError>();
+            return receiptStatus == ReceiptStatus.Confirmed
+                ? DocumentType.ConfirmRequestChangeOfPriceList
+                : DocumentType.RejectRequestChangeOfPriceList;
+        }
+
+        private List<AvailableReceiptValidationError> GetReasonCodes(int no)
+        {
+            var reasonCodes = new List<AvailableReceiptValidationError>();
             var noOfReasons = (no % 3) + 1;
 
             for (var i = 1; i <= noOfReasons; i++)
             {
                 var text = i % 2 == 0 ? $"Text{no}_{i}" : string.Empty;
 
-                reasonCodes.Add(new AvailableChargeReceiptValidationError(
+                reasonCodes.Add(new AvailableReceiptValidationError(
                     ReasonCode.D14, // Matches that of the test file
                     text));
             }

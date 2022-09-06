@@ -1,0 +1,1 @@
+ALTER TABLE [Charges].[ChargePoint] DROP COLUMN Position;

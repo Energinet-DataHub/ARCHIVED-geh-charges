@@ -50,9 +50,9 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.Charges
 
         internal const string ChargeResolution = "priceTimeFrame_Period.resolution";
 
-        internal const string StartDateTime = "effectiveDate";
+        internal const string EffectiveDate = "effectiveDate";
 
-        internal const string EndDateTime = "terminationDate";
+        internal const string TerminationDate = "terminationDate";
 
         internal const string VatClassification = "VATPayer";
 

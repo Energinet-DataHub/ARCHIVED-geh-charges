@@ -17,8 +17,14 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
+    /// <summary>
+    /// Handles document validation of the charge information.
+    /// </summary>
     public interface IChargeCommandReceivedEventHandler
     {
+        /// <summary>
+        /// Asynchronously handle the event.
+        /// </summary>
         Task HandleAsync(ChargeCommandReceivedEvent commandReceivedEvent);
     }
 }

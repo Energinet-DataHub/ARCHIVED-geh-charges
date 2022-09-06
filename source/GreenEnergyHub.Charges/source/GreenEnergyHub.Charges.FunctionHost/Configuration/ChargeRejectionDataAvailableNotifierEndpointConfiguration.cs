@@ -13,14 +13,15 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandRejected;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification.Charges;
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
+using GreenEnergyHub.Charges.MessageHub.Models.Shared;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
@@ -29,29 +30,24 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.ReceiveProtobufMessage<ChargeCommandRejectedContract>(
-                configuration => configuration.WithParser(() => ChargeCommandRejectedContract.Parser));
+            serviceCollection.AddScoped<IAvailableDataNotifier<AvailableChargeReceiptData, ChargeCommandRejectedEvent>,
+                AvailableDataNotifier<AvailableChargeReceiptData, ChargeCommandRejectedEvent>>();
+            serviceCollection.AddScoped<AvailableChargeReceiptValidationErrorFactory,
+                AvailableChargeReceiptValidationErrorFactory>();
+            serviceCollection.AddScoped<ICimValidationErrorTextProvider, CimValidationErrorTextProvider>();
+            serviceCollection.AddScoped<ICimValidationErrorCodeFactory, CimValidationErrorCodeFactory>();
+            serviceCollection.AddScoped<ICimValidationErrorTextFactory<ChargeInformationCommand, ChargeInformationOperationDto>,
+                ChargeCimValidationErrorTextFactory>();
+            serviceCollection.AddScoped<IAvailableDataFactory<AvailableChargeReceiptData, ChargeCommandRejectedEvent>,
+                AvailableChargeRejectionDataFactory>();
+            serviceCollection.AddScoped<IAvailableDataNotificationFactory<AvailableChargeReceiptData>,
+                AvailableDataNotificationFactory<AvailableChargeReceiptData>>();
+            serviceCollection.AddScoped<BundleSpecification<AvailableChargeReceiptData, ChargeCommandRejectedEvent>,
+                ChargeRejectionBundleSpecification>();
+
             serviceCollection
-                .AddScoped<IAvailableDataNotifier<AvailableChargeReceiptData, ChargeCommandRejectedEvent>,
-                    AvailableDataNotifier<AvailableChargeReceiptData, ChargeCommandRejectedEvent>>();
-            serviceCollection
-                .AddScoped<AvailableChargeReceiptValidationErrorFactory,
-                    AvailableChargeReceiptValidationErrorFactory>();
-            serviceCollection
-                .AddScoped<ICimValidationErrorTextProvider, CimValidationErrorTextProvider>();
-            serviceCollection
-                .AddScoped<ICimValidationErrorCodeFactory, CimValidationErrorCodeFactory>();
-            serviceCollection
-                .AddScoped<ICimValidationErrorTextFactory, CimValidationErrorTextFactory>();
-            serviceCollection
-                .AddScoped<IAvailableDataFactory<AvailableChargeReceiptData, ChargeCommandRejectedEvent>,
-                    AvailableChargeRejectionDataFactory>();
-            serviceCollection
-                .AddScoped<IAvailableDataNotificationFactory<AvailableChargeReceiptData>,
-                    AvailableDataNotificationFactory<AvailableChargeReceiptData>>();
-            serviceCollection
-                .AddScoped<BundleSpecification<AvailableChargeReceiptData, ChargeCommandRejectedEvent>,
-                    ChargeRejectionBundleSpecification>();
+                .AddMessaging()
+                .AddInternalMessageExtractor<ChargeCommandRejectedEvent>();
         }
     }
 }

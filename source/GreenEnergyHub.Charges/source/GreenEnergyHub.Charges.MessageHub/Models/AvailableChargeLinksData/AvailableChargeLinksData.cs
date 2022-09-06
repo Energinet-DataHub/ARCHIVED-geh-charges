@@ -14,7 +14,7 @@
 
 using System;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using NodaTime;
 
@@ -23,6 +23,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData
     public class AvailableChargeLinksData : AvailableDataBase
     {
         public AvailableChargeLinksData(
+            string senderId,
+            MarketParticipantRole senderRole,
             string recipientId,
             MarketParticipantRole recipientRole,
             BusinessReasonCode businessReasonCode,
@@ -34,8 +36,21 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData
             string meteringPointId,
             int factor,
             Instant startDateTime,
-            Instant endDateTime)
-                : base(recipientId, recipientRole, businessReasonCode, requestDateTime, availableDataReferenceId)
+            Instant endDateTime,
+            DocumentType documentType,
+            int operationOrder,
+            Guid actorId)
+                : base(
+                    senderId,
+                    senderRole,
+                    recipientId,
+                    recipientRole,
+                    businessReasonCode,
+                    requestDateTime,
+                    availableDataReferenceId,
+                    documentType,
+                    operationOrder,
+                    actorId)
         {
             ChargeId = chargeId;
             ChargeOwner = chargeOwner;

@@ -26,16 +26,15 @@
 $connectionString = "Server=(localdb)\mssqllocaldb;Database=ChargesDatabase;Trusted_Connection=True;"
 $context = "QueryDbContext"
 $outputDir = "Model"
-$schema = "charges"
+$schema = "Charges"
 
 # Update database model
 Invoke-Expression "dotnet build ..\GreenEnergyHub.Charges.ApplyDBMigrationsApp\GreenEnergyHub.Charges.ApplyDBMigrationsApp.csproj"
-Invoke-Expression "dotnet run --project ..\\GreenEnergyHub.Charges.ApplyDBMigrationsApp -- ""Server=(localdb)\mssqllocaldb;Database=ChargesDatabase;Trusted_Connection=True;"" includeSeedData includeTestData"
+Invoke-Expression "dotnet run --project ..\\GreenEnergyHub.Charges.ApplyDBMigrationsApp -- ""Server=(localdb)\mssqllocaldb;Database=ChargesDatabase;Trusted_Connection=True;"" includeSeedData"
 
 # Update scaffolded model
-Invoke-Expression "dotnet ef dbcontext scaffold ""$connectionString"" Microsoft.EntityFrameworkCore.SqlServer --output-dir $outputDir --context $context --schema $schema --force"
+# --data-annotations: In order to add keys annotation required by OData
+Invoke-Expression "dotnet ef dbcontext scaffold ""$connectionString"" Microsoft.EntityFrameworkCore.SqlServer --output-dir $outputDir --context $context --schema $schema --force --no-onconfiguring --data-annotations"
 
 # Apply .editorconfig styles and fix .editorconfig analyzer violations - e.g. add license header and add empty line between props
 Invoke-Expression "dotnet format -s -a --include .\Model\"
-
-Write-Warning "Remove or comment out the if-clause in the method 'OnConfiguring' of the generated file '$outputDir\$context.cs'."

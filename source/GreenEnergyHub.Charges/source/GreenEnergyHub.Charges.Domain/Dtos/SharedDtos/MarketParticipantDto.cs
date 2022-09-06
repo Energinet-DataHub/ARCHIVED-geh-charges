@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using System;
 
 #pragma warning disable 8618
 namespace GreenEnergyHub.Charges.Domain.Dtos.SharedDtos
@@ -25,12 +25,22 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.SharedDtos
         /// <summary>
         /// Contains an ID that identifies the Market Participants. In Denmark this would be the GLN number or EIC code.
         /// </summary>
-        public string Id { get; set; }
+        public string MarketParticipantId { get; set; }
 
         /// <summary>
         /// Contains the role a market participant uses when initiating and communicating with Green Energy Hub
         /// about a specific business process, e.g. Grid Access Provider use 'DDM' when creating Charge price lists.
         /// </summary>
         public MarketParticipantRole BusinessProcessRole { get; set; }
+
+        /// <summary>
+        /// ID of the market participant in charges domain
+        /// </summary>
+        public Guid Id { get; init; }
+
+        /// <summary>
+        /// ID for authentication provided by the market participant domain
+        /// </summary>
+        public Guid? B2CActorId { get; init; }
     }
 }

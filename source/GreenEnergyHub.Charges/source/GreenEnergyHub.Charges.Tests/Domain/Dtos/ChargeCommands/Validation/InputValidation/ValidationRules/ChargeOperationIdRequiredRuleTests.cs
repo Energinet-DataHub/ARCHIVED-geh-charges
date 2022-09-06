@@ -12,13 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Linq;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation.InputValidation;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Charges.Tests.Builders;
+using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Categories;
@@ -36,26 +34,21 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void ChargeOperationIdRequiredRule_Test(
             string chargeOperationId,
             bool expected,
-            ChargeCommandBuilder builder)
+            ChargeInformationOperationDtoBuilder builder)
         {
-            var command = builder.WithOperationId(chargeOperationId).Build();
-            var sut = new ChargeOperationIdRequiredRule(command);
-            Assert.Equal(expected, sut.IsValid);
+            var chargeOperationDto = builder.WithChargeOperationId(chargeOperationId).Build();
+            var sut = new ChargeOperationIdRequiredRule(chargeOperationDto);
+            sut.IsValid.Should().Be(expected);
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder builder)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeInformationOperationDtoBuilder builder)
         {
-            var invalidCommand = CreateInvalidCommand(builder);
-            var sut = new ChargeOperationIdRequiredRule(invalidCommand);
+            var invalidChargeOperationDto = builder.WithChargeOperationId(string.Empty).Build();
+            var sut = new ChargeOperationIdRequiredRule(invalidChargeOperationDto);
             sut.ValidationRuleIdentifier.Should()
                 .Be(ValidationRuleIdentifier.ChargeOperationIdRequired);
-        }
-
-        private static ChargeCommand CreateInvalidCommand(ChargeCommandBuilder builder)
-        {
-            return builder.WithOperationId(string.Empty).Build();
         }
     }
 }

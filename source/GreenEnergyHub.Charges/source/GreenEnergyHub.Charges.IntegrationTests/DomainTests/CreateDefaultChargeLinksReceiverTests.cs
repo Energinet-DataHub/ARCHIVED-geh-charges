@@ -14,17 +14,24 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using Energinet.Charges.Contracts;
+using Energinet.DataHub.Core.App.Common.Abstractions.ServiceBus;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using FluentAssertions;
 using Google.Protobuf;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
+using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
+using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
-using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
+using GreenEnergyHub.Charges.TestCore;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
+using Actor = Energinet.DataHub.Core.App.Common.Abstractions.Actor.Actor;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 {
@@ -43,31 +50,25 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task When_ReceivingCreateDefaultChargeLinksRequest_MessageHubIsNotifiedAboutAvailableData_And_Then_When_MessageHubRequestsTheBundle_Then_MessageHubReceivesBundleReply()
             {
                 // Arrange
-                var meteringPointId = "571313180000000005";
-                var request = CreateServiceBusMessage(
-                    meteringPointId,
-                    Fixture.CreateLinkReplyQueue.Name,
-                    out var correlationId,
-                    out var parentId);
+                var meteringPointId = "571313180000000029";
+                var (message, correlationId) = CreateServiceBusMessage(meteringPointId, Fixture.CreateLinkReplyQueue.Name);
 
                 // Act
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
-                    () => Fixture.CreateLinkRequestQueue.SenderClient.SendMessageAsync(request), correlationId, parentId);
+                    () => Fixture.CreateLinkRequestQueue.SenderClient.SendMessageAsync(message), correlationId);
 
                 // Assert
-                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId);
+                await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId);
             }
 
-            [Fact]
-            public async Task When_ReceivingCreateDefaultChargeLinksRequest_MeteringPointDomainIsNotifiedThatDefaultChargeLinksAreCreated()
+            [Theory]
+            [InlineData("571313180000000012")]
+            [InlineData("571313180000000045")]
+            public async Task When_ReceivingCreateDefaultChargeLinksRequest_MeteringPointDomainIsNotifiedThatDefaultChargeLinksAreCreated(
+                string meteringPointId)
             {
                 // Arrange
-                var meteringPointId = "701313180000000005";
-                var request = CreateServiceBusMessage(
-                    meteringPointId,
-                    Fixture.CreateLinkReplyQueue.Name,
-                    out var correlationId,
-                    out var parentId);
+                var (message, correlationId) = CreateServiceBusMessage(meteringPointId, Fixture.CreateLinkReplyQueue.Name);
 
                 using var isMessageReceived = await Fixture.CreateLinkReplyQueueListener
                     .ListenForMessageAsync(correlationId)
@@ -75,11 +76,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
                 // Act
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
-                    () => Fixture.CreateLinkRequestQueue.SenderClient.SendMessageAsync(request), correlationId, parentId);
+                    () => Fixture.CreateLinkRequestQueue.SenderClient.SendMessageAsync(message), correlationId);
 
                 // Assert
-                var isMessageReceivedByQueue = isMessageReceived.MessageAwaiter!.Wait(TimeSpan.FromSeconds(10));
+                var isMessageReceivedByQueue = isMessageReceived.MessageAwaiter!.Wait(TimeSpan.FromSeconds(20));
                 isMessageReceivedByQueue.Should().BeTrue();
+                isMessageReceived.ApplicationProperties![MessageMetaDataConstants.CorrelationId]
+                    .Should().Be(correlationId);
             }
 
             public Task InitializeAsync()
@@ -93,11 +96,17 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 return Task.CompletedTask;
             }
 
-            private ServiceBusMessage CreateServiceBusMessage(string meteringPointId, string replyToQueueName, out string correlationId, out string parentId)
+            private static (ServiceBusMessage ServiceBusMessage, string CorrelationId) CreateServiceBusMessage(
+                string meteringPointId, string replyToQueueName)
             {
-                correlationId = CorrelationIdGenerator.Create();
+                var correlationId = CorrelationIdGenerator.Create();
                 var message = new CreateDefaultChargeLinks { MeteringPointId = meteringPointId };
-                parentId = $"00-{correlationId}-b7ad6b7169203331-01";
+
+                var actor = JsonSerializer.Serialize(new Actor(
+                    SeededData.GridAreaLink.Provider8100000000030.Id,
+                    "???",
+                    "???",
+                    MarketParticipantRole.GridAccessProvider.ToString()));
 
                 var byteArray = message.ToByteArray();
                 var serviceBusMessage = new ServiceBusMessage(byteArray)
@@ -105,10 +114,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                     CorrelationId = correlationId,
                     ApplicationProperties =
                     {
-                        new KeyValuePair<string, object>("ReplyTo", replyToQueueName),
+                        new KeyValuePair<string, object>(MessageMetaDataConstants.CorrelationId, correlationId),
+                        new KeyValuePair<string, object>(MessageMetaDataConstants.ReplyTo, replyToQueueName),
+                        new KeyValuePair<string, object>(Constants.ServiceBusIdentityKey, actor),
                     },
                 };
-                return serviceBusMessage;
+                return (serviceBusMessage, correlationId);
             }
         }
     }

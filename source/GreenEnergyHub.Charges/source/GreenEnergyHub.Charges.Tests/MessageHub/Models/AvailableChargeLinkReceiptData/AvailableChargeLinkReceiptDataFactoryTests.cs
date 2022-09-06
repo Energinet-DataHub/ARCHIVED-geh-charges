@@ -12,22 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinkReceiptData;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData;
+using GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.MessageHub.Application.ChargeLinks
+namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkReceiptData
 {
     [UnitTest]
     public class AvailableChargeLinkReceiptDataFactoryTests
@@ -37,38 +40,39 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Application.ChargeLinks
         [InlineAutoDomainData(MarketParticipantRole.GridAccessProvider)]
         public async Task CreateAsync_WhenSenderNotSystemOperator_ReturnsAvailableData(
             MarketParticipantRole marketParticipantRole,
+            MarketParticipant meteringPointAdministrator,
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             ChargeLinksAcceptedEvent acceptedEvent,
             Instant now,
-            AvailableChargeLinkReceiptDataFactory sut)
+            AvailableChargeLinksReceiptDataFactory sut)
         {
             // Arrange
-            acceptedEvent.ChargeLinksCommand.Document.Sender.BusinessProcessRole = marketParticipantRole;
-
-            messageMetaDataContext.Setup(
-                    m => m.RequestDataTime)
-                .Returns(now);
-
-            var expectedLinks = acceptedEvent.ChargeLinksCommand.ChargeLinks.ToList();
+            messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
+            var expectedLinks = acceptedEvent.Command.Operations.ToList();
+            var documentDto = acceptedEvent.Command.Document;
+            documentDto.Sender.BusinessProcessRole = marketParticipantRole;
+            var actorId = Guid.NewGuid();
+            MarketParticipantRepositoryMockBuilder.SetupMarketParticipantRepositoryMock(
+                marketParticipantRepository, meteringPointAdministrator, documentDto.Sender, actorId);
 
             // Act
-            var actualList =
-                await sut.CreateAsync(acceptedEvent);
+            var actualList = await sut.CreateAsync(acceptedEvent);
 
             // Assert
             actualList.Should().HaveSameCount(expectedLinks);
             for (var i = 0; i < actualList.Count; i++)
             {
-                actualList[i].RecipientId.Should().Be(acceptedEvent.ChargeLinksCommand.Document.Sender.Id);
-                actualList[i].RecipientRole.Should()
-                    .Be(acceptedEvent.ChargeLinksCommand.Document.Sender.BusinessProcessRole);
-                actualList[i].BusinessReasonCode.Should()
-                    .Be(acceptedEvent.ChargeLinksCommand.Document.BusinessReasonCode);
+                actualList[i].ActorId.Should().Be(actorId);
+                actualList[i].RecipientId.Should().Be(documentDto.Sender.MarketParticipantId);
+                actualList[i].RecipientRole.Should().Be(documentDto.Sender.BusinessProcessRole);
+                actualList[i].BusinessReasonCode.Should().Be(documentDto.BusinessReasonCode);
                 actualList[i].RequestDateTime.Should().Be(now);
                 actualList[i].ReceiptStatus.Should().Be(ReceiptStatus.Confirmed);
+                actualList[i].DocumentType.Should().Be(DocumentType.ConfirmRequestChangeBillingMasterData);
                 actualList[i].OriginalOperationId.Should().Be(expectedLinks[i].OperationId);
-                actualList[i].MeteringPointId.Should().Be(acceptedEvent.ChargeLinksCommand.MeteringPointId);
-                actualList[i].ReasonCodes.Should().BeEmpty();
+                actualList[i].MeteringPointId.Should().Be(expectedLinks[i].MeteringPointId);
+                actualList[i].ValidationErrors.Should().BeEmpty();
             }
         }
 
@@ -76,14 +80,13 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Application.ChargeLinks
         [InlineAutoDomainData]
         public async Task CreateAsync_WhenSenderIsSystemOperator_ReturnsEmptyList(
             ChargeLinksAcceptedEvent acceptedEvent,
-            AvailableChargeLinkReceiptDataFactory sut)
+            AvailableChargeLinksReceiptDataFactory sut)
         {
             // Arrange
-            acceptedEvent.ChargeLinksCommand.Document.Sender.BusinessProcessRole = MarketParticipantRole.SystemOperator;
+            acceptedEvent.Command.Document.Sender.BusinessProcessRole = MarketParticipantRole.SystemOperator;
 
             // Act
-            var actualList =
-                await sut.CreateAsync(acceptedEvent);
+            var actualList = await sut.CreateAsync(acceptedEvent);
 
             // Assert
             actualList.Should().BeEmpty();

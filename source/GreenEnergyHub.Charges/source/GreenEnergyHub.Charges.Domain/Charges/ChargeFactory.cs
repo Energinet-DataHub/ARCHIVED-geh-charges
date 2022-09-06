@@ -14,8 +14,7 @@
 
 using System;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Core.DateTime;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Domain.Charges
@@ -29,27 +28,28 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             _marketParticipantRepository = marketParticipantRepository;
         }
 
-        public async Task<Charge> CreateFromCommandAsync(ChargeCommand command)
+        public async Task<Charge> CreateFromChargeOperationDtoAsync(ChargeInformationOperationDto chargeInformationOperationDto)
         {
-            var owner = await _marketParticipantRepository.GetOrNullAsync(command.ChargeOperation.ChargeOwner);
+            var owner = await _marketParticipantRepository
+                .SingleOrNullAsync(chargeInformationOperationDto.ChargeOwner)
+                .ConfigureAwait(false);
 
             if (owner == null)
-                throw new Exception($"Market participant '{command.ChargeOperation.ChargeOwner}' does not exist.");
+                throw new InvalidOperationException($"Market participant '{chargeInformationOperationDto.ChargeOwner}' does not exist.");
 
-            return new Charge(
-                Guid.NewGuid(),
-                command.ChargeOperation.ChargeId,
-                command.ChargeOperation.ChargeName,
-                command.ChargeOperation.ChargeDescription,
+            return Charge.Create(
+                chargeInformationOperationDto.OperationId,
+                chargeInformationOperationDto.ChargeName,
+                chargeInformationOperationDto.ChargeDescription,
+                chargeInformationOperationDto.SenderProvidedChargeId,
                 owner.Id,
-                command.ChargeOperation.StartDateTime,
-                command.ChargeOperation.EndDateTime.TimeOrEndDefault(),
-                command.ChargeOperation.Type,
-                command.ChargeOperation.VatClassification,
-                command.ChargeOperation.Resolution,
-                command.ChargeOperation.TransparentInvoicing,
-                command.ChargeOperation.TaxIndicator,
-                command.ChargeOperation.Points);
+                chargeInformationOperationDto.ChargeType,
+                chargeInformationOperationDto.Resolution,
+                chargeInformationOperationDto.TaxIndicator,
+                chargeInformationOperationDto.VatClassification,
+                chargeInformationOperationDto.TransparentInvoicing == TransparentInvoicing.Transparent,
+                chargeInformationOperationDto.StartDateTime,
+                chargeInformationOperationDto.EndDateTime);
         }
     }
 }

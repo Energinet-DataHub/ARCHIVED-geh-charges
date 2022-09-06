@@ -15,7 +15,7 @@
 using System.Collections.Generic;
 using Energinet.DataHub.Core.Messaging.MessageTypes.Common;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
 {

@@ -12,25 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.Core.Messaging.Protobuf;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Core.Currency;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.Factories;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.InputValidation.Factories;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandReceived;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandRejected;
+using GreenEnergyHub.Charges.Infrastructure.Core.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
+using GreenEnergyHub.Charges.MessageHub.Models.Shared;
 using GreenEnergyHub.Iso8601;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -40,12 +40,20 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<IChargeCommandConfirmationService, ChargeCommandConfirmationService>();
-            serviceCollection.AddScoped<IChargeCommandReceivedEventHandler, ChargeCommandReceivedEventHandler>();
+            serviceCollection.AddScoped<IChargeCommandReceiptService, ChargeCommandReceiptService>();
+            serviceCollection.AddScoped<IChargeInformationEventHandler, ChargeInformationEventHandler>();
             serviceCollection.AddScoped<IChargeFactory, ChargeFactory>();
+            serviceCollection.AddScoped<IChargeIdentifierFactory, ChargeIdentifierFactory>();
+            serviceCollection.AddScoped<IChargePeriodFactory, ChargePeriodFactory>();
             serviceCollection.AddScoped<IChargeCommandAcceptedEventFactory, ChargeCommandAcceptedEventFactory>();
             serviceCollection.AddScoped<IChargeCommandRejectedEventFactory, ChargeCommandRejectedEventFactory>();
-
+            serviceCollection.AddScoped<ICimValidationErrorTextFactory<ChargeInformationCommand, ChargeInformationOperationDto>,
+                ChargeCimValidationErrorTextFactory>();
+            serviceCollection.AddScoped<ICimValidationErrorCodeFactory, CimValidationErrorCodeFactory>();
+            serviceCollection.AddScoped<IAvailableChargeReceiptValidationErrorFactory,
+                AvailableChargeReceiptValidationErrorFactory>();
+            serviceCollection.AddScoped<IChargeCommandReceivedEventHandler, ChargeInformationCommandReceivedEventHandler>();
+            serviceCollection.AddScoped<IChargePriceEventHandlerDeprecated, ChargePriceEventHandlerDeprecated>();
             ConfigureDatabase(serviceCollection);
             ConfigureValidation(serviceCollection);
             ConfigureIso8601Timezones(serviceCollection);
@@ -60,12 +68,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
         private static void ConfigureValidation(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<IBusinessValidationRulesFactory, BusinessValidationRulesFactory>();
-            serviceCollection.AddScoped<IInputValidationRulesFactory, InputValidationRulesFactory>();
-            serviceCollection.AddScoped<IRulesConfigurationRepository, RulesConfigurationRepository>();
-            serviceCollection.AddScoped<IChargeCommandInputValidator, ChargeCommandInputValidator>();
-            serviceCollection.AddScoped<IChargeCommandBusinessValidator, ChargeCommandBusinessValidator>();
-            serviceCollection.AddScoped<IChargeCommandValidator, ChargeCommandValidator>();
+            serviceCollection.AddScoped<IInputValidationRulesFactory<ChargeInformationOperationDto>,
+                ChargeOperationInputValidationRulesFactory>();
+            serviceCollection.AddScoped<IInputValidator<ChargeInformationOperationDto>, InputValidator<ChargeInformationOperationDto>>();
         }
 
         private static void ConfigureIso8601Timezones(IServiceCollection serviceCollection)
@@ -85,18 +90,15 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
         private static void ConfigureMessaging(IServiceCollection serviceCollection)
         {
-            serviceCollection.ReceiveProtobufMessage<ChargeCommandReceivedContract>(
-                configuration => configuration.WithParser(() => ChargeCommandReceivedContract.Parser));
-
-            serviceCollection.SendProtobuf<ChargeCommandAcceptedContract>();
-            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeCommandAcceptedEvent>(
+            serviceCollection
+                .AddMessaging()
+                .AddInternalMessageExtractor<ChargeCommandReceivedEvent>()
+                .AddInternalMessageDispatcher<ChargeCommandAcceptedEvent>(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
-                EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandAcceptedTopicName));
-
-            serviceCollection.SendProtobuf<ChargeCommandRejectedContract>();
-            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeCommandRejectedEvent>(
-                EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
-                EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandRejectedTopicName));
+                EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandAcceptedTopicName))
+                .AddInternalMessageDispatcher<ChargeCommandRejectedEvent>(
+                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
+                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandRejectedTopicName));
         }
     }
 }

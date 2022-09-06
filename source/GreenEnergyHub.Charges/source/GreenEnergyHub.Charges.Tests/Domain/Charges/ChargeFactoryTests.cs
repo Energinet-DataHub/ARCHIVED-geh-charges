@@ -12,12 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Tests.Builders.Command;
+using GreenEnergyHub.Charges.Tests.Builders.Testables;
 using GreenEnergyHub.TestHelpers;
 using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
 using Moq;
@@ -32,18 +35,47 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
         [Theory]
         [InlineAutoDomainData]
         public async Task CreateFromCommandAsync_Charge_HasNoNullsOrEmptyCollections(
-            MarketParticipant owner,
-            ChargeCommand chargeCommand,
+            TestMarketParticipant owner,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
+            ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder,
             ChargeFactory sut)
         {
+            // Arrange
+            var chargeOperationDto = chargeInformationOperationDtoBuilder.Build();
             marketParticipantRepository
-                .Setup(repo => repo.GetOrNullAsync(chargeCommand.ChargeOperation.ChargeOwner))
+                .Setup(repo => repo.SingleOrNullAsync(
+                    chargeOperationDto.ChargeOwner))
                 .ReturnsAsync(owner);
 
-            var actual = await sut.CreateFromCommandAsync(chargeCommand);
+            // Act
+            var actual = await sut.CreateFromChargeOperationDtoAsync(chargeOperationDto);
 
-            actual.Should().NotContainNullsOrEmptyEnumerables();
+            // Assert
+            actual.Should().NotContainNullEnumerable();
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task CreateFromCommandAsync_WhenOwnerIsNull_ThrowsException(
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
+            [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
+            ChargeInformationOperationDto chargeInformationOperationDto,
+            ChargeFactory sut)
+        {
+            // Arrange
+            var chargePeriod = new ChargePeriodBuilder().Build();
+            marketParticipantRepository
+                .Setup(repo => repo.SingleOrNullAsync(
+                    It.IsAny<string>()))
+                .ReturnsAsync((MarketParticipant?)null);
+
+            chargePeriodFactory
+                .Setup(f => f.CreateFromChargeOperationDto(It.IsAny<ChargeInformationOperationDto>()))
+                .Returns(chargePeriod);
+
+            // Act & Assert
+            await Assert.ThrowsAsync<InvalidOperationException>(() =>
+                sut.CreateFromChargeOperationDtoAsync(chargeInformationOperationDto));
         }
     }
 }

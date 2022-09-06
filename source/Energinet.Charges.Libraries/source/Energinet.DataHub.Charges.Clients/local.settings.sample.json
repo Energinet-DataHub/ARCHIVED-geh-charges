@@ -1,19 +1,16 @@
 {
   "IsEncrypted": false,
   "Values": {
-    "AzureWebJobsDashboard": "UseDevelopmentStorage=true",
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
-    
+
     "APPINSIGHTS_INSTRUMENTATIONKEY": "<App insights instrumentation key>",
     "LOCAL_TIMEZONENAME": "<Your time zone ID, e.g.Europe/Copenhagen, see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones for others>",
     "CURRENCY": "<Your system currency e.g. DKK, see https://en.wikipedia.org/wiki/ISO_4217>",
     "INTEGRATIONEVENT_SENDER_CONNECTION_STRING": "<sb sender connection string for integration events (without EntityPath)>",
     "INTEGRATIONEVENT_LISTENER_CONNECTION_STRING": "<sb listener connection string for integration events (without EntityPath)>",
-        
-    "CREATE_LINK_REQUEST_QUEUE_NAME": "create-link-request",
-    "CREATE_LINK_REPLY_QUEUE_NAME": "create-link-reply",
-    "CREATE_LINK_MESSAGES_REQUEST_QUEUE_NAME": "create-link-messages-request",
-    "CREATE_LINK_MESSAGES_REPLY_QUEUE_NAME": "create-link-messages-reply"
+
+    "CREATE_LINKS_REQUEST_QUEUE_NAME": "create-links-request",
+    "CREATE_LINKS_REPLY_QUEUE_NAME": "create-links-reply"
   }
 }

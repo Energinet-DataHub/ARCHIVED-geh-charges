@@ -16,7 +16,7 @@ limitations under the License.
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
@@ -27,15 +27,22 @@ limitations under the License.
     <ItemGroup>
       <ProjectReference Include="..\GreenEnergyHub.Charges.Application\GreenEnergyHub.Charges.Application.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.Domain\GreenEnergyHub.Charges.Domain.csproj" />
+      <ProjectReference Include="..\GreenEnergyHub.Charges.Infrastructure.Core\GreenEnergyHub.Charges.Infrastructure.Core.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Energinet.DataHub.Core.Schemas" Version="1.0.7" />
-      <PackageReference Include="Energinet.DataHub.Core.Messaging.Protobuf" Version="1.1.2" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.12" />
-      <PackageReference Include="Google.Protobuf" Version="3.19.2" />
-      <PackageReference Include="Grpc.Tools" Version="2.43.0" PrivateAssets="All" />
-      <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.354">
+      <PackageReference Include="Energinet.DataHub.Core.Schemas" Version="2.1.1" />
+      <PackageReference Include="Energinet.DataHub.Core.Messaging.Protobuf" Version="2.1.1" />
+      <PackageReference Include="Energinet.DataHub.MarketParticipant.Integration.Model" Version="2.5.1" />
+      <PackageReference Include="Energinet.DataHub.Core.SchemaValidation" Version="1.0.13" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.8" />
+      <PackageReference Include="Google.Protobuf" Version="3.21.5" />
+      <PackageReference Include="Grpc.Tools" Version="2.48.1" PrivateAssets="All" />
+      <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.435">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+      <PackageReference Update="Microsoft.VisualStudio.Threading.Analyzers" Version="17.3.44">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
@@ -47,7 +54,7 @@ limitations under the License.
         <Access>Public</Access>
         <ProtoCompile>True</ProtoCompile>
         <CompileOutputs>True</CompileOutputs>
-        <OutputDir>obj\Debug\net5.0\</OutputDir>
+        <OutputDir>obj\Debug\net6.0\</OutputDir>
         <Generator>MSBuild:Compile</Generator>
       </Protobuf>
       <Protobuf Include="../../../Contracts/*.proto">
@@ -82,10 +89,6 @@ limitations under the License.
       <Protobuf Update="..\..\..\Contracts\CreateDefaultChargeLinks.proto">
         <Link>Contracts\Public\CreateDefaultChargeLinks\CreateDefaultChargeLinks.proto</Link>
       </Protobuf>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Contracts\External" />
     </ItemGroup>
 
     <ItemGroup>

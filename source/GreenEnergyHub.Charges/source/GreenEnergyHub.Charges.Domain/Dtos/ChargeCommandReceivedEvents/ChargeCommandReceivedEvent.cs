@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 using NodaTime;
 
@@ -22,12 +22,12 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents
     {
         public ChargeCommandReceivedEvent(
             Instant publishedTime,
-            ChargeCommand command)
+            ChargeInformationCommand command)
             : base(publishedTime)
         {
             Command = command;
         }
 
-        public ChargeCommand Command { get; }
+        public ChargeInformationCommand Command { get; }
     }
 }

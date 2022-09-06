@@ -12,14 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Core.Messaging.Transport;
-using GreenEnergyHub.Charges.Infrastructure.Core.Correlation;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factories;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions
 {
@@ -33,17 +30,14 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions
         where TOutboundMessage : IOutboundMessage
     {
         private readonly ServiceBusSender _serviceBusSender;
-        private readonly ICorrelationContext _correlationContext;
-        private readonly IMessageMetaDataContext _messageMetaDataContext;
+        private readonly IServiceBusMessageFactory _serviceBusMessageFactory;
 
         public ServiceBusChannel(
-            [NotNull] IServiceBusSender<TOutboundMessage> serviceBusSender,
-            ICorrelationContext correlationContext,
-            IMessageMetaDataContext messageMetaDataContext)
+            IServiceBusSender<TOutboundMessage> serviceBusSender,
+            IServiceBusMessageFactory serviceBusMessageFactory)
         {
             _serviceBusSender = serviceBusSender.Instance;
-            _correlationContext = correlationContext;
-            _messageMetaDataContext = messageMetaDataContext;
+            _serviceBusMessageFactory = serviceBusMessageFactory;
         }
 
         /// <summary>
@@ -53,23 +47,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions
         /// <param name="cancellationToken">cancellation token</param>
         protected override async Task WriteAsync(byte[] data, CancellationToken cancellationToken = default)
         {
-            var message = GetServiceBusMessage(data);
+            var message = _serviceBusMessageFactory.CreateExternalMessage(data);
             await _serviceBusSender.SendMessageAsync(message, cancellationToken).ConfigureAwait(false);
-        }
-
-        private ServiceBusMessage GetServiceBusMessage(byte[] data)
-        {
-            if (_messageMetaDataContext.IsReplyToSet())
-            {
-                return new ServiceBusMessage(data)
-                {
-                        CorrelationId = _correlationContext.Id,
-                        ApplicationProperties =
-                        { new KeyValuePair<string, object>("ReplyTo", _messageMetaDataContext.ReplyTo), },
-                };
-            }
-
-            return new ServiceBusMessage(data) { CorrelationId = _correlationContext.Id, };
         }
     }
 }

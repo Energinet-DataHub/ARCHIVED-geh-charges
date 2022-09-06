@@ -12,64 +12,143 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Linq;
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
+using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using Energinet.DataHub.Core.Messaging.Transport.SchemaValidation;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
-using GreenEnergyHub.Charges.Application.Charges.Handlers.Message;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
+using GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocument;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
+using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Charges
 {
     public class ChargeIngestion
     {
-        /// <summary>
-        /// The name of the function.
-        /// Function name affects the URL and thus possibly dependent infrastructure.
-        /// </summary>
-        private readonly IChargesMessageHandler _chargesMessageHandler;
+        private readonly ILogger _logger;
+        private readonly ICorrelationContext _correlationContext;
+        private readonly IChargeInformationCommandBundleHandler _chargeInformationCommandBundleHandler;
+        private readonly IChargePriceCommandBundleHandler _chargePriceCommandBundleHandler;
         private readonly IHttpResponseBuilder _httpResponseBuilder;
         private readonly ValidatingMessageExtractor<ChargeCommandBundle> _messageExtractor;
+        private readonly IActorContext _actorContext;
 
         public ChargeIngestion(
-            IChargesMessageHandler chargesMessageHandler,
+            ILoggerFactory loggerFactory,
+            ICorrelationContext correlationContext,
+            IChargeInformationCommandBundleHandler chargeInformationCommandBundleHandler,
+            IChargePriceCommandBundleHandler chargePriceCommandBundleHandler,
             IHttpResponseBuilder httpResponseBuilder,
-            ValidatingMessageExtractor<ChargeCommandBundle> messageExtractor)
+            ValidatingMessageExtractor<ChargeCommandBundle> messageExtractor,
+            IActorContext actorContext)
         {
-            _chargesMessageHandler = chargesMessageHandler;
+            _logger = loggerFactory.CreateLogger(nameof(ChargeIngestion));
+            _correlationContext = correlationContext;
+            _chargeInformationCommandBundleHandler = chargeInformationCommandBundleHandler;
+            _chargePriceCommandBundleHandler = chargePriceCommandBundleHandler;
             _httpResponseBuilder = httpResponseBuilder;
             _messageExtractor = messageExtractor;
+            _actorContext = actorContext;
         }
 
         [Function(IngestionFunctionNames.ChargeIngestion)]
         public async Task<HttpResponseData> RunAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]
-            HttpRequestData req)
+            HttpRequestData request)
         {
-            var inboundMessage = await ValidateMessageAsync(req).ConfigureAwait(false);
-            if (inboundMessage.HasErrors)
+            try
             {
+                var inboundMessage = await ValidateMessageAsync(request).ConfigureAwait(false);
+
+                if (inboundMessage.HasErrors)
+                {
+                    return await _httpResponseBuilder
+                        .CreateBadRequestResponseAsync(request, inboundMessage.SchemaValidationError)
+                        .ConfigureAwait(false);
+                }
+
+                if (AuthenticatedMatchesSenderId(inboundMessage) == false)
+                {
+                    return _httpResponseBuilder.CreateBadRequestB2BResponse(
+                        request, B2BErrorCode.ActorIsNotWhoTheyClaimToBeErrorMessage);
+                }
+
+                var bundle = inboundMessage.ValidatedMessage;
+                switch (bundle)
+                {
+                    case ChargeInformationCommandBundle commandBundle:
+                        ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(commandBundle);
+                        await _chargeInformationCommandBundleHandler.HandleAsync(commandBundle).ConfigureAwait(false);
+                        break;
+                    case ChargePriceCommandBundle commandBundle:
+                        // This is a temporary fix to support "old" price flow while new is under development
+                        await SupportOldFlowAsync(commandBundle).ConfigureAwait(false);
+                        await _chargePriceCommandBundleHandler.HandleAsync(commandBundle).ConfigureAwait(false);
+                        break;
+                }
+
+                return _httpResponseBuilder.CreateAcceptedResponse(request);
+            }
+            catch (SchemaValidationException exception)
+            {
+                _logger.LogError(
+                    exception,
+                    "Unable to schema validate request with correlation id: {CorrelationId}",
+                    _correlationContext.Id);
                 return await _httpResponseBuilder
-                    .CreateBadRequestResponseAsync(req, inboundMessage.SchemaValidationError)
+                    .CreateBadRequestResponseAsync(request, exception.SchemaValidationError)
                     .ConfigureAwait(false);
             }
+        }
 
-            var message = GetChargesMessage(inboundMessage.ValidatedMessage);
+        private async Task SupportOldFlowAsync(ChargePriceCommandBundle priceCommandBundle)
+        {
+            var document = priceCommandBundle.Document;
+            var chargeInformationCommands = priceCommandBundle.Commands
+                .Select(priceCommand => priceCommand.Operations
+                    .Select(priceOperation => new ChargeInformationOperationDto(
+                        priceOperation.OperationId,
+                        priceOperation.ChargeType,
+                        priceOperation.SenderProvidedChargeId,
+                        string.Empty,
+                        string.Empty,
+                        priceOperation.ChargeOwner,
+                        Resolution.Unknown,
+                        priceOperation.Resolution,
+                        TaxIndicator.Unknown,
+                        TransparentInvoicing.Unknown,
+                        VatClassification.Unknown,
+                        priceOperation.StartDateTime,
+                        null,
+                        priceOperation.PointsStartInterval,
+                        priceOperation.PointsEndInterval,
+                        priceOperation.Points))
+                    .ToList())
+                .Select(operations => new ChargeInformationCommand(document, operations))
+                .ToList();
 
-            foreach (var chargeCommand in message.ChargeCommands)
-            {
-                ChargeCommandNullChecker.ThrowExceptionIfRequiredPropertyIsNull(chargeCommand);
-            }
+            var chargeInformationCommandBundle =
+                new ChargeInformationCommandBundle(document, chargeInformationCommands);
 
-            var messageResult = await _chargesMessageHandler.HandleAsync(message)
+            await _chargeInformationCommandBundleHandler
+                .HandleAsync(chargeInformationCommandBundle)
                 .ConfigureAwait(false);
+        }
 
-            return await _httpResponseBuilder
-                .CreateAcceptedResponseAsync(req, messageResult)
-                .ConfigureAwait(false);
+        private bool AuthenticatedMatchesSenderId(SchemaValidatedInboundMessage<ChargeCommandBundle> inboundMessage)
+        {
+            var authorizedActor = _actorContext.CurrentActor;
+            var senderId = inboundMessage.ValidatedMessage?.Document.Sender.MarketParticipantId;
+
+            return authorizedActor != null && senderId == authorizedActor.Identifier;
         }
 
         private async Task<SchemaValidatedInboundMessage<ChargeCommandBundle>> ValidateMessageAsync(HttpRequestData req)
@@ -77,13 +156,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             return (SchemaValidatedInboundMessage<ChargeCommandBundle>)await _messageExtractor
                 .ExtractAsync(req.Body)
                 .ConfigureAwait(false);
-        }
-
-        private ChargesMessage GetChargesMessage(ChargeCommandBundle chargeCommandBundle)
-        {
-            var message = new ChargesMessage();
-            message.ChargeCommands.AddRange(chargeCommandBundle.ChargeCommands);
-            return message;
         }
     }
 }

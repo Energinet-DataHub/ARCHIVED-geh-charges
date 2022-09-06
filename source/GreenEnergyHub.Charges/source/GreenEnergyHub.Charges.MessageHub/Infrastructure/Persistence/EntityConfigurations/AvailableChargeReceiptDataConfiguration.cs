@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -28,6 +29,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Persistence.EntityCon
             builder.HasKey(x => x.Id);
 
             builder.Property(p => p.Id).ValueGeneratedNever();
+            builder.Property(x => x.SenderId);
+            builder.Property(x => x.SenderRole);
             builder.Property(x => x.RecipientId);
             builder.Property(x => x.RecipientRole);
             builder.Property(x => x.BusinessReasonCode);
@@ -35,17 +38,19 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Persistence.EntityCon
             builder.Property(x => x.OriginalOperationId);
             builder.Property(x => x.RequestDateTime);
             builder.Property(x => x.AvailableDataReferenceId);
-
+            builder.Property(x => x.DocumentType);
+            builder.Property(x => x.OperationOrder);
+            builder.Property(x => x.ActorId);
             builder.Ignore(c => c.ValidationErrors);
-            builder.OwnsMany<AvailableChargeReceiptValidationError>("_validationErrors", ConfigureValidationErrors);
+            builder.OwnsMany<AvailableReceiptValidationError>("_validationErrors", ConfigureValidationErrors);
         }
 
         private static void ConfigureValidationErrors(
             OwnedNavigationBuilder<AvailableChargeReceiptData,
-            AvailableChargeReceiptValidationError> validationErrors)
+                AvailableReceiptValidationError> validationErrors)
         {
             validationErrors.WithOwner().HasForeignKey($"{_aggregateTableName}Id");
-            validationErrors.ToTable(nameof(AvailableChargeReceiptValidationError), DatabaseSchemaNames.MessageHub);
+            validationErrors.ToTable("AvailableChargeReceiptValidationError", DatabaseSchemaNames.MessageHub);
             validationErrors.HasKey(r => r.Id);
 
             validationErrors.Property(r => r.Id).ValueGeneratedNever();

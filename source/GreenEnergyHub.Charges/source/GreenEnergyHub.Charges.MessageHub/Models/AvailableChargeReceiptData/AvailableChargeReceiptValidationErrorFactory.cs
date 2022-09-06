@@ -12,32 +12,35 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
+using GreenEnergyHub.Charges.MessageHub.Models.Shared;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 {
-    public class AvailableChargeReceiptValidationErrorFactory
+    public class AvailableChargeReceiptValidationErrorFactory : IAvailableChargeReceiptValidationErrorFactory
     {
         private readonly ICimValidationErrorCodeFactory _cimValidationErrorCodeFactory;
-        private readonly ICimValidationErrorTextFactory _cimValidationErrorTextFactory;
+        private readonly ICimValidationErrorTextFactory<ChargeInformationCommand, ChargeInformationOperationDto> _cimValidationErrorTextFactory;
 
         public AvailableChargeReceiptValidationErrorFactory(
             ICimValidationErrorCodeFactory cimValidationErrorCodeFactory,
-            ICimValidationErrorTextFactory cimValidationErrorTextFactory)
+            ICimValidationErrorTextFactory<ChargeInformationCommand, ChargeInformationOperationDto> cimValidationErrorTextFactory)
         {
             _cimValidationErrorCodeFactory = cimValidationErrorCodeFactory;
             _cimValidationErrorTextFactory = cimValidationErrorTextFactory;
         }
 
-        public AvailableChargeReceiptValidationError Create(
-            ValidationRuleIdentifier ruleIdentifier,
-            ChargeCommand command)
+        public AvailableReceiptValidationError Create(
+            ValidationError validationError,
+            ChargeInformationCommand command,
+            ChargeInformationOperationDto chargeInformationOperationDto)
         {
-            var reasonCode = _cimValidationErrorCodeFactory.Create(ruleIdentifier);
-            var reasonText = _cimValidationErrorTextFactory.Create(ruleIdentifier, command);
+            var reasonCode = _cimValidationErrorCodeFactory.Create(validationError.ValidationRuleIdentifier);
+            var reasonText = _cimValidationErrorTextFactory.Create(validationError, command, chargeInformationOperationDto);
 
-            return new AvailableChargeReceiptValidationError(reasonCode, reasonText);
+            return new AvailableReceiptValidationError(reasonCode, reasonText);
         }
     }
 }

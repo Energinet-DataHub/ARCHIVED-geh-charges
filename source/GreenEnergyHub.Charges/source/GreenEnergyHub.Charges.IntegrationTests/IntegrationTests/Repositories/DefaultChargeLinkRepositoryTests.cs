@@ -17,14 +17,14 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
-using GreenEnergyHub.Charges.IntegrationTests.Fixtures.Database;
+using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using Xunit;
 using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 {
     /// <summary>
-    /// Tests <see cref="DefaultChargeLinkRepository"/> using an SQLite in-memory database.
+    /// Tests <see cref="DefaultChargeLinkRepository"/> using a database.
     /// </summary>
     [IntegrationTest]
     public class DefaultChargeLinkRepositoryTests : IClassFixture<ChargesDatabaseFixture>

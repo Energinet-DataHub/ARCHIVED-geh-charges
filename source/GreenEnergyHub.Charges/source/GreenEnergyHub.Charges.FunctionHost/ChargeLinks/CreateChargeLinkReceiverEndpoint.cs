@@ -12,14 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Energinet.Charges.Contracts;
-using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.CreateDefaultChargeLinksRequests;
 using GreenEnergyHub.Charges.FunctionHost.Common;
-using GreenEnergyHub.Charges.Infrastructure.Core.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
 using Microsoft.Azure.Functions.Worker;
 
@@ -32,16 +29,13 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
         public const string FunctionName = nameof(CreateChargeLinkReceiverEndpoint);
-        private readonly ICorrelationContext _correlationContext;
         private readonly MessageExtractor<CreateDefaultChargeLinks> _messageExtractor;
         private readonly ICreateLinkRequestHandler _createLinkRequestHandler;
 
         public CreateChargeLinkReceiverEndpoint(
-            ICorrelationContext correlationContext,
             MessageExtractor<CreateDefaultChargeLinks> messageExtractor,
             ICreateLinkRequestHandler createLinkRequestHandler)
         {
-            _correlationContext = correlationContext;
             _messageExtractor = messageExtractor;
             _createLinkRequestHandler = createLinkRequestHandler;
         }
@@ -49,15 +43,13 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         [Function(FunctionName)]
         public async Task RunAsync(
             [ServiceBusTrigger(
-                "%" + EnvironmentSettingNames.CreateLinkRequestQueueName + "%",
+                "%" + EnvironmentSettingNames.CreateLinksRequestQueueName + "%",
                 Connection = EnvironmentSettingNames.DataHubListenerConnectionString)]
             byte[] message)
         {
             var createLinkCommandEvent =
                 (CreateDefaultChargeLinksRequest)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
-
-            await _createLinkRequestHandler
-                .HandleAsync(createLinkCommandEvent).ConfigureAwait(false);
+            await _createLinkRequestHandler.HandleAsync(createLinkCommandEvent).ConfigureAwait(false);
         }
     }
 }

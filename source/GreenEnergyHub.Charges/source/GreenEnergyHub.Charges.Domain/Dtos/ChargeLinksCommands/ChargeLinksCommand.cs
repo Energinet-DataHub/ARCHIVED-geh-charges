@@ -16,26 +16,20 @@ using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
-#pragma warning disable 8618
-
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
 {
-    public class ChargeLinksCommand : CommandBase
+    public class ChargeLinksCommand : ChargeCommand
     {
         public ChargeLinksCommand(
-            string meteringPointId,
             DocumentDto document,
-            IReadOnlyCollection<ChargeLinkDto> chargeLinks)
+            IReadOnlyCollection<ChargeLinkOperationDto> operations)
         {
-            MeteringPointId = meteringPointId;
             Document = document;
-            ChargeLinks = chargeLinks;
+            Operations = operations;
         }
 
-        public string MeteringPointId { get; }
+        public override DocumentDto Document { get; }
 
-        public DocumentDto Document { get; }
-
-        public IReadOnlyCollection<ChargeLinkDto> ChargeLinks { get; }
+        public override IReadOnlyCollection<ChargeLinkOperationDto> Operations { get; }
     }
 }

@@ -18,14 +18,14 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
+using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using Energinet.DataHub.Core.Schemas;
 using Energinet.DataHub.Core.SchemaValidation;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeLinkBundle;
-using GreenEnergyHub.Charges.Infrastructure.Core.Correlation;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Moq;
@@ -55,17 +55,17 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeL
             var resultBundle = (ChargeLinksCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
 
             // Assert
-            var result = resultBundle.ChargeLinksCommands.Single();
-            var chargeLink = result.ChargeLinks.First();
-            result.MeteringPointId.Should().Be("578032999778756222");
+            var result = resultBundle.Commands.Single();
+            var chargeLink = result.Operations.First();
+            chargeLink.MeteringPointId.Should().Be("578032999778756222");
 
             // Document
             result.Document.Id.Should().Be("DocId_Valid_001");
             result.Document.Type.Should().Be(DocumentType.RequestChangeBillingMasterData);
             result.Document.BusinessReasonCode.Should().Be(BusinessReasonCode.UpdateMasterDataSettlement);
-            result.Document.Sender.Id.Should().Be("8100000000016");
+            result.Document.Sender.MarketParticipantId.Should().Be("8100000000016");
             result.Document.Sender.BusinessProcessRole.Should().Be(MarketParticipantRole.GridAccessProvider);
-            result.Document.Recipient.Id.Should().Be("5790001330552");
+            result.Document.Recipient.MarketParticipantId.Should().Be("5790001330552");
             result.Document.Recipient.BusinessProcessRole.Should().Be(MarketParticipantRole.MeteringPointAdministrator);
             result.Document.CreatedDateTime.Should().Be(InstantPattern.ExtendedIso.Parse("2021-07-05T13:20:02.387Z").Value);
 
@@ -75,7 +75,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeL
             chargeLink.EndDateTime.Should().Be(InstantPattern.ExtendedIso.Parse("2021-11-05T23:00:00Z").Value);
             chargeLink.SenderProvidedChargeId.Should().Be("ChargeId01");
             chargeLink.Factor.Should().Be(1);
-            chargeLink.ChargeOwnerId.Should().Be("8100000000016");
+            chargeLink.ChargeOwner.Should().Be("8100000000016");
             chargeLink.ChargeType.Should().Be(ChargeType.Tariff);
         }
 
@@ -96,9 +96,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeL
             var resultBundle = (ChargeLinksCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
 
             // Assert
-            var result = resultBundle.ChargeLinksCommands.Single();
+            var result = resultBundle.Commands.Single();
             result.Document.Id.Should().Be("DocId_Valid_002");
-            result.ChargeLinks.First().OperationId.Should().Be("rId_Valid_002");
+            result.Operations.First().OperationId.Should().Be("rId_Valid_002");
 
             await Task.CompletedTask.ConfigureAwait(false);
         }
@@ -120,10 +120,10 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeL
             var resultBundle = (ChargeLinksCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
 
             // Assert
-            var result = resultBundle.ChargeLinksCommands.Single();
+            var result = resultBundle.Commands.Single();
             result.Document.Id.Should().Be("DocId_Valid_003");
-            result.ChargeLinks.First().OperationId.Should().Be("rId_Valid_003");
-            result.ChargeLinks.First().EndDateTime.Should().BeNull();
+            result.Operations.First().OperationId.Should().Be("rId_Valid_003");
+            result.Operations.First().EndDateTime.Should().BeNull();
 
             await Task.CompletedTask.ConfigureAwait(false);
         }
@@ -146,37 +146,36 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeL
 
             // Assert
             // Document
-            var document =
-                result.ChargeLinksCommands.First().Document;
+            var document = result.Commands.First().Document;
             document.Id.Should().Be("DocId_Valid_001");
             document.Type.Should().Be(DocumentType.RequestChangeBillingMasterData);
             document.BusinessReasonCode.Should().Be(BusinessReasonCode.UpdateMasterDataSettlement);
-            document.Sender.Id.Should().Be("8100000000016");
+            document.Sender.MarketParticipantId.Should().Be("8100000000016");
             document.Sender.BusinessProcessRole.Should().Be(MarketParticipantRole.GridAccessProvider);
-            document.Recipient.Id.Should().Be("5790001330552");
+            document.Recipient.MarketParticipantId.Should().Be("5790001330552");
             document.Recipient.BusinessProcessRole.Should().Be(MarketParticipantRole.MeteringPointAdministrator);
             document.CreatedDateTime.Should().Be(InstantPattern.ExtendedIso.Parse("2021-07-05T13:20:02.387Z").Value);
 
             // ChargeLink 1
-            var chargeLink1 =
-                result.ChargeLinksCommands.Single(x => x.ChargeLinks.First().OperationId == "rId_Valid_001").ChargeLinks
-                    .First();
+            var chargeLink1 = result.Commands
+                .Single(x => x.Operations.First().OperationId == "rId_Valid_001")
+                .Operations.First();
             chargeLink1.StartDateTime.Should().Be(InstantPattern.ExtendedIso.Parse("2021-09-27T22:00:00Z").Value);
             chargeLink1.EndDateTime.Should().Be(InstantPattern.ExtendedIso.Parse("2021-11-05T23:00:00Z").Value);
             chargeLink1.SenderProvidedChargeId.Should().Be("ChargeId01");
             chargeLink1.Factor.Should().Be(1);
-            chargeLink1.ChargeOwnerId.Should().Be("8100000000016");
+            chargeLink1.ChargeOwner.Should().Be("8100000000016");
             chargeLink1.ChargeType.Should().Be(ChargeType.Tariff);
 
             // ChargeLink 2
-            var chargeLink2 =
-                result.ChargeLinksCommands.Single(x => x.ChargeLinks.First().OperationId == "rId_Valid_002").ChargeLinks
-                    .First();
+            var chargeLink2 = result.Commands
+                .Single(x => x.Operations.First().OperationId == "rId_Valid_002")
+                .Operations.First();
             chargeLink2.StartDateTime.Should().Be(InstantPattern.ExtendedIso.Parse("2021-11-27T22:00:00Z").Value);
             chargeLink2.EndDateTime.Should().Be(InstantPattern.ExtendedIso.Parse("2021-12-05T23:00:00Z").Value);
             chargeLink2.SenderProvidedChargeId.Should().Be("ChargeId01");
             chargeLink2.Factor.Should().Be(1);
-            chargeLink2.ChargeOwnerId.Should().Be("8100000000016");
+            chargeLink2.ChargeOwner.Should().Be("8100000000016");
             chargeLink2.ChargeType.Should().Be(ChargeType.Tariff);
         }
 

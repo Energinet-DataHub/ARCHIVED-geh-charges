@@ -30,8 +30,9 @@ namespace GreenEnergyHub.Charges.MessageHub.MessageHub
             return availableData.Select(
                     data => new DataAvailableNotificationDto(
                         data.AvailableDataReferenceId,
-                        new GlobalLocationNumberDto(data.RecipientId),
+                        new ActorIdDto(data.ActorId),
                         new MessageTypeDto(bundleSpecification.GetMessageType(data.BusinessReasonCode)),
+                        data.DocumentType.ToString(),
                         DomainOrigin.Charges,
                         true,
                         bundleSpecification.GetMessageWeight(data)))

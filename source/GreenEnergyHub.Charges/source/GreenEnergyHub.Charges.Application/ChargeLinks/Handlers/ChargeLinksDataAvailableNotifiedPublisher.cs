@@ -14,10 +14,9 @@
 
 using System;
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksDataAvailableNotifiedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.DefaultChargeLinksDataAvailableNotifiedEvents;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
@@ -36,11 +35,11 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 
         public async Task PublishAsync(ChargeLinksAcceptedEvent chargeLinksAcceptedEvent)
         {
-            if (chargeLinksAcceptedEvent == null) throw new ArgumentNullException(nameof(chargeLinksAcceptedEvent));
+            ArgumentNullException.ThrowIfNull(chargeLinksAcceptedEvent);
 
             var chargeLinksDataAvailableNotifiedEvent =
                 _chargeLinksDataAvailableNotifiedEventFactory.Create(chargeLinksAcceptedEvent);
-            await _messageDispatcher.DispatchAsync(chargeLinksDataAvailableNotifiedEvent);
+            await _messageDispatcher.DispatchAsync(chargeLinksDataAvailableNotifiedEvent).ConfigureAwait(false);
         }
     }
 }

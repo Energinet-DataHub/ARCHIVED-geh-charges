@@ -12,15 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.Core.Messaging.Protobuf;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
+using GreenEnergyHub.Charges.Application.ChargeLinks.Services;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.BusinessValidation.Factories;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksRejectionEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
+using GreenEnergyHub.Charges.Infrastructure.Core.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
@@ -32,15 +38,26 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IChargeLinksReceivedEventHandler, ChargeLinksReceivedEventHandler>();
             serviceCollection.AddScoped<IChargeLinkFactory, ChargeLinkFactory>();
             serviceCollection.AddSingleton<IChargeLinksAcceptedEventFactory, ChargeLinksAcceptedEventFactory>();
+            serviceCollection.AddScoped<IChargeLinksRepository, ChargeLinksRepository>();
+            serviceCollection.AddScoped<IBusinessValidationRulesFactory<ChargeLinkOperationDto>,
+                ChargeLinksCommandBusinessValidationRulesFactory>();
+            serviceCollection.AddScoped<IChargeLinksReceiptService, ChargeLinksReceiptService>();
+            serviceCollection.AddScoped<IChargeLinksRejectedEventFactory, ChargeLinksRejectedEventFactory>();
+            serviceCollection.AddScoped<IBusinessValidator<ChargeLinkOperationDto>,
+                BusinessValidator<ChargeLinkOperationDto>>();
+            serviceCollection.AddScoped<IAvailableChargeLinksReceiptValidationErrorFactory,
+                AvailableChargeLinksReceiptValidationErrorFactory>();
+            serviceCollection.AddScoped<ICimValidationErrorTextFactory<ChargeLinksCommand, ChargeLinkOperationDto>,
+                ChargeLinksCimValidationErrorTextFactory>();
 
-            serviceCollection.ReceiveProtobufMessage<ChargeLinkCommandReceived>(
-                configuration => configuration.WithParser(() => ChargeLinkCommandReceived.Parser));
-            serviceCollection.SendProtobuf<ChargeLinkCommandAccepted>();
-            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinksAcceptedEvent>(
+            serviceCollection.AddMessaging()
+                .AddInternalMessageExtractor<ChargeLinksReceivedEvent>()
+                .AddInternalMessageDispatcher<ChargeLinksAcceptedEvent>(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
-                EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinkAcceptedTopicName));
-
-            serviceCollection.AddScoped<IChargeLinkRepository, ChargeLinkRepository>();
+                EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksAcceptedTopicName))
+                .AddInternalMessageDispatcher<ChargeLinksRejectedEvent>(
+                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
+                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksRejectedTopicName));
         }
     }
 }

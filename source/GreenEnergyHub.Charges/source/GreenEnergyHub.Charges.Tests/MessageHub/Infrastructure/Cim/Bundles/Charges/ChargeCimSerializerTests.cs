@@ -14,13 +14,14 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
+using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Configuration;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim;
 using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.Charges;
@@ -43,53 +44,55 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
         private const string RecipientId = "Recipient";
 
         [Theory]
-        [InlineAutoDomainData("GreenEnergyHub.Charges.Tests.TestFiles.ExpectedOutputChargeCimSerializerMasterDataAndPrices.blob", true, true)]
-        [InlineAutoDomainData("GreenEnergyHub.Charges.Tests.TestFiles.ExpectedOutputChargeCimSerializerMasterDataWithoutPrices.blob", true, false)]
-        [InlineAutoDomainData("GreenEnergyHub.Charges.Tests.TestFiles.ExpectedOutputChargeCimSerializerPricesWithoutMasterData.blob", false, true)]
+        [InlineAutoDomainData("GreenEnergyHub.Charges.Tests.TestFiles.ExpectedOutputChargeCimSerializerMasterDataAndPrices.blob", true, true)] // TODO remove once D18 flow cant have prices anymore
+        [InlineAutoDomainData("GreenEnergyHub.Charges.Tests.TestFiles.ExpectedOutputChargeCimSerializerChargeInformation.blob", true, false)]
+        [InlineAutoDomainData("GreenEnergyHub.Charges.Tests.TestFiles.ExpectedOutputChargeCimSerializerChargePrices.blob", false, true)]
         public async Task SerializeAsync_WhenCalled_StreamHasSerializedResult(
             string embeddedResource,
-            bool includeMasterData,
-            bool includePrices,
-            [Frozen] Mock<IHubSenderConfiguration> hubSenderConfiguration,
+            bool isChargeInformation,
+            bool isChargePrices,
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IClock> clock,
             [Frozen] Mock<IIso8601Durations> iso8601Durations,
             [Frozen] Mock<ICimIdProvider> cimIdProvider,
             ChargeCimSerializer sut)
         {
             // Arrange
-            SetupMocks(hubSenderConfiguration, clock, iso8601Durations, cimIdProvider);
+            SetupMocks(marketParticipantRepository, clock, iso8601Durations, cimIdProvider);
             await using var stream = new MemoryStream();
 
             var expected = EmbeddedStreamHelper.GetEmbeddedStreamAsString(
                 Assembly.GetExecutingAssembly(),
                 embeddedResource);
 
-            var charges = GetCharges(clock.Object, includeMasterData, includePrices);
+            var charges = GetCharges(clock.Object, isChargeInformation, isChargePrices);
 
             // Act
             await sut.SerializeToStreamAsync(
                 charges,
                 stream,
-                BusinessReasonCode.UpdateChargeInformation,
+                charges.First().BusinessReasonCode,
+                "5790001330552",
+                MarketParticipantRole.MeteringPointAdministrator,
                 RecipientId,
                 MarketParticipantRole.GridAccessProvider);
 
             // Assert
             var actual = stream.AsString();
 
-            Assert.Equal(expected, actual);
+            actual.Should().Be(expected);
         }
 
         [Theory(Skip = "Manually run test to save the generated file to disk")]
         [InlineAutoDomainData]
         public async Task SerializeAsync_WhenCalled_SaveSerializedStream(
-            [NotNull] [Frozen] Mock<IHubSenderConfiguration> hubSenderConfiguration,
-            [NotNull] [Frozen] Mock<IClock> clock,
-            [NotNull] [Frozen] Mock<IIso8601Durations> iso8601Durations,
-            [NotNull] [Frozen] Mock<ICimIdProvider> cimIdProvider,
-            [NotNull] ChargeCimSerializer sut)
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
+            [Frozen] Mock<IClock> clock,
+            [Frozen] Mock<IIso8601Durations> iso8601Durations,
+            [Frozen] Mock<ICimIdProvider> cimIdProvider,
+            ChargeCimSerializer sut)
         {
-            SetupMocks(hubSenderConfiguration, clock, iso8601Durations, cimIdProvider);
+            SetupMocks(marketParticipantRepository, clock, iso8601Durations, cimIdProvider);
 
             var charges = GetCharges(clock.Object, false, true);
 
@@ -99,6 +102,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
                 charges,
                 stream,
                 BusinessReasonCode.UpdateChargeInformation,
+                "5790001330552",
+                MarketParticipantRole.MeteringPointAdministrator,
                 RecipientId,
                 MarketParticipantRole.GridAccessProvider);
 
@@ -108,14 +113,20 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
         }
 
         private void SetupMocks(
-            Mock<IHubSenderConfiguration> hubSenderConfiguration,
+            Mock<IMarketParticipantRepository> marketParticipantRepository,
             Mock<IClock> clock,
             Mock<IIso8601Durations> iso8601Durations,
             Mock<ICimIdProvider> cimIdProvider)
         {
-            hubSenderConfiguration
-                .Setup(h => h.GetSenderMarketParticipant())
-                .Returns(new MarketParticipant(Guid.NewGuid(), "5790001330552", true, new[] { MarketParticipantRole.MeteringPointAdministrator }));
+            marketParticipantRepository
+                .Setup(r => r.GetMeteringPointAdministratorAsync())
+                .ReturnsAsync(new MarketParticipant(
+                    id: Guid.NewGuid(),
+                    actorId: Guid.NewGuid(),
+                    b2CActorId: Guid.NewGuid(),
+                    "5790001330552",
+                    true,
+                    MarketParticipantRole.MeteringPointAdministrator));
 
             var currentTime = Instant.FromUtc(2021, 10, 22, 15, 30, 41).PlusNanoseconds(4);
             clock.Setup(c => c.GetCurrentInstant()).Returns(currentTime);
@@ -130,32 +141,35 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
             cimIdProvider.Setup(c => c.GetUniqueId()).Returns(CimTestId);
         }
 
-        private List<AvailableChargeData> GetCharges(IClock clock, bool includeMasterData, bool includePrices)
+        private static List<AvailableChargeData> GetCharges(IClock clock, bool isChargeInformation, bool isChargePrices)
         {
             var charges = new List<AvailableChargeData>();
 
             for (var i = 1; i <= NoOfChargesInBundle; i++)
             {
-                if (includeMasterData)
+                var order = i - 1;
+                if (isChargeInformation)
                 {
-                    charges.Add(GetChargeWithMasterData(i, clock, includePrices));
+                    charges.Add(GetChargeInformation(i, clock, isChargePrices, order));
                 }
                 else
                 {
-                    charges.Add(GetChargeWithoutMasterData(i, clock, includePrices));
+                    charges.Add(GetChargePrices(i, clock, isChargePrices));
                 }
             }
 
             return charges;
         }
 
-        private AvailableChargeData GetChargeWithMasterData(int no, IClock clock, bool includePrices)
+        private static AvailableChargeData GetChargeInformation(int no, IClock clock, bool includePrices, int order)
         {
             var validTo = no % 2 == 0 ?
                 Instant.FromUtc(9999, 12, 31, 23, 59, 59) :
                 Instant.FromUtc(2021, 4, 30, 22, 0, 0);
 
             return new AvailableChargeData(
+                "5790001330552",
+                MarketParticipantRole.MeteringPointAdministrator,
                 RecipientId,
                 MarketParticipantRole.GridAccessProvider,
                 BusinessReasonCode.UpdateChargeInformation,
@@ -172,15 +186,20 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
                 true,
                 false,
                 GetResolution(no),
+                DocumentType.NotifyPriceList,
+                order,
+                Guid.NewGuid(),
                 GetPoints(GetNoOfPoints(no, includePrices)));
         }
 
-        private AvailableChargeData GetChargeWithoutMasterData(int no, IClock clock, bool includePrices)
+        private static AvailableChargeData GetChargePrices(int no, IClock clock, bool includePrices)
         {
             return new AvailableChargeData(
+                "5790001330552",
+                MarketParticipantRole.MeteringPointAdministrator,
                 "Recipient",
                 MarketParticipantRole.GridAccessProvider,
-                BusinessReasonCode.UpdateChargeInformation,
+                BusinessReasonCode.UpdateChargePrices,
                 clock.GetCurrentInstant(),
                 Guid.NewGuid(),
                 "ChargeId" + no,
@@ -194,6 +213,9 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
                 false,
                 false,
                 GetResolution(no),
+                DocumentType.NotifyPriceList,
+                0,
+                Guid.NewGuid(),
                 GetPoints(GetNoOfPoints(no, includePrices)));
         }
 

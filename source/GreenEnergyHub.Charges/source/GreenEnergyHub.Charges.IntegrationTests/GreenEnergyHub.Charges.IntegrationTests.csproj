@@ -16,7 +16,7 @@ limitations under the License.
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
         <IsPackable>false</IsPackable>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -31,66 +31,56 @@ limitations under the License.
       <ProjectReference Include="..\GreenEnergyHub.Charges.ApplyDBMigrationsApp\GreenEnergyHub.Charges.ApplyDBMigrationsApp.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.Domain\GreenEnergyHub.Charges.Domain.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.FunctionHost\GreenEnergyHub.Charges.FunctionHost.csproj" />
+      <ProjectReference Include="..\GreenEnergyHub.Charges.IntegrationTest.Core\GreenEnergyHub.Charges.IntegrationTest.Core.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.TestCore\GreenEnergyHub.Charges.TestCore.csproj" />
+      <ProjectReference Include="..\GreenEnergyHub.Charges.Tests\GreenEnergyHub.Charges.Tests.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.WebApi\GreenEnergyHub.Charges.WebApi.csproj" />
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="AutoFixture" Version="4.17.0" />
         <PackageReference Include="AutoFixture.AutoMoq" Version="4.17.0" />
-        <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.5.0" />
-        <PackageReference Include="Energinet.DataHub.Core.FunctionApp.TestCommon" Version="1.3.0" />
-        <PackageReference Include="Energinet.DataHub.MessageHub.IntegrationTesting" Version="1.1.0" />
-        <PackageReference Include="EntityFrameworkCore.SqlServer.NodaTime" Version="5.0.1" />
+        <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.10.0" />
+        <PackageReference Include="Energinet.DataHub.Core.FunctionApp.TestCommon" Version="3.3.0" />
+        <PackageReference Include="Energinet.DataHub.MessageHub.Client" Version="3.1.0" />
+        <PackageReference Include="Energinet.DataHub.MessageHub.IntegrationTesting" Version="3.1.0" />
         <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="5.0.12" />
-        <PackageReference Include="Microsoft.Azure.Management.ServiceBus" Version="3.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.8" />
+        <PackageReference Include="Microsoft.Azure.Management.ServiceBus" Version="5.0.0" />
         <PackageReference Include="Microsoft.Azure.WebJobs.Extensions" Version="4.0.1" />
         <PackageReference Include="Microsoft.Azure.WebJobs.Host.TestCommon" Version="3.0.30" />
-        <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="5.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="6.0.1" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
         <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
-        <PackageReference Include="xunit" Version="2.4.1" />
-        <PackageReference Include="FluentAssertions" Version="6.2.0" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
-        <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" />
-        <PackageReference Include="coverlet.collector" Version="3.1.0" />
-        <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.354">
+        <PackageReference Include="xunit" Version="2.4.2" />
+        <PackageReference Include="FluentAssertions" Version="6.7.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.1" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="coverlet.collector" Version="3.1.2">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.435">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Update="Microsoft.VisualStudio.Threading.Analyzers" Version="17.3.44">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="appsettings.json" />
-      <None Update="TestFiles\ChargeLinks\InvalidSchemaChargeLinkDocument.xml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="TestFiles\Charges\InvalidTariffDocument.xml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="TestFiles\Charges\InvalidSchemaTariffDocument.xml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="TestFiles\Charges\TaxTariffWithPriceDocument.xml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="TestFiles\ChargeLinks\FixedPeriodTaxTariffChargeLinkDocument.xml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Include="TestFiles\Charges\TariffBundleWithValidAndInvalid.xml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-    </ItemGroup>
-
-    <ItemGroup>
       <None Update="functionapphost.settings.json">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
       <None Update="integrationtest.local.settings.json">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         <CopyToPublishDirectory>Never</CopyToPublishDirectory>
       </None>
     </ItemGroup>

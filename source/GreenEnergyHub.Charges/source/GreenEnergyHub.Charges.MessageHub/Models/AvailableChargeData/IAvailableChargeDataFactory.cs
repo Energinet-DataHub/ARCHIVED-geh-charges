@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using NodaTime;
 
@@ -22,7 +22,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
     public interface IAvailableChargeDataFactory
     {
         AvailableChargeData Create(
-            ChargeCommand chargeCommand,
+            ChargeInformationCommand chargeInformationCommand,
             MarketParticipant recipient,
             Instant requestDateTime,
             Guid messageHubId);

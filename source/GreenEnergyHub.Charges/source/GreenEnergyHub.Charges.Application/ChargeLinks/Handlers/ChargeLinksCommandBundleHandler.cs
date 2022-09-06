@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers.Message;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 
 namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
@@ -27,14 +26,12 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
             _chargeLinksCommandHandler = chargeLinksCommandHandler;
         }
 
-        public async Task<ChargeLinksMessageResult> HandleAsync(ChargeLinksCommandBundle chargeLinksCommandBundle)
+        public async Task HandleAsync(ChargeLinksCommandBundle chargeLinksCommandBundle)
         {
-            foreach (var chargeLinksCommand in chargeLinksCommandBundle.ChargeLinksCommands)
+            foreach (var chargeLinksCommand in chargeLinksCommandBundle.Commands)
             {
-                await _chargeLinksCommandHandler.HandleAsync(chargeLinksCommand);
+                await _chargeLinksCommandHandler.HandleAsync(chargeLinksCommand).ConfigureAwait(false);
             }
-
-            return ChargeLinksMessageResult.CreateSuccess();
         }
     }
 }

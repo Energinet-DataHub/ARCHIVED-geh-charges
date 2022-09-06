@@ -16,8 +16,8 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Moq;
 using NodaTime;
@@ -33,17 +33,15 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommandRejectedEvents
         [InlineAutoMoqData]
         public void CreateEvent_WhenCalledWithValidationResult_CreatesEventWithCorrectFailures(
             [Frozen] Mock<IClock> clock,
-            ChargeCommand command,
-            IList<IValidationRule> failedRules,
+            ChargeInformationCommand command,
+            IList<IValidationRuleContainer> failedRules,
             ChargeCommandRejectedEventFactory sut)
         {
             // Arrange
             var currentTime = Instant.FromUtc(2021, 7, 7, 7, 50, 49);
-            clock.Setup(
-                    c => c.GetCurrentInstant())
-                .Returns(currentTime);
+            clock.Setup(c => c.GetCurrentInstant()).Returns(currentTime);
 
-            var validationResult = ChargeCommandValidationResult.CreateFailure(failedRules);
+            var validationResult = ValidationResult.CreateFailure(failedRules);
 
             // Act
             var result = sut.CreateEvent(command, validationResult);
@@ -51,10 +49,12 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommandRejectedEvents
             // Assert
             Assert.NotNull(result);
             Assert.Equal(currentTime, result.PublishedTime);
-            Assert.Equal(failedRules.Count, result.FailedValidationRuleIdentifiers.Count());
+            Assert.Equal(failedRules.Count, result.ValidationErrors.Count());
             foreach (var failedRule in failedRules)
             {
-                Assert.Contains(failedRule.ValidationRuleIdentifier, result.FailedValidationRuleIdentifiers);
+                Assert.Contains(
+                    failedRule.ValidationRule.ValidationRuleIdentifier,
+                    result.ValidationErrors.Select(x => x.ValidationRuleIdentifier));
             }
         }
     }

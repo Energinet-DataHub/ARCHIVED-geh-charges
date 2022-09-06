@@ -12,14 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Linq;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.InputValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Charges.Tests.Builders;
+using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.TestHelpers;
+using Microsoft.Extensions.Logging;
 using Xunit;
 using Xunit.Categories;
 
@@ -37,13 +39,13 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void IsValid_WhenLessThan8DigitsAnd6Decimals_IsValid(
             decimal price,
             bool expected,
-            ChargeCommandBuilder builder)
+            ChargeInformationOperationDtoBuilder builder)
         {
             // Arrange
-            var command = builder.WithPoint(price).Build();
+            var chargeOperationDto = builder.WithPoint(price).Build();
 
             // Act
-            var sut = new ChargePriceMaximumDigitsAndDecimalsRule(command);
+            var sut = new ChargePriceMaximumDigitsAndDecimalsRule(chargeOperationDto);
 
             // Assert
             sut.IsValid.Should().Be(expected);
@@ -51,16 +53,47 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder builder)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeInformationOperationDtoBuilder builder)
         {
-            var invalidCommand = CreateInvalidCommand(builder);
-            var sut = new ChargePriceMaximumDigitsAndDecimalsRule(invalidCommand);
+            var invalidChargeOperationDto = builder.WithPoint(123456789m).Build();
+            var sut = new ChargePriceMaximumDigitsAndDecimalsRule(invalidChargeOperationDto);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChargePriceMaximumDigitsAndDecimals);
         }
 
-        private static ChargeCommand CreateInvalidCommand(ChargeCommandBuilder builder)
+        [Theory]
+        [InlineAutoDomainData]
+        public void TriggeredBy_ShouldCauseCompleteErrorMessages_ToMarketParticipant(
+            ILoggerFactory loggerFactory,
+            CimValidationErrorTextProvider cimValidationErrorTextProvider)
         {
-            return builder.WithPoint(123456789m).Build();
+            // Arrange
+            var chargeOperationDto = new ChargeInformationOperationDtoBuilder()
+                .WithPoint(123456789m)
+                .Build();
+            var invalidCommand = new ChargeInformationCommandBuilder()
+                .WithChargeOperation(chargeOperationDto)
+                .Build();
+            var expectedPoint = chargeOperationDto.Points[0];
+            var triggeredBy = chargeOperationDto.Points.GetPositionOfPoint(expectedPoint).ToString();
+
+            var sutRule = new ChargePriceMaximumDigitsAndDecimalsRule(chargeOperationDto);
+            var validationError =
+                new ValidationError(sutRule.ValidationRuleIdentifier, chargeOperationDto.OperationId, triggeredBy);
+            var sutFactory = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
+
+            // Act
+            var actual = sutFactory.Create(validationError, invalidCommand, chargeOperationDto);
+
+            // Assert
+            sutRule.IsValid.Should().BeFalse();
+            sutRule.TriggeredBy.Should().Be(triggeredBy);
+
+            var expected = CimValidationErrorTextTemplateMessages.ChargePriceMaximumDigitsAndDecimalsErrorText
+                            .Replace("{{ChargePointPrice}}", expectedPoint.Price.ToString("N"))
+                            .Replace("{{DocumentSenderProvidedChargeId}}", chargeOperationDto.SenderProvidedChargeId)
+                            .Replace("{{ChargeType}}", chargeOperationDto.ChargeType.ToString())
+                            .Replace("{{ChargeOwner}}", chargeOperationDto.ChargeOwner);
+            actual.Should().Be(expected);
         }
     }
 }

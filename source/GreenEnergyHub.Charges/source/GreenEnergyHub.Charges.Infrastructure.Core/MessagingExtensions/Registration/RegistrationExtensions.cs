@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
+using Energinet.DataHub.Core.JsonSerialization;
 using Energinet.DataHub.Core.Messaging.Transport;
-using GreenEnergyHub.Charges.Infrastructure.Core.Correlation;
+using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
-using GreenEnergyHub.Json;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration
@@ -27,7 +28,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registr
             services.AddScoped<ICorrelationContext, CorrelationContext>();
             services.AddScoped<IMessageMetaDataContext, MessageMetaDataContext>();
             services.AddScoped<MessageExtractor>();
-            services.AddSingleton<IJsonSerializer, GreenEnergyHub.Charges.Core.Json.JsonSerializer>();
+            services.AddSingleton<IJsonSerializer, JsonSerializer>();
             return new MessagingRegistrator(services);
         }
 

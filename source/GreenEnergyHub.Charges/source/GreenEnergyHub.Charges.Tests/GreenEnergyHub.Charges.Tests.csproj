@@ -16,7 +16,7 @@ limitations under the License.
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
         <IsPackable>false</IsPackable>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -39,17 +39,24 @@ limitations under the License.
     <ItemGroup>
         <PackageReference Include="AutoFixture" Version="4.17.0" />
         <PackageReference Include="AutoFixture.AutoMoq" Version="4.17.0" />
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-        <PackageReference Include="NodaTime.Testing" Version="3.0.9" />
+        <PackageReference Include="Energinet.DataHub.MarketParticipant.Integration.Model" Version="2.5.1" />
+        <PackageReference Include="NodaTime.Testing" Version="3.1.2" />
         <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
-        <PackageReference Include="xunit" Version="2.4.1" />
-        <PackageReference Include="FluentAssertions" Version="6.2.0" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
-        <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" />
-        <PackageReference Include="coverlet.collector" Version="3.1.0" />
-        <PackageReference Include="Google.Protobuf" Version="3.19.2" />
-        <PackageReference Include="Grpc.Tools" Version="2.43.0" PrivateAssets="All" />
-        <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.354">
+        <PackageReference Include="xunit" Version="2.4.2" />
+        <PackageReference Include="FluentAssertions" Version="6.7.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.1" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5" />
+        <PackageReference Include="coverlet.collector" Version="3.1.2">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Google.Protobuf" Version="3.21.5" />
+        <PackageReference Include="Grpc.Tools" Version="2.48.1" PrivateAssets="All" />
+        <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.435">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Update="Microsoft.VisualStudio.Threading.Analyzers" Version="17.3.44">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -65,13 +72,14 @@ limitations under the License.
       <EmbeddedResource Include="TestFiles\Valid_CIM_Charge_Prices_Without_Master_Data.xml" />
       <EmbeddedResource Include="TestFiles\Valid_CIM_Charge_Without_Prices.xml" />
       <EmbeddedResource Include="TestFiles\ExpectedOutputChargeCimSerializerMasterDataAndPrices.blob" />
-      <EmbeddedResource Include="TestFiles\ExpectedOutputChargeCimSerializerMasterDataWithoutPrices.blob" />
-      <EmbeddedResource Include="TestFiles\ExpectedOutputChargeCimSerializerPricesWithoutMasterData.blob" />
+      <EmbeddedResource Include="TestFiles\ExpectedOutputChargeCimSerializerChargeInformation.blob" />
+      <EmbeddedResource Include="TestFiles\ExpectedOutputChargeCimSerializerChargePrices.blob" />
       <EmbeddedResource Include="TestFiles\ExpectedOutputChargeLinkReceiptCimSerializerConfirmation.blob" />
       <EmbeddedResource Include="TestFiles\ExpectedOutputChargeLinkReceiptCimSerializerRejection.blob" />
       <EmbeddedResource Include="TestFiles\ExpectedOutputChargeReceiptCimSerializerConfirmation.blob" />
       <EmbeddedResource Include="TestFiles\ExpectedOutputChargeReceiptCimSerializerRejection.blob" />
-      <EmbeddedResource Include="TestFiles\CreateTariffsBundle.xml" />      
+      <EmbeddedResource Include="TestFiles\CreateTariffsBundle.xml" />
+      <EmbeddedResource Include="TestFiles\BundleMixOfChargeMasterDataOperations.xml" />
     </ItemGroup>
 
     <ItemGroup>
@@ -80,7 +88,7 @@ limitations under the License.
         <Access>Public</Access>
         <ProtoCompile>True</ProtoCompile>
         <CompileOutputs>True</CompileOutputs>
-        <OutputDir>obj\Debug\net5.0\</OutputDir>
+        <OutputDir>obj\Debug\net6.0\</OutputDir>
         <Generator>MSBuild:Compile</Generator>
       </Protobuf>
     </ItemGroup>
@@ -101,9 +109,5 @@ limitations under the License.
       <None Update="TestFiles\SingleChargeReceiptWorstCase.blob">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Infrastructure\ReplySender" />
     </ItemGroup>
 </Project>

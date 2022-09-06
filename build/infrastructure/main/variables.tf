@@ -44,7 +44,13 @@ variable shared_resources_resource_group_name {
   description   = "Name of the Resource Group, that contains the shared resources."
 }
 
-variable notification_email {
+variable enable_health_check_alerts {
+  type          = bool
+  description   = "Specify if health check alerts for Azure Functions and App Services should be enabled."
+}
+
+variable developer_ad_group_name {
   type          = string
-  description   = "Email address to send notifications to"
+  description   = "(Optional) Name of the AD group containing developers to have read access to SQL database."
+  default       = ""
 }

@@ -12,17 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
-using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
+using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Moq;
 using Xunit;
@@ -36,18 +34,18 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Acknowledgement
         [Theory]
         [AutoMoqData]
         public async Task RejectAsync_WhenCalledWithCommandAndResult_UsesFactoryToCreateEventAndDispatchesIt(
-            [Frozen] [NotNull] Mock<IChargeCommandRejectedEventFactory> rejectedEventFactory,
-            [Frozen] [NotNull] Mock<IMessageDispatcher<ChargeCommandRejectedEvent>> rejectedEventDispatcher,
-            [NotNull] ChargeCommand command,
-            [NotNull] ChargeCommandValidationResult validationResult,
-            [NotNull] ChargeCommandRejectedEvent rejectedEvent,
-            [NotNull] ChargeCommandConfirmationService sut)
+            [Frozen] Mock<IChargeCommandRejectedEventFactory> rejectedEventFactory,
+            [Frozen] Mock<IMessageDispatcher<ChargeCommandRejectedEvent>> rejectedEventDispatcher,
+            ChargeInformationCommand command,
+            ValidationResult validationResult,
+            ChargeCommandRejectedEvent rejectedEvent,
+            ChargeCommandReceiptService sut)
         {
             // Arrange
             rejectedEventFactory.Setup(
                 f => f.CreateEvent(
-                    It.IsAny<ChargeCommand>(),
-                    It.IsAny<ChargeCommandValidationResult>()))
+                    It.IsAny<ChargeInformationCommand>(),
+                    It.IsAny<ValidationResult>()))
                 .Returns(rejectedEvent);
 
             ChargeCommandRejectedEvent? eventForSerialization = null;
@@ -68,16 +66,16 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Acknowledgement
         [Theory]
         [AutoMoqData]
         public async Task AcceptAsync_WhenCalledWithCommand_UsesFactoryToCreateEventAndDispatchesIt(
-            [Frozen] [NotNull] Mock<IChargeCommandAcceptedEventFactory> acceptedEventFactory,
-            [Frozen] [NotNull] Mock<IMessageDispatcher<ChargeCommandAcceptedEvent>> acceptedEventDispatcher,
-            [NotNull] ChargeCommand command,
-            [NotNull] ChargeCommandAcceptedEvent acceptedEvent,
-            [NotNull] ChargeCommandConfirmationService sut)
+            [Frozen] Mock<IChargeCommandAcceptedEventFactory> acceptedEventFactory,
+            [Frozen] Mock<IMessageDispatcher<ChargeCommandAcceptedEvent>> acceptedEventDispatcher,
+            ChargeInformationCommand command,
+            ChargeCommandAcceptedEvent acceptedEvent,
+            ChargeCommandReceiptService sut)
         {
             // Arrange
             acceptedEventFactory.Setup(
                     f => f.CreateEvent(
-                        It.IsAny<ChargeCommand>()))
+                        It.IsAny<ChargeInformationCommand>()))
                 .Returns(acceptedEvent);
 
             ChargeCommandAcceptedEvent? eventForSerialization = null;

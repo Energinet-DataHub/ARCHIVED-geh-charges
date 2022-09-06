@@ -13,14 +13,19 @@
 // limitations under the License.
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Core.DateTime;
+using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
-using GreenEnergyHub.Charges.Tests.Builders;
+using GreenEnergyHub.Charges.Tests.Builders.Command;
+using GreenEnergyHub.Charges.Tests.Builders.Testables;
 using GreenEnergyHub.TestHelpers;
 using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
 using Moq;
@@ -39,71 +44,147 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             Instant now,
-            List<MarketParticipant> gridAccessProvider,
-            ChargeCommandBuilder chargeCommandBuilder,
+            TestMeteringPointAdministrator meteringPointAdministrator,
+            List<TestGridAccessProvider> gridAccessProvider,
+            ChargeInformationCommandBuilder chargeInformationCommandBuilder,
             ChargeCommandAcceptedEventBuilder chargeCommandAcceptedEventBuilder,
             AvailableChargeDataFactory sut)
         {
             // Arrange
-            var chargeCommand = chargeCommandBuilder.WithPoint(1).WithTaxIndicator(true).Build();
+            var chargeOperationDto = new ChargeInformationOperationDtoBuilder()
+                .WithPoint(1)
+                .WithTaxIndicator(TaxIndicator.Tax)
+                .WithTransparentInvoicing(TransparentInvoicing.Transparent)
+                .Build();
+            var chargeCommand = chargeInformationCommandBuilder.WithChargeOperation(chargeOperationDto).Build();
             var acceptedEvent = chargeCommandAcceptedEventBuilder.WithChargeCommand(chargeCommand).Build();
 
-            marketParticipantRepository.Setup(
-                    r => r.GetActiveGridAccessProvidersAsync())
-                .ReturnsAsync(gridAccessProvider);
+            marketParticipantRepository
+                .Setup(r => r.GetGridAccessProvidersAsync())
+                .ReturnsAsync(gridAccessProvider.Cast<MarketParticipant>().ToList);
 
-            messageMetaDataContext.Setup(
-                    m => m.RequestDataTime)
-                .Returns(now);
+            marketParticipantRepository
+                .Setup(r => r.GetMeteringPointAdministratorAsync())
+                .ReturnsAsync(meteringPointAdministrator);
+
+            messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
 
             // Act
-            var actualList =
-                await sut.CreateAsync(acceptedEvent);
+            var actual = await sut.CreateAsync(acceptedEvent);
 
             // Assert
-            var operation = acceptedEvent.Command.ChargeOperation;
-            actualList.Should().HaveSameCount(gridAccessProvider);
-            for (var i = 0; i < actualList.Count; i++)
+            var operation = acceptedEvent.Command.Operations.First();
+            actual.Should().HaveSameCount(gridAccessProvider);
+            for (var i = 0; i < actual.Count; i++)
             {
-                actualList[i].Should().NotContainNullsOrEmptyEnumerables();
-                actualList[i].RecipientId.Should().Be(gridAccessProvider[i].MarketParticipantId);
-                actualList[i].RecipientRole.Should().Be(MarketParticipantRole.GridAccessProvider);
-                actualList[i].BusinessReasonCode.Should().Be(acceptedEvent.Command.Document.BusinessReasonCode);
-                actualList[i].RequestDateTime.Should().Be(now);
-                actualList[i].ChargeId.Should().Be(operation.ChargeId);
-                actualList[i].ChargeOwner.Should().Be(operation.ChargeOwner);
-                actualList[i].ChargeType.Should().Be(operation.Type);
-                actualList[i].ChargeName.Should().Be(operation.ChargeName);
-                actualList[i].ChargeDescription.Should().Be(operation.ChargeDescription);
-                actualList[i].StartDateTime.Should().Be(operation.StartDateTime);
-                actualList[i].EndDateTime.Should().Be(operation.EndDateTime.TimeOrEndDefault());
-                actualList[i].VatClassification.Should().Be(operation.VatClassification);
-                actualList[i].TaxIndicator.Should().Be(operation.TaxIndicator);
-                actualList[i].TransparentInvoicing.Should().Be(operation.TransparentInvoicing);
-                actualList[i].Resolution.Should().Be(operation.Resolution);
-                actualList[i].Points.Should().BeEquivalentTo(
+                actual[i].Should().NotContainNullEnumerable();
+                actual[i].RecipientId.Should().Be(gridAccessProvider[i].MarketParticipantId);
+                actual[i].RecipientRole.Should().Be(gridAccessProvider[i].BusinessProcessRole);
+                actual[i].BusinessReasonCode.Should().Be(acceptedEvent.Command.Document.BusinessReasonCode);
+                actual[i].RequestDateTime.Should().Be(now);
+                actual[i].ChargeId.Should().Be(operation.SenderProvidedChargeId);
+                actual[i].ChargeOwner.Should().Be(operation.ChargeOwner);
+                actual[i].ChargeType.Should().Be(operation.ChargeType);
+                actual[i].ChargeName.Should().Be(operation.ChargeName);
+                actual[i].ChargeDescription.Should().Be(operation.ChargeDescription);
+                actual[i].StartDateTime.Should().Be(operation.StartDateTime);
+                actual[i].EndDateTime.Should().Be(operation.EndDateTime.TimeOrEndDefault());
+                actual[i].VatClassification.Should().Be(operation.VatClassification);
+                actual[i].TaxIndicator.Should().Be(true);
+                actual[i].TransparentInvoicing.Should().Be(true);
+                actual[i].Resolution.Should().Be(operation.Resolution);
+                actual[i].Points.Should().BeEquivalentTo(
                     operation.Points,
                     options => options.ExcludingMissingMembers());
             }
         }
 
         [Theory]
-        [InlineAutoDomainData]
+        [InlineAutoDomainData(TaxIndicator.NoTax, 0)]
+        [InlineAutoDomainData(TaxIndicator.Tax, 1)]
         public async Task CreateAsync_WhenNotTaxCharge_ReturnsEmptyList(
-            ChargeCommandBuilder chargeCommandBuilder,
+            TaxIndicator taxIndicator,
+            int availableChargeDataCount,
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
+            ChargeInformationCommandBuilder chargeInformationCommandBuilder,
             ChargeCommandAcceptedEventBuilder chargeCommandAcceptedEventBuilder,
             AvailableChargeDataFactory sut)
         {
             // Arrange
-            var chargeCommand = chargeCommandBuilder.WithTaxIndicator(false).Build();
+            var marketParticipants = new List<MarketParticipant>()
+            {
+                new MarketParticipantBuilder()
+                    .WithRole(MarketParticipantRole.GridAccessProvider)
+                    .Build(),
+            };
+            marketParticipantRepository
+                .Setup(m => m.GetGridAccessProvidersAsync())
+                .ReturnsAsync(marketParticipants);
+            marketParticipantRepository
+                .Setup(m => m.GetMeteringPointAdministratorAsync())
+                .ReturnsAsync(new MarketParticipantBuilder().Build());
+            var chargeOperationDto = new ChargeInformationOperationDtoBuilder()
+                .WithPoint(1)
+                .WithTaxIndicator(taxIndicator)
+                .WithTransparentInvoicing(TransparentInvoicing.Transparent)
+                .Build();
+            var chargeCommand = chargeInformationCommandBuilder.WithChargeOperation(chargeOperationDto).Build();
             var acceptedEvent = chargeCommandAcceptedEventBuilder.WithChargeCommand(chargeCommand).Build();
 
             // Act
-            var actualList =
-                await sut.CreateAsync(acceptedEvent);
+            var actual = await sut.CreateAsync(acceptedEvent);
 
             // Assert
-            actualList.Should().BeEmpty();
+            actual.Count.Should().Be(availableChargeDataCount);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task CreateAsync_WhenSeveralOperationsInChargeCommand_ReturnOrderedListOfOperations(
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
+            ChargeInformationCommandBuilder chargeInformationCommandBuilder,
+            ChargeCommandAcceptedEventBuilder chargeCommandAcceptedEventBuilder,
+            List<TestGridAccessProvider> gridAccessProvider,
+            TestMeteringPointAdministrator meteringPointAdministrator,
+            AvailableChargeDataFactory sut)
+        {
+            // Arrange
+            marketParticipantRepository
+                .Setup(r => r.GetGridAccessProvidersAsync())
+                .ReturnsAsync(gridAccessProvider.Cast<MarketParticipant>().ToList);
+            marketParticipantRepository
+                .Setup(r => r.GetMeteringPointAdministratorAsync())
+                .ReturnsAsync(meteringPointAdministrator);
+            var chargeCommand = chargeInformationCommandBuilder
+                .WithChargeOperations(
+                    new List<ChargeInformationOperationDto>
+                    {
+                        new ChargeInformationOperationDtoBuilder().WithTaxIndicator(TaxIndicator.Tax)
+                            .WithTransparentInvoicing(TransparentInvoicing.Transparent).Build(),
+                        new ChargeInformationOperationDtoBuilder().WithTaxIndicator(TaxIndicator.Tax)
+                            .WithTransparentInvoicing(TransparentInvoicing.Transparent).Build(),
+                        new ChargeInformationOperationDtoBuilder().WithTaxIndicator(TaxIndicator.Tax)
+                            .WithTransparentInvoicing(TransparentInvoicing.Transparent).Build(),
+                    })
+                .Build();
+            var acceptedEvent = chargeCommandAcceptedEventBuilder.WithChargeCommand(chargeCommand).Build();
+
+            // Act
+            var actual = await sut.CreateAsync(acceptedEvent);
+
+            // Assert
+            actual.Count.Should().Be(gridAccessProvider.Count * 3);
+            foreach (var gap in gridAccessProvider)
+            {
+                var availableChargesForProvider = actual
+                    .Where(x => x.RecipientId == gap.MarketParticipantId).ToList();
+                var operationOrder = -1;
+                for (var i = 0; i < availableChargesForProvider.Count; i++)
+                {
+                    availableChargesForProvider[i].OperationOrder.Should().BeGreaterThan(operationOrder);
+                    operationOrder = actual[i].OperationOrder;
+                }
+            }
         }
     }
 }

@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System.ComponentModel;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using Xunit;
 using Xunit.Categories;
@@ -24,6 +24,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Cim.MarketDocument
     public class BusinessReasonCodeMapperTests
     {
         [Theory]
+        [InlineData("D08", BusinessReasonCode.UpdateChargePrices)]
         [InlineData("D17", BusinessReasonCode.UpdateMasterDataSettlement)]
         [InlineData("D18", BusinessReasonCode.UpdateChargeInformation)]
         [InlineData("", BusinessReasonCode.Unknown)]
@@ -36,6 +37,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Cim.MarketDocument
         }
 
         [Theory]
+        [InlineData(BusinessReasonCode.UpdateChargePrices, "D08")]
         [InlineData(BusinessReasonCode.UpdateChargeInformation, "D18")]
         [InlineData(BusinessReasonCode.UpdateMasterDataSettlement, "D17")]
         public void Map_WhenGivenKnownInput_MapsToCorrectString(BusinessReasonCode businessReasonCode, string expected)

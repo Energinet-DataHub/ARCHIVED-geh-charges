@@ -14,6 +14,10 @@
 
 using System;
 using Azure.Messaging.ServiceBus;
+using Energinet.DataHub.Core.App.FunctionApp.FunctionTelemetryScope;
+using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
+using Energinet.DataHub.Core.JsonSerialization;
+using Energinet.DataHub.Core.Logging.RequestResponseMiddleware.Storage;
 using Energinet.DataHub.Core.Messaging.Protobuf;
 using Energinet.DataHub.Core.Messaging.Transport;
 using Energinet.DataHub.MessageHub.Client;
@@ -23,36 +27,37 @@ using Energinet.DataHub.MessageHub.Client.Peek;
 using Energinet.DataHub.MessageHub.Client.Storage;
 using Energinet.DataHub.MessageHub.Model.Dequeue;
 using Energinet.DataHub.MessageHub.Model.Peek;
-using EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkReplier;
+using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Configuration;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
+using GreenEnergyHub.Charges.Domain.GridAreaLinks;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.FunctionHost.Common;
-using GreenEnergyHub.Charges.Infrastructure.Configuration;
-using GreenEnergyHub.Charges.Infrastructure.Context;
-using GreenEnergyHub.Charges.Infrastructure.Core.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factories;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandReceived;
+using GreenEnergyHub.Charges.Infrastructure.Core.Registration;
+using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeCreated;
+using GreenEnergyHub.Charges.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.Infrastructure.ReplySender;
 using GreenEnergyHub.Charges.Infrastructure.ReplySender.CreateDefaultChargeLinkReplier;
 using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim;
 using GreenEnergyHub.Charges.MessageHub.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinkReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using GreenEnergyHub.Iso8601;
-using GreenEnergyHub.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using NodaTime;
-using MarketParticipantRole = GreenEnergyHub.Charges.Domain.MarketParticipants.MarketParticipantRole;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
@@ -61,14 +66,20 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped(typeof(IClock), _ => SystemClock.Instance);
-            serviceCollection.AddSingleton<IJsonSerializer, JsonSerializer>();
             serviceCollection.AddLogging();
+            serviceCollection.AddSingleton<IJsonSerializer, JsonSerializer>();
             serviceCollection.AddScoped<CorrelationIdMiddleware>();
             serviceCollection.AddScoped<FunctionTelemetryScopeMiddleware>();
             serviceCollection.AddScoped<MessageMetaDataMiddleware>();
             serviceCollection.AddScoped<FunctionInvocationLoggingMiddleware>();
-            serviceCollection.AddApplicationInsightsTelemetryWorkerService(
-                EnvironmentHelper.GetEnv(EnvironmentSettingNames.AppInsightsInstrumentationKey));
+
+            var tenantId = EnvironmentHelper.GetEnv(EnvironmentSettingNames.B2CTenantId);
+            var audience = EnvironmentHelper.GetEnv(EnvironmentSettingNames.BackendServiceAppId);
+            var metadataAddress = $"https://login.microsoftonline.com/{tenantId}/v2.0/.well-known/openid-configuration";
+            serviceCollection.AddJwtTokenSecurity(metadataAddress, audience);
+
+            serviceCollection.AddActorContext();
+            serviceCollection.AddApplicationInsightsTelemetryWorkerService();
 
             ConfigureSharedDatabase(serviceCollection);
             ConfigureSharedMessaging(serviceCollection);
@@ -82,6 +93,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             var azureBlobStorageContainerName = EnvironmentHelper.GetEnv(EnvironmentSettingNames.MessageHubStorageContainer);
 
             var serviceBusClient = new ServiceBusClient(serviceBusConnectionString);
+
+            AddRequestResponseLogging(serviceCollection);
 
             AddCreateDefaultChargeLinksReplier(serviceCollection, serviceBusClient);
             AddPostOfficeCommunication(
@@ -107,48 +120,53 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                                    throw new ArgumentNullException(
                                        EnvironmentSettingNames.ChargeDbConnectionString,
                                        "does not exist in configuration settings");
+
             serviceCollection.AddDbContext<ChargesDatabaseContext>(
                 options => options.UseSqlServer(connectionString, o => o.UseNodaTime()));
+
             serviceCollection.AddScoped<IChargesDatabaseContext, ChargesDatabaseContext>();
+            serviceCollection.AddScoped<IUnitOfWork, UnitOfWork>();
 
             serviceCollection.AddDbContext<MessageHubDatabaseContext>(
                 options => options.UseSqlServer(connectionString, o => o.UseNodaTime()));
+
             serviceCollection.AddScoped<IMessageHubDatabaseContext, MessageHubDatabaseContext>();
 
             serviceCollection.AddScoped<IChargeRepository, ChargeRepository>();
             serviceCollection.AddScoped<IMeteringPointRepository, MeteringPointRepository>();
-            serviceCollection
-                .AddScoped<IAvailableDataRepository<AvailableChargeLinksData>, AvailableDataRepository<AvailableChargeLinksData>>();
-            serviceCollection
-                .AddScoped<IAvailableDataRepository<AvailableChargeData>, AvailableDataRepository<AvailableChargeData>>();
-            serviceCollection
-                .AddScoped<IAvailableDataRepository<AvailableChargeLinkReceiptData>, AvailableDataRepository<AvailableChargeLinkReceiptData>>();
-            serviceCollection
-                .AddScoped<IAvailableDataRepository<AvailableChargeReceiptData>, AvailableDataRepository<AvailableChargeReceiptData>>();
+            serviceCollection.AddScoped<
+                IAvailableDataRepository<AvailableChargeLinksData>,
+                AvailableDataRepository<AvailableChargeLinksData>>();
+            serviceCollection.AddScoped<
+                IAvailableDataRepository<AvailableChargeData>,
+                AvailableDataRepository<AvailableChargeData>>();
+            serviceCollection.AddScoped<
+                IAvailableDataRepository<AvailableChargeLinksReceiptData>,
+                AvailableDataRepository<AvailableChargeLinksReceiptData>>();
+            serviceCollection.AddScoped<
+                IAvailableDataRepository<AvailableChargeReceiptData>,
+                AvailableDataRepository<AvailableChargeReceiptData>>();
+            serviceCollection.AddScoped<IMarketParticipantRepository, MarketParticipantRepository>();
+            serviceCollection.AddScoped<IGridAreaLinkRepository, GridAreaLinkRepository>();
         }
 
         private static void ConfigureSharedMessaging(IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<MessageDispatcher>();
+            serviceCollection.AddScoped<IServiceBusMessageFactory, ServiceBusMessageFactory>();
             serviceCollection.ConfigureProtobufReception();
 
-            serviceCollection.SendProtobuf<ChargeLinkCommandReceived>();
-            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeLinksReceivedEvent>(
+            serviceCollection.SendProtobuf<ChargeCreated>();
+            serviceCollection.AddMessaging()
+                .AddInternalMessageExtractor<ChargeCommandAcceptedEvent>()
+                .AddExternalMessageDispatcher<ChargeLinksReceivedEvent>(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
-                EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinkReceivedTopicName));
+                EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksReceivedTopicName));
         }
 
         private static void ConfigureSharedCim(IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<ICimIdProvider, CimIdProvider>();
-            serviceCollection.AddScoped<IHubSenderConfiguration>(_ =>
-            {
-                var senderId = EnvironmentHelper.GetEnv(EnvironmentSettingNames.HubSenderId);
-                var roleIntText = EnvironmentHelper.GetEnv(EnvironmentSettingNames.HubSenderRoleIntEnumValue);
-                return new HubSenderConfiguration(
-                    senderId,
-                    (MarketParticipantRole)int.Parse(roleIntText));
-            });
         }
 
         private static void ConfigureIso8601Services(IServiceCollection serviceCollection)
@@ -162,7 +180,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         /// <summary>
         /// Post office provides a NuGet package to handle the configuration, but it's for SimpleInjector
         /// and thus not applicable in this function host. See also
-        /// https://github.com/Energinet-DataHub/geh-post-office/blob/main/source/PostOffice.Communicator.SimpleInjector/source/PostOffice.Communicator.SimpleInjector/ContainerExtensions.cs
+        /// https://github.com/Energinet-DataHub/geh-post-office/blob/main/source/PostOffice.Communicator.SimpleInjector/source/PostOffice.Communicator.SimpleInjector/ServiceCollectionExtensions.cs
         /// </summary>
         private static void AddPostOfficeCommunication(
             IServiceCollection serviceCollection,
@@ -191,6 +209,18 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddServiceBus(serviceBusConnectionString);
             serviceCollection.AddApplicationServices();
             serviceCollection.AddStorageHandler(storageServiceConnectionString);
+        }
+
+        private static void AddRequestResponseLogging(IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddScoped<IRequestResponseLogging>(provider =>
+            {
+                var requestResponseLogStorage = EnvironmentHelper.GetEnv(EnvironmentSettingNames.RequestResponseLoggingConnectionString);
+                var requestResponseLogContainerName = EnvironmentHelper.GetEnv(EnvironmentSettingNames.RequestResponseLoggingContainerName);
+
+                var storageLogging = provider.GetService<ILogger<RequestResponseLoggingBlobStorage>>();
+                return new RequestResponseLoggingBlobStorage(requestResponseLogStorage, requestResponseLogContainerName, storageLogging!);
+            });
         }
 
         private static void AddServiceBus(this IServiceCollection serviceCollection, string serviceBusConnectionString)

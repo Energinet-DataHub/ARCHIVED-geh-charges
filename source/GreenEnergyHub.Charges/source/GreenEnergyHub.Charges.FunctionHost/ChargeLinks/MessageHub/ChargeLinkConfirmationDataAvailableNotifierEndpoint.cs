@@ -12,14 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeLinkCommandAccepted;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinkReceiptData;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData;
 using Microsoft.Azure.Functions.Worker;
 
 namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
@@ -32,27 +30,27 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
     public class ChargeLinkConfirmationDataAvailableNotifierEndpoint
     {
         private const string FunctionName = nameof(ChargeLinkConfirmationDataAvailableNotifierEndpoint);
-        private readonly MessageExtractor<ChargeLinkCommandAccepted> _messageExtractor;
-        private readonly IAvailableDataNotifier<AvailableChargeLinkReceiptData, ChargeLinksAcceptedEvent> _availableDataNotifier;
+        private readonly JsonMessageDeserializer<ChargeLinksAcceptedEvent> _deserializer;
+        private readonly IAvailableDataNotifier<AvailableChargeLinksReceiptData, ChargeLinksAcceptedEvent> _availableDataNotifier;
 
         public ChargeLinkConfirmationDataAvailableNotifierEndpoint(
-            MessageExtractor<ChargeLinkCommandAccepted> messageExtractor,
-            IAvailableDataNotifier<AvailableChargeLinkReceiptData, ChargeLinksAcceptedEvent> availableDataNotifier)
+            JsonMessageDeserializer<ChargeLinksAcceptedEvent> deserializer,
+            IAvailableDataNotifier<AvailableChargeLinksReceiptData, ChargeLinksAcceptedEvent> availableDataNotifier)
         {
-            _messageExtractor = messageExtractor;
+            _deserializer = deserializer;
             _availableDataNotifier = availableDataNotifier;
         }
 
         [Function(FunctionName)]
         public async Task RunAsync(
             [ServiceBusTrigger(
-                "%" + EnvironmentSettingNames.ChargeLinkAcceptedTopicName + "%",
-                "%" + EnvironmentSettingNames.ChargeLinkAcceptedSubConfirmationNotifier + "%",
+                "%" + EnvironmentSettingNames.ChargeLinksAcceptedTopicName + "%",
+                "%" + EnvironmentSettingNames.ChargeLinksAcceptedSubConfirmationNotifier + "%",
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
-            [NotNull] byte[] message)
+            byte[] message)
         {
-            var chargeLinkCommandAcceptedEvent = (ChargeLinksAcceptedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
-
+            var chargeLinkCommandAcceptedEvent =
+                (ChargeLinksAcceptedEvent)await _deserializer.FromBytesAsync(message).ConfigureAwait(false);
             await _availableDataNotifier.NotifyAsync(chargeLinkCommandAcceptedEvent).ConfigureAwait(false);
         }
     }

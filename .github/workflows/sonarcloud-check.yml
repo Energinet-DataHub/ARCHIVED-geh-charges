@@ -1,0 +1,55 @@
+name: SonarCloud Check
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - source/**
+      - .github/workflows/sonarcloud-check.yml
+
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - source/**
+      - .github/workflows/sonarcloud-check.yml
+
+env:
+  SOLUTION_PATH: 'source\GreenEnergyHub.Charges\GreenEnergyHub.Charges.sln'
+  DOTNET_VERSION: '6.0.300'
+  SONAR_PROJECTKEY: 'geh-charges'
+  SOURCE_PATH_ON_BUILDMACHINE: 'D:\a\geh-charges\geh-charges\source' # We have to be speficic with this path to get around a .NET 5.0 issue in SonarCLoud
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  build:
+    name: Build
+    runs-on: windows-2022
+    steps:
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.11
+
+      - name: Setup .NET ${{ env.DOTNET_VERSION }} environment
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+        env:
+          DOTNET_INSTALL_DIR: 'C:\Program Files\dotnet'
+
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+
+      - name: Install SonarCloud scanner
+        shell: powershell
+        run: |
+          New-Item -Path .\.sonar\scanner -ItemType Directory
+          dotnet tool update dotnet-sonarscanner --global
+
+      - name: Build and analyze
+        shell: powershell
+        run: |
+          dotnet-sonarscanner begin /k:"${{ env.SONAR_PROJECTKEY }}" /o:"energinet-datahub" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.projectBaseDir="${{ env.SOURCE_PATH_ON_BUILDMACHINE }}" /d:sonar.host.url="https://sonarcloud.io"
+          dotnet build ${{ env.SOLUTION_PATH }} --configuration Release
+          dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"

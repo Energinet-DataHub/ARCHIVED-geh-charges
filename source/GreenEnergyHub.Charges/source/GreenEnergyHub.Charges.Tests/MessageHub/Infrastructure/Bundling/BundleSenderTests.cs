@@ -13,11 +13,21 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
+using Energinet.DataHub.MessageHub.Client.Storage;
 using Energinet.DataHub.MessageHub.Model.Model;
+using FluentAssertions;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.MessageHub.Infrastructure.Bundling;
+using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Moq;
 using Xunit;
@@ -75,6 +85,82 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Bundling
             // Assert
             replierMock.Verify(replier => replier.ReplyAsync(It.IsAny<Stream>(), It.IsAny<DataBundleRequestDto>()), Times.Never);
             replierMock.Verify(replier => replier.ReplyErrorAsync(It.IsAny<Exception>(), anyRequest));
+        }
+
+        [Theory]
+        [InlineAutoMoqData(BusinessReasonCode.Unknown)]
+        [InlineAutoMoqData(BusinessReasonCode.UpdateChargeInformation)]
+        [InlineAutoMoqData(BusinessReasonCode.UpdateMasterDataSettlement)]
+        public void Get_ReturnsValidData_ForAllBundleTypes(
+            BusinessReasonCode businessReasonCode,
+            IStorageHandler storageHandler)
+        {
+            // Arrange
+            var bundleTypes = (BundleType[])Enum.GetValues(typeof(BundleType));
+            var bundleCreators = CreateBundleCreators(bundleTypes, storageHandler);
+
+            // Act
+            // Assert
+            foreach (var bundleType in bundleTypes)
+            {
+                var creatorProvider = new BundleCreatorProvider(bundleCreators);
+                var messageType = $"{bundleType}_{businessReasonCode}";
+                var request = new DataBundleRequestDto(
+                    RequestId: Guid.NewGuid(),
+                    DataAvailableNotificationReferenceId: Guid.NewGuid().ToString(),
+                    IdempotencyId: Guid.NewGuid().ToString(),
+                    new MessageTypeDto(messageType),
+                    ResponseFormat.Xml,
+                    ResponseVersion: 1.0);
+
+                var actual = creatorProvider.Get(request);
+
+                actual.Should().NotBeNull();
+            }
+        }
+
+        private IList<IBundleCreator> CreateBundleCreators(
+            IEnumerable<BundleType> bundleTypes,
+            IStorageHandler storageHandler)
+        {
+            var bundleCreators = new List<IBundleCreator>();
+
+            foreach (var bundleType in bundleTypes)
+            {
+                switch (bundleType)
+                {
+                    case BundleType.ChargeDataAvailable:
+                        bundleCreators.Add(CreateBundleCreator<AvailableChargeData>(storageHandler));
+                        break;
+                    case BundleType.ChargeConfirmationDataAvailable:
+                        bundleCreators.Add(CreateBundleCreator<AvailableChargeReceiptData>(storageHandler));
+                        break;
+                    case BundleType.ChargeRejectionDataAvailable:
+                        // BundleCreator<AvailableChargeReceiptData> already added
+                        break;
+                    case BundleType.ChargeLinkDataAvailable:
+                        bundleCreators.Add(CreateBundleCreator<AvailableChargeLinksData>(storageHandler));
+                        break;
+                    case BundleType.ChargeLinkConfirmationDataAvailable:
+                        bundleCreators.Add(CreateBundleCreator<AvailableChargeLinksReceiptData>(storageHandler));
+                        break;
+                    case BundleType.ChargeLinkRejectionDataAvailable:
+                        // BundleCreator<AvailableChargeLinksReceiptData> already added
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(bundleType));
+                }
+            }
+
+            return bundleCreators;
+        }
+
+        private IBundleCreator CreateBundleCreator<T>(IStorageHandler storageHandler)
+            where T : AvailableDataBase
+        {
+            var cimSerializer = new Mock<ICimSerializer<T>>().Object;
+            var availableDataRepository = new Mock<IAvailableDataRepository<T>>().Object;
+            return new BundleCreator<T>(availableDataRepository, cimSerializer, storageHandler);
         }
     }
 }

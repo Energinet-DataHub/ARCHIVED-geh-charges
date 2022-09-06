@@ -12,16 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using FluentAssertions;
+using FluentAssertions.Execution;
+using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
+using GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.ChargeLinks;
+using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
-using GreenEnergyHub.Charges.IntegrationTests.TestFiles.ChargeLinks;
-using GreenEnergyHub.Charges.IntegrationTests.TestHelpers;
-using NodaTime;
+using GreenEnergyHub.Charges.TestCore;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
@@ -34,6 +37,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
         [Collection(nameof(ChargesFunctionAppCollectionFixture))]
         public class RunAsync : FunctionAppTestBase<ChargesFunctionAppFixture>, IAsyncLifetime
         {
+            private const string EndpointUrl = "api/ChargeLinksIngestion";
+
             public RunAsync(ChargesFunctionAppFixture fixture, ITestOutputHelper testOutputHelper)
                 : base(fixture, testOutputHelper)
             {
@@ -51,55 +56,91 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             }
 
             [Fact]
-            public async Task When_ChargeLinkIsReceived_Then_AHttp200ResponseIsReturned()
+            public async Task When_RequestIsUnauthenticated_Then_AHttp401UnauthorizedIsReturned()
             {
-                var request = CreateHttpRequest(ChargeLinkDocument.AnyValid, out _);
+                var request = HttpRequestGenerator.CreateHttpPostRequest(
+                    EndpointUrl,
+                    ChargeLinkDocument.AnyValid,
+                    ZonedDateTimeServiceHelper.GetZonedDateTimeService(InstantHelper.GetTodayAtMidnightUtc()));
+
+                var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                actual.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+            }
+
+            [Fact]
+            public async Task Given_NewMessage_When_SenderIdDoesNotMatchAuthenticatedId_Then_ShouldReturnErrorMessage()
+            {
+                // Arrange
+                var (request, _) =
+                    Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
+                        EndpointUrl, ChargeLinkDocument.ChargeLinkDocumentWhereSenderIdDoNotMatchAuthorizedActorId);
+
+                // Act
+                var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                // Assert
+                actual.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+                var errorMessage = await actual.Content.ReadAsStreamAsync();
+                var document = await XDocument.LoadAsync(errorMessage, LoadOptions.None, CancellationToken.None);
+                document.Element("Message")?.Value.Should().Be(ErrorMessageConstants.ActorIsNotWhoTheyClaimToBeErrorMessage);
+            }
+
+            [Fact]
+            public async Task When_ChargeLinkIsReceived_Then_AHttp202ResponseWithEmptyBodyIsReturned()
+            {
+                var (request, _) =
+                    Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
+                        EndpointUrl, ChargeLinkDocument.AnyValid);
 
                 var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request);
+                var responseBody = await actualResponse.Content.ReadAsStringAsync();
 
-                actualResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+                actualResponse.StatusCode.Should().Be(HttpStatusCode.Accepted);
+                responseBody.Should().BeEmpty();
             }
 
             [Fact]
             public async Task When_InvalidChargeLinkIsReceived_Then_AHttp400ResponseIsReturned()
             {
                 // Arrange
-                var request = CreateHttpRequest(ChargeLinkDocument.InvalidSchema, out _);
+                var (request, _) =
+                    Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
+                        EndpointUrl, ChargeLinkDocument.InvalidSchema);
 
                 // Act
                 var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Assert
                 actualResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+                var responseAsString = await actualResponse.Content.ReadAsStringAsync();
+                responseAsString.Should().Contain("type' element is invalid - The value 'InvalidType' is invalid according to its datatype");
             }
 
             [Fact]
             public async Task Given_NewTaxChargeLinkMessage_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply()
             {
                 // Arrange
-                var request = CreateHttpRequest(ChargeLinkDocument.AnyTax, out var correlationId);
+                var (request, correlationId) =
+                    Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
+                        EndpointUrl, ChargeLinkDocument.TaxWithCreateAndUpdateDueToOverLappingPeriod);
 
                 // Act
-                var response = await Fixture.HostManager.HttpClient.SendAsync(request);
+                await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Assert
-                // We expect two message types in the messagehub, one for the receipt and one for the charge link itself
-                await Fixture.MessageHubMock.AssertPeekReceivesReplyAsync(correlationId, 2);
-            }
+                using var assertionScope = new AssertionScope();
+                // We expect 3 message types in the MessageHub, one for the receipt,
+                // one for the charge link itself and one rejected
+                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 3);
+                peekResults.Should().ContainMatch("*ConfirmRequestChangeBillingMasterData_MarketDocument*");
+                peekResults.Should().ContainMatch("*NotifyBillingMasterData_MarketDocument*");
 
-            private static HttpRequestMessage CreateHttpRequest(string testFilePath, out string correlationId)
-            {
-                var clock = SystemClock.Instance;
-                var chargeLinkJson = EmbeddedResourceHelper.GetEmbeddedFile(testFilePath, clock);
-                correlationId = CorrelationIdGenerator.Create();
-
-                var request = new HttpRequestMessage(HttpMethod.Post, "api/ChargeLinkIngestion")
-                {
-                    Content = new StringContent(chargeLinkJson, Encoding.UTF8, "application/xml"),
-                };
-                request.ConfigureTraceContext(correlationId);
-
-                return request;
+                // For now, ChargeLinkCommandConverter splits all CIM MktActivityRecord into separate ChargeLinkCommands
+                // so we do not always receive a rejection due to the parallel handling of commands.
+                if (peekResults.Any(s => s.Contains("RejectRequestChangeBillingMasterData_MarketDocument")))
+                    peekResults.Should().ContainMatch("*cannot yet be updated or stopped. The functionality is not implemented yet*");
             }
         }
     }

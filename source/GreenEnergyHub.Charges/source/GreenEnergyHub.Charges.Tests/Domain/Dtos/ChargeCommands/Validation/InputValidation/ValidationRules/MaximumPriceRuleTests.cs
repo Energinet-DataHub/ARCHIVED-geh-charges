@@ -12,14 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Linq;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.InputValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Charges.Tests.Builders;
+using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.TestHelpers;
+using Microsoft.Extensions.Logging;
 using Xunit;
 using Xunit.Categories;
 
@@ -39,23 +42,60 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void MaximumPriceRule_WhenCalledPriceIsTooHigh_IsFalse(
             decimal price,
             bool expected,
-            ChargeCommandBuilder builder)
+            ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder)
         {
-            var chargeCommand = CreateCommand(builder, price);
-            var sut = new MaximumPriceRule(chargeCommand);
+            var chargeOperationDto = CreateChargeOperationDto(chargeInformationOperationDtoBuilder, price);
+            var sut = new MaximumPriceRule(chargeOperationDto);
             sut.IsValid.Should().Be(expected);
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder chargeCommandBuilder)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder)
         {
-            var command = CreateCommand(chargeCommandBuilder, SmallestInvalidPrice);
-            var sut = new MaximumPriceRule(command);
+            var chargeOperationDto = CreateChargeOperationDto(chargeInformationOperationDtoBuilder, SmallestInvalidPrice);
+            var sut = new MaximumPriceRule(chargeOperationDto);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.MaximumPrice);
         }
 
-        private static ChargeCommand CreateCommand(ChargeCommandBuilder builder, decimal price)
+        [Theory]
+        [InlineAutoDomainData(ValidationRuleIdentifier.MaximumPrice)]
+        public void TriggeredBy_ShouldCauseCompleteErrorMessages_ToMarketParticipant(
+            ValidationRuleIdentifier validationRuleIdentifier,
+            ILoggerFactory loggerFactory,
+            CimValidationErrorTextProvider cimValidationErrorTextProvider)
+        {
+            // Arrange
+            var chargeOperationDto = new ChargeInformationOperationDtoBuilder()
+                .WithPoint(LargestValidPrice)
+                .WithPoint(SmallestInvalidPrice)
+                .Build();
+            var invalidCommand = new ChargeInformationCommandBuilder().WithChargeOperation(chargeOperationDto).Build();
+            var expectedPoint = chargeOperationDto.Points[1];
+            var triggeredBy = chargeOperationDto.Points.GetPositionOfPoint(expectedPoint).ToString();
+
+            // Act & arrange
+            var sutRule = new MaximumPriceRule(chargeOperationDto);
+            var sutFactory = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
+            var actual = sutFactory.Create(
+                new ValidationError(validationRuleIdentifier, chargeOperationDto.OperationId, triggeredBy),
+                invalidCommand,
+                chargeOperationDto);
+
+            // Assert
+            sutRule.IsValid.Should().BeFalse();
+            sutRule.TriggeredBy.Should().Be(triggeredBy);
+
+            var expected = CimValidationErrorTextTemplateMessages.MaximumPriceErrorText
+                .Replace("{{ChargePointPrice}}", expectedPoint.Price.ToString("N"))
+                .Replace("{{ChargePointPosition}}", triggeredBy)
+                .Replace("{{DocumentSenderProvidedChargeId}}", chargeOperationDto.SenderProvidedChargeId)
+                .Replace("{{ChargeType}}", chargeOperationDto.ChargeType.ToString())
+                .Replace("{{ChargeOwner}}", chargeOperationDto.ChargeOwner);
+            actual.Should().Be(expected);
+        }
+
+        private static ChargeInformationOperationDto CreateChargeOperationDto(ChargeInformationOperationDtoBuilder builder, decimal price)
         {
             return builder.WithPoint(price).Build();
         }

@@ -13,13 +13,12 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCreatedEvents
 {
     public interface IChargeLinkCreatedEventFactory
     {
-        IReadOnlyCollection<ChargeLinkCreatedEvent> CreateEvents([NotNull] ChargeLinksCommand command);
+        IReadOnlyCollection<ChargeLinkCreatedEvent> CreateEvents(ChargeLinksCommand command);
     }
 }

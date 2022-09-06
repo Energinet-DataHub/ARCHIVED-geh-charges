@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksAcceptedEvent
             var result = sut.Create(chargeLinksCommand);
 
             // Assert
-            result.ChargeLinksCommand.ChargeLinks.Should().BeEquivalentTo(chargeLinksCommand.ChargeLinks);
+            result.Command.Operations.Should().BeEquivalentTo(chargeLinksCommand.Operations);
         }
     }
 }

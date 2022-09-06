@@ -14,6 +14,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
 namespace GreenEnergyHub.Charges.Domain.MarketParticipants
 {
@@ -22,35 +24,77 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
     /// </summary>
     public class MarketParticipant
     {
-        private readonly List<MarketParticipantRole> _roles;
+        public static readonly IReadOnlyCollection<MarketParticipantRole> _validRoles = new List<MarketParticipantRole>
+        {
+            MarketParticipantRole.EnergySupplier,
+            MarketParticipantRole.SystemOperator,
+            MarketParticipantRole.GridAccessProvider,
+            MarketParticipantRole.MeteringPointAdministrator,
+        }.AsReadOnly();
 
-        public MarketParticipant(Guid id, string marketParticipantId, bool isActive, IEnumerable<MarketParticipantRole> roles)
+        public MarketParticipant(
+            Guid id,
+            Guid actorId,
+            Guid? b2CActorId,
+            string marketParticipantId,
+            bool isActive,
+            MarketParticipantRole businessProcessRole)
         {
             Id = id;
+            ActorId = actorId;
+            B2CActorId = b2CActorId;
             MarketParticipantId = marketParticipantId;
             IsActive = isActive;
-            _roles = new(roles);
+            UpdateBusinessProcessRole(businessProcessRole);
         }
 
         // ReSharper disable once UnusedMember.Local - Required by persistence framework
         private MarketParticipant()
         {
             MarketParticipantId = null!;
-            _roles = new();
         }
 
         public Guid Id { get; }
 
         /// <summary>
+        /// ID identifying the actor in the Market Participant domain
+        /// The setter is public as the charges domain doesn't enforce any validation
+        /// as it is the responsibility of the market participant domain providing the data.
+        /// </summary>
+        public Guid ActorId { get; set; }
+
+        /// <summary>
+        /// ID used for authentication of B2B requests.
+        /// The setter is public as the charges domain doesn't enforce any validation
+        /// as it is the responsibility of the market participant domain providing the data.
+        /// </summary>
+        public Guid? B2CActorId { get; set; }
+
+        /// <summary>
         /// The ID that identifies the market participant. In Denmark this would be the GLN number or EIC code.
+        /// This ID must be immutable. A new market participant id would require de-activating the market participant
+        /// and replacing it by a new market participant.
         /// </summary>
         public string MarketParticipantId { get; }
 
         /// <summary>
         /// The roles of the market participant.
         /// </summary>
-        public IReadOnlyCollection<MarketParticipantRole> Roles => _roles;
+        public MarketParticipantRole BusinessProcessRole { get; private set; }
 
-        public bool IsActive { get; }
+        public void UpdateBusinessProcessRole(MarketParticipantRole role)
+        {
+            if (!_validRoles.Contains(role))
+                throw new ArgumentException($"Business process role '{role}' is not valid in the charges domain.");
+
+            BusinessProcessRole = role;
+        }
+
+        /// <summary>
+        /// Market participants will not be deleted. They will be made in-active.
+        /// The setter is public as the charges domain doesn't enforce any validation
+        /// as it is the responsibility of the market participant domain providing the data.
+        /// </summary>
+        public bool IsActive { get; set; }
     }
 }

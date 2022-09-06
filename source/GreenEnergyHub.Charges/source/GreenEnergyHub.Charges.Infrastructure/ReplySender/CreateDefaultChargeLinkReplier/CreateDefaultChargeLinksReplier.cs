@@ -13,13 +13,12 @@
 // limitations under the License.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Energinet.Charges.Contracts;
+using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using Google.Protobuf;
 using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkReplier;
 using GreenEnergyHub.Charges.Contracts;
-using GreenEnergyHub.Charges.Infrastructure.Core.Correlation;
 
 namespace GreenEnergyHub.Charges.Infrastructure.ReplySender.CreateDefaultChargeLinkReplier
 {
@@ -29,17 +28,17 @@ namespace GreenEnergyHub.Charges.Infrastructure.ReplySender.CreateDefaultChargeL
         private readonly IServiceBusReplySenderProvider _serviceBusReplySenderProvider;
 
         public CreateDefaultChargeLinksReplier(
-            [NotNull] ICorrelationContext correlationContext,
-            [NotNull] IServiceBusReplySenderProvider serviceBusReplySenderProvider)
+            ICorrelationContext correlationContext,
+            IServiceBusReplySenderProvider serviceBusReplySenderProvider)
         {
             _correlationContext = correlationContext;
             _serviceBusReplySenderProvider = serviceBusReplySenderProvider;
         }
 
-        public async Task ReplyWithSucceededAsync(
-            [NotNull] string meteringPointId,
+        public Task ReplyWithSucceededAsync(
+            string meteringPointId,
             bool didCreateChargeLinks,
-            [NotNull] string replyTo)
+            string replyTo)
         {
             ValidateParametersOrThrow(meteringPointId, replyTo, _correlationContext.Id);
 
@@ -53,13 +52,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.ReplySender.CreateDefaultChargeL
                 },
             };
 
-            await SendReplyAsync(createDefaultChargeLinksReplySucceeded, replyTo, _correlationContext.Id);
+            return SendReplyAsync(createDefaultChargeLinksReplySucceeded, replyTo, _correlationContext.Id);
         }
 
-        public async Task ReplyWithFailedAsync(
-            [NotNull] string meteringPointId,
+        public Task ReplyWithFailedAsync(
+            string meteringPointId,
             ErrorCode errorCode,
-            [NotNull] string replyTo)
+            string replyTo)
         {
             ValidateParametersOrThrow(meteringPointId, replyTo, _correlationContext.Id);
 
@@ -74,18 +73,17 @@ namespace GreenEnergyHub.Charges.Infrastructure.ReplySender.CreateDefaultChargeL
                     },
             };
 
-            await SendReplyAsync(createDefaultChargeLinksReplyFailed, replyTo, _correlationContext.Id);
+            return SendReplyAsync(createDefaultChargeLinksReplyFailed, replyTo, _correlationContext.Id);
         }
 
-        private async Task SendReplyAsync(
+        private Task SendReplyAsync(
             CreateDefaultChargeLinksReply createDefaultChargeLinks,
             string replyTo,
             string correlationId)
         {
             var sender = _serviceBusReplySenderProvider.GetInstance(replyTo);
 
-            await sender.SendReplyAsync(createDefaultChargeLinks.ToByteArray(), correlationId)
-                .ConfigureAwait(false);
+            return sender.SendReplyAsync(createDefaultChargeLinks.ToByteArray(), correlationId);
         }
 
         private static void ValidateParametersOrThrow(string meteringPointId, string replyTo, string correlationId)

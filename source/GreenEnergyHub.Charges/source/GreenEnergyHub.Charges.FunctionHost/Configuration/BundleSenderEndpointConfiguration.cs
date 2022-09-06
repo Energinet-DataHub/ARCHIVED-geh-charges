@@ -21,8 +21,8 @@ using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeReceipt
 using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.Charges;
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinkReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -47,8 +47,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             // Charge link bundles
             serviceCollection.AddScoped<IBundleCreator, BundleCreator<AvailableChargeLinksData>>();
             serviceCollection.AddScoped<ICimSerializer<AvailableChargeLinksData>, ChargeLinkCimSerializer>();
-            serviceCollection.AddScoped<IBundleCreator, BundleCreator<AvailableChargeLinkReceiptData>>();
-            serviceCollection.AddScoped<ICimSerializer<AvailableChargeLinkReceiptData>, ChargeLinkReceiptCimSerializer>();
+            serviceCollection.AddScoped<IBundleCreator, BundleCreator<AvailableChargeLinksReceiptData>>();
+            serviceCollection.AddScoped<ICimSerializer<AvailableChargeLinksReceiptData>, ChargeLinksReceiptCimSerializer>();
         }
     }
 }

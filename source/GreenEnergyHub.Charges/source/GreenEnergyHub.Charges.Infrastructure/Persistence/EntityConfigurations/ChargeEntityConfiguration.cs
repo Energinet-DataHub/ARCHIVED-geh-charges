@@ -14,10 +14,11 @@
 
 using System;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Infrastructure.Core.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
+namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
 {
     public class ChargeEntityConfiguration : IEntityTypeConfiguration<Charge>
     {
@@ -27,25 +28,56 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
         {
             builder.ToTable(_aggregateTableName);
             builder.HasKey(c => c.Id);
-
-            builder.Property(c => c.Description);
-            builder.Property(c => c.Name);
+            builder.Property(x => x.Id).ValueGeneratedNever();
             builder.Property(c => c.OwnerId);
             builder.Property(c => c.SenderProvidedChargeId);
             builder.Property(c => c.Resolution);
             builder.Property(c => c.Type);
-            builder.Property(c => c.TaxIndicator);
-            builder.Property(c => c.TransparentInvoicing);
-            builder.Property(c => c.VatClassification);
-            builder.Property(c => c.StartDateTime);
-            builder.Property(c => c.EndDateTime);
-
             builder.OwnsMany(c => c.Points, ConfigurePoints);
+            builder.OwnsMany(c => c.Periods, ConfigurePeriods);
 
             // Enable EF Core to hydrate the points
-            builder.Metadata
-                .FindNavigation(nameof(Charge.Points))
-                .SetPropertyAccessMode(PropertyAccessMode.Field);
+            var points = builder.Metadata
+                .FindNavigation(nameof(Charge.Points));
+
+            if (points == null)
+            {
+                throw new InvalidOperationException(
+                    $"Could not configure ChargeEntityConfiguration entity. Navigation property {nameof(Charge.Points)} was not found.");
+            }
+
+            points.SetPropertyAccessMode(PropertyAccessMode.Field);
+
+            // Enable EF Core to hydrate the periods
+            var periods = builder.Metadata
+                .FindNavigation(nameof(Charge.Periods));
+
+            if (periods == null)
+            {
+                throw new InvalidOperationException(
+                    $"Could not configure ChargeEntityConfiguration entity. Navigation property {nameof(Charge.Periods)} was not found.");
+            }
+
+            periods.SetPropertyAccessMode(PropertyAccessMode.Field);
+        }
+
+        private void ConfigurePeriods(OwnedNavigationBuilder<Charge, ChargePeriod> periods)
+        {
+            // This field is defined in the SQL model (as a foreign key)
+            periods.WithOwner().HasForeignKey($"{_aggregateTableName}Id");
+
+            var tableName = $"{nameof(ChargePeriod)}";
+            periods.ToTable(tableName);
+
+            periods.HasKey(c => c.Id);
+            periods.Property(x => x.Id).ValueGeneratedNever();
+
+            periods.Property(p => p.Name);
+            periods.Property(p => p.Description);
+            periods.Property(p => p.TransparentInvoicing);
+            periods.Property(p => p.VatClassification);
+            periods.Property(p => p.StartDateTime);
+            periods.Property(p => p.EndDateTime);
         }
 
         private static void ConfigurePoints(OwnedNavigationBuilder<Charge, Point> points)
@@ -58,9 +90,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Context.EntityConfigurations
 
             // This is a database-only column - doesn't exist in domain model as point is not an aggregate
             points.Property<Guid>("Id").ValueGeneratedOnAdd();
-
-            points.Property(p => p.Position);
-            points.Property(p => p.Price);
+            points.Property(p => p.Price)
+                .HasPrecision(DecimalPrecisionConstants.Precision, DecimalPrecisionConstants.Scale);
             points.Property(p => p.Time);
         }
     }

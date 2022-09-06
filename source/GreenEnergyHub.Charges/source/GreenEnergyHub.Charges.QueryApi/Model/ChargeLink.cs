@@ -13,14 +13,19 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 #nullable disable
 
 namespace GreenEnergyHub.Charges.QueryApi.Model
 {
+    [Table("ChargeLink", Schema = "Charges")]
+    [Index(nameof(MeteringPointId), nameof(ChargeId), Name = "IX_MeteringPointId_ChargeId")]
     public partial class ChargeLink
     {
+        [Key]
         public Guid Id { get; set; }
 
         public Guid ChargeId { get; set; }
@@ -33,8 +38,12 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
 
         public int Factor { get; set; }
 
+        [ForeignKey(nameof(ChargeId))]
+        [InverseProperty("ChargeLinks")]
         public virtual Charge Charge { get; set; }
 
+        [ForeignKey(nameof(MeteringPointId))]
+        [InverseProperty("ChargeLinks")]
         public virtual MeteringPoint MeteringPoint { get; set; }
     }
 }

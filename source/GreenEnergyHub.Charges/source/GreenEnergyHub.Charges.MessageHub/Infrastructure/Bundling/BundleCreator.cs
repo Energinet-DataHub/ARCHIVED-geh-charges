@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -55,15 +54,18 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Bundling
                     $"Peek request with id '{request.RequestId}' resulted in available ids '{ids}' but no data was found in the database");
             }
 
+            var firstData = availableData.First();
             await _cimSerializer.SerializeToStreamAsync(
                 availableData,
                 outputStream,
                 // Due to the nature of the interface to the MessageHub and the use of MessageType in that
-                // BusinessReasonCode, RecipientId, RecipientRole and ReceiptStatus will always be the same value
-                // on all records in the list. We can simply take it from the first record.
-                availableData.First().BusinessReasonCode,
-                availableData.First().RecipientId,
-                availableData.First().RecipientRole).ConfigureAwait(false);
+                // BusinessReasonCode, SenderId, SenderRole, RecipientId, RecipientRole and ReceiptStatus will always
+                // be the same value on all records in the list. We can simply take it from the first record.
+                firstData.BusinessReasonCode,
+                firstData.SenderId,
+                firstData.SenderRole,
+                firstData.RecipientId,
+                firstData.RecipientRole).ConfigureAwait(false);
         }
     }
 }

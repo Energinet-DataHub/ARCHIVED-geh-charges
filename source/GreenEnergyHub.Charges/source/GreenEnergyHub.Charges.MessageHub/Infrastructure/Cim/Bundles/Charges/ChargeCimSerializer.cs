@@ -17,8 +17,7 @@ using System.Linq;
 using System.Xml.Linq;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Configuration;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.Charges;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
@@ -29,14 +28,13 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.Charges
 {
     public class ChargeCimSerializer : CimSerializer<AvailableChargeData>
     {
-        private IIso8601Durations _iso8601Durations;
+        private readonly IIso8601Durations _iso8601Durations;
 
         public ChargeCimSerializer(
-            IHubSenderConfiguration hubSenderConfiguration,
             IClock clock,
             IIso8601Durations iso8601Durations,
             ICimIdProvider cimIdProvider)
-            : base(hubSenderConfiguration, clock, cimIdProvider)
+            : base(clock, cimIdProvider)
         {
             _iso8601Durations = iso8601Durations;
         }
@@ -76,12 +74,21 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.Charges
             XNamespace cimNamespace,
             AvailableChargeData charge)
         {
-            return new XElement(
-                cimNamespace + CimChargeConstants.ChargeGroup,
-                GetChargeTypeElement(cimNamespace, charge));
+            if (charge.BusinessReasonCode == BusinessReasonCode.UpdateChargeInformation)
+            {
+                return new XElement(
+                    cimNamespace + CimChargeConstants.ChargeGroup,
+                    GetChargeInformationTypeElement(cimNamespace, charge));
+            }
+            else
+            {
+                return new XElement(
+                    cimNamespace + CimChargeConstants.ChargeGroup,
+                    GetChargePricesTypeElement(cimNamespace, charge));
+            }
         }
 
-        private XElement GetChargeTypeElement(
+        private XElement GetChargeInformationTypeElement(
             XNamespace cimNamespace,
             AvailableChargeData charge)
         {
@@ -114,12 +121,13 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.Charges
                     charge.Points.Count > 0,
                     CimChargeConstants.ChargeResolution,
                     () => ResolutionMapper.Map(charge.Resolution)),
-                new XElement(cimNamespace + CimChargeConstants.StartDateTime, charge.StartDateTime.ToString()),
-                // EndDateTime
+                // EffectiveDate
+                new XElement(cimNamespace + CimChargeConstants.EffectiveDate, charge.StartDateTime.ToString()),
+                // TerminationDate
                 CimHelper.GetElementIfNeeded(
                     cimNamespace,
                     charge.EndDateTime.IsEndDefault(),
-                    CimChargeConstants.EndDateTime,
+                    CimChargeConstants.TerminationDate,
                     () => charge.EndDateTime.ToString()),
                 // VatClassification
                 CimHelper.GetElementIfNeeded(
@@ -141,6 +149,25 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.Charges
                     string.IsNullOrEmpty(charge.ChargeName),
                     CimChargeConstants.TaxIndicator,
                     () => charge.TaxIndicator),
+                GetSeriesPeriod(cimNamespace, charge));
+        }
+
+        private XElement GetChargePricesTypeElement(
+            XNamespace cimNamespace,
+            AvailableChargeData charge)
+        {
+            return new XElement(
+                cimNamespace + CimChargeConstants.ChargeTypeElement,
+                new XElement(
+                    cimNamespace + CimChargeConstants.ChargeOwner,
+                    new XAttribute(
+                        CimMarketDocumentConstants.CodingScheme,
+                        CodingSchemeMapper.Map(CodingScheme.GS1)),
+                    charge.ChargeOwner),
+                new XElement(cimNamespace + CimChargeConstants.ChargeType, ChargeTypeMapper.Map(charge.ChargeType)),
+                new XElement(cimNamespace + CimChargeConstants.ChargeId, charge.ChargeId),
+                // EffectiveDate
+                new XElement(cimNamespace + CimChargeConstants.EffectiveDate, charge.StartDateTime.ToString()),
                 GetSeriesPeriod(cimNamespace, charge));
         }
 
@@ -167,13 +194,14 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.Charges
         {
             return new XElement(
                 cimNamespace + CimChargeConstants.TimeInterval,
-                new XElement(cimNamespace + CimChargeConstants.TimeIntervalStart, charge.StartDateTime),
+                new XElement(cimNamespace + CimChargeConstants.TimeIntervalStart, charge.StartDateTime.GetTimeAndPriceSeriesDateTimeFormat()),
                 new XElement(
                     cimNamespace + CimChargeConstants.TimeIntervalEnd,
                     _iso8601Durations.GetTimeFixedToDuration(
                         charge.StartDateTime,
                         ResolutionMapper.Map(charge.Resolution),
-                        charge.Points.Count)));
+                        charge.Points.Count)
+                        .GetTimeAndPriceSeriesDateTimeFormat()));
         }
 
         private static XElement GetPoint(XNamespace cimNamespace, AvailableChargeDataPoint point)

@@ -12,10 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.Charges.Factories;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.TestHelpers;
 using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
 using Xunit;
@@ -29,14 +28,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Factories
         [Theory]
         [InlineAutoDomainData]
         public void Create_Charge_HasNoNullsOrEmptyCollections(
-            ChargeCommandAcceptedEvent chargeCommandAcceptedEvent,
-            [NotNull] ChargeCreatedEventFactory sut)
+            ChargeInformationOperationDto chargeInformationOperationDto,
+            ChargeCreatedEventFactory sut)
         {
             // Act
-            var actual = sut.Create(chargeCommandAcceptedEvent);
+            var actual = sut.Create(chargeInformationOperationDto);
 
             // Assert
-            actual.Should().NotContainNullsOrEmptyEnumerables();
+            actual.Should().NotContainNullEnumerable();
         }
     }
 }

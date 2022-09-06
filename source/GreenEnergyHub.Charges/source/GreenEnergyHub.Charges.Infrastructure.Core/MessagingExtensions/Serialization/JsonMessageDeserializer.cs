@@ -15,8 +15,8 @@
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.JsonSerialization;
 using Energinet.DataHub.Core.Messaging.Transport;
-using GreenEnergyHub.Json;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization
 {
@@ -32,8 +32,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Seriali
 
         public override async Task<IInboundMessage> FromBytesAsync(byte[] data, CancellationToken cancellationToken = default)
         {
-            await using var stream = new MemoryStream(data);
-            return (TInboundMessage)await _jsonSerializer.DeserializeAsync(stream, typeof(TInboundMessage)).ConfigureAwait(false);
+            var stream = new MemoryStream(data);
+            await using (stream.ConfigureAwait(false))
+            {
+                return (TInboundMessage)await _jsonSerializer.DeserializeAsync(
+                    stream, typeof(TInboundMessage)).ConfigureAwait(false);
+            }
         }
     }
 }

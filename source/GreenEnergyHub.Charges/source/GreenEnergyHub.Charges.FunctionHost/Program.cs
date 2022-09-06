@@ -12,8 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.Core.App.FunctionApp.FunctionTelemetryScope;
+using Energinet.DataHub.Core.App.FunctionApp.Middleware;
+using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
+using Energinet.DataHub.Core.Logging.RequestResponseMiddleware;
 using GreenEnergyHub.Charges.FunctionHost.Configuration;
-using GreenEnergyHub.Charges.Infrastructure.Core.Correlation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using Grpc.Core;
@@ -31,23 +34,40 @@ namespace GreenEnergyHub.Charges.FunctionHost
     {
         public void ConfigureFunctionsWorker(IFunctionsWorkerApplicationBuilder builder)
         {
-            builder.UseMiddleware<CorrelationIdMiddleware>();
-            builder.UseMiddleware<FunctionTelemetryScopeMiddleware>();
-            builder.UseMiddleware<MessageMetaDataMiddleware>();
-            builder.UseMiddleware<FunctionInvocationLoggingMiddleware>();
+            var host = new HostBuilder()
+                .ConfigureFunctionsWorkerDefaults(builder =>
+                {
+                    builder.UseMiddleware<CorrelationIdMiddleware>();
+                    builder.UseMiddleware<FunctionTelemetryScopeMiddleware>();
+                    builder.UseMiddleware<MessageMetaDataMiddleware>();
+                    builder.UseMiddleware<FunctionInvocationLoggingMiddleware>();
+                    builder.UseMiddleware<RequestResponseLoggingMiddleware>();
+                    builder.UseMiddleware<JwtTokenMiddleware>();
+                    builder.UseMiddleware<ActorMiddleware>();
+                })
+                .ConfigureServices(ConfigureServices)
+                .Build();
+
+            host.Run();
         }
 
         public void ConfigureServices(HostBuilderContext hostBuilderContext, IServiceCollection serviceCollection)
         {
             SharedConfiguration.ConfigureServices(serviceCollection);
+            HealthCheckConfiguration.ConfigureServices(serviceCollection);
+
+            // Outbox messages
+            OutboxMessageProcessorConfiguration.ConfigureServices(serviceCollection);
 
             // Charges
             ChargeIngestionConfiguration.ConfigureServices(serviceCollection);
-            ChargeIntegrationEventsPublisherEndpointConfiguration.ConfigureServices(serviceCollection);
             ChargeCommandReceiverConfiguration.ConfigureServices(serviceCollection);
+            ChargePriceCommandReceiverConfiguration.ConfigureServices(serviceCollection);
             ChargeConfirmationDataAvailableNotifierEndpointConfiguration.ConfigureServices(serviceCollection);
             ChargeRejectionDataAvailableNotifierEndpointConfiguration.ConfigureServices(serviceCollection);
             ChargeDataAvailableNotifierConfiguration.ConfigureServices(serviceCollection);
+            ChargePriceRejectedDataAvailableNotifierEndpointConfiguration.ConfigureServices(serviceCollection);
+            ChargeIntegrationEventsPublisherEndpointConfiguration.ConfigureServices(serviceCollection);
 
             // Charge links
             ChargeLinkIngestionConfiguration.ConfigureServices(serviceCollection);
@@ -57,12 +77,16 @@ namespace GreenEnergyHub.Charges.FunctionHost
             CreateChargeLinkReceiverConfiguration.ConfigureServices(serviceCollection);
             ChargeLinkDataAvailableNotifierConfiguration.ConfigureServices(serviceCollection);
             ChargeLinkConfirmationDataAvailableNotifierConfiguration.ConfigureServices(serviceCollection);
+            ChargeLinksRejectionDataAvailableNotifierEndpointConfiguration.ConfigureServices(serviceCollection);
 
             // Metering points
-            ConsumptionMeteringPointPersisterConfiguration.ConfigureServices(serviceCollection);
+            MeteringPointPersisterConfiguration.ConfigureServices(serviceCollection);
 
             // Message Hub
             BundleSenderEndpointConfiguration.ConfigureServices(serviceCollection);
+
+            // Market participant registry
+            MarketParticipantPersisterConfiguration.ConfigureServices(serviceCollection);
         }
 
         public IHost Build()

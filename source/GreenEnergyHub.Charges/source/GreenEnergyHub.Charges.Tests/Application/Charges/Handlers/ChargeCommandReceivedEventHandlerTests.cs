@@ -12,20 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
-using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
-using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.TestHelpers;
 using Moq;
-using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
@@ -35,104 +32,80 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
     public class ChargeCommandReceivedEventHandlerTests
     {
         [Theory]
-        [InlineAutoMoqData]
-        public async Task HandleAsync_WhenValidationSucceed_StoreAndConfirmCommand(
-            [Frozen] [NotNull] Mock<IChargeCommandValidator> validator,
-            [Frozen] [NotNull] Mock<IChargeRepository> repository,
-            [Frozen] [NotNull] Mock<IChargeCommandConfirmationService> confirmationService,
-            [Frozen] [NotNull] Mock<Charge> charge,
-            [Frozen] [NotNull] Mock<IChargeFactory> chargeFactory,
-            [NotNull] ChargeCommandReceivedEvent receivedEvent,
-            [NotNull] ChargeCommandReceivedEventHandler sut)
+        [InlineAutoDomainData]
+        public async Task HandleAsync_WhenBusinessReasonCodeIsUpdateChargePrice_ActivateHandler(
+            ChargeCommandReceivedEvent chargeCommandReceivedEvent,
+            [Frozen] Mock<IChargePriceEventHandlerDeprecated> chargePriceEventHandlerDeprecated,
+            [Frozen] Mock<IDocumentValidator> documentValidator,
+            ChargeInformationCommandReceivedEventHandler sut)
         {
             // Arrange
-            var validationResult = ChargeCommandValidationResult.CreateSuccess();
-            validator.Setup(
-                    v => v.ValidateAsync(
-                        It.IsAny<ChargeCommand>()))
-                .Returns(
-                    Task.FromResult(validationResult));
-
-            var stored = false;
-            repository.Setup(
-                    r => r.StoreChargeAsync(
-                        It.IsAny<Charge>()))
-                .Callback<Charge>(
-                    _ => stored = true);
-
-            var confirmed = false;
-            confirmationService.Setup(
-                    s => s.AcceptAsync(
-                        It.IsAny<ChargeCommand>()))
-                .Callback<ChargeCommand>(
-                    _ => confirmed = true);
-
-            chargeFactory.Setup(s => s.CreateFromCommandAsync(
-                    It.IsAny<ChargeCommand>()))
-                .ReturnsAsync(charge.Object);
+            documentValidator
+                .Setup(v => v.ValidateAsync(It.IsAny<ChargeInformationCommand>()))
+                .ReturnsAsync(ValidationResult.CreateSuccess());
+            chargeCommandReceivedEvent.Command.Document.BusinessReasonCode = BusinessReasonCode.UpdateChargePrices;
 
             // Act
-            await sut.HandleAsync(receivedEvent).ConfigureAwait(false);
+            await sut.HandleAsync(chargeCommandReceivedEvent);
 
             // Assert
-            Assert.True(stored);
-            Assert.True(confirmed);
+            chargePriceEventHandlerDeprecated.Verify(
+                x => x.HandleAsync(chargeCommandReceivedEvent),
+                Times.Once);
         }
 
         [Theory]
-        [InlineAutoMoqData]
-        public async Task HandleAsync_WhenValidationFails_RejectsEvent(
-            [Frozen] [NotNull] Mock<IChargeCommandValidator> validator,
-            [Frozen] [NotNull] Mock<IChargeCommandConfirmationService> confirmationService,
-            [NotNull] ChargeCommandReceivedEvent receivedEvent,
-            [NotNull] ChargeCommandReceivedEventHandler sut)
+        [InlineAutoDomainData]
+        public async Task HandleAsync_WhenBusinessReasonCodeIsUpdateChargeInformation_ActivateHandler(
+            ChargeCommandReceivedEvent chargeCommandReceivedEvent,
+            [Frozen] Mock<IChargeInformationEventHandler> chargeCommandReceivedEventHandlerMock,
+            [Frozen] Mock<IDocumentValidator> documentValidator,
+            ChargeInformationCommandReceivedEventHandler sut)
         {
             // Arrange
-            var validationResult = GetFailedValidationResult();
-            validator.Setup(
-                    v => v.ValidateAsync(
-                        It.IsAny<ChargeCommand>()))
-                .Returns(
-                    Task.FromResult(validationResult));
-
-            var rejected = false;
-            confirmationService.Setup(
-                    s => s.RejectAsync(
-                        It.IsAny<ChargeCommand>(),
-                        validationResult))
-                .Callback<ChargeCommand, ChargeCommandValidationResult>(
-                    (_, _) => rejected = true);
+            documentValidator
+                .Setup(v => v.ValidateAsync(It.IsAny<ChargeInformationCommand>()))
+                .ReturnsAsync(ValidationResult.CreateSuccess());
+            chargeCommandReceivedEvent.Command.Document.BusinessReasonCode = BusinessReasonCode.UpdateChargeInformation;
 
             // Act
-            await sut.HandleAsync(receivedEvent).ConfigureAwait(false);
+            await sut.HandleAsync(chargeCommandReceivedEvent);
 
             // Assert
-            Assert.True(rejected);
+            chargeCommandReceivedEventHandlerMock.Verify(
+                x => x.HandleAsync(chargeCommandReceivedEvent),
+                Times.Once);
         }
 
         [Theory]
-        [InlineAutoMoqData]
-        public async Task HandleAsync_IfEventIsNull_ThrowsArgumentNullException(
-            [NotNull] ChargeCommandReceivedEventHandler sut)
+        [InlineAutoDomainData]
+        public async Task HandleAsync_WhenDocumentValidationFails_ShouldCallReject(
+            ChargeCommandReceivedEvent chargeCommandReceivedEvent,
+            [Frozen] Mock<IDocumentValidator> documentValidator,
+            [Frozen] Mock<IChargeCommandReceiptService> chargeCommandReceiptService,
+            ChargeInformationCommandReceivedEventHandler sut)
         {
             // Arrange
-            ChargeCommandReceivedEvent? receivedEvent = null;
+            documentValidator.Setup(v =>
+                    v.ValidateAsync(It.IsAny<ChargeInformationCommand>()))
+                .ReturnsAsync(ValidationResult.CreateFailure(GetFailedValidationResult()));
+            chargeCommandReceivedEvent.Command.Document.BusinessReasonCode = BusinessReasonCode.UpdateChargeInformation;
 
-            // Act / Assert
-            await Assert.ThrowsAsync<ArgumentNullException>(
-                    () => sut.HandleAsync(receivedEvent!))
-                .ConfigureAwait(false);
+            // Act
+            await sut.HandleAsync(chargeCommandReceivedEvent);
+
+            // Assert
+            chargeCommandReceiptService.Verify(
+                x => x.RejectAsync(chargeCommandReceivedEvent.Command, It.IsAny<ValidationResult>()),
+                Times.Once);
         }
 
-        private static ChargeCommandValidationResult GetFailedValidationResult()
+        private static List<IValidationRuleContainer> GetFailedValidationResult()
         {
             var failedRule = new Mock<IValidationRule>();
-            failedRule.Setup(
-                    r => r.IsValid)
-                .Returns(false);
+            failedRule.Setup(r => r.IsValid).Returns(false);
 
-            return ChargeCommandValidationResult.CreateFailure(
-                new List<IValidationRule> { failedRule.Object });
+            return new List<IValidationRuleContainer> { new DocumentValidationRuleContainer(failedRule.Object) };
         }
     }
 }

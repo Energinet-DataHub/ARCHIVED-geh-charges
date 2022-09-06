@@ -12,13 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Linq;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation.InputValidation;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Charges.Tests.Builders;
+using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Categories;
@@ -35,30 +34,25 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void ChargeIdLengthValidationRule_Test(
             string chargeId,
             bool expected,
-            ChargeCommandBuilder builder)
+            ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder)
         {
-            var command = builder.WithChargeId(chargeId).Build();
-            var sut = new ChargeIdLengthValidationRule(command);
-            Assert.Equal(expected, sut.IsValid);
+            var chargeOperationDto = chargeInformationOperationDtoBuilder.WithChargeId(chargeId).Build();
+            var sut = new ChargeIdLengthValidationRule(chargeOperationDto);
+            sut.IsValid.Should().Be(expected);
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder builder)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder)
         {
-            var invalidCommand = CreateInvalidCommand(builder);
-            var sut = new ChargeIdLengthValidationRule(invalidCommand);
+            var invalidChargeOperationDto = CreateInvalidChargeOperationDto(chargeInformationOperationDtoBuilder);
+            var sut = new ChargeIdLengthValidationRule(invalidChargeOperationDto);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChargeIdLengthValidation);
         }
 
-        private static ChargeCommand CreateValidCommand(ChargeCommandBuilder builder)
+        private static ChargeInformationOperationDto CreateInvalidChargeOperationDto(ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder)
         {
-            return builder.WithChargeId("ok").Build();
-        }
-
-        private static ChargeCommand CreateInvalidCommand(ChargeCommandBuilder builder)
-        {
-            return builder.WithChargeId("this charge id is to long").Build();
+            return chargeInformationOperationDtoBuilder.WithChargeId("this charge id is to long").Build();
         }
     }
 }

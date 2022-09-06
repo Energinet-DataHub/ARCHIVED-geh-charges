@@ -14,11 +14,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Configuration;
 using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
 using GreenEnergyHub.Charges.Domain.Dtos.CreateDefaultChargeLinksRequests;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
@@ -34,30 +32,27 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
         private readonly IMeteringPointRepository _meteringPointRepository;
         private readonly IClock _clock;
         private readonly IMarketParticipantRepository _marketParticipantRepository;
-        private readonly IHubSenderConfiguration _hubSenderConfiguration;
 
         public ChargeLinksCommandFactory(
             IChargeRepository chargeRepository,
             IMeteringPointRepository meteringPointRepository,
             IClock clock,
-            IMarketParticipantRepository marketParticipantRepository,
-            IHubSenderConfiguration hubSenderConfiguration)
+            IMarketParticipantRepository marketParticipantRepository)
         {
             _chargeRepository = chargeRepository;
             _clock = clock;
             _marketParticipantRepository = marketParticipantRepository;
-            _hubSenderConfiguration = hubSenderConfiguration;
             _meteringPointRepository = meteringPointRepository;
         }
 
         public async Task<ChargeLinksCommand> CreateAsync(
-            [NotNull] CreateDefaultChargeLinksRequest createDefaultChargeLinksRequest,
-            [NotNull] IReadOnlyCollection<DefaultChargeLink> defaultChargeLinks)
+            CreateDefaultChargeLinksRequest createDefaultChargeLinksRequest,
+            IReadOnlyCollection<DefaultChargeLink> defaultChargeLinks)
         {
             var chargeIds = defaultChargeLinks.Select(x => x.ChargeId).ToList();
 
             var charges = await _chargeRepository
-                .GetAsync(chargeIds)
+                .GetByIdsAsync(chargeIds)
                 .ConfigureAwait(false);
 
             var ownerIds = charges.Select(c => c.OwnerId);
@@ -70,7 +65,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
                 .ConfigureAwait(false);
 
             var systemOperator = await _marketParticipantRepository
-                .GetAsync(MarketParticipantRole.SystemOperator)
+                .GetSystemOperatorAsync()
                 .ConfigureAwait(false);
 
             var defChargeAndCharge =
@@ -79,34 +74,35 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
                         defaultChargeLink => defaultChargeLink,
                         defaultChargeLink => charges.Single(c => defaultChargeLink.ChargeId == c.Id));
 
-            var chargeLinks = defChargeAndCharge.Select(pair => new ChargeLinkDto
-                {
-                    ChargeType = pair.Value.Type,
-                    SenderProvidedChargeId = pair.Value.SenderProvidedChargeId,
-                    ChargeOwnerId = GetChargeOwnerId(pair.Value, owners),
-                    StartDateTime = pair.Key.GetStartDateTime(meteringPoint.EffectiveDate),
-                    EndDateTime = pair.Key.EndDateTime,
-                    OperationId = Guid.NewGuid().ToString(), // When creating default charge links, the TSO starts a new operation, which is why a new OperationId is provided.
-                    Factor = DefaultChargeLink.Factor,
-                })
+            var chargeLinks = defChargeAndCharge.Select(pair => new ChargeLinkOperationDto(
+                    Guid.NewGuid().ToString(), // When creating default charge links, the TSO starts a new operation, which is why a new OperationId is provided.
+                    meteringPoint.MeteringPointId,
+                    pair.Key.GetStartDateTime(meteringPoint.EffectiveDate),
+                    pair.Key.EndDateTime,
+                    pair.Value.SenderProvidedChargeId,
+                    DefaultChargeLink.Factor,
+                    GetChargeOwner(pair.Value, owners),
+                    pair.Value.Type))
                 .ToList();
 
-            return CreateChargeLinksCommand(createDefaultChargeLinksRequest, systemOperator, chargeLinks);
+            return await CreateChargeLinksCommandAsync(systemOperator, chargeLinks).ConfigureAwait(false);
         }
 
-        private static string GetChargeOwnerId(Charge charge, IReadOnlyCollection<MarketParticipant> owners)
+        private static string GetChargeOwner(Charge charge, IReadOnlyCollection<MarketParticipant> owners)
         {
             return owners.Single(o => o.Id == charge.OwnerId).MarketParticipantId;
         }
 
-        private ChargeLinksCommand CreateChargeLinksCommand(
-            CreateDefaultChargeLinksRequest createDefaultChargeLinksRequest,
+        private async Task<ChargeLinksCommand> CreateChargeLinksCommandAsync(
             MarketParticipant systemOperator,
-            List<ChargeLinkDto> chargeLinks)
+            List<ChargeLinkOperationDto> chargeLinks)
         {
             var currentTime = _clock.GetCurrentInstant();
+            var meteringPointAdministrator = await _marketParticipantRepository
+                .GetMeteringPointAdministratorAsync()
+                .ConfigureAwait(false);
+
             return new ChargeLinksCommand(
-                createDefaultChargeLinksRequest.MeteringPointId,
                 new DocumentDto
                 {
                     Id = Guid.NewGuid().ToString(),
@@ -117,13 +113,17 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
                     CreatedDateTime = currentTime,
                     Sender = new MarketParticipantDto
                     {
-                        Id = systemOperator.MarketParticipantId, // For default charge links the owner is the TSO.
-                        BusinessProcessRole = MarketParticipantRole.SystemOperator,
+                        MarketParticipantId = systemOperator.MarketParticipantId, // For default charge links the owner is the TSO.
+                        BusinessProcessRole = systemOperator.BusinessProcessRole,
+                        Id = systemOperator.Id,
+                        B2CActorId = Guid.Empty,
                     },
                     Recipient = new MarketParticipantDto
                     {
-                        Id = _hubSenderConfiguration.GetSenderMarketParticipant().MarketParticipantId,
-                        BusinessProcessRole = MarketParticipantRole.MeteringPointAdministrator,
+                        MarketParticipantId = meteringPointAdministrator.MarketParticipantId,
+                        BusinessProcessRole = meteringPointAdministrator.BusinessProcessRole,
+                        Id = systemOperator.Id,
+                        B2CActorId = Guid.Empty,
                     },
                 },
                 chargeLinks);

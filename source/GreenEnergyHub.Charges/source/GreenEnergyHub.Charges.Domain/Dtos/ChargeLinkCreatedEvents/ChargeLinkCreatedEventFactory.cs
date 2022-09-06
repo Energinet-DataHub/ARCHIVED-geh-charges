@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
@@ -22,29 +21,28 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCreatedEvents
 {
     public class ChargeLinkCreatedEventFactory : IChargeLinkCreatedEventFactory
     {
-        public IReadOnlyCollection<ChargeLinkCreatedEvent> CreateEvents([NotNull] ChargeLinksCommand command)
+        public IReadOnlyCollection<ChargeLinkCreatedEvent> CreateEvents(ChargeLinksCommand chargeCommand)
         {
-            return command.ChargeLinks.Select(
-                chargeLinkDto => ChargeLinkCreatedEvent(command, chargeLinkDto)).ToList();
+            return chargeCommand.Operations.Select(ChargeLinkCreatedEvent).ToList();
         }
 
-        private static ChargeLinkCreatedEvent ChargeLinkCreatedEvent(ChargeLinksCommand command, ChargeLinkDto chargeLinkDto)
+        private static ChargeLinkCreatedEvent ChargeLinkCreatedEvent(ChargeLinkOperationDto chargeLinkOperationDto)
         {
             return new ChargeLinkCreatedEvent(
-                chargeLinkDto.OperationId,
-                command.MeteringPointId,
-                chargeLinkDto.SenderProvidedChargeId,
-                chargeLinkDto.ChargeType,
-                chargeLinkDto.ChargeOwnerId,
-                ChargeLinkPeriod(chargeLinkDto));
+                chargeLinkOperationDto.OperationId,
+                chargeLinkOperationDto.MeteringPointId,
+                chargeLinkOperationDto.SenderProvidedChargeId,
+                chargeLinkOperationDto.ChargeType,
+                chargeLinkOperationDto.ChargeOwner,
+                ChargeLinkPeriod(chargeLinkOperationDto));
         }
 
-        private static ChargeLinkPeriod ChargeLinkPeriod(ChargeLinkDto chargeLinkDto)
+        private static ChargeLinkPeriod ChargeLinkPeriod(ChargeLinkOperationDto chargeLinkOperationDto)
         {
             return new ChargeLinkPeriod(
-                chargeLinkDto.StartDateTime,
-                chargeLinkDto.EndDateTime.TimeOrEndDefault(),
-                chargeLinkDto.Factor);
+                chargeLinkOperationDto.StartDateTime,
+                chargeLinkOperationDto.EndDateTime.TimeOrEndDefault(),
+                chargeLinkOperationDto.Factor);
         }
     }
 }

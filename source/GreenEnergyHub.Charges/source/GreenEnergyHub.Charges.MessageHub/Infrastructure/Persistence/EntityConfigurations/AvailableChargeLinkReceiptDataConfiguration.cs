@@ -12,20 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinkReceiptData;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Persistence.EntityConfigurations
 {
-    public class AvailableChargeLinkReceiptDataConfiguration : IEntityTypeConfiguration<AvailableChargeLinkReceiptData>
+    public class AvailableChargeLinkReceiptDataConfiguration : IEntityTypeConfiguration<AvailableChargeLinksReceiptData>
     {
-        public void Configure(EntityTypeBuilder<AvailableChargeLinkReceiptData> builder)
+        public void Configure(EntityTypeBuilder<AvailableChargeLinksReceiptData> builder)
         {
-            builder.ToTable(nameof(AvailableChargeLinkReceiptData));
-            builder.HasKey(x => x.Id);
+            builder.ToTable(nameof(AvailableChargeLinksReceiptData));
 
+            builder.HasKey(x => x.Id);
             builder.Property(p => p.Id).ValueGeneratedNever();
+
+            builder.Property(x => x.SenderId);
+            builder.Property(x => x.SenderRole);
             builder.Property(x => x.RecipientId);
             builder.Property(x => x.RecipientRole);
             builder.Property(x => x.BusinessReasonCode);
@@ -34,22 +38,22 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Persistence.EntityCon
             builder.Property(x => x.MeteringPointId);
             builder.Property(x => x.RequestDateTime);
             builder.Property(x => x.AvailableDataReferenceId);
-
-            builder.Ignore(c => c.ReasonCodes);
-            builder.OwnsMany<AvailableChargeLinkReceiptDataReasonCode>("_reasonCodes", ConfigureReasonCodes);
+            builder.Property(x => x.DocumentType);
+            builder.Property(x => x.OperationOrder);
+            builder.Property(x => x.ActorId);
+            builder.Ignore(x => x.ValidationErrors);
+            builder.OwnsMany<AvailableReceiptValidationError>("_validationErrors", ConfigureReasonCodes);
         }
 
         private static void ConfigureReasonCodes(
-            OwnedNavigationBuilder<AvailableChargeLinkReceiptData,
-            AvailableChargeLinkReceiptDataReasonCode> reasonCodes)
+            OwnedNavigationBuilder<AvailableChargeLinksReceiptData, AvailableReceiptValidationError> validationErrors)
         {
-            reasonCodes.WithOwner().HasForeignKey("AvailableChargeLinkReceiptDataId");
-            reasonCodes.ToTable(nameof(AvailableChargeLinkReceiptDataReasonCode));
-            reasonCodes.HasKey(r => r.Id);
-
-            reasonCodes.Property(r => r.Id).ValueGeneratedNever();
-            reasonCodes.Property(r => r.ReasonCode);
-            reasonCodes.Property(r => r.Text);
+            validationErrors.WithOwner().HasForeignKey("AvailableChargeLinkReceiptDataId");
+            validationErrors.ToTable("AvailableChargeLinksReceiptValidationError", DatabaseSchemaNames.MessageHub);
+            validationErrors.HasKey(r => r.Id);
+            validationErrors.Property(r => r.Id).ValueGeneratedNever();
+            validationErrors.Property(r => r.ReasonCode);
+            validationErrors.Property(r => r.Text);
         }
     }
 }

@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification.Charges;
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
@@ -32,7 +31,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                     AvailableDataNotifier<AvailableChargeReceiptData, ChargeCommandAcceptedEvent>>();
             serviceCollection
                 .AddScoped<IAvailableDataFactory<AvailableChargeReceiptData, ChargeCommandAcceptedEvent>,
-                    AvailableChargeConfirmationDataFactory>();
+                    AvailableChargeReceiptDataFactory>();
             serviceCollection
                 .AddScoped<IAvailableDataNotificationFactory<AvailableChargeReceiptData>,
                     AvailableDataNotificationFactory<AvailableChargeReceiptData>>();

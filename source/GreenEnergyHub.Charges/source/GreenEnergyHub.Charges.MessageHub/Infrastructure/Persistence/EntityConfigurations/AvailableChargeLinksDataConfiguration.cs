@@ -25,7 +25,10 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Persistence.EntityCon
             builder.ToTable(nameof(AvailableChargeLinksData), DatabaseSchemaNames.MessageHub);
 
             builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id).ValueGeneratedNever();
 
+            builder.Property(x => x.SenderId);
+            builder.Property(x => x.SenderRole);
             builder.Property(x => x.RecipientId);
             builder.Property(x => x.RecipientRole);
             builder.Property(x => x.BusinessReasonCode);
@@ -38,6 +41,9 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Persistence.EntityCon
             builder.Property(x => x.EndDateTime);
             builder.Property(x => x.RequestDateTime);
             builder.Property(x => x.AvailableDataReferenceId);
+            builder.Property(x => x.OperationOrder);
+            builder.Property(x => x.DocumentType);
+            builder.Property(x => x.ActorId);
         }
     }
 }

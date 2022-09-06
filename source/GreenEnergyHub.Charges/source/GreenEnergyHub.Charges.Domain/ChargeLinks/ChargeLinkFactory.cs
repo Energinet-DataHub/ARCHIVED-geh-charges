@@ -13,11 +13,10 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 
 namespace GreenEnergyHub.Charges.Domain.ChargeLinks
@@ -26,37 +25,39 @@ namespace GreenEnergyHub.Charges.Domain.ChargeLinks
     {
         private readonly IChargeRepository _chargeRepository;
         private readonly IMeteringPointRepository _meteringPointRepository;
+        private readonly IChargeIdentifierFactory _chargeIdentifierFactory;
 
-        public ChargeLinkFactory(IChargeRepository chargeRepository, IMeteringPointRepository meteringPointRepository)
+        public ChargeLinkFactory(
+            IChargeRepository chargeRepository,
+            IMeteringPointRepository meteringPointRepository,
+            IChargeIdentifierFactory chargeIdentifierFactory)
         {
             _chargeRepository = chargeRepository;
             _meteringPointRepository = meteringPointRepository;
+            _chargeIdentifierFactory = chargeIdentifierFactory;
         }
 
-        public async Task<IReadOnlyCollection<ChargeLink>> CreateAsync(ChargeLinksReceivedEvent chargeLinksEvent)
+        public async Task<ChargeLink> CreateAsync(ChargeLinkOperationDto dto)
         {
-            if (chargeLinksEvent == null) throw new ArgumentNullException(nameof(chargeLinksEvent));
+            ArgumentNullException.ThrowIfNull(dto);
 
-            var chargeLinksCreated = new List<ChargeLink>();
+            var chargeIdentifier = await _chargeIdentifierFactory.CreateAsync(
+                dto.SenderProvidedChargeId, dto.ChargeType, dto.ChargeOwner).ConfigureAwait(false);
 
-            foreach (var chargeLink in chargeLinksEvent.ChargeLinksCommand.ChargeLinks)
-            {
-                var chargeIdentifier = new ChargeIdentifier(chargeLink.SenderProvidedChargeId, chargeLink.ChargeOwnerId, chargeLink.ChargeType);
-                var charge = await _chargeRepository.GetAsync(chargeIdentifier).ConfigureAwait(false);
+            var charge = await _chargeRepository.SingleAsync(chargeIdentifier).ConfigureAwait(false);
 
-                var meteringPoint = await _meteringPointRepository
-                    .GetMeteringPointAsync(chargeLinksEvent.ChargeLinksCommand.MeteringPointId)
-                    .ConfigureAwait(false);
+            var meteringPoint = await _meteringPointRepository
+                .GetMeteringPointAsync(dto.MeteringPointId)
+                .ConfigureAwait(false);
 
-                chargeLinksCreated.Add(new ChargeLink(
-                    charge.Id,
-                    meteringPoint.Id,
-                    chargeLink.StartDateTime,
-                    chargeLink.EndDateTime.TimeOrEndDefault(),
-                    chargeLink.Factor));
-            }
+            var chargeLink = new ChargeLink(
+                charge.Id,
+                meteringPoint.Id,
+                dto.StartDateTime,
+                dto.EndDateTime.TimeOrEndDefault(),
+                dto.Factor);
 
-            return chargeLinksCreated;
+            return chargeLink;
         }
     }
 }

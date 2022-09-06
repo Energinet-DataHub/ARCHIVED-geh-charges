@@ -12,14 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.Tests.Builders.Testables;
+using GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared;
 using Moq;
 using NodaTime;
 using Xunit;
@@ -33,28 +39,37 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
         [Theory]
         [InlineAutoMoqData]
         public async Task CreateAsync_WhenCalledWithAcceptedEvent_ReturnsAvailableData(
+            TestMeteringPointAdministrator meteringPointAdministrator,
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             ChargeCommandAcceptedEvent acceptedEvent,
             Instant now,
-            AvailableChargeConfirmationDataFactory sut)
+            AvailableChargeReceiptDataFactory sut)
         {
             // Arrange
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
+            var documentDto = acceptedEvent.Command.Document;
+            documentDto.Sender.BusinessProcessRole = MarketParticipantRole.GridAccessProvider;
+            var actorId = Guid.NewGuid();
+            MarketParticipantRepositoryMockBuilder.SetupMarketParticipantRepositoryMock(
+                marketParticipantRepository, meteringPointAdministrator, documentDto.Sender, actorId);
 
             // Act
             var actualList = await sut.CreateAsync(acceptedEvent);
 
             // Assert
-            actualList.Should().ContainSingle();
-            actualList[0].RecipientId.Should().Be(acceptedEvent.Command.Document.Sender.Id);
-            actualList[0].RecipientRole.Should()
-                    .Be(acceptedEvent.Command.Document.Sender.BusinessProcessRole);
-            actualList[0].BusinessReasonCode.Should()
-                    .Be(acceptedEvent.Command.Document.BusinessReasonCode);
+            actualList.Should().HaveCount(3);
+            actualList[0].ActorId.Should().Be(actorId);
+            actualList[0].RecipientId.Should().Be(documentDto.Sender.MarketParticipantId);
+            actualList[0].RecipientRole.Should().Be(documentDto.Sender.BusinessProcessRole);
+            actualList[0].BusinessReasonCode.Should().Be(documentDto.BusinessReasonCode);
             actualList[0].RequestDateTime.Should().Be(now);
             actualList[0].ReceiptStatus.Should().Be(ReceiptStatus.Confirmed);
-            actualList[0].OriginalOperationId.Should().Be(acceptedEvent.Command.ChargeOperation.Id);
+            actualList[0].DocumentType.Should().Be(DocumentType.ConfirmRequestChangeOfPriceList);
+            actualList[0].OriginalOperationId.Should().Be(acceptedEvent.Command.Operations.First().OperationId);
             actualList[0].ValidationErrors.Should().BeEmpty();
+            var expectedList = actualList.OrderBy(x => x.OperationOrder);
+            actualList.SequenceEqual(expectedList).Should().BeTrue();
         }
     }
 }

@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Diagnostics.CodeAnalysis;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 
 namespace GreenEnergyHub.Charges.Infrastructure.ReplySender
 {
@@ -23,18 +23,22 @@ namespace GreenEnergyHub.Charges.Infrastructure.ReplySender
     {
         private readonly ServiceBusSender _serviceBusSender;
 
-        public ServiceBusReplySender([NotNull] ServiceBusSender serviceBusSender)
+        public ServiceBusReplySender(ServiceBusSender serviceBusSender)
         {
             _serviceBusSender = serviceBusSender;
         }
 
         public async Task SendReplyAsync(byte[] data, string correlationId)
         {
-            await _serviceBusSender.SendMessageAsync(new ServiceBusMessage
-            {
-                Body = new BinaryData(data),
-                CorrelationId = correlationId,
-            }).ConfigureAwait(false);
+            await _serviceBusSender.SendMessageAsync(
+                new ServiceBusMessage(data)
+                {
+                    CorrelationId = correlationId,
+                    ApplicationProperties =
+                    {
+                        new KeyValuePair<string, object>(MessageMetaDataConstants.CorrelationId, correlationId),
+                    },
+                }).ConfigureAwait(false);
         }
     }
 }

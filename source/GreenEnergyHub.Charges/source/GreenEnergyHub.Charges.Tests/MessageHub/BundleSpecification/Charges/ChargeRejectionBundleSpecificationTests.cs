@@ -15,13 +15,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.Configuration;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using GreenEnergyHub.Charges.Infrastructure.Core.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification.Charges;
 using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim;
@@ -39,8 +37,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.Charges
     [UnitTest]
     public class ChargeRejectionBundleSpecificationTests
     {
-        private const string MaxLengthId = "00000000000000000000000000000000000";
-        private const int MaxTextLengthInTest = 10000;
+        private const string MaxLengthId = "1_______10________20________3012345";
 
         [Theory]
         [InlineAutoMoqData(0)]
@@ -49,7 +46,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.Charges
         [InlineAutoMoqData(1000)]
         public async Task GetMessageWeight_WhenCalled_ReturnedWeightIsHigherThanSerializedStream(
             int noOfReasons,
-            [Frozen] Mock<IHubSenderConfiguration> hubSenderConfiguration,
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<ICimIdProvider> cimIdProvider,
             ChargeReceiptCimSerializer serializer,
             ChargeRejectionBundleSpecification sut)
@@ -57,13 +54,17 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.Charges
             // Arrange
             var availableData = GetRejection(noOfReasons);
 
-            var marketParticipant = new MarketParticipant(
-                Guid.NewGuid(),
+            var meteringPointAdministrator = new MarketParticipant(
+                id: Guid.NewGuid(),
+                actorId: Guid.NewGuid(),
+                b2CActorId: Guid.NewGuid(),
                 MaxLengthId,
                 true,
-                new[] { MarketParticipantRole.GridAccessProvider });
+                MarketParticipantRole.GridAccessProvider);
 
-            hubSenderConfiguration.Setup(c => c.GetSenderMarketParticipant()).Returns(marketParticipant);
+            marketParticipantRepository
+                .Setup(c => c.GetMeteringPointAdministratorAsync()).
+                ReturnsAsync(meteringPointAdministrator);
 
             cimIdProvider.Setup(c => c.GetUniqueId()).Returns(MaxLengthId);
 
@@ -72,6 +73,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.Charges
                 new List<AvailableChargeReceiptData> { availableData },
                 stream,
                 BusinessReasonCode.UpdateChargeInformation,
+                "senderId",
+                MarketParticipantRole.MeteringPointAdministrator,
                 MaxLengthId,
                 MarketParticipantRole.GridAccessProvider);
 
@@ -95,9 +98,11 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.Charges
             xmlSizeInBytes.Should().BeLessOrEqualTo(confirmationMessageWeightInBytes);
         }
 
-        private AvailableChargeReceiptData GetRejection(int noOfReasons)
+        private static AvailableChargeReceiptData GetRejection(int noOfReasons)
         {
             return new AvailableChargeReceiptData(
+                "senderId",
+                MarketParticipantRole.MeteringPointAdministrator,
                 MaxLengthId,
                 MarketParticipantRole.GridAccessProvider,
                 BusinessReasonCode.UpdateChargeInformation,
@@ -105,38 +110,10 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.Charges
                 Guid.Empty,
                 ReceiptStatus.Rejected,
                 MaxLengthId,
-                GetReasons(noOfReasons));
-        }
-
-        private List<AvailableChargeReceiptValidationError> GetReasons(int noOfReasons)
-        {
-            var reasons = new List<AvailableChargeReceiptValidationError>();
-
-            for (var i = 0; i < noOfReasons; i++)
-            {
-                reasons.Add(GetReason());
-            }
-
-            return reasons;
-        }
-
-        private AvailableChargeReceiptValidationError GetReason()
-        {
-            var text = CreateStringOfRandomLength();
-            return new AvailableChargeReceiptValidationError(ReasonCode.D01, text);
-        }
-
-        private static string CreateStringOfRandomLength()
-        {
-            var builder = new StringBuilder();
-            var randomizer = new Random();
-            var length = randomizer.Next(0, MaxTextLengthInTest);
-            for (var i = 0; i < length; i++)
-            {
-                builder.Append('0');
-            }
-
-            return builder.ToString();
+                DocumentType.RejectRequestChangeOfPriceList,
+                0,
+                Guid.NewGuid(),
+                AvailableReceiptValidationErrorGenerator.CreateReasons(noOfReasons));
         }
     }
 }

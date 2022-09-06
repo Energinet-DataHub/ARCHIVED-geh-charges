@@ -13,15 +13,14 @@
 // limitations under the License.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
+using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using Xunit;
@@ -35,17 +34,22 @@ namespace GreenEnergyHub.Charges.Tests.Domain.ChargeLinks
         [Theory]
         [InlineAutoDomainData]
         public async Task CreateAsync_WhenCalled_ShouldCreateChargeLinkCorrectly(
-            [NotNull] ChargeLinksReceivedEvent expectedEvent,
-            [NotNull] Charge expectedCharge,
-            [NotNull] MeteringPoint expectedMeteringPoint,
-            [NotNull] [Frozen] Mock<IChargeRepository> chargeRepository,
-            [NotNull] [Frozen] Mock<IMeteringPointRepository> meteringPointRepository,
-            [NotNull] ChargeLinkFactory sut)
+            ChargeLinkOperationDto chargeLinkOperationDto,
+            ChargeBuilder chargeBuilder,
+            MeteringPoint expectedMeteringPoint,
+            [Frozen] Mock<IChargeIdentifierFactory> chargeIdentifierFactory,
+            [Frozen] Mock<IChargeRepository> chargeRepository,
+            [Frozen] Mock<IMeteringPointRepository> meteringPointRepository,
+            ChargeLinkFactory sut)
         {
             // Arrange
+            var expectedCharge = chargeBuilder.Build();
+            chargeIdentifierFactory
+                .Setup(x => x.CreateAsync(It.IsAny<string>(), It.IsAny<ChargeType>(), It.IsAny<string>()))
+                .ReturnsAsync(It.IsAny<ChargeIdentifier>());
+
             chargeRepository
-                .Setup(x => x.GetAsync(
-                        It.IsAny<ChargeIdentifier>()))
+                .Setup(x => x.SingleAsync(It.IsAny<ChargeIdentifier>()))
                 .ReturnsAsync(expectedCharge);
 
             meteringPointRepository
@@ -53,23 +57,19 @@ namespace GreenEnergyHub.Charges.Tests.Domain.ChargeLinks
                 .ReturnsAsync(expectedMeteringPoint);
 
             // Act
-            var actual = await sut.CreateAsync(expectedEvent).ConfigureAwait(false);
+            var actual = await sut.CreateAsync(chargeLinkOperationDto).ConfigureAwait(false);
 
             // Assert
-            var actualFirst = actual.First();
-            var firstExpectedLink = expectedEvent.ChargeLinksCommand.ChargeLinks.First();
-
-            actualFirst.ChargeId.Should().Be(expectedCharge.Id);
-            actualFirst.MeteringPointId.Should().Be(expectedMeteringPoint.Id);
-            actualFirst.Factor.Should().Be(firstExpectedLink.Factor);
-            actualFirst.StartDateTime.Should().Be(firstExpectedLink.StartDateTime);
-            actualFirst.EndDateTime.Should().Be(firstExpectedLink.EndDateTime!.Value);
+            actual.ChargeId.Should().Be(expectedCharge.Id);
+            actual.MeteringPointId.Should().Be(expectedMeteringPoint.Id);
+            actual.Factor.Should().Be(chargeLinkOperationDto.Factor);
+            actual.StartDateTime.Should().Be(chargeLinkOperationDto.StartDateTime);
+            actual.EndDateTime.Should().Be(chargeLinkOperationDto.EndDateTime!.Value);
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public async Task CreateAsync_WhenCalledWithNull_ShouldThrow(
-            [NotNull] ChargeLinkFactory sut)
+        public async Task CreateAsync_WhenCalledWithNull_ShouldThrow(ChargeLinkFactory sut)
         {
             await Assert
                 .ThrowsAsync<ArgumentNullException>(async () => await sut.CreateAsync(null!)

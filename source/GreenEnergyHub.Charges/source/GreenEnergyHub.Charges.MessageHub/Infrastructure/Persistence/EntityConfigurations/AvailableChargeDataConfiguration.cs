@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Infrastructure.Core.EntityFrameworkCore;
+using GreenEnergyHub.Charges.Infrastructure.Core.Persistence;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -23,10 +23,13 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Persistence.EntityCon
     {
         public void Configure(EntityTypeBuilder<AvailableChargeData> builder)
         {
-            builder.ToTable("AvailableChargeData", DatabaseSchemaNames.MessageHub);
-            builder.HasKey(x => x.Id);
+            builder.ToTable(nameof(AvailableChargeData), DatabaseSchemaNames.MessageHub);
 
+            builder.HasKey(x => x.Id);
             builder.Property(p => p.Id).ValueGeneratedNever();
+
+            builder.Property(x => x.SenderId);
+            builder.Property(x => x.SenderRole);
             builder.Property(x => x.RecipientId);
             builder.Property(x => x.RecipientRole);
             builder.Property(x => x.BusinessReasonCode);
@@ -43,7 +46,9 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Persistence.EntityCon
             builder.Property(x => x.Resolution);
             builder.Property(x => x.RequestDateTime);
             builder.Property(x => x.AvailableDataReferenceId);
-
+            builder.Property(x => x.DocumentType);
+            builder.Property(x => x.OperationOrder);
+            builder.Property(x => x.ActorId);
             builder.Ignore(c => c.Points);
             builder.OwnsMany<AvailableChargeDataPoint>("_points", ConfigurePoints);
         }
@@ -56,7 +61,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Persistence.EntityCon
 
             points.Property(p => p.Id).ValueGeneratedNever();
             points.Property(d => d.Position);
-            points.Property(d => d.Price).HasColumnType(DbTypes.Price);
+            points.Property(d => d.Price)
+                .HasPrecision(DecimalPrecisionConstants.Precision, DecimalPrecisionConstants.Scale);
         }
     }
 }

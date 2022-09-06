@@ -13,12 +13,12 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 
 namespace GreenEnergyHub.Charges.Domain.Charges
 {
     public interface IChargeFactory
     {
-        Task<Charge> CreateFromCommandAsync(ChargeCommand command);
+        Task<Charge> CreateFromChargeOperationDtoAsync(ChargeInformationOperationDto chargeInformationOperationDto);
     }
 }

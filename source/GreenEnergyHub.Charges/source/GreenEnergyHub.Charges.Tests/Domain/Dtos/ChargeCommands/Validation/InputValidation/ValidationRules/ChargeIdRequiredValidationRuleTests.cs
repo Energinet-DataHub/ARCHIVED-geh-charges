@@ -13,11 +13,10 @@
 // limitations under the License.
 
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation.InputValidation;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Charges.Tests.Builders;
+using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Categories;
@@ -35,25 +34,20 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void ChargeIdRequiredValidationRule_Test(
             string chargeId,
             bool expected,
-            ChargeCommandBuilder builder)
+            ChargeInformationOperationDtoBuilder builder)
         {
-            var command = builder.WithChargeId(chargeId).Build();
-            var sut = new ChargeIdRequiredValidationRule(command);
-            Assert.Equal(expected, sut.IsValid);
+            var chargeOperationDto = builder.WithChargeId(chargeId).Build();
+            var sut = new ChargeIdRequiredValidationRule(chargeOperationDto);
+            sut.IsValid.Should().Be(expected);
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeCommandBuilder builder)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeInformationOperationDtoBuilder builder)
         {
-            var invalidCommand = CreateInvalidCommand(builder);
-            var sut = new ChargeIdRequiredValidationRule(invalidCommand);
+            var invalidChargeOperationDto = builder.WithChargeId(string.Empty).Build();
+            var sut = new ChargeIdRequiredValidationRule(invalidChargeOperationDto);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChargeIdRequiredValidation);
-        }
-
-        private static ChargeCommand CreateInvalidCommand(ChargeCommandBuilder builder)
-        {
-            return builder.WithChargeId(string.Empty).Build();
         }
     }
 }

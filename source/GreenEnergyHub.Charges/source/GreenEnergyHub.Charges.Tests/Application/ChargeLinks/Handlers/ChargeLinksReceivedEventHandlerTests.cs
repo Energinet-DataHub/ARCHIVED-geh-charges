@@ -14,21 +14,24 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Threading;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture;
 using AutoFixture.AutoMoq;
 using AutoFixture.Xunit2;
-using GreenEnergyHub.Charges.Application;
+using FluentAssertions;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
+using GreenEnergyHub.Charges.Application.ChargeLinks.Services;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Tests.Builders.Command;
+using GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.TestHelpers;
 using Moq;
+using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
@@ -39,34 +42,149 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
     {
         [Theory]
         [InlineAutoDomainData]
-        public async Task HandleAsync_ShouldDispatch_AcceptedEvent(
-            [Frozen] Mock<IMessageDispatcher<ChargeLinksAcceptedEvent>> messageDispatcher,
+        public async Task HandleAsync_IfEventIsNull_ThrowsArgumentNullException(ChargeLinksReceivedEventHandler sut)
+        {
+            // Arrange
+            ChargeLinksReceivedEvent? receivedEvent = null;
+
+            // Act / Assert
+            await Assert.ThrowsAsync<ArgumentNullException>(() => sut.HandleAsync(receivedEvent!));
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task HandleAsync_WhenCalledWithValidChargeLinksCommand_ShouldDispatchAcceptedEvent(
+            [Frozen] Mock<IChargeLinksReceiptService> chargeLinksReceiptService,
             [Frozen] Mock<IChargeLinkFactory> chargeLinkFactory,
             [Frozen] Mock<IChargeLinksAcceptedEventFactory> chargeLinkCommandAcceptedEventFactory,
-            ChargeLinksReceivedEvent chargeLinksReceivedEvent,
+            [Frozen] Mock<IBusinessValidator<ChargeLinkOperationDto>> businessValidator,
+            ChargeLinkDtoBuilder linksDtoBuilder,
+            ChargeLinksCommandBuilder linksCommandBuilder,
             ChargeLinksAcceptedEvent chargeLinksAcceptedEvent,
             ChargeLinksReceivedEventHandler sut)
         {
             // Arrange
-            var fixture = new Fixture().Customize(new AutoMoqCustomization());
-            fixture.Customizations.Add(new StringGenerator(() => Guid.NewGuid().ToString()[..16]));
-            var chargeLink = fixture.Create<ChargeLink>();
+            var chargeLink = CreateChargeLink();
+            var links = new List<ChargeLinkOperationDto> { linksDtoBuilder.Build() };
+            var chargeLinksCommand = linksCommandBuilder.WithChargeLinks(links).Build();
+            var chargeLinksReceivedEvent = new ChargeLinksReceivedEvent(Instant.MinValue, chargeLinksCommand);
 
-            chargeLinkFactory
-                .Setup(x => x.CreateAsync(It.IsAny<ChargeLinksReceivedEvent>()))
-                .ReturnsAsync(new List<ChargeLink> { chargeLink, chargeLink });
-
-            chargeLinkCommandAcceptedEventFactory.Setup(
-                    x => x.Create(
-                        It.IsAny<ChargeLinksCommand>()))
-                .Returns(chargeLinksAcceptedEvent);
+            SetupSuccessfulValidator(businessValidator);
+            SetupFactories(chargeLinkFactory, chargeLinkCommandAcceptedEventFactory, chargeLinksAcceptedEvent, chargeLink);
 
             // Act
-            await sut.HandleAsync(chargeLinksReceivedEvent).ConfigureAwait(false);
+            await sut.HandleAsync(chargeLinksReceivedEvent);
 
             // Assert
-            messageDispatcher.Verify(
-                x => x.DispatchAsync(chargeLinksAcceptedEvent, It.IsAny<CancellationToken>()));
+            chargeLinksReceiptService.Verify(x => x.AcceptAsync(It.IsAny<ChargeLinksCommand>()));
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task HandleAsync_WhenCalledWithInvalidChargeLinksCommand_ShouldDispatchRejectedEvent(
+            [Frozen] Mock<IChargeLinksReceiptService> chargeLinksReceiptService,
+            [Frozen] Mock<IChargeLinkFactory> chargeLinkFactory,
+            [Frozen] Mock<IBusinessValidator<ChargeLinkOperationDto>> businessValidator,
+            ChargeLinkDtoBuilder linksDtoBuilder,
+            ChargeLinksCommandBuilder linksCommandBuilder,
+            ChargeLinksReceivedEventHandler sut)
+        {
+            // Arrange
+            var chargeLink = CreateChargeLink();
+            var links = new List<ChargeLinkOperationDto> { linksDtoBuilder.Build() };
+            var chargeLinksCommand = linksCommandBuilder.WithChargeLinks(links).Build();
+            var chargeLinksReceivedEvent = new ChargeLinksReceivedEvent(Instant.MinValue, chargeLinksCommand);
+            chargeLinkFactory
+                .Setup(x => x.CreateAsync(It.IsAny<ChargeLinkOperationDto>()))
+                .ReturnsAsync(chargeLink);
+
+            SetupErroneousValidator(businessValidator);
+
+            // Act
+            await sut.HandleAsync(chargeLinksReceivedEvent);
+
+            // Assert
+            chargeLinksReceiptService.Verify(x => x.RejectAsync(
+                It.IsAny<ChargeLinksCommand>(),
+                It.IsAny<ValidationResult>()));
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task HandleAsync_WhenCalledWithInvalidChargeLinksCommand_ShouldRejectedAllSubsequentOperations(
+            [Frozen] Mock<IChargeLinksReceiptService> chargeLinksReceiptService,
+            [Frozen] Mock<IChargeLinkFactory> chargeLinkFactory,
+            [Frozen] Mock<IBusinessValidator<ChargeLinkOperationDto>> businessValidator,
+            List<ChargeLinkOperationDto> chargeLinkDtos,
+            ChargeLinksCommandBuilder linksCommandBuilder,
+            ChargeLinksReceivedEventHandler sut)
+        {
+            // Arrange
+            var chargeLink = CreateChargeLink();
+            var chargeLinksCommand = linksCommandBuilder.WithChargeLinks(chargeLinkDtos).Build();
+            var chargeLinksReceivedEvent = new ChargeLinksReceivedEvent(Instant.MinValue, chargeLinksCommand);
+            chargeLinkFactory
+                .Setup(x => x.CreateAsync(It.IsAny<ChargeLinkOperationDto>()))
+                .ReturnsAsync(chargeLink);
+            SetupErroneousValidator(businessValidator);
+
+            var validationResultsArgs = new List<ValidationResult>();
+            chargeLinksReceiptService
+                .Setup(s => s.RejectAsync(It.IsAny<ChargeLinksCommand>(), It.IsAny<ValidationResult>()))
+                .Callback<ChargeLinksCommand, ValidationResult>((_, s) => validationResultsArgs.Add(s));
+
+            // Act
+            await sut.HandleAsync(chargeLinksReceivedEvent);
+
+            // Assert
+            var validationRules = validationResultsArgs.Single().InvalidRules.ToList();
+            var invalid = validationRules.Where(vr =>
+                vr.ValidationRule.ValidationRuleIdentifier == ValidationRuleIdentifier.MeteringPointDoesNotExist);
+            var subsequent = validationRules.Where(vr =>
+                vr.ValidationRule.ValidationRuleIdentifier == ValidationRuleIdentifier.SubsequentBundleOperationsFail);
+
+            validationRules.Count.Should().Be(3);
+            invalid.Count().Should().Be(1);
+            subsequent.Count().Should().Be(2);
+        }
+
+        private static ChargeLink CreateChargeLink()
+        {
+            var fixture = new Fixture().Customize(new AutoMoqCustomization());
+            fixture.Customizations.Add(new StringGenerator(() => Guid.NewGuid().ToString()[..16]));
+            return fixture.Create<ChargeLink>();
+        }
+
+        private static void SetupSuccessfulValidator(Mock<IBusinessValidator<ChargeLinkOperationDto>> businessValidator)
+        {
+            businessValidator.Setup(x => x.ValidateAsync(It.IsAny<ChargeLinkOperationDto>()))
+                .ReturnsAsync(ValidationResult.CreateSuccess());
+        }
+
+        private static void SetupErroneousValidator(Mock<IBusinessValidator<ChargeLinkOperationDto>> businessValidator)
+        {
+            businessValidator.Setup(x => x.ValidateAsync(It.IsAny<ChargeLinkOperationDto>()))
+                .ReturnsAsync(ValidationResult.CreateFailure(new List<IValidationRuleContainer>
+                {
+                    new OperationValidationRuleContainer(
+                        new TestValidationRule(false, ValidationRuleIdentifier.MeteringPointDoesNotExist),
+                        "testOperationId"),
+                }));
+        }
+
+        private static void SetupFactories(
+            Mock<IChargeLinkFactory> chargeLinkFactory,
+            Mock<IChargeLinksAcceptedEventFactory> chargeLinkCommandAcceptedEventFactory,
+            ChargeLinksAcceptedEvent chargeLinksAcceptedEvent,
+            ChargeLink chargeLink)
+        {
+            chargeLinkFactory
+                .Setup(x => x.CreateAsync(It.IsAny<ChargeLinkOperationDto>()))
+                .ReturnsAsync(chargeLink);
+
+            chargeLinkCommandAcceptedEventFactory
+                .Setup(x => x.Create(It.IsAny<ChargeLinksCommand>()))
+                .Returns(chargeLinksAcceptedEvent);
         }
     }
 }

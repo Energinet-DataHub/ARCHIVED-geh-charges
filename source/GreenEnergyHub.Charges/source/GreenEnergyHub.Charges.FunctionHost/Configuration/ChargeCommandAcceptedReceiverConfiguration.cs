@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.Core.Messaging.Protobuf;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Application.Charges.Factories;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
@@ -20,7 +19,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
+using GreenEnergyHub.Charges.Infrastructure.Core.Registration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
@@ -29,9 +28,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.ReceiveProtobufMessage<ChargeCommandAcceptedContract>(
-                configuration => configuration.WithParser(() => ChargeCommandAcceptedContract.Parser));
-
             serviceCollection.AddScoped<MessageExtractor<ChargeCommandAcceptedEvent>>();
             serviceCollection.AddScoped<IChargeCreatedEventFactory, ChargeCreatedEventFactory>();
             serviceCollection.AddScoped<IChargePricesUpdatedEventFactory, ChargePricesUpdatedEventFactory>();
@@ -39,14 +35,13 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IChargePricesUpdatedPublisher, ChargePricesUpdatedPublisher>();
             serviceCollection.AddScoped<IChargeIntegrationEventsPublisher, ChargeIntegrationEventsPublisher>();
 
-            serviceCollection.SendProtobuf<Infrastructure.Integration.ChargeCreated.ChargeCreated>();
-            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargeCreatedEvent>(
-                EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString),
-                EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeCreatedTopicName));
-
-            serviceCollection.AddMessagingProtobuf().AddMessageDispatcher<ChargePricesUpdatedEvent>(
-                EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString),
-                EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargePricesUpdatedTopicName));
+            serviceCollection.AddMessaging()
+                .AddExternalMessageDispatcher<ChargeCreatedEvent>(
+                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString),
+                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeCreatedTopicName))
+                .AddExternalMessageDispatcher<ChargePricesUpdatedEvent>(
+                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString),
+                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargePricesUpdatedTopicName));
         }
     }
 }

@@ -37,29 +37,24 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Bundling
 
         public async Task ReplyAsync(Stream bundleStream, DataBundleRequestDto request)
         {
-            var path = await _storageHandler.AddStreamToStorageAsync(bundleStream, request);
+            var path = await _storageHandler.AddStreamToStorageAsync(bundleStream, request).ConfigureAwait(false);
 
             var response = request.CreateResponse(path);
 
-            await _dataBundleResponseSender
-                .SendAsync(response)
-                .ConfigureAwait(false);
+            await _dataBundleResponseSender.SendAsync(response).ConfigureAwait(false);
         }
 
         public async Task ReplyErrorAsync(Exception e, DataBundleRequestDto request)
         {
-            var response = request.CreateErrorResponse(
-                new DataBundleResponseErrorDto { Reason = GetReason(e) });
-
-            await _dataBundleResponseSender
-                .SendAsync(response)
-                .ConfigureAwait(false);
+            var response = request.CreateErrorResponse(new DataBundleResponseErrorDto(GetReason(e), e.Message));
+            await _dataBundleResponseSender.SendAsync(response).ConfigureAwait(false);
         }
 
         private DataBundleResponseErrorReason GetReason(Exception e)
         {
             return e.GetType() == typeof(UnknownDataAvailableNotificationIdsException) ?
-                DataBundleResponseErrorReason.DatasetNotFound : DataBundleResponseErrorReason.InternalError;
+                DataBundleResponseErrorReason.DatasetNotFound :
+                DataBundleResponseErrorReason.InternalError;
         }
     }
 }

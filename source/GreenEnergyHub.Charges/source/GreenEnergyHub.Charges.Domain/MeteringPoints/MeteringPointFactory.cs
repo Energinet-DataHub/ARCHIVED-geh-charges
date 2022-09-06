@@ -13,27 +13,25 @@
 // limitations under the License.
 
 using System;
-using GreenEnergyHub.Charges.Core.Enumeration;
 using GreenEnergyHub.Charges.Domain.Dtos.MeteringPointCreatedEvents;
-using NodaTime.Text;
 
 namespace GreenEnergyHub.Charges.Domain.MeteringPoints
 {
     public static class MeteringPointFactory
     {
         public static MeteringPoint Create(
-            ConsumptionMeteringPointCreatedEvent consumptionMeteringPointCreatedEvent)
+            MeteringPointCreatedEvent meteringPointCreatedEvent)
         {
-            if (consumptionMeteringPointCreatedEvent == null)
-                throw new ArgumentNullException(nameof(consumptionMeteringPointCreatedEvent));
+            if (meteringPointCreatedEvent == null)
+                throw new ArgumentNullException(nameof(meteringPointCreatedEvent));
 
             return MeteringPoint.Create(
-                consumptionMeteringPointCreatedEvent.MeteringPointId,
-                MeteringPointType.Consumption,
-                consumptionMeteringPointCreatedEvent.GridAreaId,
-                consumptionMeteringPointCreatedEvent.EffectiveDate,
-                consumptionMeteringPointCreatedEvent.ConnectionState,
-                consumptionMeteringPointCreatedEvent.SettlementMethod);
+                meteringPointCreatedEvent.MeteringPointId,
+                meteringPointCreatedEvent.MeteringPointType,
+                meteringPointCreatedEvent.GridAreaLinkId,
+                meteringPointCreatedEvent.EffectiveDate,
+                meteringPointCreatedEvent.ConnectionState,
+                meteringPointCreatedEvent.SettlementMethod);
         }
     }
 }

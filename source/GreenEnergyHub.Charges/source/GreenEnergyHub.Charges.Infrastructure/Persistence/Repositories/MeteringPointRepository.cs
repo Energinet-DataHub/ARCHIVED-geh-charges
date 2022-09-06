@@ -15,7 +15,6 @@
 using System;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
-using GreenEnergyHub.Charges.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
@@ -29,11 +28,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
             _chargesDatabaseContext = chargesDatabaseContext;
         }
 
-        public async Task StoreMeteringPointAsync(MeteringPoint meteringPoint)
+        public async Task AddAsync(MeteringPoint meteringPoint)
         {
             if (meteringPoint == null) throw new ArgumentNullException(nameof(meteringPoint));
             await _chargesDatabaseContext.MeteringPoints.AddAsync(meteringPoint).ConfigureAwait(false);
-            await _chargesDatabaseContext.SaveChangesAsync().ConfigureAwait(false);
         }
 
         public async Task<MeteringPoint> GetMeteringPointAsync(string meteringPointId)

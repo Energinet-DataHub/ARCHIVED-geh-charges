@@ -18,8 +18,8 @@ using System.Linq;
 using Energinet.DataHub.MessageHub.Model.Model;
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinkReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 
@@ -47,9 +47,11 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Bundling
                 // RSM-033 CIM XML 'RejectRequestChangeOfPriceList' rejections
                 BundleType.ChargeRejectionDataAvailable => _bundleCreators[typeof(BundleCreator<AvailableChargeReceiptData>)],
                 // RSM-030 CIM XML 'ConfirmRequestChangeBillingMasterData' confirmations
-                BundleType.ChargeLinkConfirmationDataAvailable => _bundleCreators[typeof(BundleCreator<AvailableChargeLinkReceiptData>)],
+                BundleType.ChargeLinkConfirmationDataAvailable => _bundleCreators[typeof(BundleCreator<AvailableChargeLinksReceiptData>)],
                 // RSM-031 CIM XML 'NotifyBillingMasterData' requests
                 BundleType.ChargeLinkDataAvailable => _bundleCreators[typeof(BundleCreator<AvailableChargeLinksData>)],
+                // RSM-030 CIM XML 'RejectRequestChangeBillingMasterData' rejections
+                BundleType.ChargeLinkRejectionDataAvailable => _bundleCreators[typeof(BundleCreator<AvailableChargeLinksReceiptData>)],
                 _ => throw new ArgumentException(
                     $"Unknown message type: {request.MessageType} with DataAvailableNotificationIds: {request.IdempotencyId}"),
             };

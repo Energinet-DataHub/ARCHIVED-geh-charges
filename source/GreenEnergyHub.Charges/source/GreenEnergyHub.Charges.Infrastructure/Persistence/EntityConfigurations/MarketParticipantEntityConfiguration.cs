@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Linq;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -27,16 +25,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
             builder.ToTable(nameof(MarketParticipant));
 
             builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id).ValueGeneratedNever();
 
+            builder.Property(x => x.ActorId);
+            builder.Property(x => x.B2CActorId);
             builder.Property(x => x.MarketParticipantId);
             builder.Property(x => x.IsActive);
-            builder
-                .Property(x => x.Roles)
-                .HasField("_roles")
-                .HasColumnType("varchar(512)")
-                .HasConversion(
-                    v => string.Join(",", v.Select(r => ((int)r).ToString())),
-                    v => v.Split(',', StringSplitOptions.None).Select(s => (MarketParticipantRole)int.Parse(s)).ToList());
+            builder.Property(x => x.BusinessProcessRole);
         }
     }
 }

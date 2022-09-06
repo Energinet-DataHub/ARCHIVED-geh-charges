@@ -12,12 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
-using GreenEnergyHub.Charges.Infrastructure.Internal.ChargeCommandAccepted;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
 using Microsoft.Azure.Functions.Worker;
@@ -32,14 +30,14 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
     public class ChargeDataAvailableNotifierEndpoint
     {
         private const string FunctionName = nameof(ChargeDataAvailableNotifierEndpoint);
-        private readonly MessageExtractor<ChargeCommandAcceptedContract> _messageExtractor;
+        private readonly JsonMessageDeserializer<ChargeCommandAcceptedEvent> _deserializer;
         private readonly IAvailableDataNotifier<AvailableChargeData, ChargeCommandAcceptedEvent> _availableDataNotifier;
 
         public ChargeDataAvailableNotifierEndpoint(
-            MessageExtractor<ChargeCommandAcceptedContract> messageExtractor,
+            JsonMessageDeserializer<ChargeCommandAcceptedEvent> deserializer,
             IAvailableDataNotifier<AvailableChargeData, ChargeCommandAcceptedEvent> availableDataNotifier)
         {
-            _messageExtractor = messageExtractor;
+            _deserializer = deserializer;
             _availableDataNotifier = availableDataNotifier;
         }
 
@@ -49,10 +47,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
                 "%" + EnvironmentSettingNames.CommandAcceptedTopicName + "%",
                 "%" + EnvironmentSettingNames.ChargeAcceptedSubDataAvailableNotifier + "%",
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
-            [NotNull] byte[] message)
+            byte[] message)
         {
-            var chargeCommandAcceptedEvent = (ChargeCommandAcceptedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);
-
+            var chargeCommandAcceptedEvent = (ChargeCommandAcceptedEvent)await _deserializer.FromBytesAsync(message).ConfigureAwait(false);
             await _availableDataNotifier.NotifyAsync(chargeCommandAcceptedEvent).ConfigureAwait(false);
         }
     }

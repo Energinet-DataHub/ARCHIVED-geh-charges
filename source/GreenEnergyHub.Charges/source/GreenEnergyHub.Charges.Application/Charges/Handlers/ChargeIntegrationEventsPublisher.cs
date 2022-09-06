@@ -13,10 +13,10 @@
 // limitations under the License.
 
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
@@ -35,17 +35,20 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 
         public async Task PublishAsync(ChargeCommandAcceptedEvent chargeCommandAcceptedEvent)
         {
-            if (chargeCommandAcceptedEvent == null) throw new ArgumentNullException(nameof(chargeCommandAcceptedEvent));
+            ArgumentNullException.ThrowIfNull(chargeCommandAcceptedEvent);
 
-            await _chargePublisher
-                .PublishChargeCreatedAsync(chargeCommandAcceptedEvent)
-                .ConfigureAwait(false);
-
-            if (chargeCommandAcceptedEvent.Command.ChargeOperation.Points.Any())
+            foreach (var chargeOperationDto in chargeCommandAcceptedEvent.Command.Operations)
             {
-                await _chargePricesUpdatedPublisher
-                    .PublishChargePricesAsync(chargeCommandAcceptedEvent)
-                    .ConfigureAwait(false);
+                if (chargeCommandAcceptedEvent.Command.Document.BusinessReasonCode == BusinessReasonCode.UpdateChargeInformation)
+                {
+                    await _chargePublisher.PublishChargeCreatedAsync(chargeOperationDto).ConfigureAwait(false);
+                }
+                else
+                {
+                    await _chargePricesUpdatedPublisher
+                        .PublishChargePricesAsync(chargeOperationDto)
+                        .ConfigureAwait(false);
+                }
             }
         }
     }

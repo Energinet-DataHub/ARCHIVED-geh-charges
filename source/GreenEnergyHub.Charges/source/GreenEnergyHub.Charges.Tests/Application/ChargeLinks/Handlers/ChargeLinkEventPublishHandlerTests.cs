@@ -13,17 +13,15 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Application;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
+using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCreatedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using Xunit;
@@ -37,11 +35,11 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
         [Theory]
         [InlineAutoDomainData]
         public async Task HandleAsync_WhenCalled_UsesFactoryToCreateEventAndDispatchesIt(
-            [Frozen] [NotNull] Mock<IChargeLinkCreatedEventFactory> factory,
-            [Frozen] [NotNull] Mock<IMessageDispatcher<ChargeLinkCreatedEvent>> dispatcher,
-            [NotNull] ChargeLinksAcceptedEvent command,
-            [NotNull] IReadOnlyCollection<ChargeLinkCreatedEvent> createdEvents,
-            [NotNull] ChargeLinkEventPublishHandler sut)
+            [Frozen] Mock<IChargeLinkCreatedEventFactory> factory,
+            [Frozen] Mock<IMessageDispatcher<ChargeLinkCreatedEvent>> dispatcher,
+            ChargeLinksAcceptedEvent command,
+            IReadOnlyCollection<ChargeLinkCreatedEvent> createdEvents,
+            ChargeLinkEventPublishHandler sut)
         {
             // Arrange
             factory.Setup(

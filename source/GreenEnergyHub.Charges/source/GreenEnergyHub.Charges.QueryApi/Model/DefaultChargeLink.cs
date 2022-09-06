@@ -13,14 +13,19 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 #nullable disable
 
 namespace GreenEnergyHub.Charges.QueryApi.Model
 {
+    [Table("DefaultChargeLink", Schema = "Charges")]
+    [Index(nameof(MeteringPointType), nameof(StartDateTime), nameof(EndDateTime), Name = "IX_MeteringPointType_StartDateTime_EndDateTime")]
     public partial class DefaultChargeLink
     {
+        [Key]
         public Guid Id { get; set; }
 
         public int MeteringPointType { get; set; }
@@ -31,6 +36,8 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
 
         public DateTime EndDateTime { get; set; }
 
+        [ForeignKey(nameof(ChargeId))]
+        [InverseProperty("DefaultChargeLinks")]
         public virtual Charge Charge { get; set; }
     }
 }

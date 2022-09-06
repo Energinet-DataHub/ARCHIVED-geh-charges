@@ -1,8 +1,6 @@
 # Charges
 
-<!--
 [![codecov](https://codecov.io/gh/Energinet-DataHub/geh-charges/branch/main/graph/badge.svg?token=MGC9QR9S3Q)](https://codecov.io/gh/Energinet-DataHub/geh-charges)
--->
 
 ## Intro
 
@@ -20,7 +18,7 @@ These are the business processes maintained by this domain.
 | [Change of Fee price list](docs/business-processes/change-of-fee.md) |
 | [Change of Tariff price list](docs/business-processes/change-of-tariff.md) |
 | [Request for Prices](docs/business-processes/request-for-prices.md) |
-| [Settlement master data for metering point - fee, subscription and tariff links](docs/business-processes/settlement-master-data.md)
+| [Settlement master data for metering point - fee, subscription and tariff links](docs/business-processes/settlement-master-data.md) |
 
 For more information on the system flows supporting the above-mentioned business processes, please see the [process-flows](docs/process-flows/README.md) folder.
 
@@ -43,9 +41,22 @@ Also, some components have singular names while others have plural names. This i
 
 ![Charge And Charge Prices](ARCHITECTURE-ChargeAndChargePrices.png)
 
+### Charge Prices architecture
+
+Below diagram illustrates our ongoing work building a separate architectural path for handling Charge Prices. So please consider this as 'to be implemented'.
+
+![Charge Prices](ARCHITECTURE-ChargePrices.png)
+
 ### Charge links architecture
 
 ![Charge Links](ARCHITECTURE-ChargeLinks.png)
+
+### Supporting architecture
+
+Below depicts architectural components which supports the Charges domain in fulfilling its business purpose.
+One such example is consuming market participant integration events published by the Market Participant domain. Market participant data is required to authenticate and authorize the sender of incoming requests.
+
+![Supporting Architecture](ARCHITECTURE-SupportingArchitecture.png)
 
 ## Context Streams
 
@@ -59,15 +70,11 @@ If you are interested in the public contracts of the Charges domain, please visi
 
 ## Domain Road Map
 
-In the current program increment (PI) the planned work is captured by the stated PI goals:
+Planned work for the current program increment (PI):
 
-1. When a Grid Access Provider submits a **new charge**, the Charges domain will store it and make a confirmation message available to the Grid Access Provider, so that the Grid Access Provider may maintain its' charges.
-(Out of scope: Updating and stopping charges, some input and business validations)
+1. When a charge owner submits a charge price series, using the new business reason code `D08`, the Charges domain will be able to receive, validate, persist and forward it to relevant market participants. When this is implemented, it will no longer be possible to include price series with charge information request submitted with business reason code `D18`.
 
-2. When a Grid Access Provider submits a **new metering point**, the Charges domain will link relevant TSO charges to the metering point, and if any of those charges are marked as tax a charge link message will be made available to the Grid Access Provider, so that a correct basis is provided for settling the customer(s) on the metering point.
-
-3. When a Grid Access Provider submits a **new charge link**, the Charges domain will store it and make a confirmation message available to the Grid Access Provider, so that the Grid Access Provider may maintain its charge links.
-(Out of scope: Updating and stopping charge links, validation)
+2. Subscribe to and use the integration events published by the [Market Participant](https://github.com/Energinet-DataHub/geh-market-participant) domain, thereby replacing the existing manual data synchronization process.
 
 ## Where can I get more help?
 

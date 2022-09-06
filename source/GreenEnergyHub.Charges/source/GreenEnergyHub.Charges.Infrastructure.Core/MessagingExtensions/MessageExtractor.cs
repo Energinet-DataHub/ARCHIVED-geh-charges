@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,14 +23,14 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions
 {
     public class MessageExtractor<TInboundMessage> : MessageExtractor
     {
-        public MessageExtractor([NotNull] MessageDeserializer<TInboundMessage> deserializer)
+        public MessageExtractor(MessageDeserializer<TInboundMessage> deserializer)
             : base(deserializer)
         {
         }
 
-        public new async Task<IInboundMessage> ExtractAsync(byte[] data, CancellationToken cancellationToken = default)
+        public new Task<IInboundMessage> ExtractAsync(byte[] data, CancellationToken cancellationToken = default)
         {
-            return await base.ExtractAsync(data, cancellationToken).ConfigureAwait(false);
+            return base.ExtractAsync(data, cancellationToken);
         }
 
         public async Task<IInboundMessage> ExtractAsync(Stream data, CancellationToken cancellationToken = default)
@@ -45,10 +44,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions
 
         private static async Task<byte[]> GetBytesFromStreamAsync(Stream data, CancellationToken cancellationToken)
         {
-            await using var stream = new MemoryStream();
-            await data.CopyToAsync(stream, cancellationToken).ConfigureAwait(false);
-            var bytes = stream.ToArray();
-            return bytes;
+            var stream = new MemoryStream();
+            await using (stream.ConfigureAwait(false))
+            {
+                await data.CopyToAsync(stream, cancellationToken).ConfigureAwait(false);
+                var bytes = stream.ToArray();
+                return bytes;
+            }
         }
     }
 }

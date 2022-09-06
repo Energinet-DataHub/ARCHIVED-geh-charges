@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -21,11 +19,12 @@ using System.Threading.Tasks;
 using AutoFixture;
 using AutoFixture.AutoMoq;
 using AutoFixture.Kernel;
+using Energinet.DataHub.Core.JsonSerialization;
 using Energinet.DataHub.Core.Messaging.Transport;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
-using GreenEnergyHub.Json;
+using GreenEnergyHub.Charges.Tests.TestCore;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using Xunit.Categories;
@@ -41,11 +40,11 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions.S
         ///
         /// The test suffers from a few weaknesses regarding the following assumptions about the messaging framework:
         /// * It is assumed that transport uses JSON serialized UTF8 strings converted to byte[]
-        /// * It is assumed that it uses <see cref="Charges.Core.Json.JsonSerializer.DeserializeAsync"/> for deserialization
+        /// * It is assumed that it uses <see cref="Energinet.DataHub.Core.JsonSerialization.JsonSerializer.DeserializeAsync"/> for deserialization
         /// </summary>
         [Theory]
         [MemberData(nameof(Messages))]
-        public async Task FromBytesAsync_CreatesMessage([NotNull] IInboundMessage expected)
+        public async Task FromBytesAsync_CreatesMessage(IInboundMessage expected)
         {
             // Arrange
             var jsonSerializer = GetMessagingDeserializer();
@@ -92,10 +91,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions.S
             {
                 var data = new TheoryData<IInboundMessage>();
                 var fixture = new Fixture().Customize(new AutoMoqCustomization());
-                var domainAssembly = AppDomain
-                    .CurrentDomain
-                    .GetAssemblies()
-                    .Single(a => a.GetName().Name == "GreenEnergyHub.Charges.Domain");
+                var domainAssembly = DomainAssemblyHelper.GetDomainAssembly();
                 var messageTypes = domainAssembly
                     .GetTypes()
                     .Where(t => typeof(IMessage).IsAssignableFrom(t) && t.IsClass && !t.IsAbstract)

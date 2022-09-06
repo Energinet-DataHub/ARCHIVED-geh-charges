@@ -17,6 +17,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
     public enum CimValidationErrorTextToken
     {
         ChargeDescription,
+        ChargeLinkStartDate,
         ChargeName,
         ChargeOwner,
         ChargePointPosition,
@@ -32,5 +33,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         DocumentSenderId,
         DocumentSenderProvidedChargeId,
         DocumentType,
+        DocumentRecipientBusinessProcessRole,
+        MeteringPointId,
+        TriggeredByOperationId,
+        ChargeOperationId,
     }
 }

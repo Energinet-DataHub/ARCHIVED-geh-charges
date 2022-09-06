@@ -19,15 +19,17 @@ using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Configuration;
 using GreenEnergyHub.Charges.Domain.DefaultChargeLinks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.CreateDefaultChargeLinksRequests;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
+using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.Tests.Builders.Command;
+using GreenEnergyHub.Charges.Tests.Builders.Testables;
 using Moq;
-using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
@@ -42,44 +44,26 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IMeteringPointRepository> meteringPointRepository,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            [Frozen] Mock<IHubSenderConfiguration> hubSenderConfiguration,
-            MarketParticipant recipient,
-            MarketParticipant systemOperator,
-            MarketParticipant chargeOwner,
+            TestMeteringPointAdministrator recipient,
+            TestSystemOperator systemOperator,
+            TestMarketParticipant chargeOwner,
             Guid defaultChargeLinkId,
-            Guid chargeId,
             MeteringPoint meteringPoint,
             CreateDefaultChargeLinksRequest createDefaultChargeLinksRequest,
+            ChargeBuilder chargeBuilder,
             ChargeLinksCommandFactory sut)
         {
             // Arrange
+            var charge = chargeBuilder.WithOwnerId(chargeOwner.Id).Build();
             var defaultChargeLink = new DefaultChargeLink(
                 defaultChargeLinkId,
-                Instant.MinValue,
-                Instant.MaxValue,
-                chargeId,
+                InstantHelper.GetTodayAtMidnightUtc(),
+                InstantHelper.GetEndDefault(),
+                charge.Id,
                 meteringPoint.MeteringPointType);
 
-            var charge = new Charge(
-                chargeId,
-                "SenderProvidedId",
-                "Name",
-                "description",
-                chargeOwner.Id,
-                SystemClock.Instance.GetCurrentInstant(),
-                Instant.FromUtc(9999, 12, 31, 23, 59, 59),
-                ChargeType.Fee,
-                VatClassification.Unknown,
-                Resolution.P1D,
-                true,
-                false,
-                new List<Point>
-                {
-                    new Point(0, 200m, SystemClock.Instance.GetCurrentInstant()),
-                });
-
             chargeRepository
-                .Setup(f => f.GetAsync(new List<Guid> { defaultChargeLink.ChargeId }))
+                .Setup(f => f.GetByIdsAsync(new List<Guid> { defaultChargeLink.ChargeId }))
                 .ReturnsAsync(new List<Charge> { charge });
 
             meteringPointRepository
@@ -87,16 +71,16 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands
                 .ReturnsAsync(meteringPoint);
 
             marketParticipantRepository
-                .Setup(m => m.GetAsync(MarketParticipantRole.SystemOperator))
+                .Setup(m => m.GetSystemOperatorAsync())
                 .ReturnsAsync(systemOperator);
 
             marketParticipantRepository
                 .Setup(m => m.GetAsync(new List<Guid> { charge.OwnerId }))
                 .ReturnsAsync(new List<MarketParticipant> { chargeOwner });
 
-            hubSenderConfiguration
-                .Setup(configuration => configuration.GetSenderMarketParticipant())
-                .Returns(recipient);
+            marketParticipantRepository
+                .Setup(m => m.GetMeteringPointAdministratorAsync())
+                .ReturnsAsync(recipient);
 
             // Act
             var actual = await sut
@@ -109,16 +93,16 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksCommands
             actual.Document.IndustryClassification.Should().Be(IndustryClassification.Electricity);
             actual.Document.BusinessReasonCode.Should().Be(BusinessReasonCode.UpdateMasterDataSettlement);
             actual.Document.Sender.BusinessProcessRole.Should().Be(MarketParticipantRole.SystemOperator);
-            actual.Document.Sender.Id.Should().Be(systemOperator.MarketParticipantId);
+            actual.Document.Sender.MarketParticipantId.Should().Be(systemOperator.MarketParticipantId);
             actual.Document.Recipient.BusinessProcessRole.Should().Be(MarketParticipantRole.MeteringPointAdministrator);
-            actual.Document.Recipient.Id.Should().Be(recipient.MarketParticipantId);
-            actual.ChargeLinks.First().SenderProvidedChargeId.Should().Be(charge.SenderProvidedChargeId);
-            actual.ChargeLinks.First().ChargeType.Should().Be(charge.Type);
-            actual.ChargeLinks.First().EndDateTime.Should().Be(defaultChargeLink.EndDateTime);
-            actual.ChargeLinks.First().ChargeOwnerId.Should().Be(chargeOwner.MarketParticipantId);
-            actual.MeteringPointId.Should().Be(createDefaultChargeLinksRequest.MeteringPointId);
-            actual.ChargeLinks.First().StartDateTime.Should().Be(defaultChargeLink.GetStartDateTime(meteringPoint.EffectiveDate));
-            actual.ChargeLinks.First().Factor.Should().Be(1);
+            actual.Document.Recipient.MarketParticipantId.Should().Be(recipient.MarketParticipantId);
+            actual.Operations.First().SenderProvidedChargeId.Should().Be(charge.SenderProvidedChargeId);
+            actual.Operations.First().ChargeType.Should().Be(charge.Type);
+            actual.Operations.First().EndDateTime.Should().Be(defaultChargeLink.EndDateTime);
+            actual.Operations.First().ChargeOwner.Should().Be(chargeOwner.MarketParticipantId);
+            actual.Operations.First().MeteringPointId.Should().Be(meteringPoint.MeteringPointId);
+            actual.Operations.First().StartDateTime.Should().Be(defaultChargeLink.GetStartDateTime(meteringPoint.EffectiveDate));
+            actual.Operations.First().Factor.Should().Be(1);
         }
     }
 }

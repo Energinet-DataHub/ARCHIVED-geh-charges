@@ -29,7 +29,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.MessageHub
     public class BundleTypeMapperTests
     {
         [Theory]
-        [MemberData("GetBundleTypes")]
+        [MemberData(nameof(GetBundleTypes))]
         public void Map_WhenGivenEnum_MapsToString(BundleType bundleType)
         {
             var actual = BundleTypeMapper.Map(bundleType);
@@ -96,10 +96,12 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.MessageHub
         private DataBundleRequestDto GetDataBundleRequestDtoWithMessageType(string messageType)
         {
             return new DataBundleRequestDto(
-                Guid.NewGuid(),
-                Guid.NewGuid().ToString(),
-                Guid.NewGuid().ToString(),
-                messageType);
+                    RequestId: Guid.NewGuid(),
+                    DataAvailableNotificationReferenceId: Guid.NewGuid().ToString(),
+                    IdempotencyId: Guid.NewGuid().ToString(),
+                    new MessageTypeDto(messageType),
+                    ResponseFormat.Xml,
+                    ResponseVersion: 1.0);
         }
     }
 }

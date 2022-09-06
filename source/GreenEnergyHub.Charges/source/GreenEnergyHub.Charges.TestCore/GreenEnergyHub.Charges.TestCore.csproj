@@ -16,7 +16,7 @@ limitations under the License.
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
         <IsPackable>false</IsPackable>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -30,17 +30,24 @@ limitations under the License.
       <PackageReference Include="AutoFixture" Version="4.17.0" />
       <PackageReference Include="AutoFixture.AutoMoq" Version="4.17.0" />
       <PackageReference Include="AutoFixture.Xunit2" Version="4.17.0" />
-      <PackageReference Include="Energinet.DataHub.Core.FunctionApp.TestCommon" Version="1.3.0" />
-      <PackageReference Include="EntityFrameworkCore.SqlServer.NodaTime" Version="5.0.1" />
-      <PackageReference Include="FluentAssertions" Version="6.2.0" />
-      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
-      <PackageReference Include="NodaTime" Version="3.0.9" />
+      <PackageReference Include="Energinet.DataHub.Core.App.FunctionApp" Version="7.0.0" />
+      <PackageReference Include="Energinet.DataHub.Core.FunctionApp.TestCommon" Version="3.3.0" />
+      <PackageReference Include="Microsoft.Azure.Functions.Worker.Core" Version="1.6.0" />
+      <PackageReference Include="FluentAssertions" Version="6.7.0" />
+      <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+      <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.1" />
+      <PackageReference Include="NodaTime" Version="3.1.2" />
       <PackageReference Include="MicroElements.AutoFixture.NodaTime" Version="1.0.0" />
       <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
-      <PackageReference Include="xunit.extensibility.core" Version="2.4.1" />
-      <PackageReference Include="Google.Protobuf" Version="3.19.2" />
-      <PackageReference Include="xunit" Version="2.4.1" />
-      <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.354">
+      <PackageReference Include="Google.Protobuf" Version="3.21.5" />
+      <PackageReference Include="xunit" Version="2.4.2" />
+      <PackageReference Include="xunit.extensibility.core" Version="2.4.2" />
+      <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.435">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+      <PackageReference Update="Microsoft.VisualStudio.Threading.Analyzers" Version="17.3.44">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>

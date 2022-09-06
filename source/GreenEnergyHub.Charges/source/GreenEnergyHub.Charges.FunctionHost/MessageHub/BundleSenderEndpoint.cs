@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
         }
 
         [Function(FunctionName)]
-        public async Task RunAsync(
+        public Task RunAsync(
             [ServiceBusTrigger(
                 "%" + EnvironmentSettingNames.MessageHubRequestQueue + "%",
                 Connection = EnvironmentSettingNames.DataHubListenerConnectionString,
@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
             byte[] data)
         {
             var request = _requestBundleParser.Parse(data);
-            await _bundleSender.SendAsync(request);
+            return _bundleSender.SendAsync(request);
         }
     }
 }
