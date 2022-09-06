@@ -110,7 +110,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
             private static ServiceBusMessage CreateServiceBusMessage(ChargeLinksCommand command, string correlationId)
             {
-                var chargeLinksAcceptedEvent = new ChargeLinksReceivedEvent(
+                var chargeLinksReceivedEvent = new ChargeLinksReceivedEvent(
                     Instant.FromDateTimeUtc(DateTime.UtcNow), command);
 
                 var applicationProperties = new Dictionary<string, string>
@@ -118,10 +118,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     { MessageMetaDataConstants.CorrelationId, correlationId },
                 };
                 var message = ServiceBusMessageGenerator.CreateWithJsonContent(
-                    chargeLinksAcceptedEvent,
+                    chargeLinksReceivedEvent,
                     applicationProperties,
                     correlationId,
-                    chargeLinksAcceptedEvent.GetType().Name);
+                    chargeLinksReceivedEvent.GetType().Name);
 
                 return message;
             }
