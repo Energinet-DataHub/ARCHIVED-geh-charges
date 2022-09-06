@@ -92,7 +92,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
                 // Act
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
-                    () => Fixture.ChargesTopic.SenderClient.SendMessageAsync(messageOne), correlationIdOne);
+                    () => Fixture.ChargesDomainEventTopic.SenderClient.SendMessageAsync(messageOne), correlationIdOne);
 
                 await FunctionAsserts.AssertHasExecutedAsync(
                     Fixture.HostManager, nameof(ChargeLinkConfirmationDataAvailableNotifierEndpoint));
@@ -101,7 +101,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 var messageTwo = CreateServiceBusMessage(command, correlationIdTwo);
 
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
-                    () => Fixture.ChargesTopic.SenderClient.SendMessageAsync(messageTwo), correlationIdTwo);
+                    () => Fixture.ChargesDomainEventTopic.SenderClient.SendMessageAsync(messageTwo), correlationIdTwo);
 
                 // Assert
                 await FunctionAsserts.AssertHasExecutedAsync(

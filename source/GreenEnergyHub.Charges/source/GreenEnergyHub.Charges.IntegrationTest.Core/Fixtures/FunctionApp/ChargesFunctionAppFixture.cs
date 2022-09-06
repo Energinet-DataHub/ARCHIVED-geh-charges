@@ -89,7 +89,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
         public TopicResource? MarketParticipantChangedTopic { get; private set; }
 
         [NotNull]
-        public TopicResource? ChargesTopic { get; private set; }
+        public TopicResource? ChargesDomainEventTopic { get; private set; }
 
         public AuthorizedTestActor AsGridAccessProvider { get; }
 
@@ -144,7 +144,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.BackendServiceAppId, AuthorizationConfiguration.BackendApp.AppId);
 
             // Domain events
-            ChargesTopic = await ServiceBusResourceProvider
+            ChargesDomainEventTopic = await ServiceBusResourceProvider
                 .BuildTopic(ChargesServiceBusResourceNames.ChargeTopicKey)
                     .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.ChargesDomainEventTopicName)
 

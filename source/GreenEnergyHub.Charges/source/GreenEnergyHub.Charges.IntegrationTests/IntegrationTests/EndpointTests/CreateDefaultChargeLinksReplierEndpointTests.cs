@@ -78,7 +78,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
                 // Act
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
-                    () => Fixture.ChargesTopic.SenderClient.SendMessageAsync(message), correlationId);
+                    () => Fixture.ChargesDomainEventTopic.SenderClient.SendMessageAsync(message), correlationId);
 
                 // Assert
                 var isMessageReceivedByQueue = isMessageReceived.MessageAwaiter!.Wait(TimeSpan.FromSeconds(20));
