@@ -90,7 +90,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
         public const string ChargeLinksAcceptedSubConfirmationNotifier = "CHARGE_LINKS_ACCEPTED_SUB_CONFIRMATION_NOTIFIER";
         public const string ChargeLinksAcceptedSubDataAvailableNotifier = "CHARGE_LINKS_ACCEPTED_SUB_DATA_AVAILABLE_NOTIFIER";
         public const string ChargeLinksAcceptedSubEventPublisher = "CHARGE_LINKS_ACCEPTED_SUB_EVENT_PUBLISHER";
-        public const string ChargeLinksAcceptedReplier = "CHARGE_LINKS_ACCEPTED_SUB_REPLIER";
         public const string DefaultChargeLinksDataAvailableNotifiedSubscription =
             "DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_SUBSCRIPTION_NAME";
 
