@@ -19,10 +19,11 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Energinet.Charges.Contracts.ChargeLink;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
+using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
-using GreenEnergyHub.Charges.IntegrationTests.Fixtures.Database;
+using GreenEnergyHub.Charges.Tests.Builders.Command;
 using Xunit;
 using Xunit.Categories;
 
@@ -59,7 +60,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
             // Act
             var response = await _client.GetAsync($"{BaseUrl}{KnownMeteringPointId}");
             var jsonString = await response.Content.ReadAsStringAsync();
-            var actual = JsonSerializer.Deserialize<List<ChargeLinkDto>>(
+            var actual = JsonSerializer.Deserialize<List<ChargeLinkOperationDto>>(
                 jsonString,
                 new JsonSerializerOptions
                 {
@@ -68,8 +69,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi
                 });
 
             actual.Should().BeInAscendingOrder(c => c.ChargeType)
-                .And.ThenBeInAscendingOrder(c => c.ChargeId)
-                .And.ThenBeInDescendingOrder(c => c.StartDate);
+                .And.ThenBeInAscendingOrder(c => c.SenderProvidedChargeId)
+                .And.ThenBeInDescendingOrder(c => c.StartDateTime);
         }
 
         [Fact]

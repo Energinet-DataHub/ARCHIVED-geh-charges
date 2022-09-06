@@ -14,7 +14,7 @@
 
 using System;
 using GreenEnergyHub.Charges.FunctionHost.Common;
-using GreenEnergyHub.Charges.IntegrationTests.Fixtures.Database;
+using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using Xunit;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.Fixtures
