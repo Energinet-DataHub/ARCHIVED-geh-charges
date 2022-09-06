@@ -199,7 +199,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
                 .CreateAsync();
 
             // Integration events
-            await ServiceBusResourceProvider
+            MarketParticipantChangedTopic = await ServiceBusResourceProvider
                 .BuildTopic(ChargesServiceBusResourceNames.MarketParticipantChangedTopicKey)
                 .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.MarketParticipantChangedTopicName)
                 .AddSubscription(ChargesServiceBusResourceNames.MarketParticipantChangedSubscriptionName)
@@ -353,7 +353,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             MessageHubMock = new MessageHubSimulation(messageHubSimulationConfig);
         }
 
-        private async Task SetUpRequestResponseLoggingAsync()
+        private static async Task SetUpRequestResponseLoggingAsync()
         {
             Environment.SetEnvironmentVariable(
                 EnvironmentSettingNames.RequestResponseLoggingConnectionString,

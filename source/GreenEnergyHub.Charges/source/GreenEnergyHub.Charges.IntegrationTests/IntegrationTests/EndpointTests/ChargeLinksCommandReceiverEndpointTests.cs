@@ -88,7 +88,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 var links = new List<ChargeLinkOperationDto> { link };
                 var command = chargeLinksCommandBuilder.WithChargeLinks(links).Build();
                 var correlationIdOne = CorrelationIdGenerator.Create();
-                var messageOne = CreateServiceBusMessage(command, correlationIdOne, nameof(ChargeLinksReceivedEvent));
+                var messageOne = CreateServiceBusMessage(command, correlationIdOne);
 
                 // Act
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
@@ -98,7 +98,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     Fixture.HostManager, nameof(ChargeLinkConfirmationDataAvailableNotifierEndpoint));
 
                 var correlationIdTwo = CorrelationIdGenerator.Create();
-                var messageTwo = CreateServiceBusMessage(command, correlationIdTwo, nameof(ChargeLinksReceivedEvent));
+                var messageTwo = CreateServiceBusMessage(command, correlationIdTwo);
 
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
                     () => Fixture.ChargesTopic.SenderClient.SendMessageAsync(messageTwo), correlationIdTwo);
@@ -108,10 +108,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     Fixture.HostManager, nameof(ChargeLinksRejectionDataAvailableNotifierEndpoint));
             }
 
-            private static ServiceBusMessage CreateServiceBusMessage(
-                ChargeLinksCommand command,
-                string correlationId,
-                string subject)
+            private static ServiceBusMessage CreateServiceBusMessage(ChargeLinksCommand command, string correlationId)
             {
                 var chargeLinksAcceptedEvent = new ChargeLinksAcceptedEvent(
                     command, Instant.FromDateTimeUtc(DateTime.UtcNow));
@@ -121,7 +118,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     { MessageMetaDataConstants.CorrelationId, correlationId },
                 };
                 var message = ServiceBusMessageGenerator.CreateWithJsonContent(
-                    chargeLinksAcceptedEvent, applicationProperties, correlationId, subject);
+                    chargeLinksAcceptedEvent,
+                    applicationProperties,
+                    correlationId,
+                    chargeLinksAcceptedEvent.GetType().Name);
 
                 return message;
             }

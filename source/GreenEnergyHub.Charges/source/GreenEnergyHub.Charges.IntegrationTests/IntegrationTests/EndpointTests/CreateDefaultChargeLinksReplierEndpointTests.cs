@@ -70,7 +70,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 };
                 var command = new ChargeLinksCommandBuilder().WithChargeLinks(links).Build();
                 var correlationId = CorrelationIdGenerator.Create();
-                var message = CreateServiceBusMessage(command, correlationId, "ChargeLinksAccepted");
+                var message = CreateServiceBusMessage(command, correlationId);
 
                 using var isMessageReceived = await Fixture.CreateLinkReplyQueueListener
                     .ListenForMessageAsync(correlationId)
@@ -85,10 +85,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 isMessageReceivedByQueue.Should().BeTrue();
             }
 
-            private ServiceBusMessage CreateServiceBusMessage(
-                ChargeLinksCommand command,
-                string correlationId,
-                string subject)
+            private ServiceBusMessage CreateServiceBusMessage(ChargeLinksCommand command, string correlationId)
             {
                 var chargeLinksAcceptedEvent = new ChargeLinksAcceptedEvent(
                     command, Instant.FromDateTimeUtc(DateTime.UtcNow));
@@ -100,7 +97,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 };
 
                 var message = ServiceBusMessageGenerator.CreateWithJsonContent(
-                    chargeLinksAcceptedEvent, applicationProperties, correlationId, subject);
+                    chargeLinksAcceptedEvent,
+                    applicationProperties,
+                    correlationId,
+                    chargeLinksAcceptedEvent.GetType().Name);
 
                 return message;
             }

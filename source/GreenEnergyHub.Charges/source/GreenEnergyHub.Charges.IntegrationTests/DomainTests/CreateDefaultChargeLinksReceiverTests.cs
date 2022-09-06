@@ -109,6 +109,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 var byteArray = message.ToByteArray();
                 var serviceBusMessage = new ServiceBusMessage(byteArray)
                 {
+                    Subject = nameof(CreateDefaultChargeLinks),
                     CorrelationId = correlationId,
                     ApplicationProperties =
                     {

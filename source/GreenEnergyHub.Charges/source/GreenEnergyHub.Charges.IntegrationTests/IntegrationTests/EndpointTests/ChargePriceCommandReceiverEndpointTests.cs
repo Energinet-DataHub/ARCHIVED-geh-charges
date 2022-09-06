@@ -79,7 +79,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 var invalidChargePriceCommandReceivedEvent = CreateInvalidChargePriceCommandReceivedEvent(
                     commandBuilder, operationDtoBuilder);
                 var correlationId = CorrelationIdGenerator.Create();
-                var message = CreateServiceBusMessage(invalidChargePriceCommandReceivedEvent, correlationId, "ChargePriceCommand");
+                var message = CreateServiceBusMessage(invalidChargePriceCommandReceivedEvent, correlationId);
 
                 // Act
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
@@ -114,7 +114,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 var chargePriceCommandReceivedEvent = CreateChargePriceCommandReceivedEvent(
                     commandBuilder, documentDtoBuilder, operationDtoBuilder, chargeId, ownerGln, chargeType);
                 var correlationId = CorrelationIdGenerator.Create();
-                var message = CreateServiceBusMessage(chargePriceCommandReceivedEvent, correlationId, "ChargePriceCommand");
+                var message = CreateServiceBusMessage(chargePriceCommandReceivedEvent, correlationId);
 
                 // Act
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
@@ -185,17 +185,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 return chargePriceReceivedEvent;
             }
 
-            private static ServiceBusMessage CreateServiceBusMessage(
-                IInternalEvent internalEvent,
-                string correlationId,
-                string subject)
+            private static ServiceBusMessage CreateServiceBusMessage(IInternalEvent internalEvent, string correlationId)
             {
                 var applicationProperties = new Dictionary<string, string>
                 {
                     { MessageMetaDataConstants.CorrelationId, correlationId },
                 };
                 var message = ServiceBusMessageGenerator.CreateWithJsonContent(
-                    internalEvent, applicationProperties, correlationId, subject);
+                    internalEvent, applicationProperties, correlationId, internalEvent.GetType().Name);
 
                 return message;
             }
