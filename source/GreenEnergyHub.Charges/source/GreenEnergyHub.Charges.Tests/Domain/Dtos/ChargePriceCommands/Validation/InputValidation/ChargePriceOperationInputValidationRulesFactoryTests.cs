@@ -123,6 +123,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
                 typeof(ChargePriceMaximumDigitsAndDecimalsRule),
                 typeof(PriceListMustStartAndStopAtMidnightValidationRule),
                 typeof(ResolutionSubscriptionValidationRule),
+                typeof(ResolutionTariffValidationRule),
             };
         }
 
