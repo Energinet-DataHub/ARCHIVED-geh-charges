@@ -73,18 +73,9 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.Charges
             XNamespace cimNamespace,
             AvailableChargePriceData chargePrice)
         {
-            if (chargePrice.BusinessReasonCode == BusinessReasonCode.UpdateChargeInformation)
-            {
-                return new XElement(
-                    cimNamespace + CimChargeConstants.ChargeGroup,
-                    GetChargePriceTypeElement(cimNamespace, chargePrice));
-            }
-            else
-            {
                 return new XElement(
                     cimNamespace + CimChargeConstants.ChargeGroup,
                     GetChargePricesTypeElement(cimNamespace, chargePrice));
-            }
         }
 
         private XElement GetChargePriceTypeElement(

@@ -23,7 +23,7 @@ namespace GreenEnergyHub.Charges.MessageHub.BundleSpecification.Charges
     {
         /// <summary>
         /// The upper anticipated weight (kilobytes) contribution to the final bundle
-        /// for a single charge (master data only)
+        /// for a single charge (charge price header data only)
         /// </summary>
         public const decimal ChargeMessageWeight = 5m;
 

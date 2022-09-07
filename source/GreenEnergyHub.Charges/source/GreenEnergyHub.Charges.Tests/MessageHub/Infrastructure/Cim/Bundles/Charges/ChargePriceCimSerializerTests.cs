@@ -108,7 +108,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
             await stream.CopyToAsync(fileStream);
         }
 
-        private void SetupMocks(
+        private static void SetupMocks(
             Mock<IMarketParticipantRepository> marketParticipantRepository,
             Mock<IClock> clock,
             Mock<IIso8601Durations> iso8601Durations,
