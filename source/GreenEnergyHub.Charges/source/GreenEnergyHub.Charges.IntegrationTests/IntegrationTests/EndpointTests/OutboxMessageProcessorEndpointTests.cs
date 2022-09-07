@@ -132,7 +132,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 [Frozen] Mock<IClock> clock,
                 [Frozen] Mock<IInternalEventDispatcher> dispatcher,
                 [Frozen] Mock<IOutboxMessageParser> outboxMessageParser,
-                PriceRejectedEventBuilder rejectedEventBuilder,
                 TimerInfo timerInfo,
                 CorrelationContext correlationContext,
                 Instant now)
@@ -141,12 +140,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
                 await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
 
-                var rejectedEvent = rejectedEventBuilder.Build();
                 clock.Setup(c => c.GetCurrentInstant()).Returns(now);
+                var operationsRejectedEvent = CreateChargePriceOperationsRejectedEvent();
                 outboxMessageParser
                     .Setup(o => o.Parse(It.IsAny<string>(), It.IsAny<string>()))
-                    .Returns(rejectedEvent);
-                var operationsRejectedEvent = CreateChargePriceOperationsRejectedEvent();
+                    .Returns(operationsRejectedEvent);
                 var outboxMessage = await PersistToOutboxMessage(chargesDatabaseWriteContext, operationsRejectedEvent);
 
                 var unitOfWork = new UnitOfWork(chargesDatabaseWriteContext);
