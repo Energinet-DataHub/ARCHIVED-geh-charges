@@ -56,23 +56,5 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registr
 
             return this;
         }
-
-        /// <summary>
-        /// Register services required to resolve a <see cref="IInternalEventDispatcher"/>.
-        /// Which is used when sending messages within of the Charges domain.
-        /// </summary>
-        public MessagingRegistrator AddInternalEventDispatcher(
-            ServiceBusEventMapper serviceBusEventMapper,
-            ServiceBusClient serviceBusClient)
-        {
-            _services.AddScoped<IInternalEventDispatcher, InternalEventDispatcher>();
-            _services.AddScoped<IServiceBusDispatcher, ServiceBusDispatcher>();
-
-            // Must be a singleton as per documentation of ServiceBusClient and ServiceBusSender
-            _services.AddSingleton<IServiceBusDispatcher>(
-                _ => new ServiceBusDispatcher(serviceBusClient, serviceBusEventMapper));
-
-            return this;
-        }
     }
 }

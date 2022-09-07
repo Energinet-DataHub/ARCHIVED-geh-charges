@@ -48,6 +48,7 @@ using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factories;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using GreenEnergyHub.Charges.Infrastructure.Core.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeCreated;
 using GreenEnergyHub.Charges.Infrastructure.Persistence;
@@ -83,7 +84,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
             serviceCollection.AddScoped(typeof(IClock), _ => SystemClock.Instance);
             serviceCollection.AddLogging();
-            serviceCollection.AddSingleton<IJsonSerializer, JsonSerializer>();
             serviceCollection.AddScoped<CorrelationIdMiddleware>();
             serviceCollection.AddScoped<FunctionTelemetryScopeMiddleware>();
             serviceCollection.AddScoped<MessageMetaDataMiddleware>();
@@ -91,9 +91,10 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddJwtTokenSecurity();
             serviceCollection.AddActorContext();
             serviceCollection.AddApplicationInsightsTelemetryWorkerService();
+            serviceCollection.AddEventPublishing(serviceBusClient);
 
             ConfigureSharedDatabase(serviceCollection);
-            ConfigureSharedMessaging(serviceCollection, serviceBusClient);
+            ConfigureSharedMessaging(serviceCollection);
             ConfigureIso8601Services(serviceCollection);
             ConfigureSharedCim(serviceCollection);
 
@@ -153,17 +154,13 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IGridAreaLinkRepository, GridAreaLinkRepository>();
         }
 
-        private static void ConfigureSharedMessaging(
-            IServiceCollection serviceCollection,
-            ServiceBusClient serviceBusClient)
+        private static void ConfigureSharedMessaging(IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<MessageDispatcher>();
             serviceCollection.AddScoped<IServiceBusMessageFactory, ServiceBusMessageFactory>();
-            serviceCollection.AddMessaging().AddInternalEventDispatcher(
-                CreateInternalServiceBusEventMapper(),
-                serviceBusClient);
             serviceCollection.ConfigureProtobufReception();
             serviceCollection.SendProtobuf<ChargeCreated>();
+            serviceCollection.AddMessaging();
         }
 
         private static void ConfigureSharedCim(IServiceCollection serviceCollection)
@@ -268,23 +265,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             });
 
             serviceCollection.AddSingleton<IStorageHandler, StorageHandler>();
-        }
-
-        private static ServiceBusEventMapper CreateInternalServiceBusEventMapper()
-        {
-            var mapper = new ServiceBusEventMapper();
-            mapper.Add(typeof(ChargeCommandReceivedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandReceivedTopicName));
-            mapper.Add(typeof(ChargeCommandAcceptedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandAcceptedTopicName));
-            mapper.Add(typeof(ChargeCommandRejectedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandRejectedTopicName));
-            mapper.Add(typeof(ChargeLinksAcceptedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksAcceptedTopicName));
-            mapper.Add(typeof(ChargeLinksReceivedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksReceivedTopicName));
-            mapper.Add(typeof(ChargeLinksRejectedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksRejectedTopicName));
-            mapper.Add(typeof(ChargePriceCommandReceivedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.PriceCommandReceivedTopicName));
-            mapper.Add(typeof(ChargeLinksDataAvailableNotifiedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName));
-            mapper.Add(typeof(PriceConfirmedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargePriceConfirmedTopicName));
-            mapper.Add(typeof(PriceRejectedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargePriceRejectedTopicName));
-
-            return mapper;
         }
     }
 }
