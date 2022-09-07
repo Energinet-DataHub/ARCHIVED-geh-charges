@@ -14,7 +14,7 @@
 
 namespace GreenEnergyHub.Charges.Application.Common.Services
 {
-    public interface IDomainEventPublisher
+    public interface IInternalEventPublisher
     {
         /// <summary>
         /// Publisher for raising domain events
