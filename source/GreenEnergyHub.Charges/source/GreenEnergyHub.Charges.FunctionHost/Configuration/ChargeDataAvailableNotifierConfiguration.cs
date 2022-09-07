@@ -42,6 +42,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 AvailableDataNotifier<AvailableChargePriceData, PriceConfirmedEvent>>();
             serviceCollection.AddScoped<IAvailableDataFactory<AvailableChargePriceData, PriceConfirmedEvent>,
                 AvailableChargePriceDataFactory>();
+            serviceCollection.AddScoped<IAvailableDataNotificationFactory<AvailableChargePriceData>,
+                AvailableDataNotificationFactory<AvailableChargePriceData>>();
+
             serviceCollection
                 .AddScoped<BundleSpecification<AvailableChargePriceData, PriceConfirmedEvent>,
                     ChargePriceBundleSpecification>();

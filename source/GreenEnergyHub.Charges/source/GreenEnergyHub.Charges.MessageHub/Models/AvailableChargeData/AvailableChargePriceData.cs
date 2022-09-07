@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
             DocumentType documentType,
             int operationOrder,
             Guid actorId,
-            List<AvailableChargeDataPoint> points)
+            List<AvailableChargePriceDataPoint> points)
             : base(
                 senderId,
                 senderRole,
@@ -67,7 +67,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
         {
             ChargeId = null!;
             ChargeOwner = null!;
-            _points = new List<AvailableChargeDataPoint>();
+            _points = new List<AvailableChargePriceDataPoint>();
         }
 
         public string ChargeId { get; }
@@ -82,8 +82,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
 
         public Resolution Resolution { get; }
 
-        private readonly List<AvailableChargeDataPoint> _points;
+        private readonly List<AvailableChargePriceDataPoint> _points;
 
-        public IReadOnlyCollection<AvailableChargeDataPoint> Points => _points.AsReadOnly();
+        public IReadOnlyCollection<AvailableChargePriceDataPoint> Points => _points.AsReadOnly();
     }
 }

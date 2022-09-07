@@ -27,8 +27,7 @@ using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
 {
-    public class
-        AvailableChargePriceDataFactory : AvailableDataFactoryBase<AvailableChargePriceData, PriceConfirmedEvent>
+    public class AvailableChargePriceDataFactory : AvailableDataFactoryBase<AvailableChargePriceData, PriceConfirmedEvent>
     {
         private readonly IChargeIdentifierFactory _chargeIdentifierFactory;
         private readonly IChargeRepository _chargeRepository;
@@ -82,7 +81,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
             {
                 var points = priceOperation.Points
                     .Select(point =>
-                        new AvailableChargeDataPoint(priceOperation.Points.GetPositionOfPoint(point), point.Price))
+                        new AvailableChargePriceDataPoint(priceOperation.Points.GetPositionOfPoint(point), point.Price))
                     .ToList();
 
                 var sender = await GetSenderAsync().ConfigureAwait(false);
@@ -95,7 +94,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
                     recipient.BusinessProcessRole,
                     input.Document.BusinessReasonCode,
                     _messageMetaDataContext.RequestDataTime,
-                    Guid.NewGuid(), // ID of each available piece of data must be unique
+                    availableDataReferenceId: Guid.NewGuid(), // ID of each available piece of data must be unique
                     priceOperation.SenderProvidedChargeId,
                     priceOperation.ChargeOwner,
                     priceOperation.ChargeType,

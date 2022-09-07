@@ -12,16 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableData
+using System;
+
+namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
 {
-    public enum BundleType
+    public class AvailableChargePriceDataPoint
     {
-        ChargeDataAvailable = 1,
-        ChargeConfirmationDataAvailable = 2,
-        ChargeRejectionDataAvailable = 3,
-        ChargeLinkDataAvailable = 4,
-        ChargeLinkConfirmationDataAvailable = 5,
-        ChargeLinkRejectionDataAvailable = 6,
-        ChargePriceDataAvailable = 7,
+        public AvailableChargePriceDataPoint(int position, decimal price)
+        {
+            Position = position;
+            Price = price;
+            Id = Guid.NewGuid();
+        }
+
+        public Guid Id { get; }
+
+        public int Position { get; }
+
+        public decimal Price { get; }
     }
 }

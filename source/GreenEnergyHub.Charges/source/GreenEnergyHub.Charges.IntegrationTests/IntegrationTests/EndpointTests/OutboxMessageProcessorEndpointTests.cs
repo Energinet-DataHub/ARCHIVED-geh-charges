@@ -25,6 +25,7 @@ using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Application.Messaging;
+using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 using GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub;
@@ -36,6 +37,9 @@ using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
+using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.TestHelpers;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using Microsoft.Azure.Functions.Worker;
@@ -76,7 +80,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
             }
 
             [Fact]
-            public async Task RunAsync_WhenRejectedOutboxMessageIsRead_AvailableDataIsPersisted_AndProcessedDateIsSet()
+            public async Task RunAsync_WhenRejectedOutboxMessageIsRead_AvailableReceiptDataIsPersisted_AndProcessedDateIsSet()
             {
                 // Arrange
                 await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
@@ -102,7 +106,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
             }
 
             [Fact]
-            public async Task RunAsync_WhenConfirmedOutboxMessageIsRead_AvailableDataIsPersisted_AndProcessedDateIsSet()
+            public async Task RunAsync_WhenConfirmedOutboxMessageIsRead_AvailableReceiptDataIsPersisted_AndProcessedDateIsSet()
             {
                 // Arrange
                 await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
@@ -124,6 +128,25 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 var processedOutboxMessage = chargesDatabaseReadContext.OutboxMessages.Single(x => x.Id == outboxMessage.Id);
                 processedOutboxMessage.Should().BeEquivalentTo(outboxMessage, om => om.Excluding(p => p.ProcessedDate));
                 processedOutboxMessage.ProcessedDate.Should().NotBeNull();
+            }
+
+            [Fact]
+            public async Task RunAsync_WhenConfirmedOutboxMessageIsRead_AvailablePriceDataAvailableNotifierHasExecuted()
+            {
+                // Arrange
+                await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
+                await using var messageHubDatabaseContext = Fixture.MessageHubDatabaseManager.CreateDbContext();
+                await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
+                var operationsConfirmedEvent = CreateChargePriceOperationsConfirmedEvent();
+
+                // Act
+                var outboxMessage = await PersistToOutboxMessage(chargesDatabaseWriteContext, operationsConfirmedEvent);
+
+                // Assert
+                await FunctionAsserts.AssertHasExecutedAsync(
+                    Fixture.HostManager, nameof(OutboxMessageProcessorEndpoint));
+                await FunctionAsserts.AssertHasExecutedAsync(
+                    Fixture.HostManager, nameof(ChargePriceDataAvailableNotifierEndpoint));
             }
 
             [Theory]
@@ -221,6 +244,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 var chargePriceOperation =
                     new ChargePriceOperationDtoBuilder()
                         .WithChargePriceOperationId(Guid.NewGuid().ToString())
+                        .WithOwner(SeededData.MarketParticipants.SystemOperator.Gln)
+                        .WithChargeType(ChargeType.Tariff)
+                        .WithChargeId("EA-001")
                         .Build();
                 var operations = new List<ChargePriceOperationDto> { chargePriceOperation };
                 var operationsConfirmedEvent = new PriceConfirmedEventBuilder()

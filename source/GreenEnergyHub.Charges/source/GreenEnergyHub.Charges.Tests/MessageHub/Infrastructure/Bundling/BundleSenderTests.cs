@@ -91,6 +91,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Bundling
         [InlineAutoMoqData(BusinessReasonCode.Unknown)]
         [InlineAutoMoqData(BusinessReasonCode.UpdateChargeInformation)]
         [InlineAutoMoqData(BusinessReasonCode.UpdateMasterDataSettlement)]
+        [InlineAutoMoqData(BusinessReasonCode.UpdateChargePrices)]
         public void Get_ReturnsValidData_ForAllBundleTypes(
             BusinessReasonCode businessReasonCode,
             IStorageHandler storageHandler)
@@ -146,6 +147,9 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Bundling
                         break;
                     case BundleType.ChargeLinkRejectionDataAvailable:
                         // BundleCreator<AvailableChargeLinksReceiptData> already added
+                        break;
+                    case BundleType.ChargePriceDataAvailable:
+                        bundleCreators.Add(CreateBundleCreator<AvailableChargePriceData>(storageHandler));
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(bundleType));

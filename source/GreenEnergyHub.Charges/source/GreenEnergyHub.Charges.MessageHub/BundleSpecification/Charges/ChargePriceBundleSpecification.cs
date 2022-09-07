@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.MessageHub.BundleSpecification.Charges
         public const decimal ChargePointMessageWeight = 0.2m;
 
         public ChargePriceBundleSpecification()
-            : base(BundleType.ChargeDataAvailable)
+            : base(BundleType.ChargePriceDataAvailable)
         {
         }
 
