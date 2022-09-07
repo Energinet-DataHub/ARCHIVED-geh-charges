@@ -30,7 +30,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Factories
     {
         [Theory]
         [InlineAutoDomainData]
-        public void GivenCreatePriceRejectedEvent_WhenValidRejection_HasNoNullsOrEmptyCollections(
+        public void CreatePriceRejectedEvent_WhenValidRejection_HasNoNullsOrEmptyCollections(
             DocumentDtoBuilder documentDtoBuilder,
             ChargePriceOperationDtoBuilder chargePriceOperationDtoBuilder,
             ValidationResult validationResult,
