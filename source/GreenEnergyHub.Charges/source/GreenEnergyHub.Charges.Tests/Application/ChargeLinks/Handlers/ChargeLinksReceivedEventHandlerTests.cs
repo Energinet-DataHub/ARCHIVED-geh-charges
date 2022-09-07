@@ -154,7 +154,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task GivenHandleAsync_WhenValidationFails_ShouldLogValidationErrors(
+        public async Task HandleAsync_WhenValidationFails_ShouldLogValidationErrors(
             Mock<ILoggerFactory> loggerFactory,
             Mock<ILogger> logger,
             Mock<IChargeLinksReceiptService> chargeLinksReceiptService,
