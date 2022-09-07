@@ -44,14 +44,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IChargePriceCommandHandler, ChargePriceCommandHandler>();
             serviceCollection.AddScoped<IDocumentValidationRulesFactory, DocumentValidationRulesFactory>();
             serviceCollection.AddScoped<IDocumentValidator, DocumentValidator>();
-
-            serviceCollection.AddMessaging()
-                .AddInternalMessageDispatcher<ChargeCommandReceivedEvent>(
-                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
-                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandReceivedTopicName))
-                .AddInternalMessageDispatcher<ChargePriceCommandReceivedEvent>(
-                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
-                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.PriceCommandReceivedTopicName));
         }
     }
 }

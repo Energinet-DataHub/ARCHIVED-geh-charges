@@ -15,7 +15,7 @@
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using Energinet.DataHub.Core.JsonSerialization;
-using Energinet.DataHub.Core.Messaging.Transport;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using GreenEnergyHub.TestHelpers;
 using Moq;
@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions.S
             [Frozen] Mock<IJsonOutboundMapperFactory> mapperFactory,
             [Frozen] Mock<IJsonSerializer> jsonSerializer,
             Mock<IJsonOutboundMapper> mapper,
-            Mock<IOutboundMessage> message,
+            Mock<InternalEvent> message,
             string stringResult,
             JsonMessageSerializer sut)
         {

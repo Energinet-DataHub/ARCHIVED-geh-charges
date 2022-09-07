@@ -12,13 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Threading;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
+using Azure.Messaging.ServiceBus;
 
-namespace GreenEnergyHub.Charges.Application.Charges.Handlers
+namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions
 {
-    public interface IChargePriceEventHandlerDeprecated
+    // ReSharper disable once UnusedTypeParameter
+    // - Type parameter is necessary in order to distinguish instances during resolution of types in dependency container
+    public interface IServiceBusDispatcher
     {
-        Task HandleAsync(ChargeCommandReceivedEvent commandReceivedEvent);
+        public Task DispatchAsync(ServiceBusMessage serviceBusMessage, Type eventType, CancellationToken cancellationToken = default);
     }
 }

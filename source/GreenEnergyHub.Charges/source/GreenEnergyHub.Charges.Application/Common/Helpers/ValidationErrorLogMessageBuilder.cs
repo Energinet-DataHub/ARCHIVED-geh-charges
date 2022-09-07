@@ -13,22 +13,25 @@
 // limitations under the License.
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
-namespace GreenEnergyHub.Charges.MessageHub.Models.Shared
+namespace GreenEnergyHub.Charges.Application.Common.Helpers
 {
     public static class ValidationErrorLogMessageBuilder
     {
-        public static string BuildErrorMessage(DocumentDto documentDto, IEnumerable<ValidationError> validationErrors)
+        public static string BuildErrorMessage(
+            DocumentDto documentDto,
+            IEnumerable<IValidationRuleContainer> invalidRules)
         {
             var sb = new StringBuilder();
             sb.Append($"document Id {documentDto.Id} with Type {documentDto.Type} from GLN {documentDto.Sender.MarketParticipantId}:\r\n");
 
-            foreach (var validationError in validationErrors)
+            foreach (var identifier in invalidRules.Select(r => r.ValidationRule.ValidationRuleIdentifier))
             {
-                sb.Append($"- {nameof(ValidationRuleIdentifier)}: {validationError.ValidationRuleIdentifier}\r\n");
+                sb.Append($"- {nameof(ValidationRuleIdentifier)}: {identifier}\r\n");
             }
 
             return sb.ToString();

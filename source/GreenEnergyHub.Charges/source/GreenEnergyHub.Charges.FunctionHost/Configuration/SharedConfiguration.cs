@@ -28,16 +28,24 @@ using Energinet.DataHub.MessageHub.Client.Storage;
 using Energinet.DataHub.MessageHub.Model.Dequeue;
 using Energinet.DataHub.MessageHub.Model.Peek;
 using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkReplier;
+using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksDataAvailableNotifiedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksRejectionEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.GridAreaLinks;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factories;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Core.Registration;
@@ -65,6 +73,14 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
+            var serviceBusConnectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString);
+            var dataAvailableQueue = EnvironmentHelper.GetEnv(EnvironmentSettingNames.MessageHubDataAvailableQueue);
+            var domainReplyQueue = EnvironmentHelper.GetEnv(EnvironmentSettingNames.MessageHubReplyQueue);
+            var storageServiceConnectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.MessageHubStorageConnectionString);
+            var azureBlobStorageContainerName = EnvironmentHelper.GetEnv(EnvironmentSettingNames.MessageHubStorageContainer);
+
+            var serviceBusClient = new ServiceBusClient(serviceBusConnectionString);
+
             serviceCollection.AddScoped(typeof(IClock), _ => SystemClock.Instance);
             serviceCollection.AddLogging();
             serviceCollection.AddSingleton<IJsonSerializer, JsonSerializer>();
@@ -82,17 +98,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddApplicationInsightsTelemetryWorkerService();
 
             ConfigureSharedDatabase(serviceCollection);
-            ConfigureSharedMessaging(serviceCollection);
+            ConfigureSharedMessaging(serviceCollection, serviceBusClient);
             ConfigureIso8601Services(serviceCollection);
             ConfigureSharedCim(serviceCollection);
-
-            var serviceBusConnectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString);
-            var dataAvailableQueue = EnvironmentHelper.GetEnv(EnvironmentSettingNames.MessageHubDataAvailableQueue);
-            var domainReplyQueue = EnvironmentHelper.GetEnv(EnvironmentSettingNames.MessageHubReplyQueue);
-            var storageServiceConnectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.MessageHubStorageConnectionString);
-            var azureBlobStorageContainerName = EnvironmentHelper.GetEnv(EnvironmentSettingNames.MessageHubStorageContainer);
-
-            var serviceBusClient = new ServiceBusClient(serviceBusConnectionString);
 
             AddRequestResponseLogging(serviceCollection);
 
@@ -146,22 +154,24 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<
                 IAvailableDataRepository<AvailableChargeReceiptData>,
                 AvailableDataRepository<AvailableChargeReceiptData>>();
+            serviceCollection.AddScoped<
+                IAvailableDataRepository<AvailableChargePriceData>,
+                AvailableDataRepository<AvailableChargePriceData>>();
             serviceCollection.AddScoped<IMarketParticipantRepository, MarketParticipantRepository>();
             serviceCollection.AddScoped<IGridAreaLinkRepository, GridAreaLinkRepository>();
         }
 
-        private static void ConfigureSharedMessaging(IServiceCollection serviceCollection)
+        private static void ConfigureSharedMessaging(
+            IServiceCollection serviceCollection,
+            ServiceBusClient serviceBusClient)
         {
             serviceCollection.AddScoped<MessageDispatcher>();
             serviceCollection.AddScoped<IServiceBusMessageFactory, ServiceBusMessageFactory>();
+            serviceCollection.AddMessaging().AddInternalEventDispatcher(
+                CreateInternalServiceBusEventMapper(),
+                serviceBusClient);
             serviceCollection.ConfigureProtobufReception();
-
             serviceCollection.SendProtobuf<ChargeCreated>();
-            serviceCollection.AddMessaging()
-                .AddInternalMessageExtractor<ChargeCommandAcceptedEvent>()
-                .AddExternalMessageDispatcher<ChargeLinksReceivedEvent>(
-                EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
-                EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksReceivedTopicName));
         }
 
         private static void ConfigureSharedCim(IServiceCollection serviceCollection)
@@ -266,6 +276,23 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             });
 
             serviceCollection.AddSingleton<IStorageHandler, StorageHandler>();
+        }
+
+        private static ServiceBusEventMapper CreateInternalServiceBusEventMapper()
+        {
+            var mapper = new ServiceBusEventMapper();
+            mapper.Add(typeof(ChargeCommandReceivedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandReceivedTopicName));
+            mapper.Add(typeof(ChargeCommandAcceptedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandAcceptedTopicName));
+            mapper.Add(typeof(ChargeCommandRejectedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandRejectedTopicName));
+            mapper.Add(typeof(ChargeLinksAcceptedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksAcceptedTopicName));
+            mapper.Add(typeof(ChargeLinksReceivedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksReceivedTopicName));
+            mapper.Add(typeof(ChargeLinksRejectedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksRejectedTopicName));
+            mapper.Add(typeof(ChargePriceCommandReceivedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.PriceCommandReceivedTopicName));
+            mapper.Add(typeof(ChargeLinksDataAvailableNotifiedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName));
+            mapper.Add(typeof(PriceConfirmedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargePriceConfirmedTopicName));
+            mapper.Add(typeof(PriceRejectedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargePriceRejectedTopicName));
+
+            return mapper;
         }
     }
 }

@@ -207,6 +207,15 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
                 .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargePriceRejectedSubscriptionName)
                 .CreateAsync();
 
+            await ServiceBusResourceProvider
+                .BuildTopic(ChargesServiceBusResourceNames.ChargePriceConfirmedTopicKey)
+                .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.ChargePriceConfirmedTopicName)
+                .AddSubscription(ChargesServiceBusResourceNames.ChargePriceConfirmedSubscriptionName)
+                .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargePriceConfirmedSubscriptionName)
+                .AddSubscription(ChargesServiceBusResourceNames.ChargePriceConfirmedDataAvailableNotifier)
+                .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargePriceConfirmedDataAvailableSubscriptionName)
+                .CreateAsync();
+
             CreateLinkRequestQueue = await ServiceBusResourceProvider
                 .BuildQueue(ChargesServiceBusResourceNames.CreateLinksRequestQueueKey)
                 .SetEnvironmentVariableToQueueName(EnvironmentSettingNames.CreateLinksRequestQueueName)

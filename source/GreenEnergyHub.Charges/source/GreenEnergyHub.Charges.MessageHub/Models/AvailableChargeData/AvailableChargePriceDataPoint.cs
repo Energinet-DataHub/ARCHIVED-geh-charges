@@ -12,16 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Application.Charges.Events;
+using System;
 
-namespace GreenEnergyHub.Charges.Application.Charges.Services
+namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
 {
-    public interface IChargePriceRejectionService
+    public class AvailableChargePriceDataPoint
     {
-        /// <summary>
-        /// Saves rejected operations to Outbox
-        /// </summary>
-        /// <param name="chargePriceOperationsRejectedEvent"></param>
-        public void SaveRejections(ChargePriceOperationsRejectedEvent chargePriceOperationsRejectedEvent);
+        public AvailableChargePriceDataPoint(int position, decimal price)
+        {
+            Position = position;
+            Price = price;
+            Id = Guid.NewGuid();
+        }
+
+        public Guid Id { get; }
+
+        public int Position { get; }
+
+        public decimal Price { get; }
     }
 }

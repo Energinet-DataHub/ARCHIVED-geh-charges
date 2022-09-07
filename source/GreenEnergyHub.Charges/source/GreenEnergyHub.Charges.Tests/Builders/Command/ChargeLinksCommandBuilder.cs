@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
+using GreenEnergyHub.Charges.TestCore;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Tests.Builders.Command
@@ -31,12 +32,12 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             RequestDate = SystemClock.Instance.GetCurrentInstant(),
             Recipient = new MarketParticipantDto
             {
-                MarketParticipantId = Guid.NewGuid().ToString("N"),
+                MarketParticipantId = SeededData.MarketParticipants.GridAccessProviderOfMeteringPoint571313180000000005.Gln,
                 BusinessProcessRole = MarketParticipantRole.GridAccessProvider,
             },
             Sender = new MarketParticipantDto
             {
-                MarketParticipantId = Guid.NewGuid().ToString("N"),
+                MarketParticipantId = SeededData.MarketParticipants.SystemOperator.Gln,
                 BusinessProcessRole = MarketParticipantRole.MeteringPointAdministrator,
             },
             Type = DocumentType.RequestChangeBillingMasterData,
