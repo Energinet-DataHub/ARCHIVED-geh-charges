@@ -59,6 +59,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
             public Task DisposeAsync()
             {
+                Fixture.HostManager.ClearHostLog();
                 Fixture.MessageHubMock.Clear();
                 return Task.CompletedTask;
             }
@@ -174,7 +175,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     actualCharge.Should().BeEquivalentTo(expectedCharge);
                     var actualOutboxMessage = await postOperationReadContext.OutboxMessages
                         .SingleOrDefaultAsync(x => x.CorrelationId.Contains(correlationId));
-                    actualOutboxMessage.Should().BeNull();
+                    actualOutboxMessage!.Type.Should().Be(typeof(PriceConfirmedEvent).FullName);
                 }
             }
 
