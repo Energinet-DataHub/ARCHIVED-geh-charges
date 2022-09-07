@@ -44,7 +44,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.InternalMessaging
         {
             if (message == null) throw new ArgumentNullException(nameof(message));
             var data = _jsonSerializer.Serialize(message);
-            var serviceBusMessage = _serviceBusMessageFactory.CreateInternalMessage(data);
+            var serviceBusMessage = _serviceBusMessageFactory.CreateInternalMessage(data, message.GetType().Name);
             await _serviceBusSender.Instance.SendMessageAsync(serviceBusMessage, cancellationToken).ConfigureAwait(false);
         }
     }
