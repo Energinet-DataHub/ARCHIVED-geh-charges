@@ -139,6 +139,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     .WithVatClassification(VatClassification.NoVat)
                     .WithChargeName("Grid Access Provider test tariff")
                     .WithDescription("Description...")
+                    .WithPriceResolution(Resolution.P1D)
                     .Build();
                 var chargeCommand = commandBuilder
                     .WithDocumentDto(document)
