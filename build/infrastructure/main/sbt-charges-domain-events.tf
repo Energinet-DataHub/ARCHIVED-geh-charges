@@ -26,9 +26,7 @@ module "sbts_charges_charge_command_received" {
   topic_id            = module.sbt_charges_domain_events.id
   max_delivery_count  = 1
   correlation_filter  = {
-    properties     = {
-      "Subject" = "ChargeCommandReceivedEvent"
-    }
+    label = "ChargeCommandReceivedEvent"
   }
 }
 
@@ -39,9 +37,7 @@ module "sbts_charges_charge_command_accepted_publish" {
   topic_id            = module.sbt_charges_domain_events.id
   max_delivery_count  = 1
   correlation_filter  = {
-    properties     = {
-      "Subject" = "ChargeCommandAcceptedEvent"
-    }
+    label = "ChargeCommandAcceptedEvent"
   }
 }
 
@@ -52,9 +48,7 @@ module "sbts_charges_charge_accepted_dataavailable" {
   topic_id            = module.sbt_charges_domain_events.id
   max_delivery_count  = 1
   correlation_filter  = {
-    properties     = {
-      "Subject" = "ChargeCommandAcceptedEvent"
-    }
+    label = "ChargeCommandAcceptedEvent"
   }
 }
 
@@ -65,9 +59,7 @@ module "sbts_charges_charge_command_accepted" {
   topic_id            = module.sbt_charges_domain_events.id
   max_delivery_count  = 1
   correlation_filter  = {
-    properties     = {
-      "Subject" = "ChargeCommandAcceptedEvent"
-    }
+    label = "ChargeCommandAcceptedEvent"
   }
 }
 
@@ -78,9 +70,7 @@ module "sbts_charges_charge_command_rejected" {
   topic_id            = module.sbt_charges_domain_events.id
   max_delivery_count  = 1
   correlation_filter  = {
-    properties     = {
-      "Subject" = "ChargeCommandRejectedEvent"
-    }
+    label = "ChargeCommandRejectedEvent"
   }
 }
 
@@ -91,9 +81,7 @@ module "sbts_charges_default_charge_links_dataavailable" {
   topic_id            = module.sbt_charges_domain_events.id
   max_delivery_count  = 1
   correlation_filter  = {
-    properties     = {
-      "Subject" = "ChargeLinksDataAvailableNotifiedEvent"
-    }
+    label = "ChargeLinksDataAvailableNotifiedEvent"
   }
 }
 
@@ -104,9 +92,7 @@ module "sbts_charges_charge_links_accepted_publish" {
   topic_id            = module.sbt_charges_domain_events.id
   max_delivery_count  = 1
   correlation_filter  = {
-    properties     = {
-      "Subject" = "ChargeLinksAcceptedEvent"
-    }
+    label = "ChargeLinksAcceptedEvent"
   }
 }
 
@@ -117,9 +103,7 @@ module "sbts_charges_charge_links_accepted_dataavailable" {
   topic_id            = module.sbt_charges_domain_events.id
   max_delivery_count  = 1
   correlation_filter  = {
-    properties     = {
-      "Subject" = "ChargeLinksAcceptedEvent"
-    }
+    label = "ChargeLinksAcceptedEvent"
   }
 }
 
@@ -130,9 +114,7 @@ module "sbts_charges_charge_links_accepted_confirmation" {
   topic_id            = module.sbt_charges_domain_events.id
   max_delivery_count  = 1
   correlation_filter  = {
-    properties     = {
-      "Subject" = "ChargeLinksAcceptedEvent"
-    }
+    label ="ChargeLinksAcceptedEvent"
   }
 }
 
@@ -143,9 +125,7 @@ module "sbts_charges_charge_links_command_received" {
   topic_id            = module.sbt_charges_domain_events.id
   max_delivery_count  = 1
   correlation_filter  = {
-    properties     = {
-      "Subject" = "ChargeLinksReceivedEvent"
-    }
+    label = "ChargeLinksReceivedEvent"
   }
 }
 
@@ -156,9 +136,7 @@ module "sbts_charges_charge_links_command_rejected" {
   topic_id            = module.sbt_charges_domain_events.id
   max_delivery_count  = 1
   correlation_filter  = {
-    properties     = {
-      "Subject" = "ChargeLinksRejectedEvent"
-    }
+    label = "ChargeLinksRejectedEvent"
   }
 }
 
@@ -169,9 +147,7 @@ module "sbts_charges_charge_price_command_received" {
   topic_id            = module.sbt_charges_domain_events.id
   max_delivery_count  = 1
   correlation_filter  = {
-    properties     = {
-      "Subject" = "ChargePriceCommandReceivedEvent"
-    }
+    label = "ChargePriceCommandReceivedEvent"
   }
 }
 
@@ -182,8 +158,6 @@ module "sbts_charges_charge_price_command_rejected" {
   topic_id            = module.sbt_charges_domain_events.id
   max_delivery_count  = 1
   correlation_filter  = {
-    properties     = {
-      "Subject" = "ChargePriceOperationsRejectedEvent"
-    }
+    label = "ChargePriceOperationsRejectedEvent"
   }
 }
