@@ -69,8 +69,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
             public Task DisposeAsync()
             {
-                Fixture.MessageHubMock.Clear();
                 Fixture.HostManager.ClearHostLog();
+                Fixture.MessageHubMock.Clear();
                 return Task.CompletedTask;
             }
 
