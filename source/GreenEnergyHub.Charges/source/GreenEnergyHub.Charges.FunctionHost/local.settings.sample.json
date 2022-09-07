@@ -50,7 +50,7 @@
     "REQUEST_RESPONSE_LOGGING_CONTAINER_NAME": "marketoplogs",
 
     // Internal, charge
-    "CHARGES_TOPIC_NAME": "sbt-charges-domain-events",
+    "DOMAIN_EVENTS_TOPIC_NAME": "sbt-charges-domain-events",
 
     // Internal, charge, received
     "CHARGE_COMMAND_RECEIVED_SUBSCRIPTION_NAME": "sbtsub-charges-charge-command-received",

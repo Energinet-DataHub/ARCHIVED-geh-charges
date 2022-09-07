@@ -40,7 +40,7 @@ module "func_functionhost" {
     DOMAINEVENT_LISTENER_CONNECTION_STRING                          = module.sb_charges.primary_connection_strings["listen"]
     
     # Topics
-    CHARGES_TOPIC_NAME                                              = "sbt-charges-domain-events"
+    DOMAIN_EVENTS_TOPIC_NAME                                              = "sbt-charges-domain-events"
     CHARGE_CREATED_TOPIC_NAME                                       = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbt-charge-created-name)"
     CHARGE_PRICES_UPDATED_TOPIC_NAME                                = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbt-charge-prices-updated-name)"
     CHARGE_LINKS_CREATED_TOPIC_NAME                                 = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbt-charge-link-created-name)"
