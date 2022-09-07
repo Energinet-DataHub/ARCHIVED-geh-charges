@@ -70,7 +70,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
         public const string ChargePriceRejectedTopicKey = "charge-price-rejected";
         public const string ChargePriceRejectedSubscriptionName = "charge-price-rejected";
 
-        // Internal, charge price operations, rejected
+        // Internal, charge price operations, confirmed
         public const string ChargePriceConfirmedTopicKey = "charge-price-confirmed";
         public const string ChargePriceConfirmedSubscriptionName = "charge-price-confirmed";
 
