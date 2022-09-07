@@ -14,14 +14,14 @@
 
 module "sbt_charges_domain_events" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic?ref=v8"
-  name                = "charges_domain_events"
+  name                = "charges-domain-events"
   namespace_id        = module.sb_charges.id
   project_name        = var.domain_name_short
 }
 
 module "sbts_charges_charge_command_received" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v8"
-  name                = "charge_command_received"
+  name                = "charge-command-received"
   project_name        = var.domain_name_short
   topic_id            = module.sbt_charges_domain_events.id
   max_delivery_count  = 1
@@ -34,7 +34,7 @@ module "sbts_charges_charge_command_received" {
 
 module "sbts_charges_charge_command_accepted_publish" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v8"
-  name                = "charge_command_accepted_publish"
+  name                = "charge-command-accepted-publish"
   project_name        = var.domain_name_short
   topic_id            = module.sbt_charges_domain_events.id
   max_delivery_count  = 1
@@ -47,7 +47,7 @@ module "sbts_charges_charge_command_accepted_publish" {
 
 module "sbts_charges_charge_accepted_dataavailable" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v8"
-  name                = "charge_accepted_dataavailable"
+  name                = "charge-accepted-dataavailable"
   project_name        = var.domain_name_short
   topic_id            = module.sbt_charges_domain_events.id
   max_delivery_count  = 1
@@ -60,7 +60,7 @@ module "sbts_charges_charge_accepted_dataavailable" {
 
 module "sbts_charges_charge_command_accepted" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v8"
-  name                = "charge_command_accepted"
+  name                = "charge-command-accepted"
   project_name        = var.domain_name_short
   topic_id            = module.sbt_charges_domain_events.id
   max_delivery_count  = 1
@@ -73,7 +73,7 @@ module "sbts_charges_charge_command_accepted" {
 
 module "sbts_charges_charge_command_rejected" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v8"
-  name                = "charge_command_rejected"
+  name                = "charge-command-rejected"
   project_name        = var.domain_name_short
   topic_id            = module.sbt_charges_domain_events.id
   max_delivery_count  = 1
@@ -86,7 +86,7 @@ module "sbts_charges_charge_command_rejected" {
 
 module "sbts_charges_default_charge_links_dataavailable" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v8"
-  name                = "default_charge_links_dataavailable"
+  name                = "default-charge-links-dataavailable"
   project_name        = var.domain_name_short
   topic_id            = module.sbt_charges_domain_events.id
   max_delivery_count  = 1
@@ -99,7 +99,7 @@ module "sbts_charges_default_charge_links_dataavailable" {
 
 module "sbts_charges_charge_links_accepted_publish" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v8"
-  name                = "charge_links_accepted_publish"
+  name                = "charge-links-accepted-publish"
   project_name        = var.domain_name_short
   topic_id            = module.sbt_charges_domain_events.id
   max_delivery_count  = 1
@@ -112,7 +112,7 @@ module "sbts_charges_charge_links_accepted_publish" {
 
 module "sbts_charges_charge_links_accepted_dataavailable" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v8"
-  name                = "charge_links_accepted_dataavailable"
+  name                = "charge-links-accepted-dataavailable"
   project_name        = var.domain_name_short
   topic_id            = module.sbt_charges_domain_events.id
   max_delivery_count  = 1
@@ -125,7 +125,7 @@ module "sbts_charges_charge_links_accepted_dataavailable" {
 
 module "sbts_charges_charge_links_accepted_confirmation" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v8"
-  name                = "charge_links_accepted_confirmation"
+  name                = "charge-links-accepted-confirmation"
   project_name        = var.domain_name_short
   topic_id            = module.sbt_charges_domain_events.id
   max_delivery_count  = 1
@@ -138,7 +138,7 @@ module "sbts_charges_charge_links_accepted_confirmation" {
 
 module "sbts_charges_charge_links_command_received" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v8"
-  name                = "charge_links_command_received"
+  name                = "charge-links-command-received"
   project_name        = var.domain_name_short
   topic_id            = module.sbt_charges_domain_events.id
   max_delivery_count  = 1
@@ -151,7 +151,7 @@ module "sbts_charges_charge_links_command_received" {
 
 module "sbts_charges_charge_links_command_rejected" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v8"
-  name                = "charge_links_command_rejected"
+  name                = "charge-links-command-rejected"
   project_name        = var.domain_name_short
   topic_id            = module.sbt_charges_domain_events.id
   max_delivery_count  = 1
@@ -164,7 +164,7 @@ module "sbts_charges_charge_links_command_rejected" {
 
 module "sbts_charges_charge_price_command_received" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v8"
-  name                = "charge_price_command_received"
+  name                = "charge-price-command-received"
   project_name        = var.domain_name_short
   topic_id            = module.sbt_charges_domain_events.id
   max_delivery_count  = 1
@@ -177,7 +177,7 @@ module "sbts_charges_charge_price_command_received" {
 
 module "sbts_charges_charge_price_command_rejected" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v8"
-  name                = "charge_price_command_rejected"
+  name                = "charge-price-command-rejected"
   project_name        = var.domain_name_short
   topic_id            = module.sbt_charges_domain_events.id
   max_delivery_count  = 1
