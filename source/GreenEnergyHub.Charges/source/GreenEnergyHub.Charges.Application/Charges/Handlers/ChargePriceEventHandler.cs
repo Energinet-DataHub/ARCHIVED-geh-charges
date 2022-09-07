@@ -20,9 +20,9 @@ using GreenEnergyHub.Charges.Application.Charges.Factories;
 using GreenEnergyHub.Charges.Application.Charges.Services;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Charges.Exceptions;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
@@ -143,13 +143,13 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             List<IValidationRuleContainer> rejectionRules,
             ValidationResult validationResult,
             IEnumerable<ChargePriceOperationDto> operationsToBeRejected,
-            ChargeOperation operation)
+            ChargePriceOperationDto operation)
         {
             rejectionRules.AddRange(validationResult.InvalidRules);
             rejectionRules.AddRange(operationsToBeRejected.Skip(1)
                 .Select(subsequentOperation =>
                     new OperationValidationRuleContainer(
-                        new PreviousOperationsMustBeValidRule(operation.OperationId), subsequentOperation.OperationId)));
+                        new PreviousOperationsMustBeValidRule(operation), subsequentOperation.OperationId)));
         }
 
         private async Task<Charge?> GetChargeAsync(ChargeOperation chargeOperationDto)
