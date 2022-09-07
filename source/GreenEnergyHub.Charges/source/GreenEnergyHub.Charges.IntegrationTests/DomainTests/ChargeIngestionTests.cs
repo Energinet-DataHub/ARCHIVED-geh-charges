@@ -204,10 +204,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             }
 
             [Theory]
-            [InlineAutoMoqData(ChargeDocument.SubscriptionMonthlyPriceSample)]
-            [InlineAutoMoqData(ChargeDocument.FeeMonthlyPriceSample)]
-            [InlineAutoMoqData(ChargeDocument.TariffHourlyPricesSample)]
-            public async Task Given_ChargeInformationExampleFileWithPrices_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply(
+            [InlineAutoMoqData(ChargeDocument.ChargeInformationSubscriptionMonthlySample)]
+            [InlineAutoMoqData(ChargeDocument.ChargeInformationFeeMonthlySample)]
+            [InlineAutoMoqData(ChargeDocument.ChargeInformationTariffHourlySample)]
+            [InlineAutoMoqData(ChargeDocument.BundledChargeInformationSample)]
+            public async Task Given_ChargeInformationSampleFile_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply(
                 string testFilePath)
             {
                 // Arrange
@@ -228,8 +229,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             }
 
             [Theory]
-            [InlineAutoMoqData(ChargeDocument.TariffPriceSeries)]
-            public async Task Given_ChargePricesExampleFileWithPrices_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply(
+            [InlineAutoMoqData(ChargeDocument.ChargePriceSeriesSubscriptionMonthlySample)]
+            [InlineAutoMoqData(ChargeDocument.ChargePriceSeriesFeeMonthlySample)]
+            [InlineAutoMoqData(ChargeDocument.ChargePriceSeriesTariffHourlySample)]
+            [InlineAutoMoqData(ChargeDocument.BundledChargePriceSeriesSample)]
+            public async Task Given_ChargePriceSample_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply(
                 string testFilePath)
             {
                 // Arrange
@@ -539,8 +543,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                     .Wait(TimeSpan.FromSeconds(SecondsToWaitForIntegrationEvents));
                 var hostLogSnapshot = Fixture.HostManager.GetHostLogSnapshot();
                 hostLogSnapshot.Any(x => x.Contains("With errors:")).Should().BeFalse();
-                hostLogSnapshot.Any(x => x.Contains("1 confirmed price operations was persisted.")).Should().BeTrue();
-                hostLogSnapshot.Any(x => x.Contains("1 notifications was persisted.")).Should().BeTrue();
+                hostLogSnapshot.Any(x => x.Contains("1 confirmed price operations was persisted")).Should().BeTrue();
+                hostLogSnapshot.Any(x => x.Contains("1 notifications was persisted")).Should().BeTrue();
             }
 
             [Fact]
@@ -564,7 +568,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                     .Wait(TimeSpan.FromSeconds(SecondsToWaitForIntegrationEvents));
                 var hostLogSnapshot = Fixture.HostManager.GetHostLogSnapshot();
                 hostLogSnapshot.Any(x => x.Contains("With errors:")).Should().BeFalse();
-                hostLogSnapshot.Any(x => x.Contains("1 confirmed price operations was persisted.")).Should().BeTrue();
+                hostLogSnapshot.Any(x => x.Contains("1 confirmed price operations was persisted")).Should().BeTrue();
             }
 
             [Fact]
@@ -588,7 +592,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                     .Wait(TimeSpan.FromSeconds(SecondsToWaitForIntegrationEvents));
                 var hostLogSnapshot = Fixture.HostManager.GetHostLogSnapshot();
                 hostLogSnapshot.Any(x => x.Contains("With errors:")).Should().BeFalse();
-                hostLogSnapshot.Any(x => x.Contains("1 confirmed price operations was persisted.")).Should().BeTrue();
+                hostLogSnapshot.Any(x => x.Contains("1 confirmed price operations was persisted")).Should().BeTrue();
             }
 
             [Fact]

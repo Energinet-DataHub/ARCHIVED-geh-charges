@@ -165,7 +165,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions
 
             // Assert
             receivedMessage!.Should().NotBeNull();
-            receivedMessage!.ApplicationProperties.TryGetValue("ReplyTo", out var replyTo);
+            receivedMessage!.ApplicationProperties.TryGetValue(MessageMetaDataConstants.ReplyTo, out var replyTo);
             replyTo.Should().BeNull();
             content.SequenceEqual(receivedMessage.Body.ToArray()).Should().BeTrue();
         }

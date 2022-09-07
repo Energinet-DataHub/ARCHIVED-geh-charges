@@ -34,9 +34,14 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.Charges
 
         public const string TariffSystemOperatorCreate = "TestFiles/Charges/TariffSystemOperatorCreate.xml";
 
-        public const string TariffHourlyPricesSample = "TestFiles/Charges/Samples/TariffHourlyPricesSample.xml";
-        public const string FeeMonthlyPriceSample = "TestFiles/Charges/Samples/FeeMonthlyPriceSample.xml";
-        public const string SubscriptionMonthlyPriceSample = "TestFiles/Charges/Samples/SubscriptionMonthlyPriceSample.xml";
+        public const string ChargeInformationTariffHourlySample = "TestFiles/Charges/Samples/ChargeInformationTariffHourlySample.xml";
+        public const string ChargeInformationFeeMonthlySample = "TestFiles/Charges/Samples/ChargeInformationFeeMonthlySample.xml";
+        public const string ChargeInformationSubscriptionMonthlySample = "TestFiles/Charges/Samples/ChargeInformationSubscriptionMonthlySample.xml";
+        public const string BundledChargeInformationSample = "TestFiles/Charges/Samples/BundledChargeInformationSample.xml";
+        public const string ChargePriceSeriesSubscriptionMonthlySample = "TestFiles/Charges/Samples/ChargePriceSeriesSubscriptionMonthlySample.xml";
+        public const string ChargePriceSeriesFeeMonthlySample = "TestFiles/Charges/Samples/ChargePriceSeriesFeeMonthlySample.xml";
+        public const string ChargePriceSeriesTariffHourlySample = "TestFiles/Charges/Samples/ChargePriceSeriesTariffHourlySample.xml";
+        public const string BundledChargePriceSeriesSample = "TestFiles/Charges/Samples/BundledChargePriceSeriesSample.xml";
         public const string TariffPriceSeries = "TestFiles/Charges/PriceSeries/TariffPriceSeries.xml";
         public const string TariffPriceSeriesWithInvalidRecipientType = "TestFiles/Charges/PriceSeries/TariffPriceSeriesWithInvalidRecipientType.xml";
         public const string TariffPriceSeriesWithInvalidBusinessReasonCode = "TestFiles/Charges/PriceSeries/TariffPriceSeriesWithInvalidBusinessReasonCode.xml";

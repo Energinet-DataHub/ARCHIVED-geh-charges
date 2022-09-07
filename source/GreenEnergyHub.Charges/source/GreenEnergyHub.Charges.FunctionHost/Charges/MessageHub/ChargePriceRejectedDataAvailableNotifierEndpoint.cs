@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
@@ -40,8 +39,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
         [Function(FunctionName)]
         public async Task RunAsync(
             [ServiceBusTrigger(
-                "%" + EnvironmentSettingNames.ChargePriceRejectedTopicName + "%",
-                "%" + EnvironmentSettingNames.ChargePriceRejectedSubscriptionName + "%",
+                "%" + EnvironmentSettingNames.ChargesDomainEventTopicName + "%",
+                "%" + EnvironmentSettingNames.ChargePriceCommandRejectedSubscriptionName + "%",
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             byte[] message)
         {

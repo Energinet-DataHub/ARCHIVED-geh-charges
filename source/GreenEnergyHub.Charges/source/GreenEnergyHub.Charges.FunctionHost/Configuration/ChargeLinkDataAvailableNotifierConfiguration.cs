@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 .AddInternalMessageExtractor<ChargeLinksAcceptedEvent>()
                 .AddInternalMessageDispatcher<ChargeLinksDataAvailableNotifiedEvent>(
                     EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
-                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName));
+                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesDomainEventTopicName));
         }
     }
 }

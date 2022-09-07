@@ -48,43 +48,36 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
         public const string MarketParticipantChangedTopicKey = "market-participant-changed";
         public const string MarketParticipantChangedSubscriptionName = "market-participant-changed-to-charges";
 
+        // Internal, charge
+        public const string ChargesDomainEventsTopicKey = "sbt-charges-domain-events";
+
         // Internal, charge, received
-        public const string CommandReceivedTopicKey = "command-received";
-        public const string CommandReceivedSubscriptionName = "command-received";
+        public const string ChargeCommandReceivedSubscriptionName = "sbtsub-charges-charge-command-received";
 
         // Internal, charge price, received
-        public const string PriceCommandReceivedTopicKey = "price-command-received";
-        public const string PriceCommandReceivedSubscriptionName = "price-command-received";
+        public const string ChargePriceCommandReceivedSubscriptionName = "sbtsub-charges-charge-price-command-received";
 
         // Internal, charge, accepted
-        public const string CommandAcceptedTopicKey = "command-accepted";
-        public const string ChargeAcceptedSubDataAvailableNotifier = "chargeaccepted-sub-dataavailablenotifier";
-        public const string CommandAcceptedSubscriptionName = "command-accepted";
-        public const string CommandAcceptedReceiverSubscriptionName = "charge-command-accepted-receiver";
+        public const string ChargeAcceptedDataAvailableSubscriptionName = "sbtsub-charges-charge-accepted-dataavailable";
+        public const string ChargeCommandAcceptedSubscriptionName = "sbtsub-charges-charge-command-accepted";
+        public const string ChargeCommandAcceptedPublishSubscriptionName = "sbtsub-charges-charge-command-accepted-publish";
 
         // Internal, charge, rejected
-        public const string CommandRejectedTopicKey = "command-rejected";
-        public const string CommandRejectedSubscriptionName = "command-rejected";
+        public const string ChargeCommandRejectedSubscriptionName = "sbtsub-charges-charge-command-rejected";
 
         // Internal, charge price operations, rejected
-        public const string ChargePriceRejectedTopicKey = "charge-price-rejected";
-        public const string ChargePriceRejectedSubscriptionName = "charge-price-rejected";
+        public const string ChargePriceCommandRejectedSubscriptionName = "sbtsub-charges-charge-price-command-rejected";
 
         // Internal, charge links, received
-        public const string ChargeLinksReceivedTopicKey = "links-command-received";
-        public const string ChargeLinksReceivedSubscriptionName = "links-command-received-receiver";
+        public const string ChargeLinksCommandReceivedSubscriptionName = "sbtsub-charges-charge-links-command-received";
 
         // Internal, charge links, rejected
-        public const string ChargeLinksRejectedTopicKey = "links-command-rejected";
-        public const string ChargeLinksRejectedSubscriptionName = "links-command-rejected";
+        public const string ChargeLinksCommandRejectedSubscriptionName = "sbtsub-charges-charge-links-command-rejected";
 
         // Internal, charge links, accepted
-        public const string ChargeLinksAcceptedTopicKey = "links-command-accepted";
-        public const string ChargeLinksAcceptedConfirmationNotifierSubscriptionName = "charge-links-accepted-sub-confirmation-notifier";
-        public const string ChargeLinksAcceptedDataAvailableNotifierSubscriptionName = "charge-links-accepted-sub-data-available-notifier";
-        public const string ChargeLinksAcceptedEventPublisherSubscriptionName = "charge-links-accepted-sub-event-publisher";
-        public const string ChargeLinksAcceptedEventReplierSubscriptionName = "charge-links-accepted-sub-replier";
-        public const string DefaultChargeLinksDataAvailableNotifiedTopicKey = "default-charge-links-available";
-        public const string DefaultChargeLinksDataAvailableNotifiedSubscriptionName = "default-charge-links-available-notified";
+        public const string ChargeLinksAcceptedConfirmationSubscriptionName = "sbtsub-charges-charge-links-accepted-confirmation";
+        public const string ChargeLinksAcceptedDataAvailableSubscriptionName = "sbtsub-charges-charge-links-accepted-dataavailable";
+        public const string ChargeLinksAcceptedPublishSubscriptionName = "sbtsub-charges-charge-links-accepted-publish";
+        public const string DefaultChargeLinksDataAvailableSubscriptionName = "sbtsub-charges-default-charge-links-dataavailable";
     }
 }

@@ -9,7 +9,7 @@ DECLARE @tariff_charge_id UNIQUEIDENTIFIER = (SELECT TOP(1) [Id] from [Charges].
 DECLARE @fee_charge_id UNIQUEIDENTIFIER = (SELECT TOP(1) [Id] from [Charges].[Charge] where [SenderProvidedChargeId] = 'TestFee');
 DECLARE @subscription_charge_id UNIQUEIDENTIFIER = (SELECT TOP(1) [Id] from [Charges].[Charge] where [SenderProvidedChargeId] = 'TestSub');
 
-DECLARE @point_time [datetime2] = '2020-02-1 23:00:00';
+DECLARE @point_time [datetime2] = '2022-02-1 23:00:00';
 
 INSERT INTO [Charges].[ChargePoint] VALUES (@tariff_id, @tariff_charge_id, @point_time, 1.0, 1);
 INSERT INTO [Charges].[ChargePoint] VALUES (@fee_id, @fee_charge_id, @point_time, 1.0, 1);

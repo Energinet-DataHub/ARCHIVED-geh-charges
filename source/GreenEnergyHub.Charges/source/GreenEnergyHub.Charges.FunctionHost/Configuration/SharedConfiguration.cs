@@ -72,7 +72,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<FunctionTelemetryScopeMiddleware>();
             serviceCollection.AddScoped<MessageMetaDataMiddleware>();
             serviceCollection.AddScoped<FunctionInvocationLoggingMiddleware>();
-            serviceCollection.AddJwtTokenSecurity();
+
+            var tenantId = EnvironmentHelper.GetEnv(EnvironmentSettingNames.B2CTenantId);
+            var audience = EnvironmentHelper.GetEnv(EnvironmentSettingNames.BackendServiceAppId);
+            var metadataAddress = $"https://login.microsoftonline.com/{tenantId}/v2.0/.well-known/openid-configuration";
+            serviceCollection.AddJwtTokenSecurity(metadataAddress, audience);
+
             serviceCollection.AddActorContext();
             serviceCollection.AddApplicationInsightsTelemetryWorkerService();
 
@@ -156,7 +161,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 .AddInternalMessageExtractor<ChargeCommandAcceptedEvent>()
                 .AddExternalMessageDispatcher<ChargeLinksReceivedEvent>(
                 EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
-                EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksReceivedTopicName));
+                EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesDomainEventTopicName));
         }
 
         private static void ConfigureSharedCim(IServiceCollection serviceCollection)

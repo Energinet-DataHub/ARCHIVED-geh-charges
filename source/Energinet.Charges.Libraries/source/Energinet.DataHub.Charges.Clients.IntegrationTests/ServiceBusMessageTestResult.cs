@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Threading;
 
 namespace Energinet.DataHub.Charges.Clients.IntegrationTests
@@ -31,6 +32,8 @@ namespace Energinet.DataHub.Charges.Clients.IntegrationTests
         public BinaryData? Body { get; set; }
 
         public string? CorrelationId { get; set; }
+
+        public IReadOnlyDictionary<string, object>? ApplicationProperties { get; set; }
 
         public void Dispose()
         {

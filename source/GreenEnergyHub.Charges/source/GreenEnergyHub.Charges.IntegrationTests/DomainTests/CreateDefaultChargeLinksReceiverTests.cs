@@ -23,6 +23,7 @@ using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using FluentAssertions;
 using Google.Protobuf;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
@@ -78,8 +79,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                     () => Fixture.CreateLinkRequestQueue.SenderClient.SendMessageAsync(message), correlationId);
 
                 // Assert
-                var isMessageReceivedByQueue = isMessageReceived.MessageAwaiter!.Wait(TimeSpan.FromSeconds(60));
+                var isMessageReceivedByQueue = isMessageReceived.MessageAwaiter!.Wait(TimeSpan.FromSeconds(20));
                 isMessageReceivedByQueue.Should().BeTrue();
+                isMessageReceived.ApplicationProperties![MessageMetaDataConstants.CorrelationId]
+                    .Should().Be(correlationId);
             }
 
             public Task InitializeAsync()
@@ -108,11 +111,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 var byteArray = message.ToByteArray();
                 var serviceBusMessage = new ServiceBusMessage(byteArray)
                 {
+                    Subject = nameof(CreateDefaultChargeLinks),
                     CorrelationId = correlationId,
                     ApplicationProperties =
                     {
-                        new KeyValuePair<string, object>("OperationCorrelationId", correlationId),
-                        new KeyValuePair<string, object>("ReplyTo", replyToQueueName),
+                        new KeyValuePair<string, object>(MessageMetaDataConstants.CorrelationId, correlationId),
+                        new KeyValuePair<string, object>(MessageMetaDataConstants.ReplyTo, replyToQueueName),
                         new KeyValuePair<string, object>(Constants.ServiceBusIdentityKey, actor),
                     },
                 };

@@ -15,20 +15,29 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using GreenEnergyHub.Charges.Application.Charges.Events;
+using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.FunctionHost.Charges;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
+using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
+using Microsoft.EntityFrameworkCore;
 using NodaTime;
+using NodaTime.Text;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
@@ -61,19 +70,20 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
             [Theory]
             [InlineAutoMoqData]
-            public async Task ChargePriceCommandReceivedEvent_WhenValidationFails_PersistsRejectedEvent(
+            public async Task RunAsync_WhenValidationFails_PersistsRejectedEvent(
                 ChargePriceCommandBuilder commandBuilder,
                 ChargePriceOperationDtoBuilder operationDtoBuilder)
             {
                 // Arrange
                 await using var context = Fixture.ChargesDatabaseManager.CreateDbContext();
-                var invalidChargePriceCommandReceivedEvent = CreateInvalidChargePriceCommandReceivedEvent(commandBuilder, operationDtoBuilder);
+                var invalidChargePriceCommandReceivedEvent = CreateInvalidChargePriceCommandReceivedEvent(
+                    commandBuilder, operationDtoBuilder);
                 var correlationId = CorrelationIdGenerator.Create();
                 var message = CreateServiceBusMessage(invalidChargePriceCommandReceivedEvent, correlationId);
 
                 // Act
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
-                    () => Fixture.ChargePriceCommandReceivedTopic.SenderClient.SendMessageAsync(message), correlationId);
+                    () => Fixture.ChargesDomainEventTopic.SenderClient.SendMessageAsync(message), correlationId);
 
                 await FunctionAsserts.AssertHasExecutedAsync(
                     Fixture.HostManager, nameof(ChargePriceCommandReceiverEndpoint));
@@ -81,6 +91,48 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 // Assert
                 var actualOutboxMessage = context.OutboxMessages.Single(x => x.CorrelationId.Contains(correlationId));
                 actualOutboxMessage.Type.Should().Be(_operationsRejectedEventType);
+            }
+
+            [Theory]
+            [InlineAutoMoqData]
+            public async Task RunAsync_WhenPriceSeriesIsNotChanged_ConfirmationEventIsRaised(
+                ChargePriceCommandBuilder commandBuilder,
+                DocumentDtoBuilder documentDtoBuilder,
+                ChargePriceOperationDtoBuilder operationDtoBuilder)
+            {
+                // Arrange
+                var ownerId = SeededData.GridAreaLink.Provider8100000000030.Id;
+                const string ownerGln = SeededData.GridAreaLink.Provider8100000000030.MarketParticipantId;
+                const string chargeId = "TestTariff";
+                const ChargeType chargeType = ChargeType.Tariff;
+
+                await using var expectedChargeContext = Fixture.ChargesDatabaseManager.CreateDbContext();
+
+                var expectedCharge = await expectedChargeContext.Charges.FirstAsync(
+                    GetChargePredicate(chargeId, ownerId, chargeType));
+
+                var chargePriceCommandReceivedEvent = CreateChargePriceCommandReceivedEvent(
+                    commandBuilder, documentDtoBuilder, operationDtoBuilder, chargeId, ownerGln, chargeType);
+                var correlationId = CorrelationIdGenerator.Create();
+                var message = CreateServiceBusMessage(chargePriceCommandReceivedEvent, correlationId);
+
+                // Act
+                await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
+                    () => Fixture.ChargesDomainEventTopic.SenderClient.SendMessageAsync(message), correlationId);
+
+                await FunctionAsserts.AssertHasExecutedAsync(
+                    Fixture.HostManager, nameof(ChargePriceCommandReceiverEndpoint));
+
+                // Assert
+                await using var actualChargeContext = Fixture.ChargesDatabaseManager.CreateDbContext();
+                var actualCharge = await actualChargeContext.Charges.FirstAsync(
+                    GetChargePredicate(chargeId, ownerId, chargeType));
+
+                using var assertionScope = new AssertionScope();
+                actualCharge.Should().BeEquivalentTo(expectedCharge);
+                var actualOutboxMessage = await actualChargeContext.OutboxMessages
+                    .SingleOrDefaultAsync(x => x.CorrelationId.Contains(correlationId));
+                actualOutboxMessage.Should().BeNull();
             }
 
             private static ChargePriceCommandReceivedEvent CreateInvalidChargePriceCommandReceivedEvent(
@@ -93,11 +145,54 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 return chargePriceReceivedEvent;
             }
 
-            private static ServiceBusMessage CreateServiceBusMessage(ChargePriceCommandReceivedEvent command, string correlationId)
+            private static Expression<Func<Charge, bool>> GetChargePredicate(
+                string chargeId, Guid ownerId, ChargeType chargeType) =>
+                x =>
+                    x.SenderProvidedChargeId == chargeId &&
+                    x.OwnerId == ownerId &&
+                    x.Type == chargeType;
+
+            private static ChargePriceCommandReceivedEvent CreateChargePriceCommandReceivedEvent(
+                ChargePriceCommandBuilder commandBuilder,
+                DocumentDtoBuilder documentDtoBuilder,
+                ChargePriceOperationDtoBuilder operationDtoBuilder,
+                string chargeId,
+                string ownerId,
+                ChargeType chargeType)
             {
-                var applicationProperties = new Dictionary<string, string> { { "OperationCorrelationId", correlationId } };
+                var document = documentDtoBuilder
+                    .WithBusinessReasonCode(BusinessReasonCode.UpdateChargePrices)
+                    .WithDocumentType(DocumentType.RequestChangeOfPriceList)
+                    .Build();
+
+                var pointsStartDateTime = InstantPattern.ExtendedIso.Parse("2022-02-01T23:00:00Z").Value;
+                var pointsEndTime = InstantPattern.ExtendedIso.Parse("2022-02-02T23:00:00Z").Value;
+
+                var operation = operationDtoBuilder
+                    .WithOwner(ownerId)
+                    .WithChargeId(chargeId)
+                    .WithChargeType(chargeType)
+                    .WithPriceResolution(Resolution.P1D)
+                    .WithPointsInterval(pointsStartDateTime, pointsEndTime)
+                    .WithStartDateTime(pointsStartDateTime)
+                    .Build();
+                var priceCommand = commandBuilder
+                    .WithDocument(document)
+                    .WithChargeOperation(operation)
+                    .Build();
+                var chargePriceReceivedEvent = new ChargePriceCommandReceivedEvent(
+                    Instant.FromDateTimeUtc(DateTime.UtcNow), priceCommand);
+                return chargePriceReceivedEvent;
+            }
+
+            private static ServiceBusMessage CreateServiceBusMessage(IInternalEvent internalEvent, string correlationId)
+            {
+                var applicationProperties = new Dictionary<string, string>
+                {
+                    { MessageMetaDataConstants.CorrelationId, correlationId },
+                };
                 var message = ServiceBusMessageGenerator.CreateWithJsonContent(
-                    command, applicationProperties, correlationId);
+                    internalEvent, applicationProperties, correlationId, internalEvent.GetType().Name);
 
                 return message;
             }

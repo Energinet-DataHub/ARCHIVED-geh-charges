@@ -44,8 +44,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
         [Function(FunctionName)]
         public async Task RunAsync(
             [ServiceBusTrigger(
-                "%" + EnvironmentSettingNames.CommandAcceptedTopicName + "%",
-                "%" + EnvironmentSettingNames.CommandAcceptedSubscriptionName + "%",
+                "%" + EnvironmentSettingNames.ChargesDomainEventTopicName + "%",
+                "%" + EnvironmentSettingNames.ChargeCommandAcceptedSubscriptionName + "%",
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             byte[] message)
         {

@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using GreenEnergyHub.Charges.Application.Messaging;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factories
 {
@@ -32,34 +33,43 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factori
             _messageMetaDataContext = messageMetaDataContext;
         }
 
-        public ServiceBusMessage CreateInternalMessage(string data)
+        public ServiceBusMessage CreateInternalMessage(string data, string subject)
         {
             if (_messageMetaDataContext.IsReplyToSet())
             {
                 return new ServiceBusMessage(data)
                 {
+                    Subject = subject,
                     CorrelationId = _correlationContext.Id,
                     ApplicationProperties =
                     {
-                        new KeyValuePair<string, object>("ReplyTo", _messageMetaDataContext.ReplyTo),
-                        new KeyValuePair<string, object>("OperationCorrelationId", _correlationContext.Id),
+                        new KeyValuePair<string, object>(MessageMetaDataConstants.ReplyTo, _messageMetaDataContext.ReplyTo),
+                        new KeyValuePair<string, object>(MessageMetaDataConstants.CorrelationId, _correlationContext.Id),
                     },
                 };
             }
 
             return new ServiceBusMessage(data)
             {
+                Subject = subject,
                 CorrelationId = _correlationContext.Id,
                 ApplicationProperties =
                 {
-                    new KeyValuePair<string, object>("OperationCorrelationId", _correlationContext.Id),
+                    new KeyValuePair<string, object>(MessageMetaDataConstants.CorrelationId, _correlationContext.Id),
                 },
             };
         }
 
         public ServiceBusMessage CreateExternalMessage(byte[] data)
         {
-            return new ServiceBusMessage(data) { CorrelationId = _correlationContext.Id, };
+            return new ServiceBusMessage(data)
+            {
+                CorrelationId = _correlationContext.Id,
+                ApplicationProperties =
+                {
+                    new KeyValuePair<string, object>(MessageMetaDataConstants.CorrelationId, _correlationContext.Id),
+                },
+            };
         }
     }
 }
