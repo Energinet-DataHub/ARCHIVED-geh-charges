@@ -176,33 +176,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 outboxMessage.ProcessedDate.Should().Be(now);
             }
 
-            [Fact]
-            public async Task GivenNewRejectedEvent_WhenRunAsync_ThenRejectedEventIsProcessed()
-            {
-                // Arrange
-                var messageType = typeof(PriceRejectedEvent).FullName!;
-                await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-                await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
-                var jsonSerializer = new JsonSerializer();
-                var rejectedEvent = new PriceRejectedEventBuilder().Build();
-                var type = messageType;
-                var serializedEvent = jsonSerializer.Serialize(rejectedEvent);
-                var outboxMessage = new OutboxMessageBuilder().WithType(type).WithData(serializedEvent).Build();
-                chargesDatabaseWriteContext.OutboxMessages.Add(outboxMessage);
-                await chargesDatabaseWriteContext.SaveChangesAsync();
-                outboxMessage.ProcessedDate.Should().BeNull();
-
-                // Act
-                await FunctionAsserts.AssertHasExecutedAsync(
-                    Fixture.HostManager, nameof(OutboxMessageProcessorEndpoint));
-
-                // Assert
-                var processedOutboxMessage = chargesDatabaseReadContext.OutboxMessages.Single(x => x.Id == outboxMessage.Id);
-                processedOutboxMessage.Should().BeEquivalentTo(outboxMessage, om => om.Excluding(p => p.ProcessedDate));
-                processedOutboxMessage.ProcessedDate.Should().NotBeNull();
-                processedOutboxMessage.Type.Should().Be(messageType);
-            }
-
             private static PriceRejectedEvent CreateChargePriceOperationsRejectedEvent()
             {
                 var chargePriceOperation =
