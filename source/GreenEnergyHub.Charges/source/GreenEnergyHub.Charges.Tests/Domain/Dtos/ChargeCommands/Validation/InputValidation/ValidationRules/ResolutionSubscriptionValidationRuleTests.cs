@@ -103,11 +103,16 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         [InlineAutoDomainData]
         public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder)
         {
+            // Arrange
             var chargeOperationDto = chargeInformationOperationDtoBuilder
                 .WithChargeType(ChargeType.Subscription)
                 .WithResolution(Resolution.Unknown)
                 .Build();
+
+            // Act
             var sut = new ResolutionSubscriptionValidationRule(chargeOperationDto);
+
+            // Assert
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ResolutionSubscriptionValidation);
         }
     }

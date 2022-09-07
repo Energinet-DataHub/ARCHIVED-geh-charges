@@ -104,11 +104,16 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
         [InlineAutoDomainData]
         public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargePriceOperationDtoBuilder builder)
         {
+            // Arrange
             var chargeOperationDto = builder
                 .WithChargeType(ChargeType.Tariff)
                 .WithPriceResolution(Resolution.Unknown)
                 .Build();
+
+            // Act
             var sut = new ResolutionTariffValidationRule(chargeOperationDto);
+
+            // Assert
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ResolutionTariffValidation);
         }
     }
