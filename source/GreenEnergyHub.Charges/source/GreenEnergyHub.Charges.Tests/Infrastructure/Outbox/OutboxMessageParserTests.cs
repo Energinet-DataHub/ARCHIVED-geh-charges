@@ -26,7 +26,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Outbox
     public class OutboxMessageParserTests
     {
         [Fact]
-        public void GivenPriceRejectedEventType_WhenParseCalled_ThenPriceRejectedEventReturned()
+        public void Parse_PriceRejectedEventType_PriceRejectedEventReturned()
         {
             // Arrange
             var jsonSerializer = new JsonSerializer();
