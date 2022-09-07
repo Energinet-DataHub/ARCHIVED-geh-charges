@@ -49,35 +49,35 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
         public const string MarketParticipantChangedSubscriptionName = "market-participant-changed-to-charges";
 
         // Internal, charge
-        public const string ChargesDomainEventsTopicKey = "charges-domain-events";
+        public const string ChargesDomainEventsTopicKey = "sbt-charges-domain-events";
 
         // Internal, charge, received
-        public const string ChargeCommandReceivedSubscriptionName = "charge-command-received";
+        public const string ChargeCommandReceivedSubscriptionName = "sbtsub-charges-charge-command-received";
 
         // Internal, charge price, received
-        public const string ChargePriceCommandReceivedSubscriptionName = "charge-price-command-received";
+        public const string ChargePriceCommandReceivedSubscriptionName = "sbtsub-charges-charge-price-command-received";
 
         // Internal, charge, accepted
-        public const string ChargeAcceptedDataAvailableSubscriptionName = "charge-accepted-dataavailable";
-        public const string ChargeCommandAcceptedSubscriptionName = "charge-command-accepted";
-        public const string ChargeCommandAcceptedPublishSubscriptionName = "charge-command-accepted-publish";
+        public const string ChargeAcceptedDataAvailableSubscriptionName = "sbtsub-charges-charge-accepted-dataavailable";
+        public const string ChargeCommandAcceptedSubscriptionName = "sbtsub-charges-charge-command-accepted";
+        public const string ChargeCommandAcceptedPublishSubscriptionName = "sbtsub-charges-charge-command-accepted-publish";
 
         // Internal, charge, rejected
-        public const string ChargeCommandRejectedSubscriptionName = "charge-command-rejected";
+        public const string ChargeCommandRejectedSubscriptionName = "sbtsub-charges-charge-command-rejected";
 
         // Internal, charge price operations, rejected
-        public const string ChargePriceCommandRejectedSubscriptionName = "charge-price-command-rejected";
+        public const string ChargePriceCommandRejectedSubscriptionName = "sbtsub-charges-charge-price-command-rejected";
 
         // Internal, charge links, received
-        public const string ChargeLinksCommandReceivedSubscriptionName = "charge-links-command-received";
+        public const string ChargeLinksCommandReceivedSubscriptionName = "sbtsub-charges-charge-links-command-received";
 
         // Internal, charge links, rejected
-        public const string ChargeLinksCommandRejectedSubscriptionName = "charge-links-command-rejected";
+        public const string ChargeLinksCommandRejectedSubscriptionName = "sbtsub-charges-charge-links-command-rejected";
 
         // Internal, charge links, accepted
-        public const string ChargeLinksAcceptedConfirmationSubscriptionName = "charge-links-accepted-confirmation";
-        public const string ChargeLinksAcceptedDataAvailableSubscriptionName = "charge-links-accepted-dataavailable";
-        public const string ChargeLinksAcceptedPublishSubscriptionName = "charge-links-accepted-publish";
-        public const string DefaultChargeLinksDataAvailableSubscriptionName = "default-charge-links-dataavailable";
+        public const string ChargeLinksAcceptedConfirmationSubscriptionName = "sbtsub-charges-charge-links-accepted-confirmation";
+        public const string ChargeLinksAcceptedDataAvailableSubscriptionName = "sbtsub-charges-charge-links-accepted-dataavailable";
+        public const string ChargeLinksAcceptedPublishSubscriptionName = "sbtsub-charges-charge-links-accepted-publish";
+        public const string DefaultChargeLinksDataAvailableSubscriptionName = "sbtsub-charges-default-charge-links-dataavailable";
     }
 }

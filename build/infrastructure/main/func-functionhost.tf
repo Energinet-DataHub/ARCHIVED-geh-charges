@@ -40,24 +40,24 @@ module "func_functionhost" {
     DOMAINEVENT_LISTENER_CONNECTION_STRING                          = module.sb_charges.primary_connection_strings["listen"]
     
     # Topics
-    CHARGES_TOPIC_NAME                                              = "charges-domain-events"
+    CHARGES_TOPIC_NAME                                              = "sbt-charges-domain-events"
     CHARGE_CREATED_TOPIC_NAME                                       = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbt-charge-created-name)"
     CHARGE_PRICES_UPDATED_TOPIC_NAME                                = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbt-charge-prices-updated-name)"
     CHARGE_LINKS_CREATED_TOPIC_NAME                                 = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbt-charge-link-created-name)"
 
-    # Charge domain subscriptions
-    CHARGE_LINKS_COMMAND_REJECTED_SUBSCRIPTION_NAME                 = "charge-links-command-rejected"
-    CHARGE_LINKS_ACCEPTED_PUBLISH_SUBSCRIPTION_NAME                 = "charge-links-accepted-publish"
-    CHARGE_LINKS_ACCEPTED_DATAAVAILABLE_SUBSCRIPTION_NAME           = "charge-links-accepted-dataavailable"
-    CHARGE_LINKS_ACCEPTED_CONFIRMATION_SUBSCRIPTION_NAME            = "charge-links-accepted-confirmation"    
-    CHARGE_LINKS_COMMAND_RECEIVED_SUBSCRIPTION_NAME                 = "charge-links-command-received"
-    CHARGE_COMMAND_ACCEPTED_PUBLISH_SUBSCRIPTION_NAME               = "charge-command-accepted-publish"
-    CHARGE_ACCEPTED_DATAAVAILABLE_SUBSCRIPTION_NAME                 = "charge-accepted-dataavailable"
-    CHARGE_COMMAND_ACCEPTED_SUBSCRIPTION_NAME                       = "charge-command-accepted"
-    CHARGE_COMMAND_RECEIVED_SUBSCRIPTION_NAME                       = "charge-command-received"
-    CHARGE_COMMAND_REJECTED_SUBSCRIPTION_NAME                       = "charge-command-rejected"
-    CHARGE_PRICE_COMMAND_RECEIVED_SUBSCRIPTION_NAME                 = "charge-price-command-received"
-    CHARGE_PRICE_COMMAND_REJECTED_SUBSCRIPTION_NAME                 = "charge-price-command-rejected"
+    # Charge domain event subscriptions
+    CHARGE_LINKS_COMMAND_REJECTED_SUBSCRIPTION_NAME                 = "sbtsub-charges-charge-links-command-rejected"
+    CHARGE_LINKS_ACCEPTED_PUBLISH_SUBSCRIPTION_NAME                 = "sbtsub-charges-charge-links-accepted-publish"
+    CHARGE_LINKS_ACCEPTED_DATAAVAILABLE_SUBSCRIPTION_NAME           = "sbtsub-charges-charge-links-accepted-dataavailable"
+    CHARGE_LINKS_ACCEPTED_CONFIRMATION_SUBSCRIPTION_NAME            = "sbtsub-charges-charge-links-accepted-confirmation"    
+    CHARGE_LINKS_COMMAND_RECEIVED_SUBSCRIPTION_NAME                 = "sbtsub-charges-charge-links-command-received"
+    CHARGE_COMMAND_ACCEPTED_PUBLISH_SUBSCRIPTION_NAME               = "sbtsub-charges-charge-command-accepted-publish"
+    CHARGE_ACCEPTED_DATAAVAILABLE_SUBSCRIPTION_NAME                 = "sbtsub-charges-charge-accepted-dataavailable"
+    CHARGE_COMMAND_ACCEPTED_SUBSCRIPTION_NAME                       = "sbtsub-charges-charge-command-accepted"
+    CHARGE_COMMAND_RECEIVED_SUBSCRIPTION_NAME                       = "sbtsub-charges-charge-command-received"
+    CHARGE_COMMAND_REJECTED_SUBSCRIPTION_NAME                       = "sbtsub-charges-charge-command-rejected"
+    CHARGE_PRICE_COMMAND_RECEIVED_SUBSCRIPTION_NAME                 = "sbtsub-charges-charge-price-command-received"
+    CHARGE_PRICE_COMMAND_REJECTED_SUBSCRIPTION_NAME                 = "sbtsub-charges-charge-price-command-rejected"
 
     # Integration
     CREATE_LINKS_REQUEST_QUEUE_NAME                                 = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbq-create-link-request-name)"
