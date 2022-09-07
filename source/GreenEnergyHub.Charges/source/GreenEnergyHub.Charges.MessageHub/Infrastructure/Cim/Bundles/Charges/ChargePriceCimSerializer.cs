@@ -78,38 +78,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.Charges
                     GetChargePricesTypeElement(cimNamespace, chargePrice));
         }
 
-        private XElement GetChargePriceTypeElement(
-            XNamespace cimNamespace,
-            AvailableChargePriceData chargePrice)
-        {
-            return new XElement(
-                cimNamespace + CimChargeConstants.ChargeTypeElement,
-                new XElement(
-                    cimNamespace + CimChargeConstants.ChargeOwner,
-                    new XAttribute(
-                        CimMarketDocumentConstants.CodingScheme,
-                        CodingSchemeMapper.Map(CodingScheme.GS1)),
-                    chargePrice.ChargeOwner),
-                new XElement(cimNamespace + CimChargeConstants.ChargeType, ChargeTypeMapper.Map(chargePrice.ChargeType)),
-                new XElement(cimNamespace + CimChargeConstants.ChargeId, chargePrice.ChargeId),
-                // Charge resolution
-                CimHelper.GetElementIfNeeded(
-                    cimNamespace,
-                    // Charge resolution is not needed if there are prices, as it will be added in that section
-                    chargePrice.Points.Count > 0,
-                    CimChargeConstants.ChargeResolution,
-                    () => ResolutionMapper.Map(chargePrice.Resolution)),
-                // EffectiveDate
-                new XElement(cimNamespace + CimChargeConstants.EffectiveDate, chargePrice.StartDateTime.ToString()),
-                // TerminationDate
-                CimHelper.GetElementIfNeeded(
-                    cimNamespace,
-                    chargePrice.EndDateTime.IsEndDefault(),
-                    CimChargeConstants.TerminationDate,
-                    () => chargePrice.EndDateTime.ToString()),
-                GetSeriesPeriod(cimNamespace, chargePrice));
-        }
-
         private XElement GetChargePricesTypeElement(
             XNamespace cimNamespace,
             AvailableChargePriceData chargePrice)
