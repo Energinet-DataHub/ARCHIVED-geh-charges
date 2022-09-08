@@ -91,7 +91,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddJwtTokenSecurity();
             serviceCollection.AddActorContext();
             serviceCollection.AddApplicationInsightsTelemetryWorkerService();
-            serviceCollection.AddEventPublishing(serviceBusClient);
+            serviceCollection.AddInternalEventPublishing(serviceBusClient);
 
             ConfigureSharedDatabase(serviceCollection);
             ConfigureSharedMessaging(serviceCollection);

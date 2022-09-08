@@ -13,10 +13,12 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
+using Castle.Components.DictionaryAdapter;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using Energinet.DataHub.Core.JsonSerialization;
@@ -24,6 +26,7 @@ using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Application.Messaging;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 using GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub;
 using GreenEnergyHub.Charges.FunctionHost.MessageHub;
@@ -73,14 +76,16 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 return Task.CompletedTask;
             }
 
-            [Fact]
-            public async Task RunAsync_WhenRejectedOutboxMessageIsRead_AvailableDataIsPersisted_AndProcessedDateIsSet()
+            [Theory]
+            [InlineAutoMoqData]
+            public async Task RunAsync_WhenRejectedOutboxMessageIsRead_AvailableDataIsPersisted_AndProcessedDateIsSet(
+                PriceRejectedEventBuilder priceRejectedEventBuilder)
             {
                 // Arrange
                 await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
                 await using var messageHubDatabaseContext = Fixture.MessageHubDatabaseManager.CreateDbContext();
                 await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
-                var operationsRejectedEvent = new PriceRejectedEventBuilder().Build();
+                var operationsRejectedEvent = priceRejectedEventBuilder.Build();
 
                 // Act
                 var outboxMessage = await PersistToOutboxMessage(chargesDatabaseWriteContext, operationsRejectedEvent);

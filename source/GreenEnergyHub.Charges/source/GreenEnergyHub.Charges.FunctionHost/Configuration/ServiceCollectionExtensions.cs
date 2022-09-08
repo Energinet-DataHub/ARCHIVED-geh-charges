@@ -81,7 +81,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IActorProvider, ActorProvider>();
         }
 
-        public static void AddEventPublishing(this IServiceCollection serviceCollection, ServiceBusClient serviceBusClient)
+        public static void AddInternalEventPublishing(this IServiceCollection serviceCollection, ServiceBusClient serviceBusClient)
         {
             var mapper = new ServiceBusEventMapper();
             mapper.Add(typeof(ChargeCommandReceivedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandReceivedTopicName));
