@@ -134,9 +134,9 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
             // Assert
             foreach (var validationRuleIdentifier in validationRuleIdentifiers)
             {
-                string? triggeredBy = null;
-                if (validationRuleIdentifier == ValidationRuleIdentifier.SubsequentBundleOperationsFail)
-                    triggeredBy = chargePriceOperationDto.OperationId;
+                var triggeredBy = validationRuleIdentifier == ValidationRuleIdentifier.SubsequentBundleOperationsFail ?
+                    chargePriceOperationDto.OperationId :
+                    null!;
 
                 var actual = sut.Create(
                     new ValidationError(validationRuleIdentifier, null, triggeredBy),
