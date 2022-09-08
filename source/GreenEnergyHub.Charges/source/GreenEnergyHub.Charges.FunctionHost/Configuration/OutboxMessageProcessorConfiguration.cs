@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 .AddInternalMessageExtractor<ChargePriceOperationsRejectedEvent>()
                 .AddInternalMessageDispatcher<ChargePriceOperationsRejectedEvent>(
                     EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
-                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargePriceRejectedTopicName));
+                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesDomainEventTopicName));
         }
     }
 }
