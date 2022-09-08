@@ -35,9 +35,9 @@ module "func_functionhost" {
     LOCAL_TIMEZONENAME                                              = "Europe/Copenhagen"
     CURRENCY                                                        = "DKK"
     CHARGE_DB_CONNECTION_STRING                                     = local.MS_CHARGE_DB_CONNECTION_STRING
-    DOMAINEVENT_SENDER_CONNECTION_STRING                            = data.azurerm_key_vault_secret.sb_domain_relay_send_connection_string
-    DOMAINEVENT_MANAGER_CONNECTION_STRING                           = data.azurerm_key_vault_secret.sb_domain_relay_manage_connection_string
-    DOMAINEVENT_LISTENER_CONNECTION_STRING                          = data.azurerm_key_vault_secret.sb_domain_relay_listen_connection_string
+    DOMAINEVENT_SENDER_CONNECTION_STRING                            = data.azurerm_key_vault_secret.sb_domain_relay_send_connection_string.value
+    DOMAINEVENT_MANAGER_CONNECTION_STRING                           = data.azurerm_key_vault_secret.sb_domain_relay_manage_connection_string.value
+    DOMAINEVENT_LISTENER_CONNECTION_STRING                          = data.azurerm_key_vault_secret.sb_domain_relay_listen_connection_string.value
     
     # Topics
     DOMAIN_EVENTS_TOPIC_NAME                                        = "sbt-charges-domain-events"
