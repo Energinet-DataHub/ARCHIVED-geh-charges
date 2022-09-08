@@ -42,7 +42,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
         {
             // Arrange
             var document = documentDtoBuilder
-                .WithDocumentType(DocumentType.NotifyPriceList)
+                .WithDocumentType(DocumentType.RejectRequestChangeOfPriceList)
                 .WithBusinessReasonCode(BusinessReasonCode.UpdateChargePrices)
                 .Build();
             var sut = new ChargePriceCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
