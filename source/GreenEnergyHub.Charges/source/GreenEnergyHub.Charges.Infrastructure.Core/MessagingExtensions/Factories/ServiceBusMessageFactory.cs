@@ -33,12 +33,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factori
             _messageMetaDataContext = messageMetaDataContext;
         }
 
-        public ServiceBusMessage CreateInternalMessage(string data)
+        public ServiceBusMessage CreateInternalMessage(string data, string subject)
         {
             if (_messageMetaDataContext.IsReplyToSet())
             {
                 return new ServiceBusMessage(data)
                 {
+                    Subject = subject,
                     CorrelationId = _correlationContext.Id,
                     ApplicationProperties =
                     {
@@ -50,6 +51,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factori
 
             return new ServiceBusMessage(data)
             {
+                Subject = subject,
                 CorrelationId = _correlationContext.Id,
                 ApplicationProperties =
                 {
@@ -60,7 +62,14 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factori
 
         public ServiceBusMessage CreateExternalMessage(byte[] data)
         {
-            return new ServiceBusMessage(data) { CorrelationId = _correlationContext.Id, };
+            return new ServiceBusMessage(data)
+            {
+                CorrelationId = _correlationContext.Id,
+                ApplicationProperties =
+                {
+                    new KeyValuePair<string, object>(MessageMetaDataConstants.CorrelationId, _correlationContext.Id),
+                },
+            };
         }
     }
 }

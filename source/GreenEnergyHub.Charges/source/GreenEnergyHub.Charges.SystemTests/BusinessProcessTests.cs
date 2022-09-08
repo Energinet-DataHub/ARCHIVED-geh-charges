@@ -19,6 +19,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.FunctionApp.TestCommon.Configuration.B2C;
 using Energinet.DataHub.Core.TestCommon;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
@@ -36,20 +37,18 @@ namespace GreenEnergyHub.Charges.SystemTests
     [Collection(nameof(SystemTestCollectionFixture))]
     public class BusinessProcessTests : IClassFixture<BusinessProcessConfiguration>
     {
-        private readonly BackendAuthenticationClient _authenticationClient;
+        private readonly B2CAppAuthenticationClient _authenticationClient;
 
         public BusinessProcessTests()
         {
             Configuration = new BusinessProcessConfiguration();
 
-            var clientCredentialsSettings = Configuration.AuthorizationConfiguration.B2CTestClients
-                .First(tc => tc.ClientName == "endk-ddm3")
-                .ClientCredentialsSettings;
+            var clientApp = Configuration.AuthorizationConfiguration.ClientApps["endk-ddm3"];
 
-            _authenticationClient = new BackendAuthenticationClient(
-                Configuration.AuthorizationConfiguration.BackendAppScope,
-                clientCredentialsSettings,
-                Configuration.AuthorizationConfiguration.B2CTenantId);
+            _authenticationClient = new B2CAppAuthenticationClient(
+                Configuration.AuthorizationConfiguration.TenantId,
+                Configuration.AuthorizationConfiguration.BackendApp,
+                clientApp);
         }
 
         private BusinessProcessConfiguration Configuration { get; }
@@ -167,7 +166,7 @@ namespace GreenEnergyHub.Charges.SystemTests
             var authenticationResult = await _authenticationClient.GetAuthenticationTokenAsync();
             return new HttpClient
             {
-                BaseAddress = Configuration.ApiManagementBaseAddress,
+                BaseAddress = Configuration.AuthorizationConfiguration.ApiManagementBaseAddress,
                 DefaultRequestHeaders =
                 {
                     Authorization = new AuthenticationHeaderValue("Bearer", authenticationResult.AccessToken),

@@ -54,8 +54,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
                         d => d.DispatchAsync(
                             chargeLinkCreatedEvent,
                             It.IsAny<CancellationToken>()))
-                    .Callback<ChargeLinkCreatedEvent, CancellationToken>(
-                        (_, _) => dispatched = true);
+                    .Callback<ChargeLinkCreatedEvent, CancellationToken>((_, _) => dispatched = true);
             }
 
             // Act

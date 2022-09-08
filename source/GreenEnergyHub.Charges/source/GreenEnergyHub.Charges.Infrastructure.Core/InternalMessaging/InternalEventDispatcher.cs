@@ -41,7 +41,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.InternalMessaging
         public async Task DispatchAsync<T>(T internalEvent, CancellationToken cancellationToken = default)
         {
             ArgumentNullException.ThrowIfNull(internalEvent);
-            var data = _jsonSerializer.Serialize(internalEvent);
+            var data = _jsonSerializer.Serialize(internalEvent, internalEvent.GetType().Name);
             var serviceBusMessage = _serviceBusMessageFactory.CreateInternalMessage(data);
             await _serviceBusDispatcher.DispatchAsync(serviceBusMessage, internalEvent.GetType(), cancellationToken).ConfigureAwait(false);
         }

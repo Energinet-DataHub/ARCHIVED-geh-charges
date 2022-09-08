@@ -14,7 +14,7 @@
 
 using System;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.IntegrationTest.Core.Authorization;
+using Energinet.DataHub.Core.FunctionApp.TestCommon.Configuration.B2C;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.WebApi;
@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.WebApi
 
         public ChargesDatabaseManager DatabaseManager { get; }
 
-        public AuthorizationConfiguration AuthorizationConfiguration { get; }
+        public B2CAuthorizationConfiguration AuthorizationConfiguration { get; }
 
         /// <inheritdoc/>
         protected override void OnConfigureEnvironment()
@@ -51,8 +51,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.WebApi
                 $"CONNECTIONSTRINGS:{EnvironmentSettingNames.ChargeDbConnectionString}",
                 DatabaseManager.ConnectionString);
 
-            Environment.SetEnvironmentVariable(EnvironmentSettingNames.FrontEndOpenIdUrl, AuthorizationConfiguration.FrontendOpenIdUrl);
-            Environment.SetEnvironmentVariable(EnvironmentSettingNames.FrontEndServiceAppId, AuthorizationConfiguration.FrontendAppId);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.FrontEndOpenIdUrl, AuthorizationConfiguration.FrontendOpenIdConfigurationUrl);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.FrontEndServiceAppId, AuthorizationConfiguration.FrontendApp.AppId);
         }
 
         /// <inheritdoc/>

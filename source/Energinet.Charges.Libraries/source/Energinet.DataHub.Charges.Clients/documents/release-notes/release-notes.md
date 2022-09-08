@@ -1,5 +1,17 @@
 # Energinet.DataHub.Charges.Clients Release notes
 
+## Version 3.0.12
+
+`ChargeLinksClient` calls will now be routed to `v1/ChargeLinks` instead of `v2`
+
+## Version 3.0.11
+
+Updated NuGet packages
+
+## Version 3.0.10
+
+Added custom property `OperationCorrelationId` to `ServiceBusRequestSender`
+
 ## Version 3.0.9
 
 Updated NuGet packages

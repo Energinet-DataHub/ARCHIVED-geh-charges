@@ -38,38 +38,35 @@ module "func_functionhost" {
     DOMAINEVENT_SENDER_CONNECTION_STRING                            = module.sb_charges.primary_connection_strings["send"]
     DOMAINEVENT_MANAGER_CONNECTION_STRING                           = module.sb_charges.primary_connection_strings["manage"]
     DOMAINEVENT_LISTENER_CONNECTION_STRING                          = module.sb_charges.primary_connection_strings["listen"]
+    
+    # Topics
+    DOMAIN_EVENTS_TOPIC_NAME                                        = "sbt-charges-domain-events"
     CHARGE_CREATED_TOPIC_NAME                                       = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbt-charge-created-name)"
     CHARGE_PRICES_UPDATED_TOPIC_NAME                                = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbt-charge-prices-updated-name)"
-    CHARGE_LINKS_ACCEPTED_TOPIC_NAME                                = module.sbt_links_command_accepted.name
-    CHARGE_LINKS_REJECTED_TOPIC_NAME                                = module.sbt_links_command_rejected.name
-    CHARGE_LINKS_REJECTED_SUBSCRIPTION_NAME                         = "links-command-rejected"
-    CHARGE_LINKS_ACCEPTED_SUB_REPLIER                               = "charge-links-accepted-sub-replier"
-    CHARGE_LINKS_ACCEPTED_SUB_EVENT_PUBLISHER                       = "charge-links-accepted-sub-event-publisher"
-    CHARGE_LINKS_ACCEPTED_SUB_DATA_AVAILABLE_NOTIFIER               = "charge-links-accepted-sub-data-available-notifier"
-    CHARGE_LINKS_ACCEPTED_SUB_CONFIRMATION_NOTIFIER                 = "charge-links-accepted-sub-confirmation-notifier"
     CHARGE_LINKS_CREATED_TOPIC_NAME                                 = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbt-charge-link-created-name)"
-    CHARGE_LINKS_RECEIVED_TOPIC_NAME                                = module.sbt_links_command_received.name
-    CHARGE_LINKS_RECEIVED_SUBSCRIPTION_NAME                         = "links-command-received-receiver"
-    COMMAND_ACCEPTED_TOPIC_NAME                                     = module.sbt_command_accepted.name
-    COMMAND_ACCEPTED_RECEIVER_SUBSCRIPTION_NAME                     = "charge-command-accepted-receiver"
-    CHARGEACCEPTED_SUB_DATAAVAILABLENOTIFIER                        = "chargeaccepted-sub-dataavailablenotifier"
-    COMMAND_ACCEPTED_SUBSCRIPTION_NAME                              = "command-accepted"
-    COMMAND_RECEIVED_TOPIC_NAME                                     = module.sbt_command_received.name
-    COMMAND_RECEIVED_SUBSCRIPTION_NAME                              = "command-received"
-    PRICE_COMMAND_RECEIVED_TOPIC_NAME                               = module.sbt_price_command_received.name
-    PRICE_COMMAND_RECEIVED_SUBSCRIPTION_NAME                        = "price-command-received"
-    COMMAND_REJECTED_TOPIC_NAME                                     = module.sbt_command_rejected.name
-    COMMAND_REJECTED_SUBSCRIPTION_NAME                              = "command-rejected"
-    DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_TOPIC_NAME         = module.sbt_default_charge_links_available_notified.name
-    DEFAULT_CHARGE_LINKS_DATA_AVAILABLE_NOTIFIED_SUBSCRIPTION_NAME  = "default-charge-links-available-notified"
+
+    # Charge domain event subscriptions
+    CHARGE_LINKS_COMMAND_REJECTED_SUBSCRIPTION_NAME                 = "sbtsub-charges-charge-links-command-rejected"
+    CHARGE_LINKS_ACCEPTED_PUBLISH_SUBSCRIPTION_NAME                 = "sbtsub-charges-charge-links-accepted-publish"
+    CHARGE_LINKS_ACCEPTED_DATAAVAILABLE_SUBSCRIPTION_NAME           = "sbtsub-charges-charge-links-accepted-dataavailable"
+    CHARGE_LINKS_ACCEPTED_CONFIRMATION_SUBSCRIPTION_NAME            = "sbtsub-charges-charge-links-accepted-confirmation"    
+    CHARGE_LINKS_COMMAND_RECEIVED_SUBSCRIPTION_NAME                 = "sbtsub-charges-charge-links-command-received"
+    CHARGE_COMMAND_ACCEPTED_PUBLISH_SUBSCRIPTION_NAME               = "sbtsub-charges-charge-command-accepted-publish"
+    CHARGE_ACCEPTED_DATAAVAILABLE_SUBSCRIPTION_NAME                 = "sbtsub-charges-charge-accepted-dataavailable"
+    CHARGE_COMMAND_ACCEPTED_SUBSCRIPTION_NAME                       = "sbtsub-charges-charge-command-accepted"
+    CHARGE_COMMAND_RECEIVED_SUBSCRIPTION_NAME                       = "sbtsub-charges-charge-command-received"
+    CHARGE_COMMAND_REJECTED_SUBSCRIPTION_NAME                       = "sbtsub-charges-charge-command-rejected"
+    CHARGE_PRICE_COMMAND_RECEIVED_SUBSCRIPTION_NAME                 = "sbtsub-charges-charge-price-command-received"
+    CHARGE_PRICE_COMMAND_REJECTED_SUBSCRIPTION_NAME                 = "sbtsub-charges-charge-price-command-rejected"
+    DEFAULT_CHARGE_LINKS_DATAAVAILABLE_SUBSCRIPTION_NAME            = "sbtsub-charges-default-charge-links-dataavailable"
+
+    # Integration
     CREATE_LINKS_REQUEST_QUEUE_NAME                                 = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbq-create-link-request-name)"
     METERING_POINT_CREATED_TOPIC_NAME                               = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbt-metering-point-created-name)"
     METERING_POINT_CREATED_SUBSCRIPTION_NAME                        = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbs-metering-point-created-sub-charges-name)"
     MARKET_PARTICIPANT_CHANGED_TOPIC_NAME                           = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbt-market-participant-changed-name)"
     MARKET_PARTICIPANT_CHANGED_SUBSCRIPTION_NAME                    = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbs-market-participant-changed-to-charges-name)"
-    CHARGE_PRICE_REJECTED_TOPIC_NAME                                = module.sbt_charge_price_rejected.name
     CHARGE_PRICE_REJECTED_SUBSCRIPTION_NAME                         = "charge-price-rejected"
-    CHARGE_PRICE_CONFIRMED_TOPIC_NAME                               = module.sbt_charge_price_confirmed.name
     CHARGE_PRICE_CONFIRMED_SUBSCRIPTION_NAME                        = "charge-price-confirmed"
     CHARGE_PRICE_CONFIRMED_DATAAVAILABLENOTIFIER_SUBSCRIPTION_NAME  = "charge-price-confirmed-dataavailablenotifier"
     

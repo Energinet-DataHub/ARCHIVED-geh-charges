@@ -78,11 +78,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
                 // Act
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
-                    () => Fixture.ChargeLinksAcceptedTopic.SenderClient.SendMessageAsync(message), correlationId);
+                    () => Fixture.ChargesDomainEventTopic.SenderClient.SendMessageAsync(message), correlationId);
 
                 // Assert
-                var isMessageReceivedByQueue = isMessageReceived.MessageAwaiter!.Wait(TimeSpan.FromSeconds(60));
+                var isMessageReceivedByQueue = isMessageReceived.MessageAwaiter!.Wait(TimeSpan.FromSeconds(20));
                 isMessageReceivedByQueue.Should().BeTrue();
+                isMessageReceived.ApplicationProperties![MessageMetaDataConstants.CorrelationId]
+                    .Should().Be(correlationId);
             }
 
             private ServiceBusMessage CreateServiceBusMessage(ChargeLinksCommand command, string correlationId)
@@ -97,7 +99,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 };
 
                 var message = ServiceBusMessageGenerator.CreateWithJsonContent(
-                    chargeLinksAcceptedEvent, applicationProperties, correlationId);
+                    chargeLinksAcceptedEvent,
+                    applicationProperties,
+                    correlationId,
+                    chargeLinksAcceptedEvent.GetType().Name);
 
                 return message;
             }
