@@ -41,8 +41,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
 
             // Assert
             messageDispatcher.Verify(
-                x =>
-                    x.DispatchAsync(It.IsAny<ChargeLinksReceivedEvent>(), It.IsAny<CancellationToken>()),
+                x => x.DispatchAsync(
+                    It.IsAny<ChargeLinksReceivedEvent>(),
+                    It.IsAny<CancellationToken>()),
                 Times.Once);
         }
     }

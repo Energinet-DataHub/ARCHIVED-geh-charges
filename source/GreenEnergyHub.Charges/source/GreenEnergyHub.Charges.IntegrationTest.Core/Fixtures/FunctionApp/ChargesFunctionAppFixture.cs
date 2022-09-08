@@ -27,6 +27,15 @@ using Energinet.DataHub.Core.FunctionApp.TestCommon.FunctionAppHost;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ListenerMock;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ResourceProvider;
 using Energinet.DataHub.MessageHub.IntegrationTesting;
+using GreenEnergyHub.Charges.Application.Charges.Events;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksDataAvailableNotifiedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksRejectionEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon;
@@ -65,15 +74,6 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
         public MessageHubSimulation? MessageHubMock { get; private set; }
 
         [NotNull]
-        public TopicResource? ChargeCommandReceivedTopic { get; private set; }
-
-        [NotNull]
-        public TopicResource? ChargePriceCommandReceivedTopic { get; private set; }
-
-        [NotNull]
-        public TopicResource? ChargeLinksReceivedTopic { get; private set; }
-
-        [NotNull]
         public QueueResource? CreateLinkRequestQueue { get; private set; }
 
         [NotNull]
@@ -89,7 +89,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
         public TopicResource? MarketParticipantChangedTopic { get; private set; }
 
         [NotNull]
-        public TopicResource? ChargeLinksAcceptedTopic { get; private set; }
+        public TopicResource? ChargesDomainEventTopic { get; private set; }
 
         public AuthorizedTestActor AsGridAccessProvider { get; }
 
@@ -143,68 +143,71 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.B2CTenantId, AuthorizationConfiguration.TenantId);
             Environment.SetEnvironmentVariable(EnvironmentSettingNames.BackendServiceAppId, AuthorizationConfiguration.BackendApp.AppId);
 
-            ChargeLinksAcceptedTopic = await ServiceBusResourceProvider
-                .BuildTopic(ChargesServiceBusResourceNames.ChargeLinksAcceptedTopicKey)
-                .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.ChargeLinksAcceptedTopicName)
-                .AddSubscription(ChargesServiceBusResourceNames.ChargeLinksAcceptedDataAvailableNotifierSubscriptionName)
-                .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargeLinksAcceptedSubDataAvailableNotifier)
-                .AddSubscription(ChargesServiceBusResourceNames.ChargeLinksAcceptedEventPublisherSubscriptionName)
-                .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargeLinksAcceptedSubEventPublisher)
-                .AddSubscription(ChargesServiceBusResourceNames.ChargeLinksAcceptedEventReplierSubscriptionName)
-                .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargeLinksAcceptedReplier)
-                .AddSubscription(ChargesServiceBusResourceNames.ChargeLinksAcceptedConfirmationNotifierSubscriptionName)
-                .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargeLinksAcceptedSubConfirmationNotifier)
+            // Domain events
+            ChargesDomainEventTopic = await ServiceBusResourceProvider
+                .BuildTopic(ChargesServiceBusResourceNames.ChargesDomainEventsTopicKey)
+                    .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.ChargesDomainEventTopicName)
+
+                .AddSubscription(ChargesServiceBusResourceNames.ChargeCommandReceivedSubscriptionName)
+                    .AddSubjectFilter(nameof(ChargeCommandReceivedEvent))
+                    .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargeCommandReceivedSubscriptionName)
+
+                .AddSubscription(ChargesServiceBusResourceNames.ChargeLinksAcceptedDataAvailableSubscriptionName)
+                    .AddSubjectFilter(nameof(ChargeLinksAcceptedEvent))
+                    .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargeLinksAcceptedDataAvailableSubscriptionName)
+                .AddSubscription(ChargesServiceBusResourceNames.ChargeLinksAcceptedPublishSubscriptionName)
+                    .AddSubjectFilter(nameof(ChargeLinksAcceptedEvent))
+                    .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargeLinksAcceptedPublishSubscriptionName)
+                .AddSubscription(ChargesServiceBusResourceNames.ChargeLinksAcceptedConfirmationSubscriptionName)
+                    .AddSubjectFilter(nameof(ChargeLinksAcceptedEvent))
+                    .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargeLinksAcceptedConfirmationSubscriptionName)
+
+                .AddSubscription(ChargesServiceBusResourceNames.ChargeLinksCommandReceivedSubscriptionName)
+                    .AddSubjectFilter(nameof(ChargeLinksReceivedEvent))
+                    .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargeLinksCommandReceivedSubscriptionName)
+
+                .AddSubscription(ChargesServiceBusResourceNames.ChargeCommandAcceptedSubscriptionName)
+                    .AddSubjectFilter(nameof(ChargeCommandAcceptedEvent))
+                    .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargeCommandAcceptedSubscriptionName)
+                .AddSubscription(ChargesServiceBusResourceNames.ChargeCommandAcceptedPublishSubscriptionName)
+                    .AddSubjectFilter(nameof(ChargeCommandAcceptedEvent))
+                    .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargeCommandAcceptedPublishSubscriptionName)
+                .AddSubscription(ChargesServiceBusResourceNames.ChargeAcceptedDataAvailableSubscriptionName)
+                    .AddSubjectFilter(nameof(ChargeCommandAcceptedEvent))
+                    .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargeAcceptedDataAvailableSubscriptionName)
+
+                .AddSubscription(ChargesServiceBusResourceNames.ChargePriceCommandReceivedSubscriptionName)
+                    .AddSubjectFilter(nameof(ChargePriceCommandReceivedEvent))
+                    .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargePriceCommandReceivedSubscriptionName)
+
+                .AddSubscription(ChargesServiceBusResourceNames.ChargeCommandRejectedSubscriptionName)
+                    .AddSubjectFilter(nameof(ChargeCommandRejectedEvent))
+                    .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargeCommandRejectedSubscriptionName)
+
+                .AddSubscription(ChargesServiceBusResourceNames.ChargePriceCommandRejectedSubscriptionName)
+                    .AddSubjectFilter(nameof(ChargePriceOperationsRejectedEvent))
+                    .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargePriceCommandRejectedSubscriptionName)
+
+                .AddSubscription(ChargesServiceBusResourceNames.ChargeLinksCommandRejectedSubscriptionName)
+                    .AddSubjectFilter(nameof(ChargeLinksRejectedEvent))
+                    .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargeLinksCommandRejectedSubscriptionName)
+
+                .AddSubscription(ChargesServiceBusResourceNames.DefaultChargeLinksDataAvailableSubscriptionName)
+                    .AddSubjectFilter(nameof(ChargeLinksDataAvailableNotifiedEvent))
+                    .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.DefaultChargeLinksDataAvailableSubscriptionName)
                 .CreateAsync();
 
-            var chargeLinkCreatedTopic = await ServiceBusResourceProvider
+            // Integration events
+            MarketParticipantChangedTopic = await ServiceBusResourceProvider
+                .BuildTopic(ChargesServiceBusResourceNames.MarketParticipantChangedTopicKey)
+                .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.MarketParticipantChangedTopicName)
+                .AddSubscription(ChargesServiceBusResourceNames.MarketParticipantChangedSubscriptionName)
+                .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.MarketParticipantChangedSubscriptionName)
+                .CreateAsync();
+
+            await ServiceBusResourceProvider
                 .BuildTopic(ChargesServiceBusResourceNames.ChargeLinksCreatedTopicKey)
                 .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.ChargeLinksCreatedTopicName)
-                .CreateAsync();
-
-            ChargeLinksReceivedTopic = await ServiceBusResourceProvider
-                .BuildTopic(ChargesServiceBusResourceNames.ChargeLinksReceivedTopicKey)
-                .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.ChargeLinksReceivedTopicName)
-                .AddSubscription(ChargesServiceBusResourceNames.ChargeLinksReceivedSubscriptionName)
-                .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargeLinksReceivedSubscriptionName)
-                .CreateAsync();
-
-            var commandAcceptedTopic = await ServiceBusResourceProvider
-                .BuildTopic(ChargesServiceBusResourceNames.CommandAcceptedTopicKey)
-                .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.CommandAcceptedTopicName)
-                .AddSubscription(ChargesServiceBusResourceNames.CommandAcceptedSubscriptionName)
-                .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.CommandAcceptedSubscriptionName)
-                .AddSubscription(ChargesServiceBusResourceNames.CommandAcceptedReceiverSubscriptionName)
-                .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.CommandAcceptedReceiverSubscriptionName)
-                .AddSubscription(ChargesServiceBusResourceNames.ChargeAcceptedSubDataAvailableNotifier)
-                .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargeAcceptedSubDataAvailableNotifier)
-                .CreateAsync();
-
-            ChargeCommandReceivedTopic = await ServiceBusResourceProvider
-                .BuildTopic(ChargesServiceBusResourceNames.CommandReceivedTopicKey)
-                .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.CommandReceivedTopicName)
-                .AddSubscription(ChargesServiceBusResourceNames.CommandReceivedSubscriptionName)
-                .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.CommandReceivedSubscriptionName)
-                .CreateAsync();
-
-            ChargePriceCommandReceivedTopic = await ServiceBusResourceProvider
-                .BuildTopic(ChargesServiceBusResourceNames.PriceCommandReceivedTopicKey)
-                .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.PriceCommandReceivedTopicName)
-                .AddSubscription(ChargesServiceBusResourceNames.PriceCommandReceivedSubscriptionName)
-                .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.PriceCommandReceivedSubscriptionName)
-                .CreateAsync();
-
-            var commandRejectedTopic = await ServiceBusResourceProvider
-                .BuildTopic(ChargesServiceBusResourceNames.CommandRejectedTopicKey)
-                .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.CommandRejectedTopicName)
-                .AddSubscription(ChargesServiceBusResourceNames.CommandRejectedSubscriptionName)
-                .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.CommandRejectedSubscriptionName)
-                .CreateAsync();
-
-            var chargePriceOperationsRejectedTopic = await ServiceBusResourceProvider
-                .BuildTopic(ChargesServiceBusResourceNames.ChargePriceRejectedTopicKey)
-                .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.ChargePriceRejectedTopicName)
-                .AddSubscription(ChargesServiceBusResourceNames.ChargePriceRejectedSubscriptionName)
-                .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargePriceRejectedSubscriptionName)
                 .CreateAsync();
 
             CreateLinkRequestQueue = await ServiceBusResourceProvider
@@ -214,13 +217,6 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
 
             CreateLinkReplyQueue = await ServiceBusResourceProvider
                 .BuildQueue(ChargesServiceBusResourceNames.CreateLinksReplyQueueKey)
-                .CreateAsync();
-
-            var chargeLinksCommandRejectedTopic = await ServiceBusResourceProvider
-                .BuildTopic(ChargesServiceBusResourceNames.ChargeLinksRejectedTopicKey)
-                .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.ChargeLinksRejectedTopicName)
-                .AddSubscription(ChargesServiceBusResourceNames.ChargeLinksRejectedSubscriptionName)
-                .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargeLinksRejectedSubscriptionName)
                 .CreateAsync();
 
             MeteringPointCreatedTopic = await ServiceBusResourceProvider
@@ -234,21 +230,6 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
                 .BuildTopic(ChargesServiceBusResourceNames.ChargeCreatedTopicKey)
                 .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.ChargeCreatedTopicName)
                 .AddSubscription(ChargesServiceBusResourceNames.ChargeCreatedSubscriptionName)
-                .CreateAsync();
-
-            MarketParticipantChangedTopic = await ServiceBusResourceProvider
-                .BuildTopic(ChargesServiceBusResourceNames.MarketParticipantChangedTopicKey)
-                .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.MarketParticipantChangedTopicName)
-                .AddSubscription(ChargesServiceBusResourceNames.MarketParticipantChangedSubscriptionName)
-                .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.MarketParticipantChangedSubscriptionName)
-                .CreateAsync();
-
-            await ServiceBusResourceProvider
-                .BuildTopic(ChargesServiceBusResourceNames.DefaultChargeLinksDataAvailableNotifiedTopicKey)
-                .SetEnvironmentVariableToTopicName(EnvironmentSettingNames
-                    .DefaultChargeLinksDataAvailableNotifiedTopicName)
-                .AddSubscription(ChargesServiceBusResourceNames.DefaultChargeLinksDataAvailableNotifiedSubscriptionName)
-                    .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedSubscription)
                 .CreateAsync();
 
             var chargeCreatedListener = new ServiceBusListenerMock(ServiceBusResourceProvider.ConnectionString, TestLogger);
@@ -365,13 +346,13 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
                 ChargesServiceBusResourceNames.MessageHubStorageConnectionString,
                 ChargesServiceBusResourceNames.MessageHubStorageContainerName);
 
-            messageHubSimulationConfig.PeekTimeout = TimeSpan.FromSeconds(30.0);
-            messageHubSimulationConfig.WaitTimeout = TimeSpan.FromSeconds(30.0);
+            messageHubSimulationConfig.PeekTimeout = TimeSpan.FromSeconds(60.0);
+            messageHubSimulationConfig.WaitTimeout = TimeSpan.FromSeconds(60.0);
 
             MessageHubMock = new MessageHubSimulation(messageHubSimulationConfig);
         }
 
-        private async Task SetUpRequestResponseLoggingAsync()
+        private static async Task SetUpRequestResponseLoggingAsync()
         {
             Environment.SetEnvironmentVariable(
                 EnvironmentSettingNames.RequestResponseLoggingConnectionString,
