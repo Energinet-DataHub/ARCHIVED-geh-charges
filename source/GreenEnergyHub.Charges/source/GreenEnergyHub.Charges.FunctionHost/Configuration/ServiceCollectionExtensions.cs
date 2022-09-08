@@ -102,24 +102,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
         public static void AddInternalEventPublishing(this IServiceCollection serviceCollection, ServiceBusClient serviceBusClient)
         {
-            var mapper = new ServiceBusEventMapper();
-            mapper.Add(typeof(ChargeCommandReceivedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandReceivedTopicName));
-            mapper.Add(typeof(ChargeCommandAcceptedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandAcceptedTopicName));
-            mapper.Add(typeof(ChargeCommandRejectedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandRejectedTopicName));
-            mapper.Add(typeof(ChargeLinksAcceptedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksAcceptedTopicName));
-            mapper.Add(typeof(ChargeLinksReceivedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksReceivedTopicName));
-            mapper.Add(typeof(ChargeLinksRejectedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksRejectedTopicName));
-            mapper.Add(typeof(ChargePriceCommandReceivedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.PriceCommandReceivedTopicName));
-            mapper.Add(typeof(ChargeLinksDataAvailableNotifiedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName));
-            mapper.Add(typeof(PriceConfirmedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargePriceConfirmedTopicName));
-            mapper.Add(typeof(PriceRejectedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargePriceRejectedTopicName));
-
             serviceCollection.AddScoped<IInternalEventDispatcher, InternalEventDispatcher>();
             serviceCollection.AddScoped<IServiceBusDispatcher, ServiceBusDispatcher>();
 
             // Must be a singleton as per documentation of ServiceBusClient and ServiceBusSender
             serviceCollection.AddSingleton<IServiceBusDispatcher>(
-                _ => new ServiceBusDispatcher(serviceBusClient, mapper));
+                _ => new ServiceBusDispatcher(serviceBusClient, EnvironmentSettingNames.ChargesDomainEventTopicName));
         }
     }
 }

@@ -152,6 +152,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
             private static ServiceBusMessage CreateServiceBusMessage<T>(T internalEvent, string correlationId)
             {
+                ArgumentNullException.ThrowIfNull(internalEvent);
+
                 var applicationProperties = new Dictionary<string, string>
                 {
                     { MessageMetaDataConstants.CorrelationId, correlationId },

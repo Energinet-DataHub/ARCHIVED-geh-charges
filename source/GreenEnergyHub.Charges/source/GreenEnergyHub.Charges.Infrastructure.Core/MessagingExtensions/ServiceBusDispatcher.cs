@@ -28,18 +28,17 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions
     public class ServiceBusDispatcher : IServiceBusDispatcher
     {
         private readonly ServiceBusClient _serviceBusClient;
-        private readonly ServiceBusEventMapper _serviceBusEventMapper;
+        private readonly string _topicName;
 
-        public ServiceBusDispatcher(ServiceBusClient serviceBusClient, ServiceBusEventMapper serviceBusEventMapper)
+        public ServiceBusDispatcher(ServiceBusClient serviceBusClient, string topicName)
         {
             _serviceBusClient = serviceBusClient;
-            _serviceBusEventMapper = serviceBusEventMapper;
+            _topicName = topicName;
         }
 
         public async Task DispatchAsync(ServiceBusMessage serviceBusMessage, Type eventType, CancellationToken cancellationToken = default)
         {
-            var eventMetadata = _serviceBusEventMapper.GetByType(eventType);
-            var sender = _serviceBusClient.CreateSender(eventMetadata.TopicName);
+            var sender = _serviceBusClient.CreateSender(_topicName);
             await sender.SendMessageAsync(serviceBusMessage, cancellationToken).ConfigureAwait(false);
         }
     }

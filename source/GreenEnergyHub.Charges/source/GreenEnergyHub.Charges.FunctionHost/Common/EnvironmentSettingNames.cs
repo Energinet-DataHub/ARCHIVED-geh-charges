@@ -78,7 +78,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
         public const string ChargeCommandAcceptedPublishSubscriptionName = "CHARGE_COMMAND_ACCEPTED_PUBLISH_SUBSCRIPTION_NAME";
 
         // Internal, charge price, confirmed
-        public const string ChargePriceConfirmedTopicName = "CHARGE_PRICE_CONFIRMED_TOPIC_NAME";
         public const string ChargePriceConfirmedSubscriptionName = "CHARGE_PRICE_CONFIRMED_SUBSCRIPTION_NAME";
         public const string ChargePriceConfirmedDataAvailableSubscriptionName = "CHARGE_PRICE_CONFIRMED_DATAAVAILABLENOTIFIER_SUBSCRIPTION_NAME";
 
