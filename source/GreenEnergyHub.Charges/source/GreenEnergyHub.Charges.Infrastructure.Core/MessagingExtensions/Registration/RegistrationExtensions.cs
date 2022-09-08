@@ -17,29 +17,27 @@ using Energinet.DataHub.Core.JsonSerialization;
 using Energinet.DataHub.Core.Messaging.Transport;
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration
 {
     public static class RegistrationExtensions
     {
-        public static MessagingRegistrator AddMessaging(this IServiceCollection services)
+        public static MessagingRegistrator AddMessaging(this IServiceCollection serviceCollection)
         {
-            services.AddScoped<ICorrelationContext, CorrelationContext>();
-            services.AddScoped<IMessageMetaDataContext, MessageMetaDataContext>();
-            services.AddSingleton<IJsonSerializer, JsonSerializer>();
-            services.AddSingleton<JsonMessageSerializer>();
-            return new MessagingRegistrator(services);
+            serviceCollection.AddScoped<ICorrelationContext, CorrelationContext>();
+            serviceCollection.AddScoped<IMessageMetaDataContext, MessageMetaDataContext>();
+            serviceCollection.AddSingleton<IJsonSerializer, JsonSerializer>();
+            return new MessagingRegistrator(serviceCollection);
         }
 
-        public static MessagingRegistrator AddMessagingProtobuf(this IServiceCollection services)
+        public static MessagingRegistrator AddMessagingProtobuf(this IServiceCollection serviceCollection)
         {
-            services.AddScoped<ICorrelationContext, CorrelationContext>();
-            services.AddScoped<IMessageMetaDataContext, MessageMetaDataContext>();
-            services.AddScoped<MessageExtractor>();
+            serviceCollection.AddScoped<ICorrelationContext, CorrelationContext>();
+            serviceCollection.AddScoped<IMessageMetaDataContext, MessageMetaDataContext>();
+            serviceCollection.AddScoped<MessageExtractor>();
 
-            return new MessagingRegistrator(services);
+            return new MessagingRegistrator(serviceCollection);
         }
     }
 }

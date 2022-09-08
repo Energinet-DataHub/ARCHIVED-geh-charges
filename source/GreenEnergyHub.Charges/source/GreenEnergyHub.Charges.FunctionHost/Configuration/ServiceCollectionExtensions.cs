@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Core.App.Common;
 using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
 using Energinet.DataHub.Core.App.Common.Abstractions.Identity;
@@ -19,8 +20,20 @@ using Energinet.DataHub.Core.App.Common.Abstractions.Security;
 using Energinet.DataHub.Core.App.Common.Identity;
 using Energinet.DataHub.Core.App.Common.Security;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware;
+using GreenEnergyHub.Charges.Application.Charges.Events;
+using GreenEnergyHub.Charges.Application.Messaging;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksDataAvailableNotifiedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksRejectionEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure;
+using GreenEnergyHub.Charges.Infrastructure.Core.InternalMessaging;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
 using GreenEnergyHub.Charges.Infrastructure.Core.Registration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -66,6 +79,28 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 _functionNamesToExclude));
             serviceCollection.AddScoped<IActorContext, ActorContext>();
             serviceCollection.AddScoped<IActorProvider, ActorProvider>();
+        }
+
+        public static void AddEventPublishing(this IServiceCollection serviceCollection, ServiceBusClient serviceBusClient)
+        {
+            var mapper = new ServiceBusEventMapper();
+            mapper.Add(typeof(ChargeCommandReceivedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandReceivedTopicName));
+            mapper.Add(typeof(ChargeCommandAcceptedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandAcceptedTopicName));
+            mapper.Add(typeof(ChargeCommandRejectedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.CommandRejectedTopicName));
+            mapper.Add(typeof(ChargeLinksAcceptedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksAcceptedTopicName));
+            mapper.Add(typeof(ChargeLinksReceivedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksReceivedTopicName));
+            mapper.Add(typeof(ChargeLinksRejectedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksRejectedTopicName));
+            mapper.Add(typeof(ChargePriceCommandReceivedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.PriceCommandReceivedTopicName));
+            mapper.Add(typeof(ChargeLinksDataAvailableNotifiedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName));
+            mapper.Add(typeof(PriceConfirmedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargePriceConfirmedTopicName));
+            mapper.Add(typeof(PriceRejectedEvent), EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargePriceRejectedTopicName));
+
+            serviceCollection.AddScoped<IInternalEventDispatcher, InternalEventDispatcher>();
+            serviceCollection.AddScoped<IServiceBusDispatcher, ServiceBusDispatcher>();
+
+            // Must be a singleton as per documentation of ServiceBusClient and ServiceBusSender
+            serviceCollection.AddSingleton<IServiceBusDispatcher>(
+                _ => new ServiceBusDispatcher(serviceBusClient, mapper));
         }
     }
 }

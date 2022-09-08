@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
@@ -41,8 +40,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection
                 .AddScoped<BundleSpecification<AvailableChargeLinksReceiptData, ChargeLinksAcceptedEvent>,
                     ChargeLinksConfirmationBundleSpecification>();
-            serviceCollection
-                .AddMessaging();
             serviceCollection.AddScoped<JsonMessageDeserializer<ChargeLinksAcceptedEvent>>();
         }
     }

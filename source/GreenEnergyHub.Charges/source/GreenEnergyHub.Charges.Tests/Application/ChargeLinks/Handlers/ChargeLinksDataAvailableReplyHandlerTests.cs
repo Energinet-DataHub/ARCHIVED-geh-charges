@@ -30,7 +30,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
 {
     [UnitTest]
-    public class ChargeLinkDataAvailableReplyHandlerTests
+    public class ChargeLinksDataAvailableReplyHandlerTests
     {
         [Theory]
         [InlineAutoMoqData]

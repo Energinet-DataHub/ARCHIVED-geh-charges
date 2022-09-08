@@ -66,7 +66,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             ChargePriceCommandReceivedEvent chargePriceCommandReceivedEvent,
             [Frozen] Mock<IDocumentValidator> documentValidator,
             [Frozen] Mock<IChargePriceEventHandler> chargePriceEventHandler,
-            [Frozen] Mock<IDomainEventPublisher> chargePriceRejectionService,
+            [Frozen] Mock<IInternalEventPublisher> chargePriceRejectionService,
             [Frozen] Mock<IPriceRejectedEventFactory> priceRejectedEventFactory,
             ChargePriceCommandReceivedEventHandler sut,
             PriceRejectedEventBuilder priceRejectedEventBuilder)
@@ -96,13 +96,13 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 
         [Theory]
         [InlineAutoDomainData]
-        public async Task GivenHandleAsync_WhenValidationFails_ShouldLogValidationErrors(
+        public async Task HandleAsync_WhenValidationFails_ShouldLogValidationErrors(
             Mock<ILoggerFactory> loggerFactory,
             Mock<ILogger> logger,
             Mock<IDocumentValidator> documentValidator,
             Mock<IPriceRejectedEventFactory> priceRejectedEventFactory,
             Mock<IChargePriceEventHandler> chargePriceEventHandler,
-            Mock<IDomainEventPublisher> domainEventPublisher,
+            Mock<IInternalEventPublisher> domainEventPublisher,
             PriceRejectedEvent rejectedEvent,
             ChargePriceCommandReceivedEvent chargePriceCommandReceivedEvent)
         {

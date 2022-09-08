@@ -26,11 +26,11 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Application.Charges.Factories
 {
     [UnitTest]
-    public class ChargeEventFactoryTests
+    public class PriceRejectedEventFactoryTests
     {
         [Theory]
         [InlineAutoDomainData]
-        public void GivenCreatePriceRejectedEvent_WhenValidRejection_HasNoNullsOrEmptyCollections(
+        public void CreatePriceRejectedEvent_WhenValidRejection_HasNoNullsOrEmptyCollections(
             DocumentDtoBuilder documentDtoBuilder,
             ChargePriceOperationDtoBuilder chargePriceOperationDtoBuilder,
             ValidationResult validationResult,
@@ -40,22 +40,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Factories
             var document = documentDtoBuilder.Build();
             var operations = new List<ChargePriceOperationDto> { chargePriceOperationDtoBuilder.Build() };
             var actual = sut.Create(document, operations, validationResult);
-
-            // Assert
-            actual.Should().NotContainNullEnumerable();
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
-        public void GivenCreatePriceConfirmationEvent_WhenValidConfirmation_HasNoNullsOrEmptyCollections(
-            DocumentDtoBuilder documentDtoBuilder,
-            ChargePriceOperationDtoBuilder chargePriceOperationDtoBuilder,
-            PriceConfirmedEventFactory sut)
-        {
-            // Act
-            var document = documentDtoBuilder.Build();
-            var operations = new List<ChargePriceOperationDto> { chargePriceOperationDtoBuilder.Build() };
-            var actual = sut.Create(document, operations);
 
             // Assert
             actual.Should().NotContainNullEnumerable();

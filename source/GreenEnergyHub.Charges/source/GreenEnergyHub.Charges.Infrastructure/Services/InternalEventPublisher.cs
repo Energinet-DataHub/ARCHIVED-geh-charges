@@ -12,19 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Application.Common.Services;
 using GreenEnergyHub.Charges.Infrastructure.Outbox;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Services
 {
-    public class DomainEventPublisher : IDomainEventPublisher
+    public class InternalEventPublisher : IInternalEventPublisher
     {
         private readonly IOutboxMessageRepository _outboxMessageRepository;
         private readonly OutboxMessageFactory _outboxMessageFactory;
 
-        public DomainEventPublisher(
+        public InternalEventPublisher(
             IOutboxMessageRepository outboxMessageRepository,
             OutboxMessageFactory outboxMessageFactory)
         {
@@ -35,18 +34,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Services
         public void Publish<T>(T domainEvent)
         {
             var outboxMessage = _outboxMessageFactory.CreateFrom(domainEvent);
-            _outboxMessageRepository.Add(outboxMessage);
-        }
-
-        public void SaveRejections(PriceRejectedEvent priceRejectedEvent)
-        {
-            var outboxMessage = _outboxMessageFactory.CreateFrom(priceRejectedEvent);
-            _outboxMessageRepository.Add(outboxMessage);
-        }
-
-        public void SaveConfirmations(PriceConfirmedEvent priceConfirmedEvent)
-        {
-            var outboxMessage = _outboxMessageFactory.CreateFrom(priceConfirmedEvent);
             _outboxMessageRepository.Add(outboxMessage);
         }
     }

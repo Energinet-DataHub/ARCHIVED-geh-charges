@@ -12,15 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
-
-namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization
+namespace GreenEnergyHub.Charges.Application.Common.Services
 {
-    public class NoMapper : IJsonOutboundMapper
+    public interface IInternalEventPublisher
     {
-        public object Convert(InternalEvent message)
-        {
-            return message;
-        }
+        /// <summary>
+        /// Publisher for raising domain events
+        /// </summary>
+        /// <param name="domainEvent"></param>
+        public void Publish<T>(T domainEvent);
     }
 }
