@@ -7,16 +7,16 @@ assignees: ''
 
 ---
 
-**Observation**
+### Observation
 A clear and concise description of what the bug is.
 
-**Environment**
+### Environment
 
-**Expected result**
+### Expected result
 
-**Actual result**
+### Actual result
 
-**How to reproduce**
+### How to reproduce
 
-**Additional context**
+### Additional context
 Add any other context about the problem here.
