@@ -16,10 +16,24 @@ using Azure.Messaging.ServiceBus;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factories
 {
+    /// <summary>
+    /// Factory for creating ServiceBusMessage
+    /// </summary>
     public interface IServiceBusMessageFactory
     {
-        ServiceBusMessage CreateInternalMessage(string data);
+        /// <summary>
+        /// Creates ServiceBusMessage for internal messaging
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="subject"></param>
+        /// <returns>ServiceBusMessage</returns>
+        ServiceBusMessage CreateInternalMessage(string data, string subject);
 
+        /// <summary>
+        /// Creates ServiceBusMessage for external messaging
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns>ServiceBusMessage</returns>
         ServiceBusMessage CreateExternalMessage(byte[] data);
     }
 }
