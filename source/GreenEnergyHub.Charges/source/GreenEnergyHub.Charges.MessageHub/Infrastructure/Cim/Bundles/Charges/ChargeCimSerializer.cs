@@ -61,13 +61,13 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.Charges
 
         protected override XElement GetActivityRecord(
             XNamespace cimNamespace,
-            AvailableChargeData charge)
+            AvailableChargeData chargePrice)
         {
             return new XElement(
                 cimNamespace + CimMarketDocumentConstants.MarketActivityRecord,
                 new XElement(cimNamespace + CimChargeConstants.MarketActivityRecordId, CimIdProvider.GetUniqueId()),
-                new XElement(cimNamespace + CimChargeConstants.SnapshotDateTime, charge.RequestDateTime.ToString()),
-                GetChargeGroupElement(cimNamespace, charge));
+                new XElement(cimNamespace + CimChargeConstants.SnapshotDateTime, chargePrice.RequestDateTime.ToString()),
+                GetChargeGroupElement(cimNamespace, chargePrice));
         }
 
         private XElement GetChargeGroupElement(

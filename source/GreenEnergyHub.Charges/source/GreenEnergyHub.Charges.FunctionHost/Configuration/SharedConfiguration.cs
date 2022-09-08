@@ -150,6 +150,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<
                 IAvailableDataRepository<AvailableChargeReceiptData>,
                 AvailableDataRepository<AvailableChargeReceiptData>>();
+            serviceCollection.AddScoped<
+                IAvailableDataRepository<AvailableChargePriceData>,
+                AvailableDataRepository<AvailableChargePriceData>>();
             serviceCollection.AddScoped<IMarketParticipantRepository, MarketParticipantRepository>();
             serviceCollection.AddScoped<IGridAreaLinkRepository, GridAreaLinkRepository>();
         }

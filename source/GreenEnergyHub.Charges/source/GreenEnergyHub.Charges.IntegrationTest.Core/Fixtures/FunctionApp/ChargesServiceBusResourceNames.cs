@@ -73,6 +73,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
         // Internal, charge price operations, confirmed
         public const string ChargePriceConfirmedTopicKey = "charge-price-confirmed";
         public const string ChargePriceConfirmedSubscriptionName = "charge-price-confirmed";
+        public const string ChargePriceConfirmedDataAvailableNotifier = "charge-price-confirmed-dataavailablenotifier";
 
         // Internal, charge links, received
         public const string ChargeLinksReceivedTopicKey = "links-command-received";

@@ -44,6 +44,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.MessageHub
         [InlineData("ChargeLinkDataAvailable", BundleType.ChargeLinkDataAvailable)]
         [InlineData("ChargeLinkConfirmationDataAvailable", BundleType.ChargeLinkConfirmationDataAvailable)]
         [InlineData("ChargeLinkRejectionDataAvailable", BundleType.ChargeLinkRejectionDataAvailable)]
+        [InlineData("ChargePriceDataAvailable", BundleType.ChargePriceDataAvailable)]
         public void Map_WhenGivenKnownString_MapsToBundleType(
             string input,
             BundleType expected)

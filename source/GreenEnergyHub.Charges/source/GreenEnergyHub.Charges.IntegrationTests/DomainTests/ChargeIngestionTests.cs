@@ -485,6 +485,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 var (request, correlationId) =
                     Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
                         EndpointUrl, testFilePath);
+
                 // Act
                 var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
 

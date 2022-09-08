@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification;
@@ -36,7 +37,20 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection
                 .AddScoped<BundleSpecification<AvailableChargeData, ChargeCommandAcceptedEvent>,
                     ChargeBundleSpecification>();
+
+            serviceCollection.AddScoped<IAvailableDataNotifier<AvailableChargePriceData, PriceConfirmedEvent>,
+                AvailableDataNotifier<AvailableChargePriceData, PriceConfirmedEvent>>();
+            serviceCollection.AddScoped<IAvailableDataFactory<AvailableChargePriceData, PriceConfirmedEvent>,
+                AvailableChargePriceDataFactory>();
+            serviceCollection.AddScoped<IAvailableDataNotificationFactory<AvailableChargePriceData>,
+                AvailableDataNotificationFactory<AvailableChargePriceData>>();
+
+            serviceCollection
+                .AddScoped<BundleSpecification<AvailableChargePriceData, PriceConfirmedEvent>,
+                    ChargePriceBundleSpecification>();
+
             serviceCollection.AddScoped<JsonMessageDeserializer<ChargeCommandAcceptedEvent>>();
+            serviceCollection.AddScoped<JsonMessageDeserializer<PriceConfirmedEvent>>();
         }
     }
 }
