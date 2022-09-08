@@ -74,9 +74,9 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
             // Assert
             foreach (var validationRuleIdentifier in validationRuleIdentifiers)
             {
-                string? triggeredBy = null;
-                if (validationRuleIdentifier == ValidationRuleIdentifier.SubsequentBundleOperationsFail)
-                    triggeredBy = chargeLinksCommand.Operations.First().OperationId;
+                var triggeredBy = validationRuleIdentifier == ValidationRuleIdentifier.SubsequentBundleOperationsFail ?
+                    chargeLinksCommand.Operations.First().OperationId :
+                    null!;
 
                 var actual = sut.Create(
                     new ValidationError(validationRuleIdentifier, chargeLinkDto.OperationId, triggeredBy),
