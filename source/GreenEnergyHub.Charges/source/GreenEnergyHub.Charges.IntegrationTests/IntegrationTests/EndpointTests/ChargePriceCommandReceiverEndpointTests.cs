@@ -174,13 +174,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 var actualCharge = await postOperationReadContext.Charges.FirstAsync(
                     GetChargePredicate(chargeId, ownerId, chargeType));
 
-                using (new AssertionScope())
-                {
-                    actualCharge.Should().BeEquivalentTo(expectedCharge);
-                    var actualOutboxMessage = await postOperationReadContext.OutboxMessages
-                        .SingleOrDefaultAsync(x => x.CorrelationId.Contains(correlationId));
-                    actualOutboxMessage!.Type.Should().Be(typeof(PriceConfirmedEvent).FullName);
-                }
+                using var assertionScope = new AssertionScope();
+                actualCharge.Should().BeEquivalentTo(expectedCharge);
+                var actualOutboxMessage = await postOperationReadContext.OutboxMessages
+                    .SingleOrDefaultAsync(x => x.CorrelationId.Contains(correlationId));
+                actualOutboxMessage!.Type.Should().Be(typeof(PriceConfirmedEvent).FullName);
             }
 
             private static ChargePriceCommandReceivedEvent CreateInvalidChargePriceCommandReceivedEvent(
