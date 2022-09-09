@@ -17,7 +17,7 @@ data "template_file" "dash_charges_template" {
     subscription_id          = data.azurerm_subscription.this.subscription_id
     resouce_group_name       = azurerm_resource_group.this.name
     application_insight_name = data.azurerm_key_vault_secret.appi_shared_name.value
-    service_bus_namespace    = module.sb_charges.name
+    service_bus_namespace    = data.azurerm_key_vault_secret.sb_domain_relay_namespace_id.value
   }
 }
 
