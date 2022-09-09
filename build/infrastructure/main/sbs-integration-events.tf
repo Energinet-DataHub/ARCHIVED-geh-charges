@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-module "sbs_charges_charge_links_command_received" {
+module "sbs_int-events-metering-point-created" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v8"
   name                = "metering-point-created-sub"
   project_name        = var.domain_name_short
@@ -25,7 +25,7 @@ module "sbs_charges_charge_links_command_received" {
   }
 }
 
-module "sbs_charges_charge_links_command_received" {
+module "sbs_int-events-market-participant-changed" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v8"
   name                = "market-participant-changed"
   project_name        = var.domain_name_short
