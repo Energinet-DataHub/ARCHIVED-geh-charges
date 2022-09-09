@@ -2,7 +2,7 @@
 
 ## Version 3.0.13
 
-Fix: `ChargeLinksClient` was using an incomplete endpoint url after changing to `v1`
+Fix: `ChargeLinksClient` used an incomplete endpoint address after changing to `v1`
 
 ## Version 3.0.12
 
