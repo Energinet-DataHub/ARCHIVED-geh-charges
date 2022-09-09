@@ -14,12 +14,19 @@
 
 using System.Threading;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 
 namespace GreenEnergyHub.Charges.Application.Messaging
 {
+    /// <summary>
+    /// Service for dispatching internal events raised during current business process
+    /// </summary>
     public interface IInternalEventDispatcher
     {
+        /// <summary>
+        /// Dispatch internal event
+        /// </summary>
+        /// <param name="internalEvent"></param>
+        /// <param name="cancellationToken"></param>
         Task DispatchAsync<T>(T internalEvent, CancellationToken cancellationToken = default);
     }
 }

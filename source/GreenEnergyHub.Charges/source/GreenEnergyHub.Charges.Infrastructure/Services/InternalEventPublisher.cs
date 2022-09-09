@@ -31,9 +31,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Services
             _outboxMessageFactory = outboxMessageFactory;
         }
 
-        public void Publish<T>(T domainEvent)
+        public void Publish<T>(T internalEvent)
         {
-            var outboxMessage = _outboxMessageFactory.CreateFrom(domainEvent);
+            var outboxMessage = _outboxMessageFactory.CreateFrom(internalEvent);
             _outboxMessageRepository.Add(outboxMessage);
         }
     }

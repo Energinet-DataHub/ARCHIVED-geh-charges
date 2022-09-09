@@ -14,12 +14,15 @@
 
 namespace GreenEnergyHub.Charges.Application.Common.Services
 {
+    /// <summary>
+    /// Service for publishing internal events
+    /// </summary>
     public interface IInternalEventPublisher
     {
         /// <summary>
-        /// Publisher for raising domain events
+        /// Publisher for raising internal events
         /// </summary>
-        /// <param name="domainEvent"></param>
-        public void Publish<T>(T domainEvent);
+        /// <param name="internalEvent"></param>
+        public void Publish<T>(T internalEvent);
     }
 }
