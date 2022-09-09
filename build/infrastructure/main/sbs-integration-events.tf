@@ -33,7 +33,7 @@ module "sbs_int-events-market-participant-changed" {
   max_delivery_count  = 1
   correlation_filter  = {
     properties     = {
-      "MessageType" = "MarketParticipantChanged"
+      "MessageType" = "ActorUpdatedIntegrationEvent"
     }
   }
 }
