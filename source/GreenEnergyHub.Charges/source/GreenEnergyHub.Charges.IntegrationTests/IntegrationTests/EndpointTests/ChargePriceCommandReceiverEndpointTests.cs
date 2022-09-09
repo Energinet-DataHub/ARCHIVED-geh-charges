@@ -107,14 +107,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 const string chargeId = "TestTariff";
                 const ChargeType chargeType = ChargeType.Tariff;
                 var correlationId = CorrelationIdGenerator.Create();
-                Charge? existingCharge;
-                await using (var ctx = Fixture.ChargesDatabaseManager.CreateDbContext())
+
+                Charge existingCharge;
+                await using (var preOperationReadContext = Fixture.ChargesDatabaseManager.CreateDbContext())
                 {
-                    existingCharge = await ctx.Charges.FirstAsync(
+                    existingCharge = await preOperationReadContext.Charges.FirstAsync(
                         GetChargePredicate(chargeId, ownerId, chargeType));
                 }
 
-                await using var preOperationReadContext = Fixture.ChargesDatabaseManager.CreateDbContext();
                 var newPrices = existingCharge.Points.Select(point => new Point(point.Price + 100, point.Time)).ToList();
                 var chargePriceCommandReceivedEvent = CreateChargePriceCommandReceivedEvent(
                     chargePriceCommandBuilder, documentDtoBuilder, operationDtoBuilder, chargeId, ownerGln, chargeType, newPrices);
@@ -158,7 +158,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     GetChargePredicate(chargeId, ownerId, chargeType));
 
                 var chargePriceCommandReceivedEvent = CreateChargePriceCommandReceivedEvent(
-                    commandBuilder, documentDtoBuilder, operationDtoBuilder, chargeId, ownerGln, chargeType, null!);
+                    commandBuilder, documentDtoBuilder, operationDtoBuilder, chargeId, ownerGln, chargeType, expectedCharge.Points.ToList());
                 var correlationId = CorrelationIdGenerator.Create();
                 var message = CreateServiceBusMessage(chargePriceCommandReceivedEvent, correlationId);
 
@@ -225,10 +225,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     .WithPointsInterval(pointsStartDateTime, pointsEndTime)
                     .WithStartDateTime(pointsStartDateTime);
 
-                if (!points.IsNullOrEmpty())
-                {
-                    operationDtoBuilder.WithPoints(points);
-                }
+                operationDtoBuilder.WithPoints(points);
 
                 var operation = operationDtoBuilder.Build();
                 var priceCommand = commandBuilder

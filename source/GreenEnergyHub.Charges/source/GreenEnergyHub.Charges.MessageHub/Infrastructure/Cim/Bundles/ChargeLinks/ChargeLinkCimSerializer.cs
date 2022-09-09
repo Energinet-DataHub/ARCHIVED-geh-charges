@@ -52,7 +52,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeLin
             return DocumentType.NotifyBillingMasterData;
         }
 
-        protected override XElement GetActivityRecord(XNamespace cimNamespace, AvailableChargeLinksData chargePrice)
+        protected override XElement GetActivityRecord(XNamespace cimNamespace, AvailableChargeLinksData chargeLinksData)
         {
             return new XElement(
                 cimNamespace + CimMarketDocumentConstants.MarketActivityRecord,
@@ -60,8 +60,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeLin
                 new XElement(
                     cimNamespace + CimChargeLinkConstants.MeteringPointId,
                     new XAttribute(CimMarketDocumentConstants.CodingScheme, CodingSchemeMapper.Map(CodingScheme.GS1)),
-                    chargePrice.MeteringPointId),
-                GetChargeGroupElement(cimNamespace, chargePrice));
+                    chargeLinksData.MeteringPointId),
+                GetChargeGroupElement(cimNamespace, chargeLinksData));
         }
 
         private static XElement GetChargeGroupElement(XNamespace cimNamespace, AvailableChargeLinksData chargeLink)

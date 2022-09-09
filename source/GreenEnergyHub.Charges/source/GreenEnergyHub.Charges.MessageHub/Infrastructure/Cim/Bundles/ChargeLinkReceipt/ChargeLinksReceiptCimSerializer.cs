@@ -75,21 +75,21 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeLin
                 : DocumentType.RejectRequestChangeBillingMasterData;
         }
 
-        protected override XElement GetActivityRecord(XNamespace cimNamespace, AvailableChargeLinksReceiptData chargePrice)
+        protected override XElement GetActivityRecord(XNamespace cimNamespace, AvailableChargeLinksReceiptData receipt)
         {
             return new XElement(
                 cimNamespace + CimMarketDocumentConstants.MarketActivityRecord,
                 new XElement(
                     cimNamespace + CimChargeLinkReceiptConstants.MarketActivityRecordId, CimIdProvider.GetUniqueId()),
                 new XElement(
-                    cimNamespace + CimChargeLinkReceiptConstants.OriginalOperationId, chargePrice.OriginalOperationId),
+                    cimNamespace + CimChargeLinkReceiptConstants.OriginalOperationId, receipt.OriginalOperationId),
                 new XElement(
                     cimNamespace + CimChargeLinkReceiptConstants.MeteringPointId,
                     new XAttribute(
                         CimMarketDocumentConstants.CodingScheme,
                         CodingSchemeMapper.Map(CodingScheme.GS1)),
-                    chargePrice.MeteringPointId),
-                GetReasonCodes(cimNamespace, chargePrice));
+                    receipt.MeteringPointId),
+                GetReasonCodes(cimNamespace, receipt));
         }
 
         private IEnumerable<XElement> GetReasonCodes(XNamespace cimNamespace, AvailableChargeLinksReceiptData receipt)
