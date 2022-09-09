@@ -31,6 +31,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions
     {
         private readonly ServiceBusSender _serviceBusSender;
         private readonly IServiceBusMessageFactory _serviceBusMessageFactory;
+        private readonly string _messageType;
 
         public ServiceBusChannel(
             IServiceBusSender<TOutboundMessage> serviceBusSender,
@@ -38,6 +39,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions
         {
             _serviceBusSender = serviceBusSender.Instance;
             _serviceBusMessageFactory = serviceBusMessageFactory;
+            _messageType = typeof(TOutboundMessage).ToString();
         }
 
         /// <summary>
@@ -47,7 +49,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions
         /// <param name="cancellationToken">cancellation token</param>
         protected override async Task WriteAsync(byte[] data, CancellationToken cancellationToken = default)
         {
-            var message = _serviceBusMessageFactory.CreateExternalMessage(data);
+            var message = _serviceBusMessageFactory.CreateExternalMessage(data, _messageType);
             await _serviceBusSender.SendMessageAsync(message, cancellationToken).ConfigureAwait(false);
         }
     }
