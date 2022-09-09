@@ -68,7 +68,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim
 
         protected abstract DocumentType GetDocumentType(IEnumerable<T> records);
 
-        protected abstract XElement GetActivityRecord(XNamespace cimNamespace, T chargePrice);
+        protected abstract XElement GetActivityRecord(XNamespace cimNamespace, T record);
 
         private XDocument GetDocument(
             IEnumerable<T> records,

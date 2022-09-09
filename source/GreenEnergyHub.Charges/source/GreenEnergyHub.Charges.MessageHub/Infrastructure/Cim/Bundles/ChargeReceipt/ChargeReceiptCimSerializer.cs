@@ -71,7 +71,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeRec
                 DocumentType.ConfirmRequestChangeOfPriceList : DocumentType.RejectRequestChangeOfPriceList;
         }
 
-        protected override XElement GetActivityRecord(XNamespace cimNamespace, AvailableChargeReceiptData chargePrice)
+        protected override XElement GetActivityRecord(XNamespace cimNamespace, AvailableChargeReceiptData record)
         {
             return new XElement(
                 cimNamespace + CimMarketDocumentConstants.MarketActivityRecord,
@@ -80,8 +80,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeRec
                     CimIdProvider.GetUniqueId()),
                 new XElement(
                     cimNamespace + CimChargeReceiptConstants.OriginalOperationId,
-                    chargePrice.OriginalOperationId),
-                GetReasonCodes(cimNamespace, chargePrice));
+                    record.OriginalOperationId),
+                GetReasonCodes(cimNamespace, record));
         }
 
         private IEnumerable<XElement> GetReasonCodes(XNamespace cimNamespace, AvailableChargeReceiptData receipt)
