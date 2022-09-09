@@ -24,7 +24,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
 {
     /// <summary>
     /// The function will initiate the communication with MessageHub
-    /// by notifying that charge and/or charge price data is available
+    /// by notifying that charge price data is available
     /// This is the RSM-034 CIM XML 'NotifyPriceList'.
     /// </summary>
     public class ChargePriceDataAvailableNotifierEndpoint
