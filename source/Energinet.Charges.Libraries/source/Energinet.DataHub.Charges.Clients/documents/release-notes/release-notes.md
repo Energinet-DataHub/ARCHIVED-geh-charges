@@ -1,5 +1,9 @@
 # Energinet.DataHub.Charges.Clients Release notes
 
+## Version 3.0.13
+
+Fix: `ChargeLinksClient` was using an incomplete endpoint url after changing to `v1`
+
 ## Version 3.0.12
 
 `ChargeLinksClient` calls will now be routed to `v1/ChargeLinks` instead of `v2`
