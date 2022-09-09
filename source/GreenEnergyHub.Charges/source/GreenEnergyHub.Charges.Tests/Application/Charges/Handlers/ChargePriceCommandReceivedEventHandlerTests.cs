@@ -89,7 +89,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             await sut.HandleAsync(chargePriceCommandReceivedEvent);
 
             // Assert
-            chargePriceRejectionService.Verify(
+            eventPublisher.Verify(
                 x => x.Publish(priceRejectedEvent), Times.Once);
             chargePriceEventHandler.Verify(x => x.HandleAsync(chargePriceCommandReceivedEvent), Times.Never);
         }

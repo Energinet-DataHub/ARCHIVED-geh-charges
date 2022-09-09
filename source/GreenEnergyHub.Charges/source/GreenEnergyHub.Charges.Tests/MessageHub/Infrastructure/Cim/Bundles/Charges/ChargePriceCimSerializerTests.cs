@@ -163,6 +163,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
                 "Owner" + no,
                 GetChargeType(no),
                 Instant.FromUtc(2020, 12, 31, 23, 0, 0),
+                Instant.FromUtc(9999, 12, 31, 23, 59, 59),
                 GetResolution(no),
                 DocumentType.NotifyPriceList,
                 0,
