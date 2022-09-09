@@ -57,7 +57,9 @@ module "func_functionhost" {
     CHARGE_COMMAND_RECEIVED_SUBSCRIPTION_NAME                       = "sbtsub-charges-charge-command-received"
     CHARGE_COMMAND_REJECTED_SUBSCRIPTION_NAME                       = "sbtsub-charges-charge-command-rejected"
     CHARGE_PRICE_COMMAND_RECEIVED_SUBSCRIPTION_NAME                 = "sbtsub-charges-charge-price-command-received"
-    CHARGE_PRICE_COMMAND_REJECTED_SUBSCRIPTION_NAME                 = "sbtsub-charges-charge-price-command-rejected"
+    CHARGE_PRICE_REJECTED_SUBSCRIPTION_NAME                         = "sbtsub-charges-charge-price-rejected"
+    CHARGE_PRICE_CONFIRMED_SUBSCRIPTION_NAME                        = "sbtsub-charges-charge-price-confirmed"
+    CHARGE_PRICE_CONFIRMED_DATAAVAILABLE_SUBSCRIPTION_NAME          = "sbtsub-charges-charge-price-confirmed-dataavail"
     DEFAULT_CHARGE_LINKS_DATAAVAILABLE_SUBSCRIPTION_NAME            = "sbtsub-charges-default-charge-links-dataavailable"
 
     # Integration
@@ -66,9 +68,6 @@ module "func_functionhost" {
     METERING_POINT_CREATED_SUBSCRIPTION_NAME                        = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbs-metering-point-created-sub-charges-name)"
     MARKET_PARTICIPANT_CHANGED_TOPIC_NAME                           = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbt-market-participant-changed-name)"
     MARKET_PARTICIPANT_CHANGED_SUBSCRIPTION_NAME                    = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbs-market-participant-changed-to-charges-name)"
-    CHARGE_PRICE_REJECTED_SUBSCRIPTION_NAME                         = "charge-price-rejected"
-    CHARGE_PRICE_CONFIRMED_SUBSCRIPTION_NAME                        = "charge-price-confirmed"
-    CHARGE_PRICE_CONFIRMED_DATAAVAILABLENOTIFIER_SUBSCRIPTION_NAME  = "charge-price-confirmed-dataavailablenotifier"
     
     # Shared resources
     INTEGRATIONEVENT_SENDER_CONNECTION_STRING                       = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-send-connection-string)"
