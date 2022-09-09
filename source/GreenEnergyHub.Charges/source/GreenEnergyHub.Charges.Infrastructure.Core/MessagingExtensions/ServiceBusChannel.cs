@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions
         {
             _serviceBusSender = serviceBusSender.Instance;
             _serviceBusMessageFactory = serviceBusMessageFactory;
-            _messageType = typeof(TOutboundMessage).ToString();
+            _messageType = typeof(TOutboundMessage).Name;
         }
 
         /// <summary>
