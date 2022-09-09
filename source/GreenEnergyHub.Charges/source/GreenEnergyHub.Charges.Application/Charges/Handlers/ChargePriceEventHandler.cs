@@ -112,7 +112,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             }
 
             HandleConfirmations(document, operationsToBeConfirmed);
-            HandleRejections(operationsToBeRejected, rejectionRules, document);
+            HandleRejections(document, operationsToBeRejected, rejectionRules);
         }
 
         private void HandleConfirmations(
@@ -124,9 +124,9 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         }
 
         private void HandleRejections(
+            DocumentDto document,
             IReadOnlyCollection<ChargePriceOperationDto> operationsToBeRejected,
-            IList<IValidationRuleContainer> rejectionRules,
-            DocumentDto document)
+            IList<IValidationRuleContainer> rejectionRules)
         {
             ArgumentNullException.ThrowIfNull(operationsToBeRejected);
             ArgumentNullException.ThrowIfNull(rejectionRules);
