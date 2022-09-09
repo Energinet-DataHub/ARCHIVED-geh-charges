@@ -182,7 +182,11 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             ChargePriceEventHandlerDeprecated sut)
         {
             // Arrange
-            var charge = chargeBuilder.WithStopDate(InstantHelper.GetTodayAtMidnightUtc()).Build();
+            var charge = chargeBuilder
+                .WithType(ChargeType.Fee)
+                .WithTaxIndicator(TaxIndicator.NoTax)
+                .WithStopDate(InstantHelper.GetTodayAtMidnightUtc())
+                .Build();
             var receivedEvent = CreateInvalidOperationBundle();
             chargeRepository
                 .Setup(r => r.SingleOrNullAsync(It.IsAny<ChargeIdentifier>()))!
@@ -217,6 +221,65 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                 vr.ValidationRule.ValidationRuleIdentifier == ValidationRuleIdentifier.SubsequentBundleOperationsFail);
             var other = rejectedRules.Where(vr =>
                 vr.ValidationRule.ValidationRuleIdentifier != ValidationRuleIdentifier.UpdateChargeMustHaveEffectiveDateBeforeOrOnStopDate &&
+                vr.ValidationRule.ValidationRuleIdentifier != ValidationRuleIdentifier.SubsequentBundleOperationsFail);
+
+            rejectedRules.Count.Should().Be(3);
+            invalid.Count().Should().Be(1);
+            subsequent.Count().Should().Be(2);
+            other.Count().Should().Be(0);
+        }
+
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task HandleAsync_WhenTaxTariffButNotSystemOperator_RejectCurrentAndAllSubsequentOperations(
+            [Frozen] Mock<IChargeIdentifierFactory> chargeIdentifierFactory,
+            [Frozen] Mock<IChargeRepository> chargeRepository,
+            [Frozen] Mock<IDocumentValidator> documentValidator,
+            [Frozen] Mock<IInputValidator<ChargeInformationOperationDto>> inputValidator,
+            [Frozen] Mock<IChargeCommandReceiptService> receiptService,
+            TestMarketParticipant sender,
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
+            ChargeBuilder chargeBuilder,
+            ChargeCommandReceivedEvent receivedEvent,
+            ChargePriceEventHandlerDeprecated sut)
+        {
+            var charge = chargeBuilder
+                .WithType(ChargeType.Tariff)
+                .WithTaxIndicator(TaxIndicator.Tax)
+                .Build();
+            chargeRepository
+                .Setup(r => r.SingleOrNullAsync(It.IsAny<ChargeIdentifier>()))!
+                .ReturnsAsync(charge);
+            SetupMarketParticipantRepository(marketParticipantRepository, sender);
+            SetupChargeIdentifierFactoryMock(chargeIdentifierFactory);
+            SetupValidatorsForOperation(documentValidator, inputValidator);
+
+            var accepted = 0;
+            receiptService
+                .Setup(s => s.AcceptValidOperationsAsync(
+                    It.IsAny<IReadOnlyCollection<ChargeInformationOperationDto>>(),
+                    It.IsAny<DocumentDto>()))
+                .Callback<IReadOnlyCollection<ChargeInformationOperationDto>, DocumentDto>((_, _) => accepted++);
+            var rejectedRules = new List<IValidationRuleContainer>();
+            receiptService
+                .Setup(s => s.RejectInvalidOperationsAsync(
+                    It.IsAny<IReadOnlyCollection<ChargeInformationOperationDto>>(),
+                    It.IsAny<DocumentDto>(),
+                    It.IsAny<IList<IValidationRuleContainer>>()))
+                .Callback<IReadOnlyCollection<ChargeInformationOperationDto>, DocumentDto, IList<IValidationRuleContainer>>(
+                    (_, _, s) => rejectedRules.AddRange(s));
+
+            // Act
+            await sut.HandleAsync(receivedEvent);
+
+            // Assert
+            accepted.Should().Be(1);
+            var invalid = rejectedRules.Where(vr =>
+                vr.ValidationRule.ValidationRuleIdentifier == ValidationRuleIdentifier.UpdateTaxTariffOnlyBySystemOperator);
+            var subsequent = rejectedRules.Where(vr =>
+                vr.ValidationRule.ValidationRuleIdentifier == ValidationRuleIdentifier.SubsequentBundleOperationsFail);
+            var other = rejectedRules.Where(vr =>
+                vr.ValidationRule.ValidationRuleIdentifier != ValidationRuleIdentifier.UpdateTaxTariffOnlyBySystemOperator &&
                 vr.ValidationRule.ValidationRuleIdentifier != ValidationRuleIdentifier.SubsequentBundleOperationsFail);
 
             rejectedRules.Count.Should().Be(3);

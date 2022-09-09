@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.TestCore;
 using NodaTime;
 
@@ -32,6 +33,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         private Instant _startDate = InstantHelper.GetStartDefault();
         private Resolution _resolution = Resolution.PT1H;
         private TaxIndicator _taxIndicator = TaxIndicator.Tax;
+        private ChargeType _type = ChargeType.Tariff;
 
         public ChargeBuilder WithTaxIndicator(TaxIndicator taxIndicator)
         {
@@ -93,6 +95,12 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             return this;
         }
 
+        public ChargeBuilder WithType(ChargeType type)
+        {
+            _type = type;
+            return this;
+        }
+
         public Charge Build()
         {
             var operationId = Guid.NewGuid().ToString();
@@ -103,7 +111,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
                 "chargeDescription",
                 _senderProvidedChargeId,
                 _ownerId,
-                ChargeType.Tariff,
+                _type,
                 _resolution,
                 _taxIndicator,
                 VatClassification.Unknown,
@@ -135,7 +143,8 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
                     _points.Min(p => p.Time),
                     _points.Max(p => p.Time),
                     _points,
-                    operationId);
+                    operationId,
+                    MarketParticipantRole.SystemOperator);
             }
 
             return charge;

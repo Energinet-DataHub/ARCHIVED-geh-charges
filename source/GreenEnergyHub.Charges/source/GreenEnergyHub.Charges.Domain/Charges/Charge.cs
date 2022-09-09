@@ -18,6 +18,7 @@ using System.Linq;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges.Exceptions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.BusinessValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using NodaTime;
 
@@ -213,7 +214,12 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             _periods.Add(chargePeriod);
         }
 
-        public void UpdatePrices(Instant startDate, Instant endDate, IReadOnlyList<Point> newPrices, string operationId)
+        public void UpdatePrices(
+            Instant startDate,
+            Instant endDate,
+            IReadOnlyList<Point> newPrices,
+            string operationId,
+            MarketParticipantRole senderMarketParticipantRole)
         {
             ArgumentNullException.ThrowIfNull(newPrices);
             ArgumentNullException.ThrowIfNull(operationId);
@@ -226,6 +232,12 @@ namespace GreenEnergyHub.Charges.Domain.Charges
                     new UpdateChargeMustHaveStartDateBeforeOrOnStopDateRule(
                         _periods.OrderBy(x => x.EndDateTime).Last().EndDateTime,
                         startDate),
+                    operationId),
+                new(
+                    new UpdateTaxTariffOnlyBySystemOperatorRule(
+                        Type,
+                        senderMarketParticipantRole,
+                        TaxIndicator),
                     operationId),
             };
             CheckRules(rules);
