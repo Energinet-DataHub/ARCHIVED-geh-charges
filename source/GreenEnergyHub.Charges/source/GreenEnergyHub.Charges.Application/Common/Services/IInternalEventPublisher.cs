@@ -20,7 +20,7 @@ namespace GreenEnergyHub.Charges.Application.Common.Services
     public interface IInternalEventPublisher
     {
         /// <summary>
-        /// Publisher for raising internal events
+        /// Publish internal event
         /// </summary>
         /// <param name="internalEvent"></param>
         public void Publish<T>(T internalEvent);
