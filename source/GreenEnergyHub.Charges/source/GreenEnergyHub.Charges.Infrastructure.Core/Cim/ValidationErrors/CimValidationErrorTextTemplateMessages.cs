@@ -105,6 +105,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         public const string ChargeTypeTariffPriceCountErrorText =
             "The number of prices {{ChargePointsCount}} doesn't match period type {{ChargeResolution}} for charge ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} owned by {{ChargeOwner}}.";
 
+        [ErrorMessageFor(ValidationRuleIdentifier.ChargeTypeTariffTaxIndicator)]
+        public const string ChargeTypeTariffTaxIndicatorErrorText =
+            "The sender role used is not allowed to set tax indicator to {{ChargeTaxIndicator}} for charge ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} owned by {{ChargeOwner}}";
+
         [ErrorMessageFor(ValidationRuleIdentifier.MaximumPrice)]
         public const string MaximumPriceErrorText =
             "Price {{ChargePointPrice}} not allowed: The specified charge price for position {{ChargePointPosition}} is not plausible (too large) for charge with ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} owned by {{ChargeOwner}}.";
