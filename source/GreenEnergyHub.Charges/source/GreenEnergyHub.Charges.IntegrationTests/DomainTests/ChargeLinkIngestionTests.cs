@@ -142,6 +142,27 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 if (peekResults.Any(s => s.Contains("RejectRequestChangeBillingMasterData_MarketDocument")))
                     peekResults.Should().ContainMatch("*cannot yet be updated or stopped. The functionality is not implemented yet*");
             }
+
+            [Fact]
+            public async Task Given_ChargeLinkSampleFile_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply()
+            {
+                // Arrange
+                var (request, correlationId) =
+                    Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
+                        EndpointUrl, ChargeLinkDocument.ChargeLinkSubscriptionSample);
+
+                // Act
+                var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
+                var responseBody = await actual.Content!.ReadAsStringAsync();
+
+                // Assert
+                actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
+
+                using var assertionScope = new AssertionScope();
+                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId);
+                peekResults.Should().ContainMatch("*ConfirmRequestChangeBillingMasterData_MarketDocument*");
+                peekResults.Should().NotContainMatch("*Reject*");
+            }
         }
     }
 }
