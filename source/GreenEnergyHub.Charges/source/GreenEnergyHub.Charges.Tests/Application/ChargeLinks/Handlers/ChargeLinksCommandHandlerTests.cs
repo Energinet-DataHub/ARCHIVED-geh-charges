@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
         [Theory]
         [InlineAutoDomainData]
         public async Task HandleAsync_WhenValidChargeLinkCommand_DispatchesOnce(
-            [Frozen] Mock<IMessageDispatcher<ChargeLinksReceivedEvent>> messageDispatcher,
+            [Frozen] Mock<IInternalEventDispatcher> eventDispatcher,
             ChargeLinksCommand chargeLinksCommand,
             ChargeLinksCommandHandler sut)
         {
@@ -40,10 +40,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             await sut.HandleAsync(chargeLinksCommand).ConfigureAwait(false);
 
             // Assert
-            messageDispatcher.Verify(
-                x => x.DispatchAsync(
-                    It.IsAny<ChargeLinksReceivedEvent>(),
-                    It.IsAny<CancellationToken>()),
+            eventDispatcher.Verify(
+                x =>
+                    x.DispatchAsync(It.IsAny<ChargeLinksReceivedEvent>(), It.IsAny<CancellationToken>()),
                 Times.Once);
         }
     }

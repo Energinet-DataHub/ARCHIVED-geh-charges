@@ -17,7 +17,7 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksDataAvailableNotifiedEvents
 {
-    public class ChargeLinksDataAvailableNotifiedEvent : InternalEventBase
+    public class ChargeLinksDataAvailableNotifiedEvent : InternalEvent
     {
         public ChargeLinksDataAvailableNotifiedEvent(Instant publishedTime, string meteringPointId)
             : base(publishedTime)

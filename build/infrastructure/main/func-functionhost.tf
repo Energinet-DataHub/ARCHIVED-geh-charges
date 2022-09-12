@@ -57,7 +57,9 @@ module "func_functionhost" {
     CHARGE_COMMAND_RECEIVED_SUBSCRIPTION_NAME                       = "sbtsub-charges-charge-command-received"
     CHARGE_COMMAND_REJECTED_SUBSCRIPTION_NAME                       = "sbtsub-charges-charge-command-rejected"
     CHARGE_PRICE_COMMAND_RECEIVED_SUBSCRIPTION_NAME                 = "sbtsub-charges-charge-price-command-received"
-    CHARGE_PRICE_COMMAND_REJECTED_SUBSCRIPTION_NAME                 = "sbtsub-charges-charge-price-command-rejected"
+    CHARGE_PRICE_REJECTED_SUBSCRIPTION_NAME                         = "sbtsub-charges-charge-price-rejected"
+    CHARGE_PRICE_CONFIRMED_SUBSCRIPTION_NAME                        = "sbtsub-charges-charge-price-confirmed"
+    CHARGE_PRICE_CONFIRMED_DATAAVAILABLE_SUBSCRIPTION_NAME          = "sbtsub-charges-charge-price-confirmed-dataavail"
     DEFAULT_CHARGE_LINKS_DATAAVAILABLE_SUBSCRIPTION_NAME            = "sbtsub-charges-default-charge-links-dataavailable"
 
     # Integration

@@ -23,19 +23,16 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Services
 {
     public class ChargeLinksReceiptService : IChargeLinksReceiptService
     {
-        private readonly IMessageDispatcher<ChargeLinksAcceptedEvent> _acceptedMessageDispatcher;
-        private readonly IMessageDispatcher<ChargeLinksRejectedEvent> _rejectedMessageDispatcher;
+        private readonly IInternalEventDispatcher _internalEventDispatcher;
         private readonly IChargeLinksAcceptedEventFactory _chargeLinksAcceptedEventFactory;
         private readonly IChargeLinksRejectedEventFactory _chargeLinksRejectedEventFactory;
 
         public ChargeLinksReceiptService(
-            IMessageDispatcher<ChargeLinksAcceptedEvent> acceptedMessageDispatcher,
-            IMessageDispatcher<ChargeLinksRejectedEvent> rejectedMessageDispatcher,
+            IInternalEventDispatcher internalEventDispatcher,
             IChargeLinksAcceptedEventFactory chargeLinksAcceptedEventFactory,
             IChargeLinksRejectedEventFactory chargeLinksRejectedEventFactory)
         {
-            _acceptedMessageDispatcher = acceptedMessageDispatcher;
-            _rejectedMessageDispatcher = rejectedMessageDispatcher;
+            _internalEventDispatcher = internalEventDispatcher;
             _chargeLinksAcceptedEventFactory = chargeLinksAcceptedEventFactory;
             _chargeLinksRejectedEventFactory = chargeLinksRejectedEventFactory;
         }
@@ -43,13 +40,13 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Services
         public async Task RejectAsync(ChargeLinksCommand command, ValidationResult validationResult)
         {
             var rejectedEvent = _chargeLinksRejectedEventFactory.Create(command, validationResult);
-            await _rejectedMessageDispatcher.DispatchAsync(rejectedEvent).ConfigureAwait(false);
+            await _internalEventDispatcher.DispatchAsync(rejectedEvent).ConfigureAwait(false);
         }
 
         public async Task AcceptAsync(ChargeLinksCommand command)
         {
             var acceptedEvent = _chargeLinksAcceptedEventFactory.Create(command);
-            await _acceptedMessageDispatcher.DispatchAsync(acceptedEvent).ConfigureAwait(false);
+            await _internalEventDispatcher.DispatchAsync(acceptedEvent).ConfigureAwait(false);
         }
     }
 }

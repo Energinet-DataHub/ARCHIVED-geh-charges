@@ -42,6 +42,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Persistence
 
         public DbSet<AvailableChargeData> AvailableChargeData { get; private set; }
 
+        public DbSet<AvailableChargePriceData> AvailableChargePriceData { get; private set; }
+
         public DbSet<AvailableChargeReceiptData> AvailableChargeReceiptData { get; private set; }
 
         public DbSet<AvailableChargeLinksData> AvailableChargeLinksData { get; private set; }
@@ -58,6 +60,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Persistence
             if (modelBuilder == null) throw new ArgumentNullException(nameof(modelBuilder));
 
             modelBuilder.ApplyConfiguration(new AvailableChargeDataConfiguration());
+            modelBuilder.ApplyConfiguration(new AvailableChargePriceDataConfiguration());
             modelBuilder.ApplyConfiguration(new AvailableChargeReceiptDataConfiguration());
             modelBuilder.ApplyConfiguration(new AvailableChargeLinksDataConfiguration());
             modelBuilder.ApplyConfiguration(new AvailableChargeLinkReceiptDataConfiguration());

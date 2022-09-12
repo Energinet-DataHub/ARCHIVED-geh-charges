@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
     {
         private readonly IDefaultChargeLinkRepository _defaultChargeLinkRepository;
         private readonly IChargeLinksCommandFactory _chargeLinksCommandFactory;
-        private readonly IMessageDispatcher<ChargeLinksReceivedEvent> _messageDispatcher;
+        private readonly IInternalEventDispatcher _internalEventDispatcher;
         private readonly IClock _clock;
         private readonly IMeteringPointRepository _meteringPointRepository;
         private readonly ICreateDefaultChargeLinksReplier _createDefaultChargeLinksReplier;
@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
         public CreateLinkRequestHandler(
             IDefaultChargeLinkRepository defaultChargeLinkRepository,
             IChargeLinksCommandFactory chargeLinksCommandFactory,
-            IMessageDispatcher<ChargeLinksReceivedEvent> messageDispatcher,
+            IInternalEventDispatcher internalEventDispatcher,
             IClock clock,
             IMeteringPointRepository meteringPointRepository,
             ICreateDefaultChargeLinksReplier createDefaultChargeLinksReplier,
@@ -55,7 +55,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
         {
             _defaultChargeLinkRepository = defaultChargeLinkRepository;
             _chargeLinksCommandFactory = chargeLinksCommandFactory;
-            _messageDispatcher = messageDispatcher;
+            _internalEventDispatcher = internalEventDispatcher;
             _clock = clock;
             _meteringPointRepository = meteringPointRepository;
             _createDefaultChargeLinksReplier = createDefaultChargeLinksReplier;
@@ -71,7 +71,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
                 var errorMessage = $"Could not handle request CreateDefaultChargeLinks on metering point with id: " +
                                    $"{createDefaultChargeLinksRequest.MeteringPointId} and " +
                                    $"correlation id: {_correlationIdContext.Id}";
-                _logger.LogError("The reply queue name was absent or empty: {errorMessage}", errorMessage);
+                _logger.LogError("The reply queue name was absent or empty: {ErrorMessage}", errorMessage);
 
                 throw new ArgumentNullException(nameof(_messageMetaDataContext.ReplyTo));
             }
@@ -158,7 +158,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
                 _clock.GetCurrentInstant(),
                 chargeLinksCommand);
 
-            await _messageDispatcher.DispatchAsync(chargeLinksReceivedEvent).ConfigureAwait(false);
+            await _internalEventDispatcher.DispatchAsync(chargeLinksReceivedEvent).ConfigureAwait(false);
         }
     }
 }
