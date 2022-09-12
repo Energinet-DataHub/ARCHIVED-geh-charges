@@ -32,13 +32,13 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             RequestDate = SystemClock.Instance.GetCurrentInstant(),
             Recipient = new MarketParticipantDto
             {
-                MarketParticipantId = SeededData.MarketParticipants.GridAccessProviderOfMeteringPoint571313180000000005.Gln,
-                BusinessProcessRole = MarketParticipantRole.GridAccessProvider,
+                MarketParticipantId = SeededData.MarketParticipants.MeteringPointAdministrator.Gln,
+                BusinessProcessRole = MarketParticipantRole.MeteringPointAdministrator,
             },
             Sender = new MarketParticipantDto
             {
-                MarketParticipantId = SeededData.MarketParticipants.SystemOperator.Gln,
-                BusinessProcessRole = MarketParticipantRole.MeteringPointAdministrator,
+                MarketParticipantId = SeededData.MarketParticipants.GridAccessProviderOfMeteringPoint571313180000000005.Gln,
+                BusinessProcessRole = MarketParticipantRole.GridAccessProvider,
             },
             Type = DocumentType.RequestChangeBillingMasterData,
         };

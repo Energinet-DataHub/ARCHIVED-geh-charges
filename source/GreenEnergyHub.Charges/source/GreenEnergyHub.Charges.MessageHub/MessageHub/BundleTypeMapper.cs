@@ -27,6 +27,7 @@ namespace GreenEnergyHub.Charges.MessageHub.MessageHub
         private const string ChargeLinkDataAvailable = "ChargeLinkDataAvailable";
         private const string ChargeLinkConfirmationDataAvailable = "ChargeLinkConfirmationDataAvailable";
         private const string ChargeLinkRejectionDataAvailable = "ChargeLinkRejectionDataAvailable";
+        private const string ChargePriceDataAvailable = "ChargePriceDataAvailable";
 
         public static string Map(BundleType bundleType)
         {
@@ -38,6 +39,7 @@ namespace GreenEnergyHub.Charges.MessageHub.MessageHub
                 BundleType.ChargeLinkDataAvailable => ChargeLinkDataAvailable,
                 BundleType.ChargeLinkConfirmationDataAvailable => ChargeLinkConfirmationDataAvailable,
                 BundleType.ChargeLinkRejectionDataAvailable => ChargeLinkRejectionDataAvailable,
+                BundleType.ChargePriceDataAvailable => ChargePriceDataAvailable,
                 _ => throw new InvalidEnumArgumentException(
                     $"Provided BundleType value '{bundleType}' is invalid and cannot be mapped"),
             };
@@ -65,6 +67,7 @@ namespace GreenEnergyHub.Charges.MessageHub.MessageHub
                 ChargeLinkDataAvailable => BundleType.ChargeLinkDataAvailable,
                 ChargeLinkConfirmationDataAvailable => BundleType.ChargeLinkConfirmationDataAvailable,
                 ChargeLinkRejectionDataAvailable => BundleType.ChargeLinkRejectionDataAvailable,
+                ChargePriceDataAvailable => BundleType.ChargePriceDataAvailable,
                 _ => throw new ArgumentException(
                     $"Provided string value '{bundleType}' cannot be mapped to a BundleType"),
             };

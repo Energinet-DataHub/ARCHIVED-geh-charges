@@ -43,15 +43,21 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Bundling
                 // RSM-034 CIM XML 'NotifyPriceList' requests
                 BundleType.ChargeDataAvailable => _bundleCreators[typeof(BundleCreator<AvailableChargeData>)],
                 // RSM-033 CIM XML 'ConfirmRequestChangeOfPriceList' confirmations
-                BundleType.ChargeConfirmationDataAvailable => _bundleCreators[typeof(BundleCreator<AvailableChargeReceiptData>)],
+                BundleType.ChargeConfirmationDataAvailable => _bundleCreators[
+                    typeof(BundleCreator<AvailableChargeReceiptData>)],
                 // RSM-033 CIM XML 'RejectRequestChangeOfPriceList' rejections
-                BundleType.ChargeRejectionDataAvailable => _bundleCreators[typeof(BundleCreator<AvailableChargeReceiptData>)],
+                BundleType.ChargeRejectionDataAvailable => _bundleCreators[
+                    typeof(BundleCreator<AvailableChargeReceiptData>)],
                 // RSM-030 CIM XML 'ConfirmRequestChangeBillingMasterData' confirmations
-                BundleType.ChargeLinkConfirmationDataAvailable => _bundleCreators[typeof(BundleCreator<AvailableChargeLinksReceiptData>)],
+                BundleType.ChargeLinkConfirmationDataAvailable => _bundleCreators[
+                    typeof(BundleCreator<AvailableChargeLinksReceiptData>)],
                 // RSM-031 CIM XML 'NotifyBillingMasterData' requests
                 BundleType.ChargeLinkDataAvailable => _bundleCreators[typeof(BundleCreator<AvailableChargeLinksData>)],
                 // RSM-030 CIM XML 'RejectRequestChangeBillingMasterData' rejections
-                BundleType.ChargeLinkRejectionDataAvailable => _bundleCreators[typeof(BundleCreator<AvailableChargeLinksReceiptData>)],
+                BundleType.ChargeLinkRejectionDataAvailable => _bundleCreators[
+                    typeof(BundleCreator<AvailableChargeLinksReceiptData>)],
+                // RSM-034 CIM XML 'NotifyPriceList' requests
+                BundleType.ChargePriceDataAvailable => _bundleCreators[typeof(BundleCreator<AvailableChargePriceData>)],
                 _ => throw new ArgumentException(
                     $"Unknown message type: {request.MessageType} with DataAvailableNotificationIds: {request.IdempotencyId}"),
             };
