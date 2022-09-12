@@ -15,9 +15,7 @@
 using System;
 using System.Linq;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
@@ -69,13 +67,13 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
         {
             // Arrange
             var sut = new ChargePriceCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
-            var triggeredBy = chargePriceOperationDto.Points.GetPositionOfPoint(chargePriceOperationDto.Points[1]).ToString();
+            const string triggeredBy = "3";
             var validationError = new ValidationError(ValidationRuleIdentifier.MaximumPrice, chargePriceOperationDto.OperationId, triggeredBy);
 
-            var expectedPoint = chargePriceOperationDto.Points[1];
+            var expectedPoint = chargePriceOperationDto.Points.OrderBy(x => x.Time).ToList().Last();
             var expected = CimValidationErrorTextTemplateMessages.MaximumPriceErrorText
                 .Replace("{{ChargePointPrice}}", expectedPoint.Price.ToString("N"))
-                .Replace("{{ChargePointPosition}}", chargePriceOperationDto.Points.GetPositionOfPoint(expectedPoint).ToString())
+                .Replace("{{ChargePointPosition}}", triggeredBy)
                 .Replace("{{DocumentSenderProvidedChargeId}}", chargePriceOperationDto.SenderProvidedChargeId)
                 .Replace("{{ChargeType}}", chargePriceOperationDto.ChargeType.ToString())
                 .Replace("{{ChargeOwner}}", chargePriceOperationDto.ChargeOwner);
