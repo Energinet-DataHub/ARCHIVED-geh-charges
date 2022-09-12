@@ -21,7 +21,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
     {
         public static int GetPositionOfPoint(this List<Point> points, Point pointToFindPositionOf)
         {
-            var index = points.OrderByDescending(point => point.Time).ToList().IndexOf(pointToFindPositionOf);
+            var index = points.OrderBy(point => point.Time).ToList().IndexOf(pointToFindPositionOf);
             return index + 1;
         }
     }
