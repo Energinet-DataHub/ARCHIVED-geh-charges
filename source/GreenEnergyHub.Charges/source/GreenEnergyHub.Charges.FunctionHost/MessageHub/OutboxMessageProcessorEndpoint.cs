@@ -12,10 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
-using Energinet.DataHub.Core.JsonSerialization;
-using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.FunctionHost.Common;
@@ -30,41 +29,38 @@ namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
     {
         private const string FunctionName = nameof(OutboxMessageProcessorEndpoint);
         private readonly IOutboxMessageRepository _outboxMessageRepository;
-        private readonly IJsonSerializer _jsonSerializer;
+        private readonly IOutboxMessageParser _outboxMessageParser;
         private readonly IClock _clock;
         private readonly ICorrelationContext _correlationContext;
-        private readonly IMessageDispatcher<ChargePriceOperationsRejectedEvent> _chargePriceOperationsRejectedMessageDispatcher;
+        private readonly IInternalEventDispatcher _internalEventDispatcher;
         private readonly IUnitOfWork _unitOfWork;
 
         public OutboxMessageProcessorEndpoint(
             IOutboxMessageRepository outboxMessageRepository,
-            IJsonSerializer jsonSerializer,
+            IOutboxMessageParser outboxMessageParser,
             IClock clock,
             ICorrelationContext correlationContext,
-            IMessageDispatcher<ChargePriceOperationsRejectedEvent> chargePriceOperationsRejectedMessageDispatcher,
+            IInternalEventDispatcher internalEventDispatcher,
             IUnitOfWork unitOfWork)
         {
             _outboxMessageRepository = outboxMessageRepository;
-            _jsonSerializer = jsonSerializer;
+            _outboxMessageParser = outboxMessageParser;
             _clock = clock;
             _correlationContext = correlationContext;
-            _chargePriceOperationsRejectedMessageDispatcher = chargePriceOperationsRejectedMessageDispatcher;
+            _internalEventDispatcher = internalEventDispatcher;
             _unitOfWork = unitOfWork;
         }
 
         [Function(FunctionName)]
-        public async Task RunAsync(
-            [TimerTrigger(TimerTriggerTimeConstants.Every10Seconds)] TimerInfo timerInfo)
+        public async Task RunAsync([TimerTrigger(TimerTriggerTimeConstants.Every10Seconds)] TimerInfo timerInfo)
         {
             OutboxMessage? outboxMessage;
 
             while ((outboxMessage = _outboxMessageRepository.GetNext()) != null)
             {
-                var operationsRejectedEvent = _jsonSerializer
-                    .Deserialize<ChargePriceOperationsRejectedEvent>(outboxMessage.Data);
+                var internalEvent = _outboxMessageParser.Parse(outboxMessage.Type, outboxMessage.Data);
                 _correlationContext.SetId(outboxMessage.CorrelationId);
-                await _chargePriceOperationsRejectedMessageDispatcher
-                    .DispatchAsync(operationsRejectedEvent).ConfigureAwait(false);
+                await _internalEventDispatcher.DispatchAsync(internalEvent).ConfigureAwait(false);
                 outboxMessage.SetProcessed(_clock.GetCurrentInstant());
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             }

@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification
 
         private static AvailableReceiptValidationError CreateReason(ReasonCode reasonCode)
         {
-            var text = StringGenerator.CreateStringOfRandomLength(MaxTextLengthInTest);
+            var text = TestStringGenerator.CreateStringOfRandomLength(MaxTextLengthInTest);
             return new AvailableReceiptValidationError(reasonCode, text);
         }
     }

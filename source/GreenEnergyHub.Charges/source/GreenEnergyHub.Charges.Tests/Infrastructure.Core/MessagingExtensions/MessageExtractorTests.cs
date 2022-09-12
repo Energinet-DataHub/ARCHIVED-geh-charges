@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions
         [Fact]
         public void Constructor_WhenDeserializerIsNull_ThrowsArgumentNullException()
         {
-            JsonMessageDeserializer<IInboundMessage>? deserializer = null;
+            MessageDeserializer<IInboundMessage>? deserializer = null;
 
             Assert.Throws<ArgumentNullException>(
                 () => new MessageExtractor<IInboundMessage>(deserializer!));
@@ -54,7 +54,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions
         [Theory]
         [InlineAutoMoqData]
         public async Task ExtractAsync_WhenGivenByteArray_CallsDeserializerAndReturnsResult(
-            [Frozen] Mock<JsonMessageDeserializer<IInboundMessage>> deserializer,
+            [Frozen] Mock<MessageDeserializer<IInboundMessage>> deserializer,
             byte[] data,
             IInboundMessage message)
         {
@@ -93,7 +93,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions
         [Theory]
         [InlineAutoMoqData]
         public async Task ExtractAsync_WhenGivenStream_CallsDeserializerAndReturnsResult(
-            [Frozen] Mock<JsonMessageDeserializer<IInboundMessage>> deserializer,
+            [Frozen] Mock<MessageDeserializer<IInboundMessage>> deserializer,
             IInboundMessage message)
         {
             // Arrange

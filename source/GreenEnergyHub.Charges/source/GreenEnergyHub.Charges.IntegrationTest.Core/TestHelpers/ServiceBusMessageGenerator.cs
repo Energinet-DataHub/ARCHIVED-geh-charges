@@ -21,8 +21,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
 {
     public static class ServiceBusMessageGenerator
     {
-        public static ServiceBusMessage CreateWithJsonContent(
-            IInternalEvent internalEvent,
+        public static ServiceBusMessage CreateWithJsonContent<T>(
+            T internalEvent,
             Dictionary<string, string> applicationProperties,
             string correlationId,
             string subject)
