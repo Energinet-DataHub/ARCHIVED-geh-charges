@@ -18,6 +18,9 @@ using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 {
+    // ReSharper disable once UnusedType.Global
+    // This test is implicitly used by calling abstract class AvailableDataRepositoryTests with
+    // concrete implementation of type AvailableDataBase
     [IntegrationTest]
     public class AvailableChargeLinkReceiptDataRepositoryTests : AvailableDataRepositoryTests<AvailableChargeLinksReceiptData>
     {
