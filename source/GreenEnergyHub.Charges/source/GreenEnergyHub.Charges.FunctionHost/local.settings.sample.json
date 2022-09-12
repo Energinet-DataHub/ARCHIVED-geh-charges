@@ -66,8 +66,12 @@
     // Internal, charge, rejected
     "CHARGE_COMMAND_REJECTED_SUBSCRIPTION_NAME": "sbtsub-charges-charge-command-rejected",
 
+    // Internal, charge price, confirmed
+    "CHARGE_PRICE_CONFIRMED_SUBSCRIPTION_NAME": "sbtsub-charges-charge-price-confirmed",
+    "CHARGE_PRICE_CONFIRMED_DATAAVAILABLE_SUBSCRIPTION_NAME": "sbtsub-charges-charge-price-confirmed-dataavail",
+
     // Internal, charge price, rejected
-    "CHARGE_PRICE_COMMAND_REJECTED_SUBSCRIPTION_NAME": "sbtsub-charges-charge-price-command-rejected",
+    "CHARGE_PRICE_REJECTED_SUBSCRIPTION_NAME": "sbtsub-charges-charge-price-rejected",
 
     // Internal, charge links, received
     "CHARGE_LINKS_COMMAND_RECEIVED_SUBSCRIPTION_NAME": "sbtsub-charges-charge-links-command-received",

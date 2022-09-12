@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
 
         public ChargePriceOperationDtoBuilder()
         {
-            _operationId = "operationId";
+            _operationId = Guid.NewGuid().ToString();
             _chargeId = "some charge id";
             _startDateTime = InstantHelper.GetTodayPlusDaysAtMidnightUtc(31);
             _endDateTime = InstantHelper.GetEndDefault();

@@ -28,7 +28,7 @@ namespace Energinet.DataHub.Charges.Clients.ChargeLinks
         /// <returns>Relative URI including metering point id parameter</returns>
         public static Uri GetChargeLinks(string meteringPointId)
         {
-            return new Uri($"v1/ChargeLinks?meteringPointId={meteringPointId}", UriKind.Relative);
+            return new Uri($"v1/ChargeLinks/GetAsync?meteringPointId={meteringPointId}", UriKind.Relative);
         }
     }
 }

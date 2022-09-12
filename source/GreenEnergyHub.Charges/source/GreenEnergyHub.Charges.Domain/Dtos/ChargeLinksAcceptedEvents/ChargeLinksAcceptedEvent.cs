@@ -18,7 +18,7 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents
 {
-    public class ChargeLinksAcceptedEvent : InternalEventBase
+    public class ChargeLinksAcceptedEvent : InternalEvent
     {
         public ChargeLinksCommand Command { get; }
 

@@ -20,7 +20,7 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksRejectionEvents
 {
-    public class ChargeLinksRejectedEvent : InternalEventBase
+    public class ChargeLinksRejectedEvent : InternalEvent
     {
         public ChargeLinksRejectedEvent(
             Instant publishedTime,

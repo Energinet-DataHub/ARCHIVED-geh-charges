@@ -20,5 +20,6 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.ChargeLinks
         public const string ChargeLinkDocumentWhereSenderIdDoNotMatchAuthorizedActorId = "TestFiles/ChargeLinks/ChargeLinkDocumentWhereSenderIdDoNotMatchAuthorizedActorId.xml";
         public const string TaxWithCreateAndUpdateDueToOverLappingPeriod = "TestFiles/ChargeLinks/TaxTariffWithCreateAndUpdateDueToOverLappingPeriodChargeLinkDocument.xml";
         public const string InvalidSchema = "TestFiles/ChargeLinks/InvalidSchemaChargeLinkDocument.xml";
+        public const string ChargeLinkSubscriptionSample = "TestFiles/Samples/ChargeLinks/ChargeLinkSubscriptionSample.xml";
     }
 }
