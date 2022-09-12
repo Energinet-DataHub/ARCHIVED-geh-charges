@@ -13,11 +13,11 @@
 // limitations under the License.
 
 using Energinet.DataHub.Core.Messaging.MessageTypes.Common;
-using Energinet.DataHub.Core.Messaging.Transport;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.CreateDefaultChargeLinksRequests
 {
-    public class CreateDefaultChargeLinksRequest : IInboundMessage
+    public class CreateDefaultChargeLinksRequest : MessageBase
     {
         public CreateDefaultChargeLinksRequest(string meteringPointId)
         {
@@ -29,7 +29,5 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.CreateDefaultChargeLinksRequests
         /// Metering point ID to add links to
         /// </summary>
         public string MeteringPointId { get; }
-
-        public Transaction Transaction { get; set; }
     }
 }

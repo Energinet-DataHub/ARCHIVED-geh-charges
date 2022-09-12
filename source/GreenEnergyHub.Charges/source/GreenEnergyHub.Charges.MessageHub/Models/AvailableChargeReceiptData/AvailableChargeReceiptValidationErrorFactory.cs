@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using GreenEnergyHub.Charges.MessageHub.Models.Shared;
@@ -22,11 +23,11 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
     public class AvailableChargeReceiptValidationErrorFactory : IAvailableChargeReceiptValidationErrorFactory
     {
         private readonly ICimValidationErrorCodeFactory _cimValidationErrorCodeFactory;
-        private readonly ICimValidationErrorTextFactory<ChargeInformationCommand, ChargeInformationOperationDto> _cimValidationErrorTextFactory;
+        private readonly ICimValidationErrorTextFactory<ChargeInformationOperationDto> _cimValidationErrorTextFactory;
 
         public AvailableChargeReceiptValidationErrorFactory(
             ICimValidationErrorCodeFactory cimValidationErrorCodeFactory,
-            ICimValidationErrorTextFactory<ChargeInformationCommand, ChargeInformationOperationDto> cimValidationErrorTextFactory)
+            ICimValidationErrorTextFactory<ChargeInformationOperationDto> cimValidationErrorTextFactory)
         {
             _cimValidationErrorCodeFactory = cimValidationErrorCodeFactory;
             _cimValidationErrorTextFactory = cimValidationErrorTextFactory;
@@ -34,11 +35,11 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 
         public AvailableReceiptValidationError Create(
             ValidationError validationError,
-            ChargeInformationCommand command,
+            DocumentDto document,
             ChargeInformationOperationDto chargeInformationOperationDto)
         {
             var reasonCode = _cimValidationErrorCodeFactory.Create(validationError.ValidationRuleIdentifier);
-            var reasonText = _cimValidationErrorTextFactory.Create(validationError, command, chargeInformationOperationDto);
+            var reasonText = _cimValidationErrorTextFactory.Create(validationError, document, chargeInformationOperationDto);
 
             return new AvailableReceiptValidationError(reasonCode, reasonText);
         }
