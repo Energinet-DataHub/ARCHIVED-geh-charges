@@ -14,7 +14,7 @@
 
 module "sbs_int-events-metering-point-created" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v8"
-  name                = "metering-point-created-sub"
+  name                = "metering-point-created"
   project_name        = var.domain_name_short
   topic_id            = data.azurerm_key_vault_secret.sbt_domainrelay_integrationevent_received_id.value
   max_delivery_count  = 1
