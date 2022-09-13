@@ -42,7 +42,7 @@ namespace GreenEnergyHub.Charges.Tests.Core.Enumeration
         {
             foreach (var strategy in Enum.GetValues(typeof(EnumComparisonStrategy)))
             {
-                yield return new object[] { strategy! };
+                yield return new[] { strategy! };
             }
         }
     }

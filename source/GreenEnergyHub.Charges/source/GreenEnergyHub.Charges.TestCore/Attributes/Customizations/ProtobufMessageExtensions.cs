@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using AutoFixture;
@@ -29,7 +28,7 @@ namespace GreenEnergyHub.Charges.TestCore.Attributes.Customizations
         /// </summary>
         /// <param name="message">IMessage that we will find all RepeatedFields for</param>
         /// <param name="fixture">Fixture to use to populate the RepeatedFields with AddManyTo</param>
-        public static void AddManyToRepeatedFields([NotNull] this IMessage message, IFixture fixture)
+        public static void AddManyToRepeatedFields(this IMessage message, IFixture fixture)
         {
             var properties = message.GetType().GetProperties();
 
@@ -68,7 +67,7 @@ namespace GreenEnergyHub.Charges.TestCore.Attributes.Customizations
                     })
                 .Single()
                 .MakeGenericMethod(property.PropertyType.GenericTypeArguments[0])
-                .Invoke(fixture, new object[] { fixture, obj! });
+                .Invoke(fixture, new[] { fixture, obj! });
         }
     }
 }

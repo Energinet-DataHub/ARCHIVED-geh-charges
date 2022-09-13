@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Core.Enumeration;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Xunit;
@@ -34,7 +33,7 @@ namespace GreenEnergyHub.Charges.Tests.Core.Enumeration
             ProtobufEnum protobufValue,
             ComparisonEnum comparisonEnum,
             bool expected,
-            [NotNull] ProtobufLenientValueNameComparisonStrategy sut)
+            ProtobufLenientValueNameComparisonStrategy sut)
         {
             var actual = sut.IsEquivalent(protobufValue, comparisonEnum);
             Assert.Equal(expected, actual);
@@ -43,7 +42,7 @@ namespace GreenEnergyHub.Charges.Tests.Core.Enumeration
         [Theory]
         [InlineAutoMoqData]
         public void IsEquivalent_WhenProtobufEnumLackPrefix_ThrowsArgumentExceptions(
-            [NotNull] ProtobufLenientValueNameComparisonStrategy sut)
+            ProtobufLenientValueNameComparisonStrategy sut)
         {
             Assert.Throws<ArgumentException>(() => sut.IsEquivalent(ProtobufEnum.Tofewwords, ComparisonEnum.Something));
         }

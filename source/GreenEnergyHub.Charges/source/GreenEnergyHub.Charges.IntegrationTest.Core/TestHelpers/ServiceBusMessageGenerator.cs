@@ -15,7 +15,6 @@
 using System.Collections.Generic;
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Core.JsonSerialization;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 
 namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
 {
