@@ -191,6 +191,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                     topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesDomainEventTopicName),
                     subscriptionName: EnvironmentHelper.GetEnv(
                         EnvironmentSettingNames.ChargeCommandAcceptedPublishSubscriptionName))
+
                 // Used by ChargePriceIntegrationEventsPublisherEndpoint
                 .AddAzureServiceBusSubscription(
                     name: "ChargePriceConfirmedPublishSubscriptionExists",
