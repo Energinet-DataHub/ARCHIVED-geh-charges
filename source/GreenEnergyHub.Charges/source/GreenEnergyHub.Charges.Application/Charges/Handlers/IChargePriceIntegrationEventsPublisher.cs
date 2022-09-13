@@ -17,8 +17,16 @@ using GreenEnergyHub.Charges.Application.Charges.Events;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
+    /// <summary>
+    /// Integration events to other domains when accepted charge prices (Business reason code: D08) has been ingested,
+    /// handled and persisted.
+    /// </summary>
     public interface IChargePriceIntegrationEventsPublisher
     {
-        Task PublishAsync(PriceConfirmedEvent chargePriceConfirmedEvent);
+        /// <summary>
+        /// Publish integration event to the service bus
+        /// </summary>
+        /// <param name="priceConfirmedEvent"></param>
+        Task PublishAsync(PriceConfirmedEvent priceConfirmedEvent);
     }
 }

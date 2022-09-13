@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Application.Charges.Factories;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Application.Common.Services;
@@ -42,7 +41,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IPriceConfirmedEventFactory, PriceConfirmedEventFactory>();
             serviceCollection.AddScoped<IPriceRejectedEventFactory, PriceRejectedEventFactory>();
             serviceCollection.AddScoped<JsonMessageDeserializer<ChargePriceCommandReceivedEvent>>();
-            serviceCollection.AddScoped<JsonMessageDeserializer<PriceConfirmedEvent>>();
         }
     }
 }
