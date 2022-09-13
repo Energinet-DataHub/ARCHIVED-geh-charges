@@ -24,6 +24,7 @@ The following asynchronous validation rules are currently implemented in the cha
 |VR.505-2|The Fee to which the charge information applies must have period type Month|D23|(✓) Fee only|||
 |VR.505-3|The Subscription to which the charge information applies must have period type Month|D23|(✓) Subscription only|||
 |VR.507-1|The Tariff to which the charge information applies must have 1 price for period type Day, 24 prices for period type Hour or 96 prices for period type Quarter of Hour|E87|(✓) Tariff only|(✓) Tariff only||
+|VR.508|Only System Operator role is allowed to submit requests concerning tax tariffs|E0I|(✓) Tariff only|(✓) Tariff only||
 |VR.509|The charge price must be plausible (i.e. value less than 1.000.000)|E90|✓|✓||
 |VR.513|Charge owner must match sender of a message|E0I|✓|✓||
 |VR.531|The occurrence of a charge is mandatory|E0H|✓|✓||
