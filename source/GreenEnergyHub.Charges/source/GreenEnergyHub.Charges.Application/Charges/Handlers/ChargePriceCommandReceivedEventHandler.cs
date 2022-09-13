@@ -29,20 +29,20 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         private readonly ILogger _logger;
         private readonly IChargePriceEventHandler _chargePriceEventHandler;
         private readonly IDocumentValidator _documentValidator;
-        private readonly IInternalEventPublisher _internalEventPublisher;
+        private readonly IDomainEventPublisher _domainEventPublisher;
         private readonly IPriceRejectedEventFactory _priceRejectedEventFactory;
 
         public ChargePriceCommandReceivedEventHandler(
             ILoggerFactory loggerFactory,
             IChargePriceEventHandler chargePriceEventHandler,
             IDocumentValidator documentValidator,
-            IInternalEventPublisher internalEventPublisher,
+            IDomainEventPublisher domainEventPublisher,
             IPriceRejectedEventFactory priceRejectedEventFactory)
         {
             _logger = loggerFactory.CreateLogger(nameof(ChargePriceCommandReceivedEventHandler));
             _chargePriceEventHandler = chargePriceEventHandler;
             _documentValidator = documentValidator;
-            _internalEventPublisher = internalEventPublisher;
+            _domainEventPublisher = domainEventPublisher;
             _priceRejectedEventFactory = priceRejectedEventFactory;
         }
 
@@ -74,7 +74,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 commandReceivedEvent.Command.Operations,
                 validationResult);
 
-            _internalEventPublisher.Publish(rejectedEvent);
+            _domainEventPublisher.Publish(rejectedEvent);
         }
     }
 }

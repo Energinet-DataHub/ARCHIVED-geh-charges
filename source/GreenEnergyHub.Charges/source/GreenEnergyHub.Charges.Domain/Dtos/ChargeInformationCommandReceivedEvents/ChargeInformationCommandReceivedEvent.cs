@@ -16,9 +16,9 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents
+namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommandReceivedEvents
 {
-    public class ChargeInformationCommandReceivedEvent : InternalEvent
+    public class ChargeInformationCommandReceivedEvent : DomainEvent
     {
         public ChargeInformationCommandReceivedEvent(
             Instant publishedTime,

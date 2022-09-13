@@ -79,7 +79,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 var invalidChargePriceCommandReceivedEvent = CreateInvalidChargePriceCommandReceivedEvent(
                     commandBuilder, operationDtoBuilder);
                 var correlationId = CorrelationIdGenerator.Create();
-                var message = CreateServiceBusMessage(invalidChargePriceCommandReceivedEvent, correlationId);
+                var message = ServiceBusMessageGenerator.CreateServiceBusMessage(
+                    invalidChargePriceCommandReceivedEvent,
+                    correlationId);
 
                 // Act
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
@@ -117,7 +119,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 var newPrices = existingCharge.Points.Select(point => new Point(point.Price + 100, point.Time)).ToList();
                 var chargePriceCommandReceivedEvent = CreateChargePriceCommandReceivedEvent(
                     chargePriceCommandBuilder, documentDtoBuilder, operationDtoBuilder, chargeId, ownerGln, chargeType, newPrices);
-                var message = CreateServiceBusMessage(chargePriceCommandReceivedEvent, correlationId);
+                var message = ServiceBusMessageGenerator.CreateServiceBusMessage(
+                    chargePriceCommandReceivedEvent,
+                    correlationId);
 
                 // Act
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
@@ -159,7 +163,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 var chargePriceCommandReceivedEvent = CreateChargePriceCommandReceivedEvent(
                     commandBuilder, documentDtoBuilder, operationDtoBuilder, chargeId, ownerGln, chargeType, expectedCharge.Points.ToList());
                 var correlationId = CorrelationIdGenerator.Create();
-                var message = CreateServiceBusMessage(chargePriceCommandReceivedEvent, correlationId);
+                var message = ServiceBusMessageGenerator.CreateServiceBusMessage(
+                    chargePriceCommandReceivedEvent,
+                    correlationId);
 
                 // Act
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
@@ -232,20 +238,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 var chargePriceReceivedEvent = new ChargePriceCommandReceivedEvent(
                     Instant.FromDateTimeUtc(DateTime.UtcNow), priceCommand);
                 return chargePriceReceivedEvent;
-            }
-
-            private static ServiceBusMessage CreateServiceBusMessage<T>(T internalEvent, string correlationId)
-            {
-                ArgumentNullException.ThrowIfNull(internalEvent);
-
-                var applicationProperties = new Dictionary<string, string>
-                {
-                    { MessageMetaDataConstants.CorrelationId, correlationId },
-                };
-                var message = ServiceBusMessageGenerator.CreateWithJsonContent(
-                    internalEvent, applicationProperties, correlationId, internalEvent.GetType().Name);
-
-                return message;
             }
         }
     }

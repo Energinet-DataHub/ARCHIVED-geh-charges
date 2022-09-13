@@ -16,9 +16,9 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.Messages.Events
 {
-    public abstract class InternalEvent : IEvent
+    public abstract class DomainEvent : IEvent
     {
-        protected InternalEvent(Instant publishedTime)
+        protected DomainEvent(Instant publishedTime)
         {
             PublishedTime = publishedTime;
         }

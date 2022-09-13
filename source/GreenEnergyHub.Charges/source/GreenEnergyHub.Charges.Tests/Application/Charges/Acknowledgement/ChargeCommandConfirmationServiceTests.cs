@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Acknowledgement
         [AutoMoqData]
         public async Task RejectAsync_WhenCalledWithCommandAndResult_UsesFactoryToCreateEventAndDispatchesIt(
             [Frozen] Mock<IChargeCommandRejectedEventFactory> rejectedEventFactory,
-            [Frozen] Mock<IInternalEventDispatcher> internalEventDispatcher,
+            [Frozen] Mock<IDomainEventDispatcher> domainEventDispatcher,
             ChargeInformationCommand command,
             ValidationResult validationResult,
             ChargeCommandRejectedEvent rejectedEvent,
@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Acknowledgement
                 .Returns(rejectedEvent);
 
             ChargeCommandRejectedEvent? eventForSerialization = null;
-            internalEventDispatcher.Setup(
+            domainEventDispatcher.Setup(
                     d => d.DispatchAsync(
                         It.IsAny<ChargeCommandRejectedEvent>(),
                         It.IsAny<CancellationToken>()))
@@ -67,7 +67,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Acknowledgement
         [AutoMoqData]
         public async Task AcceptAsync_WhenCalledWithCommand_UsesFactoryToCreateEventAndDispatchesIt(
             [Frozen] Mock<IChargeCommandAcceptedEventFactory> acceptedEventFactory,
-            [Frozen] Mock<IInternalEventDispatcher> internalEventDispatcher,
+            [Frozen] Mock<IDomainEventDispatcher> domainEventDispatcher,
             ChargeInformationCommand command,
             ChargeCommandAcceptedEvent acceptedEvent,
             ChargeCommandReceiptService sut)
@@ -79,7 +79,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Acknowledgement
                 .Returns(acceptedEvent);
 
             ChargeCommandAcceptedEvent? eventForSerialization = null;
-            internalEventDispatcher.Setup(
+            domainEventDispatcher.Setup(
                     d => d.DispatchAsync(
                         It.IsAny<ChargeCommandAcceptedEvent>(),
                         It.IsAny<CancellationToken>()))

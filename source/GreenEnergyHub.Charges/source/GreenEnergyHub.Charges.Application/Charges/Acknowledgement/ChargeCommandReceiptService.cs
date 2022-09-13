@@ -31,30 +31,30 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
         private readonly ILogger _logger;
         private readonly IChargeCommandRejectedEventFactory _chargeCommandRejectedEventFactory;
         private readonly IChargeCommandAcceptedEventFactory _chargeCommandAcceptedEventFactory;
-        private readonly IInternalEventDispatcher _internalEventDispatcher;
+        private readonly IDomainEventDispatcher _domainEventDispatcher;
 
         public ChargeCommandReceiptService(
             ILoggerFactory loggerFactory,
             IChargeCommandRejectedEventFactory chargeCommandRejectedEventFactory,
             IChargeCommandAcceptedEventFactory chargeCommandAcceptedEventFactory,
-            IInternalEventDispatcher internalEventDispatcher)
+            IDomainEventDispatcher domainEventDispatcher)
         {
             _logger = loggerFactory.CreateLogger(nameof(ChargeCommandReceiptService));
             _chargeCommandRejectedEventFactory = chargeCommandRejectedEventFactory;
             _chargeCommandAcceptedEventFactory = chargeCommandAcceptedEventFactory;
-            _internalEventDispatcher = internalEventDispatcher;
+            _domainEventDispatcher = domainEventDispatcher;
         }
 
         public async Task RejectAsync(ChargeInformationCommand command, ValidationResult validationResult)
         {
             var rejectedEvent = _chargeCommandRejectedEventFactory.CreateEvent(command, validationResult);
-            await _internalEventDispatcher.DispatchAsync(rejectedEvent).ConfigureAwait(false);
+            await _domainEventDispatcher.DispatchAsync(rejectedEvent).ConfigureAwait(false);
         }
 
         public async Task AcceptAsync(ChargeInformationCommand command)
         {
             var acceptedEvent = _chargeCommandAcceptedEventFactory.CreateEvent(command);
-            await _internalEventDispatcher.DispatchAsync(acceptedEvent).ConfigureAwait(false);
+            await _domainEventDispatcher.DispatchAsync(acceptedEvent).ConfigureAwait(false);
         }
 
         /// <summary>

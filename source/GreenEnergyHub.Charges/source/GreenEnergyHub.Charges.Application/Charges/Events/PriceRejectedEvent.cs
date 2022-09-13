@@ -14,6 +14,7 @@
 
 using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
@@ -21,7 +22,7 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Events
 {
-    public class PriceRejectedEvent : InternalEvent
+    public class PriceRejectedEvent : DomainEvent
     {
         public PriceRejectedEvent(
             Instant publishedTime,

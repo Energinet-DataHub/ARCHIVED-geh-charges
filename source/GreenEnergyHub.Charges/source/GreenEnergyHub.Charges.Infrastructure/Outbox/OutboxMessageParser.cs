@@ -28,7 +28,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Outbox
             _jsonSerializer = jsonSerializer;
         }
 
-        public InternalEvent Parse(string outboxMessageType, string data)
+        public DomainEvent Parse(string outboxMessageType, string data)
         {
             if (outboxMessageType == typeof(PriceRejectedEvent).FullName)
             {

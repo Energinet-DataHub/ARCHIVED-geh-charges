@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.Tests.FunctionHost
         [Fact]
         public void AllFunctionsShouldBeIncludedInCoverage()
         {
-            Assert.Equal("ChargeCommandReceiverEndpoint", ChargeCommandReceiverEndpoint.FunctionName);
+            Assert.Equal("ChargeCommandReceiverEndpoint", ChargeInformationCommandReceiverEndpoint.FunctionName);
         }
     }
 }

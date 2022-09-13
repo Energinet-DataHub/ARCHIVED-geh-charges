@@ -18,15 +18,15 @@ using System.Threading.Tasks;
 namespace GreenEnergyHub.Charges.Application.Messaging
 {
     /// <summary>
-    /// Service for dispatching internal events raised during current business process
+    /// Service for dispatching domain events raised during current business process
     /// </summary>
-    public interface IInternalEventDispatcher
+    public interface IDomainEventDispatcher
     {
         /// <summary>
-        /// Dispatch internal event
+        /// Dispatch domain event
         /// </summary>
-        /// <param name="internalEvent"></param>
+        /// <param name="domainEvent"></param>
         /// <param name="cancellationToken"></param>
-        Task DispatchAsync<T>(T internalEvent, CancellationToken cancellationToken = default);
+        Task DispatchAsync<T>(T domainEvent, CancellationToken cancellationToken = default);
     }
 }

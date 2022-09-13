@@ -20,7 +20,7 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Events
 {
-    public class PriceConfirmedEvent : InternalEvent
+    public class PriceConfirmedEvent : DomainEvent
     {
         public PriceConfirmedEvent(
             Instant publishedTime,

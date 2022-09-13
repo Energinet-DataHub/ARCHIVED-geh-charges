@@ -21,13 +21,13 @@ using Microsoft.Azure.Functions.Worker;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Charges
 {
-    public class ChargeCommandReceiverEndpoint
+    public class ChargeInformationCommandReceiverEndpoint
     {
-        public const string FunctionName = nameof(ChargeCommandReceiverEndpoint);
+        public const string FunctionName = nameof(ChargeInformationCommandReceiverEndpoint);
         private readonly IChargeCommandReceivedEventHandler _chargeCommandReceivedEventHandler;
         private readonly JsonMessageDeserializer<ChargeInformationCommandReceivedEvent> _deserializer;
 
-        public ChargeCommandReceiverEndpoint(
+        public ChargeInformationCommandReceiverEndpoint(
             IChargeCommandReceivedEventHandler chargeCommandReceivedEventHandler,
             JsonMessageDeserializer<ChargeInformationCommandReceivedEvent> deserializer)
         {

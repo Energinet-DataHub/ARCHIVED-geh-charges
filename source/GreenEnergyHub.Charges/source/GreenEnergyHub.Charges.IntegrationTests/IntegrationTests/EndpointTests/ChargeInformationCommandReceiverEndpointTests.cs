@@ -42,7 +42,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 {
     [IntegrationTest]
-    public class ChargeCommandReceiverEndpointTests
+    public class ChargeInformationCommandReceiverEndpointTests
     {
         [Collection(nameof(ChargesFunctionAppCollectionFixture))]
         public class RunAsync : FunctionAppTestBase<ChargesFunctionAppFixture>, IAsyncLifetime
@@ -84,7 +84,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 var chargeCommandReceivedEvent = CreateChargeCommandReceivedEvent(
                     commandBuilder, documentDtoBuilder, operationDtoBuilder, chargeId, ownerGln, chargeType);
                 var correlationId = CorrelationIdGenerator.Create();
-                var message = CreateServiceBusMessage(chargeCommandReceivedEvent, correlationId);
+                var message = ServiceBusMessageGenerator.CreateServiceBusMessage(
+                    chargeCommandReceivedEvent,
+                    correlationId);
 
                 // Act
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
@@ -147,20 +149,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     Instant.FromDateTimeUtc(DateTime.UtcNow), chargeCommand);
 
                 return chargeInformationReceivedEvent;
-            }
-
-            private static ServiceBusMessage CreateServiceBusMessage<T>(T domainEvent, string correlationId)
-            {
-                ArgumentNullException.ThrowIfNull(domainEvent);
-
-                var applicationProperties = new Dictionary<string, string>
-                {
-                    { MessageMetaDataConstants.CorrelationId, correlationId },
-                };
-                var message = ServiceBusMessageGenerator.CreateWithJsonContent(
-                    domainEvent, applicationProperties, correlationId, domainEvent.GetType().Name);
-
-                return message;
             }
         }
     }

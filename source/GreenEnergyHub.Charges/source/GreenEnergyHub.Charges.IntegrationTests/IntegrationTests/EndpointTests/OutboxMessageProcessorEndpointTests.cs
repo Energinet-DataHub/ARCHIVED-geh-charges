@@ -132,7 +132,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
             [InlineAutoMoqData]
             public async Task GivenOutputProcessorEndpoint_WhenFailsFirstAttempt_ThenRetryNext(
                 [Frozen] Mock<IClock> clock,
-                [Frozen] Mock<IInternalEventDispatcher> dispatcher,
+                [Frozen] Mock<IDomainEventDispatcher> dispatcher,
                 [Frozen] Mock<IOutboxMessageParser> outboxMessageParser,
                 PriceRejectedEventBuilder priceRejectedEventBuilder,
                 TimerInfo timerInfo,
@@ -162,15 +162,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
                 // Act & Assert
                 dispatcher.Setup(d => d.DispatchAsync(
-                        It.IsAny<InternalEvent>(),
+                        It.IsAny<DomainEvent>(),
                         It.IsAny<CancellationToken>())).Throws<Exception>();
 
                 await Assert.ThrowsAsync<Exception>(() => sut.RunAsync(timerInfo));
 
                 dispatcher.Setup(d => d.DispatchAsync(
-                        It.IsAny<InternalEvent>(),
+                        It.IsAny<DomainEvent>(),
                         It.IsAny<CancellationToken>()))
-                    .Callback<InternalEvent, CancellationToken>((_, _) => { });
+                    .Callback<DomainEvent, CancellationToken>((_, _) => { });
                 await sut.RunAsync(timerInfo);
 
                 outboxMessage = chargesDatabaseReadContext.OutboxMessages.Single(x => x.Id == outboxMessage.Id);

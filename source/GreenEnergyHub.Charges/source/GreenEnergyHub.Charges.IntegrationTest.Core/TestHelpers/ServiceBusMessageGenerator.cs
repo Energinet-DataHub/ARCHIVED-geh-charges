@@ -12,22 +12,41 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Core.JsonSerialization;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 
 namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
 {
     public static class ServiceBusMessageGenerator
     {
-        public static ServiceBusMessage CreateWithJsonContent<T>(
-            T internalEvent,
+        public static ServiceBusMessage CreateServiceBusMessage<T>(T content, string correlationId, string? replyTo = null)
+        {
+            ArgumentNullException.ThrowIfNull(content);
+
+            var applicationProperties = new Dictionary<string, string>
+            {
+                { MessageMetaDataConstants.CorrelationId, correlationId },
+            };
+
+            if (replyTo != null)
+            {
+                applicationProperties.Add(MessageMetaDataConstants.ReplyTo, replyTo);
+            }
+
+            return CreateWithJsonContent(content, applicationProperties, correlationId, content.GetType().Name);
+        }
+
+        private static ServiceBusMessage CreateWithJsonContent<T>(
+            T content,
             Dictionary<string, string> applicationProperties,
             string correlationId,
             string subject)
         {
             var jsonSerializer = new JsonSerializer();
-            var body = jsonSerializer.Serialize(internalEvent);
+            var body = jsonSerializer.Serialize(content);
 
             var serviceBusMessage = new ServiceBusMessage(body)
             {
