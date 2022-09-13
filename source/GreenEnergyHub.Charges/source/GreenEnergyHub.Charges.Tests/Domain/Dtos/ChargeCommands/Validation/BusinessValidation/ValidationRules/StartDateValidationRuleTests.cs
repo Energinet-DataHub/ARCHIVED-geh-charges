@@ -14,13 +14,12 @@
 
 using AutoFixture.Xunit2;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.TestCore.TestHelpers;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
-using GreenEnergyHub.Iso8601;
 using GreenEnergyHub.TestHelpers;
 using NodaTime;
 using NodaTime.Testing;
@@ -46,7 +45,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             // Arrange
             var effectiveDate = InstantHelper.GetTodayPlusDaysAtMidnightUtc(daysOffset);
             var clock = new FakeClock(InstantHelper.GetTodayAtMidnightUtc());
-            var zonedDateTimeService = new ZonedDateTimeService(clock, new Iso8601ConversionConfiguration("Europe/Copenhagen"));
+            var zonedDateTimeService = ZonedDateTimeServiceHelper.GetZonedDateTimeService(InstantHelper.GetTodayAtMidnightUtc());
             var chargeOperationDto = builder
                 .WithStartDateTime(effectiveDate)
                 .Build();
@@ -64,7 +63,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         {
             // Arrange
             var chargeOperationDto = builder.WithStartDateTime(InstantHelper.GetEndDefault()).Build();
-            var zonedDateTimeService = new ZonedDateTimeService(clock, new Iso8601ConversionConfiguration("Europe/Copenhagen"));
+            var zonedDateTimeService = ZonedDateTimeServiceHelper.GetZonedDateTimeService(InstantHelper.GetTodayAtMidnightUtc());
 
             // Act (implicit)
             var sut = new StartDateValidationRule(chargeOperationDto, zonedDateTimeService, clock);
