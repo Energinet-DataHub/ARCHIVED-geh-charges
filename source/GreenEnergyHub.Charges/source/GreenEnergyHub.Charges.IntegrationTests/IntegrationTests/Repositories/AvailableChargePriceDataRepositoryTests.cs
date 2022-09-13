@@ -22,9 +22,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
     // This test is implicitly used by calling abstract class AvailableDataRepositoryTests with
     // concrete implementation of type AvailableDataBase
     [IntegrationTest]
-    public class AvailableChargeDataRepositoryTests : AvailableDataRepositoryTests<AvailableChargeData>
+    public class AvailableChargePriceDataRepositoryTests : AvailableDataRepositoryTests<AvailableChargePriceData>
     {
-        public AvailableChargeDataRepositoryTests(MessageHubDatabaseFixture fixture)
+        public AvailableChargePriceDataRepositoryTests(MessageHubDatabaseFixture fixture)
             : base(fixture)
         {
         }
