@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
@@ -30,7 +29,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinksAcceptedEvent
         [Theory]
         [InlineAutoMoqData]
         public void Map_MapsFrom_ChargeLinkCommand_ToAcceptedEventWithCorrectValues(
-            [NotNull] ChargeLinksCommand chargeLinksCommand)
+            ChargeLinksCommand chargeLinksCommand)
         {
             // Arrange
             var sut = new ChargeLinksAcceptedEventFactory(new FakeClock(Instant.MinValue));

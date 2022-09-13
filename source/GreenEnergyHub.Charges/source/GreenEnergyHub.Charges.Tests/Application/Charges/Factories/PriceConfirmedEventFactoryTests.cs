@@ -16,7 +16,6 @@ using System.Collections.Generic;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.Charges.Factories;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.TestHelpers;
 using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;

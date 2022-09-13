@@ -98,7 +98,7 @@ namespace GreenEnergyHub.Charges.TestCore.Attributes.Customizations
                     })
                 .Single()
                 .MakeGenericMethod(messageType)
-                .Invoke(fixture, new object[] { functionMethod?.Invoke(function, Array.Empty<object>()) ?? new NullException("Null encountered while invoking method to retrieve customization function") });
+                .Invoke(fixture, new[] { functionMethod?.Invoke(function, Array.Empty<object>()) ?? new NullException("Null encountered while invoking method to retrieve customization function") });
         }
 
         private static object CreateProtobufCustomizationFunction(IFixture fixture, Type messageType)

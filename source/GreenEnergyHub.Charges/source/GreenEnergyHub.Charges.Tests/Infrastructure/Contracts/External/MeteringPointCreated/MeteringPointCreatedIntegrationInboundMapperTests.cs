@@ -14,7 +14,6 @@
 
 using System;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using Google.Protobuf.WellKnownTypes;
 using GreenEnergyHub.Charges.Core.DateTime;
@@ -35,8 +34,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Contracts.External.Meterin
         [Theory]
         [InlineAutoMoqData]
         public void MeteringPointCreatedIntegrationInboundMapper_WhenCalled_ShouldMapToProtobufWithCorrectValues(
-            [NotNull] Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated meteringPointCreatedEvent,
-            [NotNull] MeteringPointCreatedInboundMapper sut)
+            Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated meteringPointCreatedEvent,
+            MeteringPointCreatedInboundMapper sut)
         {
             meteringPointCreatedEvent.GridAreaCode = Guid.NewGuid().ToString();
             meteringPointCreatedEvent.EffectiveDate = Timestamp.FromDateTime(new DateTime(2021, 10, 31, 23, 00, 00, 00, DateTimeKind.Utc));
@@ -59,7 +58,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Contracts.External.Meterin
 
         [Theory]
         [InlineAutoMoqData]
-        public void Convert_WhenCalledWithNull_ShouldThrow([NotNull] MeteringPointCreatedInboundMapper sut)
+        public void Convert_WhenCalledWithNull_ShouldThrow(MeteringPointCreatedInboundMapper sut)
         {
             Assert.Throws<InvalidOperationException>(() => sut.Convert(null!));
         }

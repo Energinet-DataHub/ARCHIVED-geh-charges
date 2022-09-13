@@ -21,7 +21,6 @@ using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.FunctionHost.Charges;
 using GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub;
