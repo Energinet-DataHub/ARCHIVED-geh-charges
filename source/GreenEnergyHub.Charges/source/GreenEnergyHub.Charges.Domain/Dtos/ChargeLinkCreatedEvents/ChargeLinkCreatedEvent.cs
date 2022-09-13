@@ -14,7 +14,6 @@
 
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCreatedEvents
 {

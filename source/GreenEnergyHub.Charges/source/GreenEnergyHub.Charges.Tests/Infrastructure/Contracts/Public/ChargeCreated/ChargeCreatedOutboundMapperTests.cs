@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Infrastructure.Contracts.Public.ChargeCreated;
 using GreenEnergyHub.Charges.TestCore.Attributes;
@@ -29,8 +28,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Contracts.Public.ChargeCre
         [Theory]
         [InlineAutoMoqData]
         public void Convert_WhenCalled_MapsToCorrectValues(
-            [NotNull] ChargeCreatedEvent chargeCreatedEvent,
-            [NotNull] ChargeCreatedOutboundMapper sut)
+            ChargeCreatedEvent chargeCreatedEvent,
+            ChargeCreatedOutboundMapper sut)
         {
             var result = (GreenEnergyHub.Charges.Infrastructure.Integration.ChargeCreated.ChargeCreated)sut.Convert(chargeCreatedEvent);
             ProtobufAssert.OutgoingContractIsSubset(chargeCreatedEvent, result);
@@ -38,7 +37,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Contracts.Public.ChargeCre
 
         [Theory]
         [InlineAutoMoqData]
-        public void Convert_WhenCalledWithNull_ShouldThrow([NotNull]ChargeCreatedOutboundMapper sut)
+        public void Convert_WhenCalledWithNull_ShouldThrow(ChargeCreatedOutboundMapper sut)
         {
             Assert.Throws<InvalidOperationException>(() => sut.Convert(null!));
         }

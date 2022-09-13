@@ -154,7 +154,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
                 // Act
                 var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
-                var responseBody = await actual.Content!.ReadAsStringAsync();
+                await actual.Content.ReadAsStringAsync();
 
                 // Assert
                 actual.StatusCode.Should().Be(HttpStatusCode.Accepted);

@@ -56,12 +56,12 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             _chargeCommandReceiptService = chargeCommandReceiptService;
         }
 
-        public async Task HandleAsync(ChargeCommandReceivedEvent commandReceivedEvent)
+        public async Task HandleAsync(ChargeInformationCommandReceivedEvent chargeInformationCommandReceivedEvent)
         {
-            ArgumentNullException.ThrowIfNull(commandReceivedEvent);
+            ArgumentNullException.ThrowIfNull(chargeInformationCommandReceivedEvent);
 
-            var operations = commandReceivedEvent.Command.Operations.ToArray();
-            var document = commandReceivedEvent.Command.Document;
+            var operations = chargeInformationCommandReceivedEvent.Command.Operations.ToArray();
+            var document = chargeInformationCommandReceivedEvent.Command.Document;
             var operationsToBeRejected = new List<ChargeInformationOperationDto>();
             var rejectionRules = new List<IValidationRuleContainer>();
             var operationsToBeConfirmed = new List<ChargeInformationOperationDto>();
