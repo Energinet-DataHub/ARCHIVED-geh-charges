@@ -15,7 +15,7 @@
 module "sbt_charges_domain_events" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic?ref=v8"
   name                = "domain-events"
-  namespace_id        = module.sb_charges.id
+  namespace_id        = data.azurerm_key_vault_secret.sb_domain_relay_namespace_id.value
   project_name        = var.domain_name_short
 }
 
@@ -153,11 +153,34 @@ module "sbts_charges_charge_price_command_received" {
 
 module "sbts_charges_charge_price_command_rejected" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v8"
-  name                = "charge-price-command-rejected"
+  name                = "charge-price-rejected"
   project_name        = var.domain_name_short
   topic_id            = module.sbt_charges_domain_events.id
   max_delivery_count  = 1
   correlation_filter  = {
-    label = "ChargePriceOperationsRejectedEvent"
+    label = "PriceRejectedEvent"
   }
 }
+
+module "sbts_charges_charge_price_command_confirmed" {
+  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v8"
+  name                = "charge-price-confirmed"
+  project_name        = var.domain_name_short
+  topic_id            = module.sbt_charges_domain_events.id
+  max_delivery_count  = 1
+  correlation_filter  = {
+    label = "PriceConfirmedEvent"
+  }
+}
+
+module "sbts_charges_charge_price_command_confirmed_dataavailable" {  
+  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v8"
+  name                = "charge-price-confirmed-dataavail"
+  project_name        = var.domain_name_short
+  topic_id            = module.sbt_charges_domain_events.id
+  max_delivery_count  = 1
+  correlation_filter  = {
+    label = "PriceConfirmedEvent"
+  }
+}
+

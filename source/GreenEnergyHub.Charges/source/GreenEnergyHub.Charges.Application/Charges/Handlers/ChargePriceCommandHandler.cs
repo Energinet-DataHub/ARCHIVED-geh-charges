@@ -23,20 +23,20 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
     public class ChargePriceCommandHandler : IChargePriceCommandHandler
     {
         private readonly IClock _clock;
-        private readonly IMessageDispatcher<ChargePriceCommandReceivedEvent> _chargePriceMessageDispatcher;
+        private readonly IInternalEventDispatcher _internalEventDispatcher;
 
         public ChargePriceCommandHandler(
             IClock clock,
-            IMessageDispatcher<ChargePriceCommandReceivedEvent> chargePriceMessageDispatcher)
+            IInternalEventDispatcher internalEventDispatcher)
         {
             _clock = clock;
-            _chargePriceMessageDispatcher = chargePriceMessageDispatcher;
+            _internalEventDispatcher = internalEventDispatcher;
         }
 
         public async Task HandleAsync(ChargePriceCommand priceCommand)
         {
             var priceReceivedEvent = new ChargePriceCommandReceivedEvent(_clock.GetCurrentInstant(), priceCommand);
-            await _chargePriceMessageDispatcher.DispatchAsync(priceReceivedEvent).ConfigureAwait(false);
+            await _internalEventDispatcher.DispatchAsync(priceReceivedEvent).ConfigureAwait(false);
         }
     }
 }

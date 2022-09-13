@@ -156,11 +156,17 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                     topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesDomainEventTopicName),
                     subscriptionName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeCommandAcceptedSubscriptionName))
                 .AddAzureServiceBusSubscription(
-                    name: "ChargePriceCommandRejectedSubscriptionExists",
+                    name: "ChargePriceRejectedSubscriptionExists",
                     connectionString: EnvironmentHelper.GetEnv(
                         EnvironmentSettingNames.DomainEventManagerConnectionString),
                     topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesDomainEventTopicName),
-                    subscriptionName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargePriceCommandRejectedSubscriptionName))
+                    subscriptionName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargePriceRejectedSubscriptionName))
+                .AddAzureServiceBusSubscription(
+                    name: "ChargePriceConfirmedSubscriptionExists",
+                    connectionString: EnvironmentHelper.GetEnv(
+                        EnvironmentSettingNames.DomainEventManagerConnectionString),
+                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesDomainEventTopicName),
+                    subscriptionName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargePriceConfirmedSubscriptionName))
 
                 // Used by ChargeDataAvailableNotifierEndpoint
                 .AddAzureServiceBusSubscription(
@@ -170,6 +176,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                     topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesDomainEventTopicName),
                     subscriptionName: EnvironmentHelper.GetEnv(
                         EnvironmentSettingNames.ChargeAcceptedDataAvailableSubscriptionName))
+                .AddAzureServiceBusSubscription(
+                    name: "ChargePriceConfirmedDataAvailableSubscriptionNameExists",
+                    connectionString: EnvironmentHelper.GetEnv(
+                        EnvironmentSettingNames.DomainEventManagerConnectionString),
+                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesDomainEventTopicName),
+                    subscriptionName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargePriceConfirmedDataAvailableSubscriptionName))
 
                 // Used by ChargeIntegrationEventsPublisherEndpoint
                 .AddAzureServiceBusSubscription(

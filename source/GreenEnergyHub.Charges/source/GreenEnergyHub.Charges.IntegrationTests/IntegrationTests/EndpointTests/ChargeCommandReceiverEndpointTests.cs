@@ -150,8 +150,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 return chargeInformationReceivedEvent;
             }
 
-            private static ServiceBusMessage CreateServiceBusMessage(IInternalEvent internalEvent, string correlationId)
+            private static ServiceBusMessage CreateServiceBusMessage<T>(T internalEvent, string correlationId)
             {
+                ArgumentNullException.ThrowIfNull(internalEvent);
+
                 var applicationProperties = new Dictionary<string, string>
                 {
                     { MessageMetaDataConstants.CorrelationId, correlationId },

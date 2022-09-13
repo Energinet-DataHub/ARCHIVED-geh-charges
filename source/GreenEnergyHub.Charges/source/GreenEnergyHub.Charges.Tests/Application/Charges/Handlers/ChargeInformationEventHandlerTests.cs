@@ -32,7 +32,10 @@ using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.Charges.Tests.Builders.Testables;
 using GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation;
+using GreenEnergyHub.TestHelpers;
+using Microsoft.Extensions.Logging;
 using Moq;
+using NodaTime;
 using Xunit;
 using Xunit.Categories;
 

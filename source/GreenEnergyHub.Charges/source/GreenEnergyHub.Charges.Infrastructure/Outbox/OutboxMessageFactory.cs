@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using Energinet.DataHub.Core.JsonSerialization;
 using GreenEnergyHub.Charges.Application.Charges.Events;
@@ -19,7 +20,7 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Outbox
 {
-    public class OutboxMessageFactory : IOutboxMessageFactory
+    public class OutboxMessageFactory
     {
         private readonly IJsonSerializer _jsonSerializer;
         private readonly IClock _clock;
@@ -35,13 +36,17 @@ namespace GreenEnergyHub.Charges.Infrastructure.Outbox
             _correlationContext = correlationContext;
         }
 
-        public OutboxMessage CreateFrom(ChargePriceOperationsRejectedEvent chargePriceOperationsRejectedEvent)
+        public OutboxMessage CreateFrom<T>(T domainEvent)
         {
-            var data = _jsonSerializer.Serialize(chargePriceOperationsRejectedEvent);
+            ArgumentNullException.ThrowIfNull(domainEvent);
+            var typeName = domainEvent.GetType().FullName;
+            ArgumentNullException.ThrowIfNull(typeName);
+
+            var data = _jsonSerializer.Serialize(domainEvent);
             return OutboxMessage.Create(
                 data,
                 _correlationContext.Id,
-                chargePriceOperationsRejectedEvent.GetType().ToString(),
+                typeName,
                 _clock.GetCurrentInstant());
         }
     }

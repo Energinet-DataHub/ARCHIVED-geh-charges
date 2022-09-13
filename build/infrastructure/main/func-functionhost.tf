@@ -35,9 +35,9 @@ module "func_functionhost" {
     LOCAL_TIMEZONENAME                                              = "Europe/Copenhagen"
     CURRENCY                                                        = "DKK"
     CHARGE_DB_CONNECTION_STRING                                     = local.MS_CHARGE_DB_CONNECTION_STRING
-    DOMAINEVENT_SENDER_CONNECTION_STRING                            = module.sb_charges.primary_connection_strings["send"]
-    DOMAINEVENT_MANAGER_CONNECTION_STRING                           = module.sb_charges.primary_connection_strings["manage"]
-    DOMAINEVENT_LISTENER_CONNECTION_STRING                          = module.sb_charges.primary_connection_strings["listen"]
+    DOMAINEVENT_SENDER_CONNECTION_STRING                            = data.azurerm_key_vault_secret.sb_domain_relay_send_connection_string.value
+    DOMAINEVENT_MANAGER_CONNECTION_STRING                           = data.azurerm_key_vault_secret.sb_domain_relay_manage_connection_string.value
+    DOMAINEVENT_LISTENER_CONNECTION_STRING                          = data.azurerm_key_vault_secret.sb_domain_relay_listen_connection_string.value
     
     # Topics
     DOMAIN_EVENTS_TOPIC_NAME                                        = "sbt-charges-domain-events"
@@ -57,7 +57,9 @@ module "func_functionhost" {
     CHARGE_COMMAND_RECEIVED_SUBSCRIPTION_NAME                       = "sbtsub-charges-charge-command-received"
     CHARGE_COMMAND_REJECTED_SUBSCRIPTION_NAME                       = "sbtsub-charges-charge-command-rejected"
     CHARGE_PRICE_COMMAND_RECEIVED_SUBSCRIPTION_NAME                 = "sbtsub-charges-charge-price-command-received"
-    CHARGE_PRICE_COMMAND_REJECTED_SUBSCRIPTION_NAME                 = "sbtsub-charges-charge-price-command-rejected"
+    CHARGE_PRICE_REJECTED_SUBSCRIPTION_NAME                         = "sbtsub-charges-charge-price-rejected"
+    CHARGE_PRICE_CONFIRMED_SUBSCRIPTION_NAME                        = "sbtsub-charges-charge-price-confirmed"
+    CHARGE_PRICE_CONFIRMED_DATAAVAILABLE_SUBSCRIPTION_NAME          = "sbtsub-charges-charge-price-confirmed-dataavail"
     DEFAULT_CHARGE_LINKS_DATAAVAILABLE_SUBSCRIPTION_NAME            = "sbtsub-charges-default-charge-links-dataavailable"
 
     # Integration

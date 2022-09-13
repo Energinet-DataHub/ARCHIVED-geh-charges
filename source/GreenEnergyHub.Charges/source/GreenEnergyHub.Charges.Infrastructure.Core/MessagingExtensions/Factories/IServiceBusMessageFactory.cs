@@ -25,15 +25,16 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factori
         /// Creates ServiceBusMessage for internal messaging
         /// </summary>
         /// <param name="data"></param>
-        /// <param name="subject"></param>
+        /// <param name="messageType"></param>
         /// <returns>ServiceBusMessage</returns>
-        ServiceBusMessage CreateInternalMessage(string data, string subject);
+        ServiceBusMessage CreateInternalMessage(string data, string messageType);
 
         /// <summary>
         /// Creates ServiceBusMessage for external messaging
         /// </summary>
         /// <param name="data"></param>
+        /// <param name="messageType"></param>
         /// <returns>ServiceBusMessage</returns>
-        ServiceBusMessage CreateExternalMessage(byte[] data);
+        ServiceBusMessage CreateExternalMessage(byte[] data, string messageType);
     }
 }
