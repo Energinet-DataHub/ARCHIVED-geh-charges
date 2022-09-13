@@ -20,7 +20,7 @@ using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.FunctionHost.Charges;
 using GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub;
@@ -91,7 +91,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     () => Fixture.ChargesDomainEventTopic.SenderClient.SendMessageAsync(message), correlationId);
 
                 await FunctionAsserts.AssertHasExecutedAsync(
-                    Fixture.HostManager, nameof(ChargeCommandReceiverEndpoint));
+                    Fixture.HostManager, nameof(ChargeInformationCommandReceiverEndpoint));
 
                 await FunctionAsserts.AssertHasExecutedAsync(
                     Fixture.HostManager, nameof(ChargeConfirmationDataAvailableNotifierEndpoint));
@@ -149,16 +149,16 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 return chargeInformationReceivedEvent;
             }
 
-            private static ServiceBusMessage CreateServiceBusMessage<T>(T internalEvent, string correlationId)
+            private static ServiceBusMessage CreateServiceBusMessage<T>(T domainEvent, string correlationId)
             {
-                ArgumentNullException.ThrowIfNull(internalEvent);
+                ArgumentNullException.ThrowIfNull(domainEvent);
 
                 var applicationProperties = new Dictionary<string, string>
                 {
                     { MessageMetaDataConstants.CorrelationId, correlationId },
                 };
                 var message = ServiceBusMessageGenerator.CreateWithJsonContent(
-                    internalEvent, applicationProperties, correlationId, internalEvent.GetType().Name);
+                    domainEvent, applicationProperties, correlationId, domainEvent.GetType().Name);
 
                 return message;
             }

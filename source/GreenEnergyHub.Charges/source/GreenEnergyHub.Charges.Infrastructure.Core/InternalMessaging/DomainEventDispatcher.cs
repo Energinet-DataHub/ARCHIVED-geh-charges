@@ -22,13 +22,13 @@ using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factories;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.InternalMessaging
 {
-    public class InternalEventDispatcher : IInternalEventDispatcher
+    public class DomainEventDispatcher : IDomainEventDispatcher
     {
         private readonly IJsonSerializer _jsonSerializer;
         private readonly IServiceBusDispatcher _serviceBusDispatcher;
         private readonly IServiceBusMessageFactory _serviceBusMessageFactory;
 
-        public InternalEventDispatcher(
+        public DomainEventDispatcher(
             IJsonSerializer jsonSerializer,
             IServiceBusDispatcher serviceBusDispatcher,
             IServiceBusMessageFactory serviceBusMessageFactory)

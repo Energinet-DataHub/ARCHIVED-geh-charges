@@ -14,7 +14,7 @@
 
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommandReceivedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using Microsoft.Azure.Functions.Worker;
