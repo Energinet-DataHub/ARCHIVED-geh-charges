@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 
@@ -22,7 +23,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
     {
         AvailableReceiptValidationError Create(
             ValidationError validationError,
-            ChargeLinksCommand command,
+            DocumentDto document,
             ChargeLinkOperationDto chargeLinkOperationDto);
     }
 }

@@ -14,16 +14,16 @@
 
 using System;
 using Energinet.DataHub.Core.Messaging.MessageTypes.Common;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.GridAreas
 {
-    public class GridAreaUpdatedEvent : InboundIntegrationEvent
+    public class GridAreaUpdatedEvent : MessageBase
     {
         public GridAreaUpdatedEvent(
             Guid gridAreaId,
             Guid gridAreaLinkId)
-            : base(Transaction.NewTransaction())
         {
             GridAreaId = gridAreaId;
             GridAreaLinkId = gridAreaLinkId;

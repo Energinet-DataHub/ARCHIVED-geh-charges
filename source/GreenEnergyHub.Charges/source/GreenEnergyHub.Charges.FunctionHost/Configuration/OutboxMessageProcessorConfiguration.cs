@@ -12,10 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Application.Charges.Events;
-using GreenEnergyHub.Charges.FunctionHost.Common;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
-using GreenEnergyHub.Charges.Infrastructure.Core.Registration;
+using GreenEnergyHub.Charges.Infrastructure.Outbox;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -26,17 +23,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<IOutboxMessageRepository, OutboxMessageRepository>();
-            ConfigureMessaging(serviceCollection);
-        }
-
-        private static void ConfigureMessaging(IServiceCollection serviceCollection)
-        {
-            serviceCollection
-                .AddMessaging()
-                .AddInternalMessageExtractor<ChargePriceOperationsRejectedEvent>()
-                .AddInternalMessageDispatcher<ChargePriceOperationsRejectedEvent>(
-                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
-                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargePriceRejectedTopicName));
+            serviceCollection.AddScoped<IOutboxMessageParser, OutboxMessageParser>();
         }
     }
 }

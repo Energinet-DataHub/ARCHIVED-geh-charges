@@ -20,6 +20,7 @@ using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.BusinessValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 using GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
@@ -91,7 +92,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
                 // Act
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
-                    () => Fixture.ChargeLinksReceivedTopic.SenderClient.SendMessageAsync(messageOne), correlationIdOne);
+                    () => Fixture.ChargesDomainEventTopic.SenderClient.SendMessageAsync(messageOne), correlationIdOne);
 
                 await FunctionAsserts.AssertHasExecutedAsync(
                     Fixture.HostManager, nameof(ChargeLinkConfirmationDataAvailableNotifierEndpoint));
@@ -100,7 +101,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 var messageTwo = CreateServiceBusMessage(command, correlationIdTwo);
 
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
-                    () => Fixture.ChargeLinksReceivedTopic.SenderClient.SendMessageAsync(messageTwo), correlationIdTwo);
+                    () => Fixture.ChargesDomainEventTopic.SenderClient.SendMessageAsync(messageTwo), correlationIdTwo);
 
                 // Assert
                 await FunctionAsserts.AssertHasExecutedAsync(
@@ -109,15 +110,18 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
             private static ServiceBusMessage CreateServiceBusMessage(ChargeLinksCommand command, string correlationId)
             {
-                var chargeLinksAcceptedEvent = new ChargeLinksAcceptedEvent(
-                    command, Instant.FromDateTimeUtc(DateTime.UtcNow));
+                var chargeLinksReceivedEvent = new ChargeLinksReceivedEvent(
+                    Instant.FromDateTimeUtc(DateTime.UtcNow), command);
 
                 var applicationProperties = new Dictionary<string, string>
                 {
                     { MessageMetaDataConstants.CorrelationId, correlationId },
                 };
                 var message = ServiceBusMessageGenerator.CreateWithJsonContent(
-                    chargeLinksAcceptedEvent, applicationProperties, correlationId);
+                    chargeLinksReceivedEvent,
+                    applicationProperties,
+                    correlationId,
+                    chargeLinksReceivedEvent.GetType().Name);
 
                 return message;
             }

@@ -14,7 +14,6 @@
 
 using Energinet.DataHub.Core.Messaging.Protobuf;
 using GreenEnergyHub.Charges.Application.Messaging;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factories;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
 using GreenEnergyHub.Charges.Tests.Infrastructure.Messaging;
@@ -47,23 +46,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions.R
             // Assert
             var provider = services.BuildServiceProvider();
             var dispatcher = provider.GetService<IMessageDispatcher<TestMessage>>();
-            Assert.NotNull(dispatcher);
-        }
-
-        [Fact]
-        public void AddMessageExtractor_AllowsResolvingAMessageExtractor()
-        {
-            // Arrange
-            var services = new ServiceCollection();
-
-            // Act
-            services
-                .AddMessaging()
-                .AddExternalMessageExtractor<TestMessage>();
-
-            // Assert
-            var provider = services.BuildServiceProvider();
-            var dispatcher = provider.GetService<MessageExtractor<TestMessage>>();
             Assert.NotNull(dispatcher);
         }
     }

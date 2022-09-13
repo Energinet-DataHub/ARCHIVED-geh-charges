@@ -15,6 +15,7 @@
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.InputValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
@@ -22,6 +23,7 @@ using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.TestHelpers;
 using Microsoft.Extensions.Logging;
+using Moq;
 using Xunit;
 using Xunit.Categories;
 
@@ -82,7 +84,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             var sutFactory = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
 
             // Act
-            var actual = sutFactory.Create(validationError, invalidCommand, chargeOperationDto);
+            var actual = sutFactory.Create(validationError, It.IsAny<DocumentDto>(), chargeOperationDto);
 
             // Assert
             sutRule.IsValid.Should().BeFalse();

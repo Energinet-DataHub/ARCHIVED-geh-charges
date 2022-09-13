@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
         IClassFixture<WebApiFactory>,
         IAsyncLifetime
     {
-        private const string BaseUrl = "/ChargeLinks/GetAsync?meteringPointId=";
+        private const string BaseUrl = "/v1/ChargeLinks/GetAsync?meteringPointId=";
         private const string KnownMeteringPointId = SeededData.MeteringPoints.Mp571313180000000005.Id;
         private readonly HttpClient _client;
 
