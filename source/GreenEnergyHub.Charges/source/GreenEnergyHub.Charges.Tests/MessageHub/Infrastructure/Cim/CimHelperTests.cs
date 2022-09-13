@@ -55,7 +55,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim
                 cimNamespace,
                 false,
                 elementName,
-                () => value);
+                () => value).ToArray();
 
             // Assert
             actual.Should().ContainSingle();

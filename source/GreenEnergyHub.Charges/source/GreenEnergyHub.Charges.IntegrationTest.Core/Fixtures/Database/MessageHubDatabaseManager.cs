@@ -23,7 +23,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database
 {
     public class MessageHubDatabaseManager : SqlServerDatabaseManager<MessageHubDatabaseContext>
     {
-        private string? _connectionString = null;
+        private string? _connectionString;
 
         public MessageHubDatabaseManager(string? connectionString = null)
             : base("MessageHub")

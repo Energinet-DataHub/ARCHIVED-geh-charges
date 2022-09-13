@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Protobuf;
 using GreenEnergyHub.Charges.Tests.TestCore.Protobuf.ProtobufAssertHelpers;
@@ -35,7 +34,7 @@ namespace GreenEnergyHub.Charges.Tests.TestCore.Protobuf
 
         [Theory]
         [InlineAutoMoqData]
-        public void OutgoingContractIsSubset_Succeeds_WhenContractIsTrueSubset([NotNull]TestDomainType domain)
+        public void OutgoingContractIsSubset_Succeeds_WhenContractIsTrueSubset(TestDomainType domain)
         {
             var trueSubsetContract = new TrueSubsetContract(domain.A);
             ProtobufAssert.OutgoingContractIsSubset<TrueSubsetContract>(domain, trueSubsetContract);
@@ -43,7 +42,7 @@ namespace GreenEnergyHub.Charges.Tests.TestCore.Protobuf
 
         [Theory]
         [InlineAutoMoqData]
-        public void OutgoingContractIsSubset_Succeeds_WhenContractIsEquivalent([NotNull]TestDomainType domain)
+        public void OutgoingContractIsSubset_Succeeds_WhenContractIsEquivalent(TestDomainType domain)
         {
             var subsetContract = new TestDomainTypeEquivalentContract(domain.A, domain.B);
             ProtobufAssert.OutgoingContractIsSubset<TestDomainTypeEquivalentContract>(domain, subsetContract);
@@ -51,7 +50,7 @@ namespace GreenEnergyHub.Charges.Tests.TestCore.Protobuf
 
         [Theory]
         [InlineAutoMoqData]
-        public void IncomingContractIsSuperset_Fails_WhenContractIsTrueSubset([NotNull]TestDomainType domain)
+        public void IncomingContractIsSuperset_Fails_WhenContractIsTrueSubset(TestDomainType domain)
         {
             var trueSubsetContract = new TrueSubsetContract(domain.A);
             Assert.Throws<XunitException>(
@@ -60,7 +59,7 @@ namespace GreenEnergyHub.Charges.Tests.TestCore.Protobuf
 
         [Theory]
         [InlineAutoMoqData]
-        public void IncomingContractIsSuperset_Succeeds_WhenContractIsEquivalent([NotNull]TestDomainType domain)
+        public void IncomingContractIsSuperset_Succeeds_WhenContractIsEquivalent(TestDomainType domain)
         {
             var equivalentContract = new TestDomainTypeEquivalentContract(domain.A, domain.B);
             ProtobufAssert.IncomingContractIsSuperset<TestDomainTypeEquivalentContract>(domain, equivalentContract);
@@ -68,7 +67,7 @@ namespace GreenEnergyHub.Charges.Tests.TestCore.Protobuf
 
         [Theory]
         [InlineAutoMoqData]
-        public void IncomingContractIsSuperset_Succeeds_WhenContractIsTrueSuperset([NotNull]TrueSupersetContract trueSupersetContract)
+        public void IncomingContractIsSuperset_Succeeds_WhenContractIsTrueSuperset(TrueSupersetContract trueSupersetContract)
         {
             var domain = new TestDomainType(trueSupersetContract.A, trueSupersetContract.B);
             ProtobufAssert.IncomingContractIsSuperset<TrueSupersetContract>(domain, trueSupersetContract);
