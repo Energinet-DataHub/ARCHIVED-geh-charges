@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using GreenEnergyHub.Charges.Application.MeteringPoints.Handlers;
@@ -47,7 +46,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MeteringPoint
                 "%" + EnvironmentSettingNames.MeteringPointCreatedTopicName + "%",
                 "%" + EnvironmentSettingNames.MeteringPointCreatedSubscriptionName + "%",
                 Connection = EnvironmentSettingNames.DataHubListenerConnectionString)]
-            [NotNull] byte[] message)
+            byte[] message)
         {
             var meteringPointCreatedEvent =
                 (MeteringPointCreatedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);

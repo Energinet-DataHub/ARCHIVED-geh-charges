@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
@@ -23,7 +22,6 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.Charges.Tests.TestCore;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -120,13 +118,11 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
         public void Create_PointPositionAreIgnored_WhenNotApplicable(
             ValidationRuleIdentifier validationRuleIdentifier,
             string? seedTriggeredBy,
-            ChargeInformationCommandBuilder chargeInformationCommandBuilder,
             ChargeInformationOperationDto chargeInformationOperationDto,
             CimValidationErrorTextProvider cimValidationErrorTextProvider,
             ILoggerFactory loggerFactory)
         {
             // Arrange
-            var chargeCommand = chargeInformationCommandBuilder.WithChargeOperation(chargeInformationOperationDto).Build();
             var triggeredBy = seedTriggeredBy == "0" ?
                 chargeInformationOperationDto.Points.GetPositionOfPoint(chargeInformationOperationDto.Points[1]).ToString() :
                 seedTriggeredBy;

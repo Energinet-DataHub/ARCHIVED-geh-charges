@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.Tests.Core.DateTime
             var result = instant.TimeOrEndDefault();
 
             // Assert
-            Assert.Equal(instant!.Value, result);
+            Assert.Equal(instant.Value, result);
         }
 
         [Fact]
