@@ -74,6 +74,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             };
             var charge = chargeBuilder
                 .WithPoints(points)
+                .WithTaxIndicator(TaxIndicator.NoTax)
                 .WithMarketParticipantRole(MarketParticipantRole.SystemOperator)
                 .Build();
             SetupChargeRepository(chargeRepository, charge);
