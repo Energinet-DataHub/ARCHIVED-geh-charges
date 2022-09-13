@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.InputValidation.ValidationRules;
@@ -53,33 +54,51 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         }
 
         [Theory]
-        [InlineAutoMoqData(MarketParticipantRole.GridAccessProvider, TaxIndicator.Tax, false)]
-        [InlineAutoMoqData(MarketParticipantRole.GridAccessProvider, TaxIndicator.NoTax, true)]
-        [InlineAutoMoqData(MarketParticipantRole.GridAccessProvider, TaxIndicator.Unknown, true)]
-        [InlineAutoMoqData(MarketParticipantRole.SystemOperator, TaxIndicator.Tax, true)]
-        [InlineAutoMoqData(MarketParticipantRole.SystemOperator, TaxIndicator.NoTax, true)]
-        [InlineAutoMoqData(MarketParticipantRole.SystemOperator, TaxIndicator.Unknown, true)]
+        [AutoDomainData]
         public void ChargeTypeTariffTaxIndicatorValidationRule_WhenNotSystemOperator_ReturnsTrue(
-            MarketParticipantRole senderRole,
-            TaxIndicator taxIndicator,
-            bool expectedResult,
             ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder,
             MarketParticipantDtoBuilder marketParticipantDtoBuilder)
         {
-            // Arrange
+            foreach (var senderRole in Enum.GetValues<MarketParticipantRole>())
+            {
+                //  Arrange
+                var expectedResult = senderRole == MarketParticipantRole.SystemOperator;
+                var senderMarketParticipant = marketParticipantDtoBuilder
+                    .WithMarketParticipantRole(senderRole)
+                    .Build();
+                var chargeOperation = chargeInformationOperationDtoBuilder
+                    .WithChargeType(ChargeType.Tariff)
+                    .WithTaxIndicator(TaxIndicator.Tax)
+                    .Build();
+
+                // Act
+                var sut = new ChargeTypeTariffTaxIndicatorValidationRule(chargeOperation, senderMarketParticipant);
+
+                // Assert
+                sut.IsValid.Should().Be(expectedResult);
+            }
+        }
+
+        [Theory]
+        [AutoDomainData]
+        public void IsValid_WhenTaxIndicatorIsFalse_ReturnsTrue(
+            ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder,
+            MarketParticipantDtoBuilder marketParticipantDtoBuilder)
+        {
+            //  Arrange
             var senderMarketParticipant = marketParticipantDtoBuilder
-                .WithMarketParticipantRole(senderRole)
+                .WithMarketParticipantRole(MarketParticipantRole.GridAccessProvider)
                 .Build();
             var chargeOperation = chargeInformationOperationDtoBuilder
                 .WithChargeType(ChargeType.Tariff)
-                .WithTaxIndicator(taxIndicator)
+                .WithTaxIndicator(TaxIndicator.NoTax)
                 .Build();
 
             // Act
             var sut = new ChargeTypeTariffTaxIndicatorValidationRule(chargeOperation, senderMarketParticipant);
 
             // Assert
-            sut.IsValid.Should().Be(expectedResult);
+            sut.IsValid.Should().Be(true);
         }
 
         [Theory]

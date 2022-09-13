@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.BusinessValidation.ValidationRules;
@@ -35,28 +36,40 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
         {
             // Arrange
             // Act
-            var sut = new UpdateTaxTariffOnlyAllowedBySystemOperatorRule(chargeType, MarketParticipantRole.SystemOperator, false);
+            var sut = new UpdateTaxTariffOnlyAllowedBySystemOperatorRule(chargeType, MarketParticipantRole.GridAccessProvider, false);
 
             // Assert
             sut.IsValid.Should().Be(true);
         }
 
-        [Theory]
-        [InlineAutoMoqData(MarketParticipantRole.GridAccessProvider, true, false)]
-        [InlineAutoMoqData(MarketParticipantRole.GridAccessProvider, false, true)]
-        [InlineAutoMoqData(MarketParticipantRole.SystemOperator, true, true)]
-        [InlineAutoMoqData(MarketParticipantRole.SystemOperator, false, true)]
-        public void ChargeTypeTariffTaxIndicatorAuthorizeRule_WhenNotSystemOperator_ReturnsTrue(
-            MarketParticipantRole senderRole,
-            bool taxIndicator,
-            bool expectedResult)
+        [Fact]
+        public void ChargeTypeTariffTaxIndicatorAuthorizeRule_WhenNotSystemOperator_ReturnsTrue()
+        {
+            foreach (var senderRole in Enum.GetValues<MarketParticipantRole>())
+            {
+                // Arrange
+                var expectedResult = senderRole == MarketParticipantRole.SystemOperator;
+
+                // Act
+                var sut = new UpdateTaxTariffOnlyAllowedBySystemOperatorRule(ChargeType.Tariff, senderRole, true);
+
+                // Assert
+                sut.IsValid.Should().Be(expectedResult);
+            }
+        }
+
+        [Fact]
+        public void IsValid_WhenTaxIndicatorIsFalse_ReturnsTrue()
         {
             // Arrange
             // Act
-            var sut = new UpdateTaxTariffOnlyAllowedBySystemOperatorRule(ChargeType.Tariff, senderRole, taxIndicator);
+            var sut = new UpdateTaxTariffOnlyAllowedBySystemOperatorRule(
+                ChargeType.Tariff,
+                MarketParticipantRole.GridAccessProvider,
+                false);
 
             // Assert
-            sut.IsValid.Should().Be(expectedResult);
+            sut.IsValid.Should().Be(true);
         }
 
         [Fact]
