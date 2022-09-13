@@ -60,7 +60,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
         }
 
         [Fact]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo()
+        public void ValidationRuleIdentifier_ShouldBeUpdateTaxTariffOnlyAllowedBySystemOperator()
         {
             // Arrange
             // Act

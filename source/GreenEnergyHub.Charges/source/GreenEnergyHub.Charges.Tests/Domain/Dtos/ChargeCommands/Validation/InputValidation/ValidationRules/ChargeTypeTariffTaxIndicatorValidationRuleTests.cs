@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         {
             // Arrange
             var senderMarketParticipant = marketParticipantDtoBuilder
-                .WithMarketParticipantRole(MarketParticipantRole.SystemOperator)
+                .WithMarketParticipantRole(MarketParticipantRole.GridAccessProvider)
                 .Build();
             var chargeOperation = chargeInformationOperationDtoBuilder
                 .WithChargeType(chargeType)
@@ -84,7 +84,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(
+        public void ValidationRuleIdentifier_ShouldBeChargeTypeTariffTaxIndicatorOnlyAllowedBySystemOperator(
             ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder,
             MarketParticipantDtoBuilder marketParticipantDtoBuilder)
         {
