@@ -18,6 +18,7 @@ using System.Linq;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges.Exceptions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.BusinessValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using NodaTime;
@@ -234,7 +235,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
                         startDate),
                     operationId),
                 new(
-                    new UpdateTaxTariffOnlyBySystemOperatorRule(
+                    new UpdateTaxTariffOnlyAllowedBySystemOperatorRule(
                         Type,
                         senderMarketParticipantRole,
                         TaxIndicator),

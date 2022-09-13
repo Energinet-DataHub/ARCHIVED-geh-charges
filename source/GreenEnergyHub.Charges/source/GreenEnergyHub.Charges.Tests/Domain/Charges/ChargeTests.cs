@@ -370,7 +370,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             };
             var sut = new ChargeBuilder()
                 .WithStartDate(InstantHelper.GetTodayPlusDaysAtMidnightUtc(0))
-                .WithPoints(points).Build();
+                .WithPoints(points)
+                .WithMarketParticipantRole(MarketParticipantRole.SystemOperator)
+                .Build();
 
             // Act
             sut.Stop(InstantHelper.GetTodayPlusDaysAtMidnightUtc(2));
@@ -477,6 +479,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             var sut = new ChargeBuilder()
                 .WithStartDate(InstantHelper.GetTodayPlusDaysAtMidnightUtc(0))
                 .WithPoints(points)
+                .WithMarketParticipantRole(MarketParticipantRole.SystemOperator)
                 .Build();
 
             // Act
@@ -516,6 +519,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             var sut = new ChargeBuilder()
                 .WithStartDate(InstantHelper.GetTodayPlusDaysAtMidnightUtc(0))
                 .WithPoints(points)
+                .WithMarketParticipantRole(MarketParticipantRole.SystemOperator)
                 .Build();
 
             // Act
@@ -541,10 +545,6 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             var points = new List<Point>
             {
                 new(1.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(0)),
-                new(2.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(1)),
-                new(3.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(2)),
-                new(4.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(3)),
-                new(5.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(4)),
             };
             var newPrices = new List<Point>
             {
@@ -555,6 +555,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             var sut = new ChargeBuilder()
                 .WithStartDate(InstantHelper.GetTodayPlusDaysAtMidnightUtc(0))
                 .WithPoints(points)
+                .WithMarketParticipantRole(MarketParticipantRole.SystemOperator)
                 .WithType(ChargeType.Tariff)
                 .WithTaxIndicator(TaxIndicator.Tax)
                 .Build();

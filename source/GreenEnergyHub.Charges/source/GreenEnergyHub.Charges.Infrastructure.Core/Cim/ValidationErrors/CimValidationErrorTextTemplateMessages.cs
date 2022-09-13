@@ -105,12 +105,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         public const string ChargeTypeTariffPriceCountErrorText =
             "The number of prices {{ChargePointsCount}} doesn't match period type {{ChargeResolution}} for charge ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} owned by {{ChargeOwner}}.";
 
-        [ErrorMessageFor(ValidationRuleIdentifier.ChargeTypeTariffTaxIndicator)]
-        public const string ChargeTypeTariffTaxIndicatorErrorText =
+        [ErrorMessageFor(ValidationRuleIdentifier.ChargeTypeTariffTaxIndicatorOnlyAllowedBySystemOperator)]
+        public const string ChargeTypeTariffTaxIndicatorOnlyAllowedBySystemOperatorErrorText =
             "The sender role used is not allowed to set tax indicator to {{ChargeTaxIndicator}} for charge ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} owned by {{ChargeOwner}}";
 
-        [ErrorMessageFor(ValidationRuleIdentifier.UpdateTaxTariffOnlyBySystemOperator)]
-        public const string UpdateTaxTariffOnlyBySystemOperatorErrorText =
+        [ErrorMessageFor(ValidationRuleIdentifier.UpdateTaxTariffOnlyAllowedBySystemOperator)]
+        public const string UpdateTaxTariffOnlyAllowedBySystemOperatorErrorText =
             "The sender role used is not allowed to submit a price series for charge ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} owned by {{ChargeOwner}} as it is marked as a tax";
 
         [ErrorMessageFor(ValidationRuleIdentifier.MaximumPrice)]

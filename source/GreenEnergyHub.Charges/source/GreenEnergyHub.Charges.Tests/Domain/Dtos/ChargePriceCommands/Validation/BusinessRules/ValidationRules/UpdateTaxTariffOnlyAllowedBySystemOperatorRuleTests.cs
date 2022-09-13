@@ -14,17 +14,17 @@
 
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.BusinessValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules
+namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validation.BusinessRules.ValidationRules
 {
     [UnitTest]
-    public class UpdateTaxTariffOnlyBySystemOperatorRuleTests
+    public class UpdateTaxTariffOnlyAllowedBySystemOperatorRuleTests
     {
         [Theory]
         [InlineAutoMoqData(ChargeType.Fee)]
@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         {
             // Arrange
             // Act
-            var sut = new UpdateTaxTariffOnlyBySystemOperatorRule(chargeType, MarketParticipantRole.SystemOperator, false);
+            var sut = new UpdateTaxTariffOnlyAllowedBySystemOperatorRule(chargeType, MarketParticipantRole.SystemOperator, false);
 
             // Assert
             sut.IsValid.Should().Be(true);
@@ -53,7 +53,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         {
             // Arrange
             // Act
-            var sut = new UpdateTaxTariffOnlyBySystemOperatorRule(ChargeType.Tariff, senderRole, taxIndicator);
+            var sut = new UpdateTaxTariffOnlyAllowedBySystemOperatorRule(ChargeType.Tariff, senderRole, taxIndicator);
 
             // Assert
             sut.IsValid.Should().Be(expectedResult);
@@ -64,10 +64,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         {
             // Arrange
             // Act
-            var sut = new UpdateTaxTariffOnlyBySystemOperatorRule(ChargeType.Tariff, MarketParticipantRole.SystemOperator, true);
+            var sut = new UpdateTaxTariffOnlyAllowedBySystemOperatorRule(ChargeType.Tariff, MarketParticipantRole.SystemOperator, true);
 
             // Assert
-            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.UpdateTaxTariffOnlyBySystemOperator);
+            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.UpdateTaxTariffOnlyAllowedBySystemOperator);
         }
     }
 }

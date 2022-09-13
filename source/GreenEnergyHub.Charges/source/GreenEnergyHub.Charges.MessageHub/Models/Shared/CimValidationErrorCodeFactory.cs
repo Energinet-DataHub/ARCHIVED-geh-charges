@@ -67,8 +67,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.Shared
                 ValidationRuleIdentifier.TaxIndicatorMustBeFalseForSubscription => ReasonCode.D14,
                 ValidationRuleIdentifier.ChargeOperationIdLengthValidation => ReasonCode.E86,
                 ValidationRuleIdentifier.ChargeOwnerMustMatchSender => ReasonCode.E0I,
-                ValidationRuleIdentifier.ChargeTypeTariffTaxIndicator => ReasonCode.E0I,
-                ValidationRuleIdentifier.UpdateTaxTariffOnlyBySystemOperator => ReasonCode.E0I,
+                ValidationRuleIdentifier.ChargeTypeTariffTaxIndicatorOnlyAllowedBySystemOperator => ReasonCode.E0I,
+                ValidationRuleIdentifier.UpdateTaxTariffOnlyAllowedBySystemOperator => ReasonCode.E0I,
                 _ => throw new NotImplementedException(),
             };
         }

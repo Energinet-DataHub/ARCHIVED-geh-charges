@@ -33,6 +33,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
                                _chargeInformationOperationDto.TaxIndicator is not TaxIndicator.Tax ||
                                _senderMarketParticipantDto.BusinessProcessRole is MarketParticipantRole.SystemOperator;
 
-        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeTypeTariffTaxIndicator;
+        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeTypeTariffTaxIndicatorOnlyAllowedBySystemOperator;
     }
 }

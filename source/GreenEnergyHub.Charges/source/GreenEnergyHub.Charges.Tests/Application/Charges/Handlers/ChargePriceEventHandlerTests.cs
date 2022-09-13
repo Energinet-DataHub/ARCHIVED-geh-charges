@@ -70,7 +70,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                 new(1.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(0)),
                 new(2.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(1)),
             };
-            var charge = chargeBuilder.WithPoints(points).Build();
+            var charge = chargeBuilder
+                .WithPoints(points)
+                .WithMarketParticipantRole(MarketParticipantRole.SystemOperator)
+                .Build();
             SetupChargeRepository(chargeRepository, charge);
             SetupMarketParticipantRepository(marketParticipantRepository, sender);
             SetupChargeIdentifierFactoryMock(chargeIdentifierFactory);

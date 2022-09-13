@@ -16,15 +16,15 @@ using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.BusinessValidation.ValidationRules
+namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.BusinessValidation.ValidationRules
 {
-    public class UpdateTaxTariffOnlyBySystemOperatorRule : IValidationRule
+    public class UpdateTaxTariffOnlyAllowedBySystemOperatorRule : IValidationRule
     {
         private readonly ChargeType _chargeType;
         private readonly MarketParticipantRole _businessProcessRole;
         private readonly bool _taxIndicator;
 
-        public UpdateTaxTariffOnlyBySystemOperatorRule(ChargeType chargeType, MarketParticipantRole businessProcessRole, bool taxIndicator)
+        public UpdateTaxTariffOnlyAllowedBySystemOperatorRule(ChargeType chargeType, MarketParticipantRole businessProcessRole, bool taxIndicator)
         {
             _chargeType = chargeType;
             _businessProcessRole = businessProcessRole;
@@ -35,6 +35,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
                                !_taxIndicator ||
                                _businessProcessRole is MarketParticipantRole.SystemOperator;
 
-        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.UpdateTaxTariffOnlyBySystemOperator;
+        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.UpdateTaxTariffOnlyAllowedBySystemOperator;
     }
 }

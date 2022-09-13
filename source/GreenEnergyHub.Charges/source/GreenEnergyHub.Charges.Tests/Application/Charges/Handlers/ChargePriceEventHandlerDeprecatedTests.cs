@@ -64,7 +64,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                 new(1.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(0)),
                 new(2.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(1)),
             };
-            var charge = chargeBuilder.WithPoints(points).Build();
+            var charge = chargeBuilder
+                .WithPoints(points)
+                .WithMarketParticipantRole(MarketParticipantRole.SystemOperator)
+                .Build();
             SetupChargeRepository(chargeRepository, charge);
             SetupMarketParticipantRepository(marketParticipantRepository, sender);
             SetupChargeIdentifierFactoryMock(chargeIdentifierFactory);
@@ -153,7 +156,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                 points.Add(new Point(price + i, InstantHelper.GetTodayAtMidnightUtc() + Duration.FromHours(i)));
             }
 
-            var charge = chargeBuilder.WithPoints(points).Build();
+            var charge = chargeBuilder
+                .WithPoints(points)
+                .WithMarketParticipantRole(MarketParticipantRole.SystemOperator)
+                .Build();
             SetupChargeRepository(chargeRepository, charge);
             SetupMarketParticipantRepository(marketParticipantRepository, sender);
             SetupChargeIdentifierFactoryMock(chargeIdentifierFactory);
@@ -187,10 +193,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                 .WithTaxIndicator(TaxIndicator.NoTax)
                 .WithStopDate(InstantHelper.GetTodayAtMidnightUtc())
                 .Build();
+            SetupChargeRepository(chargeRepository, charge);
             var receivedEvent = CreateInvalidOperationBundle();
-            chargeRepository
-                .Setup(r => r.SingleOrNullAsync(It.IsAny<ChargeIdentifier>()))!
-                .ReturnsAsync(charge);
             SetupMarketParticipantRepository(marketParticipantRepository, sender);
             SetupChargeIdentifierFactoryMock(chargeIdentifierFactory);
             SetupValidatorsForOperation(documentValidator, inputValidator);
@@ -256,30 +260,29 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 
             var accepted = 0;
             receiptService
-                .Setup(s => s.AcceptValidOperationsAsync(
-                    It.IsAny<IReadOnlyCollection<ChargeInformationOperationDto>>(),
-                    It.IsAny<DocumentDto>()))
-                .Callback<IReadOnlyCollection<ChargeInformationOperationDto>, DocumentDto>((_, _) => accepted++);
+                    .Setup(s => s.AcceptValidOperationsAsync(
+                        It.IsAny<IReadOnlyCollection<ChargeInformationOperationDto>>(),
+                        It.IsAny<DocumentDto>()))
+                    .Callback<IReadOnlyCollection<ChargeInformationOperationDto>, DocumentDto>((_, _) => accepted++);
             var rejectedRules = new List<IValidationRuleContainer>();
             receiptService
-                .Setup(s => s.RejectInvalidOperationsAsync(
-                    It.IsAny<IReadOnlyCollection<ChargeInformationOperationDto>>(),
-                    It.IsAny<DocumentDto>(),
-                    It.IsAny<IList<IValidationRuleContainer>>()))
-                .Callback<IReadOnlyCollection<ChargeInformationOperationDto>, DocumentDto, IList<IValidationRuleContainer>>(
-                    (_, _, s) => rejectedRules.AddRange(s));
-
+                    .Setup(s => s.RejectInvalidOperationsAsync(
+                        It.IsAny<IReadOnlyCollection<ChargeInformationOperationDto>>(),
+                        It.IsAny<DocumentDto>(),
+                        It.IsAny<IList<IValidationRuleContainer>>()))
+                    .Callback<IReadOnlyCollection<ChargeInformationOperationDto>, DocumentDto, IList<IValidationRuleContainer>>(
+                        (_, _, s) => rejectedRules.AddRange(s));
             // Act
             await sut.HandleAsync(receivedEvent);
 
             // Assert
             accepted.Should().Be(1);
             var invalid = rejectedRules.Where(vr =>
-                vr.ValidationRule.ValidationRuleIdentifier == ValidationRuleIdentifier.UpdateTaxTariffOnlyBySystemOperator);
+                vr.ValidationRule.ValidationRuleIdentifier == ValidationRuleIdentifier.UpdateTaxTariffOnlyAllowedBySystemOperator);
             var subsequent = rejectedRules.Where(vr =>
                 vr.ValidationRule.ValidationRuleIdentifier == ValidationRuleIdentifier.SubsequentBundleOperationsFail);
             var other = rejectedRules.Where(vr =>
-                vr.ValidationRule.ValidationRuleIdentifier != ValidationRuleIdentifier.UpdateTaxTariffOnlyBySystemOperator &&
+                vr.ValidationRule.ValidationRuleIdentifier != ValidationRuleIdentifier.UpdateTaxTariffOnlyAllowedBySystemOperator &&
                 vr.ValidationRule.ValidationRuleIdentifier != ValidationRuleIdentifier.SubsequentBundleOperationsFail);
 
             rejectedRules.Count.Should().Be(3);
