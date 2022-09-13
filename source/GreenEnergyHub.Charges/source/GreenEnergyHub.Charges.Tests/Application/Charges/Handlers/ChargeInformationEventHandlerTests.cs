@@ -66,7 +66,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                 .WithEndDateTime(InstantHelper.GetEndDefault())
                 .Build();
             var chargeCommand = chargeCommandBuilder.WithChargeOperation(createOperationDto).Build();
-            var receivedEvent = new ChargeCommandReceivedEvent(InstantHelper.GetTodayAtMidnightUtc(), chargeCommand);
+            var receivedEvent = new ChargeInformationCommandReceivedEvent(InstantHelper.GetTodayAtMidnightUtc(), chargeCommand);
 
             var validationResult = ValidationResult.CreateSuccess();
             SetupValidators(inputValidator, validationResult);
@@ -112,7 +112,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             TestMarketParticipant sender,
             ChargeBuilder chargeBuilder,
-            ChargeCommandReceivedEvent receivedEvent,
+            ChargeInformationCommandReceivedEvent receivedEvent,
             ChargeInformationEventHandler sut)
         {
             // Arrange
@@ -147,7 +147,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             ChargeInformationEventHandler sut)
         {
             // Arrange
-            ChargeCommandReceivedEvent? receivedEvent = null;
+            ChargeInformationCommandReceivedEvent? receivedEvent = null;
 
             // Act / Assert
             await Assert.ThrowsAsync<ArgumentNullException>(() => sut.HandleAsync(receivedEvent!));
@@ -174,7 +174,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                 .WithStartDateTime(InstantHelper.GetTodayAtMidnightUtc())
                 .Build();
             var chargeCommand = chargeInformationCommandBuilder.WithChargeOperation(updateOperationDto).Build();
-            var receivedEvent = new ChargeCommandReceivedEvent(InstantHelper.GetTodayAtMidnightUtc(), chargeCommand);
+            var receivedEvent = new ChargeInformationCommandReceivedEvent(InstantHelper.GetTodayAtMidnightUtc(), chargeCommand);
             var validationResult = ValidationResult.CreateSuccess();
             SetupValidators(inputValidator, validationResult);
             var newPeriod = chargePeriodBuilder
@@ -219,7 +219,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             var stopDate = InstantHelper.GetTodayAtMidnightUtc();
             var stopOperationDto = chargeInformationOperationDtoBuilder.WithStartDateTime(stopDate).WithEndDateTime(stopDate).Build();
             var chargeCommand = chargeInformationCommandBuilder.WithChargeOperation(stopOperationDto).Build();
-            var receivedEvent = new ChargeCommandReceivedEvent(InstantHelper.GetTodayAtMidnightUtc(), chargeCommand);
+            var receivedEvent = new ChargeInformationCommandReceivedEvent(InstantHelper.GetTodayAtMidnightUtc(), chargeCommand);
             var charge = chargeBuilder.Build();
             var validationResult = ValidationResult.CreateSuccess();
             SetupValidators(inputValidator, validationResult);
@@ -262,7 +262,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             var chargeCommand = chargeInformationCommandBuilder
                 .WithChargeOperation(chargeOperationDto)
                 .Build();
-            var receivedEvent = new ChargeCommandReceivedEvent(InstantHelper.GetTodayAtMidnightUtc(), chargeCommand);
+            var receivedEvent = new ChargeInformationCommandReceivedEvent(InstantHelper.GetTodayAtMidnightUtc(), chargeCommand);
             var charge = chargeBuilder.WithStopDate(InstantHelper.GetTomorrowAtMidnightUtc()).Build();
             SetupMarketParticipantRepository(marketParticipantRepository, sender);
             SetupChargeIdentifierFactoryMock(chargeIdentifierFactory);
@@ -480,7 +480,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                 .ReturnsAsync(charge);
     }
 
-        private static (ChargeCommandReceivedEvent ReceivedEvent, string InvalidOperationId) CreateReceivedEventWithChargeOperations()
+        private static (ChargeInformationCommandReceivedEvent ReceivedEvent, string InvalidOperationId) CreateReceivedEventWithChargeOperations()
         {
             var validChargeOperationDto = new ChargeInformationOperationDtoBuilder()
                 .WithChargeOperationId("Operation1")
@@ -514,7 +514,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                         anotherFailedChargeOperationDto,
                     })
                 .Build();
-            var receivedEvent = new ChargeCommandReceivedEvent(
+            var receivedEvent = new ChargeInformationCommandReceivedEvent(
                 InstantHelper.GetTodayAtMidnightUtc(),
                 chargeCommand);
             return (ReceivedEvent: receivedEvent, InvalidOperationId: invalidChargeOperationDto.OperationId);

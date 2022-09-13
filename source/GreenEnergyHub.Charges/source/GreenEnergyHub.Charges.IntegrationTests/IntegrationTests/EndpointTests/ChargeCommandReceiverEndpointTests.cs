@@ -113,7 +113,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     x.OwnerId == ownerId &&
                     x.Type == chargeType;
 
-            private static ChargeCommandReceivedEvent CreateChargeCommandReceivedEvent(
+            private static ChargeInformationCommandReceivedEvent CreateChargeCommandReceivedEvent(
                 ChargeInformationCommandBuilder commandBuilder,
                 DocumentDtoBuilder documentDtoBuilder,
                 ChargeInformationOperationDtoBuilder operationDtoBuilder,
@@ -144,7 +144,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     .WithDocumentDto(document)
                     .WithChargeOperation(operation)
                     .Build();
-                var chargeInformationReceivedEvent = new ChargeCommandReceivedEvent(
+                var chargeInformationReceivedEvent = new ChargeInformationCommandReceivedEvent(
                     Instant.FromDateTimeUtc(DateTime.UtcNow), chargeCommand);
 
                 return chargeInformationReceivedEvent;

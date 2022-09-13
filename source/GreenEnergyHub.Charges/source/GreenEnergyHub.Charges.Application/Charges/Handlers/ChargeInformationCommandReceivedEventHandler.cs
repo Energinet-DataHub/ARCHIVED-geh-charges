@@ -37,17 +37,17 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             _chargeCommandReceiptService = chargeCommandReceiptService;
         }
 
-        public async Task HandleAsync(ChargeCommandReceivedEvent commandReceivedEvent)
+        public async Task HandleAsync(ChargeInformationCommandReceivedEvent chargeInformationCommandReceivedEvent)
         {
-            var documentValidationResult = await _documentValidator.ValidateAsync(commandReceivedEvent.Command).ConfigureAwait(false);
+            var documentValidationResult = await _documentValidator.ValidateAsync(chargeInformationCommandReceivedEvent.Command).ConfigureAwait(false);
             if (documentValidationResult.IsFailed)
             {
                 await _chargeCommandReceiptService
-                    .RejectAsync(commandReceivedEvent.Command, documentValidationResult).ConfigureAwait(false);
+                    .RejectAsync(chargeInformationCommandReceivedEvent.Command, documentValidationResult).ConfigureAwait(false);
                 return;
             }
 
-            await _chargeInformationEventHandler.HandleAsync(commandReceivedEvent).ConfigureAwait(false);
+            await _chargeInformationEventHandler.HandleAsync(chargeInformationCommandReceivedEvent).ConfigureAwait(false);
         }
     }
 }
