@@ -69,7 +69,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Acknowledgement
             [Frozen] Mock<IChargeCommandAcceptedEventFactory> acceptedEventFactory,
             [Frozen] Mock<IDomainEventDispatcher> domainEventDispatcher,
             ChargeInformationCommand command,
-            ChargeCommandAcceptedEvent acceptedEvent,
+            ChargeInformationCommandAcceptedEvent acceptedEvent,
             ChargeCommandReceiptService sut)
         {
             // Arrange
@@ -78,12 +78,12 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Acknowledgement
                         It.IsAny<ChargeInformationCommand>()))
                 .Returns(acceptedEvent);
 
-            ChargeCommandAcceptedEvent? eventForSerialization = null;
+            ChargeInformationCommandAcceptedEvent? eventForSerialization = null;
             domainEventDispatcher.Setup(
                     d => d.DispatchAsync(
-                        It.IsAny<ChargeCommandAcceptedEvent>(),
+                        It.IsAny<ChargeInformationCommandAcceptedEvent>(),
                         It.IsAny<CancellationToken>()))
-                .Callback<ChargeCommandAcceptedEvent, CancellationToken>(
+                .Callback<ChargeInformationCommandAcceptedEvent, CancellationToken>(
                     (e, _) => eventForSerialization = e);
 
             // Act

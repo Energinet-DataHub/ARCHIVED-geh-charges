@@ -18,6 +18,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents
 {
     public interface IChargeCommandAcceptedEventFactory
     {
-        ChargeCommandAcceptedEvent CreateEvent(ChargeInformationCommand command);
+        ChargeInformationCommandAcceptedEvent CreateEvent(ChargeInformationCommand command);
     }
 }

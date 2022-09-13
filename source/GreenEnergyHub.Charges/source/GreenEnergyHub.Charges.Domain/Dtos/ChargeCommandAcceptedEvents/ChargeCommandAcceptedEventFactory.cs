@@ -26,9 +26,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents
             _clock = clock;
         }
 
-        public ChargeCommandAcceptedEvent CreateEvent(ChargeInformationCommand command)
+        public ChargeInformationCommandAcceptedEvent CreateEvent(ChargeInformationCommand command)
         {
-            return new ChargeCommandAcceptedEvent(_clock.GetCurrentInstant(), command);
+            return new ChargeInformationCommandAcceptedEvent(_clock.GetCurrentInstant(), command);
         }
     }
 }

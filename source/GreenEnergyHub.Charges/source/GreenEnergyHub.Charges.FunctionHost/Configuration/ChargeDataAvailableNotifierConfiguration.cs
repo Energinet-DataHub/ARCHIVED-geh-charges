@@ -28,14 +28,14 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<IAvailableDataNotifier<AvailableChargeData, ChargeCommandAcceptedEvent>,
-                AvailableDataNotifier<AvailableChargeData, ChargeCommandAcceptedEvent>>();
-            serviceCollection.AddScoped<IAvailableDataFactory<AvailableChargeData, ChargeCommandAcceptedEvent>,
+            serviceCollection.AddScoped<IAvailableDataNotifier<AvailableChargeData, ChargeInformationCommandAcceptedEvent>,
+                AvailableDataNotifier<AvailableChargeData, ChargeInformationCommandAcceptedEvent>>();
+            serviceCollection.AddScoped<IAvailableDataFactory<AvailableChargeData, ChargeInformationCommandAcceptedEvent>,
                 AvailableChargeDataFactory>();
             serviceCollection.AddScoped<IAvailableDataNotificationFactory<AvailableChargeData>,
                 AvailableDataNotificationFactory<AvailableChargeData>>();
             serviceCollection
-                .AddScoped<BundleSpecification<AvailableChargeData, ChargeCommandAcceptedEvent>,
+                .AddScoped<BundleSpecification<AvailableChargeData, ChargeInformationCommandAcceptedEvent>,
                     ChargeBundleSpecification>();
 
             serviceCollection.AddScoped<IAvailableDataNotifier<AvailableChargePriceData, PriceConfirmedEvent>,
@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 .AddScoped<BundleSpecification<AvailableChargePriceData, PriceConfirmedEvent>,
                     ChargePriceBundleSpecification>();
 
-            serviceCollection.AddScoped<JsonMessageDeserializer<ChargeCommandAcceptedEvent>>();
+            serviceCollection.AddScoped<JsonMessageDeserializer<ChargeInformationCommandAcceptedEvent>>();
             serviceCollection.AddScoped<JsonMessageDeserializer<PriceConfirmedEvent>>();
         }
     }

@@ -33,13 +33,13 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             _chargePricesUpdatedPublisher = chargePricesUpdatedPublisher;
         }
 
-        public async Task PublishAsync(ChargeCommandAcceptedEvent chargeCommandAcceptedEvent)
+        public async Task PublishAsync(ChargeInformationCommandAcceptedEvent chargeInformationCommandAcceptedEvent)
         {
-            ArgumentNullException.ThrowIfNull(chargeCommandAcceptedEvent);
+            ArgumentNullException.ThrowIfNull(chargeInformationCommandAcceptedEvent);
 
-            foreach (var chargeOperationDto in chargeCommandAcceptedEvent.Command.Operations)
+            foreach (var chargeOperationDto in chargeInformationCommandAcceptedEvent.Command.Operations)
             {
-                if (chargeCommandAcceptedEvent.Command.Document.BusinessReasonCode == BusinessReasonCode.UpdateChargeInformation)
+                if (chargeInformationCommandAcceptedEvent.Command.Document.BusinessReasonCode == BusinessReasonCode.UpdateChargeInformation)
                 {
                     await _chargePublisher.PublishChargeCreatedAsync(chargeOperationDto).ConfigureAwait(false);
                 }
