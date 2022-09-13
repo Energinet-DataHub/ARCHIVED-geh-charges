@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application.Charges.Events;
 
-namespace GreenEnergyHub.Charges.Application.Charges.Factories
+namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
-    public interface IChargePricesUpdatedEventFactory
+    public interface IChargePriceIntegrationEventsPublisher
     {
-        ChargePricesUpdatedEvent Create(ChargePriceOperationDto chargePriceOperationDto);
+        Task PublishAsync(PriceConfirmedEvent chargePriceConfirmedEvent);
     }
 }

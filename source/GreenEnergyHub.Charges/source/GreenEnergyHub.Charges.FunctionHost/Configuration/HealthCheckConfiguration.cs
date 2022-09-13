@@ -190,7 +190,15 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                         EnvironmentSettingNames.DomainEventManagerConnectionString),
                     topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesDomainEventTopicName),
                     subscriptionName: EnvironmentHelper.GetEnv(
-                        EnvironmentSettingNames.ChargeCommandAcceptedPublishSubscriptionName));
+                        EnvironmentSettingNames.ChargeCommandAcceptedPublishSubscriptionName))
+                // Used by ChargePriceIntegrationEventsPublisherEndpoint
+                .AddAzureServiceBusSubscription(
+                    name: "ChargePriceConfirmedPublishSubscriptionExists",
+                    connectionString: EnvironmentHelper.GetEnv(
+                        EnvironmentSettingNames.DomainEventManagerConnectionString),
+                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesDomainEventTopicName),
+                    subscriptionName: EnvironmentHelper.GetEnv(
+                        EnvironmentSettingNames.ChargePriceConfirmedPublishSubscriptionName));
         }
 
         private static void ConfigureDomainEventsChargeLinks(IServiceCollection serviceCollection)
