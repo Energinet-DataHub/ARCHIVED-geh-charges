@@ -31,7 +31,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
         [InlineAutoMoqData(ChargeType.Fee)]
         [InlineAutoMoqData(ChargeType.Subscription)]
         [InlineAutoMoqData(ChargeType.Unknown)]
-        public void ChargeTypeTariffTaxIndicatorAuthorizeRule_WhenChargeTypeNotTariff_ReturnsTrue(
+        public void IsValid_WhenChargeTypeNotTariff_IsTrue(
             ChargeType chargeType)
         {
             // Arrange
@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
         }
 
         [Fact]
-        public void ChargeTypeTariffTaxIndicatorAuthorizeRule_WhenNotSystemOperator_ReturnsTrue()
+        public void IsValid_WhenNotSystemOperator_IsTrue()
         {
             foreach (var senderRole in Enum.GetValues<MarketParticipantRole>())
             {
@@ -59,7 +59,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
         }
 
         [Fact]
-        public void IsValid_WhenTaxIndicatorIsFalse_ReturnsTrue()
+        public void IsValid_WhenTaxIndicatorIsFalse_IsTrue()
         {
             // Arrange
             // Act

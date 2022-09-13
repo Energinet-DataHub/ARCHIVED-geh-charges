@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         [InlineAutoMoqData(ChargeType.Fee)]
         [InlineAutoMoqData(ChargeType.Subscription)]
         [InlineAutoMoqData(ChargeType.Unknown)]
-        public void ChargeTypeTariffTaxIndicatorValidationRule_WhenChargeTypeNotTariff_ReturnsTrue(
+        public void IsValid_WhenChargeTypeNotTariff_IsTrue(
             ChargeType chargeType,
             ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder,
             MarketParticipantDtoBuilder marketParticipantDtoBuilder)
@@ -55,7 +55,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [AutoDomainData]
-        public void ChargeTypeTariffTaxIndicatorValidationRule_WhenNotSystemOperator_ReturnsTrue(
+        public void IsValid_WhenNotSystemOperator_IsTrue(
             ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder,
             MarketParticipantDtoBuilder marketParticipantDtoBuilder)
         {
@@ -81,7 +81,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [AutoDomainData]
-        public void IsValid_WhenTaxIndicatorIsFalse_ReturnsTrue(
+        public void IsValid_WhenTaxIndicatorIsFalse_IsTrue(
             ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder,
             MarketParticipantDtoBuilder marketParticipantDtoBuilder)
         {
