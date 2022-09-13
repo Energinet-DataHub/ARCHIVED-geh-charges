@@ -33,9 +33,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
     public class StartDateValidationRuleTests
     {
         [Theory]
-        [InlineAutoMoqData(-1000, false)]
+        [InlineAutoMoqData(-721, false)]
+        [InlineAutoMoqData(-720, true)]
         [InlineAutoMoqData(0, true)]
-        [InlineAutoMoqData(2000, false)]
+        [InlineAutoMoqData(1095, true)]
+        [InlineAutoMoqData(1096, false)]
         public void IsValid_WhenStartDateIsWithinInterval_IsTrue(
             int daysOffset,
             bool expected,
@@ -50,7 +52,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
                 .Build();
 
             // Act (implicit)
-            var sut = new StartDateValidationRule(chargeOperationDto.StartDateTime, zonedDateTimeService, clock);
+            var sut = new StartDateValidationRule(chargeOperationDto, zonedDateTimeService, clock);
 
             // Assert
             sut.IsValid.Should().Be(expected);
@@ -65,7 +67,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
             var zonedDateTimeService = new ZonedDateTimeService(clock, new Iso8601ConversionConfiguration("Europe/Copenhagen"));
 
             // Act (implicit)
-            var sut = new StartDateValidationRule(chargeOperationDto.StartDateTime, zonedDateTimeService, clock);
+            var sut = new StartDateValidationRule(chargeOperationDto, zonedDateTimeService, clock);
 
             // Assert
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.StartDateValidation);

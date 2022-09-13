@@ -19,14 +19,14 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.Inpu
 {
     public class ResolutionIsRequiredRule : IValidationRule
     {
-        private readonly ChargePriceOperationDto _chargeInformationOperationDto;
+        private readonly ChargePriceOperationDto _chargePriceOperationDto;
 
-        public ResolutionIsRequiredRule(ChargePriceOperationDto chargeInformationOperationDto)
+        public ResolutionIsRequiredRule(ChargePriceOperationDto chargePriceOperationDto)
         {
-            _chargeInformationOperationDto = chargeInformationOperationDto;
+            _chargePriceOperationDto = chargePriceOperationDto;
         }
 
-        public bool IsValid => _chargeInformationOperationDto.Resolution is not Resolution.Unknown;
+        public bool IsValid => _chargePriceOperationDto.Resolution is not Resolution.Unknown;
 
         public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ResolutionIsRequired;
     }

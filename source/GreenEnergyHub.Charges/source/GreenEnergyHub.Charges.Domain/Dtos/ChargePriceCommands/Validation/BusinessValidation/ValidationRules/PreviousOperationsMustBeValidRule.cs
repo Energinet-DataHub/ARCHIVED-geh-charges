@@ -18,9 +18,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.Busi
 {
     public class PreviousOperationsMustBeValidRule : IValidationRuleWithExtendedData
     {
-        public PreviousOperationsMustBeValidRule(ChargePriceOperationDto chargePriceOperationDto)
+        public PreviousOperationsMustBeValidRule(ChargePriceOperationDto previousOperation)
         {
-            TriggeredBy = chargePriceOperationDto.OperationId;
+            TriggeredBy = previousOperation.OperationId;
         }
 
         public bool IsValid => string.IsNullOrEmpty(TriggeredBy);

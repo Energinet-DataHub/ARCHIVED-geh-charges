@@ -14,6 +14,7 @@
 
 using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.ValidationRules
 {
@@ -24,7 +25,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.Inpu
                 chargePriceOperationDto,
                 ChargeType.Tariff,
                 new List<Resolution> { Resolution.P1D, Resolution.PT1H, Resolution.PT15M },
-                Dtos.Validation.ValidationRuleIdentifier.ResolutionTariffValidation)
+                ValidationRuleIdentifier.ResolutionTariffValidation)
         {
         }
     }

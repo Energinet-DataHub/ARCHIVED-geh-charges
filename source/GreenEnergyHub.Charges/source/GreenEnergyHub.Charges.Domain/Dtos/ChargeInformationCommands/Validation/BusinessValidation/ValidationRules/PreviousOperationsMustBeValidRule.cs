@@ -18,9 +18,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
 {
     public class PreviousOperationsMustBeValidRule : IValidationRuleWithExtendedData
     {
-        public PreviousOperationsMustBeValidRule(ChargeInformationOperationDto chargeInformationOperationDto)
+        public PreviousOperationsMustBeValidRule(ChargeInformationOperationDto previousOperation)
         {
-            TriggeredBy = chargeInformationOperationDto.OperationId;
+            TriggeredBy = previousOperation.OperationId;
         }
 
         public bool IsValid => string.IsNullOrEmpty(TriggeredBy);
