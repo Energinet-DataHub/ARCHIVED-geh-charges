@@ -61,7 +61,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         {
             foreach (var senderRole in Enum.GetValues<MarketParticipantRole>())
             {
-                //  Arrange
+                // Arrange
                 var expectedResult = senderRole == MarketParticipantRole.SystemOperator;
                 var senderMarketParticipant = marketParticipantDtoBuilder
                     .WithMarketParticipantRole(senderRole)
@@ -85,7 +85,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder,
             MarketParticipantDtoBuilder marketParticipantDtoBuilder)
         {
-            //  Arrange
+            // Arrange
             var senderMarketParticipant = marketParticipantDtoBuilder
                 .WithMarketParticipantRole(MarketParticipantRole.GridAccessProvider)
                 .Build();
