@@ -333,7 +333,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 await using var chargesAssertDatabaseContext = Fixture.ChargesDatabaseManager.CreateDbContext();
                 var actual = GetCharge(chargesAssertDatabaseContext, senderProvidedChargeId, ownerId, chargeType);
                 actual.Should().BeEquivalentTo(expected, x => x.Excluding(y => y!.Points));
-                actual.Points.Should().NotBeEquivalentTo(expected.Points);
+                actual.Points.Count.Should().Be(24);
 
                 // We need to clear host log after each test is done to ensure that we can assert on function executed on each test run because we only check on function name.
                 Fixture.HostManager.ClearHostLog();
