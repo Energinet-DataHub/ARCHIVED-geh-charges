@@ -94,7 +94,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
                 // Act
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
-                    () => Fixture.MeteringPointCreatedTopic.SenderClient.SendMessageAsync(message), correlationId);
+                    () => Fixture.IntegrationEventTopic.SenderClient.SendMessageAsync(message), correlationId);
 
                 // Assert
                 await FunctionAsserts.AssertHasExecutedAsync(Fixture.HostManager, nameof(MeteringPointPersisterEndpoint)).ConfigureAwait(false);

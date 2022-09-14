@@ -44,8 +44,10 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
         // Integration events, charge links
         public const string ChargeLinksCreatedTopicName = "CHARGE_LINKS_CREATED_TOPIC_NAME";
 
+        // Integration event shared topic
+        public const string IntegrationEventTopicName = "INTEGRATION_EVENT_TOPIC_NAME";
+
         // Integration, metering point domain
-        public const string MeteringPointCreatedTopicName = "METERING_POINT_CREATED_TOPIC_NAME";
         public const string MeteringPointCreatedSubscriptionName = "METERING_POINT_CREATED_SUBSCRIPTION_NAME";
         public const string CreateLinksRequestQueueName = "CREATE_LINKS_REQUEST_QUEUE_NAME";
 
@@ -60,7 +62,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
         public const string RequestResponseLoggingContainerName = "REQUEST_RESPONSE_LOGGING_CONTAINER_NAME";
 
         // Integration, marketparticipant/actor domain
-        public const string MarketParticipantChangedTopicName = "MARKET_PARTICIPANT_CHANGED_TOPIC_NAME";
         public const string MarketParticipantChangedSubscriptionName = "MARKET_PARTICIPANT_CHANGED_SUBSCRIPTION_NAME";
 
         // Internal, charge
