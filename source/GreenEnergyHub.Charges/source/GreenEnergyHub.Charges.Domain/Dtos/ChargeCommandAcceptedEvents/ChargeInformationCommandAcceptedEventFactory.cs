@@ -17,18 +17,18 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents
 {
-    public class ChargeCommandAcceptedEventFactory : IChargeCommandAcceptedEventFactory
+    public class ChargeInformationCommandAcceptedEventFactory : IChargeInformationCommandAcceptedEventFactory
     {
         private readonly IClock _clock;
 
-        public ChargeCommandAcceptedEventFactory(IClock clock)
+        public ChargeInformationCommandAcceptedEventFactory(IClock clock)
         {
             _clock = clock;
         }
 
-        public ChargeCommandAcceptedEvent CreateEvent(ChargeInformationCommand command)
+        public ChargeInformationCommandAcceptedEvent CreateEvent(ChargeInformationCommand command)
         {
-            return new ChargeCommandAcceptedEvent(_clock.GetCurrentInstant(), command);
+            return new ChargeInformationCommandAcceptedEvent(_clock.GetCurrentInstant(), command);
         }
     }
 }

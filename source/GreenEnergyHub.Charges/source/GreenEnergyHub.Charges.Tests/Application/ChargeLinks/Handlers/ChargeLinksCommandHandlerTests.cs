@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
         [Theory]
         [InlineAutoDomainData]
         public async Task HandleAsync_WhenValidChargeLinkCommand_DispatchesOnce(
-            [Frozen] Mock<IInternalEventDispatcher> eventDispatcher,
+            [Frozen] Mock<IDomainEventDispatcher> eventDispatcher,
             ChargeLinksCommand chargeLinksCommand,
             ChargeLinksCommandHandler sut)
         {

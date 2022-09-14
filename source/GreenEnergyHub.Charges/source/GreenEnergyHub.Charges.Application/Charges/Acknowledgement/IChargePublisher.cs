@@ -22,6 +22,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
     {
         Task PublishChargeCreatedAsync(ChargeInformationOperationDto chargeInformationOperationDto);
 
-        Task PublishChargeUpdatedAsync(ChargeCommandAcceptedEvent chargeCommandAcceptedEvent);
+        Task PublishChargeUpdatedAsync(ChargeInformationCommandAcceptedEvent chargeInformationCommandAcceptedEvent);
     }
 }

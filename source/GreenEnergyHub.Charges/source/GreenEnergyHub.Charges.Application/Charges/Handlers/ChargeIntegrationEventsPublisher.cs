@@ -28,7 +28,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             _chargePublisher = chargePublisher;
         }
 
-        public async Task PublishAsync(ChargeCommandAcceptedEvent chargeCommandAcceptedEvent)
+        public async Task PublishAsync(ChargeInformationCommandAcceptedEvent chargeCommandAcceptedEvent)
         {
             ArgumentNullException.ThrowIfNull(chargeCommandAcceptedEvent);
 

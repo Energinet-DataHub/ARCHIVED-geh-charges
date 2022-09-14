@@ -22,14 +22,14 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Tests.Builders.Command
 {
-    public class PriceRejectedEventBuilder
+    public class ChargePriceOperationsRejectedEventBuilder
     {
         private Instant _publishedTime;
         private DocumentDto _document;
         private IReadOnlyCollection<ChargePriceOperationDto> _operations;
         private IEnumerable<ValidationError> _validationErrors;
 
-        public PriceRejectedEventBuilder()
+        public ChargePriceOperationsRejectedEventBuilder()
         {
             _publishedTime = SystemClock.Instance.GetCurrentInstant();
             _document = new DocumentDtoBuilder().WithDocumentType(DocumentType.RejectRequestChangeOfPriceList).Build();
@@ -37,19 +37,19 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             _validationErrors = new List<ValidationError>();
         }
 
-        public PriceRejectedEventBuilder WithOperations(List<ChargePriceOperationDto> operations)
+        public ChargePriceOperationsRejectedEventBuilder WithOperations(List<ChargePriceOperationDto> operations)
         {
             _operations = operations;
             return this;
         }
 
-        public PriceRejectedEventBuilder WithValidationErrors(IEnumerable<ValidationError> validationErrors)
+        public ChargePriceOperationsRejectedEventBuilder WithValidationErrors(IEnumerable<ValidationError> validationErrors)
         {
             _validationErrors = validationErrors;
             return this;
         }
 
-        public PriceRejectedEvent Build()
+        public ChargePriceOperationsRejectedEvent Build()
         {
             if (!_validationErrors.Any())
             {
@@ -62,7 +62,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
                 };
             }
 
-            return new PriceRejectedEvent(_publishedTime, _document, _operations, _validationErrors);
+            return new ChargePriceOperationsRejectedEvent(_publishedTime, _document, _operations, _validationErrors);
         }
     }
 }

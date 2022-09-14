@@ -30,12 +30,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
     public class ChargePriceDataAvailableNotifierEndpoint
     {
         private const string FunctionName = nameof(ChargePriceDataAvailableNotifierEndpoint);
-        private readonly JsonMessageDeserializer<PriceConfirmedEvent> _deserializer;
-        private readonly IAvailableDataNotifier<AvailableChargePriceData, PriceConfirmedEvent> _availableDataNotifier;
+        private readonly JsonMessageDeserializer<ChargePriceOperationsConfirmedEvent> _deserializer;
+        private readonly IAvailableDataNotifier<AvailableChargePriceData, ChargePriceOperationsConfirmedEvent> _availableDataNotifier;
 
         public ChargePriceDataAvailableNotifierEndpoint(
-            JsonMessageDeserializer<PriceConfirmedEvent> deserializer,
-            IAvailableDataNotifier<AvailableChargePriceData, PriceConfirmedEvent> availableDataNotifier)
+            JsonMessageDeserializer<ChargePriceOperationsConfirmedEvent> deserializer,
+            IAvailableDataNotifier<AvailableChargePriceData, ChargePriceOperationsConfirmedEvent> availableDataNotifier)
         {
             _deserializer = deserializer;
             _availableDataNotifier = availableDataNotifier;
@@ -49,8 +49,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             byte[] message)
         {
-            var priceConfirmedEvent = (PriceConfirmedEvent)await _deserializer.FromBytesAsync(message).ConfigureAwait(false);
-            await _availableDataNotifier.NotifyAsync(priceConfirmedEvent).ConfigureAwait(false);
+            var chargePriceOperationsConfirmedEvent = (ChargePriceOperationsConfirmedEvent)await _deserializer.FromBytesAsync(message).ConfigureAwait(false);
+            await _availableDataNotifier.NotifyAsync(chargePriceOperationsConfirmedEvent).ConfigureAwait(false);
         }
     }
 }

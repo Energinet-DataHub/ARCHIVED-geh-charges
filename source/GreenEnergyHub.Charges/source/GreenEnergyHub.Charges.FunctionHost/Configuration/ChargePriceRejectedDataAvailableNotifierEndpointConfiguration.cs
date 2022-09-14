@@ -29,17 +29,17 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<IAvailableDataNotifier<AvailableChargeReceiptData, PriceRejectedEvent>,
-                AvailableDataNotifier<AvailableChargeReceiptData, PriceRejectedEvent>>();
-            serviceCollection.AddScoped<IAvailableDataFactory<AvailableChargeReceiptData, PriceRejectedEvent>,
+            serviceCollection.AddScoped<IAvailableDataNotifier<AvailableChargeReceiptData, ChargePriceOperationsRejectedEvent>,
+                AvailableDataNotifier<AvailableChargeReceiptData, ChargePriceOperationsRejectedEvent>>();
+            serviceCollection.AddScoped<IAvailableDataFactory<AvailableChargeReceiptData, ChargePriceOperationsRejectedEvent>,
                 AvailableChargePriceOperationRejectionsFactory>();
             serviceCollection.AddScoped<IAvailableChargePriceReceiptValidationErrorFactory,
                 AvailableChargePriceReceiptValidationErrorFactory>();
             serviceCollection.AddScoped<ICimValidationErrorTextFactory<ChargePriceOperationDto>,
                 ChargePriceCimValidationErrorTextFactory>();
-            serviceCollection.AddScoped<BundleSpecification<AvailableChargeReceiptData, PriceRejectedEvent>,
+            serviceCollection.AddScoped<BundleSpecification<AvailableChargeReceiptData, ChargePriceOperationsRejectedEvent>,
                 ChargePriceRejectionBundleSpecification>();
-            serviceCollection.AddScoped<JsonMessageDeserializer<PriceRejectedEvent>>();
+            serviceCollection.AddScoped<JsonMessageDeserializer<ChargePriceOperationsRejectedEvent>>();
         }
     }
 }

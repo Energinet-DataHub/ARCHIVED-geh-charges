@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Application.Messaging;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.TestHelpers;
@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         [Theory]
         [InlineAutoDomainData]
         public async Task HandleAsync_WhenCalledWithChargeCommand_ShouldDispatchReceivedEvent(
-            [Frozen] Mock<IInternalEventDispatcher> chargeEventPublisher,
+            [Frozen] Mock<IDomainEventDispatcher> chargeEventPublisher,
             ChargeInformationCommandHandler sut)
         {
             // Arrange
