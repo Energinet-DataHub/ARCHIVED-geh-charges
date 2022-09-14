@@ -25,8 +25,8 @@ namespace GreenEnergyHub.Charges.Application.Charges.Factories
                 chargePriceOperationDto.SenderProvidedChargeId,
                 chargePriceOperationDto.ChargeType,
                 chargePriceOperationDto.ChargeOwner,
-                chargePriceOperationDto.StartDateTime,
-                chargePriceOperationDto.EndDateTime.GetValueOrDefault(),
+                chargePriceOperationDto.pointsStartInterval,
+                chargePriceOperationDto.pointsEndInterval,
                 chargePriceOperationDto.Points);
         }
     }
