@@ -20,16 +20,19 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.InputVal
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation.InputValidation;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.Factories
 {
     public class ChargePriceOperationInputValidationRulesFactory : IInputValidationRulesFactory<ChargePriceOperationDto>
     {
         private readonly IZonedDateTimeService _zonedDateTimeService;
+        private readonly IClock _clock;
 
-        public ChargePriceOperationInputValidationRulesFactory(IZonedDateTimeService zonedDateTimeService)
+        public ChargePriceOperationInputValidationRulesFactory(IZonedDateTimeService zonedDateTimeService, IClock clock)
         {
             _zonedDateTimeService = zonedDateTimeService;
+            _clock = clock;
         }
 
         public IValidationRuleSet CreateRules(ChargePriceOperationDto operation, DocumentDto document)
@@ -56,6 +59,11 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.Inpu
                 CreateRuleContainer(new NumberOfPointsMatchTimeIntervalAndResolutionRule(operation), operation.OperationId),
                 CreateRuleContainer(new PriceListMustStartAndStopAtMidnightValidationRule(_zonedDateTimeService, operation), operation.OperationId),
                 CreateRuleContainer(new StartDateTimeRequiredValidationRule(operation), operation.OperationId),
+                CreateRuleContainer(new StartDateValidationRule(operation, _zonedDateTimeService, _clock), operation.OperationId),
+                CreateRuleContainer(new ResolutionSubscriptionValidationRule(operation), operation.OperationId),
+                CreateRuleContainer(new ResolutionTariffValidationRule(operation), operation.OperationId),
+                CreateRuleContainer(new ResolutionFeeValidationRule(operation), operation.OperationId),
+                CreateRuleContainer(new ResolutionIsRequiredRule(operation), operation.OperationId),
             };
 
             return rules;

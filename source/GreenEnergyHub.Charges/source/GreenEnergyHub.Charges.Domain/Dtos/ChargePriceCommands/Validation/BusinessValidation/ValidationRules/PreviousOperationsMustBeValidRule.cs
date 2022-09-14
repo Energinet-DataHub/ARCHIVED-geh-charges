@@ -14,11 +14,11 @@
 
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.BusinessValidation.ValidationRules
+namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.BusinessValidation.ValidationRules
 {
     public class PreviousOperationsMustBeValidRule : IValidationRuleWithExtendedData
     {
-        public PreviousOperationsMustBeValidRule(ChargeInformationOperationDto previousOperation)
+        public PreviousOperationsMustBeValidRule(ChargePriceOperationDto previousOperation)
         {
             TriggeredBy = previousOperation.OperationId;
         }

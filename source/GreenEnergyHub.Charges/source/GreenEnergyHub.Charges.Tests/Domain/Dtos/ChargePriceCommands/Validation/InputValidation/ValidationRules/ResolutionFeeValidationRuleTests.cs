@@ -14,7 +14,7 @@
 
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.InputValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
@@ -22,31 +22,30 @@ using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
+namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.ValidationRules
 {
     [UnitTest]
-    public class ResolutionTariffValidationRuleTests
+    public class ResolutionFeeValidationRuleTests
     {
         [Theory]
         [InlineAutoMoqData(Resolution.Unknown, true)]
         [InlineAutoMoqData(Resolution.P1D, true)]
-        [InlineAutoMoqData(Resolution.P1M, false)]
+        [InlineAutoMoqData(Resolution.P1M, true)]
         [InlineAutoMoqData(Resolution.PT1H, true)]
         [InlineAutoMoqData(Resolution.PT15M, true)]
-        [InlineAutoMoqData(-1, false)]
-        public void ResolutionTariffValidationRule_WithTariffType_EqualsExpectedResult(
+        public void ResolutionFeeValidationRule_WithTariffType_EqualsExpectedResult(
             Resolution resolution,
             bool expected,
-            ChargeInformationOperationDtoBuilder builder)
+            ChargePriceOperationDtoBuilder chargePriceOperationDtoBuilder)
         {
             // Arrange
-            var chargeOperationDto = builder
+            var chargeOperationDto = chargePriceOperationDtoBuilder
                 .WithChargeType(ChargeType.Tariff)
-                .WithResolution(resolution)
+                .WithPriceResolution(resolution)
                 .Build();
 
             // Act
-            var sut = new ResolutionTariffValidationRule(chargeOperationDto);
+            var sut = new ResolutionFeeValidationRule(chargeOperationDto);
 
             // Assert
             sut.IsValid.Should().Be(expected);
@@ -58,19 +57,19 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         [InlineAutoMoqData(Resolution.P1M, true)]
         [InlineAutoMoqData(Resolution.PT1H, true)]
         [InlineAutoMoqData(Resolution.PT15M, true)]
-        public void ResolutionTariffValidationRule_WithSubscriptionType_EqualsExpectedResult(
+        public void ResolutionFeeValidationRule_WithSubscriptionType_EqualsExpectedResult(
             Resolution resolution,
             bool expected,
-            ChargeInformationOperationDtoBuilder builder)
+            ChargePriceOperationDtoBuilder chargePriceOperationDtoBuilder)
         {
             // Arrange
-            var chargeOperationDto = builder
+            var chargeOperationDto = chargePriceOperationDtoBuilder
                 .WithChargeType(ChargeType.Subscription)
-                .WithResolution(resolution)
+                .WithPriceResolution(resolution)
                 .Build();
 
             // Act
-            var sut = new ResolutionTariffValidationRule(chargeOperationDto);
+            var sut = new ResolutionFeeValidationRule(chargeOperationDto);
 
             // Assert
             sut.IsValid.Should().Be(expected);
@@ -78,23 +77,23 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [InlineAutoMoqData(Resolution.Unknown, true)]
-        [InlineAutoMoqData(Resolution.P1D, true)]
+        [InlineAutoMoqData(Resolution.P1D, false)]
         [InlineAutoMoqData(Resolution.P1M, true)]
-        [InlineAutoMoqData(Resolution.PT1H, true)]
-        [InlineAutoMoqData(Resolution.PT15M, true)]
-        public void ResolutionTariffValidationRule_WithFeeType_EqualsExpectedResult(
+        [InlineAutoMoqData(Resolution.PT1H, false)]
+        [InlineAutoMoqData(Resolution.PT15M, false)]
+        public void ResolutionFeeValidationRule_WithFeeType_EqualsExpectedResult(
             Resolution resolution,
             bool expected,
-            ChargeInformationOperationDtoBuilder builder)
+            ChargePriceOperationDtoBuilder chargePriceOperationDtoBuilder)
         {
             // Arrange
-            var chargeOperationDto = builder
-                .WithChargeType(ChargeType.Fee)
-                .WithResolution(resolution)
-                .Build();
+            var chargeOperationDto = chargePriceOperationDtoBuilder
+                    .WithChargeType(ChargeType.Fee)
+                    .WithPriceResolution(resolution)
+                    .Build();
 
             // Act
-            var sut = new ResolutionTariffValidationRule(chargeOperationDto);
+            var sut = new ResolutionFeeValidationRule(chargeOperationDto);
 
             // Assert
             sut.IsValid.Should().Be(expected);
@@ -102,19 +101,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeInformationOperationDtoBuilder builder)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargePriceOperationDtoBuilder chargePriceOperationDtoBuilder)
         {
-            // Arrange
-            var chargeOperationDto = builder
-                .WithChargeType(ChargeType.Tariff)
-                .WithResolution(Resolution.Unknown)
-                .Build();
-
-            // Act
-            var sut = new ResolutionTariffValidationRule(chargeOperationDto);
-
-            // Assert
-            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ResolutionTariffValidation);
+            var chargeOperationDto = chargePriceOperationDtoBuilder.Build();
+            var sut = new ResolutionFeeValidationRule(chargeOperationDto);
+            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ResolutionFeeValidation);
         }
     }
 }

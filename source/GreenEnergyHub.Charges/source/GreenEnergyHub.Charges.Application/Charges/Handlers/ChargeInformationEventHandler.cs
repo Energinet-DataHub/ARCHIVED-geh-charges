@@ -113,7 +113,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             rejectionRules.AddRange(operationsToBeRejected.Skip(1)
                 .Select(subsequentOperation =>
                     new OperationValidationRuleContainer(
-                        new PreviousOperationsMustBeValidRule(informationOperation.OperationId), subsequentOperation.OperationId)));
+                        new PreviousOperationsMustBeValidRule(informationOperation), subsequentOperation.OperationId)));
         }
 
         private async Task HandleOperationAsync(ChargeInformationOperationDto informationOperation, Charge? charge)
