@@ -15,7 +15,7 @@
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Factories;
 using GreenEnergyHub.Charges.Application.Messaging;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
 {
@@ -32,9 +32,9 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
             _chargePricesUpdatedEventFactory = chargePricesUpdatedEventFactory;
         }
 
-        public async Task PublishChargePricesAsync(ChargeInformationOperationDto chargeInformationOperationDto)
+        public async Task PublishChargePricesAsync(ChargePriceOperationDto chargePriceOperationDto)
         {
-            var prices = _chargePricesUpdatedEventFactory.Create(chargeInformationOperationDto);
+            var prices = _chargePricesUpdatedEventFactory.Create(chargePriceOperationDto);
             await _messagePricesDispatcher.DispatchAsync(prices).ConfigureAwait(false);
         }
     }

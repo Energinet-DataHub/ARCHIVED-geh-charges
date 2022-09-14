@@ -13,9 +13,9 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
+using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Application.Charges.Factories;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
@@ -25,20 +25,20 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
-    internal static class ChargeIntegrationEventsPublisherEndpointConfiguration
+    internal static class ChargePriceIntegrationEventsPublisherEndpointConfiguration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<MessageExtractor<ChargeCommandAcceptedEvent>>();
-            serviceCollection.AddScoped<IChargeCreatedEventFactory, ChargeCreatedEventFactory>();
-            serviceCollection.AddScoped<IChargePublisher, ChargePublisher>();
-            serviceCollection.AddScoped<IChargeIntegrationEventsPublisher, ChargeIntegrationEventsPublisher>();
-            serviceCollection.AddScoped<JsonMessageDeserializer<ChargeCommandAcceptedEvent>>();
+            serviceCollection.AddScoped<MessageExtractor<PriceConfirmedEvent>>();
+            serviceCollection.AddScoped<IChargePricesUpdatedEventFactory, ChargePricesUpdatedEventFactory>();
+            serviceCollection.AddScoped<IChargePricesUpdatedPublisher, ChargePricesUpdatedPublisher>();
+            serviceCollection.AddScoped<IChargePriceIntegrationEventsPublisher, ChargePriceIntegrationEventsPublisher>();
+            serviceCollection.AddScoped<JsonMessageDeserializer<PriceConfirmedEvent>>();
 
             serviceCollection.AddMessagingProtobuf()
-                .AddExternalMessageDispatcher<ChargeCreatedEvent>(
+                .AddExternalMessageDispatcher<ChargePricesUpdatedEvent>(
                     EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString),
-                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeCreatedTopicName));
+                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargePricesUpdatedTopicName));
         }
     }
 }
