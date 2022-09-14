@@ -27,7 +27,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
 {
     [UnitTest]
-    public class ChargeTypeTariffTaxIndicatorValidationRuleTests
+    public class ChargeTypeTariffTaxIndicatorOnlyAllowedBySystemOperatorValidationRuleTests
     {
         [Theory]
         [InlineAutoMoqData(ChargeType.Fee)]
@@ -47,7 +47,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 .Build();
 
             // Act
-            var sut = new ChargeTypeTariffTaxIndicatorValidationRule(chargeOperation, senderMarketParticipant);
+            var sut = new ChargeTypeTariffTaxIndicatorOnlyAllowedBySystemOperatorValidationRule(chargeOperation, senderMarketParticipant);
 
             // Assert
             sut.IsValid.Should().Be(true);
@@ -72,7 +72,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                     .Build();
 
                 // Act
-                var sut = new ChargeTypeTariffTaxIndicatorValidationRule(chargeOperation, senderMarketParticipant);
+                var sut = new ChargeTypeTariffTaxIndicatorOnlyAllowedBySystemOperatorValidationRule(chargeOperation, senderMarketParticipant);
 
                 // Assert
                 sut.IsValid.Should().Be(expectedResult);
@@ -95,7 +95,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 .Build();
 
             // Act
-            var sut = new ChargeTypeTariffTaxIndicatorValidationRule(chargeOperation, senderMarketParticipant);
+            var sut = new ChargeTypeTariffTaxIndicatorOnlyAllowedBySystemOperatorValidationRule(chargeOperation, senderMarketParticipant);
 
             // Assert
             sut.IsValid.Should().Be(true);
@@ -116,7 +116,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 .Build();
 
             // Act
-            var sut = new ChargeTypeTariffTaxIndicatorValidationRule(chargeOperation, senderMarketParticipant);
+            var sut = new ChargeTypeTariffTaxIndicatorOnlyAllowedBySystemOperatorValidationRule(chargeOperation, senderMarketParticipant);
 
             // Assert
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChargeTypeTariffTaxIndicatorOnlyAllowedBySystemOperator);

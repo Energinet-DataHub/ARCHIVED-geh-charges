@@ -144,7 +144,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 typeof(TaxIndicatorMustBeFalseForFeeValidationRule),
                 typeof(TaxIndicatorMustBeFalseForSubscriptionValidationRule),
                 typeof(ChargeOwnerMustMatchSenderRule),
-                typeof(ChargeTypeTariffTaxIndicatorValidationRule),
+                typeof(ChargeTypeTariffTaxIndicatorOnlyAllowedBySystemOperatorValidationRule),
             };
             return expectedRules;
         }

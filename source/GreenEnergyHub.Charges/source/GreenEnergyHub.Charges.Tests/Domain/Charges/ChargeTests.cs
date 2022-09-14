@@ -371,7 +371,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             var sut = new ChargeBuilder()
                 .WithStartDate(InstantHelper.GetTodayPlusDaysAtMidnightUtc(0))
                 .WithPoints(points)
-                .WithMarketParticipantRole(MarketParticipantRole.SystemOperator)
+                .WithType(ChargeType.Fee)
                 .Build();
 
             // Act
@@ -479,7 +479,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             var sut = new ChargeBuilder()
                 .WithStartDate(InstantHelper.GetTodayPlusDaysAtMidnightUtc(0))
                 .WithPoints(points)
-                .WithMarketParticipantRole(MarketParticipantRole.SystemOperator)
+                .WithType(ChargeType.Fee)
                 .Build();
 
             // Act
@@ -488,7 +488,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
                 InstantHelper.GetTodayPlusDaysAtMidnightUtc(4),
                 newPrices,
                 Guid.NewGuid().ToString(),
-                MarketParticipantRole.SystemOperator);
+                MarketParticipantRole.GridAccessProvider);
 
             // Assert
             sut.Points.Count.Should().Be(5);
@@ -519,7 +519,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             var sut = new ChargeBuilder()
                 .WithStartDate(InstantHelper.GetTodayPlusDaysAtMidnightUtc(0))
                 .WithPoints(points)
-                .WithMarketParticipantRole(MarketParticipantRole.SystemOperator)
+                .WithType(ChargeType.Fee)
                 .Build();
 
             // Act
@@ -528,7 +528,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
                 InstantHelper.GetTodayPlusDaysAtMidnightUtc(7),
                 newPrices,
                 Guid.NewGuid().ToString(),
-                MarketParticipantRole.SystemOperator);
+                MarketParticipantRole.GridAccessProvider);
 
             // Assert
             sut.Points.Count.Should().Be(7);

@@ -18,12 +18,12 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.InputValidation.ValidationRules
 {
-    public class ChargeTypeTariffTaxIndicatorValidationRule : IValidationRule
+    public class ChargeTypeTariffTaxIndicatorOnlyAllowedBySystemOperatorValidationRule : IValidationRule
     {
         private readonly ChargeInformationOperationDto _chargeInformationOperationDto;
         private readonly MarketParticipantDto _senderMarketParticipantDto;
 
-        public ChargeTypeTariffTaxIndicatorValidationRule(ChargeInformationOperationDto chargeInformationOperationDto, MarketParticipantDto senderMarketParticipantDto)
+        public ChargeTypeTariffTaxIndicatorOnlyAllowedBySystemOperatorValidationRule(ChargeInformationOperationDto chargeInformationOperationDto, MarketParticipantDto senderMarketParticipantDto)
         {
             _chargeInformationOperationDto = chargeInformationOperationDto;
             _senderMarketParticipantDto = senderMarketParticipantDto;
