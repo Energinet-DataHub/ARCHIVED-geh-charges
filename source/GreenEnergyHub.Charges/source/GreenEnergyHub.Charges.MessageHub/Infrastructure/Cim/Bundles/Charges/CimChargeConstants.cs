@@ -32,8 +32,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.Charges
 
         internal const string MarketActivityRecordId = "mRID";
 
-        internal const string SnapshotDateTime = "snapshot_DateAndOrTime.dateTime";
-
         internal const string ChargeGroup = "ChargeGroup";
 
         internal const string ChargeTypeElement = "ChargeType";
