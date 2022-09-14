@@ -63,6 +63,8 @@ limitations under the License.
     </ItemGroup>
 
     <ItemGroup>
+      <EmbeddedResource Include="TestFiles\BundleMixOfChargePriceOperations.xml" />
+      <EmbeddedResource Include="TestFiles\CreateTariffsWithPricesBundle.xml" />
       <EmbeddedResource Include="TestFiles\Valid_CIM_ChargeLink.xml" />
       <EmbeddedResource Include="TestFiles\Valid_CIM_ChargeLink_Bundle.xml" />
       <EmbeddedResource Include="TestFiles\Valid_CIM_ChargeLink_WithUnusedCimContent.xml" />

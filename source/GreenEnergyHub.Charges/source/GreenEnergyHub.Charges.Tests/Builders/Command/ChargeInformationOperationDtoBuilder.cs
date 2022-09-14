@@ -35,10 +35,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         private string _chargeName;
         private ChargeType _chargeType;
         private Resolution _resolution;
-        private Resolution _priceResolution;
         private string _operationId;
-        private Instant? _pointsStartInterval;
-        private Instant? _pointsEndInterval;
 
         public ChargeInformationOperationDtoBuilder()
         {
@@ -54,9 +51,6 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             _chargeType = ChargeType.Fee;
             _points = new List<Point>();
             _resolution = Resolution.PT1H;
-            _priceResolution = Resolution.PT1H;
-            _pointsStartInterval = _startDateTime;
-            _pointsEndInterval = _endDateTime;
         }
 
         public ChargeInformationOperationDtoBuilder WithDescription(string description)
@@ -125,45 +119,9 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             return this;
         }
 
-        public ChargeInformationOperationDtoBuilder WithPoints(List<Point> points)
-        {
-            _points = points;
-            return this;
-        }
-
-        public ChargeInformationOperationDtoBuilder WithPoint(decimal price)
-        {
-            _points.Add(new Point(price, _startDateTime));
-            return this;
-        }
-
-        public ChargeInformationOperationDtoBuilder WithPointsInterval(Instant startTime, Instant endTime)
-        {
-            _pointsStartInterval = startTime;
-            _pointsEndInterval = endTime;
-            return this;
-        }
-
-        public ChargeInformationOperationDtoBuilder WithPointWithXNumberOfPrices(int numberOfPrices)
-        {
-            for (var i = 0; i < numberOfPrices; i++)
-            {
-                var point = new Point(i * 10, GetTimeForPoint(_startDateTime, i));
-                _points.Add(point);
-            }
-
-            return this;
-        }
-
         public ChargeInformationOperationDtoBuilder WithResolution(Resolution resolution)
         {
             _resolution = resolution;
-            return this;
-        }
-
-        public ChargeInformationOperationDtoBuilder WithPriceResolution(Resolution priceResolution)
-        {
-            _priceResolution = priceResolution;
             return this;
         }
 
@@ -177,28 +135,11 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
                 _description,
                 _owner,
                 _resolution,
-                _priceResolution,
                 _taxIndicator,
                 _transparentInvoicing,
                 _vatClassification,
                 _startDateTime,
-                _endDateTime,
-                _pointsStartInterval,
-                _pointsEndInterval,
-                _points);
-        }
-
-        private Instant GetTimeForPoint(Instant startTime, int index)
-        {
-            return _priceResolution switch
-            {
-                Resolution.Unknown => SystemClock.Instance.GetCurrentInstant(),
-                Resolution.PT15M => startTime.Plus(Duration.FromMinutes(15) * (index + 1)),
-                Resolution.PT1H => startTime.Plus(Duration.FromHours(1) * (index + 1)),
-                Resolution.P1D => startTime.Plus(Duration.FromDays(1) * (index + 1)),
-                Resolution.P1M => startTime.Plus(Duration.FromDays(30) * (index + 1)),
-                _ => throw new ArgumentOutOfRangeException(),
-            };
+                _endDateTime);
         }
     }
 }
