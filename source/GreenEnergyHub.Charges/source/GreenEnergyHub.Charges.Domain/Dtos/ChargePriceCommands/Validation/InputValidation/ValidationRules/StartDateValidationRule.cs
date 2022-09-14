@@ -16,7 +16,7 @@ using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.InputValidation.ValidationRules
+namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.ValidationRules
 {
     public class StartDateValidationRule : IValidationRule
     {
@@ -28,11 +28,11 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
         private readonly Instant _periodEnd;
 
         public StartDateValidationRule(
-            ChargeInformationOperationDto chargeInformationOperationDto,
+            ChargePriceOperationDto chargePriceOperationDto,
             IZonedDateTimeService zonedDateTimeService,
             IClock clock)
         {
-            _validityStartDate = chargeInformationOperationDto.StartDateTime;
+            _validityStartDate = chargePriceOperationDto.StartDateTime;
             var today = zonedDateTimeService.GetZonedDateTime(clock.GetCurrentInstant()).Date;
             _periodStart = CalculatePeriodPoint(LowerTimeLimitInDays, zonedDateTimeService, today);
             _periodEnd = CalculatePeriodPoint(UpperTimeLimitInDays, zonedDateTimeService, today);
