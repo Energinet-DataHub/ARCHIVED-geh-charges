@@ -340,7 +340,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             }
 
             [Fact]
-            public async Task Given_ChargePriceMessageWithChargeInformationData_WhenPosted_ThenChargePriceDataAvailableIsNotified()
+            public async Task Given_ChargePriceMessageWithChargeInformationData_WhenPosted_ThenChargePriceDataAvailableNotificationToGridAccessProviderContainsMandatoryChargeInformationOnly()
             {
                 // Arrange
                 var (request, correlationId) = Fixture.AsSystemOperator.PrepareHttpPostRequestWithAuthorization(
@@ -354,8 +354,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
                 using var assertionScope = new AssertionScope();
                 var peekResult = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 2);
-                var notification = peekResult.First(s => s.Contains("NotifyPriceList_MarketDocument"));
+                var notification = peekResult.First(s =>
+                    s.Contains("NotifyPriceList_MarketDocument")
+                    && s.Contains("<cim:receiver_MarketParticipant.marketRole.type>DDM"));
                 notification.Should().Contain("<cim:process.processType>D08</cim:process.processType>");
+                notification.Should().Contain("<cim:chargeTypeOwner_MarketParticipant.mRID codingScheme=\"A10\">5790000432752");
+                notification.Should().Contain("<cim:type>D03</cim:type>");
+                notification.Should().Contain("<cim:mRID>EA-001</cim:mRID>");
+                notification.Should().Contain("<cim:effectiveDate>");
                 notification.Should().NotContain("<cim:name>");
                 notification.Should().NotContain("<cim:description>");
                 notification.Should().NotContain("<cim:VATPayer>");
