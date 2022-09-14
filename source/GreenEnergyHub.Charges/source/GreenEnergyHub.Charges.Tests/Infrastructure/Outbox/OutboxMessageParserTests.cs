@@ -26,12 +26,12 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Outbox
     public class OutboxMessageParserTests
     {
         [Fact]
-        public void Parse_PriceRejectedEventType_PriceRejectedEventReturned()
+        public void Parse_ChargePriceOperationsRejectedEventType_ChargePriceOperationsRejectedEventReturned()
         {
             // Arrange
             var jsonSerializer = new JsonSerializer();
-            var rejectedEvent = new PriceRejectedEventBuilder().Build();
-            var messageTypeString = typeof(PriceRejectedEvent).FullName;
+            var rejectedEvent = new ChargePriceOperationsRejectedEventBuilder().Build();
+            var messageTypeString = typeof(ChargePriceOperationsRejectedEvent).FullName;
             var serializedEvent = jsonSerializer.Serialize(rejectedEvent);
             var sut = new OutboxMessageParser(jsonSerializer);
 
@@ -39,16 +39,16 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Outbox
             var actual = sut.Parse(messageTypeString!, serializedEvent);
 
             // Assert
-            actual.Should().BeOfType(typeof(PriceRejectedEvent));
+            actual.Should().BeOfType(typeof(ChargePriceOperationsRejectedEvent));
         }
 
         [Fact]
-        public void Parse_PriceConfirmedEventType_PriceConfirmedEventReturned()
+        public void Parse_ChargePriceOperationsConfirmedEventType_ChargePriceOperationsConfirmedEventReturned()
         {
             // Arrange
             var jsonSerializer = new JsonSerializer();
-            var confirmedEvent = new PriceConfirmedEventBuilder().Build();
-            var messageTypeString = typeof(PriceConfirmedEvent).FullName;
+            var confirmedEvent = new ChargePriceOperationsConfirmedEventBuilder().Build();
+            var messageTypeString = typeof(ChargePriceOperationsConfirmedEvent).FullName;
             var serializedEvent = jsonSerializer.Serialize(confirmedEvent);
             var sut = new OutboxMessageParser(jsonSerializer);
 
@@ -56,7 +56,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Outbox
             var actual = sut.Parse(messageTypeString!, serializedEvent);
 
             // Assert
-            actual.Should().BeOfType(typeof(PriceConfirmedEvent));
+            actual.Should().BeOfType(typeof(ChargePriceOperationsConfirmedEvent));
         }
     }
 }

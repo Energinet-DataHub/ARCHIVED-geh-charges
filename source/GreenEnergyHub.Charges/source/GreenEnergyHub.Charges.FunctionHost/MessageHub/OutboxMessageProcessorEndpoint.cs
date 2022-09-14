@@ -31,7 +31,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
         private readonly IOutboxMessageParser _outboxMessageParser;
         private readonly IClock _clock;
         private readonly ICorrelationContext _correlationContext;
-        private readonly IInternalEventDispatcher _internalEventDispatcher;
+        private readonly IDomainEventDispatcher _domainEventDispatcher;
         private readonly IUnitOfWork _unitOfWork;
 
         public OutboxMessageProcessorEndpoint(
@@ -39,14 +39,14 @@ namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
             IOutboxMessageParser outboxMessageParser,
             IClock clock,
             ICorrelationContext correlationContext,
-            IInternalEventDispatcher internalEventDispatcher,
+            IDomainEventDispatcher domainEventDispatcher,
             IUnitOfWork unitOfWork)
         {
             _outboxMessageRepository = outboxMessageRepository;
             _outboxMessageParser = outboxMessageParser;
             _clock = clock;
             _correlationContext = correlationContext;
-            _internalEventDispatcher = internalEventDispatcher;
+            _domainEventDispatcher = domainEventDispatcher;
             _unitOfWork = unitOfWork;
         }
 
@@ -57,9 +57,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
 
             while ((outboxMessage = _outboxMessageRepository.GetNext()) != null)
             {
-                var internalEvent = _outboxMessageParser.Parse(outboxMessage.Type, outboxMessage.Data);
+                var domainEvent = _outboxMessageParser.Parse(outboxMessage.Type, outboxMessage.Data);
                 _correlationContext.SetId(outboxMessage.CorrelationId);
-                await _internalEventDispatcher.DispatchAsync(internalEvent).ConfigureAwait(false);
+                await _domainEventDispatcher.DispatchAsync(domainEvent).ConfigureAwait(false);
                 outboxMessage.SetProcessed(_clock.GetCurrentInstant());
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
             }

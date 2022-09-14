@@ -12,22 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
-using NodaTime;
-
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents
+namespace GreenEnergyHub.Charges.Application.Common.Services
 {
-    public class ChargeCommandAcceptedEvent : InternalEvent
+    /// <summary>
+    /// Service for publishing domain events
+    /// </summary>
+    public interface IDomainEventPublisher
     {
-        public ChargeCommandAcceptedEvent(
-            Instant publishedTime,
-            ChargeInformationCommand command)
-            : base(publishedTime)
-        {
-            Command = command;
-        }
-
-        public ChargeInformationCommand Command { get; }
+        /// <summary>
+        /// Publish domain event
+        /// </summary>
+        /// <param name="domainEvent"></param>
+        public void Publish<T>(T domainEvent);
     }
 }

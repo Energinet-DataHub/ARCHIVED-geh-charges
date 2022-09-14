@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
     {
         [Theory]
         [InlineAutoMoqData]
-        public async Task CreateAsync_WhenCalledWithChargePriceConfirmedEvent_ReturnsAvailableData(
+        public async Task CreateAsync_WhenCalledWithChargePriceOperationsConfirmedEvent_ReturnsAvailableData(
             TestMeteringPointAdministrator meteringPointAdministrator,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
@@ -56,7 +56,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
                 marketParticipantRepository, meteringPointAdministrator, document.Sender, actorId);
 
             var chargePriceOperationsConfirmedEvent =
-                new PriceConfirmedEvent(now, document, chargePriceOperations);
+                new ChargePriceOperationsConfirmedEvent(now, document, chargePriceOperations);
 
             // Act
             var actualList = await sut.CreateAsync(chargePriceOperationsConfirmedEvent);

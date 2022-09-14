@@ -17,9 +17,9 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.Messages.Command
 {
-    public abstract class ChargeOperation
+    public abstract class ChargeOperationDto
     {
-        protected ChargeOperation(
+        protected ChargeOperationDto(
             string operationId,
             ChargeType chargeType,
             string senderProvidedChargeId,

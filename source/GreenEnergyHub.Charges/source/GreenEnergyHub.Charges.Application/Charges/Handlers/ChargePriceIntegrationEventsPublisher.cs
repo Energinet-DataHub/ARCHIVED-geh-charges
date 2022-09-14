@@ -28,11 +28,11 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             _chargePricesUpdatedPublisher = chargePricesUpdatedPublisher;
         }
 
-        public async Task PublishAsync(PriceConfirmedEvent priceConfirmedEvent)
+        public async Task PublishAsync(ChargePriceOperationsConfirmedEvent chargePriceOperationsConfirmedEvent)
         {
-            ArgumentNullException.ThrowIfNull(priceConfirmedEvent);
+            ArgumentNullException.ThrowIfNull(chargePriceOperationsConfirmedEvent);
 
-            foreach (var chargePriceOperationDto in priceConfirmedEvent.Operations)
+            foreach (var chargePriceOperationDto in chargePriceOperationsConfirmedEvent.Operations)
             {
                 await _chargePricesUpdatedPublisher
                     .PublishChargePricesAsync(chargePriceOperationDto)

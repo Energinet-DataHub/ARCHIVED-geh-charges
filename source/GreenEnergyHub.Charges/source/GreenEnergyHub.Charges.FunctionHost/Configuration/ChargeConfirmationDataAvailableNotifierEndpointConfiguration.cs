@@ -28,18 +28,18 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
             serviceCollection
-                .AddScoped<IAvailableDataNotifier<AvailableChargeReceiptData, ChargeCommandAcceptedEvent>,
-                    AvailableDataNotifier<AvailableChargeReceiptData, ChargeCommandAcceptedEvent>>();
+                .AddScoped<IAvailableDataNotifier<AvailableChargeReceiptData, ChargeInformationCommandAcceptedEvent>,
+                    AvailableDataNotifier<AvailableChargeReceiptData, ChargeInformationCommandAcceptedEvent>>();
             serviceCollection
-                .AddScoped<IAvailableDataFactory<AvailableChargeReceiptData, ChargeCommandAcceptedEvent>,
+                .AddScoped<IAvailableDataFactory<AvailableChargeReceiptData, ChargeInformationCommandAcceptedEvent>,
                     AvailableChargeReceiptDataFactory>();
             serviceCollection
                 .AddScoped<IAvailableDataNotificationFactory<AvailableChargeReceiptData>,
                     AvailableDataNotificationFactory<AvailableChargeReceiptData>>();
             serviceCollection
-                .AddScoped<BundleSpecification<AvailableChargeReceiptData, ChargeCommandAcceptedEvent>,
+                .AddScoped<BundleSpecification<AvailableChargeReceiptData, ChargeInformationCommandAcceptedEvent>,
                     ChargeConfirmationBundleSpecification>();
-            serviceCollection.AddScoped<JsonMessageDeserializer<ChargeCommandAcceptedEvent>>();
+            serviceCollection.AddScoped<JsonMessageDeserializer<ChargeInformationCommandAcceptedEvent>>();
         }
     }
 }

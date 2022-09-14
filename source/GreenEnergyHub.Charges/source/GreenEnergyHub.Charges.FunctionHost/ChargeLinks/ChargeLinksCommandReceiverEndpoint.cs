@@ -23,7 +23,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
 {
     public class ChargeLinksCommandReceiverEndpoint
     {
-        public const string FunctionName = nameof(ChargeLinksCommandReceiverEndpoint);
+        private const string FunctionName = nameof(ChargeLinksCommandReceiverEndpoint);
         private readonly JsonMessageDeserializer<ChargeLinksReceivedEvent> _deserializer;
         private readonly IChargeLinksReceivedEventHandler _chargeLinksReceivedEventHandler;
 

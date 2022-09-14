@@ -22,12 +22,12 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableData
     /// Factory for creating CIM error text of charge rejections.
     /// </summary>
     public interface ICimValidationErrorTextFactory<in TOperation>
-        where TOperation : ChargeOperation
+        where TOperation : ChargeOperationDto
     {
         /// <summary>
         /// Creates an error text by replacing occurrences of the
         /// placeholder texts with values from the TOperation/>.
         /// </summary>
-        string Create(ValidationError validationError, DocumentDto document, TOperation operation);
+        string Create(ValidationError validationError, DocumentDto document, TOperation operationDto);
     }
 }

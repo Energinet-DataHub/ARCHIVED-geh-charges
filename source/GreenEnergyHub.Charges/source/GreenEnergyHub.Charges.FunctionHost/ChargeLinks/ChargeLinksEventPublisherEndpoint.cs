@@ -27,7 +27,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         /// The name of the function.
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
-        public const string FunctionName = nameof(ChargeLinksEventPublisherEndpoint);
+        private const string FunctionName = nameof(ChargeLinksEventPublisherEndpoint);
         private readonly JsonMessageDeserializer<ChargeLinksAcceptedEvent> _deserializer;
         private readonly IChargeLinkEventPublishHandler _chargeLinkEventPublishHandler;
 
