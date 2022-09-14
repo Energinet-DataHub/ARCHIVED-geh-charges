@@ -26,7 +26,7 @@ module "sbts_charges_charge_command_received" {
   topic_id            = module.sbt_charges_domain_events.id
   max_delivery_count  = 1
   correlation_filter  = {
-    label = "ChargeCommandReceivedEvent"
+    label = "ChargeInformationCommandReceivedEvent"
   }
 }
 
