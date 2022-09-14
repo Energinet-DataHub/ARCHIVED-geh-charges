@@ -149,7 +149,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
                     .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.ChargesDomainEventTopicName)
 
                 .AddSubscription(ChargesServiceBusResourceNames.ChargeCommandReceivedSubscriptionName)
-                    .AddSubjectFilter(nameof(ChargeCommandReceivedEvent))
+                    .AddSubjectFilter(nameof(ChargeInformationCommandReceivedEvent))
                     .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargeCommandReceivedSubscriptionName)
 
                 .AddSubscription(ChargesServiceBusResourceNames.ChargeLinksAcceptedDataAvailableSubscriptionName)
@@ -195,6 +195,10 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
                 .AddSubscription(ChargesServiceBusResourceNames.ChargePriceConfirmedDataAvailableSubscriptionName)
                     .AddSubjectFilter(nameof(PriceConfirmedEvent))
                     .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargePriceConfirmedDataAvailableSubscriptionName)
+
+                .AddSubscription(ChargesServiceBusResourceNames.ChargePriceConfirmedPublishSubscriptionName)
+                    .AddSubjectFilter(nameof(PriceConfirmedEvent))
+                    .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargePriceConfirmedPublishSubscriptionName)
 
                 .AddSubscription(ChargesServiceBusResourceNames.ChargeLinksCommandRejectedSubscriptionName)
                     .AddSubjectFilter(nameof(ChargeLinksRejectedEvent))
@@ -245,7 +249,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             ChargeCreatedListener = new ServiceBusTestListener(chargeCreatedListener);
 
             var chargePricesUpdatedTopic = await ServiceBusResourceProvider
-                .BuildTopic(ChargesServiceBusResourceNames.ChargePricesUpdatedTopicKey).SetEnvironmentVariableToTopicName(EnvironmentSettingNames.ChargePricesUpdatedTopicName)
+                .BuildTopic(ChargesServiceBusResourceNames.ChargePricesUpdatedTopicKey)
+                .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.ChargePricesUpdatedTopicName)
                 .AddSubscription(ChargesServiceBusResourceNames.ChargePricesUpdatedSubscriptionName)
                 .CreateAsync();
 

@@ -31,7 +31,6 @@ using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared;
 using GreenEnergyHub.TestHelpers;
-using Microsoft.Extensions.Logging;
 using Moq;
 using NodaTime;
 using Xunit;
@@ -75,7 +74,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
                 marketParticipantRepository, meteringPointAdministrator, chargeLinksCommand.Document.Sender, actorId);
 
             SetupAvailableChargeLinksReceiptValidationErrorFactory(
-                availableChargeLinksReceiptValidationErrorFactory, chargeLinksCommand);
+                availableChargeLinksReceiptValidationErrorFactory);
 
             // Act
             var actualList = await sut.CreateAsync(rejectedEvent);
@@ -131,8 +130,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
         }
 
         private static void SetupAvailableChargeLinksReceiptValidationErrorFactory(
-            Mock<IAvailableChargeLinksReceiptValidationErrorFactory> availableChargeLinksReceiptValidationErrorFactory,
-            ChargeLinksCommand chargeLinksCommand)
+            Mock<IAvailableChargeLinksReceiptValidationErrorFactory> availableChargeLinksReceiptValidationErrorFactory)
         {
             // fake error code and text
             availableChargeLinksReceiptValidationErrorFactory

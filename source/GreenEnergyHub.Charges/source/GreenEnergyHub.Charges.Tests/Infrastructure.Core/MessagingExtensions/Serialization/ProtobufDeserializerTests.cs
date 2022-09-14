@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using Energinet.DataHub.Core.Messaging.Protobuf;
@@ -33,7 +32,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions.S
         [Theory]
         [InlineAutoDomainData]
         public void Ctor_WhenCalledWithNullMapper_ThrowsException(
-            [NotNull] ProtobufParser<IMessage> parser)
+            ProtobufParser<IMessage> parser)
         {
             // Arrange
             ProtobufInboundMapperFactory? factory = null;
@@ -45,7 +44,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions.S
         [Theory]
         [InlineAutoDomainData]
         public void Ctor_WhenCalledWithNullParser_ThrowsException(
-            [NotNull]ProtobufInboundMapperFactory factory)
+            ProtobufInboundMapperFactory factory)
         {
             // Arrange
             ProtobufParser<IMessage>? parser = null;
@@ -57,13 +56,13 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions.S
         [Theory]
         [InlineAutoDomainData]
         public async Task FromBytesAsync_WhenCalled_DeserializeMessage(
-            [Frozen] [NotNull] Mock<IServiceProvider> serviceProvider,
-            [Frozen] [NotNull] Mock<ProtobufParser<IMessage>> parser,
-            [NotNull] Mock<ProtobufInboundMapper> mapper,
+            [Frozen] Mock<IServiceProvider> serviceProvider,
+            [Frozen] Mock<ProtobufParser<IMessage>> parser,
+            Mock<ProtobufInboundMapper> mapper,
             byte[] data,
             IMessage message,
             IInboundMessage expected,
-            [NotNull] ProtobufDeserializer<IMessage> sut)
+            ProtobufDeserializer<IMessage> sut)
         {
             // Arrange
             parser.Setup(

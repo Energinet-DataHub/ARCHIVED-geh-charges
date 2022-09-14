@@ -13,38 +13,39 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using Microsoft.Azure.Functions.Worker;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Charges
 {
-    public class ChargeCommandReceiverEndpoint
+    public class ChargePriceIntegrationEventsPublisherEndpoint
     {
-        public const string FunctionName = nameof(ChargeCommandReceiverEndpoint);
-        private readonly IChargeCommandReceivedEventHandler _chargeCommandReceivedEventHandler;
-        private readonly JsonMessageDeserializer<ChargeInformationCommandReceivedEvent> _deserializer;
+        public const string FunctionName = nameof(ChargePriceIntegrationEventsPublisherEndpoint);
+        private readonly JsonMessageDeserializer<PriceConfirmedEvent> _deserializer;
+        private readonly IChargePriceIntegrationEventsPublisher _chargePriceIntegrationEventsPublisher;
 
-        public ChargeCommandReceiverEndpoint(
-            IChargeCommandReceivedEventHandler chargeCommandReceivedEventHandler,
-            JsonMessageDeserializer<ChargeInformationCommandReceivedEvent> deserializer)
+        public ChargePriceIntegrationEventsPublisherEndpoint(
+            JsonMessageDeserializer<PriceConfirmedEvent> deserializer,
+            IChargePriceIntegrationEventsPublisher chargePriceIntegrationEventsPublisher)
         {
-            _chargeCommandReceivedEventHandler = chargeCommandReceivedEventHandler;
             _deserializer = deserializer;
+            _chargePriceIntegrationEventsPublisher = chargePriceIntegrationEventsPublisher;
         }
 
         [Function(FunctionName)]
         public async Task RunAsync(
             [ServiceBusTrigger(
                 "%" + EnvironmentSettingNames.ChargesDomainEventTopicName + "%",
-                "%" + EnvironmentSettingNames.ChargeCommandReceivedSubscriptionName + "%",
+                "%" + EnvironmentSettingNames.ChargePriceConfirmedPublishSubscriptionName + "%",
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             byte[] message)
         {
-            var receivedEvent = (ChargeInformationCommandReceivedEvent)await _deserializer.FromBytesAsync(message).ConfigureAwait(false);
-            await _chargeCommandReceivedEventHandler.HandleAsync(receivedEvent).ConfigureAwait(false);
+            var priceConfirmedEvent = (PriceConfirmedEvent)await _deserializer
+                .FromBytesAsync(message).ConfigureAwait(false);
+            await _chargePriceIntegrationEventsPublisher.PublishAsync(priceConfirmedEvent).ConfigureAwait(false);
         }
     }
 }

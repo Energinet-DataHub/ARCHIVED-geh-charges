@@ -13,19 +13,20 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
+using GreenEnergyHub.Charges.Application.Charges.Events;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
     /// <summary>
-    /// Handles events for charges with BusinessReasonCode D18
+    /// Integration events to other domains when accepted charge prices (Business reason code: D08) has been ingested,
+    /// handled and persisted.
     /// </summary>
-    public interface IChargeInformationEventHandler
+    public interface IChargePriceIntegrationEventsPublisher
     {
         /// <summary>
-        /// Handles received event as a chargeinformation event
+        /// Publish integration event to the service bus
         /// </summary>
-        /// <param name="chargeInformationCommandReceivedEvent"></param>
-        Task HandleAsync(ChargeInformationCommandReceivedEvent chargeInformationCommandReceivedEvent);
+        /// <param name="priceConfirmedEvent"></param>
+        Task PublishAsync(PriceConfirmedEvent priceConfirmedEvent);
     }
 }

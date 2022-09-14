@@ -14,12 +14,7 @@
 
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Core.Messaging.Transport;
-using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Application.Messaging;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
-using GreenEnergyHub.Charges.Infrastructure.Core.InternalMessaging;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
-using GreenEnergyHub.Charges.Infrastructure.Core.Registration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration

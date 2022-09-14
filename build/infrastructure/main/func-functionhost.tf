@@ -60,6 +60,7 @@ module "func_functionhost" {
     CHARGE_PRICE_REJECTED_SUBSCRIPTION_NAME                         = "sbtsub-charges-charge-price-rejected"
     CHARGE_PRICE_CONFIRMED_SUBSCRIPTION_NAME                        = "sbtsub-charges-charge-price-confirmed"
     CHARGE_PRICE_CONFIRMED_DATAAVAILABLE_SUBSCRIPTION_NAME          = "sbtsub-charges-charge-price-confirmed-dataavail"
+    CHARGE_PRICE_CONFIRMED_PUBLISH_SUBSCRIPTION_NAME                = "sbtsub-charges-charge-price-confirmed-publish"
     DEFAULT_CHARGE_LINKS_DATAAVAILABLE_SUBSCRIPTION_NAME            = "sbtsub-charges-default-charge-links-dataavailable"
 
     # Integration

@@ -84,7 +84,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
             // Act
             Action act = () =>
             {
-                var notUsed = new NumberOfPointsMatchTimeIntervalAndResolutionRule(dto);
+                _ = new NumberOfPointsMatchTimeIntervalAndResolutionRule(dto);
             };
 
             // Assert
@@ -101,7 +101,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
             // Act
             Action act = () =>
             {
-                var notUsed = new NumberOfPointsMatchTimeIntervalAndResolutionRule(dto);
+                _ = new NumberOfPointsMatchTimeIntervalAndResolutionRule(dto);
             };
 
             // Assert

@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
 
@@ -21,7 +20,7 @@ namespace GreenEnergyHub.Charges.TestCore
 {
     public static class EmbeddedStreamHelper
     {
-        public static Stream GetInputStream([NotNull] Assembly assembly, string streamPath)
+        public static Stream GetInputStream(Assembly assembly, string streamPath)
         {
             var result = assembly.GetManifestResourceStream(streamPath);
             if (result == null)
