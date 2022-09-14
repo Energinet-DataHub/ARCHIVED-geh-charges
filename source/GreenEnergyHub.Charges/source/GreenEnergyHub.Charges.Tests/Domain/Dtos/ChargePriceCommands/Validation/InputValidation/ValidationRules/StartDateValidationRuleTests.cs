@@ -14,7 +14,7 @@
 
 using AutoFixture.Xunit2;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.InputValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
@@ -26,7 +26,7 @@ using NodaTime.Testing;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.BusinessValidation.ValidationRules
+namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.ValidationRules
 {
     [UnitTest]
     public class StartDateValidationRuleTests
@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
         public void IsValid_WhenStartDateIsWithinInterval_IsTrue(
             int daysOffset,
             bool expected,
-            [Frozen] ChargeInformationOperationDtoBuilder builder)
+            [Frozen] ChargePriceOperationDtoBuilder builder)
         {
             // Arrange
             var effectiveDate = InstantHelper.GetTodayPlusDaysAtMidnightUtc(daysOffset);
@@ -59,7 +59,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Bus
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeInformationOperationDtoBuilder builder, IClock clock)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargePriceOperationDtoBuilder builder, IClock clock)
         {
             // Arrange
             var chargeOperationDto = builder.WithStartDateTime(InstantHelper.GetEndDefault()).Build();

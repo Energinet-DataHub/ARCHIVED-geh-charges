@@ -63,7 +63,12 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
                 CreateRuleContainer(new ChargeDescriptionHasMaximumLengthRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
                 CreateRuleContainer(new VatClassificationValidationRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
                 CreateRuleContainer(new TransparentInvoicingIsNotAllowedForFeeValidationRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
-                CreateRuleContainer(new StartDateValidationRule(chargeInformationOperationDto.StartDateTime, _zonedDateTimeService, _clock), chargeInformationOperationDto.OperationId),
+                CreateRuleContainer(
+                    new StartDateValidationRule(
+                        chargeInformationOperationDto,
+                        _zonedDateTimeService,
+                        _clock),
+                    chargeInformationOperationDto.OperationId),
                 CreateRuleContainer(new ChargeNameRequiredRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
                 CreateRuleContainer(new ChargeDescriptionRequiredRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
                 CreateRuleContainer(new ResolutionIsRequiredRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),

@@ -22,6 +22,7 @@ using FluentAssertions;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.ChargeLinks;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.SystemTests.Fixtures;
+using GreenEnergyHub.Charges.TestCore.TestHelpers;
 using NodaTime;
 using Xunit;
 

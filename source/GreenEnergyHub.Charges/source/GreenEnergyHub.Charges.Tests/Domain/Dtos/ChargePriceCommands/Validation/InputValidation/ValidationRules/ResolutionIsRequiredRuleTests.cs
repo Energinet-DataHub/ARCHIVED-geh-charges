@@ -12,15 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.InputValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.ValidationRules;
+using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
+namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.ValidationRules
 {
     [UnitTest]
     public class ResolutionIsRequiredRuleTests
@@ -32,12 +32,12 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         [InlineAutoMoqData(Resolution.P1D, true)]
         [InlineAutoMoqData(Resolution.P1M, true)]
         public void IsValid_WhenCalled_ShouldReturnExpectedValue(
-        Resolution resolution,
-        bool expectedResult,
-        ChargeInformationOperationDtoBuilder builder)
+            Resolution resolution,
+            bool expectedResult,
+            ChargePriceOperationDtoBuilder builder)
         {
             // Arrange
-            var dto = builder.WithResolution(resolution).Build();
+            var dto = builder.WithPriceResolution(resolution).Build();
 
             // Act
             var sut = new ResolutionIsRequiredRule(dto);

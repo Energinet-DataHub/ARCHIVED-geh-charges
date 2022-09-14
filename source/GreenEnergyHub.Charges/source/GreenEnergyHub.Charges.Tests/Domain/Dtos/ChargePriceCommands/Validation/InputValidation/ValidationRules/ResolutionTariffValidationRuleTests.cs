@@ -14,7 +14,7 @@
 
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.InputValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
@@ -22,54 +22,31 @@ using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
+namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.ValidationRules
 {
     [UnitTest]
-    public class ResolutionSubscriptionValidationRuleTests
+    public class ResolutionTariffValidationRuleTests
     {
         [Theory]
         [InlineAutoMoqData(Resolution.Unknown, true)]
         [InlineAutoMoqData(Resolution.P1D, true)]
-        [InlineAutoMoqData(Resolution.P1M, true)]
+        [InlineAutoMoqData(Resolution.P1M, false)]
         [InlineAutoMoqData(Resolution.PT1H, true)]
         [InlineAutoMoqData(Resolution.PT15M, true)]
-        public void ResolutionSubscriptionValidationRule_WithTariffType_EqualsExpectedResult(
+        [InlineAutoMoqData(-1, false)]
+        public void ResolutionTariffValidationRule_WithTariffType_EqualsExpectedResult(
             Resolution resolution,
             bool expected,
-            ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder)
+            ChargePriceOperationDtoBuilder builder)
         {
             // Arrange
-            var chargeOperationDto = chargeInformationOperationDtoBuilder
+            var chargeOperationDto = builder
                 .WithChargeType(ChargeType.Tariff)
-                .WithResolution(resolution)
+                .WithPriceResolution(resolution)
                 .Build();
 
             // Act
-            var sut = new ResolutionSubscriptionValidationRule(chargeOperationDto);
-
-            // Assert
-            sut.IsValid.Should().Be(expected);
-        }
-
-        [Theory]
-        [InlineAutoMoqData(Resolution.Unknown, true)]
-        [InlineAutoMoqData(Resolution.P1D, false)]
-        [InlineAutoMoqData(Resolution.P1M, true)]
-        [InlineAutoMoqData(Resolution.PT1H, false)]
-        [InlineAutoMoqData(Resolution.PT15M, false)]
-        public void ResolutionSubscriptionValidationRule_WithSubscriptionType_EqualsExpectedResult(
-            Resolution resolution,
-            bool expected,
-            ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder)
-        {
-            // Arrange
-            var chargeOperationDto = chargeInformationOperationDtoBuilder
-                .WithChargeType(ChargeType.Subscription)
-                .WithResolution(resolution)
-                .Build();
-
-            // Act
-            var sut = new ResolutionSubscriptionValidationRule(chargeOperationDto);
+            var sut = new ResolutionTariffValidationRule(chargeOperationDto);
 
             // Assert
             sut.IsValid.Should().Be(expected);
@@ -81,19 +58,43 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         [InlineAutoMoqData(Resolution.P1M, true)]
         [InlineAutoMoqData(Resolution.PT1H, true)]
         [InlineAutoMoqData(Resolution.PT15M, true)]
-        public void ResolutionSubscriptionValidationRule_WithFeeType_EqualsExpectedResult(
+        public void ResolutionTariffValidationRule_WithSubscriptionType_EqualsExpectedResult(
             Resolution resolution,
             bool expected,
-            ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder)
+            ChargePriceOperationDtoBuilder builder)
         {
-            // Assert
-            var chargeOperationDto = chargeInformationOperationDtoBuilder
-                .WithChargeType(ChargeType.Fee)
-                .WithResolution(resolution)
+            // Arrange
+            var chargeOperationDto = builder
+                .WithChargeType(ChargeType.Subscription)
+                .WithPriceResolution(resolution)
                 .Build();
 
             // Act
-            var sut = new ResolutionSubscriptionValidationRule(chargeOperationDto);
+            var sut = new ResolutionTariffValidationRule(chargeOperationDto);
+
+            // Assert
+            sut.IsValid.Should().Be(expected);
+        }
+
+        [Theory]
+        [InlineAutoMoqData(Resolution.Unknown, true)]
+        [InlineAutoMoqData(Resolution.P1D, true)]
+        [InlineAutoMoqData(Resolution.P1M, true)]
+        [InlineAutoMoqData(Resolution.PT1H, true)]
+        [InlineAutoMoqData(Resolution.PT15M, true)]
+        public void ResolutionTariffValidationRule_WithFeeType_EqualsExpectedResult(
+            Resolution resolution,
+            bool expected,
+            ChargePriceOperationDtoBuilder builder)
+        {
+            // Arrange
+            var chargeOperationDto = builder
+                .WithChargeType(ChargeType.Fee)
+                .WithPriceResolution(resolution)
+                .Build();
+
+            // Act
+            var sut = new ResolutionTariffValidationRule(chargeOperationDto);
 
             // Assert
             sut.IsValid.Should().Be(expected);
@@ -101,19 +102,19 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargePriceOperationDtoBuilder builder)
         {
             // Arrange
-            var chargeOperationDto = chargeInformationOperationDtoBuilder
-                .WithChargeType(ChargeType.Subscription)
-                .WithResolution(Resolution.Unknown)
+            var chargeOperationDto = builder
+                .WithChargeType(ChargeType.Tariff)
+                .WithPriceResolution(Resolution.Unknown)
                 .Build();
 
             // Act
-            var sut = new ResolutionSubscriptionValidationRule(chargeOperationDto);
+            var sut = new ResolutionTariffValidationRule(chargeOperationDto);
 
             // Assert
-            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ResolutionSubscriptionValidation);
+            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ResolutionTariffValidation);
         }
     }
 }

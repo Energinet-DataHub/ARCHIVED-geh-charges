@@ -34,7 +34,7 @@ limitations under the License.
                 <cim:priceTimeFrame_Period.resolution>P1D</cim:priceTimeFrame_Period.resolution>
                 <cim:effectiveDate>{{$isoTimestampPlusOneMonth}}</cim:effectiveDate>
                 <cim:Series_Period>
-                    <cim:resolution>P1D</cim:resolution>
+                    <cim:resolution>P1M</cim:resolution>
                     <cim:timeInterval>
                         <cim:start>{{$YMDHM_TimestampPlusOneMonth}}</cim:start>
                         <cim:end>{{$YMDHM_TimestampPlusOneMonthAndOneDay}}</cim:end>

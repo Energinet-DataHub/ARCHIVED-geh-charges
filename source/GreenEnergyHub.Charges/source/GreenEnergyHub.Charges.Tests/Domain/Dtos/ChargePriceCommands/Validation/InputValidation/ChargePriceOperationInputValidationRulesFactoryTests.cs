@@ -87,19 +87,24 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
         {
             return new List<Type>
             {
-                typeof(MaximumPriceRule),
                 typeof(ChargeIdLengthValidationRule),
                 typeof(ChargeIdRequiredValidationRule),
                 typeof(ChargeOperationIdRequiredRule),
                 typeof(ChargeOperationIdLengthValidationRule),
                 typeof(ChargeOwnerIsRequiredValidationRule),
                 typeof(ChargeTypeIsKnownValidationRule),
-                typeof(StartDateTimeRequiredValidationRule),
                 typeof(ChargeOwnerMustMatchSenderRule),
                 typeof(ChargeTypeTariffPriceCountRule),
-                typeof(NumberOfPointsMatchTimeIntervalAndResolutionRule),
                 typeof(ChargePriceMaximumDigitsAndDecimalsRule),
+                typeof(MaximumPriceRule),
+                typeof(NumberOfPointsMatchTimeIntervalAndResolutionRule),
                 typeof(PriceListMustStartAndStopAtMidnightValidationRule),
+                typeof(StartDateValidationRule),
+                typeof(StartDateTimeRequiredValidationRule),
+                typeof(ResolutionSubscriptionValidationRule),
+                typeof(ResolutionTariffValidationRule),
+                typeof(ResolutionFeeValidationRule),
+                typeof(ResolutionIsRequiredRule),
             };
         }
 
