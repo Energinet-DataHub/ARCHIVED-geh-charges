@@ -71,7 +71,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.Charges
                 GetChargeInformationTypeElement(cimNamespace, charge));
         }
 
-        private XElement GetChargeInformationTypeElement(
+        private static XElement GetChargeInformationTypeElement(
             XNamespace cimNamespace,
             AvailableChargeData charge)
         {
