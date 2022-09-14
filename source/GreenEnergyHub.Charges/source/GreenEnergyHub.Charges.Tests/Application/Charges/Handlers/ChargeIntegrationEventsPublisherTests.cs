@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
@@ -32,33 +31,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
     {
         [Theory]
         [InlineAutoDomainData]
-        public async Task HandleAsync_WhenCalledWithPrices_ShouldCallChargePricesSender(
+        public async Task HandleAsync_WhenCalled_ShouldCallChargeCreatedSender(
             [Frozen] Mock<IChargePublisher> chargeSender,
-            [Frozen] Mock<IChargePricesUpdatedPublisher> chargePricesUpdatedSender,
-            DocumentDtoBuilder documentDtoBuilder,
-            List<ChargeInformationOperationDto> chargeOperations,
-            ChargeInformationCommandBuilder chargeInformationCommandBuilder,
-            ChargeCommandAcceptedEventBuilder chargeCommandAcceptedEventBuilder,
-            ChargeIntegrationEventsPublisher sut)
-        {
-            // Arrange
-            var document = documentDtoBuilder.WithBusinessReasonCode(BusinessReasonCode.UpdateChargePrices).Build();
-            var chargeCommand = chargeInformationCommandBuilder.WithDocumentDto(document).WithChargeOperations(chargeOperations).Build();
-            var acceptedEvent = chargeCommandAcceptedEventBuilder.WithChargeCommand(chargeCommand).Build();
-
-            // Act
-            await sut.PublishAsync(acceptedEvent).ConfigureAwait(false);
-
-            // Assert
-            chargeSender.Verify(x => x.PublishChargeCreatedAsync(It.IsAny<ChargeInformationOperationDto>()), Times.Never);
-            chargePricesUpdatedSender.Verify(x => x.PublishChargePricesAsync(It.IsAny<ChargeInformationOperationDto>()), Times.Exactly(3));
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
-        public async Task HandleAsync_WhenCalledWithoutPrices_ShouldOnlyCallChargeCreatedSender(
-            [Frozen] Mock<IChargePublisher> chargeSender,
-            [Frozen] Mock<IChargePricesUpdatedPublisher> chargePricesUpdatedSender,
             DocumentDtoBuilder documentDtoBuilder,
             ChargeInformationCommandBuilder chargeInformationCommandBuilder,
             ChargeCommandAcceptedEventBuilder chargeCommandAcceptedEventBuilder,
@@ -73,8 +47,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             await sut.PublishAsync(acceptedEvent).ConfigureAwait(false);
 
             // Assert
-            chargeSender.Verify(x => x.PublishChargeCreatedAsync(It.IsAny<ChargeInformationOperationDto>()), Times.Once);
-            chargePricesUpdatedSender.Verify(x => x.PublishChargePricesAsync(It.IsAny<ChargeInformationOperationDto>()), Times.Never);
+            chargeSender.Verify(x => x.PublishChargeCreatedAsync(It.IsAny<ChargeInformationOperationDto>()), Times.Once());
         }
     }
 }

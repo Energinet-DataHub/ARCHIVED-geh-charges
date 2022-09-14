@@ -29,6 +29,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation.InputValidation
 
         public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeIdLengthValidation;
 
-        public bool IsValid => _operation.SenderProvidedChargeId?.Length <= MaxValidLength;
+        public bool IsValid => _operation.SenderProvidedChargeId.Length <= MaxValidLength;
     }
 }

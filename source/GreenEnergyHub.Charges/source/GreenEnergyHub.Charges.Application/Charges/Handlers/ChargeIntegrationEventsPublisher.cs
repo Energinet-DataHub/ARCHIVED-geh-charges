@@ -16,39 +16,25 @@ using System;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
     public class ChargeIntegrationEventsPublisher : IChargeIntegrationEventsPublisher
     {
         private readonly IChargePublisher _chargePublisher;
-        private readonly IChargePricesUpdatedPublisher _chargePricesUpdatedPublisher;
 
-        public ChargeIntegrationEventsPublisher(
-            IChargePublisher chargePublisher,
-            IChargePricesUpdatedPublisher chargePricesUpdatedPublisher)
+        public ChargeIntegrationEventsPublisher(IChargePublisher chargePublisher)
         {
             _chargePublisher = chargePublisher;
-            _chargePricesUpdatedPublisher = chargePricesUpdatedPublisher;
         }
 
         public async Task PublishAsync(ChargeCommandAcceptedEvent chargeCommandAcceptedEvent)
         {
             ArgumentNullException.ThrowIfNull(chargeCommandAcceptedEvent);
 
-            foreach (var chargeOperationDto in chargeCommandAcceptedEvent.Command.Operations)
+            foreach (var chargeInformationOperationDto in chargeCommandAcceptedEvent.Command.Operations)
             {
-                if (chargeCommandAcceptedEvent.Command.Document.BusinessReasonCode == BusinessReasonCode.UpdateChargeInformation)
-                {
-                    await _chargePublisher.PublishChargeCreatedAsync(chargeOperationDto).ConfigureAwait(false);
-                }
-                else
-                {
-                    await _chargePricesUpdatedPublisher
-                        .PublishChargePricesAsync(chargeOperationDto)
-                        .ConfigureAwait(false);
-                }
+                await _chargePublisher.PublishChargeCreatedAsync(chargeInformationOperationDto).ConfigureAwait(false);
             }
         }
     }

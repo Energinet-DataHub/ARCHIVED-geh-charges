@@ -27,9 +27,6 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
     [UnitTest]
     public class MaximumPriceRuleTests
     {
-        private const decimal LargestValidPrice = 999999;
-        private const decimal SmallestInvalidPrice = 1000000;
-
         [Theory]
         [InlineAutoMoqData(999999, true)]
         [InlineAutoMoqData(999999.999999, true)]
@@ -47,9 +44,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargePriceOperationDtoBuilder chargePriceOperationDtoBuilder)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(decimal price, ChargePriceOperationDtoBuilder chargePriceOperationDtoBuilder)
         {
-            var chargePriceOperationDto = CreateChargeOperationDto(chargePriceOperationDtoBuilder, SmallestInvalidPrice);
+            var chargePriceOperationDto = CreateChargeOperationDto(chargePriceOperationDtoBuilder, price);
             var sut = new MaximumPriceRule(chargePriceOperationDto);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.MaximumPrice);
         }

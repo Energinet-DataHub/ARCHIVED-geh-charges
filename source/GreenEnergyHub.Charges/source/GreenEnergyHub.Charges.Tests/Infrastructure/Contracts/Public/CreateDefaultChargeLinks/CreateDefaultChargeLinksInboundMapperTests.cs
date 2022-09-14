@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.Dtos.CreateDefaultChargeLinksRequests;
 using GreenEnergyHub.Charges.Infrastructure.Contracts.Public.CreateDefaultChargeLinks;
 using GreenEnergyHub.Charges.TestCore.Attributes;
@@ -28,8 +27,8 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Contracts.Public.CreateDef
         [Theory]
         [InlineAutoMoqData]
         public void Convert_WhenCalled_ShouldMapToDomainObjectWithCorrectValues(
-            [NotNull] Energinet.Charges.Contracts.CreateDefaultChargeLinks createDefaultChargeLinks,
-            [NotNull] CreateDefaultChargeLinksInboundMapper sut)
+            Energinet.Charges.Contracts.CreateDefaultChargeLinks createDefaultChargeLinks,
+            CreateDefaultChargeLinksInboundMapper sut)
         {
             var result = (CreateDefaultChargeLinksRequest)sut.Convert(createDefaultChargeLinks);
             ProtobufAssert.IncomingContractIsSuperset(result, createDefaultChargeLinks);

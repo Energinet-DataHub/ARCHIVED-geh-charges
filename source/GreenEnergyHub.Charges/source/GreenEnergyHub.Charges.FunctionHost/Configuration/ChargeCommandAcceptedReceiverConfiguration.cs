@@ -31,19 +31,14 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         {
             serviceCollection.AddScoped<MessageExtractor<ChargeCommandAcceptedEvent>>();
             serviceCollection.AddScoped<IChargeCreatedEventFactory, ChargeCreatedEventFactory>();
-            serviceCollection.AddScoped<IChargePricesUpdatedEventFactory, ChargePricesUpdatedEventFactory>();
             serviceCollection.AddScoped<IChargePublisher, ChargePublisher>();
-            serviceCollection.AddScoped<IChargePricesUpdatedPublisher, ChargePricesUpdatedPublisher>();
             serviceCollection.AddScoped<IChargeIntegrationEventsPublisher, ChargeIntegrationEventsPublisher>();
             serviceCollection.AddScoped<JsonMessageDeserializer<ChargeCommandAcceptedEvent>>();
 
             serviceCollection.AddMessagingProtobuf()
                 .AddExternalMessageDispatcher<ChargeCreatedEvent>(
                     EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString),
-                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeCreatedTopicName))
-                .AddExternalMessageDispatcher<ChargePricesUpdatedEvent>(
-                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString),
-                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargePricesUpdatedTopicName));
+                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeCreatedTopicName));
         }
     }
 }

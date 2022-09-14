@@ -132,8 +132,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 isChargeCreatedReceived.Should().BeTrue();
             }
 
-            // TODO: Reenable when new price flow raise integration events (story #1562)
-            [Fact(Skip = "Not implemented")]
+            [Fact]
             public async Task When_ChargePricesAreReceived_Then_ChargePricesUpdatedIntegrationEventsArePublished()
             {
                 // Arrange

@@ -25,6 +25,7 @@ using GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.ChargeLinks;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
 using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.Charges.TestCore.TestHelpers;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
@@ -153,7 +154,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
                 // Act
                 var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
-                var responseBody = await actual.Content!.ReadAsStringAsync();
+                await actual.Content.ReadAsStringAsync();
 
                 // Assert
                 actual.StatusCode.Should().Be(HttpStatusCode.Accepted);

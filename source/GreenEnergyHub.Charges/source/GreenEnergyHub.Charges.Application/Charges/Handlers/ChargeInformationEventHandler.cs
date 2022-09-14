@@ -56,12 +56,12 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             _chargeCommandReceiptService = chargeCommandReceiptService;
         }
 
-        public async Task HandleAsync(ChargeCommandReceivedEvent commandReceivedEvent)
+        public async Task HandleAsync(ChargeInformationCommandReceivedEvent chargeInformationCommandReceivedEvent)
         {
-            ArgumentNullException.ThrowIfNull(commandReceivedEvent);
+            ArgumentNullException.ThrowIfNull(chargeInformationCommandReceivedEvent);
 
-            var operations = commandReceivedEvent.Command.Operations.ToArray();
-            var document = commandReceivedEvent.Command.Document;
+            var operations = chargeInformationCommandReceivedEvent.Command.Operations.ToArray();
+            var document = chargeInformationCommandReceivedEvent.Command.Document;
             var operationsToBeRejected = new List<ChargeInformationOperationDto>();
             var rejectionRules = new List<IValidationRuleContainer>();
             var operationsToBeConfirmed = new List<ChargeInformationOperationDto>();
@@ -113,7 +113,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             rejectionRules.AddRange(operationsToBeRejected.Skip(1)
                 .Select(subsequentOperation =>
                     new OperationValidationRuleContainer(
-                        new PreviousOperationsMustBeValidRule(informationOperation.OperationId), subsequentOperation.OperationId)));
+                        new PreviousOperationsMustBeValidRule(informationOperation), subsequentOperation.OperationId)));
         }
 
         private async Task HandleOperationAsync(ChargeInformationOperationDto informationOperation, Charge? charge)

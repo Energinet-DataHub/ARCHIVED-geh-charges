@@ -21,7 +21,6 @@ using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.FunctionHost.Charges;
 using GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub;
@@ -113,7 +112,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     x.OwnerId == ownerId &&
                     x.Type == chargeType;
 
-            private static ChargeCommandReceivedEvent CreateChargeCommandReceivedEvent(
+            private static ChargeInformationCommandReceivedEvent CreateChargeCommandReceivedEvent(
                 ChargeInformationCommandBuilder commandBuilder,
                 DocumentDtoBuilder documentDtoBuilder,
                 ChargeInformationOperationDtoBuilder operationDtoBuilder,
@@ -139,12 +138,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     .WithVatClassification(VatClassification.NoVat)
                     .WithChargeName("Grid Access Provider test tariff")
                     .WithDescription("Description...")
+                    .WithPriceResolution(Resolution.P1D)
                     .Build();
                 var chargeCommand = commandBuilder
                     .WithDocumentDto(document)
                     .WithChargeOperation(operation)
                     .Build();
-                var chargeInformationReceivedEvent = new ChargeCommandReceivedEvent(
+                var chargeInformationReceivedEvent = new ChargeInformationCommandReceivedEvent(
                     Instant.FromDateTimeUtc(DateTime.UtcNow), chargeCommand);
 
                 return chargeInformationReceivedEvent;

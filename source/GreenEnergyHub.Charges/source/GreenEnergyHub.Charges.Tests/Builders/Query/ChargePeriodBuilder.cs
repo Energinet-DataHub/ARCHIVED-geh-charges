@@ -23,7 +23,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Query
         private DateTime _startDateTime = DateTime.Now.Date.ToUniversalTime();
         private DateTime _endDateTime = InstantExtensions.GetEndDefault().ToDateTimeUtc();
         private string _name = "Charge name";
-        private bool _transparentInvoicing = false;
+        private bool _transparentInvoicing;
 
         public ChargePeriodBuilder WithStartDateTime(DateTime startDateTime)
         {

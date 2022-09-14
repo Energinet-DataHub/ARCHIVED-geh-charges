@@ -17,14 +17,14 @@ using GreenEnergyHub.Iso8601;
 using NodaTime;
 using NodaTime.Testing;
 
-namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
+namespace GreenEnergyHub.Charges.TestCore.TestHelpers
 {
     public static class ZonedDateTimeServiceHelper
     {
         public static ZonedDateTimeService GetZonedDateTimeService(Instant instant)
         {
             var clock = new FakeClock(instant);
-            return new ZonedDateTimeService(clock, new Iso8601ConversionConfiguration("Europe/Copenhagen"));
+            return new ZonedDateTimeService(clock, new Iso8601ConversionConfiguration(DateTimeZoneProviders.Tzdb.GetSystemDefault().Id));
         }
     }
 }

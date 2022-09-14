@@ -12,22 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
-using NodaTime;
+using System.Collections.Generic;
+using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents
+namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.ValidationRules
 {
-    public class ChargeCommandReceivedEvent : InternalEvent
+    public class ResolutionFeeValidationRule : ResolutionValidationRule
     {
-        public ChargeCommandReceivedEvent(
-            Instant publishedTime,
-            ChargeInformationCommand command)
-            : base(publishedTime)
+        public ResolutionFeeValidationRule(ChargePriceOperationDto chargePriceOperationDto)
+            : base(
+                chargePriceOperationDto,
+                ChargeType.Fee,
+                new List<Resolution> { Resolution.P1M },
+                ValidationRuleIdentifier.ResolutionFeeValidation)
         {
-            Command = command;
         }
-
-        public ChargeInformationCommand Command { get; }
     }
 }

@@ -13,9 +13,7 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.Core.Messaging.MessageTypes.Common;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using NodaTime;
 
