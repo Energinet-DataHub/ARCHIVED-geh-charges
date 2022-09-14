@@ -14,7 +14,7 @@
 
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.InputValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
@@ -22,7 +22,7 @@ using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.InputValidation.ValidationRules
+namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.ValidationRules
 {
     [UnitTest]
     public class ResolutionSubscriptionValidationRuleTests
@@ -36,12 +36,12 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void ResolutionSubscriptionValidationRule_WithTariffType_EqualsExpectedResult(
             Resolution resolution,
             bool expected,
-            ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder)
+            ChargePriceOperationDtoBuilder chargePriceOperationDtoBuilder)
         {
             // Arrange
-            var chargeOperationDto = chargeInformationOperationDtoBuilder
+            var chargeOperationDto = chargePriceOperationDtoBuilder
                 .WithChargeType(ChargeType.Tariff)
-                .WithResolution(resolution)
+                .WithPriceResolution(resolution)
                 .Build();
 
             // Act
@@ -60,12 +60,12 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void ResolutionSubscriptionValidationRule_WithSubscriptionType_EqualsExpectedResult(
             Resolution resolution,
             bool expected,
-            ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder)
+            ChargePriceOperationDtoBuilder chargePriceOperationDtoBuilder)
         {
             // Arrange
-            var chargeOperationDto = chargeInformationOperationDtoBuilder
+            var chargeOperationDto = chargePriceOperationDtoBuilder
                 .WithChargeType(ChargeType.Subscription)
-                .WithResolution(resolution)
+                .WithPriceResolution(resolution)
                 .Build();
 
             // Act
@@ -84,12 +84,12 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         public void ResolutionSubscriptionValidationRule_WithFeeType_EqualsExpectedResult(
             Resolution resolution,
             bool expected,
-            ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder)
+            ChargePriceOperationDtoBuilder chargePriceOperationDtoBuilder)
         {
-            // Assert
-            var chargeOperationDto = chargeInformationOperationDtoBuilder
+            // Arrange
+            var chargeOperationDto = chargePriceOperationDtoBuilder
                 .WithChargeType(ChargeType.Fee)
-                .WithResolution(resolution)
+                .WithPriceResolution(resolution)
                 .Build();
 
             // Act
@@ -101,12 +101,12 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder)
+        public void ValidationRuleIdentifier_ShouldBy_EqualTo(ChargePriceOperationDtoBuilder chargePriceOperationDtoBuilder)
         {
             // Arrange
-            var chargeOperationDto = chargeInformationOperationDtoBuilder
+            var chargeOperationDto = chargePriceOperationDtoBuilder
                 .WithChargeType(ChargeType.Subscription)
-                .WithResolution(Resolution.Unknown)
+                .WithPriceResolution(Resolution.Unknown)
                 .Build();
 
             // Act
