@@ -51,10 +51,4 @@ limitations under the License.
     </Compile>
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="GreenEnergyHub.Charges.Domain">
-      <HintPath>..\GreenEnergyHub.Charges.FunctionHost\bin\Debug\net6.0\GreenEnergyHub.Charges.Domain.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 </Project>
