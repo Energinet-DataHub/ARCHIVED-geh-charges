@@ -20,7 +20,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
     /// <summary>
     /// Handles events for charges with BusinessReasonCode D08
     /// </summary>
-    public interface IChargePriceEventHandler
+    public interface IChargePriceOperationsEventHandler
     {
         /// <summary>
         /// Handles the received event as a charge price event

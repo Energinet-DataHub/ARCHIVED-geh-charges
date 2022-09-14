@@ -20,20 +20,20 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Tests.Builders.Command
 {
-    public class PriceConfirmedEventBuilder
+    public class ChargePriceOperationsConfirmedEventBuilder
     {
         private Instant _publishedTime;
         private DocumentDto _document;
         private IReadOnlyCollection<ChargePriceOperationDto> _operations;
 
-        public PriceConfirmedEventBuilder()
+        public ChargePriceOperationsConfirmedEventBuilder()
         {
             _publishedTime = SystemClock.Instance.GetCurrentInstant();
             _document = new DocumentDtoBuilder().WithDocumentType(DocumentType.ConfirmRequestChangeOfPriceList).Build();
             _operations = new List<ChargePriceOperationDto>() { new ChargePriceOperationDtoBuilder().Build() };
         }
 
-        public PriceConfirmedEventBuilder WithOperations(List<ChargePriceOperationDto> operations)
+        public ChargePriceOperationsConfirmedEventBuilder WithOperations(List<ChargePriceOperationDto> operations)
         {
             _operations = operations;
             return this;

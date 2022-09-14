@@ -43,11 +43,11 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Outbox
         }
 
         [Fact]
-        public void Parse_PriceConfirmedEventType_PriceConfirmedEventReturned()
+        public void Parse_ChargePriceOperationsConfirmedEventType_ChargePriceOperationsConfirmedEventReturned()
         {
             // Arrange
             var jsonSerializer = new JsonSerializer();
-            var confirmedEvent = new PriceConfirmedEventBuilder().Build();
+            var confirmedEvent = new ChargePriceOperationsConfirmedEventBuilder().Build();
             var messageTypeString = typeof(ChargePriceOperationsConfirmedEvent).FullName;
             var serializedEvent = jsonSerializer.Serialize(confirmedEvent);
             var sut = new OutboxMessageParser(jsonSerializer);

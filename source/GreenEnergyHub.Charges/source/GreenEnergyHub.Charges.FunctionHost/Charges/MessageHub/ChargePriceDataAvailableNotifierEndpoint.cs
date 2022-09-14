@@ -49,8 +49,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             byte[] message)
         {
-            var priceConfirmedEvent = (ChargePriceOperationsConfirmedEvent)await _deserializer.FromBytesAsync(message).ConfigureAwait(false);
-            await _availableDataNotifier.NotifyAsync(priceConfirmedEvent).ConfigureAwait(false);
+            var chargePriceOperationsConfirmedEvent = (ChargePriceOperationsConfirmedEvent)await _deserializer.FromBytesAsync(message).ConfigureAwait(false);
+            await _availableDataNotifier.NotifyAsync(chargePriceOperationsConfirmedEvent).ConfigureAwait(false);
         }
     }
 }

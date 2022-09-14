@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
     {
         [Theory]
         [InlineAutoMoqData]
-        public async Task CreateAsync_WhenCalledWithChargePriceConfirmedEvent_ReturnsAvailableData(
+        public async Task CreateAsync_WhenCalledWithChargePriceOperationsConfirmedEvent_ReturnsAvailableData(
             TestMeteringPointAdministrator meteringPointAdministrator,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,

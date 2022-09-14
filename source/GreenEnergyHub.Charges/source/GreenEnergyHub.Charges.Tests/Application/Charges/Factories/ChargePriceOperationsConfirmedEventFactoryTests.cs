@@ -25,14 +25,14 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Application.Charges.Factories
 {
     [UnitTest]
-    public class PriceConfirmedEventFactoryTests
+    public class ChargePriceOperationsConfirmedEventFactoryTests
     {
         [Theory]
         [InlineAutoDomainData]
         public void CreatePriceConfirmationEvent_WhenValidConfirmation_HasNoNullsOrEmptyCollections(
             DocumentDtoBuilder documentDtoBuilder,
             ChargePriceOperationDtoBuilder chargePriceOperationDtoBuilder,
-            PriceConfirmedEventFactory sut)
+            ChargePriceOperationsConfirmedEventFactory sut)
         {
             // Act
             var document = documentDtoBuilder.Build();
