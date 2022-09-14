@@ -96,7 +96,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
             }
         }
 
-        private static bool ShouldMakeDataAvailableForActiveGridProviders(ChargeInformationOperationDto chargeInformationOperationDto)
+        private static bool ShouldMakeDataAvailableForActiveGridProviders(
+            ChargeInformationOperationDto chargeInformationOperationDto)
         {
             // We only need to notify grid providers if the charge includes tax which are the
             // only charges they do not maintain themselves
