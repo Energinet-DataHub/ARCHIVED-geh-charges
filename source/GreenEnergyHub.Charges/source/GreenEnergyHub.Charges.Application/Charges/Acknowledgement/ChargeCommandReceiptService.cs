@@ -29,31 +29,31 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
     public class ChargeCommandReceiptService : IChargeCommandReceiptService
     {
         private readonly ILogger _logger;
-        private readonly IChargeCommandRejectedEventFactory _chargeCommandRejectedEventFactory;
-        private readonly IChargeCommandAcceptedEventFactory _chargeCommandAcceptedEventFactory;
+        private readonly IChargeInformationCommandRejectedEventFactory _chargeInformationCommandRejectedEventFactory;
+        private readonly IChargeInformationCommandAcceptedEventFactory _chargeInformationCommandAcceptedEventFactory;
         private readonly IDomainEventDispatcher _domainEventDispatcher;
 
         public ChargeCommandReceiptService(
             ILoggerFactory loggerFactory,
-            IChargeCommandRejectedEventFactory chargeCommandRejectedEventFactory,
-            IChargeCommandAcceptedEventFactory chargeCommandAcceptedEventFactory,
+            IChargeInformationCommandRejectedEventFactory chargeInformationCommandRejectedEventFactory,
+            IChargeInformationCommandAcceptedEventFactory chargeInformationCommandAcceptedEventFactory,
             IDomainEventDispatcher domainEventDispatcher)
         {
             _logger = loggerFactory.CreateLogger(nameof(ChargeCommandReceiptService));
-            _chargeCommandRejectedEventFactory = chargeCommandRejectedEventFactory;
-            _chargeCommandAcceptedEventFactory = chargeCommandAcceptedEventFactory;
+            _chargeInformationCommandRejectedEventFactory = chargeInformationCommandRejectedEventFactory;
+            _chargeInformationCommandAcceptedEventFactory = chargeInformationCommandAcceptedEventFactory;
             _domainEventDispatcher = domainEventDispatcher;
         }
 
         public async Task RejectAsync(ChargeInformationCommand command, ValidationResult validationResult)
         {
-            var rejectedEvent = _chargeCommandRejectedEventFactory.CreateEvent(command, validationResult);
+            var rejectedEvent = _chargeInformationCommandRejectedEventFactory.CreateEvent(command, validationResult);
             await _domainEventDispatcher.DispatchAsync(rejectedEvent).ConfigureAwait(false);
         }
 
         public async Task AcceptAsync(ChargeInformationCommand command)
         {
-            var acceptedEvent = _chargeCommandAcceptedEventFactory.CreateEvent(command);
+            var acceptedEvent = _chargeInformationCommandAcceptedEventFactory.CreateEvent(command);
             await _domainEventDispatcher.DispatchAsync(acceptedEvent).ConfigureAwait(false);
         }
 

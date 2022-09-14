@@ -34,11 +34,11 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Acknowledgement
         [Theory]
         [AutoMoqData]
         public async Task RejectAsync_WhenCalledWithCommandAndResult_UsesFactoryToCreateEventAndDispatchesIt(
-            [Frozen] Mock<IChargeCommandRejectedEventFactory> rejectedEventFactory,
+            [Frozen] Mock<IChargeInformationCommandRejectedEventFactory> rejectedEventFactory,
             [Frozen] Mock<IDomainEventDispatcher> domainEventDispatcher,
             ChargeInformationCommand command,
             ValidationResult validationResult,
-            ChargeCommandRejectedEvent rejectedEvent,
+            ChargeInformationCommandRejectedEvent rejectedEvent,
             ChargeCommandReceiptService sut)
         {
             // Arrange
@@ -48,12 +48,12 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Acknowledgement
                     It.IsAny<ValidationResult>()))
                 .Returns(rejectedEvent);
 
-            ChargeCommandRejectedEvent? eventForSerialization = null;
+            ChargeInformationCommandRejectedEvent? eventForSerialization = null;
             domainEventDispatcher.Setup(
                     d => d.DispatchAsync(
-                        It.IsAny<ChargeCommandRejectedEvent>(),
+                        It.IsAny<ChargeInformationCommandRejectedEvent>(),
                         It.IsAny<CancellationToken>()))
-                .Callback<ChargeCommandRejectedEvent, CancellationToken>(
+                .Callback<ChargeInformationCommandRejectedEvent, CancellationToken>(
                     (e, _) => eventForSerialization = e);
 
             // Act
@@ -66,7 +66,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Acknowledgement
         [Theory]
         [AutoMoqData]
         public async Task AcceptAsync_WhenCalledWithCommand_UsesFactoryToCreateEventAndDispatchesIt(
-            [Frozen] Mock<IChargeCommandAcceptedEventFactory> acceptedEventFactory,
+            [Frozen] Mock<IChargeInformationCommandAcceptedEventFactory> acceptedEventFactory,
             [Frozen] Mock<IDomainEventDispatcher> domainEventDispatcher,
             ChargeInformationCommand command,
             ChargeInformationCommandAcceptedEvent acceptedEvent,

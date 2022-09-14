@@ -12,28 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Linq;
+using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents
 {
-    public class ChargeCommandRejectedEventFactory : IChargeCommandRejectedEventFactory
+    public class ChargeInformationCommandRejectedEvent : DomainEvent
     {
-        private readonly IClock _clock;
-
-        public ChargeCommandRejectedEventFactory(IClock clock)
+        public ChargeInformationCommandRejectedEvent(
+            Instant publishedTime,
+            ChargeInformationCommand command,
+            IEnumerable<ValidationError> validationErrors)
+            : base(publishedTime)
         {
-            _clock = clock;
+            Command = command;
+            ValidationErrors = validationErrors;
         }
 
-        public ChargeCommandRejectedEvent CreateEvent(ChargeInformationCommand command, ValidationResult validationResult)
-        {
-            return new ChargeCommandRejectedEvent(
-                _clock.GetCurrentInstant(),
-                command,
-                validationResult.InvalidRules.Select(ValidationErrorFactory.Create()));
-        }
+        public ChargeInformationCommand Command { get; }
+
+        public IEnumerable<ValidationError> ValidationErrors { get; }
     }
 }

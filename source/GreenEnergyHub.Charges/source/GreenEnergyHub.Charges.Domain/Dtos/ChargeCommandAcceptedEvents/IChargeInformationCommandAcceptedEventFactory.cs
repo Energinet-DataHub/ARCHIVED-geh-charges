@@ -13,22 +13,11 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
-using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents
 {
-    public class ChargeCommandAcceptedEventFactory : IChargeCommandAcceptedEventFactory
+    public interface IChargeInformationCommandAcceptedEventFactory
     {
-        private readonly IClock _clock;
-
-        public ChargeCommandAcceptedEventFactory(IClock clock)
-        {
-            _clock = clock;
-        }
-
-        public ChargeInformationCommandAcceptedEvent CreateEvent(ChargeInformationCommand command)
-        {
-            return new ChargeInformationCommandAcceptedEvent(_clock.GetCurrentInstant(), command);
-        }
+        ChargeInformationCommandAcceptedEvent CreateEvent(ChargeInformationCommand command);
     }
 }
