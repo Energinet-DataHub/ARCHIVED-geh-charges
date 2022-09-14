@@ -13,12 +13,20 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
+using GreenEnergyHub.Charges.Application.Charges.Events;
 
-namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
+namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
-    public interface IChargePricesUpdatedPublisher
+    /// <summary>
+    /// Integration events to other domains when accepted charge prices (Business reason code: D08) has been ingested,
+    /// handled and persisted.
+    /// </summary>
+    public interface IChargePriceIntegrationEventsPublisher
     {
-        Task PublishChargePricesAsync(ChargePriceOperationDto chargePriceOperationDto);
+        /// <summary>
+        /// Publish integration event to the service bus
+        /// </summary>
+        /// <param name="priceConfirmedEvent"></param>
+        Task PublishAsync(PriceConfirmedEvent priceConfirmedEvent);
     }
 }

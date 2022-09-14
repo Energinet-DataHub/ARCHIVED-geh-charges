@@ -71,6 +71,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
         // Internal, charge price, confirmed
         public const string ChargePriceConfirmedSubscriptionName = "sbtsub-charges-charge-price-confirmed";
         public const string ChargePriceConfirmedDataAvailableSubscriptionName = "sbtsub-charges-charge-price-confirmed-dataavail";
+        public const string ChargePriceConfirmedPublishSubscriptionName = "sbtsub-charges-charge-price-confirmed-publish";
 
         // Internal, charge links, received
         public const string ChargeLinksCommandReceivedSubscriptionName = "sbtsub-charges-charge-links-command-received";

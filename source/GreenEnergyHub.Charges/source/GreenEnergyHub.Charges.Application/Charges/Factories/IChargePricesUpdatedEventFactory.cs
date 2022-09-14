@@ -13,12 +13,12 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Factories
 {
     public interface IChargePricesUpdatedEventFactory
     {
-        ChargePricesUpdatedEvent Create(ChargeInformationOperationDto chargeInformationOperationDto);
+        ChargePricesUpdatedEvent Create(ChargePriceOperationDto chargePriceOperationDto);
     }
 }
