@@ -39,6 +39,7 @@ limitations under the License.
       <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.1" />
       <PackageReference Include="NodaTime" Version="3.1.2" />
       <PackageReference Include="MicroElements.AutoFixture.NodaTime" Version="1.0.0" />
+      <PackageReference Include="NodaTime.Testing" Version="3.1.2" />
       <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
       <PackageReference Include="Google.Protobuf" Version="3.21.5" />
       <PackageReference Include="xunit" Version="2.4.2" />

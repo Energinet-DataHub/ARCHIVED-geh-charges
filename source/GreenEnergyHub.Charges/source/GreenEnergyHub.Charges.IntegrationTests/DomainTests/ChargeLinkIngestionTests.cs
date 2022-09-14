@@ -25,6 +25,7 @@ using GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.ChargeLinks;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
 using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.Charges.TestCore.TestHelpers;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
