@@ -19,8 +19,8 @@ using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization
 {
-    public class JsonMessageDeserializer<TInternalEvent>
-      where TInternalEvent : InternalEvent
+    public class JsonMessageDeserializer<TDomainEvent>
+      where TDomainEvent : DomainEvent
     {
         private readonly IJsonSerializer _jsonSerializer;
 
@@ -29,13 +29,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Seriali
             _jsonSerializer = jsonSerializer;
         }
 
-        public async Task<InternalEvent> FromBytesAsync(byte[] data)
+        public async Task<DomainEvent> FromBytesAsync(byte[] data)
         {
             var stream = new MemoryStream(data);
             await using (stream.ConfigureAwait(false))
             {
-                return (TInternalEvent)await _jsonSerializer.DeserializeAsync(
-                    stream, typeof(TInternalEvent)).ConfigureAwait(false);
+                return (TDomainEvent)await _jsonSerializer.DeserializeAsync(
+                    stream, typeof(TDomainEvent)).ConfigureAwait(false);
             }
         }
     }

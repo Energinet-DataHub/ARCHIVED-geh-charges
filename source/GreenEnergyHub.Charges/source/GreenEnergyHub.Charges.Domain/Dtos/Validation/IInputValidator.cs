@@ -21,7 +21,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
     /// Contract defining the input validator for change of charges messages.
     /// </summary>
     public interface IInputValidator<in TOperation>
-        where TOperation : ChargeOperation
+        where TOperation : ChargeOperationDto
     {
         /// <summary>
         /// Input validation of operation/>.

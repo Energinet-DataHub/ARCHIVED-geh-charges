@@ -31,7 +31,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommandAcceptedEvents
         public void CreateEvent_WhenCalled_CreatesEventWithCorrectTime(
             [Frozen] Mock<IClock> clock,
             ChargeInformationCommand command,
-            ChargeCommandAcceptedEventFactory sut)
+            ChargeInformationCommandAcceptedEventFactory sut)
         {
             // Arrange
             var currentTime = Instant.FromUtc(2021, 7, 7, 7, 50, 49);

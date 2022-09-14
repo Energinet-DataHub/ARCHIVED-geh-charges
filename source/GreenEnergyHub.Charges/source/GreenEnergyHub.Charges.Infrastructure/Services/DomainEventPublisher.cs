@@ -18,12 +18,12 @@ using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Services
 {
-    public class InternalEventPublisher : IInternalEventPublisher
+    public class DomainEventPublisher : IDomainEventPublisher
     {
         private readonly IOutboxMessageRepository _outboxMessageRepository;
         private readonly OutboxMessageFactory _outboxMessageFactory;
 
-        public InternalEventPublisher(
+        public DomainEventPublisher(
             IOutboxMessageRepository outboxMessageRepository,
             OutboxMessageFactory outboxMessageFactory)
         {
@@ -31,9 +31,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Services
             _outboxMessageFactory = outboxMessageFactory;
         }
 
-        public void Publish<T>(T internalEvent)
+        public void Publish<T>(T domainEvent)
         {
-            var outboxMessage = _outboxMessageFactory.CreateFrom(internalEvent);
+            var outboxMessage = _outboxMessageFactory.CreateFrom(domainEvent);
             _outboxMessageRepository.Add(outboxMessage);
         }
     }

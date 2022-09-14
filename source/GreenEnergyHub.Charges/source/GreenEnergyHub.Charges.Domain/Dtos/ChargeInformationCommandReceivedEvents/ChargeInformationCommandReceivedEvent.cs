@@ -12,28 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
-using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.Application.Charges.Events
+namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommandReceivedEvents
 {
-    public class PriceConfirmedEvent : InternalEvent
+    public class ChargeInformationCommandReceivedEvent : DomainEvent
     {
-        public PriceConfirmedEvent(
+        public ChargeInformationCommandReceivedEvent(
             Instant publishedTime,
-            DocumentDto document,
-            IReadOnlyCollection<ChargePriceOperationDto> operations)
+            ChargeInformationCommand command)
             : base(publishedTime)
         {
-            Document = document;
-            Operations = operations;
+            Command = command;
         }
 
-        public DocumentDto Document { get; }
-
-        public IReadOnlyCollection<ChargePriceOperationDto> Operations { get; }
+        public ChargeInformationCommand Command { get; }
     }
 }

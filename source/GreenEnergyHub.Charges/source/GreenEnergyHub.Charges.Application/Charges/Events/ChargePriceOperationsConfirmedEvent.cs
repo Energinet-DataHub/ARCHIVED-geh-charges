@@ -13,25 +13,27 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
+using NodaTime;
 
-namespace GreenEnergyHub.Charges.Application.Charges.Factories
+namespace GreenEnergyHub.Charges.Application.Charges.Events
 {
-    /// <summary>
-    /// Factory for creating <see cref="PriceConfirmedEvent"/>
-    /// </summary>
-    public interface IPriceConfirmedEventFactory
+    public class ChargePriceOperationsConfirmedEvent : DomainEvent
     {
-        /// <summary>
-        /// Factory method for creating <see cref="PriceConfirmedEvent"/> based on confirmed operations
-        /// </summary>
-        /// <param name="document">Document containing information about market participant causing the event</param>
-        /// <param name="operations">Operations to be confirmed</param>
-        /// <returns><see cref="PriceConfirmedEvent"/></returns>
-        PriceConfirmedEvent Create(
+        public ChargePriceOperationsConfirmedEvent(
+            Instant publishedTime,
             DocumentDto document,
-            IReadOnlyCollection<ChargePriceOperationDto> operations);
+            IReadOnlyCollection<ChargePriceOperationDto> operations)
+            : base(publishedTime)
+        {
+            Document = document;
+            Operations = operations;
+        }
+
+        public DocumentDto Document { get; }
+
+        public IReadOnlyCollection<ChargePriceOperationDto> Operations { get; }
     }
 }

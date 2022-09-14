@@ -18,7 +18,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
 {
     public class InputValidator<TOperation> : IInputValidator<TOperation>
-        where TOperation : ChargeOperation
+        where TOperation : ChargeOperationDto
     {
         private readonly IInputValidationRulesFactory<TOperation> _inputValidationRulesFactory;
 

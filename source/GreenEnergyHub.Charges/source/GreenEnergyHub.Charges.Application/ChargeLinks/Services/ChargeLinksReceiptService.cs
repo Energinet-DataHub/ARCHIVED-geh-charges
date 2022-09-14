@@ -23,16 +23,16 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Services
 {
     public class ChargeLinksReceiptService : IChargeLinksReceiptService
     {
-        private readonly IInternalEventDispatcher _internalEventDispatcher;
+        private readonly IDomainEventDispatcher _domainEventDispatcher;
         private readonly IChargeLinksAcceptedEventFactory _chargeLinksAcceptedEventFactory;
         private readonly IChargeLinksRejectedEventFactory _chargeLinksRejectedEventFactory;
 
         public ChargeLinksReceiptService(
-            IInternalEventDispatcher internalEventDispatcher,
+            IDomainEventDispatcher domainEventDispatcher,
             IChargeLinksAcceptedEventFactory chargeLinksAcceptedEventFactory,
             IChargeLinksRejectedEventFactory chargeLinksRejectedEventFactory)
         {
-            _internalEventDispatcher = internalEventDispatcher;
+            _domainEventDispatcher = domainEventDispatcher;
             _chargeLinksAcceptedEventFactory = chargeLinksAcceptedEventFactory;
             _chargeLinksRejectedEventFactory = chargeLinksRejectedEventFactory;
         }
@@ -40,13 +40,13 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Services
         public async Task RejectAsync(ChargeLinksCommand command, ValidationResult validationResult)
         {
             var rejectedEvent = _chargeLinksRejectedEventFactory.Create(command, validationResult);
-            await _internalEventDispatcher.DispatchAsync(rejectedEvent).ConfigureAwait(false);
+            await _domainEventDispatcher.DispatchAsync(rejectedEvent).ConfigureAwait(false);
         }
 
         public async Task AcceptAsync(ChargeLinksCommand command)
         {
             var acceptedEvent = _chargeLinksAcceptedEventFactory.Create(command);
-            await _internalEventDispatcher.DispatchAsync(acceptedEvent).ConfigureAwait(false);
+            await _domainEventDispatcher.DispatchAsync(acceptedEvent).ConfigureAwait(false);
         }
     }
 }
