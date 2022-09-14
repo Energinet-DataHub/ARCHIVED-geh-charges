@@ -100,8 +100,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.Charges
                 // Charge resolution
                 CimHelper.GetElementIfNeeded(
                     cimNamespace,
-                    // Charge resolution is not needed if there are prices, as it will be added in that section
-                    charge.Points.Count > 0,
+                    charge.Resolution == Resolution.Unknown,
                     CimChargeConstants.ChargeResolution,
                     () => ResolutionMapper.Map(charge.Resolution)),
                 // EffectiveDate

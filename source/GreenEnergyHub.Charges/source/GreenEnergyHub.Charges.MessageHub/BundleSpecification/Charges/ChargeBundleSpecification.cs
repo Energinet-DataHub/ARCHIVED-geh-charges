@@ -27,12 +27,6 @@ namespace GreenEnergyHub.Charges.MessageHub.BundleSpecification.Charges
         /// </summary>
         public const decimal ChargeMessageWeight = 5m;
 
-        /// <summary>
-        /// The upper anticipated weight (kilobytes) contribution to the final bundle
-        /// for a single price point
-        /// </summary>
-        public const decimal ChargePointMessageWeight = 0.2m;
-
         public ChargeBundleSpecification()
             : base(BundleType.ChargeDataAvailable)
         {
@@ -40,9 +34,7 @@ namespace GreenEnergyHub.Charges.MessageHub.BundleSpecification.Charges
 
         public override int GetMessageWeight(AvailableChargeData data)
         {
-            return (int)Math.Round(
-                (data.Points.Count * ChargePointMessageWeight) + ChargeMessageWeight,
-                MidpointRounding.AwayFromZero);
+            return (int)Math.Round(ChargeMessageWeight, MidpointRounding.AwayFromZero);
         }
     }
 }

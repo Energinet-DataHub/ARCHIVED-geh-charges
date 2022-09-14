@@ -93,9 +93,6 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
                 actual[i].TaxIndicator.Should().Be(true);
                 actual[i].TransparentInvoicing.Should().Be(true);
                 actual[i].Resolution.Should().Be(operation.Resolution);
-                actual[i].Points.Should().BeEquivalentTo(
-                    operation.Points,
-                    options => options.ExcludingMissingMembers());
             }
         }
 

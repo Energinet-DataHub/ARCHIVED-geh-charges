@@ -61,8 +61,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 availableChargeData.Resolution,
                 availableChargeData.DocumentType,
                 availableChargeData.OperationOrder,
-                SeededData.MarketParticipants.SystemOperator.Id,
-                availableChargeData.Points.ToList());
+                SeededData.MarketParticipants.SystemOperator.Id);
         }
 
         private static AvailableChargeReceiptData GetAvailableDataBasedOn(

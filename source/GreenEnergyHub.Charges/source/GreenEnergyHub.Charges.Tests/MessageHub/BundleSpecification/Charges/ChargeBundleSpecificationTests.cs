@@ -33,9 +33,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.Charges
             ChargeBundleSpecification sut)
         {
             // Arrange
-            var expected = (int)Math.Round(
-                (availableData.Points.Count * ChargeBundleSpecification.ChargePointMessageWeight) + ChargeBundleSpecification.ChargeMessageWeight,
-                MidpointRounding.AwayFromZero);
+            var expected = (int)Math.Round(ChargeBundleSpecification.ChargeMessageWeight, MidpointRounding.AwayFromZero);
 
             // Act
             var actual = sut.GetMessageWeight(availableData);
@@ -45,31 +43,16 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.Charges
         }
 
         [Fact]
-        public void SizeOfMaximumDocument_ShouldNotExceedDefinedWeight()
-        {
-            // Arrange
-            var chargeMessageWeightInBytes = (long)ChargeBundleSpecification.ChargeMessageWeight * 1000;
-
-            // Act
-            var xmlSizeInBytes = new System.IO.FileInfo(FilesForCalculatingBundleSize.WorstCaseChargeNoPoints).Length;
-
-            // Assert
-            xmlSizeInBytes.Should().BeLessOrEqualTo(chargeMessageWeightInBytes);
-        }
-
-        [Fact]
         public void SizeOfMaximumDocumentWith1000Points_ShouldNotExceedDefinedWeight()
         {
             // Arrange
-            var numberOfPointsInXml = 1000;
             var convertMessageWeightToKb = 1000;
             var chargeMessageWeightInBytes =
-                (long)(ChargeBundleSpecification.ChargeMessageWeight +
-                       (ChargeBundleSpecification.ChargePointMessageWeight * numberOfPointsInXml))
-                * convertMessageWeightToKb;
+                (long)ChargeBundleSpecification.ChargeMessageWeight * convertMessageWeightToKb;
 
             // Act
-            var xmlSizeInBytes = new System.IO.FileInfo(FilesForCalculatingBundleSize.WorstCaseChargeWithPoints).Length;
+            var xmlSizeInBytes =
+                new System.IO.FileInfo(FilesForCalculatingBundleSize.WorstCaseChargeNoPoints).Length;
 
             // Assert
             xmlSizeInBytes.Should().BeLessOrEqualTo(chargeMessageWeightInBytes);
