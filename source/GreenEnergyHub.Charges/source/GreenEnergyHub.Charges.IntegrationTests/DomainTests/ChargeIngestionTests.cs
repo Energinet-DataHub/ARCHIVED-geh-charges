@@ -169,7 +169,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 await FunctionAsserts.AssertHasExecutedAsync(
                     Fixture.HostManager, nameof(ChargePriceCommandReceiverEndpoint)).ConfigureAwait(false);
 
-                // We need to clear host log after each test is done to ensure that we can assert on function executed on each test run because we only check on function name.
+                // We need to clear host log after each test is done to ensure that we can assert on function executed
+                // on each test run because we only check on function name.
                 Fixture.HostManager.ClearHostLog();
             }
 
@@ -330,12 +331,17 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 await FunctionAsserts.AssertHasExecutedAsync(
                     Fixture.HostManager, nameof(ChargePriceCommandReceiverEndpoint)).ConfigureAwait(false);
 
+                // For some reason still not perceived, when running this test in the CI-pipeline, we need to wait this
+                // small timespan for the points to be committed, before querying the database.
+                await Task.Delay(TimeSpan.FromSeconds(1));
+
                 await using var chargesAssertDatabaseContext = Fixture.ChargesDatabaseManager.CreateDbContext();
                 var actual = GetCharge(chargesAssertDatabaseContext, senderProvidedChargeId, ownerId, chargeType);
                 actual.Should().BeEquivalentTo(expected, x => x.Excluding(y => y!.Points));
                 actual.Points.Count.Should().Be(24);
 
-                // We need to clear host log after each test is done to ensure that we can assert on function executed on each test run because we only check on function name.
+                // We need to clear host log after each test is done to ensure that we can assert on function executed
+                // on each test run because we only check on function name.
                 Fixture.HostManager.ClearHostLog();
             }
 
@@ -634,12 +640,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             }
 
             private static Charge GetCharge(
-                IChargesDatabaseContext chargesAssertDatabaseContext,
+                IChargesDatabaseContext chargesDatabaseContext,
                 string senderProvidedChargeId,
                 Guid ownerId,
                 ChargeType chargeType)
             {
-                var charge = chargesAssertDatabaseContext.Charges.Single(x =>
+                var charge = chargesDatabaseContext.Charges.Single(x =>
                     x.SenderProvidedChargeId == senderProvidedChargeId &&
                     x.OwnerId == ownerId &&
                     x.Type == chargeType);
