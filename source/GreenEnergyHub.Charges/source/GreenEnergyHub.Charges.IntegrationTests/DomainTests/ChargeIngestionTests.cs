@@ -24,7 +24,6 @@ using FluentAssertions.Execution;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.FunctionHost.Charges;
-using GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub;
 using GreenEnergyHub.Charges.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon;
@@ -329,7 +328,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // Assert
                 actualResponse.StatusCode.Should().Be(HttpStatusCode.Accepted);
                 await FunctionAsserts.AssertHasExecutedAsync(
-                    Fixture.HostManager, nameof(ChargePriceConfirmedDataAvailableNotifierEndpoint)).ConfigureAwait(false);
+                    Fixture.HostManager, nameof(ChargePriceCommandReceiverEndpoint)).ConfigureAwait(false);
 
                 await using var chargesAssertDatabaseContext = Fixture.ChargesDatabaseManager.CreateDbContext();
                 var actual = GetCharge(chargesAssertDatabaseContext, senderProvidedChargeId, ownerId, chargeType);
