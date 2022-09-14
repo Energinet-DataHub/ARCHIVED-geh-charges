@@ -29,11 +29,11 @@ namespace GreenEnergyHub.Charges.Application.Charges.Factories
             _clock = clock;
         }
 
-        public PriceConfirmedEvent Create(
+        public ChargePriceOperationsConfirmedEvent Create(
             DocumentDto document,
             IReadOnlyCollection<ChargePriceOperationDto> operations)
         {
-            return new PriceConfirmedEvent(
+            return new ChargePriceOperationsConfirmedEvent(
                 _clock.GetCurrentInstant(),
                 document,
                 operations);

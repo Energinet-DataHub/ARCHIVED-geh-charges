@@ -30,15 +30,15 @@ namespace GreenEnergyHub.Charges.Infrastructure.Outbox
 
         public DomainEvent Parse(string outboxMessageType, string data)
         {
-            if (outboxMessageType == typeof(PriceRejectedEvent).FullName)
+            if (outboxMessageType == typeof(ChargePriceOperationsRejectedEvent).FullName)
             {
-                var obj = _jsonSerializer.Deserialize(data, typeof(PriceRejectedEvent));
-                return (PriceRejectedEvent)obj;
+                var obj = _jsonSerializer.Deserialize(data, typeof(ChargePriceOperationsRejectedEvent));
+                return (ChargePriceOperationsRejectedEvent)obj;
             }
 
-            if (outboxMessageType == typeof(PriceConfirmedEvent).FullName)
+            if (outboxMessageType == typeof(ChargePriceOperationsConfirmedEvent).FullName)
             {
-                return (PriceConfirmedEvent)_jsonSerializer.Deserialize(data, typeof(PriceConfirmedEvent));
+                return (ChargePriceOperationsConfirmedEvent)_jsonSerializer.Deserialize(data, typeof(ChargePriceOperationsConfirmedEvent));
             }
 
             throw new ArgumentOutOfRangeException($"Could not parse outbox event of type: {outboxMessageType} with data {data}");

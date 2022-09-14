@@ -56,7 +56,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
                 marketParticipantRepository, meteringPointAdministrator, document.Sender, actorId);
 
             var chargePriceOperationsConfirmedEvent =
-                new PriceConfirmedEvent(now, document, chargePriceOperations);
+                new ChargePriceOperationsConfirmedEvent(now, document, chargePriceOperations);
 
             // Act
             var actualList = await sut.CreateAsync(chargePriceOperationsConfirmedEvent);

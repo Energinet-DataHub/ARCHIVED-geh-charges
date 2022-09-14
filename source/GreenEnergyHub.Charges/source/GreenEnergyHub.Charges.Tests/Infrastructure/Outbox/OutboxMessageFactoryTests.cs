@@ -28,7 +28,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Outbox
     [UnitTest]
     public class OutboxMessageFactoryTests
     {
-        private static readonly string _operationsRejectedEventType = typeof(PriceRejectedEvent).FullName!;
+        private static readonly string _operationsRejectedEventType = typeof(ChargePriceOperationsRejectedEvent).FullName!;
 
         [Theory]
         [AutoDomainData]
@@ -36,10 +36,10 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Outbox
             JsonSerializer jsonSerializer,
             IClock clock,
             ICorrelationContext context,
-            PriceRejectedEventBuilder priceRejectedEventBuilder)
+            ChargePriceOperationsRejectedEventBuilder chargePriceOperationsRejectedEventBuilder)
         {
             // Arrange
-            var rejectedEvent = priceRejectedEventBuilder.Build();
+            var rejectedEvent = chargePriceOperationsRejectedEventBuilder.Build();
             var factory = new OutboxMessageFactory(jsonSerializer, clock, context);
 
             // Act

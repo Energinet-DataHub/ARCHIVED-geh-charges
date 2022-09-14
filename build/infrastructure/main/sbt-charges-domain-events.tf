@@ -158,7 +158,7 @@ module "sbts_charges_charge_price_command_rejected" {
   topic_id            = module.sbt_charges_domain_events.id
   max_delivery_count  = 1
   correlation_filter  = {
-    label = "PriceRejectedEvent"
+    label = "ChargePriceOperationsRejectedEvent"
   }
 }
 
@@ -169,7 +169,7 @@ module "sbts_charges_charge_price_command_confirmed" {
   topic_id            = module.sbt_charges_domain_events.id
   max_delivery_count  = 1
   correlation_filter  = {
-    label = "PriceConfirmedEvent"
+    label = "ChargePriceOperationsConfirmedEvent"
   }
 }
 
@@ -180,7 +180,7 @@ module "sbts_charges_charge_price_command_confirmed_dataavailable" {
   topic_id            = module.sbt_charges_domain_events.id
   max_delivery_count  = 1
   correlation_filter  = {
-    label = "PriceConfirmedEvent"
+    label = "ChargePriceOperationsConfirmedEvent"
   }
 }
 
@@ -191,7 +191,7 @@ module "sbts_charges_charge_price_confirmed_publish" {
   topic_id            = module.sbt_charges_domain_events.id
   max_delivery_count  = 1
   correlation_filter  = {
-    label = "PriceConfirmedEvent"
+    label = "ChargePriceOperationsConfirmedEvent"
   }
 }
 

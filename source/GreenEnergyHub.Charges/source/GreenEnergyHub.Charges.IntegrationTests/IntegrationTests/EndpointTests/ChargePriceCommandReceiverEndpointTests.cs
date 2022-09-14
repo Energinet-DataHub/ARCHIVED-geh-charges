@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
         [Collection(nameof(ChargesFunctionAppCollectionFixture))]
         public class RunAsync : FunctionAppTestBase<ChargesFunctionAppFixture>, IAsyncLifetime
         {
-            private static readonly string _operationsRejectedEventType = typeof(PriceRejectedEvent).FullName!;
+            private static readonly string _operationsRejectedEventType = typeof(ChargePriceOperationsRejectedEvent).FullName!;
 
             public RunAsync(ChargesFunctionAppFixture fixture, ITestOutputHelper testOutputHelper)
                 : base(fixture, testOutputHelper)
@@ -139,7 +139,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 actualCharge.Points.Should().BeEquivalentTo(newPrices);
                 var actualOutboxMessage = await postOperationReadContext.OutboxMessages
                     .SingleAsync(x => x.CorrelationId.Contains(correlationId));
-                actualOutboxMessage.Type.Should().Be(typeof(PriceConfirmedEvent).FullName);
+                actualOutboxMessage.Type.Should().Be(typeof(ChargePriceOperationsConfirmedEvent).FullName);
             }
 
             [Theory]
@@ -183,7 +183,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 actualCharge.Should().BeEquivalentTo(expectedCharge);
                 var actualOutboxMessage = await postOperationReadContext.OutboxMessages
                     .SingleOrDefaultAsync(x => x.CorrelationId.Contains(correlationId));
-                actualOutboxMessage!.Type.Should().Be(typeof(PriceConfirmedEvent).FullName);
+                actualOutboxMessage!.Type.Should().Be(typeof(ChargePriceOperationsConfirmedEvent).FullName);
             }
 
             private static ChargePriceCommandReceivedEvent CreateInvalidChargePriceCommandReceivedEvent(

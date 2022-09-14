@@ -30,20 +30,20 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         private readonly IChargePriceEventHandler _chargePriceEventHandler;
         private readonly IDocumentValidator _documentValidator;
         private readonly IDomainEventPublisher _domainEventPublisher;
-        private readonly IPriceRejectedEventFactory _priceRejectedEventFactory;
+        private readonly IChargePriceOperationsRejectedEventFactory _chargePriceOperationsRejectedEventFactory;
 
         public ChargePriceCommandReceivedEventHandler(
             ILoggerFactory loggerFactory,
             IChargePriceEventHandler chargePriceEventHandler,
             IDocumentValidator documentValidator,
             IDomainEventPublisher domainEventPublisher,
-            IPriceRejectedEventFactory priceRejectedEventFactory)
+            IChargePriceOperationsRejectedEventFactory chargePriceOperationsRejectedEventFactory)
         {
             _logger = loggerFactory.CreateLogger(nameof(ChargePriceCommandReceivedEventHandler));
             _chargePriceEventHandler = chargePriceEventHandler;
             _documentValidator = documentValidator;
             _domainEventPublisher = domainEventPublisher;
-            _priceRejectedEventFactory = priceRejectedEventFactory;
+            _chargePriceOperationsRejectedEventFactory = chargePriceOperationsRejectedEventFactory;
         }
 
         public async Task HandleAsync(ChargePriceCommandReceivedEvent chargePriceCommandReceivedEvent)
@@ -69,7 +69,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             _logger.LogError("ValidationErrors for {ErrorMessage}", errorMessage);
             var validationResult = ValidationResult.CreateFailure(rejectionRules);
 
-            var rejectedEvent = _priceRejectedEventFactory.Create(
+            var rejectedEvent = _chargePriceOperationsRejectedEventFactory.Create(
                 commandReceivedEvent.Command.Document,
                 commandReceivedEvent.Command.Operations,
                 validationResult);

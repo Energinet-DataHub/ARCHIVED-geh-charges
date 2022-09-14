@@ -39,9 +39,9 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             return this;
         }
 
-        public PriceConfirmedEvent Build()
+        public ChargePriceOperationsConfirmedEvent Build()
         {
-            return new PriceConfirmedEvent(_publishedTime, _document, _operations);
+            return new ChargePriceOperationsConfirmedEvent(_publishedTime, _document, _operations);
         }
     }
 }

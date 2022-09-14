@@ -79,13 +79,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
             [Theory]
             [InlineAutoMoqData]
             public async Task RunAsync_WhenRejectedOutboxMessageIsRead_AvailableDataIsPersisted_AndProcessedDateIsSet(
-                PriceRejectedEventBuilder priceRejectedEventBuilder)
+                ChargePriceOperationsRejectedEventBuilder chargePriceOperationsRejectedEventBuilder)
             {
                 // Arrange
                 await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
                 await using var messageHubDatabaseContext = Fixture.MessageHubDatabaseManager.CreateDbContext();
                 await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
-                var operationsRejectedEvent = priceRejectedEventBuilder.Build();
+                var operationsRejectedEvent = chargePriceOperationsRejectedEventBuilder.Build();
 
                 // Act
                 var outboxMessage = await PersistToOutboxMessage(chargesDatabaseWriteContext, operationsRejectedEvent);
@@ -137,7 +137,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 [Frozen] Mock<IClock> clock,
                 [Frozen] Mock<IDomainEventDispatcher> dispatcher,
                 [Frozen] Mock<IOutboxMessageParser> outboxMessageParser,
-                PriceRejectedEventBuilder priceRejectedEventBuilder,
+                ChargePriceOperationsRejectedEventBuilder chargePriceOperationsRejectedEventBuilder,
                 TimerInfo timerInfo,
                 CorrelationContext correlationContext,
                 Instant now)
@@ -147,7 +147,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
 
                 clock.Setup(c => c.GetCurrentInstant()).Returns(now);
-                var operationsRejectedEvent = priceRejectedEventBuilder.Build();
+                var operationsRejectedEvent = chargePriceOperationsRejectedEventBuilder.Build();
                 outboxMessageParser
                     .Setup(o => o.Parse(It.IsAny<string>(), It.IsAny<string>()))
                     .Returns(operationsRejectedEvent);
@@ -184,11 +184,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
             public async Task GivenNewRejectedEvent_WhenRunAsync_ThenRejectedEventIsProcessed()
             {
                 // Arrange
-                var messageType = typeof(PriceRejectedEvent).FullName!;
+                var messageType = typeof(ChargePriceOperationsRejectedEvent).FullName!;
                 await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
                 await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
                 var jsonSerializer = new JsonSerializer();
-                var rejectedEvent = new PriceRejectedEventBuilder().Build();
+                var rejectedEvent = new ChargePriceOperationsRejectedEventBuilder().Build();
                 var type = messageType;
                 var serializedEvent = jsonSerializer.Serialize(rejectedEvent);
                 var outboxMessage = new OutboxMessageBuilder().WithType(type).WithData(serializedEvent).Build();

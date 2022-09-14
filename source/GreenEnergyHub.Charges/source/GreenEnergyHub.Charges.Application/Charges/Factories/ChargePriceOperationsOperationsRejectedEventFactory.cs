@@ -22,23 +22,23 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Factories
 {
-    public class PriceRejectedEventFactory : IPriceRejectedEventFactory
+    public class ChargePriceOperationsOperationsRejectedEventFactory : IChargePriceOperationsRejectedEventFactory
     {
         private readonly IClock _clock;
 
-        public PriceRejectedEventFactory(IClock clock)
+        public ChargePriceOperationsOperationsRejectedEventFactory(IClock clock)
         {
             _clock = clock;
         }
 
-        public PriceRejectedEvent Create(
+        public ChargePriceOperationsRejectedEvent Create(
             DocumentDto document,
             IReadOnlyCollection<ChargePriceOperationDto> operations,
             ValidationResult validationResult)
         {
             var validationErrors = validationResult.InvalidRules
                 .Select(ValidationErrorFactory.Create());
-            return new PriceRejectedEvent(
+            return new ChargePriceOperationsRejectedEvent(
                 _clock.GetCurrentInstant(),
                 document,
                 operations,

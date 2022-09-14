@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 ChargePriceOperationInputValidationRulesFactory>();
             serviceCollection.AddScoped<IDomainEventPublisher, DomainEventPublisher>();
             serviceCollection.AddScoped<IPriceConfirmedEventFactory, PriceConfirmedEventFactory>();
-            serviceCollection.AddScoped<IPriceRejectedEventFactory, PriceRejectedEventFactory>();
+            serviceCollection.AddScoped<IChargePriceOperationsRejectedEventFactory, ChargePriceOperationsOperationsRejectedEventFactory>();
             serviceCollection.AddScoped<JsonMessageDeserializer<ChargePriceCommandReceivedEvent>>();
         }
     }

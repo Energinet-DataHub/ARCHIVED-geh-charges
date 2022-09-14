@@ -38,19 +38,19 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 .AddScoped<BundleSpecification<AvailableChargeData, ChargeInformationCommandAcceptedEvent>,
                     ChargeBundleSpecification>();
 
-            serviceCollection.AddScoped<IAvailableDataNotifier<AvailableChargePriceData, PriceConfirmedEvent>,
-                AvailableDataNotifier<AvailableChargePriceData, PriceConfirmedEvent>>();
-            serviceCollection.AddScoped<IAvailableDataFactory<AvailableChargePriceData, PriceConfirmedEvent>,
+            serviceCollection.AddScoped<IAvailableDataNotifier<AvailableChargePriceData, ChargePriceOperationsConfirmedEvent>,
+                AvailableDataNotifier<AvailableChargePriceData, ChargePriceOperationsConfirmedEvent>>();
+            serviceCollection.AddScoped<IAvailableDataFactory<AvailableChargePriceData, ChargePriceOperationsConfirmedEvent>,
                 AvailableChargePriceDataFactory>();
             serviceCollection.AddScoped<IAvailableDataNotificationFactory<AvailableChargePriceData>,
                 AvailableDataNotificationFactory<AvailableChargePriceData>>();
 
             serviceCollection
-                .AddScoped<BundleSpecification<AvailableChargePriceData, PriceConfirmedEvent>,
+                .AddScoped<BundleSpecification<AvailableChargePriceData, ChargePriceOperationsConfirmedEvent>,
                     ChargePriceBundleSpecification>();
 
             serviceCollection.AddScoped<JsonMessageDeserializer<ChargeInformationCommandAcceptedEvent>>();
-            serviceCollection.AddScoped<JsonMessageDeserializer<PriceConfirmedEvent>>();
+            serviceCollection.AddScoped<JsonMessageDeserializer<ChargePriceOperationsConfirmedEvent>>();
         }
     }
 }

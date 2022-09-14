@@ -20,17 +20,17 @@ using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 namespace GreenEnergyHub.Charges.Application.Charges.Factories
 {
     /// <summary>
-    /// Factory for creating <see cref="PriceConfirmedEvent"/>
+    /// Factory for creating <see cref="ChargePriceOperationsConfirmedEvent"/>
     /// </summary>
     public interface IPriceConfirmedEventFactory
     {
         /// <summary>
-        /// Factory method for creating <see cref="PriceConfirmedEvent"/> based on confirmed operations
+        /// Factory method for creating <see cref="ChargePriceOperationsConfirmedEvent"/> based on confirmed operations
         /// </summary>
         /// <param name="document">Document containing information about market participant causing the event</param>
         /// <param name="operations">Operations to be confirmed</param>
-        /// <returns><see cref="PriceConfirmedEvent"/></returns>
-        PriceConfirmedEvent Create(
+        /// <returns><see cref="ChargePriceOperationsConfirmedEvent"/></returns>
+        ChargePriceOperationsConfirmedEvent Create(
             DocumentDto document,
             IReadOnlyCollection<ChargePriceOperationDto> operations);
     }

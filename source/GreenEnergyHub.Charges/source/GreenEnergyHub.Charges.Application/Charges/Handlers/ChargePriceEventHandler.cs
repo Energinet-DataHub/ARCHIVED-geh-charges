@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         private readonly IDomainEventPublisher _domainEventPublisher;
         private readonly ILogger _logger;
         private readonly IPriceConfirmedEventFactory _priceConfirmedEventFactory;
-        private readonly IPriceRejectedEventFactory _priceRejectedEventFactory;
+        private readonly IChargePriceOperationsRejectedEventFactory _chargePriceOperationsRejectedEventFactory;
 
         public ChargePriceEventHandler(
             IChargeRepository chargeRepository,
@@ -48,14 +48,14 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             IDomainEventPublisher domainEventPublisher,
             ILoggerFactory loggerFactory,
             IPriceConfirmedEventFactory priceConfirmedEventFactory,
-            IPriceRejectedEventFactory priceRejectedEventFactory)
+            IChargePriceOperationsRejectedEventFactory chargePriceOperationsRejectedEventFactory)
         {
             _chargeRepository = chargeRepository;
             _marketParticipantRepository = marketParticipantRepository;
             _inputValidator = inputValidator;
             _domainEventPublisher = domainEventPublisher;
             _priceConfirmedEventFactory = priceConfirmedEventFactory;
-            _priceRejectedEventFactory = priceRejectedEventFactory;
+            _chargePriceOperationsRejectedEventFactory = chargePriceOperationsRejectedEventFactory;
             _logger = loggerFactory.CreateLogger(nameof(ChargePriceEventHandler));
         }
 
@@ -154,7 +154,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         {
             if (!operationsToBeRejected.Any()) return;
             var validationResult = ValidationResult.CreateFailure(rejectionRules);
-            var rejectedEvent = _priceRejectedEventFactory.Create(document, operationsToBeRejected, validationResult);
+            var rejectedEvent = _chargePriceOperationsRejectedEventFactory.Create(document, operationsToBeRejected, validationResult);
             _domainEventPublisher.Publish(rejectedEvent);
         }
 

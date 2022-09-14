@@ -26,15 +26,15 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Application.Charges.Factories
 {
     [UnitTest]
-    public class PriceRejectedEventFactoryTests
+    public class ChargePriceOperationsRejectedEventFactoryTests
     {
         [Theory]
         [InlineAutoDomainData]
-        public void CreatePriceRejectedEvent_WhenValidRejection_HasNoNullsOrEmptyCollections(
+        public void CreateChargePriceOperationsRejectedEvent_WhenValidRejection_HasNoNullsOrEmptyCollections(
             DocumentDtoBuilder documentDtoBuilder,
             ChargePriceOperationDtoBuilder chargePriceOperationDtoBuilder,
             ValidationResult validationResult,
-            PriceRejectedEventFactory sut)
+            ChargePriceOperationsOperationsRejectedEventFactory sut)
         {
             // Act
             var document = documentDtoBuilder.Build();
