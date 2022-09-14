@@ -29,7 +29,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
     /// </summary>
     public class ChargeConfirmationDataAvailableNotifierEndpoint
     {
-        public const string FunctionName = nameof(ChargeConfirmationDataAvailableNotifierEndpoint);
+        private const string FunctionName = nameof(ChargeConfirmationDataAvailableNotifierEndpoint);
         private readonly IAvailableDataNotifier<AvailableChargeReceiptData, ChargeInformationCommandAcceptedEvent> _availableDataNotifier;
         private readonly JsonMessageDeserializer<ChargeInformationCommandAcceptedEvent> _deserializer;
 

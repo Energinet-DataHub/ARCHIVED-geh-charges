@@ -25,7 +25,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
 {
     public class ChargeRejectionDataAvailableNotifierEndpoint
     {
-        public const string FunctionName = nameof(ChargeRejectionDataAvailableNotifierEndpoint);
+        private const string FunctionName = nameof(ChargeRejectionDataAvailableNotifierEndpoint);
         private readonly IAvailableDataNotifier<AvailableChargeReceiptData, ChargeInformationCommandRejectedEvent> _availableDataNotifier;
         private readonly JsonMessageDeserializer<ChargeInformationCommandRejectedEvent> _deserializer;
 
