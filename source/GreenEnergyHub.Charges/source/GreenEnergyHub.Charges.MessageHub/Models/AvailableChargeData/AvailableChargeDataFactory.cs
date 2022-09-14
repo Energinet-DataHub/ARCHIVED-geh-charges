@@ -45,9 +45,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
         {
             var result = new List<AvailableChargeData>();
 
-            foreach (var chargeOperationDto in
-                     input.Command.Operations.Where(x =>
-                         ShouldMakeDataAvailableForActiveGridProviders(x, input.Command.Document)))
+            foreach (var chargeOperationDto in input.Command.Operations.Where(ShouldMakeDataAvailableForActiveGridProviders))
             {
                 await CreateForOperationAsync(input, chargeOperationDto, result).ConfigureAwait(false);
             }
@@ -99,17 +97,11 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
         }
 
         private static bool ShouldMakeDataAvailableForActiveGridProviders(
-            ChargeInformationOperationDto chargeInformationOperationDto, DocumentDto documentDto)
+            ChargeInformationOperationDto chargeInformationOperationDto)
         {
-            // Todo: Remove when Price handling is separated in its own flow:
-            // Issue: 1411: New Price Flow: #3 Accept/reject/notify and persist
-            var isRelevantForPriceFlow =
-                documentDto.BusinessReasonCode == BusinessReasonCode.UpdateChargePrices
-                && chargeInformationOperationDto.ChargeType == ChargeType.Tariff;
-
             // We only need to notify grid providers if the charge includes tax which are the
             // only charges they do not maintain themselves
-            return chargeInformationOperationDto.TaxIndicator == TaxIndicator.Tax || isRelevantForPriceFlow;
+            return chargeInformationOperationDto.TaxIndicator == TaxIndicator.Tax;
         }
     }
 }
