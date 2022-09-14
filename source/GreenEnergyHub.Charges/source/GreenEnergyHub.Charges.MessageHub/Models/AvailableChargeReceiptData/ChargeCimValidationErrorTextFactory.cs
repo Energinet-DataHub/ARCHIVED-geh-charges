@@ -38,9 +38,9 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
         public string Create(
             ValidationError validationError,
             DocumentDto document,
-            ChargeInformationOperationDto chargeInformationOperationDto)
+            ChargeInformationOperationDto operationDto)
         {
-            return GetMergedErrorMessage(validationError, document, chargeInformationOperationDto);
+            return GetMergedErrorMessage(validationError, document, operationDto);
         }
 
         private string GetMergedErrorMessage(

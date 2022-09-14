@@ -21,6 +21,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Messages.Command
     {
         public abstract DocumentDto Document { get; }
 
-        public abstract IReadOnlyCollection<ChargeOperation> Operations { get; }
+        public abstract IReadOnlyCollection<ChargeOperationDto> Operations { get; }
     }
 }

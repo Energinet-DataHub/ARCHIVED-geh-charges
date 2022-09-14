@@ -90,9 +90,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IActorProvider, ActorProvider>();
         }
 
-        public static void AddInternalEventPublishing(this IServiceCollection serviceCollection, ServiceBusClient serviceBusClient)
+        public static void AddDomainEventPublishing(this IServiceCollection serviceCollection, ServiceBusClient serviceBusClient)
         {
-            serviceCollection.AddScoped<IInternalEventDispatcher, InternalEventDispatcher>();
+            serviceCollection.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
             serviceCollection.AddScoped<IServiceBusDispatcher, ServiceBusDispatcher>();
             var topicName = EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesDomainEventTopicName);
 

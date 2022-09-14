@@ -25,13 +25,13 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
 {
     public class ChargeRejectionDataAvailableNotifierEndpoint
     {
-        public const string FunctionName = nameof(ChargeRejectionDataAvailableNotifierEndpoint);
-        private readonly IAvailableDataNotifier<AvailableChargeReceiptData, ChargeCommandRejectedEvent> _availableDataNotifier;
-        private readonly JsonMessageDeserializer<ChargeCommandRejectedEvent> _deserializer;
+        private const string FunctionName = nameof(ChargeRejectionDataAvailableNotifierEndpoint);
+        private readonly IAvailableDataNotifier<AvailableChargeReceiptData, ChargeInformationCommandRejectedEvent> _availableDataNotifier;
+        private readonly JsonMessageDeserializer<ChargeInformationCommandRejectedEvent> _deserializer;
 
         public ChargeRejectionDataAvailableNotifierEndpoint(
-            IAvailableDataNotifier<AvailableChargeReceiptData, ChargeCommandRejectedEvent> availableDataNotifier,
-            JsonMessageDeserializer<ChargeCommandRejectedEvent> deserializer)
+            IAvailableDataNotifier<AvailableChargeReceiptData, ChargeInformationCommandRejectedEvent> availableDataNotifier,
+            JsonMessageDeserializer<ChargeInformationCommandRejectedEvent> deserializer)
         {
             _availableDataNotifier = availableDataNotifier;
             _deserializer = deserializer;
@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             byte[] message)
         {
-            var rejectedEvent = (ChargeCommandRejectedEvent)await _deserializer.FromBytesAsync(message).ConfigureAwait(false);
+            var rejectedEvent = (ChargeInformationCommandRejectedEvent)await _deserializer.FromBytesAsync(message).ConfigureAwait(false);
             if (rejectedEvent.Command.Document.BusinessReasonCode == BusinessReasonCode.UpdateChargePrices) return;
 
             await _availableDataNotifier.NotifyAsync(rejectedEvent).ConfigureAwait(false);

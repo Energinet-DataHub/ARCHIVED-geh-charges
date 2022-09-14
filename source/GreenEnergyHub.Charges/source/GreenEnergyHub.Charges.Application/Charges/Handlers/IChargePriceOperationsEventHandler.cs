@@ -12,17 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Application.Common.Services
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
+
+namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
     /// <summary>
-    /// Service for publishing internal events
+    /// Handles events for charges with BusinessReasonCode D08
     /// </summary>
-    public interface IInternalEventPublisher
+    public interface IChargePriceOperationsEventHandler
     {
         /// <summary>
-        /// Publish internal event
+        /// Handles the received event as a charge price event
         /// </summary>
-        /// <param name="internalEvent"></param>
-        public void Publish<T>(T internalEvent);
+        /// <param name="commandReceivedEvent"></param>
+        Task HandleAsync(ChargePriceCommandReceivedEvent commandReceivedEvent);
     }
 }

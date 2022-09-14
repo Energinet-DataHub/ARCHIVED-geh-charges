@@ -42,7 +42,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             TestMeteringPointAdministrator meteringPointAdministrator,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
-            ChargeCommandAcceptedEvent acceptedEvent,
+            ChargeInformationCommandAcceptedEvent acceptedEvent,
             Instant now,
             AvailableChargeReceiptDataFactory sut)
         {

@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
     {
         private readonly IDefaultChargeLinkRepository _defaultChargeLinkRepository;
         private readonly IChargeLinksCommandFactory _chargeLinksCommandFactory;
-        private readonly IInternalEventDispatcher _internalEventDispatcher;
+        private readonly IDomainEventDispatcher _domainEventDispatcher;
         private readonly IClock _clock;
         private readonly IMeteringPointRepository _meteringPointRepository;
         private readonly ICreateDefaultChargeLinksReplier _createDefaultChargeLinksReplier;
@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
         public CreateLinkRequestHandler(
             IDefaultChargeLinkRepository defaultChargeLinkRepository,
             IChargeLinksCommandFactory chargeLinksCommandFactory,
-            IInternalEventDispatcher internalEventDispatcher,
+            IDomainEventDispatcher domainEventDispatcher,
             IClock clock,
             IMeteringPointRepository meteringPointRepository,
             ICreateDefaultChargeLinksReplier createDefaultChargeLinksReplier,
@@ -55,7 +55,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
         {
             _defaultChargeLinkRepository = defaultChargeLinkRepository;
             _chargeLinksCommandFactory = chargeLinksCommandFactory;
-            _internalEventDispatcher = internalEventDispatcher;
+            _domainEventDispatcher = domainEventDispatcher;
             _clock = clock;
             _meteringPointRepository = meteringPointRepository;
             _createDefaultChargeLinksReplier = createDefaultChargeLinksReplier;
@@ -158,7 +158,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
                 _clock.GetCurrentInstant(),
                 chargeLinksCommand);
 
-            await _internalEventDispatcher.DispatchAsync(chargeLinksReceivedEvent).ConfigureAwait(false);
+            await _domainEventDispatcher.DispatchAsync(chargeLinksReceivedEvent).ConfigureAwait(false);
         }
     }
 }

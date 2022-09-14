@@ -20,7 +20,7 @@ using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 
 namespace GreenEnergyHub.Charges.MessageHub.BundleSpecification.Charges
 {
-    public class ChargeRejectionBundleSpecification : BundleSpecification<AvailableChargeReceiptData, ChargeCommandRejectedEvent>
+    public class ChargeRejectionBundleSpecification : BundleSpecification<AvailableChargeReceiptData, ChargeInformationCommandRejectedEvent>
     {
         /// <summary>
         /// The upper anticipated weight (kilobytes) contribution to the final bundle
