@@ -33,12 +33,12 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Outbox
         [Theory]
         [AutoDomainData]
         public void CreateFrom_GivenOperationsRejectedEvent_OutboxMessageWithSerializedDataIsReturned(
-            JsonSerializer jsonSerializer,
             IClock clock,
             ICorrelationContext context,
             ChargePriceOperationsRejectedEventBuilder chargePriceOperationsRejectedEventBuilder)
         {
             // Arrange
+            var jsonSerializer = new JsonSerializer();
             var rejectedEvent = chargePriceOperationsRejectedEventBuilder.Build();
             var factory = new OutboxMessageFactory(jsonSerializer, clock, context);
 
