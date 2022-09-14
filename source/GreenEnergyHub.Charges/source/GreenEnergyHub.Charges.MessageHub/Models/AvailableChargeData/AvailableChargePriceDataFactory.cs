@@ -99,7 +99,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
                     priceOperation.ChargeOwner,
                     priceOperation.ChargeType,
                     priceOperation.StartDateTime,
-                    priceOperation.EndDateTime.TimeOrEndDefault(),
                     priceOperation.Resolution,
                     DocumentType.NotifyPriceList, // Will be added to the HTTP MessageType header
                     operationOrder,

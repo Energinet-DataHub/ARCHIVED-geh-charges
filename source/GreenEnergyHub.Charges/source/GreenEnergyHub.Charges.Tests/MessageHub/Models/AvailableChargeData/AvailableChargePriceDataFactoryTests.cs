@@ -89,7 +89,6 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
                 actual[i].ChargeOwner.Should().Be(operation.ChargeOwner);
                 actual[i].ChargeType.Should().Be(operation.ChargeType);
                 actual[i].StartDateTime.Should().Be(operation.StartDateTime);
-                actual[i].EndDateTime.Should().Be(operation.EndDateTime.TimeOrEndDefault());
                 actual[i].Resolution.Should().Be(operation.Resolution);
                 actual[i].Points.Should().BeEquivalentTo(
                     operation.Points,
