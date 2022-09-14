@@ -18,7 +18,7 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
 {
-    public class ChargeLinkOperationDto : ChargeOperation
+    public class ChargeLinkOperationDto : ChargeOperationDto
     {
         public ChargeLinkOperationDto(
             string operationId,
