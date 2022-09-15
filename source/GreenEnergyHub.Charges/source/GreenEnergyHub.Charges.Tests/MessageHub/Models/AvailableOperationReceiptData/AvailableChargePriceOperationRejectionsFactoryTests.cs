@@ -42,33 +42,33 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
     {
         [Theory]
         [InlineAutoMoqData]
-        public async Task CreateAsync_WhenCalledWithChargePriceRejectedEvent_ReturnsAvailableData(
+        public async Task CreateAsync_WhenCalledWithChargePriceOperationsRejectedEvent_ReturnsAvailableData(
             TestMeteringPointAdministrator meteringPointAdministrator,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             [Frozen] Mock<IAvailableChargePriceReceiptValidationErrorFactory> availableChargePriceReceiptValidationErrorFactory,
-            List<ChargePriceOperationDto> chargePriceOperations,
-            ChargePriceCommandBuilder chargePriceCommandBuilder,
+            IReadOnlyCollection<ChargePriceOperationDto> chargePriceOperations,
+            DocumentDtoBuilder documentDtoBuilder,
             Instant now,
             AvailableChargePriceOperationRejectionsFactory sut)
         {
             // Arrange
-            var chargePriceCommand = chargePriceCommandBuilder.WithChargeOperations(chargePriceOperations).Build();
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
             var actorId = Guid.NewGuid();
+            var document = documentDtoBuilder.WithBusinessReasonCode(BusinessReasonCode.UpdateChargePrices).Build();
             MarketParticipantRepositoryMockBuilder.SetupMarketParticipantRepositoryMock(
-                marketParticipantRepository, meteringPointAdministrator, chargePriceCommand.Document.Sender, actorId);
+                marketParticipantRepository, meteringPointAdministrator, document.Sender, actorId);
 
             SetupAvailablePriceReceiptValidationErrorFactoryMock(
-                availableChargePriceReceiptValidationErrorFactory, chargePriceCommand);
+                availableChargePriceReceiptValidationErrorFactory, document);
 
-            var validationErrors = chargePriceCommand.Operations
+            var validationErrors = chargePriceOperations
                 .Reverse() // GetReasons() should provide the correct ValidationError no matter what order they have here
                 .Select(x => new ValidationError(ValidationRuleIdentifier.SenderIsMandatoryTypeValidation, x.OperationId, null))
                 .ToList();
 
             var chargePriceOperationsRejectedEvent =
-                new ChargePriceOperationsRejectedEvent(now, chargePriceCommand, validationErrors);
+                new ChargePriceOperationsRejectedEvent(now, document, chargePriceOperations, validationErrors);
 
             // Act
             var actualList = await sut.CreateAsync(chargePriceOperationsRejectedEvent);
@@ -80,16 +80,15 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
             for (var i1 = 0; i1 < actualList.Count; i1++)
             {
                 var actual = actualList[i1];
-                var chargeCommandDocument = chargePriceCommand.Document;
                 actual.ActorId.Should().Be(actorId);
-                actual.RecipientId.Should().Be(chargeCommandDocument.Sender.MarketParticipantId);
-                actual.RecipientRole.Should().Be(chargeCommandDocument.Sender.BusinessProcessRole);
-                actual.BusinessReasonCode.Should().Be(chargeCommandDocument.BusinessReasonCode);
+                actual.RecipientId.Should().Be(document.Sender.MarketParticipantId);
+                actual.RecipientRole.Should().Be(document.Sender.BusinessProcessRole);
+                actual.BusinessReasonCode.Should().Be(document.BusinessReasonCode);
                 actual.RequestDateTime.Should().Be(now);
                 actual.ReceiptStatus.Should().Be(ReceiptStatus.Rejected);
                 actual.DocumentType.Should().Be(DocumentType.RejectRequestChangeOfPriceList);
 
-                var expectedChargeOperationDto = chargePriceCommand.Operations.ToArray()[i1];
+                var expectedChargeOperationDto = chargePriceOperations.ToArray()[i1];
                 actual.OriginalOperationId.Should().Be(expectedChargeOperationDto.OperationId);
 
                 var actualValidationErrors = actual.ValidationErrors.ToList();
@@ -110,12 +109,12 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
 
         private static void SetupAvailablePriceReceiptValidationErrorFactoryMock(
             Mock<IAvailableChargePriceReceiptValidationErrorFactory> availablePriceReceiptValidationErrorFactory,
-            ChargePriceCommand chargePriceCommand)
+            DocumentDto document)
         {
             // fake error code and text
             availablePriceReceiptValidationErrorFactory
-                .Setup(f => f.Create(It.IsAny<ValidationError>(), chargePriceCommand, It.IsAny<ChargePriceOperationDto>()))
-                .Returns<ValidationError, ChargePriceCommand, ChargePriceOperationDto>((validationError, _, _) =>
+                .Setup(f => f.Create(It.IsAny<ValidationError>(), document, It.IsAny<ChargePriceOperationDto>()))
+                .Returns<ValidationError, DocumentDto, ChargePriceOperationDto>((validationError, _, _) =>
                     new AvailableReceiptValidationError(
                         ReasonCode.D01, validationError.ValidationRuleIdentifier.ToString()));
         }

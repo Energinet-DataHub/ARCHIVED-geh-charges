@@ -36,8 +36,13 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         bool expectedResult,
         ChargeInformationOperationDtoBuilder builder)
         {
+            // Arrange
             var dto = builder.WithResolution(resolution).Build();
+
+            // Act
             var sut = new ResolutionIsRequiredRule(dto);
+
+            // Assert
             sut.IsValid.Should().Be(expectedResult);
         }
     }

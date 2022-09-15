@@ -25,7 +25,7 @@ namespace GreenEnergyHub.Charges.Tests.Builders.MessageHub
     {
         private BusinessReasonCode _businessReasonCode;
         private Guid _availableDataReferenceId;
-        private int _operationOrder = 0;
+        private int _operationOrder;
         private Instant _requestDateTime = SystemClock.Instance.GetCurrentInstant();
         private Guid _actorId;
 

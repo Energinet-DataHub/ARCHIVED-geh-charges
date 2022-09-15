@@ -23,34 +23,27 @@ using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
-using GreenEnergyHub.Charges.MessageHub.Models.Shared;
-using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 {
     public class AvailableChargeRejectionDataFactory :
-        AvailableDataFactoryBase<AvailableChargeReceiptData, ChargeCommandRejectedEvent>
+        AvailableDataFactoryBase<AvailableChargeReceiptData, ChargeInformationCommandRejectedEvent>
     {
         private readonly IMessageMetaDataContext _messageMetaDataContext;
         private readonly IAvailableChargeReceiptValidationErrorFactory _availableChargeReceiptValidationErrorFactory;
-        private readonly ILogger _logger;
 
         public AvailableChargeRejectionDataFactory(
             IMessageMetaDataContext messageMetaDataContext,
             IAvailableChargeReceiptValidationErrorFactory availableChargeReceiptValidationErrorFactory,
-            IMarketParticipantRepository marketParticipantRepository,
-            ILoggerFactory loggerFactory)
+            IMarketParticipantRepository marketParticipantRepository)
             : base(marketParticipantRepository)
         {
             _messageMetaDataContext = messageMetaDataContext;
             _availableChargeReceiptValidationErrorFactory = availableChargeReceiptValidationErrorFactory;
-            _logger = loggerFactory.CreateLogger(nameof(AvailableChargeRejectionDataFactory));
         }
 
-        public override async Task<IReadOnlyList<AvailableChargeReceiptData>> CreateAsync(ChargeCommandRejectedEvent input)
+        public override async Task<IReadOnlyList<AvailableChargeReceiptData>> CreateAsync(ChargeInformationCommandRejectedEvent input)
         {
-            LogValidationErrors(input);
-
             // The original sender is the recipient of the receipt
             var recipient = await GetRecipientAsync(input.Command.Document.Sender).ConfigureAwait(false);
             var sender = await GetSenderAsync().ConfigureAwait(false);
@@ -74,24 +67,15 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                 .ToList();
         }
 
-        private void LogValidationErrors(ChargeCommandRejectedEvent rejectedEvent)
-        {
-            var errorMessage = ValidationErrorLogMessageBuilder.BuildErrorMessage(
-                rejectedEvent.Command.Document,
-                rejectedEvent.ValidationErrors);
-
-            _logger.LogError("ValidationErrors for {ErrorMessage}", errorMessage);
-        }
-
         private List<AvailableReceiptValidationError> GetReasons(
-            ChargeCommandRejectedEvent input,
+            ChargeInformationCommandRejectedEvent input,
             ChargeInformationOperationDto chargeInformationOperationDto)
         {
             return input
                 .ValidationErrors
                 .Where(ve => ve.OperationId == chargeInformationOperationDto.OperationId || string.IsNullOrWhiteSpace(ve.OperationId))
                 .Select(validationError => _availableChargeReceiptValidationErrorFactory
-                    .Create(validationError, input.Command, chargeInformationOperationDto))
+                    .Create(validationError, input.Command.Document, chargeInformationOperationDto))
                 .ToList();
         }
     }

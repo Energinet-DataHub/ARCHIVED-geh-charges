@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCreatedEvents;
@@ -29,8 +28,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeLinkCreatedEvents
         [Theory]
         [InlineAutoMoqData]
         public void CreateEvent_WhenCalled_CreatesEventWithCorrectValues(
-            [NotNull] ChargeLinksCommand command,
-            [NotNull] ChargeLinkCreatedEventFactory sut)
+            ChargeLinksCommand command,
+            ChargeLinkCreatedEventFactory sut)
         {
             // Arrange
 

@@ -15,7 +15,7 @@
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification.Charges;
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
@@ -30,24 +30,21 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<IAvailableDataNotifier<AvailableChargeReceiptData, ChargeCommandRejectedEvent>,
-                AvailableDataNotifier<AvailableChargeReceiptData, ChargeCommandRejectedEvent>>();
+            serviceCollection.AddScoped<IAvailableDataNotifier<AvailableChargeReceiptData, ChargeInformationCommandRejectedEvent>,
+                AvailableDataNotifier<AvailableChargeReceiptData, ChargeInformationCommandRejectedEvent>>();
             serviceCollection.AddScoped<AvailableChargeReceiptValidationErrorFactory,
                 AvailableChargeReceiptValidationErrorFactory>();
             serviceCollection.AddScoped<ICimValidationErrorTextProvider, CimValidationErrorTextProvider>();
             serviceCollection.AddScoped<ICimValidationErrorCodeFactory, CimValidationErrorCodeFactory>();
-            serviceCollection.AddScoped<ICimValidationErrorTextFactory<ChargeInformationCommand, ChargeInformationOperationDto>,
+            serviceCollection.AddScoped<ICimValidationErrorTextFactory<ChargeInformationOperationDto>,
                 ChargeCimValidationErrorTextFactory>();
-            serviceCollection.AddScoped<IAvailableDataFactory<AvailableChargeReceiptData, ChargeCommandRejectedEvent>,
+            serviceCollection.AddScoped<IAvailableDataFactory<AvailableChargeReceiptData, ChargeInformationCommandRejectedEvent>,
                 AvailableChargeRejectionDataFactory>();
             serviceCollection.AddScoped<IAvailableDataNotificationFactory<AvailableChargeReceiptData>,
                 AvailableDataNotificationFactory<AvailableChargeReceiptData>>();
-            serviceCollection.AddScoped<BundleSpecification<AvailableChargeReceiptData, ChargeCommandRejectedEvent>,
+            serviceCollection.AddScoped<BundleSpecification<AvailableChargeReceiptData, ChargeInformationCommandRejectedEvent>,
                 ChargeRejectionBundleSpecification>();
-
-            serviceCollection
-                .AddMessaging()
-                .AddInternalMessageExtractor<ChargeCommandRejectedEvent>();
+            serviceCollection.AddScoped<JsonMessageDeserializer<ChargeInformationCommandRejectedEvent>>();
         }
     }
 }

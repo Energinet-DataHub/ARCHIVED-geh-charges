@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 
@@ -27,12 +28,12 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableOperationReceiptData
         /// Factory method for creating <see cref="AvailableReceiptValidationError"/>
         /// </summary>
         /// <param name="validationError"></param>
-        /// <param name="command"></param>
+        /// <param name="document"></param>
         /// <param name="chargePriceOperationDto"></param>
         /// <returns><see cref="AvailableReceiptValidationError"/></returns>
         AvailableReceiptValidationError Create(
             ValidationError validationError,
-            ChargePriceCommand command,
+            DocumentDto document,
             ChargePriceOperationDto chargePriceOperationDto);
     }
 }

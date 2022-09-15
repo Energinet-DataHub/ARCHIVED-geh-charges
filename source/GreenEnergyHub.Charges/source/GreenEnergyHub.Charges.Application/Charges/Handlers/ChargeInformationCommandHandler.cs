@@ -14,7 +14,7 @@
 
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Messaging;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using NodaTime;
 
@@ -23,20 +23,20 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
     public class ChargeInformationCommandHandler : IChargeInformationCommandHandler
     {
         private readonly IClock _clock;
-        private readonly IMessageDispatcher<ChargeCommandReceivedEvent> _chargeMessageDispatcher;
+        private readonly IDomainEventDispatcher _domainEventDispatcher;
 
         public ChargeInformationCommandHandler(
             IClock clock,
-            IMessageDispatcher<ChargeCommandReceivedEvent> chargeMessageDispatcher)
+            IDomainEventDispatcher domainEventDispatcher)
         {
             _clock = clock;
-            _chargeMessageDispatcher = chargeMessageDispatcher;
+            _domainEventDispatcher = domainEventDispatcher;
         }
 
         public async Task HandleAsync(ChargeInformationCommand command)
         {
-            var receivedEvent = new ChargeCommandReceivedEvent(_clock.GetCurrentInstant(), command);
-            await _chargeMessageDispatcher.DispatchAsync(receivedEvent).ConfigureAwait(false);
+            var receivedEvent = new ChargeInformationCommandReceivedEvent(_clock.GetCurrentInstant(), command);
+            await _domainEventDispatcher.DispatchAsync(receivedEvent).ConfigureAwait(false);
         }
     }
 }

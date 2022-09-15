@@ -125,5 +125,27 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 SeededData.MarketParticipants.SystemOperator.Id,
                 availableChargeLinksReceiptData.ValidationErrors.ToList());
         }
+
+        private static AvailableChargePriceData GetAvailableDataBasedOn(
+            AvailableChargePriceData availableChargePriceData)
+        {
+            return new AvailableChargePriceData(
+                availableChargePriceData.SenderId.Substring(0, 34),
+                availableChargePriceData.SenderRole,
+                availableChargePriceData.RecipientId.Substring(0, 34),
+                availableChargePriceData.RecipientRole,
+                availableChargePriceData.BusinessReasonCode,
+                availableChargePriceData.RequestDateTime,
+                availableChargePriceData.AvailableDataReferenceId,
+                availableChargePriceData.ChargeId.Substring(0, 34),
+                availableChargePriceData.ChargeOwner.Substring(0, 34),
+                availableChargePriceData.ChargeType,
+                availableChargePriceData.StartDateTime,
+                availableChargePriceData.Resolution,
+                availableChargePriceData.DocumentType,
+                availableChargePriceData.OperationOrder,
+                SeededData.MarketParticipants.SystemOperator.Id,
+                availableChargePriceData.Points.ToList());
+        }
     }
 }

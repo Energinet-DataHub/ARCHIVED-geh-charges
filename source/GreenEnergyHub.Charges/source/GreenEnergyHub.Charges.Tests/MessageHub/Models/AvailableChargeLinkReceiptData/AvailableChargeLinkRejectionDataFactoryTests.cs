@@ -31,7 +31,6 @@ using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared;
 using GreenEnergyHub.TestHelpers;
-using Microsoft.Extensions.Logging;
 using Moq;
 using NodaTime;
 using Xunit;
@@ -75,7 +74,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
                 marketParticipantRepository, meteringPointAdministrator, chargeLinksCommand.Document.Sender, actorId);
 
             SetupAvailableChargeLinksReceiptValidationErrorFactory(
-                availableChargeLinksReceiptValidationErrorFactory, chargeLinksCommand);
+                availableChargeLinksReceiptValidationErrorFactory);
 
             // Act
             var actualList = await sut.CreateAsync(rejectedEvent);
@@ -116,48 +115,6 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
 
         [Theory]
         [InlineAutoDomainData]
-        public async Task CreateAsync_WhenCalled_ShouldLogValidationErrors(
-            Instant now,
-            ChargeLinksRejectedEvent rejectedEvent,
-            MarketParticipantRole marketParticipantRole,
-            MarketParticipant meteringPointAdministrator,
-            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
-            [Frozen] Mock<IAvailableChargeLinksReceiptValidationErrorFactory> availableChargeLinksReceiptValidationErrorFactory,
-            [Frozen] Mock<ILoggerFactory> loggerFactory,
-            [Frozen] Mock<ILogger> logger)
-        {
-            // Arrange
-            loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
-            rejectedEvent.Command.Document.Sender.BusinessProcessRole = marketParticipantRole;
-            messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
-            var actorId = Guid.NewGuid();
-            MarketParticipantRepositoryMockBuilder.SetupMarketParticipantRepositoryMock(
-                marketParticipantRepository, meteringPointAdministrator, rejectedEvent.Command.Document.Sender, actorId);
-
-            SetupAvailableChargeLinksReceiptValidationErrorFactory(
-                availableChargeLinksReceiptValidationErrorFactory, rejectedEvent.Command);
-
-            var sut = new AvailableChargeLinksRejectionDataFactory(
-                messageMetaDataContext.Object,
-                availableChargeLinksReceiptValidationErrorFactory.Object,
-                marketParticipantRepository.Object,
-                loggerFactory.Object);
-
-            // Act
-            await sut.CreateAsync(rejectedEvent);
-
-            // Assert
-            var document = rejectedEvent.Command.Document;
-            var expectedMessage = $"ValidationErrors for document Id {document.Id} with Type {document.Type} from GLN {document.Sender.MarketParticipantId}:\r\n" +
-                                   "- ValidationRuleIdentifier: StartDateValidation\r\n" +
-                                   "- ValidationRuleIdentifier: ChangingTariffTaxValueNotAllowed\r\n" +
-                                   "- ValidationRuleIdentifier: SenderIsMandatoryTypeValidation\r\n";
-            logger.VerifyLoggerWasCalled(expectedMessage, LogLevel.Error);
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
         public async Task CreateAsync_WhenSenderIsSystemOperator_ReturnsEmptyList(
             ChargeLinksRejectedEvent rejectedEvent,
             AvailableChargeLinksRejectionDataFactory sut)
@@ -173,13 +130,15 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
         }
 
         private static void SetupAvailableChargeLinksReceiptValidationErrorFactory(
-            Mock<IAvailableChargeLinksReceiptValidationErrorFactory> availableChargeLinksReceiptValidationErrorFactory,
-            ChargeLinksCommand chargeLinksCommand)
+            Mock<IAvailableChargeLinksReceiptValidationErrorFactory> availableChargeLinksReceiptValidationErrorFactory)
         {
             // fake error code and text
             availableChargeLinksReceiptValidationErrorFactory
-                .Setup(f => f.Create(It.IsAny<ValidationError>(), chargeLinksCommand, It.IsAny<ChargeLinkOperationDto>()))
-                .Returns<ValidationError, ChargeLinksCommand, ChargeLinkOperationDto>((validationError, _, _) =>
+                .Setup(f => f.Create(
+                    It.IsAny<ValidationError>(),
+                    It.IsAny<DocumentDto>(),
+                    It.IsAny<ChargeLinkOperationDto>()))
+                .Returns<ValidationError, DocumentDto, ChargeLinkOperationDto>((validationError, _, _) =>
                     new AvailableReceiptValidationError(
                         ReasonCode.D01, validationError.ValidationRuleIdentifier.ToString()));
         }

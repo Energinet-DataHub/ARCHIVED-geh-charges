@@ -13,11 +13,11 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCreatedEvents
 {
-    public class ChargeLinkCreatedEvent : OutboundIntegrationEvent
+    public class ChargeLinkCreatedEvent : MessageBase
     {
         public ChargeLinkCreatedEvent(
             string chargeLinkId,

@@ -31,9 +31,9 @@ namespace GreenEnergyHub.Charges.Tests.TestCore
 
             return types.Select(type => new
                 {
-                    type, obj = FormatterServices.GetUninitializedObject(type!),
+                    type, obj = FormatterServices.GetUninitializedObject(type),
                 })
-                .Select(t => (ValidationRuleIdentifier)t.type!.GetProperties()
+                .Select(t => (ValidationRuleIdentifier)t.type.GetProperties()
                     .Single(x => x.Name == nameof(ValidationRuleIdentifier))
                     .GetValue(t.obj, null)!)
                 .ToList();

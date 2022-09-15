@@ -12,10 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.Charges.Factories;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.TestHelpers;
 using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
 using Xunit;
@@ -28,13 +30,16 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Factories
     {
         [Theory]
         [InlineAutoDomainData]
-        public void Create_ChargePriceOperationsRejectedEvent_HasNoNullsOrEmptyCollections(
-            ChargePriceCommand command,
+        public void CreateChargePriceOperationsRejectedEvent_WhenValidRejection_HasNoNullsOrEmptyCollections(
+            DocumentDtoBuilder documentDtoBuilder,
+            ChargePriceOperationDtoBuilder chargePriceOperationDtoBuilder,
             ValidationResult validationResult,
-            ChargePriceOperationsRejectedEventFactory sut)
+            ChargePriceOperationsOperationsRejectedEventFactory sut)
         {
             // Act
-            var actual = sut.Create(command, validationResult);
+            var document = documentDtoBuilder.Build();
+            var operations = new List<ChargePriceOperationDto> { chargePriceOperationDtoBuilder.Build() };
+            var actual = sut.Create(document, operations, validationResult);
 
             // Assert
             actual.Should().NotContainNullEnumerable();

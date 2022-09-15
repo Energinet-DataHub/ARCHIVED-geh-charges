@@ -12,13 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using Energinet.DataHub.Core.Messaging.Transport.SchemaValidation;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
-using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
@@ -89,8 +87,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
                         await _chargeInformationCommandBundleHandler.HandleAsync(commandBundle).ConfigureAwait(false);
                         break;
                     case ChargePriceCommandBundle commandBundle:
-                        // This is a temporary fix to support "old" price flow while new is under development
-                        await SupportOldFlowAsync(commandBundle).ConfigureAwait(false);
                         await _chargePriceCommandBundleHandler.HandleAsync(commandBundle).ConfigureAwait(false);
                         break;
                 }
@@ -107,40 +103,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
                     .CreateBadRequestResponseAsync(request, exception.SchemaValidationError)
                     .ConfigureAwait(false);
             }
-        }
-
-        private async Task SupportOldFlowAsync(ChargePriceCommandBundle priceCommandBundle)
-        {
-            var document = priceCommandBundle.Document;
-            var chargeInformationCommands = priceCommandBundle.Commands
-                .Select(priceCommand => priceCommand.Operations
-                    .Select(priceOperation => new ChargeInformationOperationDto(
-                        priceOperation.OperationId,
-                        priceOperation.ChargeType,
-                        priceOperation.SenderProvidedChargeId,
-                        string.Empty,
-                        string.Empty,
-                        priceOperation.ChargeOwner,
-                        Resolution.Unknown,
-                        priceOperation.Resolution,
-                        TaxIndicator.Unknown,
-                        TransparentInvoicing.Unknown,
-                        VatClassification.Unknown,
-                        priceOperation.StartDateTime,
-                        null,
-                        priceOperation.PointsStartInterval,
-                        priceOperation.PointsEndInterval,
-                        priceOperation.Points))
-                    .ToList())
-                .Select(operations => new ChargeInformationCommand(document, operations))
-                .ToList();
-
-            var chargeInformationCommandBundle =
-                new ChargeInformationCommandBundle(document, chargeInformationCommands);
-
-            await _chargeInformationCommandBundleHandler
-                .HandleAsync(chargeInformationCommandBundle)
-                .ConfigureAwait(false);
         }
 
         private bool AuthenticatedMatchesSenderId(SchemaValidatedInboundMessage<ChargeCommandBundle> inboundMessage)

@@ -22,10 +22,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
-using GreenEnergyHub.Charges.MessageHub.Models.Shared;
-using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableOperationReceiptData
 {
@@ -34,36 +31,32 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableOperationReceiptData
     {
         private readonly IMessageMetaDataContext _messageMetaDataContext;
         private readonly IAvailableChargePriceReceiptValidationErrorFactory _availableChargePriceReceiptValidationErrorFactory;
-        private readonly ILogger _logger;
 
         public AvailableChargePriceOperationRejectionsFactory(
             IMessageMetaDataContext messageMetaDataContext,
             IAvailableChargePriceReceiptValidationErrorFactory availableChargePriceReceiptValidationErrorFactory,
-            IMarketParticipantRepository marketParticipantRepository,
-            ILoggerFactory loggerFactory)
+            IMarketParticipantRepository marketParticipantRepository)
             : base(marketParticipantRepository)
         {
             _messageMetaDataContext = messageMetaDataContext;
             _availableChargePriceReceiptValidationErrorFactory = availableChargePriceReceiptValidationErrorFactory;
-            _logger = loggerFactory.CreateLogger(nameof(AvailableChargeRejectionDataFactory));
         }
 
-        public override async Task<IReadOnlyList<AvailableChargeReceiptData.AvailableChargeReceiptData>> CreateAsync(ChargePriceOperationsRejectedEvent input)
+        public override async Task<IReadOnlyList<AvailableChargeReceiptData.AvailableChargeReceiptData>> CreateAsync(
+            ChargePriceOperationsRejectedEvent input)
         {
-            LogValidationErrors(input);
-
             // The original sender is the recipient of the receipt
-            var recipient = await GetRecipientAsync(input.Command.Document.Sender).ConfigureAwait(false);
+            var recipient = await GetRecipientAsync(input.Document.Sender).ConfigureAwait(false);
             var sender = await GetSenderAsync().ConfigureAwait(false);
 
             var operationOrder = 0;
 
-            return input.Command.Operations.Select(operationDto => new AvailableChargeReceiptData.AvailableChargeReceiptData(
+            return input.Operations.Select(operationDto => new AvailableChargeReceiptData.AvailableChargeReceiptData(
                     sender.MarketParticipantId,
                     sender.BusinessProcessRole,
                     recipient.MarketParticipantId,
                     recipient.BusinessProcessRole,
-                    input.Command.Document.BusinessReasonCode,
+                    BusinessReasonCode.UpdateChargePrices,
                     _messageMetaDataContext.RequestDataTime,
                     Guid.NewGuid(), // ID of each available piece of data must be unique
                     ReceiptStatus.Rejected,
@@ -75,14 +68,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableOperationReceiptData
                 .ToList();
         }
 
-        private void LogValidationErrors(ChargePriceOperationsRejectedEvent rejectedEvent)
-        {
-            var errorMessage = ValidationErrorLogMessageBuilder.BuildErrorMessage(
-                rejectedEvent.Command.Document,
-                rejectedEvent.ValidationErrors);
-            _logger.LogError("ValidationErrors for {ErrorMessage}", errorMessage);
-        }
-
         private List<AvailableReceiptValidationError> GetReasons(
             ChargePriceOperationsRejectedEvent input,
             ChargePriceOperationDto operationDto)
@@ -91,7 +76,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableOperationReceiptData
                 .ValidationErrors
                 .Where(ve => ve.OperationId == operationDto.OperationId || string.IsNullOrWhiteSpace(ve.OperationId))
                 .Select(validationError => _availableChargePriceReceiptValidationErrorFactory
-                    .Create(validationError, input.Command, operationDto))
+                    .Create(validationError, input.Document, operationDto))
                 .ToList();
         }
     }

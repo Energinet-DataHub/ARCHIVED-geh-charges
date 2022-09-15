@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
             await _messageChargeDispatcher.DispatchAsync(chargeCreatedEvent).ConfigureAwait(false);
         }
 
-        public Task PublishChargeUpdatedAsync(ChargeCommandAcceptedEvent chargeCommandAcceptedEvent)
+        public Task PublishChargeUpdatedAsync(ChargeInformationCommandAcceptedEvent chargeInformationCommandAcceptedEvent)
         {
             return Task.CompletedTask;
         }

@@ -94,7 +94,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
                 // Act
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
-                    () => Fixture.MeteringPointCreatedTopic.SenderClient.SendMessageAsync(message), correlationId);
+                    () => Fixture.IntegrationEventTopic.SenderClient.SendMessageAsync(message), correlationId);
 
                 // Assert
                 await FunctionAsserts.AssertHasExecutedAsync(Fixture.HostManager, nameof(MeteringPointPersisterEndpoint)).ConfigureAwait(false);
@@ -102,7 +102,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 var meteringPoint = context.MeteringPoints.SingleOrDefault(x => x.MeteringPointId == meteringPointId);
                 meteringPoint.Should().NotBeNull();
 
-                // We need to clear host log after each test is done to ensure that we can assert on function executed on each test run because we only check on function name.
+                // We need to clear host log after each test is done to ensure that we can assert on function executed
+                // on each test run because we only check on function name.
                 Fixture.HostManager.ClearHostLog();
             }
 

@@ -25,7 +25,7 @@ namespace GreenEnergyHub.TestHelpers
         /// </summary>
         public static Mock<ILogger<T>> VerifyLoggerWasCalled<T>(this Mock<ILogger<T>> logger, string expectedMessage, LogLevel logLevel)
         {
-            Func<object, Type, bool> stringComparer = (v, t) => string.Compare(v.ToString(), expectedMessage, StringComparison.InvariantCulture) == 0;
+            Func<object, Type, bool> stringComparer = (v, _) => string.Compare(v.ToString(), expectedMessage, StringComparison.InvariantCulture) == 0;
 
             if (logger == null)
             {
@@ -45,7 +45,7 @@ namespace GreenEnergyHub.TestHelpers
 
         public static Mock<ILogger> VerifyLoggerWasCalled(this Mock<ILogger> logger, string expectedMessage, LogLevel logLevel)
         {
-            Func<object, Type, bool> stringComparer = (v, t) => string.Compare(v.ToString(), expectedMessage, StringComparison.InvariantCulture) == 0;
+            Func<object, Type, bool> stringComparer = (v, _) => string.Compare(v.ToString(), expectedMessage, StringComparison.InvariantCulture) == 0;
 
             if (logger == null)
             {

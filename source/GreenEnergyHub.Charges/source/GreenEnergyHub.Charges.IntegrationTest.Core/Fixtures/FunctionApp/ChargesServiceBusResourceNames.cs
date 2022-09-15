@@ -29,9 +29,11 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
         // Integration events, charge links
         public const string ChargeLinksCreatedTopicKey = "charge-links-created";
 
+        // Integration events topic
+        public const string IntegrationEventTopicKey = "integration_event_topic";
+
         // Integration, metering point domain
-        public const string MeteringPointCreatedTopicKey = "metering-point-created";
-        public const string MeteringPointCreatedSubscriptionName = "metering-point-created-sub-charges";
+        public const string MeteringPointCreatedSubscriptionName = "metering-point-created";
         public const string CreateLinksRequestQueueKey = "create-links-request";
         public const string CreateLinksReplyQueueKey = "create-links-reply";
 
@@ -45,8 +47,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
         public const string RequestResponseLoggingContainerName = "marketoplogs";
 
         // Integration, marketparticipants domain
-        public const string MarketParticipantChangedTopicKey = "market-participant-changed";
-        public const string MarketParticipantChangedSubscriptionName = "market-participant-changed-to-charges";
+        public const string MarketParticipantChangedSubscriptionName = "market-participant-changed";
 
         // Internal, charge
         public const string ChargesDomainEventsTopicKey = "sbt-charges-domain-events";
@@ -65,8 +66,13 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
         // Internal, charge, rejected
         public const string ChargeCommandRejectedSubscriptionName = "sbtsub-charges-charge-command-rejected";
 
-        // Internal, charge price operations, rejected
-        public const string ChargePriceCommandRejectedSubscriptionName = "sbtsub-charges-charge-price-command-rejected";
+        // Internal, charge price, rejected
+        public const string ChargePriceRejectedSubscriptionName = "sbtsub-charges-charge-price-rejected";
+
+        // Internal, charge price, confirmed
+        public const string ChargePriceConfirmedSubscriptionName = "sbtsub-charges-charge-price-confirmed";
+        public const string ChargePriceConfirmedDataAvailableSubscriptionName = "sbtsub-charges-charge-price-confirmed-dataavail";
+        public const string ChargePriceConfirmedPublishSubscriptionName = "sbtsub-charges-charge-price-confirmed-publish";
 
         // Internal, charge links, received
         public const string ChargeLinksCommandReceivedSubscriptionName = "sbtsub-charges-charge-links-command-received";

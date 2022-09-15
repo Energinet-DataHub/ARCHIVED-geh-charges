@@ -16,7 +16,6 @@ using System;
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Core.App.FunctionApp.FunctionTelemetryScope;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
-using Energinet.DataHub.Core.JsonSerialization;
 using Energinet.DataHub.Core.Logging.RequestResponseMiddleware.Storage;
 using Energinet.DataHub.Core.Messaging.Protobuf;
 using Energinet.DataHub.Core.Messaging.Transport;
@@ -30,8 +29,6 @@ using Energinet.DataHub.MessageHub.Model.Peek;
 using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkReplier;
 using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 using GreenEnergyHub.Charges.Domain.GridAreaLinks;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
@@ -65,9 +62,16 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
+            var serviceBusConnectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString);
+            var dataAvailableQueue = EnvironmentHelper.GetEnv(EnvironmentSettingNames.MessageHubDataAvailableQueue);
+            var messageHubReplyQueue = EnvironmentHelper.GetEnv(EnvironmentSettingNames.MessageHubReplyQueue);
+            var storageServiceConnectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.MessageHubStorageConnectionString);
+            var azureBlobStorageContainerName = EnvironmentHelper.GetEnv(EnvironmentSettingNames.MessageHubStorageContainer);
+
+            var serviceBusClient = new ServiceBusClient(serviceBusConnectionString);
+
             serviceCollection.AddScoped(typeof(IClock), _ => SystemClock.Instance);
             serviceCollection.AddLogging();
-            serviceCollection.AddSingleton<IJsonSerializer, JsonSerializer>();
             serviceCollection.AddScoped<CorrelationIdMiddleware>();
             serviceCollection.AddScoped<FunctionTelemetryScopeMiddleware>();
             serviceCollection.AddScoped<MessageMetaDataMiddleware>();
@@ -80,19 +84,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
             serviceCollection.AddActorContext();
             serviceCollection.AddApplicationInsightsTelemetryWorkerService();
+            serviceCollection.AddDomainEventPublishing(serviceBusClient);
 
             ConfigureSharedDatabase(serviceCollection);
             ConfigureSharedMessaging(serviceCollection);
             ConfigureIso8601Services(serviceCollection);
             ConfigureSharedCim(serviceCollection);
-
-            var serviceBusConnectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString);
-            var dataAvailableQueue = EnvironmentHelper.GetEnv(EnvironmentSettingNames.MessageHubDataAvailableQueue);
-            var domainReplyQueue = EnvironmentHelper.GetEnv(EnvironmentSettingNames.MessageHubReplyQueue);
-            var storageServiceConnectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.MessageHubStorageConnectionString);
-            var azureBlobStorageContainerName = EnvironmentHelper.GetEnv(EnvironmentSettingNames.MessageHubStorageContainer);
-
-            var serviceBusClient = new ServiceBusClient(serviceBusConnectionString);
 
             AddRequestResponseLogging(serviceCollection);
 
@@ -100,7 +97,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             AddPostOfficeCommunication(
                 serviceCollection,
                 serviceBusConnectionString,
-                new MessageHubConfig(dataAvailableQueue, domainReplyQueue),
+                new MessageHubConfig(dataAvailableQueue, messageHubReplyQueue),
                 storageServiceConnectionString,
                 new StorageConfig(azureBlobStorageContainerName));
         }
@@ -146,6 +143,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<
                 IAvailableDataRepository<AvailableChargeReceiptData>,
                 AvailableDataRepository<AvailableChargeReceiptData>>();
+            serviceCollection.AddScoped<
+                IAvailableDataRepository<AvailableChargePriceData>,
+                AvailableDataRepository<AvailableChargePriceData>>();
             serviceCollection.AddScoped<IMarketParticipantRepository, MarketParticipantRepository>();
             serviceCollection.AddScoped<IGridAreaLinkRepository, GridAreaLinkRepository>();
         }
@@ -155,13 +155,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<MessageDispatcher>();
             serviceCollection.AddScoped<IServiceBusMessageFactory, ServiceBusMessageFactory>();
             serviceCollection.ConfigureProtobufReception();
-
             serviceCollection.SendProtobuf<ChargeCreated>();
-            serviceCollection.AddMessaging()
-                .AddInternalMessageExtractor<ChargeCommandAcceptedEvent>()
-                .AddExternalMessageDispatcher<ChargeLinksReceivedEvent>(
-                EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
-                EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesDomainEventTopicName));
+            serviceCollection.AddMessaging();
         }
 
         private static void ConfigureSharedCim(IServiceCollection serviceCollection)

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
@@ -21,7 +22,7 @@ using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData
 {
-    public class ChargeLinksCimValidationErrorTextFactory : ICimValidationErrorTextFactory<ChargeLinksCommand, ChargeLinkOperationDto>
+    public class ChargeLinksCimValidationErrorTextFactory : ICimValidationErrorTextFactory<ChargeLinkOperationDto>
     {
         private readonly ICimValidationErrorTextProvider _cimValidationErrorTextProvider;
         private readonly ILogger _logger;
@@ -36,10 +37,10 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptDa
 
         public string Create(
             ValidationError validationError,
-            ChargeLinksCommand command,
-            ChargeLinkOperationDto chargeLinkOperationDto)
+            DocumentDto document,
+            ChargeLinkOperationDto operationDto)
         {
-            return GetMergedErrorMessage(validationError, chargeLinkOperationDto);
+            return GetMergedErrorMessage(validationError, operationDto);
         }
 
         private string GetMergedErrorMessage(

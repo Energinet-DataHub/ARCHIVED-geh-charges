@@ -134,28 +134,10 @@ limitations under the License.
     <Content Include="TestFiles\Charges\PriceSeries\TariffPriceSeries.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestFiles\Charges\Samples\BundledChargeInformationSample.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestFiles\Charges\Samples\BundledChargePriceSeriesSample.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestFiles\Charges\Samples\ChargePriceSeriesSubscriptionMonthlySample.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestFiles\Charges\Samples\ChargePriceSeriesTariffHourlySample.xml">
+    <Content Include="TestFiles\Charges\PriceSeries\TaxTariffPriceSeriesWithInformationToBeIgnored.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestFiles\Charges\TariffBundleWithCreateAndUpdate.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestFiles\Charges\Samples\ChargeInformationFeeMonthlySample.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestFiles\Charges\Samples\ChargeInformationSubscriptionMonthlySample.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestFiles\Charges\Samples\ChargeInformationTariffHourlySample.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestFiles\Charges\TariffBundleWithValidAndInvalid.xml">
@@ -176,7 +158,31 @@ limitations under the License.
     <Content Include="TestFiles\Charges\TariffSystemOperatorCreate.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestFiles\Charges\Samples\ChargePriceSeriesFeeMonthlySample.xml">
+    <Content Include="TestFiles\Samples\ChargeLinks\ChargeLinkSubscriptionSample.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Samples\Charges\BundledChargeInformationSample.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Samples\Charges\BundledChargePriceSeriesSample.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Samples\Charges\ChargeInformationFeeMonthlySample.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Samples\Charges\ChargeInformationSubscriptionMonthlySample.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Samples\Charges\ChargeInformationTariffHourlySample.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Samples\Charges\ChargePriceSeriesFeeMonthlySample.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Samples\Charges\ChargePriceSeriesSubscriptionMonthlySample.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Samples\Charges\ChargePriceSeriesTariffHourlySample.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

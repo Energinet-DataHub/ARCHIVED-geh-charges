@@ -14,7 +14,7 @@
 
 using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification.Charges;
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
@@ -35,14 +35,11 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 AvailableChargePriceOperationRejectionsFactory>();
             serviceCollection.AddScoped<IAvailableChargePriceReceiptValidationErrorFactory,
                 AvailableChargePriceReceiptValidationErrorFactory>();
-            serviceCollection.AddScoped<ICimValidationErrorTextFactory<ChargePriceCommand, ChargePriceOperationDto>,
+            serviceCollection.AddScoped<ICimValidationErrorTextFactory<ChargePriceOperationDto>,
                 ChargePriceCimValidationErrorTextFactory>();
             serviceCollection.AddScoped<BundleSpecification<AvailableChargeReceiptData, ChargePriceOperationsRejectedEvent>,
                 ChargePriceRejectionBundleSpecification>();
-
-            serviceCollection
-                .AddMessaging()
-                .AddInternalMessageExtractor<ChargePriceOperationsRejectedEvent>();
+            serviceCollection.AddScoped<JsonMessageDeserializer<ChargePriceOperationsRejectedEvent>>();
         }
     }
 }

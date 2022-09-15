@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinkCreatedEvents;
 using GreenEnergyHub.Charges.Infrastructure.Contracts.Public.ChargeLinkCreated;
@@ -32,7 +31,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Contracts.Public.ChargeLin
         [Theory]
         [InlineAutoMoqData]
         public void Convert_WhenCalled_MapsToCorrectValues(
-            [NotNull] ChargeLinkCreatedOutboundMapper sut)
+            ChargeLinkCreatedOutboundMapper sut)
         {
             var createdEvent = GetCreatedEvent();
             var result = (ChargeLinkCreatedContract)sut.Convert(createdEvent);
@@ -41,7 +40,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Contracts.Public.ChargeLin
 
         [Theory]
         [InlineAutoMoqData]
-        public void Convert_WhenCalledWithNull_ShouldThrow([NotNull]ChargeLinkCreatedOutboundMapper sut)
+        public void Convert_WhenCalledWithNull_ShouldThrow(ChargeLinkCreatedOutboundMapper sut)
         {
             Assert.Throws<InvalidOperationException>(() => sut.Convert(null!));
         }

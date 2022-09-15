@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Tests.ApplyDBMigrationsApp.Helpers
         {
             // Arrange
             var connectionString = "SomeString";
-            var args = new string[] { connectionString };
+            var args = new[] { connectionString };
 
             // Act
             var result = ConnectionStringFactory.GetConnectionString(args);

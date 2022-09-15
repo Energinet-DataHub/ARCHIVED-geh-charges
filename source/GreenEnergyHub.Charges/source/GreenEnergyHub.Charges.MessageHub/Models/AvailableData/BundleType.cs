@@ -22,5 +22,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableData
         ChargeLinkDataAvailable = 4,
         ChargeLinkConfirmationDataAvailable = 5,
         ChargeLinkRejectionDataAvailable = 6,
+        ChargePriceDataAvailable = 7,
     }
 }

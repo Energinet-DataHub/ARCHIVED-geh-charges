@@ -49,7 +49,6 @@ namespace GreenEnergyHub.Charges.Core.Enumeration
         private static string GetStringWithoutPrefix(string s)
         {
             var uppercaseWords = Regex.Matches(s, @"([A-Z][a-z0-9]*)")
-                .Cast<Match>()
                 .Select(m => m.Value).ToList();
 
             if (uppercaseWords.Count < 2)

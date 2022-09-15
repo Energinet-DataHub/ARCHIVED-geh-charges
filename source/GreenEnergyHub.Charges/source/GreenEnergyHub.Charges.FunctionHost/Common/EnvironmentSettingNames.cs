@@ -44,8 +44,10 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
         // Integration events, charge links
         public const string ChargeLinksCreatedTopicName = "CHARGE_LINKS_CREATED_TOPIC_NAME";
 
+        // Integration event shared topic
+        public const string IntegrationEventTopicName = "INTEGRATION_EVENT_TOPIC_NAME";
+
         // Integration, metering point domain
-        public const string MeteringPointCreatedTopicName = "METERING_POINT_CREATED_TOPIC_NAME";
         public const string MeteringPointCreatedSubscriptionName = "METERING_POINT_CREATED_SUBSCRIPTION_NAME";
         public const string CreateLinksRequestQueueName = "CREATE_LINKS_REQUEST_QUEUE_NAME";
 
@@ -60,28 +62,32 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
         public const string RequestResponseLoggingContainerName = "REQUEST_RESPONSE_LOGGING_CONTAINER_NAME";
 
         // Integration, marketparticipant/actor domain
-        public const string MarketParticipantChangedTopicName = "MARKET_PARTICIPANT_CHANGED_TOPIC_NAME";
         public const string MarketParticipantChangedSubscriptionName = "MARKET_PARTICIPANT_CHANGED_SUBSCRIPTION_NAME";
 
         // Internal, charge
         public const string ChargesDomainEventTopicName = "DOMAIN_EVENTS_TOPIC_NAME";
 
-        // Internal, charge, received
+        // Internal, charge information, received
         public const string ChargeCommandReceivedSubscriptionName = "CHARGE_COMMAND_RECEIVED_SUBSCRIPTION_NAME";
 
         // Internal, charge price, received
         public const string ChargePriceCommandReceivedSubscriptionName = "CHARGE_PRICE_COMMAND_RECEIVED_SUBSCRIPTION_NAME";
 
-        // Internal, charge, accepted
+        // Internal, charge information, accepted
         public const string ChargeAcceptedDataAvailableSubscriptionName = "CHARGE_ACCEPTED_DATAAVAILABLE_SUBSCRIPTION_NAME";
         public const string ChargeCommandAcceptedSubscriptionName = "CHARGE_COMMAND_ACCEPTED_SUBSCRIPTION_NAME";
         public const string ChargeCommandAcceptedPublishSubscriptionName = "CHARGE_COMMAND_ACCEPTED_PUBLISH_SUBSCRIPTION_NAME";
 
-        // Internal, charge price, rejected
-        public const string ChargePriceCommandRejectedSubscriptionName = "CHARGE_PRICE_COMMAND_REJECTED_SUBSCRIPTION_NAME";
-
-        // Internal, charge, rejected
+        // Internal, charge information, rejected
         public const string ChargeCommandRejectedSubscriptionName = "CHARGE_COMMAND_REJECTED_SUBSCRIPTION_NAME";
+
+        // Internal, charge price, confirmed
+        public const string ChargePriceOperationsConfirmedSubscriptionName = "CHARGE_PRICE_OPERATIONS_CONFIRMED_SUBSCRIPTION_NAME";
+        public const string ChargePriceConfirmedDataAvailableSubscriptionName = "CHARGE_PRICE_CONFIRMED_DATAAVAILABLE_SUBSCRIPTION_NAME";
+        public const string ChargePriceConfirmedPublishSubscriptionName = "CHARGE_PRICE_CONFIRMED_PUBLISH_SUBSCRIPTION_NAME";
+
+        // Internal, charge price, rejected
+        public const string ChargePriceOperationsRejectedSubscriptionName = "CHARGE_PRICE_OPERATIONS_REJECTED_SUBSCRIPTION_NAME";
 
         // Internal, charge links, received
         public const string ChargeLinksCommandReceivedSubscriptionName = "CHARGE_LINKS_COMMAND_RECEIVED_SUBSCRIPTION_NAME";

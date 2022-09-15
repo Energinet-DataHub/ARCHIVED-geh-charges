@@ -35,9 +35,9 @@ module "func_functionhost" {
     LOCAL_TIMEZONENAME                                              = "Europe/Copenhagen"
     CURRENCY                                                        = "DKK"
     CHARGE_DB_CONNECTION_STRING                                     = local.MS_CHARGE_DB_CONNECTION_STRING
-    DOMAINEVENT_SENDER_CONNECTION_STRING                            = module.sb_charges.primary_connection_strings["send"]
-    DOMAINEVENT_MANAGER_CONNECTION_STRING                           = module.sb_charges.primary_connection_strings["manage"]
-    DOMAINEVENT_LISTENER_CONNECTION_STRING                          = module.sb_charges.primary_connection_strings["listen"]
+    DOMAINEVENT_SENDER_CONNECTION_STRING                            = data.azurerm_key_vault_secret.sb_domain_relay_send_connection_string.value
+    DOMAINEVENT_MANAGER_CONNECTION_STRING                           = data.azurerm_key_vault_secret.sb_domain_relay_manage_connection_string.value
+    DOMAINEVENT_LISTENER_CONNECTION_STRING                          = data.azurerm_key_vault_secret.sb_domain_relay_listen_connection_string.value
     
     # Topics
     DOMAIN_EVENTS_TOPIC_NAME                                        = "sbt-charges-domain-events"
@@ -46,26 +46,28 @@ module "func_functionhost" {
     CHARGE_LINKS_CREATED_TOPIC_NAME                                 = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbt-charge-link-created-name)"
 
     # Charge domain event subscriptions
-    CHARGE_LINKS_COMMAND_REJECTED_SUBSCRIPTION_NAME                 = "sbtsub-charges-charge-links-command-rejected"
-    CHARGE_LINKS_ACCEPTED_PUBLISH_SUBSCRIPTION_NAME                 = "sbtsub-charges-charge-links-accepted-publish"
-    CHARGE_LINKS_ACCEPTED_DATAAVAILABLE_SUBSCRIPTION_NAME           = "sbtsub-charges-charge-links-accepted-dataavailable"
-    CHARGE_LINKS_ACCEPTED_CONFIRMATION_SUBSCRIPTION_NAME            = "sbtsub-charges-charge-links-accepted-confirmation"    
-    CHARGE_LINKS_COMMAND_RECEIVED_SUBSCRIPTION_NAME                 = "sbtsub-charges-charge-links-command-received"
-    CHARGE_COMMAND_ACCEPTED_PUBLISH_SUBSCRIPTION_NAME               = "sbtsub-charges-charge-command-accepted-publish"
-    CHARGE_ACCEPTED_DATAAVAILABLE_SUBSCRIPTION_NAME                 = "sbtsub-charges-charge-accepted-dataavailable"
-    CHARGE_COMMAND_ACCEPTED_SUBSCRIPTION_NAME                       = "sbtsub-charges-charge-command-accepted"
-    CHARGE_COMMAND_RECEIVED_SUBSCRIPTION_NAME                       = "sbtsub-charges-charge-command-received"
-    CHARGE_COMMAND_REJECTED_SUBSCRIPTION_NAME                       = "sbtsub-charges-charge-command-rejected"
-    CHARGE_PRICE_COMMAND_RECEIVED_SUBSCRIPTION_NAME                 = "sbtsub-charges-charge-price-command-received"
-    CHARGE_PRICE_COMMAND_REJECTED_SUBSCRIPTION_NAME                 = "sbtsub-charges-charge-price-command-rejected"
-    DEFAULT_CHARGE_LINKS_DATAAVAILABLE_SUBSCRIPTION_NAME            = "sbtsub-charges-default-charge-links-dataavailable"
+    CHARGE_LINKS_COMMAND_REJECTED_SUBSCRIPTION_NAME                 = module.sbts_charges_charge_links_command_rejected.name
+    CHARGE_LINKS_ACCEPTED_PUBLISH_SUBSCRIPTION_NAME                 = module.sbts_charges_charge_links_accepted_publish.name
+    CHARGE_LINKS_ACCEPTED_DATAAVAILABLE_SUBSCRIPTION_NAME           = module.sbts_charges_charge_links_accepted_dataavailable.name
+    CHARGE_LINKS_ACCEPTED_CONFIRMATION_SUBSCRIPTION_NAME            = module.sbts_charges_charge_links_accepted_confirmation.name
+    CHARGE_LINKS_COMMAND_RECEIVED_SUBSCRIPTION_NAME                 = module.sbts_charges_charge_links_command_received.name
+    CHARGE_COMMAND_ACCEPTED_PUBLISH_SUBSCRIPTION_NAME               = module.sbts_charges_charge_command_accepted_publish.name
+    CHARGE_ACCEPTED_DATAAVAILABLE_SUBSCRIPTION_NAME                 = module.sbts_charges_charge_accepted_dataavailable.name
+    CHARGE_COMMAND_ACCEPTED_SUBSCRIPTION_NAME                       = module.sbts_charges_charge_command_accepted.name
+    CHARGE_COMMAND_RECEIVED_SUBSCRIPTION_NAME                       = module.sbts_charges_charge_command_received.name
+    CHARGE_COMMAND_REJECTED_SUBSCRIPTION_NAME                       = module.sbts_charges_charge_command_rejected.name
+    CHARGE_PRICE_COMMAND_RECEIVED_SUBSCRIPTION_NAME                 = module.sbts_charges_charge_price_command_received.name
+    CHARGE_PRICE_OPERATIONS_REJECTED_SUBSCRIPTION_NAME              = module.sbts_charges_charge_price_command_rejected.name
+    CHARGE_PRICE_OPERATIONS_CONFIRMED_SUBSCRIPTION_NAME             = module.sbts_charges_charge_price_command_confirmed.name
+    CHARGE_PRICE_CONFIRMED_DATAAVAILABLE_SUBSCRIPTION_NAME          = module.sbts_charges_charge_price_command_confirmed_dataavailable.name
+    CHARGE_PRICE_CONFIRMED_PUBLISH_SUBSCRIPTION_NAME                = module.sbts_charges_charge_price_confirmed_publish.name
+    DEFAULT_CHARGE_LINKS_DATAAVAILABLE_SUBSCRIPTION_NAME            = module.sbts_charges_default_charge_links_dataavailable.name
 
     # Integration
     CREATE_LINKS_REQUEST_QUEUE_NAME                                 = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbq-create-link-request-name)"
-    METERING_POINT_CREATED_TOPIC_NAME                               = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbt-metering-point-created-name)"
-    METERING_POINT_CREATED_SUBSCRIPTION_NAME                        = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbs-metering-point-created-sub-charges-name)"
-    MARKET_PARTICIPANT_CHANGED_TOPIC_NAME                           = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbt-market-participant-changed-name)"
-    MARKET_PARTICIPANT_CHANGED_SUBSCRIPTION_NAME                    = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbs-market-participant-changed-to-charges-name)"
+    INTEGRATION_EVENT_TOPIC_NAME                                    = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbt-sharedres-integrationevent-received-name)"
+    METERING_POINT_CREATED_SUBSCRIPTION_NAME                        = module.sbs_int_events_metering_point_created.name
+    MARKET_PARTICIPANT_CHANGED_SUBSCRIPTION_NAME                    = module.sbs_int_events_market_participant_changed.name
     
     # Shared resources
     INTEGRATIONEVENT_SENDER_CONNECTION_STRING                       = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-send-connection-string)"

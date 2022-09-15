@@ -27,7 +27,7 @@ using Microsoft.Extensions.Logging;
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 {
     public class AvailableChargeReceiptDataFactory
-        : AvailableDataFactoryBase<AvailableChargeReceiptData, ChargeCommandAcceptedEvent>
+        : AvailableDataFactoryBase<AvailableChargeReceiptData, ChargeInformationCommandAcceptedEvent>
     {
         private readonly IMessageMetaDataContext _messageMetaDataContext;
         private readonly ILogger _logger;
@@ -42,7 +42,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             _logger = loggerFactory.CreateLogger(nameof(AvailableChargeReceiptDataFactory));
         }
 
-        public override async Task<IReadOnlyList<AvailableChargeReceiptData>> CreateAsync(ChargeCommandAcceptedEvent input)
+        public override async Task<IReadOnlyList<AvailableChargeReceiptData>> CreateAsync(ChargeInformationCommandAcceptedEvent input)
         {
             // The original sender is the recipient of the receipt
             var recipient = await GetRecipientAsync(input.Command.Document.Sender).ConfigureAwait(false);

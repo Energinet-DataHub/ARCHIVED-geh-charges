@@ -28,11 +28,11 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
         private readonly Instant _periodEnd;
 
         public StartDateValidationRule(
-            Instant startDate,
+            ChargeInformationOperationDto chargeInformationOperationDto,
             IZonedDateTimeService zonedDateTimeService,
             IClock clock)
         {
-            _validityStartDate = startDate;
+            _validityStartDate = chargeInformationOperationDto.StartDateTime;
             var today = zonedDateTimeService.GetZonedDateTime(clock.GetCurrentInstant()).Date;
             _periodStart = CalculatePeriodPoint(LowerTimeLimitInDays, zonedDateTimeService, today);
             _periodEnd = CalculatePeriodPoint(UpperTimeLimitInDays, zonedDateTimeService, today);

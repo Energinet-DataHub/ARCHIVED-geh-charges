@@ -52,7 +52,7 @@ namespace GreenEnergyHub.Charges.Core.Enumeration
             return (Enum)Enum.ToObject(comparisonType, Convert.ToInt32(value, CultureInfo.InvariantCulture));
         }
 
-        private static bool IsSameIntValue(System.Enum valueOne, System.Enum valueTwo)
+        private static bool IsSameIntValue(Enum valueOne, Enum valueTwo)
         {
             var oneAsInt = Convert.ToInt32(valueOne, CultureInfo.InvariantCulture);
             var twoAsInt = Convert.ToInt32(valueTwo, CultureInfo.InvariantCulture);
