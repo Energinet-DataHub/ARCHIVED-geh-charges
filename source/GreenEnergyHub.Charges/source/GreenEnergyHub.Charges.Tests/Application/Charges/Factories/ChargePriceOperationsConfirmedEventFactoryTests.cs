@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Factories
         public void CreatePriceConfirmationEvent_WhenValidConfirmation_HasNoNullsOrEmptyCollections(
             DocumentDtoBuilder documentDtoBuilder,
             ChargePriceOperationDtoBuilder chargePriceOperationDtoBuilder,
-            ChargePriceOperationsConfirmedEventFactory sut)
+            ChargePriceOperationsAcceptedEventFactory sut)
         {
             // Act
             var document = documentDtoBuilder.Build();

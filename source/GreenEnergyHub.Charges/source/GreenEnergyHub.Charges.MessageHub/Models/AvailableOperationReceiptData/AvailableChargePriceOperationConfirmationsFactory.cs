@@ -27,7 +27,7 @@ using Microsoft.Extensions.Logging;
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableOperationReceiptData
 {
     public class AvailableChargePriceOperationConfirmationsFactory :
-        AvailableDataFactoryBase<AvailableChargeReceiptData.AvailableChargeReceiptData, ChargePriceOperationsConfirmedEvent>
+        AvailableDataFactoryBase<AvailableChargeReceiptData.AvailableChargeReceiptData, ChargePriceOperationsAcceptedEvent>
     {
         private readonly IMessageMetaDataContext _messageMetaDataContext;
         private readonly ILogger _logger;
@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableOperationReceiptData
         }
 
         public override async Task<IReadOnlyList<AvailableChargeReceiptData.AvailableChargeReceiptData>> CreateAsync(
-            ChargePriceOperationsConfirmedEvent input)
+            ChargePriceOperationsAcceptedEvent input)
         {
             // The original sender is the recipient of the receipt
             var recipient = await GetRecipientAsync(input.Document.Sender).ConfigureAwait(false);
@@ -84,7 +84,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableOperationReceiptData
                     Guid.NewGuid(), // ID of each available piece of data must be unique
                     ReceiptStatus.Confirmed,
                     chargePriceOperationDto.OperationId[..Math.Min(chargePriceOperationDto.OperationId.Length, 100)],
-                    DocumentType.ConfirmRequestChangeOfPriceList, // Will be added to the HTTP MessageType header
+                    DocumentType.AcceptRequestChangeOfPriceList, // Will be added to the HTTP MessageType header
                     operationOrder,
                     recipient.ActorId,
                     new List<AvailableReceiptValidationError>()),

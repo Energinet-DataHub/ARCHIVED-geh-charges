@@ -24,7 +24,7 @@ using Moq;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
+namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers.ChargePrice
 {
     [UnitTest]
     public class ChargePriceIntegrationEventsPublisherTests
@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         public async Task HandleAsync_WhenCalledWithPrices_ShouldCallChargePricesSenderForEachOperation(
             [Frozen] Mock<IChargePricesUpdatedPublisher> chargePricesUpdatedSender,
             ChargePriceOperationDtoBuilder chargePriceOperationDtoBuilder,
-            ChargePriceOperationsConfirmedEventBuilder chargePriceOperationsConfirmedEventBuilder,
+            ChargePriceOperationsAcceptedEventBuilder chargePriceOperationsAcceptedEventBuilder,
             ChargePriceIntegrationEventsPublisher sut)
         {
             // Arrange
@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                     chargePriceOperationDtoBuilder.Build(),
             };
 
-            var chargePriceOperationsConfirmedEvent = chargePriceOperationsConfirmedEventBuilder.WithOperations(operations).Build();
+            var chargePriceOperationsConfirmedEvent = chargePriceOperationsAcceptedEventBuilder.WithOperations(operations).Build();
 
             // Act
             await sut.PublishAsync(chargePriceOperationsConfirmedEvent).ConfigureAwait(false);

@@ -22,11 +22,11 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Factories
 {
-    public class ChargeInformationOperationsOperationsRejectedEventFactory : IChargeInformationOperationsRejectedEventFactory
+    public class ChargeInformationOperationsRejectedEventFactory : IChargeInformationOperationsRejectedEventFactory
     {
         private readonly IClock _clock;
 
-        public ChargeInformationOperationsOperationsRejectedEventFactory(IClock clock)
+        public ChargeInformationOperationsRejectedEventFactory(IClock clock)
         {
             _clock = clock;
         }

@@ -65,7 +65,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             actualList[0].BusinessReasonCode.Should().Be(documentDto.BusinessReasonCode);
             actualList[0].RequestDateTime.Should().Be(now);
             actualList[0].ReceiptStatus.Should().Be(ReceiptStatus.Confirmed);
-            actualList[0].DocumentType.Should().Be(DocumentType.ConfirmRequestChangeOfPriceList);
+            actualList[0].DocumentType.Should().Be(DocumentType.AcceptRequestChangeOfPriceList);
             actualList[0].OriginalOperationId.Should().Be(acceptedEvent.Command.Operations.First().OperationId);
             actualList[0].ValidationErrors.Should().BeEmpty();
             var expectedList = actualList.OrderBy(x => x.OperationOrder);

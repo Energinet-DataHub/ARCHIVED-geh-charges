@@ -44,7 +44,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument
             return documentType switch
             {
                 DocumentType.RequestChangeOfPriceList => CimRequestChangeOfPriceList,
-                DocumentType.ConfirmRequestChangeOfPriceList => CimChargeReceipt,
+                DocumentType.AcceptRequestChangeOfPriceList => CimChargeReceipt,
                 DocumentType.RejectRequestChangeOfPriceList => CimChargeReceipt,
                 DocumentType.NotifyPriceList => CimNotifyPriceList,
                 DocumentType.RequestChangeBillingMasterData => CimRequestChangeBillingMasterData,

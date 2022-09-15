@@ -29,11 +29,11 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<MessageExtractor<ChargePriceOperationsConfirmedEvent>>();
+            serviceCollection.AddScoped<MessageExtractor<ChargePriceOperationsAcceptedEvent>>();
             serviceCollection.AddScoped<IChargePricesUpdatedEventFactory, ChargePricesUpdatedEventFactory>();
             serviceCollection.AddScoped<IChargePricesUpdatedPublisher, ChargePricesUpdatedPublisher>();
             serviceCollection.AddScoped<IChargePriceIntegrationEventsPublisher, ChargePriceIntegrationEventsPublisher>();
-            serviceCollection.AddScoped<JsonMessageDeserializer<ChargePriceOperationsConfirmedEvent>>();
+            serviceCollection.AddScoped<JsonMessageDeserializer<ChargePriceOperationsAcceptedEvent>>();
 
             serviceCollection.AddMessagingProtobuf()
                 .AddExternalMessageDispatcher<ChargePricesUpdatedEvent>(

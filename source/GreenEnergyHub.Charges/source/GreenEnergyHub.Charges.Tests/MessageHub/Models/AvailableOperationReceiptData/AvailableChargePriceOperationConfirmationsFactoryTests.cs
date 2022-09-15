@@ -56,7 +56,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
                 marketParticipantRepository, meteringPointAdministrator, document.Sender, actorId);
 
             var chargePriceOperationsConfirmedEvent =
-                new ChargePriceOperationsConfirmedEvent(now, document, chargePriceOperations);
+                new ChargePriceOperationsAcceptedEvent(now, document, chargePriceOperations);
 
             // Act
             var actualList = await sut.CreateAsync(chargePriceOperationsConfirmedEvent);
@@ -74,7 +74,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
                 actual.BusinessReasonCode.Should().Be(document.BusinessReasonCode);
                 actual.RequestDateTime.Should().Be(now);
                 actual.ReceiptStatus.Should().Be(ReceiptStatus.Confirmed);
-                actual.DocumentType.Should().Be(DocumentType.ConfirmRequestChangeOfPriceList);
+                actual.DocumentType.Should().Be(DocumentType.AcceptRequestChangeOfPriceList);
 
                 var expectedChargeOperationDto = chargePriceOperations.ToArray()[i1];
                 actual.OriginalOperationId.Should().Be(expectedChargeOperationDto.OperationId);

@@ -25,10 +25,10 @@ using Moq;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
+namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers.ChargeInformation
 {
     [UnitTest]
-    public class ChargeCommandHandlerTests
+    public class ChargeInformationCommandHandlerTests
     {
         [Theory]
         [InlineAutoDomainData]

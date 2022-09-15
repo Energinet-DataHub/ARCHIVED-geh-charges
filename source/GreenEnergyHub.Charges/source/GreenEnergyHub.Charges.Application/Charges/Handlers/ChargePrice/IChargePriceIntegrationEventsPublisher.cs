@@ -26,7 +26,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         /// <summary>
         /// Publish integration event to the service bus
         /// </summary>
-        /// <param name="chargePriceOperationsConfirmedEvent"></param>
-        Task PublishAsync(ChargePriceOperationsConfirmedEvent chargePriceOperationsConfirmedEvent);
+        /// <param name="chargePriceOperationsAcceptedEvent"></param>
+        Task PublishAsync(ChargePriceOperationsAcceptedEvent chargePriceOperationsAcceptedEvent);
     }
 }

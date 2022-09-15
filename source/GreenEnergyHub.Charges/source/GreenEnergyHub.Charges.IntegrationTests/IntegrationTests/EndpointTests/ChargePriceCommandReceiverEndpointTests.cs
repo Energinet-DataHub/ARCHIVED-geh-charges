@@ -139,7 +139,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 actualCharge.Points.Should().BeEquivalentTo(newPrices);
                 var actualOutboxMessage = await postOperationReadContext.OutboxMessages
                     .SingleAsync(x => x.CorrelationId.Contains(correlationId));
-                actualOutboxMessage.Type.Should().Be(typeof(ChargePriceOperationsConfirmedEvent).FullName);
+                actualOutboxMessage.Type.Should().Be(typeof(ChargePriceOperationsAcceptedEvent).FullName);
             }
 
             [Theory]
@@ -183,7 +183,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 actualCharge.Should().BeEquivalentTo(expectedCharge);
                 var actualOutboxMessage = await postOperationReadContext.OutboxMessages
                     .SingleOrDefaultAsync(x => x.CorrelationId.Contains(correlationId));
-                actualOutboxMessage!.Type.Should().Be(typeof(ChargePriceOperationsConfirmedEvent).FullName);
+                actualOutboxMessage!.Type.Should().Be(typeof(ChargePriceOperationsAcceptedEvent).FullName);
             }
 
             private static ChargePriceCommandReceivedEvent CreateInvalidChargePriceCommandReceivedEvent(

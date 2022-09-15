@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
             Instant now,
             TestMeteringPointAdministrator meteringPointAdministrator,
             List<TestGridAccessProvider> gridAccessProvider,
-            ChargePriceOperationsConfirmedEventBuilder chargePriceOperationsConfirmedEventBuilder,
+            ChargePriceOperationsAcceptedEventBuilder chargePriceOperationsAcceptedEventBuilder,
             AvailableChargePriceDataFactory sut)
         {
             // Arrange
@@ -58,7 +58,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
                     .WithPoint(1)
                     .Build(),
             };
-            var confirmedEvent = chargePriceOperationsConfirmedEventBuilder.WithOperations(operations).Build();
+            var confirmedEvent = chargePriceOperationsAcceptedEventBuilder.WithOperations(operations).Build();
 
             SetupChargeIdentifierFactoryMock(chargeIdentifierFactory);
             SetupChargeRepository(chargeRepository, TaxIndicator.Tax);
@@ -105,7 +105,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IChargeIdentifierFactory> chargeIdentifierFactory,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            ChargePriceOperationsConfirmedEventBuilder chargePriceOperationsConfirmedEventBuilder,
+            ChargePriceOperationsAcceptedEventBuilder chargePriceOperationsAcceptedEventBuilder,
             AvailableChargePriceDataFactory sut)
         {
             // Arrange
@@ -129,7 +129,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
                     .WithPoint(1)
                     .Build(),
             };
-            var confirmedEvent = chargePriceOperationsConfirmedEventBuilder.WithOperations(operations).Build();
+            var confirmedEvent = chargePriceOperationsAcceptedEventBuilder.WithOperations(operations).Build();
 
             // Act
             var actual = await sut.CreateAsync(confirmedEvent);
@@ -144,7 +144,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IChargeIdentifierFactory> chargeIdentifierFactory,
-            ChargePriceOperationsConfirmedEventBuilder chargePriceOperationsConfirmedEventBuilder,
+            ChargePriceOperationsAcceptedEventBuilder chargePriceOperationsAcceptedEventBuilder,
             List<TestGridAccessProvider> gridAccessProvider,
             TestMeteringPointAdministrator meteringPointAdministrator,
             AvailableChargePriceDataFactory sut)
@@ -158,7 +158,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
                 .ReturnsAsync(meteringPointAdministrator);
             SetupChargeIdentifierFactoryMock(chargeIdentifierFactory);
             SetupChargeRepository(chargeRepository, TaxIndicator.Tax);
-            var confirmedEvent = chargePriceOperationsConfirmedEventBuilder.WithOperations(
+            var confirmedEvent = chargePriceOperationsAcceptedEventBuilder.WithOperations(
                     new List<ChargePriceOperationDto>
                     {
                         new ChargePriceOperationDtoBuilder().Build(),

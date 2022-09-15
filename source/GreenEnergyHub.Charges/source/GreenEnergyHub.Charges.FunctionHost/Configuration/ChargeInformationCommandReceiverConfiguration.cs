@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
+using GreenEnergyHub.Charges.Application.Charges.Factories;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Core.Currency;
 using GreenEnergyHub.Charges.Core.DateTime;
@@ -45,8 +46,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IChargeFactory, ChargeFactory>();
             serviceCollection.AddScoped<IChargeIdentifierFactory, ChargeIdentifierFactory>();
             serviceCollection.AddScoped<IChargePeriodFactory, ChargePeriodFactory>();
-            serviceCollection.AddScoped<IChargeInformationCommandAcceptedEventFactory, ChargeInformationCommandAcceptedEventFactory>();
-            serviceCollection.AddScoped<IChargeInformationCommandRejectedEventFactory, ChargeInformationCommandRejectedEventFactory>();
+            serviceCollection.AddScoped<IChargeInformationOperationsAcceptedEventFactory, ChargeInformationOperationsAcceptedEventFactory>();
+            serviceCollection.AddScoped<IChargeInformationOperationsRejectedEventFactory, ChargeInformationOperationsRejectedEventFactory>();
             serviceCollection.AddScoped<ICimValidationErrorTextFactory<ChargeInformationOperationDto>,
                 ChargeCimValidationErrorTextFactory>();
             serviceCollection.AddScoped<ICimValidationErrorCodeFactory, CimValidationErrorCodeFactory>();

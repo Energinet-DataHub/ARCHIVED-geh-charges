@@ -107,13 +107,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
             [Theory]
             [InlineAutoMoqData]
             public async Task RunAsync_WhenConfirmedOutboxMessageIsRead_AvailableDataIsPersisted_AndProcessedDateIsSet(
-                ChargePriceOperationsConfirmedEventBuilder chargePriceOperationsConfirmedEventBuilder)
+                ChargePriceOperationsAcceptedEventBuilder chargePriceOperationsAcceptedEventBuilder)
             {
                 // Arrange
                 await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
                 await using var messageHubDatabaseContext = Fixture.MessageHubDatabaseManager.CreateDbContext();
                 await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
-                var operationsConfirmedEvent = chargePriceOperationsConfirmedEventBuilder.Build();
+                var operationsConfirmedEvent = chargePriceOperationsAcceptedEventBuilder.Build();
 
                 // Act
                 var outboxMessage = await PersistToOutboxMessage(chargesDatabaseWriteContext, operationsConfirmedEvent);

@@ -14,6 +14,7 @@
 
 using GreenEnergyHub.Charges.Application.Charges.Factories;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
+using GreenEnergyHub.Charges.Application.Charges.Handlers.ChargePrice;
 using GreenEnergyHub.Charges.Application.Common.Services;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
@@ -38,7 +39,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IInputValidationRulesFactory<ChargePriceOperationDto>,
                 ChargePriceOperationInputValidationRulesFactory>();
             serviceCollection.AddScoped<IDomainEventPublisher, DomainEventPublisher>();
-            serviceCollection.AddScoped<IChargePriceOperationsConfirmedEventFactory, ChargePriceOperationsConfirmedEventFactory>();
+            serviceCollection.AddScoped<IChargePriceOperationsAcceptedEventFactory, ChargePriceOperationsAcceptedEventFactory>();
             serviceCollection.AddScoped<IChargePriceOperationsRejectedEventFactory, ChargePriceOperationsOperationsRejectedEventFactory>();
             serviceCollection.AddScoped<JsonMessageDeserializer<ChargePriceCommandReceivedEvent>>();
         }

@@ -27,7 +27,7 @@ using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
 {
-    public class AvailableChargePriceDataFactory : AvailableDataFactoryBase<AvailableChargePriceData, ChargePriceOperationsConfirmedEvent>
+    public class AvailableChargePriceDataFactory : AvailableDataFactoryBase<AvailableChargePriceData, ChargePriceOperationsAcceptedEvent>
     {
         private readonly IChargeIdentifierFactory _chargeIdentifierFactory;
         private readonly IChargeRepository _chargeRepository;
@@ -47,7 +47,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
             _messageMetaDataContext = messageMetaDataContext;
         }
 
-        public override async Task<IReadOnlyList<AvailableChargePriceData>> CreateAsync(ChargePriceOperationsConfirmedEvent input)
+        public override async Task<IReadOnlyList<AvailableChargePriceData>> CreateAsync(ChargePriceOperationsAcceptedEvent input)
         {
             var result = new List<AvailableChargePriceData>();
 
@@ -70,7 +70,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
         }
 
         private async Task CreateForOperationAsync(
-            ChargePriceOperationsConfirmedEvent input,
+            ChargePriceOperationsAcceptedEvent input,
             ChargePriceOperationDto priceOperation,
             ICollection<AvailableChargePriceData> result)
         {

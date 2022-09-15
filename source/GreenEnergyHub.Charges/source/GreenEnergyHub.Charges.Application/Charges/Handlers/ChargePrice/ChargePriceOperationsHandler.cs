@@ -29,7 +29,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using Microsoft.Extensions.Logging;
 
-namespace GreenEnergyHub.Charges.Application.Charges.Handlers
+namespace GreenEnergyHub.Charges.Application.Charges.Handlers.ChargePrice
 {
     public class ChargePriceOperationsHandler : IChargePriceOperationsHandler
     {
@@ -38,7 +38,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         private readonly IInputValidator<ChargePriceOperationDto> _inputValidator;
         private readonly IDomainEventPublisher _domainEventPublisher;
         private readonly ILogger _logger;
-        private readonly IChargePriceOperationsConfirmedEventFactory _chargePriceOperationsConfirmedEventFactory;
+        private readonly IChargePriceOperationsAcceptedEventFactory _chargePriceOperationsAcceptedEventFactory;
         private readonly IChargePriceOperationsRejectedEventFactory _chargePriceOperationsRejectedEventFactory;
 
         public ChargePriceOperationsHandler(
@@ -47,14 +47,14 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             IInputValidator<ChargePriceOperationDto> inputValidator,
             IDomainEventPublisher domainEventPublisher,
             ILoggerFactory loggerFactory,
-            IChargePriceOperationsConfirmedEventFactory chargePriceOperationsConfirmedEventFactory,
+            IChargePriceOperationsAcceptedEventFactory chargePriceOperationsAcceptedEventFactory,
             IChargePriceOperationsRejectedEventFactory chargePriceOperationsRejectedEventFactory)
         {
             _chargeRepository = chargeRepository;
             _marketParticipantRepository = marketParticipantRepository;
             _inputValidator = inputValidator;
             _domainEventPublisher = domainEventPublisher;
-            _chargePriceOperationsConfirmedEventFactory = chargePriceOperationsConfirmedEventFactory;
+            _chargePriceOperationsAcceptedEventFactory = chargePriceOperationsAcceptedEventFactory;
             _chargePriceOperationsRejectedEventFactory = chargePriceOperationsRejectedEventFactory;
             _logger = loggerFactory.CreateLogger(nameof(ChargePriceOperationsHandler));
         }
@@ -143,7 +143,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             IReadOnlyCollection<ChargePriceOperationDto> operationsToBeConfirmed)
         {
             if (!operationsToBeConfirmed.Any()) return;
-            var confirmedEvent = _chargePriceOperationsConfirmedEventFactory.Create(document, operationsToBeConfirmed);
+            var confirmedEvent = _chargePriceOperationsAcceptedEventFactory.Create(document, operationsToBeConfirmed);
             _domainEventPublisher.Publish(confirmedEvent);
         }
 

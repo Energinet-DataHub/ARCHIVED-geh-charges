@@ -83,7 +83,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                     Guid.NewGuid(), // ID of each available piece of data must be unique
                     ReceiptStatus.Confirmed,
                     chargeInformationOperationDto.OperationId[..Math.Min(chargeInformationOperationDto.OperationId.Length, 100)],
-                    DocumentType.ConfirmRequestChangeOfPriceList, // Will be added to the HTTP MessageType header
+                    DocumentType.AcceptRequestChangeOfPriceList, // Will be added to the HTTP MessageType header
                     operationOrder,
                     recipient.ActorId,
                     new List<AvailableReceiptValidationError>()),

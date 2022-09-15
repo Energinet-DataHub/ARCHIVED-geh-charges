@@ -161,7 +161,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
         private DocumentType GetDocumentType(ReceiptStatus receiptStatus)
         {
             return receiptStatus == ReceiptStatus.Confirmed
-                ? DocumentType.ConfirmRequestChangeOfPriceList
+                ? DocumentType.AcceptRequestChangeOfPriceList
                 : DocumentType.RejectRequestChangeOfPriceList;
         }
 

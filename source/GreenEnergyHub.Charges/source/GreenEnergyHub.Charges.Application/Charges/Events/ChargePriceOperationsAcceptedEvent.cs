@@ -13,30 +13,27 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.Application.Charges.Factories
+namespace GreenEnergyHub.Charges.Application.Charges.Events
 {
-    public class ChargePriceOperationsConfirmedEventFactory : IChargePriceOperationsConfirmedEventFactory
+    public class ChargePriceOperationsAcceptedEvent : DomainEvent
     {
-        private readonly IClock _clock;
-
-        public ChargePriceOperationsConfirmedEventFactory(IClock clock)
-        {
-            _clock = clock;
-        }
-
-        public ChargePriceOperationsConfirmedEvent Create(
+        public ChargePriceOperationsAcceptedEvent(
+            Instant publishedTime,
             DocumentDto document,
             IReadOnlyCollection<ChargePriceOperationDto> operations)
+            : base(publishedTime)
         {
-            return new ChargePriceOperationsConfirmedEvent(
-                _clock.GetCurrentInstant(),
-                document,
-                operations);
+            Document = document;
+            Operations = operations;
         }
+
+        public DocumentDto Document { get; }
+
+        public IReadOnlyCollection<ChargePriceOperationDto> Operations { get; }
     }
 }

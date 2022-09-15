@@ -36,9 +36,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Outbox
                 return (ChargePriceOperationsRejectedEvent)obj;
             }
 
-            if (outboxMessageType == typeof(ChargePriceOperationsConfirmedEvent).FullName)
+            if (outboxMessageType == typeof(ChargePriceOperationsAcceptedEvent).FullName)
             {
-                return (ChargePriceOperationsConfirmedEvent)_jsonSerializer.Deserialize(data, typeof(ChargePriceOperationsConfirmedEvent));
+                return (ChargePriceOperationsAcceptedEvent)_jsonSerializer.Deserialize(data, typeof(ChargePriceOperationsAcceptedEvent));
             }
 
             throw new ArgumentOutOfRangeException($"Could not parse outbox event of type: {outboxMessageType} with data {data}");
