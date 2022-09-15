@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         private readonly IChargeFactory _chargeFactory;
         private readonly IChargePeriodFactory _chargePeriodFactory;
         private readonly IDomainEventPublisher _domainEventPublisher;
-        private readonly IChargeInformationOperationsConfirmedEventFactory _chargeInformationOperationsConfirmedEventFactory;
+        private readonly IChargeInformationOperationsAcceptedEventFactory _chargeInformationOperationsAcceptedEventFactory;
         private readonly IChargeInformationOperationsRejectedEventFactory _chargeInformationOperationsRejectedEventFactory;
         private readonly ILogger _logger;
 
@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             IChargePeriodFactory chargePeriodFactory,
             IDomainEventPublisher domainEventPublisher,
             ILoggerFactory loggerFactory,
-            IChargeInformationOperationsConfirmedEventFactory chargeInformationOperationsConfirmedEventFactory,
+            IChargeInformationOperationsAcceptedEventFactory chargeInformationOperationsAcceptedEventFactory,
             IChargeInformationOperationsRejectedEventFactory chargeInformationOperationsRejectedEventFactory)
         {
             _inputValidator = inputValidator;
@@ -60,7 +60,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             _chargeFactory = chargeFactory;
             _chargePeriodFactory = chargePeriodFactory;
             _domainEventPublisher = domainEventPublisher;
-            _chargeInformationOperationsConfirmedEventFactory = chargeInformationOperationsConfirmedEventFactory;
+            _chargeInformationOperationsAcceptedEventFactory = chargeInformationOperationsAcceptedEventFactory;
             _chargeInformationOperationsRejectedEventFactory = chargeInformationOperationsRejectedEventFactory;
             _logger = loggerFactory.CreateLogger(nameof(ChargeInformationOperationsHandler));
         }
@@ -140,7 +140,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             IReadOnlyCollection<ChargeInformationOperationDto> operationsToBeConfirmed)
         {
             if (!operationsToBeConfirmed.Any()) return;
-            var confirmedEvent = _chargeInformationOperationsConfirmedEventFactory.Create(document, operationsToBeConfirmed);
+            var confirmedEvent = _chargeInformationOperationsAcceptedEventFactory.Create(document, operationsToBeConfirmed);
             _domainEventPublisher.Publish(confirmedEvent);
         }
 

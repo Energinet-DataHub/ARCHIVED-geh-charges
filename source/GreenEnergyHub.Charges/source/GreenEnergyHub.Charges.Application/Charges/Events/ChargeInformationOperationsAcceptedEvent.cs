@@ -20,9 +20,9 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Events
 {
-    public class ChargeInformationOperationsConfirmedEvent : DomainEvent
+    public class ChargeInformationOperationsAcceptedEvent : DomainEvent
     {
-        public ChargeInformationOperationsConfirmedEvent(
+        public ChargeInformationOperationsAcceptedEvent(
             Instant publishedTime,
             DocumentDto document,
             IReadOnlyCollection<ChargeInformationOperationDto> operations)
