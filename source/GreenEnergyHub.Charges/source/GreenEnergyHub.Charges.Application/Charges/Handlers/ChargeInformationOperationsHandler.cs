@@ -16,15 +16,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
-using GreenEnergyHub.Charges.Application.Persistence;
+using GreenEnergyHub.Charges.Application.Charges.Factories;
+using GreenEnergyHub.Charges.Application.Common.Helpers;
+using GreenEnergyHub.Charges.Application.Common.Services;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Charges.Exceptions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.BusinessValidation.ValidationRules;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
@@ -35,8 +38,10 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         private readonly IMarketParticipantRepository _marketParticipantRepository;
         private readonly IChargeFactory _chargeFactory;
         private readonly IChargePeriodFactory _chargePeriodFactory;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IChargeCommandReceiptService _chargeCommandReceiptService;
+        private readonly IDomainEventPublisher _domainEventPublisher;
+        private readonly IChargeInformationOperationsConfirmedEventFactory _chargeInformationOperationsConfirmedEventFactory;
+        private readonly IChargeInformationOperationsRejectedEventFactory _chargeInformationOperationsRejectedEventFactory;
+        private readonly ILogger _logger;
 
         public ChargeInformationOperationsHandler(
             IInputValidator<ChargeInformationOperationDto> inputValidator,
@@ -44,16 +49,20 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             IMarketParticipantRepository marketParticipantRepository,
             IChargeFactory chargeFactory,
             IChargePeriodFactory chargePeriodFactory,
-            IUnitOfWork unitOfWork,
-            IChargeCommandReceiptService chargeCommandReceiptService)
+            IDomainEventPublisher domainEventPublisher,
+            ILoggerFactory loggerFactory,
+            IChargeInformationOperationsConfirmedEventFactory chargeInformationOperationsConfirmedEventFactory,
+            IChargeInformationOperationsRejectedEventFactory chargeInformationOperationsRejectedEventFactory)
         {
             _inputValidator = inputValidator;
             _chargeRepository = chargeRepository;
             _marketParticipantRepository = marketParticipantRepository;
             _chargeFactory = chargeFactory;
             _chargePeriodFactory = chargePeriodFactory;
-            _unitOfWork = unitOfWork;
-            _chargeCommandReceiptService = chargeCommandReceiptService;
+            _domainEventPublisher = domainEventPublisher;
+            _chargeInformationOperationsConfirmedEventFactory = chargeInformationOperationsConfirmedEventFactory;
+            _chargeInformationOperationsRejectedEventFactory = chargeInformationOperationsRejectedEventFactory;
+            _logger = loggerFactory.CreateLogger(nameof(ChargeInformationOperationsHandler));
         }
 
         public async Task HandleAsync(ChargeInformationCommandReceivedEvent chargeInformationCommandReceivedEvent)
@@ -98,9 +107,52 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 operationsToBeConfirmed.Add(operation);
             }
 
-            await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-            await _chargeCommandReceiptService.RejectInvalidOperationsAsync(operationsToBeRejected, document, rejectionRules).ConfigureAwait(false);
-            await _chargeCommandReceiptService.AcceptValidOperationsAsync(operationsToBeConfirmed, document).ConfigureAwait(false);
+            HandleConfirmations(document, operationsToBeConfirmed);
+            HandleRejections(document, operationsToBeRejected, rejectionRules);
+        }
+
+        private void HandleConfirmations(
+            DocumentDto document,
+            IReadOnlyCollection<ChargeInformationOperationDto> operationsToBeConfirmed)
+        {
+            if (!operationsToBeConfirmed.Any()) return;
+            RaiseConfirmedEvent(document, operationsToBeConfirmed);
+        }
+
+        private void HandleRejections(
+            DocumentDto document,
+            IReadOnlyCollection<ChargeInformationOperationDto> operationsToBeRejected,
+            IList<IValidationRuleContainer> rejectionRules)
+        {
+            ArgumentNullException.ThrowIfNull(operationsToBeRejected);
+            ArgumentNullException.ThrowIfNull(rejectionRules);
+
+            if (!operationsToBeRejected.Any()) return;
+
+            var errorMessage = ValidationErrorLogMessageBuilder.BuildErrorMessage(document, rejectionRules);
+            _logger.LogError("ValidationErrors for {ErrorMessage}", errorMessage);
+
+            RaiseRejectedEvent(document, operationsToBeRejected, rejectionRules);
+        }
+
+        private void RaiseConfirmedEvent(
+            DocumentDto document,
+            IReadOnlyCollection<ChargeInformationOperationDto> operationsToBeConfirmed)
+        {
+            if (!operationsToBeConfirmed.Any()) return;
+            var confirmedEvent = _chargeInformationOperationsConfirmedEventFactory.Create(document, operationsToBeConfirmed);
+            _domainEventPublisher.Publish(confirmedEvent);
+        }
+
+        private void RaiseRejectedEvent(
+            DocumentDto document,
+            IReadOnlyCollection<ChargeInformationOperationDto> operationsToBeRejected,
+            IList<IValidationRuleContainer> rejectionRules)
+        {
+            if (!operationsToBeRejected.Any()) return;
+            var validationResult = ValidationResult.CreateFailure(rejectionRules);
+            var rejectedEvent = _chargeInformationOperationsRejectedEventFactory.Create(document, operationsToBeRejected, validationResult);
+            _domainEventPublisher.Publish(rejectedEvent);
         }
 
         private static void CollectRejectionRules(
@@ -122,23 +174,23 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             switch (operationType)
             {
                 case OperationType.Create:
-                    await HandleCreateEventAsync(informationOperation).ConfigureAwait(false);
+                    await HandleCreateOperationAsync(informationOperation).ConfigureAwait(false);
                     break;
                 case OperationType.Update:
-                    HandleUpdateEvent(charge!, informationOperation);
+                    HandleUpdateOperationEvent(charge!, informationOperation);
                     break;
                 case OperationType.Stop:
                     charge!.Stop(informationOperation.EndDateTime);
                     break;
                 case OperationType.CancelStop:
-                    HandleCancelStopEvent(charge!, informationOperation);
+                    HandleCancelStopOperationEvent(charge!, informationOperation);
                     break;
                 default:
                     throw new InvalidOperationException("Could not handle charge command.");
             }
         }
 
-        private async Task HandleCreateEventAsync(ChargeInformationOperationDto chargeInformationOperationDto)
+        private async Task HandleCreateOperationAsync(ChargeInformationOperationDto chargeInformationOperationDto)
         {
             var charge = await _chargeFactory
                 .CreateFromChargeOperationDtoAsync(chargeInformationOperationDto)
@@ -146,7 +198,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             await _chargeRepository.AddAsync(charge).ConfigureAwait(false);
         }
 
-        private void HandleUpdateEvent(Charge charge, ChargeInformationOperationDto chargeInformationOperationDto)
+        private void HandleUpdateOperationEvent(Charge charge, ChargeInformationOperationDto chargeInformationOperationDto)
         {
             var newChargePeriod = _chargePeriodFactory.CreateFromChargeOperationDto(chargeInformationOperationDto);
             charge.Update(
@@ -156,7 +208,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 chargeInformationOperationDto.OperationId);
         }
 
-        private void HandleCancelStopEvent(Charge charge, ChargeInformationOperationDto chargeInformationOperationDto)
+        private void HandleCancelStopOperationEvent(Charge charge, ChargeInformationOperationDto chargeInformationOperationDto)
         {
             var newChargePeriod = _chargePeriodFactory.CreateFromChargeOperationDto(chargeInformationOperationDto);
             charge.CancelStop(
