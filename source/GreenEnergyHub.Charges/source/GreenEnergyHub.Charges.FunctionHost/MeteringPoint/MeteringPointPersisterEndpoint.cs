@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MeteringPoint
         [Function(FunctionName)]
         public async Task RunAsync(
             [ServiceBusTrigger(
-                "%" + EnvironmentSettingNames.MeteringPointCreatedTopicName + "%",
+                "%" + EnvironmentSettingNames.IntegrationEventTopicName + "%",
                 "%" + EnvironmentSettingNames.MeteringPointCreatedSubscriptionName + "%",
                 Connection = EnvironmentSettingNames.DataHubListenerConnectionString)]
             byte[] message)

@@ -24,8 +24,6 @@ locals {
     CHARGE_LINK_CREATED_TOPIC_NAME                      = "charge-link-created"
     CHARGE_CREATED_TOPIC_NAME                           = "charge-created"
     CHARGE_PRICES_UPDATED_TOPIC_NAME                    = "charge-prices-updated"
-    METERING_POINT_CREATED_TOPIC_NAME                   = "metering-point-created"
-    METERING_POINT_CREATED_SUBSCRIPTION_NAME            = "metering-point-created-sub-charges"
     CREATE_LINK_REQUEST_QUEUE_NAME                      = "create-link-request"
     CREATE_LINK_REPLY_QUEUE_NAME                        = "create-link-reply"
 
