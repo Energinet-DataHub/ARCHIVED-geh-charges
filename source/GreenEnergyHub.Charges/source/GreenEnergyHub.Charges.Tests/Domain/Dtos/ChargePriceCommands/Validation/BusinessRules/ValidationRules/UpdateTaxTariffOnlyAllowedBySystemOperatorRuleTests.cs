@@ -13,12 +13,13 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
-using GreenEnergyHub.Charges.TestCore.Attributes;
 using Xunit;
 using Xunit.Categories;
 
@@ -27,23 +28,26 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
     [UnitTest]
     public class UpdateTaxTariffOnlyAllowedBySystemOperatorRuleTests
     {
-        [Theory]
-        [InlineAutoMoqData(ChargeType.Fee)]
-        [InlineAutoMoqData(ChargeType.Subscription)]
-        [InlineAutoMoqData(ChargeType.Unknown)]
-        public void IsValid_WhenChargeTypeNotTariff_IsTrue(
-            ChargeType chargeType)
+        [Fact]
+        public void IsValid_WhenChargeTypeNotTariff_IsTrue()
         {
             // Arrange
-            // Act
-            var sut = new UpdateTaxTariffOnlyAllowedBySystemOperatorRule(chargeType, MarketParticipantRole.GridAccessProvider, false);
+            var chargeTypes = Enum.GetValues<ChargeType>()
+                .Except(new List<ChargeType> { ChargeType.Tariff });
 
-            // Assert
-            sut.IsValid.Should().Be(true);
+            foreach (var chargeType in chargeTypes)
+            {
+                // Act
+                var sut = new UpdateTaxTariffOnlyAllowedBySystemOperatorRule(
+                    chargeType, MarketParticipantRole.GridAccessProvider, false);
+
+                // Assert
+                sut.IsValid.Should().Be(true);
+            }
         }
 
         [Fact]
-        public void IsValid_WhenNotSystemOperator_IsTrue()
+        public void IsValid_WhenNotSystemOperator_IsFalse()
         {
             foreach (var senderRole in Enum.GetValues<MarketParticipantRole>())
             {
@@ -77,10 +81,12 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
         {
             // Arrange
             // Act
-            var sut = new UpdateTaxTariffOnlyAllowedBySystemOperatorRule(ChargeType.Tariff, MarketParticipantRole.SystemOperator, true);
+            var sut = new UpdateTaxTariffOnlyAllowedBySystemOperatorRule(
+                ChargeType.Tariff, MarketParticipantRole.SystemOperator, true);
 
             // Assert
-            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.UpdateTaxTariffOnlyAllowedBySystemOperator);
+            sut.ValidationRuleIdentifier.Should()
+                .Be(ValidationRuleIdentifier.UpdateTaxTariffOnlyAllowedBySystemOperator);
         }
     }
 }

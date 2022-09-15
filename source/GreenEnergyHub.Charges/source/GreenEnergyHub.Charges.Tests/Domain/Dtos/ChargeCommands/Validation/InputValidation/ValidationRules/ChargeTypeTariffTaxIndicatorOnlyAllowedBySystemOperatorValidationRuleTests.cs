@@ -55,7 +55,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [AutoDomainData]
-        public void IsValid_WhenNotSystemOperator_IsTrue(
+        public void IsValid_WhenNotSystemOperator_IsFalse(
             ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder,
             MarketParticipantDtoBuilder marketParticipantDtoBuilder)
         {
@@ -116,10 +116,12 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 .Build();
 
             // Act
-            var sut = new ChargeTypeTariffTaxIndicatorOnlyAllowedBySystemOperatorValidationRule(chargeOperation, senderMarketParticipant);
+            var sut = new ChargeTypeTariffTaxIndicatorOnlyAllowedBySystemOperatorValidationRule(
+                chargeOperation, senderMarketParticipant);
 
             // Assert
-            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChargeTypeTariffTaxIndicatorOnlyAllowedBySystemOperator);
+            sut.ValidationRuleIdentifier.Should()
+                .Be(ValidationRuleIdentifier.ChargeTypeTariffTaxIndicatorOnlyAllowedBySystemOperator);
         }
     }
 }

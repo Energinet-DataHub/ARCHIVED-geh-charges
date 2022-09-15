@@ -24,7 +24,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.Busi
         private readonly MarketParticipantRole _businessProcessRole;
         private readonly bool _taxIndicator;
 
-        public UpdateTaxTariffOnlyAllowedBySystemOperatorRule(ChargeType chargeType, MarketParticipantRole businessProcessRole, bool taxIndicator)
+        public UpdateTaxTariffOnlyAllowedBySystemOperatorRule(
+            ChargeType chargeType, MarketParticipantRole businessProcessRole, bool taxIndicator)
         {
             _chargeType = chargeType;
             _businessProcessRole = businessProcessRole;
@@ -35,6 +36,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.Busi
                                !_taxIndicator ||
                                _businessProcessRole is MarketParticipantRole.SystemOperator;
 
-        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.UpdateTaxTariffOnlyAllowedBySystemOperator;
+        public ValidationRuleIdentifier ValidationRuleIdentifier =>
+            ValidationRuleIdentifier.UpdateTaxTariffOnlyAllowedBySystemOperator;
     }
 }

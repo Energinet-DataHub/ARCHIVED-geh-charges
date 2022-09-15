@@ -23,7 +23,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
         private readonly ChargeInformationOperationDto _chargeInformationOperationDto;
         private readonly MarketParticipantDto _senderMarketParticipantDto;
 
-        public ChargeTypeTariffTaxIndicatorOnlyAllowedBySystemOperatorValidationRule(ChargeInformationOperationDto chargeInformationOperationDto, MarketParticipantDto senderMarketParticipantDto)
+        public ChargeTypeTariffTaxIndicatorOnlyAllowedBySystemOperatorValidationRule(
+            ChargeInformationOperationDto chargeInformationOperationDto,
+            MarketParticipantDto senderMarketParticipantDto)
         {
             _chargeInformationOperationDto = chargeInformationOperationDto;
             _senderMarketParticipantDto = senderMarketParticipantDto;
@@ -33,6 +35,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
                                _chargeInformationOperationDto.TaxIndicator is not TaxIndicator.Tax ||
                                _senderMarketParticipantDto.BusinessProcessRole is MarketParticipantRole.SystemOperator;
 
-        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.ChargeTypeTariffTaxIndicatorOnlyAllowedBySystemOperator;
+        public ValidationRuleIdentifier ValidationRuleIdentifier =>
+            ValidationRuleIdentifier.ChargeTypeTariffTaxIndicatorOnlyAllowedBySystemOperator;
     }
 }
