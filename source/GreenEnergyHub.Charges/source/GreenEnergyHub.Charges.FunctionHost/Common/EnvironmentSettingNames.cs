@@ -82,12 +82,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
         public const string ChargeCommandRejectedSubscriptionName = "CHARGE_COMMAND_REJECTED_SUBSCRIPTION_NAME";
 
         // Internal, charge price, confirmed
-        public const string ChargePriceConfirmedSubscriptionName = "CHARGE_PRICE_CONFIRMED_SUBSCRIPTION_NAME";
+        public const string ChargePriceOperationsConfirmedSubscriptionName = "CHARGE_PRICE_OPERATIONS_CONFIRMED_SUBSCRIPTION_NAME";
         public const string ChargePriceConfirmedDataAvailableSubscriptionName = "CHARGE_PRICE_CONFIRMED_DATAAVAILABLE_SUBSCRIPTION_NAME";
         public const string ChargePriceConfirmedPublishSubscriptionName = "CHARGE_PRICE_CONFIRMED_PUBLISH_SUBSCRIPTION_NAME";
 
         // Internal, charge price, rejected
-        public const string ChargePriceRejectedSubscriptionName = "CHARGE_PRICE_REJECTED_SUBSCRIPTION_NAME";
+        public const string ChargePriceOperationsRejectedSubscriptionName = "CHARGE_PRICE_OPERATIONS_REJECTED_SUBSCRIPTION_NAME";
 
         // Internal, charge links, received
         public const string ChargeLinksCommandReceivedSubscriptionName = "CHARGE_LINKS_COMMAND_RECEIVED_SUBSCRIPTION_NAME";

@@ -13,11 +13,21 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents
 {
-    public interface IChargeCommandAcceptedEventFactory
+    public class ChargeInformationCommandAcceptedEvent : DomainEvent
     {
-        ChargeCommandAcceptedEvent CreateEvent(ChargeInformationCommand command);
+        public ChargeInformationCommandAcceptedEvent(
+            Instant publishedTime,
+            ChargeInformationCommand command)
+            : base(publishedTime)
+        {
+            Command = command;
+        }
+
+        public ChargeInformationCommand Command { get; }
     }
 }

@@ -16,27 +16,22 @@ using System.Collections.Generic;
 using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
-using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Factories
 {
-    public class PriceConfirmedEventFactory : IPriceConfirmedEventFactory
+    /// <summary>
+    /// Factory for creating <see cref="ChargePriceOperationsConfirmedEvent"/>
+    /// </summary>
+    public interface IChargePriceOperationsConfirmedEventFactory
     {
-        private readonly IClock _clock;
-
-        public PriceConfirmedEventFactory(IClock clock)
-        {
-            _clock = clock;
-        }
-
-        public PriceConfirmedEvent Create(
+        /// <summary>
+        /// Factory method for creating <see cref="ChargePriceOperationsConfirmedEvent"/> based on confirmed operations
+        /// </summary>
+        /// <param name="document">Document containing information about market participant causing the event</param>
+        /// <param name="operations">Operations to be confirmed</param>
+        /// <returns><see cref="ChargePriceOperationsConfirmedEvent"/></returns>
+        ChargePriceOperationsConfirmedEvent Create(
             DocumentDto document,
-            IReadOnlyCollection<ChargePriceOperationDto> operations)
-        {
-            return new PriceConfirmedEvent(
-                _clock.GetCurrentInstant(),
-                document,
-                operations);
-        }
+            IReadOnlyCollection<ChargePriceOperationDto> operations);
     }
 }

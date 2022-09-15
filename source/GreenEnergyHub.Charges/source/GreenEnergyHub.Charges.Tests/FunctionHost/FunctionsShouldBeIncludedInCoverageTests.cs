@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using GreenEnergyHub.Charges.FunctionHost.ChargeLinks;
 using GreenEnergyHub.Charges.FunctionHost.Charges;
+using GreenEnergyHub.Charges.FunctionHost.MessageHub;
 using Xunit;
 using Xunit.Categories;
 
@@ -26,14 +28,14 @@ namespace GreenEnergyHub.Charges.Tests.FunctionHost
         /// for this repo.
         ///
         /// The test more or less randomly just selected some symbols from each function in order
-        /// to pull the projects in an thus have them count in the coverage metrics.
+        /// to pull the projects in and thus have them count in the coverage metrics.
         ///
         /// The test method can eventually be removed when other tests are added for all projects.
         /// </summary>
         [Fact]
         public void AllFunctionsShouldBeIncludedInCoverage()
         {
-            Assert.Equal("ChargeCommandReceiverEndpoint", ChargeCommandReceiverEndpoint.FunctionName);
+            Assert.Equal("ChargeInformationCommandReceiverEndpoint", ChargeInformationCommandReceiverEndpoint.FunctionName);
         }
     }
 }

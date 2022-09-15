@@ -120,7 +120,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableOperationReceiptData
             };
         }
 
-        private string GetPosition(ChargeOperation operationDto,  string? triggeredBy)
+        private string GetPosition(ChargeOperationDto operationDto,  string? triggeredBy)
         {
             var parsed = int.TryParse(triggeredBy, out var position);
             if (!string.IsNullOrWhiteSpace(triggeredBy) && parsed && position > 0)

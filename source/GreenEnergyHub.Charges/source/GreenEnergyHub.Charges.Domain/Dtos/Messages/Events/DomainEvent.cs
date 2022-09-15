@@ -12,21 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading;
-using System.Threading.Tasks;
+using NodaTime;
 
-namespace GreenEnergyHub.Charges.Application.Messaging
+namespace GreenEnergyHub.Charges.Domain.Dtos.Messages.Events
 {
-    /// <summary>
-    /// Service for dispatching internal events raised during current business process
-    /// </summary>
-    public interface IInternalEventDispatcher
+    public abstract class DomainEvent : IEvent
     {
-        /// <summary>
-        /// Dispatch internal event
-        /// </summary>
-        /// <param name="internalEvent"></param>
-        /// <param name="cancellationToken"></param>
-        Task DispatchAsync<T>(T internalEvent, CancellationToken cancellationToken = default);
+        protected DomainEvent(Instant publishedTime)
+        {
+            PublishedTime = publishedTime;
+        }
+
+        public Instant PublishedTime { get; }
     }
 }

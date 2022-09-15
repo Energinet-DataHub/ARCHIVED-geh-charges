@@ -31,32 +31,32 @@ using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
-    public class ChargePriceEventHandler : IChargePriceEventHandler
+    public class ChargePriceOperationsEventHandler : IChargePriceOperationsEventHandler
     {
         private readonly IChargeRepository _chargeRepository;
         private readonly IMarketParticipantRepository _marketParticipantRepository;
         private readonly IInputValidator<ChargePriceOperationDto> _inputValidator;
-        private readonly IInternalEventPublisher _internalEventPublisher;
+        private readonly IDomainEventPublisher _domainEventPublisher;
         private readonly ILogger _logger;
-        private readonly IPriceConfirmedEventFactory _priceConfirmedEventFactory;
-        private readonly IPriceRejectedEventFactory _priceRejectedEventFactory;
+        private readonly IChargePriceOperationsConfirmedEventFactory _chargePriceOperationsConfirmedEventFactory;
+        private readonly IChargePriceOperationsRejectedEventFactory _chargePriceOperationsRejectedEventFactory;
 
-        public ChargePriceEventHandler(
+        public ChargePriceOperationsEventHandler(
             IChargeRepository chargeRepository,
             IMarketParticipantRepository marketParticipantRepository,
             IInputValidator<ChargePriceOperationDto> inputValidator,
-            IInternalEventPublisher internalEventPublisher,
+            IDomainEventPublisher domainEventPublisher,
             ILoggerFactory loggerFactory,
-            IPriceConfirmedEventFactory priceConfirmedEventFactory,
-            IPriceRejectedEventFactory priceRejectedEventFactory)
+            IChargePriceOperationsConfirmedEventFactory chargePriceOperationsConfirmedEventFactory,
+            IChargePriceOperationsRejectedEventFactory chargePriceOperationsRejectedEventFactory)
         {
             _chargeRepository = chargeRepository;
             _marketParticipantRepository = marketParticipantRepository;
             _inputValidator = inputValidator;
-            _internalEventPublisher = internalEventPublisher;
-            _priceConfirmedEventFactory = priceConfirmedEventFactory;
-            _priceRejectedEventFactory = priceRejectedEventFactory;
-            _logger = loggerFactory.CreateLogger(nameof(ChargePriceEventHandler));
+            _domainEventPublisher = domainEventPublisher;
+            _chargePriceOperationsConfirmedEventFactory = chargePriceOperationsConfirmedEventFactory;
+            _chargePriceOperationsRejectedEventFactory = chargePriceOperationsRejectedEventFactory;
+            _logger = loggerFactory.CreateLogger(nameof(ChargePriceOperationsEventHandler));
         }
 
         public async Task HandleAsync(ChargePriceCommandReceivedEvent commandReceivedEvent)
@@ -143,8 +143,8 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             IReadOnlyCollection<ChargePriceOperationDto> operationsToBeConfirmed)
         {
             if (!operationsToBeConfirmed.Any()) return;
-            var confirmedEvent = _priceConfirmedEventFactory.Create(document, operationsToBeConfirmed);
-            _internalEventPublisher.Publish(confirmedEvent);
+            var confirmedEvent = _chargePriceOperationsConfirmedEventFactory.Create(document, operationsToBeConfirmed);
+            _domainEventPublisher.Publish(confirmedEvent);
         }
 
         private void RaiseRejectedEvent(
@@ -154,8 +154,8 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         {
             if (!operationsToBeRejected.Any()) return;
             var validationResult = ValidationResult.CreateFailure(rejectionRules);
-            var rejectedEvent = _priceRejectedEventFactory.Create(document, operationsToBeRejected, validationResult);
-            _internalEventPublisher.Publish(rejectedEvent);
+            var rejectedEvent = _chargePriceOperationsRejectedEventFactory.Create(document, operationsToBeRejected, validationResult);
+            _domainEventPublisher.Publish(rejectedEvent);
         }
 
         private static void CollectRejectionRules(
