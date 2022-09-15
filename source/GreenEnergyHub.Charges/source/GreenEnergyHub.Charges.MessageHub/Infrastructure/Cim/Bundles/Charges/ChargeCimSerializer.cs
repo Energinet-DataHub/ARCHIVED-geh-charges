@@ -62,7 +62,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.Charges
                 GetChargeGroupElement(cimNamespace, record));
         }
 
-        private XElement GetChargeGroupElement(
+        private static XElement GetChargeGroupElement(
             XNamespace cimNamespace,
             AvailableChargeData charge)
         {
