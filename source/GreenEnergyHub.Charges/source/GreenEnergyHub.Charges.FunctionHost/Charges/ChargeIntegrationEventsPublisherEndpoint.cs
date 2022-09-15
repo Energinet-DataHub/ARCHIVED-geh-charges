@@ -23,7 +23,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
 {
     public class ChargeIntegrationEventsPublisherEndpoint
     {
-        public const string FunctionName = nameof(ChargeIntegrationEventsPublisherEndpoint);
+        private const string FunctionName = nameof(ChargeIntegrationEventsPublisherEndpoint);
         private readonly JsonMessageDeserializer<ChargeInformationCommandAcceptedEvent> _deserializer;
         private readonly IChargeIntegrationEventsPublisher _chargeIntegrationEventsPublisher;
 

@@ -70,13 +70,13 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableOperationReceiptData
 
         private List<AvailableReceiptValidationError> GetReasons(
             ChargePriceOperationsRejectedEvent input,
-            ChargePriceOperationDto operationDtoDto)
+            ChargePriceOperationDto operationDto)
         {
             return input
                 .ValidationErrors
-                .Where(ve => ve.OperationId == operationDtoDto.OperationId || string.IsNullOrWhiteSpace(ve.OperationId))
+                .Where(ve => ve.OperationId == operationDto.OperationId || string.IsNullOrWhiteSpace(ve.OperationId))
                 .Select(validationError => _availableChargePriceReceiptValidationErrorFactory
-                    .Create(validationError, input.Document, operationDtoDto))
+                    .Create(validationError, input.Document, operationDto))
                 .ToList();
         }
     }
