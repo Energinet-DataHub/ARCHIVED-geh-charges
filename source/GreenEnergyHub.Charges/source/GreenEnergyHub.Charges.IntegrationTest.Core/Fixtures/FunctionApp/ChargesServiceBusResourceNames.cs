@@ -29,9 +29,11 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
         // Integration events, charge links
         public const string ChargeLinksCreatedTopicKey = "charge-links-created";
 
+        // Integration events topic
+        public const string IntegrationEventTopicKey = "integration_event_topic";
+
         // Integration, metering point domain
-        public const string MeteringPointCreatedTopicKey = "metering-point-created";
-        public const string MeteringPointCreatedSubscriptionName = "metering-point-created-sub-charges";
+        public const string MeteringPointCreatedSubscriptionName = "metering-point-created";
         public const string CreateLinksRequestQueueKey = "create-links-request";
         public const string CreateLinksReplyQueueKey = "create-links-reply";
 
@@ -45,8 +47,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
         public const string RequestResponseLoggingContainerName = "marketoplogs";
 
         // Integration, marketparticipants domain
-        public const string MarketParticipantChangedTopicKey = "market-participant-changed";
-        public const string MarketParticipantChangedSubscriptionName = "market-participant-changed-to-charges";
+        public const string MarketParticipantChangedSubscriptionName = "market-participant-changed";
 
         // Internal, charge
         public const string ChargesDomainEventsTopicKey = "sbt-charges-domain-events";

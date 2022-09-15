@@ -30,15 +30,16 @@
     // Integration events, charge links
     "CHARGE_LINKS_CREATED_TOPIC_NAME": "charge-links-created",
 
+    // Shared integration events
+    "INTEGRATION_EVENT_TOPIC_NAME": "sbt-sharedres-integrationevent-received",
+
     // Integration, metering point domain
-    "METERING_POINT_CREATED_TOPIC_NAME": "metering-point-created",
-    "METERING_POINT_CREATED_SUBSCRIPTION_NAME": "metering-point-created-sub-charges",
+    "METERING_POINT_CREATED_SUBSCRIPTION_NAME": "metering-point-created",
     "CREATE_LINKS_REQUEST_QUEUE_NAME": "create-links-request",
     "CREATE_LINKS_REPLY_QUEUE_NAME": "create-links-reply",
 
     // Integration, market participant domain
-    "MARKET_PARTICIPANT_CHANGED_TOPIC_NAME": "market-participant-changed",
-    "MARKET_PARTICIPANT_CHANGED_SUBSCRIPTION_NAME": "market-participant-changed-to-charges",
+    "MARKET_PARTICIPANT_CHANGED_SUBSCRIPTION_NAME": "market-participant-changed",
 
     // Integration, message hub
     "MESSAGEHUB_DATAAVAILABLE_QUEUE": "dataavailable",

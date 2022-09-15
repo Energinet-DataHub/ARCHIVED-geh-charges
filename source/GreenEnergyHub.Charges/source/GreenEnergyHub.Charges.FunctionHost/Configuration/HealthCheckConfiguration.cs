@@ -35,8 +35,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             // Integration events
             ConfigureIntegrationEventsCharges(serviceCollection);
             ConfigureIntegrationEventsChargeLinks(serviceCollection);
-            ConfigureIntegrationEventsMeteringPointDomain(serviceCollection);
-            ConfigureIntegrationEventsMarketParticipantDomain(serviceCollection);
+            ConfigureIntegrationEvents(serviceCollection);
             ConfigureIntegrationEventsMessageHub(serviceCollection);
 
             // Domain events
@@ -68,37 +67,28 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                     topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksCreatedTopicName));
         }
 
-        private static void ConfigureIntegrationEventsMeteringPointDomain(IServiceCollection serviceCollection)
+        private static void ConfigureIntegrationEvents(IServiceCollection serviceCollection)
         {
             serviceCollection.AddHealthChecks()
                 .AddAzureServiceBusTopic(
-                    name: "MeteringPointCreatedTopicExists",
+                    name: "IntegrationEventsTopicExists",
                     connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubManagerConnectionString),
-                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.MeteringPointCreatedTopicName))
+                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.IntegrationEventTopicName))
                 .AddAzureServiceBusSubscription(
                     name: "MeteringPointCreatedSubscriptionExists",
                     connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubManagerConnectionString),
-                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.MeteringPointCreatedTopicName),
+                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.IntegrationEventTopicName),
                     subscriptionName: EnvironmentHelper.GetEnv(EnvironmentSettingNames
                         .MeteringPointCreatedSubscriptionName))
+                .AddAzureServiceBusSubscription(
+                    name: "MarketParticipantChangedSubscriptionExists",
+                    connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubManagerConnectionString),
+                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.IntegrationEventTopicName),
+                    subscriptionName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.MarketParticipantChangedSubscriptionName))
                 .AddAzureServiceBusQueue(
                     name: "CreateLinksRequestQueueExists",
                     connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubManagerConnectionString),
                     queueName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.CreateLinksRequestQueueName));
-        }
-
-        private static void ConfigureIntegrationEventsMarketParticipantDomain(IServiceCollection serviceCollection)
-        {
-            serviceCollection.AddHealthChecks()
-                .AddAzureServiceBusTopic(
-                    name: "MarketParticipantChangedTopicExists",
-                    connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubManagerConnectionString),
-                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.MarketParticipantChangedTopicName))
-                .AddAzureServiceBusSubscription(
-                    name: "MarketParticipantChangedSubscriptionExists",
-                    connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubManagerConnectionString),
-                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.MarketParticipantChangedTopicName),
-                    subscriptionName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.MarketParticipantChangedSubscriptionName));
         }
 
         private static void ConfigureIntegrationEventsMessageHub(IServiceCollection serviceCollection)
