@@ -35,7 +35,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
             string chargeOwner,
             ChargeType chargeType,
             Instant startDateTime,
-            Instant endDateTime,
             Resolution resolution,
             DocumentType documentType,
             int operationOrder,
@@ -57,7 +56,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
             ChargeOwner = chargeOwner;
             ChargeType = chargeType;
             StartDateTime = startDateTime;
-            EndDateTime = endDateTime;
             Resolution = resolution;
             _points = points;
         }
@@ -77,8 +75,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
         public ChargeType ChargeType { get; }
 
         public Instant StartDateTime { get; }
-
-        public Instant EndDateTime { get; }
 
         public Resolution Resolution { get; }
 

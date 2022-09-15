@@ -55,6 +55,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
             });
 
             return mergedFile
+                .Replace("{{$systemOperatorMarketParticipant}}", "5790000432752")
                 .Replace("{{$senderMarketParticipant}}", "8100000000030")
                 .Replace("{{$receiverMarketParticipant}}", "5790001330552")
                 .Replace("{{$randomCharacters}}", Guid.NewGuid().ToString("n")[..10])
