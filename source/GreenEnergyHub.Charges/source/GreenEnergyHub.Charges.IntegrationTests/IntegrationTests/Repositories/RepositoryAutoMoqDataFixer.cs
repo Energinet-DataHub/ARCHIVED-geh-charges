@@ -141,7 +141,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 availableChargePriceData.ChargeOwner.Substring(0, 34),
                 availableChargePriceData.ChargeType,
                 availableChargePriceData.StartDateTime,
-                availableChargePriceData.EndDateTime,
                 availableChargePriceData.Resolution,
                 availableChargePriceData.DocumentType,
                 availableChargePriceData.OperationOrder,
