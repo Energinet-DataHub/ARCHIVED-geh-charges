@@ -27,20 +27,20 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
     public class ChargePriceCommandReceivedEventHandler : IChargePriceCommandReceivedEventHandler
     {
         private readonly ILogger _logger;
-        private readonly IChargePriceOperationsEventHandler _chargePriceOperationsEventHandler;
+        private readonly IChargePriceOperationsHandler _chargePriceOperationsHandler;
         private readonly IDocumentValidator _documentValidator;
         private readonly IDomainEventPublisher _domainEventPublisher;
         private readonly IChargePriceOperationsRejectedEventFactory _chargePriceOperationsRejectedEventFactory;
 
         public ChargePriceCommandReceivedEventHandler(
             ILoggerFactory loggerFactory,
-            IChargePriceOperationsEventHandler chargePriceOperationsEventHandler,
+            IChargePriceOperationsHandler chargePriceOperationsHandler,
             IDocumentValidator documentValidator,
             IDomainEventPublisher domainEventPublisher,
             IChargePriceOperationsRejectedEventFactory chargePriceOperationsRejectedEventFactory)
         {
             _logger = loggerFactory.CreateLogger(nameof(ChargePriceCommandReceivedEventHandler));
-            _chargePriceOperationsEventHandler = chargePriceOperationsEventHandler;
+            _chargePriceOperationsHandler = chargePriceOperationsHandler;
             _documentValidator = documentValidator;
             _domainEventPublisher = domainEventPublisher;
             _chargePriceOperationsRejectedEventFactory = chargePriceOperationsRejectedEventFactory;
@@ -56,7 +56,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 return;
             }
 
-            await _chargePriceOperationsEventHandler.HandleAsync(chargePriceCommandReceivedEvent).ConfigureAwait(false);
+            await _chargePriceOperationsHandler.HandleAsync(chargePriceCommandReceivedEvent).ConfigureAwait(false);
         }
 
         private void RaiseRejectedEvent(

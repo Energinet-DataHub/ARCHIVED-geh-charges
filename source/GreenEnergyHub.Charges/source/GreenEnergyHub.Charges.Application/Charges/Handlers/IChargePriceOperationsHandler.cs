@@ -18,14 +18,14 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
     /// <summary>
-    /// Handles events for charges with BusinessReasonCode D08
+    /// Service for handling charge price operations
     /// </summary>
-    public interface IChargePriceOperationsEventHandler
+    public interface IChargePriceOperationsHandler
     {
         /// <summary>
-        /// Handles the received event as a charge price event
+        /// Handle operations of a charge price command
         /// </summary>
-        /// <param name="commandReceivedEvent"></param>
-        Task HandleAsync(ChargePriceCommandReceivedEvent commandReceivedEvent);
+        /// <param name="chargePriceCommandReceivedEvent"></param>
+        Task HandleAsync(ChargePriceCommandReceivedEvent chargePriceCommandReceivedEvent);
     }
 }

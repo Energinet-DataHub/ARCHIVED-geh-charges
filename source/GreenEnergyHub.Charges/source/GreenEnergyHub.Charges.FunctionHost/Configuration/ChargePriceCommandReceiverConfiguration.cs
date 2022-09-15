@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         {
             serviceCollection.AddScoped<OutboxMessageFactory>();
             serviceCollection.AddScoped<IChargePriceCommandReceivedEventHandler, ChargePriceCommandReceivedEventHandler>();
-            serviceCollection.AddScoped<IChargePriceOperationsEventHandler, ChargePriceOperationsEventHandler>();
+            serviceCollection.AddScoped<IChargePriceOperationsHandler, ChargePriceOperationsHandler>();
             serviceCollection
                 .AddScoped<IInputValidator<ChargePriceOperationDto>, InputValidator<ChargePriceOperationDto>>();
             serviceCollection.AddScoped<IInputValidationRulesFactory<ChargePriceOperationDto>,

@@ -31,7 +31,7 @@ using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
-    public class ChargePriceOperationsEventHandler : IChargePriceOperationsEventHandler
+    public class ChargePriceOperationsHandler : IChargePriceOperationsHandler
     {
         private readonly IChargeRepository _chargeRepository;
         private readonly IMarketParticipantRepository _marketParticipantRepository;
@@ -41,7 +41,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         private readonly IChargePriceOperationsConfirmedEventFactory _chargePriceOperationsConfirmedEventFactory;
         private readonly IChargePriceOperationsRejectedEventFactory _chargePriceOperationsRejectedEventFactory;
 
-        public ChargePriceOperationsEventHandler(
+        public ChargePriceOperationsHandler(
             IChargeRepository chargeRepository,
             IMarketParticipantRepository marketParticipantRepository,
             IInputValidator<ChargePriceOperationDto> inputValidator,
@@ -56,15 +56,15 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             _domainEventPublisher = domainEventPublisher;
             _chargePriceOperationsConfirmedEventFactory = chargePriceOperationsConfirmedEventFactory;
             _chargePriceOperationsRejectedEventFactory = chargePriceOperationsRejectedEventFactory;
-            _logger = loggerFactory.CreateLogger(nameof(ChargePriceOperationsEventHandler));
+            _logger = loggerFactory.CreateLogger(nameof(ChargePriceOperationsHandler));
         }
 
-        public async Task HandleAsync(ChargePriceCommandReceivedEvent commandReceivedEvent)
+        public async Task HandleAsync(ChargePriceCommandReceivedEvent chargePriceCommandReceivedEvent)
         {
-            ArgumentNullException.ThrowIfNull(commandReceivedEvent);
+            ArgumentNullException.ThrowIfNull(chargePriceCommandReceivedEvent);
 
-            var operations = commandReceivedEvent.Command.Operations.ToArray();
-            var document = commandReceivedEvent.Command.Document;
+            var operations = chargePriceCommandReceivedEvent.Command.Operations.ToArray();
+            var document = chargePriceCommandReceivedEvent.Command.Document;
             var operationsToBeRejected = new List<ChargePriceOperationDto>();
             var rejectionRules = new List<IValidationRuleContainer>();
             var operationsToBeConfirmed = new List<ChargePriceOperationDto>();

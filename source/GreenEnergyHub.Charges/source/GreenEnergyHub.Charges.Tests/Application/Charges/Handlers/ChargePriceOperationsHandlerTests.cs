@@ -42,7 +42,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 {
     [UnitTest]
-    public class ChargePriceEventHandlerTests
+    public class ChargePriceOperationsHandlerTests
     {
         [Theory]
         [InlineAutoMoqData]
@@ -84,7 +84,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                     It.IsAny<IReadOnlyCollection<ChargePriceOperationDto>>()))
                 .Returns(chargePriceOperationsConfirmedEvent);
 
-            var sut = new ChargePriceOperationsEventHandler(
+            var sut = new ChargePriceOperationsHandler(
                 chargeRepository.Object,
                 marketParticipantRepository.Object,
                 inputValidator.Object,
@@ -116,7 +116,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             ChargeBuilder chargeBuilder,
             ChargePriceCommandReceivedEvent receivedEvent,
             ChargePriceOperationsRejectedEvent chargePriceOperationsRejectedEvent,
-            ChargePriceOperationsEventHandler sut)
+            ChargePriceOperationsHandler sut)
         {
             // Arrange
             var validationResult = GetFailedValidationResult(It.IsAny<ValidationRuleIdentifier>());
@@ -175,7 +175,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                     It.IsAny<IReadOnlyCollection<ChargePriceOperationDto>>(),
                     It.IsAny<ValidationResult>()))
                 .Returns(operationsRejectedEvent);
-            var sut = new ChargePriceOperationsEventHandler(
+            var sut = new ChargePriceOperationsHandler(
                 It.IsAny<IChargeRepository>(),
                 It.IsAny<IMarketParticipantRepository>(),
                 inputValidator.Object,
@@ -194,7 +194,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         [Theory]
         [InlineAutoMoqData]
         public async Task HandleAsync_IfEventIsNull_ThrowsArgumentNullException(
-            ChargePriceOperationsEventHandler sut)
+            ChargePriceOperationsHandler sut)
         {
             // Arrange
             ChargePriceCommandReceivedEvent? receivedEvent = null;
