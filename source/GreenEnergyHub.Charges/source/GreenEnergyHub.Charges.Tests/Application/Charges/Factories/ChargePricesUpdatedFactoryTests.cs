@@ -14,7 +14,7 @@
 
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.Charges.Factories;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.TestHelpers;
 using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
 using Xunit;
@@ -28,11 +28,11 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Factories
         [Theory]
         [InlineAutoDomainData]
         public void Create_Charge_HasNoNullsOrEmptyCollections(
-            ChargeInformationOperationDto chargeInformationOperationDto,
+            ChargePriceOperationDto chargePriceOperationDto,
             ChargePricesUpdatedEventFactory sut)
         {
             // Act
-            var actual = sut.Create(chargeInformationOperationDto);
+            var actual = sut.Create(chargePriceOperationDto);
 
             // Assert
             actual.Should().NotContainNullEnumerable();

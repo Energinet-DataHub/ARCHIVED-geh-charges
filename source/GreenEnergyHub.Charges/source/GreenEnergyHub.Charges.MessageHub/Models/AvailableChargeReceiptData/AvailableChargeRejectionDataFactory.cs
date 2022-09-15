@@ -27,7 +27,7 @@ using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 {
     public class AvailableChargeRejectionDataFactory :
-        AvailableDataFactoryBase<AvailableChargeReceiptData, ChargeCommandRejectedEvent>
+        AvailableDataFactoryBase<AvailableChargeReceiptData, ChargeInformationCommandRejectedEvent>
     {
         private readonly IMessageMetaDataContext _messageMetaDataContext;
         private readonly IAvailableChargeReceiptValidationErrorFactory _availableChargeReceiptValidationErrorFactory;
@@ -42,7 +42,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             _availableChargeReceiptValidationErrorFactory = availableChargeReceiptValidationErrorFactory;
         }
 
-        public override async Task<IReadOnlyList<AvailableChargeReceiptData>> CreateAsync(ChargeCommandRejectedEvent input)
+        public override async Task<IReadOnlyList<AvailableChargeReceiptData>> CreateAsync(ChargeInformationCommandRejectedEvent input)
         {
             // The original sender is the recipient of the receipt
             var recipient = await GetRecipientAsync(input.Command.Document.Sender).ConfigureAwait(false);
@@ -68,7 +68,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
         }
 
         private List<AvailableReceiptValidationError> GetReasons(
-            ChargeCommandRejectedEvent input,
+            ChargeInformationCommandRejectedEvent input,
             ChargeInformationOperationDto chargeInformationOperationDto)
         {
             return input

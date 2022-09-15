@@ -13,21 +13,21 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Factories
 {
     public class ChargePricesUpdatedEventFactory : IChargePricesUpdatedEventFactory
     {
-        public ChargePricesUpdatedEvent Create(ChargeInformationOperationDto chargeInformationOperationDto)
+        public ChargePricesUpdatedEvent Create(ChargePriceOperationDto chargePriceOperationDto)
         {
             return new ChargePricesUpdatedEvent(
-                chargeInformationOperationDto.SenderProvidedChargeId,
-                chargeInformationOperationDto.ChargeType,
-                chargeInformationOperationDto.ChargeOwner,
-                chargeInformationOperationDto.StartDateTime,
-                chargeInformationOperationDto.EndDateTime.GetValueOrDefault(),
-                chargeInformationOperationDto.Points);
+                chargePriceOperationDto.SenderProvidedChargeId,
+                chargePriceOperationDto.ChargeType,
+                chargePriceOperationDto.ChargeOwner,
+                chargePriceOperationDto.PointsStartInterval,
+                chargePriceOperationDto.PointsEndInterval,
+                chargePriceOperationDto.Points);
         }
     }
 }

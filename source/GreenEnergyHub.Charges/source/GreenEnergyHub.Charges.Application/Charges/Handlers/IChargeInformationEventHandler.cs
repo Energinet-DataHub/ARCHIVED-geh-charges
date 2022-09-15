@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommandReceivedEvents;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
@@ -25,7 +25,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         /// <summary>
         /// Handles received event as a chargeinformation event
         /// </summary>
-        /// <param name="commandReceivedEvent"></param>
-        Task HandleAsync(ChargeCommandReceivedEvent commandReceivedEvent);
+        /// <param name="chargeInformationCommandReceivedEvent"></param>
+        Task HandleAsync(ChargeInformationCommandReceivedEvent chargeInformationCommandReceivedEvent);
     }
 }

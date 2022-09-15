@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
@@ -32,10 +31,10 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions
         [Theory]
         [InlineAutoMoqData]
         public async Task DispatchAsync_WhenCalled_UsesSerializer(
-            [Frozen] [NotNull] Mock<MessageSerializer> serializer,
-            [NotNull] IOutboundMessage message,
-            [NotNull] byte[] serializedBytes,
-            [NotNull] MessageDispatcher<IOutboundMessage> sut)
+            [Frozen] Mock<MessageSerializer> serializer,
+            IOutboundMessage message,
+            byte[] serializedBytes,
+            MessageDispatcher<IOutboundMessage> sut)
         {
             // Arrange
             IOutboundMessage? serializedMessage = null;
@@ -56,7 +55,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions
         [Theory]
         [InlineAutoMoqData]
         public async Task DispatchAsync_WhenMessageIsNull_ThrowsArgumentNullException(
-            [NotNull] MessageDispatcher<IOutboundMessage> sut)
+            MessageDispatcher<IOutboundMessage> sut)
         {
             IOutboundMessage? message = null;
 

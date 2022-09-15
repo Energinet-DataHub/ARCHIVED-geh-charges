@@ -26,7 +26,7 @@ module "sbts_charges_charge_command_received" {
   topic_id            = module.sbt_charges_domain_events.id
   max_delivery_count  = 1
   correlation_filter  = {
-    label = "ChargeCommandReceivedEvent"
+    label = "ChargeInformationCommandReceivedEvent"
   }
 }
 
@@ -158,7 +158,7 @@ module "sbts_charges_charge_price_command_rejected" {
   topic_id            = module.sbt_charges_domain_events.id
   max_delivery_count  = 1
   correlation_filter  = {
-    label = "PriceRejectedEvent"
+    label = "ChargePriceOperationsRejectedEvent"
   }
 }
 
@@ -169,7 +169,7 @@ module "sbts_charges_charge_price_command_confirmed" {
   topic_id            = module.sbt_charges_domain_events.id
   max_delivery_count  = 1
   correlation_filter  = {
-    label = "PriceConfirmedEvent"
+    label = "ChargePriceOperationsConfirmedEvent"
   }
 }
 
@@ -180,7 +180,18 @@ module "sbts_charges_charge_price_command_confirmed_dataavailable" {
   topic_id            = module.sbt_charges_domain_events.id
   max_delivery_count  = 1
   correlation_filter  = {
-    label = "PriceConfirmedEvent"
+    label = "ChargePriceOperationsConfirmedEvent"
+  }
+}
+
+module "sbts_charges_charge_price_confirmed_publish" {
+  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v8"
+  name                = "charge-price-confirmed-publish"
+  project_name        = var.domain_name_short
+  topic_id            = module.sbt_charges_domain_events.id
+  max_delivery_count  = 1
+  correlation_filter  = {
+    label = "ChargePriceOperationsConfirmedEvent"
   }
 }
 

@@ -90,7 +90,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.MessageHub
         {
             foreach (var bundleType in Enum.GetValues(typeof(BundleType)))
             {
-                yield return new object[] { bundleType };
+                yield return new[] { bundleType };
             }
         }
 

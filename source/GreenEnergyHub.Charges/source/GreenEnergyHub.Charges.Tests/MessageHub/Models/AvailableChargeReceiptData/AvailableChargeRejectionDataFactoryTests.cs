@@ -32,8 +32,6 @@ using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.Charges.Tests.Builders.Testables;
 using GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared;
-using GreenEnergyHub.TestHelpers;
-using Microsoft.Extensions.Logging;
 using Moq;
 using NodaTime;
 using Xunit;
@@ -71,7 +69,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
                 .ToList();
 
             var chargeCommandRejectedEvent =
-                new ChargeCommandRejectedEvent(now, chargeCommand, validationErrors);
+                new ChargeInformationCommandRejectedEvent(now, chargeCommand, validationErrors);
 
             // Act
             var actualList = await sut.CreateAsync(chargeCommandRejectedEvent);

@@ -22,14 +22,14 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
 {
     public class ChargeLinksCommandHandler : IChargeLinksCommandHandler
     {
-        private readonly IInternalEventDispatcher _internalEventDispatcher;
+        private readonly IDomainEventDispatcher _domainEventDispatcher;
         private readonly IClock _clock;
 
         public ChargeLinksCommandHandler(
-            IInternalEventDispatcher internalEventDispatcher,
+            IDomainEventDispatcher domainEventDispatcher,
             IClock clock)
         {
-            _internalEventDispatcher = internalEventDispatcher;
+            _domainEventDispatcher = domainEventDispatcher;
             _clock = clock;
         }
 
@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers
                 _clock.GetCurrentInstant(),
                 command);
 
-            await _internalEventDispatcher.DispatchAsync(receivedEvent).ConfigureAwait(false);
+            await _domainEventDispatcher.DispatchAsync(receivedEvent).ConfigureAwait(false);
         }
     }
 }

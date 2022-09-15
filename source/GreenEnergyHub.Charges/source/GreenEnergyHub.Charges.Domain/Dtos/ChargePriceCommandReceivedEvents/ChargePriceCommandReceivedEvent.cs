@@ -18,7 +18,7 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents
 {
-    public class ChargePriceCommandReceivedEvent : InternalEvent
+    public class ChargePriceCommandReceivedEvent : DomainEvent
     {
         public ChargePriceCommandReceivedEvent(
             Instant publishedTime,

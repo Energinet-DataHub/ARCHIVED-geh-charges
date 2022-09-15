@@ -25,6 +25,7 @@ using GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.ChargeLinks;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
 using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.Charges.TestCore.TestHelpers;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
@@ -72,14 +73,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task Given_NewMessage_When_SenderIdDoesNotMatchAuthenticatedId_Then_ShouldReturnErrorMessage()
             {
                 // Arrange
-                var (request, _) =
-                    Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
-                        EndpointUrl, ChargeLinkDocument.ChargeLinkDocumentWhereSenderIdDoNotMatchAuthorizedActorId);
+                var (request, _) = Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
+                    EndpointUrl, ChargeLinkDocument.ChargeLinkDocumentWhereSenderIdDoNotMatchAuthorizedActorId);
 
                 // Act
                 var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
 
-                // Assert
                 // Assert
                 actual.StatusCode.Should().Be(HttpStatusCode.BadRequest);
                 var errorMessage = await actual.Content.ReadAsStreamAsync();
@@ -90,9 +89,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             [Fact]
             public async Task When_ChargeLinkIsReceived_Then_AHttp202ResponseWithEmptyBodyIsReturned()
             {
-                var (request, _) =
-                    Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
-                        EndpointUrl, ChargeLinkDocument.AnyValid);
+                var (request, _) = Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
+                    EndpointUrl, ChargeLinkDocument.AnyValid);
 
                 var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request);
                 var responseBody = await actualResponse.Content.ReadAsStringAsync();
@@ -105,9 +103,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task When_InvalidChargeLinkIsReceived_Then_AHttp400ResponseIsReturned()
             {
                 // Arrange
-                var (request, _) =
-                    Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
-                        EndpointUrl, ChargeLinkDocument.InvalidSchema);
+                var (request, _) = Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
+                    EndpointUrl, ChargeLinkDocument.InvalidSchema);
 
                 // Act
                 var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request);
@@ -122,17 +119,16 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task Given_NewTaxChargeLinkMessage_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply()
             {
                 // Arrange
-                var (request, correlationId) =
-                    Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
-                        EndpointUrl, ChargeLinkDocument.TaxWithCreateAndUpdateDueToOverLappingPeriod);
+                var (request, correlationId) = Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
+                    EndpointUrl, ChargeLinkDocument.TaxWithCreateAndUpdateDueToOverLappingPeriod);
 
                 // Act
                 await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Assert
-                using var assertionScope = new AssertionScope();
                 // We expect 3 message types in the MessageHub, one for the receipt,
                 // one for the charge link itself and one rejected
+                using var assertionScope = new AssertionScope();
                 var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 3);
                 peekResults.Should().ContainMatch("*ConfirmRequestChangeBillingMasterData_MarketDocument*");
                 peekResults.Should().ContainMatch("*NotifyBillingMasterData_MarketDocument*");
@@ -147,13 +143,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task Given_ChargeLinkSampleFile_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply()
             {
                 // Arrange
-                var (request, correlationId) =
-                    Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
-                        EndpointUrl, ChargeLinkDocument.ChargeLinkSubscriptionSample);
+                var (request, correlationId) = Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
+                    EndpointUrl, ChargeLinkDocument.ChargeLinkSubscriptionSample);
 
                 // Act
                 var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
-                var responseBody = await actual.Content!.ReadAsStringAsync();
 
                 // Assert
                 actual.StatusCode.Should().Be(HttpStatusCode.Accepted);

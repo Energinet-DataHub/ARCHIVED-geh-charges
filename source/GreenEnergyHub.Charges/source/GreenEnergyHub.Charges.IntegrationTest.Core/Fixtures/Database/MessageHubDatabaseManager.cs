@@ -23,7 +23,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database
 {
     public class MessageHubDatabaseManager : SqlServerDatabaseManager<MessageHubDatabaseContext>
     {
-        private string? _connectionString = null;
+        private string? _connectionString;
 
         public MessageHubDatabaseManager(string? connectionString = null)
             : base("MessageHub")
@@ -35,9 +35,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database
         public override MessageHubDatabaseContext CreateDbContext()
         {
             var optionsBuilder = new DbContextOptionsBuilder<MessageHubDatabaseContext>();
-
-            optionsBuilder.UseSqlServer(_connectionString ?? ConnectionString, options =>
-                options.UseNodaTime());
+            optionsBuilder.UseSqlServer(_connectionString ?? ConnectionString, options => options.UseNodaTime());
 
             return new MessageHubDatabaseContext(optionsBuilder.Options);
         }

@@ -19,7 +19,6 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.Factories;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using GreenEnergyHub.Charges.Infrastructure.Outbox;
 using GreenEnergyHub.Charges.Infrastructure.Services;
@@ -33,14 +32,14 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         {
             serviceCollection.AddScoped<OutboxMessageFactory>();
             serviceCollection.AddScoped<IChargePriceCommandReceivedEventHandler, ChargePriceCommandReceivedEventHandler>();
-            serviceCollection.AddScoped<IChargePriceEventHandler, ChargePriceEventHandler>();
+            serviceCollection.AddScoped<IChargePriceOperationsEventHandler, ChargePriceOperationsEventHandler>();
             serviceCollection
                 .AddScoped<IInputValidator<ChargePriceOperationDto>, InputValidator<ChargePriceOperationDto>>();
             serviceCollection.AddScoped<IInputValidationRulesFactory<ChargePriceOperationDto>,
                 ChargePriceOperationInputValidationRulesFactory>();
-            serviceCollection.AddScoped<IInternalEventPublisher, InternalEventPublisher>();
-            serviceCollection.AddScoped<IPriceConfirmedEventFactory, PriceConfirmedEventFactory>();
-            serviceCollection.AddScoped<IPriceRejectedEventFactory, PriceRejectedEventFactory>();
+            serviceCollection.AddScoped<IDomainEventPublisher, DomainEventPublisher>();
+            serviceCollection.AddScoped<IChargePriceOperationsConfirmedEventFactory, ChargePriceOperationsConfirmedEventFactory>();
+            serviceCollection.AddScoped<IChargePriceOperationsRejectedEventFactory, ChargePriceOperationsOperationsRejectedEventFactory>();
             serviceCollection.AddScoped<JsonMessageDeserializer<ChargePriceCommandReceivedEvent>>();
         }
     }

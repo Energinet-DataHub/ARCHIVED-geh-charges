@@ -18,8 +18,8 @@ using GreenEnergyHub.Charges.Core.Currency;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.InputValidation.Factories;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
@@ -45,15 +45,15 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IChargeFactory, ChargeFactory>();
             serviceCollection.AddScoped<IChargeIdentifierFactory, ChargeIdentifierFactory>();
             serviceCollection.AddScoped<IChargePeriodFactory, ChargePeriodFactory>();
-            serviceCollection.AddScoped<IChargeCommandAcceptedEventFactory, ChargeCommandAcceptedEventFactory>();
-            serviceCollection.AddScoped<IChargeCommandRejectedEventFactory, ChargeCommandRejectedEventFactory>();
+            serviceCollection.AddScoped<IChargeInformationCommandAcceptedEventFactory, ChargeInformationCommandAcceptedEventFactory>();
+            serviceCollection.AddScoped<IChargeInformationCommandRejectedEventFactory, ChargeInformationCommandRejectedEventFactory>();
             serviceCollection.AddScoped<ICimValidationErrorTextFactory<ChargeInformationOperationDto>,
                 ChargeCimValidationErrorTextFactory>();
             serviceCollection.AddScoped<ICimValidationErrorCodeFactory, CimValidationErrorCodeFactory>();
             serviceCollection.AddScoped<IAvailableChargeReceiptValidationErrorFactory,
                 AvailableChargeReceiptValidationErrorFactory>();
             serviceCollection.AddScoped<IChargeCommandReceivedEventHandler, ChargeInformationCommandReceivedEventHandler>();
-            serviceCollection.AddScoped<JsonMessageDeserializer<ChargeCommandReceivedEvent>>();
+            serviceCollection.AddScoped<JsonMessageDeserializer<ChargeInformationCommandReceivedEvent>>();
             ConfigureDatabase(serviceCollection);
             ConfigureValidation(serviceCollection);
             ConfigureIso8601Timezones(serviceCollection);

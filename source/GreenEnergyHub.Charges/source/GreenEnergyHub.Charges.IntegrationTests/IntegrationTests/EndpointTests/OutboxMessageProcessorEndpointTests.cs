@@ -13,12 +13,10 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
-using Castle.Components.DictionaryAdapter;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using Energinet.DataHub.Core.JsonSerialization;
@@ -26,7 +24,6 @@ using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Application.Messaging;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
 using GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub;
 using GreenEnergyHub.Charges.FunctionHost.MessageHub;
@@ -66,6 +63,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
             public Task DisposeAsync()
             {
+                // We need to clear host log after each test is done to ensure that we can assert
+                // on function executed on each test run because we only check on function name.
+                Fixture.HostManager.ClearHostLog();
                 Fixture.MessageHubMock.Clear();
                 Fixture.HostManager.ClearHostLog();
                 return Task.CompletedTask;
@@ -79,13 +79,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
             [Theory]
             [InlineAutoMoqData]
             public async Task RunAsync_WhenRejectedOutboxMessageIsRead_AvailableDataIsPersisted_AndProcessedDateIsSet(
-                PriceRejectedEventBuilder priceRejectedEventBuilder)
+                ChargePriceOperationsRejectedEventBuilder chargePriceOperationsRejectedEventBuilder)
             {
                 // Arrange
                 await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
                 await using var messageHubDatabaseContext = Fixture.MessageHubDatabaseManager.CreateDbContext();
                 await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
-                var operationsRejectedEvent = priceRejectedEventBuilder.Build();
+                var operationsRejectedEvent = chargePriceOperationsRejectedEventBuilder.Build();
 
                 // Act
                 var outboxMessage = await PersistToOutboxMessage(chargesDatabaseWriteContext, operationsRejectedEvent);
@@ -107,13 +107,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
             [Theory]
             [InlineAutoMoqData]
             public async Task RunAsync_WhenConfirmedOutboxMessageIsRead_AvailableDataIsPersisted_AndProcessedDateIsSet(
-                PriceConfirmedEventBuilder priceConfirmedEventBuilder)
+                ChargePriceOperationsConfirmedEventBuilder chargePriceOperationsConfirmedEventBuilder)
             {
                 // Arrange
                 await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
                 await using var messageHubDatabaseContext = Fixture.MessageHubDatabaseManager.CreateDbContext();
                 await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
-                var operationsConfirmedEvent = priceConfirmedEventBuilder.Build();
+                var operationsConfirmedEvent = chargePriceOperationsConfirmedEventBuilder.Build();
 
                 // Act
                 var outboxMessage = await PersistToOutboxMessage(chargesDatabaseWriteContext, operationsConfirmedEvent);
@@ -135,9 +135,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
             [InlineAutoMoqData]
             public async Task GivenOutputProcessorEndpoint_WhenFailsFirstAttempt_ThenRetryNext(
                 [Frozen] Mock<IClock> clock,
-                [Frozen] Mock<IInternalEventDispatcher> dispatcher,
+                [Frozen] Mock<IDomainEventDispatcher> dispatcher,
                 [Frozen] Mock<IOutboxMessageParser> outboxMessageParser,
-                PriceRejectedEventBuilder priceRejectedEventBuilder,
+                ChargePriceOperationsRejectedEventBuilder chargePriceOperationsRejectedEventBuilder,
                 TimerInfo timerInfo,
                 CorrelationContext correlationContext,
                 Instant now)
@@ -147,7 +147,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
 
                 clock.Setup(c => c.GetCurrentInstant()).Returns(now);
-                var operationsRejectedEvent = priceRejectedEventBuilder.Build();
+                var operationsRejectedEvent = chargePriceOperationsRejectedEventBuilder.Build();
                 outboxMessageParser
                     .Setup(o => o.Parse(It.IsAny<string>(), It.IsAny<string>()))
                     .Returns(operationsRejectedEvent);
@@ -165,15 +165,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
                 // Act & Assert
                 dispatcher.Setup(d => d.DispatchAsync(
-                        It.IsAny<InternalEvent>(),
+                        It.IsAny<DomainEvent>(),
                         It.IsAny<CancellationToken>())).Throws<Exception>();
 
                 await Assert.ThrowsAsync<Exception>(() => sut.RunAsync(timerInfo));
 
                 dispatcher.Setup(d => d.DispatchAsync(
-                        It.IsAny<InternalEvent>(),
+                        It.IsAny<DomainEvent>(),
                         It.IsAny<CancellationToken>()))
-                    .Callback<InternalEvent, CancellationToken>((_, _) => { });
+                    .Callback<DomainEvent, CancellationToken>((_, _) => { });
                 await sut.RunAsync(timerInfo);
 
                 outboxMessage = chargesDatabaseReadContext.OutboxMessages.Single(x => x.Id == outboxMessage.Id);
@@ -184,11 +184,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
             public async Task GivenNewRejectedEvent_WhenRunAsync_ThenRejectedEventIsProcessed()
             {
                 // Arrange
-                var messageType = typeof(PriceRejectedEvent).FullName!;
+                var messageType = typeof(ChargePriceOperationsRejectedEvent).FullName!;
                 await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
                 await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
                 var jsonSerializer = new JsonSerializer();
-                var rejectedEvent = new PriceRejectedEventBuilder().Build();
+                var rejectedEvent = new ChargePriceOperationsRejectedEventBuilder().Build();
                 var type = messageType;
                 var serializedEvent = jsonSerializer.Serialize(rejectedEvent);
                 var outboxMessage = new OutboxMessageBuilder().WithType(type).WithData(serializedEvent).Build();

@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         [Theory]
         [InlineAutoDomainData]
         public async Task HandleAsync_WhenBusinessReasonCodeIsUpdateChargeInformation_ActivateHandler(
-            ChargeCommandReceivedEvent chargeCommandReceivedEvent,
+            ChargeInformationCommandReceivedEvent chargeInformationCommandReceivedEvent,
             [Frozen] Mock<IChargeInformationEventHandler> chargeCommandReceivedEventHandlerMock,
             [Frozen] Mock<IDocumentValidator> documentValidator,
             ChargeInformationCommandReceivedEventHandler sut)
@@ -43,21 +43,21 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             documentValidator
                 .Setup(v => v.ValidateAsync(It.IsAny<ChargeInformationCommand>()))
                 .ReturnsAsync(ValidationResult.CreateSuccess());
-            chargeCommandReceivedEvent.Command.Document.BusinessReasonCode = BusinessReasonCode.UpdateChargeInformation;
+            chargeInformationCommandReceivedEvent.Command.Document.BusinessReasonCode = BusinessReasonCode.UpdateChargeInformation;
 
             // Act
-            await sut.HandleAsync(chargeCommandReceivedEvent);
+            await sut.HandleAsync(chargeInformationCommandReceivedEvent);
 
             // Assert
             chargeCommandReceivedEventHandlerMock.Verify(
-                x => x.HandleAsync(chargeCommandReceivedEvent),
+                x => x.HandleAsync(chargeInformationCommandReceivedEvent),
                 Times.Once);
         }
 
         [Theory]
         [InlineAutoDomainData]
         public async Task HandleAsync_WhenDocumentValidationFails_ShouldCallReject(
-            ChargeCommandReceivedEvent chargeCommandReceivedEvent,
+            ChargeInformationCommandReceivedEvent chargeInformationCommandReceivedEvent,
             [Frozen] Mock<IDocumentValidator> documentValidator,
             [Frozen] Mock<IChargeCommandReceiptService> chargeCommandReceiptService,
             ChargeInformationCommandReceivedEventHandler sut)
@@ -66,14 +66,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             documentValidator.Setup(v =>
                     v.ValidateAsync(It.IsAny<ChargeInformationCommand>()))
                 .ReturnsAsync(ValidationResult.CreateFailure(GetFailedValidationResult()));
-            chargeCommandReceivedEvent.Command.Document.BusinessReasonCode = BusinessReasonCode.UpdateChargeInformation;
+            chargeInformationCommandReceivedEvent.Command.Document.BusinessReasonCode = BusinessReasonCode.UpdateChargeInformation;
 
             // Act
-            await sut.HandleAsync(chargeCommandReceivedEvent);
+            await sut.HandleAsync(chargeInformationCommandReceivedEvent);
 
             // Assert
             chargeCommandReceiptService.Verify(
-                x => x.RejectAsync(chargeCommandReceivedEvent.Command, It.IsAny<ValidationResult>()),
+                x => x.RejectAsync(chargeInformationCommandReceivedEvent.Command, It.IsAny<ValidationResult>()),
                 Times.Once);
         }
 

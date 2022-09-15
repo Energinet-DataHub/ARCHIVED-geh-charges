@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using Energinet.Charges.Contracts;
 using Energinet.DataHub.Core.Messaging.Protobuf;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
@@ -31,7 +30,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions.R
         [Theory]
         [InlineAutoDomainData]
         public void ConfigureProtobufReception_WhenCalled_NeededTypesCanBeResolved(
-            [NotNull] ServiceCollection serviceCollection)
+            ServiceCollection serviceCollection)
         {
             // Act
             serviceCollection.ConfigureProtobufReception();
@@ -45,7 +44,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions.R
         [Theory]
         [InlineAutoDomainData]
         public void ReceiveProtobufMessage_WhenCalled_NeededTypesCanBeResolved(
-            [NotNull] ServiceCollection serviceCollection)
+            ServiceCollection serviceCollection)
         {
             // Act
             serviceCollection.ConfigureProtobufReception();

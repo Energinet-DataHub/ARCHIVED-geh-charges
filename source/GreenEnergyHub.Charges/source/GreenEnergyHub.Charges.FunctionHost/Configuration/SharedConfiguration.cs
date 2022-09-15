@@ -84,7 +84,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
             serviceCollection.AddActorContext();
             serviceCollection.AddApplicationInsightsTelemetryWorkerService();
-            serviceCollection.AddInternalEventPublishing(serviceBusClient);
+            serviceCollection.AddDomainEventPublishing(serviceBusClient);
 
             ConfigureSharedDatabase(serviceCollection);
             ConfigureSharedMessaging(serviceCollection);

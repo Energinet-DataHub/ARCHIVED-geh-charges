@@ -22,11 +22,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Outbox
     public interface IOutboxMessageParser
     {
         /// <summary>
-        /// Parse data from outbox message using the message type to deliver an event of the correct type
+        /// Parse data from outbox message using the message type to deliver a domain event of the correct type
         /// </summary>
         /// <param name="outboxMessageType"></param>
         /// <param name="data"></param>
-        /// <returns>an internal event matching outboxMessageType</returns>
-        public InternalEvent Parse(string outboxMessageType, string data);
+        /// <returns>an domain event matching outboxMessageType</returns>
+        public DomainEvent Parse(string outboxMessageType, string data);
     }
 }

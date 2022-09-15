@@ -104,7 +104,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
                 CreateRuleContainer(new MaximumPriceRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
                 CreateRuleContainer(
                     new StartDateValidationRule(
-                        chargeInformationOperationDto.StartDateTime,
+                        chargeInformationOperationDto,
                         _zonedDateTimeService,
                         _clock),
                     chargeInformationOperationDto.OperationId),
