@@ -37,7 +37,7 @@ module "sbts_charges_charge_command_accepted_publish" {
   topic_id            = module.sbt_charges_domain_events.id
   max_delivery_count  = 1
   correlation_filter  = {
-    label = "ChargeCommandAcceptedEvent"
+    label = "ChargeInformationCommandAcceptedEvent"
   }
 }
 
@@ -48,7 +48,7 @@ module "sbts_charges_charge_accepted_dataavailable" {
   topic_id            = module.sbt_charges_domain_events.id
   max_delivery_count  = 1
   correlation_filter  = {
-    label = "ChargeCommandAcceptedEvent"
+    label = "ChargeInformationCommandAcceptedEvent"
   }
 }
 
@@ -59,7 +59,7 @@ module "sbts_charges_charge_command_accepted" {
   topic_id            = module.sbt_charges_domain_events.id
   max_delivery_count  = 1
   correlation_filter  = {
-    label = "ChargeCommandAcceptedEvent"
+    label = "ChargeInformationCommandAcceptedEvent"
   }
 }
 
@@ -70,7 +70,7 @@ module "sbts_charges_charge_command_rejected" {
   topic_id            = module.sbt_charges_domain_events.id
   max_delivery_count  = 1
   correlation_filter  = {
-    label = "ChargeCommandRejectedEvent"
+    label = "ChargeInformationCommandRejectedEvent"
   }
 }
 
