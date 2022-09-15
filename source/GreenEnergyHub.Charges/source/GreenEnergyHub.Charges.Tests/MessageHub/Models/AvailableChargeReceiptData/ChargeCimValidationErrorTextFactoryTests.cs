@@ -13,6 +13,8 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.InputValidation.ValidationRules;
@@ -21,6 +23,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.Tests.TestCore;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
@@ -65,6 +68,14 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
         {
             // Arrange
             var validationRuleIdentifiers = (ValidationRuleIdentifier[])Enum.GetValues(typeof(ValidationRuleIdentifier));
+            var identifiersForRulesWithExtendedData =
+                ValidationRuleForInterfaceLoader.GetValidationRuleIdentifierForTypes(
+                    DomainAssemblyHelper.GetDomainAssembly(), typeof(IValidationRuleWithExtendedData))
+                    .Except(new List<ValidationRuleIdentifier>()
+                    {
+                        ValidationRuleIdentifier.MaximumPrice,
+                        ValidationRuleIdentifier.ChargePriceMaximumDigitsAndDecimals,
+                    }).ToList();
             var sut = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
 
             // Act
@@ -81,7 +92,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
                     actual.Should().NotBeNullOrWhiteSpace();
                     actual.Should().NotContain("{");
                     actual.Should().NotContain("  ");
-                    if (identifier == ValidationRuleIdentifier.SubsequentBundleOperationsFail)
+                    if (identifiersForRulesWithExtendedData.Contains(identifier))
                         actual.Should().NotContain("unknown");
                 }
             }

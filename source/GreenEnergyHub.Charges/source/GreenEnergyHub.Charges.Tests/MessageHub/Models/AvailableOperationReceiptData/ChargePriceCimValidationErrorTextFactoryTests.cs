@@ -17,7 +17,6 @@ using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
@@ -26,7 +25,6 @@ using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.Charges.Tests.TestCore;
 using Microsoft.Extensions.Logging;
-using Moq;
 using Xunit;
 
 namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationReceiptData
@@ -117,8 +115,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
         [Theory]
         [InlineAutoMoqData]
         public void Create_MergesAllMergeFields(
-            DocumentDto document,
-            ChargePriceOperationDto chargePriceOperationDto,
+            ChargePriceCommand chargePriceCommand,
             CimValidationErrorTextProvider cimValidationErrorTextProvider,
             ILoggerFactory loggerFactory)
         {
@@ -127,29 +124,40 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
             var identifiersForRulesWithExtendedData =
                 ValidationRuleForInterfaceLoader.GetValidationRuleIdentifierForTypes(
                     DomainAssemblyHelper.GetDomainAssembly(), typeof(IValidationRuleWithExtendedData));
-
             var sut = new ChargePriceCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
 
             // Act
             // Assert
-            foreach (var validationRuleIdentifier in validationRuleIdentifiers)
+            foreach (var operation in chargePriceCommand.Operations)
             {
-                var triggeredBy = validationRuleIdentifier == ValidationRuleIdentifier.SubsequentBundleOperationsFail ?
-                    chargePriceOperationDto.OperationId :
-                    null!;
+                foreach (var identifier in validationRuleIdentifiers)
+                {
+                    var triggeredBy = GetTriggeredBy(operation, identifier);
+                    var validationError = new ValidationError(identifier, operation.OperationId, triggeredBy);
 
-                var actual = sut.Create(
-                    new ValidationError(validationRuleIdentifier, null, triggeredBy),
-                    document,
-                    chargePriceOperationDto);
+                    var actual = sut.Create(validationError, chargePriceCommand.Document, operation);
 
-                actual.Should().NotBeNullOrWhiteSpace();
-                actual.Should().NotContain("{");
-                actual.Should().NotContain("  ");
-
-                if (identifiersForRulesWithExtendedData.Contains(validationRuleIdentifier) && triggeredBy != null)
-                    actual.Should().NotContain("unknown");
+                    actual.Should().NotBeNullOrWhiteSpace();
+                    actual.Should().NotContain("{");
+                    actual.Should().NotContain("  ");
+                    if (identifiersForRulesWithExtendedData.Contains(identifier))
+                        actual.Should().NotContain("unknown");
+                }
             }
+        }
+
+        private static string? GetTriggeredBy(
+            ChargePriceOperationDto chargePriceOperationDto, ValidationRuleIdentifier validationRuleIdentifier)
+        {
+            return validationRuleIdentifier switch
+            {
+                ValidationRuleIdentifier.ChargePriceMaximumDigitsAndDecimals =>
+                    chargePriceOperationDto.Points.GetPositionOfPoint(chargePriceOperationDto.Points[0]).ToString(),
+                ValidationRuleIdentifier.MaximumPrice =>
+                    chargePriceOperationDto.Points.GetPositionOfPoint(chargePriceOperationDto.Points[1]).ToString(),
+                ValidationRuleIdentifier.SubsequentBundleOperationsFail =>
+                    chargePriceOperationDto.OperationId,
+                _ => null,            };
         }
     }
 }
