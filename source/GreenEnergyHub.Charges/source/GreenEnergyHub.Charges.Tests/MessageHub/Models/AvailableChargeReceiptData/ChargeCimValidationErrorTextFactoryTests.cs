@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.InputValidation.ValidationRules;
@@ -53,6 +54,48 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
 
             // Assert
             actual.Should().Be(expected);
+        }
+
+        [Theory]
+        [InlineAutoMoqData]
+        public void Create_MergesAllMergeFields(
+            ChargeInformationCommand chargeInformationCommand,
+            CimValidationErrorTextProvider cimValidationErrorTextProvider,
+            ILoggerFactory loggerFactory)
+        {
+            // Arrange
+            var validationRuleIdentifiers = (ValidationRuleIdentifier[])Enum.GetValues(typeof(ValidationRuleIdentifier));
+            var sut = new ChargeCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
+
+            // Act
+            // Assert
+            foreach (var operation in chargeInformationCommand.Operations)
+            {
+                foreach (var identifier in validationRuleIdentifiers)
+                {
+                    var triggeredBy = GetTriggeredBy(operation, identifier);
+                    var validationError = new ValidationError(identifier, operation.OperationId, triggeredBy);
+
+                    var actual = sut.Create(validationError, chargeInformationCommand.Document, operation);
+
+                    actual.Should().NotBeNullOrWhiteSpace();
+                    actual.Should().NotContain("{");
+                    actual.Should().NotContain("  ");
+                    if (identifier == ValidationRuleIdentifier.SubsequentBundleOperationsFail)
+                        actual.Should().NotContain("unknown");
+                }
+            }
+        }
+
+        private static string? GetTriggeredBy(
+            ChargeInformationOperationDto chargeInformationOperationDto, ValidationRuleIdentifier validationRuleIdentifier)
+        {
+            return validationRuleIdentifier switch
+            {
+                ValidationRuleIdentifier.SubsequentBundleOperationsFail =>
+                    chargeInformationOperationDto.OperationId,
+                _ => null,
+            };
         }
     }
 }

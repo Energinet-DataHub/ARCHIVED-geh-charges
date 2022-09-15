@@ -61,7 +61,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
             }
         }
 
-        private async Task<ChargeInformationCommandBundle> ParseChargeInformationCommandBundleAsync(
+        private static async Task<ChargeInformationCommandBundle> ParseChargeInformationCommandBundleAsync(
             SchemaValidatingReader reader, DocumentDto document)
         {
             var chargeOperationsAsync = await ParseChargeInformationOperationsAsync(reader).ConfigureAwait(false);
@@ -185,7 +185,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
                 points);
         }
 
-        private async Task<List<ChargeInformationOperationDto>> ParseChargeInformationOperationsAsync(SchemaValidatingReader reader)
+        private static async Task<List<ChargeInformationOperationDto>> ParseChargeInformationOperationsAsync(SchemaValidatingReader reader)
         {
             var operations = new List<ChargeInformationOperationDto>();
             var operationId = string.Empty;
@@ -206,7 +206,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle
             return operations;
         }
 
-        private async Task<ChargeInformationOperationDto> ParseChargeGroupIntoOperationAsync(SchemaValidatingReader reader, string operationId)
+        private static async Task<ChargeInformationOperationDto> ParseChargeGroupIntoOperationAsync(SchemaValidatingReader reader, string operationId)
         {
             ChargeInformationOperationDto? operation = null;
             while (await reader.AdvanceAsync().ConfigureAwait(false))

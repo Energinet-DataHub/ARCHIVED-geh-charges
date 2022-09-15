@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.Charges
         }
 
         [Fact]
-        public void SizeOfMaximumDocumentWith1000Points_ShouldNotExceedDefinedWeight()
+        public void SizeOfMaximumDocument_ShouldNotExceedDefinedWeight()
         {
             // Arrange
             var convertMessageWeightToKb = 1000;
