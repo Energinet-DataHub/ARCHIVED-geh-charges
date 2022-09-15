@@ -66,8 +66,8 @@ module "func_functionhost" {
     # Integration
     CREATE_LINKS_REQUEST_QUEUE_NAME                                 = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbq-create-link-request-name)"
     INTEGRATION_EVENT_TOPIC_NAME                                    = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbt-sharedres-integrationevent-received-name)"
-    METERING_POINT_CREATED_SUBSCRIPTION_NAME                        = module.sbs_int-events-metering-point-created.name
-    MARKET_PARTICIPANT_CHANGED_SUBSCRIPTION_NAME                    = module.sbs_int-events-market-participant-changed.name
+    METERING_POINT_CREATED_SUBSCRIPTION_NAME                        = module.sbs_int_events_metering_point_created.name
+    MARKET_PARTICIPANT_CHANGED_SUBSCRIPTION_NAME                    = module.sbs_int_events_market_participant_changed.name
     
     # Shared resources
     INTEGRATIONEVENT_SENDER_CONNECTION_STRING                       = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-send-connection-string)"
