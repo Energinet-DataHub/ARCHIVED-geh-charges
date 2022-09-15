@@ -1,0 +1,1 @@
+ALTER TABLE [MessageHub].[AvailableChargePriceData] DROP COLUMN EndDateTime;
