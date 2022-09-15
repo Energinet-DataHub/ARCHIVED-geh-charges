@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
             {
                 // Act
                 var sut = new UpdateTaxTariffOnlyAllowedBySystemOperatorRule(
-                    chargeType, MarketParticipantRole.GridAccessProvider, false);
+                    chargeType, MarketParticipantRole.GridAccessProvider, true);
 
                 // Assert
                 sut.IsValid.Should().Be(true);

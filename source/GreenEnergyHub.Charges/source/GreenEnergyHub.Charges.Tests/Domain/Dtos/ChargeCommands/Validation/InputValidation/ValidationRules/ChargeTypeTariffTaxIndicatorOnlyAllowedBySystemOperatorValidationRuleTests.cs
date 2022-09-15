@@ -13,12 +13,13 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
-using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
@@ -30,27 +31,31 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
     public class ChargeTypeTariffTaxIndicatorOnlyAllowedBySystemOperatorValidationRuleTests
     {
         [Theory]
-        [InlineAutoMoqData(ChargeType.Fee)]
-        [InlineAutoMoqData(ChargeType.Subscription)]
-        [InlineAutoMoqData(ChargeType.Unknown)]
+        [AutoDomainData]
         public void IsValid_WhenChargeTypeNotTariff_IsTrue(
-            ChargeType chargeType,
             ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder,
             MarketParticipantDtoBuilder marketParticipantDtoBuilder)
         {
             // Arrange
-            var senderMarketParticipant = marketParticipantDtoBuilder
-                .WithMarketParticipantRole(MarketParticipantRole.GridAccessProvider)
-                .Build();
-            var chargeOperation = chargeInformationOperationDtoBuilder
-                .WithChargeType(chargeType)
-                .Build();
+            var chargeTypes = Enum.GetValues<ChargeType>()
+                .Except(new List<ChargeType> { ChargeType.Tariff });
 
-            // Act
-            var sut = new ChargeTypeTariffTaxIndicatorOnlyAllowedBySystemOperatorValidationRule(chargeOperation, senderMarketParticipant);
+            foreach (var chargeType in chargeTypes)
+            {
+                var senderMarketParticipant = marketParticipantDtoBuilder
+                    .WithMarketParticipantRole(MarketParticipantRole.GridAccessProvider)
+                    .Build();
+                var chargeOperation = chargeInformationOperationDtoBuilder
+                    .WithChargeType(chargeType)
+                    .WithTaxIndicator(TaxIndicator.Tax)
+                    .Build();
 
-            // Assert
-            sut.IsValid.Should().Be(true);
+                // Act
+                var sut = new ChargeTypeTariffTaxIndicatorOnlyAllowedBySystemOperatorValidationRule(chargeOperation, senderMarketParticipant);
+
+                // Assert
+                sut.IsValid.Should().Be(true);
+            }
         }
 
         [Theory]
