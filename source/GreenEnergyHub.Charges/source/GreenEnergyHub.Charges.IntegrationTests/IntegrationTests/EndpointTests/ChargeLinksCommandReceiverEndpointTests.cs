@@ -21,7 +21,6 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 using GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;

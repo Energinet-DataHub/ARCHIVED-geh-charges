@@ -18,7 +18,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Application.Messaging;
-using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
