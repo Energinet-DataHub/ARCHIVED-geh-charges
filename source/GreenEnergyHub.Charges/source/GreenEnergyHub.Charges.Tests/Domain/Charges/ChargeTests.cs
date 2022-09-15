@@ -19,6 +19,7 @@ using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Charges.Exceptions;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
@@ -369,7 +370,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             };
             var sut = new ChargeBuilder()
                 .WithStartDate(InstantHelper.GetTodayPlusDaysAtMidnightUtc(0))
-                .WithPoints(points).Build();
+                .WithPoints(points)
+                .WithType(ChargeType.Fee)
+                .Build();
 
             // Act
             sut.Stop(InstantHelper.GetTodayPlusDaysAtMidnightUtc(2));
@@ -476,6 +479,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             var sut = new ChargeBuilder()
                 .WithStartDate(InstantHelper.GetTodayPlusDaysAtMidnightUtc(0))
                 .WithPoints(points)
+                .WithType(ChargeType.Fee)
                 .Build();
 
             // Act
@@ -483,7 +487,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
                 InstantHelper.GetTodayPlusDaysAtMidnightUtc(2),
                 InstantHelper.GetTodayPlusDaysAtMidnightUtc(4),
                 newPrices,
-                Guid.NewGuid().ToString());
+                Guid.NewGuid().ToString(),
+                MarketParticipantRole.GridAccessProvider);
 
             // Assert
             sut.Points.Count.Should().Be(5);
@@ -514,6 +519,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             var sut = new ChargeBuilder()
                 .WithStartDate(InstantHelper.GetTodayPlusDaysAtMidnightUtc(0))
                 .WithPoints(points)
+                .WithType(ChargeType.Fee)
                 .Build();
 
             // Act
@@ -521,7 +527,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
                 InstantHelper.GetTodayPlusDaysAtMidnightUtc(5),
                 InstantHelper.GetTodayPlusDaysAtMidnightUtc(7),
                 newPrices,
-                Guid.NewGuid().ToString());
+                Guid.NewGuid().ToString(),
+                MarketParticipantRole.GridAccessProvider);
 
             // Assert
             sut.Points.Count.Should().Be(7);
@@ -529,6 +536,39 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
             var actualPriceSecondAdded = sut.Points.Single(x => x.Time == InstantHelper.GetTodayPlusDaysAtMidnightUtc(6));
             actualPriceFirstAdded.Price.Should().Be(6.00m);
             actualPriceSecondAdded.Price.Should().Be(7.00m);
+        }
+
+        [Fact]
+        public void UpdatePrices_WhenChargeIsTaxTariff_AndSenderIsNotSystemOperator_PointsNotUpdated()
+        {
+            // Arrange
+            var points = new List<Point>
+            {
+                new(1.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(0)),
+            };
+            var newPrices = new List<Point>
+            {
+                new(6.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(5)),
+                new(7.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(6)),
+            };
+
+            var sut = new ChargeBuilder()
+                .WithStartDate(InstantHelper.GetTodayPlusDaysAtMidnightUtc(0))
+                .WithPoints(points)
+                .WithMarketParticipantRole(MarketParticipantRole.SystemOperator)
+                .WithType(ChargeType.Tariff)
+                .WithTaxIndicator(TaxIndicator.Tax)
+                .Build();
+
+            // Act
+            // Assert
+            Assert.Throws<ChargeOperationFailedException>(() =>
+                sut.UpdatePrices(
+                    InstantHelper.GetTodayPlusDaysAtMidnightUtc(5),
+                    InstantHelper.GetTodayPlusDaysAtMidnightUtc(7),
+                    newPrices,
+                    Guid.NewGuid().ToString(),
+                    MarketParticipantRole.GridAccessProvider));
         }
 
         [Fact]

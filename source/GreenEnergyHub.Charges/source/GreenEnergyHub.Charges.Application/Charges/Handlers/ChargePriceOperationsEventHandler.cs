@@ -94,7 +94,8 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                         operation.PointsStartInterval,
                         operation.PointsEndInterval,
                         operation.Points,
-                        operation.OperationId);
+                        operation.OperationId,
+                        document.Sender.BusinessProcessRole);
                 }
                 catch (ChargeOperationFailedException exception)
                 {
