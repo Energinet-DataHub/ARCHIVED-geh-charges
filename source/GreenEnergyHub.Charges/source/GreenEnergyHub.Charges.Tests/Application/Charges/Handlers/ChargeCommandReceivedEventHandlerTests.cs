@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         [InlineAutoDomainData]
         public async Task HandleAsync_WhenBusinessReasonCodeIsUpdateChargeInformation_ActivateHandler(
             ChargeInformationCommandReceivedEvent chargeInformationCommandReceivedEvent,
-            [Frozen] Mock<IChargeInformationEventHandler> chargeCommandReceivedEventHandlerMock,
+            [Frozen] Mock<IChargeInformationOperationsHandler> chargeCommandReceivedEventHandlerMock,
             [Frozen] Mock<IDocumentValidator> documentValidator,
             ChargeInformationCommandReceivedEventHandler sut)
         {

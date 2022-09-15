@@ -21,16 +21,16 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
     public class ChargeInformationCommandReceivedEventHandler : IChargeCommandReceivedEventHandler
     {
-        private readonly IChargeInformationEventHandler _chargeInformationEventHandler;
+        private readonly IChargeInformationOperationsHandler _chargeInformationOperationsHandler;
         private readonly IDocumentValidator _documentValidator;
         private readonly IChargeCommandReceiptService _chargeCommandReceiptService;
 
         public ChargeInformationCommandReceivedEventHandler(
-            IChargeInformationEventHandler chargeInformationEventHandler,
+            IChargeInformationOperationsHandler chargeInformationOperationsHandler,
             IDocumentValidator documentValidator,
             IChargeCommandReceiptService chargeCommandReceiptService)
         {
-            _chargeInformationEventHandler = chargeInformationEventHandler;
+            _chargeInformationOperationsHandler = chargeInformationOperationsHandler;
             _documentValidator = documentValidator;
             _chargeCommandReceiptService = chargeCommandReceiptService;
         }
@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
                 return;
             }
 
-            await _chargeInformationEventHandler.HandleAsync(chargeInformationCommandReceivedEvent).ConfigureAwait(false);
+            await _chargeInformationOperationsHandler.HandleAsync(chargeInformationCommandReceivedEvent).ConfigureAwait(false);
         }
     }
 }

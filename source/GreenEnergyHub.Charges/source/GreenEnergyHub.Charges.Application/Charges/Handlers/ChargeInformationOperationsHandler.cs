@@ -28,7 +28,7 @@ using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
-    public class ChargeInformationEventHandler : IChargeInformationEventHandler
+    public class ChargeInformationOperationsHandler : IChargeInformationOperationsHandler
     {
         private readonly IInputValidator<ChargeInformationOperationDto> _inputValidator;
         private readonly IChargeRepository _chargeRepository;
@@ -38,7 +38,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
         private readonly IUnitOfWork _unitOfWork;
         private readonly IChargeCommandReceiptService _chargeCommandReceiptService;
 
-        public ChargeInformationEventHandler(
+        public ChargeInformationOperationsHandler(
             IInputValidator<ChargeInformationOperationDto> inputValidator,
             IChargeRepository chargeRepository,
             IMarketParticipantRepository marketParticipantRepository,

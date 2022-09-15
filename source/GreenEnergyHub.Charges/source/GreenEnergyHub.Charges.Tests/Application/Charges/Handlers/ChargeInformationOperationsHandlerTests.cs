@@ -39,7 +39,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
 {
     [UnitTest]
-    public class ChargeInformationEventHandlerTests
+    public class ChargeInformationOperationsHandlerTests
     {
         [Theory]
         [InlineAutoMoqData]
@@ -55,7 +55,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             ChargeBuilder chargeBuilder,
             ChargeInformationCommandBuilder chargeCommandBuilder,
             ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder,
-            ChargeInformationEventHandler sut)
+            ChargeInformationOperationsHandler sut)
         {
             // Arrange
             var createOperationDto = chargeInformationOperationDtoBuilder
@@ -110,7 +110,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             TestMarketParticipant sender,
             ChargeBuilder chargeBuilder,
             ChargeInformationCommandReceivedEvent receivedEvent,
-            ChargeInformationEventHandler sut)
+            ChargeInformationOperationsHandler sut)
         {
             // Arrange
             var charge = chargeBuilder.Build();
@@ -141,7 +141,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         [Theory]
         [InlineAutoMoqData]
         public async Task HandleAsync_IfEventIsNull_ThrowsArgumentNullException(
-            ChargeInformationEventHandler sut)
+            ChargeInformationOperationsHandler sut)
         {
             // Arrange
             ChargeInformationCommandReceivedEvent? receivedEvent = null;
@@ -163,7 +163,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             ChargeInformationCommandBuilder chargeInformationCommandBuilder,
             ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder,
             TestMarketParticipant sender,
-            ChargeInformationEventHandler sut)
+            ChargeInformationOperationsHandler sut)
         {
             // Arrange
             var charge = chargeBuilder.Build();
@@ -210,7 +210,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             ChargeInformationCommandBuilder chargeInformationCommandBuilder,
             ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder,
             TestMarketParticipant sender,
-            ChargeInformationEventHandler sut)
+            ChargeInformationOperationsHandler sut)
         {
             // Arrange
             var stopDate = InstantHelper.GetTodayAtMidnightUtc();
@@ -247,7 +247,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             ChargeInformationCommandBuilder chargeInformationCommandBuilder,
             ChargeBuilder chargeBuilder,
             ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder,
-            ChargeInformationEventHandler sut)
+            ChargeInformationOperationsHandler sut)
         {
             // Arrange
             var validationResult = ValidationResult.CreateSuccess();
@@ -287,7 +287,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             [Frozen] Mock<IDocumentValidator> documentValidator,
             [Frozen] Mock<IInputValidator<ChargeInformationOperationDto>> inputValidator,
             [Frozen] Mock<IChargeCommandReceiptService> receiptService,
-            ChargeInformationEventHandler sut)
+            ChargeInformationOperationsHandler sut)
         {
          // Arrange
          var (receivedEvent, invalidOperationId) = CreateReceivedEventWithChargeOperations();
@@ -359,7 +359,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             TestMarketParticipant sender,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             ChargeBuilder chargeBuilder,
-            ChargeInformationEventHandler sut)
+            ChargeInformationOperationsHandler sut)
         {
             // Arrange
             var charge = chargeBuilder.WithTaxIndicator(TaxIndicator.Tax).Build();
