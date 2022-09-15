@@ -59,6 +59,7 @@ limitations under the License.
       <EmbeddedResource Include="Scripts\Test\202207251045 Add test price data.sql" />
       <EmbeddedResource Include="Scripts\Test\202206030818 Add test data to gridarealinks.sql" />
       <EmbeddedResource Include="Scripts\Model\202207151427 Increase OriginalOperationId length.sql" />
+      <EmbeddedResource Include="Scripts\Model\202209141117 Remove EndDateTime from AvailableChargePriceData.sql" />
     </ItemGroup>
 
 </Project>

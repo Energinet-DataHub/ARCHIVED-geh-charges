@@ -37,7 +37,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Persistence.EntityCon
             builder.Property(x => x.ChargeOwner);
             builder.Property(x => x.ChargeType);
             builder.Property(x => x.StartDateTime);
-            builder.Property(x => x.EndDateTime);
             builder.Property(x => x.Resolution);
             builder.Property(x => x.RequestDateTime);
             builder.Property(x => x.AvailableDataReferenceId);

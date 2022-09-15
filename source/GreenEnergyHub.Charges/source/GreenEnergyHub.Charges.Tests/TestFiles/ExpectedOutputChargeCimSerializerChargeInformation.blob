@@ -11,7 +11,6 @@
   <cim:createdDateTime>2021-10-22T15:30:41Z</cim:createdDateTime>
   <cim:MktActivityRecord>
     <cim:mRID>00000000000000000000000000000000</cim:mRID>
-    <cim:snapshot_DateAndOrTime.dateTime>2021-10-22T15:30:41Z</cim:snapshot_DateAndOrTime.dateTime>
     <cim:ChargeGroup>
       <cim:ChargeType>
         <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">Owner1</cim:chargeTypeOwner_MarketParticipant.mRID>
@@ -30,7 +29,6 @@
   </cim:MktActivityRecord>
   <cim:MktActivityRecord>
     <cim:mRID>00000000000000000000000000000000</cim:mRID>
-    <cim:snapshot_DateAndOrTime.dateTime>2021-10-22T15:30:41Z</cim:snapshot_DateAndOrTime.dateTime>
     <cim:ChargeGroup>
       <cim:ChargeType>
         <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">Owner2</cim:chargeTypeOwner_MarketParticipant.mRID>
@@ -48,7 +46,6 @@
   </cim:MktActivityRecord>
   <cim:MktActivityRecord>
     <cim:mRID>00000000000000000000000000000000</cim:mRID>
-    <cim:snapshot_DateAndOrTime.dateTime>2021-10-22T15:30:41Z</cim:snapshot_DateAndOrTime.dateTime>
     <cim:ChargeGroup>
       <cim:ChargeType>
         <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">Owner3</cim:chargeTypeOwner_MarketParticipant.mRID>
@@ -67,7 +64,6 @@
   </cim:MktActivityRecord>
   <cim:MktActivityRecord>
     <cim:mRID>00000000000000000000000000000000</cim:mRID>
-    <cim:snapshot_DateAndOrTime.dateTime>2021-10-22T15:30:41Z</cim:snapshot_DateAndOrTime.dateTime>
     <cim:ChargeGroup>
       <cim:ChargeType>
         <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">Owner4</cim:chargeTypeOwner_MarketParticipant.mRID>
@@ -85,7 +81,6 @@
   </cim:MktActivityRecord>
   <cim:MktActivityRecord>
     <cim:mRID>00000000000000000000000000000000</cim:mRID>
-    <cim:snapshot_DateAndOrTime.dateTime>2021-10-22T15:30:41Z</cim:snapshot_DateAndOrTime.dateTime>
     <cim:ChargeGroup>
       <cim:ChargeType>
         <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">Owner5</cim:chargeTypeOwner_MarketParticipant.mRID>
@@ -104,7 +99,6 @@
   </cim:MktActivityRecord>
   <cim:MktActivityRecord>
     <cim:mRID>00000000000000000000000000000000</cim:mRID>
-    <cim:snapshot_DateAndOrTime.dateTime>2021-10-22T15:30:41Z</cim:snapshot_DateAndOrTime.dateTime>
     <cim:ChargeGroup>
       <cim:ChargeType>
         <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">Owner6</cim:chargeTypeOwner_MarketParticipant.mRID>
@@ -122,7 +116,6 @@
   </cim:MktActivityRecord>
   <cim:MktActivityRecord>
     <cim:mRID>00000000000000000000000000000000</cim:mRID>
-    <cim:snapshot_DateAndOrTime.dateTime>2021-10-22T15:30:41Z</cim:snapshot_DateAndOrTime.dateTime>
     <cim:ChargeGroup>
       <cim:ChargeType>
         <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">Owner7</cim:chargeTypeOwner_MarketParticipant.mRID>
@@ -141,7 +134,6 @@
   </cim:MktActivityRecord>
   <cim:MktActivityRecord>
     <cim:mRID>00000000000000000000000000000000</cim:mRID>
-    <cim:snapshot_DateAndOrTime.dateTime>2021-10-22T15:30:41Z</cim:snapshot_DateAndOrTime.dateTime>
     <cim:ChargeGroup>
       <cim:ChargeType>
         <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">Owner8</cim:chargeTypeOwner_MarketParticipant.mRID>
@@ -159,7 +151,6 @@
   </cim:MktActivityRecord>
   <cim:MktActivityRecord>
     <cim:mRID>00000000000000000000000000000000</cim:mRID>
-    <cim:snapshot_DateAndOrTime.dateTime>2021-10-22T15:30:41Z</cim:snapshot_DateAndOrTime.dateTime>
     <cim:ChargeGroup>
       <cim:ChargeType>
         <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">Owner9</cim:chargeTypeOwner_MarketParticipant.mRID>
@@ -178,7 +169,6 @@
   </cim:MktActivityRecord>
   <cim:MktActivityRecord>
     <cim:mRID>00000000000000000000000000000000</cim:mRID>
-    <cim:snapshot_DateAndOrTime.dateTime>2021-10-22T15:30:41Z</cim:snapshot_DateAndOrTime.dateTime>
     <cim:ChargeGroup>
       <cim:ChargeType>
         <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">Owner10</cim:chargeTypeOwner_MarketParticipant.mRID>

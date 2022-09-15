@@ -65,7 +65,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.Charges
             return new XElement(
                 cimNamespace + CimMarketDocumentConstants.MarketActivityRecord,
                 new XElement(cimNamespace + CimChargeConstants.MarketActivityRecordId, CimIdProvider.GetUniqueId()),
-                new XElement(cimNamespace + CimChargeConstants.SnapshotDateTime, record.RequestDateTime.ToString()),
                 GetChargeGroupElement(cimNamespace, record));
         }
 
