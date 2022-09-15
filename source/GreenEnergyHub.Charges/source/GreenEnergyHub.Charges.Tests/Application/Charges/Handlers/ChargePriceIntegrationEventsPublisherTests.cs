@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         public async Task HandleAsync_WhenCalledWithPrices_ShouldCallChargePricesSenderForEachOperation(
             [Frozen] Mock<IChargePricesUpdatedPublisher> chargePricesUpdatedSender,
             ChargePriceOperationDtoBuilder chargePriceOperationDtoBuilder,
-            PriceConfirmedEventBuilder priceConfirmedEventBuilder,
+            ChargePriceOperationsConfirmedEventBuilder chargePriceOperationsConfirmedEventBuilder,
             ChargePriceIntegrationEventsPublisher sut)
         {
             // Arrange
@@ -45,10 +45,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
                     chargePriceOperationDtoBuilder.Build(),
             };
 
-            var priceConfirmedEvent = priceConfirmedEventBuilder.WithOperations(operations).Build();
+            var chargePriceOperationsConfirmedEvent = chargePriceOperationsConfirmedEventBuilder.WithOperations(operations).Build();
 
             // Act
-            await sut.PublishAsync(priceConfirmedEvent).ConfigureAwait(false);
+            await sut.PublishAsync(chargePriceOperationsConfirmedEvent).ConfigureAwait(false);
 
             // Assert
             chargePricesUpdatedSender.Verify(

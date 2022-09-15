@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommandRejectedEvents
             [Frozen] Mock<IClock> clock,
             ChargeInformationCommand command,
             IList<IValidationRuleContainer> failedRules,
-            ChargeCommandRejectedEventFactory sut)
+            ChargeInformationCommandRejectedEventFactory sut)
         {
             // Arrange
             var currentTime = Instant.FromUtc(2021, 7, 7, 7, 50, 49);

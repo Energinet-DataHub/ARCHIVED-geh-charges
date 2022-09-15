@@ -40,9 +40,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands
             }
         }
 
-        private static void CheckOperation(ChargeOperation operation)
+        private static void CheckOperation(ChargeOperationDto operationDto)
         {
-            if (operation == null) throw new ArgumentNullException(nameof(operation));
+            if (operationDto == null) throw new ArgumentNullException(nameof(operationDto));
         }
 
         private static void CheckDocument(DocumentDto document)

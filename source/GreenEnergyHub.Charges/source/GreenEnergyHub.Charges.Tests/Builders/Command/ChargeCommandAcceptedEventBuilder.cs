@@ -41,9 +41,9 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             return this;
         }
 
-        public ChargeCommandAcceptedEvent Build()
+        public ChargeInformationCommandAcceptedEvent Build()
         {
-            return new ChargeCommandAcceptedEvent(_publishedTime, _chargeInformationCommand);
+            return new ChargeInformationCommandAcceptedEvent(_publishedTime, _chargeInformationCommand);
         }
     }
 }

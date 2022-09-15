@@ -22,7 +22,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands
     /// <summary>
     /// The ChargePriceOperationDto class contains the price series for a charge.
     /// </summary>
-    public class ChargePriceOperationDto : ChargeOperation
+    public class ChargePriceOperationDto : ChargeOperationDto
     {
         public ChargePriceOperationDto(
             string operationId,

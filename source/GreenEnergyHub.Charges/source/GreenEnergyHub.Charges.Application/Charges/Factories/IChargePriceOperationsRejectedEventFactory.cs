@@ -21,19 +21,19 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 namespace GreenEnergyHub.Charges.Application.Charges.Factories
 {
     /// <summary>
-    /// Factory for creating <see cref="PriceRejectedEvent"/>
+    /// Factory for creating <see cref="ChargePriceOperationsRejectedEvent"/>
     /// </summary>
-    public interface IPriceRejectedEventFactory
+    public interface IChargePriceOperationsRejectedEventFactory
     {
         /// <summary>
-        /// Factory method for creating <see cref="PriceRejectedEvent"/> based on rejected operations and
+        /// Factory method for creating <see cref="ChargePriceOperationsRejectedEvent"/> based on rejected operations and
         /// corresponding validation results.
         /// </summary>
         /// <param name="document">Document containing information about market participant causing the event</param>
         /// <param name="operations">Operations to be rejected</param>
         /// <param name="validationResult">Validation results containing reasons for rejection</param>
-        /// <returns><see cref="PriceRejectedEvent"/></returns>
-        PriceRejectedEvent Create(
+        /// <returns><see cref="ChargePriceOperationsRejectedEvent"/></returns>
+        ChargePriceOperationsRejectedEvent Create(
             DocumentDto document,
             IReadOnlyCollection<ChargePriceOperationDto> operations,
             ValidationResult validationResult);

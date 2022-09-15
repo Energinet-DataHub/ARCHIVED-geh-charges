@@ -18,7 +18,7 @@ using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 
 namespace GreenEnergyHub.Charges.MessageHub.BundleSpecification.Charges
 {
-    public class ChargeConfirmationBundleSpecification : BundleSpecification<AvailableChargeReceiptData, ChargeCommandAcceptedEvent>
+    public class ChargeConfirmationBundleSpecification : BundleSpecification<AvailableChargeReceiptData, ChargeInformationCommandAcceptedEvent>
     {
         /// <summary>
         /// The upper anticipated weight (kilobytes) contribution to the final bundle
