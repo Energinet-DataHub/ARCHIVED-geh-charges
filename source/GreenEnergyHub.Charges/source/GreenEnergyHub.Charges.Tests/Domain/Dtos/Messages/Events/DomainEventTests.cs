@@ -73,16 +73,17 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.Messages.Events
         /// <returns>List of all domain event filter names</returns>
         private static List<string> GetOrderedServiceBusFiltersPresumedToBeUsedInInfrastructureAsCode()
         {
+            // Names are split to avoid Resharper from automatically renaming when class is renamed
             var presumedServiceBusFilters = new List<string>
             {
-                "ChargePriceCommandReceivedEvent",
-                "ChargeLinksRejectedEvent",
-                "ChargeLinksReceivedEvent",
-                "ChargeLinksDataAvailableNotifiedEvent",
-                "ChargeLinksAcceptedEvent",
-                "ChargeInformationCommandReceivedEvent",
-                "ChargeInformationCommandRejectedEvent",
-                "ChargeInformationCommandAcceptedEvent",
+                "ChargePriceCommandReceived" + "Event",
+                "ChargeLinksRejected" + "Event",
+                "ChargeLinksReceived" + "Event",
+                "ChargeLinksDataAvailableNotified" + "Event",
+                "ChargeLinksAccepted" + "Event",
+                "ChargeInformationCommandReceived" + "Event",
+                "ChargeInformationCommandRejected" + "Event",
+                "ChargeInformationCommandAccepted" + "Event",
             };
             return presumedServiceBusFilters.OrderBy(x => x).ToList();
         }
