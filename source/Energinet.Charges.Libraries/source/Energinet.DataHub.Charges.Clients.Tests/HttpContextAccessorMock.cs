@@ -15,7 +15,7 @@
 using System;
 using Microsoft.AspNetCore.Http;
 
-namespace GreenEnergyHub.Charges.TestCore
+namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests
 {
     public class HttpContextAccessorMock : IHttpContextAccessor
     {

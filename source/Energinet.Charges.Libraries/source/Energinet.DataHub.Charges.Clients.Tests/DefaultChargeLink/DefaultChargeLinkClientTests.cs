@@ -19,7 +19,6 @@ using Energinet.DataHub.Charges.Clients.DefaultChargeLink;
 using Energinet.DataHub.Charges.Clients.DefaultChargeLink.Models;
 using Energinet.DataHub.Charges.Clients.ServiceBus;
 using Energinet.DataHub.Charges.Clients.ServiceBus.Providers;
-using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using Xunit;
@@ -34,8 +33,8 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
         private const string CorrelationId = "fake_value";
 
         [Theory]
-        [InlineAutoMoqData(MeteringPointId, null!)]
-        [InlineAutoMoqData(null!, CorrelationId)]
+        [InlineAutoDomainData(MeteringPointId, null!)]
+        [InlineAutoDomainData(null!, CorrelationId)]
         public async Task SendAsync_WhenAnyArgumentIsNull_ThrowsArgumentNullException(
             string meteringPointId,
             string correlationId,

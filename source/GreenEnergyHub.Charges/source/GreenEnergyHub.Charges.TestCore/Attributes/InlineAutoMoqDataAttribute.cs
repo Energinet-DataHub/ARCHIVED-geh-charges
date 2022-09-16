@@ -16,9 +16,9 @@ using AutoFixture.Xunit2;
 
 namespace GreenEnergyHub.Charges.TestCore.Attributes
 {
-    public class InlineAutoMoqDataAttribute : InlineAutoDataAttribute
+    public class InlineAutoDomainDataAttribute : InlineAutoDataAttribute
     {
-        public InlineAutoMoqDataAttribute(params object[] objects)
+        public InlineAutoDomainDataAttribute(params object[] objects)
             : base(new AutoMoqDataAttribute(), objects) { }
     }
 }
