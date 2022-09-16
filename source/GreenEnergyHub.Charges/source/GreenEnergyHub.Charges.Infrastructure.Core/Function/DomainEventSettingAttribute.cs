@@ -16,7 +16,8 @@ using System;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
 {
-    public class DomainEventSettingAttribute : Attribute
+    [AttributeUsage(AttributeTargets.Field)]
+    public sealed class DomainEventSettingAttribute : Attribute
     {
     }
 }
