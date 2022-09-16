@@ -16,7 +16,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.Tests.Builders.Command
+namespace GreenEnergyHub.Charges.TestCore.Builders.Command
 {
     public class ChargeCommandAcceptedEventBuilder
     {

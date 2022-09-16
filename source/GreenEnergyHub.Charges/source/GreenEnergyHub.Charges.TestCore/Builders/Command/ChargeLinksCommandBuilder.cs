@@ -16,10 +16,9 @@ using System;
 using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
-using GreenEnergyHub.Charges.TestCore;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.Tests.Builders.Command
+namespace GreenEnergyHub.Charges.TestCore.Builders.Command
 {
     public class ChargeLinksCommandBuilder
     {

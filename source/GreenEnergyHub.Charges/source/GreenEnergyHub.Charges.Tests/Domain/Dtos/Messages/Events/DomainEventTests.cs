@@ -51,8 +51,8 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.Messages.Events
             catch (Exception)
             {
                 _testOutputHelper.WriteLine(
-                    "This test is failed due to a discrepancy between one or more names of classes inherited " +
-                    "from {0}. Please ensure conformity in the following elements:",
+                    "The failure of this test indicates a discrepancy between one or more names of classes " +
+                    "inherited from {0}. Please ensure conformity in the following elements:",
                     nameof(DomainEvent));
                 _testOutputHelper.WriteLine(" - 'func-functionhost.tf'");
                 _testOutputHelper.WriteLine(" - 'sbt-charges-domain-events.tf'");

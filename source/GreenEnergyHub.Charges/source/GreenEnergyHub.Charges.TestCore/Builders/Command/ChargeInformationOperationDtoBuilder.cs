@@ -14,97 +14,136 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
-using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.Tests.Builders.Command
+namespace GreenEnergyHub.Charges.TestCore.Builders.Command
 {
-   public class ChargePriceOperationDtoBuilder
+   public class ChargeInformationOperationDtoBuilder
     {
         private List<Point> _points;
         private string _chargeId;
         private Instant _startDateTime;
-        private Instant _endDateTime;
+        private Instant? _endDateTime;
+        private VatClassification _vatClassification;
+        private TransparentInvoicing _transparentInvoicing;
+        private TaxIndicator _taxIndicator;
         private string _owner;
+        private string _description;
+        private string _chargeName;
         private ChargeType _chargeType;
+        private Resolution _resolution;
         private Resolution _priceResolution;
         private string _operationId;
-        private Instant _pointsStartInterval;
-        private Instant _pointsEndInterval;
+        private Instant? _pointsStartInterval;
+        private Instant? _pointsEndInterval;
 
-        public ChargePriceOperationDtoBuilder()
+        public ChargeInformationOperationDtoBuilder()
         {
-            _operationId = Guid.NewGuid().ToString();
+            _operationId = "operationId";
             _chargeId = "some charge id";
             _startDateTime = InstantHelper.GetTodayPlusDaysAtMidnightUtc(31);
             _endDateTime = InstantHelper.GetEndDefault();
+            _vatClassification = VatClassification.Vat25;
+            _taxIndicator = TaxIndicator.Tax;
             _owner = "owner";
+            _description = "some description";
+            _chargeName = "some charge name";
             _chargeType = ChargeType.Fee;
             _points = new List<Point>();
+            _resolution = Resolution.PT1H;
             _priceResolution = Resolution.PT1H;
             _pointsStartInterval = _startDateTime;
             _pointsEndInterval = _endDateTime;
         }
 
-        public ChargePriceOperationDtoBuilder WithChargePriceOperationId(string operationId)
+        public ChargeInformationOperationDtoBuilder WithDescription(string description)
+        {
+            _description = description;
+            return this;
+        }
+
+        public ChargeInformationOperationDtoBuilder WithChargeName(string name)
+        {
+            _chargeName = name;
+            return this;
+        }
+
+        public ChargeInformationOperationDtoBuilder WithChargeOperationId(string operationId)
         {
             _operationId = operationId;
             return this;
         }
 
-        public ChargePriceOperationDtoBuilder WithChargeId(string chargeId)
+        public ChargeInformationOperationDtoBuilder WithChargeId(string chargeId)
         {
             _chargeId = chargeId;
             return this;
         }
 
-        public ChargePriceOperationDtoBuilder WithOwner(string owner)
+        public ChargeInformationOperationDtoBuilder WithTaxIndicator(TaxIndicator taxIndicator)
+        {
+            _taxIndicator = taxIndicator;
+            return this;
+        }
+
+        public ChargeInformationOperationDtoBuilder WithOwner(string owner)
         {
             _owner = owner;
             return this;
         }
 
-        public ChargePriceOperationDtoBuilder WithChargeType(ChargeType type)
+        public ChargeInformationOperationDtoBuilder WithVatClassification(VatClassification vatClassification)
+        {
+            _vatClassification = vatClassification;
+            return this;
+        }
+
+        public ChargeInformationOperationDtoBuilder WithTransparentInvoicing(TransparentInvoicing transparentInvoicing)
+        {
+            _transparentInvoicing = transparentInvoicing;
+            return this;
+        }
+
+        public ChargeInformationOperationDtoBuilder WithChargeType(ChargeType type)
         {
             _chargeType = type;
             return this;
         }
 
-        public ChargePriceOperationDtoBuilder WithStartDateTime(Instant startDateTime)
+        public ChargeInformationOperationDtoBuilder WithStartDateTime(Instant startDateTime)
         {
             _startDateTime = startDateTime;
             return this;
         }
 
-        public ChargePriceOperationDtoBuilder WithEndDateTime(Instant endDateTime)
+        public ChargeInformationOperationDtoBuilder WithEndDateTime(Instant? endDateTime)
         {
             _endDateTime = endDateTime;
             return this;
         }
 
-        public ChargePriceOperationDtoBuilder WithPoints(List<Point> points)
+        public ChargeInformationOperationDtoBuilder WithPoints(List<Point> points)
         {
             _points = points;
             return this;
         }
 
-        public ChargePriceOperationDtoBuilder WithPoint(decimal price)
+        public ChargeInformationOperationDtoBuilder WithPoint(decimal price)
         {
             _points.Add(new Point(price, _startDateTime));
             return this;
         }
 
-        public ChargePriceOperationDtoBuilder WithPointsInterval(Instant startTime, Instant endTime)
+        public ChargeInformationOperationDtoBuilder WithPointsInterval(Instant startTime, Instant endTime)
         {
             _pointsStartInterval = startTime;
             _pointsEndInterval = endTime;
             return this;
         }
 
-        public ChargePriceOperationDtoBuilder WithPointWithXNumberOfPrices(int numberOfPrices)
+        public ChargeInformationOperationDtoBuilder WithPointWithXNumberOfPrices(int numberOfPrices)
         {
             for (var i = 0; i < numberOfPrices; i++)
             {
@@ -115,29 +154,36 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
             return this;
         }
 
-        public ChargePriceOperationDtoBuilder WithPriceResolution(Resolution priceResolution)
+        public ChargeInformationOperationDtoBuilder WithResolution(Resolution resolution)
+        {
+            _resolution = resolution;
+            return this;
+        }
+
+        public ChargeInformationOperationDtoBuilder WithPriceResolution(Resolution priceResolution)
         {
             _priceResolution = priceResolution;
             return this;
         }
 
-        public ChargePriceOperationDto Build()
+        public ChargeInformationOperationDto Build()
         {
-            if (!_points.Any())
-            {
-                _points.Add(new Point(1.00m, _startDateTime));
-            }
-
-            return new ChargePriceOperationDto(
+            return new ChargeInformationOperationDto(
                 _operationId,
                 _chargeType,
                 _chargeId,
+                _chargeName,
+                _description,
                 _owner,
+                _resolution,
+                _priceResolution,
+                _taxIndicator,
+                _transparentInvoicing,
+                _vatClassification,
                 _startDateTime,
                 _endDateTime,
                 _pointsStartInterval,
                 _pointsEndInterval,
-                _priceResolution,
                 _points);
         }
 

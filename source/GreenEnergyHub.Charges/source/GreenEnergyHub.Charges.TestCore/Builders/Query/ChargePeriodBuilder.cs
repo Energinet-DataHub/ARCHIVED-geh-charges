@@ -16,7 +16,7 @@ using System;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.QueryApi.Model;
 
-namespace GreenEnergyHub.Charges.Tests.Builders.Query
+namespace GreenEnergyHub.Charges.TestCore.Builders.Query
 {
     public class ChargePeriodBuilder
     {

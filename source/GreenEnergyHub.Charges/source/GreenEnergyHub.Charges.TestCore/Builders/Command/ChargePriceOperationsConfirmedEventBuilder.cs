@@ -18,7 +18,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.Tests.Builders.Command
+namespace GreenEnergyHub.Charges.TestCore.Builders.Command
 {
     public class ChargePriceOperationsConfirmedEventBuilder
     {

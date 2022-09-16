@@ -24,7 +24,7 @@ using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Charges.Tests.Builders.Testables;
+using GreenEnergyHub.Charges.TestCore.Builders.Testables;
 using GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared;
 using Moq;
 using NodaTime;

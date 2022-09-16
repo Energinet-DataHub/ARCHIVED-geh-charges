@@ -19,7 +19,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.Tests.Builders.MessageHub
+namespace GreenEnergyHub.Charges.TestCore.Builders.MessageHub
 {
     public class AvailableChargeDataBuilder
     {

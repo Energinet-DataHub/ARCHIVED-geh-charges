@@ -12,34 +12,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
-namespace GreenEnergyHub.Charges.Tests.Builders.Command
+namespace GreenEnergyHub.Charges.TestCore.Builders.Application
 {
-    public class MarketParticipantDtoBuilder
+    public class ChargePriceCommandBundleBuilder
     {
-        private string _id = string.Empty;
-        private MarketParticipantRole _marketParticipantRole;
+        private readonly List<ChargePriceCommand> _commands = new();
+        private DocumentDto _document = new();
 
-        public MarketParticipantDtoBuilder WithId(string id)
+        public ChargePriceCommandBundleBuilder WithDocument(DocumentDto document)
         {
-            _id = id;
+            _document = document;
             return this;
         }
 
-        public MarketParticipantDtoBuilder WithMarketParticipantRole(MarketParticipantRole marketParticipantRole)
+        public ChargePriceCommandBundleBuilder WithCommand(ChargePriceCommand command)
         {
-            _marketParticipantRole = marketParticipantRole;
+            _commands.Add(command);
             return this;
         }
 
-        public MarketParticipantDto Build()
+        public ChargePriceCommandBundle Build()
         {
-            return new MarketParticipantDto
-            {
-                MarketParticipantId = _id,
-                BusinessProcessRole = _marketParticipantRole,
-            };
+            return new ChargePriceCommandBundle(_document, _commands);
         }
     }
 }

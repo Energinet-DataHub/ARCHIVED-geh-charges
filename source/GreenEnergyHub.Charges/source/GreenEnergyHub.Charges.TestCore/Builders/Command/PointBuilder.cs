@@ -12,17 +12,33 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Domain.Charges;
+using NodaTime;
 
-namespace GreenEnergyHub.Charges.Tests.Builders.Testables
+namespace GreenEnergyHub.Charges.TestCore.Builders.Command
 {
-    public class TestSystemOperator : MarketParticipant
+    public class PointBuilder
     {
-        public TestSystemOperator(Guid id, Guid actorId, Guid b2CActorId, string marketParticipantId)
-            : base(id, actorId, b2CActorId, marketParticipantId, true, MarketParticipantRole.SystemOperator)
+        private Instant _time = InstantHelper.GetStartDefault();
+        private decimal _price = 1.00m;
+
+        public PointBuilder WithTime(Instant time)
         {
+            _time = time;
+            return this;
+        }
+
+        public PointBuilder WithPrice(decimal price)
+        {
+            _price = price;
+            return this;
+        }
+
+        public Point Build()
+        {
+            return new Point(
+                _price,
+                _time);
         }
     }
 }

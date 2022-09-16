@@ -21,7 +21,7 @@ using GreenEnergyHub.Charges.MessageHub.BundleSpecification;
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
-using GreenEnergyHub.Charges.Tests.Builders.MessageHub;
+using GreenEnergyHub.Charges.TestCore.Builders.MessageHub;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using NodaTime;

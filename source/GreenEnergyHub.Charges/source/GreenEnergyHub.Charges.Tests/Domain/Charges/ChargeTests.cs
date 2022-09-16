@@ -22,7 +22,7 @@ using GreenEnergyHub.Charges.Domain.Charges.Exceptions;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.TestCore;
-using GreenEnergyHub.Charges.Tests.Builders.Command;
+using GreenEnergyHub.Charges.TestCore.Builders.Command;
 using Moq;
 using NodaTime;
 using Xunit;

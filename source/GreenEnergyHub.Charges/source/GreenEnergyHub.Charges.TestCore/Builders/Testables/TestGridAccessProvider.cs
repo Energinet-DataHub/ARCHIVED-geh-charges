@@ -16,14 +16,14 @@ using System;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
-namespace GreenEnergyHub.Charges.Tests.Builders.Testables
+namespace GreenEnergyHub.Charges.TestCore.Builders.Testables
 {
     /// <summary>
     /// Makes it easier to auto-mock grid access providers in tests.
     /// </summary>
-    public class TestMarketParticipant : MarketParticipant
+    public class TestGridAccessProvider : MarketParticipant
     {
-        public TestMarketParticipant(Guid id, Guid actorId, Guid b2CActorId, string marketParticipantId)
+        public TestGridAccessProvider(Guid id, Guid actorId, Guid b2CActorId, string marketParticipantId)
             : base(id, actorId, b2CActorId, marketParticipantId, true, MarketParticipantRole.GridAccessProvider)
         {
         }

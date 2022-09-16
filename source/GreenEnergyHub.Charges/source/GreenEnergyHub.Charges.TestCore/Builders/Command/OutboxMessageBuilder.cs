@@ -14,10 +14,9 @@
 
 using System;
 using GreenEnergyHub.Charges.Infrastructure.Outbox;
-using GreenEnergyHub.Charges.TestCore;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.Tests.Builders.Command
+namespace GreenEnergyHub.Charges.TestCore.Builders.Command
 {
     public class OutboxMessageBuilder
     {
