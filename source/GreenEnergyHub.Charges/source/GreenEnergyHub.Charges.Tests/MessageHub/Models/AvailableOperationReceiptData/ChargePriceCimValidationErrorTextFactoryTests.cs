@@ -15,6 +15,7 @@
 using System;
 using System.Linq;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
@@ -24,6 +25,7 @@ using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.Charges.Tests.TestCore;
 using Microsoft.Extensions.Logging;
+using Moq;
 using Xunit;
 
 namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationReceiptData
@@ -147,6 +149,34 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
                 if (identifiersForRulesWithExtendedData.Contains(validationRuleIdentifier) && triggeredBy != null)
                     actual.Should().NotContain("unknown");
             }
+        }
+
+        [Theory]
+        [InlineAutoMoqData(ValidationRuleIdentifier.StartDateValidation, null!)]
+        [InlineAutoMoqData(ValidationRuleIdentifier.StartDateValidation, -1)]
+        [InlineAutoMoqData(ValidationRuleIdentifier.StartDateValidation, 0)]
+        public void Create_PointPositionAreIgnored_WhenNotApplicable(
+            ValidationRuleIdentifier validationRuleIdentifier,
+            string? seedTriggeredBy,
+            ChargePriceOperationDto chargePriceOperationDto,
+            CimValidationErrorTextProvider cimValidationErrorTextProvider,
+            ILoggerFactory loggerFactory)
+        {
+            // Arrange
+            var triggeredBy = seedTriggeredBy == "0" ?
+                chargePriceOperationDto.Points.GetPositionOfPoint(chargePriceOperationDto.Points[1]).ToString() :
+                seedTriggeredBy;
+            var validationError = new ValidationError(validationRuleIdentifier, chargePriceOperationDto.OperationId, triggeredBy);
+
+            var sut = new ChargePriceCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
+            var expected = CimValidationErrorTextTemplateMessages.StartDateValidationErrorText
+                .Replace("{{ChargeStartDateTime}}", chargePriceOperationDto.StartDateTime.ToString());
+
+            // Act
+            var actual = sut.Create(validationError, It.IsAny<DocumentDto>(), chargePriceOperationDto);
+
+            // Assert
+            actual.Should().Contain(expected);
         }
     }
 }

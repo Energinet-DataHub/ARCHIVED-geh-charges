@@ -84,10 +84,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
         public ServiceBusTestListener? CreateLinkReplyQueueListener { get; private set; }
 
         [NotNull]
-        public TopicResource? MeteringPointCreatedTopic { get; private set; }
-
-        [NotNull]
-        public TopicResource? MarketParticipantChangedTopic { get; private set; }
+        public TopicResource? IntegrationEventTopic { get; private set; }
 
         [NotNull]
         public TopicResource? ChargesDomainEventTopic { get; private set; }
@@ -211,11 +208,13 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
                 .CreateAsync();
 
             // Integration events
-            MarketParticipantChangedTopic = await ServiceBusResourceProvider
-                .BuildTopic(ChargesServiceBusResourceNames.MarketParticipantChangedTopicKey)
-                .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.MarketParticipantChangedTopicName)
+            IntegrationEventTopic = await ServiceBusResourceProvider
+                .BuildTopic(ChargesServiceBusResourceNames.IntegrationEventTopicKey)
+                .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.IntegrationEventTopicName)
                 .AddSubscription(ChargesServiceBusResourceNames.MarketParticipantChangedSubscriptionName)
                 .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.MarketParticipantChangedSubscriptionName)
+                .AddSubscription(ChargesServiceBusResourceNames.MeteringPointCreatedSubscriptionName)
+                .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.MeteringPointCreatedSubscriptionName)
                 .CreateAsync();
 
             await ServiceBusResourceProvider
@@ -230,13 +229,6 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
 
             CreateLinkReplyQueue = await ServiceBusResourceProvider
                 .BuildQueue(ChargesServiceBusResourceNames.CreateLinksReplyQueueKey)
-                .CreateAsync();
-
-            MeteringPointCreatedTopic = await ServiceBusResourceProvider
-                .BuildTopic(ChargesServiceBusResourceNames.MeteringPointCreatedTopicKey)
-                .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.MeteringPointCreatedTopicName)
-                .AddSubscription(ChargesServiceBusResourceNames.MeteringPointCreatedSubscriptionName)
-                .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.MeteringPointCreatedSubscriptionName)
                 .CreateAsync();
 
             var chargeCreatedTopic = await ServiceBusResourceProvider
