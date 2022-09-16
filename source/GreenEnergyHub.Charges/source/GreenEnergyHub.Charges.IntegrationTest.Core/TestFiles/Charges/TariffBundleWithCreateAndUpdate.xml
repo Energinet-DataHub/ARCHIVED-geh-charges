@@ -19,8 +19,8 @@ limitations under the License.
     <cim:type>D10</cim:type>
     <cim:process.processType>D18</cim:process.processType>
     <cim:businessSector.type>23</cim:businessSector.type>
-    <cim:sender_MarketParticipant.mRID codingScheme="A10">8100000000030</cim:sender_MarketParticipant.mRID>
-    <cim:sender_MarketParticipant.marketRole.type>DDM</cim:sender_MarketParticipant.marketRole.type>
+    <cim:sender_MarketParticipant.mRID codingScheme="A10">5790000432752</cim:sender_MarketParticipant.mRID>
+    <cim:sender_MarketParticipant.marketRole.type>EZ</cim:sender_MarketParticipant.marketRole.type>
     <cim:receiver_MarketParticipant.mRID codingScheme="A10">5790001330552</cim:receiver_MarketParticipant.mRID>
     <cim:receiver_MarketParticipant.marketRole.type>DDZ</cim:receiver_MarketParticipant.marketRole.type>
     <cim:createdDateTime>2021-12-17T09:30:47Z</cim:createdDateTime>
@@ -28,7 +28,7 @@ limitations under the License.
         <cim:mRID>36251480</cim:mRID>
         <cim:ChargeGroup>
             <cim:ChargeType>
-                <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">8100000000030</cim:chargeTypeOwner_MarketParticipant.mRID>
+                <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">5790000432752</cim:chargeTypeOwner_MarketParticipant.mRID>
                 <cim:type>D03</cim:type>
                 <cim:mRID>{{$randomCharactersShort}}</cim:mRID>
                 <cim:name>Charge Tariff day Name 1</cim:name>
@@ -45,7 +45,7 @@ limitations under the License.
         <cim:mRID>36251481</cim:mRID>
         <cim:ChargeGroup>
             <cim:ChargeType>
-                <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">8100000000030</cim:chargeTypeOwner_MarketParticipant.mRID>
+                <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">5790000432752</cim:chargeTypeOwner_MarketParticipant.mRID>
                 <cim:type>D03</cim:type>
                 <cim:mRID>{{$randomCharactersShort}}</cim:mRID>
                 <cim:name>Charge Tariff day Name 2</cim:name>
