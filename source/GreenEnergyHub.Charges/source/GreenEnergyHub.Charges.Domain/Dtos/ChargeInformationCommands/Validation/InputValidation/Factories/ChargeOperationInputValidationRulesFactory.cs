@@ -72,6 +72,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
                 CreateRuleContainer(new TerminationDateMustMatchEffectiveDateValidationRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
                 CreateRuleContainer(new TaxIndicatorMustBeFalseForFeeValidationRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
                 CreateRuleContainer(new TaxIndicatorMustBeFalseForSubscriptionValidationRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
+                CreateRuleContainer(new ChargeTypeTariffTaxIndicatorOnlyAllowedBySystemOperatorValidationRule(chargeInformationOperationDto, document.Sender), chargeInformationOperationDto.OperationId),
             };
             return rules;
         }
