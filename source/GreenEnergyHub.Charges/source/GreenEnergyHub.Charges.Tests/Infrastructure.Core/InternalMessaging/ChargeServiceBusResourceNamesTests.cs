@@ -22,32 +22,31 @@ using Microsoft.Extensions.Configuration;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.FunctionHost
+namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.InternalMessaging
 {
     [UnitTest]
-    public class EnvironmentSettingNamesTests
+    public class ChargeServiceBusResourceNamesTests
     {
-        public EnvironmentSettingNamesTests(IConfiguration config)
+        public ChargeServiceBusResourceNamesTests(IConfiguration config)
         {
             FunctionHostEnvironmentSettingHelper.SetFunctionHostEnvironmentVariablesFromSampleSettingsFile(config);
         }
 
         [Fact]
-        public void AllDomainEventSettingNames_ShouldHaveEquivalent_DomainEventChargesServiceBusResourceName()
+        public void AllDomainEventChargesServiceBusResourceNames_ShouldHaveEquivalent_DomainEventSettingNames()
         {
             // Arrange
-            var domainEventEnvironmentSettingNames =
-                DomainEventSettingHelper.GetDomainEventSettings(typeof(EnvironmentSettingNames));
+            var domainEventSettings = DomainEventSettingHelper.GetDomainEventSettings(typeof(EnvironmentSettingNames));
             var domainEventChargesServiceBusResourceNames =
                 DomainEventSettingHelper.GetDomainEventSettings(typeof(ChargesServiceBusResourceNames));
-            var settings = domainEventEnvironmentSettingNames
+            var settings = domainEventSettings
                 .Select(domainEventEnvironmentSettingName =>
-                    Environment.GetEnvironmentVariable(domainEventEnvironmentSettingName.Value));
+                    Environment.GetEnvironmentVariable(domainEventEnvironmentSettingName.Value)).ToList();
 
             // Act
             // Assert
-            foreach (var setting in settings)
-                domainEventChargesServiceBusResourceNames.Values.Should().Contain(setting);
+            foreach (var domainEventChargesServiceBusResourceName in domainEventChargesServiceBusResourceNames)
+                settings.Should().Contain(domainEventChargesServiceBusResourceName.Value);
         }
     }
 }
