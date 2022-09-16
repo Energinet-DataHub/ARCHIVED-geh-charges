@@ -15,7 +15,7 @@
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 
-namespace GreenEnergyHub.Charges.Application.Charges.Handlers
+namespace GreenEnergyHub.Charges.Application.Charges.Handlers.ChargeInformation
 {
     public class ChargeInformationCommandBundleHandler : IChargeInformationCommandBundleHandler
     {

@@ -29,7 +29,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using Microsoft.Extensions.Logging;
 
-namespace GreenEnergyHub.Charges.Application.Charges.Handlers
+namespace GreenEnergyHub.Charges.Application.Charges.Handlers.ChargeInformation
 {
     public class ChargeInformationOperationsHandler : IChargeInformationOperationsHandler
     {
@@ -116,7 +116,8 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             IReadOnlyCollection<ChargeInformationOperationDto> operationsToBeConfirmed)
         {
             if (!operationsToBeConfirmed.Any()) return;
-            RaiseConfirmedEvent(document, operationsToBeConfirmed);
+            var confirmedEvent = _chargeInformationOperationsAcceptedEventFactory.Create(document, operationsToBeConfirmed);
+            _domainEventPublisher.Publish(confirmedEvent);
         }
 
         private void HandleRejections(
@@ -132,26 +133,9 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             var errorMessage = ValidationErrorLogMessageBuilder.BuildErrorMessage(document, rejectionRules);
             _logger.LogError("ValidationErrors for {ErrorMessage}", errorMessage);
 
-            RaiseRejectedEvent(document, operationsToBeRejected, rejectionRules);
-        }
-
-        private void RaiseConfirmedEvent(
-            DocumentDto document,
-            IReadOnlyCollection<ChargeInformationOperationDto> operationsToBeConfirmed)
-        {
-            if (!operationsToBeConfirmed.Any()) return;
-            var confirmedEvent = _chargeInformationOperationsAcceptedEventFactory.Create(document, operationsToBeConfirmed);
-            _domainEventPublisher.Publish(confirmedEvent);
-        }
-
-        private void RaiseRejectedEvent(
-            DocumentDto document,
-            IReadOnlyCollection<ChargeInformationOperationDto> operationsToBeRejected,
-            IList<IValidationRuleContainer> rejectionRules)
-        {
-            if (!operationsToBeRejected.Any()) return;
             var validationResult = ValidationResult.CreateFailure(rejectionRules);
             var rejectedEvent = _chargeInformationOperationsRejectedEventFactory.Create(document, operationsToBeRejected, validationResult);
+
             _domainEventPublisher.Publish(rejectedEvent);
         }
 

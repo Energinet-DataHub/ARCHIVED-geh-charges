@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 using System.Transactions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 
-namespace GreenEnergyHub.Charges.Application.Charges.Handlers
+namespace GreenEnergyHub.Charges.Application.Charges.Handlers.ChargeInformation
 {
     /// <summary>
     /// Contract for handling a charge information message.
