@@ -45,6 +45,7 @@ limitations under the License.
         <PackageReference Include="xunit" Version="2.4.2" />
         <PackageReference Include="FluentAssertions" Version="6.7.0" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.1" />
+        <PackageReference Include="Xunit.DependencyInjection" Version="8.5.0" />
         <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5" />
         <PackageReference Include="coverlet.collector" Version="3.1.2">
           <PrivateAssets>all</PrivateAssets>
@@ -109,5 +110,12 @@ limitations under the License.
       <None Update="TestFiles\SingleChargeReceiptWorstCase.blob">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\GreenEnergyHub.Charges.FunctionHost\local.settings.sample.json">
+        <Link>local.settings.sample.json</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 </Project>

@@ -13,19 +13,10 @@
 // limitations under the License.
 
 using System;
-using System.Linq;
-using System.Reflection;
 
-namespace GreenEnergyHub.Charges.Tests.TestCore
+namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
 {
-    public static class DomainAssemblyHelper
+    public class DomainEventSettingAttribute : Attribute
     {
-        public static Assembly GetDomainAssembly()
-        {
-            return AppDomain
-                .CurrentDomain
-                .GetAssemblies()
-                .Single(a => a.GetName().Name == "GreenEnergyHub.Charges.Domain");
-        }
     }
 }

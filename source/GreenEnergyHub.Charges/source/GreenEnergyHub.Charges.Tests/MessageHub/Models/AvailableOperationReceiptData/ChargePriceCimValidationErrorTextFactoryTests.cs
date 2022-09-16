@@ -123,7 +123,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
             var validationRuleIdentifiers = (ValidationRuleIdentifier[])Enum.GetValues(typeof(ValidationRuleIdentifier));
             var identifiersForRulesWithExtendedData =
                 ValidationRuleForInterfaceLoader.GetValidationRuleIdentifierForTypes(
-                    DomainAssemblyHelper.GetDomainAssembly(), typeof(IValidationRuleWithExtendedData));
+                    AssemblyHelper.GetDomainAssembly(), typeof(IValidationRuleWithExtendedData));
 
             var sut = new ChargePriceCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
 

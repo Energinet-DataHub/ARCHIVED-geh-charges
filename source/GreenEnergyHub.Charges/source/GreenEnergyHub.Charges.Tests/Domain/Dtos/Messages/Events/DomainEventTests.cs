@@ -93,7 +93,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.Messages.Events
         /// </summary>
         private static IEnumerable<string> GetOrderedDomainEventTypeNames()
         {
-            var domainAssembly = DomainAssemblyHelper.GetDomainAssembly();
+            var domainAssembly = AssemblyHelper.GetDomainAssembly();
             var messageTypes = domainAssembly
                 .GetTypes()
                 .Where(t => typeof(DomainEvent).IsAssignableFrom(t) && t.IsClass && !t.IsAbstract)

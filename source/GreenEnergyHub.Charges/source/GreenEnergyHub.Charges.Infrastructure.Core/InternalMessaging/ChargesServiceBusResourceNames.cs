@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
+using GreenEnergyHub.Charges.Infrastructure.Core.Function;
+
+namespace GreenEnergyHub.Charges.Infrastructure.Core.InternalMessaging
 {
     public static class ChargesServiceBusResourceNames
     {
@@ -48,41 +50,58 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
         public const string MarketParticipantChangedTopicKey = "market-participant-changed";
         public const string MarketParticipantChangedSubscriptionName = "market-participant-changed-to-charges";
 
-        // Internal, charge
+        // Domain event
+        [DomainEventSetting]
         public const string ChargesDomainEventsTopicKey = "sbt-charges-domain-events";
 
-        // Internal, charge, received
+        // Domain event, charge, received
+        [DomainEventSetting]
         public const string ChargeCommandReceivedSubscriptionName = "sbtsub-charges-charge-command-received";
 
-        // Internal, charge price, received
+        // Domain event, charge price, received
+        [DomainEventSetting]
         public const string ChargePriceCommandReceivedSubscriptionName = "sbtsub-charges-charge-price-command-received";
 
-        // Internal, charge, accepted
+        // Domain event, charge, accepted
+        [DomainEventSetting]
         public const string ChargeAcceptedDataAvailableSubscriptionName = "sbtsub-charges-charge-accepted-dataavailable";
+        [DomainEventSetting]
         public const string ChargeCommandAcceptedSubscriptionName = "sbtsub-charges-charge-command-accepted";
+        [DomainEventSetting]
         public const string ChargeCommandAcceptedPublishSubscriptionName = "sbtsub-charges-charge-command-accepted-publish";
 
-        // Internal, charge, rejected
+        // Domain event, charge, rejected
+        [DomainEventSetting]
         public const string ChargeCommandRejectedSubscriptionName = "sbtsub-charges-charge-command-rejected";
 
-        // Internal, charge price, rejected
+        // Domain event, charge price, rejected
+        [DomainEventSetting]
         public const string ChargePriceRejectedSubscriptionName = "sbtsub-charges-charge-price-rejected";
 
-        // Internal, charge price, confirmed
+        // Domain event, charge price, confirmed
+        [DomainEventSetting]
         public const string ChargePriceConfirmedSubscriptionName = "sbtsub-charges-charge-price-confirmed";
+        [DomainEventSetting]
         public const string ChargePriceConfirmedDataAvailableSubscriptionName = "sbtsub-charges-charge-price-confirmed-dataavail";
+        [DomainEventSetting]
         public const string ChargePriceConfirmedPublishSubscriptionName = "sbtsub-charges-charge-price-confirmed-publish";
 
-        // Internal, charge links, received
+        // Domain event, charge links, received
+        [DomainEventSetting]
         public const string ChargeLinksCommandReceivedSubscriptionName = "sbtsub-charges-charge-links-command-received";
 
-        // Internal, charge links, rejected
+        // Domain event, charge links, rejected
+        [DomainEventSetting]
         public const string ChargeLinksCommandRejectedSubscriptionName = "sbtsub-charges-charge-links-command-rejected";
 
-        // Internal, charge links, accepted
+        // Domain event, charge links, accepted
+        [DomainEventSetting]
         public const string ChargeLinksAcceptedConfirmationSubscriptionName = "sbtsub-charges-charge-links-accepted-confirmation";
+        [DomainEventSetting]
         public const string ChargeLinksAcceptedDataAvailableSubscriptionName = "sbtsub-charges-charge-links-accepted-dataavailable";
+        [DomainEventSetting]
         public const string ChargeLinksAcceptedPublishSubscriptionName = "sbtsub-charges-charge-links-accepted-publish";
+        [DomainEventSetting]
         public const string DefaultChargeLinksDataAvailableSubscriptionName = "sbtsub-charges-default-charge-links-dataavailable";
     }
 }
