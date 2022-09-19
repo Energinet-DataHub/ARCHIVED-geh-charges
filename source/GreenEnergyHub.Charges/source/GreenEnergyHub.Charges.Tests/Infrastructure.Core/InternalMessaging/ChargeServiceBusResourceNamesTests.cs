@@ -46,7 +46,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.InternalMessaging
             // Act
             // Assert
             foreach (var domainEventChargesServiceBusResourceName in domainEventChargesServiceBusResourceNames)
+            {
                 settings.Should().Contain(domainEventChargesServiceBusResourceName.Value);
+            }
         }
     }
 }

@@ -47,7 +47,9 @@ namespace GreenEnergyHub.Charges.Tests.FunctionHost
             // Act
             // Assert
             foreach (var setting in settings)
+            {
                 domainEventChargesServiceBusResourceNames.Values.Should().Contain(setting);
+            }
         }
     }
 }
