@@ -180,32 +180,6 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
                 Guid.NewGuid());
         }
 
-        private static AvailableChargeData GetChargePrices(int no, IClock clock)
-        {
-            return new AvailableChargeData(
-                "5790001330552",
-                MarketParticipantRole.MeteringPointAdministrator,
-                "Recipient",
-                MarketParticipantRole.GridAccessProvider,
-                BusinessReasonCode.UpdateChargePrices,
-                clock.GetCurrentInstant(),
-                Guid.NewGuid(),
-                "ChargeId" + no,
-                "Owner" + no,
-                GetChargeType(no),
-                string.Empty,
-                string.Empty,
-                Instant.FromUtc(2020, 12, 31, 23, 0, 0),
-                Instant.FromUtc(9999, 12, 31, 23, 59, 59),
-                VatClassification.Unknown,
-                false,
-                false,
-                GetResolution(no),
-                DocumentType.NotifyPriceList,
-                0,
-                Guid.NewGuid());
-        }
-
         private static ChargeType GetChargeType(int no)
         {
             return (no % 3) switch

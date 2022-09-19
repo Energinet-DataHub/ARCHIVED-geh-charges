@@ -32,7 +32,6 @@ limitations under the License.
                 <cim:type>D03</cim:type>
                 <cim:mRID>Charge001</cim:mRID>
                 <cim:effectiveDate>2022-10-31T23:00:00Z</cim:effectiveDate>
-                <cim:VATPayer>D01</cim:VATPayer>
                 <cim:Series_Period>
                     <cim:resolution>P1D</cim:resolution>
                     <cim:timeInterval>

@@ -255,7 +255,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
                 iso8601Durations,
                 correlationId,
                 expectedStartTime,
-                "GreenEnergyHub.Charges.Tests.TestFiles.CreateTariffsWithPricesBundle.xml");
+                "GreenEnergyHub.Charges.Tests.TestFiles.TariffPriceSeriesBundle.xml");
 
             // Act
             var actual = (ChargePriceCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
