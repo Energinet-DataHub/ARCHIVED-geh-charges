@@ -20,21 +20,18 @@ using GreenEnergyHub.Charges.Application.Common.Services;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using Microsoft.Extensions.Logging;
-using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers.ChargeInformation
 {
     public class ChargeInformationCommandReceivedEventHandler : IChargeCommandReceivedEventHandler
     {
         private readonly ILogger _logger;
-        private readonly IClock _clock;
         private readonly IChargeInformationOperationsHandler _chargeInformationOperationsHandler;
         private readonly IDocumentValidator _documentValidator;
         private readonly IDomainEventPublisher _domainEventPublisher;
         private readonly IChargeInformationOperationsRejectedEventFactory _chargeInformationOperationsRejectedEventFactory;
 
         public ChargeInformationCommandReceivedEventHandler(
-            IClock clock,
             ILoggerFactory loggerFactory,
             IChargeInformationOperationsHandler chargeInformationOperationsHandler,
             IDocumentValidator documentValidator,
@@ -42,7 +39,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers.ChargeInformation
             IChargeInformationOperationsRejectedEventFactory chargeInformationOperationsRejectedEventFactory)
         {
             _logger = loggerFactory.CreateLogger(nameof(ChargeInformationCommandReceivedEventHandler));
-            _clock = clock;
             _chargeInformationOperationsHandler = chargeInformationOperationsHandler;
             _documentValidator = documentValidator;
             _domainEventPublisher = domainEventPublisher;

@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using GreenEnergyHub.TestHelpers;
 using Moq;
@@ -33,15 +33,18 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
         [InlineAutoDomainData]
         public async Task HandleAsync_WhenCalled_ShouldCallChargeCreatedSender(
             [Frozen] Mock<IChargePublisher> chargeSender,
-            DocumentDtoBuilder documentDtoBuilder,
-            ChargeInformationCommandBuilder chargeInformationCommandBuilder,
+            ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder,
             ChargeInformationOperationsAcceptedEventBuilder chargeInformationOperationsAcceptedEventBuilder,
             ChargeIntegrationEventsPublisher sut)
         {
             // Arrange
-            var document = documentDtoBuilder.WithBusinessReasonCode(BusinessReasonCode.UpdateChargeInformation).Build();
-            var chargeCommand = chargeInformationCommandBuilder.WithDocumentDto(document).Build();
-            var acceptedEvent = chargeInformationOperationsAcceptedEventBuilder.Build();
+            var acceptedEvent = chargeInformationOperationsAcceptedEventBuilder
+                .WithOperations(
+                    new List<ChargeInformationOperationDto>
+                    {
+                        chargeInformationOperationDtoBuilder.Build(),
+                    })
+                .Build();
 
             // Act
             await sut.PublishAsync(acceptedEvent).ConfigureAwait(false);
