@@ -12,8 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Application.Charges.Events;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification.Charges;
@@ -28,14 +27,14 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<IAvailableDataNotifier<AvailableChargeData, ChargeInformationCommandAcceptedEvent>,
-                AvailableDataNotifier<AvailableChargeData, ChargeInformationCommandAcceptedEvent>>();
-            serviceCollection.AddScoped<IAvailableDataFactory<AvailableChargeData, ChargeInformationCommandAcceptedEvent>,
+            serviceCollection.AddScoped<IAvailableDataNotifier<AvailableChargeData, ChargeInformationOperationsAcceptedEvent>,
+                AvailableDataNotifier<AvailableChargeData, ChargeInformationOperationsAcceptedEvent>>();
+            serviceCollection.AddScoped<IAvailableDataFactory<AvailableChargeData, ChargeInformationOperationsAcceptedEvent>,
                 AvailableChargeDataFactory>();
             serviceCollection.AddScoped<IAvailableDataNotificationFactory<AvailableChargeData>,
                 AvailableDataNotificationFactory<AvailableChargeData>>();
             serviceCollection
-                .AddScoped<BundleSpecification<AvailableChargeData, ChargeInformationCommandAcceptedEvent>,
+                .AddScoped<BundleSpecification<AvailableChargeData, ChargeInformationOperationsAcceptedEvent>,
                     ChargeBundleSpecification>();
 
             serviceCollection.AddScoped<IAvailableDataNotifier<AvailableChargePriceData, ChargePriceOperationsAcceptedEvent>,
@@ -49,7 +48,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 .AddScoped<BundleSpecification<AvailableChargePriceData, ChargePriceOperationsAcceptedEvent>,
                     ChargePriceBundleSpecification>();
 
-            serviceCollection.AddScoped<JsonMessageDeserializer<ChargeInformationCommandAcceptedEvent>>();
+            serviceCollection.AddScoped<JsonMessageDeserializer<ChargeInformationOperationsAcceptedEvent>>();
             serviceCollection.AddScoped<JsonMessageDeserializer<ChargePriceOperationsAcceptedEvent>>();
         }
     }

@@ -19,9 +19,9 @@ using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
@@ -74,7 +74,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
                 actual.BusinessReasonCode.Should().Be(document.BusinessReasonCode);
                 actual.RequestDateTime.Should().Be(now);
                 actual.ReceiptStatus.Should().Be(ReceiptStatus.Confirmed);
-                actual.DocumentType.Should().Be(DocumentType.AcceptRequestChangeOfPriceList);
+                actual.DocumentType.Should().Be(DocumentType.ConfirmRequestChangeOfPriceList);
 
                 var expectedChargeOperationDto = chargePriceOperations.ToArray()[i1];
                 actual.OriginalOperationId.Should().Be(expectedChargeOperationDto.OperationId);

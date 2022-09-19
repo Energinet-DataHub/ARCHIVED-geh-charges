@@ -14,8 +14,7 @@
 
 using System;
 using Energinet.DataHub.Core.JsonSerialization;
-using GreenEnergyHub.Charges.Application.Charges.Events;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Outbox
 {

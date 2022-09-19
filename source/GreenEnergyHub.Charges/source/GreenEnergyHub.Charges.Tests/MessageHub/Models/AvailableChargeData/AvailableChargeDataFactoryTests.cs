@@ -47,7 +47,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
             TestMeteringPointAdministrator meteringPointAdministrator,
             List<TestGridAccessProvider> gridAccessProvider,
             ChargeInformationCommandBuilder chargeInformationCommandBuilder,
-            ChargeCommandAcceptedEventBuilder chargeCommandAcceptedEventBuilder,
+            ChargeInformationOperationsAcceptedEventBuilder chargeInformationOperationsAcceptedEventBuilder,
             AvailableChargeDataFactory sut)
         {
             // Arrange
@@ -57,7 +57,10 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
                 .WithTransparentInvoicing(TransparentInvoicing.Transparent)
                 .Build();
             var chargeCommand = chargeInformationCommandBuilder.WithChargeOperation(chargeOperationDto).Build();
-            var acceptedEvent = chargeCommandAcceptedEventBuilder.WithChargeCommand(chargeCommand).Build();
+            var acceptedEvent = chargeInformationOperationsAcceptedEventBuilder
+                .WithDocument(chargeCommand.Document)
+                .WithOperations(chargeCommand.Operations)
+                .Build();
 
             marketParticipantRepository
                 .Setup(r => r.GetGridAccessProvidersAsync())
@@ -73,14 +76,14 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
             var actual = await sut.CreateAsync(acceptedEvent);
 
             // Assert
-            var operation = acceptedEvent.Command.Operations.First();
+            var operation = acceptedEvent.Operations.First();
             actual.Should().HaveSameCount(gridAccessProvider);
             for (var i = 0; i < actual.Count; i++)
             {
                 actual[i].Should().NotContainNullEnumerable();
                 actual[i].RecipientId.Should().Be(gridAccessProvider[i].MarketParticipantId);
                 actual[i].RecipientRole.Should().Be(gridAccessProvider[i].BusinessProcessRole);
-                actual[i].BusinessReasonCode.Should().Be(acceptedEvent.Command.Document.BusinessReasonCode);
+                actual[i].BusinessReasonCode.Should().Be(acceptedEvent.Document.BusinessReasonCode);
                 actual[i].RequestDateTime.Should().Be(now);
                 actual[i].ChargeId.Should().Be(operation.SenderProvidedChargeId);
                 actual[i].ChargeOwner.Should().Be(operation.ChargeOwner);
@@ -106,8 +109,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
             TaxIndicator taxIndicator,
             int availableChargeDataCount,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            ChargeInformationCommandBuilder chargeInformationCommandBuilder,
-            ChargeCommandAcceptedEventBuilder chargeCommandAcceptedEventBuilder,
+            ChargeInformationOperationsAcceptedEventBuilder chargeInformationOperationsAcceptedEventBuilder,
             AvailableChargeDataFactory sut)
         {
             // Arrange
@@ -128,8 +130,10 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
                 .WithTaxIndicator(taxIndicator)
                 .WithTransparentInvoicing(TransparentInvoicing.Transparent)
                 .Build();
-            var chargeCommand = chargeInformationCommandBuilder.WithChargeOperation(chargeOperationDto).Build();
-            var acceptedEvent = chargeCommandAcceptedEventBuilder.WithChargeCommand(chargeCommand).Build();
+            var acceptedEvent = chargeInformationOperationsAcceptedEventBuilder
+                .WithOperations(
+                    new List<ChargeInformationOperationDto> { chargeOperationDto })
+                .Build();
 
             // Act
             var actual = await sut.CreateAsync(acceptedEvent);
@@ -142,8 +146,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
         [InlineAutoDomainData]
         public async Task CreateAsync_WhenSeveralOperationsInChargeCommand_ReturnOrderedListOfOperations(
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            ChargeInformationCommandBuilder chargeInformationCommandBuilder,
-            ChargeCommandAcceptedEventBuilder chargeCommandAcceptedEventBuilder,
+            ChargeInformationOperationsAcceptedEventBuilder chargeInformationOperationsAcceptedEventBuilder,
             List<TestGridAccessProvider> gridAccessProvider,
             TestMeteringPointAdministrator meteringPointAdministrator,
             AvailableChargeDataFactory sut)
@@ -155,19 +158,17 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
             marketParticipantRepository
                 .Setup(r => r.GetMeteringPointAdministratorAsync())
                 .ReturnsAsync(meteringPointAdministrator);
-            var chargeCommand = chargeInformationCommandBuilder
-                .WithChargeOperations(
-                    new List<ChargeInformationOperationDto>
-                    {
-                        new ChargeInformationOperationDtoBuilder().WithTaxIndicator(TaxIndicator.Tax)
-                            .WithTransparentInvoicing(TransparentInvoicing.Transparent).Build(),
-                        new ChargeInformationOperationDtoBuilder().WithTaxIndicator(TaxIndicator.Tax)
-                            .WithTransparentInvoicing(TransparentInvoicing.Transparent).Build(),
-                        new ChargeInformationOperationDtoBuilder().WithTaxIndicator(TaxIndicator.Tax)
-                            .WithTransparentInvoicing(TransparentInvoicing.Transparent).Build(),
-                    })
-                .Build();
-            var acceptedEvent = chargeCommandAcceptedEventBuilder.WithChargeCommand(chargeCommand).Build();
+            var operations =
+                new List<ChargeInformationOperationDto>
+                {
+                    new ChargeInformationOperationDtoBuilder().WithTaxIndicator(TaxIndicator.Tax)
+                        .WithTransparentInvoicing(TransparentInvoicing.Transparent).Build(),
+                    new ChargeInformationOperationDtoBuilder().WithTaxIndicator(TaxIndicator.Tax)
+                        .WithTransparentInvoicing(TransparentInvoicing.Transparent).Build(),
+                    new ChargeInformationOperationDtoBuilder().WithTaxIndicator(TaxIndicator.Tax)
+                        .WithTransparentInvoicing(TransparentInvoicing.Transparent).Build(),
+                };
+            var acceptedEvent = chargeInformationOperationsAcceptedEventBuilder.WithOperations(operations).Build();
 
             // Act
             var actual = await sut.CreateAsync(acceptedEvent);

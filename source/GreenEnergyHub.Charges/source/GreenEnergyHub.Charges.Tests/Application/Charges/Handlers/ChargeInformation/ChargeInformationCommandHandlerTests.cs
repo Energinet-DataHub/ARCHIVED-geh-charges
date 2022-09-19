@@ -15,7 +15,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
-using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Application.Charges.Handlers.ChargeInformation;
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommandReceivedEvents;

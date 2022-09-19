@@ -35,13 +35,13 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers
             [Frozen] Mock<IChargePublisher> chargeSender,
             DocumentDtoBuilder documentDtoBuilder,
             ChargeInformationCommandBuilder chargeInformationCommandBuilder,
-            ChargeCommandAcceptedEventBuilder chargeCommandAcceptedEventBuilder,
+            ChargeInformationOperationsAcceptedEventBuilder chargeInformationOperationsAcceptedEventBuilder,
             ChargeIntegrationEventsPublisher sut)
         {
             // Arrange
             var document = documentDtoBuilder.WithBusinessReasonCode(BusinessReasonCode.UpdateChargeInformation).Build();
             var chargeCommand = chargeInformationCommandBuilder.WithDocumentDto(document).Build();
-            var acceptedEvent = chargeCommandAcceptedEventBuilder.WithChargeCommand(chargeCommand).Build();
+            var acceptedEvent = chargeInformationOperationsAcceptedEventBuilder.Build();
 
             // Act
             await sut.PublishAsync(acceptedEvent).ConfigureAwait(false);

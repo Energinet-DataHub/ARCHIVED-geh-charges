@@ -29,7 +29,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Factories
     {
         [Theory]
         [InlineAutoDomainData]
-        public void CreatePriceConfirmationEvent_WhenValidConfirmation_HasNoNullsOrEmptyCollections(
+        public void Create_WhenValidConfirmation_HasNoNullsOrEmptyCollections(
             DocumentDtoBuilder documentDtoBuilder,
             ChargePriceOperationDtoBuilder chargePriceOperationDtoBuilder,
             ChargePriceOperationsAcceptedEventFactory sut)

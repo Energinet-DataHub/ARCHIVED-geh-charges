@@ -15,11 +15,13 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
-using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
-using GreenEnergyHub.Charges.Application.Charges.Handlers;
+using FluentAssertions;
+using GreenEnergyHub.Charges.Application.Charges.Factories;
 using GreenEnergyHub.Charges.Application.Charges.Handlers.ChargeInformation;
+using GreenEnergyHub.Charges.Application.Common.Services;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.TestHelpers;
@@ -57,25 +59,38 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers.ChargeInform
 
         [Theory]
         [InlineAutoDomainData]
-        public async Task HandleAsync_WhenDocumentValidationFails_ShouldCallReject(
+        public async Task HandleAsync_WhenDocumentValidationFails_ShouldRaiseRejectedEvent(
             ChargeInformationCommandReceivedEvent chargeInformationCommandReceivedEvent,
             [Frozen] Mock<IDocumentValidator> documentValidator,
-            [Frozen] Mock<IChargeCommandReceiptService> chargeCommandReceiptService,
+            [Frozen] Mock<IDomainEventPublisher> domainEventPublisher,
+            [Frozen] Mock<IChargeInformationOperationsRejectedEventFactory> chargeInformationOperationsRejectedEventFactory,
+            ChargeInformationOperationsRejectedEvent chargeInformationOperationsRejectedEvent,
             ChargeInformationCommandReceivedEventHandler sut)
         {
             // Arrange
+            chargeInformationOperationsRejectedEventFactory
+                .Setup(c => c.Create(
+                    It.IsAny<DocumentDto>(),
+                    It.IsAny<IReadOnlyCollection<ChargeInformationOperationDto>>(),
+                    It.IsAny<ValidationResult>()))
+                .Returns(chargeInformationOperationsRejectedEvent);
             documentValidator.Setup(v =>
                     v.ValidateAsync(It.IsAny<ChargeInformationCommand>()))
                 .ReturnsAsync(ValidationResult.CreateFailure(GetFailedValidationResult()));
             chargeInformationCommandReceivedEvent.Command.Document.BusinessReasonCode = BusinessReasonCode.UpdateChargeInformation;
+            ChargeInformationOperationsRejectedEvent actualRejectedEvent = null!;
+            domainEventPublisher
+                .Setup(d => d.Publish(It.IsAny<ChargeInformationOperationsRejectedEvent>()))
+                .Callback<ChargeInformationOperationsRejectedEvent>(e => actualRejectedEvent = e);
 
             // Act
             await sut.HandleAsync(chargeInformationCommandReceivedEvent);
 
             // Assert
-            chargeCommandReceiptService.Verify(
-                x => x.RejectAsync(chargeInformationCommandReceivedEvent.Command, It.IsAny<ValidationResult>()),
+            domainEventPublisher.Verify(
+                x => x.Publish(actualRejectedEvent),
                 Times.Once);
+            actualRejectedEvent.Should().BeEquivalentTo(chargeInformationOperationsRejectedEvent);
         }
 
         private static List<IValidationRuleContainer> GetFailedValidationResult()

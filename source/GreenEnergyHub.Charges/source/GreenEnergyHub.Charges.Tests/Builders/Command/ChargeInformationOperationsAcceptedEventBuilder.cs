@@ -13,9 +13,9 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using GreenEnergyHub.Charges.Application.Charges.Events;
+using System.Linq;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using NodaTime;
 
@@ -30,11 +30,17 @@ namespace GreenEnergyHub.Charges.Tests.Builders.Command
         public ChargeInformationOperationsAcceptedEventBuilder()
         {
             _publishedTime = SystemClock.Instance.GetCurrentInstant();
-            _document = new DocumentDtoBuilder().WithDocumentType(DocumentType.AcceptRequestChangeOfPriceList).Build();
+            _document = new DocumentDtoBuilder().WithDocumentType(DocumentType.ConfirmRequestChangeOfPriceList).Build();
             _operations = new List<ChargeInformationOperationDto>() { new ChargeInformationOperationDtoBuilder().Build() };
         }
 
-        public ChargeInformationOperationsAcceptedEventBuilder WithOperations(List<ChargeInformationOperationDto> operations)
+        public ChargeInformationOperationsAcceptedEventBuilder WithDocument(DocumentDto documentDto)
+        {
+            _document = documentDto;
+            return this;
+        }
+
+        public ChargeInformationOperationsAcceptedEventBuilder WithOperations(IReadOnlyCollection<ChargeInformationOperationDto> operations)
         {
             _operations = operations;
             return this;

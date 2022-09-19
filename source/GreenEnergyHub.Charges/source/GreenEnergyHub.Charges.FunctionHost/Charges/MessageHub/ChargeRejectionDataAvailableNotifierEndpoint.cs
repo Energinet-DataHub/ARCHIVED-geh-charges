@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
@@ -26,12 +26,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
     public class ChargeRejectionDataAvailableNotifierEndpoint
     {
         private const string FunctionName = nameof(ChargeRejectionDataAvailableNotifierEndpoint);
-        private readonly IAvailableDataNotifier<AvailableChargeReceiptData, ChargeInformationCommandRejectedEvent> _availableDataNotifier;
-        private readonly JsonMessageDeserializer<ChargeInformationCommandRejectedEvent> _deserializer;
+        private readonly IAvailableDataNotifier<AvailableChargeReceiptData, ChargeInformationOperationsRejectedEvent> _availableDataNotifier;
+        private readonly JsonMessageDeserializer<ChargeInformationOperationsRejectedEvent> _deserializer;
 
         public ChargeRejectionDataAvailableNotifierEndpoint(
-            IAvailableDataNotifier<AvailableChargeReceiptData, ChargeInformationCommandRejectedEvent> availableDataNotifier,
-            JsonMessageDeserializer<ChargeInformationCommandRejectedEvent> deserializer)
+            IAvailableDataNotifier<AvailableChargeReceiptData, ChargeInformationOperationsRejectedEvent> availableDataNotifier,
+            JsonMessageDeserializer<ChargeInformationOperationsRejectedEvent> deserializer)
         {
             _availableDataNotifier = availableDataNotifier;
             _deserializer = deserializer;
@@ -45,8 +45,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             byte[] message)
         {
-            var rejectedEvent = (ChargeInformationCommandRejectedEvent)await _deserializer.FromBytesAsync(message).ConfigureAwait(false);
-            if (rejectedEvent.Command.Document.BusinessReasonCode == BusinessReasonCode.UpdateChargePrices) return;
+            var rejectedEvent = (ChargeInformationOperationsRejectedEvent)await _deserializer.FromBytesAsync(message).ConfigureAwait(false);
+            if (rejectedEvent.Document.BusinessReasonCode == BusinessReasonCode.UpdateChargePrices) return;
 
             await _availableDataNotifier.NotifyAsync(rejectedEvent).ConfigureAwait(false);
         }

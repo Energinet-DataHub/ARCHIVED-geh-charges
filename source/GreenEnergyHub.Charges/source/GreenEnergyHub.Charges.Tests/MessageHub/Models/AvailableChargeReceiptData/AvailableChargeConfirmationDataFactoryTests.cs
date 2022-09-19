@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.Messaging;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
@@ -42,13 +42,13 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             TestMeteringPointAdministrator meteringPointAdministrator,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
-            ChargeInformationCommandAcceptedEvent acceptedEvent,
+            ChargeInformationOperationsAcceptedEvent acceptedEvent,
             Instant now,
             AvailableChargeReceiptDataFactory sut)
         {
             // Arrange
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
-            var documentDto = acceptedEvent.Command.Document;
+            var documentDto = acceptedEvent.Document;
             documentDto.Sender.BusinessProcessRole = MarketParticipantRole.GridAccessProvider;
             var actorId = Guid.NewGuid();
             MarketParticipantRepositoryMockBuilder.SetupMarketParticipantRepositoryMock(
@@ -65,8 +65,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             actualList[0].BusinessReasonCode.Should().Be(documentDto.BusinessReasonCode);
             actualList[0].RequestDateTime.Should().Be(now);
             actualList[0].ReceiptStatus.Should().Be(ReceiptStatus.Confirmed);
-            actualList[0].DocumentType.Should().Be(DocumentType.AcceptRequestChangeOfPriceList);
-            actualList[0].OriginalOperationId.Should().Be(acceptedEvent.Command.Operations.First().OperationId);
+            actualList[0].DocumentType.Should().Be(DocumentType.ConfirmRequestChangeOfPriceList);
+            actualList[0].OriginalOperationId.Should().Be(acceptedEvent.Operations.First().OperationId);
             actualList[0].ValidationErrors.Should().BeEmpty();
             var expectedList = actualList.OrderBy(x => x.OperationOrder);
             actualList.SequenceEqual(expectedList).Should().BeTrue();

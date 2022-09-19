@@ -12,9 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.FunctionHost.ChargeLinks;
 using GreenEnergyHub.Charges.FunctionHost.Charges;
-using GreenEnergyHub.Charges.FunctionHost.MessageHub;
 using Xunit;
 using Xunit.Categories;
 

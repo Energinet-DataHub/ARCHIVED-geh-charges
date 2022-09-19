@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using Energinet.DataHub.Core.Messaging.Transport.SchemaValidation;
-using GreenEnergyHub.Charges.Application.Charges.Handlers;
 using GreenEnergyHub.Charges.Application.Charges.Handlers.ChargeInformation;
 using GreenEnergyHub.Charges.Application.Charges.Handlers.ChargePrice;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;

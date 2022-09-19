@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Cim.MarketDocument
         [InlineData(DocumentType.RejectRequestChangeBillingMasterData, "D06")]
         [InlineData(DocumentType.NotifyBillingMasterData, "D07")]
         [InlineData(DocumentType.RequestChangeOfPriceList, "D10")]
-        [InlineData(DocumentType.AcceptRequestChangeOfPriceList, "D11")]
+        [InlineData(DocumentType.ConfirmRequestChangeOfPriceList, "D11")]
         [InlineData(DocumentType.RejectRequestChangeOfPriceList, "D11")]
         [InlineData(DocumentType.NotifyPriceList, "D12")]
         public void Map_WhenGivenKnownInput_MapsToCorrectString(DocumentType documentType, string expected)

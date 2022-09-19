@@ -15,7 +15,7 @@
 using System;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
@@ -28,11 +28,11 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
             _chargePublisher = chargePublisher;
         }
 
-        public async Task PublishAsync(ChargeInformationCommandAcceptedEvent chargeCommandAcceptedEvent)
+        public async Task PublishAsync(ChargeInformationOperationsAcceptedEvent chargeInformationOperationsAcceptedEvent)
         {
-            ArgumentNullException.ThrowIfNull(chargeCommandAcceptedEvent);
+            ArgumentNullException.ThrowIfNull(chargeInformationOperationsAcceptedEvent);
 
-            foreach (var chargeInformationOperationDto in chargeCommandAcceptedEvent.Command.Operations)
+            foreach (var chargeInformationOperationDto in chargeInformationOperationsAcceptedEvent.Operations)
             {
                 await _chargePublisher.PublishChargeCreatedAsync(chargeInformationOperationDto).ConfigureAwait(false);
             }

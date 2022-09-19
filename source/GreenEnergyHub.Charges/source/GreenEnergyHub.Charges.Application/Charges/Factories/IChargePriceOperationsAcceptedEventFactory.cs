@@ -13,8 +13,8 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Factories

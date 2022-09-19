@@ -18,13 +18,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Application.Charges.Factories;
 using GreenEnergyHub.Charges.Application.Charges.Handlers.ChargeInformation;
 using GreenEnergyHub.Charges.Application.Common.Services;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
@@ -466,20 +466,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers.ChargeInform
             chargePeriodFactory
                 .Setup(r => r.CreateFromChargeOperationDto(It.IsAny<ChargeInformationOperationDto>()))
                 .Returns(period);
-        }
-
-        private static void SetupChargePeriodFactory(Mock<IChargePeriodFactory> chargePeriodFactory, List<ChargeInformationOperationDto> operations)
-        {
-            foreach (var operation in operations)
-            {
-                var period = new ChargePeriodBuilder()
-                    .WithName(operation.ChargeName)
-                    .WithStartDateTime(operation.StartDateTime)
-                    .Build();
-                chargePeriodFactory
-                    .Setup(r => r.CreateFromChargeOperationDto(operation))
-                    .Returns(period);
-            }
         }
 
         private static void SetupChargeRepository(Mock<IChargeRepository> chargeRepository, Charge? charge = null)

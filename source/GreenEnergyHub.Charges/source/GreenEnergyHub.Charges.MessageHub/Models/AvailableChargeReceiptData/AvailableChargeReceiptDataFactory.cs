@@ -16,8 +16,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Messaging;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
+
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
@@ -27,7 +28,7 @@ using Microsoft.Extensions.Logging;
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 {
     public class AvailableChargeReceiptDataFactory
-        : AvailableDataFactoryBase<AvailableChargeReceiptData, ChargeInformationCommandAcceptedEvent>
+        : AvailableDataFactoryBase<AvailableChargeReceiptData, ChargeInformationOperationsAcceptedEvent>
     {
         private readonly IMessageMetaDataContext _messageMetaDataContext;
         private readonly ILogger _logger;
@@ -42,19 +43,19 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             _logger = loggerFactory.CreateLogger(nameof(AvailableChargeReceiptDataFactory));
         }
 
-        public override async Task<IReadOnlyList<AvailableChargeReceiptData>> CreateAsync(ChargeInformationCommandAcceptedEvent input)
+        public override async Task<IReadOnlyList<AvailableChargeReceiptData>> CreateAsync(ChargeInformationOperationsAcceptedEvent input)
         {
             // The original sender is the recipient of the receipt
-            var recipient = await GetRecipientAsync(input.Command.Document.Sender).ConfigureAwait(false);
+            var recipient = await GetRecipientAsync(input.Document.Sender).ConfigureAwait(false);
             var sender = await GetSenderAsync().ConfigureAwait(false);
 
             var availableChargeReceiptData = new List<AvailableChargeReceiptData>();
 
             var operationOrder = 0;
-            foreach (var chargeOperationDto in input.Command.Operations)
+            foreach (var chargeOperationDto in input.Operations)
             {
                 availableChargeReceiptData.AddRange(CreateAvailableChargeReceiptData(
-                    input.Command.Document, chargeOperationDto, sender, recipient, operationOrder++));
+                    input.Document, chargeOperationDto, sender, recipient, operationOrder++));
             }
 
             return availableChargeReceiptData;
@@ -83,7 +84,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                     Guid.NewGuid(), // ID of each available piece of data must be unique
                     ReceiptStatus.Confirmed,
                     chargeInformationOperationDto.OperationId[..Math.Min(chargeInformationOperationDto.OperationId.Length, 100)],
-                    DocumentType.AcceptRequestChangeOfPriceList, // Will be added to the HTTP MessageType header
+                    DocumentType.ConfirmRequestChangeOfPriceList, // Will be added to the HTTP MessageType header
                     operationOrder,
                     recipient.ActorId,
                     new List<AvailableReceiptValidationError>()),

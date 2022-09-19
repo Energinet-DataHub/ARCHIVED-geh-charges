@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System;
-using GreenEnergyHub.Charges.Application.Charges.Events;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 

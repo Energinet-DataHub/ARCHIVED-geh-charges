@@ -27,15 +27,13 @@ using Energinet.DataHub.Core.FunctionApp.TestCommon.FunctionAppHost;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ListenerMock;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ResourceProvider;
 using Energinet.DataHub.MessageHub.IntegrationTesting;
-using GreenEnergyHub.Charges.Application.Charges.Events;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksDataAvailableNotifiedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksRejectionEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon;
@@ -164,13 +162,13 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
                     .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargeLinksCommandReceivedSubscriptionName)
 
                 .AddSubscription(ChargesServiceBusResourceNames.ChargeCommandAcceptedSubscriptionName)
-                    .AddSubjectFilter(nameof(ChargeInformationCommandAcceptedEvent))
+                    .AddSubjectFilter(nameof(ChargeInformationOperationsAcceptedEvent))
                     .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargeCommandAcceptedSubscriptionName)
                 .AddSubscription(ChargesServiceBusResourceNames.ChargeCommandAcceptedPublishSubscriptionName)
-                    .AddSubjectFilter(nameof(ChargeInformationCommandAcceptedEvent))
+                    .AddSubjectFilter(nameof(ChargeInformationOperationsAcceptedEvent))
                     .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargeCommandAcceptedPublishSubscriptionName)
                 .AddSubscription(ChargesServiceBusResourceNames.ChargeAcceptedDataAvailableSubscriptionName)
-                    .AddSubjectFilter(nameof(ChargeInformationCommandAcceptedEvent))
+                    .AddSubjectFilter(nameof(ChargeInformationOperationsAcceptedEvent))
                     .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargeAcceptedDataAvailableSubscriptionName)
 
                 .AddSubscription(ChargesServiceBusResourceNames.ChargePriceCommandReceivedSubscriptionName)
@@ -178,7 +176,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
                     .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargePriceCommandReceivedSubscriptionName)
 
                 .AddSubscription(ChargesServiceBusResourceNames.ChargeCommandRejectedSubscriptionName)
-                    .AddSubjectFilter(nameof(ChargeInformationCommandRejectedEvent))
+                    .AddSubjectFilter(nameof(ChargeInformationOperationsRejectedEvent))
                     .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargeCommandRejectedSubscriptionName)
 
                 .AddSubscription(ChargesServiceBusResourceNames.ChargePriceRejectedSubscriptionName)

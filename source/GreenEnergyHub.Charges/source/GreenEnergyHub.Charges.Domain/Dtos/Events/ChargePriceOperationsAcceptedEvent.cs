@@ -13,27 +13,26 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
-using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents
+namespace GreenEnergyHub.Charges.Domain.Dtos.Events
 {
-    public class ChargeInformationCommandRejectedEvent : DomainEvent
+    public class ChargePriceOperationsAcceptedEvent : DomainEvent
     {
-        public ChargeInformationCommandRejectedEvent(
+        public ChargePriceOperationsAcceptedEvent(
             Instant publishedTime,
-            ChargeInformationCommand command,
-            IEnumerable<ValidationError> validationErrors)
+            DocumentDto document,
+            IReadOnlyCollection<ChargePriceOperationDto> operations)
             : base(publishedTime)
         {
-            Command = command;
-            ValidationErrors = validationErrors;
+            Document = document;
+            Operations = operations;
         }
 
-        public ChargeInformationCommand Command { get; }
+        public DocumentDto Document { get; }
 
-        public IEnumerable<ValidationError> ValidationErrors { get; }
+        public IReadOnlyCollection<ChargePriceOperationDto> Operations { get; }
     }
 }

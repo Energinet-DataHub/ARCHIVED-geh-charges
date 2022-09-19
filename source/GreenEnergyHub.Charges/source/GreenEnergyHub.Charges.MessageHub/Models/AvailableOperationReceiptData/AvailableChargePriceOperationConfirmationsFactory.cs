@@ -15,9 +15,9 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
@@ -84,7 +84,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableOperationReceiptData
                     Guid.NewGuid(), // ID of each available piece of data must be unique
                     ReceiptStatus.Confirmed,
                     chargePriceOperationDto.OperationId[..Math.Min(chargePriceOperationDto.OperationId.Length, 100)],
-                    DocumentType.AcceptRequestChangeOfPriceList, // Will be added to the HTTP MessageType header
+                    DocumentType.ConfirmRequestChangeOfPriceList, // Will be added to the HTTP MessageType header
                     operationOrder,
                     recipient.ActorId,
                     new List<AvailableReceiptValidationError>()),

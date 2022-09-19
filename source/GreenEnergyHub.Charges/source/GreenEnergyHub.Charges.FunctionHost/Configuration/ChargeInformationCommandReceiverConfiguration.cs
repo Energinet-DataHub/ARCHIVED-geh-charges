@@ -19,8 +19,6 @@ using GreenEnergyHub.Charges.Application.Charges.Handlers.ChargeInformation;
 using GreenEnergyHub.Charges.Core.Currency;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.InputValidation.Factories;
@@ -42,7 +40,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<IChargeCommandReceiptService, ChargeCommandReceiptService>();
             serviceCollection.AddScoped<IChargeInformationOperationsHandler, ChargeInformationOperationsHandler>();
             serviceCollection.AddScoped<IChargeFactory, ChargeFactory>();
             serviceCollection.AddScoped<IChargeIdentifierFactory, ChargeIdentifierFactory>();

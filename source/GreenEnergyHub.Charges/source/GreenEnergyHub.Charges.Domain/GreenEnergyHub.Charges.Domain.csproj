@@ -41,4 +41,8 @@ limitations under the License.
       <ProjectReference Include="..\GreenEnergyHub.Charges.Core\GreenEnergyHub.Charges.Core.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Dtos\Messages\Events" />
+    </ItemGroup>
+
 </Project>

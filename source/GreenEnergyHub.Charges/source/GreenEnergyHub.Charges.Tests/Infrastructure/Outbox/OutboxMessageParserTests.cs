@@ -14,7 +14,7 @@
 
 using Energinet.DataHub.Core.JsonSerialization;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Application.Charges.Events;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.Infrastructure.Outbox;
 using GreenEnergyHub.Charges.Tests.Builders.Command;
 using Xunit;
