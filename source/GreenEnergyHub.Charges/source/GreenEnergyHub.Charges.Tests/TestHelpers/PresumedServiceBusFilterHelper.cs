@@ -25,7 +25,7 @@ namespace GreenEnergyHub.Charges.Tests.TestHelpers
         /// - sbt-charges-domain-events.tf
         /// </summary>
         /// <returns>List of all domain event filter names</returns>
-        public static List<string> GetOrderedServiceBusFiltersPresumedToBeUsedInInfrastructureAsCode()
+        public static IOrderedEnumerable<string> GetOrderedServiceBusFiltersPresumedToBeUsedInInfrastructureAsCode()
         {
             // Names are split to prevent Resharper from automatically renaming when class is renamed
             var presumedServiceBusFilters = new List<string>
@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Tests.TestHelpers
                 "ChargeInformationCommandRejected" + "Event",
                 "ChargeInformationCommandAccepted" + "Event",
             };
-            return presumedServiceBusFilters.OrderBy(x => x).ToList();
+            return presumedServiceBusFilters.OrderBy(x => x);
         }
     }
 }
