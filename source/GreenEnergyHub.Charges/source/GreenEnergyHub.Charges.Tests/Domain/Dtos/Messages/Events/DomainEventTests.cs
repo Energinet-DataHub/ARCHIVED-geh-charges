@@ -13,11 +13,9 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
-using GreenEnergyHub.Charges.Tests.TestCore;
+using GreenEnergyHub.Charges.Tests.TestHelpers;
 using GreenEnergyHub.Charges.WebApi;
 using Xunit;
 using Xunit.Abstractions;
@@ -36,11 +34,12 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.Messages.Events
         }
 
         [Fact]
-        public void PresumedServiceBusFiltersAreNamedInInAccordanceWithInheritedClasses_Test()
+        public void InheritedClasses_AreNamedInInAccordanceWith_PresumedServiceBusFilters()
         {
             // Arrange
-            var presumedServiceBusFilters = GetOrderedServiceBusFiltersPresumedToBeUsedInInfrastructureAsCode();
-            var classNames = GetOrderedDomainEventTypeNames();
+            var presumedServiceBusFilters = PresumedServiceBusFilterHelper
+                .GetOrderedServiceBusFiltersPresumedToBeUsedInInfrastructureAsCode();
+            var classNames = DomainEventTypeHelper.GetOrderedDomainEventTypeNames();
 
             // Act
             // Assert
@@ -59,47 +58,11 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.Messages.Events
                 _testOutputHelper.WriteLine(" - 'local.settings.sample.json'");
                 _testOutputHelper.WriteLine(" - '{0}", nameof(EnvironmentSettingNames));
                 _testOutputHelper.WriteLine(" - 'ChargesServiceBusResourceNames'");
-                _testOutputHelper.WriteLine(" - '{0}", nameof(GetOrderedServiceBusFiltersPresumedToBeUsedInInfrastructureAsCode));
+                _testOutputHelper.WriteLine(" - '{0}", nameof(PresumedServiceBusFilterHelper
+                        .GetOrderedServiceBusFiltersPresumedToBeUsedInInfrastructureAsCode));
 
                 throw;
             }
-        }
-
-        /// <summary>
-        /// This method returns a list of names of all domain event filters we presume to to use in infrastructure-as-code:
-        /// - func-functionhost.tf
-        /// - sbt-charges-domain-events.tf
-        /// </summary>
-        /// <returns>List of all domain event filter names</returns>
-        private static List<string> GetOrderedServiceBusFiltersPresumedToBeUsedInInfrastructureAsCode()
-        {
-            // Names are split to avoid Resharper from automatically renaming when class is renamed
-            var presumedServiceBusFilters = new List<string>
-            {
-                "ChargePriceCommandReceived" + "Event",
-                "ChargeLinksRejected" + "Event",
-                "ChargeLinksReceived" + "Event",
-                "ChargeLinksDataAvailableNotified" + "Event",
-                "ChargeLinksAccepted" + "Event",
-                "ChargeInformationCommandReceived" + "Event",
-                "ChargeInformationCommandRejected" + "Event",
-                "ChargeInformationCommandAccepted" + "Event",
-            };
-            return presumedServiceBusFilters.OrderBy(x => x).ToList();
-        }
-
-        /// <summary>
-        /// Return all non-abstract implementations of <see cref="DomainEvent"/> from domain assembly.
-        /// </summary>
-        private static IEnumerable<string> GetOrderedDomainEventTypeNames()
-        {
-            var domainAssembly = AssemblyHelper.GetDomainAssembly();
-            var messageTypes = domainAssembly
-                .GetTypes()
-                .Where(t => typeof(DomainEvent).IsAssignableFrom(t) && t.IsClass && !t.IsAbstract)
-                .Select(t => t.Name)
-                .ToList();
-            return messageTypes.OrderBy(x => x).ToList();
         }
     }
 }
