@@ -149,7 +149,7 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Command
                 Resolution.PT1H => startTime.Plus(Duration.FromHours(1) * (index + 1)),
                 Resolution.P1D => startTime.Plus(Duration.FromDays(1) * (index + 1)),
                 Resolution.P1M => startTime.Plus(Duration.FromDays(30) * (index + 1)),
-                _ => throw new ArgumentOutOfRangeException(),
+                _ => throw new ArgumentOutOfRangeException($"{_priceResolution} is out of range of {nameof(Resolution)}"),
             };
         }
     }
