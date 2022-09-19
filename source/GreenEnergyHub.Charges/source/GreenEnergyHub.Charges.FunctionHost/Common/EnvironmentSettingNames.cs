@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using GreenEnergyHub.Charges.Infrastructure.Core.Function;
+
 namespace GreenEnergyHub.Charges.FunctionHost.Common
 {
     /// <summary>
@@ -64,41 +66,58 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
         // Integration, marketparticipant/actor domain
         public const string MarketParticipantChangedSubscriptionName = "MARKET_PARTICIPANT_CHANGED_SUBSCRIPTION_NAME";
 
-        // Internal, charge
+        // Domain event
+        [DomainEventSetting]
         public const string ChargesDomainEventTopicName = "DOMAIN_EVENTS_TOPIC_NAME";
 
-        // Internal, charge information, received
+        // Domain event, charge information, received
+        [DomainEventSetting]
         public const string ChargeCommandReceivedSubscriptionName = "CHARGE_COMMAND_RECEIVED_SUBSCRIPTION_NAME";
 
-        // Internal, charge price, received
+        // Domain event, charge price, received
+        [DomainEventSetting]
         public const string ChargePriceCommandReceivedSubscriptionName = "CHARGE_PRICE_COMMAND_RECEIVED_SUBSCRIPTION_NAME";
 
-        // Internal, charge information, accepted
+        // Domain event, charge information, accepted
+        [DomainEventSetting]
         public const string ChargeAcceptedDataAvailableSubscriptionName = "CHARGE_ACCEPTED_DATAAVAILABLE_SUBSCRIPTION_NAME";
+        [DomainEventSetting]
         public const string ChargeCommandAcceptedSubscriptionName = "CHARGE_COMMAND_ACCEPTED_SUBSCRIPTION_NAME";
+        [DomainEventSetting]
         public const string ChargeCommandAcceptedPublishSubscriptionName = "CHARGE_COMMAND_ACCEPTED_PUBLISH_SUBSCRIPTION_NAME";
 
-        // Internal, charge information, rejected
+        // Domain event, charge information, rejected
+        [DomainEventSetting]
         public const string ChargeCommandRejectedSubscriptionName = "CHARGE_COMMAND_REJECTED_SUBSCRIPTION_NAME";
 
-        // Internal, charge price, confirmed
+        // Domain event, charge price, confirmed
+        [DomainEventSetting]
         public const string ChargePriceOperationsConfirmedSubscriptionName = "CHARGE_PRICE_OPERATIONS_CONFIRMED_SUBSCRIPTION_NAME";
+        [DomainEventSetting]
         public const string ChargePriceConfirmedDataAvailableSubscriptionName = "CHARGE_PRICE_CONFIRMED_DATAAVAILABLE_SUBSCRIPTION_NAME";
+        [DomainEventSetting]
         public const string ChargePriceConfirmedPublishSubscriptionName = "CHARGE_PRICE_CONFIRMED_PUBLISH_SUBSCRIPTION_NAME";
 
-        // Internal, charge price, rejected
+        // Domain event, charge price, rejected
+        [DomainEventSetting]
         public const string ChargePriceOperationsRejectedSubscriptionName = "CHARGE_PRICE_OPERATIONS_REJECTED_SUBSCRIPTION_NAME";
 
-        // Internal, charge links, received
+        // Domain event, charge links, received
+        [DomainEventSetting]
         public const string ChargeLinksCommandReceivedSubscriptionName = "CHARGE_LINKS_COMMAND_RECEIVED_SUBSCRIPTION_NAME";
 
-        // Internal, charge links, accepted
+        // Domain event, charge links, accepted
+        [DomainEventSetting]
         public const string ChargeLinksAcceptedConfirmationSubscriptionName = "CHARGE_LINKS_ACCEPTED_CONFIRMATION_SUBSCRIPTION_NAME";
+        [DomainEventSetting]
         public const string ChargeLinksAcceptedDataAvailableSubscriptionName = "CHARGE_LINKS_ACCEPTED_DATAAVAILABLE_SUBSCRIPTION_NAME";
+        [DomainEventSetting]
         public const string ChargeLinksAcceptedPublishSubscriptionName = "CHARGE_LINKS_ACCEPTED_PUBLISH_SUBSCRIPTION_NAME";
+        [DomainEventSetting]
         public const string DefaultChargeLinksDataAvailableSubscriptionName = "DEFAULT_CHARGE_LINKS_DATAAVAILABLE_SUBSCRIPTION_NAME";
 
-        // Internal, charge links, rejected
+        // Domain event, charge links, rejected
+        [DomainEventSetting]
         public const string ChargeLinksCommandRejectedSubscriptionName = "CHARGE_LINKS_COMMAND_REJECTED_SUBSCRIPTION_NAME";
 
         // JWT Token auth

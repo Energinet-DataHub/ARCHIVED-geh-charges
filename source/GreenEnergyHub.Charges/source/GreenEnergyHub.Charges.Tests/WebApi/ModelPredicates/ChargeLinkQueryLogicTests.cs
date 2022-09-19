@@ -21,7 +21,7 @@ using FluentAssertions;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.QueryApi.Model;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Charges.Tests.Builders.Query;
+using GreenEnergyHub.Charges.TestCore.Builders.Query;
 using GreenEnergyHub.Charges.WebApi.ModelPredicates;
 using Xunit;
 using Xunit.Categories;

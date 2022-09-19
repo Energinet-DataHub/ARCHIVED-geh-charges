@@ -14,9 +14,9 @@
 
 using System;
 using Energinet.DataHub.Charges.Clients.ChargeLinks;
+using Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests;
 using Energinet.DataHub.Charges.Clients.Registration.ChargeLinks.ServiceCollectionExtensions;
 using FluentAssertions;
-using GreenEnergyHub.Charges.TestCore;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;

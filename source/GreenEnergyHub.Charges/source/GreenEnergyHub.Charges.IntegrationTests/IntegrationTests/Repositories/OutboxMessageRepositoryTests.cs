@@ -19,7 +19,7 @@ using GreenEnergyHub.Charges.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using GreenEnergyHub.Charges.TestCore;
-using GreenEnergyHub.Charges.Tests.Builders.Command;
+using GreenEnergyHub.Charges.TestCore.Builders.Command;
 using GreenEnergyHub.TestHelpers;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
@@ -65,7 +65,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
         [Theory]
         [AutoDomainData]
-        public async Task GetNext_WhenMultipleOutboxMessagesExists_ThenReturnTheEarliestAndNotProcessedOutboxMessage(OutboxMessageBuilder outboxMessageBuilder)
+        public async Task GetNext_WhenMultipleOutboxMessagesExists_ThenReturnTheEarliestAndNotProcessedOutboxMessage(
+            OutboxMessageBuilder outboxMessageBuilder)
         {
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
