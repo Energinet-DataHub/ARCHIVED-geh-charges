@@ -51,7 +51,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
                 .FromBytesAsync(message)
                 .ConfigureAwait(false);
 
-            await _chargePriceCommandReceivedEventHandler.HandleAsync(chargePriceCommandReceivedEvent)
+            await _chargePriceCommandReceivedEventHandler
+                .HandleAsync(chargePriceCommandReceivedEvent)
                 .ConfigureAwait(false);
 
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);

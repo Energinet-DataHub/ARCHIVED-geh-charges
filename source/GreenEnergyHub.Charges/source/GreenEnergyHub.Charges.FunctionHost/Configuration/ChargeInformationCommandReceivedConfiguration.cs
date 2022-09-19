@@ -35,7 +35,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
-    internal static class ChargeInformationCommandReceiverConfiguration
+    internal static class ChargeInformationCommandReceivedConfiguration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
@@ -52,22 +52,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 AvailableChargeReceiptValidationErrorFactory>();
             serviceCollection.AddScoped<IChargeCommandReceivedEventHandler, ChargeInformationCommandReceivedEventHandler>();
             serviceCollection.AddScoped<JsonMessageDeserializer<ChargeInformationCommandReceivedEvent>>();
-            ConfigureDatabase(serviceCollection);
-            ConfigureValidation(serviceCollection);
-            ConfigureIso8601Timezones(serviceCollection);
-            ConfigureIso4217Currency(serviceCollection);
-        }
-
-        private static void ConfigureDatabase(IServiceCollection serviceCollection)
-        {
             serviceCollection.AddScoped<IMarketParticipantRepository, MarketParticipantRepository>();
-        }
-
-        private static void ConfigureValidation(IServiceCollection serviceCollection)
-        {
             serviceCollection.AddScoped<IInputValidationRulesFactory<ChargeInformationOperationDto>,
                 ChargeOperationInputValidationRulesFactory>();
             serviceCollection.AddScoped<IInputValidator<ChargeInformationOperationDto>, InputValidator<ChargeInformationOperationDto>>();
+            ConfigureIso8601Timezones(serviceCollection);
+            ConfigureIso4217Currency(serviceCollection);
         }
 
         private static void ConfigureIso8601Timezones(IServiceCollection serviceCollection)

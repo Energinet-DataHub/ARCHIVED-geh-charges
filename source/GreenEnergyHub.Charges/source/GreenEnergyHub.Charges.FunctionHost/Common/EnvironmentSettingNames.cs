@@ -68,7 +68,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
         public const string ChargesDomainEventTopicName = "DOMAIN_EVENTS_TOPIC_NAME";
 
         // Internal, charge information, received
-        public const string ChargeCommandReceivedSubscriptionName = "CHARGE_COMMAND_RECEIVED_SUBSCRIPTION_NAME";
+        public const string ChargeInformationCommandReceivedSubscriptionName = "CHARGE_COMMAND_RECEIVED_SUBSCRIPTION_NAME";
 
         // Internal, charge price, received
         public const string ChargePriceCommandReceivedSubscriptionName = "CHARGE_PRICE_COMMAND_RECEIVED_SUBSCRIPTION_NAME";

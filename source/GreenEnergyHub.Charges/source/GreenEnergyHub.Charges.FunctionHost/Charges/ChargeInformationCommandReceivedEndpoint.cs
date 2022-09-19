@@ -14,6 +14,7 @@
 
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
+using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommandReceivedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
@@ -21,30 +22,38 @@ using Microsoft.Azure.Functions.Worker;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Charges
 {
-    public class ChargeInformationCommandReceiverEndpoint
+    public class ChargeInformationCommandReceivedEndpoint
     {
-        public const string FunctionName = nameof(ChargeInformationCommandReceiverEndpoint);
+        public const string FunctionName = nameof(ChargeInformationCommandReceivedEndpoint);
         private readonly IChargeCommandReceivedEventHandler _chargeCommandReceivedEventHandler;
         private readonly JsonMessageDeserializer<ChargeInformationCommandReceivedEvent> _deserializer;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public ChargeInformationCommandReceiverEndpoint(
+        public ChargeInformationCommandReceivedEndpoint(
             IChargeCommandReceivedEventHandler chargeCommandReceivedEventHandler,
-            JsonMessageDeserializer<ChargeInformationCommandReceivedEvent> deserializer)
+            JsonMessageDeserializer<ChargeInformationCommandReceivedEvent> deserializer,
+            IUnitOfWork unitOfWork)
         {
             _chargeCommandReceivedEventHandler = chargeCommandReceivedEventHandler;
             _deserializer = deserializer;
+            _unitOfWork = unitOfWork;
         }
 
         [Function(FunctionName)]
         public async Task RunAsync(
             [ServiceBusTrigger(
                 "%" + EnvironmentSettingNames.ChargesDomainEventTopicName + "%",
-                "%" + EnvironmentSettingNames.ChargeCommandReceivedSubscriptionName + "%",
+                "%" + EnvironmentSettingNames.ChargeInformationCommandReceivedSubscriptionName + "%",
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             byte[] message)
         {
-            var receivedEvent = (ChargeInformationCommandReceivedEvent)await _deserializer.FromBytesAsync(message).ConfigureAwait(false);
+            var receivedEvent = (ChargeInformationCommandReceivedEvent)await _deserializer
+                .FromBytesAsync(message)
+                .ConfigureAwait(false);
+
             await _chargeCommandReceivedEventHandler.HandleAsync(receivedEvent).ConfigureAwait(false);
+
+            await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
         }
     }
 }

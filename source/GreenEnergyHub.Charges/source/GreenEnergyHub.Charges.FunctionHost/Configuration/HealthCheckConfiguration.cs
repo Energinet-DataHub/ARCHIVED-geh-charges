@@ -125,7 +125,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                     connectionString: EnvironmentHelper.GetEnv(
                         EnvironmentSettingNames.DomainEventManagerConnectionString),
                     topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesDomainEventTopicName),
-                    subscriptionName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeCommandReceivedSubscriptionName))
+                    subscriptionName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeInformationCommandReceivedSubscriptionName))
                 .AddAzureServiceBusSubscription(
                     name: "ChargePriceCommandReceivedSubscriptionExists",
                     connectionString: EnvironmentHelper.GetEnv(

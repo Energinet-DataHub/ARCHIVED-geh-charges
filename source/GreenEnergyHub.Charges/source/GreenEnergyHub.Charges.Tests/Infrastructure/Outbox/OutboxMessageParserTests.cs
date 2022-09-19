@@ -58,5 +58,39 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Outbox
             // Assert
             actual.Should().BeOfType(typeof(ChargePriceOperationsAcceptedEvent));
         }
+
+        [Fact]
+        public void Parse_ChargeInformationOperationsRejectedEventType_ChargePriceOperationsRejectedEventReturned()
+        {
+            // Arrange
+            var jsonSerializer = new JsonSerializer();
+            var rejectedEvent = new ChargeInformationOperationsRejectedEventBuilder().Build();
+            var messageTypeString = typeof(ChargeInformationOperationsRejectedEvent).FullName;
+            var serializedEvent = jsonSerializer.Serialize(rejectedEvent);
+            var sut = new OutboxMessageParser(jsonSerializer);
+
+            // Act
+            var actual = sut.Parse(messageTypeString!, serializedEvent);
+
+            // Assert
+            actual.Should().BeOfType(typeof(ChargeInformationOperationsRejectedEvent));
+        }
+
+        [Fact]
+        public void Parse_ChargeInformationOperationsAcceptedEventType_ChargeInformationOperationsAcceptedEventReturned()
+        {
+            // Arrange
+            var jsonSerializer = new JsonSerializer();
+            var confirmedEvent = new ChargeInformationOperationsAcceptedEventBuilder().Build();
+            var messageTypeString = typeof(ChargeInformationOperationsAcceptedEvent).FullName;
+            var serializedEvent = jsonSerializer.Serialize(confirmedEvent);
+            var sut = new OutboxMessageParser(jsonSerializer);
+
+            // Act
+            var actual = sut.Parse(messageTypeString!, serializedEvent);
+
+            // Assert
+            actual.Should().BeOfType(typeof(ChargeInformationOperationsAcceptedEvent));
+        }
     }
 }
