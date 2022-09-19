@@ -12,9 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Linq;
-using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
@@ -94,10 +91,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                     chargeInformationOperationDto.ChargeOwner,
                 CimValidationErrorTextToken.ChargePointPosition =>
                     GetPosition(chargeInformationOperationDto, triggeredBy),
-                CimValidationErrorTextToken.ChargePointPrice =>
-                    GetPriceFromPointByPosition(chargeInformationOperationDto, triggeredBy),
-                CimValidationErrorTextToken.ChargePointsCount =>
-                    chargeInformationOperationDto.Points.Count.ToString(),
                 CimValidationErrorTextToken.ChargeResolution =>
                     chargeInformationOperationDto.Resolution.ToString(),
                 CimValidationErrorTextToken.ChargeStartDateTime =>
@@ -142,22 +135,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
             _logger.LogError("Invalid position: {ErrorMessage}", errorMessage);
 
             return CimValidationErrorTextTemplateMessages.Unknown;
-        }
-
-        private string GetPriceFromPointByPosition(ChargeInformationOperationDto chargeInformationOperationDto, string? triggeredBy)
-        {
-            try
-            {
-                return chargeInformationOperationDto.Points
-                        .Single(p => chargeInformationOperationDto.Points.GetPositionOfPoint(p) == int.Parse(triggeredBy!))
-                        .Price.ToString("N");
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, "Price not found {ErrorMessage}", $"by position: {triggeredBy}");
-
-                return CimValidationErrorTextTemplateMessages.Unknown;
-            }
         }
 
         private string GetOperationIdFromTriggeredBy(string? triggeredBy)

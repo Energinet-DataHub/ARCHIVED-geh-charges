@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
     {
         [Theory]
         [InlineAutoMoqData]
-        public void CreateRules_WhenOperationContainsPoints_ShouldContainRules(
+        public void CreateRules_WhenChargePriceOperation_ShouldContainRules(
             DocumentDtoBuilder documentDtoBuilder,
             ChargePriceOperationInputValidationRulesFactory sut)
         {
@@ -51,28 +51,6 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
 
             // Assert
             actualRuleTypes.Should().Contain(expectedRulesTypes);
-        }
-
-        [Theory]
-        [InlineAutoMoqData]
-        public void CreateRules_WhenOperationContainsNoPoints_ShouldContainRules(
-            DocumentDtoBuilder documentDtoBuilder,
-            ChargePriceOperationInputValidationRulesFactory sut)
-        {
-            // Arrange
-            var document = documentDtoBuilder.WithBusinessReasonCode(BusinessReasonCode.UpdateChargePrices).Build();
-            var chargeOperationDto = new ChargePriceOperationDtoBuilder().Build();
-            var expectedRulesTypes = GetExpectedRulesForChargePriceOperation()
-                .OrderBy(r => r.FullName);
-
-            // Act
-            var actualRuleTypes = sut.CreateRules(chargeOperationDto, document).GetRules()
-                .Select(r => r.ValidationRule.GetType())
-                .OrderBy(r => r.FullName)
-                .ToList();
-
-            // Assert
-            actualRuleTypes.Should().Equal(expectedRulesTypes);
         }
 
         [Theory]
