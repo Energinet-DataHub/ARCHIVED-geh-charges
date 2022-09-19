@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.using System;
 
-using System;
+using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
@@ -116,37 +116,30 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
         [Theory]
         [InlineAutoMoqData]
         public void Create_MergesAllMergeFields(
-            DocumentDto document,
-            ChargePriceOperationDto chargePriceOperationDto,
+            DocumentDto documentDto,
             CimValidationErrorTextProvider cimValidationErrorTextProvider,
+            ChargePriceOperationDtoBuilder chargePriceOperationDtoBuilder,
             ILoggerFactory loggerFactory)
         {
             // Arrange
-            var validationRuleIdentifiers = (ValidationRuleIdentifier[])Enum.GetValues(typeof(ValidationRuleIdentifier));
+            var chargePriceOperationDto = chargePriceOperationDtoBuilder.Build();
+            var validationRuleIdentifiers = GetExpectedRulesForChargePriceOperation();
             var identifiersForRulesWithExtendedData =
                 ValidationRuleForInterfaceLoader.GetValidationRuleIdentifierForTypes(
                     DomainAssemblyHelper.GetDomainAssembly(), typeof(IValidationRuleWithExtendedData));
-
             var sut = new ChargePriceCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
 
             // Act
             // Assert
-            foreach (var validationRuleIdentifier in validationRuleIdentifiers)
+            foreach (var identifier in validationRuleIdentifiers)
             {
-                var triggeredBy = validationRuleIdentifier == ValidationRuleIdentifier.SubsequentBundleOperationsFail ?
-                    chargePriceOperationDto.OperationId :
-                    null!;
-
-                var actual = sut.Create(
-                    new ValidationError(validationRuleIdentifier, null, triggeredBy),
-                    document,
-                    chargePriceOperationDto);
+                var validationError = new ValidationError(identifier, chargePriceOperationDto.OperationId, "1");
+                var actual = sut.Create(validationError, documentDto, chargePriceOperationDto);
 
                 actual.Should().NotBeNullOrWhiteSpace();
                 actual.Should().NotContain("{");
                 actual.Should().NotContain("  ");
-
-                if (identifiersForRulesWithExtendedData.Contains(validationRuleIdentifier) && triggeredBy != null)
+                if (identifiersForRulesWithExtendedData.Contains(identifier))
                     actual.Should().NotContain("unknown");
             }
         }
@@ -177,6 +170,32 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
 
             // Assert
             actual.Should().Contain(expected);
+        }
+
+        private static List<ValidationRuleIdentifier> GetExpectedRulesForChargePriceOperation()
+        {
+            var expectedRules = new List<ValidationRuleIdentifier>
+            {
+                ValidationRuleIdentifier.ChargeIdLengthValidation,
+                ValidationRuleIdentifier.ChargeIdRequiredValidation,
+                ValidationRuleIdentifier.ChargeOperationIdRequired,
+                ValidationRuleIdentifier.ChargeOperationIdLengthValidation,
+                ValidationRuleIdentifier.ChargeOwnerIsRequiredValidation,
+                ValidationRuleIdentifier.ChargeOwnerMustMatchSender,
+                ValidationRuleIdentifier.ChargeTypeIsKnownValidation,
+                ValidationRuleIdentifier.ChargeTypeTariffPriceCount,
+                ValidationRuleIdentifier.ChargePriceMaximumDigitsAndDecimals,
+                ValidationRuleIdentifier.MaximumPrice,
+                ValidationRuleIdentifier.NumberOfPointsMatchTimeIntervalAndResolution,
+                ValidationRuleIdentifier.PriceListMustStartAndStopAtMidnightValidationRule,
+                ValidationRuleIdentifier.StartDateTimeRequiredValidation,
+                ValidationRuleIdentifier.StartDateValidation,
+                ValidationRuleIdentifier.ResolutionSubscriptionValidation,
+                ValidationRuleIdentifier.ResolutionTariffValidation,
+                ValidationRuleIdentifier.ResolutionFeeValidation,
+                ValidationRuleIdentifier.ResolutionIsRequired,
+            };
+            return expectedRules;
         }
     }
 }

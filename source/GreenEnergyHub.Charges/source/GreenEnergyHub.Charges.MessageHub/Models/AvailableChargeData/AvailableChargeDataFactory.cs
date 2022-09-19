@@ -64,9 +64,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
 
             foreach (var recipient in activeGridAccessProviders)
             {
-                var points = informationOperation.Points
-                    .Select(point => new AvailableChargeDataPoint(informationOperation.Points.GetPositionOfPoint(point), point.Price)).ToList();
-
                 var sender = await GetSenderAsync().ConfigureAwait(false);
                 var operationOrder = input.Command.Operations.ToList().IndexOf(informationOperation);
 
@@ -91,8 +88,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
                     informationOperation.Resolution,
                     DocumentType.NotifyPriceList, // Will be added to the HTTP MessageType header
                     operationOrder,
-                    recipient.ActorId,
-                    points));
+                    recipient.ActorId));
             }
         }
 
