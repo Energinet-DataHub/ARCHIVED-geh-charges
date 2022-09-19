@@ -30,8 +30,7 @@ namespace GreenEnergyHub.Charges.Tests.TestHelpers
             var messageTypes = domainAssembly
                 .GetTypes()
                 .Where(t => typeof(DomainEvent).IsAssignableFrom(t) && t.IsClass && !t.IsAbstract)
-                .Select(t => t.Name)
-                .ToList();
+                .Select(t => t.Name);
             return messageTypes.OrderBy(x => x).ToList();
         }
     }
