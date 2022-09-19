@@ -36,29 +36,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
     {
         [Theory]
         [InlineAutoMoqData]
-        public void CreateRules_WhenBusinessReasonCodeIsUpdateChargePrices_ShouldContainRules(
-            ChargeOperationInputValidationRulesFactory sut,
-            ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder,
-            DocumentDtoBuilder documentDtoBuilder)
-        {
-            // Arrange
-            var document = documentDtoBuilder
-                .WithBusinessReasonCode(BusinessReasonCode.UpdateChargePrices)
-                .Build();
-            var chargeOperationDto = chargeInformationOperationDtoBuilder.WithPoint(1.00m).Build();
-            var expectedRulesTypes = GetExpectedRulesForChargePriceOperation().ToList();
-
-            // Act
-            var actualRuleTypes = sut.CreateRules(chargeOperationDto, document)
-                .GetRules().Select(r => r.ValidationRule.GetType()).ToList();
-
-            // Assert
-            actualRuleTypes.Should().Contain(expectedRulesTypes);
-        }
-
-        [Theory]
-        [InlineAutoMoqData]
-        public void CreateRules_WhenOperationContainsNoPoints_ShouldContainRules(
+        public void CreateRules_WhenChargeInformationOperation_ShouldContainRules(
             ChargeOperationInputValidationRulesFactory sut,
             ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder,
             DocumentDtoBuilder documentDtoBuilder)
@@ -90,29 +68,6 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             Assert.Throws<ArgumentNullException>(() => sut.CreateRules(null!, null!));
         }
 
-        [Theory]
-        [InlineAutoMoqData(CimValidationErrorTextToken.ChargePointPosition)]
-        [InlineAutoMoqData(CimValidationErrorTextToken.ChargePointPrice)]
-        public void CreateRulesForChargeCommand_AllRulesThatNeedTriggeredByForErrorMessage_MustImplementIValidationRuleWithExtendedData(
-            CimValidationErrorTextToken cimValidationErrorTextToken,
-            ChargeOperationInputValidationRulesFactory sut,
-            ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder,
-            DocumentDtoBuilder documentDtoBuilder)
-        {
-            // Arrange
-            var document = documentDtoBuilder
-                .WithBusinessReasonCode(BusinessReasonCode.UpdateChargeInformation)
-                .Build();
-            var chargeOperationDto = chargeInformationOperationDtoBuilder.Build();
-
-            // Act
-            var validationRules = sut.CreateRules(chargeOperationDto, document).GetRules();
-
-            // Assert
-            AssertAllRulesThatNeedTriggeredByForErrorMessageImplementsIValidationRuleWithExtendedData(
-                cimValidationErrorTextToken, validationRules);
-        }
-
         private static List<Type> GetExpectedRulesForChargeInformationOperation()
         {
             var expectedRules = new List<Type>
@@ -131,10 +86,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 typeof(ChargeDescriptionHasMaximumLengthRule),
                 typeof(VatClassificationValidationRule),
                 typeof(TransparentInvoicingIsNotAllowedForFeeValidationRule),
-                typeof(ChargePriceMaximumDigitsAndDecimalsRule),
-                typeof(ChargeTypeTariffPriceCountRule),
                 typeof(StartDateValidationRule),
-                typeof(MaximumPriceRule),
                 typeof(ChargeNameRequiredRule),
                 typeof(ChargeDescriptionRequiredRule),
                 typeof(ResolutionIsRequiredRule),
@@ -147,47 +99,6 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
                 typeof(ChargeTypeTariffTaxIndicatorOnlyAllowedBySystemOperatorValidationRule),
             };
             return expectedRules;
-        }
-
-        private static IEnumerable<Type> GetExpectedRulesForChargePriceOperation()
-        {
-            return new List<Type>
-            {
-                typeof(ChargeIdLengthValidationRule),
-                typeof(ChargeIdRequiredValidationRule),
-                typeof(ChargeOperationIdRequiredRule),
-                typeof(ChargeOwnerIsRequiredValidationRule),
-                typeof(ChargeTypeIsKnownValidationRule),
-                typeof(StartDateTimeRequiredValidationRule),
-                typeof(ChargePriceMaximumDigitsAndDecimalsRule),
-                typeof(ChargeTypeTariffPriceCountRule),
-                typeof(MaximumPriceRule),
-                typeof(NumberOfPointsMatchTimeIntervalAndResolutionRule),
-                typeof(ChargeOwnerMustMatchSenderRule),
-            };
-        }
-
-        private static void AssertAllRulesThatNeedTriggeredByForErrorMessageImplementsIValidationRuleWithExtendedData(
-            CimValidationErrorTextToken cimValidationErrorTextToken,
-            IReadOnlyCollection<IValidationRuleContainer> validationRules)
-        {
-            var type = typeof(CimValidationErrorTextTemplateMessages);
-            foreach (var fieldInfo in type.GetFields(BindingFlags.Static | BindingFlags.Public))
-            {
-                if (!fieldInfo.GetCustomAttributes().Any()) continue;
-
-                var errorMessageForAttribute = (ErrorMessageForAttribute)fieldInfo.GetCustomAttributes()
-                    .Single(x => x.GetType() == typeof(ErrorMessageForAttribute));
-
-                var validationRuleIdentifier = errorMessageForAttribute.ValidationRuleIdentifier;
-                var errorText = fieldInfo.GetValue(null)!.ToString();
-                var validationErrorTextTokens = CimValidationErrorTextTokenMatcher.GetTokens(errorText!);
-                var validationRuleContainer = validationRules
-                    .FirstOrDefault(x => x.ValidationRule.ValidationRuleIdentifier == validationRuleIdentifier);
-
-                if (validationErrorTextTokens.Contains(cimValidationErrorTextToken) && validationRuleContainer != null)
-                    Assert.True(validationRuleContainer.ValidationRule is IValidationRuleWithExtendedData);
-            }
         }
     }
 }

@@ -17,7 +17,7 @@ limitations under the License.
 <cim:RequestChangeOfPriceList_MarketDocument xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cim="urn:ediel.org:structure:requestchangeofpricelist:0:1" xsi:schemaLocation="urn:ediel.org:structure:requestchangeofpricelist:0:1 urn-ediel-org-structure-requestchangeofpricelist-0-1.xsd">
     <cim:mRID>DocIdSomeDocID</cim:mRID>
     <cim:type>D10</cim:type>
-    <cim:process.processType>D18</cim:process.processType>
+    <cim:process.processType>D08</cim:process.processType>
     <cim:businessSector.type>23</cim:businessSector.type>
     <cim:sender_MarketParticipant.mRID codingScheme="A10">8100000000030</cim:sender_MarketParticipant.mRID>
     <cim:sender_MarketParticipant.marketRole.type>DDM</cim:sender_MarketParticipant.marketRole.type>
@@ -31,13 +31,18 @@ limitations under the License.
                 <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">8100000000030</cim:chargeTypeOwner_MarketParticipant.mRID>
                 <cim:type>D03</cim:type>
                 <cim:mRID>ChId1234567890</cim:mRID>
-                <cim:name>Charge Tariff day Name 1</cim:name>
-                <cim:description>The charge description 1</cim:description>
-                <cim:priceTimeFrame_Period.resolution>P1D</cim:priceTimeFrame_Period.resolution>
                 <cim:effectiveDate>2022-10-31T23:00:00Z</cim:effectiveDate>
-                <cim:VATPayer>D01</cim:VATPayer>
-                <cim:transparentInvoicing>false</cim:transparentInvoicing>
-                <cim:taxIndicator>true</cim:taxIndicator>
+                <cim:Series_Period>
+                    <cim:resolution>P1D</cim:resolution>
+                    <cim:timeInterval>
+                        <cim:start>2022-10-31T23:00Z</cim:start>
+                        <cim:end>2022-11-01T23:00Z</cim:end>
+                    </cim:timeInterval>
+                    <cim:Point>
+                        <cim:position>1</cim:position>
+                        <cim:price.amount>150.001</cim:price.amount>
+                    </cim:Point>
+                </cim:Series_Period>
             </cim:ChargeType>
         </cim:ChargeGroup>
     </cim:MktActivityRecord>
@@ -48,13 +53,18 @@ limitations under the License.
                 <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">8100000000030</cim:chargeTypeOwner_MarketParticipant.mRID>
                 <cim:type>D03</cim:type>
                 <cim:mRID>ChId1234567891</cim:mRID>
-                <cim:name>Charge Tariff day Name 2</cim:name>
-                <cim:description>The charge description 2</cim:description>
-                <cim:priceTimeFrame_Period.resolution>P1D</cim:priceTimeFrame_Period.resolution>
                 <cim:effectiveDate>2022-10-31T23:00:00Z</cim:effectiveDate>
-                <cim:VATPayer>D02</cim:VATPayer>
-                <cim:transparentInvoicing>true</cim:transparentInvoicing>
-                <cim:taxIndicator>false</cim:taxIndicator>
+                <cim:Series_Period>
+                    <cim:resolution>P1D</cim:resolution>
+                    <cim:timeInterval>
+                        <cim:start>2023-10-31T23:00Z</cim:start>
+                        <cim:end>2023-11-01T23:00Z</cim:end>
+                    </cim:timeInterval>
+                    <cim:Point>
+                        <cim:position>1</cim:position>
+                        <cim:price.amount>200.001</cim:price.amount>
+                    </cim:Point>
+                </cim:Series_Period>
             </cim:ChargeType>
         </cim:ChargeGroup>
     </cim:MktActivityRecord>

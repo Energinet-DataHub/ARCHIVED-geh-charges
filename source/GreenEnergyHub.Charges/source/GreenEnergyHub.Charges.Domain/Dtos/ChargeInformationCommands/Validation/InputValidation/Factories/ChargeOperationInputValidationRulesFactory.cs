@@ -56,42 +56,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
                 CreateRuleContainer(new ChargeTypeIsKnownValidationRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
                 CreateRuleContainer(new StartDateTimeRequiredValidationRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
                 CreateRuleContainer(new ChargeOwnerMustMatchSenderRule(document.Sender.MarketParticipantId, chargeInformationOperationDto.ChargeOwner), chargeInformationOperationDto.OperationId),
-                CreateRuleContainer(new ChargeTypeTariffTaxIndicatorOnlyAllowedBySystemOperatorValidationRule(chargeInformationOperationDto, document.Sender), chargeInformationOperationDto.OperationId),
-            };
-
-            switch (document.BusinessReasonCode)
-            {
-                case BusinessReasonCode.UpdateChargeInformation:
-                    rules.AddRange(CreateRulesForChargeInformation(chargeInformationOperationDto));
-                    break;
-                case BusinessReasonCode.UpdateChargePrices:
-                    rules.AddRange(CreateRulesForChargePrice(chargeInformationOperationDto));
-                    break;
-                case BusinessReasonCode.Unknown:
-                case BusinessReasonCode.UpdateMasterDataSettlement:
-                default:
-                    throw new ArgumentOutOfRangeException($"Could not create input validation rules for business reason code: {document.BusinessReasonCode}");
-            }
-
-            return rules;
-        }
-
-        private List<IValidationRuleContainer> CreateRulesForChargePrice(ChargeInformationOperationDto chargeInformationOperationDto)
-        {
-            return new List<IValidationRuleContainer>
-            {
-                CreateRuleContainer(new ChargePriceMaximumDigitsAndDecimalsRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
-                CreateRuleContainer(new ChargeTypeTariffPriceCountRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
-                CreateRuleContainer(new MaximumPriceRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
-                CreateRuleContainer(new NumberOfPointsMatchTimeIntervalAndResolutionRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
-                CreateRuleContainer(new PriceListMustStartAndStopAtMidnightValidationRule(_zonedDateTimeService, chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
-            };
-        }
-
-        private List<IValidationRuleContainer> CreateRulesForChargeInformation(ChargeInformationOperationDto chargeInformationOperationDto)
-        {
-            return new List<IValidationRuleContainer>
-            {
                 CreateRuleContainer(new ResolutionFeeValidationRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
                 CreateRuleContainer(new ResolutionSubscriptionValidationRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
                 CreateRuleContainer(new ResolutionTariffValidationRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
@@ -99,15 +63,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
                 CreateRuleContainer(new ChargeDescriptionHasMaximumLengthRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
                 CreateRuleContainer(new VatClassificationValidationRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
                 CreateRuleContainer(new TransparentInvoicingIsNotAllowedForFeeValidationRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
-                CreateRuleContainer(new ChargePriceMaximumDigitsAndDecimalsRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
-                CreateRuleContainer(new ChargeTypeTariffPriceCountRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
-                CreateRuleContainer(new MaximumPriceRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
-                CreateRuleContainer(
-                    new StartDateValidationRule(
-                        chargeInformationOperationDto,
-                        _zonedDateTimeService,
-                        _clock),
-                    chargeInformationOperationDto.OperationId),
+                CreateRuleContainer(new StartDateValidationRule(chargeInformationOperationDto, _zonedDateTimeService, _clock), chargeInformationOperationDto.OperationId),
                 CreateRuleContainer(new ChargeNameRequiredRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
                 CreateRuleContainer(new ChargeDescriptionRequiredRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
                 CreateRuleContainer(new ResolutionIsRequiredRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
@@ -116,7 +72,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validatio
                 CreateRuleContainer(new TerminationDateMustMatchEffectiveDateValidationRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
                 CreateRuleContainer(new TaxIndicatorMustBeFalseForFeeValidationRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
                 CreateRuleContainer(new TaxIndicatorMustBeFalseForSubscriptionValidationRule(chargeInformationOperationDto), chargeInformationOperationDto.OperationId),
+                CreateRuleContainer(new ChargeTypeTariffTaxIndicatorOnlyAllowedBySystemOperatorValidationRule(chargeInformationOperationDto, document.Sender), chargeInformationOperationDto.OperationId),
             };
+            return rules;
         }
 
         private static IValidationRuleContainer CreateRuleContainer(

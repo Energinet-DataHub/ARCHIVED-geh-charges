@@ -52,7 +52,6 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
         {
             // Arrange
             var chargeOperationDto = new ChargeInformationOperationDtoBuilder()
-                .WithPoint(1)
                 .WithTaxIndicator(TaxIndicator.Tax)
                 .WithTransparentInvoicing(TransparentInvoicing.Transparent)
                 .Build();
@@ -96,9 +95,6 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
                 actual[i].TaxIndicator.Should().Be(true);
                 actual[i].TransparentInvoicing.Should().Be(true);
                 actual[i].Resolution.Should().Be(operation.Resolution);
-                actual[i].Points.Should().BeEquivalentTo(
-                    operation.Points,
-                    options => options.ExcludingMissingMembers());
             }
         }
 
@@ -126,7 +122,6 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
                 .Setup(m => m.GetMeteringPointAdministratorAsync())
                 .ReturnsAsync(new MarketParticipantBuilder().Build());
             var chargeOperationDto = new ChargeInformationOperationDtoBuilder()
-                .WithPoint(1)
                 .WithTaxIndicator(taxIndicator)
                 .WithTransparentInvoicing(TransparentInvoicing.Transparent)
                 .Build();
