@@ -20,7 +20,7 @@ using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
-using GreenEnergyHub.Charges.Tests.Builders.Command;
+using GreenEnergyHub.Charges.TestCore.Builders.Command;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using Xunit;

@@ -20,7 +20,7 @@ using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Energinet.DataHub.MessageHub.IntegrationTesting;
 using FluentAssertions;
-using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
+using GreenEnergyHub.Charges.Infrastructure.Core.InternalMessaging;
 
 namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
 {

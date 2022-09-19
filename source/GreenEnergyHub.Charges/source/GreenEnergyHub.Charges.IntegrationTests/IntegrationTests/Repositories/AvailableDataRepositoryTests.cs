@@ -22,7 +22,7 @@ using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Charges.Tests.Builders.MessageHub;
+using GreenEnergyHub.Charges.TestCore.Builders.MessageHub;
 using NodaTime;
 using Xunit;
 

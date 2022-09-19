@@ -20,7 +20,7 @@ using Energinet.DataHub.Charges.Clients.DefaultChargeLink.Models;
 using FluentAssertions;
 using Google.Protobuf;
 using GreenEnergyHub.Charges.Contracts;
-using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Categories;
 using CreateDefaultChargeLinksFailed =
@@ -39,8 +39,8 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
         private bool _didCreateChargeLinksTestResult;
 
         [Theory]
-        [InlineAutoMoqData("knownMeteringPointId1234", true)]
-        [InlineAutoMoqData("knownMeteringPointId5678", false)]
+        [InlineAutoDomainData("knownMeteringPointId1234", true)]
+        [InlineAutoDomainData("knownMeteringPointId5678", false)]
         public async Task ReadAsync_WhenDefaultChargeLinksCreationSucceeded_MapsDataAsSucceededDto(
             string meteringPointId, bool didCreateChargeLinks)
         {
@@ -68,7 +68,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Defaul
         }
 
         [Theory]
-        [InlineAutoMoqData("unknownMeteringPointId9876")]
+        [InlineAutoDomainData("unknownMeteringPointId9876")]
         public async Task DefaultChargeLinksCreationFailed(string meteringPointId)
         {
             // Arrange

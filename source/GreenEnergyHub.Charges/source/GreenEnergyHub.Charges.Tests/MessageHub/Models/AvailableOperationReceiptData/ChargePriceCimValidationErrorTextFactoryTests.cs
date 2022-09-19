@@ -22,7 +22,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableOperationReceiptData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Charges.Tests.Builders.Command;
+using GreenEnergyHub.Charges.TestCore.Builders.Command;
 using GreenEnergyHub.Charges.Tests.TestCore;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -126,7 +126,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
             var validationRuleIdentifiers = GetExpectedRulesForChargePriceOperation();
             var identifiersForRulesWithExtendedData =
                 ValidationRuleForInterfaceLoader.GetValidationRuleIdentifierForTypes(
-                    DomainAssemblyHelper.GetDomainAssembly(), typeof(IValidationRuleWithExtendedData));
+                    AssemblyHelper.GetDomainAssembly(), typeof(IValidationRuleWithExtendedData));
             var sut = new ChargePriceCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
 
             // Act
