@@ -164,13 +164,13 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
 
                 .AddSubscription(ChargesServiceBusResourceNames.ChargeInformationOperationsAcceptedSubscriptionName)
                     .AddSubjectFilter(nameof(ChargeInformationOperationsAcceptedEvent))
-                    .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargeInformationCommandAcceptedSubscriptionName)
+                    .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargeInformationOperationsAcceptedSubscriptionName)
                 .AddSubscription(ChargesServiceBusResourceNames.ChargeInformationOperationsAcceptedPublishSubscriptionName)
                     .AddSubjectFilter(nameof(ChargeInformationOperationsAcceptedEvent))
-                    .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargeInformationCommandAcceptedPublishSubscriptionName)
+                    .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargeInformationOperationsAcceptedPublishSubscriptionName)
                 .AddSubscription(ChargesServiceBusResourceNames.ChargeInformationOperationsAcceptedDataAvailableSubscriptionName)
                     .AddSubjectFilter(nameof(ChargeInformationOperationsAcceptedEvent))
-                    .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargeInformationAcceptedDataAvailableSubscriptionName)
+                    .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargeInformationOperationsAcceptedDataAvailableSubscriptionName)
 
                 .AddSubscription(ChargesServiceBusResourceNames.ChargePriceCommandReceivedSubscriptionName)
                     .AddSubjectFilter(nameof(ChargePriceCommandReceivedEvent))
