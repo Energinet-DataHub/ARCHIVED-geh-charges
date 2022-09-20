@@ -21,7 +21,7 @@ using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.Messages.Events
+namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.Events
 {
     [UnitTest]
     public class DomainEventTests

@@ -19,7 +19,7 @@ using GreenEnergyHub.Charges.Tests.TestCore;
 
 namespace GreenEnergyHub.Charges.Tests.TestHelpers
 {
-    public class DomainEventTypeHelper
+    public static class DomainEventTypeHelper
     {
         /// <summary>
         /// Return all non-abstract implementations of <see cref="DomainEvent"/> from domain assembly.
