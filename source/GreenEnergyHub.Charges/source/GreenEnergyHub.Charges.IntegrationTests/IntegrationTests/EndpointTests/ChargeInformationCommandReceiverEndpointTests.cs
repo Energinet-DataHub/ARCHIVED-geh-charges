@@ -93,7 +93,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     Fixture.HostManager, nameof(ChargeInformationCommandReceivedEndpoint));
 
                 await FunctionAsserts.AssertHasExecutedAsync(
-                    Fixture.HostManager, nameof(ChargeConfirmationDataAvailableNotifierEndpoint));
+                    Fixture.HostManager, nameof(ChargeInformationConfirmedDataAvailableNotifierEndpoint));
 
                 // Assert
                 await using var actualChargeContext = Fixture.ChargesDatabaseManager.CreateDbContext();

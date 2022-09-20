@@ -80,23 +80,23 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
 
         // Domain event, charge information, accepted
         [DomainEventSetting]
-        public const string ChargeAcceptedDataAvailableSubscriptionName = "CHARGE_ACCEPTED_DATAAVAILABLE_SUBSCRIPTION_NAME";
+        public const string ChargeInformationAcceptedDataAvailableSubscriptionName = "CHARGE_ACCEPTED_DATAAVAILABLE_SUBSCRIPTION_NAME";
         [DomainEventSetting]
-        public const string ChargeCommandAcceptedSubscriptionName = "CHARGE_COMMAND_ACCEPTED_SUBSCRIPTION_NAME";
+        public const string ChargeInformationCommandAcceptedSubscriptionName = "CHARGE_COMMAND_ACCEPTED_SUBSCRIPTION_NAME";
         [DomainEventSetting]
-        public const string ChargeCommandAcceptedPublishSubscriptionName = "CHARGE_COMMAND_ACCEPTED_PUBLISH_SUBSCRIPTION_NAME";
+        public const string ChargeInformationCommandAcceptedPublishSubscriptionName = "CHARGE_COMMAND_ACCEPTED_PUBLISH_SUBSCRIPTION_NAME";
 
         // Domain event, charge information, rejected
         [DomainEventSetting]
-        public const string ChargeCommandRejectedSubscriptionName = "CHARGE_COMMAND_REJECTED_SUBSCRIPTION_NAME";
+        public const string ChargeInformationOperationsRejectedSubscriptionName = "CHARGE_COMMAND_REJECTED_SUBSCRIPTION_NAME";
 
         // Domain event, charge price, confirmed
         [DomainEventSetting]
         public const string ChargePriceOperationsConfirmedSubscriptionName = "CHARGE_PRICE_OPERATIONS_CONFIRMED_SUBSCRIPTION_NAME";
         [DomainEventSetting]
-        public const string ChargePriceConfirmedDataAvailableSubscriptionName = "CHARGE_PRICE_CONFIRMED_DATAAVAILABLE_SUBSCRIPTION_NAME";
+        public const string ChargePriceOperationsConfirmedDataAvailableSubscriptionName = "CHARGE_PRICE_CONFIRMED_DATAAVAILABLE_SUBSCRIPTION_NAME";
         [DomainEventSetting]
-        public const string ChargePriceConfirmedPublishSubscriptionName = "CHARGE_PRICE_CONFIRMED_PUBLISH_SUBSCRIPTION_NAME";
+        public const string ChargePriceOperationsConfirmedPublishSubscriptionName = "CHARGE_PRICE_CONFIRMED_PUBLISH_SUBSCRIPTION_NAME";
 
         // Domain event, charge price, rejected
         [DomainEventSetting]

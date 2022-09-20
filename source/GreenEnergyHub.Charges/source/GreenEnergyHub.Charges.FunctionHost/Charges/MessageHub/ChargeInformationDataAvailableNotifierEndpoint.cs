@@ -27,13 +27,13 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
     /// by notifying that charge and/or charge price data is available
     /// This is the RSM-034 CIM XML 'NotifyPriceList'.
     /// </summary>
-    public class ChargeDataAvailableNotifierEndpoint
+    public class ChargeInformationDataAvailableNotifierEndpoint
     {
-        private const string FunctionName = nameof(ChargeDataAvailableNotifierEndpoint);
+        private const string FunctionName = nameof(ChargeInformationDataAvailableNotifierEndpoint);
         private readonly JsonMessageDeserializer<ChargeInformationOperationsAcceptedEvent> _deserializer;
         private readonly IAvailableDataNotifier<AvailableChargeData, ChargeInformationOperationsAcceptedEvent> _availableDataNotifier;
 
-        public ChargeDataAvailableNotifierEndpoint(
+        public ChargeInformationDataAvailableNotifierEndpoint(
             JsonMessageDeserializer<ChargeInformationOperationsAcceptedEvent> deserializer,
             IAvailableDataNotifier<AvailableChargeData, ChargeInformationOperationsAcceptedEvent> availableDataNotifier)
         {
@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
         public async Task RunAsync(
             [ServiceBusTrigger(
                 "%" + EnvironmentSettingNames.ChargesDomainEventTopicName + "%",
-                "%" + EnvironmentSettingNames.ChargeAcceptedDataAvailableSubscriptionName + "%",
+                "%" + EnvironmentSettingNames.ChargeInformationAcceptedDataAvailableSubscriptionName + "%",
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             byte[] message)
         {

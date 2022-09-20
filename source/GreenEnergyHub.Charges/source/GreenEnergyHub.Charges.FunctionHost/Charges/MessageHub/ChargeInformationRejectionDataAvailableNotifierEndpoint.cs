@@ -14,6 +14,7 @@
 
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.Events;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
@@ -22,20 +23,15 @@ using Microsoft.Azure.Functions.Worker;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
 {
-    /// <summary>
-    /// The function will initiate the communication with the message hub
-    /// by notifying that a charge change has been confirmed
-    /// This is the RSM-033 CIM XML 'ConfirmRequestChangeBillingMasterData'.
-    /// </summary>
-    public class ChargeConfirmationDataAvailableNotifierEndpoint
+    public class ChargeInformationRejectionDataAvailableNotifierEndpoint
     {
-        private const string FunctionName = nameof(ChargeConfirmationDataAvailableNotifierEndpoint);
-        private readonly IAvailableDataNotifier<AvailableChargeReceiptData, ChargeInformationOperationsAcceptedEvent> _availableDataNotifier;
-        private readonly JsonMessageDeserializer<ChargeInformationOperationsAcceptedEvent> _deserializer;
+        private const string FunctionName = nameof(ChargeInformationRejectionDataAvailableNotifierEndpoint);
+        private readonly IAvailableDataNotifier<AvailableChargeReceiptData, ChargeInformationOperationsRejectedEvent> _availableDataNotifier;
+        private readonly JsonMessageDeserializer<ChargeInformationOperationsRejectedEvent> _deserializer;
 
-        public ChargeConfirmationDataAvailableNotifierEndpoint(
-            IAvailableDataNotifier<AvailableChargeReceiptData, ChargeInformationOperationsAcceptedEvent> availableDataNotifier,
-            JsonMessageDeserializer<ChargeInformationOperationsAcceptedEvent> deserializer)
+        public ChargeInformationRejectionDataAvailableNotifierEndpoint(
+            IAvailableDataNotifier<AvailableChargeReceiptData, ChargeInformationOperationsRejectedEvent> availableDataNotifier,
+            JsonMessageDeserializer<ChargeInformationOperationsRejectedEvent> deserializer)
         {
             _availableDataNotifier = availableDataNotifier;
             _deserializer = deserializer;
@@ -45,12 +41,14 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
         public async Task RunAsync(
             [ServiceBusTrigger(
                 "%" + EnvironmentSettingNames.ChargesDomainEventTopicName + "%",
-                "%" + EnvironmentSettingNames.ChargeCommandAcceptedSubscriptionName + "%",
+                "%" + EnvironmentSettingNames.ChargeInformationOperationsRejectedSubscriptionName + "%",
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             byte[] message)
         {
-            var acceptedEvent = (ChargeInformationOperationsAcceptedEvent)await _deserializer.FromBytesAsync(message).ConfigureAwait(false);
-            await _availableDataNotifier.NotifyAsync(acceptedEvent).ConfigureAwait(false);
+            var rejectedEvent = (ChargeInformationOperationsRejectedEvent)await _deserializer.FromBytesAsync(message).ConfigureAwait(false);
+            if (rejectedEvent.Document.BusinessReasonCode == BusinessReasonCode.UpdateChargePrices) return;
+
+            await _availableDataNotifier.NotifyAsync(rejectedEvent).ConfigureAwait(false);
         }
     }
 }

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.Tests.TestHelpers;
@@ -38,8 +39,9 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.Events
         {
             // Arrange
             var presumedServiceBusFilters = PresumedServiceBusFilterHelper
-                .GetOrderedServiceBusFiltersPresumedToBeUsedInInfrastructureAsCode();
-            var classNames = DomainEventTypeHelper.GetOrderedDomainEventTypeNames();
+                .GetOrderedServiceBusFiltersPresumedToBeUsedInInfrastructureAsCode()
+                .ToList();
+            var classNames = DomainEventTypeHelper.GetOrderedDomainEventTypeNames().ToList();
 
             // Act
             // Assert
