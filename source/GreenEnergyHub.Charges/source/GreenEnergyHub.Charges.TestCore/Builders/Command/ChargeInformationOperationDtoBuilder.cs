@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
