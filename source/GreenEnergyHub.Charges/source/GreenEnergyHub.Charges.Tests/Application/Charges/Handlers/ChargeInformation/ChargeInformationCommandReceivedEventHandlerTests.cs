@@ -68,15 +68,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers.ChargeInform
             ChargeInformationCommandReceivedEventHandler sut)
         {
             // Arrange
-            chargeInformationOperationsRejectedEventFactory
-                .Setup(c => c.Create(
-                    It.IsAny<DocumentDto>(),
-                    It.IsAny<IReadOnlyCollection<ChargeInformationOperationDto>>(),
-                    It.IsAny<ValidationResult>()))
-                .Returns(chargeInformationOperationsRejectedEvent);
-            documentValidator.Setup(v =>
-                    v.ValidateAsync(It.IsAny<ChargeInformationCommand>()))
-                .ReturnsAsync(ValidationResult.CreateFailure(GetFailedValidationResult()));
+            SetupEventFactory(chargeInformationOperationsRejectedEventFactory, chargeInformationOperationsRejectedEvent);
+            SetupDocumentValidator(documentValidator);
             chargeInformationCommandReceivedEvent.Command.Document.BusinessReasonCode = BusinessReasonCode.UpdateChargeInformation;
             ChargeInformationOperationsRejectedEvent actualRejectedEvent = null!;
             domainEventPublisher
@@ -91,6 +84,25 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers.ChargeInform
                 x => x.Publish(actualRejectedEvent),
                 Times.Once);
             actualRejectedEvent.Should().BeEquivalentTo(chargeInformationOperationsRejectedEvent);
+        }
+
+        private static void SetupDocumentValidator(Mock<IDocumentValidator> documentValidator)
+        {
+            documentValidator.Setup(v =>
+                    v.ValidateAsync(It.IsAny<ChargeInformationCommand>()))
+                .ReturnsAsync(ValidationResult.CreateFailure(GetFailedValidationResult()));
+        }
+
+        private static void SetupEventFactory(
+            Mock<IChargeInformationOperationsRejectedEventFactory> chargeInformationOperationsRejectedEventFactory,
+            ChargeInformationOperationsRejectedEvent chargeInformationOperationsRejectedEvent)
+        {
+            chargeInformationOperationsRejectedEventFactory
+                .Setup(c => c.Create(
+                    It.IsAny<DocumentDto>(),
+                    It.IsAny<IReadOnlyCollection<ChargeInformationOperationDto>>(),
+                    It.IsAny<ValidationResult>()))
+                .Returns(chargeInformationOperationsRejectedEvent);
         }
 
         private static List<IValidationRuleContainer> GetFailedValidationResult()

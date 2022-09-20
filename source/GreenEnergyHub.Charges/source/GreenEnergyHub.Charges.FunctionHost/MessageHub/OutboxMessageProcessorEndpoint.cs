@@ -26,7 +26,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
 {
     public class OutboxMessageProcessorEndpoint
     {
-        public const string FunctionName = nameof(OutboxMessageProcessorEndpoint);
+        private const string FunctionName = nameof(OutboxMessageProcessorEndpoint);
         private readonly IOutboxMessageRepository _outboxMessageRepository;
         private readonly IOutboxMessageParser _outboxMessageParser;
         private readonly IClock _clock;
