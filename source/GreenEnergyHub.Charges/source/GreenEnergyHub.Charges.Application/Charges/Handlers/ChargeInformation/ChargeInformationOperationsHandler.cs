@@ -125,9 +125,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers.ChargeInformation
             IReadOnlyCollection<ChargeInformationOperationDto> operationsToBeRejected,
             IList<IValidationRuleContainer> rejectionRules)
         {
-            ArgumentNullException.ThrowIfNull(operationsToBeRejected);
-            ArgumentNullException.ThrowIfNull(rejectionRules);
-
             if (!operationsToBeRejected.Any()) return;
 
             var errorMessage = ValidationErrorLogMessageBuilder.BuildErrorMessage(document, rejectionRules);
