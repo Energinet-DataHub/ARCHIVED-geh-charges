@@ -81,11 +81,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.InternalMessaging
 
         // Domain event, charge price, confirmed
         [DomainEventSetting]
-        public const string ChargePriceOperationsConfirmedSubscriptionName = "sbtsub-charges-charge-price-confirmed";
+        public const string ChargePriceOperationsAcceptedSubscriptionName = "sbtsub-charges-charge-price-confirmed";
         [DomainEventSetting]
-        public const string ChargePriceOperationsConfirmedDataAvailableSubscriptionName = "sbtsub-charges-charge-price-confirmed-dataavail";
+        public const string ChargePriceOperationsAcceptedDataAvailableSubscriptionName = "sbtsub-charges-charge-price-confirmed-dataavail";
         [DomainEventSetting]
-        public const string ChargePriceOperationsConfirmedPublishSubscriptionName = "sbtsub-charges-charge-price-confirmed-publish";
+        public const string ChargePriceOperationsAcceptedPublishSubscriptionName = "sbtsub-charges-charge-price-confirmed-publish";
 
         // Domain event, charge links, received
         [DomainEventSetting]

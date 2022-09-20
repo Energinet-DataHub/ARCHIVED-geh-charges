@@ -156,7 +156,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                     connectionString: EnvironmentHelper.GetEnv(
                         EnvironmentSettingNames.DomainEventManagerConnectionString),
                     topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesDomainEventTopicName),
-                    subscriptionName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargePriceOperationsConfirmedSubscriptionName))
+                    subscriptionName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargePriceOperationsAcceptedSubscriptionName))
                 .AddAzureServiceBusSubscription(
                     name: "ChargeInformationOperationsAcceptedDataAvailableSubscriptionExists",
                     connectionString: EnvironmentHelper.GetEnv(
@@ -169,7 +169,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                     connectionString: EnvironmentHelper.GetEnv(
                         EnvironmentSettingNames.DomainEventManagerConnectionString),
                     topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesDomainEventTopicName),
-                    subscriptionName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargePriceOperationsConfirmedDataAvailableSubscriptionName))
+                    subscriptionName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargePriceOperationsAcceptedDataAvailableSubscriptionName))
                 .AddAzureServiceBusSubscription(
                     name: "ChargeInformationOperationsAcceptedPublishSubscriptionExists",
                     connectionString: EnvironmentHelper.GetEnv(
@@ -183,7 +183,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                         EnvironmentSettingNames.DomainEventManagerConnectionString),
                     topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesDomainEventTopicName),
                     subscriptionName: EnvironmentHelper.GetEnv(
-                        EnvironmentSettingNames.ChargePriceOperationsConfirmedPublishSubscriptionName));
+                        EnvironmentSettingNames.ChargePriceOperationsAcceptedPublishSubscriptionName));
         }
 
         private static void ConfigureDomainEventsChargeLinks(IServiceCollection serviceCollection)

@@ -24,7 +24,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
 {
     public class ChargePriceCommandReceiverEndpoint
     {
-        public const string FunctionName = nameof(ChargePriceCommandReceiverEndpoint);
+        private const string FunctionName = nameof(ChargePriceCommandReceiverEndpoint);
         private readonly IChargePriceCommandReceivedEventHandler _chargePriceCommandReceivedEventHandler;
         private readonly JsonMessageDeserializer<ChargePriceCommandReceivedEvent> _deserializer;
         private readonly IUnitOfWork _unitOfWork;

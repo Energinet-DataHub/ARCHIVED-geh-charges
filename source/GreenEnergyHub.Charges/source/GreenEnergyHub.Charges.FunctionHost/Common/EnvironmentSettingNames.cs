@@ -72,7 +72,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
 
         // Domain event, charge information, received
         [DomainEventSetting]
-        public const string ChargeInformationCommandReceivedSubscriptionName = "CHARGE_COMMAND_RECEIVED_SUBSCRIPTION_NAME";
+        public const string ChargeInformationCommandReceivedSubscriptionName = "CHARGE_INFORMATION_COMMAND_RECEIVED_SUBSCRIPTION_NAME";
 
         // Domain event, charge price, received
         [DomainEventSetting]
@@ -80,23 +80,23 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
 
         // Domain event, charge information, accepted
         [DomainEventSetting]
-        public const string ChargeInformationOperationsAcceptedDataAvailableSubscriptionName = "CHARGE_ACCEPTED_DATAAVAILABLE_SUBSCRIPTION_NAME";
+        public const string ChargeInformationOperationsAcceptedDataAvailableSubscriptionName = "CHARGE_INFORMATION_OPERATIONS_ACCEPTED_DATAAVAILABLE_SUBSCRIPTIONNAME";
         [DomainEventSetting]
-        public const string ChargeInformationOperationsAcceptedSubscriptionName = "CHARGE_COMMAND_ACCEPTED_SUBSCRIPTION_NAME";
+        public const string ChargeInformationOperationsAcceptedSubscriptionName = "CHARGE_INFORMATION_OPERATIONS_ACCEPTED_SUBSCRIPTION_NAME";
         [DomainEventSetting]
-        public const string ChargeInformationOperationsAcceptedPublishSubscriptionName = "CHARGE_COMMAND_ACCEPTED_PUBLISH_SUBSCRIPTION_NAME";
+        public const string ChargeInformationOperationsAcceptedPublishSubscriptionName = "CHARGE_INFORMATION_OPERATIONS_ACCEPTED_PUBLISH_SUBSCRIPTION_NAME";
 
         // Domain event, charge information, rejected
         [DomainEventSetting]
-        public const string ChargeInformationOperationsRejectedSubscriptionName = "CHARGE_COMMAND_REJECTED_SUBSCRIPTION_NAME";
+        public const string ChargeInformationOperationsRejectedSubscriptionName = "CHARGE_INFORMATION_OPERATIONS_REJECTED_SUBSCRIPTION_NAME";
 
         // Domain event, charge price, confirmed
         [DomainEventSetting]
-        public const string ChargePriceOperationsConfirmedSubscriptionName = "CHARGE_PRICE_OPERATIONS_CONFIRMED_SUBSCRIPTION_NAME";
+        public const string ChargePriceOperationsAcceptedSubscriptionName = "CHARGE_PRICE_OPERATIONS_ACCEPTED_SUBSCRIPTION_NAME";
         [DomainEventSetting]
-        public const string ChargePriceOperationsConfirmedDataAvailableSubscriptionName = "CHARGE_PRICE_CONFIRMED_DATAAVAILABLE_SUBSCRIPTION_NAME";
+        public const string ChargePriceOperationsAcceptedDataAvailableSubscriptionName = "CHARGE_PRICE_OPERATIONS_ACCEPTED_DATAAVAILABLE_SUBSCRIPTION_NAME";
         [DomainEventSetting]
-        public const string ChargePriceOperationsConfirmedPublishSubscriptionName = "CHARGE_PRICE_CONFIRMED_PUBLISH_SUBSCRIPTION_NAME";
+        public const string ChargePriceOperationsAcceptedPublishSubscriptionName = "CHARGE_PRICE_OPERATIONS_ACCEPTED_PUBLISH_SUBSCRIPTION_NAME";
 
         // Domain event, charge price, rejected
         [DomainEventSetting]
