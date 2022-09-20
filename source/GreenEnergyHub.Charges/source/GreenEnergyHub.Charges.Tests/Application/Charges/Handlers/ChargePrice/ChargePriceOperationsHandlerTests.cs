@@ -54,7 +54,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers.ChargePrice
             [Frozen] Mock<IDomainEventPublisher> domainEventPublisher,
             [Frozen] Mock<ILoggerFactory> loggerFactory,
             [Frozen] Mock<IChargePriceOperationsRejectedEventFactory> chargePriceOperationsRejectedEventFactory,
-            [Frozen] Mock<IChargePriceOperationsAcceptedEventFactory> chargePriceOperationsConfirmedEventFactory,
+            [Frozen] Mock<IChargePriceOperationsAcceptedEventFactory> chargePriceOperationsAcceptedEventFactory,
             Mock<ILogger> logger,
             TestMarketParticipant sender,
             ChargeBuilder chargeBuilder,

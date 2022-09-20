@@ -47,7 +47,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Outbox
         {
             // Arrange
             var jsonSerializer = new JsonSerializer();
-            var confirmedEvent = new ChargePriceOperationsAcceptedEventBuilder().Build();
+            var acceptedEvent = new ChargePriceOperationsAcceptedEventBuilder().Build();
             var messageTypeString = typeof(ChargePriceOperationsAcceptedEvent).FullName;
             var serializedEvent = jsonSerializer.Serialize(confirmedEvent);
             var sut = new OutboxMessageParser(jsonSerializer);
