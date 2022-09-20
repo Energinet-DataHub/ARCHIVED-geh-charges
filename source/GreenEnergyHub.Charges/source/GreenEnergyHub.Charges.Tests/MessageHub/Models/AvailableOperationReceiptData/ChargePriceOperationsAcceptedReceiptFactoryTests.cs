@@ -35,7 +35,7 @@ using Xunit;
 
 namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationReceiptData
 {
-    public class AvailableChargePriceOperationConfirmationsFactoryTests
+    public class ChargePriceOperationsAcceptedReceiptFactoryTests
     {
         [Theory]
         [InlineAutoMoqData]
@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
             IReadOnlyCollection<ChargePriceOperationDto> chargePriceOperations,
             DocumentDtoBuilder documentDtoBuilder,
             Instant now,
-            AvailableChargePriceOperationConfirmationsFactory sut)
+            ChargePriceOperationsAcceptedReceiptFactory sut)
         {
             // Arrange
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
@@ -55,11 +55,11 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
             MarketParticipantRepositoryMockBuilder.SetupMarketParticipantRepositoryMock(
                 marketParticipantRepository, meteringPointAdministrator, document.Sender, actorId);
 
-            var chargePriceOperationsConfirmedEvent =
+            var chargePriceOperationsAcceptedEvent =
                 new ChargePriceOperationsAcceptedEvent(now, document, chargePriceOperations);
 
             // Act
-            var actualList = await sut.CreateAsync(chargePriceOperationsConfirmedEvent);
+            var actualList = await sut.CreateAsync(chargePriceOperationsAcceptedEvent);
 
             // Assert
             actualList.Should().HaveSameCount(chargePriceOperations);

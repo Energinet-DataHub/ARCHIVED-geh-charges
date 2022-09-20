@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                     AvailableDataNotifier<AvailableChargeReceiptData, ChargeInformationOperationsAcceptedEvent>>();
             serviceCollection
                 .AddScoped<IAvailableDataFactory<AvailableChargeReceiptData, ChargeInformationOperationsAcceptedEvent>,
-                    AvailableChargeReceiptDataFactory>();
+                    ChargeInformationOperationsAcceptedReceiptFactory>();
             serviceCollection
                 .AddScoped<IAvailableDataNotificationFactory<AvailableChargeReceiptData>,
                     AvailableDataNotificationFactory<AvailableChargeReceiptData>>();

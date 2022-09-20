@@ -31,7 +31,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IAvailableDataNotifier<AvailableChargeReceiptData, ChargePriceOperationsAcceptedEvent>,
                 AvailableDataNotifier<AvailableChargeReceiptData, ChargePriceOperationsAcceptedEvent>>();
             serviceCollection.AddScoped<IAvailableDataFactory<AvailableChargeReceiptData, ChargePriceOperationsAcceptedEvent>,
-                AvailableChargePriceOperationConfirmationsFactory>();
+                ChargePriceOperationsAcceptedReceiptFactory>();
             serviceCollection.AddScoped<BundleSpecification<AvailableChargeReceiptData, ChargePriceOperationsAcceptedEvent>,
                 ChargePriceConfirmationBundleSpecification>();
             serviceCollection.AddScoped<JsonMessageDeserializer<ChargePriceOperationsAcceptedEvent>>();

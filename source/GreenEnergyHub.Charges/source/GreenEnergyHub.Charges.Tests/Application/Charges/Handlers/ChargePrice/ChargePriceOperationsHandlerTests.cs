@@ -186,7 +186,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers.ChargePrice
                 inputValidator.Object,
                 domainEventPublisher.Object,
                 loggerFactory.Object,
-                chargePriceOperationsConfirmedEventFactory.Object,
+                chargePriceOperationsAcceptedEventFactory.Object,
                 chargePriceOperationsRejectedEventFactory.Object);
 
             // Act

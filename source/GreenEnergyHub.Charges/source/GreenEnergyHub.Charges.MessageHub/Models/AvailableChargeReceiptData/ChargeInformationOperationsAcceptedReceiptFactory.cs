@@ -27,20 +27,20 @@ using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 {
-    public class AvailableChargeReceiptDataFactory
+    public class ChargeInformationOperationsAcceptedReceiptFactory
         : AvailableDataFactoryBase<AvailableChargeReceiptData, ChargeInformationOperationsAcceptedEvent>
     {
         private readonly IMessageMetaDataContext _messageMetaDataContext;
         private readonly ILogger _logger;
 
-        public AvailableChargeReceiptDataFactory(
+        public ChargeInformationOperationsAcceptedReceiptFactory(
             IMessageMetaDataContext messageMetaDataContext,
             ILoggerFactory loggerFactory,
             IMarketParticipantRepository marketParticipantRepository)
             : base(marketParticipantRepository)
         {
             _messageMetaDataContext = messageMetaDataContext;
-            _logger = loggerFactory.CreateLogger(nameof(AvailableChargeReceiptDataFactory));
+            _logger = loggerFactory.CreateLogger(nameof(ChargeInformationOperationsAcceptedReceiptFactory));
         }
 
         public override async Task<IReadOnlyList<AvailableChargeReceiptData>> CreateAsync(ChargeInformationOperationsAcceptedEvent input)

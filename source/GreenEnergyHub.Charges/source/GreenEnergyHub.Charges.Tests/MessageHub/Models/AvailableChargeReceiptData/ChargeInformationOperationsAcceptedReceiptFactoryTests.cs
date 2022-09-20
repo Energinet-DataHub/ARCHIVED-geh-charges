@@ -34,7 +34,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptData
 {
     [UnitTest]
-    public class AvailableChargeConfirmationDataFactoryTests
+    public class ChargeInformationOperationsAcceptedReceiptFactoryTests
     {
         [Theory]
         [InlineAutoMoqData]
@@ -44,7 +44,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             ChargeInformationOperationsAcceptedEvent acceptedEvent,
             Instant now,
-            AvailableChargeReceiptDataFactory sut)
+            ChargeInformationOperationsAcceptedReceiptFactory sut)
         {
             // Arrange
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
