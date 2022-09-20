@@ -19,6 +19,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
     public interface IChargeIntegrationEventsPublisher
     {
-        Task PublishAsync(ChargeInformationOperationsAcceptedEvent chargeInformationCommandAcceptedEvent);
+        Task PublishAsync(ChargeInformationOperationsAcceptedEvent chargeInformationOperationsAcceptedEvent);
     }
 }
