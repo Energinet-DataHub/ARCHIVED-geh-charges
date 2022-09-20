@@ -16,8 +16,7 @@ using System;
 using System.Net.Http;
 using Energinet.DataHub.Charges.Clients.ChargeLinks;
 using FluentAssertions;
-using GreenEnergyHub.Charges.TestCore;
-using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.TestHelpers;
 using Xunit;
 
 namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.ChargeLinks
@@ -25,7 +24,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
     public class ChargeLinksClientFactoryTests
     {
         [Theory]
-        [InlineAutoMoqData]
+        [InlineAutoDomainData]
         public void CreateClient_WithHttpClient_ContainingAuthorizationHeaderFromHttpContextAccessor(
             IHttpClientFactory httpClientFactory)
         {
@@ -41,7 +40,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
         }
 
         [Theory]
-        [InlineAutoMoqData]
+        [InlineAutoDomainData]
         public void CreateClient_WithUri_ContainingAuthorizationHeaderFromHttpContextAccessor(
             IHttpClientFactory httpClientFactory)
         {

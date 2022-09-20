@@ -15,7 +15,7 @@
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation.InputValidation;
-using GreenEnergyHub.Charges.Tests.Builders.Command;
+using GreenEnergyHub.Charges.TestCore.Builders.Command;
 using Xunit;
 using Xunit.Categories;
 

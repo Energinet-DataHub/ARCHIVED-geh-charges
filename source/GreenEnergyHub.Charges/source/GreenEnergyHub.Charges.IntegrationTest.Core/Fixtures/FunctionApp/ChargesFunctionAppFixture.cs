@@ -35,6 +35,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksRejectionEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.FunctionHost.Common;
+using GreenEnergyHub.Charges.Infrastructure.Core.InternalMessaging;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
