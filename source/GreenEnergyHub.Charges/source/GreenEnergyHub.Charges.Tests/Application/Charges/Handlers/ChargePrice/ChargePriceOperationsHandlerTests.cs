@@ -82,7 +82,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers.ChargePrice
             SetupChargeIdentifierFactoryMock(chargeIdentifierFactory);
 
             loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
-            chargePriceOperationsConfirmedEventFactory
+            chargePriceOperationsAcceptedEventFactory
                 .Setup(c => c.Create(
                     It.IsAny<DocumentDto>(),
                     It.IsAny<IReadOnlyCollection<ChargePriceOperationDto>>()))
@@ -93,7 +93,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers.ChargePrice
                 inputValidator.Object,
                 domainEventPublisher.Object,
                 loggerFactory.Object,
-                chargePriceOperationsConfirmedEventFactory.Object,
+                chargePriceOperationsAcceptedEventFactory.Object,
                 chargePriceOperationsRejectedEventFactory.Object);
 
             // Act
