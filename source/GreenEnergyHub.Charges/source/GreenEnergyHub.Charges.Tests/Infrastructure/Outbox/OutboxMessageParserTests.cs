@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Outbox
         }
 
         [Fact]
-        public void Parse_ChargePriceOperationsConfirmedEventType_ChargePriceOperationsConfirmedEventReturned()
+        public void Parse_ChargePriceOperationsAcceptedEventType_ChargePriceOperationsAcceptedEventReturned()
         {
             // Arrange
             var jsonSerializer = new JsonSerializer();
