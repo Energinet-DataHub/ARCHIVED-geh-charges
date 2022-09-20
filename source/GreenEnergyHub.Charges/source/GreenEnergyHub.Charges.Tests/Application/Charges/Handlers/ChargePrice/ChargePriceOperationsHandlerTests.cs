@@ -152,7 +152,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers.ChargePrice
             Mock<ILoggerFactory> loggerFactory,
             Mock<IInputValidator<ChargePriceOperationDto>> inputValidator,
             Mock<IDomainEventPublisher> domainEventPublisher,
-            Mock<IChargePriceOperationsAcceptedEventFactory> chargePriceOperationsConfirmedEventFactory,
+            Mock<IChargePriceOperationsAcceptedEventFactory> chargePriceOperationsAcceptedEventFactory,
             Mock<IChargePriceOperationsRejectedEventFactory> chargePriceOperationsRejectedEventFactory,
             Mock<ILogger> logger,
             ChargePriceOperationsRejectedEvent operationsRejectedEvent,
