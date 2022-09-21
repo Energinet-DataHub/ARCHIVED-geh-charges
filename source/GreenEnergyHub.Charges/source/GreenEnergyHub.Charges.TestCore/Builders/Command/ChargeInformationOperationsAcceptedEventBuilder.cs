@@ -29,7 +29,10 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Command
         public ChargeInformationOperationsAcceptedEventBuilder()
         {
             _publishedTime = SystemClock.Instance.GetCurrentInstant();
-            _document = new DocumentDtoBuilder().WithDocumentType(DocumentType.ConfirmRequestChangeOfPriceList).Build();
+            _document = new DocumentDtoBuilder()
+                .WithDocumentType(DocumentType.ConfirmRequestChangeOfPriceList)
+                .WithBusinessReasonCode(BusinessReasonCode.UpdateChargeInformation)
+                .Build();
             _operations = new List<ChargeInformationOperationDto>() { new ChargeInformationOperationDtoBuilder().Build() };
         }
 

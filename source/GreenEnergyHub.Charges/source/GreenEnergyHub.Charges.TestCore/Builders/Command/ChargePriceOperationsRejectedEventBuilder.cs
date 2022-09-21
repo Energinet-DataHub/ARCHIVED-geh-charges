@@ -32,7 +32,10 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Command
         public ChargePriceOperationsRejectedEventBuilder()
         {
             _publishedTime = SystemClock.Instance.GetCurrentInstant();
-            _document = new DocumentDtoBuilder().WithDocumentType(DocumentType.RejectRequestChangeOfPriceList).Build();
+            _document = new DocumentDtoBuilder()
+                .WithBusinessReasonCode(BusinessReasonCode.UpdateChargePrices)
+                .WithDocumentType(DocumentType.RejectRequestChangeOfPriceList)
+                .Build();
             _operations = new List<ChargePriceOperationDto>() { new ChargePriceOperationDtoBuilder().Build() };
             _validationErrors = new List<ValidationError>();
         }
