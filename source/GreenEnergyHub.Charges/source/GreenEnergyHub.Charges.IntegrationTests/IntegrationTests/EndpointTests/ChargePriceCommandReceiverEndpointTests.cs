@@ -20,9 +20,9 @@ using System.Threading.Tasks;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using FluentAssertions;
 using FluentAssertions.Execution;
-using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.FunctionHost.Charges;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
@@ -137,7 +137,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 actualCharge.Points.Should().BeEquivalentTo(newPrices);
                 var actualOutboxMessage = await postOperationReadContext.OutboxMessages
                     .SingleAsync(x => x.CorrelationId.Contains(correlationId));
-                actualOutboxMessage.Type.Should().Be(typeof(ChargePriceOperationsConfirmedEvent).FullName);
+                actualOutboxMessage.Type.Should().Be(typeof(ChargePriceOperationsAcceptedEvent).FullName);
             }
 
             [Theory]
@@ -181,7 +181,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 actualCharge.Should().BeEquivalentTo(expectedCharge);
                 var actualOutboxMessage = await postOperationReadContext.OutboxMessages
                     .SingleOrDefaultAsync(x => x.CorrelationId.Contains(correlationId));
-                actualOutboxMessage!.Type.Should().Be(typeof(ChargePriceOperationsConfirmedEvent).FullName);
+                actualOutboxMessage!.Type.Should().Be(typeof(ChargePriceOperationsAcceptedEvent).FullName);
             }
 
             private static ChargePriceCommandReceivedEvent CreateInvalidChargePriceCommandReceivedEvent(

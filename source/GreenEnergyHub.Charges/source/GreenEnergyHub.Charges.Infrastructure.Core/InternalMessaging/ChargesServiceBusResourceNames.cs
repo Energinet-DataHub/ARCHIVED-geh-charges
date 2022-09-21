@@ -57,7 +57,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.InternalMessaging
 
         // Domain event, charge, received
         [DomainEventSetting]
-        public const string ChargeCommandReceivedSubscriptionName = "sbtsub-charges-charge-command-received";
+        public const string ChargeInformationCommandReceivedSubscriptionName = "sbtsub-charges-charge-command-received";
 
         // Domain event, charge price, received
         [DomainEventSetting]
@@ -65,27 +65,27 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.InternalMessaging
 
         // Domain event, charge, accepted
         [DomainEventSetting]
-        public const string ChargeAcceptedDataAvailableSubscriptionName = "sbtsub-charges-charge-accepted-dataavailable";
+        public const string ChargeInformationOperationsAcceptedDataAvailableSubscriptionName = "sbtsub-charges-charge-accepted-dataavailable";
         [DomainEventSetting]
-        public const string ChargeCommandAcceptedSubscriptionName = "sbtsub-charges-charge-command-accepted";
+        public const string ChargeInformationOperationsAcceptedSubscriptionName = "sbtsub-charges-charge-command-accepted";
         [DomainEventSetting]
-        public const string ChargeCommandAcceptedPublishSubscriptionName = "sbtsub-charges-charge-command-accepted-publish";
+        public const string ChargeInformationOperationsAcceptedPublishSubscriptionName = "sbtsub-charges-charge-command-accepted-publish";
 
         // Domain event, charge, rejected
         [DomainEventSetting]
-        public const string ChargeCommandRejectedSubscriptionName = "sbtsub-charges-charge-command-rejected";
+        public const string ChargeInformationOperationsRejectedSubscriptionName = "sbtsub-charges-charge-command-rejected";
 
         // Domain event, charge price, rejected
         [DomainEventSetting]
-        public const string ChargePriceRejectedSubscriptionName = "sbtsub-charges-charge-price-rejected";
+        public const string ChargePriceOperationsRejectedSubscriptionName = "sbtsub-charges-charge-price-rejected";
 
         // Domain event, charge price, confirmed
         [DomainEventSetting]
-        public const string ChargePriceConfirmedSubscriptionName = "sbtsub-charges-charge-price-confirmed";
+        public const string ChargePriceOperationsAcceptedSubscriptionName = "sbtsub-charges-charge-price-confirmed";
         [DomainEventSetting]
-        public const string ChargePriceConfirmedDataAvailableSubscriptionName = "sbtsub-charges-charge-price-confirmed-dataavail";
+        public const string ChargePriceOperationsAcceptedDataAvailableSubscriptionName = "sbtsub-charges-charge-price-confirmed-dataavail";
         [DomainEventSetting]
-        public const string ChargePriceConfirmedPublishSubscriptionName = "sbtsub-charges-charge-price-confirmed-publish";
+        public const string ChargePriceOperationsAcceptedPublishSubscriptionName = "sbtsub-charges-charge-price-confirmed-publish";
 
         // Domain event, charge links, received
         [DomainEventSetting]

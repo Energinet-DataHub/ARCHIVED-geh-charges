@@ -13,12 +13,12 @@
 // limitations under the License.
 
 using System.Text;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 
 namespace GreenEnergyHub.Charges.Tests.TestHelpers
 {
-    public class CodeToInfrastructureCoherenceErrorMessageBuilder
+    public static class CodeToInfrastructureCoherenceErrorMessageBuilder
     {
         public static string CreateErrorMessage()
         {

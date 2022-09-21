@@ -13,13 +13,13 @@
 // limitations under the License.
 
 using System;
-using GreenEnergyHub.Charges.Application.Charges.Events;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 
 namespace GreenEnergyHub.Charges.MessageHub.BundleSpecification.Charges
 {
-    public class ChargePriceBundleSpecification : BundleSpecification<AvailableChargePriceData, ChargePriceOperationsConfirmedEvent>
+    public class ChargePriceBundleSpecification : BundleSpecification<AvailableChargePriceData, ChargePriceOperationsAcceptedEvent>
     {
         /// <summary>
         /// The upper anticipated weight (kilobytes) contribution to the final bundle

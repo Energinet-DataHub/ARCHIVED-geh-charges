@@ -13,9 +13,9 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
-using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Application.Charges.Factories;
-using GreenEnergyHub.Charges.Application.Charges.Handlers;
+using GreenEnergyHub.Charges.Application.Charges.Handlers.ChargePrice;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
@@ -29,11 +29,11 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<MessageExtractor<ChargePriceOperationsConfirmedEvent>>();
+            serviceCollection.AddScoped<MessageExtractor<ChargePriceOperationsAcceptedEvent>>();
             serviceCollection.AddScoped<IChargePricesUpdatedEventFactory, ChargePricesUpdatedEventFactory>();
             serviceCollection.AddScoped<IChargePricesUpdatedPublisher, ChargePricesUpdatedPublisher>();
             serviceCollection.AddScoped<IChargePriceIntegrationEventsPublisher, ChargePriceIntegrationEventsPublisher>();
-            serviceCollection.AddScoped<JsonMessageDeserializer<ChargePriceOperationsConfirmedEvent>>();
+            serviceCollection.AddScoped<JsonMessageDeserializer<ChargePriceOperationsAcceptedEvent>>();
 
             serviceCollection.AddMessagingProtobuf()
                 .AddExternalMessageDispatcher<ChargePricesUpdatedEvent>(

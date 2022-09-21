@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 
 namespace GreenEnergyHub.Charges.MessageHub.BundleSpecification.Charges
 {
-    public class ChargeConfirmationBundleSpecification : BundleSpecification<AvailableChargeReceiptData, ChargeInformationCommandAcceptedEvent>
+    public class ChargeConfirmationBundleSpecification : BundleSpecification<AvailableChargeReceiptData, ChargeInformationOperationsAcceptedEvent>
     {
         /// <summary>
         /// The upper anticipated weight (kilobytes) contribution to the final bundle

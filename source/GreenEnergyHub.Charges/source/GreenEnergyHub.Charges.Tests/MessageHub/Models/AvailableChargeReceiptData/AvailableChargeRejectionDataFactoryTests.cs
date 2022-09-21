@@ -19,8 +19,8 @@ using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.Messaging;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
@@ -28,6 +28,7 @@ using GreenEnergyHub.Charges.Infrastructure.Core.Cim;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
+using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.TestCore.Builders.Command;
 using GreenEnergyHub.Charges.TestCore.Builders.Testables;
@@ -68,8 +69,11 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
                 .Select(x => new ValidationError(ValidationRuleIdentifier.SenderIsMandatoryTypeValidation, x.OperationId, null))
                 .ToList();
 
-            var chargeCommandRejectedEvent =
-                new ChargeInformationCommandRejectedEvent(now, chargeCommand, validationErrors);
+            var chargeCommandRejectedEvent = new ChargeInformationOperationsRejectedEvent(
+                InstantHelper.GetTodayAtMidnightUtc(),
+                chargeCommand.Document,
+                chargeCommand.Operations,
+                validationErrors);
 
             // Act
             var actualList = await sut.CreateAsync(chargeCommandRejectedEvent);

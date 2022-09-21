@@ -14,13 +14,13 @@
 
 using System;
 using System.Linq;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandRejectedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 
 namespace GreenEnergyHub.Charges.MessageHub.BundleSpecification.Charges
 {
-    public class ChargeRejectionBundleSpecification : BundleSpecification<AvailableChargeReceiptData, ChargeInformationCommandRejectedEvent>
+    public class ChargeRejectionBundleSpecification : BundleSpecification<AvailableChargeReceiptData, ChargeInformationOperationsRejectedEvent>
     {
         /// <summary>
         /// The upper anticipated weight (kilobytes) contribution to the final bundle

@@ -12,18 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
 namespace GreenEnergyHub.Charges.TestCore.Builders.Command
 {
     public class MarketParticipantDtoBuilder
     {
-        private string _id = string.Empty;
+        private string _marketParticipantId = string.Empty;
+        private Guid _id = Guid.NewGuid();
+        private Guid _b2cActorId = Guid.NewGuid();
         private MarketParticipantRole _marketParticipantRole;
 
-        public MarketParticipantDtoBuilder WithId(string id)
+        public MarketParticipantDtoBuilder WithMarketParticipantId(string marketParticipantId)
         {
-            _id = id;
+            _marketParticipantId = marketParticipantId;
             return this;
         }
 
@@ -37,8 +40,10 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Command
         {
             return new MarketParticipantDto
             {
-                MarketParticipantId = _id,
+                Id = _id,
+                MarketParticipantId = _marketParticipantId,
                 BusinessProcessRole = _marketParticipantRole,
+                B2CActorId = _b2cActorId,
             };
         }
     }
