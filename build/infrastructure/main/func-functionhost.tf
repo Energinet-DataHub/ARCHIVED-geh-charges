@@ -59,7 +59,6 @@ module "func_functionhost" {
     CHARGE_PRICE_OPERATIONS_ACCEPTED_DATAAVAILABLE_SUBSCRIPTION_NAME        = module.sbts_charges_charge_price_command_received.name
     CHARGE_PRICE_OPERATIONS_REJECTED_SUBSCRIPTION_NAME                      = module.sbts_charges_charge_price_command_rejected.name
     CHARGE_PRICE_OPERATIONS_ACCEPTED_SUBSCRIPTION_NAME                      = module.sbts_charges_charge_price_command_confirmed.name
-    CHARGE_PRICE_OPERATIONS_ACCEPTED_DATAAVAILABLE_SUBSCRIPTION_NAME        = module.sbts_charges_charge_price_command_confirmed_dataavailable.name
     CHARGE_PRICE_OPERATIONS_ACCEPTED_PUBLISH_SUBSCRIPTION_NAME              = module.sbts_charges_charge_price_confirmed_publish.name
     DEFAULT_CHARGE_LINKS_DATAAVAILABLE_SUBSCRIPTION_NAME                    = module.sbts_charges_default_charge_links_dataavailable.name
 
