@@ -15,7 +15,8 @@
 using GreenEnergyHub.Charges.Application.Charges.Acknowledgement;
 using GreenEnergyHub.Charges.Application.Charges.Factories;
 using GreenEnergyHub.Charges.Application.Charges.Handlers;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Application.Charges.Handlers.ChargeInformation;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
@@ -29,11 +30,11 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<MessageExtractor<ChargeInformationCommandAcceptedEvent>>();
+            serviceCollection.AddScoped<MessageExtractor<ChargeInformationOperationsAcceptedEvent>>();
             serviceCollection.AddScoped<IChargeCreatedEventFactory, ChargeCreatedEventFactory>();
             serviceCollection.AddScoped<IChargePublisher, ChargePublisher>();
             serviceCollection.AddScoped<IChargeIntegrationEventsPublisher, ChargeIntegrationEventsPublisher>();
-            serviceCollection.AddScoped<JsonMessageDeserializer<ChargeInformationCommandAcceptedEvent>>();
+            serviceCollection.AddScoped<JsonMessageDeserializer<ChargeInformationOperationsAcceptedEvent>>();
 
             serviceCollection.AddMessagingProtobuf()
                 .AddExternalMessageDispatcher<ChargeCreatedEvent>(

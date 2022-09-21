@@ -13,8 +13,8 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
 {
@@ -22,6 +22,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
     {
         Task PublishChargeCreatedAsync(ChargeInformationOperationDto chargeInformationOperationDto);
 
-        Task PublishChargeUpdatedAsync(ChargeInformationCommandAcceptedEvent chargeInformationCommandAcceptedEvent);
+        Task PublishChargeUpdatedAsync(ChargeInformationOperationsAcceptedEvent chargeInformationCommandAcceptedEvent);
     }
 }

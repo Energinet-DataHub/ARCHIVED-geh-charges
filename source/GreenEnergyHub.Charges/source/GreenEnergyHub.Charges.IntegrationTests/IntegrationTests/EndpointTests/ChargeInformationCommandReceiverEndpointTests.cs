@@ -90,10 +90,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     () => Fixture.ChargesDomainEventTopic.SenderClient.SendMessageAsync(message), correlationId);
 
                 await FunctionAsserts.AssertHasExecutedAsync(
-                    Fixture.HostManager, nameof(ChargeInformationCommandReceiverEndpoint));
+                    Fixture.HostManager, nameof(ChargeInformationCommandReceivedEndpoint));
 
                 await FunctionAsserts.AssertHasExecutedAsync(
-                    Fixture.HostManager, nameof(ChargeConfirmationDataAvailableNotifierEndpoint));
+                    Fixture.HostManager, nameof(ChargeInformationConfirmedDataAvailableNotifierEndpoint));
 
                 // Assert
                 await using var actualChargeContext = Fixture.ChargesDatabaseManager.CreateDbContext();

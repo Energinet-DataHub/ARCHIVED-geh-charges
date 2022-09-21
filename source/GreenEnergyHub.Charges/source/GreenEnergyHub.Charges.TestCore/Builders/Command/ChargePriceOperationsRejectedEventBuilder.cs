@@ -14,8 +14,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using NodaTime;
@@ -32,7 +32,10 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Command
         public ChargePriceOperationsRejectedEventBuilder()
         {
             _publishedTime = SystemClock.Instance.GetCurrentInstant();
-            _document = new DocumentDtoBuilder().WithDocumentType(DocumentType.RejectRequestChangeOfPriceList).Build();
+            _document = new DocumentDtoBuilder()
+                .WithBusinessReasonCode(BusinessReasonCode.UpdateChargePrices)
+                .WithDocumentType(DocumentType.RejectRequestChangeOfPriceList)
+                .Build();
             _operations = new List<ChargePriceOperationDto>() { new ChargePriceOperationDtoBuilder().Build() };
             _validationErrors = new List<ValidationError>();
         }
