@@ -71,7 +71,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.MessageHub
             }
         }
 
-        private static List<AvailableChargeData> GenerateListOfAvailableChargeDataForSameCharge(Guid actorId, int numberOfAvailableChargeData)
+        private static List<AvailableChargeData> GenerateListOfAvailableChargeDataForSameCharge(
+            Guid actorId, int numberOfAvailableChargeData)
         {
             var builder = new AvailableChargeDataBuilder();
             var now = Instant.FromDateTimeUtc(DateTime.UtcNow);
