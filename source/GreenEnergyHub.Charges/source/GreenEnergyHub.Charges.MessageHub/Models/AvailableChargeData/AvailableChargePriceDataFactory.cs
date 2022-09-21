@@ -78,7 +78,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
                 .ConfigureAwait(false);
             if (charge.TaxIndicator)
             {
-                recipients.AddRange(await _marketParticipantRepository.GetGridAccessProvidersAsync()
+                recipients.AddRange(await _marketParticipantRepository.GetActiveGridAccessProvidersAsync()
                     .ConfigureAwait(false));
             }
 

@@ -68,7 +68,7 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
         /// <summary>
         /// Get all the active grid access providers
         /// </summary>
-        Task<List<MarketParticipant>> GetGridAccessProvidersAsync();
+        Task<List<MarketParticipant>> GetActiveGridAccessProvidersAsync();
 
         /// <summary>
         /// Get the grid access provider from primary key

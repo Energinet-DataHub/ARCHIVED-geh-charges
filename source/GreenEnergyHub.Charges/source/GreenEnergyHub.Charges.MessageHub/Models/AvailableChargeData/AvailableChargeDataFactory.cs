@@ -64,7 +64,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
 
             if (informationOperation.TaxIndicator == TaxIndicator.Tax)
             {
-                recipients.AddRange(await _marketParticipantRepository.GetGridAccessProvidersAsync()
+                recipients.AddRange(await _marketParticipantRepository.GetActiveGridAccessProvidersAsync()
                     .ConfigureAwait(false));
             }
 

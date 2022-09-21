@@ -59,7 +59,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
             var acceptedEvent = chargeCommandAcceptedEventBuilder.WithChargeCommand(chargeCommand).Build();
 
             marketParticipantRepository
-                .Setup(r => r.GetGridAccessProvidersAsync())
+                .Setup(r => r.GetActiveGridAccessProvidersAsync())
                 .ReturnsAsync(gridAccessProvider.Cast<MarketParticipant>().ToList);
 
             marketParticipantRepository
@@ -120,7 +120,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
                     .Build(),
             };
             marketParticipantRepository
-                .Setup(m => m.GetGridAccessProvidersAsync())
+                .Setup(m => m.GetActiveGridAccessProvidersAsync())
                 .ReturnsAsync(gridAccessProviders);
             marketParticipantRepository
                 .Setup(r => r.GetActiveEnergySuppliersAsync())
@@ -154,7 +154,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
         {
             // Arrange
             marketParticipantRepository
-                .Setup(r => r.GetGridAccessProvidersAsync())
+                .Setup(r => r.GetActiveGridAccessProvidersAsync())
                 .ReturnsAsync(gridAccessProvider.Cast<MarketParticipant>().ToList);
             marketParticipantRepository
                 .Setup(r => r.GetActiveEnergySuppliersAsync())
