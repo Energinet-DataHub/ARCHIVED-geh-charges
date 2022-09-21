@@ -351,7 +351,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 actualResponse.StatusCode.Should().Be(HttpStatusCode.Accepted);
 
                 using var assertionScope = new AssertionScope();
-                var peekResult = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 2);
+                var peekResult = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 10);
                 var notification = peekResult.First(s =>
                     s.Contains("NotifyPriceList_MarketDocument")
                     && s.Contains("<cim:receiver_MarketParticipant.marketRole.type>DDM"));
