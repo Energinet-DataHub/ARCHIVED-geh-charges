@@ -30,14 +30,16 @@ namespace GreenEnergyHub.Charges.Tests.TestHelpers
             // Names are split to prevent Resharper from automatically renaming when class is renamed
             var presumedServiceBusFilters = new List<string>
             {
+                "ChargeInformationCommandReceived" + "Event",
+                "ChargeInformationOperationsRejected" + "Event",
+                "ChargeInformationOperationsAccepted" + "Event",
                 "ChargePriceCommandReceived" + "Event",
+                "ChargePriceOperationsRejected" + "Event",
+                "ChargePriceOperationsAccepted" + "Event",
                 "ChargeLinksRejected" + "Event",
                 "ChargeLinksReceived" + "Event",
                 "ChargeLinksDataAvailableNotified" + "Event",
                 "ChargeLinksAccepted" + "Event",
-                "ChargeInformationCommandReceived" + "Event",
-                "ChargeInformationCommandRejected" + "Event",
-                "ChargeInformationCommandAccepted" + "Event",
             };
             return presumedServiceBusFilters.OrderBy(x => x);
         }
