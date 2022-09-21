@@ -61,6 +61,11 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
         Task<IReadOnlyCollection<MarketParticipant>> GetAsync(IEnumerable<Guid> ids);
 
         /// <summary>
+        /// Get all the active grid energy suppliers
+        /// </summary>
+        Task<List<MarketParticipant>> GetActiveEnergySuppliersAsync();
+
+        /// <summary>
         /// Get all the active grid access providers
         /// </summary>
         Task<List<MarketParticipant>> GetGridAccessProvidersAsync();

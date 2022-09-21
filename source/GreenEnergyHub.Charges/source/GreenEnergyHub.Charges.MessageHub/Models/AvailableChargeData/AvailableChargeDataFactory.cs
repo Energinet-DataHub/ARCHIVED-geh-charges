@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
         {
             var result = new List<AvailableChargeData>();
 
-            foreach (var chargeOperationDto in input.Command.Operations.Where(ShouldMakeDataAvailableForActiveGridProviders))
+            foreach (var chargeOperationDto in input.Command.Operations)
             {
                 await CreateForOperationAsync(input, chargeOperationDto, result).ConfigureAwait(false);
             }
@@ -58,11 +58,17 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
             ChargeInformationOperationDto informationOperation,
             ICollection<AvailableChargeData> result)
         {
-            var activeGridAccessProviders = await _marketParticipantRepository
-                .GetGridAccessProvidersAsync()
+            var recipients = await _marketParticipantRepository
+                .GetActiveEnergySuppliersAsync()
                 .ConfigureAwait(false);
 
-            foreach (var recipient in activeGridAccessProviders)
+            if (informationOperation.TaxIndicator == TaxIndicator.Tax)
+            {
+                recipients.AddRange(await _marketParticipantRepository.GetGridAccessProvidersAsync()
+                    .ConfigureAwait(false));
+            }
+
+            foreach (var recipient in recipients)
             {
                 var sender = await GetSenderAsync().ConfigureAwait(false);
                 var operationOrder = input.Command.Operations.ToList().IndexOf(informationOperation);
