@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
         {
             var result = new List<AvailableChargeData>();
 
-            foreach (var chargeOperationDto in input.Command.Operations.Where(ShouldMakeDataAvailableForActiveGridProviders))
+            foreach (var chargeOperationDto in input.Operations)
             {
                 await CreateForOperationAsync(input, chargeOperationDto, result).ConfigureAwait(false);
             }
@@ -104,14 +104,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
                 recipients.AddRange(await _marketParticipantRepository.GetActiveGridAccessProvidersAsync()
                     .ConfigureAwait(false));
             }
-        }
-
-        private static bool ShouldMakeDataAvailableForActiveGridProviders(
-            ChargeInformationOperationDto chargeInformationOperationDto)
-        {
-            // We only need to notify grid providers if the charge includes tax which are the
-            // only charges they do not maintain themselves
-            return chargeInformationOperationDto.TaxIndicator == TaxIndicator.Tax;
         }
     }
 }
