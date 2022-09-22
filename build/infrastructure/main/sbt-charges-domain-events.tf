@@ -30,7 +30,7 @@ module "sbts_charges_charge_information_command_received" {
   }
 }
 
-module "sbts_charges_charge_information_command_accepted_publish" {
+module "sbts_charges_charge_information_operations_accepted_publish" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v9"
   name                = "charge-command-accepted-publish"
   project_name        = var.domain_name_short
