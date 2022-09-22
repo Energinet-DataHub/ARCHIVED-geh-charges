@@ -26,25 +26,22 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon
     public class MessageHubSimulator : IAsyncDisposable
     {
         private const int SecondsToWaitForIntegrationEvents = 15;
-        private readonly string _serviceBusResourceProviderCorrectionString;
         private readonly ServiceBusTestListener _messageHubDataAvailableServiceBusTestListener;
-        private readonly string _messageHubRequestQueueName;
-        private readonly string _messageHubReplyQueueName;
+        private readonly ServiceBusTestListener _messageHubRequestServiceBusTestListener;
+        private readonly ServiceBusTestListener _messageHubReplyServiceBusTestListener;
         private readonly string _messageHubStorageConnectionString;
         private readonly string _messageHubStorageContainerName;
 
         public MessageHubSimulator(
-            string serviceBusResourceProviderCorrectionString,
             ServiceBusTestListener messageHubDataAvailableServiceBusTestListener,
-            string messageHubRequestQueueName,
-            string messageHubReplyQueueName,
+            ServiceBusTestListener messageHubRequestServiceBusTestListener,
+            ServiceBusTestListener messageHubReplyServiceBusTestListener,
             string messageHubStorageConnectionString,
             string messageHubStorageContainerName)
         {
-            _serviceBusResourceProviderCorrectionString = serviceBusResourceProviderCorrectionString;
             _messageHubDataAvailableServiceBusTestListener = messageHubDataAvailableServiceBusTestListener;
-            _messageHubRequestQueueName = messageHubRequestQueueName;
-            _messageHubReplyQueueName = messageHubReplyQueueName;
+            _messageHubRequestServiceBusTestListener = messageHubRequestServiceBusTestListener;
+            _messageHubReplyServiceBusTestListener = messageHubReplyServiceBusTestListener;
             _messageHubStorageConnectionString = messageHubStorageConnectionString;
             _messageHubStorageContainerName = messageHubStorageContainerName;
         }

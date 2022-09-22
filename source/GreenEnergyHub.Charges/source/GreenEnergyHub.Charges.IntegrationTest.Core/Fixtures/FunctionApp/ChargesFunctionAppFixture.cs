@@ -96,6 +96,12 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
         public ServiceBusTestListener? AvailableDataQueueListener { get; private set; }
 
         [NotNull]
+        public ServiceBusTestListener? MessageHubRequestQueueListener { get; private set; }
+
+        [NotNull]
+        public ServiceBusTestListener? MessageHubReplyQueueListener { get; private set; }
+
+        [NotNull]
         public ServiceBusTestListener? CreateLinkReplyQueueListener { get; private set; }
 
         [NotNull]
@@ -359,6 +365,14 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             await availableDataQueueListener.AddQueueListenerAsync(MessageHubDataAvailableQueue.Name);
             AvailableDataQueueListener = new ServiceBusTestListener(availableDataQueueListener);
 
+            var messageHubRequestQueueListener = new ServiceBusListenerMock(ServiceBusResourceProvider.ConnectionString, TestLogger);
+            await messageHubRequestQueueListener.AddQueueListenerAsync(MessageHubRequestQueue.Name);
+            MessageHubRequestQueueListener = new ServiceBusTestListener(messageHubRequestQueueListener);
+
+            var messageHubReplyQueueListener = new ServiceBusListenerMock(ServiceBusResourceProvider.ConnectionString, TestLogger);
+            await messageHubReplyQueueListener.AddQueueListenerAsync(MessageHubReplyQueue.Name);
+            MessageHubReplyQueueListener = new ServiceBusTestListener(messageHubReplyQueueListener);
+
             Environment.SetEnvironmentVariable(
                 EnvironmentSettingNames.MessageHubStorageConnectionString,
                 ChargesServiceBusResourceNames.MessageHubStorageConnectionString);
@@ -380,10 +394,9 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             MessageHubMock = new MessageHubSimulation(messageHubSimulationConfig);*/
 
             MessageHubSimulator = new MessageHubSimulator(
-                ServiceBusResourceProvider.ConnectionString,
                 AvailableDataQueueListener,
-                MessageHubRequestQueue.Name,
-                MessageHubReplyQueue.Name,
+                MessageHubRequestQueueListener,
+                MessageHubReplyQueueListener,
                 ChargesServiceBusResourceNames.MessageHubStorageConnectionString,
                 ChargesServiceBusResourceNames.MessageHubStorageContainerName);
         }
