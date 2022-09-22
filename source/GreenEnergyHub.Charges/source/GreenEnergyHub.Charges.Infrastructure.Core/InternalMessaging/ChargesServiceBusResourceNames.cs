@@ -57,52 +57,52 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.InternalMessaging
 
         // Domain event, charge, received
         [DomainEventSetting]
-        public const string ChargeInformationCommandReceivedSubscriptionName = "sbts_charges_info_command_received";
+        public const string ChargeInformationCommandReceivedSubscriptionName = "sbtsub-charges-info-command-received";
 
         // Domain event, charge price, received
         [DomainEventSetting]
-        public const string ChargePriceCommandReceivedSubscriptionName = "sbts_charges_price_command_received";
+        public const string ChargePriceCommandReceivedSubscriptionName = "sbtsub-charges-price-command-received";
 
         // Domain event, charge, accepted
         [DomainEventSetting]
-        public const string ChargeInformationOperationsAcceptedDataAvailableSubscriptionName = "sbts_charges_info_operations_accepted_da";
+        public const string ChargeInformationOperationsAcceptedDataAvailableSubscriptionName = "sbtsub-charges-info-operations-accepted-da";
         [DomainEventSetting]
-        public const string ChargeInformationOperationsAcceptedSubscriptionName = "sbts_charges_info_operations_accepted";
+        public const string ChargeInformationOperationsAcceptedSubscriptionName = "sbtsub-charges-info-operations-accepted";
         [DomainEventSetting]
-        public const string ChargeInformationOperationsAcceptedPublishSubscriptionName = "sbts_charges_info_operations_accepted_publish";
+        public const string ChargeInformationOperationsAcceptedPublishSubscriptionName = "sbtsub-charges-info-operations-accepted-publish";
 
         // Domain event, charge, rejected
         [DomainEventSetting]
-        public const string ChargeInformationOperationsRejectedSubscriptionName = "sbts_charges_info_operations_rejected";
+        public const string ChargeInformationOperationsRejectedSubscriptionName = "sbtsub-charges-info-operations-rejected";
 
         // Domain event, charge price, rejected
         [DomainEventSetting]
-        public const string ChargePriceOperationsRejectedSubscriptionName = "sbts_charges_price_operations_rejected";
+        public const string ChargePriceOperationsRejectedSubscriptionName = "sbtsub-charges-price-operations-rejected";
 
         // Domain event, charge price, confirmed
         [DomainEventSetting]
-        public const string ChargePriceOperationsAcceptedSubscriptionName = "sbts_charges_price_operations_accepted";
+        public const string ChargePriceOperationsAcceptedSubscriptionName = "sbtsub-charges-price-operations-accepted";
         [DomainEventSetting]
-        public const string ChargePriceOperationsAcceptedDataAvailableSubscriptionName = "sbts_charges_price_operations_accepted_da";
+        public const string ChargePriceOperationsAcceptedDataAvailableSubscriptionName = "sbtsub-charges-price-operations-accepted-da";
         [DomainEventSetting]
-        public const string ChargePriceOperationsAcceptedPublishSubscriptionName = "sbts_charges_price_operations_accepted_publish";
+        public const string ChargePriceOperationsAcceptedPublishSubscriptionName = "sbtsub-charges-price-operations-accepted-publish";
 
         // Domain event, charge links, received
         [DomainEventSetting]
-        public const string ChargeLinksCommandReceivedSubscriptionName = "sbts_charges_links_command_received";
+        public const string ChargeLinksCommandReceivedSubscriptionName = "sbtsub-charges-links-command-received";
 
         // Domain event, charge links, rejected
         [DomainEventSetting]
-        public const string ChargeLinksCommandRejectedSubscriptionName = "sbts_charges_links_command_rejected";
+        public const string ChargeLinksCommandRejectedSubscriptionName = "sbtsub-charges-links-command-rejected";
 
         // Domain event, charge links, accepted
         [DomainEventSetting]
-        public const string ChargeLinksAcceptedSubscriptionName = "sbts_charges_links_accepted";
+        public const string ChargeLinksAcceptedSubscriptionName = "sbtsub-charges-links-accepted";
         [DomainEventSetting]
-        public const string ChargeLinksAcceptedDataAvailableSubscriptionName = "sbts_charges_links_accepted_da";
+        public const string ChargeLinksAcceptedDataAvailableSubscriptionName = "sbtsub-charges-links-accepted-da";
         [DomainEventSetting]
-        public const string ChargeLinksAcceptedPublishSubscriptionName = "sbts_charges_links_accepted_publish";
+        public const string ChargeLinksAcceptedPublishSubscriptionName = "sbtsub-charges-links-accepted-publish";
         [DomainEventSetting]
-        public const string DefaultChargeLinksDataAvailableSubscriptionName = "sbts_charges_default_charge_links_da";
+        public const string DefaultChargeLinksDataAvailableSubscriptionName = "sbtsub-charges-default-charge-links-da";
     }
 }
