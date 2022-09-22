@@ -80,7 +80,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
 
         // Domain event, charge information, accepted
         [DomainEventSetting]
-        public const string ChargeInformationOperationsAcceptedDataAvailableSubscriptionName = "CHARGE_INFORMATION_OPERATIONS_ACCEPTED_DATAAVAILABLE_SUBSCRIPTIONNAME";
+        public const string ChargeInformationOperationsAcceptedDataAvailableSubscriptionName = "CHARGE_INFORMATION_OPERATIONS_ACCEPTED_DATAAVAILABLE_SUBSCRIPTION_NAME";
         [DomainEventSetting]
         public const string ChargeInformationOperationsAcceptedSubscriptionName = "CHARGE_INFORMATION_OPERATIONS_ACCEPTED_SUBSCRIPTION_NAME";
         [DomainEventSetting]
