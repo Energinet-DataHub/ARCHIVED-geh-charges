@@ -509,7 +509,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // * 1 rejection (for 2nd operation due mismatching charge owner)
                 var peekResult = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 17);
 
-                peekResult.Count(s => s.Contains("ConfirmRequestChangeOfPriceList_MarketDocument")).Should().Be(17);
+                peekResult.Count(s => s.Contains("ConfirmRequestChangeOfPriceList_MarketDocument")).Should().Be(2);
 
                 var rejection = peekResult.Single(s => s.Contains("RejectRequestChangeOfPriceList_MarketDocument"));
                 rejection.Should().Contain("<cim:process.processType>D08</cim:process.processType>");
