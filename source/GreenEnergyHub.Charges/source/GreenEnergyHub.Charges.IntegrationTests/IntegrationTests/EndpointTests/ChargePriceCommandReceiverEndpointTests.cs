@@ -17,23 +17,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using FluentAssertions;
 using FluentAssertions.Execution;
-using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.FunctionHost.Charges;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Charges.Tests.Builders.Command;
+using GreenEnergyHub.Charges.TestCore.Builders.Command;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
 using NodaTime.Text;
@@ -139,7 +137,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 actualCharge.Points.Should().BeEquivalentTo(newPrices);
                 var actualOutboxMessage = await postOperationReadContext.OutboxMessages
                     .SingleAsync(x => x.CorrelationId.Contains(correlationId));
-                actualOutboxMessage.Type.Should().Be(typeof(ChargePriceOperationsConfirmedEvent).FullName);
+                actualOutboxMessage.Type.Should().Be(typeof(ChargePriceOperationsAcceptedEvent).FullName);
             }
 
             [Theory]
@@ -183,7 +181,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 actualCharge.Should().BeEquivalentTo(expectedCharge);
                 var actualOutboxMessage = await postOperationReadContext.OutboxMessages
                     .SingleOrDefaultAsync(x => x.CorrelationId.Contains(correlationId));
-                actualOutboxMessage!.Type.Should().Be(typeof(ChargePriceOperationsConfirmedEvent).FullName);
+                actualOutboxMessage!.Type.Should().Be(typeof(ChargePriceOperationsAcceptedEvent).FullName);
             }
 
             private static ChargePriceCommandReceivedEvent CreateInvalidChargePriceCommandReceivedEvent(

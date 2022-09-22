@@ -18,11 +18,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
-using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Charges.Tests.Builders.MessageHub;
 using NodaTime;
 using Xunit;
 
@@ -91,17 +88,18 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             actual[0].Should().BeEquivalentTo(expected);
         }
 
-        [Fact]
-        public async Task GetAsync_WhenChargeDataAvailableIsOperationOrdered_ReturnsOrderedData()
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task GetAsync_WhenChargeDataAvailableIsOperationOrdered_ReturnsOrderedData(TAvailableData availableData)
         {
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-            var availableChargeDataList = GenerateListOfAvailableChargeDataForSameCharge(3);
-            await chargesDatabaseWriteContext.AddRangeAsync(availableChargeDataList);
+            var availableChargeDataList = GenerateListOfAvailableChargeDataForSameCharge(availableData, 3);
+            await chargesDatabaseWriteContext.Set<TAvailableData>().AddRangeAsync(availableChargeDataList);
             await chargesDatabaseWriteContext.SaveChangesAsync();
 
             await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
-            var sut = new AvailableDataRepository<AvailableChargeData>(chargesDatabaseReadContext);
+            var sut = new AvailableDataRepository<TAvailableData>(chargesDatabaseReadContext);
 
             // Act
             var actual =
@@ -119,20 +117,16 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 .And.ThenBeInAscendingOrder(a => a.OperationOrder);
         }
 
-        private static List<AvailableChargeData> GenerateListOfAvailableChargeDataForSameCharge(
-            int numberOfAvailableChargeData)
+        private static List<TAvailableData> GenerateListOfAvailableChargeDataForSameCharge(
+            AvailableDataBase availableChargeData, int numberOfAvailableChargeData)
         {
-            var builder = new AvailableChargeDataBuilder();
             var now = Instant.FromDateTimeUtc(DateTime.UtcNow);
-            var availableChargeDataList = new List<AvailableChargeData>();
+            var availableChargeDataList = new List<TAvailableData>();
 
             for (var i = 0; i < numberOfAvailableChargeData; i++)
             {
-                var data = builder
-                    .WithActorId(SeededData.MarketParticipants.SystemOperator.Id)
-                    .WithRequestDateTime(now)
-                    .WithOperationOrder(i).Build();
-                availableChargeDataList.Add(data);
+                availableChargeDataList.Add(
+                    (TAvailableData)RepositoryAutoMoqDataFixer.GetAvailableDataBasedOn(availableChargeData, now, i));
             }
 
             return availableChargeDataList;

@@ -45,19 +45,6 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.Charges
         }
 
         [Fact]
-        public void SizeOfMaximumDocument_ShouldNotExceedDefinedWeight()
-        {
-            // Arrange
-            var chargeMessageWeightInBytes = (long)ChargePriceBundleSpecification.ChargeMessageWeight * 1000;
-
-            // Act
-            var xmlSizeInBytes = new System.IO.FileInfo(FilesForCalculatingBundleSize.WorstCaseChargeNoPoints).Length;
-
-            // Assert
-            xmlSizeInBytes.Should().BeLessOrEqualTo(chargeMessageWeightInBytes);
-        }
-
-        [Fact]
         public void SizeOfMaximumDocumentWith1000Points_ShouldNotExceedDefinedWeight()
         {
             // Arrange

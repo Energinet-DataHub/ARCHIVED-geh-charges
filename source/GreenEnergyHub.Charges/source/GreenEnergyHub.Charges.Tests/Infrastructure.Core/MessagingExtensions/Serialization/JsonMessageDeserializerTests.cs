@@ -91,7 +91,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions.S
             {
                 var data = new TheoryData<IInboundMessage>();
                 var fixture = new Fixture().Customize(new AutoMoqCustomization());
-                var domainAssembly = DomainAssemblyHelper.GetDomainAssembly();
+                var domainAssembly = AssemblyHelper.GetDomainAssembly();
                 var messageTypes = domainAssembly
                     .GetTypes()
                     .Where(t => typeof(IMessage).IsAssignableFrom(t) && t.IsClass && !t.IsAbstract)

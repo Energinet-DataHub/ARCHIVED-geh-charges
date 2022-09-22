@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
@@ -44,8 +43,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
             Resolution resolution,
             DocumentType documentType,
             int operationOrder,
-            Guid actorId,
-            List<AvailableChargeDataPoint> points)
+            Guid actorId)
             : base(
                 senderId,
                 senderRole,
@@ -69,7 +67,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
             TaxIndicator = taxIndicator;
             TransparentInvoicing = transparentInvoicing;
             Resolution = resolution;
-            _points = points;
         }
 
         // ReSharper disable once UnusedMember.Local - Used implicitly by persistence
@@ -79,7 +76,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
             ChargeOwner = null!;
             ChargeName = null!;
             ChargeDescription = null!;
-            _points = new List<AvailableChargeDataPoint>();
         }
 
         public string ChargeId { get; }
@@ -103,9 +99,5 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
         public bool TransparentInvoicing { get; }
 
         public Resolution Resolution { get; }
-
-        private readonly List<AvailableChargeDataPoint> _points;
-
-        public IReadOnlyCollection<AvailableChargeDataPoint> Points => _points.AsReadOnly();
     }
 }

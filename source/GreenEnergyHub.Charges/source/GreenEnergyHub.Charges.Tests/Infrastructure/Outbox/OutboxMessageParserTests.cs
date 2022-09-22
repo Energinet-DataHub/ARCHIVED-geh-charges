@@ -14,9 +14,9 @@
 
 using Energinet.DataHub.Core.JsonSerialization;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Application.Charges.Events;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.Infrastructure.Outbox;
-using GreenEnergyHub.Charges.Tests.Builders.Command;
+using GreenEnergyHub.Charges.TestCore.Builders.Command;
 using Xunit;
 using Xunit.Categories;
 
@@ -43,12 +43,46 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Outbox
         }
 
         [Fact]
-        public void Parse_ChargePriceOperationsConfirmedEventType_ChargePriceOperationsConfirmedEventReturned()
+        public void Parse_ChargePriceOperationsAcceptedEventType_ChargePriceOperationsAcceptedEventReturned()
         {
             // Arrange
             var jsonSerializer = new JsonSerializer();
-            var confirmedEvent = new ChargePriceOperationsConfirmedEventBuilder().Build();
-            var messageTypeString = typeof(ChargePriceOperationsConfirmedEvent).FullName;
+            var acceptedEvent = new ChargePriceOperationsAcceptedEventBuilder().Build();
+            var messageTypeString = typeof(ChargePriceOperationsAcceptedEvent).FullName;
+            var serializedEvent = jsonSerializer.Serialize(acceptedEvent);
+            var sut = new OutboxMessageParser(jsonSerializer);
+
+            // Act
+            var actual = sut.Parse(messageTypeString!, serializedEvent);
+
+            // Assert
+            actual.Should().BeOfType(typeof(ChargePriceOperationsAcceptedEvent));
+        }
+
+        [Fact]
+        public void Parse_ChargeInformationOperationsRejectedEventType_ChargePriceOperationsRejectedEventReturned()
+        {
+            // Arrange
+            var jsonSerializer = new JsonSerializer();
+            var rejectedEvent = new ChargeInformationOperationsRejectedEventBuilder().Build();
+            var messageTypeString = typeof(ChargeInformationOperationsRejectedEvent).FullName;
+            var serializedEvent = jsonSerializer.Serialize(rejectedEvent);
+            var sut = new OutboxMessageParser(jsonSerializer);
+
+            // Act
+            var actual = sut.Parse(messageTypeString!, serializedEvent);
+
+            // Assert
+            actual.Should().BeOfType(typeof(ChargeInformationOperationsRejectedEvent));
+        }
+
+        [Fact]
+        public void Parse_ChargeInformationOperationsAcceptedEventType_ChargeInformationOperationsAcceptedEventReturned()
+        {
+            // Arrange
+            var jsonSerializer = new JsonSerializer();
+            var confirmedEvent = new ChargeInformationOperationsAcceptedEventBuilder().Build();
+            var messageTypeString = typeof(ChargeInformationOperationsAcceptedEvent).FullName;
             var serializedEvent = jsonSerializer.Serialize(confirmedEvent);
             var sut = new OutboxMessageParser(jsonSerializer);
 
@@ -56,7 +90,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Outbox
             var actual = sut.Parse(messageTypeString!, serializedEvent);
 
             // Assert
-            actual.Should().BeOfType(typeof(ChargePriceOperationsConfirmedEvent));
+            actual.Should().BeOfType(typeof(ChargeInformationOperationsAcceptedEvent));
         }
     }
 }

@@ -20,36 +20,45 @@ using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using GreenEnergyHub.Charges.TestCore;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 {
     public static class RepositoryAutoMoqDataFixer
     {
-        public static List<AvailableDataBase> GetAvailableDataListBasedOn(
-            List<AvailableDataBase> availableList)
+        public static IEnumerable<AvailableDataBase> GetAvailableDataListBasedOn(List<AvailableDataBase> availableList)
         {
             return availableList
-                .Select(availableData => (AvailableDataBase)GetAvailableDataBasedOn((dynamic)availableData))
+                .Select(availableData => (AvailableDataBase)CreateAvailableDataBasedOn((dynamic)availableData))
                 .ToList();
         }
 
         public static AvailableDataBase GetAvailableDataBasedOn(AvailableDataBase availableData)
         {
-            return GetAvailableDataBasedOn((dynamic)availableData);
+            return CreateAvailableDataBasedOn((dynamic)availableData);
         }
 
-        private static AvailableChargeData GetAvailableDataBasedOn(AvailableChargeData availableChargeData)
+        public static AvailableDataBase GetAvailableDataBasedOn(
+            AvailableDataBase availableData, Instant requestDateTime, int operationOrder)
+        {
+            return CreateAvailableDataBasedOn((dynamic)availableData, requestDateTime, operationOrder);
+        }
+
+        private static AvailableChargeData CreateAvailableDataBasedOn(
+            AvailableChargeData availableChargeData,
+            Instant? requestDateTime = default,
+            int? operationOrder = default)
         {
             return new AvailableChargeData(
-                availableChargeData.SenderId.Substring(0, 34),
+                availableChargeData.SenderId[..34],
                 availableChargeData.SenderRole,
-                availableChargeData.RecipientId.Substring(0, 34),
+                availableChargeData.RecipientId[..34],
                 availableChargeData.RecipientRole,
                 availableChargeData.BusinessReasonCode,
-                availableChargeData.RequestDateTime,
+                GetRequestDateTime(availableChargeData, requestDateTime),
                 availableChargeData.AvailableDataReferenceId,
-                availableChargeData.ChargeId.Substring(0, 34),
-                availableChargeData.ChargeOwner.Substring(0, 34),
+                availableChargeData.ChargeId[..34],
+                availableChargeData.ChargeOwner[..34],
                 availableChargeData.ChargeType,
                 availableChargeData.ChargeName,
                 availableChargeData.ChargeDescription,
@@ -60,92 +69,110 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 availableChargeData.TransparentInvoicing,
                 availableChargeData.Resolution,
                 availableChargeData.DocumentType,
-                availableChargeData.OperationOrder,
-                SeededData.MarketParticipants.SystemOperator.Id,
-                availableChargeData.Points.ToList());
+                GetOperationOrder(availableChargeData, operationOrder),
+                SeededData.MarketParticipants.SystemOperator.Id);
         }
 
-        private static AvailableChargeReceiptData GetAvailableDataBasedOn(
-            AvailableChargeReceiptData availableChargeReceiptData)
+        private static AvailableChargeReceiptData CreateAvailableDataBasedOn(
+            AvailableChargeReceiptData availableChargeReceiptData,
+            Instant? requestDateTime = default,
+            int? operationOrder = default)
         {
             return new AvailableChargeReceiptData(
-                availableChargeReceiptData.SenderId.Substring(0, 34),
+                availableChargeReceiptData.SenderId[..34],
                 availableChargeReceiptData.SenderRole,
-                availableChargeReceiptData.RecipientId.Substring(0, 34),
+                availableChargeReceiptData.RecipientId[..34],
                 availableChargeReceiptData.RecipientRole,
                 availableChargeReceiptData.BusinessReasonCode,
-                availableChargeReceiptData.RequestDateTime,
+                GetRequestDateTime(availableChargeReceiptData, requestDateTime),
                 availableChargeReceiptData.AvailableDataReferenceId,
                 availableChargeReceiptData.ReceiptStatus,
-                availableChargeReceiptData.OriginalOperationId.Substring(0, 34),
+                availableChargeReceiptData.OriginalOperationId[..34],
                 availableChargeReceiptData.DocumentType,
-                availableChargeReceiptData.OperationOrder,
+                GetOperationOrder(availableChargeReceiptData, operationOrder),
                 SeededData.MarketParticipants.SystemOperator.Id,
                 availableChargeReceiptData.ValidationErrors.ToList());
         }
 
-        private static AvailableChargeLinksData GetAvailableDataBasedOn(AvailableChargeLinksData availableChargeData)
+        private static AvailableChargeLinksData CreateAvailableDataBasedOn(
+            AvailableChargeLinksData availableChargeLinksData,
+            Instant? requestDateTime = default,
+            int? operationOrder = default)
         {
             return new AvailableChargeLinksData(
-                availableChargeData.SenderId.Substring(0, 34),
-                availableChargeData.SenderRole,
-                availableChargeData.RecipientId.Substring(0, 34),
-                availableChargeData.RecipientRole,
-                availableChargeData.BusinessReasonCode,
-                availableChargeData.RequestDateTime,
-                availableChargeData.AvailableDataReferenceId,
-                availableChargeData.ChargeId.Substring(0, 34),
-                availableChargeData.ChargeOwner.Substring(0, 34),
-                availableChargeData.ChargeType,
-                availableChargeData.MeteringPointId.Substring(0, 49),
-                availableChargeData.Factor,
-                availableChargeData.StartDateTime,
-                availableChargeData.EndDateTime,
-                availableChargeData.DocumentType,
-                availableChargeData.OperationOrder,
+                availableChargeLinksData.SenderId[..34],
+                availableChargeLinksData.SenderRole,
+                availableChargeLinksData.RecipientId[..34],
+                availableChargeLinksData.RecipientRole,
+                availableChargeLinksData.BusinessReasonCode,
+                GetRequestDateTime(availableChargeLinksData, requestDateTime),
+                availableChargeLinksData.AvailableDataReferenceId,
+                availableChargeLinksData.ChargeId[..34],
+                availableChargeLinksData.ChargeOwner[..34],
+                availableChargeLinksData.ChargeType,
+                availableChargeLinksData.MeteringPointId[..49],
+                availableChargeLinksData.Factor,
+                availableChargeLinksData.StartDateTime,
+                availableChargeLinksData.EndDateTime,
+                availableChargeLinksData.DocumentType,
+                GetOperationOrder(availableChargeLinksData, operationOrder),
                 SeededData.MarketParticipants.SystemOperator.Id);
         }
 
-        private static AvailableChargeLinksReceiptData GetAvailableDataBasedOn(
-            AvailableChargeLinksReceiptData availableChargeLinksReceiptData)
+        private static AvailableChargeLinksReceiptData CreateAvailableDataBasedOn(
+            AvailableChargeLinksReceiptData availableChargeLinksReceiptData,
+            Instant? requestDateTime = default,
+            int? operationOrder = default)
         {
             return new AvailableChargeLinksReceiptData(
-                availableChargeLinksReceiptData.SenderId.Substring(0, 34),
+                availableChargeLinksReceiptData.SenderId[..34],
                 availableChargeLinksReceiptData.SenderRole,
-                availableChargeLinksReceiptData.RecipientId.Substring(0, 34),
+                availableChargeLinksReceiptData.RecipientId[..34],
                 availableChargeLinksReceiptData.RecipientRole,
                 availableChargeLinksReceiptData.BusinessReasonCode,
-                availableChargeLinksReceiptData.RequestDateTime,
+                GetRequestDateTime(availableChargeLinksReceiptData, requestDateTime),
                 availableChargeLinksReceiptData.AvailableDataReferenceId,
                 availableChargeLinksReceiptData.ReceiptStatus,
-                availableChargeLinksReceiptData.OriginalOperationId.Substring(0, 34),
-                availableChargeLinksReceiptData.MeteringPointId.Substring(0, 49),
+                availableChargeLinksReceiptData.OriginalOperationId[..34],
+                availableChargeLinksReceiptData.MeteringPointId[..49],
                 availableChargeLinksReceiptData.DocumentType,
-                availableChargeLinksReceiptData.OperationOrder,
+                GetOperationOrder(availableChargeLinksReceiptData, operationOrder),
                 SeededData.MarketParticipants.SystemOperator.Id,
                 availableChargeLinksReceiptData.ValidationErrors.ToList());
         }
 
-        private static AvailableChargePriceData GetAvailableDataBasedOn(
-            AvailableChargePriceData availableChargePriceData)
+        private static AvailableChargePriceData CreateAvailableDataBasedOn(
+            AvailableChargePriceData availableChargePriceData,
+            Instant? requestDateTime = default,
+            int? operationOrder = default)
         {
             return new AvailableChargePriceData(
-                availableChargePriceData.SenderId.Substring(0, 34),
+                availableChargePriceData.SenderId[..34],
                 availableChargePriceData.SenderRole,
-                availableChargePriceData.RecipientId.Substring(0, 34),
+                availableChargePriceData.RecipientId[..34],
                 availableChargePriceData.RecipientRole,
                 availableChargePriceData.BusinessReasonCode,
-                availableChargePriceData.RequestDateTime,
+                GetRequestDateTime(availableChargePriceData, requestDateTime),
                 availableChargePriceData.AvailableDataReferenceId,
-                availableChargePriceData.ChargeId.Substring(0, 34),
-                availableChargePriceData.ChargeOwner.Substring(0, 34),
+                availableChargePriceData.ChargeId[..34],
+                availableChargePriceData.ChargeOwner[..34],
                 availableChargePriceData.ChargeType,
                 availableChargePriceData.StartDateTime,
                 availableChargePriceData.Resolution,
                 availableChargePriceData.DocumentType,
-                availableChargePriceData.OperationOrder,
+                GetOperationOrder(availableChargePriceData, operationOrder),
                 SeededData.MarketParticipants.SystemOperator.Id,
                 availableChargePriceData.Points.ToList());
+        }
+
+        private static int GetOperationOrder(AvailableDataBase availableData, int? operationOrder)
+        {
+            return operationOrder ?? availableData.OperationOrder;
+        }
+
+        private static Instant GetRequestDateTime(AvailableDataBase availableData, Instant? requestDateTime)
+        {
+            return requestDateTime ?? availableData.RequestDateTime;
         }
     }
 }

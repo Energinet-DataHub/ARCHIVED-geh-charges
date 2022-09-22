@@ -13,10 +13,8 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
@@ -24,14 +22,13 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.FunctionHost.Charges;
 using GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Charges.Tests.Builders.Command;
+using GreenEnergyHub.Charges.TestCore.Builders.Command;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;
 using NodaTime.Text;
@@ -93,10 +90,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     () => Fixture.ChargesDomainEventTopic.SenderClient.SendMessageAsync(message), correlationId);
 
                 await FunctionAsserts.AssertHasExecutedAsync(
-                    Fixture.HostManager, nameof(ChargeInformationCommandReceiverEndpoint));
+                    Fixture.HostManager, nameof(ChargeInformationCommandReceivedEndpoint));
 
                 await FunctionAsserts.AssertHasExecutedAsync(
-                    Fixture.HostManager, nameof(ChargeConfirmationDataAvailableNotifierEndpoint));
+                    Fixture.HostManager, nameof(ChargeInformationConfirmedDataAvailableNotifierEndpoint));
 
                 // Assert
                 await using var actualChargeContext = Fixture.ChargesDatabaseManager.CreateDbContext();
@@ -140,7 +137,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     .WithVatClassification(VatClassification.NoVat)
                     .WithChargeName("Grid Access Provider test tariff")
                     .WithDescription("Description...")
-                    .WithPriceResolution(Resolution.P1D)
                     .Build();
                 var chargeCommand = commandBuilder
                     .WithDocumentDto(document)

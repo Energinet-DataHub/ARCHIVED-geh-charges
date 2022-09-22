@@ -24,7 +24,7 @@ using System.Threading.Tasks;
 using Energinet.Charges.Contracts.ChargeLink;
 using Energinet.DataHub.Charges.Clients.ChargeLinks;
 using FluentAssertions;
-using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.TestHelpers;
 using Moq;
 using Moq.Protected;
 using Xunit;
@@ -39,7 +39,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
         private const string MeteringPointId = "57131310000000000";
 
         [Theory]
-        [InlineAutoMoqData]
+        [InlineAutoDomainData]
         public async Task GetAsync_WhenMeteringPointHasLinks_ReturnsChargeLinks(
             ChargeLinkV1Dto chargeLinkDto,
             Mock<IChargeLinksClientFactory> chargeLinksClientFactory)
@@ -72,7 +72,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
         }
 
         [Theory]
-        [InlineAutoMoqData]
+        [InlineAutoDomainData]
         public async Task GetAsync_WhenResponseIsNotFound_ReturnsEmptyList(
             Mock<IChargeLinksClientFactory> chargeLinksClientFactory)
         {
