@@ -296,7 +296,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // * one for the confirmation (first operation)
                 // * one for the rejection (second operation violating VR.903)
                 using var assertionScope = new AssertionScope();
-                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 2);
+                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 8);
                 peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
                 peekResults.Should().ContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
                 peekResults.Should().ContainMatch("*It is not allowed to change the tax indicator to Tax for charge*");
@@ -608,9 +608,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // * 7 data available to energy suppliers
                 var peekResult = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 8);
                 peekResult.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
-                peekResult.Should().NotContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
-                peekResult.Should().NotContainMatch("*NotifyPriceList_MarketDocument*");
+                peekResult.Should().ContainMatch("*NotifyPriceList_MarketDocument*");
                 peekResult.Should().ContainMatch("*<cim:process.processType>D08</cim:process.processType>*");
+                peekResult.Should().NotContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
                 peekResult.Should().NotContainMatch("*<cim:process.processType>D18</cim:process.processType>*");
             }
 
