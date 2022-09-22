@@ -14,12 +14,12 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.Tests.TestCore;
 
 namespace GreenEnergyHub.Charges.Tests.TestHelpers
 {
-    public class DomainEventTypeHelper
+    public static class DomainEventTypeHelper
     {
         /// <summary>
         /// Return all non-abstract implementations of <see cref="DomainEvent"/> from domain assembly.

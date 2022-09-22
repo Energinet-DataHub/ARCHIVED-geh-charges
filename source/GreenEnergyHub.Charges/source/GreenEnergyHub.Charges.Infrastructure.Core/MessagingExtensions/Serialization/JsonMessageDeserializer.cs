@@ -15,7 +15,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.JsonSerialization;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization
 {
