@@ -2,16 +2,15 @@
 
 All process flows within the Charges domain will be gathered here.
 
-- [Charge Price List Flow](#Charge-Price-List-Flow)
+- [Process Flow For Charge Information And Charge Prices](#Process-Flow-For-Charge-Information-And-Charge-Prices)
     - [Persist Charge Information](#Persist-Charge-Information)
     - [Persist Charge Prices](#Persist-Charge-Prices)
         - [Irregular Price Series](#Irregular-Price-Series)
 - [Charge Link Flow](#Charge-Link-Flow)
 
-## Charge Price List Flow
+## Process Flow For Charge Information And Charge Prices
 
-The following image depicts the charge price list flow.
-It also shows the micro services involved along with the activities they perform.
+Below process flow covers both the handling of `Charge Information` and `Charge Prices` request as they rather identical. Do note that whenever an event is mentioned, when looking in the source code the events will be prefixed with either `ChargeInformation` or `ChargePrices`.
 
 ![Charge flow](images/ChargePriceListProcessFlow.png)
 
