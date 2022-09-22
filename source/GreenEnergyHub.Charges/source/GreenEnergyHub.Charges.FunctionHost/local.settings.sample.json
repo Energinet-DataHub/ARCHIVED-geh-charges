@@ -54,35 +54,35 @@
     "DOMAIN_EVENTS_TOPIC_NAME": "sbt-charges-domain-events",
 
     // Internal, charge, received
-    "CHARGE_INFORMATION_COMMAND_RECEIVED_SUBSCRIPTION_NAME": "sbts_charges_charge_information_command_received",
+    "CHARGE_INFORMATION_COMMAND_RECEIVED_SUBSCRIPTION_NAME": "sbts_charges_info_command_received",
 
     // Internal, charge price, received
-    "CHARGE_PRICE_COMMAND_RECEIVED_SUBSCRIPTION_NAME": "sbts_charges_charge_price_command_received",
+    "CHARGE_PRICE_COMMAND_RECEIVED_SUBSCRIPTION_NAME": "sbts_charges_price_command_received",
 
     // Internal, charge, accepted
-    "CHARGE_INFORMATION_OPERATIONS_ACCEPTED_DATAAVAILABLE_SUBSCRIPTION_NAME": "sbts_charges_charge_information_operations_accepted_dataavailable",
-    "CHARGE_INFORMATION_OPERATIONS_ACCEPTED_SUBSCRIPTION_NAME": "sbts_charges_charge_information_operations_accepted_publish",
-    "CHARGE_INFORMATION_OPERATIONS_ACCEPTED_PUBLISH_SUBSCRIPTION_NAME": "sbts_charges_charge_information_operations_accepted",
+    "CHARGE_INFORMATION_OPERATIONS_ACCEPTED_DATAAVAILABLE_SUBSCRIPTION_NAME": "sbts_charges_info_operations_accepted_da",
+    "CHARGE_INFORMATION_OPERATIONS_ACCEPTED_SUBSCRIPTION_NAME": "sbts_charges_info_operations_accepted_publish",
+    "CHARGE_INFORMATION_OPERATIONS_ACCEPTED_PUBLISH_SUBSCRIPTION_NAME": "sbts_charges_info_operations_accepted",
 
     // Internal, charge, rejected
-    "CHARGE_INFORMATION_OPERATIONS_REJECTED_SUBSCRIPTION_NAME": "sbts_charges_charge_information_operations_rejected",
+    "CHARGE_INFORMATION_OPERATIONS_REJECTED_SUBSCRIPTION_NAME": "sbts_charges_info_operations_rejected",
 
     // Internal, charge price, confirmed
-    "CHARGE_PRICE_OPERATIONS_ACCEPTED_SUBSCRIPTION_NAME": "sbts_charges_charge_price_operations_accepted",
-    "CHARGE_PRICE_OPERATIONS_ACCEPTED_DATAAVAILABLE_SUBSCRIPTION_NAME": "sbts_charges_charge_price_operations_accepted_dataavailable",
-    "CHARGE_PRICE_OPERATIONS_ACCEPTED_PUBLISH_SUBSCRIPTION_NAME": "sbts_charges_charge_price_operations_accepted_publish",
+    "CHARGE_PRICE_OPERATIONS_ACCEPTED_SUBSCRIPTION_NAME": "sbts_charges_price_operations_accepted",
+    "CHARGE_PRICE_OPERATIONS_ACCEPTED_DATAAVAILABLE_SUBSCRIPTION_NAME": "sbts_charges_price_operations_accepted_da",
+    "CHARGE_PRICE_OPERATIONS_ACCEPTED_PUBLISH_SUBSCRIPTION_NAME": "sbts_charges_price_operations_accepted_publish",
 
     // Internal, charge price, rejected
-    "CHARGE_PRICE_OPERATIONS_REJECTED_SUBSCRIPTION_NAME": "sbts_charges_charge_price_operations_rejected",
+    "CHARGE_PRICE_OPERATIONS_REJECTED_SUBSCRIPTION_NAME": "sbts_charges_price_operations_rejected",
 
     // Internal, charge links, received
-    "CHARGE_LINKS_COMMAND_RECEIVED_SUBSCRIPTION_NAME": "sbtsub-charges-charge-links-command-received",
+    "CHARGE_LINKS_COMMAND_RECEIVED_SUBSCRIPTION_NAME": "sbts_charges_links_command_received",
 
     // Internal, charge links, accepted
-    "CHARGE_LINKS_COMMAND_REJECTED_SUBSCRIPTION_NAME": "sbtsub-charges-charge-links-command-rejected",
-    "CHARGE_LINKS_ACCEPTED_CONFIRMATION_SUBSCRIPTION_NAME": "sbtsub-charges-charge-links-accepted-confirmation",
-    "CHARGE_LINKS_ACCEPTED_DATAAVAILABLE_SUBSCRIPTION_NAME": "sbtsub-charges-charge-links-accepted-dataavailable",
-    "CHARGE_LINKS_ACCEPTED_PUBLISH_SUBSCRIPTION_NAME": "sbtsub-charges-charge-links-accepted-publish",
-    "DEFAULT_CHARGE_LINKS_DATAAVAILABLE_SUBSCRIPTION_NAME": "sbtsub-charges-default-charge-links-dataavailable"
+    "CHARGE_LINKS_COMMAND_REJECTED_SUBSCRIPTION_NAME": "sbts_charges_links_command_rejected",
+    "CHARGE_LINKS_ACCEPTED_SUBSCRIPTION_NAME": "sbts_charges_links_accepted",
+    "CHARGE_LINKS_ACCEPTED_DATAAVAILABLE_SUBSCRIPTION_NAME": "sbts_charges_links_accepted_da",
+    "CHARGE_LINKS_ACCEPTED_PUBLISH_SUBSCRIPTION_NAME": "sbts_charges_links_accepted_publish",
+    "DEFAULT_CHARGE_LINKS_DATAAVAILABLE_SUBSCRIPTION_NAME": "sbts_charges_default_charge_links_da"
   }
 }

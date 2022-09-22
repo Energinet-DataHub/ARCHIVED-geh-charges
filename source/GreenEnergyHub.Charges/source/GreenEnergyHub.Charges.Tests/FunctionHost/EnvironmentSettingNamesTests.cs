@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.Tests.FunctionHost
             foreach (var setting in settings)
             {
                 domainEventChargesServiceBusResourceNames.Values.Should()
-                    .Contain(setting, because: CodeToInfrastructureCoherenceErrorMessageBuilder.CreateErrorMessage());
+                    .Contain(setting, because: CodeToInfrastructureCoherenceErrorMessageBuilder.CreateErrorMessage(setting));
             }
         }
     }
