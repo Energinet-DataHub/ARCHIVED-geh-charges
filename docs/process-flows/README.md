@@ -10,9 +10,10 @@ All process flows within the Charges domain will be gathered here.
 
 ## Process Flow For Charge Information And Charge Prices
 
-Below process flow covers both `Charge Information` and `Charge Prices` requests as they rather identical, why generic event names are applied. When looking into to the source code, events like `CommandReceived` will be prefixed with either `ChargeInformation` or `ChargePrices`.
+Below process flow covers both the handling of `Charge Information` and `Charge Prices` requests as they are rather similar.
+This is also the reason why generic event names are applied. Event names will be prefixed with either `ChargeInformation` or `ChargePrices` in the source code.
 
-![Charge flow](images/ChargePriceListProcessFlow.png)
+![Charge flow](images/ChargeInformationAndPricesProcessFlow.png)
 
 ### Persist Charge Information
 
