@@ -15,6 +15,7 @@
 using System;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ListenerMock;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 
 namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon
 {
@@ -35,7 +36,9 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon
                 .VerifyOnceAsync(receivedMessage =>
                 {
                     result.Body = receivedMessage.Body;
-                    result.CorrelationId = receivedMessage.CorrelationId;
+                    result.CorrelationId =
+                        receivedMessage.CorrelationId ??
+                        receivedMessage.ApplicationProperties[MessageMetaDataConstants.CorrelationId].ToString();
                     result.ApplicationProperties = receivedMessage.ApplicationProperties;
                     return Task.CompletedTask;
                 }).ConfigureAwait(false);

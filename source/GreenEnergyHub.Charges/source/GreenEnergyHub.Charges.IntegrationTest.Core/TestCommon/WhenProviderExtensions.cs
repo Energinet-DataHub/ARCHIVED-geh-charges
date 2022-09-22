@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ListenerMock;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 
 namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon
 {
@@ -30,7 +31,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon
         public static DoProvider WhenCorrelationId(this ServiceBusListenerMock provider, string? correlationId = null)
         {
             return provider.When(request =>
-                request.CorrelationId == correlationId);
+                request.CorrelationId == correlationId ||
+                request.ApplicationProperties[MessageMetaDataConstants.CorrelationId].Equals(correlationId));
         }
     }
 }
