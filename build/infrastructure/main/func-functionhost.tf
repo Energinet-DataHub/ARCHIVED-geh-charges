@@ -46,22 +46,22 @@ module "func_functionhost" {
     CHARGE_LINKS_CREATED_TOPIC_NAME                                         = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbt-charge-link-created-name)"
 
     # Charge domain event subscriptions
-    CHARGE_LINKS_COMMAND_REJECTED_SUBSCRIPTION_NAME                         = module.sbts_charges_charge_links_command_rejected.name
-    CHARGE_LINKS_ACCEPTED_PUBLISH_SUBSCRIPTION_NAME                         = module.sbts_charges_charge_links_accepted_publish.name
-    CHARGE_LINKS_ACCEPTED_DATAAVAILABLE_SUBSCRIPTION_NAME                   = module.sbts_charges_charge_links_accepted_dataavailable.name
-    CHARGE_LINKS_ACCEPTED_CONFIRMATION_SUBSCRIPTION_NAME                    = module.sbts_charges_charge_links_accepted_confirmation.name
-    CHARGE_LINKS_COMMAND_RECEIVED_SUBSCRIPTION_NAME                         = module.sbts_charges_charge_links_command_received.name
-    CHARGE_INFORMATION_COMMAND_RECEIVED_SUBSCRIPTION_NAME                   = module.sbts_charges_charge_command_received.name
-    CHARGE_INFORMATION_OPERATIONS_ACCEPTED_DATAAVAILABLE_SUBSCRIPTIONNAME   = module.sbts_charges_charge_accepted_dataavailable.name
-    CHARGE_INFORMATION_OPERATIONS_ACCEPTED_PUBLISH_SUBSCRIPTION_NAME        = module.sbts_charges_charge_command_accepted_publish.name
-    CHARGE_INFORMATION_OPERATIONS_ACCEPTED_SUBSCRIPTION_NAME                = module.sbts_charges_charge_command_accepted.name
-    CHARGE_INFORMATION_OPERATIONS_REJECTED_SUBSCRIPTION_NAME                = module.sbts_charges_charge_command_rejected.name
-    CHARGE_PRICE_COMMAND_RECEIVED_SUBSCRIPTION_NAME                         = module.sbts_charges_charge_price_command_received.name
-    CHARGE_PRICE_OPERATIONS_ACCEPTED_DATAAVAILABLE_SUBSCRIPTION_NAME        = module.sbts_charges_charge_price_command_confirmed_dataavailable.name
-    CHARGE_PRICE_OPERATIONS_ACCEPTED_PUBLISH_SUBSCRIPTION_NAME              = module.sbts_charges_charge_price_confirmed_publish.name
-    CHARGE_PRICE_OPERATIONS_ACCEPTED_SUBSCRIPTION_NAME                      = module.sbts_charges_charge_price_command_confirmed.name
-    CHARGE_PRICE_OPERATIONS_REJECTED_SUBSCRIPTION_NAME                      = module.sbts_charges_charge_price_command_rejected.name
-    DEFAULT_CHARGE_LINKS_DATAAVAILABLE_SUBSCRIPTION_NAME                    = module.sbts_charges_default_charge_links_dataavailable.name
+    CHARGE_LINKS_COMMAND_REJECTED_SUBSCRIPTION_NAME                         = module.sbtsub-charges-links-command-rejected.name
+    CHARGE_LINKS_ACCEPTED_PUBLISH_SUBSCRIPTION_NAME                         = module.sbtsub-charges-links-accepted-publish.name
+    CHARGE_LINKS_ACCEPTED_DATAAVAILABLE_SUBSCRIPTION_NAME                   = module.sbtsub-charges-links-accepted-da.name
+    CHARGE_LINKS_ACCEPTED_SUBSCRIPTION_NAME                                 = module.sbtsub-charges-links-accepted.name
+    CHARGE_LINKS_COMMAND_RECEIVED_SUBSCRIPTION_NAME                         = module.sbtsub-charges-links-command-received.name
+    CHARGE_INFORMATION_COMMAND_RECEIVED_SUBSCRIPTION_NAME                   = module.sbtsub-charges-info-command-received.name
+    CHARGE_INFORMATION_OPERATIONS_ACCEPTED_DATAAVAILABLE_SUBSCRIPTION_NAME  = module.sbtsub-charges-info-operations-accepted-da.name
+    CHARGE_INFORMATION_OPERATIONS_ACCEPTED_PUBLISH_SUBSCRIPTION_NAME        = module.sbtsub-charges-info-operations-accepted-publish.name
+    CHARGE_INFORMATION_OPERATIONS_ACCEPTED_SUBSCRIPTION_NAME                = module.sbtsub-charges-info-operations-accepted.name
+    CHARGE_INFORMATION_OPERATIONS_REJECTED_SUBSCRIPTION_NAME                = module.sbtsub-charges-info-operations-rejected.name
+    CHARGE_PRICE_COMMAND_RECEIVED_SUBSCRIPTION_NAME                         = module.sbtsub-charges-price-command-received.name
+    CHARGE_PRICE_OPERATIONS_ACCEPTED_DATAAVAILABLE_SUBSCRIPTION_NAME        = module.sbtsub-charges-price-operations-accepted-da.name
+    CHARGE_PRICE_OPERATIONS_ACCEPTED_PUBLISH_SUBSCRIPTION_NAME              = module.sbtsub-charges-price-operations-accepted-publish.name
+    CHARGE_PRICE_OPERATIONS_ACCEPTED_SUBSCRIPTION_NAME                      = module.sbtsub-charges-price-operations-accepted.name
+    CHARGE_PRICE_OPERATIONS_REJECTED_SUBSCRIPTION_NAME                      = module.sbtsub-charges-price-operations-rejected.name
+    DEFAULT_CHARGE_LINKS_DATAAVAILABLE_SUBSCRIPTION_NAME                    = module.sbtsub-charges-default-charge-links-da.name
 
     # Integration
     CREATE_LINKS_REQUEST_QUEUE_NAME                                         = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbq-create-link-request-name)"

@@ -154,9 +154,9 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
                 .AddSubscription(ChargesServiceBusResourceNames.ChargeLinksAcceptedPublishSubscriptionName)
                     .AddSubjectFilter(nameof(ChargeLinksAcceptedEvent))
                     .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargeLinksAcceptedPublishSubscriptionName)
-                .AddSubscription(ChargesServiceBusResourceNames.ChargeLinksAcceptedConfirmationSubscriptionName)
+                .AddSubscription(ChargesServiceBusResourceNames.ChargeLinksAcceptedSubscriptionName)
                     .AddSubjectFilter(nameof(ChargeLinksAcceptedEvent))
-                    .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargeLinksAcceptedConfirmationSubscriptionName)
+                    .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.ChargeLinksAcceptedSubscriptionName)
 
                 .AddSubscription(ChargesServiceBusResourceNames.ChargeLinksCommandReceivedSubscriptionName)
                     .AddSubjectFilter(nameof(ChargeLinksReceivedEvent))

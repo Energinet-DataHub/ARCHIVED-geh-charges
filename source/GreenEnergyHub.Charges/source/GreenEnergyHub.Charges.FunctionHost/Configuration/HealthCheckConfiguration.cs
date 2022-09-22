@@ -203,7 +203,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 name: "ChargeLinksAcceptedConfirmationSubscriptionExists",
                 connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventManagerConnectionString),
                 topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesDomainEventTopicName),
-                subscriptionName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksAcceptedConfirmationSubscriptionName))
+                subscriptionName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksAcceptedSubscriptionName))
             .AddAzureServiceBusSubscription(
                 name: "ChargeLinksCommandRejectedSubscriptionExists",
                 connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventManagerConnectionString),

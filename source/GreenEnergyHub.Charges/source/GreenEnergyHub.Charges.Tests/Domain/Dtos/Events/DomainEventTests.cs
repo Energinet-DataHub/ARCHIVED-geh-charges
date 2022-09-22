@@ -17,7 +17,7 @@ using GreenEnergyHub.Charges.Tests.TestHelpers;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.Messages.Events
+namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.Events
 {
     [UnitTest]
     public class DomainEventTests
