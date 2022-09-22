@@ -609,7 +609,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // * 7 data available to energy suppliers
                 var peekResult = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 8);
                 peekResult.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
-
                 peekResult.Should().ContainMatch("*NotifyPriceList_MarketDocument*");
                 peekResult.Should().ContainMatch("*<cim:process.processType>D08</cim:process.processType>*");
                 peekResult.Should().NotContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
