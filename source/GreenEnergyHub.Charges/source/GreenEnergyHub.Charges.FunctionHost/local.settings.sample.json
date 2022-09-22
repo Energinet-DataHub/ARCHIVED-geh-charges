@@ -61,8 +61,8 @@
 
     // Internal, charge, accepted
     "CHARGE_INFORMATION_OPERATIONS_ACCEPTED_DATAAVAILABLE_SUBSCRIPTION_NAME": "sbtsub-charges-info-operations-accepted-da",
-    "CHARGE_INFORMATION_OPERATIONS_ACCEPTED_SUBSCRIPTION_NAME": "sbtsub-charges-info-operations-accepted-publish",
-    "CHARGE_INFORMATION_OPERATIONS_ACCEPTED_PUBLISH_SUBSCRIPTION_NAME": "sbtsub-charges-info-operations-accepted",
+    "CHARGE_INFORMATION_OPERATIONS_ACCEPTED_SUBSCRIPTION_NAME": "sbtsub-charges-info-operations-accepted",
+    "CHARGE_INFORMATION_OPERATIONS_ACCEPTED_PUBLISH_SUBSCRIPTION_NAME": "sbtsub-charges-info-operations-accepted-publish",
 
     // Internal, charge, rejected
     "CHARGE_INFORMATION_OPERATIONS_REJECTED_SUBSCRIPTION_NAME": "sbtsub-charges-info-operations-rejected",
