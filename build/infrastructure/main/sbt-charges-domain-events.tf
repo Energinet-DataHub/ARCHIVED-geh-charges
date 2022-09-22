@@ -96,7 +96,7 @@ module "sbtsub-charges-links-accepted-publish" {
   }
 }
 
-module "sbtsub-charges-links-accepted_da" {
+module "sbtsub-charges-links-accepted-da" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v9"
   name                = "links-accepted-da"
   project_name        = var.domain_name_short
