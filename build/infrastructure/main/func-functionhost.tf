@@ -51,7 +51,7 @@ module "func_functionhost" {
     CHARGE_LINKS_ACCEPTED_DATAAVAILABLE_SUBSCRIPTION_NAME                   = module.sbts_charges_links_accepted_da.name
     CHARGE_LINKS_ACCEPTED_SUBSCRIPTION_NAME                                 = module.sbts_charges_links_accepted.name
     CHARGE_LINKS_COMMAND_RECEIVED_SUBSCRIPTION_NAME                         = module.sbts_charges_links_command_received.name
-    CHARGE_INFORMATION_COMMAND_RECEIVED_SUBSCRIPTION_NAME                   = module.sbts_charges_information_command_received.name
+    CHARGE_INFORMATION_COMMAND_RECEIVED_SUBSCRIPTION_NAME                   = module.sbts_charges_info_command_received.name
     CHARGE_INFORMATION_OPERATIONS_ACCEPTED_DATAAVAILABLE_SUBSCRIPTION_NAME  = module.sbts_charges_info_operations_accepted_da.name
     CHARGE_INFORMATION_OPERATIONS_ACCEPTED_PUBLISH_SUBSCRIPTION_NAME        = module.sbts_charges_info_operations_accepted_publish.name
     CHARGE_INFORMATION_OPERATIONS_ACCEPTED_SUBSCRIPTION_NAME                = module.sbts_charges_info_operations_accepted.name
