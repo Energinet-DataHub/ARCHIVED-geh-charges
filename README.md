@@ -32,18 +32,16 @@ Learn how to get a development environment up and running for development, debug
 
 The architecture diagrams below illustrate both current state of the Charges domain as well as future work, last-mentioned being illustrated by grey arrows and components with lowered opacity.
 
-The diagrams depict the architecture of `Charge and Charge Prices` and `Charge Links`, respectively.
+The diagrams depict the architecture of `Charge Information`, `Charge Prices` and `Charge Links`, respectively.
 
 Please note, all the azure functions displayed in the architecture diagrams are hosted in the same function host.
 Also, some components have singular names while others have plural names. This is intended. The components using plural may need to process a bundle of e.g. charge links to determine whether an operation, e.g. validation, was successful.
 
-### Charge and charge prices architecture
+### Charge Information architecture
 
-![Charge And Charge Prices](ARCHITECTURE-ChargeAndChargePrices.png)
+![Charge And Charge Prices](ARCHITECTURE-ChargeInformation.png)
 
 ### Charge Prices architecture
-
-Below diagram illustrates our ongoing work building a separate architectural path for handling Charge Prices. So please consider this as 'to be implemented'.
 
 ![Charge Prices](ARCHITECTURE-ChargePrices.png)
 
