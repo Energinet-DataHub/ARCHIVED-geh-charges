@@ -21,6 +21,7 @@ using Azure.Storage.Blobs.Models;
 using Energinet.DataHub.MessageHub.IntegrationTesting;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Infrastructure.Core.InternalMessaging;
+using GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon;
 
 namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
 {
@@ -29,7 +30,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
         /// <summary>
         /// Listen for dataAvailable events, initiates a peek and assert that a reply is received.
         /// </summary>
-        public static async Task<List<string>> AssertPeekReceivesRepliesAsync(
+        public static async Task<List<string>> AssertPeekReceivesRepliesDeprecatedAsync(
             this MessageHubSimulation messageHub,
             string correlationId,
             int noOfMessageTypes = 1)
@@ -43,7 +44,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
             {
                 try
                 {
-                    peekResults.Add(await WaitForDataAvailableAndPeek(messageHub, correlationId));
+                    peekResults.Add(await WaitForDataAvailableAndPeekDeprecated(messageHub, correlationId));
                 }
                 catch (Exception ex) when (ex is TaskCanceledException or TimeoutException)
                 {
@@ -60,7 +61,55 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
             return peekResults;
         }
 
+        /// <summary>
+        /// Listen for dataAvailable events, initiates a peek and assert that a reply is received.
+        /// </summary>
+        public static async Task<List<string>> AssertPeekReceivesRepliesAsync(
+            this MessageHubSimulator messageHubSimulator,
+            string correlationId,
+            int noOfMessageTypes = 1)
+        {
+            var peekResults = new List<string>();
+
+            var expected = $"MessageHub received all {noOfMessageTypes} expected messages.";
+            var actual = expected;
+
+            for (var i = 0; i < noOfMessageTypes; i++)
+            {
+                try
+                {
+                    peekResults.Add(await WaitForDataAvailableAndPeek(messageHubSimulator, correlationId));
+                }
+                catch (Exception ex) when (ex is TaskCanceledException or TimeoutException)
+                {
+                    actual = $"MessageHub received only {i} of {noOfMessageTypes} expected messages!";
+                }
+                finally
+                {
+                    messageHubSimulator.Clear();
+                }
+            }
+
+            actual.Should().Be(expected);
+
+            return peekResults;
+        }
+
         private static async Task<string> WaitForDataAvailableAndPeek(
+            MessageHubSimulator messageHubSimulator,
+            string correlationId)
+        {
+            // Throws if expected data available message (by correlation ID) is not received
+            await messageHubSimulator.WaitForNotificationsInDataAvailableQueueAsync(correlationId);
+
+            // Invokes the domain and ensures that a reply to the peek request is received for each message type
+            /*var peekSimulationResponseDto = await messageHubSimulator.PeekAsync(); // Throws if corresponding peek reply is not received
+            return await DownloadPeekResult(peekSimulationResponseDto);*/
+
+            return null!;
+        }
+
+        private static async Task<string> WaitForDataAvailableAndPeekDeprecated(
             MessageHubSimulation messageHub, string correlationId)
         {
             // Throws if expected data available message (by correlation ID) is not received

@@ -58,7 +58,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                     () => Fixture.CreateLinkRequestQueue.SenderClient.SendMessageAsync(message), correlationId);
 
                 // Assert
-                await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId);
+                await Fixture.MessageHubMock.AssertPeekReceivesRepliesDeprecatedAsync(correlationId);
             }
 
             [Theory]
