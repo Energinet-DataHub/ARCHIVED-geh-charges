@@ -27,7 +27,7 @@ jobs:
 
   # Build and test solution, and publish coverage report
   dotnet_solution_ci:
-    uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci.yml@v8
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci.yml@8.5.0
     with:
       SOLUTION_FILE_PATH: 'source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln'
       USE_AZURE_FUNCTIONS_TOOLS: true
