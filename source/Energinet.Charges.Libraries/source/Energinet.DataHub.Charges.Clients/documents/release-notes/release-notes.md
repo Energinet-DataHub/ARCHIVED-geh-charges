@@ -2,7 +2,7 @@
 
 ## Version 3.0.15
 
-Renamed client to Charges 
+Renamed client to Charges
 
 ## Version 3.0.14
 
