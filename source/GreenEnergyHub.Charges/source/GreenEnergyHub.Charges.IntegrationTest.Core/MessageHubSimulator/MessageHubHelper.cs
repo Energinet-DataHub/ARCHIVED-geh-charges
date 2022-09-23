@@ -21,9 +21,8 @@ using Azure.Storage.Blobs.Models;
 using Energinet.DataHub.MessageHub.IntegrationTesting;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Infrastructure.Core.InternalMessaging;
-using GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon;
 
-namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
+namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHubSimulator
 {
     public static class MessageHubHelper
     {
@@ -103,10 +102,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
             await messageHubSimulator.WaitForNotificationsInDataAvailableQueueAsync(correlationId);
 
             // Invokes the domain and ensures that a reply to the peek request is received for each message type
-            /*var peekSimulationResponseDto = await messageHubSimulator.PeekAsync(); // Throws if corresponding peek reply is not received
-            return await DownloadPeekResult(peekSimulationResponseDto);*/
-
-            return null!;
+            var peekSimulationResponseDto = await messageHubSimulator.PeekAsync(correlationId); // Throws if corresponding peek reply is not received
+            return await DownloadPeekResult(peekSimulationResponseDto);
         }
 
         private static async Task<string> WaitForDataAvailableAndPeekDeprecated(
@@ -117,10 +114,32 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
 
             // Invokes the domain and ensures that a reply to the peek request is received for each message type
             var peekSimulationResponseDto = await messageHub.PeekAsync(); // Throws if corresponding peek reply is not received
-            return await DownloadPeekResult(peekSimulationResponseDto);
+            return await DownloadPeekResultDeprecated(peekSimulationResponseDto);
         }
 
-        private static async Task<string> DownloadPeekResult(PeekSimulationResponseDto peekSimulationResponseDto)
+        private static async Task<string> DownloadPeekResult(PeekSimulatorResponseDto peekSimulationResponseDto)
+        {
+            ArgumentNullException.ThrowIfNull(peekSimulationResponseDto);
+            ArgumentNullException.ThrowIfNull(peekSimulationResponseDto.Content!.Path);
+
+            /*var uri = peekSimulationResponseDto.Content.Path;
+            var availableDataReferenceId = uri.Segments.Last().TrimEnd('/');
+
+            const string connectionString = ChargesServiceBusResourceNames.MessageHubStorageConnectionString;
+            const string blobContainerName = ChargesServiceBusResourceNames.MessageHubStorageContainerName;
+
+            var blobServiceClient = new BlobServiceClient(connectionString);
+            var blobClient = blobServiceClient
+                .GetBlobContainerClient(blobContainerName)
+                .GetBlobClient(availableDataReferenceId);
+
+            BlobDownloadResult downloadResult = await blobClient.DownloadContentAsync();
+            return downloadResult.Content.ToString();*/
+
+            return await Task.FromResult("string"); // TODO: use MessageHubSimulator _blobContainerClient. to download result and return
+        }
+
+        private static async Task<string> DownloadPeekResultDeprecated(PeekSimulationResponseDto peekSimulationResponseDto)
         {
             ArgumentNullException.ThrowIfNull(peekSimulationResponseDto);
             ArgumentNullException.ThrowIfNull(peekSimulationResponseDto.Content!.Path);

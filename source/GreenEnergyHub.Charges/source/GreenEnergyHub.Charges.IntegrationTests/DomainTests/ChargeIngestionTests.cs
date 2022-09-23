@@ -26,6 +26,7 @@ using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.FunctionHost.Charges;
 using GreenEnergyHub.Charges.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
+using GreenEnergyHub.Charges.IntegrationTest.Core.MessageHubSimulator;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.Charges;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
@@ -223,10 +224,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             }
 
             [Theory]
-            [InlineAutoMoqData(ChargeDocument.ChargePriceSeriesSubscriptionMonthlySample)]
-            /*[InlineAutoMoqData(ChargeDocument.ChargePriceSeriesFeeMonthlySample)]
-            [InlineAutoMoqData(ChargeDocument.ChargePriceSeriesTariffHourlySample)]
-            [InlineAutoMoqData(ChargeDocument.BundledChargePriceSeriesSample)]*/
+            /*[InlineAutoMoqData(ChargeDocument.ChargePriceSeriesSubscriptionMonthlySample)]
+            [InlineAutoMoqData(ChargeDocument.ChargePriceSeriesFeeMonthlySample)]
+            [InlineAutoMoqData(ChargeDocument.ChargePriceSeriesTariffHourlySample)]*/
+            [InlineAutoMoqData(ChargeDocument.BundledChargePriceSeriesSample)]
             public async Task Given_ChargePriceSample_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply(
                 string testFilePath)
             {
@@ -242,7 +243,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
                 using var assertionScope = new AssertionScope();
 
-                var peekResults = await Fixture.MessageHubSimulator.AssertPeekReceivesRepliesAsync(correlationId);
+                var peekResults = await Fixture.MessageHubSimulator.AssertPeekReceivesRepliesAsync(correlationId, 2);
                 /*peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
                 peekResults.Should().NotContainMatch("*Reject*");*/
             }

@@ -73,7 +73,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
         public MessageHubSimulation? MessageHubMock { get; private set; }
 
         [NotNull]
-        public MessageHubSimulator? MessageHubSimulator { get; private set; }
+        public MessageHubSimulator.MessageHubSimulator? MessageHubSimulator { get; private set; }
 
         [NotNull]
         public QueueResource? CreateLinkRequestQueue { get; private set; }
@@ -380,6 +380,13 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
                 EnvironmentSettingNames.MessageHubStorageContainer,
                 ChargesServiceBusResourceNames.MessageHubStorageContainerName);
 
+            var blobContainerClient = new BlobContainerClient(
+                ChargesServiceBusResourceNames.MessageHubStorageConnectionString,
+                ChargesServiceBusResourceNames.MessageHubStorageContainerName);
+
+            if (!await blobContainerClient.ExistsAsync())
+                await blobContainerClient.CreateAsync();
+
             /*var messageHubSimulationConfig = new MessageHubSimulationConfig(
                 ServiceBusResourceProvider.ConnectionString,
                 MessageHubDataAvailableQueue.Name,
@@ -393,12 +400,12 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
 
             MessageHubMock = new MessageHubSimulation(messageHubSimulationConfig);*/
 
-            MessageHubSimulator = new MessageHubSimulator(
+            MessageHubSimulator = new MessageHubSimulator.MessageHubSimulator(
                 AvailableDataQueueListener,
-                MessageHubRequestQueueListener,
+                MessageHubRequestQueue,
                 MessageHubReplyQueueListener,
-                ChargesServiceBusResourceNames.MessageHubStorageConnectionString,
-                ChargesServiceBusResourceNames.MessageHubStorageContainerName);
+                MessageHubRequestQueue.Name,
+                blobContainerClient);
         }
 
         /*private async Task InitializeMessageHubSimulator()
