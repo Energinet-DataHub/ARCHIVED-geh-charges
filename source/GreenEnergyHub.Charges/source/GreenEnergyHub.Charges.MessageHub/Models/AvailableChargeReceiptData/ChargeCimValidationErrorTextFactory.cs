@@ -19,6 +19,7 @@ using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using GreenEnergyHub.Charges.MessageHub.Models.Shared;
 using Microsoft.Extensions.Logging;
+using static GreenEnergyHub.Charges.Infrastructure.Core.Cim.Charges.MarketParticipantRoleMapper;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 {
@@ -116,7 +117,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
                 CimValidationErrorTextToken.ChargeOperationId =>
                     chargeInformationOperationDto.OperationId,
                 CimValidationErrorTextToken.DocumentRecipientBusinessProcessRole =>
-                    document.Recipient.BusinessProcessRole.ToString(),
+                    Map(document.Recipient.BusinessProcessRole),
                 _ => CimValidationErrorTextTemplateMessages.Unknown,
 
             };
