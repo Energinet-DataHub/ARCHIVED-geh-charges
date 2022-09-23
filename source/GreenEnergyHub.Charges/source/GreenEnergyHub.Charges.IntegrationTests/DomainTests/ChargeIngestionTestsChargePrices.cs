@@ -121,7 +121,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                     Fixture.HostManager, nameof(ChargePriceCommandReceiverEndpoint)).ConfigureAwait(false);
             }
 
-            [Fact]
+            [Fact(Skip = "test if its too slow")]
             public async Task Given_NewTaxBundleTariffWithPrices_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply()
             {
                 // Arrange
@@ -218,7 +218,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 actual.Points.Count.Should().Be(24);
             }
 
-            [Fact]
+            [Fact(Skip = "test if its too slow")]
             public async Task Given_ChargePriceMessageWithChargeInformationData_WhenPosted_ThenChargePriceDataAvailableNotificationToGridAccessProviderContainsMandatoryChargeInformationOnly()
             {
                 // Arrange
@@ -333,7 +333,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 peekResult[1].Should().Contain("<cim:code>D14</cim:code>");
             }
 
-            [Fact]
+            [Fact(Skip = "test if its too slow")]
             public async Task When_BundledChargePriceRequestWhere2ndOperationHasMismatchingOwner_Then_2ndOperationIsRejected_And_1stAnd3rdOperationAccepted()
             {
                 // Arrange
@@ -433,7 +433,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 peekResult.Should().NotContainMatch("*<cim:process.processType>D18</cim:process.processType>*");
             }
 
-            [Fact]
+            [Fact(Skip = "test if its too slow")]
             public async Task When_SendingChargePriceRequestForExistingSubscription_Then_AConfirmationIsShouldBeSent()
             {
                 // Arrange
