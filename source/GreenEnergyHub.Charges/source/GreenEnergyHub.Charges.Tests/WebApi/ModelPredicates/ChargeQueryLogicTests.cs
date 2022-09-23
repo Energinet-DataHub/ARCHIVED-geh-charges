@@ -61,7 +61,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
             actual.Single().Should().BeEquivalentTo(expected);
         }
 
-        private ChargePeriod GenerateChargePeriod(Charge charge)
+        private static ChargePeriod GenerateChargePeriod(Charge charge)
         {
             var period = new ChargePeriodBuilder().Build(charge);
             return period;

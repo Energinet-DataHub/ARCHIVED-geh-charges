@@ -25,7 +25,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
 {
     [IntegrationTest]
     [Collection(nameof(ChargesWebApiCollectionFixture))]
-    public class ChargesControllerTests : WebApiTestBase<ChargesWebApiFixture>,
+    public class ChargesControllerTests :
+        WebApiTestBase<ChargesWebApiFixture>,
         IClassFixture<ChargesWebApiFixture>,
         IClassFixture<WebApiFactory>,
         IAsyncLifetime
