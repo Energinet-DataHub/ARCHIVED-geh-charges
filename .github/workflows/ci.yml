@@ -53,7 +53,7 @@ jobs:
       terraform_validate,
       dotnet_solution_ci
     ]
-    uses: Energinet-DataHub/.github/.github/workflows/create-prerelease.yml@v8
+    uses: Energinet-DataHub/.github/.github/workflows/create-prerelease.yml@8.7.0
     with:
       CALLER_REPOSITORY_PATH: Energinet-DataHub/geh-charges
     secrets:
