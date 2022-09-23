@@ -357,7 +357,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
                 .CreateAsync();
 
             MessageHubReplyQueue = await ServiceBusResourceProvider
-                .BuildQueue(ChargesServiceBusResourceNames.MessageHubReplyQueueKey, requiresSession: true)
+                .BuildQueue(ChargesServiceBusResourceNames.MessageHubReplyQueueKey) //, requiresSession: true
                 .SetEnvironmentVariableToQueueName(EnvironmentSettingNames.MessageHubReplyQueue)
                 .CreateAsync();
 
@@ -404,7 +404,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
                 AvailableDataQueueListener,
                 MessageHubRequestQueue,
                 MessageHubReplyQueueListener,
-                MessageHubRequestQueue.Name,
+                MessageHubReplyQueue.Name,
                 blobContainerClient);
         }
 

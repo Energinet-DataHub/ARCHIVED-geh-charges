@@ -77,33 +77,31 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHubSimulator
             {
                 try
                 {
-                    peekResults.Add(await WaitForDataAvailableAndPeek(messageHubSimulator, correlationId));
+                    await WaitForDataAvailable(messageHubSimulator, correlationId);
                 }
                 catch (Exception ex) when (ex is TaskCanceledException or TimeoutException)
                 {
                     actual = $"MessageHub received only {i} of {noOfMessageTypes} expected messages!";
                 }
-                finally
-                {
-                    messageHubSimulator.Clear();
-                }
             }
+
+            // Invokes the domain and ensures that a reply to the peek request is received for each message type
+            var peekSimulationResponseDto = await messageHubSimulator.PeekAsync(correlationId); // Throws if corresponding peek reply is not received
+            peekResults.Add(await DownloadPeekResult(messageHubSimulator, peekSimulationResponseDto));
+
+            messageHubSimulator.Clear();
 
             actual.Should().Be(expected);
 
             return peekResults;
         }
 
-        private static async Task<string> WaitForDataAvailableAndPeek(
+        private static async Task WaitForDataAvailable(
             MessageHubSimulator messageHubSimulator,
             string correlationId)
         {
             // Throws if expected data available message (by correlation ID) is not received
             await messageHubSimulator.WaitForNotificationsInDataAvailableQueueAsync(correlationId);
-
-            // Invokes the domain and ensures that a reply to the peek request is received for each message type
-            var peekSimulationResponseDto = await messageHubSimulator.PeekAsync(correlationId); // Throws if corresponding peek reply is not received
-            return await DownloadPeekResult(peekSimulationResponseDto);
         }
 
         private static async Task<string> WaitForDataAvailableAndPeekDeprecated(
@@ -117,10 +115,11 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHubSimulator
             return await DownloadPeekResultDeprecated(peekSimulationResponseDto);
         }
 
-        private static async Task<string> DownloadPeekResult(PeekSimulatorResponseDto peekSimulationResponseDto)
+        private static async Task<string> DownloadPeekResult(
+            MessageHubSimulator messageHubSimulator,
+            PeekSimulatorResponseDto peekSimulationResponseDto)
         {
-            ArgumentNullException.ThrowIfNull(peekSimulationResponseDto);
-            ArgumentNullException.ThrowIfNull(peekSimulationResponseDto.Content!.Path);
+            var downloadResult = await messageHubSimulator.DownLoadPeekResultAsync(peekSimulationResponseDto);
 
             /*var uri = peekSimulationResponseDto.Content.Path;
             var availableDataReferenceId = uri.Segments.Last().TrimEnd('/');
@@ -136,7 +135,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHubSimulator
             BlobDownloadResult downloadResult = await blobClient.DownloadContentAsync();
             return downloadResult.Content.ToString();*/
 
-            return await Task.FromResult("string"); // TODO: use MessageHubSimulator _blobContainerClient. to download result and return
+            return downloadResult;
         }
 
         private static async Task<string> DownloadPeekResultDeprecated(PeekSimulationResponseDto peekSimulationResponseDto)
