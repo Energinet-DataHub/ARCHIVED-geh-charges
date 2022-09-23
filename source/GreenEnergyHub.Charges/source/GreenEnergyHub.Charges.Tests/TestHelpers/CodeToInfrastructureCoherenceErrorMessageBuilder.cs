@@ -20,7 +20,7 @@ namespace GreenEnergyHub.Charges.Tests.TestHelpers
 {
     public static class CodeToInfrastructureCoherenceErrorMessageBuilder
     {
-        public static string CreateErrorMessage()
+        public static string CreateErrorMessage(string? setting = null)
         {
             var sb = new StringBuilder();
             sb.AppendLine("The failure of this test indicates a discrepancy between one or more elements " +
@@ -31,6 +31,7 @@ namespace GreenEnergyHub.Charges.Tests.TestHelpers
             sb.AppendLine(" - 'ChargesServiceBusResourceNames'");
             sb.AppendLine(" - 'func-functionhost.tf'");
             sb.AppendLine(" - 'sbt-charges-domain-events.tf'");
+            if (setting != null) sb.AppendLine($" - setting not found: {setting}");
 
             return sb.ToString();
         }
