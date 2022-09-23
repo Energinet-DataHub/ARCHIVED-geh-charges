@@ -2,8 +2,8 @@
 
 ## Version 3.0.15
 
-Renamed 'ChargeLinksClient' to 'ChargesClient'
-Added GetChargesAsync() to 'ChargesClient'
+Renamed ChargeLinksClient to ChargesClient
+Added get charges to ChargesClient
 
 ## Version 3.0.14
 
