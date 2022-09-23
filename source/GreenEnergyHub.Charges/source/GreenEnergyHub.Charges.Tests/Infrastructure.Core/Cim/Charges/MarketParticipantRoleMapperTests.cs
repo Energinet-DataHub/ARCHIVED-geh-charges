@@ -14,23 +14,26 @@
 
 using System.ComponentModel;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
-using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
+using GreenEnergyHub.Charges.Infrastructure.Core.Cim.Charges;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Cim.MarketDocument
+namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Cim.Charges
 {
     [UnitTest]
     public class MarketParticipantRoleMapperTests
     {
         [Theory]
+        [InlineData("DDK", MarketParticipantRole.BalanceResponsibleParty)]
         [InlineData("STS", MarketParticipantRole.EnergyAgency)]
         [InlineData("DDQ", MarketParticipantRole.EnergySupplier)]
         [InlineData("DDM", MarketParticipantRole.GridAccessProvider)]
+        [InlineData("DDX", MarketParticipantRole.ImbalanceSettlementResponsible)]
         [InlineData("DGL", MarketParticipantRole.MeteredDataAdministrator)]
         [InlineData("MDR", MarketParticipantRole.MeteredDataResponsible)]
         [InlineData("DDZ", MarketParticipantRole.MeteringPointAdministrator)]
         [InlineData("EZ", MarketParticipantRole.SystemOperator)]
+        [InlineData("TSO", MarketParticipantRole.TransmissionSystemOperator)]
         [InlineData("", MarketParticipantRole.Unknown)]
         [InlineData("DoesNotExist", MarketParticipantRole.Unknown)]
         [InlineData(null, MarketParticipantRole.Unknown)]
@@ -41,13 +44,16 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Cim.MarketDocument
         }
 
         [Theory]
+        [InlineData(MarketParticipantRole.BalanceResponsibleParty, "DDK")]
         [InlineData(MarketParticipantRole.EnergyAgency, "STS")]
         [InlineData(MarketParticipantRole.EnergySupplier, "DDQ")]
         [InlineData(MarketParticipantRole.GridAccessProvider, "DDM")]
+        [InlineData(MarketParticipantRole.ImbalanceSettlementResponsible, "DDX")]
         [InlineData(MarketParticipantRole.MeteredDataAdministrator, "DGL")]
         [InlineData(MarketParticipantRole.MeteredDataResponsible, "MDR")]
         [InlineData(MarketParticipantRole.MeteringPointAdministrator, "DDZ")]
         [InlineData(MarketParticipantRole.SystemOperator, "EZ")]
+        [InlineData(MarketParticipantRole.TransmissionSystemOperator, "TSO")]
         public void Map_WhenGivenKnownInput_MapsToCorrectString(MarketParticipantRole marketParticipantRole, string expected)
         {
             var actual = MarketParticipantRoleMapper.Map(marketParticipantRole);
