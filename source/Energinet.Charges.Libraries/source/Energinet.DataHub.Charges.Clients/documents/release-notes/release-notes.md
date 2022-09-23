@@ -1,6 +1,6 @@
 # Energinet.DataHub.Charges.Clients Release notes
 
-## Version 3.0.14
+## Version 3.0.15
 
 Renamed 'ChargeLinksClient' to 'ChargesClient'
 
