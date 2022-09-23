@@ -26,7 +26,7 @@ jobs:
 
   dispatch_deployment_request:
     needs: publish_release
-    uses: Energinet-DataHub/.github/.github/workflows/dispatch-deployment-request.yml@v8
+    uses: Energinet-DataHub/.github/.github/workflows/dispatch-deployment-request.yml@8.7.0
     with:
       CALLER_REPOSITORY_NAME: geh-charges
       CALLER_REPOSITORY_PATH: Energinet-DataHub/geh-charges
