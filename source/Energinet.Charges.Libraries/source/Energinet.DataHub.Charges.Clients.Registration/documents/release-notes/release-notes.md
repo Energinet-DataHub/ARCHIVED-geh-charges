@@ -1,5 +1,10 @@
 # Energinet.DataHub.Charges.Clients.Registrations Release notes
 
+## Version 3.0.15
+
+Renamed 'ChargeLinksClient' to 'ChargesClient'
+Added GetChargesAsync() to 'ChargesClient'
+
 ## Version 3.0.14
 
 Removed internal test project reference

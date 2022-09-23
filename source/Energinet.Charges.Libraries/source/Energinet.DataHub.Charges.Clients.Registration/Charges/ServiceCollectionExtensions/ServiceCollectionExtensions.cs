@@ -15,11 +15,11 @@
 using System;
 using System.Linq;
 using System.Net.Http;
-using Energinet.DataHub.Charges.Clients.ChargeLinks;
+using Energinet.DataHub.Charges.Clients.Charges;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Energinet.DataHub.Charges.Clients.Registration.ChargeLinks.ServiceCollectionExtensions
+namespace Energinet.DataHub.Charges.Clients.Registration.Charges.ServiceCollectionExtensions
 {
     public static class ServiceCollectionExtensions
     {
@@ -29,10 +29,10 @@ namespace Energinet.DataHub.Charges.Clients.Registration.ChargeLinks.ServiceColl
         /// <param name="services">Service collection</param>
         /// <param name="baseUri">The base URL for the Charges domain</param>
         /// <returns>Service Collection with ChargeLinkClient</returns>
-        public static IServiceCollection AddChargeLinksClient(this IServiceCollection services, Uri baseUri)
+        public static IServiceCollection AddChargesClient(this IServiceCollection services, Uri baseUri)
         {
             services.AddHttpContextAccessor();
-            services.AddScoped<IChargeLinksClient>(x => new ChargeLinksClientFactory(
+            services.AddScoped<IChargesClient>(x => new ChargesClientFactory(
                     x.GetRequiredService<IHttpClientFactory>(),
                     x.GetRequiredService<IHttpContextAccessor>())
                 .CreateClient(baseUri));

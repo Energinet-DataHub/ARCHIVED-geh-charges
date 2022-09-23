@@ -2,6 +2,10 @@
 
 ## Version 3.0.14
 
+Renamed 'ChargeLinksClient' to 'ChargesClient'
+
+## Version 3.0.14
+
 Removed internal test project reference
 
 ## Version 3.0.13

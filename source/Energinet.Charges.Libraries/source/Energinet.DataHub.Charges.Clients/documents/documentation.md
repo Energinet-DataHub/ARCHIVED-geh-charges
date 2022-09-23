@@ -15,7 +15,7 @@ The library provides
 
 - The type [`IDefaultChargeLinkClient`](https://github.com/Energinet-DataHub/geh-charges/blob/main/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/DefaultChargeLink/IDefaultChargeLinkClient.cs) to request creation of charge links from defaults and handle the reply.
 - The type [`DefaultChargeLinkReplyReader`](https://github.com/Energinet-DataHub/geh-charges/blob/main/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/DefaultChargeLink/DefaultChargeLinkReplyReader.cs) to read the respond from the request queue.
-- The type [`ChargeLinksClient`](https://github.com/Energinet-DataHub/geh-charges/blob/main/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/ChargeLinks/ChargeLinksClient.cs) to get charge links data from the Charges domain's Web API.
+- The type [`ChargesClient`](https://github.com/Energinet-DataHub/geh-charges/blob/main/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/Charges/ChargesClient.cs) to get charges data from the Charges domain's Web API.
 
 ## Registration
 
@@ -29,4 +29,4 @@ We have created a independent NuGet package for easier registration when using [
 
 ### Using Microsoft Dependency Injection
 
-`ChargeLinkClients` must be registered as scoped.
+`ChargesClients` must be registered as scoped.

@@ -22,7 +22,7 @@ using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using Energinet.Charges.Contracts.ChargeLink;
-using Energinet.DataHub.Charges.Clients.ChargeLinks;
+using Energinet.DataHub.Charges.Clients.Charges;
 using FluentAssertions;
 using GreenEnergyHub.TestHelpers;
 using Moq;
@@ -30,33 +30,33 @@ using Moq.Protected;
 using Xunit;
 using Xunit.Categories;
 
-namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.ChargeLinks
+namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charges
 {
     [UnitTest]
-    public class ChargeLinksClientTests
+    public class ChargesClientTests
     {
-        private const string BaseUrl = "https://chargelinks-test.com/";
+        private const string BaseUrl = "https://charges-test.com/";
         private const string MeteringPointId = "57131310000000000";
 
         [Theory]
         [InlineAutoDomainData]
-        public async Task GetAsync_WhenMeteringPointHasLinks_ReturnsChargeLinks(
+        public async Task GetChargeLinksAsync_WhenMeteringPointHasLinks_ReturnsChargeLinks(
             ChargeLinkV1Dto chargeLinkDto,
-            Mock<IChargeLinksClientFactory> chargeLinksClientFactory)
+            Mock<IChargesClientFactory> chargesClientFactory)
         {
             // Arrange
             var responseContent = CreateValidResponseContent(chargeLinkDto);
             var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.OK, responseContent);
             var httpClient = CreateHttpClient(mockHttpMessageHandler);
-            chargeLinksClientFactory.Setup(x => x.CreateClient(httpClient))
-                                    .Returns(new ChargeLinksClient(httpClient));
+            chargesClientFactory.Setup(x => x.CreateClient(httpClient))
+                                    .Returns(new ChargesClient(httpClient));
 
-            var sut = chargeLinksClientFactory.Object.CreateClient(httpClient);
+            var sut = chargesClientFactory.Object.CreateClient(httpClient);
 
             var expectedUri = new Uri($"{BaseUrl}{ChargesRelativeUris.GetChargeLinks(MeteringPointId)}");
 
             // Act
-            var result = await sut.GetAsync(MeteringPointId).ConfigureAwait(false);
+            var result = await sut.GetChargeLinksAsync(MeteringPointId).ConfigureAwait(false);
 
             // Assert
             result.Should().NotBeNull();
@@ -73,19 +73,19 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
 
         [Theory]
         [InlineAutoDomainData]
-        public async Task GetAsync_WhenResponseIsNotFound_ReturnsEmptyList(
-            Mock<IChargeLinksClientFactory> chargeLinksClientFactory)
+        public async Task GetChargeLinksAsync_WhenResponseIsNotFound_ReturnsEmptyList(
+            Mock<IChargesClientFactory> chargesClientFactory)
         {
             // Arrange
             var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.NotFound, string.Empty);
             var httpClient = CreateHttpClient(mockHttpMessageHandler);
-            chargeLinksClientFactory.Setup(x => x.CreateClient(httpClient))
-                                    .Returns(new ChargeLinksClient(httpClient));
+            chargesClientFactory.Setup(x => x.CreateClient(httpClient))
+                                    .Returns(new ChargesClient(httpClient));
 
-            var sut = chargeLinksClientFactory.Object.CreateClient(httpClient);
+            var sut = chargesClientFactory.Object.CreateClient(httpClient);
 
             // Act
-            var result = await sut.GetAsync(MeteringPointId).ConfigureAwait(false);
+            var result = await sut.GetChargeLinksAsync(MeteringPointId).ConfigureAwait(false);
 
             // Assert
             result.Should().BeOfType<List<ChargeLinkV1Dto>>();
