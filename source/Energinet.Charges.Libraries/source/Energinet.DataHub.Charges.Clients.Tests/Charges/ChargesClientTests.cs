@@ -21,6 +21,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
+using Energinet.Charges.Contracts.Charge;
 using Energinet.Charges.Contracts.ChargeLink;
 using Energinet.DataHub.Charges.Clients.Charges;
 using FluentAssertions;
@@ -49,7 +50,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
             var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.OK, responseContent);
             var httpClient = CreateHttpClient(mockHttpMessageHandler);
             chargesClientFactory.Setup(x => x.CreateClient(httpClient))
-                                    .Returns(new ChargesClient(httpClient));
+                .Returns(new ChargesClient(httpClient));
 
             var sut = chargesClientFactory.Object.CreateClient(httpClient);
 
@@ -80,7 +81,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
             var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.NotFound, string.Empty);
             var httpClient = CreateHttpClient(mockHttpMessageHandler);
             chargesClientFactory.Setup(x => x.CreateClient(httpClient))
-                                    .Returns(new ChargesClient(httpClient));
+                .Returns(new ChargesClient(httpClient));
 
             var sut = chargesClientFactory.Object.CreateClient(httpClient);
 
@@ -92,24 +93,72 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
             result.Should().BeEmpty();
         }
 
-        private static string CreateValidResponseContent(ChargeLinkV1Dto chargeLinkDto)
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task GetChargesAsync_WhenSuccess_ReturnsCharges(
+            ChargeV1Dto chargeLinkDto,
+            Mock<IChargesClientFactory> chargesClientFactory)
         {
-            var chargeLinks = new List<ChargeLinkV1Dto> { chargeLinkDto };
-            var options = new JsonSerializerOptions(JsonSerializerDefaults.Web)
-            {
-                Converters = { new JsonStringEnumConverter() },
-            };
+            // Arrange
+            var responseContent = CreateValidResponseContent(chargeLinkDto);
+            var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.OK, responseContent);
+            var httpClient = CreateHttpClient(mockHttpMessageHandler);
+            chargesClientFactory.Setup(x => x.CreateClient(httpClient))
+                .Returns(new ChargesClient(httpClient));
 
-            var responseContent = JsonSerializer.Serialize<IList<ChargeLinkV1Dto>>(chargeLinks, options);
+            var sut = chargesClientFactory.Object.CreateClient(httpClient);
+
+            var expectedUri = new Uri($"{BaseUrl}{ChargesRelativeUris.GetCharges()}");
+
+            // Act
+            var result = await sut.GetChargesAsync().ConfigureAwait(false);
+
+            // Assert
+            result.Should().NotBeNull();
+            result[0].ChargeId.Should().Be(chargeLinkDto.ChargeId);
+            result[0].ChargeType.Should().Be(chargeLinkDto.ChargeType);
+            result[0].ChargeName.Should().Be(chargeLinkDto.ChargeName);
+
+            mockHttpMessageHandler.Protected().Verify(
+                "SendAsync",
+                Times.Exactly(1),
+                ItExpr.Is<HttpRequestMessage>(req => req.Method == HttpMethod.Get && req.RequestUri == expectedUri),
+                ItExpr.IsAny<CancellationToken>());
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task GetChargesAsync_WhenResponseIsNotFound_ReturnsEmptyList(
+            Mock<IChargesClientFactory> chargesClientFactory)
+        {
+            // Arrange
+            var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.NotFound, string.Empty);
+            var httpClient = CreateHttpClient(mockHttpMessageHandler);
+            chargesClientFactory.Setup(x => x.CreateClient(httpClient))
+                .Returns(new ChargesClient(httpClient));
+
+            var sut = chargesClientFactory.Object.CreateClient(httpClient);
+
+            // Act
+            var result = await sut.GetChargesAsync().ConfigureAwait(false);
+
+            // Assert
+            result.Should().BeOfType<List<ChargeV1Dto>>();
+            result.Should().BeEmpty();
+        }
+
+        private static string CreateValidResponseContent<TModel>(TModel chargeLinkDto)
+        {
+            var chargeLinks = new List<TModel> { chargeLinkDto };
+            var options = new JsonSerializerOptions(JsonSerializerDefaults.Web) { Converters = { new JsonStringEnumConverter() } };
+
+            var responseContent = JsonSerializer.Serialize<IList<TModel>>(chargeLinks, options);
             return responseContent;
         }
 
         private static HttpClient CreateHttpClient(Mock<HttpMessageHandler> mockHttpMessageHandler)
         {
-            return new HttpClient(mockHttpMessageHandler.Object)
-            {
-                BaseAddress = new Uri(BaseUrl),
-            };
+            return new HttpClient(mockHttpMessageHandler.Object) { BaseAddress = new Uri(BaseUrl) };
         }
 
         private static Mock<HttpMessageHandler> GetMockHttpMessageHandler(HttpStatusCode statusCode, string responseContent)
@@ -121,11 +170,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
                     "SendAsync",
                     ItExpr.IsAny<HttpRequestMessage>(),
                     ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(new HttpResponseMessage()
-                {
-                    StatusCode = statusCode,
-                    Content = new StringContent(responseContent, Encoding.UTF8, "application/json"),
-                })
+                .ReturnsAsync(new HttpResponseMessage { StatusCode = statusCode, Content = new StringContent(responseContent, Encoding.UTF8, "application/json") })
                 .Verifiable();
             return mockHttpMessageHandler;
         }
