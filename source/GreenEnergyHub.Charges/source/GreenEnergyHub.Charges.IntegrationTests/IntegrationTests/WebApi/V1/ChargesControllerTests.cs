@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using FluentAssertions;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.WebApi;
-using GreenEnergyHub.Charges.TestCore;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
@@ -44,12 +45,26 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
 
         public Task InitializeAsync()
         {
-            throw new System.NotImplementedException();
+            _client.DefaultRequestHeaders.Add("Authorization", $"Bearer xxx");
+            return Task.CompletedTask;
         }
 
         public Task DisposeAsync()
         {
-            throw new System.NotImplementedException();
+            _client.Dispose();
+            return Task.CompletedTask;
+        }
+
+        [Fact]
+        public async Task GetAsync_WhenMeteringPointIdHasChargeLinks_ReturnsOkAndCorrectContentType()
+        {
+            // Act
+            var response = await _client.GetAsync($"{BaseUrl}");
+
+            // Assert
+            var contentType = response.Content.Headers.ContentType!.ToString();
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            contentType.Should().Be("application/json; charset=utf-8");
         }
     }
 }

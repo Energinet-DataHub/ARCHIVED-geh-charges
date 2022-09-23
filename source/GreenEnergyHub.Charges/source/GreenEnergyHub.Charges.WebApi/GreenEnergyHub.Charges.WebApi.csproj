@@ -59,6 +59,9 @@ limitations under the License.
     <Compile Include="..\..\..\Contracts\Charge\ChargeType.cs">
       <Link>Dtos\Charge\ChargeType.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\Contracts\Charge\Resolution.cs">
+      <Link>Dtos\Charge\Resolution.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\Contracts\Charge\ChargesV1Dto.cs">
       <Link>Dtos\Charge\ChargesV1Dto.cs</Link>
     </Compile>

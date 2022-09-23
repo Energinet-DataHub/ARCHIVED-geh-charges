@@ -14,6 +14,7 @@
 
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.QueryApi;
+using GreenEnergyHub.Charges.WebApi.ModelPredicates;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -41,7 +42,10 @@ public class ChargesController : ControllerBase
     [MapToApiVersion(Version1)]
     public async Task<IActionResult> GetAsync()
     {
-        var charges = await _data.Charges.ToListAsync().ConfigureAwait(false);
+        var charges = await _data.Charges
+            .AsChargeV1Dto()
+            .ToListAsync()
+            .ConfigureAwait(false);
 
         return Ok(charges);
     }

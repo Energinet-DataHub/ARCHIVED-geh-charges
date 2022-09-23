@@ -32,23 +32,11 @@ namespace GreenEnergyHub.Charges.WebApi.ModelPredicates
                 .Select(cl => new ChargeLinkV1Dto(
                     Map(cl.Charge.GetChargeType()),
                     cl.Charge.SenderProvidedChargeId,
-                    (cl.Charge.ChargePeriods
-                        .Where(cp => cp.StartDateTime <= todayAtMidnightUtc)
-                        .OrderByDescending(cp => cp.StartDateTime)
-                        .FirstOrDefault() ??
-                     cl.Charge.ChargePeriods
-                         .OrderBy(cp => cp.StartDateTime)
-                         .First()).Name,
+                    cl.Charge.GetChargeName(todayAtMidnightUtc),
                     cl.Charge.Owner.MarketParticipantId,
                     "<Aktørnavn XYZ>", // Hardcoded as we currently don't have the ChargeOwnerName data
                     cl.Charge.TaxIndicator,
-                    (cl.Charge.ChargePeriods
-                        .Where(cp => cp.StartDateTime <= todayAtMidnightUtc)
-                        .OrderByDescending(cp => cp.StartDateTime)
-                        .FirstOrDefault() ??
-                     cl.Charge.ChargePeriods
-                         .OrderBy(cp => cp.StartDateTime)
-                         .First()).TransparentInvoicing,
+                    cl.Charge.IsTransparentInvoicing(todayAtMidnightUtc),
                     cl.Factor,
                     cl.StartDateTime,
                     cl.EndDateTime == InstantExtensions.GetEndDefault().ToDateTimeOffset() ? null : cl.EndDateTime)); // Nullify "EndDefault" end dates
@@ -64,22 +52,10 @@ namespace GreenEnergyHub.Charges.WebApi.ModelPredicates
                 .Select(cl => new ChargeLinkV2Dto(
                     Map(cl.Charge.GetChargeType()),
                     cl.Charge.SenderProvidedChargeId,
-                    (cl.Charge.ChargePeriods
-                         .Where(cp => cp.StartDateTime <= todayAtMidnightUtc)
-                         .OrderByDescending(cp => cp.StartDateTime)
-                         .FirstOrDefault() ??
-                     cl.Charge.ChargePeriods
-                         .OrderBy(cp => cp.StartDateTime)
-                         .First()).Name,
+                    cl.Charge.GetChargeName(todayAtMidnightUtc),
                     cl.Charge.Owner.Id,
                     cl.Charge.TaxIndicator,
-                    (cl.Charge.ChargePeriods
-                        .Where(cp => cp.StartDateTime <= todayAtMidnightUtc)
-                        .OrderByDescending(cp => cp.StartDateTime)
-                        .FirstOrDefault() ??
-                     cl.Charge.ChargePeriods
-                         .OrderBy(cp => cp.StartDateTime)
-                         .First()).TransparentInvoicing,
+                    cl.Charge.IsTransparentInvoicing(todayAtMidnightUtc),
                     cl.Factor,
                     cl.StartDateTime,
                     cl.EndDateTime == InstantExtensions.GetEndDefault().ToDateTimeOffset() ? null : cl.EndDateTime)); // Nullify "EndDefault" end dates
