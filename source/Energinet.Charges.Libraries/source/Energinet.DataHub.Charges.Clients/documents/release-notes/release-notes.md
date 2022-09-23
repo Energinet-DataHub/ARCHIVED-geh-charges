@@ -2,7 +2,7 @@
 
 ## Version 3.0.15
 
-Renamed 'ChargeLinksClient' to 'ChargesClient'
+Renamed to Charges instead of ChargeLinks
 
 ## Version 3.0.14
 
