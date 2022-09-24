@@ -83,8 +83,9 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHubSimulator
             }
 
             // Invokes the domain and ensures that a reply to the peek request is received for each message type
-            var peekSimulationResponseDto = await messageHubSimulator.PeekAsync(correlationId); // Throws if corresponding peek reply is not received
-            peekResults.Add(await DownloadPeekResult(messageHubSimulator, peekSimulationResponseDto));
+            // Throws if corresponding peek reply is not received
+            var peekSimulationResponseDto = await messageHubSimulator.PeekAsync(correlationId);
+            peekResults.Add(await messageHubSimulator.DownLoadPeekResultAsync(peekSimulationResponseDto));
 
             messageHubSimulator.Clear();
 
@@ -102,29 +103,6 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHubSimulator
             // Invokes the domain and ensures that a reply to the peek request is received for each message type
             var peekSimulationResponseDto = await messageHub.PeekAsync(); // Throws if corresponding peek reply is not received
             return await DownloadPeekResultDeprecated(peekSimulationResponseDto);
-        }
-
-        private static async Task<string> DownloadPeekResult(
-            MessageHubSimulator messageHubSimulator,
-            PeekSimulatorResponseDto peekSimulationResponseDto)
-        {
-            var downloadResult = await messageHubSimulator.DownLoadPeekResultAsync(peekSimulationResponseDto);
-
-            /*var uri = peekSimulationResponseDto.Content.Path;
-            var availableDataReferenceId = uri.Segments.Last().TrimEnd('/');
-
-            const string connectionString = ChargesServiceBusResourceNames.MessageHubStorageConnectionString;
-            const string blobContainerName = ChargesServiceBusResourceNames.MessageHubStorageContainerName;
-
-            var blobServiceClient = new BlobServiceClient(connectionString);
-            var blobClient = blobServiceClient
-                .GetBlobContainerClient(blobContainerName)
-                .GetBlobClient(availableDataReferenceId);
-
-            BlobDownloadResult downloadResult = await blobClient.DownloadContentAsync();
-            return downloadResult.Content.ToString();*/
-
-            return downloadResult;
         }
 
         private static async Task<string> DownloadPeekResultDeprecated(PeekSimulationResponseDto peekSimulationResponseDto)

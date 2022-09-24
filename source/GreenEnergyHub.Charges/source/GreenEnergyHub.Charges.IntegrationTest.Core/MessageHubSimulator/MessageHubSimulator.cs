@@ -29,6 +29,7 @@ using Energinet.DataHub.MessageHub.Model.IntegrationEvents;
 using Energinet.DataHub.MessageHub.Model.Model;
 using Energinet.DataHub.MessageHub.Model.Peek;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Domain.Charges.Exceptions;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
@@ -108,40 +109,24 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHubSimulator
 
         public async Task<PeekSimulatorResponseDto> PeekAsync(string correlationId)
         {
-            var requestId = Guid.NewGuid();
-            var idempotencyId = correlationId; // TODO: not sure if this is correct?
+            InvalidOperationExceptionExtension.ThrowIfNoElements(
+                _notifications, $"{nameof(MessageHubSimulator)}: No dataavailable was provided for Peek");
 
-            if (_notifications.Count == 0)
-            {
-                throw new InvalidOperationException(
-                    $"{nameof(MessageHubSimulator)}: No dataavailable was provided for Peek");
-            }
+            var dataAvailableNotificationIds = _notifications.Select(x => x.Uuid);
+            await AddDataAvailableNotificationIdsToStorageAsync(
+                    correlationId, dataAvailableNotificationIds).ConfigureAwait(false);
 
             var messageType = _notifications.Select(x => x.MessageType.Value).Distinct().Single();
-            var dataAvailableNotificationIds = _notifications.Select(x => x.Uuid);
-            var dataAvailableNotificationReferenceId = idempotencyId.ToString();
-
-            await AddDataAvailableNotificationIdsToStorageAsync(
-                    dataAvailableNotificationReferenceId, dataAvailableNotificationIds).ConfigureAwait(false);
-
+            var requestId = Guid.NewGuid();
             var request = new DataBundleRequestDto(
-                requestId,
-                dataAvailableNotificationReferenceId,
-                idempotencyId.ToString(),
+                RequestId: requestId,
+                DataAvailableNotificationReferenceId: correlationId,
+                IdempotencyId: correlationId,
                 new MessageTypeDto(messageType),
                 ResponseFormat.Xml,
                 1.0);
 
-            // var newPeekResponse = CreateDataBundle(request, correlationId);
             var peekResponse = await RequestDataBundleAsync(request, correlationId).ConfigureAwait(false);
-
-            /*// Not in use but must be valid
-            const DomainOrigin domainOrigin = DomainOrigin.Charges;
-
-            var peekResponse = await _dataBundleRequestSender
-                .SendAsync(request, domainOrigin)
-                .ConfigureAwait(false);
-*/
             if (peekResponse == null)
             {
                 throw new TimeoutException("MessageHubSimulation: Waiting for Peek reply timed out");
@@ -150,7 +135,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHubSimulator
             return peekResponse.IsErrorResponse
                 ? new PeekSimulatorResponseDto()
                 : new PeekSimulatorResponseDto(
-                    requestId, dataAvailableNotificationReferenceId, new AzureBlobContentDto(peekResponse.ContentUri));
+                    requestId, correlationId, new AzureBlobContentDto(peekResponse.ContentUri));
         }
 
         public async Task<string> DownLoadPeekResultAsync(PeekSimulatorResponseDto peekSimulationResponseDto)
@@ -222,18 +207,6 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHubSimulator
             var dataBundleResponseDto = _responseBundleParser.Parse(messageBody.ToArray());
             return dataBundleResponseDto;
         }
-
-        /*private ServiceBusMessage CreateReplyMessageHubServiceBusMessage(string correlationId, byte[] bytes, string sessionId)
-        {
-            // TODO: Which bytes?
-            var contractBytes = _responseBundleParser.Parse(dataBundleResponseDto);
-            var serviceBusReplyMessage = new ServiceBusMessage(contractBytes)
-            {
-                SessionId = sessionId,
-            }.AddDataBundleResponseIntegrationEvents(dataBundleResponseDto.RequestIdempotencyId);
-
-            return serviceBusReplyMessage;
-        }*/
 
         private ServiceBusMessage CreateRequestMessageHubServiceBusMessage(string correlationId, byte[] bytes, string sessionId)
         {
