@@ -87,21 +87,23 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHubSimulator
         ///     Can throw a TimeoutException or TaskCanceledException.
         /// </summary>
         /// <param name="correlationId">correlation id to wait for</param>
-        public async Task WaitForNotificationsInDataAvailableQueueAsync(string correlationId)
+        /// <param name="noOfMessageTypes"></param>
+        public async Task WaitForNotificationsInDataAvailableQueueAsync(string correlationId, int noOfMessageTypes)
         {
             using var eventualAvailableDataEvent = await _messageHubDataAvailableServiceBusTestListener
-                .ListenForMessageAsync(correlationId)
+                .ListenForEventsAsync(correlationId, noOfMessageTypes)
                 .ConfigureAwait(false);
 
-            var isAvailableDataEventReceived = eventualAvailableDataEvent
-                .MessageAwaiter!
+            var isAvailableDataEventReceived = eventualAvailableDataEvent.CountdownEvent!
                 .Wait(TimeSpan.FromSeconds(SecondsToWaitForIntegrationEvents));
-            isAvailableDataEventReceived.Should().BeTrue();
-            eventualAvailableDataEvent.Body.Should().NotBeNull();
 
-            var messageBody = eventualAvailableDataEvent.Body!;
-            var dataAvailableNotificationDto = _dataAvailableNotificationParser.Parse(messageBody.ToArray());
-            _notifications.Add(dataAvailableNotificationDto);
+            isAvailableDataEventReceived.Should().BeTrue();
+            eventualAvailableDataEvent.EventualServiceBusMessages.Count.Should().Be(noOfMessageTypes);
+            eventualAvailableDataEvent.EventualServiceBusMessages.Select(x => x.Body).Should().NotBeNull();
+
+            _notifications.AddRange(
+                eventualAvailableDataEvent.EventualServiceBusMessages.Select(x =>
+                _dataAvailableNotificationParser.Parse(x.Body!.ToArray())));
         }
 
         public async Task<PeekSimulatorResponseDto> PeekAsync(string correlationId)
@@ -148,8 +150,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHubSimulator
             return peekResponse.IsErrorResponse
                 ? new PeekSimulatorResponseDto()
                 : new PeekSimulatorResponseDto(
-                    requestId, dataAvailableNotificationReferenceId, new AzureBlobContentDto(
-                        peekResponse.ContentUri));
+                    requestId, dataAvailableNotificationReferenceId, new AzureBlobContentDto(peekResponse.ContentUri));
         }
 
         public async Task<string> DownLoadPeekResultAsync(PeekSimulatorResponseDto peekSimulationResponseDto)

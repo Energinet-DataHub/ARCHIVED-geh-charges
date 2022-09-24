@@ -200,12 +200,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             }
 
             [Theory]
-            [InlineAutoMoqData(ChargeDocument.ChargeInformationSubscriptionMonthlySample)]
-            [InlineAutoMoqData(ChargeDocument.ChargeInformationFeeMonthlySample)]
-            [InlineAutoMoqData(ChargeDocument.ChargeInformationTariffHourlySample)]
-            [InlineAutoMoqData(ChargeDocument.BundledChargeInformationSample)]
+            [InlineAutoMoqData(ChargeDocument.ChargeInformationSubscriptionMonthlySample, 1)]
+            [InlineAutoMoqData(ChargeDocument.ChargeInformationFeeMonthlySample, 1)]
+            [InlineAutoMoqData(ChargeDocument.ChargeInformationTariffHourlySample, 1)]
+            [InlineAutoMoqData(ChargeDocument.BundledChargeInformationSample, 3)]
             public async Task Given_ChargeInformationSampleFile_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply(
-                string testFilePath)
+                string testFilePath, int noOfMessagesExpected)
             {
                 // Arrange
                 var (request, correlationId) =
@@ -218,18 +218,19 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
 
                 using var assertionScope = new AssertionScope();
-                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesDeprecatedAsync(correlationId);
+                var peekResults = await Fixture.MessageHubSimulator
+                    .AssertPeekReceivesRepliesAsync(correlationId, noOfMessagesExpected);
                 peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
                 peekResults.Should().NotContainMatch("*Reject*");
             }
 
             [Theory]
-            /*[InlineAutoMoqData(ChargeDocument.ChargePriceSeriesSubscriptionMonthlySample)]
-            [InlineAutoMoqData(ChargeDocument.ChargePriceSeriesFeeMonthlySample)]
-            [InlineAutoMoqData(ChargeDocument.ChargePriceSeriesTariffHourlySample)]*/
-            [InlineAutoMoqData(ChargeDocument.BundledChargePriceSeriesSample)]
+            [InlineAutoMoqData(ChargeDocument.ChargePriceSeriesSubscriptionMonthlySample, 1)]
+            [InlineAutoMoqData(ChargeDocument.ChargePriceSeriesFeeMonthlySample, 1)]
+            [InlineAutoMoqData(ChargeDocument.ChargePriceSeriesTariffHourlySample, 1)]
+            [InlineAutoMoqData(ChargeDocument.BundledChargePriceSeriesSample, 3)]
             public async Task Given_ChargePriceSample_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply(
-                string testFilePath)
+                string testFilePath, int noOfMessagesExpected)
             {
                 // Arrange
                 var (request, correlationId) =
@@ -242,8 +243,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
 
                 using var assertionScope = new AssertionScope();
-
-                var peekResults = await Fixture.MessageHubSimulator.AssertPeekReceivesRepliesAsync(correlationId, 3);
+                var peekResults = await Fixture.MessageHubSimulator
+                    .AssertPeekReceivesRepliesAsync(correlationId, noOfMessagesExpected);
                 peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
                 peekResults.Should().NotContainMatch("*Reject*");
             }

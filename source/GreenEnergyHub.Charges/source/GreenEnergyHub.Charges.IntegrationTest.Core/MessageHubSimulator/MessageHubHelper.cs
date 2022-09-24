@@ -69,20 +69,17 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHubSimulator
             int noOfMessageTypes = 1)
         {
             var peekResults = new List<string>();
-
             var expected = $"MessageHub received all {noOfMessageTypes} expected messages.";
             var actual = expected;
 
-            for (var i = 0; i < noOfMessageTypes; i++)
+            try
             {
-                try
-                {
-                    await WaitForDataAvailable(messageHubSimulator, correlationId);
-                }
-                catch (Exception ex) when (ex is TaskCanceledException or TimeoutException)
-                {
-                    actual = $"MessageHub received only {i} of {noOfMessageTypes} expected messages!";
-                }
+                // Throws if expected data available message (by correlation ID) is not received
+                await messageHubSimulator.WaitForNotificationsInDataAvailableQueueAsync(correlationId, noOfMessageTypes);
+            }
+            catch (Exception ex) when (ex is TaskCanceledException or TimeoutException)
+            {
+                actual = $"MessageHub received fewer that the {noOfMessageTypes} expected messages!";
             }
 
             // Invokes the domain and ensures that a reply to the peek request is received for each message type
@@ -94,14 +91,6 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHubSimulator
             actual.Should().Be(expected);
 
             return peekResults;
-        }
-
-        private static async Task WaitForDataAvailable(
-            MessageHubSimulator messageHubSimulator,
-            string correlationId)
-        {
-            // Throws if expected data available message (by correlation ID) is not received
-            await messageHubSimulator.WaitForNotificationsInDataAvailableQueueAsync(correlationId);
         }
 
         private static async Task<string> WaitForDataAvailableAndPeekDeprecated(
