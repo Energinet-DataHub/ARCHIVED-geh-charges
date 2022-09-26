@@ -51,12 +51,14 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             // Arrange
             var correlationId = Guid.NewGuid().ToString();
             var expectedTime = InstantPattern.ExtendedIso.Parse("2021-01-01T23:00:00Z").Value;
-            var reader = GetReaderAndArrangeTest(
+            using var memoryStream = new MemoryStream();
+            var reader = GetReaderAndArrangeTestData(
                 context,
                 iso8601Durations,
                 correlationId,
                 expectedTime,
-                "GreenEnergyHub.Charges.Tests.TestFiles.Syntax_Valid_CIM_Charge.xml");
+                "TestFiles/Syntax_Valid_CIM_Charge.xml",
+                memoryStream);
 
             // Act
             var actualBundle = (ChargeInformationCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
@@ -102,12 +104,14 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             // Arrange
             var correlationId = Guid.NewGuid().ToString();
             var expectedTime = InstantPattern.ExtendedIso.Parse("2021-04-17T22:00:00Z").Value;
-            var reader = GetReaderAndArrangeTest(
+            using var memoryStream = new MemoryStream();
+            var reader = GetReaderAndArrangeTestData(
                 context,
                 iso8601Durations,
                 correlationId,
                 expectedTime,
-                "GreenEnergyHub.Charges.Tests.TestFiles.Valid_CIM_Charge_Without_Prices.xml");
+                "TestFiles/Valid_CIM_Charge_Without_Prices.xml",
+                memoryStream);
 
             // Act
             var actualBundle = (ChargeInformationCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
@@ -142,12 +146,14 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             var correlationId = Guid.NewGuid().ToString();
             var expectedStartTime = InstantPattern.ExtendedIso.Parse("2020-12-31T23:00:00Z").Value;
             var expectedEndTime = InstantPattern.ExtendedIso.Parse("2021-02-28T23:00:00Z").Value;
-            var reader = GetReaderAndArrangeTest(
+            using var memoryStream = new MemoryStream();
+            var reader = GetReaderAndArrangeTestData(
                 context,
                 iso8601Durations,
                 correlationId,
                 expectedStartTime,
-                "GreenEnergyHub.Charges.Tests.TestFiles.Valid_CIM_Charge_Prices_Without_Master_Data.xml");
+                "TestFiles/Valid_CIM_Charge_Prices_Without_Master_Data.xml",
+                memoryStream);
 
             // Act
             var actualBundle = (ChargePriceCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
@@ -197,12 +203,14 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             // Arrange
             var correlationId = Guid.NewGuid().ToString();
             var expectedTime = InstantPattern.ExtendedIso.Parse("2022-10-31T23:00:00Z").Value;
-            var reader = GetReaderAndArrangeTest(
+            using var memoryStream = new MemoryStream();
+            var reader = GetReaderAndArrangeTestData(
                 context,
                 iso8601Durations,
                 correlationId,
                 expectedTime,
-                "GreenEnergyHub.Charges.Tests.TestFiles.CreateTariffsBundle.xml");
+                "TestFiles/CreateTariffsBundle.xml",
+                memoryStream);
 
             // Act
             var actual = (ChargeInformationCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
@@ -250,12 +258,14 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             var correlationId = Guid.NewGuid().ToString();
             var expectedStartTime = InstantPattern.ExtendedIso.Parse("2022-10-31T23:00:00Z").Value;
             var expectedEndTime = InstantPattern.ExtendedIso.Parse("2022-11-01T23:00:00Z").Value;
-            var reader = GetReaderAndArrangeTest(
+            using var memoryStream = new MemoryStream();
+            var reader = GetReaderAndArrangeTestData(
                 context,
                 iso8601Durations,
                 correlationId,
                 expectedStartTime,
-                "GreenEnergyHub.Charges.Tests.TestFiles.TariffPriceSeriesBundle.xml");
+                "TestFiles/TariffPriceSeriesBundle.xml",
+                memoryStream);
 
             // Act
             var actual = (ChargePriceCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
@@ -300,12 +310,14 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             // Arrange
             var correlationId = Guid.NewGuid().ToString();
             var expectedTime = InstantPattern.ExtendedIso.Parse("2022-10-31T23:00:00Z").Value;
-            var reader = GetReaderAndArrangeTest(
+            using var memoryStream = new MemoryStream();
+            var reader = GetReaderAndArrangeTestData(
                 context,
                 iso8601Durations,
                 correlationId,
                 expectedTime,
-                "GreenEnergyHub.Charges.Tests.TestFiles.BundleMixOfChargeMasterDataOperations.xml");
+                "TestFiles/BundleMixOfChargeMasterDataOperations.xml",
+                memoryStream);
 
             // Act
             var actual = (ChargeInformationCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
@@ -329,12 +341,14 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             // Arrange
             var correlationId = Guid.NewGuid().ToString();
             var expectedTime = InstantPattern.ExtendedIso.Parse("2022-10-31T23:00:00Z").Value;
-            var reader = GetReaderAndArrangeTest(
+            using var memoryStream = new MemoryStream();
+            var reader = GetReaderAndArrangeTestData(
                 context,
                 iso8601Durations,
                 correlationId,
                 expectedTime,
-                "GreenEnergyHub.Charges.Tests.TestFiles.BundleMixOfChargePriceOperations.xml");
+                "TestFiles/BundleMixOfChargePriceOperations.xml",
+                memoryStream);
 
             // Act
             var actual = (ChargePriceCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
@@ -348,12 +362,13 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             chargeCommandWithTwoOperations.Operations.Should().Contain(x => x.OperationId == "Operation4");
         }
 
-        private static SchemaValidatingReader GetReaderAndArrangeTest(
+        private static SchemaValidatingReader GetReaderAndArrangeTestData(
             Mock<ICorrelationContext> context,
             Mock<IIso8601Durations> iso8601Durations,
             string correlationId,
             Instant expectedStartTime,
-            string embeddedFile)
+            string filePath,
+            Stream memoryStream)
         {
             context.Setup(c => c.Id).Returns(correlationId);
 
@@ -363,8 +378,18 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
                         It.IsAny<string>(),
                         It.IsAny<int>()))
                 .Returns(expectedStartTime);
-            var stream = GetEmbeddedResource(embeddedFile);
-            return new SchemaValidatingReader(stream, Schemas.CimXml.StructureRequestChangeOfPriceList);
+
+            var basePath = Assembly.GetExecutingAssembly().Location;
+            var path = Path.Combine(Directory.GetParent(basePath)!.FullName, filePath);
+            using (var fileStream = File.OpenRead(path))
+            {
+                fileStream.Position = 0;
+                fileStream.CopyTo(memoryStream);
+            }
+
+            memoryStream.Position = 0;
+
+            return new SchemaValidatingReader(memoryStream, Schemas.CimXml.StructureRequestChangeOfPriceList);
         }
 
         private static Stream GetEmbeddedResource(string path)
