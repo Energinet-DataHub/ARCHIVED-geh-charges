@@ -27,5 +27,12 @@ namespace GreenEnergyHub.Charges.TestCore
             memoryStream.Position = 0;
             return memoryStream;
         }
+
+        public static string GetFileAsString(string streamPath)
+        {
+            using var memoryStream = new MemoryStream();
+            GetFileAsStream(memoryStream, streamPath);
+            return memoryStream.AsString();
+        }
     }
 }
