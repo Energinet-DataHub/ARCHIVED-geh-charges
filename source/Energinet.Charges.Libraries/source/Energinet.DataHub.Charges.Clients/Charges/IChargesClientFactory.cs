@@ -15,12 +15,12 @@
 using System;
 using System.Net.Http;
 
-namespace Energinet.DataHub.Charges.Clients.ChargeLinks
+namespace Energinet.DataHub.Charges.Clients.Charges
 {
-    public interface IChargeLinksClientFactory
+    public interface IChargesClientFactory
     {
-        ChargeLinksClient CreateClient(HttpClient httpClient);
+        ChargesClient CreateClient(HttpClient httpClient);
 
-        ChargeLinksClient CreateClient(Uri baseUrl);
+        ChargesClient CreateClient(Uri baseUrl);
     }
 }

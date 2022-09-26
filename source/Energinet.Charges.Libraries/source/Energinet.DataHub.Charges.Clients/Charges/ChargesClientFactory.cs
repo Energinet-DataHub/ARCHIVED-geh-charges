@@ -17,31 +17,31 @@ using System.Linq;
 using System.Net.Http;
 using Microsoft.AspNetCore.Http;
 
-namespace Energinet.DataHub.Charges.Clients.ChargeLinks
+namespace Energinet.DataHub.Charges.Clients.Charges
 {
-    public class ChargeLinksClientFactory : IChargeLinksClientFactory
+    public class ChargesClientFactory : IChargesClientFactory
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public ChargeLinksClientFactory(IHttpClientFactory httpClientFactory, IHttpContextAccessor httpContextAccessor)
+        public ChargesClientFactory(IHttpClientFactory httpClientFactory, IHttpContextAccessor httpContextAccessor)
         {
             _httpClientFactory = httpClientFactory;
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public ChargeLinksClient CreateClient(HttpClient httpClient)
+        public ChargesClient CreateClient(HttpClient httpClient)
         {
             SetAuthorizationHeader(httpClient);
-            return new ChargeLinksClient(httpClient);
+            return new ChargesClient(httpClient);
         }
 
-        public ChargeLinksClient CreateClient(Uri baseUrl)
+        public ChargesClient CreateClient(Uri baseUrl)
         {
             var httpClient = _httpClientFactory.CreateClient();
             SetAuthorizationHeader(httpClient);
             httpClient.BaseAddress = baseUrl;
-            return new ChargeLinksClient(httpClient);
+            return new ChargesClient(httpClient);
         }
 
         private void SetAuthorizationHeader(HttpClient httpClient)

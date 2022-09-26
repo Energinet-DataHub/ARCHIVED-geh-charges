@@ -12,23 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Energinet.Charges.Contracts.Charge;
+using Energinet.Charges.Contracts.ChargeLink;
 
-namespace Energinet.DataHub.Charges.Clients.ChargeLinks
+namespace Energinet.DataHub.Charges.Clients.Charges
 {
     /// <summary>
-    /// This static class contains all relative uris / endpoints for the Charges Web API
+    /// Charge Links Client Interface
     /// </summary>
-    public static class ChargesRelativeUris
+    public interface IChargesClient
     {
         /// <summary>
-        /// Provides the relative uri for getting charge links for a given metering point id.
+        /// Gets all charge links data for a given metering point.
         /// </summary>
         /// <param name="meteringPointId">The 18-digits metering point identifier used by the Danish version of Green Energy Hub.</param>
-        /// <returns>Relative URI including metering point id parameter</returns>
-        public static Uri GetChargeLinks(string meteringPointId)
-        {
-            return new Uri($"v1/ChargeLinks/GetAsync?meteringPointId={meteringPointId}", UriKind.Relative);
-        }
+        /// <returns>A collection of Charge Link DTOs</returns>
+        public Task<IList<ChargeLinkV1Dto>> GetChargeLinksAsync(string meteringPointId);
+
+        /// <summary>
+        /// Gets all charges
+        /// </summary>
+        /// <returns>A collection of Charge DTOs</returns>
+        public Task<IList<ChargeV1Dto>> GetChargesAsync();
     }
 }
