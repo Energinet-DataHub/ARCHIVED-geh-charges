@@ -110,17 +110,19 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
 
         public async Task<List<PeekSimulatorResponseDto>> PeekAsync()
         {
-            var peekSimulatorResponseDtos = new List<PeekSimulatorResponseDto>();
-
             InvalidOperationExceptionExtension.ThrowIfNoElements(
                 _notifications, $"{nameof(MessageHubSimulator)}: No dataavailable was provided for Peek");
 
-            var messageTypes = _notifications.Select(x => x.MessageType.Value).Distinct();
+            var peekSimulatorResponseDtos = new List<PeekSimulatorResponseDto>();
+            var distinctMessages = _notifications.Select(x => new { x.MessageType.Value, x.Recipient }).Distinct();
 
-            foreach (var messageType in messageTypes)
+            foreach (var message in distinctMessages)
             {
-                var dataAvailableNotificationDtosForMessageType =
-                    _notifications.Where(x => x.MessageType.Value == messageType).ToList();
+                var dataAvailableNotificationDtosForMessageType = _notifications.Where(x =>
+                        x.MessageType.Value == message.Value &&
+                        x.Recipient == message.Recipient)
+                    .ToList();
+
                 var blobName = dataAvailableNotificationDtosForMessageType.First().Uuid.ToString();
 
                 await AddDataAvailableNotificationIdsToStorageAsync(
@@ -133,15 +135,13 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
                     RequestId: requestId,
                     DataAvailableNotificationReferenceId: blobName,
                     IdempotencyId: correlationId,
-                    new MessageTypeDto(messageType),
+                    new MessageTypeDto(message.Value),
                     ResponseFormat.Xml,
                     1.0);
 
                 var peekResponse = await RequestDataBundleAsync(request, correlationId).ConfigureAwait(false);
                 if (peekResponse == null)
-                {
                     throw new TimeoutException("MessageHubSimulation: Waiting for Peek reply timed out");
-                }
 
                 peekSimulatorResponseDtos.Add(peekResponse.IsErrorResponse
                     ? new PeekSimulatorResponseDto()

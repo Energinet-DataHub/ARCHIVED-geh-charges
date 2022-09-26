@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
             }
             catch (Exception ex) when (ex is TaskCanceledException or TimeoutException)
             {
-                actual = $"MessageHub received fewer that the {noOfDataAvailableNotifications} expected messages!";
+                actual = $"MessageHub received fewer than the {noOfDataAvailableNotifications} expected messages!";
             }
 
             actual.Should().Be(expected);
