@@ -36,7 +36,7 @@ public class ChargesController : ControllerBase
     /// <summary>
     ///     Returns all charges
     /// </summary>
-    /// <returns>Charge links data or "404 Not Found"</returns>
+    /// <returns>Charges data or "404 Not Found"</returns>
     [HttpGet("GetAsync")]
     [MapToApiVersion(Version1)]
     public async Task<IActionResult> GetAsync()
