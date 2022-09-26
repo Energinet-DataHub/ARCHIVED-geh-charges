@@ -52,9 +52,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
             SetupMocks(marketParticipantRepository, clock, cimIdProvider);
             await using var stream = new MemoryStream();
 
-            var expected = EmbeddedStreamHelper.GetEmbeddedStreamAsString(
-                Assembly.GetExecutingAssembly(),
-                "GreenEnergyHub.Charges.Tests.TestFiles.ExpectedOutputChargeLinkCimSerializer.blob");
+            var expected = ContentStreamHelper.GetFileAsString("TestFiles/ExpectedOutputChargeLinkCimSerializer.blob");
 
             var chargeLinks = GetChargeLinks(clock.Object);
 

@@ -44,9 +44,9 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
         private const string RecipientId = "Recipient";
 
         [Theory]
-        [InlineAutoDomainData("GreenEnergyHub.Charges.Tests.TestFiles.ExpectedOutputChargeCimSerializerChargePrices.blob")]
+        [InlineAutoDomainData("TestFiles/ExpectedOutputChargeCimSerializerChargePrices.blob")]
         public async Task SerializeAsync_WhenCalled_StreamHasSerializedResult(
-            string embeddedResource,
+            string expectedFilePath,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IClock> clock,
             [Frozen] Mock<IIso8601Durations> iso8601Durations,
@@ -57,9 +57,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
             SetupMocks(marketParticipantRepository, clock, iso8601Durations, cimIdProvider);
             await using var stream = new MemoryStream();
 
-            var expected = EmbeddedStreamHelper.GetEmbeddedStreamAsString(
-                Assembly.GetExecutingAssembly(),
-                embeddedResource);
+            var expected = ContentStreamHelper.GetFileAsString(expectedFilePath);
 
             var charges = GetCharges(clock.Object);
 
