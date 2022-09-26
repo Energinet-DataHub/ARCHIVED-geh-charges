@@ -64,25 +64,64 @@ limitations under the License.
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Include="TestFiles\BundleMixOfChargePriceOperations.xml" />
-      <EmbeddedResource Include="TestFiles\TariffPriceSeriesBundle.xml" />
-      <EmbeddedResource Include="TestFiles\Valid_CIM_ChargeLink.xml" />
-      <EmbeddedResource Include="TestFiles\Valid_CIM_ChargeLink_Bundle.xml" />
-      <EmbeddedResource Include="TestFiles\Valid_CIM_ChargeLink_WithUnusedCimContent.xml" />
-      <EmbeddedResource Include="TestFiles\Valid_CIM_ChargeLink_WithoutEndDate.xml" />
-      <EmbeddedResource Include="TestFiles\ExpectedOutputChargeLinkCimSerializer.blob" />
-      <EmbeddedResource Include="TestFiles\Syntax_Valid_CIM_Charge.xml" />
-      <EmbeddedResource Include="TestFiles\Valid_CIM_Charge_Prices_Without_Master_Data.xml" />
-      <EmbeddedResource Include="TestFiles\Valid_CIM_Charge_Without_Prices.xml" />
-      <EmbeddedResource Include="TestFiles\ExpectedOutputChargeCimSerializerMasterDataAndPrices.blob" />
-      <EmbeddedResource Include="TestFiles\ExpectedOutputChargeCimSerializerChargeInformation.blob" />
-      <EmbeddedResource Include="TestFiles\ExpectedOutputChargeCimSerializerChargePrices.blob" />
-      <EmbeddedResource Include="TestFiles\ExpectedOutputChargeLinkReceiptCimSerializerConfirmation.blob" />
-      <EmbeddedResource Include="TestFiles\ExpectedOutputChargeLinkReceiptCimSerializerRejection.blob" />
-      <EmbeddedResource Include="TestFiles\ExpectedOutputChargeReceiptCimSerializerConfirmation.blob" />
-      <EmbeddedResource Include="TestFiles\ExpectedOutputChargeReceiptCimSerializerRejection.blob" />
-      <EmbeddedResource Include="TestFiles\CreateTariffsBundle.xml" />
-      <EmbeddedResource Include="TestFiles\BundleMixOfChargeMasterDataOperations.xml" />
+      <Content Include="TestFiles\TariffPriceSeriesBundle.xml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="TestFiles\Valid_CIM_ChargeLink.xml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="TestFiles\Valid_CIM_ChargeLink_Bundle.xml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="TestFiles\Valid_CIM_ChargeLink_WithUnusedCimContent.xml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="TestFiles\Valid_CIM_ChargeLink_WithoutEndDate.xml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="TestFiles\ExpectedOutputChargeLinkCimSerializer.blob">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="TestFiles\Syntax_Valid_CIM_Charge.xml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="TestFiles\Valid_CIM_Charge_Prices_Without_Master_Data.xml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="TestFiles\Valid_CIM_Charge_Without_Prices.xml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="TestFiles\ExpectedOutputChargeCimSerializerMasterDataAndPrices.blob">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="TestFiles\ExpectedOutputChargeCimSerializerChargeInformation.blob">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="TestFiles\ExpectedOutputChargeCimSerializerChargePrices.blob">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="TestFiles\ExpectedOutputChargeLinkReceiptCimSerializerConfirmation.blob">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="TestFiles\ExpectedOutputChargeLinkReceiptCimSerializerRejection.blob">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="TestFiles\ExpectedOutputChargeReceiptCimSerializerConfirmation.blob">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="TestFiles\ExpectedOutputChargeReceiptCimSerializerRejection.blob">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="TestFiles\CreateTariffsBundle.xml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="TestFiles\BundleMixOfChargeMasterDataOperations.xml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="TestFiles\BundleMixOfChargePriceOperations.xml" />
+      <Content Include="TestFiles\BundleMixOfChargePriceOperations.xml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
     <ItemGroup>
