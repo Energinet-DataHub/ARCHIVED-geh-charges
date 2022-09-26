@@ -37,19 +37,15 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             ChargeCommandDeserializer sut)
         {
             // Arrange
-            var stream = GetEmbeddedResource("GreenEnergyHub.Charges.Tests.TestFiles.Syntax_Valid_CIM_Charge.xml");
+            using var stream = new MemoryStream();
+            ContentStreamHelper.GetFileAsStream(stream, "TestFiles/Syntax_Valid_CIM_Charge.xml");
+
             var byteArray = await GetBytesFromStreamAsync(stream);
             chargeCommandConverter.Setup(x => x.ConvertAsync(It.IsAny<SchemaValidatingReader>()))
                 .ThrowsAsync(new NoChargeOperationFoundException());
 
             // Assert
             await Assert.ThrowsAsync<NoChargeOperationFoundException>(async () => await sut.FromBytesAsync(byteArray));
-        }
-
-        private static Stream GetEmbeddedResource(string path)
-        {
-            var assembly = Assembly.GetExecutingAssembly();
-            return EmbeddedStreamHelper.GetInputStream(assembly, path);
         }
 
         private static async Task<byte[]> GetBytesFromStreamAsync(Stream data)
