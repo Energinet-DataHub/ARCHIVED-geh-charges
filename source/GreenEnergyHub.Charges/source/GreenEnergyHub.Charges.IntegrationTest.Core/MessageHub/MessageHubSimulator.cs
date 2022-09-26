@@ -35,7 +35,7 @@ using GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHubSimulator
+namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
 {
     public class MessageHubSimulator : IAsyncDisposable
     {
@@ -108,8 +108,10 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHubSimulator
                 _dataAvailableNotificationParser.Parse(x.Body!.ToArray())));
         }
 
-        public async Task<PeekSimulatorResponseDto> PeekAsync(string correlationId)
+        public async Task<List<PeekSimulatorResponseDto>> PeekAsync(string correlationId)
         {
+            var peekSimulatorResponseDtos = new List<PeekSimulatorResponseDto>();
+
             InvalidOperationExceptionExtension.ThrowIfNoElements(
                 _notifications, $"{nameof(MessageHubSimulator)}: No dataavailable was provided for Peek");
 
@@ -117,26 +119,32 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHubSimulator
             await AddDataAvailableNotificationIdsToStorageAsync(
                     correlationId, dataAvailableNotificationIds).ConfigureAwait(false);
 
-            var messageType = _notifications.Select(x => x.MessageType.Value).Distinct().Single();
-            var requestId = Guid.NewGuid();
-            var request = new DataBundleRequestDto(
-                RequestId: requestId,
-                DataAvailableNotificationReferenceId: correlationId,
-                IdempotencyId: correlationId,
-                new MessageTypeDto(messageType),
-                ResponseFormat.Xml,
-                1.0);
+            var messageTypes = _notifications.Select(x => x.MessageType.Value).Distinct();
 
-            var peekResponse = await RequestDataBundleAsync(request, correlationId).ConfigureAwait(false);
-            if (peekResponse == null)
+            foreach (var messageType in messageTypes)
             {
-                throw new TimeoutException("MessageHubSimulation: Waiting for Peek reply timed out");
+                var requestId = Guid.NewGuid();
+                var request = new DataBundleRequestDto(
+                    RequestId: requestId,
+                    DataAvailableNotificationReferenceId: correlationId,
+                    IdempotencyId: correlationId,
+                    new MessageTypeDto(messageType),
+                    ResponseFormat.Xml,
+                    1.0);
+
+                var peekResponse = await RequestDataBundleAsync(request, correlationId).ConfigureAwait(false);
+                if (peekResponse == null)
+                {
+                    throw new TimeoutException("MessageHubSimulation: Waiting for Peek reply timed out");
+                }
+
+                peekSimulatorResponseDtos.Add(peekResponse.IsErrorResponse
+                    ? new PeekSimulatorResponseDto()
+                    : new PeekSimulatorResponseDto(
+                        requestId, correlationId, new AzureBlobContentDto(peekResponse.ContentUri)));
             }
 
-            return peekResponse.IsErrorResponse
-                ? new PeekSimulatorResponseDto()
-                : new PeekSimulatorResponseDto(
-                    requestId, correlationId, new AzureBlobContentDto(peekResponse.ContentUri));
+            return peekSimulatorResponseDtos;
         }
 
         public async Task<string> DownLoadPeekResultAsync(PeekSimulatorResponseDto peekSimulationResponseDto)

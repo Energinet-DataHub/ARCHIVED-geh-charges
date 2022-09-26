@@ -14,7 +14,7 @@
 
 using System;
 
-namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHubSimulator
+namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
 {
     public sealed class AzureBlobContentDto
     {

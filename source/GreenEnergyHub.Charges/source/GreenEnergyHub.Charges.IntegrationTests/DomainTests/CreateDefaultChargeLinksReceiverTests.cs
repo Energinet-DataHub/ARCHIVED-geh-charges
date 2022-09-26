@@ -25,7 +25,7 @@ using Google.Protobuf;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
-using GreenEnergyHub.Charges.IntegrationTest.Core.MessageHubSimulator;
+using GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
 using GreenEnergyHub.Charges.TestCore;
@@ -59,7 +59,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                     () => Fixture.CreateLinkRequestQueue.SenderClient.SendMessageAsync(message), correlationId);
 
                 // Assert
-                await Fixture.MessageHubMock.AssertPeekReceivesRepliesDeprecatedAsync(correlationId);
+                await Fixture.MessageHubSimulator.AssertPeekReceivesRepliesAsync(correlationId);
             }
 
             [Theory]
@@ -93,7 +93,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
             public Task DisposeAsync()
             {
-                Fixture.MessageHubMock.Clear();
+                Fixture.MessageHubSimulator.Clear();
                 return Task.CompletedTask;
             }
 

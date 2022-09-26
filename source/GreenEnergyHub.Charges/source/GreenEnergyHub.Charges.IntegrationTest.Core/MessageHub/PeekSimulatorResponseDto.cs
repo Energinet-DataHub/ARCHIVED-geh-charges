@@ -15,7 +15,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHubSimulator
+namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
 {
     public sealed class PeekSimulatorResponseDto
     {
