@@ -15,7 +15,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
@@ -27,6 +26,7 @@ using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeReceipt
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.Charges.Tests.TestHelpers;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using NodaTime;
@@ -57,7 +57,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
             SetupMocks(marketParticipantRepository, clock, cimIdProvider);
             await using var stream = new MemoryStream();
 
-            var expected = ContentStreamHelper.GetFileAsString(expectedFilePath);
+            var path = FilePathHelper.GetFullFilePath(expectedFilePath);
+            var expected = ContentStreamHelper.GetFileAsString(path);
 
             var receipts = GetReceipts(receiptStatus, clock.Object);
 
@@ -105,7 +106,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
             await stream.CopyToAsync(fileStream);
         }
 
-        private void SetupMocks(
+        private static void SetupMocks(
             Mock<IMarketParticipantRepository> marketParticipantRepository,
             Mock<IClock> clock,
             Mock<ICimIdProvider> cimIdProvider)
@@ -126,7 +127,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
             cimIdProvider.Setup(c => c.GetUniqueId()).Returns(CimTestId);
         }
 
-        private List<AvailableChargeReceiptData> GetReceipts(ReceiptStatus receiptStatus, IClock clock)
+        private IEnumerable<AvailableChargeReceiptData> GetReceipts(ReceiptStatus receiptStatus, IClock clock)
         {
             var receipts = new List<AvailableChargeReceiptData>();
 
