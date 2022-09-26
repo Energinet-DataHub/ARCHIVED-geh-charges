@@ -161,10 +161,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
                 using var assertionScope = new AssertionScope();
 
-                // We expect 8 peek results:
+                // We expect 3 peek results:
                 // * 1 confirmation
-                // * 7 data available to energy suppliers
-                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 8);
+                // * 2 data available to energy suppliers
+                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 3);
                 peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
                 peekResults.Should().NotContainMatch("*Reject*");
             }
@@ -193,7 +193,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 peekResults.Should().NotContainMatch("*Reject*");
             }
 
-            [Fact(Skip = "test if its too slow")]
+            [Fact]
             public async Task Given_BundleWithTwoOperationsForSameTariffSecondOpViolatingVR903_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply()
             {
                 // Arrange
@@ -206,18 +206,18 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // Assert
                 actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
 
-                // We expect 9 peeks:
+                // We expect 4 peeks:
                 // * 1 for the confirmation (first operation)
                 // * 1 for the rejection (second operation violating VR.903)
-                // * 7 data available to energy suppliers
+                // * 2 data available to energy suppliers
                 using var assertionScope = new AssertionScope();
-                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 9);
+                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 4);
                 peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
                 peekResults.Should().ContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
                 peekResults.Should().ContainMatch("*It is not allowed to change the tax indicator to Tax for charge*");
             }
 
-            [Fact(Skip = "test if its too slow")]
+            [Fact]
             public async Task When_TaxTaxIsCreatedBySystemOperator_Then_ANotificationShouldBeReceivedByActiveGridAccessProviders()
             {
                 var (request, correlationId) = Fixture.AsSystemOperator.PrepareHttpPostRequestWithAuthorization(
@@ -228,7 +228,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
                 // Assert
                 using var assertionScope = new AssertionScope();
-                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 11);
+                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 5);
                 peekResults.Should().NotContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
                 peekResults.Should().ContainMatch("*NotifyPriceList_MarketDocument*");
                 peekResults.Should().ContainMatch("*8100000000030*");

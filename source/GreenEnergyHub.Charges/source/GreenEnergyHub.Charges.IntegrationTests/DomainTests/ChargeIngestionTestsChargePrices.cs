@@ -121,7 +121,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                     Fixture.HostManager, nameof(ChargePriceCommandReceiverEndpoint)).ConfigureAwait(false);
             }
 
-            [Fact(Skip = "test if its too slow")]
+            [Fact]
             public async Task Given_NewTaxBundleTariffWithPrices_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply()
             {
                 // Arrange
@@ -134,13 +134,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // Assert
                 actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
 
-                // We expect 20 peek results:
+                // We expect 10 peek results:
                 // * 2 confirmations
                 // * 1 rejection (ChargeIdLengthValidation)
-                // * 2 x 7 data available to energy suppliers
+                // * 2 x 2 data available to energy suppliers
                 // * 3 data available to grid access providers
                 using var assertionScope = new AssertionScope();
-                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 20);
+                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 10);
                 peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
                 peekResults.Should().ContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
                 peekResults.Should().ContainMatch("*NotifyPriceList_MarketDocument*");
@@ -168,8 +168,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
                 // We expect 8 peek results:
                 // * 1 confirmation
-                // * 7 data available to energy suppliers
-                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 8);
+                // * 2 data available to energy suppliers
+                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 3);
                 peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
                 peekResults.Should().NotContainMatch("*Reject*");
             }
@@ -218,7 +218,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 actual.Points.Count.Should().Be(24);
             }
 
-            [Fact(Skip = "test if its too slow")]
+            [Fact]
             public async Task Given_ChargePriceMessageWithChargeInformationData_WhenPosted_ThenChargePriceDataAvailableNotificationToGridAccessProviderContainsMandatoryChargeInformationOnly()
             {
                 // Arrange
@@ -333,7 +333,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 peekResult[1].Should().Contain("<cim:code>D14</cim:code>");
             }
 
-            [Fact(Skip = "test if its too slow")]
+            [Fact]
             public async Task When_BundledChargePriceRequestWhere2ndOperationHasMismatchingOwner_Then_2ndOperationIsRejected_And_1stAnd3rdOperationAccepted()
             {
                 // Arrange
@@ -347,11 +347,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 using var assertionScope = new AssertionScope();
                 actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
 
-                // We expect 17 peek results:
+                // We expect 7 peek results:
                 // * 2 confirmation
-                // * 2 x 7 data available to energy suppliers
+                // * 2 x 2 data available to energy suppliers
                 // * 1 rejection (for 2nd operation due mismatching charge owner)
-                var peekResult = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 17);
+                var peekResult = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 7);
 
                 peekResult.Count(s => s.Contains("ConfirmRequestChangeOfPriceList_MarketDocument")).Should().Be(2);
 
@@ -403,8 +403,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
                 // We expect 8 peek results:
                 // * 1 confirmation
-                // * 7 data available to energy suppliers
-                var peekResult = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 8);
+                // * 2 data available to energy suppliers
+                var peekResult = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 3);
                 peekResult.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
                 peekResult.Should().NotContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
                 peekResult.Should().ContainMatch("*<cim:process.processType>D08</cim:process.processType>*");
@@ -433,7 +433,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 peekResult.Should().NotContainMatch("*<cim:process.processType>D18</cim:process.processType>*");
             }
 
-            [Fact(Skip = "test if its too slow")]
+            [Fact]
             public async Task When_SendingChargePriceRequestForExistingSubscription_Then_AConfirmationIsShouldBeSent()
             {
                 // Arrange
@@ -449,8 +449,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
                 // We expect 8 peek results:
                 // * 1 confirmation
-                // * 7 data available to energy suppliers
-                var peekResult = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 8);
+                // * 2 data available to energy suppliers
+                var peekResult = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 3);
                 peekResult.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
                 peekResult.Should().ContainMatch("*NotifyPriceList_MarketDocument*");
                 peekResult.Should().ContainMatch("*<cim:process.processType>D08</cim:process.processType>*");
