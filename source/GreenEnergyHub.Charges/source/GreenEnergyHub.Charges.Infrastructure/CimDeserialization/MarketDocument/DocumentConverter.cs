@@ -18,6 +18,7 @@ using Energinet.DataHub.Core.SchemaValidation;
 using Energinet.DataHub.Core.SchemaValidation.Extensions;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
+using GreenEnergyHub.Charges.Infrastructure.Core.Cim.Charges;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using NodaTime;
 
