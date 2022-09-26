@@ -21,6 +21,8 @@ namespace GreenEnergyHub.Charges.WebApi.ModelPredicates;
 
 public static class ChargeQueryLogic
 {
+#pragma warning disable SA1118
+
     public static IQueryable<ChargeV1Dto> AsChargeV1Dto(this IQueryable<Charge> queryable)
     {
         var todayAtMidnightUtc = DateTime.Now.Date.ToUniversalTime();
@@ -29,14 +31,33 @@ public static class ChargeQueryLogic
             MapChargeType(c.GetChargeType()),
             MapResolution(c.GetResolution()),
             c.SenderProvidedChargeId,
-            c.GetChargeName(todayAtMidnightUtc),
+            (c.ChargePeriods
+                 .Where(cp => cp.StartDateTime <= todayAtMidnightUtc)
+                 .OrderByDescending(cp => cp.StartDateTime)
+                 .FirstOrDefault() ??
+             c.ChargePeriods
+                 .OrderBy(cp => cp.StartDateTime)
+                 .First()).Name,
             c.Owner.MarketParticipantId,
             "<Aktørnavn XYZ>", // Hardcoded as we currently don't have the ChargeOwnerName data
             c.TaxIndicator,
-            c.IsTransparentInvoicing(todayAtMidnightUtc),
-            c.GetValidFromDate(todayAtMidnightUtc),
-            c.GetValidToDate()));
+            (c.ChargePeriods
+                 .Where(cp => cp.StartDateTime <= todayAtMidnightUtc)
+                 .OrderByDescending(cp => cp.StartDateTime)
+                 .FirstOrDefault() ??
+             c.ChargePeriods
+                 .OrderBy(cp => cp.StartDateTime)
+                 .First()).TransparentInvoicing,
+            (c.ChargePeriods
+                 .Where(cp => cp.StartDateTime <= todayAtMidnightUtc)
+                 .OrderByDescending(cp => cp.StartDateTime)
+                 .FirstOrDefault() ??
+             c.ChargePeriods
+                 .OrderBy(cp => cp.StartDateTime)
+                 .First()).StartDateTime,
+            c.ChargePeriods.OrderByDescending(cp => cp.EndDateTime).First().EndDateTime));
     }
+#pragma warning restore SA1118
 
     private static ChargeType MapChargeType(Domain.Charges.ChargeType chargeType) => chargeType switch
     {

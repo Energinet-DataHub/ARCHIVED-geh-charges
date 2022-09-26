@@ -29,36 +29,5 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
         {
             return (Resolution)Resolution;
         }
-
-        public string GetChargeName(DateTime todayAtMidnightUtc)
-        {
-            return GetCurrentOrPlannedChargePeriod(todayAtMidnightUtc).Name;
-        }
-
-        public bool IsTransparentInvoicing(DateTime todayAtMidnightUtc)
-        {
-            return GetCurrentOrPlannedChargePeriod(todayAtMidnightUtc).TransparentInvoicing;
-        }
-
-        public DateTime GetValidFromDate(DateTime todayAtMidnightUtc)
-        {
-            return GetCurrentOrPlannedChargePeriod(todayAtMidnightUtc).StartDateTime;
-        }
-
-        public DateTime GetValidToDate()
-        {
-            return ChargePeriods.MaxBy(cp => cp.EndDateTime)!.EndDateTime;
-        }
-
-        private ChargePeriod GetCurrentOrPlannedChargePeriod(DateTime todayAtMidnightUtc)
-        {
-            return ChargePeriods
-                       .Where(cp => cp.StartDateTime <= todayAtMidnightUtc)
-                       .MaxBy(cp => cp.StartDateTime)
-                   ??
-                   ChargePeriods
-                       .OrderBy(cp => cp.StartDateTime)
-                       .First();
-        }
     }
 }

@@ -57,7 +57,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
         }
 
         [Fact]
-        public async Task GetAsync_WhenMeteringPointIdHasChargeLinks_ReturnsOkAndCorrectContentType()
+        public async Task GetAsync_WhenChargesExists_ReturnsOkAndCorrectContentType()
         {
             // Act
             var response = await _client.GetAsync($"{BaseUrl}");

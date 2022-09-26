@@ -21,9 +21,8 @@ using Microsoft.EntityFrameworkCore;
 namespace GreenEnergyHub.Charges.WebApi.Controllers.V1;
 
 [ApiController]
-[ApiVersion(Version1, Deprecated = true)]
+[ApiVersion(Version1)]
 [Route("v{version:apiVersion}/[controller]")]
-[Route("[controller]")] // for backward compatibility
 public class ChargesController : ControllerBase
 {
     public const string Version1 = "1.0";
