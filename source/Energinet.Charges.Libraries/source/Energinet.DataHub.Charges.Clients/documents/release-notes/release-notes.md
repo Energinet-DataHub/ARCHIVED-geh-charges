@@ -1,5 +1,9 @@
 # Energinet.DataHub.Charges.Clients Release notes
 
+## Version 3.0.15
+
+Renamed client to Charges
+
 ## Version 3.0.14
 
 Removed internal test project reference
