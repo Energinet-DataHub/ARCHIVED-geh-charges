@@ -14,14 +14,14 @@
 
 using System;
 using System.Net.Http;
-using Energinet.DataHub.Charges.Clients.ChargeLinks;
+using Energinet.DataHub.Charges.Clients.Charges;
 using FluentAssertions;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
 
-namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.ChargeLinks
+namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charges
 {
-    public class ChargeLinksClientFactoryTests
+    public class ChargesFactoryTests
     {
         [Theory]
         [InlineAutoDomainData]
@@ -30,7 +30,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
         {
             // Arrange
             var httpContextAccessor = new HttpContextAccessorMock("fake token");
-            var sut = new ChargeLinksClientFactory(httpClientFactory, httpContextAccessor);
+            var sut = new ChargesClientFactory(httpClientFactory, httpContextAccessor);
 
             // Act
             var result = sut.CreateClient(new HttpClient());
@@ -46,7 +46,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
         {
             // Arrange
             var httpContextAccessor = new HttpContextAccessorMock("fake token");
-            var sut = new ChargeLinksClientFactory(httpClientFactory, httpContextAccessor);
+            var sut = new ChargesClientFactory(httpClientFactory, httpContextAccessor);
 
             // Act
             var result = sut.CreateClient(new Uri("http://some.uri"));
