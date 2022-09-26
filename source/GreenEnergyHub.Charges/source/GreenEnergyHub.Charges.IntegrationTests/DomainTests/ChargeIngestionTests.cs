@@ -468,14 +468,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
                 actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
                 var peekResult = await Fixture.MessageHubSimulator.AssertPeekReceivesRepliesAsync(correlationId, 2);
-                foreach (var result in peekResult)
-                {
-                    result.Should().Contain("RejectRequestChangeOfPriceList_MarketDocument");
-                    result.Should().Contain("<cim:process.processType>D08</cim:process.processType>");
-                }
-
-                peekResult[0].Should().Contain("<cim:code>E90</cim:code>");
-                peekResult[1].Should().Contain("<cim:code>D14</cim:code>");
+                var result = peekResult.Single();
+                result.Should().Contain("RejectRequestChangeOfPriceList_MarketDocument");
+                result.Should().Contain("<cim:process.processType>D08</cim:process.processType>");
+                result.Should().Contain("<cim:code>E90</cim:code>");
+                result.Should().Contain("<cim:code>D14</cim:code>");
             }
 
             [Fact]
@@ -492,12 +489,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 using var assertionScope = new AssertionScope();
                 actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
 
-                // We expect 3 peek results:
-                // * two confirmations (for 1st and 3rd operation)
+                // We expect 2 peek results:
+                // * one confirmation (for 1st and 3rd operation)
                 // * one rejection (for 2nd operation due mismatching charge owner)
                 var peekResult = await Fixture.MessageHubSimulator.AssertPeekReceivesRepliesAsync(correlationId, 3);
 
-                peekResult.Count(s => s.Contains("ConfirmRequestChangeOfPriceList_MarketDocument")).Should().Be(2);
+                peekResult.Count(s => s.Contains("ConfirmRequestChangeOfPriceList_MarketDocument")).Should().Be(1);
 
                 var rejection = peekResult.Single(s => s.Contains("RejectRequestChangeOfPriceList_MarketDocument"));
                 rejection.Should().Contain("<cim:process.processType>D08</cim:process.processType>");
@@ -657,18 +654,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
             private static IList<string> GetActivityRecords(string xml)
             {
-                var xdoc = XDocument.Parse(RemoveByteOrderMark(xml));
-                var ns = xdoc.Root!.GetNamespaceOfPrefix("cim")!;
-                var marketActivityRecords = xdoc.Descendants(ns + "MktActivityRecord");
-                var operations = new List<string>();
+                var document = XDocument.Parse(RemoveByteOrderMark(xml));
+                var ns = document.Root!.GetNamespaceOfPrefix("cim")!;
+                var marketActivityRecords = document.Descendants(ns + "MktActivityRecord");
 
-                foreach (var marketActivityRecord in marketActivityRecords)
-                {
-                    var elm = marketActivityRecord.Element(ns + "originalTransactionIDReference_MktActivityRecord.mRID");
-                    operations.Add(elm!.Value);
-                }
-
-                return operations;
+                return marketActivityRecords
+                    .Select(mar => mar.Element(ns + "originalTransactionIDReference_MktActivityRecord.mRID"))
+                    .Select(elm => elm!.Value.ToString())
+                    .ToList();
             }
 
             private static string RemoveByteOrderMark(string xml)
