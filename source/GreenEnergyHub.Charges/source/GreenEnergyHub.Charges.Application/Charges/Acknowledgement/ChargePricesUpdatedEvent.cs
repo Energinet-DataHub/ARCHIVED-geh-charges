@@ -20,7 +20,7 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
 {
-    public class ChargePricesUpdatedEvent : IMessage
+    public class ChargePricesUpdatedEvent : MessageBase
     {
         public ChargePricesUpdatedEvent(
             string chargeId,
@@ -36,7 +36,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
             UpdatePeriodStartDate = updatePeriodStartDate;
             UpdatePeriodEndDate = updatePeriodEndDate;
             Points = points;
-            Transaction = Transaction.NewTransaction();
         }
 
         public string ChargeId { get; }
@@ -50,7 +49,5 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
         public Instant UpdatePeriodEndDate { get; }
 
         public List<Point> Points { get; }
-
-        public Transaction Transaction { get; set; }
     }
 }

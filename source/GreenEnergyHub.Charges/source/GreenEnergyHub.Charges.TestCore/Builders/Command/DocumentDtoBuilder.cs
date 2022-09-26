@@ -19,11 +19,11 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Command
 {
     public class DocumentDtoBuilder
     {
-        private readonly IndustryClassification _industryClassification = IndustryClassification.Unknown;
+        private readonly Instant _requestDate = SystemClock.Instance.GetCurrentInstant();
+        private readonly Instant _createdDateTime = SystemClock.Instance.GetCurrentInstant();
+        private IndustryClassification _industryClassification = IndustryClassification.Unknown;
         private string _id;
         private DocumentType _type = DocumentType.Unknown;
-        private Instant _requestDate = SystemClock.Instance.GetCurrentInstant();
-        private Instant _createdDateTime = SystemClock.Instance.GetCurrentInstant();
         private MarketParticipantDto _recipient;
         private MarketParticipantDto _sender;
         private BusinessReasonCode _businessReasonCode = BusinessReasonCode.Unknown;
@@ -71,19 +71,23 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Command
             return this;
         }
 
+        public DocumentDtoBuilder WithIndustryClassification(IndustryClassification industryClassification)
+        {
+            _industryClassification = industryClassification;
+            return this;
+        }
+
         public DocumentDto Build()
         {
-            return new DocumentDto
-            {
-                Id = _id,
-                BusinessReasonCode = _businessReasonCode,
-                CreatedDateTime = _createdDateTime,
-                IndustryClassification = _industryClassification,
-                Recipient = _recipient,
-                RequestDate = _requestDate,
-                Sender = _sender,
-                Type = _type,
-            };
+            return new DocumentDto(
+                _id,
+                _requestDate,
+                _type,
+                _createdDateTime,
+                _sender,
+                _recipient,
+                _industryClassification,
+                _businessReasonCode);
         }
     }
 }

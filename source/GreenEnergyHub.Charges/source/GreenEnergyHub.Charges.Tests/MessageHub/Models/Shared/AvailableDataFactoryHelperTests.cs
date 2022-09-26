@@ -16,6 +16,7 @@ using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.MessageHub.Models.Shared;
+using GreenEnergyHub.Charges.TestCore.Builders.Command;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Categories;
@@ -31,9 +32,13 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared
         public void ShouldSkipAvailableData_WhenSenderIsSystemOperator_ReturnsTrue(
             MarketParticipantRole role,
             bool expected,
-            ChargeLinksCommand chargeLinksCommand)
+            MarketParticipantDtoBuilder marketParticipantDtoBuilder,
+            DocumentDtoBuilder documentDtoBuilder,
+            ChargeLinksCommandBuilder chargeLinksCommandBuilder)
         {
-            chargeLinksCommand.Document.Sender.BusinessProcessRole = role;
+            var marketParticipantDto = marketParticipantDtoBuilder.WithMarketParticipantRole(role).Build();
+            var documentDto = documentDtoBuilder.WithSender(marketParticipantDto).Build();
+            var chargeLinksCommand = chargeLinksCommandBuilder.WithDocument(documentDto).Build();
             AvailableDataFactoryHelper.ShouldSkipAvailableData(chargeLinksCommand).Should().Be(expected);
         }
     }

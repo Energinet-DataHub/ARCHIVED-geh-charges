@@ -24,7 +24,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands
         public ChargeInformationCommandBundle(DocumentDto document, IReadOnlyCollection<ChargeInformationCommand> commands)
             : base(document)
         {
-            Transaction = Transaction.NewTransaction();
             Commands = commands;
         }
 

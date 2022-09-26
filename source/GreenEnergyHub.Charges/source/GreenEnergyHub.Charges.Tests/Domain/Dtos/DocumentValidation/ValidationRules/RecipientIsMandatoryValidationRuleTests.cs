@@ -17,6 +17,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation.DocumentValidation.ValidationRules;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.TestCore.Builders.Command;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Categories;
@@ -30,19 +31,25 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.DocumentValidation.Validation
         [InlineAutoMoqData(null!, false)]
         [InlineAutoMoqData("", false)]
         [InlineAutoMoqData("content", true)]
-        public void RecipientIsMandatoryValidationRule_Test(string id, bool expected, ChargeInformationCommand command)
+        public void RecipientIsMandatoryValidationRule_Test(
+            string id,
+            bool expected,
+            MarketParticipantDtoBuilder marketParticipantDtoBuilder,
+            DocumentDtoBuilder documentDtoBuilder)
         {
-            command.Document.Recipient.MarketParticipantId = id;
-            var sut = new RecipientIsMandatoryTypeValidationRule(command.Document);
+            var marketParticipantDto = marketParticipantDtoBuilder.WithMarketParticipantId(id).Build();
+            var documentDto = documentDtoBuilder.WithRecipient(marketParticipantDto).Build();
+            var sut = new RecipientIsMandatoryTypeValidationRule(documentDto);
             sut.IsValid.Should().Be(expected);
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeInformationCommand command)
+        public void ValidationRuleIdentifier_ShouldBe_EqualTo(
+            DocumentDtoBuilder documentDtoBuilder)
         {
-            command.Document.Recipient.MarketParticipantId = null!;
-            var sut = new RecipientIsMandatoryTypeValidationRule(command.Document);
+            var documentDto = documentDtoBuilder.Build();
+            var sut = new RecipientIsMandatoryTypeValidationRule(documentDto);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.RecipientIsMandatoryTypeValidation);
         }
     }

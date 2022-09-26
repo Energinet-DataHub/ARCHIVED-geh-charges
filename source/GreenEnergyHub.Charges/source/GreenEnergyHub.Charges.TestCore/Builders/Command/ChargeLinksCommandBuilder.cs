@@ -16,33 +16,45 @@ using System;
 using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
-using NodaTime;
 
 namespace GreenEnergyHub.Charges.TestCore.Builders.Command
 {
     public class ChargeLinksCommandBuilder
     {
-        private readonly DocumentDto _document = new()
-        {
-            Id = Guid.NewGuid().ToString(),
-            CreatedDateTime = SystemClock.Instance.GetCurrentInstant(),
-            BusinessReasonCode = BusinessReasonCode.UpdateMasterDataSettlement,
-            IndustryClassification = IndustryClassification.Electricity,
-            RequestDate = SystemClock.Instance.GetCurrentInstant(),
-            Recipient = new MarketParticipantDto
-            {
-                MarketParticipantId = SeededData.MarketParticipants.MeteringPointAdministrator.Gln,
-                BusinessProcessRole = MarketParticipantRole.MeteringPointAdministrator,
-            },
-            Sender = new MarketParticipantDto
-            {
-                MarketParticipantId = SeededData.MarketParticipants.GridAccessProviderOfMeteringPoint571313180000000005.Gln,
-                BusinessProcessRole = MarketParticipantRole.GridAccessProvider,
-            },
-            Type = DocumentType.RequestChangeBillingMasterData,
-        };
-
+        private DocumentDto _document;
+        private static MarketParticipantRole _senderRole = MarketParticipantRole.MeteringPointAdministrator;
         private List<ChargeLinkOperationDto> _links = new();
+
+        public ChargeLinksCommandBuilder()
+        {
+            _document = new DocumentDtoBuilder()
+                .WithDocumentId(Guid.NewGuid().ToString())
+                .WithDocumentType(DocumentType.RequestChangeBillingMasterData)
+                .WithBusinessReasonCode(BusinessReasonCode.UpdateMasterDataSettlement)
+                .WithIndustryClassification(IndustryClassification.Electricity)
+                .WithSender(new MarketParticipantDtoBuilder()
+                    .WithMarketParticipantId(SeededData.MarketParticipants.MeteringPointAdministrator.Gln)
+                    .WithMarketParticipantRole(_senderRole)
+                    .Build())
+                .WithRecipient(new MarketParticipantDtoBuilder()
+                    .WithMarketParticipantId(SeededData.MarketParticipants.GridAccessProviderOfMeteringPoint571313180000000005.Gln)
+                    .WithMarketParticipantRole(MarketParticipantRole.GridAccessProvider)
+                    .Build())
+                .Build();
+
+            _links = new List<ChargeLinkOperationDto>
+            {
+                new ChargeLinkDtoBuilder().Build(),
+                new ChargeLinkDtoBuilder().Build(),
+                new ChargeLinkDtoBuilder().Build(),
+            };
+        }
+
+        public ChargeLinksCommandBuilder WithDocument(DocumentDto documentDto)
+        {
+            _document = documentDto;
+            return this;
+        }
 
         public ChargeLinksCommandBuilder WithChargeLinks(List<ChargeLinkOperationDto> links)
         {

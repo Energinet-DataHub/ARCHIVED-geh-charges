@@ -23,6 +23,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData;
+using GreenEnergyHub.Charges.TestCore.Builders.Command;
 using GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared;
 using GreenEnergyHub.TestHelpers;
 using Moq;
@@ -43,18 +44,16 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
             MarketParticipant meteringPointAdministrator,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
-            ChargeLinksAcceptedEvent acceptedEvent,
             Instant now,
             AvailableChargeLinksReceiptDataFactory sut)
         {
             // Arrange
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
+            var acceptedEvent = BuildEvent(marketParticipantRole);
             var expectedLinks = acceptedEvent.Command.Operations.ToList();
-            var documentDto = acceptedEvent.Command.Document;
-            documentDto.Sender.BusinessProcessRole = marketParticipantRole;
             var actorId = Guid.NewGuid();
             MarketParticipantRepositoryMockBuilder.SetupMarketParticipantRepositoryMock(
-                marketParticipantRepository, meteringPointAdministrator, documentDto.Sender, actorId);
+                marketParticipantRepository, meteringPointAdministrator, acceptedEvent.Command.Document.Sender, actorId);
 
             // Act
             var actualList = await sut.CreateAsync(acceptedEvent);
@@ -64,9 +63,9 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
             for (var i = 0; i < actualList.Count; i++)
             {
                 actualList[i].ActorId.Should().Be(actorId);
-                actualList[i].RecipientId.Should().Be(documentDto.Sender.MarketParticipantId);
-                actualList[i].RecipientRole.Should().Be(documentDto.Sender.BusinessProcessRole);
-                actualList[i].BusinessReasonCode.Should().Be(documentDto.BusinessReasonCode);
+                actualList[i].RecipientId.Should().Be(acceptedEvent.Command.Document.Sender.MarketParticipantId);
+                actualList[i].RecipientRole.Should().Be(acceptedEvent.Command.Document.Sender.BusinessProcessRole);
+                actualList[i].BusinessReasonCode.Should().Be(acceptedEvent.Command.Document.BusinessReasonCode);
                 actualList[i].RequestDateTime.Should().Be(now);
                 actualList[i].ReceiptStatus.Should().Be(ReceiptStatus.Confirmed);
                 actualList[i].DocumentType.Should().Be(DocumentType.ConfirmRequestChangeBillingMasterData);
@@ -79,17 +78,26 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
         [Theory]
         [InlineAutoDomainData]
         public async Task CreateAsync_WhenSenderIsSystemOperator_ReturnsEmptyList(
-            ChargeLinksAcceptedEvent acceptedEvent,
             AvailableChargeLinksReceiptDataFactory sut)
         {
             // Arrange
-            acceptedEvent.Command.Document.Sender.BusinessProcessRole = MarketParticipantRole.SystemOperator;
+            var acceptedEvent = BuildEvent(MarketParticipantRole.SystemOperator);
 
             // Act
             var actualList = await sut.CreateAsync(acceptedEvent);
 
             // Assert
             actualList.Should().BeEmpty();
+        }
+
+        private static ChargeLinksAcceptedEvent BuildEvent(MarketParticipantRole marketParticipantRole)
+        {
+            var marketParticipant = new MarketParticipantDtoBuilder()
+                .WithMarketParticipantRole(marketParticipantRole)
+                .Build();
+            var documentDto = new DocumentDtoBuilder().WithSender(marketParticipant).Build();
+            var command = new ChargeLinksCommandBuilder().WithDocument(documentDto).Build();
+            return new ChargeLinksAcceptedEventBuilder().WithCommand(command).Build();
         }
     }
 }

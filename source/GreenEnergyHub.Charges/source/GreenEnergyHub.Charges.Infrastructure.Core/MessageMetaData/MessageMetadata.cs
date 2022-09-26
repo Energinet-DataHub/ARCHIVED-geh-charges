@@ -16,6 +16,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData
 {
     public class MessageMetadata
     {
-        public string? ReplyTo { get; set; }
+        public static string? ReplyTo => default;
     }
 }
