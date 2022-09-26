@@ -17,15 +17,16 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Energinet.Charges.Contracts.Charge;
 using Energinet.Charges.Contracts.ChargeLink;
 
-namespace Energinet.DataHub.Charges.Clients.ChargeLinks
+namespace Energinet.DataHub.Charges.Clients.Charges
 {
-    public sealed class ChargeLinksClient : IChargeLinksClient
+    public sealed class ChargesClient : IChargesClient
     {
         private readonly HttpClient _httpClient;
 
-        internal ChargeLinksClient(HttpClient httpClient)
+        internal ChargesClient(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }
@@ -37,7 +38,7 @@ namespace Energinet.DataHub.Charges.Clients.ChargeLinks
         /// Use 404 to get a "404 Not Found" response.
         /// Empty input will result in a "400 Bad Request" response</param>
         /// <returns>A collection of mocked charge links data (Dtos)</returns>
-        public async Task<IList<ChargeLinkV1Dto>> GetAsync(string meteringPointId)
+        public async Task<IList<ChargeLinkV1Dto>> GetChargeLinksAsync(string meteringPointId)
         {
             var list = new List<ChargeLinkV1Dto>();
             var response = await _httpClient
@@ -54,6 +55,34 @@ namespace Energinet.DataHub.Charges.Clients.ChargeLinks
 
             var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             var result = JsonSerializer.Deserialize<List<ChargeLinkV1Dto>>(content, options);
+
+            if (result != null)
+                list.AddRange(result);
+
+            return list;
+        }
+
+        /// <summary>
+        /// Gets all charges.
+        /// </summary>
+        /// <returns>A collection of charges(Dtos)</returns>
+        public async Task<IList<ChargeV1Dto>> GetChargesAsync()
+        {
+            var list = new List<ChargeV1Dto>();
+            var response = await _httpClient
+                .GetAsync(ChargesRelativeUris.GetCharges())
+                .ConfigureAwait(false);
+
+            if (!response.IsSuccessStatusCode)
+                return list;
+
+            var options = new JsonSerializerOptions(JsonSerializerDefaults.Web)
+            {
+                Converters = { new JsonStringEnumConverter() },
+            };
+
+            var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            var result = JsonSerializer.Deserialize<List<ChargeV1Dto>>(content, options);
 
             if (result != null)
                 list.AddRange(result);

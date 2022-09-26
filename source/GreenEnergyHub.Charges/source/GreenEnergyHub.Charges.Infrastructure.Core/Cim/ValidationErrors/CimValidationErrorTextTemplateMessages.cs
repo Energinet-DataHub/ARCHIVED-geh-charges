@@ -127,7 +127,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.MeteringPointDoesNotExist)]
         public const string MeteringPointDoesNotExistValidationErrorText =
-            "GSRN-code {{MeteringPointId}} is unknown: The specified metering point has not been registered in the system on the charge link start date.";
+            "Metering point ID {{MeteringPointId}} is unknown: The specified metering point has not been registered in the system on the charge link start date.";
 
         [ErrorMessageFor(ValidationRuleIdentifier.ChargeDoesNotExist)]
         public const string ChargeDoesNotExistValidationErrorText =
@@ -155,7 +155,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.RecipientRoleMustBeDdz)]
         public const string RecipientRoleMustBeDdzErrorText =
-            "Recipient role {{DocumentRecipientBusinessProcessRole}} not allowed: the role used with business reason code {{DocumentBusinessReasonCode}} must be metering point administrator (DDZ).";
+            "Receiver role {{DocumentRecipientBusinessProcessRole}} not allowed: the role used with business reason code {{DocumentBusinessReasonCode}} must be metering point administrator (DDZ).";
 
         [ErrorMessageFor(ValidationRuleIdentifier.NumberOfPointsMatchTimeIntervalAndResolution)]
         public const string NumberOfPointsMatchTimeIntervalAndResolutionText =

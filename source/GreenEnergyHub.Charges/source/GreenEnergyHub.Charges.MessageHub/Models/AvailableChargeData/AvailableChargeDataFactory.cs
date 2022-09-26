@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
         {
             var result = new List<AvailableChargeData>();
 
-            foreach (var chargeOperationDto in input.Operations.Where(ShouldMakeDataAvailableForActiveGridProviders))
+            foreach (var chargeOperationDto in input.Operations)
             {
                 await CreateForOperationAsync(input, chargeOperationDto, result).ConfigureAwait(false);
             }
@@ -58,11 +58,14 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
             ChargeInformationOperationDto informationOperation,
             ICollection<AvailableChargeData> result)
         {
-            var activeGridAccessProviders = await _marketParticipantRepository
-                .GetGridAccessProvidersAsync()
+            var recipients = await _marketParticipantRepository
+                .GetActiveEnergySuppliersAsync()
                 .ConfigureAwait(false);
 
-            foreach (var recipient in activeGridAccessProviders)
+            await AddGridAccessProvidersAsRecipientsIfChargeIsTaxAsync(informationOperation, recipients)
+                .ConfigureAwait(false);
+
+            foreach (var recipient in recipients)
             {
                 var sender = await GetSenderAsync().ConfigureAwait(false);
                 var operationOrder = input.Operations.ToList().IndexOf(informationOperation);
@@ -92,12 +95,15 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
             }
         }
 
-        private static bool ShouldMakeDataAvailableForActiveGridProviders(
-            ChargeInformationOperationDto chargeInformationOperationDto)
+        private async Task AddGridAccessProvidersAsRecipientsIfChargeIsTaxAsync(
+            ChargeInformationOperationDto informationOperation,
+            List<MarketParticipant> recipients)
         {
-            // We only need to notify grid providers if the charge includes tax which are the
-            // only charges they do not maintain themselves
-            return chargeInformationOperationDto.TaxIndicator == TaxIndicator.Tax;
+            if (informationOperation.TaxIndicator == TaxIndicator.Tax)
+            {
+                recipients.AddRange(await _marketParticipantRepository.GetActiveGridAccessProvidersAsync()
+                    .ConfigureAwait(false));
+            }
         }
     }
 }
