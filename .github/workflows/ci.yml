@@ -111,6 +111,7 @@ jobs:
       dotnet_solution_ci_build,
       dotnet_solution_ci_test_integrationtests_part1,
       dotnet_solution_ci_test_integrationtests_part2,
+      dotnet_solution_ci_test_integrationtests_part3,
       dotnet_solution_ci_test_tests
     ]
     uses: Energinet-DataHub/.github/.github/workflows/create-prerelease.yml@v8
