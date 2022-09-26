@@ -72,7 +72,7 @@ jobs:
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci-test.yml@8.7.0
     with:
       TESTS_DLL_FILE_PATH: '\tests\source\GreenEnergyHub.Charges\source\GreenEnergyHub.Charges.IntegrationTests\bin\Release\net6.0\GreenEnergyHub.Charges.IntegrationTests.dll'
-      TESTS_FILTER_EXPRESSION: 'Category!=ChargeIngestionTestsChargeInformation|Category!=ChargeIngestionTestsChargePrices'
+      TESTS_FILTER_EXPRESSION: 'Category!=ChargeIngestionTestsChargeInformation!=ChargeIngestionTestsChargePrices&Category'
       ASPNETCORE_TEST_CONTENTROOT_VARIABLE_NAME: ASPNETCORE_TEST_CONTENTROOT_GREENENERGYHUB_CHARGES_WEBAPI
       ASPNETCORE_TEST_CONTENTROOT_VARIABLE_VALUE: '\tests\source\GreenEnergyHub.Charges\source\GreenEnergyHub.Charges.WebApi'
       DOWNLOAD_ATTEMPT_LIMIT: 12
