@@ -58,11 +58,10 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
                     firstChargePriceOperation.ChargeOwner)
                 .ConfigureAwait(false);
             var charge = await _chargeRepository.SingleAsync(chargeIdentifier).ConfigureAwait(false);
-            if (!charge.TaxIndicator) return result;
 
             foreach (var chargePriceOperationDto in input.Operations)
             {
-                await CreateForOperationAsync(input, chargePriceOperationDto, result).ConfigureAwait(false);
+                await CreateForOperationAsync(input, chargePriceOperationDto, result, charge).ConfigureAwait(false);
             }
 
             return result;
@@ -71,12 +70,16 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
         private async Task CreateForOperationAsync(
             ChargePriceOperationsAcceptedEvent input,
             ChargePriceOperationDto priceOperation,
-            ICollection<AvailableChargePriceData> result)
+            ICollection<AvailableChargePriceData> result,
+            Charge charge)
         {
-            var activeGridAccessProviders = await _marketParticipantRepository
-                .GetGridAccessProvidersAsync()
+            var recipients = await _marketParticipantRepository
+                .GetActiveEnergySuppliersAsync()
                 .ConfigureAwait(false);
-            foreach (var recipient in activeGridAccessProviders)
+            await AddGridAccessProvidersAsRecipientsIfChargeIsTaxAsync(charge, recipients)
+                .ConfigureAwait(false);
+
+            foreach (var recipient in recipients)
             {
                 var points = priceOperation.Points
                     .Select(point =>
@@ -103,6 +106,15 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
                     operationOrder,
                     recipient.ActorId,
                     points));
+            }
+        }
+
+        private async Task AddGridAccessProvidersAsRecipientsIfChargeIsTaxAsync(Charge charge, List<MarketParticipant> recipients)
+        {
+            if (charge.TaxIndicator)
+            {
+                recipients.AddRange(await _marketParticipantRepository.GetActiveGridAccessProvidersAsync()
+                    .ConfigureAwait(false));
             }
         }
     }
