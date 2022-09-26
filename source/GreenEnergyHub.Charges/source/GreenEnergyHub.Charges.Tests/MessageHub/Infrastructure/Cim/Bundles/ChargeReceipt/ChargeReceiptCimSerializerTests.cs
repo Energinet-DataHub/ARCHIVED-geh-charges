@@ -57,7 +57,9 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
             SetupMocks(marketParticipantRepository, clock, cimIdProvider);
             await using var stream = new MemoryStream();
 
-            var expected = ContentStreamHelper.GetFileAsString(expectedFilePath);
+            var basePath = Assembly.GetExecutingAssembly().Location;
+            var path = Path.Combine(Directory.GetParent(basePath)!.FullName, expectedFilePath);
+            var expected = ContentStreamHelper.GetFileAsString(path);
 
             var receipts = GetReceipts(receiptStatus, clock.Object);
 
@@ -105,7 +107,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
             await stream.CopyToAsync(fileStream);
         }
 
-        private void SetupMocks(
+        private static void SetupMocks(
             Mock<IMarketParticipantRepository> marketParticipantRepository,
             Mock<IClock> clock,
             Mock<ICimIdProvider> cimIdProvider)
@@ -126,7 +128,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
             cimIdProvider.Setup(c => c.GetUniqueId()).Returns(CimTestId);
         }
 
-        private List<AvailableChargeReceiptData> GetReceipts(ReceiptStatus receiptStatus, IClock clock)
+        private IEnumerable<AvailableChargeReceiptData> GetReceipts(ReceiptStatus receiptStatus, IClock clock)
         {
             var receipts = new List<AvailableChargeReceiptData>();
 

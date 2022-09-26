@@ -41,8 +41,9 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
         private const string RecipientId = "TestRecipient1111";
 
         [Theory]
-        [InlineAutoDomainData]
+        [InlineAutoDomainData("TestFiles/ExpectedOutputChargeLinkCimSerializer.blob")]
         public async Task SerializeAsync_WhenCalled_StreamHasSerializedResult(
+            string expectedFilePath,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IClock> clock,
             [Frozen] Mock<ICimIdProvider> cimIdProvider,
@@ -52,7 +53,10 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
             SetupMocks(marketParticipantRepository, clock, cimIdProvider);
             await using var stream = new MemoryStream();
 
-            var expected = ContentStreamHelper.GetFileAsString("TestFiles/ExpectedOutputChargeLinkCimSerializer.blob");
+            var basePath = Assembly.GetExecutingAssembly().Location;
+            var path = Path.Combine(Directory.GetParent(basePath)!.FullName, expectedFilePath);
+
+            var expected = ContentStreamHelper.GetFileAsString(path);
 
             var chargeLinks = GetChargeLinks(clock.Object);
 
