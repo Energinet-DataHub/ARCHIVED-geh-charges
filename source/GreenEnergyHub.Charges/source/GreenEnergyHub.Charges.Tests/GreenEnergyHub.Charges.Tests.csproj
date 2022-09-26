@@ -118,8 +118,24 @@ limitations under the License.
       <Content Include="TestFiles\BundleMixOfChargeMasterDataOperations.xml">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
-      <None Remove="TestFiles\BundleMixOfChargePriceOperations.xml" />
       <Content Include="TestFiles\BundleMixOfChargePriceOperations.xml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="TestFiles\ValidCreateTariffCommandMaxDocumentSizeNoPoints.xml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="TestFiles\ValidCreateTariffCommandMaxDocumentSizeWithPoints.xml" />
+      <Content Include="TestFiles\ValidCreateTariffCommandMaxDocumentSizeWithPoints.xml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="TestFiles\SingleChargeReceiptWorstCase.blob" />
+      <Content Include="TestFiles\SingleChargeReceiptWorstCase.blob">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="TestFiles\SingleChargeLinkCimSerializerWorstCase.blob">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="TestFiles\SingleChargeLinkConfirmationCimSerializerWorstCase.blob">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
     </ItemGroup>
@@ -133,24 +149,6 @@ limitations under the License.
         <OutputDir>obj\Debug\net6.0\</OutputDir>
         <Generator>MSBuild:Compile</Generator>
       </Protobuf>
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Update="TestFiles\ValidCreateTariffCommandMaxDocumentSizeNoPoints.xml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="TestFiles\ValidCreateTariffCommandMaxDocumentSizeWithPoints.xml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Include="TestFiles\SingleChargeLinkCimSerializerWorstCase.blob">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Include="TestFiles\SingleChargeLinkConfirmationCimSerializerWorstCase.blob">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="TestFiles\SingleChargeReceiptWorstCase.blob">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
     </ItemGroup>
 
     <ItemGroup>
