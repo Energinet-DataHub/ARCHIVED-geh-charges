@@ -39,9 +39,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
 {
     public class MessageHubSimulator : IAsyncDisposable
     {
-        private const int SecondsToWaitForIntegrationEvents = 150;
+        private const int SecondsToWaitForIntegrationEvents = 20;
 
-        //private readonly IBundleCreatorProvider _bundleCreatorProvider = new BundleCreatorProvider();
         private readonly ServiceBusTestListener _messageHubDataAvailableServiceBusTestListener;
         private readonly ServiceBusTestListener _messageHubReplyServiceBusTestListener;
         private readonly QueueResource _messageHubRequestQueueResource;
@@ -108,25 +107,30 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
                 _dataAvailableNotificationParser.Parse(x.Body!.ToArray())));
         }
 
-        public async Task<List<PeekSimulatorResponseDto>> PeekAsync(string correlationId)
+        public async Task<List<PeekSimulatorResponseDto>> PeekAsync()
         {
             var peekSimulatorResponseDtos = new List<PeekSimulatorResponseDto>();
 
             InvalidOperationExceptionExtension.ThrowIfNoElements(
                 _notifications, $"{nameof(MessageHubSimulator)}: No dataavailable was provided for Peek");
 
-            var dataAvailableNotificationIds = _notifications.Select(x => x.Uuid);
-            await AddDataAvailableNotificationIdsToStorageAsync(
-                    correlationId, dataAvailableNotificationIds).ConfigureAwait(false);
-
             var messageTypes = _notifications.Select(x => x.MessageType.Value).Distinct();
 
             foreach (var messageType in messageTypes)
             {
+                var dataAvailableNotificationDtosForMessageType =
+                    _notifications.Where(x => x.MessageType.Value == messageType).ToList();
+                var blobName = dataAvailableNotificationDtosForMessageType.First().Uuid.ToString();
+
+                await AddDataAvailableNotificationIdsToStorageAsync(
+                    blobName,
+                    dataAvailableNotificationDtosForMessageType).ConfigureAwait(false);
+
+                var correlationId = CorrelationIdGenerator.Create();
                 var requestId = Guid.NewGuid();
                 var request = new DataBundleRequestDto(
                     RequestId: requestId,
-                    DataAvailableNotificationReferenceId: correlationId,
+                    DataAvailableNotificationReferenceId: blobName,
                     IdempotencyId: correlationId,
                     new MessageTypeDto(messageType),
                     ResponseFormat.Xml,
@@ -161,17 +165,17 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
         }
 
         private async Task AddDataAvailableNotificationIdsToStorageAsync(
-            string dataAvailableNotificationReferenceId, IEnumerable<Guid> dataAvailableNotificationIds)
+            string blobName,
+            IEnumerable<DataAvailableNotificationDto> dataAvailableNotifications)
         {
             try
             {
                 await using var memoryStream = new MemoryStream();
-                foreach (var guid in dataAvailableNotificationIds)
-                    memoryStream.Write(guid.ToByteArray());
+                foreach (var dataAvailableNotificationDto in dataAvailableNotifications)
+                    memoryStream.Write(dataAvailableNotificationDto.Uuid.ToByteArray());
                 memoryStream.Position = 0;
 
-                await _blobContainerClient.UploadBlobAsync(
-                    dataAvailableNotificationReferenceId, memoryStream).ConfigureAwait(false);
+                await _blobContainerClient.UploadBlobAsync(blobName, memoryStream).ConfigureAwait(false);
             }
             catch (RequestFailedException e)
             {

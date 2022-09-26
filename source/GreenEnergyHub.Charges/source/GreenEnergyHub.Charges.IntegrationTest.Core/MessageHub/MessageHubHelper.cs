@@ -47,7 +47,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
 
             // Invokes the domain and ensures that a reply to the peek request is received for each message type
             // Throws if corresponding peek reply is not received
-            var peekSimulatorResponseDtos = await messageHubSimulator.PeekAsync(correlationId);
+            var peekSimulatorResponseDtos = await messageHubSimulator.PeekAsync();
 
             foreach (var peekSimulatorResponseDto in peekSimulatorResponseDtos)
             {
