@@ -12,20 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Charges;
-
-namespace GreenEnergyHub.Charges.QueryApi.Model
+// ReSharper disable once CheckNamespace - Type is shared so namespace is not determined by project structure/namespace
+namespace Energinet.Charges.Contracts.Charge
 {
-    public partial class Charge
+    public enum Resolution
     {
-        public ChargeType GetChargeType()
-        {
-            return (ChargeType)Type;
-        }
-
-        public Resolution GetResolution()
-        {
-            return (Resolution)Resolution;
-        }
+        PT15M = 1,  // 15 minuted
+        PT1H = 2,   // 1 hour
+        P1D = 3,    // 1 day
+        P1M = 4,    // 1 month
     }
 }
