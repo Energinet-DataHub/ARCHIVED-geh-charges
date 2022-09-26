@@ -38,7 +38,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
         {
             // Arrange
             using var stream = new MemoryStream();
-            ContentStreamHelper.GetFileAsStream(stream, "TestFiles/Syntax_Valid_CIM_Charge.xml");
+            var basePath = Assembly.GetExecutingAssembly().Location;
+            var path = Path.Combine(Directory.GetParent(basePath)!.FullName, "TestFiles/Syntax_Valid_CIM_Charge.xml");
+            ContentStreamHelper.GetFileAsStream(stream, path);
 
             var byteArray = await GetBytesFromStreamAsync(stream);
             chargeCommandConverter.Setup(x => x.ConvertAsync(It.IsAny<SchemaValidatingReader>()))
