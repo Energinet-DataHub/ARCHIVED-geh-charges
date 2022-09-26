@@ -13,8 +13,10 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -64,7 +66,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             {
                 Fixture.ChargeCreatedListener.Reset();
                 Fixture.ChargePricesUpdatedListener.Reset();
-                // Fixture.MessageHubMock.Clear();
+                //Fixture.MessageHubMock.Clear();
 
                 // We need to clear host log after each test is done to ensure that we can assert on function executed
                 // on each test run because we only check on function name.
@@ -222,6 +224,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                     .AssertPeekReceivesRepliesAsync(correlationId, noOfMessagesExpected);
                 peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
                 peekResults.Should().NotContainMatch("*Reject*");
+
+                var operations = GetActivityRecords(peekResults.Single());
+                operations.Count.Should().Be(noOfMessagesExpected);
             }
 
             [Theory]
@@ -247,6 +252,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                     .AssertPeekReceivesRepliesAsync(correlationId, noOfMessagesExpected);
                 peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
                 peekResults.Should().NotContainMatch("*Reject*");
+
+                var operations = GetActivityRecords(peekResults.Single());
+                operations.Count.Should().Be(noOfMessagesExpected);
             }
 
             [Fact]
@@ -645,6 +653,33 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                     x.OwnerId == ownerId &&
                     x.Type == chargeType);
                 return charge;
+            }
+
+            private static IList<string> GetActivityRecords(string xml)
+            {
+                var xdoc = XDocument.Parse(RemoveByteOrderMark(xml));
+                var ns = xdoc.Root!.GetNamespaceOfPrefix("cim")!;
+                var marketActivityRecords = xdoc.Descendants(ns + "MktActivityRecord");
+                var operations = new List<string>();
+
+                foreach (var marketActivityRecord in marketActivityRecords)
+                {
+                    var elm = marketActivityRecord.Element(ns + "originalTransactionIDReference_MktActivityRecord.mRID");
+                    operations.Add(elm!.Value);
+                }
+
+                return operations;
+            }
+
+            private static string RemoveByteOrderMark(string xml)
+            {
+                var byteOrderMarkUtf8 = Encoding.UTF8.GetString(Encoding.UTF8.GetPreamble());
+                if (xml.StartsWith(byteOrderMarkUtf8))
+                {
+                    xml = xml.Remove(0, byteOrderMarkUtf8.Length);
+                }
+
+                return xml;
             }
         }
     }

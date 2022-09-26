@@ -85,11 +85,9 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
         public QueueResource? MessageHubDataAvailableQueue { get; private set; }
 
         [NotNull]
-
         public QueueResource? MessageHubRequestQueue { get; private set; }
 
         [NotNull]
-
         public QueueResource? MessageHubReplyQueue { get; private set; }
 
         [NotNull]
@@ -118,7 +116,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
 
         private IEnumerable<AuthorizedTestActor> AuthorizedTestActors { get; }
 
-        private string LocalTimeZoneName { get; } = "Europe/Copenhagen";
+        private static string LocalTimeZoneName => "Europe/Copenhagen";
 
         private AzuriteManager AzuriteManager { get; }
 

@@ -77,8 +77,9 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHubSimulator
 
         public async ValueTask DisposeAsync()
         {
-            /*await _dataAvailableReceiver.DisposeAsync().ConfigureAwait(false);
-            await _messageBusFactory.DisposeAsync().ConfigureAwait(false);*/
+            await _messageHubDataAvailableServiceBusTestListener.DisposeAsync().ConfigureAwait(false);
+            await _messageHubRequestQueueResource.DisposeAsync().ConfigureAwait(false);
+            await _messageHubReplyServiceBusTestListener.DisposeAsync().ConfigureAwait(false);
             await Task.CompletedTask;
         }
 
@@ -141,7 +142,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHubSimulator
         public async Task<string> DownLoadPeekResultAsync(PeekSimulatorResponseDto peekSimulationResponseDto)
         {
             ArgumentNullException.ThrowIfNull(peekSimulationResponseDto);
-            ArgumentNullException.ThrowIfNull(peekSimulationResponseDto.Content!.Path);
+            ArgumentNullException.ThrowIfNull(peekSimulationResponseDto.Content!.Path, "Content path");
 
             var uri = peekSimulationResponseDto.Content.Path;
             var availableDataReferenceId = uri.Segments.Last().TrimEnd('/');
@@ -149,14 +150,6 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHubSimulator
             var blobClient = _blobContainerClient.GetBlobClient(availableDataReferenceId);
             BlobDownloadResult downloadResult = await blobClient.DownloadContentAsync();
             return downloadResult.Content.ToString();
-
-            /*
-            // Alternative implementation:
-            BlobDownloadInfo download = await blobClient.DownloadAsync();
-            var result = new byte[download.ContentLength];
-            await download.Content.ReadAsync(result.AsMemory(0, (int)download.ContentLength));
-
-            return Encoding.UTF8.GetString(result);*/
         }
 
         private async Task AddDataAvailableNotificationIdsToStorageAsync(
@@ -177,11 +170,6 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHubSimulator
                 throw new MessageHubStorageException("Error uploading file to storage", e);
             }
         }
-
-        /*private object CreateDataBundle(DataBundleRequestDto request, string correlationId)
-        {
-            var bundleCreator = _bundleCreatorProvider.Get(request);
-        }*/
 
         private async Task<DataBundleResponseDto?> RequestDataBundleAsync(
             DataBundleRequestDto dataBundleRequestDto, string correlationId)
@@ -208,7 +196,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHubSimulator
             return dataBundleResponseDto;
         }
 
-        private ServiceBusMessage CreateRequestMessageHubServiceBusMessage(string correlationId, byte[] bytes, string sessionId)
+        private ServiceBusMessage CreateRequestMessageHubServiceBusMessage(
+            string correlationId, byte[] bytes, string sessionId)
         {
             var serviceBusMessage = new ServiceBusMessage(bytes)
             {
@@ -228,7 +217,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHubSimulator
                         IntegrationEventsMessageType.RequestDataBundle.ToString()),
                     new KeyValuePair<string, object>(MessageMetaDataConstants.EventIdentification, Guid.NewGuid()),
                 },
-            }; //.AddRequestDataBundleIntegrationEvents(dataBundleRequestDto.IdempotencyId);
+            };
             return serviceBusMessage;
         }
     }
