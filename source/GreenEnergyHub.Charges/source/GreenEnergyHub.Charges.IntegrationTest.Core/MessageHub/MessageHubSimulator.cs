@@ -88,18 +88,19 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
         ///     Can throw a TimeoutException or TaskCanceledException.
         /// </summary>
         /// <param name="correlationId">correlation id to wait for</param>
-        /// <param name="noOfMessageTypes"></param>
-        public async Task WaitForNotificationsInDataAvailableQueueAsync(string correlationId, int noOfMessageTypes)
+        /// <param name="noOfDataAvailableNotifications"></param>
+        public async Task WaitForNotificationsInDataAvailableQueueAsync(
+            string correlationId, int noOfDataAvailableNotifications)
         {
             using var eventualAvailableDataEvent = await _messageHubDataAvailableServiceBusTestListener
-                .ListenForEventsAsync(correlationId, noOfMessageTypes)
+                .ListenForEventsAsync(correlationId, noOfDataAvailableNotifications)
                 .ConfigureAwait(false);
 
             var isAvailableDataEventReceived = eventualAvailableDataEvent.CountdownEvent!
                 .Wait(TimeSpan.FromSeconds(SecondsToWaitForIntegrationEvents));
 
             isAvailableDataEventReceived.Should().BeTrue();
-            eventualAvailableDataEvent.EventualServiceBusMessages.Count.Should().Be(noOfMessageTypes);
+            eventualAvailableDataEvent.EventualServiceBusMessages.Count.Should().Be(noOfDataAvailableNotifications);
             eventualAvailableDataEvent.EventualServiceBusMessages.Select(x => x.Body).Should().NotBeNull();
 
             _notifications.AddRange(

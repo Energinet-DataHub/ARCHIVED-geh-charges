@@ -27,20 +27,20 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
         public static async Task<List<string>> AssertPeekReceivesRepliesAsync(
             this MessageHubSimulator messageHubSimulator,
             string correlationId,
-            int noOfMessageTypes = 1)
+            int noOfDataAvailableNotifications = 1)
         {
             var peekResults = new List<string>();
-            var expected = $"MessageHub received all {noOfMessageTypes} expected messages.";
+            var expected = $"MessageHub received all {noOfDataAvailableNotifications} expected messages.";
             var actual = expected;
 
             try
             {
                 // Throws if expected data available message (by correlation ID) is not received
-                await messageHubSimulator.WaitForNotificationsInDataAvailableQueueAsync(correlationId, noOfMessageTypes);
+                await messageHubSimulator.WaitForNotificationsInDataAvailableQueueAsync(correlationId, noOfDataAvailableNotifications);
             }
             catch (Exception ex) when (ex is TaskCanceledException or TimeoutException)
             {
-                actual = $"MessageHub received fewer that the {noOfMessageTypes} expected messages!";
+                actual = $"MessageHub received fewer that the {noOfDataAvailableNotifications} expected messages!";
             }
 
             actual.Should().Be(expected);
