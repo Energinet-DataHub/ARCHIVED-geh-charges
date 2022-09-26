@@ -330,10 +330,16 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
 
         private static SchemaValidatingReader GetReader(Stream memoryStream, string filePath)
         {
-            var basePath = Assembly.GetExecutingAssembly().Location;
-            var path = Path.Combine(Directory.GetParent(basePath)!.FullName, filePath);
+            var path = GetFullFilePath(filePath);
             ContentStreamHelper.GetFileAsStream(memoryStream, path);
             return new SchemaValidatingReader(memoryStream, Schemas.CimXml.StructureRequestChangeOfPriceList);
+        }
+
+        private static string GetFullFilePath(string filePath)
+        {
+            var basePath = Assembly.GetExecutingAssembly().Location;
+            var path = Path.Combine(Directory.GetParent(basePath)!.FullName, filePath);
+            return path;
         }
 
         private static void SetupTest(
