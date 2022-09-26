@@ -235,9 +235,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
                 // We expect 11 peek results:
                 // 1 confirmation
-                // 7 data available to energy suppliers
+                // 2 data available to energy suppliers
                 // 3 data available to grid access providers
-                var peekResult = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 11);
+                var peekResult = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 6);
                 var notification = peekResult.First(s =>
                     s.Contains("NotifyPriceList_MarketDocument")
                     && s.Contains("<cim:receiver_MarketParticipant.marketRole.type>DDM"));
