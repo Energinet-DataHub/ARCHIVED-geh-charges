@@ -15,6 +15,7 @@
 using System.Collections.Generic;
 using System.Xml.Linq;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
+using GreenEnergyHub.Charges.Infrastructure.Core.Cim.Charges;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using NodaTime;
 
