@@ -83,6 +83,15 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
                 .ConfigureAwait(false);
         }
 
+        public Task<List<MarketParticipant>> GetActiveEnergySuppliersAsync()
+        {
+            return _chargesDatabaseContext
+                .MarketParticipants
+                .Where(mp => mp.BusinessProcessRole == MarketParticipantRole.EnergySupplier)
+                .Where(m => m.IsActive)
+                .ToListAsync();
+        }
+
         /// <summary>
         /// Retrieves a market participant from role and gln/eic no.
         /// </summary>
@@ -109,7 +118,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
                 .ConfigureAwait(false);
         }
 
-        public Task<List<MarketParticipant>> GetGridAccessProvidersAsync()
+        public Task<List<MarketParticipant>> GetActiveGridAccessProvidersAsync()
         {
             return _chargesDatabaseContext
                 .MarketParticipants

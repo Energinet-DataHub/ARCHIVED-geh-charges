@@ -12,20 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Charges;
+using System.IO;
+using System.Reflection;
 
-namespace GreenEnergyHub.Charges.QueryApi.Model
+namespace GreenEnergyHub.Charges.Tests.TestHelpers
 {
-    public partial class Charge
+    public static class FilePathHelper
     {
-        public ChargeType GetChargeType()
+        public static string GetFullFilePath(string testFilePath)
         {
-            return (ChargeType)Type;
-        }
-
-        public Resolution GetResolution()
-        {
-            return (Resolution)Resolution;
+            var basePath = Assembly.GetExecutingAssembly().Location;
+            var path = Path.Combine(Directory.GetParent(basePath)!.FullName, testFilePath);
+            return path;
         }
     }
 }

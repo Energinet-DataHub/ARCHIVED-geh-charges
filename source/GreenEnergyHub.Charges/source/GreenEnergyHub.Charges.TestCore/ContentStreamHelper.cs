@@ -12,20 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Charges;
+using System.IO;
 
-namespace GreenEnergyHub.Charges.QueryApi.Model
+namespace GreenEnergyHub.Charges.TestCore
 {
-    public partial class Charge
+    public static class ContentStreamHelper
     {
-        public ChargeType GetChargeType()
+        public static Stream GetFileAsStream(Stream memoryStream, string filePath)
         {
-            return (ChargeType)Type;
+            using var fileStream = File.OpenRead(filePath);
+            fileStream.Position = 0;
+            fileStream.CopyTo(memoryStream);
+
+            memoryStream.Position = 0;
+            return memoryStream;
         }
 
-        public Resolution GetResolution()
+        public static string GetFileAsString(string streamPath)
         {
-            return (Resolution)Resolution;
+            using var memoryStream = new MemoryStream();
+            GetFileAsStream(memoryStream, streamPath);
+            return memoryStream.AsString();
         }
     }
 }
