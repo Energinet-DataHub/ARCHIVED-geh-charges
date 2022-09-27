@@ -27,6 +27,7 @@ using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeLinkRec
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.Charges.Tests.TestHelpers;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using NodaTime;
@@ -43,8 +44,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
         private const string RecipientId = "TestRecipient1111";
 
         [Theory]
-        [InlineAutoDomainData(ReceiptStatus.Confirmed, "GreenEnergyHub.Charges.Tests.TestFiles.ExpectedOutputChargeLinkReceiptCimSerializerConfirmation.blob")]
-        [InlineAutoDomainData(ReceiptStatus.Rejected, "GreenEnergyHub.Charges.Tests.TestFiles.ExpectedOutputChargeLinkReceiptCimSerializerRejection.blob")]
+        [InlineAutoDomainData(ReceiptStatus.Confirmed, "TestFiles/ExpectedOutputChargeLinkReceiptCimSerializerConfirmation.blob")]
+        [InlineAutoDomainData(ReceiptStatus.Rejected, "TestFiles/ExpectedOutputChargeLinkReceiptCimSerializerRejection.blob")]
         public async Task SerializeAsync_WhenCalled_StreamHasSerializedResult(
             ReceiptStatus receiptStatus,
             string expectedFilePath,
@@ -57,9 +58,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
             SetupMocks(marketParticipantRepository, clock, cimIdProvider);
             await using var stream = new MemoryStream();
 
-            var expected = EmbeddedStreamHelper.GetEmbeddedStreamAsString(
-                Assembly.GetExecutingAssembly(),
-                expectedFilePath);
+            var path = FilePathHelper.GetFullFilePath(expectedFilePath);
+            var expected = ContentStreamHelper.GetFileAsString(path);
 
             var receipts = GetReceipts(receiptStatus, clock.Object);
 
