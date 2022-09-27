@@ -67,7 +67,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
         }
 
         /// <summary>
-        ///     Clears the state between simulations.
+        /// Clears the state between simulations.
         /// </summary>
         public void Clear()
         {
@@ -79,7 +79,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
             await _messageHubDataAvailableServiceBusTestListener.DisposeAsync().ConfigureAwait(false);
             await _messageHubRequestQueueResource.DisposeAsync().ConfigureAwait(false);
             await _messageHubReplyServiceBusTestListener.DisposeAsync().ConfigureAwait(false);
-            await Task.CompletedTask;
+
+            GC.SuppressFinalize(this);
         }
 
         /// <summary>
