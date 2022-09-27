@@ -31,8 +31,20 @@ jobs:
     with:
       SOLUTION_FILE_PATH: 'source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln'
 
+  # Run all tests in 'Tests.dll'
+  unit_test:
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci-test.yml@v8
+    with:
+      TESTS_DLL_FILE_PATH: '\tests\source\GreenEnergyHub.Charges\source\GreenEnergyHub.Charges.Tests\bin\Release\net6.0\GreenEnergyHub.Charges.Tests.dll'
+      DOWNLOAD_ATTEMPT_LIMIT: 12
+      USE_AZURE_FUNCTIONS_TOOLS: false
+    secrets:
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      AZURE_SPN_ID: ${{ secrets.AZURE_SPN_ID_OIDC }}
+
   # Run tests in 'IntegrationTests.dll' with category ChargeIngestionTestsChargeInformation'
-  dotnet_solution_ci_test_integrationtests_part1:
+  int_test_charge_information_ingestion:
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci-test.yml@v8
     with:
       TESTS_DLL_FILE_PATH: '\tests\source\GreenEnergyHub.Charges\source\GreenEnergyHub.Charges.IntegrationTests\bin\Release\net6.0\GreenEnergyHub.Charges.IntegrationTests.dll'
@@ -50,7 +62,7 @@ jobs:
       AZURE_SECRETS_KEYVAULT_URL: ${{ secrets.AZURE_SECRETS_KEYVAULT_URL }}
 
   # Run tests in 'IntegrationTests.dll' with category ChargeIngestionTestsChargePrices'
-  dotnet_solution_ci_test_integrationtests_part2:
+  int_test_charge_prices_ingestion:
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci-test.yml@v8
     with:
       TESTS_DLL_FILE_PATH: '\tests\source\GreenEnergyHub.Charges\source\GreenEnergyHub.Charges.IntegrationTests\bin\Release\net6.0\GreenEnergyHub.Charges.IntegrationTests.dll'
@@ -68,7 +80,7 @@ jobs:
       AZURE_SECRETS_KEYVAULT_URL: ${{ secrets.AZURE_SECRETS_KEYVAULT_URL }}
 
   # Run tests in 'IntegrationTests.dll' NOT covered by previous cases
-  dotnet_solution_ci_test_integrationtests_part3:
+  int_test:
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci-test.yml@8.7.0
     with:
       TESTS_DLL_FILE_PATH: '\tests\source\GreenEnergyHub.Charges\source\GreenEnergyHub.Charges.IntegrationTests\bin\Release\net6.0\GreenEnergyHub.Charges.IntegrationTests.dll'
@@ -84,18 +96,6 @@ jobs:
       AZURE_SPN_ID: ${{ secrets.AZURE_SPN_ID_OIDC }}
       AZURE_KEYVAULT_URL: ${{ secrets.AZURE_KEYVAULT_URL }}
       AZURE_SECRETS_KEYVAULT_URL: ${{ secrets.AZURE_SECRETS_KEYVAULT_URL }}
-
-  # Run all tests in 'Tests.dll'
-  dotnet_solution_ci_test_tests:
-    uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci-test.yml@v8
-    with:
-      TESTS_DLL_FILE_PATH: '\tests\source\GreenEnergyHub.Charges\source\GreenEnergyHub.Charges.Tests\bin\Release\net6.0\GreenEnergyHub.Charges.Tests.dll'
-      DOWNLOAD_ATTEMPT_LIMIT: 12
-      USE_AZURE_FUNCTIONS_TOOLS: false
-    secrets:
-      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      AZURE_SPN_ID: ${{ secrets.AZURE_SPN_ID_OIDC }}
 
   terraform_validate:
     uses: Energinet-DataHub/.github/.github/workflows/terraform-validate.yml@v8
