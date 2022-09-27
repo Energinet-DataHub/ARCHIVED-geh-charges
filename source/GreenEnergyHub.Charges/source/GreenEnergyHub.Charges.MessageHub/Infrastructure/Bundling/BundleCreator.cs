@@ -27,15 +27,18 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Bundling
     {
         private readonly IAvailableDataRepository<TAvailableData> _availableDataRepository;
         private readonly ICimSerializer<TAvailableData> _cimSerializer;
+        private readonly ICimJsonSerializer<TAvailableData> _cimJsonSerializer;
         private readonly IStorageHandler _storageHandler;
 
         public BundleCreator(
             IAvailableDataRepository<TAvailableData> availableDataRepository,
             ICimSerializer<TAvailableData> cimSerializer,
+            ICimJsonSerializer<TAvailableData> cimJsonSerializer,
             IStorageHandler storageHandler)
         {
             _availableDataRepository = availableDataRepository;
             _cimSerializer = cimSerializer;
+            _cimJsonSerializer = cimJsonSerializer;
             _storageHandler = storageHandler;
         }
 
@@ -55,17 +58,31 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Bundling
             }
 
             var firstData = availableData.First();
-            await _cimSerializer.SerializeToStreamAsync(
-                availableData,
-                outputStream,
-                // Due to the nature of the interface to the MessageHub and the use of MessageType in that
-                // BusinessReasonCode, SenderId, SenderRole, RecipientId, RecipientRole and ReceiptStatus will always
-                // be the same value on all records in the list. We can simply take it from the first record.
-                firstData.BusinessReasonCode,
-                firstData.SenderId,
-                firstData.SenderRole,
-                firstData.RecipientId,
-                firstData.RecipientRole).ConfigureAwait(false);
+            if (request.ResponseFormat == ResponseFormat.Json)
+            {
+                await _cimJsonSerializer.SerializeToStreamAsync(
+                    availableData,
+                    outputStream,
+                    firstData.BusinessReasonCode,
+                    firstData.SenderId,
+                    firstData.SenderRole,
+                    firstData.RecipientId,
+                    firstData.RecipientRole).ConfigureAwait(false);
+            }
+            else
+            {
+                await _cimSerializer.SerializeToStreamAsync(
+                    availableData,
+                    outputStream,
+                    // Due to the nature of the interface to the MessageHub and the use of MessageType in that
+                    // BusinessReasonCode, SenderId, SenderRole, RecipientId, RecipientRole and ReceiptStatus will always
+                    // be the same value on all records in the list. We can simply take it from the first record.
+                    firstData.BusinessReasonCode,
+                    firstData.SenderId,
+                    firstData.SenderRole,
+                    firstData.RecipientId,
+                    firstData.RecipientRole).ConfigureAwait(false);
+            }
         }
     }
 }

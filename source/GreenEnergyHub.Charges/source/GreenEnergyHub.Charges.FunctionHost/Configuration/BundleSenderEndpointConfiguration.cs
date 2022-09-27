@@ -46,6 +46,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IBundleCreator, BundleCreator<AvailableChargePriceData>>();
             serviceCollection.AddScoped<ICimSerializer<AvailableChargePriceData>, ChargePriceCimSerializer>();
 
+            serviceCollection.AddScoped<ICimJsonSerializer<AvailableChargeData>, ChargeCimJsonSerializer>();
+            serviceCollection.AddScoped<ICimJsonSerializer<AvailableChargePriceData>, ChargePriceCimJsonSerializer>();
+
             // Charge link bundles
             serviceCollection.AddScoped<IBundleCreator, BundleCreator<AvailableChargeLinksData>>();
             serviceCollection.AddScoped<ICimSerializer<AvailableChargeLinksData>, ChargeLinkCimSerializer>();
