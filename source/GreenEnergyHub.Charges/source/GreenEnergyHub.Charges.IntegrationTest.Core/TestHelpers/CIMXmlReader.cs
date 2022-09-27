@@ -17,7 +17,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 
-namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
+namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
 {
     public class CIMXmlReader
     {
