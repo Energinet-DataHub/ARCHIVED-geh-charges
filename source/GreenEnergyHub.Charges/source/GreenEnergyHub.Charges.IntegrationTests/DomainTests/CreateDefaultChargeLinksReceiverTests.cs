@@ -59,7 +59,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                     () => Fixture.CreateLinkRequestQueue.SenderClient.SendMessageAsync(message), correlationId);
 
                 // Assert
-                await Fixture.MessageHubSimulator.AssertPeekReceivesRepliesAsync(correlationId);
+                await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId);
             }
 
             [Theory]
@@ -93,7 +93,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
             public Task DisposeAsync()
             {
-                Fixture.MessageHubSimulator.Clear();
+                Fixture.MessageHubMock.Clear();
                 return Task.CompletedTask;
             }
 

@@ -25,7 +25,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
         /// Listen for dataAvailable events, initiates a peek and assert that a reply is received.
         /// </summary>
         public static async Task<List<string>> AssertPeekReceivesRepliesAsync(
-            this MessageHubSimulator messageHubSimulator,
+            this MessageHubMock messageHubMock,
             string correlationId,
             int noOfDataAvailableNotifications = 1)
         {
@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
             try
             {
                 // Throws if expected data available message (by correlation ID) is not received
-                await messageHubSimulator.WaitForNotificationsInDataAvailableQueueAsync(correlationId, noOfDataAvailableNotifications);
+                await messageHubMock.WaitForNotificationsInDataAvailableQueueAsync(correlationId, noOfDataAvailableNotifications);
             }
             catch (Exception ex) when (ex is TaskCanceledException or TimeoutException)
             {
@@ -47,14 +47,14 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
 
             // Invokes the domain and ensures that a reply to the peek request is received for each message type
             // Throws if corresponding peek reply is not received
-            var peekSimulatorResponseDtos = await messageHubSimulator.PeekAsync();
+            var peekSimulatorResponseDtos = await messageHubMock.PeekAsync();
 
             foreach (var peekSimulatorResponseDto in peekSimulatorResponseDtos)
             {
-                peekResults.Add(await messageHubSimulator.DownLoadPeekResultAsync(peekSimulatorResponseDto));
+                peekResults.Add(await messageHubMock.DownLoadPeekResultAsync(peekSimulatorResponseDto));
             }
 
-            messageHubSimulator.Clear();
+            messageHubMock.Clear();
 
             return peekResults;
         }

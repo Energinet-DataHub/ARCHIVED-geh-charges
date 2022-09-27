@@ -70,7 +70,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
         public ServiceBusTestListener? ChargePricesUpdatedListener { get; private set; }
 
         [NotNull]
-        public MessageHubSimulator? MessageHubSimulator { get; private set; }
+        public MessageHubMock? MessageHubMock { get; private set; }
 
         [NotNull]
         public QueueResource? CreateLinkRequestQueue { get; private set; }
@@ -272,8 +272,6 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
 
             await InitializeMessageHubAsync();
 
-            /*await InitializeMessageHubSimulator();*/
-
             await SetUpRequestResponseLoggingAsync();
 
             // => Database
@@ -306,7 +304,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             await AvailableDataQueueListener.DisposeAsync();
 
             // MessageHub Simulator
-            await MessageHubSimulator.DisposeAsync();
+            await MessageHubMock.DisposeAsync();
 
             // => Service Bus
             await ServiceBusResourceProvider.DisposeAsync();
@@ -315,10 +313,10 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             await ChargesDatabaseManager.DeleteDatabaseAsync();
         }
 
-        private IEnumerable<AuthorizedTestActor> CreateAuthorizedTestActors(
-            IReadOnlyDictionary<string, B2CClientAppSettings> b2cClientAppSettings)
+        private static IEnumerable<AuthorizedTestActor> CreateAuthorizedTestActors(
+            IReadOnlyDictionary<string, B2CClientAppSettings> b2CClientAppSettings)
         {
-            return b2cClientAppSettings
+            return b2CClientAppSettings
                 .Select(kv => new AuthorizedTestActor(kv.Value, LocalTimeZoneName))
                 .ToList();
         }
@@ -362,10 +360,10 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
                 EnvironmentSettingNames.MessageHubStorageContainer,
                 ChargesServiceBusResourceNames.MessageHubStorageContainerName);
 
-            await InitializeMessageHubSimulator();
+            await InitializeMessageHubMock();
         }
 
-        private async Task InitializeMessageHubSimulator()
+        private async Task InitializeMessageHubMock()
         {
             var availableDataQueueListener = new ServiceBusListenerMock(ServiceBusResourceProvider.ConnectionString, TestLogger);
             await availableDataQueueListener.AddQueueListenerAsync(MessageHubDataAvailableQueue.Name);
@@ -382,7 +380,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             if (!await blobContainerClient.ExistsAsync())
                 await blobContainerClient.CreateAsync();
 
-            MessageHubSimulator = new MessageHubSimulator(
+            MessageHubMock = new MessageHubMock(
                 AvailableDataQueueListener,
                 MessageHubRequestQueue,
                 MessageHubReplyQueueListener,

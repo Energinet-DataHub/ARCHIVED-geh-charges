@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 // We need to clear host log after each test is done to ensure that we can assert
                 // on function executed on each test run because we only check on function name.
                 Fixture.HostManager.ClearHostLog();
-                Fixture.MessageHubSimulator.Clear();
+                Fixture.MessageHubMock.Clear();
                 return Task.CompletedTask;
             }
 

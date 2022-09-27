@@ -53,7 +53,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
             public Task DisposeAsync()
             {
-                Fixture.MessageHubSimulator.Clear();
+                Fixture.MessageHubMock.Clear();
                 return Task.CompletedTask;
             }
 
@@ -130,7 +130,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // We expect 3 message types in the MessageHub, one for the receipt,
                 // one for the charge link itself and one rejected
                 using var assertionScope = new AssertionScope();
-                var peekResults = await Fixture.MessageHubSimulator.AssertPeekReceivesRepliesAsync(correlationId, 3);
+                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 3);
                 peekResults.Should().ContainMatch("*ConfirmRequestChangeBillingMasterData_MarketDocument*");
                 peekResults.Should().ContainMatch("*NotifyBillingMasterData_MarketDocument*");
 
@@ -154,7 +154,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
 
                 using var assertionScope = new AssertionScope();
-                var peekResults = await Fixture.MessageHubSimulator.AssertPeekReceivesRepliesAsync(correlationId);
+                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId);
                 peekResults.Should().ContainMatch("*ConfirmRequestChangeBillingMasterData_MarketDocument*");
                 peekResults.Should().NotContainMatch("*Reject*");
             }

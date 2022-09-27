@@ -37,7 +37,7 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
 {
-    public class MessageHubSimulator : IAsyncDisposable
+    public class MessageHubMock : IAsyncDisposable
     {
         private const int SecondsToWaitForIntegrationEvents = 20;
 
@@ -52,7 +52,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
         private readonly IDataAvailableNotificationParser _dataAvailableNotificationParser =
             new DataAvailableNotificationParser();
 
-        public MessageHubSimulator(
+        public MessageHubMock(
             ServiceBusTestListener messageHubDataAvailableServiceBusTestListener,
             QueueResource messageHubRequestQueueResource,
             ServiceBusTestListener messageHubReplyServiceBusTestListener,
@@ -111,7 +111,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
         public async Task<List<PeekSimulatorResponseDto>> PeekAsync()
         {
             InvalidOperationExceptionExtension.ThrowIfNoElements(
-                _notifications, $"{nameof(MessageHubSimulator)}: No dataavailable was provided for Peek");
+                _notifications, $"{nameof(MessageHubMock)}: No dataavailable was provided for Peek");
 
             var peekSimulatorResponseDtos = new List<PeekSimulatorResponseDto>();
             var distinctMessages = _notifications.Select(x => new { x.MessageType.Value, x.Recipient }).Distinct();

@@ -62,7 +62,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             {
                 Fixture.ChargeCreatedListener.Reset();
                 Fixture.ChargePricesUpdatedListener.Reset();
-                Fixture.MessageHubSimulator.Clear();
+                Fixture.MessageHubMock.Clear();
 
                 // We need to clear host log after each test is done to ensure that we can assert on function executed
                 // on each test run because we only check on function name.
@@ -141,7 +141,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // * 2 x 2 data available to energy suppliers
                 // * 3 data available to grid access providers
                 using var assertionScope = new AssertionScope();
-                var peekResults = await Fixture.MessageHubSimulator.AssertPeekReceivesRepliesAsync(correlationId, 10);
+                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 10);
                 peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
                 peekResults.Should().ContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
                 peekResults.Should().ContainMatch("*NotifyPriceList_MarketDocument*");
@@ -170,7 +170,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // We expect 8 peek results:
                 // * 1 confirmation
                 // * 2 data available to energy suppliers
-                var peekResults = await Fixture.MessageHubSimulator
+                var peekResults = await Fixture.MessageHubMock
                     .AssertPeekReceivesRepliesAsync(correlationId, noOfMessagesExpected);
                 peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
                 peekResults.Should().NotContainMatch("*Reject*");
@@ -242,7 +242,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // 1 confirmation
                 // 2 data available to energy suppliers
                 // 3 data available to grid access providers
-                var peekResult = await Fixture.MessageHubSimulator.AssertPeekReceivesRepliesAsync(correlationId, 6);
+                var peekResult = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 6);
                 var notification = peekResult.First(s =>
                     s.Contains("NotifyPriceList_MarketDocument")
                     && s.Contains("<cim:receiver_MarketParticipant.marketRole.type>DDM"));
@@ -274,7 +274,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
                 // We expect 1 peek results:
                 // 1 rejection due to role (Must be DDZ)
-                var peekResult = await Fixture.MessageHubSimulator.AssertPeekReceivesRepliesAsync(correlationId);
+                var peekResult = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId);
                 peekResult.Should().ContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
                 peekResult.Should().NotContainMatch("*NotifyPriceList_MarketDocument*");
                 peekResult.Should().ContainMatch("*<cim:process.processType>D08</cim:process.processType>*");
@@ -303,7 +303,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
                 // We expect 1 peek results:
                 // 1 rejection due to invalid price
-                var peekResult = await Fixture.MessageHubSimulator.AssertPeekReceivesRepliesAsync(correlationId);
+                var peekResult = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId);
                 peekResult.Should().ContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
                 peekResult.Should().NotContainMatch("*NotifyPriceList_MarketDocument*");
                 peekResult.Should().ContainMatch("*<cim:process.processType>D08</cim:process.processType>*");
@@ -327,7 +327,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
                 // We expect 2 peek results:
                 // 2 rejections the first due to invalid price and the second due to the first error
-                var peekResult = await Fixture.MessageHubSimulator.AssertPeekReceivesRepliesAsync(correlationId, 2);
+                var peekResult = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 2);
                 var result = peekResult.Single();
                 result.Should().Contain("RejectRequestChangeOfPriceList_MarketDocument");
                 result.Should().Contain("<cim:process.processType>D08</cim:process.processType>");
@@ -353,7 +353,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // * 2 confirmation
                 // * 2 x 2 data available to energy suppliers
                 // * 1 rejection (for 2nd operation due mismatching charge owner)
-                var peekResult = await Fixture.MessageHubSimulator.AssertPeekReceivesRepliesAsync(correlationId, 7);
+                var peekResult = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 7);
 
                 peekResult.Count(s => s.Contains("ConfirmRequestChangeOfPriceList_MarketDocument")).Should().Be(2); // TODO: 1?
 
@@ -378,7 +378,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
                 using var assertionScope = new AssertionScope();
 
-                var peekResult = await Fixture.MessageHubSimulator.AssertPeekReceivesRepliesAsync(correlationId);
+                var peekResult = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId);
                 peekResult.Should().ContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
                 peekResult.Should().NotContainMatch("*NotifyPriceList_MarketDocument*");
                 peekResult.Should().ContainMatch("*<cim:process.processType>D08</cim:process.processType>*");
@@ -406,7 +406,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // We expect 8 peek results:
                 // * 1 confirmation
                 // * 2 data available to energy suppliers
-                var peekResult = await Fixture.MessageHubSimulator.AssertPeekReceivesRepliesAsync(correlationId, 3);
+                var peekResult = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 3);
                 peekResult.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
                 peekResult.Should().NotContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
                 peekResult.Should().ContainMatch("*<cim:process.processType>D08</cim:process.processType>*");
@@ -427,7 +427,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // Assert
                 using var assertionScope = new AssertionScope();
                 actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
-                var peekResult = await Fixture.MessageHubSimulator.AssertPeekReceivesRepliesAsync(correlationId, 2);
+                var peekResult = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 2);
                 peekResult.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
                 peekResult.Should().NotContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
                 peekResult.Should().ContainMatch("*NotifyPriceList_MarketDocument*");
@@ -452,7 +452,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // We expect 8 peek results:
                 // * 1 confirmation
                 // * 2 data available to energy suppliers
-                var peekResult = await Fixture.MessageHubSimulator.AssertPeekReceivesRepliesAsync(correlationId, 3);
+                var peekResult = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 3);
                 peekResult.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
                 peekResult.Should().ContainMatch("*NotifyPriceList_MarketDocument*");
                 peekResult.Should().ContainMatch("*<cim:process.processType>D08</cim:process.processType>*");
@@ -471,7 +471,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
                 // Assert
                 using var assertionScope = new AssertionScope();
-                var peekResults = await Fixture.MessageHubSimulator.AssertPeekReceivesRepliesAsync(correlationId, 4);
+                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 4);
                 peekResults.Should().NotContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
                 peekResults.Should().ContainMatch("*NotifyPriceList_MarketDocument*");
                 peekResults.Should().ContainMatch("*8100000000030*");
