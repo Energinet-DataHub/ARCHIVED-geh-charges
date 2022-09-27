@@ -37,21 +37,21 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Charges
 {
     [UnitTest]
-    public class ChargeCimSerializerTests
+    public class ChargeCimJsonSerializerTests
     {
         private const int NoOfChargesInBundle = 10;
         private const string CimTestId = "00000000000000000000000000000000";
         private const string RecipientId = "Recipient";
 
         [Theory]
-        [InlineAutoDomainData("GreenEnergyHub.Charges.Tests.TestFiles.ExpectedOutputChargeCimSerializerChargeInformation.blob")]
+        [InlineAutoDomainData("GreenEnergyHub.Charges.Tests.TestFiles.ExpectedOutputChargeCimJsonSerializerChargeInformation.blob")]
         public async Task SerializeAsync_WhenCalled_StreamHasSerializedResult(
             string embeddedResource,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IClock> clock,
             [Frozen] Mock<IIso8601Durations> iso8601Durations,
             [Frozen] Mock<ICimIdProvider> cimIdProvider,
-            ChargeCimSerializer sut)
+            ChargeCimJsonSerializer sut)
         {
             // Arrange
             SetupMocks(marketParticipantRepository, clock, iso8601Durations, cimIdProvider);
@@ -77,64 +77,6 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
             var actual = stream.AsString();
 
             actual.Should().Be(expected);
-        }
-
-        [Theory(Skip = "Manually run test to save the generated file to disk")]
-        [InlineAutoDomainData]
-        public async Task SerializeAsync_WhenCalled_SaveSerializedStream(
-            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            [Frozen] Mock<IClock> clock,
-            [Frozen] Mock<IIso8601Durations> iso8601Durations,
-            [Frozen] Mock<ICimIdProvider> cimIdProvider,
-            ChargeCimSerializer sut)
-        {
-            SetupMocks(marketParticipantRepository, clock, iso8601Durations, cimIdProvider);
-
-            var charges = GetCharges(clock.Object);
-
-            await using var stream = new MemoryStream();
-
-            await sut.SerializeToStreamAsync(
-                charges,
-                stream,
-                BusinessReasonCode.UpdateChargeInformation,
-                "5790001330552",
-                MarketParticipantRole.MeteringPointAdministrator,
-                RecipientId,
-                MarketParticipantRole.GridAccessProvider);
-
-            await using var fileStream = File.Create("C:\\Temp\\TestChargeBundle" + Guid.NewGuid() + ".xml");
-
-            await stream.CopyToAsync(fileStream);
-        }
-
-        [Theory]
-        [InlineAutoDomainData]
-        public async Task SerializeAsync_WhenCalledRequestingJson_SaveSerializedStream(
-            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            [Frozen] Mock<IClock> clock,
-            [Frozen] Mock<IIso8601Durations> iso8601Durations,
-            [Frozen] Mock<ICimIdProvider> cimIdProvider,
-            ChargeCimJsonSerializer sut)
-        {
-            SetupMocks(marketParticipantRepository, clock, iso8601Durations, cimIdProvider);
-
-            var charges = GetCharges(clock.Object);
-
-            await using var stream = new MemoryStream();
-
-            await sut.SerializeToStreamAsync(
-                charges,
-                stream,
-                BusinessReasonCode.UpdateChargeInformation,
-                "5790001330552",
-                MarketParticipantRole.MeteringPointAdministrator,
-                RecipientId,
-                MarketParticipantRole.GridAccessProvider);
-
-            await using var fileStream = File.Create("C:\\Temp\\TestChargeBundle" + Guid.NewGuid() + ".json");
-
-            await stream.CopyToAsync(fileStream);
         }
 
         private void SetupMocks(

@@ -35,10 +35,9 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Bundling
     {
         [Theory]
         [InlineAutoDomainData]
-        public async Task CreateAsync_WhenCalled_UsesRepositoryAndSerializer(
+        public async Task CreateAsync_WhenCalled_UsesRepositoryAndXmlSerializer(
             [Frozen] Mock<IAvailableDataRepository<AvailableDataBase>> repository,
             [Frozen] Mock<ICimSerializer<AvailableDataBase>> serializer,
-            DataBundleRequestDto dataBundleRequestDto,
             List<AvailableDataBase> availableData,
             List<Guid> dataAvailableIds,
             [Frozen] Mock<IStorageHandler> storageHandler,
@@ -46,6 +45,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Bundling
             BundleCreator<AvailableDataBase> sut)
         {
             // Arrange
+            var dataBundleRequestDto = GetDataBundleRequestDtoWithResponseFormat(ResponseFormat.Xml);
             storageHandler
                 .Setup(r => r.GetDataAvailableNotificationIdsAsync(dataBundleRequestDto))
                 .ReturnsAsync(dataAvailableIds);
@@ -53,7 +53,42 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Bundling
             repository.Setup(
                     r => r.GetAsync(dataAvailableIds))
                 .ReturnsAsync(availableData);
+            // Act
+            await sut.CreateAsync(dataBundleRequestDto, stream).ConfigureAwait(false);
 
+            // Assert
+            serializer.Verify(
+                s => s.SerializeToStreamAsync(
+                    availableData,
+                    stream,
+                    availableData.First().BusinessReasonCode,
+                    availableData.First().SenderId,
+                    availableData.First().SenderRole,
+                    availableData.First().RecipientId,
+                    availableData.First().RecipientRole),
+                Times.Once);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task CreateAsync_WhenCalled_UsesRepositoryAndJsonSerializer(
+            [Frozen] Mock<IAvailableDataRepository<AvailableDataBase>> repository,
+            [Frozen] Mock<ICimJsonSerializer<AvailableDataBase>> serializer,
+            List<AvailableDataBase> availableData,
+            List<Guid> dataAvailableIds,
+            [Frozen] Mock<IStorageHandler> storageHandler,
+            Stream stream,
+            BundleCreator<AvailableDataBase> sut)
+        {
+            // Arrange
+            var dataBundleRequestDto = GetDataBundleRequestDtoWithResponseFormat(ResponseFormat.Json);
+            storageHandler
+                .Setup(r => r.GetDataAvailableNotificationIdsAsync(dataBundleRequestDto))
+                .ReturnsAsync(dataAvailableIds);
+
+            repository.Setup(
+                    r => r.GetAsync(dataAvailableIds))
+                .ReturnsAsync(availableData);
             // Act
             await sut.CreateAsync(dataBundleRequestDto, stream).ConfigureAwait(false);
 
@@ -92,6 +127,17 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Bundling
             // Act
             await Assert.ThrowsAsync<UnknownDataAvailableNotificationIdsException>(
                 () => sut.CreateAsync(dataBundleRequestDto, stream));
+        }
+
+        private DataBundleRequestDto GetDataBundleRequestDtoWithResponseFormat(ResponseFormat responseFormat)
+        {
+            return new DataBundleRequestDto(
+                RequestId: Guid.NewGuid(),
+                DataAvailableNotificationReferenceId: Guid.NewGuid().ToString(),
+                IdempotencyId: Guid.NewGuid().ToString(),
+                new MessageTypeDto("messageType"),
+                responseFormat,
+                ResponseVersion: 1.0);
         }
     }
 }

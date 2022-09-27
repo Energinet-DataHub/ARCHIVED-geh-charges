@@ -77,12 +77,12 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.Charges
                 },
                 { CimChargeConstants.ChargeOwner, CimJsonHelper.CreateValueObject(charge.ChargeOwner, CodingScheme.GS1) },
                 { CimChargeConstants.ChargeDescription, charge.ChargeDescription },
-                { CimChargeConstants.EffectiveDate, charge.StartDateTime.ToString() },
+                { CimChargeConstants.EffectiveDate, charge.StartDateTime.ToDateTimeUtc() },
                 { CimChargeConstants.ChargeName, charge.ChargeName },
                 { CimChargeConstants.ChargeResolution, ResolutionMapper.Map(charge.Resolution) },
-                { CimChargeConstants.TaxIndicator, charge.TaxIndicator.ToString() },
-                { CimChargeConstants.TerminationDate, charge.EndDateTime.ToString() },
-                { CimChargeConstants.TransparentInvoicing, charge.TransparentInvoicing.ToString() },
+                { CimChargeConstants.TaxIndicator, charge.TaxIndicator },
+                { CimChargeConstants.TerminationDate, charge.EndDateTime.ToDateTimeUtc() },
+                { CimChargeConstants.TransparentInvoicing, charge.TransparentInvoicing },
                 { CimChargeConstants.ChargeType, CimJsonHelper.CreateValueObject(ChargeTypeMapper.Map(charge.ChargeType)) },
             };
             return chargeInformation;

@@ -82,7 +82,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim
                         CimMarketDocumentConstants.IndustryClassification,
                         CimJsonHelper.CreateValueObject(IndustryClassificationMapper.Map(IndustryClassification.Electricity))
                     },
-                    { CimMarketDocumentConstants.CreatedDateTime, Clock.GetCurrentInstant().ToString() },
+                    { CimMarketDocumentConstants.CreatedDateTime, Clock.GetCurrentInstant().ToDateTimeUtc() },
                     {
                         CimMarketDocumentConstants.BusinessReasonCode,
                         CimJsonHelper.CreateValueObject(BusinessReasonCodeMapper.Map(businessReasonCode))

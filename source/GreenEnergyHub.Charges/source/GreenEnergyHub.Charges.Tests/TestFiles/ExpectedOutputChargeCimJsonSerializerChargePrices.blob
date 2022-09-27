@@ -1,0 +1,993 @@
+{
+  "NotifyPriceList_MarketDocument": {
+    "mRID": "00000000000000000000000000000000",
+    "businessSector.type": {
+      "value": "23"
+    },
+    "createdDateTime": "2021-10-22T15:30:41Z",
+    "process.processType": {
+      "value": "D08"
+    },
+    "receiver_MarketParticipant.mRID": {
+      "codingScheme": "A10",
+      "value": "Recipient"
+    },
+    "receiver_MarketParticipant.marketRole.type": {
+      "value": "DDM"
+    },
+    "sender_MarketParticipant.mRID": {
+      "codingScheme": "A10",
+      "value": "5790001330552"
+    },
+    "sender_MarketParticipant.marketRole.type": {
+      "value": "DDZ"
+    },
+    "type": {
+      "value": "D12"
+    },
+    "MktActivityRecord": [
+      {
+        "mRID": "00000000000000000000000000000000",
+        "ChargeGroup": {
+          "ChargeType": [
+            {
+              "mRID": "ChargeId1",
+              "chargeTypeOwner_MarketParticipant.mRID": {
+                "codingScheme": "A10",
+                "value": "Owner1"
+              },
+              "effectiveDate": "2020-12-31T23:00:00Z",
+              "type": {
+                "value": "D02"
+              },
+              "Series_Period": [
+                {
+                  "resolution": "P1M",
+                  "timeInterval": {
+                    "start": {
+                      "value": "2020-12-31T23:00Z"
+                    },
+                    "end": {
+                      "value": "2100-03-31T22:00Z"
+                    }
+                  },
+                  "Point": [
+                    {
+                      "position": {
+                        "value": 1
+                      },
+                      "price.amount": {
+                        "value": 1
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "mRID": "00000000000000000000000000000000",
+        "ChargeGroup": {
+          "ChargeType": [
+            {
+              "mRID": "ChargeId2",
+              "chargeTypeOwner_MarketParticipant.mRID": {
+                "codingScheme": "A10",
+                "value": "Owner2"
+              },
+              "effectiveDate": "2020-12-31T23:00:00Z",
+              "type": {
+                "value": "D03"
+              },
+              "Series_Period": [
+                {
+                  "resolution": "PT1H",
+                  "timeInterval": {
+                    "start": {
+                      "value": "2020-12-31T23:00Z"
+                    },
+                    "end": {
+                      "value": "2100-03-31T22:00Z"
+                    }
+                  },
+                  "Point": [
+                    {
+                      "position": {
+                        "value": 1
+                      },
+                      "price.amount": {
+                        "value": 1
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 2
+                      },
+                      "price.amount": {
+                        "value": 2
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 3
+                      },
+                      "price.amount": {
+                        "value": 3
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 4
+                      },
+                      "price.amount": {
+                        "value": 4
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 5
+                      },
+                      "price.amount": {
+                        "value": 5
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 6
+                      },
+                      "price.amount": {
+                        "value": 6
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 7
+                      },
+                      "price.amount": {
+                        "value": 7
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 8
+                      },
+                      "price.amount": {
+                        "value": 8
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 9
+                      },
+                      "price.amount": {
+                        "value": 9
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 10
+                      },
+                      "price.amount": {
+                        "value": 10
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 11
+                      },
+                      "price.amount": {
+                        "value": 11
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 12
+                      },
+                      "price.amount": {
+                        "value": 12
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 13
+                      },
+                      "price.amount": {
+                        "value": 13
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 14
+                      },
+                      "price.amount": {
+                        "value": 14
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 15
+                      },
+                      "price.amount": {
+                        "value": 15
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 16
+                      },
+                      "price.amount": {
+                        "value": 16
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 17
+                      },
+                      "price.amount": {
+                        "value": 17
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 18
+                      },
+                      "price.amount": {
+                        "value": 18
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 19
+                      },
+                      "price.amount": {
+                        "value": 19
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 20
+                      },
+                      "price.amount": {
+                        "value": 20
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 21
+                      },
+                      "price.amount": {
+                        "value": 21
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 22
+                      },
+                      "price.amount": {
+                        "value": 22
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 23
+                      },
+                      "price.amount": {
+                        "value": 23
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 24
+                      },
+                      "price.amount": {
+                        "value": 24
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "mRID": "00000000000000000000000000000000",
+        "ChargeGroup": {
+          "ChargeType": [
+            {
+              "mRID": "ChargeId3",
+              "chargeTypeOwner_MarketParticipant.mRID": {
+                "codingScheme": "A10",
+                "value": "Owner3"
+              },
+              "effectiveDate": "2020-12-31T23:00:00Z",
+              "type": {
+                "value": "D01"
+              },
+              "Series_Period": [
+                {
+                  "resolution": "P1M",
+                  "timeInterval": {
+                    "start": {
+                      "value": "2020-12-31T23:00Z"
+                    },
+                    "end": {
+                      "value": "2100-03-31T22:00Z"
+                    }
+                  },
+                  "Point": [
+                    {
+                      "position": {
+                        "value": 1
+                      },
+                      "price.amount": {
+                        "value": 1
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "mRID": "00000000000000000000000000000000",
+        "ChargeGroup": {
+          "ChargeType": [
+            {
+              "mRID": "ChargeId4",
+              "chargeTypeOwner_MarketParticipant.mRID": {
+                "codingScheme": "A10",
+                "value": "Owner4"
+              },
+              "effectiveDate": "2020-12-31T23:00:00Z",
+              "type": {
+                "value": "D02"
+              },
+              "Series_Period": [
+                {
+                  "resolution": "P1M",
+                  "timeInterval": {
+                    "start": {
+                      "value": "2020-12-31T23:00Z"
+                    },
+                    "end": {
+                      "value": "2100-03-31T22:00Z"
+                    }
+                  },
+                  "Point": [
+                    {
+                      "position": {
+                        "value": 1
+                      },
+                      "price.amount": {
+                        "value": 1
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "mRID": "00000000000000000000000000000000",
+        "ChargeGroup": {
+          "ChargeType": [
+            {
+              "mRID": "ChargeId5",
+              "chargeTypeOwner_MarketParticipant.mRID": {
+                "codingScheme": "A10",
+                "value": "Owner5"
+              },
+              "effectiveDate": "2020-12-31T23:00:00Z",
+              "type": {
+                "value": "D03"
+              },
+              "Series_Period": [
+                {
+                  "resolution": "PT1H",
+                  "timeInterval": {
+                    "start": {
+                      "value": "2020-12-31T23:00Z"
+                    },
+                    "end": {
+                      "value": "2100-03-31T22:00Z"
+                    }
+                  },
+                  "Point": [
+                    {
+                      "position": {
+                        "value": 1
+                      },
+                      "price.amount": {
+                        "value": 1
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 2
+                      },
+                      "price.amount": {
+                        "value": 2
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 3
+                      },
+                      "price.amount": {
+                        "value": 3
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 4
+                      },
+                      "price.amount": {
+                        "value": 4
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 5
+                      },
+                      "price.amount": {
+                        "value": 5
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 6
+                      },
+                      "price.amount": {
+                        "value": 6
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 7
+                      },
+                      "price.amount": {
+                        "value": 7
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 8
+                      },
+                      "price.amount": {
+                        "value": 8
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 9
+                      },
+                      "price.amount": {
+                        "value": 9
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 10
+                      },
+                      "price.amount": {
+                        "value": 10
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 11
+                      },
+                      "price.amount": {
+                        "value": 11
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 12
+                      },
+                      "price.amount": {
+                        "value": 12
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 13
+                      },
+                      "price.amount": {
+                        "value": 13
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 14
+                      },
+                      "price.amount": {
+                        "value": 14
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 15
+                      },
+                      "price.amount": {
+                        "value": 15
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 16
+                      },
+                      "price.amount": {
+                        "value": 16
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 17
+                      },
+                      "price.amount": {
+                        "value": 17
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 18
+                      },
+                      "price.amount": {
+                        "value": 18
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 19
+                      },
+                      "price.amount": {
+                        "value": 19
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 20
+                      },
+                      "price.amount": {
+                        "value": 20
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 21
+                      },
+                      "price.amount": {
+                        "value": 21
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 22
+                      },
+                      "price.amount": {
+                        "value": 22
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 23
+                      },
+                      "price.amount": {
+                        "value": 23
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 24
+                      },
+                      "price.amount": {
+                        "value": 24
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "mRID": "00000000000000000000000000000000",
+        "ChargeGroup": {
+          "ChargeType": [
+            {
+              "mRID": "ChargeId6",
+              "chargeTypeOwner_MarketParticipant.mRID": {
+                "codingScheme": "A10",
+                "value": "Owner6"
+              },
+              "effectiveDate": "2020-12-31T23:00:00Z",
+              "type": {
+                "value": "D01"
+              },
+              "Series_Period": [
+                {
+                  "resolution": "P1M",
+                  "timeInterval": {
+                    "start": {
+                      "value": "2020-12-31T23:00Z"
+                    },
+                    "end": {
+                      "value": "2100-03-31T22:00Z"
+                    }
+                  },
+                  "Point": [
+                    {
+                      "position": {
+                        "value": 1
+                      },
+                      "price.amount": {
+                        "value": 1
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "mRID": "00000000000000000000000000000000",
+        "ChargeGroup": {
+          "ChargeType": [
+            {
+              "mRID": "ChargeId7",
+              "chargeTypeOwner_MarketParticipant.mRID": {
+                "codingScheme": "A10",
+                "value": "Owner7"
+              },
+              "effectiveDate": "2020-12-31T23:00:00Z",
+              "type": {
+                "value": "D02"
+              },
+              "Series_Period": [
+                {
+                  "resolution": "P1M",
+                  "timeInterval": {
+                    "start": {
+                      "value": "2020-12-31T23:00Z"
+                    },
+                    "end": {
+                      "value": "2100-03-31T22:00Z"
+                    }
+                  },
+                  "Point": [
+                    {
+                      "position": {
+                        "value": 1
+                      },
+                      "price.amount": {
+                        "value": 1
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "mRID": "00000000000000000000000000000000",
+        "ChargeGroup": {
+          "ChargeType": [
+            {
+              "mRID": "ChargeId8",
+              "chargeTypeOwner_MarketParticipant.mRID": {
+                "codingScheme": "A10",
+                "value": "Owner8"
+              },
+              "effectiveDate": "2020-12-31T23:00:00Z",
+              "type": {
+                "value": "D03"
+              },
+              "Series_Period": [
+                {
+                  "resolution": "PT1H",
+                  "timeInterval": {
+                    "start": {
+                      "value": "2020-12-31T23:00Z"
+                    },
+                    "end": {
+                      "value": "2100-03-31T22:00Z"
+                    }
+                  },
+                  "Point": [
+                    {
+                      "position": {
+                        "value": 1
+                      },
+                      "price.amount": {
+                        "value": 1
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 2
+                      },
+                      "price.amount": {
+                        "value": 2
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 3
+                      },
+                      "price.amount": {
+                        "value": 3
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 4
+                      },
+                      "price.amount": {
+                        "value": 4
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 5
+                      },
+                      "price.amount": {
+                        "value": 5
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 6
+                      },
+                      "price.amount": {
+                        "value": 6
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 7
+                      },
+                      "price.amount": {
+                        "value": 7
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 8
+                      },
+                      "price.amount": {
+                        "value": 8
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 9
+                      },
+                      "price.amount": {
+                        "value": 9
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 10
+                      },
+                      "price.amount": {
+                        "value": 10
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 11
+                      },
+                      "price.amount": {
+                        "value": 11
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 12
+                      },
+                      "price.amount": {
+                        "value": 12
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 13
+                      },
+                      "price.amount": {
+                        "value": 13
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 14
+                      },
+                      "price.amount": {
+                        "value": 14
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 15
+                      },
+                      "price.amount": {
+                        "value": 15
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 16
+                      },
+                      "price.amount": {
+                        "value": 16
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 17
+                      },
+                      "price.amount": {
+                        "value": 17
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 18
+                      },
+                      "price.amount": {
+                        "value": 18
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 19
+                      },
+                      "price.amount": {
+                        "value": 19
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 20
+                      },
+                      "price.amount": {
+                        "value": 20
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 21
+                      },
+                      "price.amount": {
+                        "value": 21
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 22
+                      },
+                      "price.amount": {
+                        "value": 22
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 23
+                      },
+                      "price.amount": {
+                        "value": 23
+                      }
+                    },
+                    {
+                      "position": {
+                        "value": 24
+                      },
+                      "price.amount": {
+                        "value": 24
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "mRID": "00000000000000000000000000000000",
+        "ChargeGroup": {
+          "ChargeType": [
+            {
+              "mRID": "ChargeId9",
+              "chargeTypeOwner_MarketParticipant.mRID": {
+                "codingScheme": "A10",
+                "value": "Owner9"
+              },
+              "effectiveDate": "2020-12-31T23:00:00Z",
+              "type": {
+                "value": "D01"
+              },
+              "Series_Period": [
+                {
+                  "resolution": "P1M",
+                  "timeInterval": {
+                    "start": {
+                      "value": "2020-12-31T23:00Z"
+                    },
+                    "end": {
+                      "value": "2100-03-31T22:00Z"
+                    }
+                  },
+                  "Point": [
+                    {
+                      "position": {
+                        "value": 1
+                      },
+                      "price.amount": {
+                        "value": 1
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "mRID": "00000000000000000000000000000000",
+        "ChargeGroup": {
+          "ChargeType": [
+            {
+              "mRID": "ChargeId10",
+              "chargeTypeOwner_MarketParticipant.mRID": {
+                "codingScheme": "A10",
+                "value": "Owner10"
+              },
+              "effectiveDate": "2020-12-31T23:00:00Z",
+              "type": {
+                "value": "D02"
+              },
+              "Series_Period": [
+                {
+                  "resolution": "P1M",
+                  "timeInterval": {
+                    "start": {
+                      "value": "2020-12-31T23:00Z"
+                    },
+                    "end": {
+                      "value": "2100-03-31T22:00Z"
+                    }
+                  },
+                  "Point": [
+                    {
+                      "position": {
+                        "value": 1
+                      },
+                      "price.amount": {
+                        "value": 1
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

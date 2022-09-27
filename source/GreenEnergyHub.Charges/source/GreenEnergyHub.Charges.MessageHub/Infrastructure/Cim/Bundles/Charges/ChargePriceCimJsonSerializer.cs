@@ -80,7 +80,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.Charges
                     CimChargeConstants.ChargeOwner,
                     CimJsonHelper.CreateValueObject(chargePrice.ChargeOwner, CodingScheme.GS1)
                 },
-                { CimChargeConstants.EffectiveDate, chargePrice.StartDateTime.ToString() },
+                { CimChargeConstants.EffectiveDate, chargePrice.StartDateTime.ToDateTimeUtc() },
                 {
                     CimChargeConstants.ChargeType,
                     CimJsonHelper.CreateValueObject(ChargeTypeMapper.Map(chargePrice.ChargeType))

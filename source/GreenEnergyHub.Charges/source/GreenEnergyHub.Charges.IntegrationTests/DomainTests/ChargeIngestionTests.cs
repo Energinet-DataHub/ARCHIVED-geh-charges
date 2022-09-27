@@ -473,7 +473,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // Arrange
                 var (request, correlationId) = Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
                     EndpointUrl, ChargeDocument.BundledSubscriptionPriceSeriesSecondOperationChargeOwnerMismatch);
-
                 // Act
                 var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
 
