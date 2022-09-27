@@ -15,13 +15,14 @@
 using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
+using GreenEnergyHub.Charges.TestCore.Builders.Command;
 
 namespace GreenEnergyHub.Charges.TestCore.Builders.Application
 {
     public class ChargeInformationCommandBundleBuilder
     {
         private readonly List<ChargeInformationCommand> _commands = new();
-        private DocumentDto _document = new();
+        private DocumentDto _document = new DocumentDtoBuilder().Build();
 
         public ChargeInformationCommandBundleBuilder WithDocument(DocumentDto document)
         {

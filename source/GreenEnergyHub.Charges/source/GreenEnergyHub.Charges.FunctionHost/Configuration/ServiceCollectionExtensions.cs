@@ -66,7 +66,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             services.AddScoped<ClaimsPrincipalContext>();
             services.AddScoped<IClaimsPrincipalAccessor, ClaimsPrincipalAccessor>();
 
-            services.AddScoped<JwtTokenMiddleware>(sp =>
+            services.AddScoped(sp =>
                 new JwtTokenMiddleware(
                     sp.GetRequiredService<ClaimsPrincipalContext>(),
                     sp.GetRequiredService<IJwtTokenValidator>(),

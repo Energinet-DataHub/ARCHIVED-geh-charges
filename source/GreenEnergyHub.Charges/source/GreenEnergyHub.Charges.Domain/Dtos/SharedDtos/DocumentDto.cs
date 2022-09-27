@@ -28,29 +28,41 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.SharedDtos
     /// </summary>
     public class DocumentDto
     {
+        public DocumentDto(string id, Instant requestDate, DocumentType type, Instant createdDateTime, MarketParticipantDto sender, MarketParticipantDto recipient, IndustryClassification industryClassification, BusinessReasonCode businessReasonCode)
+        {
+            Id = id;
+            RequestDate = requestDate;
+            Type = type;
+            CreatedDateTime = createdDateTime;
+            Sender = sender;
+            Recipient = recipient;
+            IndustryClassification = industryClassification;
+            BusinessReasonCode = businessReasonCode;
+        }
+
         /// <summary>
         /// An ID provided by the sender.
         /// </summary>
-        public string Id { get; set; }
+        public string Id { get; }
 
         /// <summary>
         ///  Point in time set by the Charges domain
         /// </summary>
-        public Instant RequestDate { get; set; }
+        public Instant RequestDate { get; }
 
-        public DocumentType Type { get; set; }
+        public DocumentType Type { get; }
 
         /// <summary>
         /// A point in time provided by the sender
         /// </summary>
-        public Instant CreatedDateTime { get; set; }
+        public Instant CreatedDateTime { get; }
 
-        public MarketParticipantDto Sender { get; set; }
+        public MarketParticipantDto Sender { get; }
 
-        public MarketParticipantDto Recipient { get; set; }
+        public MarketParticipantDto Recipient { get; }
 
-        public IndustryClassification IndustryClassification { get; set; }
+        public IndustryClassification IndustryClassification { get; }
 
-        public BusinessReasonCode BusinessReasonCode { get; set; }
+        public BusinessReasonCode BusinessReasonCode { get; }
     }
 }
