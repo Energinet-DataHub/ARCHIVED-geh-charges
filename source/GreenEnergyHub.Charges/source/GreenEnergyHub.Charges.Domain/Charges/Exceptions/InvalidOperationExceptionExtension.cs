@@ -24,7 +24,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges.Exceptions
         /// <summary>Throws an <see cref="InvalidOperationException"/> if <paramref name="enumerable"/> is null or contains no elements.</summary>
         /// <param name="enumerable">The reference type enumerable to validate as non-null and containing elements.</param>
         /// <param name="errorMessage">The error message to provide with the <see cref="InvalidOperationException"/>.</param>
-        public static void ThrowIfNoElements([NotNull] IEnumerable<object>? enumerable, string errorMessage)
+        public static void ThrowIfNullOrNoElements([NotNull] IEnumerable<object>? enumerable, string errorMessage)
         {
             if (enumerable is null || !enumerable.Any())
             {

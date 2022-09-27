@@ -144,12 +144,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             }
 
             [Theory]
-            [InlineAutoMoqData(ChargeDocument.ChargeInformationSubscriptionMonthlySample, 1)]
-            [InlineAutoMoqData(ChargeDocument.ChargeInformationFeeMonthlySample, 1)]
-            [InlineAutoMoqData(ChargeDocument.ChargeInformationTariffHourlySample, 1)]
-            [InlineAutoMoqData(ChargeDocument.BundledChargeInformationSample, 3)]
+            [InlineAutoMoqData(ChargeDocument.ChargeInformationSubscriptionMonthlySample, 3, 1)]
+            [InlineAutoMoqData(ChargeDocument.ChargeInformationFeeMonthlySample, 3, 1)]
+            [InlineAutoMoqData(ChargeDocument.ChargeInformationTariffHourlySample, 3, 1)]
+            [InlineAutoMoqData(ChargeDocument.BundledChargeInformationSample, 3, 1)]
             public async Task Given_ChargeInformationSampleFile_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply(
-                string testFilePath, int noOfMessagesExpected)
+                string testFilePath, int noOfMessagesExpected, int noOfConfirmedActivityRecordsExpected)
             {
                 // Arrange
                 var (request, correlationId) =
@@ -168,11 +168,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // * 2 data available to energy suppliers
                 var peekResults = await Fixture.MessageHubMock
                     .AssertPeekReceivesRepliesAsync(correlationId, noOfMessagesExpected);
+                peekResults.Count.Should().Be(noOfMessagesExpected);
                 peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
+                peekResults.Should().ContainMatch("*Notify*");
                 peekResults.Should().NotContainMatch("*Reject*");
 
-                var operations = CIMXmlReader.GetActivityRecords(peekResults.Single());
-                operations.Count.Should().Be(noOfMessagesExpected);
+                var peekResult = peekResults.Single(x => x.Contains("ConfirmRequestChangeOfPriceList_MarketDocument"));
+                var operations = CIMXmlReader.GetActivityRecords(peekResult);
+                operations.Count.Should().Be(noOfConfirmedActivityRecordsExpected);
             }
 
             [Fact]
