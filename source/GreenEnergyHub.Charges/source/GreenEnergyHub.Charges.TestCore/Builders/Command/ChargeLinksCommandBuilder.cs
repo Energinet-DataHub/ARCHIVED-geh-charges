@@ -23,7 +23,7 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Command
     {
         private DocumentDto _document;
         private static MarketParticipantRole _senderRole = MarketParticipantRole.MeteringPointAdministrator;
-        private List<ChargeLinkOperationDto> _links = new();
+        private List<ChargeLinkOperationDto> _links;
 
         public ChargeLinksCommandBuilder()
         {

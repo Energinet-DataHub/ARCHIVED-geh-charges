@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData
         {
             var sessionId = GetSessionId(context);
             var messageMetaData = GetMessageMetaData(context);
-            ((MessageMetaDataContext)_messageMetaDataContext).SetReplyTo(MessageMetadata.ReplyTo);
+            ((MessageMetaDataContext)_messageMetaDataContext).SetReplyTo(messageMetaData.ReplyTo);
             ((MessageMetaDataContext)_messageMetaDataContext).SetSessionId(sessionId);
 
             await next(context).ConfigureAwait(false);

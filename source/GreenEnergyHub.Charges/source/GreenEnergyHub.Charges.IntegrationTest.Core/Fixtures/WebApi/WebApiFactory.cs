@@ -55,7 +55,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.WebApi
                 UnregisterService<IJwtTokenValidator>(services);
 
                 JwtTokenValidatorMock = new Mock<IJwtTokenValidator>();
-                services.AddScoped<IJwtTokenValidator>(_ => JwtTokenValidatorMock.Object);
+                services.AddScoped(_ => JwtTokenValidatorMock.Object);
 
                 // var sp = services.BuildServiceProvider();
                 // using var scope = sp.CreateScope();

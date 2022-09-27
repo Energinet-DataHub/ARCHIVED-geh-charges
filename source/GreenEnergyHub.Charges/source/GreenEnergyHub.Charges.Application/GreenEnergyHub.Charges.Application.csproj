@@ -51,8 +51,4 @@ limitations under the License.
     </Compile>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="ChargeLinks\Handlers\Message" />
-  </ItemGroup>
-
 </Project>
