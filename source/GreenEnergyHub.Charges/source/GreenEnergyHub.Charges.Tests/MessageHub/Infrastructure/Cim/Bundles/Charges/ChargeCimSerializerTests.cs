@@ -18,7 +18,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
-using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
@@ -75,7 +74,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
             // Assert
             var actual = stream.AsString();
 
-            actual.Should().Be(expected);
+            Assert.Equal(expected, actual, ignoreLineEndingDifferences: true);
         }
 
         [Theory(Skip = "Manually run test to save the generated file to disk")]
