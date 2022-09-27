@@ -109,10 +109,10 @@ jobs:
       ci_base,
       terraform_validate,
       dotnet_solution_ci_build,
-      dotnet_solution_ci_test_integrationtests_part1,
-      dotnet_solution_ci_test_integrationtests_part2,
-      dotnet_solution_ci_test_integrationtests_part3,
-      dotnet_solution_ci_test_tests
+      unit_test,
+      int_test_charge_information_ingestion,
+      int_test_charge_prices_ingestion,
+      int_test,
     ]
     uses: Energinet-DataHub/.github/.github/workflows/create-prerelease.yml@v8
     with:
