@@ -147,9 +147,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             [InlineAutoMoqData(ChargeDocument.ChargeInformationSubscriptionMonthlySample, 3, 1)]
             [InlineAutoMoqData(ChargeDocument.ChargeInformationFeeMonthlySample, 3, 1)]
             [InlineAutoMoqData(ChargeDocument.ChargeInformationTariffHourlySample, 3, 1)]
-            [InlineAutoMoqData(ChargeDocument.BundledChargeInformationSample, 3, 1)]
+            [InlineAutoMoqData(ChargeDocument.BundledChargeInformationSample, 9, 3)]
             public async Task Given_ChargeInformationSampleFile_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply(
-                string testFilePath, int noOfMessagesExpected, int noOfConfirmedActivityRecordsExpected)
+                string testFilePath, int noOfDataAvailableNotificationsExpected, int noOfConfirmedActivityRecordsExpected)
             {
                 // Arrange
                 var (request, correlationId) =
@@ -167,8 +167,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // * 1 confirmation
                 // * 2 data available to energy suppliers
                 var peekResults = await Fixture.MessageHubMock
-                    .AssertPeekReceivesRepliesAsync(correlationId, noOfMessagesExpected);
-                peekResults.Count.Should().Be(noOfMessagesExpected);
+                    .AssertPeekReceivesRepliesAsync(correlationId, noOfDataAvailableNotificationsExpected);
+                peekResults.Count.Should().Be(3);
                 peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
                 peekResults.Should().ContainMatch("*Notify*");
                 peekResults.Should().NotContainMatch("*Reject*");
