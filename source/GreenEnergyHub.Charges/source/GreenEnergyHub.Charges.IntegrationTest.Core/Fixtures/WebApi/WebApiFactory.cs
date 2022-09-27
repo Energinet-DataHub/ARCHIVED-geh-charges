@@ -24,6 +24,12 @@ using Moq;
 
 namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.WebApi
 {
+    /// <summary>
+    /// When we execute the tests on build agents we use the builded output (assemblies).
+    /// To avoid an 'System.IO.DirectoryNotFoundException' exception from WebApplicationFactory
+    /// during creation, we must set the path to the 'content root' using an environment variable
+    /// named 'ASPNETCORE_TEST_CONTENTROOT_GREENENERGYHUB_CHARGES_WEBAPI'.
+    /// </summary>
     public class WebApiFactory : WebApplicationFactory<Startup>
     {
         public Mock<IJwtTokenValidator>? JwtTokenValidatorMock { get; private set; }
