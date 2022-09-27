@@ -13,7 +13,10 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -22,6 +25,7 @@ using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
+using GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.Charges;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
@@ -54,7 +58,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             {
                 Fixture.ChargeCreatedListener.Reset();
                 Fixture.ChargePricesUpdatedListener.Reset();
-                Fixture.MessageHubMock.Clear();
+                Fixture.MessageHubSimulator.Clear();
 
                 // We need to clear host log after each test is done to ensure that we can assert on function executed
                 // on each test run because we only check on function name.
@@ -122,7 +126,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
                 var response = await Fixture.HostManager.HttpClient.SendAsync(createReq);
                 response.StatusCode.Should().Be(HttpStatusCode.Accepted);
-                await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId);
+                await Fixture.MessageHubSimulator.AssertPeekReceivesRepliesAsync(correlationId);
 
                 // Arrange - Update
                 var (updateReq, updateCorrelationId) =
@@ -133,21 +137,21 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 var actual = await Fixture.HostManager.HttpClient.SendAsync(updateReq);
 
                 // Assert
+                using var assertionScope = new AssertionScope();
                 actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
 
-                using var assertionScope = new AssertionScope();
                 // * Expect one for the confirmation (update)
-                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(updateCorrelationId);
+                var peekResults = await Fixture.MessageHubSimulator.AssertPeekReceivesRepliesAsync(updateCorrelationId);
                 peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
             }
 
             [Theory]
-            [InlineAutoMoqData(ChargeDocument.ChargeInformationSubscriptionMonthlySample)]
-            [InlineAutoMoqData(ChargeDocument.ChargeInformationFeeMonthlySample)]
-            [InlineAutoMoqData(ChargeDocument.ChargeInformationTariffHourlySample)]
-            [InlineAutoMoqData(ChargeDocument.BundledChargeInformationSample)]
+            [InlineAutoMoqData(ChargeDocument.ChargeInformationSubscriptionMonthlySample, 1)]
+            [InlineAutoMoqData(ChargeDocument.ChargeInformationFeeMonthlySample, 1)]
+            [InlineAutoMoqData(ChargeDocument.ChargeInformationTariffHourlySample, 1)]
+            [InlineAutoMoqData(ChargeDocument.BundledChargeInformationSample, 3)]
             public async Task Given_ChargeInformationSampleFile_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply(
-                string testFilePath)
+                string testFilePath, int noOfMessagesExpected)
             {
                 // Arrange
                 var (request, correlationId) =
@@ -164,9 +168,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // We expect 3 peek results:
                 // * 1 confirmation
                 // * 2 data available to energy suppliers
-                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 3);
+                var peekResults = await Fixture.MessageHubSimulator
+                    .AssertPeekReceivesRepliesAsync(correlationId, noOfMessagesExpected);
                 peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
                 peekResults.Should().NotContainMatch("*Reject*");
+
+                var operations = CIMXmlReader.GetActivityRecords(peekResults.Single());
+                operations.Count.Should().Be(noOfMessagesExpected);
             }
 
             [Fact]
@@ -188,7 +196,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // * one for the create confirmation (stop)
                 // * one for the create confirmation (cancel stop)
                 using var assertionScope = new AssertionScope();
-                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 4);
+                var peekResults = await Fixture.MessageHubSimulator.AssertPeekReceivesRepliesAsync(correlationId, 4);
                 peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
                 peekResults.Should().NotContainMatch("*Reject*");
             }
@@ -211,7 +219,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // * 1 for the rejection (second operation violating VR.903)
                 // * 2 data available to energy suppliers
                 using var assertionScope = new AssertionScope();
-                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 4);
+                var peekResults = await Fixture.MessageHubSimulator.AssertPeekReceivesRepliesAsync(correlationId, 4);
                 peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
                 peekResults.Should().ContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
                 peekResults.Should().ContainMatch("*It is not allowed to change the tax indicator to Tax for charge*");
@@ -228,7 +236,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
                 // Assert
                 using var assertionScope = new AssertionScope();
-                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 6);
+                var peekResults = await Fixture.MessageHubSimulator.AssertPeekReceivesRepliesAsync(correlationId, 6);
                 peekResults.Should().NotContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
                 peekResults.Should().ContainMatch("*NotifyPriceList_MarketDocument*");
                 peekResults.Should().ContainMatch("*8100000000030*");
