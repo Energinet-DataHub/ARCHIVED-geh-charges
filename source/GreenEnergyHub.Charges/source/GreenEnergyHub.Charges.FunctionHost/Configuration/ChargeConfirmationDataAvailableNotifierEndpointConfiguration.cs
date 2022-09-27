@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification.Charges;
@@ -28,18 +28,18 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
             serviceCollection
-                .AddScoped<IAvailableDataNotifier<AvailableChargeReceiptData, ChargeInformationCommandAcceptedEvent>,
-                    AvailableDataNotifier<AvailableChargeReceiptData, ChargeInformationCommandAcceptedEvent>>();
+                .AddScoped<IAvailableDataNotifier<AvailableChargeReceiptData, ChargeInformationOperationsAcceptedEvent>,
+                    AvailableDataNotifier<AvailableChargeReceiptData, ChargeInformationOperationsAcceptedEvent>>();
             serviceCollection
-                .AddScoped<IAvailableDataFactory<AvailableChargeReceiptData, ChargeInformationCommandAcceptedEvent>,
-                    AvailableChargeReceiptDataFactory>();
+                .AddScoped<IAvailableDataFactory<AvailableChargeReceiptData, ChargeInformationOperationsAcceptedEvent>,
+                    ChargeInformationOperationsAcceptedReceiptFactory>();
             serviceCollection
                 .AddScoped<IAvailableDataNotificationFactory<AvailableChargeReceiptData>,
                     AvailableDataNotificationFactory<AvailableChargeReceiptData>>();
             serviceCollection
-                .AddScoped<BundleSpecification<AvailableChargeReceiptData, ChargeInformationCommandAcceptedEvent>,
+                .AddScoped<BundleSpecification<AvailableChargeReceiptData, ChargeInformationOperationsAcceptedEvent>,
                     ChargeConfirmationBundleSpecification>();
-            serviceCollection.AddScoped<JsonMessageDeserializer<ChargeInformationCommandAcceptedEvent>>();
+            serviceCollection.AddScoped<JsonMessageDeserializer<ChargeInformationOperationsAcceptedEvent>>();
         }
     }
 }

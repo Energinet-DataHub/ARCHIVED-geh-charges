@@ -15,6 +15,15 @@ limitations under the License.
 -->
 <Project Sdk="Microsoft.NET.Sdk">
 
+    <!--
+      To ensure code coverage tooling is available on build agents we have to use publish in workflow.
+      This can cause an error which we ignore using the follow setting.
+      See https://stackoverflow.com/questions/69919664/publish-error-found-multiple-publish-output-files-with-the-same-relative-path/69919694#69919694
+    -->
+    <PropertyGroup>
+      <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
+    </PropertyGroup>
+
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
@@ -33,8 +42,8 @@ limitations under the License.
       <ProjectReference Include="..\GreenEnergyHub.Charges.FunctionHost\GreenEnergyHub.Charges.FunctionHost.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.IntegrationTest.Core\GreenEnergyHub.Charges.IntegrationTest.Core.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.TestCore\GreenEnergyHub.Charges.TestCore.csproj" />
-      <ProjectReference Include="..\GreenEnergyHub.Charges.Tests\GreenEnergyHub.Charges.Tests.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.WebApi\GreenEnergyHub.Charges.WebApi.csproj" />
+      <ProjectReference Include="..\GreenEnergyHub.Charges.TestCore\GreenEnergyHub.Charges.TestCore.csproj" />
     </ItemGroup>
 
     <ItemGroup>

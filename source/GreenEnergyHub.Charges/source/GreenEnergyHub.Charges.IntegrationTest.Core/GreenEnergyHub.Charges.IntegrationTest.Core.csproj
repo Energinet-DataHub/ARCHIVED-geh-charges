@@ -23,6 +23,7 @@ limitations under the License.
     <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
     <LangVersion>9</LangVersion>
     <OutputType>Library</OutputType>
+    <IsTestProject>false</IsTestProject>
   </PropertyGroup>
 
   <ItemGroup>

@@ -16,18 +16,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Application.Messaging;
-using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
 {
-    public class AvailableChargePriceDataFactory : AvailableDataFactoryBase<AvailableChargePriceData, ChargePriceOperationsConfirmedEvent>
+    public class AvailableChargePriceDataFactory : AvailableDataFactoryBase<AvailableChargePriceData, ChargePriceOperationsAcceptedEvent>
     {
         private readonly IChargeIdentifierFactory _chargeIdentifierFactory;
         private readonly IChargeRepository _chargeRepository;
@@ -47,7 +46,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
             _messageMetaDataContext = messageMetaDataContext;
         }
 
-        public override async Task<IReadOnlyList<AvailableChargePriceData>> CreateAsync(ChargePriceOperationsConfirmedEvent input)
+        public override async Task<IReadOnlyList<AvailableChargePriceData>> CreateAsync(ChargePriceOperationsAcceptedEvent input)
         {
             var result = new List<AvailableChargePriceData>();
 
@@ -59,25 +58,28 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
                     firstChargePriceOperation.ChargeOwner)
                 .ConfigureAwait(false);
             var charge = await _chargeRepository.SingleAsync(chargeIdentifier).ConfigureAwait(false);
-            if (!charge.TaxIndicator) return result;
 
             foreach (var chargePriceOperationDto in input.Operations)
             {
-                await CreateForOperationAsync(input, chargePriceOperationDto, result).ConfigureAwait(false);
+                await CreateForOperationAsync(input, chargePriceOperationDto, result, charge).ConfigureAwait(false);
             }
 
             return result;
         }
 
         private async Task CreateForOperationAsync(
-            ChargePriceOperationsConfirmedEvent input,
+            ChargePriceOperationsAcceptedEvent input,
             ChargePriceOperationDto priceOperation,
-            ICollection<AvailableChargePriceData> result)
+            ICollection<AvailableChargePriceData> result,
+            Charge charge)
         {
-            var activeGridAccessProviders = await _marketParticipantRepository
-                .GetGridAccessProvidersAsync()
+            var recipients = await _marketParticipantRepository
+                .GetActiveEnergySuppliersAsync()
                 .ConfigureAwait(false);
-            foreach (var recipient in activeGridAccessProviders)
+            await AddGridAccessProvidersAsRecipientsIfChargeIsTaxAsync(charge, recipients)
+                .ConfigureAwait(false);
+
+            foreach (var recipient in recipients)
             {
                 var points = priceOperation.Points
                     .Select(point =>
@@ -104,6 +106,15 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
                     operationOrder,
                     recipient.ActorId,
                     points));
+            }
+        }
+
+        private async Task AddGridAccessProvidersAsRecipientsIfChargeIsTaxAsync(Charge charge, List<MarketParticipant> recipients)
+        {
+            if (charge.TaxIndicator)
+            {
+                recipients.AddRange(await _marketParticipantRepository.GetActiveGridAccessProvidersAsync()
+                    .ConfigureAwait(false));
             }
         }
     }

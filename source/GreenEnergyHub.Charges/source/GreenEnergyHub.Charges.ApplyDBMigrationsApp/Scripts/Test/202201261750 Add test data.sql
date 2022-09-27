@@ -9,12 +9,12 @@ DECLARE @provider8900000000005 UNIQUEIDENTIFIER = 'DBDEEEB4-F3C0-4503-8F3C-655DD
 DECLARE @provider8510000000013 UNIQUEIDENTIFIER = 'a977c279-8d9a-469b-be26-94b18b0e7dbb';
 
 INSERT INTO [Charges].[MarketParticipant] VALUES (NEWID(),'8100000000108', 1, 1);
-INSERT INTO [Charges].[MarketParticipant] VALUES (NEWID(),'8100000000115', 1, 1);
-INSERT INTO [Charges].[MarketParticipant] VALUES (NEWID(),'8100000000122', 1, 1);
-INSERT INTO [Charges].[MarketParticipant] VALUES (NEWID(),'8510000000006', 1, 1);
+--INSERT INTO [Charges].[MarketParticipant] VALUES (NEWID(),'8100000000115', 1, 1);
+--INSERT INTO [Charges].[MarketParticipant] VALUES (NEWID(),'8100000000122', 1, 1);
+--INSERT INTO [Charges].[MarketParticipant] VALUES (NEWID(),'8510000000006', 1, 1);
 INSERT INTO [Charges].[MarketParticipant] VALUES (@provider8510000000013,'8510000000013', 1, 1);
-INSERT INTO [Charges].[MarketParticipant] VALUES (NEWID(),'8510000000020', 1, 1);
-INSERT INTO [Charges].[MarketParticipant] VALUES (NEWID(),'8510000000037', 1, 1);
+--INSERT INTO [Charges].[MarketParticipant] VALUES (NEWID(),'8510000000020', 1, 1);
+--INSERT INTO [Charges].[MarketParticipant] VALUES (NEWID(),'8510000000037', 1, 1);
 INSERT INTO [Charges].[MarketParticipant] VALUES (@provider8100000000016,'8100000000016', 2, 1);
 INSERT INTO [Charges].[MarketParticipant] VALUES (@provider8100000000023,'8100000000023', 2, 1);
 INSERT INTO [Charges].[MarketParticipant] VALUES (@provider8100000000030,'8100000000030', 2, 1);
@@ -64,18 +64,22 @@ INSERT INTO [Charges].[MeteringPoint] VALUES (NEWID(), '571313180000000045', 1, 
 ------------------------------------------------------------------------------------------------------------------------
 
 DECLARE @chargeOwnerId UNIQUEIDENTIFIER
+DECLARE @systemOperatorId UNIQUEIDENTIFIER
 DECLARE @chargeId UNIQUEIDENTIFIER = NEWID()
 DECLARE @chargeId2 UNIQUEIDENTIFIER = NEWID()
 DECLARE @chargeId3 UNIQUEIDENTIFIER = NEWID()
 DECLARE @chargeId4 UNIQUEIDENTIFIER = NEWID()
+DECLARE @chargeId5 UNIQUEIDENTIFIER = NEWID()
 DECLARE @meteringPointId VARCHAR(50)
 
 SELECT @chargeOwnerId = Id FROM charges.marketparticipant WHERE marketparticipantid = '8100000000030'
+SELECT @systemOperatorId = id FROM charges.marketparticipant WHERE marketparticipantid = '5790000432752'
 
 INSERT INTO charges.charge VALUES (@chargeId, 'TestTariff', 3, @chargeOwnerId, 0, 2, 0, 'Description...', 'Grid Access Provider test tariff', 1, '2021-12-31 23:00:00', '9999-12-31 23:59:59')
 INSERT INTO charges.charge VALUES (@chargeId2, 'TestTar002', 3, @chargeOwnerId, 0, 2, 1, 'Description...', 'Grid Access Provider test tariff2', 2, '2021-12-31 23:00:00', '9999-12-31 23:59:59')
 INSERT INTO charges.charge VALUES (@chargeId3, 'TestFee', 2, @chargeOwnerId, 0, 4, 0, 'Description...', 'Grid Access Provider test fee', 2, '2021-12-31 23:00:00', '9999-12-31 23:59:59')
 INSERT INTO charges.charge VALUES (@chargeId4, 'TestSub', 1, @chargeOwnerId, 0, 4, 0, 'Description...', 'Grid Access Provider test subscription', 2, '2021-12-31 23:00:00', '9999-12-31 23:59:59')
+INSERT INTO charges.charge VALUES (@chargeId5, 'TestTaxTar', 3, @systemOperatorId, 0, 2, 0, 'Description...', 'System operator test tariff', 1, '2021-12-31 23:00:00', '9999-12-31 23:59:59')
 
 /* Charge EA-001a is a copy of EA-001, but with 8100000000030 as owner.
    This is necessary due to the fact that integration test requests are

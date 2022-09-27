@@ -12,18 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.using System;
 
-using System;
+using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableOperationReceiptData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Charges.Tests.Builders.Command;
+using GreenEnergyHub.Charges.TestCore.Builders.Command;
 using GreenEnergyHub.Charges.Tests.TestCore;
 using Microsoft.Extensions.Logging;
+using Moq;
 using Xunit;
 
 namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationReceiptData
@@ -114,39 +116,86 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
         [Theory]
         [InlineAutoMoqData]
         public void Create_MergesAllMergeFields(
-            DocumentDto document,
+            DocumentDto documentDto,
+            CimValidationErrorTextProvider cimValidationErrorTextProvider,
+            ChargePriceOperationDtoBuilder chargePriceOperationDtoBuilder,
+            ILoggerFactory loggerFactory)
+        {
+            // Arrange
+            var chargePriceOperationDto = chargePriceOperationDtoBuilder.Build();
+            var validationRuleIdentifiers = GetExpectedRulesForChargePriceOperation();
+            var identifiersForRulesWithExtendedData =
+                ValidationRuleForInterfaceLoader.GetValidationRuleIdentifierForTypes(
+                    AssemblyHelper.GetDomainAssembly(), typeof(IValidationRuleWithExtendedData));
+            var sut = new ChargePriceCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
+
+            // Act
+            // Assert
+            foreach (var identifier in validationRuleIdentifiers)
+            {
+                var validationError = new ValidationError(identifier, chargePriceOperationDto.OperationId, "1");
+                var actual = sut.Create(validationError, documentDto, chargePriceOperationDto);
+
+                actual.Should().NotBeNullOrWhiteSpace();
+                actual.Should().NotContain("{");
+                actual.Should().NotContain("  ");
+                if (identifiersForRulesWithExtendedData.Contains(identifier))
+                    actual.Should().NotContain("unknown");
+            }
+        }
+
+        [Theory]
+        [InlineAutoMoqData(ValidationRuleIdentifier.StartDateValidation, null!)]
+        [InlineAutoMoqData(ValidationRuleIdentifier.StartDateValidation, -1)]
+        [InlineAutoMoqData(ValidationRuleIdentifier.StartDateValidation, 0)]
+        public void Create_PointPositionAreIgnored_WhenNotApplicable(
+            ValidationRuleIdentifier validationRuleIdentifier,
+            string? seedTriggeredBy,
             ChargePriceOperationDto chargePriceOperationDto,
             CimValidationErrorTextProvider cimValidationErrorTextProvider,
             ILoggerFactory loggerFactory)
         {
             // Arrange
-            var validationRuleIdentifiers = (ValidationRuleIdentifier[])Enum.GetValues(typeof(ValidationRuleIdentifier));
-            var identifiersForRulesWithExtendedData =
-                ValidationRuleForInterfaceLoader.GetValidationRuleIdentifierForTypes(
-                    DomainAssemblyHelper.GetDomainAssembly(), typeof(IValidationRuleWithExtendedData));
+            var triggeredBy = seedTriggeredBy == "0" ?
+                chargePriceOperationDto.Points.GetPositionOfPoint(chargePriceOperationDto.Points[1]).ToString() :
+                seedTriggeredBy;
+            var validationError = new ValidationError(validationRuleIdentifier, chargePriceOperationDto.OperationId, triggeredBy);
 
             var sut = new ChargePriceCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
+            var expected = CimValidationErrorTextTemplateMessages.StartDateValidationErrorText
+                .Replace("{{ChargeStartDateTime}}", chargePriceOperationDto.StartDateTime.ToString());
 
             // Act
+            var actual = sut.Create(validationError, It.IsAny<DocumentDto>(), chargePriceOperationDto);
+
             // Assert
-            foreach (var validationRuleIdentifier in validationRuleIdentifiers)
+            actual.Should().Contain(expected);
+        }
+
+        private static List<ValidationRuleIdentifier> GetExpectedRulesForChargePriceOperation()
+        {
+            var expectedRules = new List<ValidationRuleIdentifier>
             {
-                var triggeredBy = validationRuleIdentifier == ValidationRuleIdentifier.SubsequentBundleOperationsFail ?
-                    chargePriceOperationDto.OperationId :
-                    null!;
-
-                var actual = sut.Create(
-                    new ValidationError(validationRuleIdentifier, null, triggeredBy),
-                    document,
-                    chargePriceOperationDto);
-
-                actual.Should().NotBeNullOrWhiteSpace();
-                actual.Should().NotContain("{");
-                actual.Should().NotContain("  ");
-
-                if (identifiersForRulesWithExtendedData.Contains(validationRuleIdentifier) && triggeredBy != null)
-                    actual.Should().NotContain("unknown");
-            }
+                ValidationRuleIdentifier.ChargeIdLengthValidation,
+                ValidationRuleIdentifier.ChargeIdRequiredValidation,
+                ValidationRuleIdentifier.ChargeOperationIdRequired,
+                ValidationRuleIdentifier.ChargeOperationIdLengthValidation,
+                ValidationRuleIdentifier.ChargeOwnerIsRequiredValidation,
+                ValidationRuleIdentifier.ChargeOwnerMustMatchSender,
+                ValidationRuleIdentifier.ChargeTypeIsKnownValidation,
+                ValidationRuleIdentifier.ChargeTypeTariffPriceCount,
+                ValidationRuleIdentifier.ChargePriceMaximumDigitsAndDecimals,
+                ValidationRuleIdentifier.MaximumPrice,
+                ValidationRuleIdentifier.NumberOfPointsMatchTimeIntervalAndResolution,
+                ValidationRuleIdentifier.PriceListMustStartAndStopAtMidnightValidationRule,
+                ValidationRuleIdentifier.StartDateTimeRequiredValidation,
+                ValidationRuleIdentifier.StartDateValidation,
+                ValidationRuleIdentifier.ResolutionSubscriptionValidation,
+                ValidationRuleIdentifier.ResolutionTariffValidation,
+                ValidationRuleIdentifier.ResolutionFeeValidation,
+                ValidationRuleIdentifier.ResolutionIsRequired,
+            };
+            return expectedRules;
         }
     }
 }

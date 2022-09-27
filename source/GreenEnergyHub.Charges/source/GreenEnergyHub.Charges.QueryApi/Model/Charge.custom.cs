@@ -22,5 +22,10 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
         {
             return (ChargeType)Type;
         }
+
+        public Resolution GetResolution()
+        {
+            return (Resolution)Resolution;
+        }
     }
 }

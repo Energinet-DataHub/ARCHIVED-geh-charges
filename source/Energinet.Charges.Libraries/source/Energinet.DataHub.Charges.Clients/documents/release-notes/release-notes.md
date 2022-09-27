@@ -1,5 +1,13 @@
 # Energinet.DataHub.Charges.Clients Release notes
 
+## Version 3.0.15
+
+Renamed client to Charges
+
+## Version 3.0.14
+
+Removed internal test project reference
+
 ## Version 3.0.13
 
 Fix: `ChargeLinksClient` used an incomplete endpoint address after changing to `v1`

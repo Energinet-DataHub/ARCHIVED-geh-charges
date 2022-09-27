@@ -22,9 +22,8 @@ using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using Energinet.DataHub.Core.JsonSerialization;
 using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Application.Charges.Events;
 using GreenEnergyHub.Charges.Application.Messaging;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub;
 using GreenEnergyHub.Charges.FunctionHost.MessageHub;
 using GreenEnergyHub.Charges.Infrastructure.Outbox;
@@ -34,8 +33,8 @@ using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
+using GreenEnergyHub.Charges.TestCore.Builders.Command;
 using GreenEnergyHub.Charges.TestCore.TestHelpers;
-using GreenEnergyHub.Charges.Tests.Builders.Command;
 using Microsoft.Azure.Functions.Worker;
 using Moq;
 using NodaTime;
@@ -107,13 +106,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
             [Theory]
             [InlineAutoMoqData]
             public async Task RunAsync_WhenConfirmedOutboxMessageIsRead_AvailableDataIsPersisted_AndProcessedDateIsSet(
-                ChargePriceOperationsConfirmedEventBuilder chargePriceOperationsConfirmedEventBuilder)
+                ChargePriceOperationsAcceptedEventBuilder chargePriceOperationsAcceptedEventBuilder)
             {
                 // Arrange
                 await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
                 await using var messageHubDatabaseContext = Fixture.MessageHubDatabaseManager.CreateDbContext();
                 await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
-                var operationsConfirmedEvent = chargePriceOperationsConfirmedEventBuilder.Build();
+                var operationsConfirmedEvent = chargePriceOperationsAcceptedEventBuilder.Build();
 
                 // Act
                 var outboxMessage = await PersistToOutboxMessage(chargesDatabaseWriteContext, operationsConfirmedEvent);

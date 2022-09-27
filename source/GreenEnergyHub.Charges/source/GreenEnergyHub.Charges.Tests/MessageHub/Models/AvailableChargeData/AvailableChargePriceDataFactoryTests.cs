@@ -18,14 +18,13 @@ using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.Messaging;
-using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
-using GreenEnergyHub.Charges.Tests.Builders.Command;
-using GreenEnergyHub.Charges.Tests.Builders.Testables;
+using GreenEnergyHub.Charges.TestCore.Builders.Command;
+using GreenEnergyHub.Charges.TestCore.Builders.Testables;
 using GreenEnergyHub.TestHelpers;
 using GreenEnergyHub.TestHelpers.FluentAssertionsExtensions;
 using Moq;
@@ -48,7 +47,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
             Instant now,
             TestMeteringPointAdministrator meteringPointAdministrator,
             List<TestGridAccessProvider> gridAccessProvider,
-            ChargePriceOperationsConfirmedEventBuilder chargePriceOperationsConfirmedEventBuilder,
+            ChargePriceOperationsAcceptedEventBuilder chargePriceOperationsAcceptedEventBuilder,
             AvailableChargePriceDataFactory sut)
         {
             // Arrange
@@ -58,12 +57,12 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
                     .WithPoint(1)
                     .Build(),
             };
-            var confirmedEvent = chargePriceOperationsConfirmedEventBuilder.WithOperations(operations).Build();
+            var confirmedEvent = chargePriceOperationsAcceptedEventBuilder.WithOperations(operations).Build();
 
             SetupChargeIdentifierFactoryMock(chargeIdentifierFactory);
             SetupChargeRepository(chargeRepository, TaxIndicator.Tax);
             marketParticipantRepository
-                .Setup(r => r.GetGridAccessProvidersAsync())
+                .Setup(r => r.GetActiveGridAccessProvidersAsync())
                 .ReturnsAsync(gridAccessProvider.Cast<MarketParticipant>().ToList);
 
             marketParticipantRepository
@@ -97,27 +96,36 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
         }
 
         [Theory]
-        [InlineAutoDomainData(TaxIndicator.NoTax, 0)]
-        [InlineAutoDomainData(TaxIndicator.Tax, 1)]
-        public async Task CreateAsync_WhenNotTaxCharge_ReturnsEmptyList(
+        [InlineAutoDomainData(TaxIndicator.NoTax, 1)]
+        [InlineAutoDomainData(TaxIndicator.Tax, 2)]
+        public async Task CreateAsync_WhenNotTaxCharge_ReturnsOnlyEnergySuppliers(
             TaxIndicator taxIndicator,
             int availableChargeDataCount,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IChargeIdentifierFactory> chargeIdentifierFactory,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            ChargePriceOperationsConfirmedEventBuilder chargePriceOperationsConfirmedEventBuilder,
+            ChargePriceOperationsAcceptedEventBuilder chargePriceOperationsAcceptedEventBuilder,
             AvailableChargePriceDataFactory sut)
         {
             // Arrange
-            var marketParticipants = new List<MarketParticipant>()
+            var gridAccessProviders = new List<MarketParticipant>()
             {
                 new MarketParticipantBuilder()
                     .WithRole(MarketParticipantRole.GridAccessProvider)
                     .Build(),
             };
+            var energySuppliers = new List<MarketParticipant>()
+            {
+                new MarketParticipantBuilder()
+                    .WithRole(MarketParticipantRole.EnergySupplier)
+                    .Build(),
+            };
             marketParticipantRepository
-                .Setup(m => m.GetGridAccessProvidersAsync())
-                .ReturnsAsync(marketParticipants);
+                .Setup(m => m.GetActiveGridAccessProvidersAsync())
+                .ReturnsAsync(gridAccessProviders);
+            marketParticipantRepository
+                .Setup(r => r.GetActiveEnergySuppliersAsync())
+                .ReturnsAsync(energySuppliers);
             marketParticipantRepository
                 .Setup(m => m.GetMeteringPointAdministratorAsync())
                 .ReturnsAsync(new MarketParticipantBuilder().Build());
@@ -129,7 +137,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
                     .WithPoint(1)
                     .Build(),
             };
-            var confirmedEvent = chargePriceOperationsConfirmedEventBuilder.WithOperations(operations).Build();
+            var confirmedEvent = chargePriceOperationsAcceptedEventBuilder.WithOperations(operations).Build();
 
             // Act
             var actual = await sut.CreateAsync(confirmedEvent);
@@ -144,21 +152,24 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IChargeRepository> chargeRepository,
             [Frozen] Mock<IChargeIdentifierFactory> chargeIdentifierFactory,
-            ChargePriceOperationsConfirmedEventBuilder chargePriceOperationsConfirmedEventBuilder,
+            ChargePriceOperationsAcceptedEventBuilder chargePriceOperationsAcceptedEventBuilder,
             List<TestGridAccessProvider> gridAccessProvider,
             TestMeteringPointAdministrator meteringPointAdministrator,
             AvailableChargePriceDataFactory sut)
         {
             // Arrange
             marketParticipantRepository
-                .Setup(r => r.GetGridAccessProvidersAsync())
+                .Setup(r => r.GetActiveGridAccessProvidersAsync())
                 .ReturnsAsync(gridAccessProvider.Cast<MarketParticipant>().ToList);
+            marketParticipantRepository
+                .Setup(r => r.GetActiveEnergySuppliersAsync())
+                .ReturnsAsync(() => new List<MarketParticipant>());
             marketParticipantRepository
                 .Setup(r => r.GetMeteringPointAdministratorAsync())
                 .ReturnsAsync(meteringPointAdministrator);
             SetupChargeIdentifierFactoryMock(chargeIdentifierFactory);
             SetupChargeRepository(chargeRepository, TaxIndicator.Tax);
-            var confirmedEvent = chargePriceOperationsConfirmedEventBuilder.WithOperations(
+            var confirmedEvent = chargePriceOperationsAcceptedEventBuilder.WithOperations(
                     new List<ChargePriceOperationDto>
                     {
                         new ChargePriceOperationDtoBuilder().Build(),

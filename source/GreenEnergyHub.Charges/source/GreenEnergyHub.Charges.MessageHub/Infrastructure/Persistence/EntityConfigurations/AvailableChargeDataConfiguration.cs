@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Infrastructure.Core.Persistence;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -49,20 +48,6 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Persistence.EntityCon
             builder.Property(x => x.DocumentType);
             builder.Property(x => x.OperationOrder);
             builder.Property(x => x.ActorId);
-            builder.Ignore(c => c.Points);
-            builder.OwnsMany<AvailableChargeDataPoint>("_points", ConfigurePoints);
-        }
-
-        private static void ConfigurePoints(OwnedNavigationBuilder<AvailableChargeData, AvailableChargeDataPoint> points)
-        {
-            points.WithOwner().HasForeignKey("AvailableChargeDataId");
-            points.ToTable("AvailableChargeDataPoints", DatabaseSchemaNames.MessageHub);
-            points.HasKey(p => p.Id);
-
-            points.Property(p => p.Id).ValueGeneratedNever();
-            points.Property(d => d.Position);
-            points.Property(d => d.Price)
-                .HasPrecision(DecimalPrecisionConstants.Precision, DecimalPrecisionConstants.Scale);
         }
     }
 }

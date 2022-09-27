@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Application.Charges.Events;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification.Charges;
@@ -28,13 +28,13 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<IAvailableDataNotifier<AvailableChargeReceiptData, ChargePriceOperationsConfirmedEvent>,
-                AvailableDataNotifier<AvailableChargeReceiptData, ChargePriceOperationsConfirmedEvent>>();
-            serviceCollection.AddScoped<IAvailableDataFactory<AvailableChargeReceiptData, ChargePriceOperationsConfirmedEvent>,
-                AvailableChargePriceOperationConfirmationsFactory>();
-            serviceCollection.AddScoped<BundleSpecification<AvailableChargeReceiptData, ChargePriceOperationsConfirmedEvent>,
+            serviceCollection.AddScoped<IAvailableDataNotifier<AvailableChargeReceiptData, ChargePriceOperationsAcceptedEvent>,
+                AvailableDataNotifier<AvailableChargeReceiptData, ChargePriceOperationsAcceptedEvent>>();
+            serviceCollection.AddScoped<IAvailableDataFactory<AvailableChargeReceiptData, ChargePriceOperationsAcceptedEvent>,
+                ChargePriceOperationsAcceptedReceiptFactory>();
+            serviceCollection.AddScoped<BundleSpecification<AvailableChargeReceiptData, ChargePriceOperationsAcceptedEvent>,
                 ChargePriceConfirmationBundleSpecification>();
-            serviceCollection.AddScoped<JsonMessageDeserializer<ChargePriceOperationsConfirmedEvent>>();
+            serviceCollection.AddScoped<JsonMessageDeserializer<ChargePriceOperationsAcceptedEvent>>();
         }
     }
 }

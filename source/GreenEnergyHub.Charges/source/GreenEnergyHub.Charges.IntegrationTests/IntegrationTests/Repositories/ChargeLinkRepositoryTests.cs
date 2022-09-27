@@ -24,7 +24,7 @@ using GreenEnergyHub.Charges.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Charges.Tests.Builders.Command;
+using GreenEnergyHub.Charges.TestCore.Builders.Command;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using NodaTime;

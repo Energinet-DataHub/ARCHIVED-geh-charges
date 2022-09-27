@@ -51,12 +51,10 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             // Arrange
             var correlationId = Guid.NewGuid().ToString();
             var expectedTime = InstantPattern.ExtendedIso.Parse("2021-01-01T23:00:00Z").Value;
-            var reader = GetReaderAndArrangeTest(
-                context,
-                iso8601Durations,
-                correlationId,
-                expectedTime,
-                "GreenEnergyHub.Charges.Tests.TestFiles.Syntax_Valid_CIM_Charge.xml");
+            SetupTest(context, iso8601Durations, correlationId, expectedTime);
+            using var memoryStream = new MemoryStream();
+
+            var reader = GetReader(memoryStream, "TestFiles/Syntax_Valid_CIM_Charge.xml");
 
             // Act
             var actualBundle = (ChargeInformationCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
@@ -90,28 +88,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             actualChargeOperation.VatClassification.Should().Be(VatClassification.Vat25);
             actualChargeOperation.TransparentInvoicing.Should().Be(TransparentInvoicing.Transparent);
             actualChargeOperation.TaxIndicator.Should().Be(TaxIndicator.Tax);
-
-            // Points
-            actualChargeOperation.Points.Should().HaveCount(2);
-            actualChargeOperation.Points[0].Time.Should().Be(expectedTime);
-            actualChargeOperation.Points[0].Price.Should().Be(100m);
-            actualChargeOperation.Points[1].Time.Should().Be(expectedTime);
-            actualChargeOperation.Points[1].Price.Should().Be(200m);
-
-            // Verify Iso8601Durations was used correctly
-            iso8601Durations.Verify(
-                i => i.GetTimeFixedToDuration(
-                    expectedTime,
-                    "PT1H",
-                    0),
-                Times.Once);
-
-            iso8601Durations.Verify(
-                i => i.GetTimeFixedToDuration(
-                    expectedTime,
-                    "PT1H",
-                    1),
-                Times.Once);
         }
 
         [Theory]
@@ -124,12 +100,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             // Arrange
             var correlationId = Guid.NewGuid().ToString();
             var expectedTime = InstantPattern.ExtendedIso.Parse("2021-04-17T22:00:00Z").Value;
-            var reader = GetReaderAndArrangeTest(
-                context,
-                iso8601Durations,
-                correlationId,
-                expectedTime,
-                "GreenEnergyHub.Charges.Tests.TestFiles.Valid_CIM_Charge_Without_Prices.xml");
+            SetupTest(context, iso8601Durations, correlationId, expectedTime);
+            using var memoryStream = new MemoryStream();
+            var reader = GetReader(memoryStream, "TestFiles/Valid_CIM_Charge_Without_Prices.xml");
 
             // Act
             var actualBundle = (ChargeInformationCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
@@ -151,15 +124,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             actualChargeOperation.VatClassification.Should().Be(VatClassification.NoVat);
             actualChargeOperation.TransparentInvoicing.Should().Be(TransparentInvoicing.NonTransparent);
             actualChargeOperation.TaxIndicator.Should().Be(TaxIndicator.NoTax);
-
-            // Prices, should not be any
-            actualChargeOperation.Points.Should().BeEmpty();
-            iso8601Durations.Verify(
-                i => i.GetTimeFixedToDuration(
-                    It.IsAny<Instant>(),
-                    It.IsAny<string>(),
-                    It.IsAny<int>()),
-                Times.Never);
         }
 
         [Theory]
@@ -171,15 +135,11 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
         {
             // Arrange
             var correlationId = Guid.NewGuid().ToString();
-            var expectedTime = InstantPattern.ExtendedIso.Parse("2020-12-31T23:00:00Z").Value;
-            var expectedStartInterval = InstantPattern.ExtendedIso.Parse("2020-12-31T23:00:00Z").Value;
-            var expectedEndInterval = InstantPattern.ExtendedIso.Parse("2021-02-28T23:00:00Z").Value;
-            var reader = GetReaderAndArrangeTest(
-                context,
-                iso8601Durations,
-                correlationId,
-                expectedTime,
-                "GreenEnergyHub.Charges.Tests.TestFiles.Valid_CIM_Charge_Prices_Without_Master_Data.xml");
+            var expectedStartTime = InstantPattern.ExtendedIso.Parse("2020-12-31T23:00:00Z").Value;
+            var expectedEndTime = InstantPattern.ExtendedIso.Parse("2021-02-28T23:00:00Z").Value;
+            SetupTest(context, iso8601Durations, correlationId, expectedStartTime);
+            using var memoryStream = new MemoryStream();
+            var reader = GetReader(memoryStream, "TestFiles/Valid_CIM_Charge_Prices_Without_Master_Data.xml");
 
             // Act
             var actualBundle = (ChargePriceCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
@@ -193,27 +153,27 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             actualChargeOperation.ChargeOwner.Should().Be("5799999925600");
             actualChargeOperation.ChargeType.Should().Be(ChargeType.Subscription);
             actualChargeOperation.SenderProvidedChargeId.Should().Be("444");
-            actualChargeOperation.PointsStartInterval.Should().Be(expectedStartInterval);
-            actualChargeOperation.PointsEndInterval.Should().Be(expectedEndInterval);
+            actualChargeOperation.PointsStartInterval.Should().Be(expectedStartTime);
+            actualChargeOperation.PointsEndInterval.Should().Be(expectedEndTime);
 
             // Points
             actualChargeOperation.Points.Should().HaveCount(2);
-            actualChargeOperation.Points[0].Time.Should().Be(expectedTime);
+            actualChargeOperation.Points[0].Time.Should().Be(expectedStartTime);
             actualChargeOperation.Points[0].Price.Should().Be(0.536m);
-            actualChargeOperation.Points[1].Time.Should().Be(expectedTime);
+            actualChargeOperation.Points[1].Time.Should().Be(expectedStartTime);
             actualChargeOperation.Points[1].Price.Should().Be(14.984m);
 
             // Verify Iso8601Durations was used correctly
             iso8601Durations.Verify(
                 i => i.GetTimeFixedToDuration(
-                    expectedTime,
+                    expectedStartTime,
                     "P1M",
                     0),
                 Times.Once);
 
             iso8601Durations.Verify(
                 i => i.GetTimeFixedToDuration(
-                    expectedTime,
+                    expectedStartTime,
                     "P1M",
                     1),
                 Times.Once);
@@ -229,12 +189,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             // Arrange
             var correlationId = Guid.NewGuid().ToString();
             var expectedTime = InstantPattern.ExtendedIso.Parse("2022-10-31T23:00:00Z").Value;
-            var reader = GetReaderAndArrangeTest(
-                context,
-                iso8601Durations,
-                correlationId,
-                expectedTime,
-                "GreenEnergyHub.Charges.Tests.TestFiles.CreateTariffsBundle.xml");
+            SetupTest(context, iso8601Durations, correlationId, expectedTime);
+            using var memoryStream = new MemoryStream();
+            var reader = GetReader(memoryStream, "TestFiles/CreateTariffsBundle.xml");
 
             // Act
             var actual = (ChargeInformationCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
@@ -256,10 +213,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             actualFirstChargeOperationDto.TransparentInvoicing.Should().Be(TransparentInvoicing.NonTransparent);
             actualFirstChargeOperationDto.TaxIndicator.Should().Be(TaxIndicator.Tax);
 
-            // Prices
-            actualFirstChargeOperationDto.Points.Should().HaveCount(1);
-            actualFirstChargeOperationDto.Points.First().Price.Should().Be(150.001m);
-
             var actualSecondChargeCommand = actual.Commands.Single(x => x.Operations.Any(y => y.OperationId == "36251481"));
             var actualSecondChargeOperationDto = actualSecondChargeCommand.Operations.First();
             actualSecondChargeOperationDto.ChargeOwner.Should().Be("8100000000030");
@@ -273,6 +226,50 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             actualSecondChargeOperationDto.VatClassification.Should().Be(VatClassification.Vat25);
             actualSecondChargeOperationDto.TransparentInvoicing.Should().Be(TransparentInvoicing.Transparent);
             actualSecondChargeOperationDto.TaxIndicator.Should().Be(TaxIndicator.NoTax);
+        }
+
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task ConvertAsync_WhenCalledWithValidPriceBundle_ReturnsMultipleParsedObject(
+            [Frozen] Mock<ICorrelationContext> context,
+            [Frozen] Mock<IIso8601Durations> iso8601Durations,
+            ChargeCommandBundleConverter sut)
+        {
+            // Arrange
+            var correlationId = Guid.NewGuid().ToString();
+            var expectedStartTime = InstantPattern.ExtendedIso.Parse("2022-10-31T23:00:00Z").Value;
+            var expectedEndTime = InstantPattern.ExtendedIso.Parse("2022-11-01T23:00:00Z").Value;
+            SetupTest(context, iso8601Durations, correlationId, expectedStartTime);
+            using var memoryStream = new MemoryStream();
+            var reader = GetReader(memoryStream, "TestFiles/TariffPriceSeriesBundle.xml");
+
+            // Act
+            var actual = (ChargePriceCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
+
+            // Assert
+
+            // Charge operation
+            var actualFirstChargeCommand = actual.Commands.Single(x => x.Operations.Any(y => y.OperationId == "36251480"));
+            var actualFirstChargeOperationDto = actualFirstChargeCommand.Operations.First();
+            actualFirstChargeOperationDto.ChargeOwner.Should().Be("8100000000030");
+            actualFirstChargeOperationDto.ChargeType.Should().Be(ChargeType.Tariff);
+            actualFirstChargeOperationDto.SenderProvidedChargeId.Should().Be("ChId1234567890");
+            actualFirstChargeOperationDto.Resolution.Should().Be(Resolution.P1D);
+            actualFirstChargeOperationDto.PointsStartInterval.Should().Be(expectedStartTime);
+            actualFirstChargeOperationDto.PointsEndInterval.Should().Be(expectedEndTime);
+
+            // Prices
+            actualFirstChargeOperationDto.Points.Should().HaveCount(1);
+            actualFirstChargeOperationDto.Points.First().Price.Should().Be(150.001m);
+
+            var actualSecondChargeCommand = actual.Commands.Single(x => x.Operations.Any(y => y.OperationId == "36251481"));
+            var actualSecondChargeOperationDto = actualSecondChargeCommand.Operations.First();
+            actualSecondChargeOperationDto.ChargeOwner.Should().Be("8100000000030");
+            actualSecondChargeOperationDto.ChargeType.Should().Be(ChargeType.Tariff);
+            actualSecondChargeOperationDto.SenderProvidedChargeId.Should().Be("ChId1234567891");
+            actualSecondChargeOperationDto.Resolution.Should().Be(Resolution.P1D);
+            actualFirstChargeOperationDto.PointsStartInterval.Should().Be(expectedStartTime);
+            actualFirstChargeOperationDto.PointsEndInterval.Should().Be(expectedEndTime);
 
             // Prices
             actualSecondChargeOperationDto.Points.Should().HaveCount(1);
@@ -289,12 +286,9 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             // Arrange
             var correlationId = Guid.NewGuid().ToString();
             var expectedTime = InstantPattern.ExtendedIso.Parse("2022-10-31T23:00:00Z").Value;
-            var reader = GetReaderAndArrangeTest(
-                context,
-                iso8601Durations,
-                correlationId,
-                expectedTime,
-                "GreenEnergyHub.Charges.Tests.TestFiles.BundleMixOfChargeMasterDataOperations.xml");
+            SetupTest(context, iso8601Durations, correlationId, expectedTime);
+            using var memoryStream = new MemoryStream();
+            var reader = GetReader(memoryStream, "TestFiles/BundleMixOfChargeMasterDataOperations.xml");
 
             // Act
             var actual = (ChargeInformationCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
@@ -308,30 +302,60 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeB
             chargeCommandWithTwoOperations.Operations.Should().Contain(x => x.OperationId == "Operation4");
         }
 
-        private static SchemaValidatingReader GetReaderAndArrangeTest(
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task ConvertAsync_WhenCalledWithMixedChargePriceBundle_ReturnsGroupedChargePriceCommands(
+            [Frozen] Mock<ICorrelationContext> context,
+            [Frozen] Mock<IIso8601Durations> iso8601Durations,
+            ChargeCommandBundleConverter sut)
+        {
+            // Arrange
+            var correlationId = Guid.NewGuid().ToString();
+            var expectedTime = InstantPattern.ExtendedIso.Parse("2022-10-31T23:00:00Z").Value;
+            SetupTest(context, iso8601Durations, correlationId, expectedTime);
+            using var memoryStream = new MemoryStream();
+            var reader = GetReader(memoryStream, "TestFiles/BundleMixOfChargePriceOperations.xml");
+
+            // Act
+            var actual = (ChargePriceCommandBundle)await sut.ConvertAsync(reader).ConfigureAwait(false);
+
+            // Assert - Grouping of operations for same unique charge is correctly done
+            actual.Commands.Should().HaveCount(3);
+            var chargeCommandWithTwoOperations = actual.Commands.Single(x =>
+                x.Operations.Any(y => y.OperationId == "Operation1"));
+            chargeCommandWithTwoOperations.Operations.Should().HaveCount(2);
+            chargeCommandWithTwoOperations.Operations.Should().Contain(x => x.OperationId == "Operation1");
+            chargeCommandWithTwoOperations.Operations.Should().Contain(x => x.OperationId == "Operation4");
+        }
+
+        private static SchemaValidatingReader GetReader(Stream memoryStream, string filePath)
+        {
+            var path = GetFullFilePath(filePath);
+            ContentStreamHelper.GetFileAsStream(memoryStream, path);
+            return new SchemaValidatingReader(memoryStream, Schemas.CimXml.StructureRequestChangeOfPriceList);
+        }
+
+        private static string GetFullFilePath(string filePath)
+        {
+            var basePath = Assembly.GetExecutingAssembly().Location;
+            var path = Path.Combine(Directory.GetParent(basePath)!.FullName, filePath);
+            return path;
+        }
+
+        private static void SetupTest(
             Mock<ICorrelationContext> context,
             Mock<IIso8601Durations> iso8601Durations,
             string correlationId,
-            Instant expectedTime,
-            string embeddedFile)
+            Instant expectedStartTime)
         {
             context.Setup(c => c.Id).Returns(correlationId);
 
             iso8601Durations.Setup(
                     i => i.GetTimeFixedToDuration(
-                        It.IsAny<Instant>(),
+                        It.Is<Instant>(time => time == expectedStartTime),
                         It.IsAny<string>(),
                         It.IsAny<int>()))
-                .Returns(expectedTime);
-
-            var stream = GetEmbeddedResource(embeddedFile);
-            return new SchemaValidatingReader(stream, Schemas.CimXml.StructureRequestChangeOfPriceList);
-        }
-
-        private static Stream GetEmbeddedResource(string path)
-        {
-            var assembly = Assembly.GetExecutingAssembly();
-            return EmbeddedStreamHelper.GetInputStream(assembly, path);
+                .Returns(expectedStartTime);
         }
     }
 }

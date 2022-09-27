@@ -18,13 +18,14 @@ The following asynchronous validation rules are currently implemented in the cha
 |VR.446|The name of a charge consists of maximal 132 characters|E86|✓|||
 |VR.447|The description of a charge consists of maximal 2048 characters|E86|✓|||
 |VR.449|The type of a charge has domain values D01 (Subscription), D02 (Fee), D03 (Tariff)|E86|✓|✓||
-|VR.457|The energy price of a charge consists of maximal 14 digits with format 99999999.999999|E86|✓|✓||
+|VR.457|The energy price of a charge consists of maximal 14 digits with format 99999999.999999|E86||✓||
 |VR.488|The VAT class of a charge has domain values D01 (No VAT), D02 (VAT)|E86|✓|||
 |VR.505-1|Tariff must have period type Day, Hour or Quarter of Hour|D23|(✓) Tariff only|(✓) Tariff only||
 |VR.505-2|Fee must have period type Month|D23|(✓) Fee only|(✓) Fee only||
 |VR.505-3|Subscription must have period type Month|D23|(✓) Subscription only|(✓) Subscription only||
-|VR.507-1|The Tariff to which the charge information applies must have 1 price for period type Day, 24 prices for period type Hour or 96 prices for period type Quarter of Hour|E87|(✓) Tariff only|(✓) Tariff only||
-|VR.509|The charge price must be plausible (i.e. value less than 1.000.000)|E90|✓|✓||
+|VR.507-1|The Tariff to which the charge price applies must have 1 price for period type Day, 24 prices for period type Hour or 96 prices for period type Quarter of Hour|E87||(✓) Tariff only||
+|VR.508|Only System Operator role is allowed to submit requests concerning tax tariffs|E0I|(✓) Tariff only|(✓) Tariff only||
+|VR.509|The charge price must be plausible (i.e. value less than 1.000.000)|E90||✓||
 |VR.513|Charge owner must match sender of a message|E0I|✓|✓||
 |VR.531|The occurrence of a charge is mandatory|E0H|✓|✓||
 |VR.532|The owner of a charge is mandatory|E0H|✓|✓||

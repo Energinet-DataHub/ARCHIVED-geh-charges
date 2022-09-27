@@ -14,7 +14,7 @@
 
 using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using NodaTime;
 
