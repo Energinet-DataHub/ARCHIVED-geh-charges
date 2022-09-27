@@ -144,10 +144,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             }
 
             [Theory]
-            [InlineAutoMoqData(ChargeDocument.ChargeInformationSubscriptionMonthlySample, 3, 1)]
-            [InlineAutoMoqData(ChargeDocument.ChargeInformationFeeMonthlySample, 3, 1)]
             [InlineAutoMoqData(ChargeDocument.ChargeInformationTariffHourlySample, 3, 1)]
             [InlineAutoMoqData(ChargeDocument.BundledChargeInformationSample, 9, 3)]
+            [InlineAutoMoqData(ChargeDocument.ChargeInformationSubscriptionMonthlySample, 3, 1)]
+            [InlineAutoMoqData(ChargeDocument.ChargeInformationFeeMonthlySample, 3, 1)]
             public async Task Given_ChargeInformationSampleFile_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply(
                 string testFilePath, int noOfDataAvailableNotificationsExpected, int noOfConfirmedActivityRecordsExpected)
             {

@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
         }
 
         [Function(FunctionName)]
-        public async Task RunAsync([TimerTrigger(TimerTriggerTimeConstants.Every10Seconds)] TimerInfo timerInfo)
+        public async Task RunAsync([TimerTrigger(TimerTriggerTimeConstants.Every2Seconds)] TimerInfo timerInfo)
         {
             OutboxMessage? outboxMessage;
 

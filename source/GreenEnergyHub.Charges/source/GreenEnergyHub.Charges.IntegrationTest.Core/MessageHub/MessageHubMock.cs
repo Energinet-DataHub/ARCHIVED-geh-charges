@@ -115,28 +115,29 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
                 _notifications, $"{nameof(MessageHubMock)}: No dataavailable was provided for Peek");
 
             var peekSimulatorResponseDtos = new List<PeekSimulatorResponseDto>();
-            var distinctMessages = _notifications.Select(x => new { x.MessageType.Value, x.Recipient }).Distinct();
+            var distinctMessages = _notifications
+                .Select(x => new { MessageType = x.MessageType.Value, Recipient = x.Recipient.Value }).Distinct();
 
             foreach (var message in distinctMessages)
             {
+                var requestId = Guid.NewGuid();
                 var dataAvailableNotificationDtosForMessageType = _notifications.Where(x =>
-                        x.MessageType.Value == message.Value &&
-                        x.Recipient == message.Recipient)
+                        x.MessageType.Value == message.MessageType &&
+                        x.Recipient.Value == message.Recipient)
                     .ToList();
 
-                var blobName = dataAvailableNotificationDtosForMessageType.First().Uuid.ToString();
+                var blobName = $"{message.MessageType}_{message.Recipient:N}_{requestId:N}";
 
                 await AddDataAvailableNotificationIdsToStorageAsync(
                     blobName,
                     dataAvailableNotificationDtosForMessageType).ConfigureAwait(false);
 
                 var correlationId = CorrelationIdGenerator.Create();
-                var requestId = Guid.NewGuid();
                 var request = new DataBundleRequestDto(
                     RequestId: requestId,
                     DataAvailableNotificationReferenceId: blobName,
                     IdempotencyId: correlationId,
-                    new MessageTypeDto(message.Value),
+                    new MessageTypeDto(message.MessageType),
                     ResponseFormat.Xml,
                     1.0);
 
@@ -188,15 +189,17 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
         private async Task<DataBundleResponseDto?> RequestDataBundleAsync(
             DataBundleRequestDto dataBundleRequestDto, string correlationId)
         {
-            var eventualMessageHubReply = await _messageHubReplyServiceBusTestListener
-                .ListenForMessageAsync(correlationId).ConfigureAwait(false);
-
             var bytes = _requestBundleParser.Parse(dataBundleRequestDto);
             var sessionId = dataBundleRequestDto.RequestId.ToString();
             var requestServiceBusMessage = CreateRequestMessageHubServiceBusMessage(correlationId, bytes, sessionId);
 
             await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
                 () => _messageHubRequestQueueResource.SenderClient.SendMessageAsync(requestServiceBusMessage), correlationId);
+
+            await Task.Delay(TimeSpan.FromSeconds(1));
+
+            var eventualMessageHubReply = await _messageHubReplyServiceBusTestListener
+                .ListenForMessageAsync(correlationId).ConfigureAwait(false);
 
             var isMessageHubReplyReceived = eventualMessageHubReply
                 .MessageAwaiter!
