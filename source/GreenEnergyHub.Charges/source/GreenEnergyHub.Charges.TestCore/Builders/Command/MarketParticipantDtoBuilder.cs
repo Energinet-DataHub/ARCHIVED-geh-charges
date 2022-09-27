@@ -38,13 +38,11 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Command
 
         public MarketParticipantDto Build()
         {
-            return new MarketParticipantDto
-            {
-                Id = _id,
-                MarketParticipantId = _marketParticipantId,
-                BusinessProcessRole = _marketParticipantRole,
-                B2CActorId = _b2cActorId,
-            };
+            return new MarketParticipantDto(
+                _id,
+                _marketParticipantId,
+                _marketParticipantRole,
+                _b2cActorId);
         }
     }
 }

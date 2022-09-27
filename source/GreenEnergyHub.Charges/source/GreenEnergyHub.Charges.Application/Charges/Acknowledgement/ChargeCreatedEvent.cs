@@ -12,14 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.Core.Messaging.MessageTypes.Common;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
 {
-    public class ChargeCreatedEvent : IMessage
+    public class ChargeCreatedEvent : MessageBase
     {
         public ChargeCreatedEvent(
             string chargeId,
@@ -39,7 +38,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
             TaxIndicator = taxIndicator;
             StartDateTime = startDateTime;
             EndDateTime = endDateTime;
-            Transaction = Transaction.NewTransaction();
         }
 
         public string ChargeId { get; }
@@ -57,7 +55,5 @@ namespace GreenEnergyHub.Charges.Application.Charges.Acknowledgement
         public Instant StartDateTime { get; }
 
         public Instant EndDateTime { get; }
-
-        public Transaction Transaction { get; set; }
     }
 }

@@ -12,20 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.Core.Messaging.MessageTypes.Common;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages;
 
 namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions
 {
-    public class TestMessage : IMessage
+    public class TestMessage : MessageBase
     {
-        public TestMessage(Transaction transaction, string correlationId)
+        public TestMessage(string correlationId)
         {
-            Transaction = transaction;
             CorrelationId = correlationId;
         }
-
-        public Transaction Transaction { get; set; }
 
         public string CorrelationId { get; }
     }

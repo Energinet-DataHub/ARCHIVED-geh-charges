@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using NodaTime;
@@ -21,7 +20,6 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Command
 {
    public class ChargeInformationOperationDtoBuilder
     {
-        private List<Point> _points;
         private string _chargeId;
         private Instant _startDateTime;
         private Instant? _endDateTime;
@@ -47,7 +45,6 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Command
             _description = "some description";
             _chargeName = "some charge name";
             _chargeType = ChargeType.Fee;
-            _points = new List<Point>();
             _resolution = Resolution.PT1H;
         }
 
