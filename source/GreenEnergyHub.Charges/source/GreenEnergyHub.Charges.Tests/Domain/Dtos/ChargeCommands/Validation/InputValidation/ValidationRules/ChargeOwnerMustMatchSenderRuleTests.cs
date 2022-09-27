@@ -15,7 +15,7 @@
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation.InputValidation;
-using GreenEnergyHub.Charges.Tests.Builders.Command;
+using GreenEnergyHub.Charges.TestCore.Builders.Command;
 using Xunit;
 using Xunit.Categories;
 
@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
             string chargeOwner,
             bool isValid)
         {
-            var marketParticipant = new MarketParticipantDtoBuilder().WithId(senderId).Build();
+            var marketParticipant = new MarketParticipantDtoBuilder().WithMarketParticipantId(senderId).Build();
             var document = new DocumentDtoBuilder().WithSender(marketParticipant).Build();
             var sut = new ChargeOwnerMustMatchSenderRule(document.Sender.MarketParticipantId, chargeOwner);
             sut.IsValid.Should().Be(isValid);

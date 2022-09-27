@@ -27,7 +27,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         /// The name of the function.
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
-        public const string FunctionName = nameof(CreateDefaultChargeLinksReplierEndpoint);
+        private const string FunctionName = nameof(CreateDefaultChargeLinksReplierEndpoint);
         private readonly JsonMessageDeserializer<ChargeLinksDataAvailableNotifiedEvent> _deserializer;
         private readonly ICreateDefaultChargeLinksReplyHandler _createDefaultChargeLinksReplyHandler;
 
@@ -42,8 +42,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         [Function(FunctionName)]
         public async Task RunAsync(
             [ServiceBusTrigger(
-                "%" + EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedTopicName + "%",
-                "%" + EnvironmentSettingNames.DefaultChargeLinksDataAvailableNotifiedSubscription + "%",
+                "%" + EnvironmentSettingNames.ChargesDomainEventTopicName + "%",
+                "%" + EnvironmentSettingNames.DefaultChargeLinksDataAvailableSubscriptionName + "%",
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             byte[] message)
         {

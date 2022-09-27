@@ -44,6 +44,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.MessageHub
         [InlineData("ChargeLinkDataAvailable", BundleType.ChargeLinkDataAvailable)]
         [InlineData("ChargeLinkConfirmationDataAvailable", BundleType.ChargeLinkConfirmationDataAvailable)]
         [InlineData("ChargeLinkRejectionDataAvailable", BundleType.ChargeLinkRejectionDataAvailable)]
+        [InlineData("ChargePriceDataAvailable", BundleType.ChargePriceDataAvailable)]
         public void Map_WhenGivenKnownString_MapsToBundleType(
             string input,
             BundleType expected)
@@ -89,7 +90,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.MessageHub
         {
             foreach (var bundleType in Enum.GetValues(typeof(BundleType)))
             {
-                yield return new object[] { bundleType };
+                yield return new[] { bundleType };
             }
         }
 

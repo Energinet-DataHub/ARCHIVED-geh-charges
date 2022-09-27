@@ -12,19 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.using System;
 
-using System;
+using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableOperationReceiptData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Charges.Tests.Builders.Command;
+using GreenEnergyHub.Charges.TestCore.Builders.Command;
 using GreenEnergyHub.Charges.Tests.TestCore;
 using Microsoft.Extensions.Logging;
+using Moq;
 using Xunit;
 
 namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationReceiptData
@@ -34,22 +35,25 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
         [Theory]
         [InlineAutoMoqData]
         public void Create_WithMultipleMergeFields_ReturnsExpectedDescription(
-            ChargePriceCommandBuilder chargePriceCommandBuilder,
+            DocumentDtoBuilder documentDtoBuilder,
             CimValidationErrorTextProvider cimValidationErrorTextProvider,
             ChargePriceOperationDto chargeOperationDto,
             ILoggerFactory loggerFactory)
         {
             // Arrange
-            var chargeCommand = chargePriceCommandBuilder.WithChargeOperation(chargeOperationDto).Build();
+            var document = documentDtoBuilder
+                .WithDocumentType(DocumentType.RejectRequestChangeOfPriceList)
+                .WithBusinessReasonCode(BusinessReasonCode.UpdateChargePrices)
+                .Build();
             var sut = new ChargePriceCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
             var validationError = new ValidationError(ValidationRuleIdentifier.DocumentTypeMustBeRequestChangeOfPriceList, null, null);
 
             var expected = CimValidationErrorTextTemplateMessages.DocumentTypeMustBeRequestChangeOfPriceListErrorText
-                .Replace("{{DocumentType}}", chargeCommand.Document.Type.ToString())
-                .Replace("{{DocumentBusinessReasonCode}}", chargeCommand.Document.BusinessReasonCode.ToString());
+                .Replace("{{DocumentType}}", document.Type.ToString())
+                .Replace("{{DocumentBusinessReasonCode}}", document.BusinessReasonCode.ToString());
 
             // Act
-            var actual = sut.Create(validationError, chargeCommand, chargeOperationDto);
+            var actual = sut.Create(validationError, document, chargeOperationDto);
 
             // Assert
             actual.Should().Be(expected);
@@ -58,27 +62,26 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
         [Theory]
         [InlineAutoMoqData]
         public void Create_WithPointPosition_ReturnsExpectedDescription(
-            ChargePriceCommandBuilder chargePriceCommandBuilder,
+            DocumentDto documentDto,
             ChargePriceOperationDto chargePriceOperationDto,
             CimValidationErrorTextProvider cimValidationErrorTextProvider,
             ILoggerFactory loggerFactory)
         {
             // Arrange
-            var chargeCommand = chargePriceCommandBuilder.WithChargeOperation(chargePriceOperationDto).Build();
             var sut = new ChargePriceCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
-            var triggeredBy = chargePriceOperationDto.Points.GetPositionOfPoint(chargePriceOperationDto.Points[1]).ToString();
+            const string triggeredBy = "3";
             var validationError = new ValidationError(ValidationRuleIdentifier.MaximumPrice, chargePriceOperationDto.OperationId, triggeredBy);
 
-            var expectedPoint = chargePriceOperationDto.Points[1];
+            var expectedPoint = chargePriceOperationDto.Points.OrderBy(x => x.Time).ToList().Last();
             var expected = CimValidationErrorTextTemplateMessages.MaximumPriceErrorText
                 .Replace("{{ChargePointPrice}}", expectedPoint.Price.ToString("N"))
-                .Replace("{{ChargePointPosition}}", chargePriceOperationDto.Points.GetPositionOfPoint(expectedPoint).ToString())
+                .Replace("{{ChargePointPosition}}", triggeredBy)
                 .Replace("{{DocumentSenderProvidedChargeId}}", chargePriceOperationDto.SenderProvidedChargeId)
                 .Replace("{{ChargeType}}", chargePriceOperationDto.ChargeType.ToString())
                 .Replace("{{ChargeOwner}}", chargePriceOperationDto.ChargeOwner);
 
             // Act
-            var actual = sut.Create(validationError, chargeCommand, chargePriceOperationDto);
+            var actual = sut.Create(validationError, documentDto, chargePriceOperationDto);
 
             // Assert
             actual.Should().Be(expected);
@@ -92,18 +95,17 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
         public void Create_WithInvalidPointPosition_ReturnsErrorMessage(
             ValidationRuleIdentifier validationRuleIdentifier,
             string? triggeredBy,
-            ChargePriceCommandBuilder chargePriceCommandBuilder,
+            DocumentDto document,
             ChargePriceOperationDto chargePriceOperationDto,
             CimValidationErrorTextProvider cimValidationErrorTextProvider,
             ILoggerFactory loggerFactory)
         {
             // Arrange
-            var chargeCommand = chargePriceCommandBuilder.WithChargeOperation(chargePriceOperationDto).Build();
             var validationError = new ValidationError(validationRuleIdentifier, chargePriceOperationDto.OperationId, triggeredBy);
             var sut = new ChargePriceCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
 
             // Act
-            var actual = sut.Create(validationError, chargeCommand, chargePriceOperationDto);
+            var actual = sut.Create(validationError, document, chargePriceOperationDto);
 
             // Assert
             actual.ToLower().Should().Contain($"price {CimValidationErrorTextTemplateMessages.Unknown}");
@@ -114,49 +116,86 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableOperationRecei
         [Theory]
         [InlineAutoMoqData]
         public void Create_MergesAllMergeFields(
-            ChargePriceCommand chargePriceCommand,
+            DocumentDto documentDto,
             CimValidationErrorTextProvider cimValidationErrorTextProvider,
+            ChargePriceOperationDtoBuilder chargePriceOperationDtoBuilder,
             ILoggerFactory loggerFactory)
         {
             // Arrange
-            var chargePriceOperationDto = chargePriceCommand.Operations.First();
-            var validationRuleIdentifiers = (ValidationRuleIdentifier[])Enum.GetValues(typeof(ValidationRuleIdentifier));
+            var chargePriceOperationDto = chargePriceOperationDtoBuilder.Build();
+            var validationRuleIdentifiers = GetExpectedRulesForChargePriceOperation();
             var identifiersForRulesWithExtendedData =
                 ValidationRuleForInterfaceLoader.GetValidationRuleIdentifierForTypes(
-                    DomainAssemblyHelper.GetDomainAssembly(), typeof(IValidationRuleWithExtendedData));
-
+                    AssemblyHelper.GetDomainAssembly(), typeof(IValidationRuleWithExtendedData));
             var sut = new ChargePriceCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
 
             // Act
             // Assert
-            foreach (var validationRuleIdentifier in validationRuleIdentifiers)
+            foreach (var identifier in validationRuleIdentifiers)
             {
-                var triggeredBy = GetTriggeredBy(chargePriceCommand, validationRuleIdentifier);
-                var actual = sut.Create(
-                    new ValidationError(validationRuleIdentifier, null, triggeredBy),
-                    chargePriceCommand,
-                    chargePriceOperationDto);
+                var validationError = new ValidationError(identifier, chargePriceOperationDto.OperationId, "1");
+                var actual = sut.Create(validationError, documentDto, chargePriceOperationDto);
 
                 actual.Should().NotBeNullOrWhiteSpace();
                 actual.Should().NotContain("{");
                 actual.Should().NotContain("  ");
-
-                if (identifiersForRulesWithExtendedData.Contains(validationRuleIdentifier) && triggeredBy != null)
+                if (identifiersForRulesWithExtendedData.Contains(identifier))
                     actual.Should().NotContain("unknown");
             }
         }
 
-        private static string? GetTriggeredBy(
-            ChargeCommand chargePriceCommand,
-            ValidationRuleIdentifier validationRuleIdentifier)
+        [Theory]
+        [InlineAutoMoqData(ValidationRuleIdentifier.StartDateValidation, null!)]
+        [InlineAutoMoqData(ValidationRuleIdentifier.StartDateValidation, -1)]
+        [InlineAutoMoqData(ValidationRuleIdentifier.StartDateValidation, 0)]
+        public void Create_PointPositionAreIgnored_WhenNotApplicable(
+            ValidationRuleIdentifier validationRuleIdentifier,
+            string? seedTriggeredBy,
+            ChargePriceOperationDto chargePriceOperationDto,
+            CimValidationErrorTextProvider cimValidationErrorTextProvider,
+            ILoggerFactory loggerFactory)
         {
-            switch (validationRuleIdentifier)
+            // Arrange
+            var triggeredBy = seedTriggeredBy == "0" ?
+                chargePriceOperationDto.Points.GetPositionOfPoint(chargePriceOperationDto.Points[1]).ToString() :
+                seedTriggeredBy;
+            var validationError = new ValidationError(validationRuleIdentifier, chargePriceOperationDto.OperationId, triggeredBy);
+
+            var sut = new ChargePriceCimValidationErrorTextFactory(cimValidationErrorTextProvider, loggerFactory);
+            var expected = CimValidationErrorTextTemplateMessages.StartDateValidationErrorText
+                .Replace("{{ChargeStartDateTime}}", chargePriceOperationDto.StartDateTime.ToString());
+
+            // Act
+            var actual = sut.Create(validationError, It.IsAny<DocumentDto>(), chargePriceOperationDto);
+
+            // Assert
+            actual.Should().Contain(expected);
+        }
+
+        private static List<ValidationRuleIdentifier> GetExpectedRulesForChargePriceOperation()
+        {
+            var expectedRules = new List<ValidationRuleIdentifier>
             {
-                case ValidationRuleIdentifier.SubsequentBundleOperationsFail:
-                    return chargePriceCommand.Operations.First().OperationId;
-                default:
-                    return null;
-            }
+                ValidationRuleIdentifier.ChargeIdLengthValidation,
+                ValidationRuleIdentifier.ChargeIdRequiredValidation,
+                ValidationRuleIdentifier.ChargeOperationIdRequired,
+                ValidationRuleIdentifier.ChargeOperationIdLengthValidation,
+                ValidationRuleIdentifier.ChargeOwnerIsRequiredValidation,
+                ValidationRuleIdentifier.ChargeOwnerMustMatchSender,
+                ValidationRuleIdentifier.ChargeTypeIsKnownValidation,
+                ValidationRuleIdentifier.ChargeTypeTariffPriceCount,
+                ValidationRuleIdentifier.ChargePriceMaximumDigitsAndDecimals,
+                ValidationRuleIdentifier.MaximumPrice,
+                ValidationRuleIdentifier.NumberOfPointsMatchTimeIntervalAndResolution,
+                ValidationRuleIdentifier.PriceListMustStartAndStopAtMidnightValidationRule,
+                ValidationRuleIdentifier.StartDateTimeRequiredValidation,
+                ValidationRuleIdentifier.StartDateValidation,
+                ValidationRuleIdentifier.ResolutionSubscriptionValidation,
+                ValidationRuleIdentifier.ResolutionTariffValidation,
+                ValidationRuleIdentifier.ResolutionFeeValidation,
+                ValidationRuleIdentifier.ResolutionIsRequired,
+            };
+            return expectedRules;
         }
     }
 }

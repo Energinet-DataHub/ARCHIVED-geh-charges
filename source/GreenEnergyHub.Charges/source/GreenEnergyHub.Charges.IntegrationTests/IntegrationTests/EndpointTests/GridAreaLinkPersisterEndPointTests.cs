@@ -64,14 +64,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
                 // Act
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
-                    () => Fixture.MarketParticipantChangedTopic.SenderClient.SendMessageAsync(message), message.CorrelationId);
+                    () => Fixture.IntegrationEventTopic.SenderClient.SendMessageAsync(message), message.CorrelationId);
 
                 // Assert
                 await FunctionAsserts.AssertHasExecutedAsync(Fixture.HostManager, nameof(MarketParticipantPersisterEndpoint)).ConfigureAwait(false);
                 var gridAreaLink = context.GridAreaLinks.SingleOrDefault(x => x.Id == id);
                 gridAreaLink.Should().NotBeNull();
 
-                // We need to clear host log after each test is done to ensure that we can assert on function executed on each test run because we only check on function name.
+                // We need to clear host log after each test is done to ensure that we can assert on function executed
+                // on each test run because we only check on function name.
                 Fixture.HostManager.ClearHostLog();
             }
 

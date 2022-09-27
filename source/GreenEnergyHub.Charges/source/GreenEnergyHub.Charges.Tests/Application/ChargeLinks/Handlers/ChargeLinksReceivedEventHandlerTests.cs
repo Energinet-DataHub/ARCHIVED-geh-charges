@@ -22,14 +22,18 @@ using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Handlers;
 using GreenEnergyHub.Charges.Application.ChargeLinks.Services;
+using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.ChargeLinks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
-using GreenEnergyHub.Charges.Tests.Builders.Command;
+using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.TestCore.Builders.Command;
+using GreenEnergyHub.Charges.TestCore.TestHelpers;
 using GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation;
 using GreenEnergyHub.TestHelpers;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NodaTime;
 using Xunit;
@@ -148,6 +152,47 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             subsequent.Count().Should().Be(2);
         }
 
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task HandleAsync_WhenValidationFails_ShouldLogValidationErrors(
+            Mock<ILoggerFactory> loggerFactory,
+            Mock<ILogger> logger,
+            Mock<IChargeLinksReceiptService> chargeLinksReceiptService,
+            Mock<IChargeLinkFactory> chargeLinkFactory,
+            Mock<IChargeLinksRepository> chargeLinksRepository,
+            Mock<IBusinessValidator<ChargeLinkOperationDto>> businessValidator,
+            Mock<IUnitOfWork> unitOfWork,
+            ChargeLinksReceivedEvent receivedEvent)
+        {
+            // Arrange
+            var document = receivedEvent.Command.Document;
+            var expectedMessage = ErrorTextGenerator.CreateExpectedErrorMessage(
+                document.Id,
+                document.Type.ToString(),
+                document.Sender.MarketParticipantId,
+                ValidationRuleIdentifier.StartDateValidation.ToString(),
+                receivedEvent.Command.Operations.Count - 1);
+
+            loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
+            businessValidator
+                .Setup(b => b.ValidateAsync(It.IsAny<ChargeLinkOperationDto>()))
+                .ReturnsAsync(GetFailedValidationResult(ValidationRuleIdentifier.StartDateValidation));
+
+            var sut = new ChargeLinksReceivedEventHandler(
+                loggerFactory.Object,
+                chargeLinksReceiptService.Object,
+                chargeLinkFactory.Object,
+                chargeLinksRepository.Object,
+                businessValidator.Object,
+                unitOfWork.Object);
+
+            // Act
+            await sut.HandleAsync(receivedEvent);
+
+            // Assert
+            logger.VerifyLoggerWasCalled(expectedMessage, LogLevel.Error);
+        }
+
         private static ChargeLink CreateChargeLink()
         {
             var fixture = new Fixture().Customize(new AutoMoqCustomization());
@@ -185,6 +230,16 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             chargeLinkCommandAcceptedEventFactory
                 .Setup(x => x.Create(It.IsAny<ChargeLinksCommand>()))
                 .Returns(chargeLinksAcceptedEvent);
+        }
+
+        private static ValidationResult GetFailedValidationResult(ValidationRuleIdentifier validationRuleIdentifier)
+        {
+            var failedRule = new Mock<IValidationRule>();
+            failedRule.Setup(r => r.IsValid).Returns(false);
+            failedRule.Setup(r => r.ValidationRuleIdentifier).Returns(validationRuleIdentifier);
+
+            return ValidationResult.CreateFailure(
+                new List<IValidationRuleContainer> { new DocumentValidationRuleContainer(failedRule.Object) });
         }
     }
 }

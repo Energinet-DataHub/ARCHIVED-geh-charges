@@ -86,3 +86,43 @@ data "azurerm_key_vault_secret" "log_shared_id" {
   name         = "log-shared-id"
   key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
 }
+
+data "azurerm_key_vault_secret" "mssql_data_elastic_pool_id" {
+  name         = "mssql-data-elastic-pool-id"
+  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
+}
+
+data "azurerm_key_vault_secret" "sb_domain_relay_namespace_id" {
+  name         = "sb-domain-relay-namespace-id"
+  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
+}
+
+data "azurerm_key_vault_secret" "sb_domain_relay_listen_connection_string" {
+  name         = "sb-domain-relay-listen-connection-string"
+  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
+}
+
+data "azurerm_key_vault_secret" "sb_domain_relay_send_connection_string" {
+  name         = "sb-domain-relay-send-connection-string"
+  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
+}
+
+data "azurerm_key_vault_secret" "sb_domain_relay_manage_connection_string" {
+  name         = "sb-domain-relay-manage-connection-string"
+  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
+}
+
+data "azurerm_key_vault_secret" "sbt_domainrelay_integrationevent_received_id" {
+  name         = "sbt-sharedres-integrationevent-received-id"
+  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
+}
+
+data "azurerm_key_vault_secret" "sbt_domainrelay_integrationevent_received_name" {
+  name         = "sbt-sharedres-integrationevent-received-name"
+  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
+}
+
+data "azurerm_key_vault_secret" "sb_domain_relay_namespace_name" {
+  name         = "sb-domain-relay-namespace-name"
+  key_vault_id = data.azurerm_key_vault.kv_shared_resources.id
+}

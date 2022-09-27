@@ -204,7 +204,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             var sut = new MarketParticipantRepository(chargesDatabaseContext);
 
             // Act
-            var actual = await sut.GetGridAccessProvidersAsync();
+            var actual = await sut.GetActiveGridAccessProvidersAsync();
 
             // Assert
             actual.Should().NotContain(x => x.MarketParticipantId == SeededData.MarketParticipants.Inactive8900000000005.Gln);
@@ -218,7 +218,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             var sut = new MarketParticipantRepository(chargesDatabaseContext);
 
             // Act
-            var actual = await sut.GetGridAccessProvidersAsync();
+            var actual = await sut.GetActiveGridAccessProvidersAsync();
 
             // Assert
             actual.Should().NotBeEmpty();

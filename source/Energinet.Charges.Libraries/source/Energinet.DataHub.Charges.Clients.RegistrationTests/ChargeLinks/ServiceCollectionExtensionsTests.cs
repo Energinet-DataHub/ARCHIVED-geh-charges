@@ -13,10 +13,10 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.Charges.Clients.ChargeLinks;
-using Energinet.DataHub.Charges.Clients.Registration.ChargeLinks.ServiceCollectionExtensions;
+using Energinet.DataHub.Charges.Clients.Charges;
+using Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests;
+using Energinet.DataHub.Charges.Clients.Registration.Charges.ServiceCollectionExtensions;
 using FluentAssertions;
-using GreenEnergyHub.Charges.TestCore;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
@@ -28,21 +28,21 @@ namespace Energinet.DataHub.Charges.Clients.RegistrationTests.ChargeLinks
     public class ServiceCollectionExtensionsTests
     {
         [Fact]
-        public void AddChargeLinksClient_WhenAdded_IsRegistered()
+        public void AddChargesClient_WhenAdded_IsRegistered()
         {
             // Arrange
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddScoped<IHttpContextAccessor>(_ => new HttpContextAccessorMock("fake token"));
 
             // Act
-            serviceCollection.AddChargeLinksClient(new Uri("http://chargelinks-test.com/"));
+            serviceCollection.AddChargesClient(new Uri("http://charges-test.com/"));
             var provider = serviceCollection.BuildServiceProvider();
-            var chargeLinkClient = provider.GetRequiredService<IChargeLinksClient>();
+            var chargeClient = provider.GetRequiredService<IChargesClient>();
 
             // Assert
-            serviceCollection.Should().ContainSingle(x => x.ServiceType == typeof(IChargeLinksClient) && x.Lifetime == ServiceLifetime.Scoped);
-            chargeLinkClient.Should().NotBeNull();
-            chargeLinkClient.Should().BeOfType<ChargeLinksClient>();
+            serviceCollection.Should().ContainSingle(x => x.ServiceType == typeof(IChargesClient) && x.Lifetime == ServiceLifetime.Scoped);
+            chargeClient.Should().NotBeNull();
+            chargeClient.Should().BeOfType<ChargesClient>();
         }
     }
 }

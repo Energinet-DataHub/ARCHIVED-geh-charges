@@ -13,14 +13,13 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.Core.Messaging.MessageTypes.Common;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.MeteringPointCreatedEvents
 {
-    public class MeteringPointCreatedEvent : InboundIntegrationEvent
+    public class MeteringPointCreatedEvent : MessageBase
     {
         public MeteringPointCreatedEvent(
             string meteringPointId,
@@ -29,7 +28,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.MeteringPointCreatedEvents
             ConnectionState connectionState,
             Instant effectiveDate,
             MeteringPointType meteringPointType)
-            : base(Transaction.NewTransaction())
         {
             MeteringPointId = meteringPointId;
             GridAreaLinkId = gridAreaLinkId;

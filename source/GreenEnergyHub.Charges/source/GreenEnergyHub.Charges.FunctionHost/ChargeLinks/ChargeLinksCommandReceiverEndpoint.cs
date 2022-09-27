@@ -23,7 +23,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
 {
     public class ChargeLinksCommandReceiverEndpoint
     {
-        public const string FunctionName = nameof(ChargeLinksCommandReceiverEndpoint);
+        private const string FunctionName = nameof(ChargeLinksCommandReceiverEndpoint);
         private readonly JsonMessageDeserializer<ChargeLinksReceivedEvent> _deserializer;
         private readonly IChargeLinksReceivedEventHandler _chargeLinksReceivedEventHandler;
 
@@ -38,8 +38,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
         [Function(FunctionName)]
         public async Task RunAsync(
             [ServiceBusTrigger(
-                "%" + EnvironmentSettingNames.ChargeLinksReceivedTopicName + "%",
-                "%" + EnvironmentSettingNames.ChargeLinksReceivedSubscriptionName + "%",
+                "%" + EnvironmentSettingNames.ChargesDomainEventTopicName + "%",
+                "%" + EnvironmentSettingNames.ChargeLinksCommandReceivedSubscriptionName + "%",
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             byte[] data)
         {

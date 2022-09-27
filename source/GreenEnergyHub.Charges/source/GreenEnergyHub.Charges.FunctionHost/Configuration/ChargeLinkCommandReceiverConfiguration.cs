@@ -21,9 +21,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands.Validation.Business
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksRejectionEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
-using GreenEnergyHub.Charges.FunctionHost.Common;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
-using GreenEnergyHub.Charges.Infrastructure.Core.Registration;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
@@ -47,17 +45,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 BusinessValidator<ChargeLinkOperationDto>>();
             serviceCollection.AddScoped<IAvailableChargeLinksReceiptValidationErrorFactory,
                 AvailableChargeLinksReceiptValidationErrorFactory>();
-            serviceCollection.AddScoped<ICimValidationErrorTextFactory<ChargeLinksCommand, ChargeLinkOperationDto>,
+            serviceCollection.AddScoped<ICimValidationErrorTextFactory<ChargeLinkOperationDto>,
                 ChargeLinksCimValidationErrorTextFactory>();
-
-            serviceCollection.AddMessaging()
-                .AddInternalMessageExtractor<ChargeLinksReceivedEvent>()
-                .AddInternalMessageDispatcher<ChargeLinksAcceptedEvent>(
-                EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
-                EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksAcceptedTopicName))
-                .AddInternalMessageDispatcher<ChargeLinksRejectedEvent>(
-                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.DomainEventSenderConnectionString),
-                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeLinksRejectedTopicName));
+            serviceCollection.AddScoped<JsonMessageDeserializer<ChargeLinksReceivedEvent>>();
         }
     }
 }

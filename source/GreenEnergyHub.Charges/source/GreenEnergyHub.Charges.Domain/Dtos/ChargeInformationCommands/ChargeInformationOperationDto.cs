@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 using NodaTime;
@@ -22,7 +21,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands
     /// <summary>
     /// The ChargeInformationOperationDto class contains the intend of the charge command, e.g. updating an existing charge.
     /// </summary>
-    public class ChargeInformationOperationDto : ChargeOperation
+    public class ChargeInformationOperationDto : ChargeOperationDto
     {
         public ChargeInformationOperationDto(
                 string operationId,
@@ -32,28 +31,19 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands
                 string chargeDescription,
                 string chargeOwner,
                 Resolution resolution,
-                Resolution priceResolution,
                 TaxIndicator taxIndicator,
                 TransparentInvoicing transparentInvoicing,
                 VatClassification vatClassification,
                 Instant startDateTime,
-                Instant? endDateTime,
-                Instant? pointsStartInterval,
-                Instant? pointsEndInterval,
-                List<Point> points)
+                Instant? endDateTime)
             : base(operationId, chargeType, senderProvidedChargeId, chargeOwner, startDateTime, endDateTime)
         {
-            Points = new List<Point>();
             ChargeName = chargeName;
             ChargeDescription = chargeDescription;
             Resolution = resolution;
-            PriceResolution = priceResolution;
             TaxIndicator = taxIndicator;
             TransparentInvoicing = transparentInvoicing;
             VatClassification = vatClassification;
-            PointsStartInterval = pointsStartInterval;
-            PointsEndInterval = pointsEndInterval;
-            Points = points;
         }
 
         /// <summary>
@@ -77,13 +67,5 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands
         public TaxIndicator TaxIndicator { get; }
 
         public Resolution Resolution { get; }
-
-        public Resolution PriceResolution { get; }
-
-        public Instant? PointsStartInterval { get; }
-
-        public Instant? PointsEndInterval { get; }
-
-        public List<Point> Points { get; }
     }
 }

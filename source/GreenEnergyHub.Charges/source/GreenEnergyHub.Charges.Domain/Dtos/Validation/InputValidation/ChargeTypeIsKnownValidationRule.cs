@@ -19,17 +19,17 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation.InputValidation
 {
     public class ChargeTypeIsKnownValidationRule : IValidationRule
     {
-        private readonly ChargeOperation _operation;
+        private readonly ChargeOperationDto _operationDto;
 
-        public ChargeTypeIsKnownValidationRule(ChargeOperation operation)
+        public ChargeTypeIsKnownValidationRule(ChargeOperationDto operationDto)
         {
-            _operation = operation;
+            _operationDto = operationDto;
         }
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.ChargeTypeIsKnownValidation;
 
-        public bool IsValid => _operation.ChargeType
+        public bool IsValid => _operationDto.ChargeType
             is ChargeType.Fee or ChargeType.Subscription or ChargeType.Tariff;
     }
 }

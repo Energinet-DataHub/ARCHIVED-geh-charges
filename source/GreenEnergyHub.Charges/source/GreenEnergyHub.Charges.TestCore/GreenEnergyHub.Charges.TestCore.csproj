@@ -31,7 +31,7 @@ limitations under the License.
       <PackageReference Include="AutoFixture.AutoMoq" Version="4.17.0" />
       <PackageReference Include="AutoFixture.Xunit2" Version="4.17.0" />
       <PackageReference Include="Energinet.DataHub.Core.App.FunctionApp" Version="7.0.0" />
-      <PackageReference Include="Energinet.DataHub.Core.FunctionApp.TestCommon" Version="3.3.0" />
+      <PackageReference Include="Energinet.DataHub.Core.FunctionApp.TestCommon" Version="3.4.0" />
       <PackageReference Include="Microsoft.Azure.Functions.Worker.Core" Version="1.6.0" />
       <PackageReference Include="FluentAssertions" Version="6.7.0" />
       <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
@@ -39,6 +39,7 @@ limitations under the License.
       <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.1" />
       <PackageReference Include="NodaTime" Version="3.1.2" />
       <PackageReference Include="MicroElements.AutoFixture.NodaTime" Version="1.0.0" />
+      <PackageReference Include="NodaTime.Testing" Version="3.1.2" />
       <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
       <PackageReference Include="Google.Protobuf" Version="3.21.5" />
       <PackageReference Include="xunit" Version="2.4.2" />
@@ -54,7 +55,12 @@ limitations under the License.
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\GreenEnergyHub.Charges.Application\GreenEnergyHub.Charges.Application.csproj" />
       <ProjectReference Include="..\GreenEnergyHub.Charges.Core\GreenEnergyHub.Charges.Core.csproj" />
+      <ProjectReference Include="..\GreenEnergyHub.Charges.Domain\GreenEnergyHub.Charges.Domain.csproj" />
+      <ProjectReference Include="..\GreenEnergyHub.Charges.Infrastructure\GreenEnergyHub.Charges.Infrastructure.csproj" />
+      <ProjectReference Include="..\GreenEnergyHub.Charges.MessageHub\GreenEnergyHub.Charges.MessageHub.csproj" />
+      <ProjectReference Include="..\GreenEnergyHub.Charges.QueryApi\GreenEnergyHub.Charges.QueryApi.csproj" />
     </ItemGroup>
 
 </Project>

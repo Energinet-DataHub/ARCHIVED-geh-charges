@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.IdentityModel.Tokens.Jwt;
+using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Core.App.Common;
 using Energinet.DataHub.Core.App.Common.Abstractions.Actor;
 using Energinet.DataHub.Core.App.Common.Abstractions.Identity;
@@ -20,9 +21,13 @@ using Energinet.DataHub.Core.App.Common.Abstractions.Security;
 using Energinet.DataHub.Core.App.Common.Identity;
 using Energinet.DataHub.Core.App.Common.Security;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware;
+using GreenEnergyHub.Charges.Application.Messaging;
+using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure;
+using GreenEnergyHub.Charges.Infrastructure.Core.InternalMessaging;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
+using GreenEnergyHub.Charges.Infrastructure.Core.Registration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
@@ -83,6 +88,17 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 _functionNamesToExclude));
             serviceCollection.AddScoped<IActorContext, ActorContext>();
             serviceCollection.AddScoped<IActorProvider, ActorProvider>();
+        }
+
+        public static void AddDomainEventPublishing(this IServiceCollection serviceCollection, ServiceBusClient serviceBusClient)
+        {
+            serviceCollection.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
+            serviceCollection.AddScoped<IServiceBusDispatcher, ServiceBusDispatcher>();
+            var topicName = EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesDomainEventTopicName);
+
+            // Must be a singleton as per documentation of ServiceBusClient and ServiceBusSender
+            serviceCollection.AddSingleton<IServiceBusDispatcher>(
+                _ => new ServiceBusDispatcher(serviceBusClient, topicName));
         }
     }
 }

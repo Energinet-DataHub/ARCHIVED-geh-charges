@@ -33,15 +33,16 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.Charges
 
         public const string TariffSystemOperatorCreate = "TestFiles/Charges/TariffSystemOperatorCreate.xml";
 
-        public const string ChargeInformationTariffHourlySample = "TestFiles/Charges/Samples/ChargeInformationTariffHourlySample.xml";
-        public const string ChargeInformationFeeMonthlySample = "TestFiles/Charges/Samples/ChargeInformationFeeMonthlySample.xml";
-        public const string ChargeInformationSubscriptionMonthlySample = "TestFiles/Charges/Samples/ChargeInformationSubscriptionMonthlySample.xml";
-        public const string BundledChargeInformationSample = "TestFiles/Charges/Samples/BundledChargeInformationSample.xml";
-        public const string ChargePriceSeriesSubscriptionMonthlySample = "TestFiles/Charges/Samples/ChargePriceSeriesSubscriptionMonthlySample.xml";
-        public const string ChargePriceSeriesFeeMonthlySample = "TestFiles/Charges/Samples/ChargePriceSeriesFeeMonthlySample.xml";
-        public const string ChargePriceSeriesTariffHourlySample = "TestFiles/Charges/Samples/ChargePriceSeriesTariffHourlySample.xml";
-        public const string BundledChargePriceSeriesSample = "TestFiles/Charges/Samples/BundledChargePriceSeriesSample.xml";
+        public const string ChargeInformationTariffHourlySample = "TestFiles/Samples/Charges/ChargeInformationTariffHourlySample.xml";
+        public const string ChargeInformationFeeMonthlySample = "TestFiles/Samples/Charges/ChargeInformationFeeMonthlySample.xml";
+        public const string ChargeInformationSubscriptionMonthlySample = "TestFiles/Samples/Charges/ChargeInformationSubscriptionMonthlySample.xml";
+        public const string BundledChargeInformationSample = "TestFiles/Samples/Charges/BundledChargeInformationSample.xml";
+        public const string ChargePriceSeriesSubscriptionMonthlySample = "TestFiles/Samples/Charges/ChargePriceSeriesSubscriptionMonthlySample.xml";
+        public const string ChargePriceSeriesFeeMonthlySample = "TestFiles/Samples/Charges/ChargePriceSeriesFeeMonthlySample.xml";
+        public const string ChargePriceSeriesTariffHourlySample = "TestFiles/Samples/Charges/ChargePriceSeriesTariffHourlySample.xml";
+        public const string BundledChargePriceSeriesSample = "TestFiles/Samples/Charges/BundledChargePriceSeriesSample.xml";
         public const string TariffPriceSeries = "TestFiles/Charges/PriceSeries/TariffPriceSeries.xml";
+        public const string TaxTariffPriceSeriesWithInformationToBeIgnored = "TestFiles/Charges/PriceSeries/TaxTariffPriceSeriesWithInformationToBeIgnored.xml";
         public const string TariffPriceSeriesWithInvalidRecipientType = "TestFiles/Charges/PriceSeries/TariffPriceSeriesWithInvalidRecipientType.xml";
         public const string TariffPriceSeriesWithInvalidBusinessReasonCode = "TestFiles/Charges/PriceSeries/TariffPriceSeriesWithInvalidBusinessReasonCode.xml";
         public const string TariffPriceSeriesInvalidMaximumPrice = "TestFiles/Charges/PriceSeries/TariffPriceSeriesInvalidMaximumPrice.xml";

@@ -12,12 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation.InputValidation;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Charges.Tests.Builders.Command;
+using GreenEnergyHub.Charges.TestCore.Builders.Command;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Categories;
@@ -30,7 +31,6 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
         [Theory]
         [InlineAutoMoqData("1234567891", true)]
         [InlineAutoMoqData("12345678912", false)]
-        [InlineAutoMoqData(null!, false)]
         public void ChargeIdLengthValidationRule_Test(
             string chargeId,
             bool expected,
@@ -43,14 +43,25 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargeCommands.Validation.Inp
 
         [Theory]
         [InlineAutoDomainData]
-        public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder)
+        public void ValidationRuleIdentifier_WhenCreated_RuleIdentifierShouldBeChargeIdLengthValidation(
+            ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder)
         {
             var invalidChargeOperationDto = CreateInvalidChargeOperationDto(chargeInformationOperationDtoBuilder);
             var sut = new ChargeIdLengthValidationRule(invalidChargeOperationDto);
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.ChargeIdLengthValidation);
         }
 
-        private static ChargeInformationOperationDto CreateInvalidChargeOperationDto(ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder)
+        [Theory]
+        [InlineAutoDomainData]
+        public void ChargeIdLengthValidationRule_WhenChargeIdNull_ShouldThrowException(
+            ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder)
+        {
+            var chargeOperationDto = chargeInformationOperationDtoBuilder.WithChargeId(null!).Build();
+            Assert.Throws<NullReferenceException>(() => new ChargeIdLengthValidationRule(chargeOperationDto).IsValid);
+        }
+
+        private static ChargeInformationOperationDto CreateInvalidChargeOperationDto(
+            ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder)
         {
             return chargeInformationOperationDtoBuilder.WithChargeId("this charge id is to long").Build();
         }

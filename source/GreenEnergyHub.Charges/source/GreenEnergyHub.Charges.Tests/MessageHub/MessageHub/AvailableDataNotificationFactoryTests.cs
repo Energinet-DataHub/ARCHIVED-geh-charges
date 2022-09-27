@@ -21,7 +21,7 @@ using GreenEnergyHub.Charges.MessageHub.BundleSpecification;
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
-using GreenEnergyHub.Charges.Tests.Builders.MessageHub;
+using GreenEnergyHub.Charges.TestCore.Builders.MessageHub;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using NodaTime;
@@ -71,7 +71,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.MessageHub
             }
         }
 
-        private static List<AvailableChargeData> GenerateListOfAvailableChargeDataForSameCharge(Guid actorId, int numberOfAvailableChargeData)
+        private static List<AvailableChargeData> GenerateListOfAvailableChargeDataForSameCharge(
+            Guid actorId, int numberOfAvailableChargeData)
         {
             var builder = new AvailableChargeDataBuilder();
             var now = Instant.FromDateTimeUtc(DateTime.UtcNow);

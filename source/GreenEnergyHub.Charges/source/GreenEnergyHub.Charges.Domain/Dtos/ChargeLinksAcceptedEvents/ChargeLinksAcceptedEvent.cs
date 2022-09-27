@@ -13,12 +13,12 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents
 {
-    public class ChargeLinksAcceptedEvent : InternalEventBase
+    public class ChargeLinksAcceptedEvent : DomainEvent
     {
         public ChargeLinksCommand Command { get; }
 

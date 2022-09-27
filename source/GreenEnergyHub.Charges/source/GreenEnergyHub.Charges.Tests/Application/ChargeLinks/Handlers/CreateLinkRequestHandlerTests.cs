@@ -27,7 +27,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.CreateDefaultChargeLinksRequests;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
-using GreenEnergyHub.Charges.Tests.Builders.Command;
+using GreenEnergyHub.Charges.TestCore.Builders.Command;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using NodaTime;
@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             [Frozen] Mock<IDefaultChargeLinkRepository> defaultChargeLinkRepository,
             [Frozen] Mock<IMeteringPointRepository> meteringPointRepository,
             [Frozen] Mock<IChargeLinksCommandFactory> chargeLinkCommandFactory,
-            [Frozen] Mock<IMessageDispatcher<ChargeLinksReceivedEvent>> dispatcher,
+            [Frozen] Mock<IDomainEventDispatcher> dispatcher,
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             Guid defaultChargeLinkId,
             string replyTo,
@@ -118,7 +118,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
         public async Task HandleAsync_WithUnknownMeteringPointId_CallDefaultLinkClientWithFailedReply(
             [Frozen] Mock<ICorrelationContext> correlationContextMock,
             [Frozen] Mock<IMeteringPointRepository> meteringPointRepository,
-            [Frozen] Mock<IMessageDispatcher<ChargeLinksReceivedEvent>> dispatcher,
+            [Frozen] Mock<IDomainEventDispatcher> dispatcher,
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             [Frozen] Mock<ICreateDefaultChargeLinksReplier> defaultChargeLinkClient,
             string correlationId,
@@ -158,7 +158,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.ChargeLinks.Handlers
             [Frozen] Mock<ICorrelationContext> correlationContextMock,
             [Frozen] Mock<IDefaultChargeLinkRepository> defaultChargeLinkRepository,
             [Frozen] Mock<IMeteringPointRepository> meteringPointRepository,
-            [Frozen] Mock<IMessageDispatcher<ChargeLinksReceivedEvent>> dispatcher,
+            [Frozen] Mock<IDomainEventDispatcher> dispatcher,
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             [Frozen] Mock<ICreateDefaultChargeLinksReplier> defaultChargeLinkClient,
             string correlationId,

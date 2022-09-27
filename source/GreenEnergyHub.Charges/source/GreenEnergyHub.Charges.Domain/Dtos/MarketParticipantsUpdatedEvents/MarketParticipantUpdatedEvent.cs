@@ -14,13 +14,12 @@
 
 using System;
 using System.Collections.Generic;
-using Energinet.DataHub.Core.Messaging.MessageTypes.Common;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
+using GreenEnergyHub.Charges.Domain.Dtos.Messages;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsUpdatedEvents
 {
-    public class MarketParticipantUpdatedEvent : InboundIntegrationEvent
+    public class MarketParticipantUpdatedEvent : MessageBase
     {
         public MarketParticipantUpdatedEvent(
             Guid actorId,
@@ -29,7 +28,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsUpdatedEvents
             List<MarketParticipantRole> businessProcessRoles,
             bool isActive,
             IEnumerable<Guid> gridAreas)
-            : base(Transaction.NewTransaction())
         {
             B2CActorId = b2CActorId;
             ActorId = actorId;

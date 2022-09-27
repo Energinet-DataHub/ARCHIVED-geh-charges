@@ -13,15 +13,14 @@
 // limitations under the License.
 
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.JsonSerialization;
-using Energinet.DataHub.Core.Messaging.Transport;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization
 {
-    public class JsonMessageDeserializer<TInboundMessage> : MessageDeserializer<TInboundMessage>
-      where TInboundMessage : IInboundMessage
+    public class JsonMessageDeserializer<TDomainEvent>
+      where TDomainEvent : DomainEvent
     {
         private readonly IJsonSerializer _jsonSerializer;
 
@@ -30,13 +29,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Seriali
             _jsonSerializer = jsonSerializer;
         }
 
-        public override async Task<IInboundMessage> FromBytesAsync(byte[] data, CancellationToken cancellationToken = default)
+        public async Task<DomainEvent> FromBytesAsync(byte[] data)
         {
             var stream = new MemoryStream(data);
             await using (stream.ConfigureAwait(false))
             {
-                return (TInboundMessage)await _jsonSerializer.DeserializeAsync(
-                    stream, typeof(TInboundMessage)).ConfigureAwait(false);
+                return (TDomainEvent)await _jsonSerializer.DeserializeAsync(
+                    stream, typeof(TDomainEvent)).ConfigureAwait(false);
             }
         }
     }

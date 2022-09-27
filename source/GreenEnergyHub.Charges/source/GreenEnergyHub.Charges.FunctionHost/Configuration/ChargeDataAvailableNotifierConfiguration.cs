@@ -12,7 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification.Charges;
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
@@ -26,15 +27,29 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<IAvailableDataNotifier<AvailableChargeData, ChargeCommandAcceptedEvent>,
-                AvailableDataNotifier<AvailableChargeData, ChargeCommandAcceptedEvent>>();
-            serviceCollection.AddScoped<IAvailableDataFactory<AvailableChargeData, ChargeCommandAcceptedEvent>,
+            serviceCollection.AddScoped<IAvailableDataNotifier<AvailableChargeData, ChargeInformationOperationsAcceptedEvent>,
+                AvailableDataNotifier<AvailableChargeData, ChargeInformationOperationsAcceptedEvent>>();
+            serviceCollection.AddScoped<IAvailableDataFactory<AvailableChargeData, ChargeInformationOperationsAcceptedEvent>,
                 AvailableChargeDataFactory>();
             serviceCollection.AddScoped<IAvailableDataNotificationFactory<AvailableChargeData>,
                 AvailableDataNotificationFactory<AvailableChargeData>>();
             serviceCollection
-                .AddScoped<BundleSpecification<AvailableChargeData, ChargeCommandAcceptedEvent>,
+                .AddScoped<BundleSpecification<AvailableChargeData, ChargeInformationOperationsAcceptedEvent>,
                     ChargeBundleSpecification>();
+
+            serviceCollection.AddScoped<IAvailableDataNotifier<AvailableChargePriceData, ChargePriceOperationsAcceptedEvent>,
+                AvailableDataNotifier<AvailableChargePriceData, ChargePriceOperationsAcceptedEvent>>();
+            serviceCollection.AddScoped<IAvailableDataFactory<AvailableChargePriceData, ChargePriceOperationsAcceptedEvent>,
+                AvailableChargePriceDataFactory>();
+            serviceCollection.AddScoped<IAvailableDataNotificationFactory<AvailableChargePriceData>,
+                AvailableDataNotificationFactory<AvailableChargePriceData>>();
+
+            serviceCollection
+                .AddScoped<BundleSpecification<AvailableChargePriceData, ChargePriceOperationsAcceptedEvent>,
+                    ChargePriceBundleSpecification>();
+
+            serviceCollection.AddScoped<JsonMessageDeserializer<ChargeInformationOperationsAcceptedEvent>>();
+            serviceCollection.AddScoped<JsonMessageDeserializer<ChargePriceOperationsAcceptedEvent>>();
         }
     }
 }

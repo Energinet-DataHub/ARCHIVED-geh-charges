@@ -12,10 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using GreenEnergyHub.Charges.Application.Messaging;
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factories
@@ -33,39 +35,52 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factori
             _messageMetaDataContext = messageMetaDataContext;
         }
 
-        public ServiceBusMessage CreateInternalMessage(string data)
+        public ServiceBusMessage CreateInternalMessage(string data, string messageType)
         {
+            var serviceBusMessage = CreateServiceBusMessage(data, messageVersion: 1, messageType);
+
             if (_messageMetaDataContext.IsReplyToSet())
             {
-                return new ServiceBusMessage(data)
-                {
-                    CorrelationId = _correlationContext.Id,
-                    ApplicationProperties =
-                    {
-                        new KeyValuePair<string, object>(MessageMetaDataConstants.ReplyTo, _messageMetaDataContext.ReplyTo),
-                        new KeyValuePair<string, object>(MessageMetaDataConstants.CorrelationId, _correlationContext.Id),
-                    },
-                };
+                serviceBusMessage.ApplicationProperties.Add(
+                    new KeyValuePair<string, object>(MessageMetaDataConstants.ReplyTo, _messageMetaDataContext.ReplyTo));
             }
 
+            return serviceBusMessage;
+        }
+
+        public ServiceBusMessage CreateExternalMessage(byte[] data, string messageType)
+        {
             return new ServiceBusMessage(data)
             {
                 CorrelationId = _correlationContext.Id,
                 ApplicationProperties =
                 {
+                    new KeyValuePair<string, object>(
+                        MessageMetaDataConstants.OperationTimestamp,
+                        _messageMetaDataContext.RequestDataTime.GetCreatedDateTimeFormat()),
                     new KeyValuePair<string, object>(MessageMetaDataConstants.CorrelationId, _correlationContext.Id),
+                    new KeyValuePair<string, object>(MessageMetaDataConstants.MessageVersion, 1),
+                    new KeyValuePair<string, object>(MessageMetaDataConstants.MessageType, messageType),
+                    new KeyValuePair<string, object>(MessageMetaDataConstants.EventIdentification, Guid.NewGuid()),
                 },
             };
         }
 
-        public ServiceBusMessage CreateExternalMessage(byte[] data)
+        private ServiceBusMessage CreateServiceBusMessage(string data, int messageVersion, string messageType)
         {
             return new ServiceBusMessage(data)
             {
+                Subject = messageType,
                 CorrelationId = _correlationContext.Id,
                 ApplicationProperties =
                 {
+                    new KeyValuePair<string, object>(
+                        MessageMetaDataConstants.OperationTimestamp,
+                        _messageMetaDataContext.RequestDataTime.GetCreatedDateTimeFormat()),
                     new KeyValuePair<string, object>(MessageMetaDataConstants.CorrelationId, _correlationContext.Id),
+                    new KeyValuePair<string, object>(MessageMetaDataConstants.MessageVersion, messageVersion),
+                    new KeyValuePair<string, object>(MessageMetaDataConstants.MessageType, messageType),
+                    new KeyValuePair<string, object>(MessageMetaDataConstants.EventIdentification, Guid.NewGuid()),
                 },
             };
         }

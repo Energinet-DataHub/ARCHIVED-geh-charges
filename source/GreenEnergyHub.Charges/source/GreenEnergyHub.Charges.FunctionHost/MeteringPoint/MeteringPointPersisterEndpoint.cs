@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Energinet.DataHub.MeteringPoints.IntegrationEventContracts;
 using GreenEnergyHub.Charges.Application.MeteringPoints.Handlers;
@@ -29,7 +28,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MeteringPoint
         /// The name of the function.
         /// Function name affects the URL and thus possibly dependent infrastructure.
         /// </summary>
-        public const string FunctionName = nameof(MeteringPointPersisterEndpoint);
+        private const string FunctionName = nameof(MeteringPointPersisterEndpoint);
         private readonly MessageExtractor<MeteringPointCreated> _messageExtractor;
         private readonly IMeteringPointPersister _meteringPointCreatedEventHandler;
 
@@ -44,10 +43,10 @@ namespace GreenEnergyHub.Charges.FunctionHost.MeteringPoint
         [Function(FunctionName)]
         public async Task RunAsync(
             [ServiceBusTrigger(
-                "%" + EnvironmentSettingNames.MeteringPointCreatedTopicName + "%",
+                "%" + EnvironmentSettingNames.IntegrationEventTopicName + "%",
                 "%" + EnvironmentSettingNames.MeteringPointCreatedSubscriptionName + "%",
                 Connection = EnvironmentSettingNames.DataHubListenerConnectionString)]
-            [NotNull] byte[] message)
+            byte[] message)
         {
             var meteringPointCreatedEvent =
                 (MeteringPointCreatedEvent)await _messageExtractor.ExtractAsync(message).ConfigureAwait(false);

@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Events;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksDataAvailableNotifiedEvents
 {
-    public class ChargeLinksDataAvailableNotifiedEvent : InternalEventBase
+    public class ChargeLinksDataAvailableNotifiedEvent : DomainEvent
     {
         public ChargeLinksDataAvailableNotifiedEvent(Instant publishedTime, string meteringPointId)
             : base(publishedTime)

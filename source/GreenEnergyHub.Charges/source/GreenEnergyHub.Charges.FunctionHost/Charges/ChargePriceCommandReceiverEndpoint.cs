@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Application.Charges.Handlers;
+using GreenEnergyHub.Charges.Application.Charges.Handlers.ChargePrice;
 using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
@@ -42,8 +42,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
         [Function(FunctionName)]
         public async Task RunAsync(
             [ServiceBusTrigger(
-                "%" + EnvironmentSettingNames.PriceCommandReceivedTopicName + "%",
-                "%" + EnvironmentSettingNames.PriceCommandReceivedSubscriptionName + "%",
+                "%" + EnvironmentSettingNames.ChargesDomainEventTopicName + "%",
+                "%" + EnvironmentSettingNames.ChargePriceCommandReceivedSubscriptionName + "%",
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             byte[] message)
         {
@@ -51,7 +51,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
                 .FromBytesAsync(message)
                 .ConfigureAwait(false);
 
-            await _chargePriceCommandReceivedEventHandler.HandleAsync(chargePriceCommandReceivedEvent)
+            await _chargePriceCommandReceivedEventHandler
+                .HandleAsync(chargePriceCommandReceivedEvent)
                 .ConfigureAwait(false);
 
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);

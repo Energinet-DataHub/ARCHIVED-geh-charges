@@ -12,8 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Application.Charges.Events;
+using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Factories
@@ -24,13 +26,16 @@ namespace GreenEnergyHub.Charges.Application.Charges.Factories
     public interface IChargePriceOperationsRejectedEventFactory
     {
         /// <summary>
-        /// Factory method for creating <see cref="ChargePriceOperationsRejectedEvent"/>
+        /// Factory method for creating <see cref="ChargePriceOperationsRejectedEvent"/> based on rejected operations and
+        /// corresponding validation results.
         /// </summary>
-        /// <param name="command"></param>
-        /// <param name="validationResult"></param>
+        /// <param name="document">Document containing information about market participant causing the event</param>
+        /// <param name="operations">Operations to be rejected</param>
+        /// <param name="validationResult">Validation results containing reasons for rejection</param>
         /// <returns><see cref="ChargePriceOperationsRejectedEvent"/></returns>
         ChargePriceOperationsRejectedEvent Create(
-            ChargePriceCommand command,
+            DocumentDto document,
+            IReadOnlyCollection<ChargePriceOperationDto> operations,
             ValidationResult validationResult);
     }
 }

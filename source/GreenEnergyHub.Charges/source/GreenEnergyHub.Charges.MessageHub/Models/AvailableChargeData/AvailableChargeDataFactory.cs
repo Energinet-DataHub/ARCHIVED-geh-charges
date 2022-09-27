@@ -19,15 +19,15 @@ using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeCommandAcceptedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
 {
-    public class AvailableChargeDataFactory : AvailableDataFactoryBase<AvailableChargeData, ChargeCommandAcceptedEvent>
+    public class AvailableChargeDataFactory : AvailableDataFactoryBase<AvailableChargeData, ChargeInformationOperationsAcceptedEvent>
     {
         private readonly IMarketParticipantRepository _marketParticipantRepository;
         private readonly IMessageMetaDataContext _messageMetaDataContext;
@@ -41,11 +41,11 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
             _messageMetaDataContext = messageMetaDataContext;
         }
 
-        public override async Task<IReadOnlyList<AvailableChargeData>> CreateAsync(ChargeCommandAcceptedEvent input)
+        public override async Task<IReadOnlyList<AvailableChargeData>> CreateAsync(ChargeInformationOperationsAcceptedEvent input)
         {
             var result = new List<AvailableChargeData>();
 
-            foreach (var chargeOperationDto in input.Command.Operations.Where(ShouldMakeDataAvailableForActiveGridProviders))
+            foreach (var chargeOperationDto in input.Operations)
             {
                 await CreateForOperationAsync(input, chargeOperationDto, result).ConfigureAwait(false);
             }
@@ -54,28 +54,28 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
         }
 
         private async Task CreateForOperationAsync(
-            ChargeCommandAcceptedEvent input,
+            ChargeInformationOperationsAcceptedEvent input,
             ChargeInformationOperationDto informationOperation,
             ICollection<AvailableChargeData> result)
         {
-            var activeGridAccessProviders = await _marketParticipantRepository
-                .GetGridAccessProvidersAsync()
+            var recipients = await _marketParticipantRepository
+                .GetActiveEnergySuppliersAsync()
                 .ConfigureAwait(false);
 
-            foreach (var recipient in activeGridAccessProviders)
-            {
-                var points = informationOperation.Points
-                    .Select(point => new AvailableChargeDataPoint(informationOperation.Points.GetPositionOfPoint(point), point.Price)).ToList();
+            await AddGridAccessProvidersAsRecipientsIfChargeIsTaxAsync(informationOperation, recipients)
+                .ConfigureAwait(false);
 
+            foreach (var recipient in recipients)
+            {
                 var sender = await GetSenderAsync().ConfigureAwait(false);
-                var operationOrder = input.Command.Operations.ToList().IndexOf(informationOperation);
+                var operationOrder = input.Operations.ToList().IndexOf(informationOperation);
 
                 result.Add(new AvailableChargeData(
                     sender.MarketParticipantId,
                     sender.BusinessProcessRole,
                     recipient.MarketParticipantId,
                     recipient.BusinessProcessRole,
-                    input.Command.Document.BusinessReasonCode,
+                    input.Document.BusinessReasonCode,
                     _messageMetaDataContext.RequestDataTime,
                     Guid.NewGuid(), // ID of each available piece of data must be unique
                     informationOperation.SenderProvidedChargeId,
@@ -91,16 +91,19 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
                     informationOperation.Resolution,
                     DocumentType.NotifyPriceList, // Will be added to the HTTP MessageType header
                     operationOrder,
-                    recipient.ActorId,
-                    points));
+                    recipient.ActorId));
             }
         }
 
-        private static bool ShouldMakeDataAvailableForActiveGridProviders(ChargeInformationOperationDto chargeInformationOperationDto)
+        private async Task AddGridAccessProvidersAsRecipientsIfChargeIsTaxAsync(
+            ChargeInformationOperationDto informationOperation,
+            List<MarketParticipant> recipients)
         {
-            // We only need to notify grid providers if the charge includes tax which are the
-            // only charges they do not maintain themselves
-            return chargeInformationOperationDto.TaxIndicator == TaxIndicator.Tax;
+            if (informationOperation.TaxIndicator == TaxIndicator.Tax)
+            {
+                recipients.AddRange(await _marketParticipantRepository.GetActiveGridAccessProvidersAsync()
+                    .ConfigureAwait(false));
+            }
         }
     }
 }
