@@ -54,7 +54,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Bundling
                     $"Peek request with id '{request.RequestId}' resulted in available ids '{ids}' but no data was found in the database");
             }
 
-            var firstData = availableData.First();
+            var firstData = availableData[0];
             await _cimSerializer.SerializeToStreamAsync(
                 availableData,
                 outputStream,

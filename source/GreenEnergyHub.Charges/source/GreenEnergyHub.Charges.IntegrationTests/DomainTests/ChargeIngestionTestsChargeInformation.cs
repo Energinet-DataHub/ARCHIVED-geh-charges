@@ -56,7 +56,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             {
                 Fixture.ChargeCreatedListener.Reset();
                 Fixture.ChargePricesUpdatedListener.Reset();
-                Fixture.MessageHubMock.Clear();
+                Fixture.MessageHubMock.Reset();
 
                 // We need to clear host log after each test is done to ensure that we can assert on function executed
                 // on each test run because we only check on function name.
@@ -168,6 +168,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // * 2 data available to energy suppliers
                 var peekResults = await Fixture.MessageHubMock
                     .AssertPeekReceivesRepliesAsync(correlationId, noOfDataAvailableNotificationsExpected);
+
                 peekResults.Count.Should().Be(3);
                 peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
                 peekResults.Should().ContainMatch("*Notify*");

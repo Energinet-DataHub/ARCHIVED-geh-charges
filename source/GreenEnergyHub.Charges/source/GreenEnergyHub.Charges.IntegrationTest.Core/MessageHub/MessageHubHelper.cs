@@ -54,8 +54,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
                 peekResults.Add(await messageHubMock.DownLoadPeekResultAsync(peekSimulatorResponseDto));
             }
 
-            messageHubMock.Clear();
-
+            messageHubMock.Reset();
             return peekResults;
         }
     }

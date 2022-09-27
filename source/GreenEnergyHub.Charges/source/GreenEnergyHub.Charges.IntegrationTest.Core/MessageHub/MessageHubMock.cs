@@ -40,6 +40,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
     public class MessageHubMock : IAsyncDisposable
     {
         private const int SecondsToWaitForIntegrationEvents = 20;
+        private const int SecondsToWaitForBundleReply = 60;
 
         private readonly ServiceBusTestListener _messageHubDataAvailableServiceBusTestListener;
         private readonly ServiceBusTestListener _messageHubReplyServiceBusTestListener;
@@ -69,9 +70,11 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
         /// <summary>
         /// Clears the state between simulations.
         /// </summary>
-        public void Clear()
+        public void Reset()
         {
             _notifications.Clear();
+            _messageHubDataAvailableServiceBusTestListener.Reset();
+            _messageHubReplyServiceBusTestListener.Reset();
         }
 
         public async ValueTask DisposeAsync()
@@ -196,19 +199,19 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
             await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
                 () => _messageHubRequestQueueResource.SenderClient.SendMessageAsync(requestServiceBusMessage), correlationId);
 
-            await Task.Delay(TimeSpan.FromSeconds(1));
-
             var eventualMessageHubReply = await _messageHubReplyServiceBusTestListener
                 .ListenForMessageAsync(correlationId).ConfigureAwait(false);
 
             var isMessageHubReplyReceived = eventualMessageHubReply
                 .MessageAwaiter!
-                .Wait(TimeSpan.FromSeconds(SecondsToWaitForIntegrationEvents));
+                .Wait(TimeSpan.FromSeconds(SecondsToWaitForBundleReply));
 
             isMessageHubReplyReceived.Should().BeTrue();
             eventualMessageHubReply.Body.Should().NotBeNull();
 
             var messageBody = eventualMessageHubReply.Body!;
+
+            _messageHubReplyServiceBusTestListener.Reset();
             var dataBundleResponseDto = _responseBundleParser.Parse(messageBody.ToArray());
             return dataBundleResponseDto;
         }
