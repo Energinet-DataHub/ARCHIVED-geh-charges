@@ -40,7 +40,6 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
     public class MessageHubMock : IAsyncDisposable
     {
         private const int SecondsToWaitForIntegrationEvents = 20;
-        private const int SecondsToWaitForBundleReply = 60;
 
         private readonly ServiceBusTestListener _messageHubDataAvailableServiceBusTestListener;
         private readonly ServiceBusTestListener _messageHubReplyServiceBusTestListener;
@@ -117,9 +116,12 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
             InvalidOperationExceptionExtension.ThrowIfNullOrNoElements(
                 _notifications, $"{nameof(MessageHubMock)}: No dataavailable was provided for Peek");
 
+            var dataBundleRequestDtos = new List<DataBundleRequestDto>();
             var peekSimulatorResponseDtos = new List<PeekSimulatorResponseDto>();
             var distinctMessages = _notifications
                 .Select(x => new { MessageType = x.MessageType.Value, Recipient = x.Recipient.Value }).Distinct();
+
+            var sessionId = Guid.NewGuid().ToString("N");
 
             foreach (var message in distinctMessages)
             {
@@ -144,15 +146,46 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
                     ResponseFormat.Xml,
                     1.0);
 
-                var peekResponse = await RequestDataBundleAsync(request, correlationId).ConfigureAwait(false);
-                if (peekResponse == null)
-                    throw new TimeoutException("MessageHubSimulation: Waiting for Peek reply timed out");
+                await RequestDataBundleAsync(sessionId, request, correlationId).ConfigureAwait(false);
+
+                dataBundleRequestDtos.Add(request);
+                await Task.Delay(TimeSpan.FromMilliseconds(100));
+            }
+
+            await Task.Delay(TimeSpan.FromMilliseconds(2000));
+
+            var eventualMessageHubReply = await _messageHubReplyServiceBusTestListener
+                .ListenForEventsAsync(
+                    dataBundleRequestDtos.Select(x => x.IdempotencyId).ToList(),
+                    dataBundleRequestDtos.Count)
+                .ConfigureAwait(false);
+
+            var isMessageHubReplyReceived = eventualMessageHubReply
+                .CountdownEvent!
+                .Wait(TimeSpan.FromSeconds(SecondsToWaitForIntegrationEvents));
+
+            if (isMessageHubReplyReceived == false)
+                await Task.Delay(TimeSpan.FromSeconds(2));
+
+            isMessageHubReplyReceived.Should().BeTrue();
+            foreach (var eventualServiceBusEvent in eventualMessageHubReply.EventualServiceBusMessages)
+            {
+                eventualServiceBusEvent.Body.Should().NotBeNull();
+                var messageBody = eventualServiceBusEvent.Body!;
+                var dataBundleRequestDto = dataBundleRequestDtos
+                    .Single(x => x.IdempotencyId == eventualServiceBusEvent.CorrelationId);
+
+                var peekResponse = _responseBundleParser.Parse(messageBody.ToArray());
 
                 peekSimulatorResponseDtos.Add(peekResponse.IsErrorResponse
                     ? new PeekSimulatorResponseDto()
                     : new PeekSimulatorResponseDto(
-                        requestId, correlationId, new AzureBlobContentDto(peekResponse.ContentUri)));
+                        dataBundleRequestDto.RequestId,
+                        dataBundleRequestDto.IdempotencyId,
+                        new AzureBlobContentDto(peekResponse.ContentUri)));
             }
+
+            _messageHubReplyServiceBusTestListener.Reset();
 
             return peekSimulatorResponseDtos;
         }
@@ -189,31 +222,16 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
             }
         }
 
-        private async Task<DataBundleResponseDto?> RequestDataBundleAsync(
-            DataBundleRequestDto dataBundleRequestDto, string correlationId)
+        private async Task RequestDataBundleAsync(
+            string sessionId,
+            DataBundleRequestDto dataBundleRequestDto,
+            string correlationId)
         {
             var bytes = _requestBundleParser.Parse(dataBundleRequestDto);
-            var sessionId = dataBundleRequestDto.RequestId.ToString();
             var requestServiceBusMessage = CreateRequestMessageHubServiceBusMessage(correlationId, bytes, sessionId);
 
             await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
                 () => _messageHubRequestQueueResource.SenderClient.SendMessageAsync(requestServiceBusMessage), correlationId);
-
-            var eventualMessageHubReply = await _messageHubReplyServiceBusTestListener
-                .ListenForMessageAsync(correlationId).ConfigureAwait(false);
-
-            var isMessageHubReplyReceived = eventualMessageHubReply
-                .MessageAwaiter!
-                .Wait(TimeSpan.FromSeconds(SecondsToWaitForBundleReply));
-
-            isMessageHubReplyReceived.Should().BeTrue();
-            eventualMessageHubReply.Body.Should().NotBeNull();
-
-            var messageBody = eventualMessageHubReply.Body!;
-
-            _messageHubReplyServiceBusTestListener.Reset();
-            var dataBundleResponseDto = _responseBundleParser.Parse(messageBody.ToArray());
-            return dataBundleResponseDto;
         }
 
         private ServiceBusMessage CreateRequestMessageHubServiceBusMessage(

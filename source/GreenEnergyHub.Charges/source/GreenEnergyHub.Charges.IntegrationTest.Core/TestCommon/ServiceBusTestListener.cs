@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ListenerMock;
@@ -51,6 +52,28 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon
             var result = new EventualServiceBusEvents();
             result.CountdownEvent = await _serviceBusListenerMock
                 .WhenCorrelationId(correlationId)
+                .VerifyCountAsync(expectedCount, receivedMessage =>
+                {
+                    result.EventualServiceBusMessages.Add(
+                        new EventualServiceBusMessage
+                        {
+                            Body = receivedMessage.Body,
+                            ApplicationProperties = receivedMessage.ApplicationProperties,
+                            CorrelationId = GetCorrelationIdFromMessage(receivedMessage),
+                        });
+                    return Task.CompletedTask;
+                }).ConfigureAwait(false);
+
+            return result;
+        }
+
+        public async Task<EventualServiceBusEvents> ListenForEventsAsync(
+            IList<string> correlationIds,
+            int expectedCount)
+        {
+            var result = new EventualServiceBusEvents();
+            result.CountdownEvent = await _serviceBusListenerMock
+                .WhenCorrelationId(correlationIds)
                 .VerifyCountAsync(expectedCount, receivedMessage =>
                 {
                     result.EventualServiceBusMessages.Add(
