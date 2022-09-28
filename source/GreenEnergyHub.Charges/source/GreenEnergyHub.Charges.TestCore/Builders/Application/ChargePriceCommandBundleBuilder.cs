@@ -15,13 +15,14 @@
 using System.Collections.Generic;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
+using GreenEnergyHub.Charges.TestCore.Builders.Command;
 
 namespace GreenEnergyHub.Charges.TestCore.Builders.Application
 {
     public class ChargePriceCommandBundleBuilder
     {
         private readonly List<ChargePriceCommand> _commands = new();
-        private DocumentDto _document = new();
+        private DocumentDto _document = new DocumentDtoBuilder().Build();
 
         public ChargePriceCommandBundleBuilder WithDocument(DocumentDto document)
         {

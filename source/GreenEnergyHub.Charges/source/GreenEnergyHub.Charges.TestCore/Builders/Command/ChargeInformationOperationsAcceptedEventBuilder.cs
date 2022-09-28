@@ -22,18 +22,24 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Command
 {
     public class ChargeInformationOperationsAcceptedEventBuilder
     {
-        private Instant _publishedTime;
+        private readonly Instant _publishedTime = SystemClock.Instance.GetCurrentInstant();
         private DocumentDto _document;
         private IReadOnlyCollection<ChargeInformationOperationDto> _operations;
 
         public ChargeInformationOperationsAcceptedEventBuilder()
         {
-            _publishedTime = SystemClock.Instance.GetCurrentInstant();
             _document = new DocumentDtoBuilder()
                 .WithDocumentType(DocumentType.ConfirmRequestChangeOfPriceList)
                 .WithBusinessReasonCode(BusinessReasonCode.UpdateChargeInformation)
                 .Build();
-            _operations = new List<ChargeInformationOperationDto>() { new ChargeInformationOperationDtoBuilder().Build() };
+
+            var chargeInformationOperationDtoBuilder = new ChargeInformationOperationDtoBuilder();
+            _operations = new List<ChargeInformationOperationDto>()
+            {
+                chargeInformationOperationDtoBuilder.Build(),
+                chargeInformationOperationDtoBuilder.Build(),
+                chargeInformationOperationDtoBuilder.Build(),
+            };
         }
 
         public ChargeInformationOperationsAcceptedEventBuilder WithDocument(DocumentDto documentDto)
