@@ -90,7 +90,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
                 .Where(mp => mp.BusinessProcessRole == MarketParticipantRole.EnergySupplier)
                 .Where(m =>
                     m.Status == MarketParticipantStatus.Active ||
-                    m.Status == MarketParticipantStatus.Inactive)
+                    m.Status == MarketParticipantStatus.Passive)
                 .ToListAsync();
         }
 
