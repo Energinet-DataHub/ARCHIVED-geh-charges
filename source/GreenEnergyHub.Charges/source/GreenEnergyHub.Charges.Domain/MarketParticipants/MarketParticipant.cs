@@ -37,14 +37,14 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
             Guid actorId,
             Guid? b2CActorId,
             string marketParticipantId,
-            bool isActive,
+            MarketParticipantStatus status,
             MarketParticipantRole businessProcessRole)
         {
             Id = id;
             ActorId = actorId;
             B2CActorId = b2CActorId;
             MarketParticipantId = marketParticipantId;
-            IsActive = isActive;
+            Status = status;
             UpdateBusinessProcessRole(businessProcessRole);
         }
 
@@ -95,6 +95,6 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
         /// The setter is public as the charges domain doesn't enforce any validation
         /// as it is the responsibility of the market participant domain providing the data.
         /// </summary>
-        public bool IsActive { get; set; }
+        public MarketParticipantStatus Status { get; set; }
     }
 }

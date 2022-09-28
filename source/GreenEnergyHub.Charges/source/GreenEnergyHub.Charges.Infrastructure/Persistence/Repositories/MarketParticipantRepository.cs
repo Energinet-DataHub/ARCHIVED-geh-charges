@@ -88,7 +88,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
             return _chargesDatabaseContext
                 .MarketParticipants
                 .Where(mp => mp.BusinessProcessRole == MarketParticipantRole.EnergySupplier)
-                .Where(m => m.IsActive)
+                .Where(m =>
+                    m.Status == MarketParticipantStatus.Active ||
+                    m.Status == MarketParticipantStatus.Inactive)
                 .ToListAsync();
         }
 
@@ -123,7 +125,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
             return _chargesDatabaseContext
                 .MarketParticipants
                 .Where(mp => mp.BusinessProcessRole == MarketParticipantRole.GridAccessProvider)
-                .Where(m => m.IsActive)
+                .Where(m =>
+                    m.Status == MarketParticipantStatus.Active ||
+                    m.Status == MarketParticipantStatus.Passive)
                 .ToListAsync();
         }
 
@@ -179,7 +183,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
             return await _chargesDatabaseContext
                 .MarketParticipants
                 .SingleAsync(mp =>
-                    mp.MarketParticipantId == marketParticipantId && mp.IsActive &&
+                    mp.MarketParticipantId == marketParticipantId &&
+                    (mp.Status == MarketParticipantStatus.Active || mp.Status == MarketParticipantStatus.Passive) &&
                     roles.Contains(mp.BusinessProcessRole))
                 .ConfigureAwait(false);
         }
@@ -188,7 +193,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
         {
             return _chargesDatabaseContext
                 .MarketParticipants
-                .Where(mp => mp.BusinessProcessRole == marketParticipantRole && mp.IsActive)
+                .Where(mp => mp.BusinessProcessRole == marketParticipantRole &&
+                             (mp.Status == MarketParticipantStatus.Active || mp.Status == MarketParticipantStatus.Passive))
                 .SingleAsync();
         }
     }

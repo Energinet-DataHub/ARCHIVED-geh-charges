@@ -22,6 +22,10 @@ limitations under the License.
     </PropertyGroup>
 
     <ItemGroup>
+      <None Remove="Scripts\Model\202227091553 Change Market Participant type to support all states.sql" />
+    </ItemGroup>
+
+    <ItemGroup>
       <PackageReference Include="dbup-sqlserver" Version="4.6.0" />
       <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.435">
         <PrivateAssets>all</PrivateAssets>
@@ -50,6 +54,7 @@ limitations under the License.
       <EmbeddedResource Include="Scripts\Model\202207271035 Remove position from ChargePoint.sql" />
       <EmbeddedResource Include="Scripts\Model\202208101116 Create OutboxMessage table.sql" />
       <EmbeddedResource Include="Scripts\Model\202209061426 Create AvailableChargePriceData table.sql" />
+      <EmbeddedResource Include="Scripts\Model\202227091553 Change Market Participant type to support all states.sql" />
       <EmbeddedResource Include="Scripts\Model\202209141409 Remove AvailableChargeDataPoints table.sql" />
       <EmbeddedResource Include="Scripts\Seed\202201261740 Add default charges owner.sql" />
       <EmbeddedResource Include="Scripts\Seed\202201261741 Add default charges.sql" />
