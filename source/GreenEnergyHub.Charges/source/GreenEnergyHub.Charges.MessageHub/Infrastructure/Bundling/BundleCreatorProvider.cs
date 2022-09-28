@@ -41,7 +41,9 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Bundling
             return bundleType switch
             {
                 // RSM-034 CIM XML 'NotifyPriceList' requests
-                BundleType.ChargeDataAvailable => _bundleCreators[typeof(BundleCreator<AvailableChargeData>)],
+                BundleType.ChargeDataAvailable => request.ResponseFormat == ResponseFormat.Xml
+                    ? _bundleCreators[typeof(BundleCreator<AvailableChargeData>)]
+                    : _bundleCreators[typeof(JsonBundleCreator<AvailableChargeData>)],
                 // RSM-033 CIM XML 'ConfirmRequestChangeOfPriceList' confirmations
                 BundleType.ChargeConfirmationDataAvailable => _bundleCreators[
                     typeof(BundleCreator<AvailableChargeReceiptData>)],
@@ -57,7 +59,9 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Bundling
                 BundleType.ChargeLinkRejectionDataAvailable => _bundleCreators[
                     typeof(BundleCreator<AvailableChargeLinksReceiptData>)],
                 // RSM-034 CIM XML 'NotifyPriceList' requests
-                BundleType.ChargePriceDataAvailable => _bundleCreators[typeof(BundleCreator<AvailableChargePriceData>)],
+                BundleType.ChargePriceDataAvailable => request.ResponseFormat == ResponseFormat.Xml
+                    ? _bundleCreators[typeof(BundleCreator<AvailableChargePriceData>)]
+                    : _bundleCreators[typeof(JsonBundleCreator<AvailableChargePriceData>)],
                 _ => throw new ArgumentException(
                     $"Unknown message type: {request.MessageType} with DataAvailableNotificationIds: {request.IdempotencyId}"),
             };

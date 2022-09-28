@@ -367,6 +367,36 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 notification.Should().NotContain("<cim:taxIndicator>");
             }
 
+            [Fact(Skip = "Messagehub need support for Json")]
+            public async Task Given_ChargePriceMessageWithChargeInformationData_WhenPosted_ThenChargePriceDataAvailableNotificationToGridAccessProviderContainsMandatoryChargeInformationOnlyInJson()
+            {
+                // Arrange
+                var (request, correlationId) = Fixture.AsSystemOperator.PrepareHttpPostRequestWithAuthorization(
+                    EndpointUrl, ChargeDocument.TaxTariffPriceSeriesWithInformationToBeIgnored);
+
+                // Act
+                var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                actualResponse.StatusCode.Should().Be(HttpStatusCode.Accepted);
+
+                using var assertionScope = new AssertionScope();
+                var peekResult = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 2);
+                var notification = peekResult.First(s =>
+                    s.Contains("NotifyPriceList_MarketDocument")
+                    && s.Contains("\"receiver_MarketParticipant.marketRole.type\": {\"value\": \"DDM\""));
+                notification.Should().Contain("\"process.processType\": {\"value\": \"D08\"");
+                notification.Should().Contain("\"chargeTypeOwner_MarketParticipant.mRID\": {\"codingScheme\": \"A10\", {\"value\": \"5790000432752\"");
+                notification.Should().Contain("\"type\": \"D03\"");
+                notification.Should().Contain("\"mRID\": \"EA-001\"");
+                notification.Should().Contain("\"effectiveDate\":");
+                notification.Should().NotContain("\"name\":");
+                notification.Should().NotContain("\"description\":");
+                notification.Should().NotContain("\"VATPayer\":");
+                notification.Should().NotContain("\"transparentInvoicing\":");
+                notification.Should().NotContain("\"taxIndicator\":");
+            }
+
             [Fact(Skip = "Used for debugging ChargeCommandReceivedEventHandler")]
             public async Task Given_UpdateRequest_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply()
             {
@@ -602,6 +632,29 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 peekResults.Should().NotContainMatch("*8900000000005*");
                 peekResults.Should().ContainMatch("*<cim:process.processType>D18</cim:process.processType>*");
                 peekResults.Should().NotContainMatch("*<cim:process.processType>D08</cim:process.processType>*");
+            }
+
+            [Fact(Skip = "Messagehub need support for Json")]
+            public async Task When_TaxTaxIsCreatedBySystemOperator_Then_ANotificationShouldBeReceivedByActiveGridAccessProvidersAsJson()
+            {
+                var (request, correlationId) = Fixture.AsSystemOperator.PrepareHttpPostRequestWithAuthorization(
+                    EndpointUrl, ChargeDocument.TariffSystemOperatorCreate);
+
+                // Act
+                await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                using var assertionScope = new AssertionScope();
+                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 4);
+
+                peekResults.Should().NotContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
+                peekResults.Should().ContainMatch("*NotifyPriceList_MarketDocument*");
+                peekResults.Should().ContainMatch("*8100000000030*");
+                peekResults.Should().ContainMatch("*8100000000016*");
+                peekResults.Should().ContainMatch("*8100000000023*");
+                peekResults.Should().NotContainMatch("*8900000000005*");
+                peekResults.Should().ContainMatch("*\"process.processType\": {\"value\": \"D18\"}*");
+                peekResults.Should().NotContainMatch("*\"process.processType\": {\"value\": \"D08\"}*");
             }
 
             [Fact(Skip = "Disabled until Charge Price flow is fully functional as the current SupportOldFlowAsync sets Tax to TaxIndicator.Unknown which means no Grid access provider will get notified.")]
