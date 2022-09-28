@@ -19,6 +19,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
+using GreenEnergyHub.Charges.Infrastructure.Core.Cim.Charges;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using NodaTime;

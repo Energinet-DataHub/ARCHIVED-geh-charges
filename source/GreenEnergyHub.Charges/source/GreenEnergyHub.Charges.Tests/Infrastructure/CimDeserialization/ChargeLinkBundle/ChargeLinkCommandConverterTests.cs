@@ -48,7 +48,10 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeL
             var correlationId = Guid.NewGuid().ToString();
             context.Setup(c => c.Id).Returns(correlationId);
 
-            var stream = GetEmbeddedResource("GreenEnergyHub.Charges.Tests.TestFiles.Valid_CIM_ChargeLink.xml");
+            using var memoryStream = new MemoryStream();
+            var path = GetFullFilePath("TestFiles/Valid_CIM_ChargeLink.xml");
+            var stream = ContentStreamHelper.GetFileAsStream(memoryStream, path);
+
             var reader = new SchemaValidatingReader(stream, Schemas.CimXml.StructureRequestChangeBillingMasterData);
 
             // Act
@@ -89,7 +92,10 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeL
             var correlationId = Guid.NewGuid().ToString();
             context.Setup(c => c.Id).Returns(correlationId);
 
-            var stream = GetEmbeddedResource("GreenEnergyHub.Charges.Tests.TestFiles.Valid_CIM_ChargeLink_WithUnusedCimContent.xml");
+            using var memoryStream = new MemoryStream();
+            var path = GetFullFilePath("TestFiles/Valid_CIM_ChargeLink_WithUnusedCimContent.xml");
+            var stream = ContentStreamHelper.GetFileAsStream(memoryStream, path);
+
             var reader = new SchemaValidatingReader(stream, Schemas.CimXml.StructureRequestChangeBillingMasterData);
 
             // Act
@@ -113,7 +119,10 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeL
             var correlationId = Guid.NewGuid().ToString();
             context.Setup(c => c.Id).Returns(correlationId);
 
-            var stream = GetEmbeddedResource("GreenEnergyHub.Charges.Tests.TestFiles.Valid_CIM_ChargeLink_WithoutEndDate.xml");
+            using var memoryStream = new MemoryStream();
+            var path = GetFullFilePath("TestFiles/Valid_CIM_ChargeLink_WithoutEndDate.xml");
+            var stream = ContentStreamHelper.GetFileAsStream(memoryStream, path);
+
             var reader = new SchemaValidatingReader(stream, Schemas.CimXml.StructureRequestChangeBillingMasterData);
 
             // Act
@@ -138,7 +147,10 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeL
             var correlationId = Guid.NewGuid().ToString();
             context.Setup(c => c.Id).Returns(correlationId);
 
-            var stream = GetEmbeddedResource("GreenEnergyHub.Charges.Tests.TestFiles.Valid_CIM_ChargeLink_Bundle.xml");
+            using var memoryStream = new MemoryStream();
+            var path = GetFullFilePath("TestFiles/Valid_CIM_ChargeLink_Bundle.xml");
+            var stream = ContentStreamHelper.GetFileAsStream(memoryStream, path);
+
             var reader = new SchemaValidatingReader(stream, Schemas.CimXml.StructureRequestChangeBillingMasterData);
 
             // Act
@@ -179,10 +191,11 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.CimDeserialization.ChargeL
             chargeLink2.ChargeType.Should().Be(ChargeType.Tariff);
         }
 
-        private static Stream GetEmbeddedResource(string path)
+        private static string GetFullFilePath(string filePath)
         {
-            var assembly = Assembly.GetExecutingAssembly();
-            return EmbeddedStreamHelper.GetInputStream(assembly, path);
+            var basePath = Assembly.GetExecutingAssembly().Location;
+            var path = Path.Combine(Directory.GetParent(basePath)!.FullName, filePath);
+            return path;
         }
     }
 }

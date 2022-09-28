@@ -12,15 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Net.Http;
+using System.IO;
+using System.Reflection;
 
-namespace Energinet.DataHub.Charges.Clients.ChargeLinks
+namespace GreenEnergyHub.Charges.Tests.TestHelpers
 {
-    public interface IChargeLinksClientFactory
+    public static class FilePathHelper
     {
-        ChargeLinksClient CreateClient(HttpClient httpClient);
-
-        ChargeLinksClient CreateClient(Uri baseUrl);
+        public static string GetFullFilePath(string testFilePath)
+        {
+            var basePath = Assembly.GetExecutingAssembly().Location;
+            var path = Path.Combine(Directory.GetParent(basePath)!.FullName, testFilePath);
+            return path;
+        }
     }
 }

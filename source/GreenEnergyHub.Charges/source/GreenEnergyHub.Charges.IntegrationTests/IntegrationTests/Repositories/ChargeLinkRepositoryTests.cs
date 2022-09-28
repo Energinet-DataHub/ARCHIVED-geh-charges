@@ -84,13 +84,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             await firstChargesContext.SaveChangesAsync();
 
             // Arrange copy
-            await using var secondChargesContext = _databaseManager.CreateDbContext();
-            var sut = new ChargeLinksRepository(secondChargesContext);
             var copyChargeLink = CreateExpectedChargeLink(chargeLink, ids);
 
             // Act
             Func<Task> act = async () =>
             {
+                await using var secondChargesContext = _databaseManager.CreateDbContext();
+                var sut = new ChargeLinksRepository(secondChargesContext);
                 await sut.AddAsync(copyChargeLink);
                 await secondChargesContext.SaveChangesAsync();
             };

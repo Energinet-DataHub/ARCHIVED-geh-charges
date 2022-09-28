@@ -78,11 +78,12 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim
             string recipientId,
             MarketParticipantRole recipientRole)
         {
-            XNamespace cimNamespace = GetNamespace(records);
+            var recordList = records.ToList();
+            var cimNamespace = GetNamespace(recordList);
 
             return new XDocument(
                 new XElement(
-                    cimNamespace + GetRootElementName(records),
+                    cimNamespace + GetRootElementName(recordList),
                     new XAttribute(
                         XNamespace.Xmlns + CimMarketDocumentConstants.CimNamespaceAbbreviation, cimNamespace),
                     // Note: The list will always have same recipient, business reason code and receipt status,
@@ -90,15 +91,15 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim
                     MarketDocumentSerializationHelper.Serialize(
                         cimNamespace,
                         CimIdProvider,
-                        GetDocumentType(records),
+                        GetDocumentType(recordList),
                         businessReasonCode,
                         senderId,
                         senderRole,
                         recipientId,
                         recipientRole,
                         Clock),
-                    GetAdditionalDocumentFields(cimNamespace, records),
-                    GetActivityRecords(cimNamespace, records)));
+                    GetAdditionalDocumentFields(cimNamespace, recordList),
+                    GetActivityRecords(cimNamespace, recordList)));
         }
 
         private IEnumerable<XElement> GetActivityRecords(XNamespace cimNamespace, IEnumerable<T> records)

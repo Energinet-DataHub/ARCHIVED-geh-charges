@@ -12,15 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers.Message
-{
-    public class ChargeLinksMessageResult
-    {
-        public bool IsSucceeded { get; set; }
+using System;
+using System.Net.Http;
 
-        public static ChargeLinksMessageResult CreateSuccess()
-        {
-            return new ChargeLinksMessageResult { IsSucceeded = true };
-        }
+namespace Energinet.DataHub.Charges.Clients.Charges
+{
+    public interface IChargesClientFactory
+    {
+        ChargesClient CreateClient(HttpClient httpClient);
+
+        ChargesClient CreateClient(Uri baseUrl);
     }
 }
