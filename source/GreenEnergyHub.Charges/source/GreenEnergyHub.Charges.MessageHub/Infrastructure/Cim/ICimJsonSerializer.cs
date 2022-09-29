@@ -25,6 +25,9 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim
     /// <typeparam name="TAvailableData">Any AvailableData that should support Json notifications</typeparam>
     public interface ICimJsonSerializer<in TAvailableData>
     {
+        /// <summary>
+        /// Serialize AvailableData to stream
+        /// </summary>
         Task SerializeToStreamAsync(
             IEnumerable<TAvailableData> availableData,
             Stream stream,
