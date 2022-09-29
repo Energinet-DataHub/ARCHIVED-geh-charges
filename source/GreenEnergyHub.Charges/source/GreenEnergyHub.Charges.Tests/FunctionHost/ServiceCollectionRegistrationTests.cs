@@ -12,10 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using FluentAssertions;
 using GreenEnergyHub.Charges.FunctionHost;
+using GreenEnergyHub.Charges.TestCore.Reflection;
 using GreenEnergyHub.Charges.Tests.TestHelpers;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Configuration;
@@ -36,31 +39,46 @@ namespace GreenEnergyHub.Charges.Tests.FunctionHost
         public void WhenApplicationIsConfigured_ThenAllApplicationDependenciesMustBeRegistered()
         {
             // Arrange
-            var program = new Program();
+            var program = new ChargesFunctionApp();
+            var host = program.ConfigureApplication();
+            var functionAppDependencies = FindDependenciesForType(typeof(ChargesFunctionApp));
 
             // Act
-            var host = program.ConfigureApplication();
-
-            var assembly = typeof(Program).Assembly;
-            var types = assembly.GetTypes();
-            var functions = types.Where(type =>
-                type.GetMethods().Any(method =>
-                    method.IsDefined(typeof(FunctionAttribute))));
-
-            foreach (var function in functions)
+            foreach (var dependency in functionAppDependencies)
             {
-                var constructorTypes = function
-                    .GetConstructors()
-                    .Single()
-                    .GetParameters()
-                    .Select(p => p.ParameterType);
+                var constructorParameters = GetConstructorParametersForDependency(dependency);
 
-                foreach (var constructorType in constructorTypes)
+                foreach (var constructorParameter in constructorParameters)
                 {
                     // Assert
-                    host.Services.GetService(constructorType).Should().NotBeNull();
+                    host.Services.GetService(constructorParameter).Should().NotBeNull();
                 }
             }
+        }
+
+        private static IEnumerable<Type> GetConstructorParametersForDependency(Type dependency)
+        {
+            return GetParameterTypesForConstructor(dependency.GetConstructors().Single());
+        }
+
+        private static IEnumerable<Type> GetParameterTypesForConstructor(ConstructorInfo constructorInfo)
+        {
+            return constructorInfo.GetParameters().Select(pi => pi.ParameterType);
+        }
+
+        private static IEnumerable<Type> FindDependenciesForType(Type type)
+        {
+            return type.Assembly.GetTypes().Where(MethodsAreAnnotatedWithFunctionAttribute);
+        }
+
+        private static bool MethodsAreAnnotatedWithFunctionAttribute(Type type)
+        {
+            return type.GetMethods().Any(MethodIsAnnotatedWithFunctionAttribute);
+        }
+
+        private static bool MethodIsAnnotatedWithFunctionAttribute(MethodInfo methodInfo)
+        {
+            return methodInfo.IsDefined(typeof(FunctionAttribute));
         }
     }
 }

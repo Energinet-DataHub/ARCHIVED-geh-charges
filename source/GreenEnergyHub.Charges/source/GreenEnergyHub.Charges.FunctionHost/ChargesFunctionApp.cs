@@ -25,11 +25,11 @@ using Microsoft.Extensions.Hosting;
 
 namespace GreenEnergyHub.Charges.FunctionHost
 {
-    public class Program
+    public class ChargesFunctionApp
     {
         public static async Task Main()
         {
-            using var host = new Program().ConfigureApplication();
+            using var host = new ChargesFunctionApp().ConfigureApplication();
             await host.RunAsync().ConfigureAwait(false);
         }
 
