@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
 {
     public class MessageHubMock : IAsyncDisposable
     {
-        private const int SecondsToWaitForIntegrationEvents = 20;
+        private const int SecondsToWaitForIntegrationEvents = 25;
 
         private readonly ServiceBusTestListener _messageHubDataAvailableServiceBusTestListener;
         private readonly ServiceBusTestListener _messageHubReplyServiceBusTestListener;
@@ -119,62 +119,19 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
             var dataBundleRequestDtos = new List<DataBundleRequestDto>();
             var peekSimulatorResponseDtos = new List<PeekSimulatorResponseDto>();
             var distinctMessages = _notifications
-                .Select(x => new { MessageType = x.MessageType.Value, Recipient = x.Recipient.Value }).Distinct();
+                .Select(x => new DistinctMessage(x.MessageType.Value, x.Recipient.Value))
+                .Distinct();
 
             var sessionId = Guid.NewGuid().ToString("N");
-
             foreach (var message in distinctMessages)
-            {
-                var requestId = Guid.NewGuid();
-                var dataAvailableNotificationDtosForMessageType = _notifications.Where(x =>
-                        x.MessageType.Value == message.MessageType &&
-                        x.Recipient.Value == message.Recipient)
-                    .ToList();
+                await BuildDataBundleRequestAndRequestDataBundleAsync(message, sessionId, dataBundleRequestDtos);
 
-                var blobName = $"{message.MessageType}_{message.Recipient:N}_{requestId:N}";
-
-                await AddDataAvailableNotificationIdsToStorageAsync(
-                    blobName,
-                    dataAvailableNotificationDtosForMessageType).ConfigureAwait(false);
-
-                var correlationId = CorrelationIdGenerator.Create();
-                var request = new DataBundleRequestDto(
-                    RequestId: requestId,
-                    DataAvailableNotificationReferenceId: blobName,
-                    IdempotencyId: correlationId,
-                    new MessageTypeDto(message.MessageType),
-                    ResponseFormat.Xml,
-                    1.0);
-
-                await RequestDataBundleAsync(sessionId, request, correlationId).ConfigureAwait(false);
-
-                dataBundleRequestDtos.Add(request);
-
-                // await Task.Delay(TimeSpan.FromMilliseconds(100));
-            }
-
-            // await Task.Delay(TimeSpan.FromMilliseconds(2000));
             var eventualMessageHubReply = await ReceiveEventualServiceBusEvents(dataBundleRequestDtos);
 
             foreach (var eventualServiceBusEvent in eventualMessageHubReply.EventualServiceBusMessages)
-            {
-                eventualServiceBusEvent.Body.Should().NotBeNull();
-                var messageBody = eventualServiceBusEvent.Body!;
-                var dataBundleRequestDto = dataBundleRequestDtos
-                    .Single(x => x.IdempotencyId == eventualServiceBusEvent.CorrelationId);
-
-                var peekResponse = _responseBundleParser.Parse(messageBody.ToArray());
-
-                peekSimulatorResponseDtos.Add(peekResponse.IsErrorResponse
-                    ? new PeekSimulatorResponseDto()
-                    : new PeekSimulatorResponseDto(
-                        dataBundleRequestDto.RequestId,
-                        dataBundleRequestDto.IdempotencyId,
-                        new AzureBlobContentDto(peekResponse.ContentUri)));
-            }
+                ParseDataBundleResponse(eventualServiceBusEvent, dataBundleRequestDtos, peekSimulatorResponseDtos);
 
             _messageHubReplyServiceBusTestListener.Reset();
-            await Task.Delay(TimeSpan.FromMilliseconds(500));
 
             return peekSimulatorResponseDtos;
         }
@@ -192,6 +149,37 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
             return downloadResult.Content.ToString();
         }
 
+        private async Task BuildDataBundleRequestAndRequestDataBundleAsync(
+            DistinctMessage message,
+            string sessionId,
+            ICollection<DataBundleRequestDto> dataBundleRequestDtos)
+        {
+            var requestId = Guid.NewGuid();
+            var dataAvailableNotificationDtosForMessageType = _notifications.Where(x =>
+                    x.MessageType.Value == message.MessageType &&
+                    x.Recipient.Value == message.Recipient)
+                .ToList();
+
+            var blobName = $"{message.MessageType}_{message.Recipient:N}_{requestId:N}";
+
+            await AddDataAvailableNotificationIdsToStorageAsync(
+                blobName,
+                dataAvailableNotificationDtosForMessageType).ConfigureAwait(false);
+
+            var correlationId = CorrelationIdGenerator.Create();
+            var request = new DataBundleRequestDto(
+                RequestId: requestId,
+                DataAvailableNotificationReferenceId: blobName,
+                IdempotencyId: correlationId,
+                new MessageTypeDto(message.MessageType),
+                ResponseFormat.Xml,
+                1.0);
+
+            await RequestDataBundleAsync(sessionId, request, correlationId).ConfigureAwait(false);
+
+            dataBundleRequestDtos.Add(request);
+        }
+
         private async Task<EventualServiceBusEvents> ReceiveEventualServiceBusEvents(
             IReadOnlyCollection<DataBundleRequestDto> dataBundleRequestDtos)
         {
@@ -207,10 +195,9 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
 
             if (isMessageHubReplyReceived == false)
             {
-                await Task.Delay(TimeSpan.FromMilliseconds(500));
+                // For debugging, set breakpoint here, to view differences in state of dataBundleRequestDtos vs. eventualMessageHubReply
+                isMessageHubReplyReceived.Should().BeTrue();
             }
-
-            isMessageHubReplyReceived.Should().BeTrue();
 
             return eventualMessageHubReply;
         }
@@ -246,6 +233,26 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
                 () => _messageHubRequestQueueResource.SenderClient.SendMessageAsync(requestServiceBusMessage), correlationId);
         }
 
+        private void ParseDataBundleResponse(
+            EventualServiceBusMessage eventualServiceBusEvent,
+            IEnumerable<DataBundleRequestDto> dataBundleRequestDtos,
+            ICollection<PeekSimulatorResponseDto> peekSimulatorResponseDtos)
+        {
+            eventualServiceBusEvent.Body.Should().NotBeNull();
+            var messageBody = eventualServiceBusEvent.Body!;
+            var dataBundleRequestDto = dataBundleRequestDtos
+                .Single(x => x.IdempotencyId == eventualServiceBusEvent.CorrelationId);
+
+            var peekResponse = _responseBundleParser.Parse(messageBody.ToArray());
+
+            peekSimulatorResponseDtos.Add(peekResponse.IsErrorResponse
+                ? new PeekSimulatorResponseDto()
+                : new PeekSimulatorResponseDto(
+                    dataBundleRequestDto.RequestId,
+                    dataBundleRequestDto.IdempotencyId,
+                    new AzureBlobContentDto(peekResponse.ContentUri)));
+        }
+
         private ServiceBusMessage CreateRequestMessageHubServiceBusMessage(
             string correlationId, byte[] bytes, string sessionId)
         {
@@ -269,6 +276,14 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
                 },
             };
             return serviceBusMessage;
+        }
+
+        private record DistinctMessage(string MessageType, Guid Recipient)
+        {
+            public override string ToString()
+            {
+                return $"{{ MessageType = {MessageType}, Recipient = {Recipient} }}";
+            }
         }
     }
 }
