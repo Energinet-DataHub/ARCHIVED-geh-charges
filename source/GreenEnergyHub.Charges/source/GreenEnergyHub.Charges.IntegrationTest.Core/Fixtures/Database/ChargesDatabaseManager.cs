@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.Database;
 using GreenEnergyHub.Charges.ApplyDBMigrationsApp.Helpers;
 using GreenEnergyHub.Charges.Infrastructure.Persistence;
+using GreenEnergyHub.Charges.QueryApi.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database
@@ -35,6 +36,14 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database
                 .UseSqlServer(ConnectionString, options => options.UseNodaTime());
 
             return new ChargesDatabaseContext(optionsBuilder.Options);
+        }
+
+        public QueryDbContext CreateDbQueryContext()
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<QueryDbContext>()
+                .UseSqlServer(ConnectionString, options => options.UseNodaTime());
+
+            return new QueryDbContext(optionsBuilder.Options);
         }
 
         /// <summary>

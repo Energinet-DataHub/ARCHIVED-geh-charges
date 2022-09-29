@@ -65,6 +65,12 @@ limitations under the License.
     <Compile Include="..\..\..\Contracts\Charge\ChargesV1Dto.cs">
       <Link>Dtos\Charge\ChargesV1Dto.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\Contracts\Charge\SearchCriteriaDto.cs">
+      <Link>Dtos\Charge\SearchCriteriaDto.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Contracts\Charge\ValidityOptions.cs">
+      <Link>Dtos\Charge\ValidityOptions.cs</Link>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
