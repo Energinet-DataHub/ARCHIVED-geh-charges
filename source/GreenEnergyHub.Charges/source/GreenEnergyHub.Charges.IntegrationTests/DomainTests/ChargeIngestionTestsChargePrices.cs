@@ -348,7 +348,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
                 // Assert
                 using var assertionScope = new AssertionScope();
-
                 actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
 
                 // We expect 2 peek results:
