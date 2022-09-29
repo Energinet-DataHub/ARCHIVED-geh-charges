@@ -93,7 +93,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         public static void AddDomainEventPublishing(this IServiceCollection serviceCollection, ServiceBusClient serviceBusClient)
         {
             serviceCollection.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
-            serviceCollection.AddScoped<IServiceBusDispatcher, ServiceBusDispatcher>();
             var topicName = EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesDomainEventTopicName);
 
             // Must be a singleton as per documentation of ServiceBusClient and ServiceBusSender
