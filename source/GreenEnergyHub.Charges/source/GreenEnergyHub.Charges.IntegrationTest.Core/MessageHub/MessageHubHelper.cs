@@ -29,26 +29,13 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
             string correlationId,
             int noOfDataAvailableNotifications = 1)
         {
-            var peekResults = new List<string>();
-            var expected = $"MessageHub received all {noOfDataAvailableNotifications} expected messages.";
-            var actual = expected;
-
-            try
-            {
-                // Throws if expected data available message (by correlation ID) is not received
-                await messageHubMock.WaitForNotificationsInDataAvailableQueueAsync(correlationId, noOfDataAvailableNotifications);
-            }
-            catch (Exception ex) when (ex is TaskCanceledException or TimeoutException)
-            {
-                actual = $"MessageHub received fewer than the {noOfDataAvailableNotifications} expected messages!";
-            }
-
-            actual.Should().Be(expected);
+            await messageHubMock.WaitForNotificationsInDataAvailableQueueAsync(correlationId, noOfDataAvailableNotifications);
 
             // Invokes the domain and ensures that a reply to the peek request is received for each message type
             // Throws if corresponding peek reply is not received
             var peekSimulatorResponseDtos = await messageHubMock.PeekAsync();
 
+            var peekResults = new List<string>();
             foreach (var peekSimulatorResponseDto in peekSimulatorResponseDtos)
             {
                 peekResults.Add(await messageHubMock.DownloadPeekResultAsync(peekSimulatorResponseDto));
