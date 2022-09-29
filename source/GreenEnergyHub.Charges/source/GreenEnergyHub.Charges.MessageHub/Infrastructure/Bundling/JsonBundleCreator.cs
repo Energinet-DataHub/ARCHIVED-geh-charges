@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Client.Storage;
 using Energinet.DataHub.MessageHub.Model.Model;
@@ -54,7 +53,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Bundling
                     $"Peek request with id '{request.RequestId}' resulted in available ids '{ids}' but no data was found in the database");
             }
 
-            var firstData = availableData.First();
+            var firstData = availableData[0];
             await _cimJsonSerializer.SerializeToStreamAsync(
                 availableData,
                 outputStream,

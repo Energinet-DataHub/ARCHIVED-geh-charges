@@ -101,6 +101,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Bundling
             var bundleTypes = (BundleType[])Enum.GetValues(typeof(BundleType));
             var bundleCreators = CreateBundleCreators(bundleTypes, storageHandler, ResponseFormat.Xml);
             bundleCreators.AddRange(CreateBundleCreators(bundleTypes, storageHandler, ResponseFormat.Json));
+
             // Act
             // Assert
             foreach (var responseFormat in responseFormats)
@@ -180,7 +181,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Bundling
             return bundleCreators;
         }
 
-        private IBundleCreator CreateBundleCreator<T>(IStorageHandler storageHandler)
+        private static IBundleCreator CreateBundleCreator<T>(IStorageHandler storageHandler)
             where T : AvailableDataBase
         {
             var availableDataRepository = new Mock<IAvailableDataRepository<T>>().Object;
@@ -188,7 +189,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Bundling
             return new BundleCreator<T>(availableDataRepository, cimSerializer, storageHandler);
         }
 
-        private IBundleCreator CreateJsonBundleCreator<T>(IStorageHandler storageHandler)
+        private static IBundleCreator CreateJsonBundleCreator<T>(IStorageHandler storageHandler)
             where T : AvailableDataBase
         {
             var availableDataRepository = new Mock<IAvailableDataRepository<T>>().Object;

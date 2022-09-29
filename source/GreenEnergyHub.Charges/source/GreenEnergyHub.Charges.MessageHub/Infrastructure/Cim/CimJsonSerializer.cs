@@ -17,6 +17,7 @@ using System.IO;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Threading;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.Charges;
@@ -40,7 +41,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim
         public ICimIdProvider CimIdProvider { get; }
 
         public async Task SerializeToStreamAsync(
-            IEnumerable<T> records,
+            IEnumerable<T> availableData,
             Stream stream,
             BusinessReasonCode businessReasonCode,
             string senderId,
@@ -52,13 +53,13 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim
             {
                 {
                     GetRootElementName(),
-                    GetDocument(records, businessReasonCode, senderId, senderRole, recipientId, recipientRole)
+                    GetDocument(availableData, businessReasonCode, senderId, senderRole, recipientId, recipientRole)
                 },
             };
             var options = new JsonSerializerOptions { WriteIndented = true };
             var document = jsonDocument.ToJsonString(options);
             var bytes = Encoding.UTF8.GetBytes(document);
-            await stream.WriteAsync(bytes, 0, bytes.Length).ConfigureAwait(false);
+            await stream.WriteAsync(bytes, 0, bytes.Length, CancellationToken.None).ConfigureAwait(false);
             stream.Position = 0;
         }
 

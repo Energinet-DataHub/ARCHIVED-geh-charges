@@ -56,6 +56,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Bundling
             repository.Setup(
                     r => r.GetAsync(dataAvailableIds))
                 .ReturnsAsync(availableData);
+
             // Act
             await sut.CreateAsync(dataBundleRequestDto, stream).ConfigureAwait(false);
 
