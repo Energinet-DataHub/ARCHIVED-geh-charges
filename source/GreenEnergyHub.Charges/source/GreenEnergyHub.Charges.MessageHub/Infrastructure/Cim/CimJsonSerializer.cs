@@ -30,7 +30,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim
     public abstract class CimJsonSerializer<T> : ICimJsonSerializer<T>
         where T : AvailableDataBase
     {
-        public CimJsonSerializer(IClock clock, ICimIdProvider cimIdProvider)
+        protected CimJsonSerializer(IClock clock, ICimIdProvider cimIdProvider)
         {
             Clock = clock;
             CimIdProvider = cimIdProvider;
