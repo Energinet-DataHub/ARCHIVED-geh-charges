@@ -155,29 +155,28 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
             ICollection<DataBundleRequestDto> dataBundleRequestDtos)
         {
             var requestId = Guid.NewGuid();
-            var dataAvailableNotificationDtosForMessageType = _notifications.Where(x =>
-                    x.MessageType.Value == message.MessageType &&
-                    x.Recipient.Value == message.Recipient)
-                .ToList();
-
             var blobName = $"{message.MessageType}_{message.Recipient:N}_{requestId:N}";
+            await AddDataAvailableNotificationIdsToStorageAsync(blobName, message).ConfigureAwait(false);
 
-            await AddDataAvailableNotificationIdsToStorageAsync(
-                blobName,
-                dataAvailableNotificationDtosForMessageType).ConfigureAwait(false);
+            var correlationId = BuildDataBundleRequestDto(message, requestId, blobName, out var request);
 
+            await RequestDataBundleAsync(sessionId, request, correlationId).ConfigureAwait(false);
+
+            dataBundleRequestDtos.Add(request);
+        }
+
+        private static string BuildDataBundleRequestDto(
+            DistinctMessage message, Guid requestId, string blobName, out DataBundleRequestDto request)
+        {
             var correlationId = CorrelationIdGenerator.Create();
-            var request = new DataBundleRequestDto(
+            request = new DataBundleRequestDto(
                 RequestId: requestId,
                 DataAvailableNotificationReferenceId: blobName,
                 IdempotencyId: correlationId,
                 new MessageTypeDto(message.MessageType),
                 ResponseFormat.Xml,
                 1.0);
-
-            await RequestDataBundleAsync(sessionId, request, correlationId).ConfigureAwait(false);
-
-            dataBundleRequestDtos.Add(request);
+            return correlationId;
         }
 
         private async Task<EventualServiceBusEvents> ReceiveEventualServiceBusEvents(
@@ -202,14 +201,17 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
             return eventualMessageHubReply;
         }
 
-        private async Task AddDataAvailableNotificationIdsToStorageAsync(
-            string blobName,
-            IEnumerable<DataAvailableNotificationDto> dataAvailableNotifications)
+        private async Task AddDataAvailableNotificationIdsToStorageAsync(string blobName, DistinctMessage message)
         {
+            var dataAvailableNotificationDtosForMessageType = _notifications.Where(x =>
+                    x.MessageType.Value == message.MessageType &&
+                    x.Recipient.Value == message.Recipient)
+                .ToList();
+
             try
             {
                 await using var memoryStream = new MemoryStream();
-                foreach (var dataAvailableNotificationDto in dataAvailableNotifications)
+                foreach (var dataAvailableNotificationDto in dataAvailableNotificationDtosForMessageType)
                     memoryStream.Write(dataAvailableNotificationDto.Uuid.ToByteArray());
                 memoryStream.Position = 0;
 
