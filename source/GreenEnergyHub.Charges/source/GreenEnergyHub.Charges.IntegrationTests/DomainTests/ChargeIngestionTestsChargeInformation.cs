@@ -162,7 +162,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
                 using var assertionScope = new AssertionScope();
 
-                // We expect 3 peek results:
+                // We expect 5 peek results:
                 // * 1 confirmation
                 // * 4 data available to energy suppliers
                 var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 5);
@@ -207,7 +207,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // Assert
                 actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
 
-                // We expect 4 peeks:
+                // We expect 6 peeks:
                 // * 1 for the confirmation (first operation)
                 // * 1 for the rejection (second operation violating VR.903)
                 // * 4 data available to energy suppliers
