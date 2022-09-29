@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
@@ -204,7 +205,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             var sut = new MarketParticipantRepository(chargesDatabaseContext);
 
             // Act
-            var actual = await sut.GetActiveGridAccessProvidersAsync();
+            var actual = await sut.GetActiveAndPassiveGridAccessProvidersAsync();
 
             // Assert
             actual.Should().NotContain(x => x.MarketParticipantId == SeededData.MarketParticipants.Inactive8900000000005.Gln);
@@ -218,7 +219,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             var sut = new MarketParticipantRepository(chargesDatabaseContext);
 
             // Act
-            var actual = await sut.GetActiveGridAccessProvidersAsync();
+            var actual = await sut.GetActiveAndPassiveGridAccessProvidersAsync();
 
             // Assert
             actual.Should().NotBeEmpty();
@@ -305,6 +306,48 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             // Assert
             actual.BusinessProcessRole.Should().Be(MarketParticipantRole.SystemOperator);
             actual.Status.Should().Be(MarketParticipantStatus.Active);
+        }
+
+        [Fact]
+        public async Task GetActiveAndPassiveEnergySuppliersAsync_WhenCalled_ShouldHaveExpected()
+        {
+            // Arrange
+            await using var readDatabaseContext = _databaseManager.CreateDbContext();
+            var sut = new MarketParticipantRepository(readDatabaseContext);
+
+            // Act
+            var actual = await sut.GetActiveAndPassiveEnergySuppliersAsync().ConfigureAwait(false);
+
+            // Assert
+            actual.Should().Contain(mp =>
+                mp.MarketParticipantId == "8100000001002" && mp.Status == MarketParticipantStatus.Active);
+            actual.Should().Contain(mp =>
+                mp.MarketParticipantId == "8100000001004" && mp.Status == MarketParticipantStatus.Passive);
+            actual.Should().NotContain(mp =>
+                mp.MarketParticipantId == "8100000001001" ||
+                mp.MarketParticipantId == "8100000001003" ||
+                mp.MarketParticipantId == "8100000001005");
+        }
+
+        [Fact]
+        public async Task GetActiveAndPassiveGridAccessProvidersAsync_WhenCalled_ShouldHaveExpected()
+        {
+            // Arrange
+            await using var readDatabaseContext = _databaseManager.CreateDbContext();
+            var sut = new MarketParticipantRepository(readDatabaseContext);
+
+            // Act
+            var actual = await sut.GetActiveAndPassiveGridAccessProvidersAsync().ConfigureAwait(false);
+
+            // Assert
+            actual.Should().Contain(mp =>
+                mp.MarketParticipantId == "8100000002002" && mp.Status == MarketParticipantStatus.Active);
+            actual.Should().Contain(mp =>
+                mp.MarketParticipantId == "8100000002004" && mp.Status == MarketParticipantStatus.Passive);
+            actual.Should().NotContain(mp =>
+                mp.MarketParticipantId == "8100000002001" ||
+                mp.MarketParticipantId == "8100000002003" ||
+                mp.MarketParticipantId == "8100000002005");
         }
 
         private static async Task AddMarketParticipantToContextAndSaveAsync(

@@ -17,7 +17,6 @@ using System.Linq;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
 using GreenEnergyHub.Charges.Domain.Dtos.GridAreas;
 using GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsUpdatedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
@@ -27,7 +26,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
         public static MarketParticipantUpdatedEvent MapFromActorUpdatedIntegrationEvent(
             ActorUpdatedIntegrationEvent actorUpdatedIntegrationEvent)
         {
-            var status = MapActorStatusToMarketParticipantStatus(actorUpdatedIntegrationEvent.Status);
+            var status = MarketParticipantStatusMapper.Map(actorUpdatedIntegrationEvent.Status);
 
             var rolesUsedInChargesDomain = actorUpdatedIntegrationEvent.BusinessRoles
                 .Select(MarketParticipantRoleMapper.Map)
@@ -60,25 +59,6 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
             return new GridAreaUpdatedEvent(
                 gridUpdatedIntegrationEvent.GridAreaId,
                 gridUpdatedIntegrationEvent.GridAreaLinkId);
-        }
-
-        private static MarketParticipantStatus MapActorStatusToMarketParticipantStatus(ActorStatus status)
-        {
-            switch (status)
-            {
-                case ActorStatus.New:
-                    return MarketParticipantStatus.New;
-                case ActorStatus.Active:
-                    return MarketParticipantStatus.Active;
-                case ActorStatus.Inactive:
-                    return MarketParticipantStatus.Inactive;
-                case ActorStatus.Passive:
-                    return MarketParticipantStatus.Passive;
-                case ActorStatus.Deleted:
-                    return MarketParticipantStatus.Deleted;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(status), status, null);
-            }
         }
     }
 }

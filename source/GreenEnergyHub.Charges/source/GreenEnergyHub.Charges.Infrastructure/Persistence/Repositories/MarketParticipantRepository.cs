@@ -83,15 +83,19 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
                 .ConfigureAwait(false);
         }
 
-        public Task<List<MarketParticipant>> GetActiveEnergySuppliersAsync()
+        /// <summary>
+        /// Retrieves all Passive and Active Energy Suppliers (DDQ)
+        /// </summary>
+        /// <returns>A list of Market Participants</returns>
+        public async Task<List<MarketParticipant>> GetActiveAndPassiveEnergySuppliersAsync()
         {
-            return _chargesDatabaseContext
+            return await _chargesDatabaseContext
                 .MarketParticipants
-                .Where(mp => mp.BusinessProcessRole == MarketParticipantRole.EnergySupplier)
-                .Where(m =>
-                    m.Status == MarketParticipantStatus.Active ||
-                    m.Status == MarketParticipantStatus.Passive)
-                .ToListAsync();
+                .Where(mp => mp.BusinessProcessRole == MarketParticipantRole.EnergySupplier &&
+                             (mp.Status == MarketParticipantStatus.Active ||
+                             mp.Status == MarketParticipantStatus.Passive))
+                .ToListAsync()
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -120,7 +124,11 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
                 .ConfigureAwait(false);
         }
 
-        public Task<List<MarketParticipant>> GetActiveGridAccessProvidersAsync()
+        /// <summary>
+        /// Retrieves all Passive and Active Grid Access Providers (DDM)
+        /// </summary>
+        /// <returns>A list of Market Participants</returns>
+        public Task<List<MarketParticipant>> GetActiveAndPassiveGridAccessProvidersAsync()
         {
             return _chargesDatabaseContext
                 .MarketParticipants
