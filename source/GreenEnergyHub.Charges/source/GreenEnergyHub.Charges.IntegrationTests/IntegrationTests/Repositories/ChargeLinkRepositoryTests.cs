@@ -126,7 +126,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                 actorId: Guid.NewGuid(),
                 b2CActorId: Guid.NewGuid(),
                 marketParticipantId,
-                true,
+                MarketParticipantStatus.Active,
                 MarketParticipantRole.EnergySupplier);
 
             context.MarketParticipants.Add(marketParticipant);

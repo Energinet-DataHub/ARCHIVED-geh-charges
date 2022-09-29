@@ -114,7 +114,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
                     actorId: Guid.NewGuid(),
                     b2CActorId: Guid.NewGuid(),
                     "5790001330552",
-                    true,
+                    MarketParticipantStatus.Active,
                     MarketParticipantRole.MeteringPointAdministrator));
 
             var currentTime = Instant.FromUtc(2021, 10, 12, 13, 37, 43).PlusNanoseconds(4);

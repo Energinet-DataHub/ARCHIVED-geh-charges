@@ -30,7 +30,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
             builder.Property(x => x.ActorId);
             builder.Property(x => x.B2CActorId);
             builder.Property(x => x.MarketParticipantId);
-            builder.Property(x => x.IsActive);
+            builder.Property(x => x.Status);
             builder.Property(x => x.BusinessProcessRole);
         }
     }
