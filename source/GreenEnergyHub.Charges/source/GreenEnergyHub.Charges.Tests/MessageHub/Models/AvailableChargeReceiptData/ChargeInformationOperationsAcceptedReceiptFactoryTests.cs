@@ -18,12 +18,12 @@ using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.Messaging;
-using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.TestCore.Builders.Command;
 using GreenEnergyHub.Charges.TestCore.Builders.Testables;
 using GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared;
 using Moq;
@@ -42,14 +42,19 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeReceiptD
             TestMeteringPointAdministrator meteringPointAdministrator,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
-            ChargeInformationOperationsAcceptedEvent acceptedEvent,
+            MarketParticipantDtoBuilder marketParticipantDtoBuilder,
+            DocumentDtoBuilder documentDtoBuilder,
+            ChargeInformationOperationsAcceptedEventBuilder chargeInformationOperationsAcceptedEventBuilder,
             Instant now,
             ChargeInformationOperationsAcceptedReceiptFactory sut)
         {
             // Arrange
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
-            var documentDto = acceptedEvent.Document;
-            documentDto.Sender.BusinessProcessRole = MarketParticipantRole.GridAccessProvider;
+            var marketParticipantDto = marketParticipantDtoBuilder
+                .WithMarketParticipantRole(MarketParticipantRole.GridAccessProvider)
+                .Build();
+            var documentDto = documentDtoBuilder.WithSender(marketParticipantDto).Build();
+            var acceptedEvent = chargeInformationOperationsAcceptedEventBuilder.WithDocument(documentDto).Build();
             var actorId = Guid.NewGuid();
             MarketParticipantRepositoryMockBuilder.SetupMarketParticipantRepositoryMock(
                 marketParticipantRepository, meteringPointAdministrator, documentDto.Sender, actorId);

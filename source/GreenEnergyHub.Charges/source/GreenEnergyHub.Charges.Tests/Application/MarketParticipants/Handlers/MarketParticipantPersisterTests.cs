@@ -254,7 +254,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
                 actorId: Guid.NewGuid(),
                 b2CActorId: Guid.NewGuid(),
                 "mp123",
-                true,
+                MarketParticipantStatus.Active,
                 MarketParticipantRole.GridAccessProvider);
 
             var marketParticipantUpdatedEvent = GetMarketParticipantUpdatedEvent(
@@ -411,7 +411,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
                 b2CActorId: Guid.NewGuid(),
                 "mp123",
                 marketParticipantRoleCodes,
-                true,
+                MarketParticipantStatus.Active,
                 gridAreas);
         }
 
@@ -423,7 +423,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
                 actorId: Guid.NewGuid(),
                 b2CActorId: Guid.NewGuid(),
                 marketParticipantUpdatedEvent.MarketParticipantId,
-                marketParticipantUpdatedEvent.IsActive,
+                marketParticipantUpdatedEvent.Status,
                 marketParticipantUpdatedEvent.BusinessProcessRoles.Single());
         }
 

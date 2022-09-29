@@ -12,20 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
-using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
-
-namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
+namespace GreenEnergyHub.Charges.Domain.Dtos.SharedDtos
 {
-    public class ChargeLinksCommandBundle : ChargeCommandBundle
+    public enum MarketParticipantStatus
     {
-        public ChargeLinksCommandBundle(DocumentDto document, IReadOnlyCollection<ChargeLinksCommand> commands)
-            : base(document)
-        {
-            Commands = commands;
-        }
-
-        public override IReadOnlyCollection<ChargeLinksCommand> Commands { get; }
+        New = 1,
+        Active = 2,
+        Inactive = 3,
+        Passive = 4,
+        Deleted = 5,
     }
 }

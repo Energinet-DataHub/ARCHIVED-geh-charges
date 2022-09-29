@@ -12,15 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers.Message
-{
-    public class ChargeLinksMessageResult
-    {
-        public bool IsSucceeded { get; set; }
+using System.IO;
+using System.Reflection;
 
-        public static ChargeLinksMessageResult CreateSuccess()
+namespace GreenEnergyHub.Charges.Tests.TestHelpers
+{
+    public static class FilePathHelper
+    {
+        public static string GetFullFilePath(string testFilePath)
         {
-            return new ChargeLinksMessageResult { IsSucceeded = true };
+            var basePath = Assembly.GetExecutingAssembly().Location;
+            var path = Path.Combine(Directory.GetParent(basePath)!.FullName, testFilePath);
+            return path;
         }
     }
 }

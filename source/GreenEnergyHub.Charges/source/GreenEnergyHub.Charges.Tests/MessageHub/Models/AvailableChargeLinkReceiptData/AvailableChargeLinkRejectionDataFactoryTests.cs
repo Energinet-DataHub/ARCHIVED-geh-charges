@@ -51,13 +51,11 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
             [Frozen] Mock<IMessageMetaDataContext> messageMetaDataContext,
             [Frozen] Mock<IAvailableChargeLinksReceiptValidationErrorFactory> availableChargeLinksReceiptValidationErrorFactory,
             List<ChargeLinkOperationDto> chargeLinkDtos,
-            ChargeLinksCommandBuilder chargeLinksCommandBuilder,
             Instant now,
             AvailableChargeLinksRejectionDataFactory sut)
         {
             // Arrange
-            var chargeLinksCommand = chargeLinksCommandBuilder.WithChargeLinks(chargeLinkDtos).Build();
-            chargeLinksCommand.Document.Sender.BusinessProcessRole = marketParticipantRole;
+            var chargeLinksCommand = BuildChargeLinksCommand(marketParticipantRole, chargeLinkDtos);
             messageMetaDataContext.Setup(m => m.RequestDataTime).Returns(now);
 
             var validationErrors = chargeLinksCommand.Operations
@@ -116,11 +114,13 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
         [Theory]
         [InlineAutoDomainData]
         public async Task CreateAsync_WhenSenderIsSystemOperator_ReturnsEmptyList(
-            ChargeLinksRejectedEvent rejectedEvent,
+            List<ChargeLinkOperationDto> chargeLinks,
+            ChargeLinksRejectedEventBuilder chargeLinksRejectedEventBuilder,
             AvailableChargeLinksRejectionDataFactory sut)
         {
             // Arrange
-            rejectedEvent.Command.Document.Sender.BusinessProcessRole = MarketParticipantRole.SystemOperator;
+            var chargeLinksCommand = BuildChargeLinksCommand(MarketParticipantRole.SystemOperator, chargeLinks);
+            var rejectedEvent = chargeLinksRejectedEventBuilder.WithCommand(chargeLinksCommand).Build();
 
             // Act
             var actualList = await sut.CreateAsync(rejectedEvent);
@@ -141,6 +141,20 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeLinkRece
                 .Returns<ValidationError, DocumentDto, ChargeLinkOperationDto>((validationError, _, _) =>
                     new AvailableReceiptValidationError(
                         ReasonCode.D01, validationError.ValidationRuleIdentifier.ToString()));
+        }
+
+        private static ChargeLinksCommand BuildChargeLinksCommand(
+            MarketParticipantRole marketParticipantRole,
+            List<ChargeLinkOperationDto> chargeLinks)
+        {
+            var marketParticipantDto = new MarketParticipantDtoBuilder()
+                .WithMarketParticipantRole(marketParticipantRole)
+                .Build();
+            var documentDto = new DocumentDtoBuilder().WithSender(marketParticipantDto).Build();
+            return new ChargeLinksCommandBuilder()
+                .WithDocument(documentDto)
+                .WithChargeLinks(chargeLinks)
+                .Build();
         }
     }
 }
