@@ -20,7 +20,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 {
     public static class MarketParticipantStatusMapper
     {
-        public static MarketParticipantStatus MapActorStatusToMarketParticipantStatus(ActorStatus status)
+        public static MarketParticipantStatus Map(ActorStatus status)
         {
             return status switch
             {
