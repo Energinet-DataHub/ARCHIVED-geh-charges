@@ -37,7 +37,16 @@ namespace Energinet.DataHub.Charges.Clients.Charges
         /// <returns>Relative URI</returns>
         public static Uri GetCharges()
         {
-            return new Uri($"v1/Charges/GetAsync", UriKind.Relative);
+            return new Uri("v1/Charges/GetAsync", UriKind.Relative);
+        }
+
+        /// <summary>
+        /// Provides the relative uri for searching in charges.
+        /// </summary>
+        /// <returns>Relative URI</returns>
+        public static Uri SearchCharges()
+        {
+            return new Uri("v1/Charges/SearchAsync", UriKind.Relative);
         }
     }
 }
