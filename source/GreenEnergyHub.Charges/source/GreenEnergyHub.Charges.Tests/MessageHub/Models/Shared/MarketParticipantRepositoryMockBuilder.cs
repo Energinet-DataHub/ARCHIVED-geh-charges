@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared
                 actorId,
                 marketParticipantDto.B2CActorId,
                 marketParticipantDto.MarketParticipantId,
-                true,
+                MarketParticipantStatus.Active,
                 marketParticipantDto.BusinessProcessRole);
 
             marketParticipantRepository

@@ -62,7 +62,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
                 .Build();
 
             marketParticipantRepository
-                .Setup(r => r.GetActiveGridAccessProvidersAsync())
+                .Setup(r => r.GetActiveAndPassiveGridAccessProvidersAsync())
                 .ReturnsAsync(gridAccessProvider.Cast<MarketParticipant>().ToList);
 
             marketParticipantRepository
@@ -122,10 +122,10 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
                     .Build(),
             };
             marketParticipantRepository
-                .Setup(m => m.GetActiveGridAccessProvidersAsync())
+                .Setup(m => m.GetActiveAndPassiveGridAccessProvidersAsync())
                 .ReturnsAsync(gridAccessProviders);
             marketParticipantRepository
-                .Setup(r => r.GetActiveEnergySuppliersAsync())
+                .Setup(r => r.GetActiveAndPassiveEnergySuppliersAsync())
                 .ReturnsAsync(energySuppliers);
             marketParticipantRepository
                 .Setup(m => m.GetMeteringPointAdministratorAsync())
@@ -157,10 +157,10 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.AvailableChargeData
         {
             // Arrange
             marketParticipantRepository
-                .Setup(r => r.GetActiveGridAccessProvidersAsync())
+                .Setup(r => r.GetActiveAndPassiveGridAccessProvidersAsync())
                 .ReturnsAsync(gridAccessProvider.Cast<MarketParticipant>().ToList);
             marketParticipantRepository
-                .Setup(r => r.GetActiveEnergySuppliersAsync())
+                .Setup(r => r.GetActiveAndPassiveEnergySuppliersAsync())
                 .ReturnsAsync(() => new List<MarketParticipant>());
             marketParticipantRepository
                 .Setup(r => r.GetMeteringPointAdministratorAsync())

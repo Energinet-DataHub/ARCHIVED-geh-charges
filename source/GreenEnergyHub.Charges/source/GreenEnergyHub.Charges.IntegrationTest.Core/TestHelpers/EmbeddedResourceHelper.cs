@@ -35,12 +35,19 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
         private static string ReplaceMergeFields(Instant currentInstant, string file, IZonedDateTimeService zonedDateTimeService)
         {
             var now = currentInstant.ToString();
-            var inThirtyoneDays = currentInstant.Plus(Duration.FromDays(31));
+            var daysToAdd = 31;
+            var inThirtyoneDays = currentInstant.Plus(Duration.FromDays(daysToAdd));
+
+            // Avoid hitting summer/winter time issues
+            if (inThirtyoneDays.ToDateTimeUtc().Month is 3 or 10)
+            {
+                daysToAdd += 30;
+            }
 
             var midnightLocalTime31DaysAhead =
-                ConvertCurrentInstantToLocalDateTimeWithDaysAdded(currentInstant, zonedDateTimeService, 31);
+                ConvertCurrentInstantToLocalDateTimeWithDaysAdded(currentInstant, zonedDateTimeService, daysToAdd);
             var midnightLocalTime32DaysAhead =
-                ConvertCurrentInstantToLocalDateTimeWithDaysAdded(currentInstant, zonedDateTimeService, 32);
+                ConvertCurrentInstantToLocalDateTimeWithDaysAdded(currentInstant, zonedDateTimeService, daysToAdd + 1);
 
             // cim:createdDateTime and effective date must have seconds
             var ymdhmsTimeInterval = currentInstant.GetCreatedDateTimeFormat();
