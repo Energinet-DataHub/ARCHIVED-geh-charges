@@ -350,6 +350,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 using var assertionScope = new AssertionScope();
 
                 actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
+
                 // We expect 2 peek results:
                 // 2 rejections the first due to invalid price and the second due to the first error
                 var peekResult = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 2);

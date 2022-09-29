@@ -30,15 +30,13 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim
     public abstract class CimJsonSerializer<T> : ICimJsonSerializer<T>
         where T : AvailableDataBase
     {
-        public CimJsonSerializer(IClock clock, ICimIdProvider cimIdProvider)
+        protected CimJsonSerializer(IClock clock, ICimIdProvider cimIdProvider)
         {
             Clock = clock;
             CimIdProvider = cimIdProvider;
         }
 
-        public IClock Clock { get; }
-
-        public ICimIdProvider CimIdProvider { get; }
+        protected ICimIdProvider CimIdProvider { get; }
 
         public async Task SerializeToStreamAsync(
             IEnumerable<T> availableData,
@@ -62,6 +60,8 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim
             await stream.WriteAsync(bytes, CancellationToken.None).ConfigureAwait(false);
             stream.Position = 0;
         }
+
+        private IClock Clock { get; }
 
         protected abstract string GetRootElementName();
 
