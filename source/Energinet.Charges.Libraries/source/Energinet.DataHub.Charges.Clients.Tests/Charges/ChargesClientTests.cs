@@ -96,11 +96,11 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
         [Theory]
         [InlineAutoDomainData]
         public async Task GetChargesAsync_WhenSuccess_ReturnsCharges(
-            ChargeV1Dto chargeLinkDto,
+            ChargeV1Dto chargeDto,
             Mock<IChargesClientFactory> chargesClientFactory)
         {
             // Arrange
-            var responseContent = CreateValidResponseContent(chargeLinkDto);
+            var responseContent = CreateValidResponseContent(chargeDto);
             var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.OK, responseContent);
             var httpClient = CreateHttpClient(mockHttpMessageHandler);
             chargesClientFactory.Setup(x => x.CreateClient(httpClient))
@@ -115,9 +115,9 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
 
             // Assert
             result.Should().NotBeNull();
-            result[0].ChargeId.Should().Be(chargeLinkDto.ChargeId);
-            result[0].ChargeType.Should().Be(chargeLinkDto.ChargeType);
-            result[0].ChargeName.Should().Be(chargeLinkDto.ChargeName);
+            result[0].ChargeId.Should().Be(chargeDto.ChargeId);
+            result[0].ChargeType.Should().Be(chargeDto.ChargeType);
+            result[0].ChargeName.Should().Be(chargeDto.ChargeName);
 
             mockHttpMessageHandler.Protected().Verify(
                 "SendAsync",
@@ -145,6 +145,64 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
             // Assert
             result.Should().BeOfType<List<ChargeV1Dto>>();
             result.Should().BeEmpty();
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task SearchChargesAsync_WhenResponseIsNotFound_ReturnsEmptyList(
+            Mock<IChargesClientFactory> chargesClientFactory,
+            SearchCriteriaDtoBuilder searchCriteriaDtoBuilder)
+        {
+            // Arrange
+            var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.NotFound, string.Empty);
+            var httpClient = CreateHttpClient(mockHttpMessageHandler);
+            chargesClientFactory.Setup(x => x.CreateClient(httpClient))
+                .Returns(new ChargesClient(httpClient));
+
+            var sut = chargesClientFactory.Object.CreateClient(httpClient);
+            var searchCriteria = searchCriteriaDtoBuilder.Build();
+
+            // Act
+            var result = await sut.SearchChargesAsync(searchCriteria).ConfigureAwait(false);
+
+            // Assert
+            result.Should().BeOfType<List<ChargeV1Dto>>();
+            result.Should().BeEmpty();
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task SearchChargesAsync_WhenSuccess_ReturnsCharges(
+            Mock<IChargesClientFactory> chargesClientFactory,
+            SearchCriteriaDtoBuilder searchCriteriaDtoBuilder,
+            ChargeV1Dto chargeDto)
+        {
+            // Arrange
+            var responseContent = CreateValidResponseContent(chargeDto);
+            var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.OK, responseContent);
+            var httpClient = CreateHttpClient(mockHttpMessageHandler);
+            chargesClientFactory.Setup(x => x.CreateClient(httpClient))
+                .Returns(new ChargesClient(httpClient));
+
+            var sut = chargesClientFactory.Object.CreateClient(httpClient);
+
+            var expectedUri = new Uri($"{BaseUrl}{ChargesRelativeUris.SearchCharges()}");
+            var searchCriteria = searchCriteriaDtoBuilder.Build();
+
+            // Act
+            var result = await sut.SearchChargesAsync(searchCriteria).ConfigureAwait(false);
+
+            // Assert
+            result.Should().NotBeNull();
+            result[0].ChargeId.Should().Be(chargeDto.ChargeId);
+            result[0].ChargeType.Should().Be(chargeDto.ChargeType);
+            result[0].ChargeName.Should().Be(chargeDto.ChargeName);
+
+            mockHttpMessageHandler.Protected().Verify(
+                "SendAsync",
+                Times.Exactly(1),
+                ItExpr.Is<HttpRequestMessage>(req => req.Method == HttpMethod.Post && req.RequestUri == expectedUri),
+                ItExpr.IsAny<CancellationToken>());
         }
 
         private static string CreateValidResponseContent<TModel>(TModel chargeLinkDto)

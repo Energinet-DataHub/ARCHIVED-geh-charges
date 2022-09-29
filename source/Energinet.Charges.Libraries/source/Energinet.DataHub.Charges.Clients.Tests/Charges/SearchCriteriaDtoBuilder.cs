@@ -12,16 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// ReSharper disable once CheckNamespace - Type is shared so namespace is not determined by project structure/namespace
-namespace Energinet.Charges.Contracts.Charge
+using Energinet.Charges.Contracts.Charge;
+
+namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charges
 {
-    public enum ValidityOptions
+    public class SearchCriteriaDtoBuilder
     {
-        Now,
-        Planned,
-        ThisWeek,
-        ThisMonth,
-        ThisQuarter,
-        ThisYear,
+        private static readonly string _chargeIdOrName = string.Empty;
+        private static readonly string _marketParticipantId = string.Empty;
+        private static readonly string _chargeTypes = string.Empty;
+
+        public SearchCriteriaDto Build()
+        {
+            return new SearchCriteriaDto(_chargeIdOrName, _marketParticipantId, _chargeTypes);
+        }
     }
 }
