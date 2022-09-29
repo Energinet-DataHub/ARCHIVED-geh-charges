@@ -149,25 +149,13 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
                 await RequestDataBundleAsync(sessionId, request, correlationId).ConfigureAwait(false);
 
                 dataBundleRequestDtos.Add(request);
-                await Task.Delay(TimeSpan.FromMilliseconds(100));
+
+                // await Task.Delay(TimeSpan.FromMilliseconds(100));
             }
 
-            await Task.Delay(TimeSpan.FromMilliseconds(2000));
+            // await Task.Delay(TimeSpan.FromMilliseconds(2000));
+            var eventualMessageHubReply = await ReceiveEventualServiceBusEvents(dataBundleRequestDtos);
 
-            var eventualMessageHubReply = await _messageHubReplyServiceBusTestListener
-                .ListenForEventsAsync(
-                    dataBundleRequestDtos.Select(x => x.IdempotencyId).ToList(),
-                    dataBundleRequestDtos.Count)
-                .ConfigureAwait(false);
-
-            var isMessageHubReplyReceived = eventualMessageHubReply
-                .CountdownEvent!
-                .Wait(TimeSpan.FromSeconds(SecondsToWaitForIntegrationEvents));
-
-            if (isMessageHubReplyReceived == false)
-                await Task.Delay(TimeSpan.FromSeconds(2));
-
-            isMessageHubReplyReceived.Should().BeTrue();
             foreach (var eventualServiceBusEvent in eventualMessageHubReply.EventualServiceBusMessages)
             {
                 eventualServiceBusEvent.Body.Should().NotBeNull();
@@ -186,6 +174,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
             }
 
             _messageHubReplyServiceBusTestListener.Reset();
+            await Task.Delay(TimeSpan.FromMilliseconds(500));
 
             return peekSimulatorResponseDtos;
         }
@@ -201,6 +190,29 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
             var blobClient = _blobContainerClient.GetBlobClient(availableDataReferenceId);
             BlobDownloadResult downloadResult = await blobClient.DownloadContentAsync();
             return downloadResult.Content.ToString();
+        }
+
+        private async Task<EventualServiceBusEvents> ReceiveEventualServiceBusEvents(
+            IReadOnlyCollection<DataBundleRequestDto> dataBundleRequestDtos)
+        {
+            var eventualMessageHubReply = await _messageHubReplyServiceBusTestListener
+                .ListenForEventsAsync(
+                    dataBundleRequestDtos.Select(x => x.IdempotencyId).ToList(),
+                    dataBundleRequestDtos.Count)
+                .ConfigureAwait(false);
+
+            var isMessageHubReplyReceived = eventualMessageHubReply
+                .CountdownEvent!
+                .Wait(TimeSpan.FromSeconds(SecondsToWaitForIntegrationEvents));
+
+            if (isMessageHubReplyReceived == false)
+            {
+                await Task.Delay(TimeSpan.FromMilliseconds(500));
+            }
+
+            isMessageHubReplyReceived.Should().BeTrue();
+
+            return eventualMessageHubReply;
         }
 
         private async Task AddDataAvailableNotificationIdsToStorageAsync(

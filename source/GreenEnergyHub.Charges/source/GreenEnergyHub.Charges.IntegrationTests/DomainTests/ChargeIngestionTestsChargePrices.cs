@@ -90,7 +90,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                     EndpointUrl, ChargeDocument.TariffPriceSeries);
                 using var eventualChargePriceUpdatedEvent = await Fixture
                     .ChargePricesUpdatedListener
-                    .ListenForEventsAsync(correlationId, expectedCount: 1)
+                    .ListenForMessageAsync(correlationId)
                     .ConfigureAwait(false);
 
                 // Act
@@ -98,7 +98,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
                 // Assert
                 var isChargePricesUpdatedReceived = eventualChargePriceUpdatedEvent
-                    .CountdownEvent!
+                    .MessageAwaiter!
                     .Wait(TimeSpan.FromSeconds(SecondsToWaitForIntegrationEvents));
                 isChargePricesUpdatedReceived.Should().BeTrue();
             }
