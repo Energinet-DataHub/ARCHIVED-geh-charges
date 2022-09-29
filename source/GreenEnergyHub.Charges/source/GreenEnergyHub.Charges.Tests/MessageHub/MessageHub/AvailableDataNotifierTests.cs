@@ -19,7 +19,6 @@ using AutoFixture.Xunit2;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using Energinet.DataHub.MessageHub.Client.DataAvailable;
 using Energinet.DataHub.MessageHub.Model.Model;
-using FluentAssertions;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification;
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
