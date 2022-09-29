@@ -113,7 +113,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
 
         public async Task<List<PeekSimulatorResponseDto>> PeekAsync()
         {
-            InvalidOperationExceptionExtension.ThrowIfNullOrNoElements(
+            ExtendedInvalidOperationException.ThrowIfNullOrNoElements(
                 _notifications, $"{nameof(MessageHubMock)}: No dataavailable was provided for Peek");
 
             var dataBundleRequestDtos = new List<DataBundleRequestDto>();

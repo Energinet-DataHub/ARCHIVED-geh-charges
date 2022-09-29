@@ -19,17 +19,25 @@ using System.Linq;
 
 namespace GreenEnergyHub.Charges.Domain.Charges.Exceptions
 {
-    public class InvalidOperationExceptionExtension : InvalidOperationException
+    [Serializable]
+    public class ExtendedInvalidOperationException : InvalidOperationException
     {
-        /// <summary>Throws an <see cref="InvalidOperationException"/> if <paramref name="enumerable"/> is null or contains no elements.</summary>
+        /// <summary>Throws an <see cref="System.InvalidOperationException"/> if <paramref name="enumerable"/> is null or contains no elements.</summary>
         /// <param name="enumerable">The reference type enumerable to validate as non-null and containing elements.</param>
-        /// <param name="errorMessage">The error message to provide with the <see cref="InvalidOperationException"/>.</param>
+        /// <param name="errorMessage">The error message to provide with the <see cref="System.InvalidOperationException"/>.</param>
         public static void ThrowIfNullOrNoElements([NotNull] IEnumerable<object>? enumerable, string errorMessage)
         {
             if (enumerable is null || !enumerable.Any())
             {
                 throw new InvalidOperationException(errorMessage);
             }
+        }
+
+        protected ExtendedInvalidOperationException(
+            System.Runtime.Serialization.SerializationInfo serializationInfo,
+            System.Runtime.Serialization.StreamingContext streamingContext)
+            : base(serializationInfo, streamingContext)
+        {
         }
     }
 }
