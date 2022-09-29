@@ -77,7 +77,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
             Assert.Equal(expected, actual, ignoreLineEndingDifferences: true);
         }
 
-        [Theory(Skip = "Manually run test to save the generated file to disk")]
+        [Theory(Skip = "Manually run test to save the generated xml file to disk")]
         [InlineAutoDomainData]
         public async Task SerializeAsync_WhenCalled_SaveSerializedStream(
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
@@ -106,7 +106,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
             await stream.CopyToAsync(fileStream);
         }
 
-        [Theory]
+        [Theory(Skip = "Manually run test to save the generated json file to disk")]
         [InlineAutoDomainData]
         public async Task SerializeAsync_WhenCalledRequestingJson_SaveSerializedStream(
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
