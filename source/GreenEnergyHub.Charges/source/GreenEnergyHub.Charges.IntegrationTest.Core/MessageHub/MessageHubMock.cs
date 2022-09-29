@@ -95,19 +95,19 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
         public async Task WaitForNotificationsInDataAvailableQueueAsync(
             string correlationId, int noOfDataAvailableNotifications)
         {
-            using var eventualAvailableDataEvent = await _messageHubDataAvailableServiceBusTestListener
+            using var eventualDataAvailableEvent = await _messageHubDataAvailableServiceBusTestListener
                 .ListenForEventsAsync(correlationId, noOfDataAvailableNotifications)
                 .ConfigureAwait(false);
 
-            var isAvailableDataEventReceived = eventualAvailableDataEvent.CountdownEvent!
+            var isDataAvailableEventReceived = eventualDataAvailableEvent.CountdownEvent!
                 .Wait(TimeSpan.FromSeconds(SecondsToWaitForIntegrationEvents));
 
-            isAvailableDataEventReceived.Should().BeTrue();
-            eventualAvailableDataEvent.EventualServiceBusMessages.Count.Should().Be(noOfDataAvailableNotifications);
-            eventualAvailableDataEvent.EventualServiceBusMessages.Select(x => x.Body).Should().NotBeNull();
+            isDataAvailableEventReceived.Should().BeTrue();
+            eventualDataAvailableEvent.EventualServiceBusMessages.Count.Should().Be(noOfDataAvailableNotifications);
+            eventualDataAvailableEvent.EventualServiceBusMessages.Select(x => x.Body).Should().NotBeNull();
 
             _notifications.AddRange(
-                eventualAvailableDataEvent.EventualServiceBusMessages.Select(x =>
+                eventualDataAvailableEvent.EventualServiceBusMessages.Select(x =>
                 _dataAvailableNotificationParser.Parse(x.Body!.ToArray())));
         }
 
