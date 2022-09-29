@@ -136,7 +136,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
             return peekSimulatorResponseDtos;
         }
 
-        public async Task<string> DownLoadPeekResultAsync(PeekSimulatorResponseDto peekSimulationResponseDto)
+        public async Task<string> DownloadPeekResultAsync(PeekSimulatorResponseDto peekSimulationResponseDto)
         {
             ArgumentNullException.ThrowIfNull(peekSimulationResponseDto);
             ArgumentNullException.ThrowIfNull(peekSimulationResponseDto.Content!.Path, "Content path");
