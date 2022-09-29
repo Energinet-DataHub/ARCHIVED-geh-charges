@@ -160,7 +160,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
 
             var correlationId = BuildDataBundleRequestDto(message, requestId, blobName, out var request);
 
-            await RequestDataBundleAsync(sessionId, request, correlationId).ConfigureAwait(false);
+            await SendDataBundleAsync(sessionId, request, correlationId).ConfigureAwait(false);
 
             dataBundleRequestDtos.Add(request);
         }
@@ -223,7 +223,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
             }
         }
 
-        private async Task RequestDataBundleAsync(
+        private async Task SendDataBundleAsync(
             string sessionId,
             DataBundleRequestDto dataBundleRequestDto,
             string correlationId)
