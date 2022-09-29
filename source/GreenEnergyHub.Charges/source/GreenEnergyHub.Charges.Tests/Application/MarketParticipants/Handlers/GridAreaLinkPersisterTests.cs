@@ -86,7 +86,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
                 actorId: Guid.NewGuid(),
                 b2CActorId: Guid.NewGuid(),
                 string.Empty,
-                true,
+                MarketParticipantStatus.Active,
                 MarketParticipantRole.GridAccessProvider);
 
             SetupGridAreaRepositories(
@@ -134,7 +134,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
                     actorId: Guid.NewGuid(),
                     b2CActorId: Guid.NewGuid(),
                     string.Empty,
-                    true,
+                    MarketParticipantStatus.Active,
                     MarketParticipantRole.GridAccessProvider));
             var sut = new GridAreaLinkPersister(
                 gridAreaLinkRepository.Object,

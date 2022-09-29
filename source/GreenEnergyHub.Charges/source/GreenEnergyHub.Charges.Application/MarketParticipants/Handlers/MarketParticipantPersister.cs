@@ -105,7 +105,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
                 marketParticipantUpdatedEvent.ActorId,
                 marketParticipantUpdatedEvent.B2CActorId,
                 marketParticipantUpdatedEvent.MarketParticipantId,
-                marketParticipantUpdatedEvent.IsActive,
+                marketParticipantUpdatedEvent.Status,
                 businessProcessRole);
 
             await _marketParticipantRepository.AddAsync(marketParticipant).ConfigureAwait(false);
@@ -127,7 +127,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
         {
             existingMarketParticipant.ActorId = marketParticipantUpdatedEvent.ActorId;
             existingMarketParticipant.B2CActorId = marketParticipantUpdatedEvent.B2CActorId;
-            existingMarketParticipant.IsActive = marketParticipantUpdatedEvent.IsActive;
+            existingMarketParticipant.Status = marketParticipantUpdatedEvent.Status;
 
             _logger.LogInformation(
                 "Market participant with MarketParticipantId '{MarketParticipantId}' " +
