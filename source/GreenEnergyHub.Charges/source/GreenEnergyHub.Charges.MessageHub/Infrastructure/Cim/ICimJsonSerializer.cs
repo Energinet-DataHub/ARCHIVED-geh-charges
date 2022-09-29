@@ -19,7 +19,11 @@ using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
 namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim
 {
-    public interface ICimJsonSerializer<TAvailableData>
+    /// <summary>
+    /// Contract defining Json serializer to be used for AvailableData
+    /// </summary>
+    /// <typeparam name="TAvailableData">Any AvailableData that should support Json notifications</typeparam>
+    public interface ICimJsonSerializer<in TAvailableData>
     {
         Task SerializeToStreamAsync(
             IEnumerable<TAvailableData> availableData,

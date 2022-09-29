@@ -59,7 +59,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim
             var options = new JsonSerializerOptions { WriteIndented = true };
             var document = jsonDocument.ToJsonString(options);
             var bytes = Encoding.UTF8.GetBytes(document);
-            await stream.WriteAsync(bytes, 0, bytes.Length, CancellationToken.None).ConfigureAwait(false);
+            await stream.WriteAsync(bytes, CancellationToken.None).ConfigureAwait(false);
             stream.Position = 0;
         }
 

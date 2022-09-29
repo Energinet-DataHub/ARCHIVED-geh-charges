@@ -125,7 +125,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Bundling
             }
         }
 
-        private List<IBundleCreator> CreateBundleCreators(
+        private static List<IBundleCreator> CreateBundleCreators(
             IEnumerable<BundleType> bundleTypes,
             IStorageHandler storageHandler,
             ResponseFormat responseFormat)
