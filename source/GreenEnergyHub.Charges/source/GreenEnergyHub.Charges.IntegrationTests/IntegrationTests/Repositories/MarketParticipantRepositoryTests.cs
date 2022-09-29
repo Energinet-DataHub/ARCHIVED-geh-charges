@@ -320,7 +320,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
             // Assert
             actual.Should().Contain(mp =>
-                mp.MarketParticipantId == "8100000001002" && mp.Status == MarketParticipantStatus.Active);
+                mp.MarketParticipantId == "8100000000108" && mp.Status == MarketParticipantStatus.Active);
             actual.Should().Contain(mp =>
                 mp.MarketParticipantId == "8100000001004" && mp.Status == MarketParticipantStatus.Passive);
             actual.Should().NotContain(mp =>
@@ -341,7 +341,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
             // Assert
             actual.Should().Contain(mp =>
-                mp.MarketParticipantId == "8100000002002" && mp.Status == MarketParticipantStatus.Active);
+                mp.MarketParticipantId == "8100000000016" && mp.Status == MarketParticipantStatus.Active);
             actual.Should().Contain(mp =>
                 mp.MarketParticipantId == "8100000002004" && mp.Status == MarketParticipantStatus.Passive);
             actual.Should().NotContain(mp =>

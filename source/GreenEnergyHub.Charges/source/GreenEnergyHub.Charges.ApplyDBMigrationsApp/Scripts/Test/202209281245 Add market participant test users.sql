@@ -1,7 +1,5 @@
 -- Add market participant with role Energy Supplier DDQ with status new
 INSERT INTO [Charges].[MarketParticipant] VALUES (NEWID(),'8100000001001', 1, 1, NEWID(), NEWID());
--- Add market participant with role Energy Supplier DDQ with status active
-INSERT INTO [Charges].[MarketParticipant] VALUES (NEWID(),'8100000001002', 1, 2, NEWID(), NEWID());
 -- Add market participant with role Energy Supplier DDQ with status inactive
 INSERT INTO [Charges].[MarketParticipant] VALUES (NEWID(),'8100000001003', 1, 3, NEWID(), NEWID());
 -- Add market participant with role Energy Supplier DDQ with status passive
@@ -11,8 +9,6 @@ INSERT INTO [Charges].[MarketParticipant] VALUES (NEWID(),'8100000001005', 1, 5,
 
 -- Add market participant with role Grid Access Provider DDM with status new
 INSERT INTO [Charges].[MarketParticipant] VALUES (NEWID(),'8100000002001', 2, 1, NEWID(), NEWID());
--- Add market participant with role Grid Access Provider DDM with status active
-INSERT INTO [Charges].[MarketParticipant] VALUES (NEWID(),'8100000002002', 2, 2, NEWID(), NEWID());
 -- Add market participant with role Grid Access Provider DDM with status inactive
 INSERT INTO [Charges].[MarketParticipant] VALUES (NEWID(),'8100000002003', 2, 3, NEWID(), NEWID());
 -- Add market participant with role Grid Access Provider DDM with status passive
