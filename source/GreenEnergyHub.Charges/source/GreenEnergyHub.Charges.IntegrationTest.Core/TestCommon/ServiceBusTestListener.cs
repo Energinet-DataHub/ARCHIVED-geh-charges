@@ -13,8 +13,11 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.ServiceBus.ListenerMock;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 
 namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon
 {
@@ -35,8 +38,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon
                 .VerifyOnceAsync(receivedMessage =>
                 {
                     result.Body = receivedMessage.Body;
-                    result.CorrelationId = receivedMessage.CorrelationId;
                     result.ApplicationProperties = receivedMessage.ApplicationProperties;
+                    result.CorrelationId = GetCorrelationIdFromMessage(receivedMessage);
                     return Task.CompletedTask;
                 }).ConfigureAwait(false);
             return result;
@@ -51,11 +54,37 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon
                 .WhenCorrelationId(correlationId)
                 .VerifyCountAsync(expectedCount, receivedMessage =>
                 {
-                    result.Body = receivedMessage.Body;
-                    result.CorrelationId = receivedMessage.CorrelationId;
+                    result.EventualServiceBusMessages.Add(
+                        new EventualServiceBusMessage
+                        {
+                            Body = receivedMessage.Body,
+                            ApplicationProperties = receivedMessage.ApplicationProperties,
+                            CorrelationId = GetCorrelationIdFromMessage(receivedMessage),
+                        });
                     return Task.CompletedTask;
-                })
-                .ConfigureAwait(false);
+                }).ConfigureAwait(false);
+
+            return result;
+        }
+
+        public async Task<EventualServiceBusEvents> ListenForEventsAsync(
+            IList<string> correlationIds,
+            int expectedCount)
+        {
+            var result = new EventualServiceBusEvents();
+            result.CountdownEvent = await _serviceBusListenerMock
+                .WhenCorrelationId(correlationIds)
+                .VerifyCountAsync(expectedCount, receivedMessage =>
+                {
+                    result.EventualServiceBusMessages.Add(
+                        new EventualServiceBusMessage
+                        {
+                            Body = receivedMessage.Body,
+                            ApplicationProperties = receivedMessage.ApplicationProperties,
+                            CorrelationId = GetCorrelationIdFromMessage(receivedMessage),
+                        });
+                    return Task.CompletedTask;
+                }).ConfigureAwait(false);
 
             return result;
         }
@@ -72,6 +101,12 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon
         public async ValueTask DisposeAsync()
         {
             await _serviceBusListenerMock.DisposeAsync();
+        }
+
+        private static string? GetCorrelationIdFromMessage(ServiceBusReceivedMessage receivedMessage)
+        {
+            return receivedMessage.CorrelationId ??
+                   receivedMessage.ApplicationProperties[MessageMetaDataConstants.CorrelationId].ToString();
         }
     }
 }
