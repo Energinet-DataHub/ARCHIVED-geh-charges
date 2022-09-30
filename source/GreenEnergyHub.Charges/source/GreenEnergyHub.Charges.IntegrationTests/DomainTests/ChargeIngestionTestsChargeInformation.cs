@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
+using Energinet.DataHub.MessageHub.Model.Model;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
@@ -252,8 +253,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 peekResults.Should().NotContainMatch("*<cim:process.processType>D08</cim:process.processType>*");
             }
 
-            [Fact(Skip = "Messagehub need support for Json")]
-            public async Task When_TaxTaxIsCreatedBySystemOperator_Then_ANotificationShouldBeReceivedByActiveGridAccessProvidersAsJson()
+            [Fact]
+            public async Task When_ChargeInformationTaxIsCreatedBySystemOperator_Then_ANotificationShouldBeReceivedByActiveGridProvidersAndSuppliersAsJson()
             {
                 var (request, correlationId) = Fixture.AsSystemOperator.PrepareHttpPostRequestWithAuthorization(
                     EndpointUrl, ChargeDocument.TariffSystemOperatorCreate);
@@ -263,16 +264,21 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
                 // Assert
                 using var assertionScope = new AssertionScope();
-                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 4);
+                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 8, ResponseFormat.Json);
 
                 peekResults.Should().NotContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
                 peekResults.Should().ContainMatch("*NotifyPriceList_MarketDocument*");
+                peekResults.Should().ContainMatch("*\"value\": \"D18\"*");
+                peekResults.Should().NotContainMatch("*\"value\": \"D08\"*");
+                peekResults.Should().ContainMatch("*\"value\": \"DDZ\"*");
+                peekResults.Should().ContainMatch("*\"value\": \"DDM\"*");
                 peekResults.Should().ContainMatch("*8100000000030*");
                 peekResults.Should().ContainMatch("*8100000000016*");
                 peekResults.Should().ContainMatch("*8100000000023*");
                 peekResults.Should().NotContainMatch("*8900000000005*");
-                peekResults.Should().ContainMatch("*\"process.processType\": {\"value\": \"D18\"}*");
-                peekResults.Should().NotContainMatch("*\"process.processType\": {\"value\": \"D08\"}*");
+                peekResults.Should().ContainMatch("*\"value\": \"DDQ\"*");
+                peekResults.Should().ContainMatch("*8100000000108*");
+                peekResults.Should().ContainMatch("*8510000000013*");
             }
         }
     }

@@ -17,6 +17,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
+using Energinet.DataHub.MessageHub.Model.Model;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using GreenEnergyHub.Charges.Core.DateTime;
@@ -510,8 +511,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 peekResults.Should().NotContainMatch("*8900000000005*");
             }
 
-            [Fact(Skip = "Messagehub need support for Json")]
-            public async Task Given_ChargePriceMessageWithChargeInformationData_WhenPosted_ThenChargePriceDataAvailableNotificationToGridAccessProviderContainsMandatoryChargeInformationOnlyInJson()
+            [Fact]
+            public async Task When_ChargePriceTaxTariffIsCreatedBySystemOperator_Then_ANotificationShouldBeReceivedByActiveGridProvidersAndSuppliersAsJson()
             {
                 // Arrange
                 var (request, correlationId) = Fixture.AsSystemOperator.PrepareHttpPostRequestWithAuthorization(
@@ -524,19 +525,22 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 actualResponse.StatusCode.Should().Be(HttpStatusCode.Accepted);
 
                 using var assertionScope = new AssertionScope();
-                var peekResult = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 2);
-                var notification = peekResult.First(s =>
-                    s.Contains("*NotifyPriceList_MarketDocument*")
-                    && s.Contains("*\"receiver_MarketParticipant.marketRole.type\": {\"value\": \"DDM\"*"));
-                notification.Should().Contain("*\"process.processType\": {\"value\": \"D08\"*");
-                notification.Should().Contain("*\"chargeTypeOwner_MarketParticipant.mRID\": {\"codingScheme\": \"A10\", {\"value\": \"5790000432752\"*");
-                notification.Should().Contain("*\"type\": \"D03\"*");
-                notification.Should().Contain("*\"mRID\": \"EA-001\"*");
-                notification.Should().Contain("*\"effectiveDate\":*");
-                notification.Should().NotContain("*\"name\":*");
-                notification.Should().NotContain("*\"description\":*");
-                notification.Should().NotContain("*\"VATPayer\":*");
-                notification.Should().NotContain("*\"transparentInvoicing\":*");
+                var peekResult = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 8, ResponseFormat.Json);
+                peekResult.Should().NotContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
+                peekResult.Should().ContainMatch("*NotifyPriceList_MarketDocument*");
+                peekResult.Should().ContainMatch("*\"value\": \"D08\"*");
+                peekResult.Should().NotContainMatch("*\"value\": \"D18\"*");
+                peekResult.Should().ContainMatch("*\"value\": \"D03\"*");
+                peekResult.Should().ContainMatch("*\"mRID\": \"EA-001\"*");
+                peekResult.Should().ContainMatch("*\"value\": \"DDZ\"*");
+                peekResult.Should().ContainMatch("*\"value\": \"DDM\"*");
+                peekResult.Should().ContainMatch("*8100000000030*");
+                peekResult.Should().ContainMatch("*8100000000016*");
+                peekResult.Should().ContainMatch("*8100000000023*");
+                peekResult.Should().NotContainMatch("*8900000000005*");
+                peekResult.Should().ContainMatch("*\"value\": \"DDQ\"*");
+                peekResult.Should().ContainMatch("*8100000000108*");
+                peekResult.Should().ContainMatch("*8510000000013*");
             }
 
             private static ZonedDateTimeService GetZonedDateTimeService()

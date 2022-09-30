@@ -77,7 +77,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
             Assert.Equal(expected, actual, ignoreLineEndingDifferences: true);
         }
 
-        [Theory(Skip = "Manually run test to save the generated xml file to disk")]
+        [Theory(Skip = "Manually run test to save the generated file to disk")]
         [InlineAutoDomainData]
         public async Task SerializeAsync_WhenCalled_SaveSerializedStream(
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
@@ -102,35 +102,6 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
                 MarketParticipantRole.GridAccessProvider);
 
             await using var fileStream = File.Create("C:\\Temp\\TestChargeBundle" + Guid.NewGuid() + ".xml");
-
-            await stream.CopyToAsync(fileStream);
-        }
-
-        [Theory(Skip = "Manually run test to save the generated json file to disk")]
-        [InlineAutoDomainData]
-        public async Task SerializeAsync_WhenCalledRequestingJson_SaveSerializedStream(
-            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            [Frozen] Mock<IClock> clock,
-            [Frozen] Mock<IIso8601Durations> iso8601Durations,
-            [Frozen] Mock<ICimIdProvider> cimIdProvider,
-            ChargeCimJsonSerializer sut)
-        {
-            SetupMocks(marketParticipantRepository, clock, iso8601Durations, cimIdProvider);
-
-            var charges = GetCharges(clock.Object);
-
-            await using var stream = new MemoryStream();
-
-            await sut.SerializeToStreamAsync(
-                charges,
-                stream,
-                BusinessReasonCode.UpdateChargeInformation,
-                "5790001330552",
-                MarketParticipantRole.MeteringPointAdministrator,
-                RecipientId,
-                MarketParticipantRole.GridAccessProvider);
-
-            await using var fileStream = File.Create("C:\\Temp\\TestChargeBundle" + Guid.NewGuid() + ".json");
 
             await stream.CopyToAsync(fileStream);
         }

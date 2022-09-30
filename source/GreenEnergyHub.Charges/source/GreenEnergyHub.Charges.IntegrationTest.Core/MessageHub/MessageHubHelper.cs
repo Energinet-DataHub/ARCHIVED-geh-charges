@@ -12,10 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using FluentAssertions;
+using Energinet.DataHub.MessageHub.Model.Model;
 
 namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
 {
@@ -27,13 +26,14 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
         public static async Task<List<string>> AssertPeekReceivesRepliesAsync(
             this MessageHubMock messageHubMock,
             string correlationId,
-            int noOfDataAvailableNotifications = 1)
+            int noOfDataAvailableNotifications = 1,
+            ResponseFormat responseFormat = ResponseFormat.Xml)
         {
             await messageHubMock.WaitForNotificationsInDataAvailableQueueAsync(correlationId, noOfDataAvailableNotifications);
 
             // Invokes the domain and ensures that a reply to the peek request is received for each message type
             // Throws if corresponding peek reply is not received
-            var peekSimulatorResponseDtos = await messageHubMock.PeekAsync();
+            var peekSimulatorResponseDtos = await messageHubMock.PeekAsync(responseFormat);
 
             var peekResults = new List<string>();
             foreach (var peekSimulatorResponseDto in peekSimulatorResponseDtos)
