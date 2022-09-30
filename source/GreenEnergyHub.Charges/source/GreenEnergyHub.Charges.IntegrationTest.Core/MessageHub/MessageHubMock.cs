@@ -129,7 +129,12 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
 
             var sessionId = Guid.NewGuid().ToString("N");
             foreach (var message in distinctMessages)
-                await CreateAndSendDataBundleRequestAsync(message, sessionId, dataBundleRequestDtos);
+            {
+                var requestId = Guid.NewGuid();
+                var blobName = await AddDataAvailableNotificationIdsToStorageAsync(requestId, message).ConfigureAwait(false);
+
+                await CreateAndSendDataBundleRequestAsync(message, sessionId, dataBundleRequestDtos, blobName, requestId);
+            }
 
             var eventualMessageHubReply = await ReceiveEventualServiceBusEvents(dataBundleRequestDtos);
 
@@ -162,12 +167,10 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
         private async Task CreateAndSendDataBundleRequestAsync(
             DistinctMessage message,
             string sessionId,
-            ICollection<DataBundleRequestDto> dataBundleRequestDtos)
+            ICollection<DataBundleRequestDto> dataBundleRequestDtos,
+            string blobName,
+            Guid requestId)
         {
-            var requestId = Guid.NewGuid();
-            var blobName = $"{message.MessageType}_{message.Recipient:N}_{requestId:N}";
-            await AddDataAvailableNotificationIdsToStorageAsync(blobName, message).ConfigureAwait(false);
-
             var correlationId = CorrelationIdGenerator.Create();
             var request = BuildDataBundleRequestDto(correlationId, message, requestId, blobName);
 
@@ -211,8 +214,10 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
             return eventualMessageHubReply;
         }
 
-        private async Task AddDataAvailableNotificationIdsToStorageAsync(string blobName, DistinctMessage message)
+        private async Task<string> AddDataAvailableNotificationIdsToStorageAsync(Guid requestId, DistinctMessage message)
         {
+            var blobName = $"{message.MessageType}_{message.Recipient:N}_{requestId:N}";
+
             var dataAvailableNotificationDtosForMessageType = _notifications.Where(x =>
                     x.MessageType.Value == message.MessageType &&
                     x.Recipient.Value == message.Recipient)
@@ -231,6 +236,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
             {
                 throw new MessageHubStorageException("Error uploading file to storage", e);
             }
+
+            return blobName;
         }
 
         private async Task SendDataBundleAsync(
