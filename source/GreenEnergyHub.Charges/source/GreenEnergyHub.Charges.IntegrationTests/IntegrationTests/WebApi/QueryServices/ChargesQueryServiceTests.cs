@@ -191,6 +191,34 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
         }
 
         [Fact]
+        public async Task SearchAsync_WhenSearchingByMultipleChargeTypes_ReturnsChargesWithChargeTypes()
+        {
+            // Arrange
+            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
+            await GetOrAddMarketParticipantAsync(chargesDatabaseWriteContext);
+
+            var charge = GetValidCharge();
+
+            chargesDatabaseWriteContext.Charges.Add(charge);
+            await chargesDatabaseWriteContext.SaveChangesAsync();
+            var expected = chargesDatabaseWriteContext.Charges.Count(c => c.Type == Domain.Charges.ChargeType.Subscription || c.Type == Domain.Charges.ChargeType.Fee);
+
+            await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
+            var searchCriteria = new SearchCriteriaDtoBuilder()
+                .WithChargeTypes(new List<ChargeType> { ChargeType.D01, ChargeType.D02 })
+                .Build();
+
+            var sut = GetSut(chargesDatabaseQueryContext);
+
+            // Act
+            var actual = await sut.SearchAsync(searchCriteria);
+
+            // Assert
+            actual.Count.Should().Be(expected);
+            actual.Should().Contain(c => c.ChargeType == ChargeType.D01 || c.ChargeType == ChargeType.D02);
+        }
+
+        [Fact]
         public async Task SearchAsync_WhenSearchingByChargeName_ReturnsOneCharge_WithOnePeriod()
         {
             // Arrange

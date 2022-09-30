@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
+using System.Linq;
 using Energinet.Charges.Contracts.Charge;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryServices
@@ -20,7 +22,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
     {
         private string _chargeIdOrName = string.Empty;
         private string _marketParticipantId = string.Empty;
-        private string _chargeType = string.Empty;
+        private string _chargeTypes = string.Empty;
 
         public SearchCriteriaDtoBuilder WithChargeIdOrName(string chargeIdOrName)
         {
@@ -36,13 +38,19 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
         public SearchCriteriaDtoBuilder WithChargeType(ChargeType chargeType)
         {
-            _chargeType = chargeType.ToString();
+            _chargeTypes = chargeType.ToString();
+            return this;
+        }
+
+        public SearchCriteriaDtoBuilder WithChargeTypes(List<ChargeType> chargeTypes)
+        {
+            _chargeTypes = string.Join(",", chargeTypes.Select(type => type.ToString()));
             return this;
         }
 
         public SearchCriteriaDto Build()
         {
-            return new SearchCriteriaDto(_chargeIdOrName, _marketParticipantId, _chargeType);
+            return new SearchCriteriaDto(_chargeIdOrName, _marketParticipantId, _chargeTypes);
         }
     }
 }

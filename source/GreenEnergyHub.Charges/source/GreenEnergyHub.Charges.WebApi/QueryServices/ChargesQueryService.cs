@@ -50,7 +50,7 @@ public class ChargesQueryService : IChargesQueryService
             charges = SearchByOwnerId(searchCriteria, charges);
 
         if (!searchCriteria.ChargeTypes.IsNullOrEmpty())
-            charges = SearchByChargeType(searchCriteria, charges);
+            charges = SearchByChargeTypes(searchCriteria, charges);
 
         return await charges
             .AsChargeV1Dto()
@@ -77,7 +77,7 @@ public class ChargesQueryService : IChargesQueryService
         return charges;
     }
 
-    private static IQueryable<Charge> SearchByChargeType(SearchCriteriaDto searchCriteria, IQueryable<Charge> charges)
+    private static IQueryable<Charge> SearchByChargeTypes(SearchCriteriaDto searchCriteria, IQueryable<Charge> charges)
     {
         var chargeTypes = ChargeTypeMapper.MapMany(searchCriteria.ChargeTypes);
         charges = charges.Where(c => chargeTypes.Contains((ChargeType)c.Type));
