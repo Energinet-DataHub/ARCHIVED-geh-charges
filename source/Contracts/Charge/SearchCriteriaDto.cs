@@ -17,6 +17,6 @@ namespace Energinet.Charges.Contracts.Charge
 {
     public record SearchCriteriaDto(
         string ChargeIdOrName,
-        string MarketParticipantId,
+        string OwnerId,
         string ChargeTypes);
 }

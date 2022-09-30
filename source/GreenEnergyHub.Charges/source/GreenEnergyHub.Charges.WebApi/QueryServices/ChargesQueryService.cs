@@ -44,29 +44,37 @@ public class ChargesQueryService : IChargesQueryService
         charges = ActiveCharges(charges);
 
         if (!searchCriteria.ChargeIdOrName.IsNullOrEmpty())
-        {
-            charges = charges
-                .Where(c => c.SenderProvidedChargeId.Contains(searchCriteria.ChargeIdOrName)
-                            || c.ChargePeriods
-                                .OrderByDescending(cp => cp.StartDateTime)
-                                .First(cp => cp.StartDateTime <= todayAtMidnightUtc)
-                                .Name.Contains(searchCriteria.ChargeIdOrName));
-        }
+            charges = SearchByChargeIdOrName(searchCriteria, charges, todayAtMidnightUtc);
 
-        if (!searchCriteria.MarketParticipantId.IsNullOrEmpty())
-        {
-            charges = charges.Where(c => c.Owner.MarketParticipantId == searchCriteria.MarketParticipantId);
-        }
+        if (!searchCriteria.OwnerId.IsNullOrEmpty())
+            charges = SearchByOwnerId(searchCriteria, charges);
 
         if (!searchCriteria.ChargeTypes.IsNullOrEmpty())
-        {
             charges = SearchByChargeType(searchCriteria, charges);
-        }
 
         return await charges
             .AsChargeV1Dto()
             .ToListAsync()
             .ConfigureAwait(false);
+    }
+
+    private static IQueryable<Charge> SearchByChargeIdOrName(
+        SearchCriteriaDto searchCriteria, IQueryable<Charge> charges, DateTime todayAtMidnightUtc)
+    {
+        charges = charges
+            .Where(c => c.SenderProvidedChargeId.Contains(searchCriteria.ChargeIdOrName)
+                        || c.ChargePeriods
+                            .OrderByDescending(cp => cp.StartDateTime)
+                            .First(cp => cp.StartDateTime <= todayAtMidnightUtc)
+                            .Name.Contains(searchCriteria.ChargeIdOrName));
+        return charges;
+    }
+
+    private static IQueryable<Charge> SearchByOwnerId(SearchCriteriaDto searchCriteria, IQueryable<Charge> charges)
+    {
+        var ownerId = Guid.Parse(searchCriteria.OwnerId);
+        charges = charges.Where(c => c.OwnerId == ownerId);
+        return charges;
     }
 
     private static IQueryable<Charge> SearchByChargeType(SearchCriteriaDto searchCriteria, IQueryable<Charge> charges)
