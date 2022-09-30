@@ -169,7 +169,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
                 // We expect at least 4 peek results:
                 // * 1 confirmation
-                // * 2 data available to energy suppliers
+                // * 3 data available to energy suppliers
                 var peekResults = await Fixture.MessageHubMock
                     .AssertPeekReceivesRepliesAsync(correlationId, noOfDataAvailableNotificationsExpected);
                 peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
