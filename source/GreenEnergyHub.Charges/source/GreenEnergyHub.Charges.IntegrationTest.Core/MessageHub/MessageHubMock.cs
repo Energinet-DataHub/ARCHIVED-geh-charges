@@ -111,6 +111,11 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
                 _dataAvailableNotificationParser.Parse(x.Body!.ToArray())));
         }
 
+        /// <summary>
+        /// Requests data bundle on the charges bundle request queue and waits for document uri's to be returned
+        /// on the charges bundle reply queue.
+        /// </summary>
+        /// <returns>List of <see cref="PeekSimulatorResponseDto"/></returns>
         public async Task<List<PeekSimulatorResponseDto>> PeekAsync()
         {
             ExtendedInvalidOperationException.ThrowIfNullOrNoElements(
@@ -136,6 +141,11 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
             return peekSimulatorResponseDtos;
         }
 
+        /// <summary>
+        /// Downloads all bundled document in the <see cref="peekSimulationResponseDto"/>.
+        /// </summary>
+        /// <param name="peekSimulationResponseDto"></param>
+        /// <returns>Bundled document as string</returns>
         public async Task<string> DownloadPeekResultAsync(PeekSimulatorResponseDto peekSimulationResponseDto)
         {
             ArgumentNullException.ThrowIfNull(peekSimulationResponseDto);
