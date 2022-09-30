@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Threading;
 
 namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon
@@ -24,13 +25,12 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon
         public EventualServiceBusEvents()
         {
             _isDisposed = false;
+            EventualServiceBusMessages = new List<EventualServiceBusMessage>();
         }
 
         public CountdownEvent? CountdownEvent { get; set; }
 
-        public BinaryData? Body { get; set; }
-
-        public string? CorrelationId { get; set; }
+        public IList<EventualServiceBusMessage> EventualServiceBusMessages { get; }
 
         public void Dispose()
         {

@@ -22,7 +22,7 @@ using NodaTime;
 namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData
 {
     /// <summary>
-    /// All data necessary for one activity records in a charge link receipt
+    /// All data necessary for one activity record in a charge receipt
     /// The data will be stored on events and will later be fetched as part
     /// of creating a bundle of receipts for a market participant once the
     /// participant peek the MessageHub
