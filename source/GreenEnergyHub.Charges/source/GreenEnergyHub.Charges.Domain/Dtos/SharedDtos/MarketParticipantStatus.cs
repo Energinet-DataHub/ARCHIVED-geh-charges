@@ -12,17 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
-
-namespace GreenEnergyHub.Charges.TestCore.Builders.Testables
+namespace GreenEnergyHub.Charges.Domain.Dtos.SharedDtos
 {
-    public class TestMeteringPointAdministrator : MarketParticipant
+    public enum MarketParticipantStatus
     {
-        public TestMeteringPointAdministrator(Guid id, Guid actorId, Guid b2CActorId, string marketParticipantId)
-            : base(id, actorId, b2CActorId, marketParticipantId, MarketParticipantStatus.Active, MarketParticipantRole.MeteringPointAdministrator)
-        {
-        }
+        New = 1,
+        Active = 2,
+        Inactive = 3,
+        Passive = 4,
+        Deleted = 5,
     }
 }

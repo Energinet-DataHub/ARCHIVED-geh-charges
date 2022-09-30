@@ -13,16 +13,19 @@
 // limitations under the License.
 
 using System;
-using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
-namespace GreenEnergyHub.Charges.TestCore.Builders.Testables
+namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
 {
-    public class TestMeteringPointAdministrator : MarketParticipant
+    public sealed class AzureBlobContentDto
     {
-        public TestMeteringPointAdministrator(Guid id, Guid actorId, Guid b2CActorId, string marketParticipantId)
-            : base(id, actorId, b2CActorId, marketParticipantId, MarketParticipantStatus.Active, MarketParticipantRole.MeteringPointAdministrator)
+        internal AzureBlobContentDto(Uri path)
         {
+            Path = path;
         }
+
+        /// <summary>
+        /// Contains the path to the bundle generated during Peek.
+        /// </summary>
+        public Uri Path { get; }
     }
 }
