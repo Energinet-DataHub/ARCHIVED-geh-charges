@@ -15,6 +15,7 @@
 using System;
 using GreenEnergyHub.Charges.QueryApi;
 using GreenEnergyHub.Charges.QueryApi.Model;
+using GreenEnergyHub.Charges.QueryApi.QueryServices;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,6 +36,7 @@ namespace GreenEnergyHub.Charges.WebApi
                 options => options.UseSqlServer(connectionString));
 
             serviceCollection.AddScoped<IData, Data>();
+            serviceCollection.AddScoped<IChargesQueryService, ChargesQueryService>();
 
             return serviceCollection;
         }

@@ -50,27 +50,6 @@ limitations under the License.
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\..\Contracts\ChargeLink\ChargeLinkV1Dto.cs">
-      <Link>Dtos\ChargeLink\ChargeLinkV1Dto.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\Contracts\ChargeLink\ChargeLinkV2Dto.cs">
-      <Link>Dtos\ChargeLink\ChargeLinkV2Dto.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\Contracts\Charge\ChargeType.cs">
-      <Link>Dtos\Charge\ChargeType.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\Contracts\Charge\Resolution.cs">
-      <Link>Dtos\Charge\Resolution.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\Contracts\Charge\ChargesV1Dto.cs">
-      <Link>Dtos\Charge\ChargesV1Dto.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\Contracts\Charge\SearchCriteriaDto.cs">
-      <Link>Dtos\Charge\SearchCriteriaDto.cs</Link>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Update="appsettings.json">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

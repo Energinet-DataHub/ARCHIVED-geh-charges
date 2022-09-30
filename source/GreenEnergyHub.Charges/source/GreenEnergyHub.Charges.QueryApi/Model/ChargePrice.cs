@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-
 #nullable disable
 
-namespace GreenEnergyHub.Charges.QueryApi.Model.Scaffolded
+using System;
+
+namespace GreenEnergyHub.Charges.QueryApi.Model
 {
     public partial class ChargePrice
     {

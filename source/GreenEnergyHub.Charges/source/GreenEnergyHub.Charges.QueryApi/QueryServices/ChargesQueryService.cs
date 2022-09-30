@@ -18,14 +18,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Energinet.Charges.Contracts.Charge;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.Charges;
-using GreenEnergyHub.Charges.QueryApi;
 using GreenEnergyHub.Charges.QueryApi.Model;
-using GreenEnergyHub.Charges.WebApi.ModelPredicates;
+using GreenEnergyHub.Charges.QueryApi.ModelPredicates;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using ChargeType = GreenEnergyHub.Charges.Domain.Charges.ChargeType;
 
-namespace GreenEnergyHub.Charges.WebApi.QueryServices;
+namespace GreenEnergyHub.Charges.QueryApi.QueryServices;
 
 public class ChargesQueryService : IChargesQueryService
 {
@@ -43,13 +41,13 @@ public class ChargesQueryService : IChargesQueryService
 
         charges = ActiveCharges(charges);
 
-        if (!searchCriteria.ChargeIdOrName.IsNullOrEmpty())
+        if (!string.IsNullOrWhiteSpace(searchCriteria.ChargeIdOrName))
             charges = SearchByChargeIdOrName(searchCriteria, charges, todayAtMidnightUtc);
 
-        if (!searchCriteria.OwnerId.IsNullOrEmpty())
+        if (!string.IsNullOrWhiteSpace(searchCriteria.OwnerId))
             charges = SearchByOwnerId(searchCriteria, charges);
 
-        if (!searchCriteria.ChargeTypes.IsNullOrEmpty())
+        if (!string.IsNullOrWhiteSpace(searchCriteria.ChargeTypes))
             charges = SearchByChargeTypes(searchCriteria, charges);
 
         return await charges

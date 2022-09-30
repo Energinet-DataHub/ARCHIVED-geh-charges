@@ -16,7 +16,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Energinet.Charges.Contracts.Charge;
 
-namespace GreenEnergyHub.Charges.WebApi.QueryServices;
+namespace GreenEnergyHub.Charges.QueryApi.QueryServices;
 
 public interface IChargesQueryService
 {

@@ -15,8 +15,9 @@
 using System.Threading.Tasks;
 using Energinet.Charges.Contracts.Charge;
 using GreenEnergyHub.Charges.QueryApi;
-using GreenEnergyHub.Charges.WebApi.ModelPredicates;
-using GreenEnergyHub.Charges.WebApi.QueryServices;
+using GreenEnergyHub.Charges.QueryApi.ModelPredicates;
+using GreenEnergyHub.Charges.QueryApi.QueryServices;
+using GreenEnergyHub.Charges.QueryApi.Validation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -61,6 +62,10 @@ public class ChargesController : ControllerBase
     [MapToApiVersion(Version1)]
     public async Task<IActionResult> SearchAsync(SearchCriteriaDto searchCriteria)
     {
+        var isValid = SearchCriteriaValidator.Validate(searchCriteria);
+        if (!isValid)
+            return BadRequest("Search criteria is not valid.");
+
         var charges = await _chargesQueryService.SearchAsync(searchCriteria).ConfigureAwait(false);
 
         return Ok(charges);

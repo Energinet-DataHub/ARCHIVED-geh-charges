@@ -18,7 +18,7 @@ using Energinet.Charges.Contracts.Charge;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.QueryApi.Model;
 
-namespace GreenEnergyHub.Charges.WebApi.ModelPredicates;
+namespace GreenEnergyHub.Charges.QueryApi.ModelPredicates;
 
 public static class ChargeQueryLogic
 {

@@ -15,8 +15,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.QueryApi;
+using GreenEnergyHub.Charges.QueryApi.ModelPredicates;
 using GreenEnergyHub.Charges.QueryApi.QueryPredicates;
-using GreenEnergyHub.Charges.WebApi.ModelPredicates;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

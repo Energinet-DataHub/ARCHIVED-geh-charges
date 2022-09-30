@@ -18,8 +18,8 @@ using Energinet.Charges.Contracts.Charge;
 using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using FluentAssertions;
 using GreenEnergyHub.Charges.QueryApi.Model;
+using GreenEnergyHub.Charges.QueryApi.ModelPredicates;
 using GreenEnergyHub.Charges.TestCore.Builders.Query;
-using GreenEnergyHub.Charges.WebApi.ModelPredicates;
 using Xunit;
 using Xunit.Categories;
 
@@ -52,7 +52,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
                 charge.TaxIndicator,
                 charge.ChargePeriods.Single().TransparentInvoicing,
                 charge.ChargePeriods.Single().StartDateTime,
-                charge.ChargePeriods.Single().EndDateTime);
+                null);
 
             // Act
             var actual = charges.AsChargeV1Dto();

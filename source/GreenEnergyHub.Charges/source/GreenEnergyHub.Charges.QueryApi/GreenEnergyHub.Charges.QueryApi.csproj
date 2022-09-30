@@ -39,5 +39,27 @@ limitations under the License.
 
     <ItemGroup>
       <ProjectReference Include="..\GreenEnergyHub.Charges.Domain\GreenEnergyHub.Charges.Domain.csproj" />
+      <ProjectReference Include="..\GreenEnergyHub.Charges.Infrastructure.Core\GreenEnergyHub.Charges.Infrastructure.Core.csproj" />
     </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\..\Contracts\ChargeLink\ChargeLinkV1Dto.cs">
+      <Link>Dtos\ChargeLink\ChargeLinkV1Dto.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Contracts\ChargeLink\ChargeLinkV2Dto.cs">
+      <Link>Dtos\ChargeLink\ChargeLinkV2Dto.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Contracts\Charge\ChargeType.cs">
+      <Link>Dtos\Charge\ChargeType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Contracts\Charge\Resolution.cs">
+      <Link>Dtos\Charge\Resolution.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Contracts\Charge\ChargesV1Dto.cs">
+      <Link>Dtos\Charge\ChargesV1Dto.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Contracts\Charge\SearchCriteriaDto.cs">
+      <Link>Dtos\Charge\SearchCriteriaDto.cs</Link>
+    </Compile>
+  </ItemGroup>
 </Project>
