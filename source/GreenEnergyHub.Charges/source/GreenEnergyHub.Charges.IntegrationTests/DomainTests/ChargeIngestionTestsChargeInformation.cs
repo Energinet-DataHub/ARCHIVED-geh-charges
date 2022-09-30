@@ -229,7 +229,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             }
 
             [Fact]
-            public async Task When_TaxTaxIsCreatedBySystemOperator_Then_ANotificationShouldBeReceivedByActiveGridAccessProvidersAndEnergySuppliers()
+            public async Task When_TaxTariffIsCreatedBySystemOperator_Then_ANotificationShouldBeReceivedByGridAccessProvidersAndEnergySuppliers()
             {
                 var (request, correlationId) = Fixture.AsSystemOperator.PrepareHttpPostRequestWithAuthorization(
                     EndpointUrl, ChargeDocument.TariffSystemOperatorCreate);
