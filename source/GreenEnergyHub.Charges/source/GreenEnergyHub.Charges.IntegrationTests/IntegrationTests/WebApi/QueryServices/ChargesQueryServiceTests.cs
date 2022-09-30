@@ -293,36 +293,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             actual.Count.Should().Be(expected);
         }
 
-        [Fact]
-        public async Task SearchAsync_WhenSearchingByValidityNow_ReturnsChargesThatAreValidNow()
-        {
-            // Arrange
-            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-            await GetOrAddMarketParticipantAsync(chargesDatabaseWriteContext);
-
-            var charge = GetPlannedCharge();
-            var todayAtMidnightUtc = DateTime.Now.Date.ToUniversalTime().ToInstant();
-
-            chargesDatabaseWriteContext.Charges.Add(charge);
-            await chargesDatabaseWriteContext.SaveChangesAsync();
-            var expected = chargesDatabaseWriteContext.Charges.Count(
-                    c => c.Periods.Any(p => p.StartDateTime <= todayAtMidnightUtc));
-
-            await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
-            var searchCriteria = new SearchCriteriaDtoBuilder()
-                .WithValidity(ValidityOptions.Now)
-                .Build();
-
-            var sut = GetSut(chargesDatabaseQueryContext);
-
-            // Act
-            var actual = await sut.SearchAsync(searchCriteria);
-
-            // Assert
-            actual.Count.Should().Be(expected);
-            actual.Should().NotContain(c => c.ChargeId == charge.SenderProvidedChargeId);
-        }
-
         private static ChargesQueryService GetSut(QueryDbContext chargesDatabaseQueryContext)
         {
             var data = new Data(chargesDatabaseQueryContext);
@@ -336,16 +306,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
                 .WithName(Guid.NewGuid().ToString())
                 .WithType(chargeType)
                 .WithStartDate(InstantHelper.GetTodayAtMidnightUtc())
-                .WithSenderProvidedChargeId($"ChgId{Guid.NewGuid().ToString("n")[..5]}")
-                .WithOwnerId(_marketParticipantId)
-                .Build();
-        }
-
-        private static Charge GetPlannedCharge()
-        {
-            return new ChargeBuilder()
-                .WithName(Guid.NewGuid().ToString())
-                .WithStartDate(InstantHelper.GetTodayPlusDaysAtMidnightUtc(10))
                 .WithSenderProvidedChargeId($"ChgId{Guid.NewGuid().ToString("n")[..5]}")
                 .WithOwnerId(_marketParticipantId)
                 .Build();

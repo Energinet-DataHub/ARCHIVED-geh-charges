@@ -20,7 +20,6 @@ using Energinet.Charges.Contracts.Charge;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.Charges;
 using GreenEnergyHub.Charges.QueryApi;
 using GreenEnergyHub.Charges.QueryApi.Model;
-using GreenEnergyHub.Charges.WebApi.Mappers;
 using GreenEnergyHub.Charges.WebApi.ModelPredicates;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -42,6 +41,8 @@ public class ChargesQueryService : IChargesQueryService
         var charges = _data.Charges;
         var todayAtMidnightUtc = DateTime.Now.Date.ToUniversalTime();
 
+        charges = ActiveCharges(charges);
+
         if (!searchCriteria.ChargeIdOrName.IsNullOrEmpty())
         {
             charges = charges
@@ -62,11 +63,6 @@ public class ChargesQueryService : IChargesQueryService
             charges = SearchByChargeType(searchCriteria, charges);
         }
 
-        if (!searchCriteria.Validity.IsNullOrEmpty())
-        {
-            charges = SearchByValidityOption(searchCriteria, charges);
-        }
-
         return await charges
             .AsChargeV1Dto()
             .ToListAsync()
@@ -80,17 +76,9 @@ public class ChargesQueryService : IChargesQueryService
         return charges;
     }
 
-    private static IQueryable<Charge> SearchByValidityOption(SearchCriteriaDto searchCriteria, IQueryable<Charge> charges)
+    private static IQueryable<Charge> ActiveCharges(IQueryable<Charge> charges)
     {
         var todayAtMidnightUtc = DateTime.Now.Date.ToUniversalTime();
-        var validityOption = ValidityOptionMapper.Map(searchCriteria.Validity);
-
-        switch (validityOption)
-        {
-            case ValidityOptions.Now:
-                return charges.Where(c => c.ChargePeriods.Any(cp => cp.StartDateTime <= todayAtMidnightUtc));
-        }
-
-        return charges;
+        return charges.Where(c => c.ChargePeriods.Any(cp => cp.StartDateTime <= todayAtMidnightUtc));
     }
 }

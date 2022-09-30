@@ -21,7 +21,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
         private string _chargeIdOrName = string.Empty;
         private string _marketParticipantId = string.Empty;
         private string _chargeType = string.Empty;
-        private string _validity = string.Empty;
 
         public SearchCriteriaDtoBuilder WithChargeIdOrName(string chargeIdOrName)
         {
@@ -41,15 +40,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             return this;
         }
 
-        public SearchCriteriaDtoBuilder WithValidity(ValidityOptions validity)
-        {
-            _validity = validity.ToString();
-            return this;
-        }
-
         public SearchCriteriaDto Build()
         {
-            return new SearchCriteriaDto(_chargeIdOrName, _marketParticipantId, _chargeType, _validity);
+            return new SearchCriteriaDto(_chargeIdOrName, _marketParticipantId, _chargeType);
         }
     }
 }
