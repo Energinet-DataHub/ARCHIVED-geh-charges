@@ -129,7 +129,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
 
             var sessionId = Guid.NewGuid().ToString("N");
             foreach (var message in distinctMessages)
-                await BuildDataBundleRequestAndRequestDataBundleAsync(message, sessionId, dataBundleRequestDtos);
+                await CreateAndSendDataBundleRequestAsync(message, sessionId, dataBundleRequestDtos);
 
             var eventualMessageHubReply = await ReceiveEventualServiceBusEvents(dataBundleRequestDtos);
 
@@ -159,7 +159,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
             return downloadResult.Content.ToString();
         }
 
-        private async Task BuildDataBundleRequestAndRequestDataBundleAsync(
+        private async Task CreateAndSendDataBundleRequestAsync(
             DistinctMessage message,
             string sessionId,
             ICollection<DataBundleRequestDto> dataBundleRequestDtos)
@@ -168,25 +168,25 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
             var blobName = $"{message.MessageType}_{message.Recipient:N}_{requestId:N}";
             await AddDataAvailableNotificationIdsToStorageAsync(blobName, message).ConfigureAwait(false);
 
-            var correlationId = BuildDataBundleRequestDto(message, requestId, blobName, out var request);
+            var correlationId = CorrelationIdGenerator.Create();
+            var request = BuildDataBundleRequestDto(correlationId, message, requestId, blobName);
 
             await SendDataBundleAsync(sessionId, request, correlationId).ConfigureAwait(false);
 
             dataBundleRequestDtos.Add(request);
         }
 
-        private static string BuildDataBundleRequestDto(
-            DistinctMessage message, Guid requestId, string blobName, out DataBundleRequestDto request)
+        private static DataBundleRequestDto BuildDataBundleRequestDto(
+            string correlationId, DistinctMessage message, Guid requestId, string blobName)
         {
-            var correlationId = CorrelationIdGenerator.Create();
-            request = new DataBundleRequestDto(
+            var request = new DataBundleRequestDto(
                 RequestId: requestId,
                 DataAvailableNotificationReferenceId: blobName,
                 IdempotencyId: correlationId,
                 new MessageTypeDto(message.MessageType),
                 ResponseFormat.Xml,
                 1.0);
-            return correlationId;
+            return request;
         }
 
         private async Task<EventualServiceBusEvents> ReceiveEventualServiceBusEvents(
