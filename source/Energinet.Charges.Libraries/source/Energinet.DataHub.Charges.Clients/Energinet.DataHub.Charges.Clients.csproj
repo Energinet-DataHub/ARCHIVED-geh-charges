@@ -73,7 +73,7 @@ https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.Char
 
   <ItemGroup>
     <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.10.0" />
-    <PackageReference Include="Google.Protobuf" Version="3.21.5" />
+    <PackageReference Include="Google.Protobuf" Version="3.21.7" />
     <PackageReference Include="Grpc.Tools" Version="2.48.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
