@@ -20,7 +20,7 @@ using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 
 namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim
 {
-    public interface ICimSerializer<TAvailableData>
+    public interface ICimXmlSerializer<TAvailableData>
         where TAvailableData : AvailableDataBase
     {
         Task SerializeToStreamAsync(

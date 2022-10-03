@@ -38,13 +38,13 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Bundling
         [InlineAutoDomainData]
         public async Task CreateAsync_WhenCalled_UsesRepositoryAndXmlSerializer(
             [Frozen] Mock<IAvailableDataRepository<AvailableDataBase>> repository,
-            [Frozen] Mock<ICimSerializer<AvailableDataBase>> serializer,
+            [Frozen] Mock<ICimXmlSerializer<AvailableDataBase>> serializer,
             List<AvailableDataBase> availableData,
             List<Guid> dataAvailableIds,
             [Frozen] Mock<IStorageHandler> storageHandler,
             DataBundleRequestDtoBuilder dataBundleRequestDtoBuilder,
             Stream stream,
-            BundleCreator<AvailableDataBase> sut)
+            XmlBundleCreator<AvailableDataBase> sut)
         {
             // Arrange
             var dataBundleRequestDto = dataBundleRequestDtoBuilder.WithResponseFormat(ResponseFormat.Xml).Build();
@@ -119,7 +119,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Bundling
             List<Guid> dataAvailableIds,
             [Frozen] Mock<IStorageHandler> storageHandler,
             Stream stream,
-            BundleCreator<AvailableDataBase> sut)
+            XmlBundleCreator<AvailableDataBase> sut)
         {
             // Arrange
             storageHandler

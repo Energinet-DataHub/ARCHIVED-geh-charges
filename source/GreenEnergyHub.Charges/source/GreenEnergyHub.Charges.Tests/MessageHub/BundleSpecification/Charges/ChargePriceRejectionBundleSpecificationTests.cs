@@ -42,14 +42,14 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.Charges
         [InlineAutoMoqData(1000)]
         public async Task GetMessageWeight_WhenCalled_ReturnedWeightIsHigherThanSerializedStream(
             int noOfReasons,
-            ChargeReceiptCimSerializer serializer,
+            ChargeReceiptCimXmlXmlSerializer xmlXmlSerializer,
             ChargePriceRejectionBundleSpecification sut)
         {
             // Arrange
             var availableData = GetRejection(noOfReasons);
 
             var stream = new MemoryStream();
-            await serializer.SerializeToStreamAsync(
+            await xmlXmlSerializer.SerializeToStreamAsync(
                 new List<AvailableChargeReceiptData> { availableData },
                 stream,
                 BusinessReasonCode.UpdateChargeInformation,

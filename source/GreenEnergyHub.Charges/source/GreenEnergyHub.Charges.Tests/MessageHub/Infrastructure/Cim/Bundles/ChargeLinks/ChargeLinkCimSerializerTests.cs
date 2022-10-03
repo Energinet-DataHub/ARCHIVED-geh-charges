@@ -47,7 +47,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IClock> clock,
             [Frozen] Mock<ICimIdProvider> cimIdProvider,
-            ChargeLinkCimSerializer sut)
+            ChargeLinkCimXmlXmlSerializer sut)
         {
             // Arrange
             SetupMocks(marketParticipantRepository, clock, cimIdProvider);
@@ -80,7 +80,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IClock> clock,
             [Frozen] Mock<ICimIdProvider> cimIdProvider,
-            ChargeLinkCimSerializer sut)
+            ChargeLinkCimXmlXmlSerializer sut)
         {
             SetupMocks(marketParticipantRepository, clock, cimIdProvider);
 

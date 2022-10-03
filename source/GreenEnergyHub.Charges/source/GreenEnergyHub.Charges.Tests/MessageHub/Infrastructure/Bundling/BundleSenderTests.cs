@@ -185,8 +185,8 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Bundling
             where T : AvailableDataBase
         {
             var availableDataRepository = new Mock<IAvailableDataRepository<T>>().Object;
-            var cimSerializer = new Mock<ICimSerializer<T>>().Object;
-            return new BundleCreator<T>(availableDataRepository, cimSerializer, storageHandler);
+            var cimSerializer = new Mock<ICimXmlSerializer<T>>().Object;
+            return new XmlBundleCreator<T>(availableDataRepository, cimSerializer, storageHandler);
         }
 
         private static IBundleCreator CreateJsonBundleCreator<T>(IStorageHandler storageHandler)

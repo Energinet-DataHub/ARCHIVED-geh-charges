@@ -26,8 +26,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
         public static async Task<List<string>> AssertPeekReceivesRepliesAsync(
             this MessageHubMock messageHubMock,
             string correlationId,
-            int noOfDataAvailableNotifications = 1,
-            ResponseFormat responseFormat = ResponseFormat.Xml)
+            ResponseFormat responseFormat,
+            int noOfDataAvailableNotifications = 1)
         {
             await messageHubMock.WaitForNotificationsInDataAvailableQueueAsync(correlationId, noOfDataAvailableNotifications);
 
