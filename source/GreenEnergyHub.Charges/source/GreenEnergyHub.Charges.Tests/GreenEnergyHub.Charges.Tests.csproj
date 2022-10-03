@@ -60,8 +60,8 @@ limitations under the License.
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Google.Protobuf" Version="3.21.5" />
-        <PackageReference Include="Grpc.Tools" Version="2.48.1" PrivateAssets="All" />
+        <PackageReference Include="Google.Protobuf" Version="3.21.7" />
+        <PackageReference Include="Grpc.Tools" Version="2.49.1" PrivateAssets="All" />
         <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.435">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
