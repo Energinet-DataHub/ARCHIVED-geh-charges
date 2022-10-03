@@ -38,16 +38,17 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
             var daysToAdd = 31;
             var inThirtyoneDays = currentInstant.Plus(Duration.FromDays(daysToAdd));
 
-            // Avoid hitting summer/winter time issues
-            if (inThirtyoneDays.ToDateTimeUtc().Month is 3 or 10)
-            {
-                daysToAdd += 30;
-            }
-
             var midnightLocalTime31DaysAhead =
                 ConvertCurrentInstantToLocalDateTimeWithDaysAdded(currentInstant, zonedDateTimeService, daysToAdd);
             var midnightLocalTime32DaysAhead =
                 ConvertCurrentInstantToLocalDateTimeWithDaysAdded(currentInstant, zonedDateTimeService, daysToAdd + 1);
+
+            AvoidHittingSummerWinterTimeIssues(
+                currentInstant,
+                zonedDateTimeService,
+                daysToAdd,
+                ref midnightLocalTime31DaysAhead,
+                ref midnightLocalTime32DaysAhead);
 
             // cim:createdDateTime and effective date must have seconds
             var ymdhmsTimeInterval = currentInstant.GetCreatedDateTimeFormat();
@@ -92,6 +93,28 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
         {
             var zonedDateTime = zonedDateTimeService.GetZonedDateTime(localDateTime, ResolutionStrategy.Leniently);
             return zonedDateTime.ToInstant().ToString("yyyy-MM-dd\\THH:mm\\Z", CultureInfo.InvariantCulture);
+        }
+
+        /// <summary>
+        /// This method helps us avoid hitting the dates where there is either 23 or 25 hours in a day
+        /// If we have anything other than 24 hours, some tests will fail as the test files they use
+        /// have 24 points which will not work on these days.
+        ///
+        /// Testing of Summer winter time should be tested in other ways.
+        /// </summary>
+        private static void AvoidHittingSummerWinterTimeIssues(
+            Instant currentInstant,
+            IZonedDateTimeService zonedDateTimeService,
+            int daysToAdd,
+            ref LocalDateTime midnightLocalTime31DaysAhead,
+            ref LocalDateTime midnightLocalTime32DaysAhead)
+        {
+            var period = Period.Between(midnightLocalTime31DaysAhead, midnightLocalTime32DaysAhead);
+            if (period.Hours is 24) return;
+            midnightLocalTime31DaysAhead =
+                ConvertCurrentInstantToLocalDateTimeWithDaysAdded(currentInstant, zonedDateTimeService, daysToAdd + 1);
+            midnightLocalTime32DaysAhead =
+                ConvertCurrentInstantToLocalDateTimeWithDaysAdded(currentInstant, zonedDateTimeService, daysToAdd + 2);
         }
     }
 }
