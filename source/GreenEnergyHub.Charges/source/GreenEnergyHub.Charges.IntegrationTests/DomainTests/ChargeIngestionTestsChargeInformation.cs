@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,6 +23,7 @@ using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
+using GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.Charges;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
@@ -55,7 +57,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             {
                 Fixture.ChargeCreatedListener.Reset();
                 Fixture.ChargePricesUpdatedListener.Reset();
-                Fixture.MessageHubMock.Clear();
+                Fixture.MessageHubMock.Reset();
 
                 // We need to clear host log after each test is done to ensure that we can assert on function executed
                 // on each test run because we only check on function name.
@@ -134,21 +136,21 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 var actual = await Fixture.HostManager.HttpClient.SendAsync(updateReq);
 
                 // Assert
+                using var assertionScope = new AssertionScope();
                 actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
 
-                using var assertionScope = new AssertionScope();
                 // * Expect one for the confirmation (update)
                 var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(updateCorrelationId);
                 peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
             }
 
             [Theory]
-            [InlineAutoMoqData(ChargeDocument.ChargeInformationSubscriptionMonthlySample)]
-            [InlineAutoMoqData(ChargeDocument.ChargeInformationFeeMonthlySample)]
-            [InlineAutoMoqData(ChargeDocument.ChargeInformationTariffHourlySample)]
-            [InlineAutoMoqData(ChargeDocument.BundledChargeInformationSample)]
+            [InlineAutoMoqData(ChargeDocument.ChargeInformationTariffHourlySample, 4, 1)]
+            [InlineAutoMoqData(ChargeDocument.BundledChargeInformationSample, 12, 3)]
+            [InlineAutoMoqData(ChargeDocument.ChargeInformationSubscriptionMonthlySample, 4, 1)]
+            [InlineAutoMoqData(ChargeDocument.ChargeInformationFeeMonthlySample, 4, 1)]
             public async Task Given_ChargeInformationSampleFile_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply(
-                string testFilePath)
+                string testFilePath, int noOfDataAvailableNotificationsExpected, int noOfConfirmedActivityRecordsExpected)
             {
                 // Arrange
                 var (request, correlationId) =
@@ -165,9 +167,17 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // We expect 4 peek results:
                 // * 1 confirmation
                 // * 3 data available to energy suppliers
-                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 4);
+                var peekResults = await Fixture.MessageHubMock
+                    .AssertPeekReceivesRepliesAsync(correlationId, noOfDataAvailableNotificationsExpected);
+
+                peekResults.Count.Should().Be(4);
                 peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
+                peekResults.Should().ContainMatch("*Notify*");
                 peekResults.Should().NotContainMatch("*Reject*");
+
+                var peekResult = peekResults.Single(x => x.Contains("ConfirmRequestChangeOfPriceList_MarketDocument"));
+                var operations = CIMXmlReader.GetActivityRecords(peekResult);
+                operations.Count.Should().Be(noOfConfirmedActivityRecordsExpected);
             }
 
             [Fact]
@@ -219,7 +229,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             }
 
             [Fact]
-            public async Task When_TaxTaxIsCreatedBySystemOperator_Then_ANotificationShouldBeReceivedByActiveGridAccessProviders()
+            public async Task When_TaxTariffIsCreatedBySystemOperator_Then_ANotificationShouldBeReceivedByGridAccessProvidersAndEnergySuppliers()
             {
                 var (request, correlationId) = Fixture.AsSystemOperator.PrepareHttpPostRequestWithAuthorization(
                     EndpointUrl, ChargeDocument.TariffSystemOperatorCreate);
@@ -235,6 +245,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 peekResults.Should().ContainMatch("*8100000000030*");
                 peekResults.Should().ContainMatch("*8100000000016*");
                 peekResults.Should().ContainMatch("*8100000000023*");
+                peekResults.Should().ContainMatch("*8100000000108*");
+                peekResults.Should().ContainMatch("*8510000000013*");
                 peekResults.Should().NotContainMatch("*8900000000005*");
                 peekResults.Should().ContainMatch("*<cim:process.processType>D18</cim:process.processType>*");
                 peekResults.Should().NotContainMatch("*<cim:process.processType>D08</cim:process.processType>*");
