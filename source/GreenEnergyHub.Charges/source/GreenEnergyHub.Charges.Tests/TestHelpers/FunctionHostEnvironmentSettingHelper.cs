@@ -13,18 +13,36 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
 using Microsoft.Extensions.Configuration;
 
 namespace GreenEnergyHub.Charges.Tests.TestHelpers
 {
     public static class FunctionHostEnvironmentSettingHelper
     {
+        private static readonly string[] _serviceBusConnectionStrings = new[]
+        {
+            "DOMAINEVENT_LISTENER_CONNECTION_STRING",
+            "DOMAINEVENT_MANAGER_CONNECTION_STRING",
+            "DOMAINEVENT_SENDER_CONNECTION_STRING",
+            "INTEGRATIONEVENT_LISTENER_CONNECTION_STRING",
+            "INTEGRATIONEVENT_MANAGER_CONNECTION_STRING",
+            "INTEGRATIONEVENT_SENDER_CONNECTION_STRING",
+        };
+
         public static void SetFunctionHostEnvironmentVariablesFromSampleSettingsFile(IConfiguration configuration)
         {
             var variables = configuration.GetSection("Values");
             foreach (var variable in variables.GetChildren())
             {
-                Environment.SetEnvironmentVariable(variable.Key, variable.Value);
+                var (key, value) = (variable.Key, variable.Value);
+
+                if (_serviceBusConnectionStrings.Contains(variable.Key))
+                {
+                    value = "Endpoint=sb://sb-mybus.servicebus.windows.net/;SharedAccessKeyName=accessKeyName;SharedAccessKey=accessKey";
+                }
+
+                Environment.SetEnvironmentVariable(key, value);
             }
         }
     }

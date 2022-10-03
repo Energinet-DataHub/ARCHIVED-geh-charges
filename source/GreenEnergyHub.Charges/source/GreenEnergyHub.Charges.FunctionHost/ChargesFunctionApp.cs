@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Threading.Tasks;
 using Energinet.DataHub.Core.App.FunctionApp.FunctionTelemetryScope;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
@@ -24,26 +25,28 @@ using Microsoft.Extensions.Hosting;
 
 namespace GreenEnergyHub.Charges.FunctionHost
 {
-    public static class Program
+    public static class ChargesFunctionApp
     {
-        public static void Main()
+        public static async Task Main()
         {
-            var host = new HostBuilder()
-                .ConfigureFunctionsWorkerDefaults(builder =>
+            using var host = ConfigureApplication();
+            await host.RunAsync().ConfigureAwait(false);
+        }
+
+        public static IHost ConfigureApplication()
+            => new HostBuilder()
+                .ConfigureFunctionsWorkerDefaults(worker =>
                 {
-                    builder.UseMiddleware<CorrelationIdMiddleware>();
-                    builder.UseMiddleware<FunctionTelemetryScopeMiddleware>();
-                    builder.UseMiddleware<MessageMetaDataMiddleware>();
-                    builder.UseMiddleware<FunctionInvocationLoggingMiddleware>();
-                    builder.UseMiddleware<RequestResponseLoggingMiddleware>();
-                    builder.UseMiddleware<JwtTokenMiddleware>();
-                    builder.UseMiddleware<ActorMiddleware>();
+                    worker.UseMiddleware<CorrelationIdMiddleware>();
+                    worker.UseMiddleware<FunctionTelemetryScopeMiddleware>();
+                    worker.UseMiddleware<MessageMetaDataMiddleware>();
+                    worker.UseMiddleware<FunctionInvocationLoggingMiddleware>();
+                    worker.UseMiddleware<RequestResponseLoggingMiddleware>();
+                    worker.UseMiddleware<JwtTokenMiddleware>();
+                    worker.UseMiddleware<ActorMiddleware>();
                 })
                 .ConfigureServices(ConfigureServices)
                 .Build();
-
-            host.Run();
-        }
 
         private static void ConfigureServices(HostBuilderContext hostBuilderContext, IServiceCollection serviceCollection)
         {
