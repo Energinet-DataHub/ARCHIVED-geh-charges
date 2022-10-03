@@ -95,7 +95,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeRec
             return result;
         }
 
-        private XElement GetReasonCode(XNamespace cimNamespace, AvailableReceiptValidationError validationError)
+        private static XElement GetReasonCode(XNamespace cimNamespace, AvailableReceiptValidationError validationError)
         {
             return new XElement(
                 cimNamespace + CimChargeReceiptConstants.ReasonElement,
@@ -107,7 +107,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeRec
                     () => validationError.Text));
         }
 
-        private bool IsConfirmation(IEnumerable<AvailableChargeReceiptData> receipts)
+        private static bool IsConfirmation(IEnumerable<AvailableChargeReceiptData> receipts)
         {
             // Due to the nature of the interface to the MessageHub and the use of MessageType in that
             // BusinessReasonCode, RecipientId, RecipientRole and ReceiptStatus will always be the same value
