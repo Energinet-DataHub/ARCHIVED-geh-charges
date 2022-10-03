@@ -20,10 +20,15 @@ on:
       - use-new-create-latest-workflow
 
 jobs:
-  # publish_release:
-  #   uses: Energinet-DataHub/.github/.github/workflows/publish-release.yml@v8
-  #   secrets:
-  #     PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+  publish_release:
+    uses: Energinet-DataHub/.github/.github/workflows/promote-prerelease.yml@v8
+    with:
+      RELEASE_NAME_PREFIX: dotnet
+
+  create_latest_release:
+    uses: Energinet-DataHub/.github/.github/workflows/create-latest-release.yml@v8
+    with:
+      RELEASE_NAME_PREFIX: dotnet
 
   # dispatch_deployment_request:
   #   needs: publish_release
@@ -34,11 +39,6 @@ jobs:
   #   secrets:
   #     PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
   #     ENVIRONMENT_REPOSITORY_PATH: ${{ secrets.ENVIRONMENT_REPOSITORY_PATH }}
-
-  create_latest_release:
-    uses: Energinet-DataHub/.github/.github/workflows/create-latest-release.yml@8.8.0
-    with:
-      RELEASE_NAME_PREFIX: dotnet
 
   # update_coverage_report:
   #   uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci.yml@v8
