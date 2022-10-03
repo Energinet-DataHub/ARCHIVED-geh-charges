@@ -42,16 +42,13 @@ namespace GreenEnergyHub.Charges.Tests.FunctionHost
             var functionAppDependencies = FindDependenciesForType(typeof(ChargesFunctionApp));
 
             // Act
+            IEnumerable<Type> constructorParameters = new List<Type>();
             foreach (var dependency in functionAppDependencies)
-            {
-                var constructorParameters = GetConstructorParametersForDependency(dependency);
+                constructorParameters = GetConstructorParametersForDependency(dependency);
 
-                foreach (var constructorParameter in constructorParameters)
-                {
-                    // Assert
-                    host.Services.GetService(constructorParameter).Should().NotBeNull();
-                }
-            }
+            // Assert
+            foreach (var constructorParameter in constructorParameters)
+                host.Services.GetService(constructorParameter).Should().NotBeNull();
         }
 
         private static IEnumerable<Type> GetConstructorParametersForDependency(Type dependency)
