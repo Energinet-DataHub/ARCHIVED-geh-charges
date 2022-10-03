@@ -24,9 +24,9 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.Charges
 {
-    public class ChargeCimXmlXmlSerializer : CimXmlXmlSerializer<AvailableChargeData>
+    public class ChargeCimXmlSerializer : CimXmlSerializer<AvailableChargeData>
     {
-        public ChargeCimXmlXmlSerializer(IClock clock, ICimIdProvider cimIdProvider)
+        public ChargeCimXmlSerializer(IClock clock, ICimIdProvider cimIdProvider)
             : base(clock, cimIdProvider)
         {
         }
@@ -85,19 +85,19 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.Charges
                 new XElement(cimNamespace + CimChargeConstants.ChargeType, ChargeTypeMapper.Map(charge.ChargeType)),
                 new XElement(cimNamespace + CimChargeConstants.ChargeId, charge.ChargeId),
                 // Charge name
-                CimHelper.GetElementIfNeeded(
+                CimXmlHelper.GetElementIfNeeded(
                     cimNamespace,
                     string.IsNullOrEmpty(charge.ChargeName),
                     CimChargeConstants.ChargeName,
                     () => charge.ChargeName),
                 // Charge description
-                CimHelper.GetElementIfNeeded(
+                CimXmlHelper.GetElementIfNeeded(
                     cimNamespace,
                     string.IsNullOrEmpty(charge.ChargeDescription),
                     CimChargeConstants.ChargeDescription,
                     () => charge.ChargeDescription),
                 // Charge resolution
-                CimHelper.GetElementIfNeeded(
+                CimXmlHelper.GetElementIfNeeded(
                     cimNamespace,
                     charge.Resolution == Resolution.Unknown,
                     CimChargeConstants.ChargeResolution,
@@ -105,26 +105,26 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.Charges
                 // EffectiveDate
                 new XElement(cimNamespace + CimChargeConstants.EffectiveDate, charge.StartDateTime.ToString()),
                 // TerminationDate
-                CimHelper.GetElementIfNeeded(
+                CimXmlHelper.GetElementIfNeeded(
                     cimNamespace,
                     charge.EndDateTime.IsEndDefault(),
                     CimChargeConstants.TerminationDate,
                     () => charge.EndDateTime.ToString()),
                 // VatClassification
-                CimHelper.GetElementIfNeeded(
+                CimXmlHelper.GetElementIfNeeded(
                     cimNamespace,
                     charge.VatClassification == VatClassification.Unknown,
                     CimChargeConstants.VatClassification,
                     () => VatClassificationMapper.Map(charge.VatClassification)),
                 // TransparentInvoicing
-                CimHelper.GetElementIfNeeded(
+                CimXmlHelper.GetElementIfNeeded(
                     cimNamespace,
                     // Right now, charge name is our best bet of determining whether to include transparent invoicing
                     string.IsNullOrEmpty(charge.ChargeName),
                     CimChargeConstants.TransparentInvoicing,
                     () => charge.TransparentInvoicing),
                 // TaxIndicator
-                CimHelper.GetElementIfNeeded(
+                CimXmlHelper.GetElementIfNeeded(
                     cimNamespace,
                     // Right now, charge name is our best bet of determining whether to include tax indicator
                     string.IsNullOrEmpty(charge.ChargeName),

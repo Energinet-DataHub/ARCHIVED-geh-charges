@@ -23,9 +23,9 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeLinks
 {
-    public class ChargeLinkCimXmlXmlSerializer : CimXmlXmlSerializer<AvailableChargeLinksData>
+    public class ChargeLinkCimXmlSerializer : CimXmlSerializer<AvailableChargeLinksData>
     {
-        public ChargeLinkCimXmlXmlSerializer(
+        public ChargeLinkCimXmlSerializer(
             IClock clock,
             ICimIdProvider cimIdProvider)
             : base(clock, cimIdProvider)
@@ -83,7 +83,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeLin
                 new XElement(cimNamespace + CimChargeLinkConstants.ChargeId, chargeLink.ChargeId),
                 new XElement(cimNamespace + CimChargeLinkConstants.Factor, chargeLink.Factor),
                 new XElement(cimNamespace + CimChargeLinkConstants.EffectiveDate, chargeLink.StartDateTime.ToString()),
-                CimHelper.GetElementIfNeeded(
+                CimXmlHelper.GetElementIfNeeded(
                     cimNamespace,
                     chargeLink.EndDateTime.IsEndDefault(),
                     CimChargeLinkConstants.TerminationDate,

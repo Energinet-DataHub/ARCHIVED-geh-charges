@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.ChargeLink
             TestMeteringPointAdministrator hubSender,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<ICimIdProvider> cimIdProvider,
-            ChargeLinksReceiptCimXmlXmlSerializer xmlXmlSerializer,
+            ChargeLinksReceiptCimXmlSerializer xmlSerializer,
             ChargeLinksRejectionBundleSpecification sut)
         {
             // Arrange
@@ -66,7 +66,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.ChargeLink
                 .Returns(MaxLengthId);
 
             var stream = new MemoryStream();
-            await xmlXmlSerializer.SerializeToStreamAsync(
+            await xmlSerializer.SerializeToStreamAsync(
                 new List<AvailableChargeLinksReceiptData>() { availableData },
                 stream,
                 BusinessReasonCode.UpdateChargeInformation,

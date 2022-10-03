@@ -25,10 +25,10 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim
 {
-    public abstract class CimXmlXmlSerializer<T> : ICimXmlSerializer<T>
+    public abstract class CimXmlSerializer<T> : ICimXmlSerializer<T>
         where T : AvailableDataBase
     {
-        public CimXmlXmlSerializer(IClock clock, ICimIdProvider cimIdProvider)
+        public CimXmlSerializer(IClock clock, ICimIdProvider cimIdProvider)
         {
             Clock = clock;
             CimIdProvider = cimIdProvider;

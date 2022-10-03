@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.Charges
             int noOfReasons,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<ICimIdProvider> cimIdProvider,
-            ChargeReceiptCimXmlXmlSerializer xmlXmlSerializer,
+            ChargeReceiptCimXmlSerializer xmlSerializer,
             ChargeRejectionBundleSpecification sut)
         {
             // Arrange
@@ -69,7 +69,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.Charges
             cimIdProvider.Setup(c => c.GetUniqueId()).Returns(MaxLengthId);
 
             var stream = new MemoryStream();
-            await xmlXmlSerializer.SerializeToStreamAsync(
+            await xmlSerializer.SerializeToStreamAsync(
                 new List<AvailableChargeReceiptData> { availableData },
                 stream,
                 BusinessReasonCode.UpdateChargeInformation,

@@ -40,11 +40,11 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
             // Charge bundles
             serviceCollection.AddScoped<IBundleCreator, XmlBundleCreator<AvailableChargeData>>();
-            serviceCollection.AddScoped<ICimXmlSerializer<AvailableChargeData>, ChargeCimXmlXmlSerializer>();
+            serviceCollection.AddScoped<ICimXmlSerializer<AvailableChargeData>, ChargeCimXmlSerializer>();
             serviceCollection.AddScoped<IBundleCreator, XmlBundleCreator<AvailableChargeReceiptData>>();
-            serviceCollection.AddScoped<ICimXmlSerializer<AvailableChargeReceiptData>, ChargeReceiptCimXmlXmlSerializer>();
+            serviceCollection.AddScoped<ICimXmlSerializer<AvailableChargeReceiptData>, ChargeReceiptCimXmlSerializer>();
             serviceCollection.AddScoped<IBundleCreator, XmlBundleCreator<AvailableChargePriceData>>();
-            serviceCollection.AddScoped<ICimXmlSerializer<AvailableChargePriceData>, ChargePriceCimXmlXmlSerializer>();
+            serviceCollection.AddScoped<ICimXmlSerializer<AvailableChargePriceData>, ChargePriceCimXmlSerializer>();
 
             serviceCollection.AddScoped<IBundleCreator, JsonBundleCreator<AvailableChargeData>>();
             serviceCollection.AddScoped<ICimJsonSerializer<AvailableChargeData>, ChargeCimJsonSerializer>();
@@ -53,9 +53,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
             // Charge link bundles
             serviceCollection.AddScoped<IBundleCreator, XmlBundleCreator<AvailableChargeLinksData>>();
-            serviceCollection.AddScoped<ICimXmlSerializer<AvailableChargeLinksData>, ChargeLinkCimXmlXmlSerializer>();
+            serviceCollection.AddScoped<ICimXmlSerializer<AvailableChargeLinksData>, ChargeLinkCimXmlSerializer>();
             serviceCollection.AddScoped<IBundleCreator, XmlBundleCreator<AvailableChargeLinksReceiptData>>();
-            serviceCollection.AddScoped<ICimXmlSerializer<AvailableChargeLinksReceiptData>, ChargeLinksReceiptCimXmlXmlSerializer>();
+            serviceCollection.AddScoped<ICimXmlSerializer<AvailableChargeLinksReceiptData>, ChargeLinksReceiptCimXmlSerializer>();
         }
     }
 }
