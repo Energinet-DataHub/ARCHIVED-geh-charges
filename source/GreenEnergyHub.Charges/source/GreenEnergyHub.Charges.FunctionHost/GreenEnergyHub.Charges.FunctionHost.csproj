@@ -29,7 +29,7 @@ limitations under the License.
     <PackageReference Include="Energinet.DataHub.Core.App.Common.Security" Version="7.0.0" />
     <PackageReference Include="Energinet.DataHub.Core.App.FunctionApp" Version="7.1.0" />
     <PackageReference Include="Energinet.DataHub.Core.Logging" Version="2.2.1" />
-    <PackageReference Include="Energinet.DataHub.Core.Messaging.Protobuf.Integration.ServiceCollection" Version="2.1.1" />
+    <PackageReference Include="Energinet.DataHub.Core.Messaging.Protobuf.Integration.ServiceCollection" Version="2.1.2" />
     <PackageReference Include="Energinet.DataHub.MarketParticipant.Integration.Model" Version="2.5.1" />
     <PackageReference Include="Microsoft.ApplicationInsights.WorkerService" Version="2.21.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
