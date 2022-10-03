@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading;
@@ -176,16 +177,19 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 peekResults.Should().NotContainMatch("*Reject*");
 
                 var peekResult = peekResults.Single(x => x.Contains("ConfirmRequestChangeOfPriceList_MarketDocument"));
-                var operations = CIMXmlReader.GetActivityRecords(peekResult);
+                var operations = CIMXmlReader.GetActivityRecordElements(
+                    peekResult, "MktActivityRecord", "originalTransactionIDReference_MktActivityRecord.mRID");
                 operations.Count.Should().Be(noOfConfirmedActivityRecordsExpected);
             }
 
             [Fact]
-            public async Task Given_BundleWithMultipleOperationsForSameCharge_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply()
+            public async Task Given_BundleWithMultipleOperationsForSameCharge_When_GridAccessProviderPeeks_Then_MessageHubReceivesReplyWithChronologicallyOrderedOperations()
             {
                 // Arrange
                 var (request, correlationId) = Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
                     EndpointUrl, ChargeDocument.BundleWithMultipleOperationsForSameTariff);
+                var expectedConfirmationOperations = new List<string> { "OpId1", "OpId2", "OpId3", "OpId4" };
+                var expectedNotificationOperations = new List<string> { "CREATE", "UPDATE", "STOP", "CANCEL STOP" };
 
                 // Act
                 var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
@@ -194,14 +198,27 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
 
                 // We expect four peeks:
-                // * one for the create confirmation (create)
-                // * one for the create confirmation (update)
-                // * one for the create confirmation (stop)
-                // * one for the create confirmation (cancel stop)
+                // * one for the create confirmation
+                // * one for the notification to GridAccessProvider 8100000000108
+                // * one for the notification to EnergySupplier 8100000001004
+                // * one for the notification to EnergySupplier 8510000000013
                 using var assertionScope = new AssertionScope();
-                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 4);
-                peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
+                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 16);
                 peekResults.Should().NotContainMatch("*Reject*");
+                peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
+
+                var confirmation = peekResults.Single(x => x.Contains("ConfirmRequestChangeOfPriceList_MarketDocument"));
+                var confirmationOperations = CIMXmlReader.GetActivityRecordElements(
+                    confirmation, "MktActivityRecord", "originalTransactionIDReference_MktActivityRecord.mRID");
+
+                confirmationOperations.Select(x => x[..x.IndexOf('_')])
+                    .Should().BeEquivalentTo(expectedConfirmationOperations);
+
+                foreach (var peekResult in peekResults.Where(x => x.Contains("NotifyPriceList_MarketDocument")))
+                {
+                    var notificationOperations = CIMXmlReader.GetActivityRecordElements(peekResult, "ChargeType", "description");
+                    notificationOperations.Should().BeEquivalentTo(expectedNotificationOperations);
+                }
             }
 
             [Fact]
@@ -250,6 +267,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 peekResults.Should().NotContainMatch("*8900000000005*");
                 peekResults.Should().ContainMatch("*<cim:process.processType>D18</cim:process.processType>*");
                 peekResults.Should().NotContainMatch("*<cim:process.processType>D08</cim:process.processType>*");
+                // TODO: secure ordering in NotifyPriceList_MarketDocument here? - missing multiple operations...
             }
         }
     }
