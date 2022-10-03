@@ -176,7 +176,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 peekResults.Should().NotContainMatch("*Reject*");
 
                 var peekResult = peekResults.Single(x => x.Contains("ConfirmRequestChangeOfPriceList_MarketDocument"));
-                var operations = CIMXmlReader.GetActivityRecords(peekResult);
+                var operations = CIMXmlReader.GetActivityRecordElements(
+                    peekResult, "MktActivityRecord", "originalTransactionIDReference_MktActivityRecord.mRID");
                 operations.Count.Should().Be(noOfConfirmedActivityRecordsExpected);
             }
 
