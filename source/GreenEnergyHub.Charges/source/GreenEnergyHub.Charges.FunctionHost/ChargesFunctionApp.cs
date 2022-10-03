@@ -25,15 +25,15 @@ using Microsoft.Extensions.Hosting;
 
 namespace GreenEnergyHub.Charges.FunctionHost
 {
-    public class ChargesFunctionApp
+    public static class ChargesFunctionApp
     {
         public static async Task Main()
         {
-            using var host = new ChargesFunctionApp().ConfigureApplication();
+            using var host = ConfigureApplication();
             await host.RunAsync().ConfigureAwait(false);
         }
 
-        public IHost ConfigureApplication()
+        public static IHost ConfigureApplication()
             => new HostBuilder()
                 .ConfigureFunctionsWorkerDefaults(worker =>
                 {
@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.FunctionHost
                 .ConfigureServices(ConfigureServices)
                 .Build();
 
-        private void ConfigureServices(HostBuilderContext hostBuilderContext, IServiceCollection serviceCollection)
+        private static void ConfigureServices(HostBuilderContext hostBuilderContext, IServiceCollection serviceCollection)
         {
             SharedConfiguration.ConfigureServices(serviceCollection);
             HealthCheckConfiguration.ConfigureServices(serviceCollection);

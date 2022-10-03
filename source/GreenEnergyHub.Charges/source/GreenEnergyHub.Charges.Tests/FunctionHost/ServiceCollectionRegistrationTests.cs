@@ -38,8 +38,7 @@ namespace GreenEnergyHub.Charges.Tests.FunctionHost
         public void WhenApplicationIsConfigured_ThenAllApplicationDependenciesMustBeRegistered()
         {
             // Arrange
-            var program = new ChargesFunctionApp();
-            var host = program.ConfigureApplication();
+            var host = ChargesFunctionApp.ConfigureApplication();
             var functionAppDependencies = FindDependenciesForType(typeof(ChargesFunctionApp));
 
             // Act
