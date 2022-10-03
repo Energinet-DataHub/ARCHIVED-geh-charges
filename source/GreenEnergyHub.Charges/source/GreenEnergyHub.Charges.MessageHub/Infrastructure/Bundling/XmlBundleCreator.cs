@@ -55,12 +55,13 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Bundling
             }
 
             var firstData = availableData[0];
+
+            // Due to the nature of the interface to the MessageHub and the use of MessageType in that
+            // BusinessReasonCode, SenderId, SenderRole, RecipientId, RecipientRole and ReceiptStatus will always
+            // be the same value on all records in the list. We can simply take it from the first record.
             await _cimXmlSerializer.SerializeToStreamAsync(
                 availableData,
                 outputStream,
-                // Due to the nature of the interface to the MessageHub and the use of MessageType in that
-                // BusinessReasonCode, SenderId, SenderRole, RecipientId, RecipientRole and ReceiptStatus will always
-                // be the same value on all records in the list. We can simply take it from the first record.
                 firstData.BusinessReasonCode,
                 firstData.SenderId,
                 firstData.SenderRole,
