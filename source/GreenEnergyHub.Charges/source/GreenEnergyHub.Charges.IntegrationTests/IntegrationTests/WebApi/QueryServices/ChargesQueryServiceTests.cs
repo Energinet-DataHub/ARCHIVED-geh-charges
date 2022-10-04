@@ -427,7 +427,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
                 actorId: Guid.NewGuid(),
                 b2CActorId: Guid.NewGuid(),
                 MarketParticipantOwnerId,
-                true,
+                MarketParticipantStatus.Active,
                 MarketParticipantRole.EnergySupplier);
             context.MarketParticipants.Add(marketParticipant);
             await context.SaveChangesAsync();
