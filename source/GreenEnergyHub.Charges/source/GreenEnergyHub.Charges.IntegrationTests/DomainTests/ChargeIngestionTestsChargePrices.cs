@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -146,6 +147,35 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
                 peekResults.Should().ContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
                 peekResults.Should().ContainMatch("*NotifyPriceList_MarketDocument*");
+            }
+
+            [Fact]
+            public async Task Given_NewTaxBundleTariffWithPrices_When_GridAccessProviderPeeks_Then_MessageHubReceivesReplyWithChronologicallyOrderedOperations()
+            {
+                // Arrange
+                var expectedNotificationOperations = new List<string> { "1.100000", "2.200000", "3.300000" };
+
+                var (request, correlationId) = Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
+                    EndpointUrl, ChargeDocument.BundledSubscriptionPriceSeries);
+
+                // Act
+                var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
+
+                // We expect 4 peek results:
+                // * 1 confirmation
+                // * 3 data available to energy suppliers
+                using var assertionScope = new AssertionScope();
+                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 12);
+                peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
+
+                foreach (var peekResult in peekResults.Where(x => x.Contains("NotifyPriceList_MarketDocument")))
+                {
+                    var notificationOperations = CIMXmlReader.GetActivityRecordElements(peekResult, "Point", "price.amount");
+                    notificationOperations.Should().BeEquivalentTo(expectedNotificationOperations);
+                }
             }
 
             [Theory]
