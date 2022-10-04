@@ -1,6 +1,6 @@
 # Energinet.DataHub.Charges.Clients Release notes
 
-## Version 3.0.16
+## Version 3.0.17
 
 Added Search to 'ChargesClient'
 
