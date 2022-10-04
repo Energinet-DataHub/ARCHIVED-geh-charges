@@ -2,7 +2,7 @@
 
 ## Version 3.0.17
 
-Added Search to 'ChargesClient'
+Added Search to Charges client
 
 ## Version 3.0.16
 
