@@ -1,5 +1,9 @@
 # Energinet.DataHub.Charges.Clients.Registrations Release notes
 
+## Version 3.0.17
+
+Added Search to 'ChargesClient'
+
 ## Version 3.0.16
 
 Updated NuGet packages
