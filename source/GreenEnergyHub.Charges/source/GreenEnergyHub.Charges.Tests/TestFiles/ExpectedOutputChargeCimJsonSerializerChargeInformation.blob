@@ -1,0 +1,301 @@
+﻿{
+  "NotifyPriceList_MarketDocument": {
+    "mRID": "00000000000000000000000000000000",
+    "businessSector.type": {
+      "value": "23"
+    },
+    "createdDateTime": "2021-10-22T15:30:41Z",
+    "process.processType": {
+      "value": "D18"
+    },
+    "receiver_MarketParticipant.mRID": {
+      "codingScheme": "A10",
+      "value": "Recipient"
+    },
+    "receiver_MarketParticipant.marketRole.type": {
+      "value": "DDM"
+    },
+    "sender_MarketParticipant.mRID": {
+      "codingScheme": "A10",
+      "value": "5790001330552"
+    },
+    "sender_MarketParticipant.marketRole.type": {
+      "value": "DDZ"
+    },
+    "type": {
+      "value": "D12"
+    },
+    "MktActivityRecord": [
+      {
+        "mRID": "00000000000000000000000000000000",
+        "ChargeGroup": {
+          "ChargeType": [
+            {
+              "mRID": "ChargeId1",
+              "VATPayer": {
+                "value": "D01"
+              },
+              "chargeTypeOwner_MarketParticipant.mRID": {
+                "codingScheme": "A10",
+                "value": "Owner1"
+              },
+              "description": "Description1",
+              "effectiveDate": "2020-12-31T23:00:00Z",
+              "name": "Name1",
+              "priceTimeFrame_Period.resolution": "P1M",
+              "taxIndicator": true,
+              "terminationDate": "2021-04-30T22:00:00Z",
+              "transparentInvoicing": false,
+              "type": {
+                "value": "D02"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "mRID": "00000000000000000000000000000000",
+        "ChargeGroup": {
+          "ChargeType": [
+            {
+              "mRID": "ChargeId2",
+              "VATPayer": {
+                "value": "D01"
+              },
+              "chargeTypeOwner_MarketParticipant.mRID": {
+                "codingScheme": "A10",
+                "value": "Owner2"
+              },
+              "description": "Description2",
+              "effectiveDate": "2020-12-31T23:00:00Z",
+              "name": "Name2",
+              "priceTimeFrame_Period.resolution": "PT1H",
+              "taxIndicator": true,
+              "terminationDate": "9999-12-31T23:59:59Z",
+              "transparentInvoicing": false,
+              "type": {
+                "value": "D03"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "mRID": "00000000000000000000000000000000",
+        "ChargeGroup": {
+          "ChargeType": [
+            {
+              "mRID": "ChargeId3",
+              "VATPayer": {
+                "value": "D01"
+              },
+              "chargeTypeOwner_MarketParticipant.mRID": {
+                "codingScheme": "A10",
+                "value": "Owner3"
+              },
+              "description": "Description3",
+              "effectiveDate": "2020-12-31T23:00:00Z",
+              "name": "Name3",
+              "priceTimeFrame_Period.resolution": "P1M",
+              "taxIndicator": true,
+              "terminationDate": "2021-04-30T22:00:00Z",
+              "transparentInvoicing": false,
+              "type": {
+                "value": "D01"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "mRID": "00000000000000000000000000000000",
+        "ChargeGroup": {
+          "ChargeType": [
+            {
+              "mRID": "ChargeId4",
+              "VATPayer": {
+                "value": "D01"
+              },
+              "chargeTypeOwner_MarketParticipant.mRID": {
+                "codingScheme": "A10",
+                "value": "Owner4"
+              },
+              "description": "Description4",
+              "effectiveDate": "2020-12-31T23:00:00Z",
+              "name": "Name4",
+              "priceTimeFrame_Period.resolution": "P1M",
+              "taxIndicator": true,
+              "terminationDate": "9999-12-31T23:59:59Z",
+              "transparentInvoicing": false,
+              "type": {
+                "value": "D02"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "mRID": "00000000000000000000000000000000",
+        "ChargeGroup": {
+          "ChargeType": [
+            {
+              "mRID": "ChargeId5",
+              "VATPayer": {
+                "value": "D01"
+              },
+              "chargeTypeOwner_MarketParticipant.mRID": {
+                "codingScheme": "A10",
+                "value": "Owner5"
+              },
+              "description": "Description5",
+              "effectiveDate": "2020-12-31T23:00:00Z",
+              "name": "Name5",
+              "priceTimeFrame_Period.resolution": "PT1H",
+              "taxIndicator": true,
+              "terminationDate": "2021-04-30T22:00:00Z",
+              "transparentInvoicing": false,
+              "type": {
+                "value": "D03"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "mRID": "00000000000000000000000000000000",
+        "ChargeGroup": {
+          "ChargeType": [
+            {
+              "mRID": "ChargeId6",
+              "VATPayer": {
+                "value": "D01"
+              },
+              "chargeTypeOwner_MarketParticipant.mRID": {
+                "codingScheme": "A10",
+                "value": "Owner6"
+              },
+              "description": "Description6",
+              "effectiveDate": "2020-12-31T23:00:00Z",
+              "name": "Name6",
+              "priceTimeFrame_Period.resolution": "P1M",
+              "taxIndicator": true,
+              "terminationDate": "9999-12-31T23:59:59Z",
+              "transparentInvoicing": false,
+              "type": {
+                "value": "D01"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "mRID": "00000000000000000000000000000000",
+        "ChargeGroup": {
+          "ChargeType": [
+            {
+              "mRID": "ChargeId7",
+              "VATPayer": {
+                "value": "D01"
+              },
+              "chargeTypeOwner_MarketParticipant.mRID": {
+                "codingScheme": "A10",
+                "value": "Owner7"
+              },
+              "description": "Description7",
+              "effectiveDate": "2020-12-31T23:00:00Z",
+              "name": "Name7",
+              "priceTimeFrame_Period.resolution": "P1M",
+              "taxIndicator": true,
+              "terminationDate": "2021-04-30T22:00:00Z",
+              "transparentInvoicing": false,
+              "type": {
+                "value": "D02"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "mRID": "00000000000000000000000000000000",
+        "ChargeGroup": {
+          "ChargeType": [
+            {
+              "mRID": "ChargeId8",
+              "VATPayer": {
+                "value": "D01"
+              },
+              "chargeTypeOwner_MarketParticipant.mRID": {
+                "codingScheme": "A10",
+                "value": "Owner8"
+              },
+              "description": "Description8",
+              "effectiveDate": "2020-12-31T23:00:00Z",
+              "name": "Name8",
+              "priceTimeFrame_Period.resolution": "PT1H",
+              "taxIndicator": true,
+              "terminationDate": "9999-12-31T23:59:59Z",
+              "transparentInvoicing": false,
+              "type": {
+                "value": "D03"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "mRID": "00000000000000000000000000000000",
+        "ChargeGroup": {
+          "ChargeType": [
+            {
+              "mRID": "ChargeId9",
+              "VATPayer": {
+                "value": "D01"
+              },
+              "chargeTypeOwner_MarketParticipant.mRID": {
+                "codingScheme": "A10",
+                "value": "Owner9"
+              },
+              "description": "Description9",
+              "effectiveDate": "2020-12-31T23:00:00Z",
+              "name": "Name9",
+              "priceTimeFrame_Period.resolution": "P1M",
+              "taxIndicator": true,
+              "terminationDate": "2021-04-30T22:00:00Z",
+              "transparentInvoicing": false,
+              "type": {
+                "value": "D01"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "mRID": "00000000000000000000000000000000",
+        "ChargeGroup": {
+          "ChargeType": [
+            {
+              "mRID": "ChargeId10",
+              "VATPayer": {
+                "value": "D01"
+              },
+              "chargeTypeOwner_MarketParticipant.mRID": {
+                "codingScheme": "A10",
+                "value": "Owner10"
+              },
+              "description": "Description10",
+              "effectiveDate": "2020-12-31T23:00:00Z",
+              "name": "Name10",
+              "priceTimeFrame_Period.resolution": "P1M",
+              "taxIndicator": true,
+              "terminationDate": "9999-12-31T23:59:59Z",
+              "transparentInvoicing": false,
+              "type": {
+                "value": "D02"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

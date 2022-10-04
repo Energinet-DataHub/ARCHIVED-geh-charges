@@ -20,6 +20,7 @@ using Azure.Messaging.ServiceBus;
 using Energinet.Charges.Contracts;
 using Energinet.DataHub.Core.App.Common.Abstractions.ServiceBus;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
+using Energinet.DataHub.MessageHub.Model.Model;
 using FluentAssertions;
 using Google.Protobuf;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
@@ -59,7 +60,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                     () => Fixture.CreateLinkRequestQueue.SenderClient.SendMessageAsync(message), correlationId);
 
                 // Assert
-                await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId);
+                await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, ResponseFormat.Xml);
             }
 
             [Theory]
