@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading;
@@ -180,14 +181,17 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 peekResults.Should().NotContainMatch("*Reject*");
 
                 var peekResult = peekResults.Single(x => x.Contains("ConfirmRequestChangeOfPriceList_MarketDocument"));
-                var operations = CIMXmlReader.GetActivityRecords(peekResult);
+                var operations = CIMXmlReader.GetActivityRecordElements(
+                    peekResult, "MktActivityRecord", "originalTransactionIDReference_MktActivityRecord.mRID");
                 operations.Count.Should().Be(noOfConfirmedActivityRecordsExpected);
             }
 
             [Fact]
-            public async Task Given_BundleWithMultipleOperationsForSameCharge_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply()
+            public async Task Given_BundleWithMultipleOperationsForSameCharge_When_GridAccessProviderPeeks_Then_MessageHubReceivesReplyWithChronologicallyOrderedOperations()
             {
                 // Arrange
+                var expectedNotificationOperations = new List<string> { "CREATE", "UPDATE", "STOP", "CANCEL STOP" };
+
                 var (request, correlationId) = Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
                     EndpointUrl, ChargeDocument.BundleWithMultipleOperationsForSameTariff);
 
@@ -198,15 +202,22 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
 
                 // We expect four peeks:
-                // * one for the create confirmation (create)
-                // * one for the create confirmation (update)
-                // * one for the create confirmation (stop)
-                // * one for the create confirmation (cancel stop)
+                // * one for the create confirmation
+                // * one for the notification to GridAccessProvider 8100000000108
+                // * one for the notification to EnergySupplier 8100000001004
+                // * one for the notification to EnergySupplier 8510000000013
                 using var assertionScope = new AssertionScope();
                 var peekResults =
-                    await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, ResponseFormat.Xml, 4);
+                    await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, ResponseFormat.Xml, 16);
                 peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
                 peekResults.Should().NotContainMatch("*Reject*");
+                peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
+
+                foreach (var peekResult in peekResults.Where(x => x.Contains("NotifyPriceList_MarketDocument")))
+                {
+                    var notificationOperations = CIMXmlReader.GetActivityRecordElements(peekResult, "ChargeType", "description");
+                    notificationOperations.Should().BeEquivalentTo(expectedNotificationOperations);
+                }
             }
 
             [Fact]
