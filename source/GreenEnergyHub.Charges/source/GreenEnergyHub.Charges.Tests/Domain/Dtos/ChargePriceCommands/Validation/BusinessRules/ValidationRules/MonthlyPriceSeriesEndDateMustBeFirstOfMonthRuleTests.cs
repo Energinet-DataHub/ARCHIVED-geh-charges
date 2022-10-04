@@ -14,10 +14,14 @@
 
 using System;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Iso8601;
 using NodaTime;
+using NodaTime.Testing;
 using Xunit;
 using Xunit.Categories;
 
@@ -46,6 +50,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
                 ? null
                 : GetInstantFromMonthAndDay(priceStopDayDateTime, priceStopMonthDateTime);
             var sut = new MonthlyPriceSeriesEndDateMustBeFirstOfMonthRule(
+                GetZonedDateTimeService(),
                 endDate,
                 stopDate);
 
@@ -62,6 +67,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
             // Arrange
             // Act
             var sut = new MonthlyPriceSeriesEndDateMustBeFirstOfMonthRule(
+                GetZonedDateTimeService(),
                 GetInstantFromMonthAndDay(1, 1),
                 GetInstantFromMonthAndDay(1, 1));
 
@@ -80,6 +86,12 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
                 0,
                 0,
                 DateTimeKind.Utc));
+        }
+
+        private static ZonedDateTimeService GetZonedDateTimeService()
+        {
+            var clock = new FakeClock(InstantHelper.GetTodayAtMidnightUtc());
+            return new ZonedDateTimeService(clock, new Iso8601ConversionConfiguration("Europe/Copenhagen"));
         }
     }
 }

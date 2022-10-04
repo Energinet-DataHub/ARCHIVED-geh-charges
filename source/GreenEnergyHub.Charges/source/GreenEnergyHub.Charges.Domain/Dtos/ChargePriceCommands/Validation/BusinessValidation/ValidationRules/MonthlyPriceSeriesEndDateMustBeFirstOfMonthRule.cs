@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using NodaTime;
 
@@ -19,16 +20,16 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.Busi
 {
     public class MonthlyPriceSeriesEndDateMustBeFirstOfMonthRule : IValidationRule
     {
-        private readonly Instant _priceEndDate;
-        private readonly Instant? _stopDate;
+        private readonly ZonedDateTime _zonedPriceEndDate;
+        private readonly ZonedDateTime? _zonedStopDate;
 
-        public MonthlyPriceSeriesEndDateMustBeFirstOfMonthRule(Instant priceEndDate, Instant? stopDate)
+        public MonthlyPriceSeriesEndDateMustBeFirstOfMonthRule(IZonedDateTimeService zonedDateTimeService, Instant priceEndDate, Instant? stopDate)
         {
-            _priceEndDate = priceEndDate;
-            _stopDate = stopDate;
+            _zonedPriceEndDate = zonedDateTimeService.GetZonedDateTime(priceEndDate);
+            _zonedStopDate = stopDate is null ? null : zonedDateTimeService.GetZonedDateTime(stopDate.Value);
         }
 
-        public bool IsValid => _priceEndDate == _stopDate || _priceEndDate.InUtc().Day is 1;
+        public bool IsValid => _zonedPriceEndDate == _zonedStopDate || _zonedPriceEndDate.Day is 1;
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.MonthlyPriceSeriesEndDateMustBeFirstOfMonth;
