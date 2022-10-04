@@ -36,21 +36,21 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Charges
 {
     [UnitTest]
-    public class ChargePriceCimSerializerTests
+    public class ChargeCimXmlSerializerTests
     {
         private const int NoOfChargesInBundle = 10;
         private const string CimTestId = "00000000000000000000000000000000";
         private const string RecipientId = "Recipient";
 
         [Theory]
-        [InlineAutoDomainData("TestFiles/ExpectedOutputChargeCimSerializerChargePrices.blob")]
+        [InlineAutoDomainData("TestFiles/ExpectedOutputChargeCimSerializerChargeInformation.blob")]
         public async Task SerializeAsync_WhenCalled_StreamHasSerializedResult(
             string expectedFilePath,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IClock> clock,
             [Frozen] Mock<IIso8601Durations> iso8601Durations,
             [Frozen] Mock<ICimIdProvider> cimIdProvider,
-            ChargePriceCimSerializer sut)
+            ChargeCimXmlSerializer sut)
         {
             // Arrange
             SetupMocks(marketParticipantRepository, clock, iso8601Durations, cimIdProvider);
@@ -84,7 +84,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
             [Frozen] Mock<IClock> clock,
             [Frozen] Mock<IIso8601Durations> iso8601Durations,
             [Frozen] Mock<ICimIdProvider> cimIdProvider,
-            ChargePriceCimSerializer sut)
+            ChargeCimXmlSerializer sut)
         {
             SetupMocks(marketParticipantRepository, clock, iso8601Durations, cimIdProvider);
 
@@ -135,37 +135,47 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
             cimIdProvider.Setup(c => c.GetUniqueId()).Returns(CimTestId);
         }
 
-        private static List<AvailableChargePriceData> GetCharges(IClock clock)
+        private static List<AvailableChargeData> GetCharges(IClock clock)
         {
-            var charges = new List<AvailableChargePriceData>();
+            var charges = new List<AvailableChargeData>();
 
             for (var i = 1; i <= NoOfChargesInBundle; i++)
             {
-                charges.Add(GetChargePrices(i, clock));
+                var order = i - 1;
+                charges.Add(GetChargeInformation(i, clock, order));
             }
 
             return charges;
         }
 
-        private static AvailableChargePriceData GetChargePrices(int no, IClock clock)
+        private static AvailableChargeData GetChargeInformation(int no, IClock clock, int order)
         {
-            return new AvailableChargePriceData(
+            var validTo = no % 2 == 0 ?
+                Instant.FromUtc(9999, 12, 31, 23, 59, 59) :
+                Instant.FromUtc(2021, 4, 30, 22, 0, 0);
+
+            return new AvailableChargeData(
                 "5790001330552",
                 MarketParticipantRole.MeteringPointAdministrator,
-                "Recipient",
+                RecipientId,
                 MarketParticipantRole.GridAccessProvider,
-                businessReasonCode: BusinessReasonCode.UpdateChargePrices,
+                BusinessReasonCode.UpdateChargeInformation,
                 clock.GetCurrentInstant(),
                 Guid.NewGuid(),
                 "ChargeId" + no,
                 "Owner" + no,
                 GetChargeType(no),
+                "Name" + no,
+                "Description" + no,
                 Instant.FromUtc(2020, 12, 31, 23, 0, 0),
+                validTo,
+                VatClassification.NoVat,
+                true,
+                false,
                 GetResolution(no),
                 DocumentType.NotifyPriceList,
-                0,
-                Guid.NewGuid(),
-                GetPoints(GetNoOfPoints(no)));
+                order,
+                Guid.NewGuid());
         }
 
         private static ChargeType GetChargeType(int no)
@@ -186,28 +196,6 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
                 1 => Resolution.P1M,
                 _ => Resolution.PT1H,
             };
-        }
-
-        private static int GetNoOfPoints(int no)
-        {
-            return (no % 3) switch
-            {
-                0 => 1,
-                1 => 1,
-                _ => 24,
-            };
-        }
-
-        private static List<AvailableChargePriceDataPoint> GetPoints(int noOfPoints)
-        {
-            var points = new List<AvailableChargePriceDataPoint>();
-
-            for (int i = 1; i <= noOfPoints; i++)
-            {
-                points.Add(new AvailableChargePriceDataPoint(i, i));
-            }
-
-            return points;
         }
     }
 }
