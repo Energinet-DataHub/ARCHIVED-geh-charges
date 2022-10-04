@@ -170,7 +170,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // * 1 confirmation
                 // * 3 data available to energy suppliers
                 using var assertionScope = new AssertionScope();
-                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 12);
+                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, ResponseFormat.Xml, 12);
                 peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
 
                 foreach (var peekResult in peekResults.Where(x => x.Contains("NotifyPriceList_MarketDocument")))
