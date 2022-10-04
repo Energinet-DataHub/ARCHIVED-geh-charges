@@ -39,18 +39,23 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IRequestBundleParser, RequestBundleParser>();
 
             // Charge bundles
-            serviceCollection.AddScoped<IBundleCreator, BundleCreator<AvailableChargeData>>();
-            serviceCollection.AddScoped<ICimSerializer<AvailableChargeData>, ChargeCimSerializer>();
-            serviceCollection.AddScoped<IBundleCreator, BundleCreator<AvailableChargeReceiptData>>();
-            serviceCollection.AddScoped<ICimSerializer<AvailableChargeReceiptData>, ChargeReceiptCimSerializer>();
-            serviceCollection.AddScoped<IBundleCreator, BundleCreator<AvailableChargePriceData>>();
-            serviceCollection.AddScoped<ICimSerializer<AvailableChargePriceData>, ChargePriceCimSerializer>();
+            serviceCollection.AddScoped<IBundleCreator, XmlBundleCreator<AvailableChargeData>>();
+            serviceCollection.AddScoped<ICimXmlSerializer<AvailableChargeData>, ChargeCimXmlSerializer>();
+            serviceCollection.AddScoped<IBundleCreator, XmlBundleCreator<AvailableChargeReceiptData>>();
+            serviceCollection.AddScoped<ICimXmlSerializer<AvailableChargeReceiptData>, ChargeReceiptCimXmlSerializer>();
+            serviceCollection.AddScoped<IBundleCreator, XmlBundleCreator<AvailableChargePriceData>>();
+            serviceCollection.AddScoped<ICimXmlSerializer<AvailableChargePriceData>, ChargePriceCimXmlSerializer>();
+
+            serviceCollection.AddScoped<IBundleCreator, JsonBundleCreator<AvailableChargeData>>();
+            serviceCollection.AddScoped<ICimJsonSerializer<AvailableChargeData>, ChargeCimJsonSerializer>();
+            serviceCollection.AddScoped<IBundleCreator, JsonBundleCreator<AvailableChargePriceData>>();
+            serviceCollection.AddScoped<ICimJsonSerializer<AvailableChargePriceData>, ChargePriceCimJsonSerializer>();
 
             // Charge link bundles
-            serviceCollection.AddScoped<IBundleCreator, BundleCreator<AvailableChargeLinksData>>();
-            serviceCollection.AddScoped<ICimSerializer<AvailableChargeLinksData>, ChargeLinkCimSerializer>();
-            serviceCollection.AddScoped<IBundleCreator, BundleCreator<AvailableChargeLinksReceiptData>>();
-            serviceCollection.AddScoped<ICimSerializer<AvailableChargeLinksReceiptData>, ChargeLinksReceiptCimSerializer>();
+            serviceCollection.AddScoped<IBundleCreator, XmlBundleCreator<AvailableChargeLinksData>>();
+            serviceCollection.AddScoped<ICimXmlSerializer<AvailableChargeLinksData>, ChargeLinkCimXmlSerializer>();
+            serviceCollection.AddScoped<IBundleCreator, XmlBundleCreator<AvailableChargeLinksReceiptData>>();
+            serviceCollection.AddScoped<ICimXmlSerializer<AvailableChargeLinksReceiptData>, ChargeLinksReceiptCimXmlSerializer>();
         }
     }
 }

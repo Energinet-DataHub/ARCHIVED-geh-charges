@@ -97,32 +97,38 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Bundling
             IStorageHandler storageHandler)
         {
             // Arrange
+            var responseFormats = (ResponseFormat[])Enum.GetValues(typeof(ResponseFormat));
             var bundleTypes = (BundleType[])Enum.GetValues(typeof(BundleType));
-            var bundleCreators = CreateBundleCreators(bundleTypes, storageHandler);
+            var bundleCreators = CreateBundleCreators(bundleTypes, storageHandler, ResponseFormat.Xml);
+            bundleCreators.AddRange(CreateBundleCreators(bundleTypes, storageHandler, ResponseFormat.Json));
 
             // Act
             // Assert
-            foreach (var bundleType in bundleTypes)
+            foreach (var responseFormat in responseFormats)
             {
-                var creatorProvider = new BundleCreatorProvider(bundleCreators);
-                var messageType = $"{bundleType}_{businessReasonCode}";
-                var request = new DataBundleRequestDto(
-                    RequestId: Guid.NewGuid(),
-                    DataAvailableNotificationReferenceId: Guid.NewGuid().ToString(),
-                    IdempotencyId: Guid.NewGuid().ToString(),
-                    new MessageTypeDto(messageType),
-                    ResponseFormat.Xml,
-                    ResponseVersion: 1.0);
+                foreach (var bundleType in bundleTypes)
+                {
+                    var creatorProvider = new BundleCreatorProvider(bundleCreators);
+                    var messageType = $"{bundleType}_{businessReasonCode}";
+                    var request = new DataBundleRequestDto(
+                        RequestId: Guid.NewGuid(),
+                        DataAvailableNotificationReferenceId: Guid.NewGuid().ToString(),
+                        IdempotencyId: Guid.NewGuid().ToString(),
+                        new MessageTypeDto(messageType),
+                        responseFormat,
+                        ResponseVersion: 1.0);
 
-                var actual = creatorProvider.Get(request);
+                    var actual = creatorProvider.Get(request);
 
-                actual.Should().NotBeNull();
+                    actual.Should().NotBeNull();
+                }
             }
         }
 
-        private IList<IBundleCreator> CreateBundleCreators(
+        private static List<IBundleCreator> CreateBundleCreators(
             IEnumerable<BundleType> bundleTypes,
-            IStorageHandler storageHandler)
+            IStorageHandler storageHandler,
+            ResponseFormat responseFormat)
         {
             var bundleCreators = new List<IBundleCreator>();
 
@@ -131,25 +137,41 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Bundling
                 switch (bundleType)
                 {
                     case BundleType.ChargeDataAvailable:
-                        bundleCreators.Add(CreateBundleCreator<AvailableChargeData>(storageHandler));
+                        bundleCreators.Add(responseFormat == ResponseFormat.Xml
+                            ? CreateBundleCreator<AvailableChargeData>(storageHandler)
+                            : CreateJsonBundleCreator<AvailableChargeData>(storageHandler));
                         break;
                     case BundleType.ChargeConfirmationDataAvailable:
-                        bundleCreators.Add(CreateBundleCreator<AvailableChargeReceiptData>(storageHandler));
+                        if (responseFormat == ResponseFormat.Xml)
+                        {
+                            bundleCreators.Add(CreateBundleCreator<AvailableChargeReceiptData>(storageHandler));
+                        }
+
                         break;
                     case BundleType.ChargeRejectionDataAvailable:
                         // BundleCreator<AvailableChargeReceiptData> already added
                         break;
                     case BundleType.ChargeLinkDataAvailable:
-                        bundleCreators.Add(CreateBundleCreator<AvailableChargeLinksData>(storageHandler));
+                        if (responseFormat == ResponseFormat.Xml)
+                        {
+                            bundleCreators.Add(CreateBundleCreator<AvailableChargeLinksData>(storageHandler));
+                        }
+
                         break;
                     case BundleType.ChargeLinkConfirmationDataAvailable:
-                        bundleCreators.Add(CreateBundleCreator<AvailableChargeLinksReceiptData>(storageHandler));
+                        if (responseFormat == ResponseFormat.Xml)
+                        {
+                            bundleCreators.Add(CreateBundleCreator<AvailableChargeLinksReceiptData>(storageHandler));
+                        }
+
                         break;
                     case BundleType.ChargeLinkRejectionDataAvailable:
                         // BundleCreator<AvailableChargeLinksReceiptData> already added
                         break;
                     case BundleType.ChargePriceDataAvailable:
-                        bundleCreators.Add(CreateBundleCreator<AvailableChargePriceData>(storageHandler));
+                        bundleCreators.Add(responseFormat == ResponseFormat.Xml
+                            ? CreateBundleCreator<AvailableChargePriceData>(storageHandler)
+                            : CreateJsonBundleCreator<AvailableChargePriceData>(storageHandler));
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(bundleType));
@@ -159,12 +181,20 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Bundling
             return bundleCreators;
         }
 
-        private IBundleCreator CreateBundleCreator<T>(IStorageHandler storageHandler)
+        private static IBundleCreator CreateBundleCreator<T>(IStorageHandler storageHandler)
             where T : AvailableDataBase
         {
-            var cimSerializer = new Mock<ICimSerializer<T>>().Object;
             var availableDataRepository = new Mock<IAvailableDataRepository<T>>().Object;
-            return new BundleCreator<T>(availableDataRepository, cimSerializer, storageHandler);
+            var cimSerializer = new Mock<ICimXmlSerializer<T>>().Object;
+            return new XmlBundleCreator<T>(availableDataRepository, cimSerializer, storageHandler);
+        }
+
+        private static IBundleCreator CreateJsonBundleCreator<T>(IStorageHandler storageHandler)
+            where T : AvailableDataBase
+        {
+            var availableDataRepository = new Mock<IAvailableDataRepository<T>>().Object;
+            var cimJsonSerializer = new Mock<ICimJsonSerializer<T>>().Object;
+            return new JsonBundleCreator<T>(availableDataRepository, cimJsonSerializer, storageHandler);
         }
     }
 }
