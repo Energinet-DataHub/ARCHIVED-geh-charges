@@ -26,8 +26,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
     {
         private readonly IChargesDatabaseContext _chargesDatabaseContext;
 
-        public MarketParticipantRepository(
-            IChargesDatabaseContext chargesDatabaseContext)
+        public MarketParticipantRepository(IChargesDatabaseContext chargesDatabaseContext)
         {
             _chargesDatabaseContext = chargesDatabaseContext;
         }

@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers.ChargePrice
         public async Task HandleAsync_WhenUpdatingValidChargePrice_ShouldActivateHandler(
             [Frozen] Mock<IDocumentValidator> documentValidator,
             [Frozen] Mock<IChargePriceOperationsHandler> chargePriceEventHandler,
-            [Frozen] Mock<IUnitOfWork> unitOfWork,
+            [Frozen] Mock<IChargesUnitOfWork> unitOfWork,
             ChargePriceCommandReceivedEvent chargeCommandReceivedEvent,
             ChargePriceCommandReceivedEventHandler sut)
         {

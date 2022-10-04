@@ -27,19 +27,19 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
     {
         private readonly IMarketParticipantRepository _marketParticipantRepository;
         private readonly IGridAreaLinkRepository _gridAreaLinkRepository;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IChargesUnitOfWork _chargesUnitOfWork;
         private readonly ILogger _logger;
 
         public MarketParticipantPersister(
             IMarketParticipantRepository marketParticipantRepository,
             IGridAreaLinkRepository gridAreaLinkRepository,
             ILoggerFactory loggerFactory,
-            IUnitOfWork unitOfWork)
+            IChargesUnitOfWork chargesUnitOfWork)
         {
             _marketParticipantRepository = marketParticipantRepository;
             _gridAreaLinkRepository = gridAreaLinkRepository;
             _logger = loggerFactory.CreateLogger(nameof(MarketParticipantPersister));
-            _unitOfWork = unitOfWork;
+            _chargesUnitOfWork = chargesUnitOfWork;
         }
 
         public async Task PersistAsync(MarketParticipantUpdatedEvent marketParticipantUpdatedEvent)
@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
             foreach (var businessProcessRole in marketParticipantUpdatedEvent.BusinessProcessRoles)
                 await HandleBusinessProcessRoleAsync(marketParticipantUpdatedEvent, businessProcessRole).ConfigureAwait(false);
 
-            await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+            await _chargesUnitOfWork.SaveChangesAsync().ConfigureAwait(false);
         }
 
         private async Task HandleBusinessProcessRoleAsync(

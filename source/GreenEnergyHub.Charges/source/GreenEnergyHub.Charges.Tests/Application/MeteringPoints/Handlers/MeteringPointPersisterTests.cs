@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
         public async Task PersistAsync_WhenCalledWithNonExistentMeteringPoint_ShouldPersist(
             [Frozen] Mock<IMeteringPointRepository> meteringPointRepository,
             [Frozen] Mock<ILoggerFactory> loggerFactory,
-            [Frozen] Mock<IUnitOfWork> unitOfWork,
+            [Frozen] Mock<IChargesUnitOfWork> unitOfWork,
             [Frozen] Mock<ILogger> logger)
         {
             // Arrange
@@ -63,7 +63,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
         public async Task PersistAsync_WhenCalledWithExistingMeteringPoint_ShouldNotPersist(
             [Frozen] Mock<IMeteringPointRepository> meteringPointRepository,
             [Frozen] Mock<ILoggerFactory> loggerFactory,
-            [Frozen] Mock<IUnitOfWork> unitOfWork,
+            [Frozen] Mock<IChargesUnitOfWork> unitOfWork,
             [Frozen] Mock<ILogger> logger)
         {
             // Arrange
@@ -93,7 +93,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MeteringPoints.Handlers
         public async Task PersistAsync_WhenNewMeteringPointDeviatesExisting_ShouldLogDifferences(
             [Frozen] Mock<IMeteringPointRepository> meteringPointRepository,
             [Frozen] Mock<ILoggerFactory> loggerFactory,
-            [Frozen] Mock<IUnitOfWork> unitOfWork,
+            [Frozen] Mock<IChargesUnitOfWork> unitOfWork,
             [Frozen] Mock<ILogger> logger)
         {
             // Arrange

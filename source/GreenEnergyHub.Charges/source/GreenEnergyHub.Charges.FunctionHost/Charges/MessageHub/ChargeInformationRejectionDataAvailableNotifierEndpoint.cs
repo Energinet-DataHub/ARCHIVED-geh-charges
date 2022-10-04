@@ -17,6 +17,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
+using GreenEnergyHub.Charges.MessageHub.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using Microsoft.Azure.Functions.Worker;
@@ -28,13 +29,16 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
         private const string FunctionName = nameof(ChargeInformationRejectionDataAvailableNotifierEndpoint);
         private readonly IAvailableDataNotifier<AvailableChargeReceiptData, ChargeInformationOperationsRejectedEvent> _availableDataNotifier;
         private readonly JsonMessageDeserializer<ChargeInformationOperationsRejectedEvent> _deserializer;
+        private readonly IMessageHubUnitOfWork _messageHubUnitOfWork;
 
         public ChargeInformationRejectionDataAvailableNotifierEndpoint(
             IAvailableDataNotifier<AvailableChargeReceiptData, ChargeInformationOperationsRejectedEvent> availableDataNotifier,
-            JsonMessageDeserializer<ChargeInformationOperationsRejectedEvent> deserializer)
+            JsonMessageDeserializer<ChargeInformationOperationsRejectedEvent> deserializer,
+            IMessageHubUnitOfWork messageHubUnitOfWork)
         {
             _availableDataNotifier = availableDataNotifier;
             _deserializer = deserializer;
+            _messageHubUnitOfWork = messageHubUnitOfWork;
         }
 
         [Function(FunctionName)]
@@ -49,6 +53,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
             if (rejectedEvent.Document.BusinessReasonCode == BusinessReasonCode.UpdateChargePrices) return;
 
             await _availableDataNotifier.NotifyAsync(rejectedEvent).ConfigureAwait(false);
+
+            await _messageHubUnitOfWork.SaveChangesAsync().ConfigureAwait(false);
         }
     }
 }

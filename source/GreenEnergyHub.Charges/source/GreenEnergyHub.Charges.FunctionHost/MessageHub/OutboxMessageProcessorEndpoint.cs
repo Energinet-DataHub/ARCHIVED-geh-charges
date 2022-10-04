@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
         private readonly IClock _clock;
         private readonly ICorrelationContext _correlationContext;
         private readonly IDomainEventDispatcher _domainEventDispatcher;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IChargesUnitOfWork _chargesUnitOfWork;
 
         public OutboxMessageProcessorEndpoint(
             IOutboxMessageRepository outboxMessageRepository,
@@ -40,14 +40,14 @@ namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
             IClock clock,
             ICorrelationContext correlationContext,
             IDomainEventDispatcher domainEventDispatcher,
-            IUnitOfWork unitOfWork)
+            IChargesUnitOfWork chargesUnitOfWork)
         {
             _outboxMessageRepository = outboxMessageRepository;
             _outboxMessageParser = outboxMessageParser;
             _clock = clock;
             _correlationContext = correlationContext;
             _domainEventDispatcher = domainEventDispatcher;
-            _unitOfWork = unitOfWork;
+            _chargesUnitOfWork = chargesUnitOfWork;
         }
 
         [Function(FunctionName)]
@@ -61,7 +61,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
                 _correlationContext.SetId(outboxMessage.CorrelationId);
                 await _domainEventDispatcher.DispatchAsync(domainEvent).ConfigureAwait(false);
                 outboxMessage.SetProcessed(_clock.GetCurrentInstant());
-                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+                await _chargesUnitOfWork.SaveChangesAsync().ConfigureAwait(false);
             }
         }
     }

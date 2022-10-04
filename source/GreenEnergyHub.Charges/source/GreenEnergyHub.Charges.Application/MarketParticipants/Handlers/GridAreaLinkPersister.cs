@@ -23,16 +23,16 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 {
     public class GridAreaLinkPersister : IGridAreaLinkPersister
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IChargesUnitOfWork _chargesUnitOfWork;
         private readonly IGridAreaLinkRepository _gridAreaLinkRepository;
         private readonly ILogger _logger;
 
         public GridAreaLinkPersister(
             IGridAreaLinkRepository gridAreaLinkRepository,
             ILoggerFactory loggerFactory,
-            IUnitOfWork unitOfWork)
+            IChargesUnitOfWork chargesUnitOfWork)
         {
-            _unitOfWork = unitOfWork;
+            _chargesUnitOfWork = chargesUnitOfWork;
             _gridAreaLinkRepository = gridAreaLinkRepository;
             _logger = loggerFactory.CreateLogger(nameof(GridAreaLinkPersister));
         }
@@ -41,7 +41,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
         {
             ArgumentNullException.ThrowIfNull(gridAreaUpdatedEvent);
             await PersistGridAreaLinkAsync(gridAreaUpdatedEvent).ConfigureAwait(false);
-            await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+            await _chargesUnitOfWork.SaveChangesAsync().ConfigureAwait(false);
         }
 
         private async Task PersistGridAreaLinkAsync(GridAreaUpdatedEvent gridAreaUpdatedEvent)

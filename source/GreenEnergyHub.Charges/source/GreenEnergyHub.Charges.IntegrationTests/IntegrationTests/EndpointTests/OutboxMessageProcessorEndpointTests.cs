@@ -150,7 +150,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     .Returns(operationsRejectedEvent);
                 var outboxMessage = await PersistToOutboxMessage(chargesDatabaseWriteContext, operationsRejectedEvent);
 
-                var unitOfWork = new UnitOfWork(chargesDatabaseWriteContext);
+                var unitOfWork = new ChargesUnitOfWork(chargesDatabaseWriteContext);
                 var outboxRepository = new OutboxMessageRepository(chargesDatabaseWriteContext);
                 var sut = new OutboxMessageProcessorEndpoint(
                     outboxRepository,

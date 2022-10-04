@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
+using GreenEnergyHub.Charges.MessageHub.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData;
 using Microsoft.Azure.Functions.Worker;
@@ -32,13 +33,16 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
         private const string FunctionName = nameof(ChargeLinkConfirmationDataAvailableNotifierEndpoint);
         private readonly JsonMessageDeserializer<ChargeLinksAcceptedEvent> _deserializer;
         private readonly IAvailableDataNotifier<AvailableChargeLinksReceiptData, ChargeLinksAcceptedEvent> _availableDataNotifier;
+        private readonly IMessageHubUnitOfWork _messageHubUnitOfWork;
 
         public ChargeLinkConfirmationDataAvailableNotifierEndpoint(
             JsonMessageDeserializer<ChargeLinksAcceptedEvent> deserializer,
-            IAvailableDataNotifier<AvailableChargeLinksReceiptData, ChargeLinksAcceptedEvent> availableDataNotifier)
+            IAvailableDataNotifier<AvailableChargeLinksReceiptData, ChargeLinksAcceptedEvent> availableDataNotifier,
+            IMessageHubUnitOfWork messageHubUnitOfWork)
         {
             _deserializer = deserializer;
             _availableDataNotifier = availableDataNotifier;
+            _messageHubUnitOfWork = messageHubUnitOfWork;
         }
 
         [Function(FunctionName)]
@@ -52,6 +56,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
             var chargeLinkCommandAcceptedEvent =
                 (ChargeLinksAcceptedEvent)await _deserializer.FromBytesAsync(message).ConfigureAwait(false);
             await _availableDataNotifier.NotifyAsync(chargeLinkCommandAcceptedEvent).ConfigureAwait(false);
+
+            await _messageHubUnitOfWork.SaveChangesAsync().ConfigureAwait(false);
         }
     }
 }

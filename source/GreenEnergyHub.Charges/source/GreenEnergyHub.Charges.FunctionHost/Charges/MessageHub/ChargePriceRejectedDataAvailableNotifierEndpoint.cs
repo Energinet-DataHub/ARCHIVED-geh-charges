@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
+using GreenEnergyHub.Charges.MessageHub.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using Microsoft.Azure.Functions.Worker;
@@ -27,13 +28,16 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
         private const string FunctionName = nameof(ChargePriceRejectedDataAvailableNotifierEndpoint);
         private readonly IAvailableDataNotifier<AvailableChargeReceiptData, ChargePriceOperationsRejectedEvent> _availableDataNotifier;
         private readonly JsonMessageDeserializer<ChargePriceOperationsRejectedEvent> _deserializer;
+        private readonly IMessageHubUnitOfWork _messageHubUnitOfWork;
 
         public ChargePriceRejectedDataAvailableNotifierEndpoint(
             IAvailableDataNotifier<AvailableChargeReceiptData, ChargePriceOperationsRejectedEvent> availableDataNotifier,
-            JsonMessageDeserializer<ChargePriceOperationsRejectedEvent> deserializer)
+            JsonMessageDeserializer<ChargePriceOperationsRejectedEvent> deserializer,
+            IMessageHubUnitOfWork messageHubUnitOfWork)
         {
             _availableDataNotifier = availableDataNotifier;
             _deserializer = deserializer;
+            _messageHubUnitOfWork = messageHubUnitOfWork;
         }
 
         [Function(FunctionName)]
@@ -47,6 +51,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
             var chargePriceOperationsRejectedEvent = (ChargePriceOperationsRejectedEvent)await _deserializer
                 .FromBytesAsync(message).ConfigureAwait(false);
             await _availableDataNotifier.NotifyAsync(chargePriceOperationsRejectedEvent).ConfigureAwait(false);
+
+            await _messageHubUnitOfWork.SaveChangesAsync().ConfigureAwait(false);
         }
     }
 }

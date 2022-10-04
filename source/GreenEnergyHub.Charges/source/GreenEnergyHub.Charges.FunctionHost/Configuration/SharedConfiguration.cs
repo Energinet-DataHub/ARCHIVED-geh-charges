@@ -120,14 +120,13 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
             serviceCollection.AddDbContext<ChargesDatabaseContext>(
                 options => options.UseSqlServer(connectionString, o => o.UseNodaTime()));
-
             serviceCollection.AddScoped<IChargesDatabaseContext, ChargesDatabaseContext>();
-            serviceCollection.AddScoped<IUnitOfWork, UnitOfWork>();
+            serviceCollection.AddScoped<IChargesUnitOfWork, ChargesUnitOfWork>();
 
             serviceCollection.AddDbContext<MessageHubDatabaseContext>(
                 options => options.UseSqlServer(connectionString, o => o.UseNodaTime()));
-
             serviceCollection.AddScoped<IMessageHubDatabaseContext, MessageHubDatabaseContext>();
+            serviceCollection.AddScoped<IMessageHubUnitOfWork, MessageHubUnitOfWork>();
 
             serviceCollection.AddScoped<IChargeRepository, ChargeRepository>();
             serviceCollection.AddScoped<IMeteringPointRepository, MeteringPointRepository>();

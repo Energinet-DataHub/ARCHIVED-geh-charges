@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IGridAreaLinkRepository> gridAreaLinkRepository,
             [Frozen] Mock<ILoggerFactory> loggerFactory,
-            [Frozen] Mock<IUnitOfWork> unitOfWork,
+            [Frozen] Mock<IChargesUnitOfWork> unitOfWork,
             Mock<ILogger> logger)
         {
             // Arrange
@@ -79,7 +79,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IGridAreaLinkRepository> gridAreaLinkRepository,
             [Frozen] Mock<ILoggerFactory> loggerFactory,
-            [Frozen] Mock<IUnitOfWork> unitOfWork,
+            [Frozen] Mock<IChargesUnitOfWork> unitOfWork,
             Mock<ILogger> logger)
         {
             // Arrange
@@ -116,7 +116,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
                 [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
                 [Frozen] Mock<IGridAreaLinkRepository> gridAreaLinkRepository,
                 [Frozen] Mock<ILoggerFactory> loggerFactory,
-                [Frozen] Mock<IUnitOfWork> unitOfWork,
+                [Frozen] Mock<IChargesUnitOfWork> unitOfWork,
                 Mock<ILogger> logger)
         {
             // Arrange
@@ -156,7 +156,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IGridAreaLinkRepository> gridAreaLinkRepository,
             [Frozen] Mock<ILoggerFactory> loggerFactory,
-            [Frozen] Mock<IUnitOfWork> unitOfWork,
+            [Frozen] Mock<IChargesUnitOfWork> unitOfWork,
             Mock<ILogger> logger)
         {
             // Arrange
@@ -201,7 +201,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IGridAreaLinkRepository> gridAreaLinkRepository,
             [Frozen] Mock<ILoggerFactory> loggerFactory,
-            [Frozen] Mock<IUnitOfWork> unitOfWork,
+            [Frozen] Mock<IChargesUnitOfWork> unitOfWork,
             Mock<ILogger> logger)
         {
             // Arrange
@@ -246,7 +246,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IGridAreaLinkRepository> gridAreaLinkRepository,
             [Frozen] Mock<ILoggerFactory> loggerFactory,
-            [Frozen] Mock<IUnitOfWork> unitOfWork)
+            [Frozen] Mock<IChargesUnitOfWork> unitOfWork)
         {
             // Arrange
             var existingMarketParticipant = new MarketParticipant(
@@ -297,7 +297,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IGridAreaLinkRepository> gridAreaLinkRepository,
             [Frozen] Mock<ILoggerFactory> loggerFactory,
-            [Frozen] Mock<IUnitOfWork> unitOfWork,
+            [Frozen] Mock<IChargesUnitOfWork> unitOfWork,
             Mock<ILogger> logger)
         {
             // Arrange
@@ -334,7 +334,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IGridAreaLinkRepository> gridAreaLinkRepository,
             [Frozen] Mock<ILoggerFactory> loggerFactory,
-            [Frozen] Mock<IUnitOfWork> unitOfWork,
+            [Frozen] Mock<IChargesUnitOfWork> unitOfWork,
             Mock<ILogger> logger)
         {
             // Arrange
@@ -370,7 +370,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IGridAreaLinkRepository> gridAreaLinkRepository,
             [Frozen] Mock<ILoggerFactory> loggerFactory,
-            [Frozen] Mock<IUnitOfWork> unitOfWork,
+            [Frozen] Mock<IChargesUnitOfWork> unitOfWork,
             Mock<ILogger> logger)
         {
             // Arrange

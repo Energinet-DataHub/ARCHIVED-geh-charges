@@ -14,7 +14,7 @@
 
 using System.Threading.Tasks;
 
-namespace GreenEnergyHub.Charges.Application.Persistence
+namespace GreenEnergyHub.Charges.Core.Persistence
 {
     public interface IUnitOfWork
     {
