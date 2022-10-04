@@ -15,54 +15,59 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
+using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim;
-using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeLinks;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksData;
+using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.Charges;
+using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.Tests.TestHelpers;
+using GreenEnergyHub.Iso8601;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.ChargeLinks
+namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Charges
 {
     [UnitTest]
-    public class ChargeLinkCimSerializerTests
+    public class ChargeCimJsonSerializerTests
     {
-        private const int NoOfLinksInBundle = 10;
+        private const int NoOfChargesInBundle = 10;
         private const string CimTestId = "00000000000000000000000000000000";
-        private const string RecipientId = "TestRecipient1111";
+        private const string RecipientId = "Recipient";
 
         [Theory]
-        [InlineAutoDomainData("TestFiles/ExpectedOutputChargeLinkCimSerializer.blob")]
+        [InlineAutoDomainData("TestFiles/ExpectedOutputChargeCimJsonSerializerChargeInformation.blob")]
         public async Task SerializeAsync_WhenCalled_StreamHasSerializedResult(
             string expectedFilePath,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IClock> clock,
+            [Frozen] Mock<IIso8601Durations> iso8601Durations,
             [Frozen] Mock<ICimIdProvider> cimIdProvider,
-            ChargeLinkCimXmlSerializer sut)
+            ChargeCimJsonSerializer sut)
         {
             // Arrange
-            SetupMocks(marketParticipantRepository, clock, cimIdProvider);
+            SetupMocks(marketParticipantRepository, clock, iso8601Durations, cimIdProvider);
             await using var stream = new MemoryStream();
 
             var path = FilePathHelper.GetFullFilePath(expectedFilePath);
             var expected = ContentStreamHelper.GetFileAsString(path);
 
-            var chargeLinks = GetChargeLinks(clock.Object);
+            var charges = GetCharges(clock.Object);
 
             // Act
             await sut.SerializeToStreamAsync(
-                chargeLinks,
+                charges,
                 stream,
-                BusinessReasonCode.UpdateMasterDataSettlement,
+                charges.First().BusinessReasonCode,
                 "5790001330552",
                 MarketParticipantRole.MeteringPointAdministrator,
                 RecipientId,
@@ -71,40 +76,13 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
             // Assert
             var actual = stream.AsString();
 
-            Assert.Equal(expected, actual, ignoreLineEndingDifferences: true);
+            actual.Should().Be(expected);
         }
 
-        [Theory(Skip = "Manually run test to save the generated file to disk")]
-        [InlineAutoDomainData]
-        public async Task SerializeAsync_WhenCalled_SaveSerializedStream(
-            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            [Frozen] Mock<IClock> clock,
-            [Frozen] Mock<ICimIdProvider> cimIdProvider,
-            ChargeLinkCimXmlSerializer sut)
-        {
-            SetupMocks(marketParticipantRepository, clock, cimIdProvider);
-
-            var chargeLinks = GetChargeLinks(clock.Object);
-
-            await using var stream = new MemoryStream();
-
-            await sut.SerializeToStreamAsync(
-                chargeLinks,
-                stream,
-                BusinessReasonCode.UpdateMasterDataSettlement,
-                "5790001330552",
-                MarketParticipantRole.MeteringPointAdministrator,
-                RecipientId,
-                MarketParticipantRole.GridAccessProvider);
-
-            await using var fileStream = File.Create("C:\\Temp\\TestChargeLinkBundle" + Guid.NewGuid() + ".xml");
-
-            await stream.CopyToAsync(fileStream);
-        }
-
-        private void SetupMocks(
-            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
+        private static void SetupMocks(
+            Mock<IMarketParticipantRepository> marketParticipantRepository,
             Mock<IClock> clock,
+            Mock<IIso8601Durations> iso8601Durations,
             Mock<ICimIdProvider> cimIdProvider)
         {
             marketParticipantRepository
@@ -117,48 +95,80 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
                     MarketParticipantStatus.Active,
                     MarketParticipantRole.MeteringPointAdministrator));
 
-            var currentTime = Instant.FromUtc(2021, 10, 12, 13, 37, 43).PlusNanoseconds(4);
+            var currentTime = Instant.FromUtc(2021, 10, 22, 15, 30, 41).PlusNanoseconds(4);
             clock.Setup(c => c.GetCurrentInstant()).Returns(currentTime);
+
+            iso8601Durations
+                .Setup(i => i.GetTimeFixedToDuration(
+                        It.IsAny<Instant>(),
+                        It.IsAny<string>(),
+                        It.IsAny<int>()))
+                .Returns(Instant.FromUtc(2100, 3, 31, 22, 0, 0));
 
             cimIdProvider.Setup(c => c.GetUniqueId()).Returns(CimTestId);
         }
 
-        private List<AvailableChargeLinksData> GetChargeLinks(IClock clock)
+        private static List<AvailableChargeData> GetCharges(IClock clock)
         {
-            var chargeLinks = new List<AvailableChargeLinksData>();
+            var charges = new List<AvailableChargeData>();
 
-            for (var i = 1; i <= NoOfLinksInBundle; i++)
+            for (var i = 1; i <= NoOfChargesInBundle; i++)
             {
-                chargeLinks.Add(GetChargeLink(i, clock));
+                var order = i - 1;
+                charges.Add(GetChargeInformation(i, clock, order));
             }
 
-            return chargeLinks;
+            return charges;
         }
 
-        private AvailableChargeLinksData GetChargeLink(int no, IClock clock)
+        private static AvailableChargeData GetChargeInformation(int no, IClock clock, int order)
         {
             var validTo = no % 2 == 0 ?
                 Instant.FromUtc(9999, 12, 31, 23, 59, 59) :
                 Instant.FromUtc(2021, 4, 30, 22, 0, 0);
 
-            return new AvailableChargeLinksData(
+            return new AvailableChargeData(
                 "5790001330552",
                 MarketParticipantRole.MeteringPointAdministrator,
                 RecipientId,
                 MarketParticipantRole.GridAccessProvider,
-                BusinessReasonCode.UpdateMasterDataSettlement,
+                BusinessReasonCode.UpdateChargeInformation,
                 clock.GetCurrentInstant(),
                 Guid.NewGuid(),
-                "Charge" + no,
+                "ChargeId" + no,
                 "Owner" + no,
-                ChargeType.Tariff,
-                "MeteringPoint" + no,
-                no,
+                GetChargeType(no),
+                "Name" + no,
+                "Description" + no,
                 Instant.FromUtc(2020, 12, 31, 23, 0, 0),
                 validTo,
-                DocumentType.NotifyBillingMasterData,
-                0,
+                VatClassification.NoVat,
+                true,
+                false,
+                GetResolution(no),
+                DocumentType.NotifyPriceList,
+                order,
                 Guid.NewGuid());
+        }
+
+        private static ChargeType GetChargeType(int no)
+        {
+            return (no % 3) switch
+            {
+                0 => ChargeType.Subscription,
+                1 => ChargeType.Fee,
+                _ => ChargeType.Tariff,
+            };
+        }
+
+        private static Resolution GetResolution(int no)
+        {
+            return (no % 3) switch
+            {
+                0 => Resolution.P1M,
+                1 => Resolution.P1M,
+                _ => Resolution.PT1H,
+            };
         }
     }
 }

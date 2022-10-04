@@ -16,13 +16,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
-using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 
 namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim
 {
-    public interface ICimSerializer<TAvailableData>
-        where TAvailableData : AvailableDataBase
+    /// <summary>
+    /// Contract defining Json serializer to be used for AvailableData
+    /// </summary>
+    /// <typeparam name="TAvailableData">Any AvailableData that should support Json notifications</typeparam>
+    public interface ICimJsonSerializer<in TAvailableData>
     {
+        /// <summary>
+        /// Serialize AvailableData to stream
+        /// </summary>
         Task SerializeToStreamAsync(
             IEnumerable<TAvailableData> availableData,
             Stream stream,
