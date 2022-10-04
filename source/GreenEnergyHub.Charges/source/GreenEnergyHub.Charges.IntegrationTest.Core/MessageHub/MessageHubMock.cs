@@ -116,7 +116,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
         /// on the charges bundle reply queue.
         /// </summary>
         /// <returns>List of <see cref="PeekSimulatorResponseDto"/></returns>
-        public async Task<List<PeekSimulatorResponseDto>> PeekAsync()
+        public async Task<List<PeekSimulatorResponseDto>> PeekAsync(ResponseFormat responseFormat)
         {
             ExtendedInvalidOperationException.ThrowIfNullOrNoElements(
                 _notifications, $"{nameof(MessageHubMock)}: No dataavailable was provided for Peek");
@@ -133,7 +133,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
                 var requestId = Guid.NewGuid();
                 var blobName = await AddDataAvailableNotificationIdsToStorageAsync(requestId, message).ConfigureAwait(false);
 
-                await CreateAndSendDataBundleRequestAsync(message, sessionId, dataBundleRequestDtos, blobName, requestId);
+                await CreateAndSendDataBundleRequestAsync(message, sessionId, dataBundleRequestDtos, blobName, requestId, responseFormat);
             }
 
             var eventualMessageHubReply = await ReceiveEventualServiceBusEvents(dataBundleRequestDtos);
@@ -169,10 +169,11 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
             string sessionId,
             ICollection<DataBundleRequestDto> dataBundleRequestDtos,
             string blobName,
-            Guid requestId)
+            Guid requestId,
+            ResponseFormat responseFormat)
         {
             var correlationId = CorrelationIdGenerator.Create();
-            var request = BuildDataBundleRequestDto(correlationId, message, requestId, blobName);
+            var request = BuildDataBundleRequestDto(correlationId, message, requestId, blobName, responseFormat);
 
             await SendDataBundleAsync(sessionId, request, correlationId).ConfigureAwait(false);
 
@@ -180,14 +181,14 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
         }
 
         private static DataBundleRequestDto BuildDataBundleRequestDto(
-            string correlationId, DistinctMessage message, Guid requestId, string blobName)
+            string correlationId, DistinctMessage message, Guid requestId, string blobName, ResponseFormat responseFormat)
         {
             var request = new DataBundleRequestDto(
                 RequestId: requestId,
                 DataAvailableNotificationReferenceId: blobName,
                 IdempotencyId: correlationId,
                 new MessageTypeDto(message.MessageType),
-                ResponseFormat.Xml,
+                responseFormat,
                 1.0);
             return request;
         }

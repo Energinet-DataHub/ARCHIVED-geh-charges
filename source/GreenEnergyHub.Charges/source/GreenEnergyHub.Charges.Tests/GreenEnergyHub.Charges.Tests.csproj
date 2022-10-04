@@ -147,6 +147,12 @@ limitations under the License.
       <Content Include="TestFiles\SingleChargeLinkConfirmationCimSerializerWorstCase.blob">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
+      <Content Include="TestFiles\ExpectedOutputChargeCimJsonSerializerChargePrices.blob">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <Content Include="TestFiles\ExpectedOutputChargeCimJsonSerializerChargeInformation.blob">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
     <ItemGroup>

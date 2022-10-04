@@ -24,10 +24,10 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeLinkReceipt
 {
-    public class ChargeLinksReceiptCimSerializer
-        : CimSerializer<AvailableChargeLinksReceiptData>
+    public class ChargeLinksReceiptCimXmlSerializer
+        : CimXmlSerializer<AvailableChargeLinksReceiptData>
     {
-        public ChargeLinksReceiptCimSerializer(
+        public ChargeLinksReceiptCimXmlSerializer(
             IClock clock,
             ICimIdProvider cimIdProvider)
             : base(clock, cimIdProvider)
@@ -108,7 +108,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeLin
             return new XElement(
                 cimNamespace + CimChargeLinkReceiptConstants.ReasonElement,
                 new XElement(cimNamespace + CimChargeLinkReceiptConstants.ReasonCode, ReasonCodeMapper.Map(validationError.ReasonCode)),
-                CimHelper.GetElementIfNeeded(
+                CimXmlHelper.GetElementIfNeeded(
                     cimNamespace,
                     string.IsNullOrWhiteSpace(validationError.Text),
                     CimChargeLinkReceiptConstants.ReasonText,
