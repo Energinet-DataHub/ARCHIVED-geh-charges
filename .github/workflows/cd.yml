@@ -20,12 +20,20 @@ on:
 
 jobs:
   publish_release:
-    uses: Energinet-DataHub/.github/.github/workflows/publish-release.yml@v8
-    secrets:
-      PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+    uses: Energinet-DataHub/.github/.github/workflows/promote-prerelease.yml@v8
+    with:
+      RELEASE_NAME_PREFIX: dotnet
+
+  create_latest_release:
+    uses: Energinet-DataHub/.github/.github/workflows/create-latest-release.yml@v8
+    with:
+      RELEASE_NAME_PREFIX: dotnet
 
   dispatch_deployment_request:
-    needs: publish_release
+    needs: [
+      publish_release,
+      create_latest_release
+    ]
     uses: Energinet-DataHub/.github/.github/workflows/dispatch-deployment-request.yml@v8
     with:
       CALLER_REPOSITORY_NAME: geh-charges
