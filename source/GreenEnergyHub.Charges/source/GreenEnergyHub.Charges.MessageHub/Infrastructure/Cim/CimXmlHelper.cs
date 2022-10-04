@@ -18,7 +18,7 @@ using System.Xml.Linq;
 
 namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim
 {
-    public static class CimHelper
+    public static class CimXmlHelper
     {
         /// <summary>
         /// Utility method for only adding an element if it is needed

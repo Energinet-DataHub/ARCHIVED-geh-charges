@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim
             string elementName)
         {
             // Act
-            var actual = CimHelper.GetElementIfNeeded(
+            var actual = CimXmlHelper.GetElementIfNeeded(
                 cimNamespace,
                 true,
                 elementName,
@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim
             string value)
         {
             // Act
-            var actual = CimHelper.GetElementIfNeeded(
+            var actual = CimXmlHelper.GetElementIfNeeded(
                 cimNamespace,
                 false,
                 elementName,
