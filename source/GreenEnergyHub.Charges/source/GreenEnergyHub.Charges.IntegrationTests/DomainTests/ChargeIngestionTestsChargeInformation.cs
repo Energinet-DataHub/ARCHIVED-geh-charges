@@ -186,7 +186,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task Given_BundleWithMultipleOperationsForSameCharge_When_GridAccessProviderPeeks_Then_MessageHubReceivesReplyWithChronologicallyOrderedOperations()
             {
                 // Arrange
-                var expectedConfirmationOperations = new List<string> { "00001", "00002", "00003", "00004" };
                 var expectedNotificationOperations = new List<string> { "CREATE", "UPDATE", "STOP", "CANCEL STOP" };
 
                 var (request, correlationId) = Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
@@ -206,15 +205,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 using var assertionScope = new AssertionScope();
                 var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 16);
                 peekResults.Should().NotContainMatch("*Reject*");
-
-                var confirmation = peekResults.Single(x => x.Contains("*ConfirmRequestChangeOfPriceList_MarketDocument*"));
-
-                peekResults.Should().Contain("ConfirmRequestChangeOfPriceList_MarketDocument");
-                var confirmationOperations = CIMXmlReader.GetActivityRecordElements(
-                    confirmation, "MktActivityRecord", "originalTransactionIDReference_MktActivityRecord.mRID");
-
-                confirmationOperations.Select(x => x.Substring(5, 5))
-                    .Should().BeEquivalentTo(expectedConfirmationOperations);
+                peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
 
                 foreach (var peekResult in peekResults.Where(x => x.Contains("NotifyPriceList_MarketDocument")))
                 {
