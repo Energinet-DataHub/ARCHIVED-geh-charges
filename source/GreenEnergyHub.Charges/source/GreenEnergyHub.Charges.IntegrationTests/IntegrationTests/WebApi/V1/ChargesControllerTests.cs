@@ -37,39 +37,26 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
     public class ChargesControllerTests :
         WebApiTestBase<ChargesWebApiFixture>,
         IClassFixture<ChargesWebApiFixture>,
-        IClassFixture<WebApiFactory>,
-        IAsyncLifetime
+        IClassFixture<WebApiFactory>
     {
         private const string BaseUrl = "/v1/Charges";
-        private readonly HttpClient _client;
 
         public ChargesControllerTests(
             ChargesWebApiFixture chargesWebApiFixture,
-            WebApiFactory factory,
             ITestOutputHelper testOutputHelper)
             : base(chargesWebApiFixture, testOutputHelper)
         {
-            _client = factory.CreateClient();
-            factory.ReconfigureJwtTokenValidatorMock(isValid: true);
         }
 
-        public Task InitializeAsync()
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task GetAsync_WhenChargesExists_ReturnsOkAndCorrectContentType(WebApiFactory factory)
         {
-            _client.DefaultRequestHeaders.Add("Authorization", $"Bearer xxx");
-            return Task.CompletedTask;
-        }
+            // Arrange
+            var sut = CreateHttpClient(factory);
 
-        public Task DisposeAsync()
-        {
-            _client.Dispose();
-            return Task.CompletedTask;
-        }
-
-        [Fact]
-        public async Task GetAsync_WhenChargesExists_ReturnsOkAndCorrectContentType()
-        {
             // Act
-            var response = await _client.GetAsync($"{BaseUrl}/GetAsync");
+            var response = await sut.GetAsync($"{BaseUrl}/GetAsync");
 
             // Assert
             var contentType = response.Content.Headers.ContentType!.ToString();
@@ -77,11 +64,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
             contentType.Should().Be("application/json; charset=utf-8");
         }
 
-        [Fact]
-        public async Task GetAsync_WhenRequested_ReturnsChargeInformation()
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task GetAsync_WhenRequested_ReturnsChargeInformation(WebApiFactory factory)
         {
+            // Arrange
+            var sut = CreateHttpClient(factory);
+
             // Act
-            var response = await _client.GetAsync($"{BaseUrl}/GetAsync");
+            var response = await sut.GetAsync($"{BaseUrl}/GetAsync");
 
             // Assert
             var jsonString = await response.Content.ReadAsStringAsync();
@@ -105,13 +96,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
         [Theory]
         [InlineAutoMoqData]
         public async Task SearchAsync_WhenSearchCriteriaIsValid_ReturnsOkAndCorrectContentType(
-            SearchCriteriaDtoBuilder searchCriteriaDtoBuilder)
+            SearchCriteriaDtoBuilder searchCriteriaDtoBuilder,
+            WebApiFactory factory)
         {
             // Arrange
+            var sut = CreateHttpClient(factory);
             var searchCriteria = searchCriteriaDtoBuilder.Build();
 
             // Act
-            var response = await _client.PostAsJsonAsync($"{BaseUrl}/SearchAsync", searchCriteria);
+            var response = await sut.PostAsJsonAsync($"{BaseUrl}/SearchAsync", searchCriteria);
 
             // Assert
             var contentType = response.Content.Headers.ContentType!.ToString();
@@ -122,15 +115,17 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
         [Theory]
         [InlineAutoMoqData]
         public async Task SearchAsync_WhenSearchCriteriaIsNotValid_ReturnsBadRequest(
-            SearchCriteriaDtoBuilder searchCriteriaDtoBuilder)
+            SearchCriteriaDtoBuilder searchCriteriaDtoBuilder,
+            WebApiFactory factory)
         {
             // Arrange
+            var sut = CreateHttpClient(factory);
             var searchCriteria = searchCriteriaDtoBuilder
                 .WithMarketParticipantId("not_a_guid")
                 .Build();
 
             // Act
-            var response = await _client.PostAsJsonAsync($"{BaseUrl}/SearchAsync", searchCriteria);
+            var response = await sut.PostAsJsonAsync($"{BaseUrl}/SearchAsync", searchCriteria);
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -139,14 +134,16 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
         [Theory]
         [InlineAutoMoqData]
         public async Task SearchAsync_WhenRequested_ReturnsChargeInformation(
-            SearchCriteriaDtoBuilder searchCriteriaDtoBuilder)
+            SearchCriteriaDtoBuilder searchCriteriaDtoBuilder,
+            WebApiFactory factory)
         {
             // Arrange
+            var sut = CreateHttpClient(factory);
             var searchCriteria = searchCriteriaDtoBuilder
                 .Build();
 
             // Act
-            var response = await _client.PostAsJsonAsync($"{BaseUrl}/SearchAsync", searchCriteria);
+            var response = await sut.PostAsJsonAsync($"{BaseUrl}/SearchAsync", searchCriteria);
 
             // Assert
             var jsonString = await response.Content.ReadAsStringAsync();
@@ -174,6 +171,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
                 PropertyNameCaseInsensitive = true,
                 Converters = { new JsonStringEnumConverter() },
             };
+        }
+
+        private static HttpClient CreateHttpClient(WebApiFactory factory)
+        {
+            var sut = factory.CreateClient();
+            factory.ReconfigureJwtTokenValidatorMock(isValid: true);
+            sut.DefaultRequestHeaders.Add("Authorization", $"Bearer xxx");
+            return sut;
         }
     }
 }

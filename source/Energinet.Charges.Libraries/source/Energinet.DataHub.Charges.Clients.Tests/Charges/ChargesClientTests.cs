@@ -128,7 +128,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
 
         [Theory]
         [InlineAutoDomainData]
-        public async Task GetChargesAsync_WhenResponseIsNotFound_ReturnsEmptyList(
+        public async Task GetChargesAsync_WhenResponseIsNotFound_ReturnsNull(
             Mock<IChargesClientFactory> chargesClientFactory)
         {
             // Arrange
@@ -143,15 +143,14 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
             var result = await sut.GetChargesAsync().ConfigureAwait(false);
 
             // Assert
-            result.Should().BeOfType<List<ChargeV1Dto>>();
-            result.Should().BeEmpty();
+            result.Should().BeNull();
         }
 
         [Theory]
         [InlineAutoDomainData]
         public async Task SearchChargesAsync_WhenResponseIsNotFound_ReturnsEmptyList(
             Mock<IChargesClientFactory> chargesClientFactory,
-            SearchCriteriaDtoBuilder searchCriteriaDtoBuilder)
+            SearchCriteriaDto searchCriteria)
         {
             // Arrange
             var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.NotFound, string.Empty);
@@ -160,21 +159,19 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
                 .Returns(new ChargesClient(httpClient));
 
             var sut = chargesClientFactory.Object.CreateClient(httpClient);
-            var searchCriteria = searchCriteriaDtoBuilder.Build();
 
             // Act
             var result = await sut.SearchChargesAsync(searchCriteria).ConfigureAwait(false);
 
             // Assert
-            result.Should().BeOfType<List<ChargeV1Dto>>();
-            result.Should().BeEmpty();
+            result.Should().BeNull();
         }
 
         [Theory]
         [InlineAutoDomainData]
         public async Task SearchChargesAsync_WhenSuccess_ReturnsCharges(
             Mock<IChargesClientFactory> chargesClientFactory,
-            SearchCriteriaDtoBuilder searchCriteriaDtoBuilder,
+            SearchCriteriaDto searchCriteria,
             ChargeV1Dto chargeDto)
         {
             // Arrange
@@ -187,7 +184,6 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
             var sut = chargesClientFactory.Object.CreateClient(httpClient);
 
             var expectedUri = new Uri($"{BaseUrl}{ChargesRelativeUris.SearchCharges()}");
-            var searchCriteria = searchCriteriaDtoBuilder.Build();
 
             // Act
             var result = await sut.SearchChargesAsync(searchCriteria).ConfigureAwait(false);

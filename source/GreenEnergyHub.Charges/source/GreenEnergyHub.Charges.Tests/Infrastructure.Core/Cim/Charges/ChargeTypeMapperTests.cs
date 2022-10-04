@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using System.ComponentModel;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.Charges;
@@ -51,6 +52,34 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Cim.Charges
         public void Map_WhenGivenUnknownInput_ThrowsExceptions(ChargeType chargeType)
         {
             Assert.Throws<InvalidEnumArgumentException>(() => ChargeTypeMapper.Map(chargeType));
+        }
+
+        [Fact]
+        public void MayMany_WhenGivenKnownInput_MapsToCorrectEnums()
+        {
+            // Arrange
+            var chargeTypes = "D01,D02,D03";
+            var expected = new List<ChargeType> { ChargeType.Subscription, ChargeType.Fee, ChargeType.Tariff };
+
+            // Act
+            var actual = ChargeTypeMapper.MapMany(chargeTypes);
+
+            // Assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void MayMany_WhenGivenUnknownInput_MapsToUnknown()
+        {
+            // Arrange
+            var chargeTypes = "not_a_type";
+            var expected = new List<ChargeType> { ChargeType.Unknown };
+
+            // Act
+            var actual = ChargeTypeMapper.MapMany(chargeTypes);
+
+            // Assert
+            Assert.Equal(expected, actual);
         }
     }
 }
