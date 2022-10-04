@@ -21,14 +21,14 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
 {
     public class CIMXmlReader
     {
-        public static IList<string> GetActivityRecords(string xml)
+        public static IList<string> GetActivityRecordElements(string xml, string group, string elementName)
         {
             var document = XDocument.Parse(RemoveByteOrderMark(xml));
             var ns = document.Root!.GetNamespaceOfPrefix("cim")!;
-            var marketActivityRecords = document.Descendants(ns + "MktActivityRecord");
+            var marketActivityRecords = document.Descendants(ns + group);
 
             return marketActivityRecords
-                .Select(mar => mar.Element(ns + "originalTransactionIDReference_MktActivityRecord.mRID"))
+                .Select(mar => mar.Element(ns + elementName))
                 .Select(elm => elm!.Value.ToString())
                 .ToList();
         }

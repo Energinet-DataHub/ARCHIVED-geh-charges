@@ -25,7 +25,7 @@ limitations under the License.
     <cim:receiver_MarketParticipant.marketRole.type>DDZ</cim:receiver_MarketParticipant.marketRole.type>
     <cim:createdDateTime>{{$isoTimestamp}}</cim:createdDateTime>
     <cim:MktActivityRecord>
-        <cim:mRID>OpId1_{{$isoTimestamp}}</cim:mRID>
+        <cim:mRID>{{$randomCharactersShort}}{{$increment5digits}}</cim:mRID>
         <cim:ChargeGroup>
             <cim:ChargeType>
                 <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">8100000000030</cim:chargeTypeOwner_MarketParticipant.mRID>
@@ -42,7 +42,7 @@ limitations under the License.
         </cim:ChargeGroup>
     </cim:MktActivityRecord>
     <cim:MktActivityRecord>
-    <cim:mRID>OpId2_{{$isoTimestamp}}</cim:mRID>
+    <cim:mRID>{{$randomCharactersShort}}{{$increment5digits}}</cim:mRID>
     <cim:ChargeGroup>
         <cim:ChargeType>
             <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">8100000000030</cim:chargeTypeOwner_MarketParticipant.mRID>
@@ -59,7 +59,7 @@ limitations under the License.
     </cim:ChargeGroup>
 </cim:MktActivityRecord>
     <cim:MktActivityRecord>
-        <cim:mRID>OpId3_{{$isoTimestamp}}</cim:mRID>
+        <cim:mRID>{{$randomCharactersShort}}{{$increment5digits}}</cim:mRID>
         <cim:ChargeGroup>
             <cim:ChargeType>
                 <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">8100000000030</cim:chargeTypeOwner_MarketParticipant.mRID>
@@ -77,7 +77,7 @@ limitations under the License.
         </cim:ChargeGroup>
     </cim:MktActivityRecord>
     <cim:MktActivityRecord>
-    <cim:mRID>OpId2_{{$isoTimestamp}}</cim:mRID>
+    <cim:mRID>{{$randomCharactersShort}}{{$increment5digits}}</cim:mRID>
     <cim:ChargeGroup>
         <cim:ChargeType>
             <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">8100000000030</cim:chargeTypeOwner_MarketParticipant.mRID>
