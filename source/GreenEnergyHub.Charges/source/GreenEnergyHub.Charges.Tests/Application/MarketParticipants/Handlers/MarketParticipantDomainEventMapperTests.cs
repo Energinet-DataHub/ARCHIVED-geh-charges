@@ -18,6 +18,7 @@ using System.Linq;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
 
@@ -52,7 +53,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             actualMarketParticipantUpdatedEvent.ActorId.Should().Be(actorId);
             actualMarketParticipantUpdatedEvent.B2CActorId.Should().Be(b2CActorId);
             actualMarketParticipantUpdatedEvent.MarketParticipantId.Should().Be(actorNumber);
-            actualMarketParticipantUpdatedEvent.IsActive.Should().Be(true);
+            actualMarketParticipantUpdatedEvent.Status.Should().Be(MarketParticipantStatus.Active);
             actualMarketParticipantUpdatedEvent.BusinessProcessRoles.Count.Should().Be(1);
             actualMarketParticipantUpdatedEvent.GridAreas.Count().Should().Be(2);
         }

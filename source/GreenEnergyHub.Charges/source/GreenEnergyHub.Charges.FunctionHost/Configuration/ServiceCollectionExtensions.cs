@@ -66,7 +66,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             services.AddScoped<ClaimsPrincipalContext>();
             services.AddScoped<IClaimsPrincipalAccessor, ClaimsPrincipalAccessor>();
 
-            services.AddScoped<JwtTokenMiddleware>(sp =>
+            services.AddScoped(sp =>
                 new JwtTokenMiddleware(
                     sp.GetRequiredService<ClaimsPrincipalContext>(),
                     sp.GetRequiredService<IJwtTokenValidator>(),
@@ -93,7 +93,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         public static void AddDomainEventPublishing(this IServiceCollection serviceCollection, ServiceBusClient serviceBusClient)
         {
             serviceCollection.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
-            serviceCollection.AddScoped<IServiceBusDispatcher, ServiceBusDispatcher>();
             var topicName = EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesDomainEventTopicName);
 
             // Must be a singleton as per documentation of ServiceBusClient and ServiceBusSender

@@ -40,7 +40,7 @@ public class MarketParticipant
 
     public int BusinessProcessRole { get; set; }
 
-    public bool IsActive { get; set; }
+    public int Status { get; set; }
 
     public Guid ActorId { get; set; }
 

@@ -26,7 +26,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
         public static MarketParticipantUpdatedEvent MapFromActorUpdatedIntegrationEvent(
             ActorUpdatedIntegrationEvent actorUpdatedIntegrationEvent)
         {
-            var isActive = actorUpdatedIntegrationEvent.Status is ActorStatus.Active;
+            var status = MarketParticipantStatusMapper.Map(actorUpdatedIntegrationEvent.Status);
 
             var rolesUsedInChargesDomain = actorUpdatedIntegrationEvent.BusinessRoles
                 .Select(MarketParticipantRoleMapper.Map)
@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
                 actorUpdatedIntegrationEvent.ExternalActorId,
                 actorUpdatedIntegrationEvent.ActorNumber,
                 rolesUsedInChargesDomain,
-                isActive,
+                status,
                 actorUpdatedIntegrationEvent.ActorMarketRoles
                     .SelectMany(amr => amr.GridAreas)
                         .DistinctBy(o => o.Id)

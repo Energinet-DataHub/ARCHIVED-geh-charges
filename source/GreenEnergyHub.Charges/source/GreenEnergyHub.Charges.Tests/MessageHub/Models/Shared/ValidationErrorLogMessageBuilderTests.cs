@@ -63,11 +63,10 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared
             var documentDto = documentDtoBuilder
                 .WithDocumentId("00001")
                 .WithDocumentType(DocumentType.RequestChangeBillingMasterData)
-                .WithSender(new MarketParticipantDto
-                {
-                    MarketParticipantId = "10000",
-                    BusinessProcessRole = MarketParticipantRole.GridAccessProvider,
-                })
+                .WithSender(new MarketParticipantDtoBuilder()
+                    .WithMarketParticipantId("10000")
+                    .WithMarketParticipantRole(MarketParticipantRole.GridAccessProvider)
+                    .Build())
                 .Build();
             return documentDto;
         }

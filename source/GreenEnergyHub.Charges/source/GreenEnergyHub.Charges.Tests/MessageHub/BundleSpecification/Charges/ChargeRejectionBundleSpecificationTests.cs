@@ -59,7 +59,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.Charges
                 actorId: Guid.NewGuid(),
                 b2CActorId: Guid.NewGuid(),
                 MaxLengthId,
-                true,
+                MarketParticipantStatus.Active,
                 MarketParticipantRole.GridAccessProvider);
 
             marketParticipantRepository

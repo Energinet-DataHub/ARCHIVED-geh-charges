@@ -12,15 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace GreenEnergyHub.Charges.Application.ChargeLinks.Handlers.Message
-{
-    public class ChargeLinksMessageResult
-    {
-        public bool IsSucceeded { get; set; }
+using System;
 
-        public static ChargeLinksMessageResult CreateSuccess()
+namespace GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub
+{
+    public sealed class AzureBlobContentDto
+    {
+        internal AzureBlobContentDto(Uri path)
         {
-            return new ChargeLinksMessageResult { IsSucceeded = true };
+            Path = path;
         }
+
+        /// <summary>
+        /// Contains the path to the bundle generated during Peek.
+        /// </summary>
+        public Uri Path { get; }
     }
 }

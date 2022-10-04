@@ -21,6 +21,7 @@ using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
+using GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.ChargeLinks;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
@@ -52,7 +53,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
             public Task DisposeAsync()
             {
-                Fixture.MessageHubMock.Clear();
+                Fixture.MessageHubMock.Reset();
                 return Task.CompletedTask;
             }
 

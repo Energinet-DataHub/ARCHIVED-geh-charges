@@ -103,29 +103,23 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
                 .ConfigureAwait(false);
 
             return new ChargeLinksCommand(
-                new DocumentDto
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    Type = DocumentType.RequestChangeBillingMasterData,
-                    IndustryClassification = IndustryClassification.Electricity,
-                    BusinessReasonCode = BusinessReasonCode.UpdateMasterDataSettlement,
-                    RequestDate = currentTime,
-                    CreatedDateTime = currentTime,
-                    Sender = new MarketParticipantDto
-                    {
-                        MarketParticipantId = systemOperator.MarketParticipantId, // For default charge links the owner is the TSO.
-                        BusinessProcessRole = systemOperator.BusinessProcessRole,
-                        Id = systemOperator.Id,
-                        B2CActorId = Guid.Empty,
-                    },
-                    Recipient = new MarketParticipantDto
-                    {
-                        MarketParticipantId = meteringPointAdministrator.MarketParticipantId,
-                        BusinessProcessRole = meteringPointAdministrator.BusinessProcessRole,
-                        Id = systemOperator.Id,
-                        B2CActorId = Guid.Empty,
-                    },
-                },
+                new DocumentDto(
+                    Guid.NewGuid().ToString(),
+                    currentTime,
+                    DocumentType.RequestChangeBillingMasterData,
+                    currentTime,
+                    new MarketParticipantDto(
+                        systemOperator.Id,
+                        systemOperator.MarketParticipantId,
+                        systemOperator.BusinessProcessRole,
+                        Guid.Empty),
+                    new MarketParticipantDto(
+                        systemOperator.Id,
+                        meteringPointAdministrator.MarketParticipantId,
+                        meteringPointAdministrator.BusinessProcessRole,
+                        Guid.Empty),
+                    IndustryClassification.Electricity,
+                    BusinessReasonCode.UpdateMasterDataSettlement),
                 chargeLinks);
         }
     }

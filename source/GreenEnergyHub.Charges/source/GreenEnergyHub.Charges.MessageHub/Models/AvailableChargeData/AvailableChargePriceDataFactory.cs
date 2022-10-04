@@ -74,7 +74,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
             Charge charge)
         {
             var recipients = await _marketParticipantRepository
-                .GetActiveEnergySuppliersAsync()
+                .GetActiveAndPassiveEnergySuppliersAsync()
                 .ConfigureAwait(false);
             await AddGridAccessProvidersAsRecipientsIfChargeIsTaxAsync(charge, recipients)
                 .ConfigureAwait(false);
@@ -113,7 +113,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData
         {
             if (charge.TaxIndicator)
             {
-                recipients.AddRange(await _marketParticipantRepository.GetActiveGridAccessProvidersAsync()
+                recipients.AddRange(await _marketParticipantRepository.GetActiveAndPassiveGridAccessProvidersAsync()
                     .ConfigureAwait(false));
             }
         }

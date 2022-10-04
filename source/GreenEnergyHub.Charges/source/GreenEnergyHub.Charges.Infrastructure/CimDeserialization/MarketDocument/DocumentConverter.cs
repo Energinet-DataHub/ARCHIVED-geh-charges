@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.SchemaValidation;
 using Energinet.DataHub.Core.SchemaValidation.Extensions;
@@ -43,12 +44,19 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocumen
 
         protected abstract Task<ChargeCommandBundle> ConvertSpecializedContentAsync(SchemaValidatingReader reader, DocumentDto document);
 
-        private static async Task ParseFieldsAsync(SchemaValidatingReader reader, DocumentDto document)
+        private async Task<DocumentDto> ParseFieldsAsync(SchemaValidatingReader reader)
         {
             var hasReadRoot = false;
 
-            document.Sender.MarketParticipantId = string.Empty;
-            document.Recipient.MarketParticipantId = string.Empty;
+            var id = string.Empty;
+            var type = default(DocumentType);
+            var businessReasonCode = default(BusinessReasonCode);
+            var industryClassification = default(IndustryClassification);
+            var senderMarketParticipantId = string.Empty;
+            var senderBusinessProcessRole = default(MarketParticipantRole);
+            var recipientMarketParticipantId = string.Empty;
+            var recepientBusinessProcessRole = default(MarketParticipantRole);
+            var createdDateTime = default(Instant);
 
             while (await reader.AdvanceAsync().ConfigureAwait(false))
             {
@@ -58,49 +66,48 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocumen
                 }
                 else if (reader.Is(CimMarketDocumentConstants.Id))
                 {
-                    var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
-                    document.Id = content;
+                    id = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
                 }
                 else if (reader.Is(CimMarketDocumentConstants.Type))
                 {
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
-                    document.Type = DocumentTypeMapper.Map(content);
+                    type = DocumentTypeMapper.Map(content);
                 }
                 else if (reader.Is(CimMarketDocumentConstants.BusinessReasonCode))
                 {
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
-                    document.BusinessReasonCode = BusinessReasonCodeMapper.Map(content);
+                    businessReasonCode = BusinessReasonCodeMapper.Map(content);
                 }
                 else if (reader.Is(CimMarketDocumentConstants.IndustryClassification))
                 {
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
-                    document.IndustryClassification = IndustryClassificationMapper.Map(content);
+                    industryClassification = IndustryClassificationMapper.Map(content);
                 }
                 else if (reader.Is(CimMarketDocumentConstants.SenderId))
                 {
                     if (!reader.CanReadValue) continue;
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
-                    document.Sender.MarketParticipantId = content;
+                    senderMarketParticipantId = content;
                 }
                 else if (reader.Is(CimMarketDocumentConstants.SenderBusinessProcessRole))
                 {
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
-                    document.Sender.BusinessProcessRole = MarketParticipantRoleMapper.Map(content);
+                    senderBusinessProcessRole = MarketParticipantRoleMapper.Map(content);
                 }
                 else if (reader.Is(CimMarketDocumentConstants.RecipientId))
                 {
                     if (!reader.CanReadValue) continue;
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
-                    document.Recipient.MarketParticipantId = content;
+                    recipientMarketParticipantId = content;
                 }
                 else if (reader.Is(CimMarketDocumentConstants.RecipientBusinessProcessRole))
                 {
                     var content = await reader.ReadValueAsStringAsync().ConfigureAwait(false);
-                    document.Recipient.BusinessProcessRole = MarketParticipantRoleMapper.Map(content);
+                    recepientBusinessProcessRole = MarketParticipantRoleMapper.Map(content);
                 }
                 else if (reader.Is(CimMarketDocumentConstants.CreatedDateTime))
                 {
-                    document.CreatedDateTime = await reader.ReadValueAsNodaTimeAsync().ConfigureAwait(false);
+                    createdDateTime = await reader.ReadValueAsNodaTimeAsync().ConfigureAwait(false);
                 }
                 else if (reader.IsElement())
                 {
@@ -110,18 +117,21 @@ namespace GreenEnergyHub.Charges.Infrastructure.CimDeserialization.MarketDocumen
                     break;
                 }
             }
+
+            return new DocumentDto(
+                id,
+                _clock.GetCurrentInstant(),
+                type,
+                createdDateTime,
+                new MarketParticipantDto(Guid.NewGuid(), senderMarketParticipantId, senderBusinessProcessRole, Guid.Empty),
+                new MarketParticipantDto(Guid.NewGuid(), recipientMarketParticipantId, recepientBusinessProcessRole, Guid.Empty),
+                industryClassification,
+                businessReasonCode);
         }
 
         private async Task<DocumentDto> ParseDocumentAsync(SchemaValidatingReader reader)
         {
-            var document = new DocumentDto()
-            {
-                Sender = new MarketParticipantDto(),
-                Recipient = new MarketParticipantDto(),
-                RequestDate = _clock.GetCurrentInstant(),
-            };
-
-            await ParseFieldsAsync(reader, document).ConfigureAwait(false);
+            var document = await ParseFieldsAsync(reader).ConfigureAwait(false);
 
             if (reader.HasErrors) throw new SchemaValidationException(reader.CreateErrorResponse());
 
