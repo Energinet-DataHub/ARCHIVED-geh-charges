@@ -12,10 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Energinet.Charges.Contracts.Charge;
 using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using FluentAssertions;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.WebApi;
@@ -71,6 +77,31 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
             contentType.Should().Be("application/json; charset=utf-8");
         }
 
+        [Fact]
+        public async Task GetAsync_WhenRequested_ReturnsChargeInformation()
+        {
+            // Act
+            var response = await _client.GetAsync($"{BaseUrl}/GetAsync");
+
+            // Assert
+            var jsonString = await response.Content.ReadAsStringAsync();
+            var chargesList = JsonSerializer.Deserialize<List<ChargeV1Dto>>(
+                jsonString,
+                GetJsonSerializerOptions());
+
+            chargesList.Should().HaveCountGreaterThan(0);
+            var actual = chargesList!.Single(x => x.ChargeId == "EA-001");
+            actual.ChargeType.Should().Be(ChargeType.D03);
+            actual.Resolution.Should().Be(Resolution.PT1H);
+            actual.ChargeName.Should().Be("Elafgift");
+            actual.ChargeOwner.Should().Be("5790000432752");
+            actual.ChargeOwnerName.Should().Be("<Aktørnavn XYZ>");
+            actual.TaxIndicator.Should().BeTrue();
+            actual.TransparentInvoicing.Should().BeTrue();
+            actual.ValidFromDateTime.Should().Be(new DateTime(2014, 12, 31, 23, 00, 00));
+            actual.ValidToDateTime.Should().Be(null); // because it's year (9999)
+        }
+
         [Theory]
         [InlineAutoMoqData]
         public async Task SearchAsync_WhenSearchCriteriaIsValid_ReturnsOkAndCorrectContentType(
@@ -103,6 +134,46 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
+
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task SearchAsync_WhenRequested_ReturnsChargeInformation(
+            SearchCriteriaDtoBuilder searchCriteriaDtoBuilder)
+        {
+            // Arrange
+            var searchCriteria = searchCriteriaDtoBuilder
+                .Build();
+
+            // Act
+            var response = await _client.PostAsJsonAsync($"{BaseUrl}/SearchAsync", searchCriteria);
+
+            // Assert
+            var jsonString = await response.Content.ReadAsStringAsync();
+            var chargesList = JsonSerializer.Deserialize<List<ChargeV1Dto>>(
+                jsonString,
+                GetJsonSerializerOptions());
+
+            chargesList.Should().HaveCountGreaterThan(0);
+            var actual = chargesList!.Single(x => x.ChargeId == "EA-001");
+            actual.ChargeType.Should().Be(ChargeType.D03);
+            actual.Resolution.Should().Be(Resolution.PT1H);
+            actual.ChargeName.Should().Be("Elafgift");
+            actual.ChargeOwner.Should().Be("5790000432752");
+            actual.ChargeOwnerName.Should().Be("<Aktørnavn XYZ>");
+            actual.TaxIndicator.Should().BeTrue();
+            actual.TransparentInvoicing.Should().BeTrue();
+            actual.ValidFromDateTime.Should().Be(new DateTime(2014, 12, 31, 23, 00, 00));
+            actual.ValidToDateTime.Should().Be(null); // because it's year (9999)
+        }
+
+        private static JsonSerializerOptions GetJsonSerializerOptions()
+        {
+            return new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+                Converters = { new JsonStringEnumConverter() },
+            };
         }
     }
 }

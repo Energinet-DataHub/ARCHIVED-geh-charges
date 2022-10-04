@@ -61,7 +61,7 @@ public static class ChargeQueryLogic
 
     private static DateTime? GetValidToDate(DateTime validToDate)
     {
-        return validToDate == InstantExtensions.GetEndDefault().ToDateTimeOffset() ? null : validToDate;
+        return validToDate == InstantExtensions.GetEndDefault().ToDateTimeUtc() ? null : validToDate;
     }
 #pragma warning restore SA1118
 
