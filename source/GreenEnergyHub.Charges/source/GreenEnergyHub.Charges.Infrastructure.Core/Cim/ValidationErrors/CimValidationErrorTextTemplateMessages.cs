@@ -205,6 +205,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         public const string OperationIdLengthValidationErrorText =
             "The document with ID {{DocumentId}} contains a transaction ID {{ChargeOperationId}} that is longer than the allowed length of 36 characters.";
 
+        [ErrorMessageFor(ValidationRuleIdentifier.MonthlyPriceSeriesEndDateMustBeFirstOfMonth)]
+        public const string MonthlyPriceSeriesEndDateMustBeFirstOfMonthErrorText =
+            "The monthly price series' END date time must be 1st of month, unless it matches the Charge's STOP date. for charge type {{ChargeType}} with charge ID {{DocumentSenderProvidedChargeId}} owned by {{ChargeOwner}}.";
+
         public const string Unknown = "unknown";
     }
 }

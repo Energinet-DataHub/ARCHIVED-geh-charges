@@ -30,6 +30,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.Busi
 
         public bool IsValid => _priceEndDate == _stopDate || _priceEndDate.InUtc().Day is 1;
 
-        public ValidationRuleIdentifier ValidationRuleIdentifier { get; }
+        public ValidationRuleIdentifier ValidationRuleIdentifier =>
+            ValidationRuleIdentifier.MonthlyPriceSeriesEndDateMustBeFirstOfMonth;
     }
 }

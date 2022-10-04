@@ -69,6 +69,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.Shared
                 ValidationRuleIdentifier.ChargeOwnerMustMatchSender => ReasonCode.E0I,
                 ValidationRuleIdentifier.ChargeTypeTariffTaxIndicatorOnlyAllowedBySystemOperator => ReasonCode.E0I,
                 ValidationRuleIdentifier.UpdateTaxTariffOnlyAllowedBySystemOperator => ReasonCode.E0I,
+                ValidationRuleIdentifier.MonthlyPriceSeriesEndDateMustBeFirstOfMonth => ReasonCode.D14,
                 _ => throw new NotImplementedException(),
             };
         }
