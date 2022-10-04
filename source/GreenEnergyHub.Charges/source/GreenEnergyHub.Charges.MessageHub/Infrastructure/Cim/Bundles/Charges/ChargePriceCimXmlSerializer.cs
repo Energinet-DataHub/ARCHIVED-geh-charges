@@ -25,11 +25,11 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.Charges
 {
-    public class ChargePriceCimSerializer : CimSerializer<AvailableChargePriceData>
+    public class ChargePriceCimXmlSerializer : CimXmlSerializer<AvailableChargePriceData>
     {
         private readonly IIso8601Durations _iso8601Durations;
 
-        public ChargePriceCimSerializer(
+        public ChargePriceCimXmlSerializer(
             IClock clock,
             IIso8601Durations iso8601Durations,
             ICimIdProvider cimIdProvider)

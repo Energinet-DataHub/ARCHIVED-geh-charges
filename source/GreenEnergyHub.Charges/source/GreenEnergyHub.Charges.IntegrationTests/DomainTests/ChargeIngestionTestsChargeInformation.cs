@@ -21,6 +21,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
+using Energinet.DataHub.MessageHub.Model.Model;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
@@ -126,7 +127,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
                 var response = await Fixture.HostManager.HttpClient.SendAsync(createReq);
                 response.StatusCode.Should().Be(HttpStatusCode.Accepted);
-                await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId);
+                await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, ResponseFormat.Xml);
 
                 // Arrange - Update
                 var (updateReq, updateCorrelationId) =
@@ -141,7 +142,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
 
                 // * Expect one for the confirmation (update)
-                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(updateCorrelationId);
+                var peekResults =
+                    await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(
+                        updateCorrelationId,
+                        ResponseFormat.Xml);
                 peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
             }
 
@@ -169,7 +173,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // * 1 confirmation
                 // * 3 data available to energy suppliers
                 var peekResults = await Fixture.MessageHubMock
-                    .AssertPeekReceivesRepliesAsync(correlationId, noOfDataAvailableNotificationsExpected);
+                    .AssertPeekReceivesRepliesAsync(correlationId, ResponseFormat.Xml, noOfDataAvailableNotificationsExpected);
 
                 peekResults.Count.Should().Be(4);
                 peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
@@ -203,7 +207,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // * one for the notification to EnergySupplier 8100000001004
                 // * one for the notification to EnergySupplier 8510000000013
                 using var assertionScope = new AssertionScope();
-                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 16);
+                var peekResults =
+                    await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, ResponseFormat.Xml, 16);
+                peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
                 peekResults.Should().NotContainMatch("*Reject*");
                 peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
 
@@ -232,7 +238,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // * 1 for the rejection (second operation violating VR.903)
                 // * 3 data available to energy suppliers
                 using var assertionScope = new AssertionScope();
-                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 5);
+                var peekResults =
+                    await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, ResponseFormat.Xml, 5);
                 peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
                 peekResults.Should().ContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
                 peekResults.Should().ContainMatch("*It is not allowed to change the tax indicator to Tax for charge*");
@@ -249,7 +256,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
                 // Assert
                 using var assertionScope = new AssertionScope();
-                var peekResults = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, 8);
+                var peekResults =
+                    await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, ResponseFormat.Xml, 8);
                 peekResults.Should().NotContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
                 peekResults.Should().ContainMatch("*NotifyPriceList_MarketDocument*");
                 peekResults.Should().ContainMatch("*8100000000030*");
@@ -260,6 +268,35 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 peekResults.Should().NotContainMatch("*8900000000005*");
                 peekResults.Should().ContainMatch("*<cim:process.processType>D18</cim:process.processType>*");
                 peekResults.Should().NotContainMatch("*<cim:process.processType>D08</cim:process.processType>*");
+            }
+
+            [Fact]
+            public async Task When_ChargeInformationTaxIsCreatedBySystemOperator_Then_ANotificationShouldBeReceivedByActiveGridProvidersAndSuppliersAsJson()
+            {
+                var (request, correlationId) = Fixture.AsSystemOperator.PrepareHttpPostRequestWithAuthorization(
+                    EndpointUrl, ChargeDocument.TariffSystemOperatorCreate);
+
+                // Act
+                await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                using var assertionScope = new AssertionScope();
+                var peekResults =
+                    await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, ResponseFormat.Json, 8);
+
+                peekResults.Should().NotContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
+                peekResults.Should().ContainMatch("*NotifyPriceList_MarketDocument*");
+                peekResults.Should().ContainMatch("*\"value\": \"D18\"*");
+                peekResults.Should().NotContainMatch("*\"value\": \"D08\"*");
+                peekResults.Should().ContainMatch("*\"value\": \"DDZ\"*");
+                peekResults.Should().ContainMatch("*\"value\": \"DDM\"*");
+                peekResults.Should().ContainMatch("*8100000000030*");
+                peekResults.Should().ContainMatch("*8100000000016*");
+                peekResults.Should().ContainMatch("*8100000000023*");
+                peekResults.Should().NotContainMatch("*8900000000005*");
+                peekResults.Should().ContainMatch("*\"value\": \"DDQ\"*");
+                peekResults.Should().ContainMatch("*8100000000108*");
+                peekResults.Should().ContainMatch("*8510000000013*");
             }
         }
     }

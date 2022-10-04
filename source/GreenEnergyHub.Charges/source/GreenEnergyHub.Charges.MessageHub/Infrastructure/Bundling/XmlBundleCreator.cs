@@ -21,20 +21,20 @@ using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 
 namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Bundling
 {
-    public class BundleCreator<TAvailableData> : IBundleCreator
+    public class XmlBundleCreator<TAvailableData> : IBundleCreator
         where TAvailableData : AvailableDataBase
     {
         private readonly IAvailableDataRepository<TAvailableData> _availableDataRepository;
-        private readonly ICimSerializer<TAvailableData> _cimSerializer;
+        private readonly ICimXmlSerializer<TAvailableData> _cimXmlSerializer;
         private readonly IStorageHandler _storageHandler;
 
-        public BundleCreator(
+        public XmlBundleCreator(
             IAvailableDataRepository<TAvailableData> availableDataRepository,
-            ICimSerializer<TAvailableData> cimSerializer,
+            ICimXmlSerializer<TAvailableData> cimXmlSerializer,
             IStorageHandler storageHandler)
         {
             _availableDataRepository = availableDataRepository;
-            _cimSerializer = cimSerializer;
+            _cimXmlSerializer = cimXmlSerializer;
             _storageHandler = storageHandler;
         }
 
@@ -54,12 +54,13 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Bundling
             }
 
             var firstData = availableData[0];
-            await _cimSerializer.SerializeToStreamAsync(
+
+            // Due to the nature of the interface to the MessageHub and the use of MessageType in that
+            // BusinessReasonCode, SenderId, SenderRole, RecipientId, RecipientRole and ReceiptStatus will always
+            // be the same value on all records in the list. We can simply take it from the first record.
+            await _cimXmlSerializer.SerializeToStreamAsync(
                 availableData,
                 outputStream,
-                // Due to the nature of the interface to the MessageHub and the use of MessageType in that
-                // BusinessReasonCode, SenderId, SenderRole, RecipientId, RecipientRole and ReceiptStatus will always
-                // be the same value on all records in the list. We can simply take it from the first record.
                 firstData.BusinessReasonCode,
                 firstData.SenderId,
                 firstData.SenderRole,

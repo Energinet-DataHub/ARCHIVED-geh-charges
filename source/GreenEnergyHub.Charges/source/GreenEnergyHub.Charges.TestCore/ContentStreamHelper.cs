@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.TestCore
         {
             using var memoryStream = new MemoryStream();
             GetFileAsStream(memoryStream, streamPath);
-            return memoryStream.AsString();
+            return memoryStream.AsString().ReplaceLineEndings();
         }
     }
 }

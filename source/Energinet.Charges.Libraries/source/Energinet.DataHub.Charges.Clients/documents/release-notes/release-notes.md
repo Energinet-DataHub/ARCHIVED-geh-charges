@@ -1,5 +1,9 @@
 # Energinet.DataHub.Charges.Clients Release notes
 
+## Version 3.0.16
+
+Updated NuGet packages
+
 ## Version 3.0.15
 
 Renamed client to Charges
