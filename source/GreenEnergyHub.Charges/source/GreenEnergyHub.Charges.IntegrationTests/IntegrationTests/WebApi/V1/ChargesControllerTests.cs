@@ -14,9 +14,12 @@
 
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using FluentAssertions;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.WebApi;
+using GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryServices;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
@@ -31,7 +34,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
         IClassFixture<WebApiFactory>,
         IAsyncLifetime
     {
-        private const string BaseUrl = "/v1/Charges/GetAsync";
+        private const string BaseUrl = "/v1/Charges";
         private readonly HttpClient _client;
 
         public ChargesControllerTests(
@@ -60,12 +63,46 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
         public async Task GetAsync_WhenChargesExists_ReturnsOkAndCorrectContentType()
         {
             // Act
-            var response = await _client.GetAsync($"{BaseUrl}");
+            var response = await _client.GetAsync($"{BaseUrl}/GetAsync");
 
             // Assert
             var contentType = response.Content.Headers.ContentType!.ToString();
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             contentType.Should().Be("application/json; charset=utf-8");
+        }
+
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task SearchAsync_WhenSearchCriteriaIsValid_ReturnsOkAndCorrectContentType(
+            SearchCriteriaDtoBuilder searchCriteriaDtoBuilder)
+        {
+            //Arrange
+            var searchCriteria = searchCriteriaDtoBuilder.Build();
+
+            // Act
+            var response = await _client.PostAsJsonAsync($"{BaseUrl}/SearchAsync", searchCriteria);
+
+            // Assert
+            var contentType = response.Content.Headers.ContentType!.ToString();
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            contentType.Should().Be("application/json; charset=utf-8");
+        }
+
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task SearchAsync_WhenSearchCriteriaIsNotValid_ReturnsBadRequest(
+            SearchCriteriaDtoBuilder searchCriteriaDtoBuilder)
+        {
+            //Arrange
+            var searchCriteria = searchCriteriaDtoBuilder
+                .WithMarketParticipantId("not_a_guid")
+                .Build();
+
+            // Act
+            var response = await _client.PostAsJsonAsync($"{BaseUrl}/SearchAsync", searchCriteria);
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
     }
 }

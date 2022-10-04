@@ -26,24 +26,32 @@ public static class SearchCriteriaValidator
     /// <returns>bool</returns>
     public static bool Validate(SearchCriteriaDto searchCriteriaDto)
     {
-        if (!string.IsNullOrEmpty(searchCriteriaDto.OwnerId) && !Guid.TryParse(searchCriteriaDto.OwnerId, out _))
+        if (!IsOwnerIdValid(searchCriteriaDto))
             return false;
 
-        if (!string.IsNullOrEmpty(searchCriteriaDto.ChargeTypes) && !ValidateChargeTypes(searchCriteriaDto))
+        if (!IsChargeTypeValid(searchCriteriaDto))
             return false;
 
         return true;
     }
 
-    private static bool ValidateChargeTypes(SearchCriteriaDto searchCriteriaDto)
+    private static bool IsChargeTypeValid(SearchCriteriaDto searchCriteriaDto)
     {
+        if (string.IsNullOrEmpty(searchCriteriaDto.ChargeTypes)) return true;
+
         var chargeTypes = searchCriteriaDto.ChargeTypes.Split(",");
         foreach (var chargeType in chargeTypes)
         {
-            if (Enum.IsDefined(typeof(ChargeType), chargeType)) continue;
-            return false;
+            if (!Enum.IsDefined(typeof(ChargeType), chargeType))
+                return false;
         }
 
         return true;
+    }
+
+    private static bool IsOwnerIdValid(SearchCriteriaDto searchCriteriaDto)
+    {
+        if (string.IsNullOrEmpty(searchCriteriaDto.OwnerId)) return true;
+        return Guid.TryParse(searchCriteriaDto.OwnerId, out _);
     }
 }
