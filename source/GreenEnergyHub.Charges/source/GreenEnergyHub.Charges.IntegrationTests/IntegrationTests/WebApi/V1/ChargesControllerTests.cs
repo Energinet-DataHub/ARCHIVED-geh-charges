@@ -107,7 +107,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
         public async Task SearchAsync_WhenSearchCriteriaIsValid_ReturnsOkAndCorrectContentType(
             SearchCriteriaDtoBuilder searchCriteriaDtoBuilder)
         {
-            //Arrange
+            // Arrange
             var searchCriteria = searchCriteriaDtoBuilder.Build();
 
             // Act
@@ -124,7 +124,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
         public async Task SearchAsync_WhenSearchCriteriaIsNotValid_ReturnsBadRequest(
             SearchCriteriaDtoBuilder searchCriteriaDtoBuilder)
         {
-            //Arrange
+            // Arrange
             var searchCriteria = searchCriteriaDtoBuilder
                 .WithMarketParticipantId("not_a_guid")
                 .Build();
