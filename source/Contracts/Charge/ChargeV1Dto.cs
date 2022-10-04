@@ -26,6 +26,6 @@ namespace Energinet.Charges.Contracts.Charge
         string ChargeOwnerName,
         bool TaxIndicator,
         bool TransparentInvoicing,
-        DateTime ValidFromDateTime,
-        DateTime? ValidToDateTime);
+        DateTimeOffset ValidFromDateTime,
+        DateTimeOffset? ValidToDateTime);
 }

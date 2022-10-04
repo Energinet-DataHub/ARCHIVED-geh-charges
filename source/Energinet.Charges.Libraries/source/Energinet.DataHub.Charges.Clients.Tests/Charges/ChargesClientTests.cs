@@ -205,9 +205,9 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
                 ItExpr.IsAny<CancellationToken>());
         }
 
-        private static string CreateValidResponseContent<TModel>(TModel chargeLinkDto)
+        private static string CreateValidResponseContent<TModel>(TModel responseDto)
         {
-            var chargeLinks = new List<TModel> { chargeLinkDto };
+            var chargeLinks = new List<TModel> { responseDto };
             var options = new JsonSerializerOptions(JsonSerializerDefaults.Web) { Converters = { new JsonStringEnumConverter() } };
 
             var responseContent = JsonSerializer.Serialize<IList<TModel>>(chargeLinks, options);

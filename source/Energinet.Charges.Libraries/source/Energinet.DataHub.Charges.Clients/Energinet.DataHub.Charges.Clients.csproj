@@ -150,8 +150,8 @@ https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.Char
     <Compile Include="..\..\..\Contracts\Charge\Resolution.cs">
       <Link>Charges\Model\Resolution.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Contracts\Charge\ChargesV1Dto.cs">
-      <Link>Charges\Model\ChargesV1Dto.cs</Link>
+    <Compile Include="..\..\..\Contracts\Charge\ChargeV1Dto.cs">
+      <Link>Charges\Model\ChargeV1Dto.cs</Link>
     </Compile>
     <Compile Include="..\..\..\Contracts\Charge\SearchCriteriaDto.cs">
       <Link>Charges\Model\SearchCriteriaDto.cs</Link>
