@@ -16,24 +16,23 @@
 
 using System;
 
-namespace GreenEnergyHub.Charges.QueryApi.Model
+namespace GreenEnergyHub.Charges.QueryApi.Model;
+
+public class ChargePrice
 {
-    public partial class ChargePrice
-    {
-        public Guid Id { get; set; }
+    public Guid Id { get; set; }
 
-        public Guid ChargeId { get; set; }
+    public Guid ChargeId { get; set; }
 
-        public DateTime Time { get; set; }
+    public DateTime Time { get; set; }
 
-        public decimal Price { get; set; }
+    public decimal Price { get; set; }
 
-        public bool Retired { get; set; }
+    public bool Retired { get; set; }
 
-        public DateTime? RetiredDateTime { get; set; }
+    public DateTime? RetiredDateTime { get; set; }
 
-        public Guid ChargeOperationId { get; set; }
+    public Guid ChargeOperationId { get; set; }
 
-        public virtual Charge Charge { get; set; }
-    }
+    public virtual Charge Charge { get; set; }
 }
