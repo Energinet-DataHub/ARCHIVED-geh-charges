@@ -18,6 +18,7 @@ using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using GreenEnergyHub.Charges.Core.DateTime;
+using Microsoft.EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
@@ -50,6 +51,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
                 ref midnightLocalTime31DaysAhead,
                 ref midnightLocalTime32DaysAhead);
 
+            var monthAhead = MakeSureLastDayIsTheFirstInAMonth(currentInstant, zonedDateTimeService);
+
             // cim:createdDateTime and effective date must have seconds
             var ymdhmsTimeInterval = currentInstant.GetCreatedDateTimeFormat();
 
@@ -73,6 +76,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
                 .Replace("{{$isoTimestampPlusOneMonth}}", inThirtyoneDays.ToString())
                 .Replace("{{$YMDHM_TimestampPlusOneMonth}}", ConvertLocalTimeToUtcAsString(zonedDateTimeService, midnightLocalTime31DaysAhead))
                 .Replace("{{$YMDHM_TimestampPlusOneMonthAndOneDay}}", ConvertLocalTimeToUtcAsString(zonedDateTimeService, midnightLocalTime32DaysAhead))
+                .Replace("{{$YMDHM_MidnightLocalTime2MonthAheadOnTheFirst}}", ConvertLocalTimeToUtcAsString(zonedDateTimeService, monthAhead.MidnightLocalTime2MonthAheadOnTheFirst))
+                .Replace("{{$YMDHM_MidnightLocalTime3MonthAheadOnTheFirst}}", ConvertLocalTimeToUtcAsString(zonedDateTimeService, monthAhead.MidnightLocalTime3MonthAheadOnTheFirst))
                 .Replace("{{$isoTimestampPlusOneMonthAndOneDay}}", inThirtyoneDays.Plus(Duration.FromDays(1)).ToString())
                 .Replace("{{$isoTimestampPlusOneMonthAndTwoDays}}", inThirtyoneDays.Plus(Duration.FromDays(2)).ToString())
                 .Replace("{{$NextYear}}", DateTime.Now.AddYears(1).Year.ToString())
@@ -93,6 +98,27 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
         {
             var zonedDateTime = zonedDateTimeService.GetZonedDateTime(localDateTime, ResolutionStrategy.Leniently);
             return zonedDateTime.ToInstant().ToString("yyyy-MM-dd\\THH:mm\\Z", CultureInfo.InvariantCulture);
+        }
+
+        private static (LocalDateTime MidnightLocalTime2MonthAheadOnTheFirst, LocalDateTime MidnightLocalTime3MonthAheadOnTheFirst) MakeSureLastDayIsTheFirstInAMonth(
+            Instant instant,
+            IZonedDateTimeService zonedDateTimeService)
+        {
+            var zonedTime = zonedDateTimeService.GetZonedDateTime(instant);
+            var midnightLocalTime = zonedTime.PlusTicks(-zonedTime.TickOfDay).LocalDateTime;
+
+            var twoMonthAdded = midnightLocalTime.PlusMonths(2);
+
+            var daysInCurrentMonth = twoMonthAdded.Calendar.GetDaysInMonth(
+                twoMonthAdded.Year,
+                twoMonthAdded.Month);
+
+            var daysToAddToHitFirstInNextMonth = daysInCurrentMonth - twoMonthAdded.Day;
+            var midnightLocalTime2MonthAheadOnTheFirst = twoMonthAdded.PlusDays(daysToAddToHitFirstInNextMonth).PlusDays(1);
+
+            var threeMonthAdded = midnightLocalTime2MonthAheadOnTheFirst.PlusMonths(1);
+
+            return (midnightLocalTime2MonthAheadOnTheFirst, threeMonthAdded);
         }
 
         /// <summary>
