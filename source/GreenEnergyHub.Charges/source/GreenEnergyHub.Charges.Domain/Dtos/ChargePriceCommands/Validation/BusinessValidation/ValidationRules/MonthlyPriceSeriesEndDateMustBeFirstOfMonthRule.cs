@@ -26,7 +26,9 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.Busi
         public MonthlyPriceSeriesEndDateMustBeFirstOfMonthRule(IZonedDateTimeService zonedDateTimeService, Instant priceEndDate, Instant? stopDate)
         {
             _zonedPriceEndDate = zonedDateTimeService.GetZonedDateTime(priceEndDate);
-            _zonedStopDate = stopDate is null ? null : zonedDateTimeService.GetZonedDateTime(stopDate.Value);
+            _zonedStopDate = stopDate is null || stopDate.Value == InstantExtensions.GetEndDefault()
+                ? null
+                : zonedDateTimeService.GetZonedDateTime(stopDate.Value);
         }
 
         public bool IsValid => _zonedPriceEndDate == _zonedStopDate || _zonedPriceEndDate.Day is 1;

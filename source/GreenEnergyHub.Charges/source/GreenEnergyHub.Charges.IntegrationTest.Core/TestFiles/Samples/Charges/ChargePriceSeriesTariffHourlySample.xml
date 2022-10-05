@@ -31,12 +31,12 @@ limitations under the License.
                 <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">8100000000030</cim:chargeTypeOwner_MarketParticipant.mRID>
                 <cim:type>D03</cim:type>
                 <cim:mRID>TestTariff</cim:mRID>
-                <cim:effectiveDate>2022-12-31T23:00:00Z</cim:effectiveDate>
+                <cim:effectiveDate>2022-12-30T23:00:00Z</cim:effectiveDate>
                 <cim:Series_Period>
                     <cim:resolution>PT1H</cim:resolution>
                     <cim:timeInterval>
-                        <cim:start>2022-12-31T23:00Z</cim:start>
-                        <cim:end>2023-01-01T23:00Z</cim:end>
+                        <cim:start>2022-12-30T23:00Z</cim:start>
+                        <cim:end>2022-12-31T23:00Z</cim:end>
                     </cim:timeInterval>
                     <cim:Point>
                         <cim:position>1</cim:position>

@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using GreenEnergyHub.Charges.Core.DateTime;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
@@ -64,6 +65,8 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.Inpu
                 CreateRuleContainer(new ResolutionTariffValidationRule(operation), operation.OperationId),
                 CreateRuleContainer(new ResolutionFeeValidationRule(operation), operation.OperationId),
                 CreateRuleContainer(new ResolutionIsRequiredRule(operation), operation.OperationId),
+                CreateRuleContainer(
+                    new MonthlyPriceSeriesEndDateMustBeFirstOfMonthRule(_zonedDateTimeService, operation.PointsEndInterval, operation.EndDateTime), operation.OperationId),
             };
 
             return rules;
