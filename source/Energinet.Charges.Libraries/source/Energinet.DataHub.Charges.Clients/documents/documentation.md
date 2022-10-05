@@ -15,7 +15,7 @@ The library provides
 
 - The type [`IDefaultChargeLinkClient`](https://github.com/Energinet-DataHub/geh-charges/blob/main/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/DefaultChargeLink/IDefaultChargeLinkClient.cs) to request creation of charge links from defaults and handle the reply.
 - The type [`DefaultChargeLinkReplyReader`](https://github.com/Energinet-DataHub/geh-charges/blob/main/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/DefaultChargeLink/DefaultChargeLinkReplyReader.cs) to read the respond from the request queue.
-- The type [`ChargesClient`](https://github.com/Energinet-DataHub/geh-charges/blob/main/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/Charges/ChargesClient.cs) to get charge data from the Charges domain's Web API.
+- The type [`IChargesClient`](https://github.com/Energinet-DataHub/geh-charges/blob/main/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/Charges/IChargesClient.cs) to get and search charge data from the Charges domain's Web API.
 
 ## Registration
 
