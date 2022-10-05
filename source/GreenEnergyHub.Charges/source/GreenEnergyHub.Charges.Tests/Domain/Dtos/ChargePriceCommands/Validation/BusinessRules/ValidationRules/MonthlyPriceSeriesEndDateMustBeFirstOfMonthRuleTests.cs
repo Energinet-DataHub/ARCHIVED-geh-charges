@@ -15,6 +15,7 @@
 using System;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Core.DateTime;
+using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.TestCore;
@@ -31,13 +32,17 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
     public class MonthlyPriceSeriesEndDateMustBeFirstOfMonthRuleTests
     {
         [Theory]
-        [InlineAutoMoqData(15, 1, 0, 0, false)]
-        [InlineAutoMoqData(15, 1, 16, 1, false)]
-        [InlineAutoMoqData(15, 1, 15, 1, true)]
-        [InlineAutoMoqData(1, 2, 0, 0, true)]
-        [InlineAutoMoqData(1, 2, 1, 2, true)]
-        [InlineAutoMoqData(1, 2, 15, 2, true)]
+        [InlineAutoMoqData(Resolution.P1M, 15, 1, 0, 0, false)]
+        [InlineAutoMoqData(Resolution.P1D, 15, 1, 0, 0, true)]
+        [InlineAutoMoqData(Resolution.PT15M, 15, 1, 0, 0, true)]
+        [InlineAutoMoqData(Resolution.PT1H, 15, 1, 0, 0, true)]
+        [InlineAutoMoqData(Resolution.P1M, 15, 1, 16, 1, false)]
+        [InlineAutoMoqData(Resolution.P1M, 15, 1, 15, 1, true)]
+        [InlineAutoMoqData(Resolution.P1M, 1, 2, 0, 0, true)]
+        [InlineAutoMoqData(Resolution.P1M, 1, 2, 1, 2, true)]
+        [InlineAutoMoqData(Resolution.P1M, 15, 2, 15, 2, true)]
         public void IsValid_WhenCalled_Should_ReturnExpectedResult(
+            Resolution resolution,
             int priceEndDayDateTime,
             int priceEndMonthDateTime,
             int priceStopDayDateTime,
@@ -51,6 +56,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
                 : GetInstantFromMonthAndDay(priceStopDayDateTime, priceStopMonthDateTime);
             var sut = new MonthlyPriceSeriesEndDateMustBeFirstOfMonthRule(
                 GetZonedDateTimeService(),
+                resolution,
                 endDate,
                 stopDate);
 
@@ -68,6 +74,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
             // Act
             var sut = new MonthlyPriceSeriesEndDateMustBeFirstOfMonthRule(
                 GetZonedDateTimeService(),
+                Resolution.P1M,
                 GetInstantFromMonthAndDay(1, 1),
                 GetInstantFromMonthAndDay(1, 1));
 

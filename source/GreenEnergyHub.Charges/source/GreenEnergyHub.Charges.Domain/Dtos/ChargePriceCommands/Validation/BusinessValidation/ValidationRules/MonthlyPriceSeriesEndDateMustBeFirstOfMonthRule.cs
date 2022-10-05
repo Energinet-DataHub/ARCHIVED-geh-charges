@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Core.DateTime;
+using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using NodaTime;
 
@@ -20,18 +21,23 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.Busi
 {
     public class MonthlyPriceSeriesEndDateMustBeFirstOfMonthRule : IValidationRule
     {
+        private readonly Resolution _resolution;
         private readonly ZonedDateTime _zonedPriceEndDate;
         private readonly ZonedDateTime? _zonedStopDate;
 
-        public MonthlyPriceSeriesEndDateMustBeFirstOfMonthRule(IZonedDateTimeService zonedDateTimeService, Instant priceEndDate, Instant? stopDate)
+        public MonthlyPriceSeriesEndDateMustBeFirstOfMonthRule(IZonedDateTimeService zonedDateTimeService, Resolution resolution, Instant priceEndDate, Instant? stopDate)
         {
+            _resolution = resolution;
             _zonedPriceEndDate = zonedDateTimeService.GetZonedDateTime(priceEndDate);
             _zonedStopDate = stopDate is null || stopDate.Value == InstantExtensions.GetEndDefault()
                 ? null
                 : zonedDateTimeService.GetZonedDateTime(stopDate.Value);
         }
 
-        public bool IsValid => _zonedPriceEndDate == _zonedStopDate || _zonedPriceEndDate.Day is 1;
+        public bool IsValid =>
+            _resolution is not Resolution.P1M ||
+            _zonedPriceEndDate == _zonedStopDate ||
+            _zonedPriceEndDate.Day is 1;
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.MonthlyPriceSeriesEndDateMustBeFirstOfMonth;

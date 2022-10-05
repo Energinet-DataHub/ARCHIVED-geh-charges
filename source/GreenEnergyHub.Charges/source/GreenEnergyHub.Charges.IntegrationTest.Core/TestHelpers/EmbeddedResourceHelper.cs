@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
         private static string ReplaceMergeFields(Instant currentInstant, string file, IZonedDateTimeService zonedDateTimeService)
         {
             var now = currentInstant.ToString();
-            var daysToAdd = 31;
+            var daysToAdd = 26;
             var inThirtyoneDays = currentInstant.Plus(Duration.FromDays(daysToAdd));
 
             var midnightLocalTime31DaysAhead =
@@ -43,9 +43,12 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
             var midnightLocalTime32DaysAhead =
                 ConvertCurrentInstantToLocalDateTimeWithDaysAdded(currentInstant, zonedDateTimeService, daysToAdd + 1);
 
-            MakeSureLastDayIsTheFirstInAMonth(ref midnightLocalTime31DaysAhead, ref midnightLocalTime32DaysAhead);
-
-            AvoidHittingSummerWinterTimeIssues(ref midnightLocalTime31DaysAhead, ref midnightLocalTime32DaysAhead);
+            AvoidHittingSummerWinterTimeIssues(
+                currentInstant,
+                zonedDateTimeService,
+                daysToAdd,
+                ref midnightLocalTime31DaysAhead,
+                ref midnightLocalTime32DaysAhead);
 
             // cim:createdDateTime and effective date must have seconds
             var ymdhmsTimeInterval = currentInstant.GetCreatedDateTimeFormat();
@@ -92,18 +95,6 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
             return zonedDateTime.ToInstant().ToString("yyyy-MM-dd\\THH:mm\\Z", CultureInfo.InvariantCulture);
         }
 
-        private static void MakeSureLastDayIsTheFirstInAMonth(
-            ref LocalDateTime midnightLocalTime31DaysAhead,
-            ref LocalDateTime midnightLocalTime32DaysAhead)
-        {
-            var daysInCurrentMonth = midnightLocalTime32DaysAhead.Calendar.GetDaysInMonth(
-                midnightLocalTime32DaysAhead.Year,
-                midnightLocalTime32DaysAhead.Month);
-            var daysToAddToHitFirstInNextMonth = daysInCurrentMonth - midnightLocalTime32DaysAhead.Day;
-            midnightLocalTime31DaysAhead = midnightLocalTime31DaysAhead.PlusDays(daysToAddToHitFirstInNextMonth + 1);
-            midnightLocalTime32DaysAhead = midnightLocalTime32DaysAhead.PlusDays(daysToAddToHitFirstInNextMonth + 1);
-        }
-
         /// <summary>
         /// This method helps us avoid hitting the dates where there is either 23 or 25 hours in a day
         /// If we have anything other than 24 hours, some tests will fail as the test files they use
@@ -112,13 +103,18 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
         /// Testing of Summer winter time should be tested in other ways.
         /// </summary>
         private static void AvoidHittingSummerWinterTimeIssues(
+            Instant currentInstant,
+            IZonedDateTimeService zonedDateTimeService,
+            int daysToAdd,
             ref LocalDateTime midnightLocalTime31DaysAhead,
             ref LocalDateTime midnightLocalTime32DaysAhead)
         {
             var period = Period.Between(midnightLocalTime31DaysAhead, midnightLocalTime32DaysAhead);
-            if (period.Days is 1 && period.Hours is 0) return;
-            midnightLocalTime31DaysAhead = midnightLocalTime31DaysAhead.PlusMonths(1);
-            midnightLocalTime32DaysAhead = midnightLocalTime32DaysAhead.PlusMonths(1);
+            if (period.Hours is 24) return;
+            midnightLocalTime31DaysAhead =
+                ConvertCurrentInstantToLocalDateTimeWithDaysAdded(currentInstant, zonedDateTimeService, daysToAdd + 1);
+            midnightLocalTime32DaysAhead =
+                ConvertCurrentInstantToLocalDateTimeWithDaysAdded(currentInstant, zonedDateTimeService, daysToAdd + 2);
         }
     }
 }
