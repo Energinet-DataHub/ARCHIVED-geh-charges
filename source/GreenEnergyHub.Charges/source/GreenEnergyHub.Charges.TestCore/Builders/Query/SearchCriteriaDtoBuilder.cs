@@ -16,7 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Energinet.Charges.Contracts.Charge;
 
-namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryServices
+namespace GreenEnergyHub.Charges.TestCore.Builders.Query
 {
     public class SearchCriteriaDtoBuilder
     {

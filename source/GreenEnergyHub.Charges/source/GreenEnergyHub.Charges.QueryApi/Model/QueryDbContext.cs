@@ -43,8 +43,6 @@ public partial class QueryDbContext : DbContext
 
     public virtual DbSet<MeteringPoint> MeteringPoints { get; set; }
 
-    public virtual DbSet<OutboxMessage> OutboxMessages { get; set; }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Charge>(entity =>
@@ -159,14 +157,6 @@ public partial class QueryDbContext : DbContext
                 .HasForeignKey(d => d.GridAreaLinkId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_MeteringPoint_GridAreaLink");
-        });
-
-        modelBuilder.Entity<OutboxMessage>(entity =>
-        {
-            entity.HasKey(e => e.Id)
-                .IsClustered(false);
-
-            entity.Property(e => e.Id).ValueGeneratedNever();
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -25,7 +25,7 @@ using Energinet.Charges.Contracts.Charge;
 using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using FluentAssertions;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.WebApi;
-using GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryServices;
+using GreenEnergyHub.Charges.TestCore.Builders.Query;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
