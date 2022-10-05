@@ -101,6 +101,9 @@ limitations under the License.
     <Content Include="TestFiles\Charges\InvalidTariffDocument.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="TestFiles\Charges\PriceSeries\BundledSubscriptionPriceSeries.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestFiles\Charges\PriceSeries\BundledSubscriptionPriceSeriesSecondOperationChargeOwnerMismatch.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
