@@ -47,7 +47,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IClock> clock,
             [Frozen] Mock<ICimIdProvider> cimIdProvider,
-            ChargeLinkCimSerializer sut)
+            ChargeLinkCimXmlSerializer sut)
         {
             // Arrange
             SetupMocks(marketParticipantRepository, clock, cimIdProvider);
@@ -80,7 +80,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IClock> clock,
             [Frozen] Mock<ICimIdProvider> cimIdProvider,
-            ChargeLinkCimSerializer sut)
+            ChargeLinkCimXmlSerializer sut)
         {
             SetupMocks(marketParticipantRepository, clock, cimIdProvider);
 
@@ -114,7 +114,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
                     actorId: Guid.NewGuid(),
                     b2CActorId: Guid.NewGuid(),
                     "5790001330552",
-                    true,
+                    MarketParticipantStatus.Active,
                     MarketParticipantRole.MeteringPointAdministrator));
 
             var currentTime = Instant.FromUtc(2021, 10, 12, 13, 37, 43).PlusNanoseconds(4);

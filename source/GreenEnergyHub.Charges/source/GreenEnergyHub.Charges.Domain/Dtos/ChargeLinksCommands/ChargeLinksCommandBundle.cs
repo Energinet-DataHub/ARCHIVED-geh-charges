@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System.Collections.Generic;
-using Energinet.DataHub.Core.Messaging.MessageTypes.Common;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
@@ -24,7 +23,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
         public ChargeLinksCommandBundle(DocumentDto document, IReadOnlyCollection<ChargeLinksCommand> commands)
             : base(document)
         {
-            Transaction = Transaction.NewTransaction();
             Commands = commands;
         }
 

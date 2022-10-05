@@ -24,6 +24,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.TestCore.Builders.Command;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using Xunit;
@@ -37,7 +38,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers.ChargeInform
         [Theory]
         [InlineAutoDomainData]
         public async Task HandleAsync_WhenBusinessReasonCodeIsUpdateChargeInformation_ActivateHandler(
-            ChargeInformationCommandReceivedEvent chargeInformationCommandReceivedEvent,
             [Frozen] Mock<IChargeInformationOperationsHandler> chargeCommandReceivedEventHandlerMock,
             [Frozen] Mock<IDocumentValidator> documentValidator,
             ChargeInformationCommandReceivedEventHandler sut)
@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers.ChargeInform
             documentValidator
                 .Setup(v => v.ValidateAsync(It.IsAny<ChargeInformationCommand>()))
                 .ReturnsAsync(ValidationResult.CreateSuccess());
-            chargeInformationCommandReceivedEvent.Command.Document.BusinessReasonCode = BusinessReasonCode.UpdateChargeInformation;
+            var chargeInformationCommandReceivedEvent = BuildEvent();
 
             // Act
             await sut.HandleAsync(chargeInformationCommandReceivedEvent);
@@ -60,7 +60,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers.ChargeInform
         [Theory]
         [InlineAutoDomainData]
         public async Task HandleAsync_WhenDocumentValidationFails_ShouldRaiseRejectedEvent(
-            ChargeInformationCommandReceivedEvent chargeInformationCommandReceivedEvent,
             [Frozen] Mock<IDocumentValidator> documentValidator,
             [Frozen] Mock<IDomainEventPublisher> domainEventPublisher,
             [Frozen] Mock<IChargeInformationOperationsRejectedEventFactory> chargeInformationOperationsRejectedEventFactory,
@@ -70,7 +69,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers.ChargeInform
             // Arrange
             SetupEventFactory(chargeInformationOperationsRejectedEventFactory, chargeInformationOperationsRejectedEvent);
             SetupDocumentValidator(documentValidator);
-            chargeInformationCommandReceivedEvent.Command.Document.BusinessReasonCode = BusinessReasonCode.UpdateChargeInformation;
+            var chargeInformationCommandReceivedEvent = BuildEvent();
             ChargeInformationOperationsRejectedEvent actualRejectedEvent = null!;
             domainEventPublisher
                 .Setup(d => d.Publish(It.IsAny<ChargeInformationOperationsRejectedEvent>()))
@@ -84,6 +83,19 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers.ChargeInform
                 x => x.Publish(actualRejectedEvent),
                 Times.Once);
             actualRejectedEvent.Should().BeEquivalentTo(chargeInformationOperationsRejectedEvent);
+        }
+
+        private ChargeInformationCommandReceivedEvent BuildEvent()
+        {
+            var documentDto = new DocumentDtoBuilder()
+                .WithBusinessReasonCode(BusinessReasonCode.UpdateChargeInformation)
+                .Build();
+            var command = new ChargeInformationCommandBuilder()
+                .WithDocumentDto(documentDto)
+                .Build();
+            return new ChargeInformationCommandReceivedEventBuilder()
+                .WithCommand(command)
+                .Build();
         }
 
         private static void SetupDocumentValidator(Mock<IDocumentValidator> documentValidator)

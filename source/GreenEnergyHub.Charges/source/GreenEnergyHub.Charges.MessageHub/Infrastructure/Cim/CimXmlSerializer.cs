@@ -25,10 +25,10 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim
 {
-    public abstract class CimSerializer<T> : ICimSerializer<T>
+    public abstract class CimXmlSerializer<T> : ICimXmlSerializer<T>
         where T : AvailableDataBase
     {
-        public CimSerializer(IClock clock, ICimIdProvider cimIdProvider)
+        protected CimXmlSerializer(IClock clock, ICimIdProvider cimIdProvider)
         {
             Clock = clock;
             CimIdProvider = cimIdProvider;
@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim
         public ICimIdProvider CimIdProvider { get; }
 
         public async Task SerializeToStreamAsync(
-            IEnumerable<T> records,
+            IEnumerable<T> availableData,
             Stream stream,
             BusinessReasonCode businessReasonCode,
             string senderId,
@@ -47,7 +47,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim
             string recipientId,
             MarketParticipantRole recipientRole)
         {
-            var document = GetDocument(records, businessReasonCode, senderId, senderRole, recipientId, recipientRole);
+            var document = GetDocument(availableData, businessReasonCode, senderId, senderRole, recipientId, recipientRole);
             await document.SaveAsync(stream, SaveOptions.None, CancellationToken.None).ConfigureAwait(false);
 
             stream.Position = 0;
@@ -78,27 +78,28 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim
             string recipientId,
             MarketParticipantRole recipientRole)
         {
-            XNamespace cimNamespace = GetNamespace(records);
+            var recordList = records.ToList();
+            var cimNamespace = GetNamespace(recordList);
 
+            // Note: The list will always have same recipient, business reason code and receipt status,
+            // so we just take those values from the first element
             return new XDocument(
                 new XElement(
-                    cimNamespace + GetRootElementName(records),
+                    cimNamespace + GetRootElementName(recordList),
                     new XAttribute(
                         XNamespace.Xmlns + CimMarketDocumentConstants.CimNamespaceAbbreviation, cimNamespace),
-                    // Note: The list will always have same recipient, business reason code and receipt status,
-                    // so we just take those values from the first element
                     MarketDocumentSerializationHelper.Serialize(
                         cimNamespace,
                         CimIdProvider,
-                        GetDocumentType(records),
+                        GetDocumentType(recordList),
                         businessReasonCode,
                         senderId,
                         senderRole,
                         recipientId,
                         recipientRole,
                         Clock),
-                    GetAdditionalDocumentFields(cimNamespace, records),
-                    GetActivityRecords(cimNamespace, records)));
+                    GetAdditionalDocumentFields(cimNamespace, recordList),
+                    GetActivityRecords(cimNamespace, recordList)));
         }
 
         private IEnumerable<XElement> GetActivityRecords(XNamespace cimNamespace, IEnumerable<T> records)

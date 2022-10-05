@@ -51,13 +51,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData
         {
             context.BindingContext.BindingData.TryGetValue("UserProperties", out var metadata);
 
-            if (metadata != null)
-            {
-                var eventMetadata = _jsonSerializer.Deserialize<MessageMetadata>(metadata.ToString()!);
-                return eventMetadata;
-            }
+            if (metadata == null) return new MessageMetadata();
 
-            return new MessageMetadata();
+            var eventMetadata = _jsonSerializer.Deserialize<MessageMetadata>(metadata.ToString()!);
+            return eventMetadata;
         }
     }
 }

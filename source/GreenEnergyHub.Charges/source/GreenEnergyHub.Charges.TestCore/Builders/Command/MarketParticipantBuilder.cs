@@ -23,7 +23,7 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Command
         private readonly Guid _actorId = Guid.NewGuid();
         private readonly Guid _b2CActorId = Guid.NewGuid();
         private Guid _id = Guid.NewGuid();
-        private bool _isActive;
+        private MarketParticipantStatus _status;
         private string _marketParticipantId;
         private MarketParticipantRole _role;
 
@@ -31,12 +31,12 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Command
         {
             _marketParticipantId = Guid.NewGuid().ToString().Substring(0, 35);
             _role = MarketParticipantRole.GridAccessProvider;
-            _isActive = true;
+            _status = MarketParticipantStatus.Active;
         }
 
-        public MarketParticipantBuilder WithIsActive(bool isActive)
+        public MarketParticipantBuilder WithStatus(MarketParticipantStatus status)
         {
-            _isActive = isActive;
+            _status = status;
             return this;
         }
 
@@ -60,7 +60,7 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Command
 
         public MarketParticipant Build()
         {
-            return new MarketParticipant(_id, _actorId, _b2CActorId, _marketParticipantId, _isActive, _role);
+            return new MarketParticipant(_id, _actorId, _b2CActorId, _marketParticipantId, _status, _role);
         }
     }
 }

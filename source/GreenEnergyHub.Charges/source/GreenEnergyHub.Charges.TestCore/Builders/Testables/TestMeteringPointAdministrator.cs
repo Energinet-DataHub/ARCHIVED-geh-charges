@@ -21,7 +21,7 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Testables
     public class TestMeteringPointAdministrator : MarketParticipant
     {
         public TestMeteringPointAdministrator(Guid id, Guid actorId, Guid b2CActorId, string marketParticipantId)
-            : base(id, actorId, b2CActorId, marketParticipantId, true, MarketParticipantRole.MeteringPointAdministrator)
+            : base(id, actorId, b2CActorId, marketParticipantId, MarketParticipantStatus.Active, MarketParticipantRole.MeteringPointAdministrator)
         {
         }
     }

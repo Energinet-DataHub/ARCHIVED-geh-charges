@@ -19,7 +19,6 @@ using AutoFixture.Xunit2;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using Energinet.DataHub.MessageHub.Client.DataAvailable;
 using Energinet.DataHub.MessageHub.Model.Model;
-using FluentAssertions;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification;
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
@@ -91,14 +90,15 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.MessageHub
         public async Task NotifyAsync_WhenNoAvailableData_DoesNotProceed(
             [Frozen] Mock<IAvailableDataFactory<AvailableDataBase, object>> availableDataFactory,
             [Frozen] Mock<IAvailableDataRepository<AvailableDataBase>> availableDataRepository,
+            [Frozen] Mock<IAvailableDataNotificationFactory<AvailableDataBase>> availableDataNotificationFactory,
+            [Frozen] Mock<IDataAvailableNotificationSender> dataAvailableNotificationSender,
             object input,
             AvailableDataNotifier<AvailableDataBase, object> sut)
         {
             // Arrange
-            var emptyList = new List<AvailableDataBase>();
             availableDataFactory.Setup(
                     f => f.CreateAsync(input))
-                .ReturnsAsync(emptyList);
+                .ReturnsAsync(new List<AvailableDataBase>());
 
             // Act
             await sut.NotifyAsync(input);
@@ -107,11 +107,19 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.MessageHub
             availableDataFactory.Verify(
                 f => f.CreateAsync(input),
                 Times.Once);
-
-            emptyList.Should().BeEmpty();
             availableDataRepository.Verify(
                 r => r.StoreAsync(
                     It.IsAny<IEnumerable<AvailableDataBase>>()),
+                Times.Never);
+            availableDataNotificationFactory.Verify(
+                r => r.Create(
+                    It.IsAny<IReadOnlyList<AvailableDataBase>>(),
+                    It.IsAny<IBundleSpecification<AvailableDataBase>>()),
+                Times.Never);
+            dataAvailableNotificationSender.Verify(
+                r => r.SendAsync(
+                    It.IsAny<string>(),
+                    It.IsAny<DataAvailableNotificationDto>()),
                 Times.Never);
         }
     }

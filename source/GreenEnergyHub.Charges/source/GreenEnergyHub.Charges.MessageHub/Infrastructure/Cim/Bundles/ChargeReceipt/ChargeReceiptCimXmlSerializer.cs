@@ -24,10 +24,10 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeReceipt
 {
-    public class ChargeReceiptCimSerializer
-        : CimSerializer<AvailableChargeReceiptData>
+    public class ChargeReceiptCimXmlSerializer
+        : CimXmlSerializer<AvailableChargeReceiptData>
     {
-        public ChargeReceiptCimSerializer(
+        public ChargeReceiptCimXmlSerializer(
             IClock clock,
             ICimIdProvider cimIdProvider)
             : base(clock, cimIdProvider)
@@ -95,19 +95,19 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeRec
             return result;
         }
 
-        private XElement GetReasonCode(XNamespace cimNamespace, AvailableReceiptValidationError validationError)
+        private static XElement GetReasonCode(XNamespace cimNamespace, AvailableReceiptValidationError validationError)
         {
             return new XElement(
                 cimNamespace + CimChargeReceiptConstants.ReasonElement,
                 new XElement(cimNamespace + CimChargeReceiptConstants.ReasonCode, ReasonCodeMapper.Map(validationError.ReasonCode)),
-                CimHelper.GetElementIfNeeded(
+                CimXmlHelper.GetElementIfNeeded(
                     cimNamespace,
                     string.IsNullOrWhiteSpace(validationError.Text),
                     CimChargeReceiptConstants.ReasonText,
                     () => validationError.Text));
         }
 
-        private bool IsConfirmation(IEnumerable<AvailableChargeReceiptData> receipts)
+        private static bool IsConfirmation(IEnumerable<AvailableChargeReceiptData> receipts)
         {
             // Due to the nature of the interface to the MessageHub and the use of MessageType in that
             // BusinessReasonCode, RecipientId, RecipientRole and ReceiptStatus will always be the same value

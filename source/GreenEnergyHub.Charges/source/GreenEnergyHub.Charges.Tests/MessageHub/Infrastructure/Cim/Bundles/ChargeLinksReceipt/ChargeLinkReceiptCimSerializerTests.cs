@@ -15,7 +15,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
@@ -52,7 +51,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IClock> clock,
             [Frozen] Mock<ICimIdProvider> cimIdProvider,
-            ChargeLinksReceiptCimSerializer sut)
+            ChargeLinksReceiptCimXmlSerializer sut)
         {
             // Arrange
             SetupMocks(marketParticipantRepository, clock, cimIdProvider);
@@ -85,7 +84,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IClock> clock,
             [Frozen] Mock<ICimIdProvider> cimIdProvider,
-            ChargeLinksReceiptCimSerializer sut)
+            ChargeLinksReceiptCimXmlSerializer sut)
         {
             SetupMocks(marketParticipantRepository, clock, cimIdProvider);
 
@@ -119,7 +118,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
                     actorId: Guid.NewGuid(),
                     b2CActorId: Guid.NewGuid(),
                     "5790001330552",
-                    true,
+                    MarketParticipantStatus.Active,
                     MarketParticipantRole.MeteringPointAdministrator));
 
             var currentTime = Instant.FromUtc(2021, 10, 12, 13, 37, 43).PlusNanoseconds(4);

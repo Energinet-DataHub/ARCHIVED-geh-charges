@@ -16,8 +16,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
+using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
@@ -36,21 +38,21 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Charges
 {
     [UnitTest]
-    public class ChargePriceCimSerializerTests
+    public class ChargePriceCimJsonSerializerTests
     {
         private const int NoOfChargesInBundle = 10;
         private const string CimTestId = "00000000000000000000000000000000";
         private const string RecipientId = "Recipient";
 
         [Theory]
-        [InlineAutoDomainData("TestFiles/ExpectedOutputChargeCimSerializerChargePrices.blob")]
+        [InlineAutoDomainData("TestFiles/ExpectedOutputChargeCimJsonSerializerChargePrices.blob")]
         public async Task SerializeAsync_WhenCalled_StreamHasSerializedResult(
             string expectedFilePath,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IClock> clock,
             [Frozen] Mock<IIso8601Durations> iso8601Durations,
             [Frozen] Mock<ICimIdProvider> cimIdProvider,
-            ChargePriceCimSerializer sut)
+            ChargePriceCimJsonSerializer sut)
         {
             // Arrange
             SetupMocks(marketParticipantRepository, clock, iso8601Durations, cimIdProvider);
@@ -74,36 +76,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
             // Assert
             var actual = stream.AsString();
 
-            Assert.Equal(expected, actual, ignoreLineEndingDifferences: true);
-        }
-
-        [Theory(Skip = "Manually run test to save the generated file to disk")]
-        [InlineAutoDomainData]
-        public async Task SerializeAsync_WhenCalled_SaveSerializedStream(
-            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            [Frozen] Mock<IClock> clock,
-            [Frozen] Mock<IIso8601Durations> iso8601Durations,
-            [Frozen] Mock<ICimIdProvider> cimIdProvider,
-            ChargePriceCimSerializer sut)
-        {
-            SetupMocks(marketParticipantRepository, clock, iso8601Durations, cimIdProvider);
-
-            var charges = GetCharges(clock.Object);
-
-            await using var stream = new MemoryStream();
-
-            await sut.SerializeToStreamAsync(
-                charges,
-                stream,
-                BusinessReasonCode.UpdateChargeInformation,
-                "5790001330552",
-                MarketParticipantRole.MeteringPointAdministrator,
-                RecipientId,
-                MarketParticipantRole.GridAccessProvider);
-
-            await using var fileStream = File.Create("C:\\Temp\\TestChargeBundle" + Guid.NewGuid() + ".xml");
-
-            await stream.CopyToAsync(fileStream);
+            actual.Should().Be(expected);
         }
 
         private static void SetupMocks(
@@ -119,7 +92,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
                     actorId: Guid.NewGuid(),
                     b2CActorId: Guid.NewGuid(),
                     "5790001330552",
-                    true,
+                    MarketParticipantStatus.Active,
                     MarketParticipantRole.MeteringPointAdministrator));
 
             var currentTime = Instant.FromUtc(2021, 10, 22, 15, 30, 41).PlusNanoseconds(4);

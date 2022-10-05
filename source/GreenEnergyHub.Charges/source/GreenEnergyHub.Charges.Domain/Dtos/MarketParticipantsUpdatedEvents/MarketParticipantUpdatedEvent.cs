@@ -26,14 +26,14 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsUpdatedEvents
             Guid? b2CActorId,
             string marketParticipantId,
             List<MarketParticipantRole> businessProcessRoles,
-            bool isActive,
+            MarketParticipantStatus status,
             IEnumerable<Guid> gridAreas)
         {
             B2CActorId = b2CActorId;
             ActorId = actorId;
             MarketParticipantId = marketParticipantId;
             BusinessProcessRoles = businessProcessRoles;
-            IsActive = isActive;
+            Status = status;
             GridAreas = gridAreas;
         }
 
@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsUpdatedEvents
 
         public List<MarketParticipantRole> BusinessProcessRoles { get; }
 
-        public bool IsActive { get; }
+        public MarketParticipantStatus Status { get; }
 
         public IEnumerable<Guid> GridAreas { get; }
     }

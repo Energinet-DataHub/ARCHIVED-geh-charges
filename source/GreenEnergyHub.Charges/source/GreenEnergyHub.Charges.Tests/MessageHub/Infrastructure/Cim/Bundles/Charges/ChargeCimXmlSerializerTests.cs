@@ -36,7 +36,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Charges
 {
     [UnitTest]
-    public class ChargeCimSerializerTests
+    public class ChargeCimXmlSerializerTests
     {
         private const int NoOfChargesInBundle = 10;
         private const string CimTestId = "00000000000000000000000000000000";
@@ -50,7 +50,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
             [Frozen] Mock<IClock> clock,
             [Frozen] Mock<IIso8601Durations> iso8601Durations,
             [Frozen] Mock<ICimIdProvider> cimIdProvider,
-            ChargeCimSerializer sut)
+            ChargeCimXmlSerializer sut)
         {
             // Arrange
             SetupMocks(marketParticipantRepository, clock, iso8601Durations, cimIdProvider);
@@ -84,7 +84,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
             [Frozen] Mock<IClock> clock,
             [Frozen] Mock<IIso8601Durations> iso8601Durations,
             [Frozen] Mock<ICimIdProvider> cimIdProvider,
-            ChargeCimSerializer sut)
+            ChargeCimXmlSerializer sut)
         {
             SetupMocks(marketParticipantRepository, clock, iso8601Durations, cimIdProvider);
 
@@ -106,7 +106,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
             await stream.CopyToAsync(fileStream);
         }
 
-        private void SetupMocks(
+        private static void SetupMocks(
             Mock<IMarketParticipantRepository> marketParticipantRepository,
             Mock<IClock> clock,
             Mock<IIso8601Durations> iso8601Durations,
@@ -119,7 +119,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
                     actorId: Guid.NewGuid(),
                     b2CActorId: Guid.NewGuid(),
                     "5790001330552",
-                    true,
+                    MarketParticipantStatus.Active,
                     MarketParticipantRole.MeteringPointAdministrator));
 
             var currentTime = Instant.FromUtc(2021, 10, 22, 15, 30, 41).PlusNanoseconds(4);
