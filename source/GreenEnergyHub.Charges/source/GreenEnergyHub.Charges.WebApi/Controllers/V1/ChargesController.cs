@@ -57,7 +57,7 @@ public class ChargesController : ControllerBase
     /// <summary>
     ///     Returns all charges based on the search criteria
     /// </summary>
-    /// <returns>Charges data or "404 Not Found"</returns>
+    /// <returns>Charges data or "400 Bad request"</returns>
     [HttpPost("SearchAsync")]
     [MapToApiVersion(Version1)]
     public async Task<IActionResult> SearchAsync(SearchCriteriaDto searchCriteria)

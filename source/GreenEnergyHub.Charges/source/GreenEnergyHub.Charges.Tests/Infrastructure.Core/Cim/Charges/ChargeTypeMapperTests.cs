@@ -55,7 +55,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Cim.Charges
         }
 
         [Fact]
-        public void MayMany_WhenGivenKnownInput_MapsToCorrectEnums()
+        public void MapMany_WhenGivenKnownInput_MapsToCorrectEnums()
         {
             // Arrange
             var chargeTypes = "D01,D02,D03";
@@ -69,7 +69,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Cim.Charges
         }
 
         [Fact]
-        public void MayMany_WhenGivenUnknownInput_MapsToUnknown()
+        public void MapMany_WhenGivenUnknownInput_MapsToUnknown()
         {
             // Arrange
             var chargeTypes = "not_a_type";
