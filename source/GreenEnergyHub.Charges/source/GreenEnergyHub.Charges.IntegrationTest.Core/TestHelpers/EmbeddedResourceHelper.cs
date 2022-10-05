@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
         private static string ReplaceMergeFields(Instant currentInstant, string file, IZonedDateTimeService zonedDateTimeService)
         {
             var now = currentInstant.ToString();
-            var daysToAdd = 26;
+            var daysToAdd = 31;
             var inThirtyoneDays = currentInstant.Plus(Duration.FromDays(daysToAdd));
 
             var midnightLocalTime31DaysAhead =
