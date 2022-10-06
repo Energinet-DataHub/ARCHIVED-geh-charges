@@ -106,6 +106,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     ApplicationProperties =
                     {
                         new KeyValuePair<string, object>(MessageMetaDataConstants.CorrelationId, correlationId),
+                        new KeyValuePair<string, object>(MessageMetaDataConstants.MessageType, "ActorUpdatedIntegrationEvent"),
                     },
                 };
 
