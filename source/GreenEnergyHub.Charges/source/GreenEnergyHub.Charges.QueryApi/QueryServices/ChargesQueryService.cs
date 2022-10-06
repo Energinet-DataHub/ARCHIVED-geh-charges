@@ -32,7 +32,7 @@ public class ChargesQueryService : IChargesQueryService
         _data = data;
     }
 
-    public async Task<IList<ChargeV1Dto>> SearchAsync(SearchCriteriaDto searchCriteria)
+    public async Task<IList<ChargeV1Dto>> SearchAsync(SearchCriteriaV1Dto searchCriteria)
     {
         var charges = _data.Charges;
         var todayAtMidnightUtc = DateTime.Now.Date.ToUniversalTime();
@@ -45,7 +45,7 @@ public class ChargesQueryService : IChargesQueryService
         if (searchCriteria.OwnerId.HasValue)
             charges = SearchByOwnerId(searchCriteria.OwnerId, charges);
 
-        if (searchCriteria.ChargeTypes.Any())
+        if (searchCriteria.ChargeTypes != null && searchCriteria.ChargeTypes.Any())
             charges = SearchByChargeTypes(searchCriteria.ChargeTypes, charges);
 
         return await charges
@@ -55,7 +55,7 @@ public class ChargesQueryService : IChargesQueryService
     }
 
     private static IQueryable<Charge> SearchByChargeIdOrName(
-        SearchCriteriaDto searchCriteria, IQueryable<Charge> charges, DateTime todayAtMidnightUtc)
+        SearchCriteriaV1Dto searchCriteria, IQueryable<Charge> charges, DateTime todayAtMidnightUtc)
     {
         charges = charges
             .Where(c => c.SenderProvidedChargeId.Contains(searchCriteria.ChargeIdOrName)

@@ -48,9 +48,9 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Query
             return this;
         }
 
-        public SearchCriteriaDto Build()
+        public SearchCriteriaV1Dto Build()
         {
-            return new SearchCriteriaDto(_chargeIdOrName, _marketParticipantId, _chargeTypes);
+            return new SearchCriteriaV1Dto(_chargeIdOrName, _marketParticipantId, _chargeTypes);
         }
     }
 }

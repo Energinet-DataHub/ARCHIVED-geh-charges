@@ -18,7 +18,7 @@ using System.Collections.Generic;
 // ReSharper disable once CheckNamespace - Type is shared so namespace is not determined by project structure/namespace
 namespace Energinet.Charges.Contracts.Charge
 {
-    public record SearchCriteriaDto(
+    public record SearchCriteriaV1Dto(
         string ChargeIdOrName,
         Guid? OwnerId,
         List<ChargeType> ChargeTypes);
