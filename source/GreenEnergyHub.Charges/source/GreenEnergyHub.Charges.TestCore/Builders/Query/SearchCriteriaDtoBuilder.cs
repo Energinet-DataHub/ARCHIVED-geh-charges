@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using Energinet.Charges.Contracts.Charge;
 
 namespace GreenEnergyHub.Charges.TestCore.Builders.Query
@@ -21,8 +21,8 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Query
     public class SearchCriteriaDtoBuilder
     {
         private string _chargeIdOrName = string.Empty;
-        private string _marketParticipantId = string.Empty;
-        private string _chargeTypes = string.Empty;
+        private Guid? _marketParticipantId = null;
+        private List<ChargeType> _chargeTypes = new List<ChargeType>();
 
         public SearchCriteriaDtoBuilder WithChargeIdOrName(string chargeIdOrName)
         {
@@ -30,7 +30,7 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Query
             return this;
         }
 
-        public SearchCriteriaDtoBuilder WithMarketParticipantId(string marketParticipantId)
+        public SearchCriteriaDtoBuilder WithMarketParticipantId(Guid marketParticipantId)
         {
             _marketParticipantId = marketParticipantId;
             return this;
@@ -38,13 +38,13 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Query
 
         public SearchCriteriaDtoBuilder WithChargeType(ChargeType chargeType)
         {
-            _chargeTypes = chargeType.ToString();
+            _chargeTypes = new List<ChargeType> { chargeType };
             return this;
         }
 
         public SearchCriteriaDtoBuilder WithChargeTypes(List<ChargeType> chargeTypes)
         {
-            _chargeTypes = string.Join(",", chargeTypes.Select(type => type.ToString()));
+            _chargeTypes = chargeTypes;
             return this;
         }
 

@@ -271,7 +271,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
             var searchCriteria = new SearchCriteriaDtoBuilder()
-                .WithMarketParticipantId(_marketParticipantId.ToString())
+                .WithMarketParticipantId(_marketParticipantId)
                 .Build();
 
             var sut = GetSut(chargesDatabaseQueryContext);

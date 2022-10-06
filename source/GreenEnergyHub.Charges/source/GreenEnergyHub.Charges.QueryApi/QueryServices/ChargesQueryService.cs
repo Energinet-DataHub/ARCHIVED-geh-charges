@@ -17,11 +17,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Energinet.Charges.Contracts.Charge;
-using GreenEnergyHub.Charges.Infrastructure.Core.Cim.Charges;
 using GreenEnergyHub.Charges.QueryApi.Model;
 using GreenEnergyHub.Charges.QueryApi.ModelPredicates;
 using Microsoft.EntityFrameworkCore;
-using ChargeType = GreenEnergyHub.Charges.Domain.Charges.ChargeType;
 
 namespace GreenEnergyHub.Charges.QueryApi.QueryServices;
 
@@ -44,11 +42,11 @@ public class ChargesQueryService : IChargesQueryService
         if (!string.IsNullOrWhiteSpace(searchCriteria.ChargeIdOrName))
             charges = SearchByChargeIdOrName(searchCriteria, charges, todayAtMidnightUtc);
 
-        if (!string.IsNullOrWhiteSpace(searchCriteria.OwnerId))
-            charges = SearchByOwnerId(searchCriteria, charges);
+        if (searchCriteria.OwnerId.HasValue)
+            charges = SearchByOwnerId(searchCriteria.OwnerId, charges);
 
-        if (!string.IsNullOrWhiteSpace(searchCriteria.ChargeTypes))
-            charges = SearchByChargeTypes(searchCriteria, charges);
+        if (searchCriteria.ChargeTypes.Any())
+            charges = SearchByChargeTypes(searchCriteria.ChargeTypes, charges);
 
         return await charges
             .AsChargeV1Dto()
@@ -68,16 +66,13 @@ public class ChargesQueryService : IChargesQueryService
         return charges;
     }
 
-    private static IQueryable<Charge> SearchByOwnerId(SearchCriteriaDto searchCriteria, IQueryable<Charge> charges)
+    private static IQueryable<Charge> SearchByOwnerId(Guid? ownerId, IQueryable<Charge> charges)
     {
-        var ownerId = Guid.Parse(searchCriteria.OwnerId);
-        charges = charges.Where(c => c.OwnerId == ownerId);
-        return charges;
+        return charges.Where(c => c.OwnerId == ownerId);
     }
 
-    private static IQueryable<Charge> SearchByChargeTypes(SearchCriteriaDto searchCriteria, IQueryable<Charge> charges)
+    private static IQueryable<Charge> SearchByChargeTypes(ICollection<ChargeType> chargeTypes, IQueryable<Charge> charges)
     {
-        var chargeTypes = ChargeTypeMapper.MapMany(searchCriteria.ChargeTypes);
         charges = charges.Where(c => chargeTypes.Contains((ChargeType)c.Type));
         return charges;
     }

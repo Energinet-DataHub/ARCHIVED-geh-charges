@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.Validation
             var searchCriteria = searchCriteriaDtoBuilder
                 .WithChargeType(ChargeType.D01)
                 .WithChargeIdOrName("test")
-                .WithMarketParticipantId(Guid.NewGuid().ToString())
+                .WithMarketParticipantId(Guid.NewGuid())
                 .Build();
 
             // Act
@@ -63,12 +63,12 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.Validation
 
         [Theory]
         [InlineAutoMoqData]
-        public void Validate_WhenSearchCriteriaOwnerIdIsNotAGuid_ReturnFalse(
+        public void Validate_WhenSearchCriteriaOwnerIdIsAEmptyGuid_ReturnsFalse(
             SearchCriteriaDtoBuilder searchCriteriaDtoBuilder)
         {
             // Arrange
             var searchCriteria = searchCriteriaDtoBuilder
-                .WithMarketParticipantId("not a guid")
+                .WithMarketParticipantId(Guid.Empty)
                 .Build();
 
             // Act

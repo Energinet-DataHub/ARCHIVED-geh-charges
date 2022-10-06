@@ -13,6 +13,8 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Energinet.Charges.Contracts.Charge;
 
 namespace GreenEnergyHub.Charges.QueryApi.Validation;
@@ -29,17 +31,16 @@ public static class SearchCriteriaValidator
         if (!IsOwnerIdValid(searchCriteriaDto))
             return false;
 
-        if (!IsChargeTypeValid(searchCriteriaDto))
+        if (!IsChargeTypesValid(searchCriteriaDto.ChargeTypes))
             return false;
 
         return true;
     }
 
-    private static bool IsChargeTypeValid(SearchCriteriaDto searchCriteriaDto)
+    private static bool IsChargeTypesValid(List<ChargeType> chargeTypes)
     {
-        if (string.IsNullOrEmpty(searchCriteriaDto.ChargeTypes)) return true;
+        if (!chargeTypes.Any()) return true;
 
-        var chargeTypes = searchCriteriaDto.ChargeTypes.Split(",");
         foreach (var chargeType in chargeTypes)
         {
             if (!Enum.IsDefined(typeof(ChargeType), chargeType))
@@ -51,7 +52,6 @@ public static class SearchCriteriaValidator
 
     private static bool IsOwnerIdValid(SearchCriteriaDto searchCriteriaDto)
     {
-        if (string.IsNullOrEmpty(searchCriteriaDto.OwnerId)) return true;
-        return Guid.TryParse(searchCriteriaDto.OwnerId, out _);
+        return searchCriteriaDto.OwnerId != Guid.Empty;
     }
 }
