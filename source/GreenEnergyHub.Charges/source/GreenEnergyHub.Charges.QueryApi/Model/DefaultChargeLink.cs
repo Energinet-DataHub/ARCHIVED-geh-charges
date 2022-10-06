@@ -17,27 +17,24 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-#nullable disable
+namespace GreenEnergyHub.Charges.QueryApi.Model;
 
-namespace GreenEnergyHub.Charges.QueryApi.Model
+[Table("DefaultChargeLink", Schema = "Charges")]
+[Index("MeteringPointType", "StartDateTime", "EndDateTime", Name = "IX_MeteringPointType_StartDateTime_EndDateTime")]
+public class DefaultChargeLink
 {
-    [Table("DefaultChargeLink", Schema = "Charges")]
-    [Index(nameof(MeteringPointType), nameof(StartDateTime), nameof(EndDateTime), Name = "IX_MeteringPointType_StartDateTime_EndDateTime")]
-    public partial class DefaultChargeLink
-    {
-        [Key]
-        public Guid Id { get; set; }
+    [Key]
+    public Guid Id { get; set; }
 
-        public int MeteringPointType { get; set; }
+    public int MeteringPointType { get; set; }
 
-        public Guid ChargeId { get; set; }
+    public Guid ChargeId { get; set; }
 
-        public DateTime StartDateTime { get; set; }
+    public DateTime StartDateTime { get; set; }
 
-        public DateTime EndDateTime { get; set; }
+    public DateTime EndDateTime { get; set; }
 
-        [ForeignKey(nameof(ChargeId))]
-        [InverseProperty("DefaultChargeLinks")]
-        public virtual Charge Charge { get; set; }
-    }
+    [ForeignKey("ChargeId")]
+    [InverseProperty("DefaultChargeLinks")]
+    public virtual Charge Charge { get; set; }
 }
