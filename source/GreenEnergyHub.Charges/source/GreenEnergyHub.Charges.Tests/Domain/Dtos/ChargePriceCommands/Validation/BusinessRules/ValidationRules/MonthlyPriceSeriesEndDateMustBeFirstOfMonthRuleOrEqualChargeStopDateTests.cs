@@ -29,7 +29,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validation.BusinessRules.ValidationRules
 {
     [UnitTest]
-    public class MonthlyPriceSeriesEndDateMustBeFirstOfMonthRuleTests
+    public class MonthlyPriceSeriesEndDateMustBeFirstOfMonthRuleOrEqualChargeStopDateTests
     {
         [Theory]
         [InlineAutoMoqData(Resolution.P1M, 15, 1, 0, 0, false)]
@@ -54,7 +54,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
             Instant? stopDate = priceStopMonthDateTime == 0
                 ? null
                 : GetInstantFromMonthAndDay(priceStopDayDateTime, priceStopMonthDateTime);
-            var sut = new MonthlyPriceSeriesEndDateMustBeFirstOfMonthRule(
+            var sut = new MonthlyPriceSeriesEndDateMustBeFirstOfMonthOrEqualChargeStopDateRule(
                 GetZonedDateTimeService(),
                 resolution,
                 endDate,
@@ -72,7 +72,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
         {
             // Arrange
             // Act
-            var sut = new MonthlyPriceSeriesEndDateMustBeFirstOfMonthRule(
+            var sut = new MonthlyPriceSeriesEndDateMustBeFirstOfMonthOrEqualChargeStopDateRule(
                 GetZonedDateTimeService(),
                 Resolution.P1M,
                 GetInstantFromMonthAndDay(1, 1),

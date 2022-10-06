@@ -19,13 +19,13 @@ using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.BusinessValidation.ValidationRules
 {
-    public class MonthlyPriceSeriesEndDateMustBeFirstOfMonthRule : IValidationRule
+    public class MonthlyPriceSeriesEndDateMustBeFirstOfMonthOrEqualChargeStopDateRule : IValidationRule
     {
         private readonly Resolution _resolution;
         private readonly ZonedDateTime _zonedPriceEndDate;
         private readonly ZonedDateTime? _zonedStopDate;
 
-        public MonthlyPriceSeriesEndDateMustBeFirstOfMonthRule(IZonedDateTimeService zonedDateTimeService, Resolution resolution, Instant priceEndDate, Instant? stopDate)
+        public MonthlyPriceSeriesEndDateMustBeFirstOfMonthOrEqualChargeStopDateRule(IZonedDateTimeService zonedDateTimeService, Resolution resolution, Instant priceEndDate, Instant? stopDate)
         {
             _resolution = resolution;
             _zonedPriceEndDate = zonedDateTimeService.GetZonedDateTime(priceEndDate);
