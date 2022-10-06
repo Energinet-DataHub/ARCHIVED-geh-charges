@@ -1,5 +1,9 @@
 # Energinet.DataHub.Charges.Clients Release notes
 
+## Version 3.0.17
+
+Renamed Client contracts namespace from Energinet.Charges.Contracts to Energinet.DataHub.Charges.Contracts
+
 ## Version 3.0.16
 
 Updated NuGet packages
@@ -158,7 +162,7 @@ Integration tests re-enabled in Energinet GitHub pipeline.
 
 ## Version 1.0.9
 
-Protobuf contracts common for both Energinet.DataHub.Charges.Libraries and elsewhere in the Charges domain are now located in one common place to avoid duplication.
+Protobuf contracts common for both Energinet.Charges.Libraries and elsewhere in the Charges domain are now located in one common place to avoid duplication.
 
 All references to Charges.Clients from elsewhere in Charges is removed.
 
