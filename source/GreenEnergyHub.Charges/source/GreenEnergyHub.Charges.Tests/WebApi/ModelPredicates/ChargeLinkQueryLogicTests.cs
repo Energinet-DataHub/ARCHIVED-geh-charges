@@ -20,9 +20,9 @@ using Energinet.Charges.Contracts.ChargeLink;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.QueryApi.Model;
+using GreenEnergyHub.Charges.QueryApi.ModelPredicates;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.TestCore.Builders.Query;
-using GreenEnergyHub.Charges.WebApi.ModelPredicates;
 using Xunit;
 using Xunit.Categories;
 

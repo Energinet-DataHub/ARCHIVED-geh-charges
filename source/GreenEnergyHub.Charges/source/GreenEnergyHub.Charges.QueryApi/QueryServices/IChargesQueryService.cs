@@ -12,27 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#nullable disable
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Energinet.Charges.Contracts.Charge;
 
-using System;
+namespace GreenEnergyHub.Charges.QueryApi.QueryServices;
 
-namespace GreenEnergyHub.Charges.QueryApi.Model;
-
-public class ChargePrice
+public interface IChargesQueryService
 {
-    public Guid Id { get; set; }
-
-    public Guid ChargeId { get; set; }
-
-    public DateTime Time { get; set; }
-
-    public decimal Price { get; set; }
-
-    public bool Retired { get; set; }
-
-    public DateTime? RetiredDateTime { get; set; }
-
-    public Guid ChargeOperationId { get; set; }
-
-    public virtual Charge Charge { get; set; }
+    Task<IList<ChargeV1Dto>> SearchAsync(SearchCriteriaDto searchCriteria);
 }

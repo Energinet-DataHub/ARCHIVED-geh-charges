@@ -14,6 +14,7 @@
 
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -40,13 +41,12 @@ namespace Energinet.DataHub.Charges.Clients.Charges
         /// <returns>A collection of mocked charge links data (Dtos)</returns>
         public async Task<IList<ChargeLinkV1Dto>> GetChargeLinksAsync(string meteringPointId)
         {
-            var list = new List<ChargeLinkV1Dto>();
             var response = await _httpClient
                 .GetAsync(ChargesRelativeUris.GetChargeLinks(meteringPointId))
                 .ConfigureAwait(false);
 
             if (!response.IsSuccessStatusCode)
-                return list;
+                return new List<ChargeLinkV1Dto>();
 
             var options = new JsonSerializerOptions(JsonSerializerDefaults.Web)
             {
@@ -54,12 +54,7 @@ namespace Energinet.DataHub.Charges.Clients.Charges
             };
 
             var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            var result = JsonSerializer.Deserialize<List<ChargeLinkV1Dto>>(content, options);
-
-            if (result != null)
-                list.AddRange(result);
-
-            return list;
+            return JsonSerializer.Deserialize<List<ChargeLinkV1Dto>>(content, options);
         }
 
         /// <summary>
@@ -68,13 +63,12 @@ namespace Energinet.DataHub.Charges.Clients.Charges
         /// <returns>A collection of charges(Dtos)</returns>
         public async Task<IList<ChargeV1Dto>> GetChargesAsync()
         {
-            var list = new List<ChargeV1Dto>();
             var response = await _httpClient
                 .GetAsync(ChargesRelativeUris.GetCharges())
                 .ConfigureAwait(false);
 
             if (!response.IsSuccessStatusCode)
-                return list;
+                return null;
 
             var options = new JsonSerializerOptions(JsonSerializerDefaults.Web)
             {
@@ -82,12 +76,29 @@ namespace Energinet.DataHub.Charges.Clients.Charges
             };
 
             var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            var result = JsonSerializer.Deserialize<List<ChargeV1Dto>>(content, options);
+            return JsonSerializer.Deserialize<List<ChargeV1Dto>>(content, options);
+        }
 
-            if (result != null)
-                list.AddRange(result);
+        /// <summary>
+        /// Returns charges based on the search criteria.
+        /// </summary>
+        /// <returns>A collection of charges(Dtos)</returns>
+        public async Task<IList<ChargeV1Dto>> SearchChargesAsync(SearchCriteriaDto searchCriteria)
+        {
+            var response = await _httpClient
+                .PostAsJsonAsync(ChargesRelativeUris.SearchCharges(), searchCriteria)
+                .ConfigureAwait(false);
 
-            return list;
+            if (!response.IsSuccessStatusCode)
+                return null;
+
+            var options = new JsonSerializerOptions(JsonSerializerDefaults.Web)
+            {
+                Converters = { new JsonStringEnumConverter() },
+            };
+
+            var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            return JsonSerializer.Deserialize<List<ChargeV1Dto>>(content, options);
         }
     }
 }

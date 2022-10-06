@@ -18,35 +18,38 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-#nullable disable
+namespace GreenEnergyHub.Charges.QueryApi.Model;
 
-namespace GreenEnergyHub.Charges.QueryApi.Model
+[Table("MarketParticipant", Schema = "Charges")]
+[Index("ActorId", Name = "UC_ActorId", IsUnique = true)]
+[Index("MarketParticipantId", "BusinessProcessRole", Name = "UC_MarketParticipantId_BusinessProcessRole", IsUnique = true)]
+public class MarketParticipant
 {
-    [Table("MarketParticipant", Schema = "Charges")]
-    [Index(nameof(MarketParticipantId), Name = "UC_MarketParticipantId", IsUnique = true)]
-    public partial class MarketParticipant
+    public MarketParticipant()
     {
-        public MarketParticipant()
-        {
-            Charges = new HashSet<Charge>();
-            GridAreaLinks = new HashSet<GridAreaLink>();
-        }
-
-        [Key]
-        public Guid Id { get; set; }
-
-        [Required]
-        [StringLength(35)]
-        public string MarketParticipantId { get; set; }
-
-        public int BusinessProcessRole { get; set; }
-
-        public int Status { get; set; }
-
-        [InverseProperty(nameof(Charge.Owner))]
-        public virtual ICollection<Charge> Charges { get; set; }
-
-        [InverseProperty(nameof(GridAreaLink.GridAccessProvider))]
-        public virtual ICollection<GridAreaLink> GridAreaLinks { get; set; }
+        Charges = new HashSet<Charge>();
+        GridAreaLinks = new HashSet<GridAreaLink>();
     }
+
+    [Key]
+    public Guid Id { get; set; }
+
+    [Required]
+    [StringLength(35)]
+    public string MarketParticipantId { get; set; }
+
+    public int BusinessProcessRole { get; set; }
+
+    public int? Status { get; set; }
+
+    public Guid ActorId { get; set; }
+
+    [Column("B2CActorId")]
+    public Guid? B2cactorId { get; set; }
+
+    [InverseProperty("Owner")]
+    public virtual ICollection<Charge> Charges { get; set; }
+
+    [InverseProperty("Owner")]
+    public virtual ICollection<GridAreaLink> GridAreaLinks { get; set; }
 }
