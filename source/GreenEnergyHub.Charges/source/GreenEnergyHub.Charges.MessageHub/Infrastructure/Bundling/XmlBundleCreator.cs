@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.MessageHub.Client.Storage;
 using Energinet.DataHub.MessageHub.Model.Model;
