@@ -13,8 +13,8 @@
 // limitations under the License.
 
 using System.Diagnostics.CodeAnalysis;
-using Energinet.Charges.Contracts;
 using Energinet.DataHub.Charges.Clients.DefaultChargeLink.Models;
+using Energinet.DataHub.Charges.Contracts;
 
 namespace Energinet.DataHub.Charges.Clients.DefaultChargeLink.Mappers
 {

@@ -14,13 +14,13 @@
 
 using System;
 using AutoFixture;
-using Energinet.Charges.Contracts;
 using Energinet.DataHub.Charges.Clients.DefaultChargeLink.Mappers;
+using Energinet.DataHub.Charges.Contracts;
 using FluentAssertions;
 using Xunit;
 using Xunit.Categories;
 using CreateDefaultChargeLinksFailed =
-    Energinet.Charges.Contracts.CreateDefaultChargeLinksReply.Types.CreateDefaultChargeLinksFailed;
+    Energinet.DataHub.Charges.Contracts.CreateDefaultChargeLinksReply.Types.CreateDefaultChargeLinksFailed;
 
 namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.DefaultChargeLink.Mappers
 {

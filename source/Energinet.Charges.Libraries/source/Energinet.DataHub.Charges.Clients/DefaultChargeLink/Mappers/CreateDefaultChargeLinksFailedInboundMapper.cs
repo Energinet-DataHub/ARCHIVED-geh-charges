@@ -14,11 +14,11 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using Energinet.Charges.Contracts;
 using Energinet.DataHub.Charges.Clients.DefaultChargeLink.Models;
+using Energinet.DataHub.Charges.Contracts;
 using GreenEnergyHub.Charges.Contracts;
 using CreateDefaultChargeLinksFailed =
-    Energinet.Charges.Contracts.CreateDefaultChargeLinksReply.Types.CreateDefaultChargeLinksFailed;
+    Energinet.DataHub.Charges.Contracts.CreateDefaultChargeLinksReply.Types.CreateDefaultChargeLinksFailed;
 
 namespace Energinet.DataHub.Charges.Clients.DefaultChargeLink.Mappers
 {

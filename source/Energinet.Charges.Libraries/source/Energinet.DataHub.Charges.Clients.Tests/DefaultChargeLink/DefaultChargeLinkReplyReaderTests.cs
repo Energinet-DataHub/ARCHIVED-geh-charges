@@ -14,9 +14,9 @@
 
 using System;
 using System.Threading.Tasks;
-using Energinet.Charges.Contracts;
 using Energinet.DataHub.Charges.Clients.DefaultChargeLink;
 using Energinet.DataHub.Charges.Clients.DefaultChargeLink.Models;
+using Energinet.DataHub.Charges.Contracts;
 using FluentAssertions;
 using Google.Protobuf;
 using GreenEnergyHub.Charges.Contracts;
@@ -24,9 +24,9 @@ using GreenEnergyHub.TestHelpers;
 using Xunit;
 using Xunit.Categories;
 using CreateDefaultChargeLinksFailed =
-    Energinet.Charges.Contracts.CreateDefaultChargeLinksReply.Types.CreateDefaultChargeLinksFailed;
+    Energinet.DataHub.Charges.Contracts.CreateDefaultChargeLinksReply.Types.CreateDefaultChargeLinksFailed;
 using CreateDefaultChargeLinksSucceeded =
-    Energinet.Charges.Contracts.CreateDefaultChargeLinksReply.Types.CreateDefaultChargeLinksSucceeded;
+    Energinet.DataHub.Charges.Contracts.CreateDefaultChargeLinksReply.Types.CreateDefaultChargeLinksSucceeded;
 
 namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.DefaultChargeLink
 {

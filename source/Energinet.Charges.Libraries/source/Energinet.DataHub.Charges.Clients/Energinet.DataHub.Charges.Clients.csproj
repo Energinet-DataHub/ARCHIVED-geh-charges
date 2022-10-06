@@ -35,17 +35,17 @@ limitations under the License.
     <RepositoryUrl>https://github.com/Energinet-DataHub/geh-charges</RepositoryUrl>
     <PackageReleaseNotes>
 Release Notes
-https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/documents/release-notes/release-notes.md
+https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.DataHub.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/documents/release-notes/release-notes.md
 
 Documentation
-https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/documents/documentation.md
+https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.DataHub.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/documents/documentation.md
     </PackageReleaseNotes>
     <PackageDescription>
 Release Notes
-https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/documents/release-notes/release-notes.md
+https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.DataHub.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/documents/release-notes/release-notes.md
 
 Documentation
-https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/documents/documentation.md
+https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.DataHub.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/documents/documentation.md
     </PackageDescription>
     <Description>
       The NuGet package Energinet.DataHub.Charges.Clients contains communication API for clients interacting with the Energinet DataHub charge domain. Energinet DataHub is built on the Green Energy Hub platform.

@@ -35,17 +35,17 @@ limitations under the License.
     <RepositoryUrl>https://github.com/Energinet-DataHub/geh-charges</RepositoryUrl>
     <PackageReleaseNotes>
       Release Notes
-      https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients.Registration/documents/release-notes/release-notes.md
+      https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.DataHub.Charges.Libraries/source/Energinet.DataHub.Charges.Clients.Registration/documents/release-notes/release-notes.md
 
       Documentation
-      https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients.Registration/documents/documentation.md
+      https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.DataHub.Charges.Libraries/source/Energinet.DataHub.Charges.Clients.Registration/documents/documentation.md
     </PackageReleaseNotes>
     <PackageDescription>
       Release Notes
-      https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients.Registration/documents/release-notes/release-notes.md
+      https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.DataHub.Charges.Libraries/source/Energinet.DataHub.Charges.Clients.Registration/documents/release-notes/release-notes.md
 
       Documentation
-      https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients.Registration/documents/documentation.md
+      https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.DataHub.Charges.Libraries/source/Energinet.DataHub.Charges.Clients.Registration/documents/documentation.md
     </PackageDescription>
     <Description>
       Contains functionality to register the Energinet.DataHub.Charges.Libraries.Clients NuGet package.
