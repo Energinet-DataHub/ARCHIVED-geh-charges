@@ -225,8 +225,13 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
                 .BuildTopic(ChargesServiceBusResourceNames.IntegrationEventTopicKey)
                 .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.IntegrationEventTopicName)
                 .AddSubscription(ChargesServiceBusResourceNames.MarketParticipantChangedSubscriptionName)
+                .AddMessageTypeFilter("ActorUpdatedIntegrationEvent")
                 .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.MarketParticipantChangedSubscriptionName)
+                .AddSubscription(ChargesServiceBusResourceNames.MarketParticipantCreatedSubscriptionName)
+                .AddMessageTypeFilter("ActorCreated")
+                .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.MarketParticipantCreatedSubscriptionName)
                 .AddSubscription(ChargesServiceBusResourceNames.MeteringPointCreatedSubscriptionName)
+                .AddMessageTypeFilter("MeteringPointCreated")
                 .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.MeteringPointCreatedSubscriptionName)
                 .CreateAsync();
 

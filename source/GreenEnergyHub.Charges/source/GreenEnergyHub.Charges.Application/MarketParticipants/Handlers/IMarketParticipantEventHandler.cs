@@ -27,5 +27,8 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
         /// </summary>
         /// <param name="message"></param>
         Task HandleAsync(BaseIntegrationEvent message);
+
+        Task HandleMarketParticipantCreatedIntegrationEventAsync(
+            ActorCreatedIntegrationEvent actorCreatedIntegrationEvent);
     }
 }
