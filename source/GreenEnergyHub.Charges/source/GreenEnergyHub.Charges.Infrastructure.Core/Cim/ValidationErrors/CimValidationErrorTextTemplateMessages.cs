@@ -207,7 +207,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.MonthlyPriceSeriesEndDateMustBeFirstOfMonth)]
         public const string MonthlyPriceSeriesEndDateMustBeFirstOfMonthErrorText =
-            "The monthly price series' END date time must be 1st of month, unless it matches the Charge's STOP date. for charge type {{ChargeType}} with charge ID {{DocumentSenderProvidedChargeId}} owned by {{ChargeOwner}}.";
+            "The monthly price series with transaction ID {{ChargeOperationId}} for charge ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} owned by {{ChargeOwner}} has an end time interval that does not match the first of a month or the charge's stop date";
 
         public const string Unknown = "unknown";
     }
