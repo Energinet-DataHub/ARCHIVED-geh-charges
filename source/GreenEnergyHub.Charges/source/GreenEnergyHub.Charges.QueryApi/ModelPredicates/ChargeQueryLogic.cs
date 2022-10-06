@@ -15,9 +15,10 @@
 using System;
 using System.Linq;
 using Energinet.Charges.Contracts.Charge;
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.QueryApi.Model;
 
-namespace GreenEnergyHub.Charges.WebApi.ModelPredicates;
+namespace GreenEnergyHub.Charges.QueryApi.ModelPredicates;
 
 public static class ChargeQueryLogic
 {
@@ -55,7 +56,12 @@ public static class ChargeQueryLogic
              c.ChargePeriods
                  .OrderBy(cp => cp.StartDateTime)
                  .First()).StartDateTime,
-            c.ChargePeriods.OrderByDescending(cp => cp.EndDateTime).First().EndDateTime));
+            GetValidToDate(c.ChargePeriods.OrderByDescending(cp => cp.EndDateTime).First().EndDateTime)));
+    }
+
+    private static DateTime? GetValidToDate(DateTime validToDate)
+    {
+        return validToDate == InstantExtensions.GetEndDefault().ToDateTimeUtc() ? null : validToDate;
     }
 #pragma warning restore SA1118
 
