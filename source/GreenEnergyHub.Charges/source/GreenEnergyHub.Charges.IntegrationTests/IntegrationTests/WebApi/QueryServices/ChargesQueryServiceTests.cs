@@ -143,6 +143,35 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
         }
 
         [Fact]
+        public async Task SearchAsync_WhenChargeTypeIsNull_ReturnsAllChargeTypes()
+        {
+            // Arrange
+            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
+            await GetOrAddMarketParticipantAsync(chargesDatabaseWriteContext);
+
+            var charge = GetValidCharge();
+
+            chargesDatabaseWriteContext.Charges.Add(charge);
+            await chargesDatabaseWriteContext.SaveChangesAsync();
+
+            await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
+            var expected = GetActiveCharges(chargesDatabaseQueryContext).Count();
+
+            var searchCriteria = new SearchCriteriaDtoBuilder()
+                .WithChargeTypes(null!)
+                .Build();
+
+            var sut = GetSut(chargesDatabaseQueryContext);
+
+            // Act
+            var actual = await sut.SearchAsync(searchCriteria);
+
+            // Assert
+            actual.Count.Should().Be(expected);
+            actual.Count.Should().NotBe(0);
+        }
+
+        [Fact]
         public async Task SearchAsync_WhenSearchingByMultipleChargeTypes_ReturnsChargesWithChargeTypes()
         {
             // Arrange
