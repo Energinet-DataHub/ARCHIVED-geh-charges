@@ -1,5 +1,11 @@
 # Energinet.DataHub.Charges.Clients Release notes
 
+## Version 4.0.0
+
+Changed search criteria name.
+Changed valid from date time offset to allow null in search criteria.
+Changed owner id to a list of owner ids in search criteria.
+
 ## Version 3.0.17
 
 Added Search to Charges client
