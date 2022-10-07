@@ -47,7 +47,7 @@ public static class ChargeQueryLogic
                  .OrderBy(cp => cp.StartDateTime)
                  .First()).Description,
             c.Owner.MarketParticipantId,
-            "<Aktørnavn XYZ>", // Hardcoded as we currently don't have the ChargeOwnerName data
+            c.Owner.Name,
             MapVatClassification((Domain.Charges.VatClassification)(c.ChargePeriods
                                       .Where(cp => cp.StartDateTime <= todayAtMidnightUtc)
                                       .OrderByDescending(cp => cp.StartDateTime)
