@@ -85,8 +85,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
             actual.ChargeType.Should().Be(ChargeType.D03);
             actual.Resolution.Should().Be(Resolution.PT1H);
             actual.ChargeName.Should().Be("Elafgift");
+            actual.ChargeDescription.Should().Be("Elafgiften");
             actual.ChargeOwner.Should().Be("5790000432752");
             actual.ChargeOwnerName.Should().Be("<Aktørnavn XYZ>");
+            actual.VatClassification.Should().Be(VatClassification.Vat25);
             actual.TaxIndicator.Should().BeTrue();
             actual.TransparentInvoicing.Should().BeTrue();
             actual.ValidFromDateTime.Should().Be(new DateTime(2014, 12, 31, 23, 00, 00));

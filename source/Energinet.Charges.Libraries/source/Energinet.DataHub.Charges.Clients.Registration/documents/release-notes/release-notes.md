@@ -1,5 +1,9 @@
 # Energinet.DataHub.Charges.Clients.Registrations Release notes
 
+## Version 4.0.1
+
+Added VatClassification and ChargeName to ChargesV1Dto
+
 ## Version 4.0.0
 
 Changed search criteria name.

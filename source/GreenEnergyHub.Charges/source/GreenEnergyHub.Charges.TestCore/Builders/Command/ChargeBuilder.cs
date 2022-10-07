@@ -120,7 +120,7 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Command
                 _type,
                 _resolution,
                 _taxIndicator,
-                VatClassification.Unknown,
+                VatClassification.Vat25,
                 true,
                 _startDate);
 

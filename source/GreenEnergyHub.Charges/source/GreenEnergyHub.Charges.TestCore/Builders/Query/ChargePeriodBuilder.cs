@@ -24,6 +24,7 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Query
         private DateTime _endDateTime = InstantExtensions.GetEndDefault().ToDateTimeUtc();
         private string _name = "Charge name";
         private bool _transparentInvoicing;
+        private GreenEnergyHub.Charges.Domain.Charges.VatClassification _vatClassification = 0;
 
         public ChargePeriodBuilder WithStartDateTime(DateTime startDateTime)
         {
@@ -49,6 +50,13 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Query
             return this;
         }
 
+        public ChargePeriodBuilder WithVatClassification(
+            GreenEnergyHub.Charges.Domain.Charges.VatClassification vatClassification)
+        {
+            _vatClassification = vatClassification;
+            return this;
+        }
+
         public ChargePeriod Build(Charge charge)
         {
             return new ChargePeriod
@@ -59,7 +67,7 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Query
                 TransparentInvoicing = _transparentInvoicing,
                 Description = "Charge description",
                 Name = _name,
-                VatClassification = 0,
+                VatClassification = (int)_vatClassification,
                 StartDateTime = _startDateTime,
                 EndDateTime = _endDateTime,
             };
