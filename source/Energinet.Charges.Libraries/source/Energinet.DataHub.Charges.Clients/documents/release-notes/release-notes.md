@@ -2,8 +2,8 @@
 
 ## Version 4.0.0
 
-Changed search criteria dto name.
-Changed date time offset to be nullable.
+Changed search criteria name.
+Changed valid from date time offset to allow null.
 
 ## Version 3.0.17
 
