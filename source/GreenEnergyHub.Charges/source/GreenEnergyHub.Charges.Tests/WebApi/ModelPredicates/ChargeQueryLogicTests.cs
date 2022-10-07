@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
                 charge.SenderProvidedChargeId,
                 charge.ChargePeriods.Single().Name,
                 charge.Owner.MarketParticipantId,
-                "<Aktørnavn XYZ>",
+                charge.Owner.Name,
                 charge.TaxIndicator,
                 charge.ChargePeriods.Single().TransparentInvoicing,
                 charge.ChargePeriods.Single().StartDateTime,
