@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
                 chargeLink.Charge.SenderProvidedChargeId,
                 chargeLink.Charge.ChargePeriods.Single().Name,
                 chargeLink.Charge.Owner.MarketParticipantId,
-                "<Aktørnavn XYZ>",
+                chargeLink.Charge.Owner.Name,
                 chargeLink.Charge.TaxIndicator,
                 chargeLink.Charge.ChargePeriods.Single().TransparentInvoicing,
                 chargeLink.Factor,
