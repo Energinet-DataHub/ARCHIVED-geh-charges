@@ -2,7 +2,8 @@
 
 ## Version 4.0.0
 
-Bumped due to Clients package change
+Changed search criteria name.
+Changed valid from date time offset to allow null.
 
 ## Version 3.0.17
 
