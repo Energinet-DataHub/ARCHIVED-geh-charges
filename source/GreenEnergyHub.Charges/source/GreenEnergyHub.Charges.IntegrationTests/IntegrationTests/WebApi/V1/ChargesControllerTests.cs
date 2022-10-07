@@ -121,7 +121,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
             // Arrange
             var sut = CreateHttpClient(factory);
             var searchCriteria = searchCriteriaDtoBuilder
-                .WithMarketParticipantId(Guid.Empty)
+                .WithOwnerId(Guid.Empty)
                 .Build();
 
             // Act

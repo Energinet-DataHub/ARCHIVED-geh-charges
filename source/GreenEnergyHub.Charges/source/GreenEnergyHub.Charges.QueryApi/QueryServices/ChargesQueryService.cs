@@ -32,7 +32,7 @@ public class ChargesQueryService : IChargesQueryService
         _data = data;
     }
 
-    public async Task<IList<ChargeV1Dto>> SearchAsync(SearchCriteriaDto searchCriteria)
+    public async Task<IList<ChargeV1Dto>> SearchAsync(SearchCriteriaV1Dto searchCriteria)
     {
         var charges = _data.Charges;
         var todayAtMidnightUtc = DateTime.Now.Date.ToUniversalTime();
@@ -42,10 +42,10 @@ public class ChargesQueryService : IChargesQueryService
         if (!string.IsNullOrWhiteSpace(searchCriteria.ChargeIdOrName))
             charges = SearchByChargeIdOrName(searchCriteria, charges, todayAtMidnightUtc);
 
-        if (searchCriteria.OwnerId.HasValue)
-            charges = SearchByOwnerId(searchCriteria.OwnerId, charges);
+        if (searchCriteria.OwnerIds != null && searchCriteria.OwnerIds.Any())
+            charges = SearchByOwnerId(searchCriteria.OwnerIds, charges);
 
-        if (searchCriteria.ChargeTypes.Any())
+        if (searchCriteria.ChargeTypes != null && searchCriteria.ChargeTypes.Any())
             charges = SearchByChargeTypes(searchCriteria.ChargeTypes, charges);
 
         return await charges
@@ -55,7 +55,7 @@ public class ChargesQueryService : IChargesQueryService
     }
 
     private static IQueryable<Charge> SearchByChargeIdOrName(
-        SearchCriteriaDto searchCriteria, IQueryable<Charge> charges, DateTime todayAtMidnightUtc)
+        SearchCriteriaV1Dto searchCriteria, IQueryable<Charge> charges, DateTime todayAtMidnightUtc)
     {
         charges = charges
             .Where(c => c.SenderProvidedChargeId.Contains(searchCriteria.ChargeIdOrName)
@@ -66,9 +66,9 @@ public class ChargesQueryService : IChargesQueryService
         return charges;
     }
 
-    private static IQueryable<Charge> SearchByOwnerId(Guid? ownerId, IQueryable<Charge> charges)
+    private static IQueryable<Charge> SearchByOwnerId(List<Guid> ownerIds, IQueryable<Charge> charges)
     {
-        return charges.Where(c => c.OwnerId == ownerId);
+        return charges.Where(c => ownerIds.Contains(c.OwnerId));
     }
 
     private static IQueryable<Charge> SearchByChargeTypes(ICollection<ChargeType> chargeTypes, IQueryable<Charge> charges)
