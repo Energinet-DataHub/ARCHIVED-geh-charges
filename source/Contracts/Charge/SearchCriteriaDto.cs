@@ -13,19 +13,13 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 
 // ReSharper disable once CheckNamespace - Type is shared so namespace is not determined by project structure/namespace
 namespace Energinet.Charges.Contracts.Charge
 {
-    public record ChargeV1Dto(
-        ChargeType ChargeType,
-        Resolution Resolution,
-        string ChargeId,
-        string ChargeName,
-        string ChargeOwner,
-        string ChargeOwnerName,
-        bool TaxIndicator,
-        bool TransparentInvoicing,
-        DateTime ValidFromDateTime,
-        DateTime ValidToDateTime);
+    public record SearchCriteriaDto(
+        string ChargeIdOrName,
+        Guid? OwnerId,
+        List<ChargeType> ChargeTypes);
 }
