@@ -1,5 +1,9 @@
 # Energinet.DataHub.Charges.Clients.Registrations Release notes
 
+## Version 4.0.0
+
+Bumped due to Clients package change
+
 ## Version 3.0.17
 
 Added Search to Charges client

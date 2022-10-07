@@ -1,5 +1,10 @@
 # Energinet.DataHub.Charges.Clients Release notes
 
+## Version 4.0.0
+
+Changed search criteria dto name.
+Changed date time offset to be nullable.
+
 ## Version 3.0.17
 
 Added Search to Charges client
