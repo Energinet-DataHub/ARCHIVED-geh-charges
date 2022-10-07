@@ -20,6 +20,6 @@ namespace Energinet.Charges.Contracts.Charge
 {
     public record SearchCriteriaV1Dto(
         string ChargeIdOrName,
-        Guid? OwnerId,
+        List<Guid> OwnerIds,
         List<ChargeType> ChargeTypes);
 }

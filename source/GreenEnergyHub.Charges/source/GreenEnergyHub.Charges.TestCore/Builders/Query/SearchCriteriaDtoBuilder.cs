@@ -21,7 +21,7 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Query
     public class SearchCriteriaDtoBuilder
     {
         private string _chargeIdOrName = string.Empty;
-        private Guid? _marketParticipantId = null;
+        private List<Guid> _ownerIds = new List<Guid>();
         private List<ChargeType> _chargeTypes = new List<ChargeType>();
 
         public SearchCriteriaDtoBuilder WithChargeIdOrName(string chargeIdOrName)
@@ -30,9 +30,15 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Query
             return this;
         }
 
-        public SearchCriteriaDtoBuilder WithMarketParticipantId(Guid marketParticipantId)
+        public SearchCriteriaDtoBuilder WithOwnerId(Guid ownerId)
         {
-            _marketParticipantId = marketParticipantId;
+            _ownerIds.Add(ownerId);
+            return this;
+        }
+
+        public SearchCriteriaDtoBuilder WithOwnerIds(List<Guid> ownerIds)
+        {
+            _ownerIds = ownerIds;
             return this;
         }
 
@@ -50,7 +56,7 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Query
 
         public SearchCriteriaV1Dto Build()
         {
-            return new SearchCriteriaV1Dto(_chargeIdOrName, _marketParticipantId, _chargeTypes);
+            return new SearchCriteriaV1Dto(_chargeIdOrName, _ownerIds, _chargeTypes);
         }
     }
 }

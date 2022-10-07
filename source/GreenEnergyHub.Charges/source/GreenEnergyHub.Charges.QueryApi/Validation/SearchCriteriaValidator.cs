@@ -28,7 +28,7 @@ public static class SearchCriteriaValidator
     /// <returns>bool</returns>
     public static bool Validate(SearchCriteriaV1Dto searchCriteriaV1Dto)
     {
-        if (!IsOwnerIdValid(searchCriteriaV1Dto))
+        if (!IsOwnerIdsValid(searchCriteriaV1Dto.OwnerIds))
             return false;
 
         if (!IsChargeTypesValid(searchCriteriaV1Dto.ChargeTypes))
@@ -50,8 +50,10 @@ public static class SearchCriteriaValidator
         return true;
     }
 
-    private static bool IsOwnerIdValid(SearchCriteriaV1Dto searchCriteriaV1Dto)
+    private static bool IsOwnerIdsValid(List<Guid> ownerIds)
     {
-        return searchCriteriaV1Dto.OwnerId != Guid.Empty;
+        if (ownerIds == null || !ownerIds.Any()) return true;
+
+        return ownerIds.All(id => id != Guid.Empty);
     }
 }

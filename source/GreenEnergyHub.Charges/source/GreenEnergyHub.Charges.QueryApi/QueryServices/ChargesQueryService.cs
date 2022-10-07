@@ -42,8 +42,8 @@ public class ChargesQueryService : IChargesQueryService
         if (!string.IsNullOrWhiteSpace(searchCriteria.ChargeIdOrName))
             charges = SearchByChargeIdOrName(searchCriteria, charges, todayAtMidnightUtc);
 
-        if (searchCriteria.OwnerId.HasValue)
-            charges = SearchByOwnerId(searchCriteria.OwnerId, charges);
+        if (searchCriteria.OwnerIds != null && searchCriteria.OwnerIds.Any())
+            charges = SearchByOwnerId(searchCriteria.OwnerIds, charges);
 
         if (searchCriteria.ChargeTypes != null && searchCriteria.ChargeTypes.Any())
             charges = SearchByChargeTypes(searchCriteria.ChargeTypes, charges);
@@ -66,9 +66,9 @@ public class ChargesQueryService : IChargesQueryService
         return charges;
     }
 
-    private static IQueryable<Charge> SearchByOwnerId(Guid? ownerId, IQueryable<Charge> charges)
+    private static IQueryable<Charge> SearchByOwnerId(List<Guid> ownerIds, IQueryable<Charge> charges)
     {
-        return charges.Where(c => c.OwnerId == ownerId);
+        return charges.Where(c => ownerIds.Contains(c.OwnerId));
     }
 
     private static IQueryable<Charge> SearchByChargeTypes(ICollection<ChargeType> chargeTypes, IQueryable<Charge> charges)
