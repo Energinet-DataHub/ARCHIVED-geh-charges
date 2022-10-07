@@ -12,10 +12,12 @@ ChargeLinkCreated
 ChargeLinkId
 ChargeLinkPeriod
 ChargeLinkUpdated
+ChargeName
 ChargeOwner
 ChargePeriod
 ChargePeriodUpdated
 ChargePricesUpdated
+ChargesV
 ChargeType
 cim
 CIM
@@ -28,6 +30,7 @@ deserialize
 dk
 DDZ
 DTO
+Dto
 ebIX
 eg
 EIC
@@ -79,5 +82,6 @@ TSO
 UpdatedPeriodEndDateTime
 UpdatedPeriodStartDateTime
 UUID
+VatClassification
 VR
 TestCommon
