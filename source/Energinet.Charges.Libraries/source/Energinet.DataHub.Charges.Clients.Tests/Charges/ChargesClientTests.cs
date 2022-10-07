@@ -150,7 +150,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
         [InlineAutoDomainData]
         public async Task SearchChargesAsync_WhenResponseIsNotFound_ReturnsEmptyList(
             Mock<IChargesClientFactory> chargesClientFactory,
-            SearchCriteriaDto searchCriteria)
+            SearchCriteriaV1Dto searchCriteria)
         {
             // Arrange
             var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.NotFound, string.Empty);
@@ -171,7 +171,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
         [InlineAutoDomainData]
         public async Task SearchChargesAsync_WhenSuccess_ReturnsCharges(
             Mock<IChargesClientFactory> chargesClientFactory,
-            SearchCriteriaDto searchCriteria,
+            SearchCriteriaV1Dto searchCriteria,
             ChargeV1Dto chargeDto)
         {
             // Arrange

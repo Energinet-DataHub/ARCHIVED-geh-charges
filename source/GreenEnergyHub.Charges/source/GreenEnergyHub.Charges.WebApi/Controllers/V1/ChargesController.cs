@@ -60,7 +60,7 @@ public class ChargesController : ControllerBase
     /// <returns>Charges data or "400 Bad request"</returns>
     [HttpPost("SearchAsync")]
     [MapToApiVersion(Version1)]
-    public async Task<IActionResult> SearchAsync(SearchCriteriaDto searchCriteria)
+    public async Task<IActionResult> SearchAsync(SearchCriteriaV1Dto searchCriteria)
     {
         var isValid = SearchCriteriaValidator.Validate(searchCriteria);
         if (!isValid)
