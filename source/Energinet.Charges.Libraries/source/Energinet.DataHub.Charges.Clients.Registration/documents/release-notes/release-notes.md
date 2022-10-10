@@ -2,7 +2,7 @@
 
 ## Version 4.0.2
 
-Added GetMarketParticipant to Charges client.
+Added GetMarketParticipants to Charges client.
 
 ## Version 4.0.1
 
