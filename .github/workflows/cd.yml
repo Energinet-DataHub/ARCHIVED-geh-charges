@@ -35,7 +35,7 @@ jobs:
       ENVIRONMENT_REPOSITORY_PATH: ${{ secrets.ENVIRONMENT_REPOSITORY_PATH }}
 
   update_coverage_report:
-    uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci.yml@v8
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci.yml@poc
     with:
       SOLUTION_FILE_PATH: 'source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln'
       USE_AZURE_FUNCTIONS_TOOLS: true
