@@ -48,5 +48,10 @@ namespace Energinet.DataHub.Charges.Clients.Charges
         {
             return new Uri("v1/Charges/SearchAsync", UriKind.Relative);
         }
+
+        public static Uri GetMarketParticipants()
+        {
+            return new Uri("v1/MarketParticipants/GetAsync", UriKind.Relative);
+        }
     }
 }

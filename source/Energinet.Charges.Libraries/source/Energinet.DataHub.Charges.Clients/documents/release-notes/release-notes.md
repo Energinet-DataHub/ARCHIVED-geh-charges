@@ -1,5 +1,9 @@
 # Energinet.DataHub.Charges.Clients Release notes
 
+## Version 4.0.1
+
+Added GetMarketParticipants to Charges client.
+
 ## Version 4.0.0
 
 Changed search criteria name.

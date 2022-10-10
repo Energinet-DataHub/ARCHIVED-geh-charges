@@ -156,6 +156,9 @@ https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.Char
     <Compile Include="..\..\..\Contracts\Charge\SearchCriteriaV1Dto.cs">
       <Link>Charges\Model\SearchCriteriaV1Dto.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\Contracts\MarketParticipant\MarketParticipantV1Dto.cs">
+      <Link>Charges\Model\MarketParticipantV1Dto.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\Contracts\ErrorCode.cs">
       <Link>DefaultChargeLink\ErrorCode.cs</Link>
     </Compile>
