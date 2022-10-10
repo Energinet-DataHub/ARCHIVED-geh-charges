@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.QueryApi.ModelPredicates
                          .OrderBy(cp => cp.StartDateTime)
                          .First()).Name,
                     cl.Charge.Owner.MarketParticipantId,
-                    "<Aktørnavn XYZ>", // Hardcoded as we currently don't have the ChargeOwnerName data
+                    cl.Charge.Owner.Name,
                     cl.Charge.TaxIndicator,
                     (cl.Charge.ChargePeriods
                         .Where(cp => cp.StartDateTime <= todayAtMidnightUtc)
