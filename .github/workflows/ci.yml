@@ -38,6 +38,7 @@ jobs:
       TESTS_DLL_FILE_PATH: '\tests\source\GreenEnergyHub.Charges\source\GreenEnergyHub.Charges.Tests\bin\Release\net6.0\GreenEnergyHub.Charges.Tests.dll'
       DOWNLOAD_ATTEMPT_LIMIT: 12
       USE_AZURE_FUNCTIONS_TOOLS: false
+      ENVIRONMENT: AzureAuth
     secrets:
       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
       AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
@@ -54,6 +55,7 @@ jobs:
       DOWNLOAD_ATTEMPT_LIMIT: 12
       USE_AZURE_FUNCTIONS_TOOLS: true
       CODE_COVERAGE_FLAGS: business
+      ENVIRONMENT: AzureAuth
     secrets:
       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
       AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
@@ -72,6 +74,7 @@ jobs:
       DOWNLOAD_ATTEMPT_LIMIT: 12
       USE_AZURE_FUNCTIONS_TOOLS: true
       CODE_COVERAGE_FLAGS: business
+      ENVIRONMENT: AzureAuth
     secrets:
       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
       AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
@@ -90,6 +93,7 @@ jobs:
       DOWNLOAD_ATTEMPT_LIMIT: 12
       USE_AZURE_FUNCTIONS_TOOLS: true
       CODE_COVERAGE_FLAGS: business
+      ENVIRONMENT: AzureAuth
     secrets:
       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
       AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
