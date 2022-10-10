@@ -89,19 +89,5 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
                     }
             }
         }
-
-        public async Task HandleMarketParticipantCreatedIntegrationEventAsync(ActorCreatedIntegrationEvent actorCreatedIntegrationEvent)
-        {
-            var marketParticipantUpdatedEvent =
-                MarketParticipantDomainEventMapper.MapFromActorCreatedIntegrationEvent(actorCreatedIntegrationEvent);
-
-            _logger.LogInformation(
-                "ActorUpdatedIntegrationEvent Id {id} has been mapped to Charges' internal " +
-                "MarketParticipantCreatedEvent for GLN {GLN}.",
-                actorCreatedIntegrationEvent.Id,
-                marketParticipantUpdatedEvent.MarketParticipantId);
-
-            await _marketParticipantPersister.PersistAsync(marketParticipantUpdatedEvent).ConfigureAwait(false);
-        }
     }
 }

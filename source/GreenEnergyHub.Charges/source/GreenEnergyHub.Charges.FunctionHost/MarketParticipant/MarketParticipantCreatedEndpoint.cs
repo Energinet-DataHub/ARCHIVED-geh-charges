@@ -26,16 +26,16 @@ namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
     {
         private const string FunctionName = nameof(MarketParticipantCreatedEndpoint);
         private readonly ISharedIntegrationEventParser _sharedIntegrationEventParser;
-        private readonly IMarketParticipantEventHandler _marketParticipantEventHandler;
+        private readonly IMarketParticipantCreatedHandler _marketParticipantCreatedHandler;
         private readonly ILogger _logger;
 
         public MarketParticipantCreatedEndpoint(
             ILoggerFactory loggerFactory,
             ISharedIntegrationEventParser sharedIntegrationEventParser,
-            IMarketParticipantEventHandler marketParticipantEventHandler)
+            IMarketParticipantCreatedHandler marketParticipantCreatedHandler)
         {
             _sharedIntegrationEventParser = sharedIntegrationEventParser;
-            _marketParticipantEventHandler = marketParticipantEventHandler;
+            _marketParticipantCreatedHandler = marketParticipantCreatedHandler;
             _logger = loggerFactory.CreateLogger(FunctionName);
         }
 
@@ -50,8 +50,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
 
             _logger.LogInformation("Received Market Participant Created integration event");
 
-            await _marketParticipantEventHandler.HandleMarketParticipantCreatedIntegrationEventAsync(messageEvent)
-                .ConfigureAwait(false);
+            await _marketParticipantCreatedHandler.HandleAsync(messageEvent).ConfigureAwait(false);
         }
     }
 }
