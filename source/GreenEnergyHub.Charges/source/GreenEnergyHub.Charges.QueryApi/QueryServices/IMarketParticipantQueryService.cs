@@ -18,7 +18,7 @@ using Energinet.Charges.Contracts.Charge;
 
 namespace GreenEnergyHub.Charges.QueryApi.QueryServices;
 
-public interface IChargesQueryService
+public interface IMarketParticipantQueryService
 {
-    Task<IList<ChargeV1Dto>> SearchAsync(SearchCriteriaV1Dto searchCriteria);
+    Task<IList<MarketParticipantV1Dto>> GetAsync();
 }

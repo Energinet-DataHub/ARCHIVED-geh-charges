@@ -86,7 +86,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
             actual.Resolution.Should().Be(Resolution.PT1H);
             actual.ChargeName.Should().Be("Elafgift");
             actual.ChargeOwner.Should().Be("5790000432752");
-            actual.ChargeOwnerName.Should().Be("<Aktørnavn XYZ>");
+            actual.ChargeOwnerName.Should().Be("System Operator");
             actual.TaxIndicator.Should().BeTrue();
             actual.TransparentInvoicing.Should().BeTrue();
             actual.ValidFromDateTime.Should().Be(new DateTime(2014, 12, 31, 23, 00, 00));
@@ -121,7 +121,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
             // Arrange
             var sut = CreateHttpClient(factory);
             var searchCriteria = searchCriteriaDtoBuilder
-                .WithMarketParticipantId(Guid.Empty)
+                .WithOwnerId(Guid.Empty)
                 .Build();
 
             // Act
@@ -157,7 +157,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
             actual.Resolution.Should().Be(Resolution.PT1H);
             actual.ChargeName.Should().Be("Elafgift");
             actual.ChargeOwner.Should().Be("5790000432752");
-            actual.ChargeOwnerName.Should().Be("<Aktørnavn XYZ>");
+            actual.ChargeOwnerName.Should().Be("System Operator");
             actual.TaxIndicator.Should().BeTrue();
             actual.TransparentInvoicing.Should().BeTrue();
             actual.ValidFromDateTime.Should().Be(new DateTime(2014, 12, 31, 23, 00, 00));

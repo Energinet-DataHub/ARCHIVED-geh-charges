@@ -15,10 +15,25 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Energinet.Charges.Contracts.Charge;
+using GreenEnergyHub.Charges.QueryApi.ModelPredicates;
+using Microsoft.EntityFrameworkCore;
 
 namespace GreenEnergyHub.Charges.QueryApi.QueryServices;
 
-public interface IChargesQueryService
+public class MarketParticipantQueryService : IMarketParticipantQueryService
 {
-    Task<IList<ChargeV1Dto>> SearchAsync(SearchCriteriaV1Dto searchCriteria);
+    private readonly IData _data;
+
+    public MarketParticipantQueryService(IData data)
+    {
+        _data = data;
+    }
+
+    public async Task<IList<MarketParticipantV1Dto>> GetAsync()
+    {
+        return await _data.MarketParticipants
+            .AsMarketParticipantV1Dto()
+            .ToListAsync()
+            .ConfigureAwait(false);
+    }
 }

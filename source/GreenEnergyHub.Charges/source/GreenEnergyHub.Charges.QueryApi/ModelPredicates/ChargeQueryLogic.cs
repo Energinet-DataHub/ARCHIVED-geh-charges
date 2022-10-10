@@ -40,7 +40,7 @@ public static class ChargeQueryLogic
                  .OrderBy(cp => cp.StartDateTime)
                  .First()).Name,
             c.Owner.MarketParticipantId,
-            "<Aktørnavn XYZ>", // Hardcoded as we currently don't have the ChargeOwnerName data
+            c.Owner.Name,
             c.TaxIndicator,
             (c.ChargePeriods
                  .Where(cp => cp.StartDateTime <= todayAtMidnightUtc)

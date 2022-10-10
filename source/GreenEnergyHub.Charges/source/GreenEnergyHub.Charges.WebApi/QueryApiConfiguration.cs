@@ -37,6 +37,7 @@ namespace GreenEnergyHub.Charges.WebApi
 
             serviceCollection.AddScoped<IData, Data>();
             serviceCollection.AddScoped<IChargesQueryService, ChargesQueryService>();
+            serviceCollection.AddScoped<IMarketParticipantQueryService, MarketParticipantQueryService>();
 
             return serviceCollection;
         }

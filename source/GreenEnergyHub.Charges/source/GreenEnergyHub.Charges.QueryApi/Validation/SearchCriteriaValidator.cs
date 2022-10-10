@@ -24,14 +24,14 @@ public static class SearchCriteriaValidator
     /// <summary>
     /// Validate if the search criteria are valid
     /// </summary>
-    /// <param name="searchCriteriaDto"></param>
+    /// <param name="searchCriteriaV1Dto"></param>
     /// <returns>bool</returns>
-    public static bool Validate(SearchCriteriaDto searchCriteriaDto)
+    public static bool Validate(SearchCriteriaV1Dto searchCriteriaV1Dto)
     {
-        if (!IsOwnerIdValid(searchCriteriaDto))
+        if (!IsOwnerIdsValid(searchCriteriaV1Dto.OwnerIds))
             return false;
 
-        if (!IsChargeTypesValid(searchCriteriaDto.ChargeTypes))
+        if (!IsChargeTypesValid(searchCriteriaV1Dto.ChargeTypes))
             return false;
 
         return true;
@@ -39,7 +39,7 @@ public static class SearchCriteriaValidator
 
     private static bool IsChargeTypesValid(List<ChargeType> chargeTypes)
     {
-        if (!chargeTypes.Any()) return true;
+        if (chargeTypes == null || !chargeTypes.Any()) return true;
 
         foreach (var chargeType in chargeTypes)
         {
@@ -50,8 +50,10 @@ public static class SearchCriteriaValidator
         return true;
     }
 
-    private static bool IsOwnerIdValid(SearchCriteriaDto searchCriteriaDto)
+    private static bool IsOwnerIdsValid(List<Guid> ownerIds)
     {
-        return searchCriteriaDto.OwnerId != Guid.Empty;
+        if (ownerIds == null || !ownerIds.Any()) return true;
+
+        return ownerIds.All(id => id != Guid.Empty);
     }
 }

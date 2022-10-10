@@ -67,28 +67,37 @@ namespace Energinet.DataHub.Charges.Clients.Charges
                 .GetAsync(ChargesRelativeUris.GetCharges())
                 .ConfigureAwait(false);
 
-            if (!response.IsSuccessStatusCode)
-                return null;
-
-            var options = new JsonSerializerOptions(JsonSerializerDefaults.Web)
-            {
-                Converters = { new JsonStringEnumConverter() },
-            };
-
-            var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            return JsonSerializer.Deserialize<List<ChargeV1Dto>>(content, options);
+            return await HandleResultAsync<ChargeV1Dto>(response).ConfigureAwait(false);
         }
 
         /// <summary>
         /// Returns charges based on the search criteria.
         /// </summary>
         /// <returns>A collection of charges(Dtos)</returns>
-        public async Task<IList<ChargeV1Dto>> SearchChargesAsync(SearchCriteriaDto searchCriteria)
+        public async Task<IList<ChargeV1Dto>> SearchChargesAsync(SearchCriteriaV1Dto searchCriteria)
         {
             var response = await _httpClient
                 .PostAsJsonAsync(ChargesRelativeUris.SearchCharges(), searchCriteria)
                 .ConfigureAwait(false);
 
+            return await HandleResultAsync<ChargeV1Dto>(response).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Gets all market participants
+        /// </summary>
+        /// <returns>A collection of market participant(Dtos)</returns>
+        public async Task<IList<MarketParticipantV1Dto>> GetMarketParticipantsAsync()
+        {
+            var response = await _httpClient
+                .GetAsync(ChargesRelativeUris.GetMarketParticipants())
+                .ConfigureAwait(false);
+
+            return await HandleResultAsync<MarketParticipantV1Dto>(response).ConfigureAwait(false);
+        }
+
+        private static async Task<IList<TModel>> HandleResultAsync<TModel>(HttpResponseMessage response)
+        {
             if (!response.IsSuccessStatusCode)
                 return null;
 
@@ -98,7 +107,7 @@ namespace Energinet.DataHub.Charges.Clients.Charges
             };
 
             var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            return JsonSerializer.Deserialize<List<ChargeV1Dto>>(content, options);
+            return JsonSerializer.Deserialize<List<TModel>>(content, options);
         }
     }
 }

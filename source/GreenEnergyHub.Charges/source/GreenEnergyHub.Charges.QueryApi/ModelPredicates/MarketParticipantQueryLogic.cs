@@ -12,13 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Linq;
 using Energinet.Charges.Contracts.Charge;
+using GreenEnergyHub.Charges.QueryApi.Model;
 
-namespace GreenEnergyHub.Charges.QueryApi.QueryServices;
+namespace GreenEnergyHub.Charges.QueryApi.ModelPredicates;
 
-public interface IChargesQueryService
+public static class MarketParticipantQueryLogic
 {
-    Task<IList<ChargeV1Dto>> SearchAsync(SearchCriteriaV1Dto searchCriteria);
+    public static IQueryable<MarketParticipantV1Dto> AsMarketParticipantV1Dto(this IQueryable<MarketParticipant> queryable)
+    {
+        return queryable.Select(m => new MarketParticipantV1Dto(m.Id, m.Name, m.MarketParticipantId));
+    }
 }
