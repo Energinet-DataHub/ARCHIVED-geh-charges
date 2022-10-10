@@ -39,6 +39,7 @@ FluentValidation
 FxCopAnalyzers
 geh
 github
+GetMarketParticipants
 GLN
 GreenEnergyHub
 IaC
