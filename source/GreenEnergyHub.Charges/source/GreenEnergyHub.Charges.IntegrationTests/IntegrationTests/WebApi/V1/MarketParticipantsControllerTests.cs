@@ -82,7 +82,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
             marketParticipantsList.Should().HaveCountGreaterThan(0);
             var actual = marketParticipantsList!.Single(x => x.Id == Guid.Parse("75ED087C-5A15-4D30-8711-FCD509A8D559"));
             actual.MarketParticipantId.Should().Be("8100000000016");
-            actual.Name.Should().Be("name");
+            actual.Name.Should().Be("Pending charge owner name");
         }
 
         private static JsonSerializerOptions GetJsonSerializerOptions()
