@@ -21,16 +21,13 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
     public class MarketParticipantCreatedHandler : IMarketParticipantCreatedHandler
     {
         private readonly IMarketParticipantPersister _marketParticipantPersister;
-        private readonly IGridAreaLinkPersister _gridAreaLinkPersister;
         private readonly ILogger _logger;
 
         public MarketParticipantCreatedHandler(
             IMarketParticipantPersister marketParticipantPersister,
-            IGridAreaLinkPersister gridAreaLinkPersister,
             ILoggerFactory loggerFactory)
         {
             _marketParticipantPersister = marketParticipantPersister;
-            _gridAreaLinkPersister = gridAreaLinkPersister;
             _logger = loggerFactory.CreateLogger(nameof(MarketParticipantEventHandler));
         }
 
