@@ -57,6 +57,7 @@ nuget
 NuGet
 nvm
 NVM
+OIDC
 POCO
 PostDeploy
 PreDeploy
