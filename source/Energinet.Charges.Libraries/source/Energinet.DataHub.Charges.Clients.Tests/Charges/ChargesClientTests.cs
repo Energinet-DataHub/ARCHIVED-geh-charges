@@ -201,12 +201,65 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
                 ItExpr.IsAny<CancellationToken>());
         }
 
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task GetMarketParticipantsAsync_WhenSuccess_ReturnsMarketParticipants(
+            MarketParticipantV1Dto marketParticipantDto,
+            Mock<IChargesClientFactory> chargesClientFactory)
+        {
+            // Arrange
+            var responseContent = CreateValidResponseContent(marketParticipantDto);
+            var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.OK, responseContent);
+            var httpClient = CreateHttpClient(mockHttpMessageHandler);
+            chargesClientFactory.Setup(x => x.CreateClient(httpClient))
+                .Returns(new ChargesClient(httpClient));
+
+            var sut = chargesClientFactory.Object.CreateClient(httpClient);
+
+            var expectedUri = new Uri($"{BaseUrl}{ChargesRelativeUris.GetMarketParticipants()}");
+
+            // Act
+            var result = await sut.GetMarketParticipantsAsync().ConfigureAwait(false);
+
+            // Assert
+            result.Should().NotBeNull();
+            result[0].Id.Should().Be(marketParticipantDto.Id);
+            result[0].MarketParticipantId.Should().Be(marketParticipantDto.MarketParticipantId);
+            result[0].Name.Should().Be(marketParticipantDto.Name);
+
+            mockHttpMessageHandler.Protected().Verify(
+                "SendAsync",
+                Times.Exactly(1),
+                ItExpr.Is<HttpRequestMessage>(req => req.Method == HttpMethod.Get && req.RequestUri == expectedUri),
+                ItExpr.IsAny<CancellationToken>());
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task GetMarketParticipantsAsync_WhenResponseIsNotFound_ReturnsNull(
+            Mock<IChargesClientFactory> chargesClientFactory)
+        {
+            // Arrange
+            var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.NotFound, string.Empty);
+            var httpClient = CreateHttpClient(mockHttpMessageHandler);
+            chargesClientFactory.Setup(x => x.CreateClient(httpClient))
+                .Returns(new ChargesClient(httpClient));
+
+            var sut = chargesClientFactory.Object.CreateClient(httpClient);
+
+            // Act
+            var result = await sut.GetMarketParticipantsAsync().ConfigureAwait(false);
+
+            // Assert
+            result.Should().BeNull();
+        }
+
         private static string CreateValidResponseContent<TModel>(TModel responseDto)
         {
-            var chargeLinks = new List<TModel> { responseDto };
+            var responseDtos = new List<TModel> { responseDto };
             var options = new JsonSerializerOptions(JsonSerializerDefaults.Web) { Converters = { new JsonStringEnumConverter() } };
 
-            var responseContent = JsonSerializer.Serialize<IList<TModel>>(chargeLinks, options);
+            var responseContent = JsonSerializer.Serialize<IList<TModel>>(responseDtos, options);
             return responseContent;
         }
 
