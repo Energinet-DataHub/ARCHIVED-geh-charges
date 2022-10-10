@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
 
             var expected = new MarketParticipantV1Dto(
                 marketParticipant.Id,
-                "name",
+                marketParticipant.Name,
                 marketParticipant.MarketParticipantId);
 
             // Act

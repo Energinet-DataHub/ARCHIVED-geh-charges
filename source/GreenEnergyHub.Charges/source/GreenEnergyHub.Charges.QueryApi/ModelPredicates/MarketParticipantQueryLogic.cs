@@ -22,6 +22,6 @@ public static class MarketParticipantQueryLogic
 {
     public static IQueryable<MarketParticipantV1Dto> AsMarketParticipantV1Dto(this IQueryable<MarketParticipant> queryable)
     {
-        return queryable.Select(m => new MarketParticipantV1Dto(m.Id, "name", m.MarketParticipantId));
+        return queryable.Select(m => new MarketParticipantV1Dto(m.Id, m.Name, m.MarketParticipantId));
     }
 }
