@@ -47,6 +47,8 @@ public class MarketParticipant
     [Column("B2CActorId")]
     public Guid? B2cactorId { get; set; }
 
+    public string Name { get; set; }
+
     [InverseProperty("Owner")]
     public virtual ICollection<Charge> Charges { get; set; }
 

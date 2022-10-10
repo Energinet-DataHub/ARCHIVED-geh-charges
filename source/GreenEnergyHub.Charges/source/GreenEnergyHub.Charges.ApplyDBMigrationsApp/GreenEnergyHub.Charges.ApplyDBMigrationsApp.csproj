@@ -52,6 +52,7 @@ limitations under the License.
       <EmbeddedResource Include="Scripts\Model\202209061426 Create AvailableChargePriceData table.sql" />
       <EmbeddedResource Include="Scripts\Model\202209271553 Change Market Participant type to support all states.sql" />
       <EmbeddedResource Include="Scripts\Model\202209141409 Remove AvailableChargeDataPoints table.sql" />
+      <EmbeddedResource Include="Scripts\Model\202210071101 Add Name column to Market Participant table.sql" />
       <EmbeddedResource Include="Scripts\Seed\202201261740 Add default charges owner.sql" />
       <EmbeddedResource Include="Scripts\Seed\202201261741 Add default charges.sql" />
       <EmbeddedResource Include="Scripts\Seed\202201261742 Add default charge links.sql" />
@@ -63,6 +64,7 @@ limitations under the License.
       <EmbeddedResource Include="Scripts\Test\202206030818 Add test data to gridarealinks.sql" />
       <EmbeddedResource Include="Scripts\Model\202207151427 Increase OriginalOperationId length.sql" />
       <EmbeddedResource Include="Scripts\Model\202209141117 Remove EndDateTime from AvailableChargePriceData.sql" />
+      <EmbeddedResource Include="Scripts\Test\202210071310 Update market participant name.sql" />
     </ItemGroup>
 
 </Project>

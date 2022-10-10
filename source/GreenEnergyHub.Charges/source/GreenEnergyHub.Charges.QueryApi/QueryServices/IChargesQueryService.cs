@@ -20,5 +20,5 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices;
 
 public interface IChargesQueryService
 {
-    Task<IList<ChargeV1Dto>> SearchAsync(SearchCriteriaDto searchCriteria);
+    Task<IList<ChargeV1Dto>> SearchAsync(SearchCriteriaV1Dto searchCriteria);
 }
