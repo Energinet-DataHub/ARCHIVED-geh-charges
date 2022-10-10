@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task GetAsync_WhenChargesExists_ReturnOkAndCorrectContentType(WebApiFactory factory)
+        public async Task GetAsync_WhenRequested_ReturnOkAndCorrectContentType(WebApiFactory factory)
         {
             // Arrange
             var sut = CreateHttpClient(factory);
