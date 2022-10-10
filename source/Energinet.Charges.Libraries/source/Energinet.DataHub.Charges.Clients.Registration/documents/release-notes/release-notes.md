@@ -4,6 +4,10 @@
 
 Added VatClassification and ChargeName to ChargesV1Dto
 
+## Version 4.0.1
+
+Use OIDC for authentication
+
 ## Version 4.0.0
 
 Changed search criteria name.
