@@ -80,7 +80,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
 
             // Assert
             sut.ValidationRuleIdentifier.Should()
-                .Be(ValidationRuleIdentifier.MonthlyPriceSeriesEndDateMustBeFirstOfMonth);
+                .Be(ValidationRuleIdentifier.MonthlyPriceSeriesEndDateMustBeFirstOfMonthOrEqualChargeStopDate);
         }
 
         private static Instant GetInstantFromMonthAndDay(int priceEndDayDateTime, int priceEndMonthDateTime)

@@ -40,6 +40,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.Busi
             _zonedPriceEndDate.Day is 1;
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
-            ValidationRuleIdentifier.MonthlyPriceSeriesEndDateMustBeFirstOfMonth;
+            ValidationRuleIdentifier.MonthlyPriceSeriesEndDateMustBeFirstOfMonthOrEqualChargeStopDate;
     }
 }
