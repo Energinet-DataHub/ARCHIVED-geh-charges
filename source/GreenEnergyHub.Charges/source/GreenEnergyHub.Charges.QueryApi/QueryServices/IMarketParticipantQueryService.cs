@@ -20,5 +20,5 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices;
 
 public interface IMarketParticipantQueryService
 {
-    Task<List<MarketParticipantV1Dto>> GetAsync();
+    Task<IList<MarketParticipantV1Dto>> GetAsync();
 }

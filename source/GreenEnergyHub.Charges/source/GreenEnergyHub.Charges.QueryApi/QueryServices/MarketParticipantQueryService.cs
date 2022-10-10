@@ -29,7 +29,7 @@ public class MarketParticipantQueryService : IMarketParticipantQueryService
         _data = data;
     }
 
-    public async Task<List<MarketParticipantV1Dto>> GetAsync()
+    public async Task<IList<MarketParticipantV1Dto>> GetAsync()
     {
         return await _data.MarketParticipants
             .AsMarketParticipantV1Dto()
