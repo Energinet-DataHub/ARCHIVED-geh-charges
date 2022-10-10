@@ -1,5 +1,9 @@
 # Energinet.DataHub.Charges.Clients.Registrations Release notes
 
+## Version 4.0.1
+
+Use OIDC for authentication
+
 ## Version 4.0.0
 
 Changed search criteria name.
