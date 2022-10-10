@@ -26,7 +26,9 @@
 $connectionString = "Server=(localdb)\mssqllocaldb;Database=ChargesDatabase;Trusted_Connection=True;"
 $context = "QueryDbContext"
 $outputDir = "Model"
-$schema = "Charges"
+
+# Define all tables that should be included in scaffolding.
+$tables = "-t Charge -t ChargeLink -t ChargePeriod -t ChargePoint -t DefaultChargeLink -t MarketParticipant -t MeteringPoint -t GridAreaLink"
 
 # Update database model
 Invoke-Expression "dotnet build ..\GreenEnergyHub.Charges.ApplyDBMigrationsApp\GreenEnergyHub.Charges.ApplyDBMigrationsApp.csproj"
@@ -34,7 +36,7 @@ Invoke-Expression "dotnet run --project ..\\GreenEnergyHub.Charges.ApplyDBMigrat
 
 # Update scaffolded model
 # --data-annotations: In order to add keys annotation required by OData
-Invoke-Expression "dotnet ef dbcontext scaffold ""$connectionString"" Microsoft.EntityFrameworkCore.SqlServer --output-dir $outputDir --context $context --schema $schema --force --no-onconfiguring --data-annotations"
+Invoke-Expression "dotnet ef dbcontext scaffold ""$connectionString"" Microsoft.EntityFrameworkCore.SqlServer --output-dir $outputDir --context $context $tables --force --no-onconfiguring --data-annotations"
 
 # Apply .editorconfig styles and fix .editorconfig analyzer violations - e.g. add license header and add empty line between props
 Invoke-Expression "dotnet format -s -a --include .\Model\"

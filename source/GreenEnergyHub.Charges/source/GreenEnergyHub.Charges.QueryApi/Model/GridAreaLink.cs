@@ -18,31 +18,28 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-#nullable disable
+namespace GreenEnergyHub.Charges.QueryApi.Model;
 
-namespace GreenEnergyHub.Charges.QueryApi.Model
+[Table("GridAreaLink", Schema = "Charges")]
+[Index("Id", Name = "IX_GridAreaLinkId")]
+public class GridAreaLink
 {
-    [Table("GridAreaLink", Schema = "Charges")]
-    [Index(nameof(Id), Name = "IX_GridAreaLinkId")]
-    public partial class GridAreaLink
+    public GridAreaLink()
     {
-        public GridAreaLink()
-        {
-            MeteringPoints = new HashSet<MeteringPoint>();
-        }
-
-        [Key]
-        public Guid Id { get; set; }
-
-        public Guid GridAreaId { get; set; }
-
-        public Guid? OwnerId { get; set; }
-
-        [ForeignKey(nameof(OwnerId))]
-        [InverseProperty(nameof(MarketParticipant.GridAreaLinks))]
-        public virtual MarketParticipant GridAccessProvider { get; set; }
-
-        [InverseProperty(nameof(MeteringPoint.GridAreaLink))]
-        public virtual ICollection<MeteringPoint> MeteringPoints { get; set; }
+        MeteringPoints = new HashSet<MeteringPoint>();
     }
+
+    [Key]
+    public Guid Id { get; set; }
+
+    public Guid GridAreaId { get; set; }
+
+    public Guid? OwnerId { get; set; }
+
+    [ForeignKey("OwnerId")]
+    [InverseProperty("GridAreaLinks")]
+    public virtual MarketParticipant Owner { get; set; }
+
+    [InverseProperty("GridAreaLink")]
+    public virtual ICollection<MeteringPoint> MeteringPoints { get; set; }
 }

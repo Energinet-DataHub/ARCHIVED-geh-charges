@@ -13,8 +13,11 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using Energinet.Charges.Contracts.Charge;
 using GreenEnergyHub.Charges.QueryApi;
-using GreenEnergyHub.Charges.WebApi.ModelPredicates;
+using GreenEnergyHub.Charges.QueryApi.ModelPredicates;
+using GreenEnergyHub.Charges.QueryApi.QueryServices;
+using GreenEnergyHub.Charges.QueryApi.Validation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,10 +30,12 @@ public class ChargesController : ControllerBase
 {
     public const string Version1 = "1.0";
     private readonly IData _data;
+    private readonly IChargesQueryService _chargesQueryService;
 
-    public ChargesController(IData data)
+    public ChargesController(IData data, IChargesQueryService chargesQueryService)
     {
         _data = data;
+        _chargesQueryService = chargesQueryService;
     }
 
     /// <summary>
@@ -45,6 +50,23 @@ public class ChargesController : ControllerBase
             .AsChargeV1Dto()
             .ToListAsync()
             .ConfigureAwait(false);
+
+        return Ok(charges);
+    }
+
+    /// <summary>
+    ///     Returns all charges based on the search criteria
+    /// </summary>
+    /// <returns>Charges data or "400 Bad request"</returns>
+    [HttpPost("SearchAsync")]
+    [MapToApiVersion(Version1)]
+    public async Task<IActionResult> SearchAsync(SearchCriteriaDto searchCriteria)
+    {
+        var isValid = SearchCriteriaValidator.Validate(searchCriteria);
+        if (!isValid)
+            return BadRequest("Search criteria is not valid.");
+
+        var charges = await _chargesQueryService.SearchAsync(searchCriteria).ConfigureAwait(false);
 
         return Ok(charges);
     }

@@ -18,51 +18,49 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-#nullable disable
+namespace GreenEnergyHub.Charges.QueryApi.Model;
 
-namespace GreenEnergyHub.Charges.QueryApi.Model
+[Table("Charge", Schema = "Charges")]
+[Index("SenderProvidedChargeId", "Type", "OwnerId", Name = "IX_SenderProvidedChargeId_ChargeType_MarketParticipantId")]
+[Index("SenderProvidedChargeId", "Type", "OwnerId", Name = "UC_SenderProvidedChargeId_Type_OwnerId", IsUnique = true)]
+public partial class Charge
 {
-    [Table("Charge", Schema = "Charges")]
-    [Index(nameof(SenderProvidedChargeId), nameof(Type), nameof(OwnerId), Name = "IX_SenderProvidedChargeId_ChargeType_MarketParticipantId")]
-    public partial class Charge
+    public Charge()
     {
-        public Charge()
-        {
-            ChargeLinks = new HashSet<ChargeLink>();
-            ChargePeriods = new HashSet<ChargePeriod>();
-            ChargePoints = new HashSet<ChargePoint>();
-            DefaultChargeLinks = new HashSet<DefaultChargeLink>();
-        }
-
-        [Key]
-        public Guid Id { get; set; }
-
-        [Required]
-        [StringLength(35)]
-        public string SenderProvidedChargeId { get; set; }
-
-        public int Type { get; set; }
-
-        public Guid OwnerId { get; set; }
-
-        public bool TaxIndicator { get; set; }
-
-        public int Resolution { get; set; }
-
-        [ForeignKey(nameof(OwnerId))]
-        [InverseProperty(nameof(MarketParticipant.Charges))]
-        public virtual MarketParticipant Owner { get; set; }
-
-        [InverseProperty(nameof(ChargeLink.Charge))]
-        public virtual ICollection<ChargeLink> ChargeLinks { get; set; }
-
-        [InverseProperty(nameof(ChargePeriod.Charge))]
-        public virtual ICollection<ChargePeriod> ChargePeriods { get; set; }
-
-        [InverseProperty(nameof(ChargePoint.Charge))]
-        public virtual ICollection<ChargePoint> ChargePoints { get; set; }
-
-        [InverseProperty(nameof(DefaultChargeLink.Charge))]
-        public virtual ICollection<DefaultChargeLink> DefaultChargeLinks { get; set; }
+        ChargeLinks = new HashSet<ChargeLink>();
+        ChargePeriods = new HashSet<ChargePeriod>();
+        ChargePoints = new HashSet<ChargePoint>();
+        DefaultChargeLinks = new HashSet<DefaultChargeLink>();
     }
+
+    [Key]
+    public Guid Id { get; set; }
+
+    [Required]
+    [StringLength(35)]
+    public string SenderProvidedChargeId { get; set; }
+
+    public int Type { get; set; }
+
+    public Guid OwnerId { get; set; }
+
+    public bool TaxIndicator { get; set; }
+
+    public int Resolution { get; set; }
+
+    [ForeignKey("OwnerId")]
+    [InverseProperty("Charges")]
+    public virtual MarketParticipant Owner { get; set; }
+
+    [InverseProperty("Charge")]
+    public virtual ICollection<ChargeLink> ChargeLinks { get; set; }
+
+    [InverseProperty("Charge")]
+    public virtual ICollection<ChargePeriod> ChargePeriods { get; set; }
+
+    [InverseProperty("Charge")]
+    public virtual ICollection<ChargePoint> ChargePoints { get; set; }
+
+    [InverseProperty("Charge")]
+    public virtual ICollection<DefaultChargeLink> DefaultChargeLinks { get; set; }
 }
