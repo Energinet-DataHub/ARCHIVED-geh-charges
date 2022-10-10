@@ -1,5 +1,9 @@
 # Energinet.DataHub.Charges.Clients.Registrations Release notes
 
+## Version 4.0.2
+
+Added GetMarketParticipant to Charges client.
+
 ## Version 4.0.1
 
 Use OIDC for authentication
