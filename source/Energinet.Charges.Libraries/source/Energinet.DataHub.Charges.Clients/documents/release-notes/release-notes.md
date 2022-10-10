@@ -1,6 +1,6 @@
 # Energinet.DataHub.Charges.Clients Release notes
 
-## Version 4.0.1
+## Version 4.0.2
 
 Added VatClassification and ChargeName to ChargesV1Dto
 
