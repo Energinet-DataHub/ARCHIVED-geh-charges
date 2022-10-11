@@ -16,12 +16,9 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.Charges
 {
     public static class ChargeDocument
     {
-        public const string AnyValid = "TestFiles/Charges/TaxTariffWithPriceDocument.xml";
-        public const string AnyWithPrice = "TestFiles/Charges/TaxTariffWithPriceDocument.xml";
         public const string CreateSubscription = "TestFiles/Charges/CreateSubscriptionWithPriceDocument.xml";
         public const string CreateTariff = "TestFiles/Charges/CreateTariffDocument.xml";
         public const string UpdateTariff = "TestFiles/Charges/UpdateTariffDocument.xml";
-        public const string TaxTariffWithPrice = "TestFiles/Charges/TaxTariffWithPriceDocument.xml";
         public const string ChargeDocumentWhereSenderIdDoNotMatchAuthorizedActorId = "TestFiles/Charges/ChargeDocumentWhereSenderIdDoNotMatchAuthorizedActorId.xml";
         public const string AnyInvalid = "TestFiles/Charges/InvalidTariffDocument.xml";
         public const string TariffInvalidSchema = "TestFiles/Charges/InvalidSchemaTariffDocument.xml";
