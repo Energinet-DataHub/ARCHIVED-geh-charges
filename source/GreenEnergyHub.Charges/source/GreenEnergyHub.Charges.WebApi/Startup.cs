@@ -120,7 +120,8 @@ namespace GreenEnergyHub.Charges.WebApi
             app.UseApiVersioning();
 
             // This middleware has to be configured after 'UseRouting' for 'AllowAnonymousAttribute' to work.
-            app.UseMiddleware<JwtTokenMiddleware>();
+            if (!env.IsDevelopment())
+                app.UseMiddleware<JwtTokenMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

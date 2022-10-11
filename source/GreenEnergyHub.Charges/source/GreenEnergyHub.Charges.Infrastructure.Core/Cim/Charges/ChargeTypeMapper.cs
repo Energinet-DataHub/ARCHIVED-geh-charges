@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using GreenEnergyHub.Charges.Domain.Charges;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.Charges
@@ -44,6 +46,12 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.Charges
                 _ => throw new InvalidEnumArgumentException(
                     $"Provided ChargeType value '{chargeType}' is invalid and cannot be mapped."),
             };
+        }
+
+        public static List<ChargeType> MapMany(string chargeTypes)
+        {
+            var ct = chargeTypes.Split(",");
+            return ct.Select(Map).ToList();
         }
     }
 }

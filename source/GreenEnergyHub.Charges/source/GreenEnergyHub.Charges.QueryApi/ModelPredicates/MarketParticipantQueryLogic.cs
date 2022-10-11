@@ -12,27 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#nullable disable
+using System.Linq;
+using Energinet.Charges.Contracts.Charge;
+using GreenEnergyHub.Charges.QueryApi.Model;
 
-using System;
+namespace GreenEnergyHub.Charges.QueryApi.ModelPredicates;
 
-namespace GreenEnergyHub.Charges.QueryApi.Model;
-
-public class ChargePrice
+public static class MarketParticipantQueryLogic
 {
-    public Guid Id { get; set; }
-
-    public Guid ChargeId { get; set; }
-
-    public DateTime Time { get; set; }
-
-    public decimal Price { get; set; }
-
-    public bool Retired { get; set; }
-
-    public DateTime? RetiredDateTime { get; set; }
-
-    public Guid ChargeOperationId { get; set; }
-
-    public virtual Charge Charge { get; set; }
+    public static IQueryable<MarketParticipantV1Dto> AsMarketParticipantV1Dto(this IQueryable<MarketParticipant> queryable)
+    {
+        return queryable.Select(m => new MarketParticipantV1Dto(m.Id, m.Name, m.MarketParticipantId));
+    }
 }

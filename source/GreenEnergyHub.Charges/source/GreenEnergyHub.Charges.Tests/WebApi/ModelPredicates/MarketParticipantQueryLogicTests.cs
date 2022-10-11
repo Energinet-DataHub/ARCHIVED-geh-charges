@@ -19,52 +19,31 @@ using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using FluentAssertions;
 using GreenEnergyHub.Charges.QueryApi.Model;
 using GreenEnergyHub.Charges.QueryApi.ModelPredicates;
-using GreenEnergyHub.Charges.TestCore.Builders.Query;
 using Xunit;
 using Xunit.Categories;
 
 namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
 {
     [UnitTest]
-    public class ChargeQueryLogicTests
+    public class MarketParticipantQueryLogicTests
     {
         [Theory]
         [InlineAutoMoqData]
-        public void AsChargeV1Dto_SetsAllProperties(Charge charge)
+        public void AsMarketParticipantV1Dto_SetsAllProperties(MarketParticipant marketParticipant)
         {
             // Arrange
-            charge.OwnerId = charge.Owner.Id;
-            charge.Type = 1;
-            charge.Resolution = 1;
+            var marketParticipants = new List<MarketParticipant> { marketParticipant }.AsQueryable();
 
-            charge.ChargePeriods.Clear();
-            charge.ChargePeriods.Add(GenerateChargePeriod(charge));
-
-            var charges = new List<Charge> { charge, }.AsQueryable();
-
-            var expected = new ChargeV1Dto(
-                (ChargeType)charge.Type,
-                (Resolution)charge.Resolution,
-                charge.SenderProvidedChargeId,
-                charge.ChargePeriods.Single().Name,
-                charge.Owner.MarketParticipantId,
-                charge.Owner.Name,
-                charge.TaxIndicator,
-                charge.ChargePeriods.Single().TransparentInvoicing,
-                charge.ChargePeriods.Single().StartDateTime,
-                null);
+            var expected = new MarketParticipantV1Dto(
+                marketParticipant.Id,
+                marketParticipant.Name,
+                marketParticipant.MarketParticipantId);
 
             // Act
-            var actual = charges.AsChargeV1Dto();
+            var actual = marketParticipants.AsMarketParticipantV1Dto();
 
             // Assert
             actual.Single().Should().BeEquivalentTo(expected);
-        }
-
-        private static ChargePeriod GenerateChargePeriod(Charge charge)
-        {
-            var period = new ChargePeriodBuilder().Build(charge);
-            return period;
         }
     }
 }

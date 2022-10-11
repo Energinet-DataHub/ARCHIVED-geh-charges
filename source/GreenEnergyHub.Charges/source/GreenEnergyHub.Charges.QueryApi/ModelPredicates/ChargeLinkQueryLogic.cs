@@ -19,7 +19,7 @@ using Energinet.Charges.Contracts.ChargeLink;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.QueryApi.Model;
 
-namespace GreenEnergyHub.Charges.WebApi.ModelPredicates
+namespace GreenEnergyHub.Charges.QueryApi.ModelPredicates
 {
     public static class ChargeLinkQueryLogic
     {
@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.WebApi.ModelPredicates
                          .OrderBy(cp => cp.StartDateTime)
                          .First()).Name,
                     cl.Charge.Owner.MarketParticipantId,
-                    "<Aktørnavn XYZ>", // Hardcoded as we currently don't have the ChargeOwnerName data
+                    cl.Charge.Owner.Name,
                     cl.Charge.TaxIndicator,
                     (cl.Charge.ChargePeriods
                         .Where(cp => cp.StartDateTime <= todayAtMidnightUtc)

@@ -12,20 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Energinet.Charges.Contracts.Charge;
 
-// ReSharper disable once CheckNamespace - Type is shared so namespace is not determined by project structure/namespace
-namespace Energinet.DataHub.Charges.Contracts.Charge
+namespace GreenEnergyHub.Charges.QueryApi.QueryServices;
+
+public interface IChargesQueryService
 {
-    public record ChargeV1Dto(
-        ChargeType ChargeType,
-        Resolution Resolution,
-        string ChargeId,
-        string ChargeName,
-        string ChargeOwner,
-        string ChargeOwnerName,
-        bool TaxIndicator,
-        bool TransparentInvoicing,
-        DateTime ValidFromDateTime,
-        DateTime ValidToDateTime);
+    Task<IList<ChargeV1Dto>> SearchAsync(SearchCriteriaV1Dto searchCriteria);
 }

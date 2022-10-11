@@ -12,27 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#nullable disable
-
 using System;
+using System.Collections.Generic;
 
-namespace GreenEnergyHub.Charges.QueryApi.Model;
-
-public class ChargePrice
+// ReSharper disable once CheckNamespace - Type is shared so namespace is not determined by project structure/namespace
+namespace Energinet.Charges.Contracts.Charge
 {
-    public Guid Id { get; set; }
-
-    public Guid ChargeId { get; set; }
-
-    public DateTime Time { get; set; }
-
-    public decimal Price { get; set; }
-
-    public bool Retired { get; set; }
-
-    public DateTime? RetiredDateTime { get; set; }
-
-    public Guid ChargeOperationId { get; set; }
-
-    public virtual Charge Charge { get; set; }
+    public record SearchCriteriaV1Dto(
+        string ChargeIdOrName,
+        List<Guid> OwnerIds,
+        List<ChargeType> ChargeTypes);
 }

@@ -1,8 +1,26 @@
 # Energinet.DataHub.Charges.Clients.Registrations Release notes
 
-## Version 4.0.1
+## Version 4.1.1
 
 Renamed Client contracts namespace from `Energinet.Charges.Contracts` to `Energinet.DataHub.Charges.Contracts`
+
+## Version 4.1.0
+
+Added `GetMarketParticipants` to Charges client.
+
+## Version 4.0.1
+
+Use OIDC for authentication
+
+## Version 4.0.0
+
+Changed search criteria name.
+Changed valid from date time offset to allow null in search criteria.
+Changed owner id to a list of owner ids in search criteria.
+
+## Version 3.0.17
+
+Added Search to Charges client
 
 ## Version 3.0.16
 

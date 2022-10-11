@@ -20,9 +20,9 @@ using Energinet.Charges.Contracts.ChargeLink;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.QueryApi.Model;
+using GreenEnergyHub.Charges.QueryApi.ModelPredicates;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.TestCore.Builders.Query;
-using GreenEnergyHub.Charges.WebApi.ModelPredicates;
 using Xunit;
 using Xunit.Categories;
 
@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
                 chargeLink.Charge.SenderProvidedChargeId,
                 chargeLink.Charge.ChargePeriods.Single().Name,
                 chargeLink.Charge.Owner.MarketParticipantId,
-                "<Aktørnavn XYZ>",
+                chargeLink.Charge.Owner.Name,
                 chargeLink.Charge.TaxIndicator,
                 chargeLink.Charge.ChargePeriods.Single().TransparentInvoicing,
                 chargeLink.Factor,
