@@ -1,6 +1,6 @@
 # Energinet.DataHub.Charges.Clients.Registrations Release notes
 
-## Version 3.0.17
+## Version 4.0.1
 
 Renamed Client contracts namespace from `Energinet.Charges.Contracts` to `Energinet.DataHub.Charges.Contracts`
 
