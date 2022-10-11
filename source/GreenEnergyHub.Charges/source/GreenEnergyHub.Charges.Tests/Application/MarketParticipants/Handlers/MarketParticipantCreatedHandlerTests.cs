@@ -16,9 +16,11 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
+using Castle.Components.DictionaryAdapter;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
 using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsUpdatedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using Xunit;
@@ -37,24 +39,26 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
                 MarketParticipantCreatedHandler sut)
         {
             // Arrange
-            var actorCreatedIntegrationEvent = new ActorCreatedIntegrationEvent(
-                Guid.Empty,
-                Guid.NewGuid(),
-                Guid.NewGuid(),
-                ActorStatus.New,
-                "1",
-                "some name",
-                new List<BusinessRoleCode> { BusinessRoleCode.Ddm },
-                new List<ActorMarketRole>(),
-                DateTime.Now);
+            var m = GetMarketParticipantUpdatedEvent();
 
             // Act
-            await sut.HandleAsync(actorCreatedIntegrationEvent);
+            await sut.HandleAsync(m);
 
             // Assert
             marketParticipantPersister.Verify(
                 v => v.PersistAsync(It.IsAny<MarketParticipantUpdatedEvent>()),
                 Times.Once);
+        }
+
+        private static MarketParticipantUpdatedEvent GetMarketParticipantUpdatedEvent()
+        {
+            return new MarketParticipantUpdatedEvent(
+                actorId: Guid.NewGuid(),
+                b2CActorId: Guid.NewGuid(),
+                "mp123",
+                new EditableList<MarketParticipantRole> { MarketParticipantRole.BalanceResponsibleParty, },
+                MarketParticipantStatus.Active,
+                new List<Guid> { Guid.NewGuid(), });
         }
     }
 }
