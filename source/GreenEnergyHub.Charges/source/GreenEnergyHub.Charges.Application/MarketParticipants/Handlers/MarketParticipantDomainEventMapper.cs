@@ -54,11 +54,11 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
         }
 
         public static MarketParticipantUpdatedEvent MapFromActorCreatedIntegrationEvent(
-            ActorCreatedIntegrationEvent actorUpdatedIntegrationEvent)
+            ActorCreatedIntegrationEvent actorCreatedIntegrationEvent)
         {
-            var status = MarketParticipantStatusMapper.Map(actorUpdatedIntegrationEvent.Status);
+            var status = MarketParticipantStatusMapper.Map(actorCreatedIntegrationEvent.Status);
 
-            var rolesUsedInChargesDomain = actorUpdatedIntegrationEvent.BusinessRoles
+            var rolesUsedInChargesDomain = actorCreatedIntegrationEvent.BusinessRoles
                 .Select(MarketParticipantRoleMapper.Map)
                 .Intersect(MarketParticipant._validRoles)
                 .ToList();
@@ -66,18 +66,18 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
             if (rolesUsedInChargesDomain.Count > 1)
             {
                 throw new InvalidOperationException(
-                    $"Only 1 role per market participant with ID '{actorUpdatedIntegrationEvent.ActorNumber}' is allowed, " +
+                    $"Only 1 role per market participant with ID '{actorCreatedIntegrationEvent.ActorNumber}' is allowed, " +
                     $"the current market participant has {rolesUsedInChargesDomain.Count} roles associated in the " +
-                    $"integration event with id '{actorUpdatedIntegrationEvent.Id}'");
+                    $"integration event with id '{actorCreatedIntegrationEvent.Id}'");
             }
 
             return new MarketParticipantUpdatedEvent(
-                actorUpdatedIntegrationEvent.ActorId,
-                actorUpdatedIntegrationEvent.OrganizationId,
-                actorUpdatedIntegrationEvent.ActorNumber,
+                actorCreatedIntegrationEvent.ActorId,
+                actorCreatedIntegrationEvent.OrganizationId,
+                actorCreatedIntegrationEvent.ActorNumber,
                 rolesUsedInChargesDomain,
                 status,
-                actorUpdatedIntegrationEvent.ActorMarketRoles
+                actorCreatedIntegrationEvent.ActorMarketRoles
                     .SelectMany(amr => amr.GridAreas)
                     .DistinctBy(o => o.Id)
                     .Select(a => a.Id));
