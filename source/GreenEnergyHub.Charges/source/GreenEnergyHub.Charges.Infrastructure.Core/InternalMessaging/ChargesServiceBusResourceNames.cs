@@ -50,6 +50,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.InternalMessaging
 
         // Integration, marketparticipants domain
         public const string MarketParticipantChangedSubscriptionName = "market-participant-changed";
+        public const string MarketParticipantCreatedSubscriptionName = "market-participant-created";
 
         // Domain event
         [DomainEventSetting]
