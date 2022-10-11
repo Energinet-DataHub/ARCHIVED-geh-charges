@@ -19,11 +19,13 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using AutoFixture.Xunit2;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using Energinet.DataHub.MessageHub.Model.Model;
 using FluentAssertions;
 using FluentAssertions.Execution;
+using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.Charges;
@@ -159,6 +161,30 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             }
 
             /* REJECTIONS */
+
+            [Fact]
+            public async Task Ingestion_InvalidChargeRequest_RejectionReceivedWithErrorCodeAndMessage()
+            {
+                // Arrange
+                var (request, correlationId) = Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
+                    EndpointUrl, ChargeDocument.InvalidTaxTariffAsGridAccessProvider);
+
+                // Act
+                var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
+
+                using var assertionScope = new AssertionScope();
+
+                var peekResult =
+                    await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, ResponseFormat.Xml);
+
+                peekResult.Should().ContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
+                peekResult.Should().ContainMatch("*<cim:code>E0I</cim:code>*");
+                peekResult.Should().ContainMatch("*The sender role used is not allowed to set tax indicator to Tax for charge ID*");
+            }
+
             /* BUNDLING */
 
             [Fact]
