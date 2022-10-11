@@ -18,7 +18,6 @@ using Energinet.DataHub.MarketParticipant.Integration.Model.Parsers;
 using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using Microsoft.Azure.Functions.Worker;
-using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
 {
@@ -27,16 +26,13 @@ namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
         private const string FunctionName = nameof(MarketParticipantCreatedEndpoint);
         private readonly ISharedIntegrationEventParser _sharedIntegrationEventParser;
         private readonly IMarketParticipantCreatedHandler _marketParticipantCreatedHandler;
-        private readonly ILogger _logger;
 
         public MarketParticipantCreatedEndpoint(
-            ILoggerFactory loggerFactory,
             ISharedIntegrationEventParser sharedIntegrationEventParser,
             IMarketParticipantCreatedHandler marketParticipantCreatedHandler)
         {
             _sharedIntegrationEventParser = sharedIntegrationEventParser;
             _marketParticipantCreatedHandler = marketParticipantCreatedHandler;
-            _logger = loggerFactory.CreateLogger(FunctionName);
         }
 
         [Function("MarketParticipantCreatedEndpoint")]
@@ -47,8 +43,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
             byte[] message)
         {
             var messageEvent = (ActorCreatedIntegrationEvent)_sharedIntegrationEventParser.Parse(message);
-
-            _logger.LogInformation("Received Market Participant Created integration event");
 
             await _marketParticipantCreatedHandler.HandleAsync(messageEvent).ConfigureAwait(false);
         }
