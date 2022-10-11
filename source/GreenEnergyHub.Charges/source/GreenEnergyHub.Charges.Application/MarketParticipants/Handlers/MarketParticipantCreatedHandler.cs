@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
+using GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsUpdatedEvents;
 
 namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 {
@@ -26,11 +26,8 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
             _marketParticipantPersister = marketParticipantPersister;
         }
 
-        public async Task HandleAsync(ActorCreatedIntegrationEvent actorCreatedIntegrationEvent)
+        public async Task HandleAsync(MarketParticipantUpdatedEvent marketParticipantUpdatedEvent)
         {
-            var marketParticipantUpdatedEvent =
-                MarketParticipantDomainEventMapper.MapFromActorCreatedIntegrationEvent(actorCreatedIntegrationEvent);
-
             await _marketParticipantPersister.PersistAsync(marketParticipantUpdatedEvent).ConfigureAwait(false);
         }
     }

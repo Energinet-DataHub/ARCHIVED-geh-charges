@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Parsers;
 using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers;
+using GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsUpdatedEvents;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using Microsoft.Azure.Functions.Worker;
 
@@ -43,8 +44,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
             byte[] message)
         {
             var messageEvent = (ActorCreatedIntegrationEvent)_sharedIntegrationEventParser.Parse(message);
-
-            await _marketParticipantCreatedHandler.HandleAsync(messageEvent).ConfigureAwait(false);
+            var marketParticipantUpdatedEvent =
+                MarketParticipantDomainEventMapper.MapFromActorCreatedIntegrationEvent(messageEvent);
+            await _marketParticipantCreatedHandler.HandleAsync(marketParticipantUpdatedEvent).ConfigureAwait(false);
         }
     }
 }

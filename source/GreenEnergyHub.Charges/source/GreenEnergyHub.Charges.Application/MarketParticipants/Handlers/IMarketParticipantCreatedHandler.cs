@@ -13,12 +13,12 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
+using GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsUpdatedEvents;
 
 namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 {
     public interface IMarketParticipantCreatedHandler
     {
-        Task HandleAsync(ActorCreatedIntegrationEvent actorCreatedIntegrationEvent);
+        Task HandleAsync(MarketParticipantUpdatedEvent marketParticipantUpdatedEvent);
     }
 }
