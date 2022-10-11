@@ -73,7 +73,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task Ingestion_ValidChargeInformationRequest_Http202AcceptedWithEmptyBodyResponse()
             {
                 var request = Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
-                    EndpointUrl, ChargeDocument.CreateTariff);
+                    EndpointUrl, ChargeInformationRequest.CreateTariff);
 
                 var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request.Request);
                 var responseBody = await actualResponse.Content.ReadAsStringAsync();
@@ -87,7 +87,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             {
                 // Arrange
                 var (request, _) = Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
-                    EndpointUrl, ChargeDocument.ChargeDocumentWhereSenderIdDoNotMatchAuthorizedActorId);
+                    EndpointUrl, ChargeInformationRequest.ChargeDocumentWhereSenderIdDoNotMatchAuthorizedActorId);
 
                 // Act
                 var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
@@ -108,7 +108,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task Ingestion_NewTaxTariffBySystemOperator_NotificationsReceivedByGridAccessProvidersAndEnergySuppliers()
             {
                 var (request, correlationId) = Fixture.AsSystemOperator.PrepareHttpPostRequestWithAuthorization(
-                    EndpointUrl, ChargeDocument.CreateTaxTariffAsSystemOperator);
+                    EndpointUrl, ChargeInformationRequest.CreateTaxTariffAsSystemOperator);
 
                 // Act
                 await Fixture.HostManager.HttpClient.SendAsync(request);
@@ -133,7 +133,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task Ingestion_NewTaxTariffBySystemOperator_NotificationsReceivedByGridAccessProvidersAndEnergySuppliersAsJson()
             {
                 var (request, correlationId) = Fixture.AsSystemOperator.PrepareHttpPostRequestWithAuthorization(
-                    EndpointUrl, ChargeDocument.CreateTaxTariffAsSystemOperator);
+                    EndpointUrl, ChargeInformationRequest.CreateTaxTariffAsSystemOperator);
 
                 // Act
                 await Fixture.HostManager.HttpClient.SendAsync(request);
@@ -165,7 +165,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             {
                 // Arrange
                 var (request, correlationId) = Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
-                    EndpointUrl, ChargeDocument.InvalidTaxTariffAsGridAccessProvider);
+                    EndpointUrl, ChargeInformationRequest.InvalidTaxTariffAsGridAccessProvider);
 
                 // Act
                 var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
@@ -192,7 +192,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 var expectedNotificationOperations = new List<string> { "CREATE", "UPDATE", "STOP", "CANCEL STOP" };
 
                 var (request, correlationId) = Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
-                    EndpointUrl, ChargeDocument.BundleWithMultipleOperationsForSameTariff);
+                    EndpointUrl, ChargeInformationRequest.BundleWithMultipleOperationsForSameTariff);
 
                 // Act
                 var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
@@ -226,7 +226,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             {
                 // Arrange
                 var (request, correlationId) = Fixture.AsSystemOperator.PrepareHttpPostRequestWithAuthorization(
-                    EndpointUrl, ChargeDocument.BundleWithTwoOperationsForSameTariffSecondOpViolatingVr903);
+                    EndpointUrl, ChargeInformationRequest.BundleWithTwoOperationsForSameTariffSecondOpViolatingVr903);
 
                 // Act
                 var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
@@ -259,7 +259,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             {
                 // Arrange
                 var (request, correlationId) = Fixture.AsSystemOperator.PrepareHttpPostRequestWithAuthorization(
-                    EndpointUrl, ChargeDocument.CreateTariffAsSystemOperator);
+                    EndpointUrl, ChargeInformationRequest.CreateTariffAsSystemOperator);
                 using var eventualChargeCreatedEvent = await Fixture
                     .ChargeCreatedListener
                     .ListenForMessageAsync(correlationId)
@@ -280,10 +280,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             /* SAMPLES */
 
             [Theory]
-            [InlineAutoMoqData(ChargeDocument.ChargeInformationTariffHourlySample, 4, 1)]
-            [InlineAutoMoqData(ChargeDocument.BundledChargeInformationSample, 12, 3)]
-            [InlineAutoMoqData(ChargeDocument.ChargeInformationSubscriptionMonthlySample, 4, 1)]
-            [InlineAutoMoqData(ChargeDocument.ChargeInformationFeeMonthlySample, 4, 1)]
+            [InlineAutoMoqData(ChargeInformationRequest.ChargeInformationTariffHourlySample, 4, 1)]
+            [InlineAutoMoqData(ChargeInformationRequest.BundledChargeInformationSample, 12, 3)]
+            [InlineAutoMoqData(ChargeInformationRequest.ChargeInformationSubscriptionMonthlySample, 4, 1)]
+            [InlineAutoMoqData(ChargeInformationRequest.ChargeInformationFeeMonthlySample, 4, 1)]
             public async Task Ingestion_ChargeInformationSampleFile_ConfirmationReceivedByGridAccessProvider(
                 string testFilePath, int noOfDataAvailableNotificationsExpected, int noOfConfirmedActivityRecordsExpected)
             {

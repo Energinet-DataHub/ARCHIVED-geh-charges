@@ -14,8 +14,12 @@
 
 namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.Charges
 {
-    public static class ChargeDocument
+    public static class ChargeInformationRequest
     {
+        /* Expect to rename file to ChargeInformationRequest
+        *  And move all charge price requests to new file ChargePricesRequest
+        */
+
         public const string CreateSubscription = "TestFiles/Charges/CreateSubscription.xml";
         public const string CreateTariff = "TestFiles/Charges/CreateTariffDocument.xml";
         public const string ChargeDocumentWhereSenderIdDoNotMatchAuthorizedActorId = "TestFiles/Charges/ChargeDocumentWhereSenderIdDoNotMatchAuthorizedActorId.xml";
@@ -32,6 +36,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.Charges
         public const string ChargeInformationFeeMonthlySample = "TestFiles/Samples/Charges/ChargeInformationFeeMonthlySample.xml";
         public const string ChargeInformationSubscriptionMonthlySample = "TestFiles/Samples/Charges/ChargeInformationSubscriptionMonthlySample.xml";
         public const string BundledChargeInformationSample = "TestFiles/Samples/Charges/BundledChargeInformationSample.xml";
+
+        // Charge prices below - pending to be moved and maintenance
         public const string ChargePriceSeriesSubscriptionMonthlySample = "TestFiles/Samples/Charges/ChargePriceSeriesSubscriptionMonthlySample.xml";
         public const string ChargePriceSeriesFeeMonthlySample = "TestFiles/Samples/Charges/ChargePriceSeriesFeeMonthlySample.xml";
         public const string ChargePriceSeriesTariffHourlySample = "TestFiles/Samples/Charges/ChargePriceSeriesTariffHourlySample.xml";
