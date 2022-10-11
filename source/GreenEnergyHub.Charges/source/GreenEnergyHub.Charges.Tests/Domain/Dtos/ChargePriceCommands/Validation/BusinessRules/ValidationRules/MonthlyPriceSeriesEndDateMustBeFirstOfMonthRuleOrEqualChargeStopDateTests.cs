@@ -14,16 +14,13 @@
 
 using System;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.BusinessValidation.ValidationRules;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Iso8601;
 using Microsoft.EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using NodaTime;
-using NodaTime.Testing;
 using Xunit;
 using Xunit.Categories;
 
@@ -68,7 +65,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
         }
 
         [Fact]
-        public void ValidationRuleIdentifier_ShouldBeUpdateTaxTariffOnlyAllowedBySystemOperator()
+        public void ValidationRuleIdentifier_ShouldBeMonthlyPriceSeriesEndDateMustBeFirstOfMonthOrEqualChargeStopDate()
         {
             // Arrange
             // Act
@@ -93,12 +90,6 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
                 0,
                 DateTimeKind.Utc))
                 .PlusHours(-1);
-        }
-
-        private static ZonedDateTimeService GetZonedDateTimeService()
-        {
-            var clock = new FakeClock(InstantHelper.GetTodayAtMidnightUtc());
-            return new ZonedDateTimeService(clock, new Iso8601ConversionConfiguration("Europe/Copenhagen"));
         }
     }
 }
