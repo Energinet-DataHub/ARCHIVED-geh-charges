@@ -52,7 +52,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
                 ref midnightLocalTime32DaysAhead);
 
             var monthAhead =
-                GenerateStartAndEndDatesForSubscriptionWithEndDateIsTheFirstInAMonth(currentInstant, zonedDateTimeService);
+                GenerateStartAndEndDatesForSubscriptionWithEndDateIsTheFirstInAMonthTwoMonthAhead(currentInstant, zonedDateTimeService);
 
             // cim:createdDateTime and effective date must have seconds
             var ymdhmsTimeInterval = currentInstant.GetCreatedDateTimeFormat();
@@ -102,22 +102,28 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
         }
 
         private static (LocalDateTime MidnightLocalTime2MonthAheadOnTheFirst, LocalDateTime MidnightLocalTime3MonthAheadOnTheFirst)
-            GenerateStartAndEndDatesForSubscriptionWithEndDateIsTheFirstInAMonth(Instant instant, IZonedDateTimeService zonedDateTimeService)
+            GenerateStartAndEndDatesForSubscriptionWithEndDateIsTheFirstInAMonthTwoMonthAhead(Instant instant, IZonedDateTimeService zonedDateTimeService)
+        {
+            var firstInMonth = GetFirstInNextMonth(instant, zonedDateTimeService);
+
+            var twoMonthAhead = firstInMonth.PlusMonths(2);
+            var threeMonthAdded = twoMonthAhead.PlusMonths(1);
+
+            return (twoMonthAhead, threeMonthAdded);
+        }
+
+        private static LocalDateTime GetFirstInNextMonth(Instant instant, IZonedDateTimeService zonedDateTimeService)
         {
             var zonedTime = zonedDateTimeService.GetZonedDateTime(instant);
             var midnightLocalTime = zonedTime.PlusTicks(-zonedTime.TickOfDay).LocalDateTime;
 
-            var midnightLocalTimeWith2MonthsAdded = midnightLocalTime.PlusMonths(2);
+            var daysInMonth = midnightLocalTime.Calendar.GetDaysInMonth(
+                midnightLocalTime.Year,
+                midnightLocalTime.Month);
+            var daysToAddToHitFirstInNextMonth = daysInMonth - midnightLocalTime.Day;
 
-            var daysInMonth = midnightLocalTimeWith2MonthsAdded.Calendar.GetDaysInMonth(
-                midnightLocalTimeWith2MonthsAdded.Year,
-                midnightLocalTimeWith2MonthsAdded.Month);
-            var daysToAddToHitFirstInNextMonth = daysInMonth - midnightLocalTimeWith2MonthsAdded.Day;
-
-            var midnightLocalTime2MonthAheadOnTheFirst = midnightLocalTimeWith2MonthsAdded.PlusDays(daysToAddToHitFirstInNextMonth).PlusDays(1);
-            var threeMonthAdded = midnightLocalTime2MonthAheadOnTheFirst.PlusMonths(1);
-
-            return (midnightLocalTime2MonthAheadOnTheFirst, threeMonthAdded);
+            var midnightLocalTime2MonthAheadOnTheFirst = midnightLocalTime.PlusDays(daysToAddToHitFirstInNextMonth).PlusDays(1);
+            return midnightLocalTime2MonthAheadOnTheFirst;
         }
 
         /// <summary>
