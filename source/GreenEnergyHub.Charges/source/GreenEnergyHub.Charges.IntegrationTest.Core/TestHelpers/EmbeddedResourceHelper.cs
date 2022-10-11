@@ -101,19 +101,18 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
             return zonedDateTime.ToInstant().ToString("yyyy-MM-dd\\THH:mm\\Z", CultureInfo.InvariantCulture);
         }
 
-        private static (LocalDateTime MidnightLocalTime2MonthAheadOnTheFirst, LocalDateTime MidnightLocalTime3MonthAheadOnTheFirst) GenerateStartAndEndDatesForSubscriptionWithEndDateIsTheFirstInAMonth(
-            Instant instant,
-            IZonedDateTimeService zonedDateTimeService)
+        private static (LocalDateTime MidnightLocalTime2MonthAheadOnTheFirst, LocalDateTime MidnightLocalTime3MonthAheadOnTheFirst)
+            GenerateStartAndEndDatesForSubscriptionWithEndDateIsTheFirstInAMonth(Instant instant, IZonedDateTimeService zonedDateTimeService)
         {
             var zonedTime = zonedDateTimeService.GetZonedDateTime(instant);
             var midnightLocalTime = zonedTime.PlusTicks(-zonedTime.TickOfDay).LocalDateTime;
 
             var midnightLocalTimeWith2MonthsAdded = midnightLocalTime.PlusMonths(2);
 
-            var daysInCurrentMonth = midnightLocalTimeWith2MonthsAdded.Calendar.GetDaysInMonth(
+            var daysInMonth = midnightLocalTimeWith2MonthsAdded.Calendar.GetDaysInMonth(
                 midnightLocalTimeWith2MonthsAdded.Year,
                 midnightLocalTimeWith2MonthsAdded.Month);
-            var daysToAddToHitFirstInNextMonth = daysInCurrentMonth - midnightLocalTimeWith2MonthsAdded.Day;
+            var daysToAddToHitFirstInNextMonth = daysInMonth - midnightLocalTimeWith2MonthsAdded.Day;
 
             var midnightLocalTime2MonthAheadOnTheFirst = midnightLocalTimeWith2MonthsAdded.PlusDays(daysToAddToHitFirstInNextMonth).PlusDays(1);
             var threeMonthAdded = midnightLocalTime2MonthAheadOnTheFirst.PlusMonths(1);
