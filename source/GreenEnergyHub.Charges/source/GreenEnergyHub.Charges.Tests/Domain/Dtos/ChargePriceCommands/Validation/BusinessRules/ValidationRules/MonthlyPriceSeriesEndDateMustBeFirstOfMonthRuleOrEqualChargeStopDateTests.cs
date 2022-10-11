@@ -21,6 +21,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Iso8601;
+using Microsoft.EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using NodaTime;
 using NodaTime.Testing;
 using Xunit;
@@ -51,11 +52,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
         {
             // Arrange
             var endDate = GetInstantFromMonthAndDay(priceEndDayDateTime, priceEndMonthDateTime);
-            Instant? stopDate = priceStopMonthDateTime == 0
-                ? null
+            var stopDate = priceStopMonthDateTime == 0
+                ? InstantHelper.GetEndDefault()
                 : GetInstantFromMonthAndDay(priceStopDayDateTime, priceStopMonthDateTime);
             var sut = new MonthlyPriceSeriesEndDateMustBeFirstOfMonthOrEqualChargeStopDateRule(
-                GetZonedDateTimeService(),
                 resolution,
                 endDate,
                 stopDate);
@@ -73,7 +73,6 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
             // Arrange
             // Act
             var sut = new MonthlyPriceSeriesEndDateMustBeFirstOfMonthOrEqualChargeStopDateRule(
-                GetZonedDateTimeService(),
                 Resolution.P1M,
                 GetInstantFromMonthAndDay(1, 1),
                 GetInstantFromMonthAndDay(1, 1));
@@ -83,16 +82,17 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
                 .Be(ValidationRuleIdentifier.MonthlyPriceSeriesEndDateMustBeFirstOfMonthOrEqualChargeStopDate);
         }
 
-        private static Instant GetInstantFromMonthAndDay(int priceEndDayDateTime, int priceEndMonthDateTime)
+        private static Instant GetInstantFromMonthAndDay(int priceEndDayDateTimeUtc, int priceEndMonthDateTimeUtc)
         {
             return Instant.FromDateTimeUtc(new DateTime(
                 2023,
-                priceEndMonthDateTime,
-                priceEndDayDateTime,
+                priceEndMonthDateTimeUtc,
+                priceEndDayDateTimeUtc,
                 0,
                 0,
                 0,
-                DateTimeKind.Utc));
+                DateTimeKind.Utc))
+                .PlusHours(-1);
         }
 
         private static ZonedDateTimeService GetZonedDateTimeService()

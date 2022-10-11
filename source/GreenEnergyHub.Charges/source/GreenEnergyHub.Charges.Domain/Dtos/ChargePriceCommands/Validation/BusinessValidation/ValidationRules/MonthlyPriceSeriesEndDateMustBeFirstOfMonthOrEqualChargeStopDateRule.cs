@@ -22,24 +22,28 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.Busi
     public class MonthlyPriceSeriesEndDateMustBeFirstOfMonthOrEqualChargeStopDateRule : IValidationRule
     {
         private readonly Resolution _resolution;
-        private readonly ZonedDateTime _zonedPriceEndDate;
-        private readonly ZonedDateTime? _zonedStopDate;
+        private readonly Instant _priceEndDate;
+        private readonly Instant _chargeStopDate;
 
-        public MonthlyPriceSeriesEndDateMustBeFirstOfMonthOrEqualChargeStopDateRule(IZonedDateTimeService zonedDateTimeService, Resolution resolution, Instant priceEndDate, Instant? stopDate)
+        public MonthlyPriceSeriesEndDateMustBeFirstOfMonthOrEqualChargeStopDateRule(Resolution resolution, Instant priceEndDate, Instant chargeStopDate)
         {
             _resolution = resolution;
-            _zonedPriceEndDate = zonedDateTimeService.GetZonedDateTime(priceEndDate);
-            _zonedStopDate = stopDate is null || stopDate.Value == InstantExtensions.GetEndDefault()
-                ? null
-                : zonedDateTimeService.GetZonedDateTime(stopDate.Value);
+            _priceEndDate = priceEndDate;
+            _chargeStopDate = chargeStopDate;
         }
 
         public bool IsValid =>
             _resolution is not Resolution.P1M ||
-            _zonedPriceEndDate == _zonedStopDate ||
-            _zonedPriceEndDate.Day is 1;
+            _priceEndDate == _chargeStopDate ||
+            IsFirstLocalDayInMonth(_priceEndDate);
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.MonthlyPriceSeriesEndDateMustBeFirstOfMonthOrEqualChargeStopDate;
+
+        private static bool IsFirstLocalDayInMonth(Instant priceEndDate)
+        {
+            return priceEndDate != InstantExtensions.GetEndDefault() &&
+                   priceEndDate.Plus(Duration.FromDays(1)).InUtc().Day == 1;
+        }
     }
 }

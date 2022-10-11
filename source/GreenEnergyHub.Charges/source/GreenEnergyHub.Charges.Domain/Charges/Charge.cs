@@ -227,18 +227,15 @@ namespace GreenEnergyHub.Charges.Domain.Charges
 
             if (newPrices.Count == 0) return;
 
+            var stopDate = _periods.OrderBy(x => x.EndDateTime).Last().EndDateTime;
+
             var rules = new List<OperationValidationRuleContainer>
             {
                 new(
-                    new UpdateChargeMustHaveStartDateBeforeOrOnStopDateRule(
-                        _periods.OrderBy(x => x.EndDateTime).Last().EndDateTime,
-                        startDate),
-                    operationId),
-                new(
-                    new UpdateTaxTariffOnlyAllowedBySystemOperatorRule(
-                        Type,
-                        senderMarketParticipantRole,
-                        TaxIndicator),
+                    new MonthlyPriceSeriesEndDateMustBeFirstOfMonthOrEqualChargeStopDateRule(
+                        Resolution,
+                        endDate,
+                        stopDate),
                     operationId),
             };
             CheckRules(rules);
