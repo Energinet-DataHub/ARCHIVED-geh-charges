@@ -16,28 +16,23 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.Charges
 {
     public static class ChargeInformationRequest
     {
-        /* Expect to rename file to ChargeInformationRequest
-        *  And move all charge price requests to new file ChargePricesRequest
-        */
-
-        public const string CreateSubscription = "TestFiles/Charges/CreateSubscription.xml";
-        public const string CreateTariff = "TestFiles/Charges/CreateTariffDocument.xml";
-        public const string ChargeDocumentWhereSenderIdDoNotMatchAuthorizedActorId = "TestFiles/Charges/ChargeDocumentWhereSenderIdDoNotMatchAuthorizedActorId.xml";
+        public const string Subscription = "TestFiles/Charges/Subscription.xml";
+        public const string Tariff = "TestFiles/Charges/Tariff.xml";
+        public const string TariffAsSystemOperator = "TestFiles/Charges/TariffAsSystemOperator.xml";
+        public const string TaxTariffAsSystemOperator = "TestFiles/Charges/TaxTariffAsSystemOperator.xml";
+        public const string SenderIdDoNotMatchAuthorizedActorId = "TestFiles/Charges/SenderIdDoNotMatchAuthorizedActorId.xml";
         public const string InvalidTaxTariffAsGridAccessProvider = "TestFiles/Charges/InvalidTaxTariffAsGridAccessProvider.xml";
-        public const string TariffBundleWithValidAndInvalid = "TestFiles/Charges/TariffBundleWithValidAndInvalid.xml";
-        public const string CreateTariffAsSystemOperator = "TestFiles/Charges/CreateTariffAsSystemOperator.xml";
-        public const string BundleWithMultipleOperationsForSameTariff = "TestFiles/Charges/BundleWithMultipleOperationsForSameTariff.xml";
-        public const string BundleWithTwoOperationsForSameTariffSecondOpViolatingVr903
-            = "TestFiles/Charges/BundleWithTwoOperationsForSameTariffSecondOpViolatingVr903.xml";
 
-        public const string CreateTaxTariffAsSystemOperator = "TestFiles/Charges/CreateTaxTariffAsSystemOperator.xml";
+        public const string BundleWithMultipleOperationsForSameTariff = "TestFiles/Charges/BundleWithMultipleOperationsForSameTariff.xml";
+        public const string BundleWithTwoOperationsForSameTariffSecondOpViolatingVr903 = "TestFiles/Charges/BundleWithTwoOperationsForSameTariffSecondOpViolatingVr903.xml";
 
         public const string ChargeInformationTariffHourlySample = "TestFiles/Samples/Charges/ChargeInformationTariffHourlySample.xml";
         public const string ChargeInformationFeeMonthlySample = "TestFiles/Samples/Charges/ChargeInformationFeeMonthlySample.xml";
         public const string ChargeInformationSubscriptionMonthlySample = "TestFiles/Samples/Charges/ChargeInformationSubscriptionMonthlySample.xml";
         public const string BundledChargeInformationSample = "TestFiles/Samples/Charges/BundledChargeInformationSample.xml";
 
-        // Charge prices below - pending to be moved and maintenance
+        // Charge prices below - pending to be moved to new ChargePricesRequest and general clean-up
+        public const string TariffBundleWithValidAndInvalid = "TestFiles/Charges/PriceSeries/TariffBundleWithValidAndInvalid.xml";
         public const string ChargePriceSeriesSubscriptionMonthlySample = "TestFiles/Samples/Charges/ChargePriceSeriesSubscriptionMonthlySample.xml";
         public const string ChargePriceSeriesFeeMonthlySample = "TestFiles/Samples/Charges/ChargePriceSeriesFeeMonthlySample.xml";
         public const string ChargePriceSeriesTariffHourlySample = "TestFiles/Samples/Charges/ChargePriceSeriesTariffHourlySample.xml";

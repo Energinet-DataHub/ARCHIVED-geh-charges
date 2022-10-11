@@ -89,10 +89,13 @@ limitations under the License.
     <Content Include="TestFiles\Charges\BundleWithTwoOperationsForSameTariffSecondOpViolatingVr903.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestFiles\Charges\CreateSubscription.xml">
+    <Content Include="TestFiles\Charges\PriceSeries\TariffBundleWithValidAndInvalid.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestFiles\Charges\CreateTariffDocument.xml">
+    <Content Include="TestFiles\Charges\Subscription.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\Charges\Tariff.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestFiles\Charges\InvalidTaxTariffAsGridAccessProvider.xml">
@@ -137,19 +140,16 @@ limitations under the License.
     <Content Include="TestFiles\Charges\PriceSeries\TaxTariffPriceSeriesWithInformationToBeIgnored.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestFiles\Charges\CreateTariffAsSystemOperator.xml">
+    <Content Include="TestFiles\Charges\TariffAsSystemOperator.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestFiles\Charges\TariffBundleWithValidAndInvalid.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestFiles\Charges\ChargeDocumentWhereSenderIdDoNotMatchAuthorizedActorId.xml">
+    <Content Include="TestFiles\Charges\SenderIdDoNotMatchAuthorizedActorId.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestFiles\Charges\PriceSeries\TariffPriceSeriesWithInvalidBusinessReasonCode.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestFiles\Charges\CreateTaxTariffAsSystemOperator.xml">
+    <Content Include="TestFiles\Charges\TaxTariffAsSystemOperator.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestFiles\Samples\ChargeLinks\ChargeLinkSubscriptionSample.xml">
