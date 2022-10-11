@@ -14,33 +14,22 @@
 
 using System.Threading.Tasks;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
-using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 {
     public class MarketParticipantCreatedHandler : IMarketParticipantCreatedHandler
     {
         private readonly IMarketParticipantPersister _marketParticipantPersister;
-        private readonly ILogger _logger;
 
-        public MarketParticipantCreatedHandler(
-            IMarketParticipantPersister marketParticipantPersister,
-            ILoggerFactory loggerFactory)
+        public MarketParticipantCreatedHandler(IMarketParticipantPersister marketParticipantPersister)
         {
             _marketParticipantPersister = marketParticipantPersister;
-            _logger = loggerFactory.CreateLogger(nameof(MarketParticipantEventHandler));
         }
 
         public async Task HandleAsync(ActorCreatedIntegrationEvent actorCreatedIntegrationEvent)
         {
             var marketParticipantUpdatedEvent =
                 MarketParticipantDomainEventMapper.MapFromActorCreatedIntegrationEvent(actorCreatedIntegrationEvent);
-
-            _logger.LogInformation(
-                "ActorUpdatedIntegrationEvent Id {id} has been mapped to Charges' internal " +
-                "MarketParticipantCreatedEvent for GLN {GLN}.",
-                actorCreatedIntegrationEvent.Id,
-                marketParticipantUpdatedEvent.MarketParticipantId);
 
             await _marketParticipantPersister.PersistAsync(marketParticipantUpdatedEvent).ConfigureAwait(false);
         }
