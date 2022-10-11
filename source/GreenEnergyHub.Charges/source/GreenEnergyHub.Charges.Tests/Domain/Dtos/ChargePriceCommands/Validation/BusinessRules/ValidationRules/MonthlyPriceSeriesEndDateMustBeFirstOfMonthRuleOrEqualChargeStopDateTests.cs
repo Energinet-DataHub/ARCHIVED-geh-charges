@@ -38,7 +38,6 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
         [InlineAutoMoqData(Resolution.P1M, 15, 1, 15, 1, true)]
         [InlineAutoMoqData(Resolution.P1M, 1, 2, 0, 0, true)]
         [InlineAutoMoqData(Resolution.P1M, 1, 2, 1, 2, true)]
-        [InlineAutoMoqData(Resolution.P1M, 15, 2, 15, 2, true)]
         public void IsValid_WhenCalled_Should_ReturnExpectedResult(
             Resolution resolution,
             int priceEndDayDateTime,
