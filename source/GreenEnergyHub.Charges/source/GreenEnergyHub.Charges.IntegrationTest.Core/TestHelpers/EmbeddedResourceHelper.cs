@@ -110,13 +110,11 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
 
             var midnightLocalTimeWith2MonthsAdded = midnightLocalTime.PlusMonths(2);
 
-            // Calculate how many days to add to ensure we hit last day of the month
             var daysInCurrentMonth = midnightLocalTimeWith2MonthsAdded.Calendar.GetDaysInMonth(
                 midnightLocalTimeWith2MonthsAdded.Year,
                 midnightLocalTimeWith2MonthsAdded.Month);
             var daysToAddToHitFirstInNextMonth = daysInCurrentMonth - midnightLocalTimeWith2MonthsAdded.Day;
 
-            // Add 1 day to hit the first day in the new month
             var midnightLocalTime2MonthAheadOnTheFirst = midnightLocalTimeWith2MonthsAdded.PlusDays(daysToAddToHitFirstInNextMonth).PlusDays(1);
             var threeMonthAdded = midnightLocalTime2MonthAheadOnTheFirst.PlusMonths(1);
 
