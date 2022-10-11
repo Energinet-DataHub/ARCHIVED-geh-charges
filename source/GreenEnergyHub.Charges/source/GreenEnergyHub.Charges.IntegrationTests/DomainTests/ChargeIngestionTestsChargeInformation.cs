@@ -67,6 +67,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 return Task.CompletedTask;
             }
 
+            /* SYNCHRONOUS RESPONSES */
+
             [Fact]
             public async Task When_ChargeIsReceived_Then_AHttp202ResponseWithEmptyBodyIsReturned()
             {
@@ -78,27 +80,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
                 actualResponse.StatusCode.Should().Be(HttpStatusCode.Accepted);
                 responseBody.Should().BeEmpty();
-            }
-
-            [Fact]
-            public async Task When_ChargeInformationIsReceived_Then_ChargeCreatedIntegrationEventIsPublished()
-            {
-                // Arrange
-                var (request, correlationId) = Fixture.AsSystemOperator.PrepareHttpPostRequestWithAuthorization(
-                    EndpointUrl, ChargeDocument.TariffBundleWithCreateAndUpdate);
-                using var eventualChargeCreatedEvent = await Fixture
-                    .ChargeCreatedListener
-                    .ListenForMessageAsync(correlationId)
-                    .ConfigureAwait(false);
-
-                // Act
-                await Fixture.HostManager.HttpClient.SendAsync(request);
-
-                // Assert
-                var isChargeCreatedReceived = eventualChargeCreatedEvent
-                    .MessageAwaiter!
-                    .Wait(TimeSpan.FromSeconds(SecondsToWaitForIntegrationEvents));
-                isChargeCreatedReceived.Should().BeTrue();
             }
 
             [Fact]
@@ -119,73 +100,65 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 document.Element("Message")?.Value.Should().Be(ErrorMessageConstants.ActorIsNotWhoTheyClaimToBeErrorMessage);
             }
 
-            [Fact(Skip = "Used for debugging ChargeCommandReceivedEventHandler")]
-            public async Task Given_UpdateRequest_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply()
+            /* CONFIRMATIONS */
+            /* NOTIFICATIONS */
+
+            [Fact]
+            public async Task When_TaxTariffIsCreatedBySystemOperator_Then_ANotificationShouldBeReceivedByGridAccessProvidersAndEnergySuppliers()
             {
-                // Arrange - Create
-                var (createReq, correlationId) = Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
-                    EndpointUrl, ChargeDocument.CreateTariff);
-
-                var response = await Fixture.HostManager.HttpClient.SendAsync(createReq);
-                response.StatusCode.Should().Be(HttpStatusCode.Accepted);
-                await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, ResponseFormat.Xml);
-
-                // Arrange - Update
-                var (updateReq, updateCorrelationId) =
-                    Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
-                        EndpointUrl, ChargeDocument.UpdateTariff);
+                var (request, correlationId) = Fixture.AsSystemOperator.PrepareHttpPostRequestWithAuthorization(
+                    EndpointUrl, ChargeDocument.TariffSystemOperatorCreate);
 
                 // Act
-                var actual = await Fixture.HostManager.HttpClient.SendAsync(updateReq);
+                await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Assert
                 using var assertionScope = new AssertionScope();
-                actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
-
-                // * Expect one for the confirmation (update)
                 var peekResults =
-                    await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(
-                        updateCorrelationId,
-                        ResponseFormat.Xml);
-                peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
+                    await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, ResponseFormat.Xml, 8);
+                peekResults.Should().NotContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
+                peekResults.Should().ContainMatch("*NotifyPriceList_MarketDocument*");
+                peekResults.Should().ContainMatch("*8100000000030*");
+                peekResults.Should().ContainMatch("*8100000000016*");
+                peekResults.Should().ContainMatch("*8100000000023*");
+                peekResults.Should().ContainMatch("*8100000000108*");
+                peekResults.Should().ContainMatch("*8510000000013*");
+                peekResults.Should().NotContainMatch("*8900000000005*");
+                peekResults.Should().ContainMatch("*<cim:process.processType>D18</cim:process.processType>*");
+                peekResults.Should().NotContainMatch("*<cim:process.processType>D08</cim:process.processType>*");
             }
 
-            [Theory]
-            [InlineAutoMoqData(ChargeDocument.ChargeInformationTariffHourlySample, 4, 1)]
-            [InlineAutoMoqData(ChargeDocument.BundledChargeInformationSample, 12, 3)]
-            [InlineAutoMoqData(ChargeDocument.ChargeInformationSubscriptionMonthlySample, 4, 1)]
-            [InlineAutoMoqData(ChargeDocument.ChargeInformationFeeMonthlySample, 4, 1)]
-            public async Task Given_ChargeInformationSampleFile_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply(
-                string testFilePath, int noOfDataAvailableNotificationsExpected, int noOfConfirmedActivityRecordsExpected)
+            [Fact]
+            public async Task When_ChargeInformationTaxIsCreatedBySystemOperator_Then_ANotificationShouldBeReceivedByActiveGridProvidersAndSuppliersAsJson()
             {
-                // Arrange
-                var (request, correlationId) =
-                    Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(EndpointUrl, testFilePath);
+                var (request, correlationId) = Fixture.AsSystemOperator.PrepareHttpPostRequestWithAuthorization(
+                    EndpointUrl, ChargeDocument.TariffSystemOperatorCreate);
 
                 // Act
-                var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
+                await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Assert
-                actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
-
                 using var assertionScope = new AssertionScope();
+                var peekResults =
+                    await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, ResponseFormat.Json, 8);
 
-                // We expect 4 peek results:
-                // * 1 confirmation
-                // * 3 data available to energy suppliers
-                var peekResults = await Fixture.MessageHubMock
-                    .AssertPeekReceivesRepliesAsync(correlationId, ResponseFormat.Xml, noOfDataAvailableNotificationsExpected);
-
-                peekResults.Count.Should().Be(4);
-                peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
-                peekResults.Should().ContainMatch("*Notify*");
-                peekResults.Should().NotContainMatch("*Reject*");
-
-                var peekResult = peekResults.Single(x => x.Contains("ConfirmRequestChangeOfPriceList_MarketDocument"));
-                var operations = CIMXmlReader.GetActivityRecordElements(
-                    peekResult, "MktActivityRecord", "originalTransactionIDReference_MktActivityRecord.mRID");
-                operations.Count.Should().Be(noOfConfirmedActivityRecordsExpected);
+                peekResults.Should().NotContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
+                peekResults.Should().ContainMatch("*NotifyPriceList_MarketDocument*");
+                peekResults.Should().ContainMatch("*\"value\": \"D18\"*");
+                peekResults.Should().NotContainMatch("*\"value\": \"D08\"*");
+                peekResults.Should().ContainMatch("*\"value\": \"DDZ\"*");
+                peekResults.Should().ContainMatch("*\"value\": \"DDM\"*");
+                peekResults.Should().ContainMatch("*8100000000030*");
+                peekResults.Should().ContainMatch("*8100000000016*");
+                peekResults.Should().ContainMatch("*8100000000023*");
+                peekResults.Should().NotContainMatch("*8900000000005*");
+                peekResults.Should().ContainMatch("*\"value\": \"DDQ\"*");
+                peekResults.Should().ContainMatch("*8100000000108*");
+                peekResults.Should().ContainMatch("*8510000000013*");
             }
+
+            /* REJECTIONS */
+            /* BUNDLING */
 
             [Fact]
             public async Task Given_BundleWithMultipleOperationsForSameCharge_When_GridAccessProviderPeeks_Then_MessageHubReceivesReplyWithChronologicallyOrderedOperations()
@@ -246,58 +219,97 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 peekResults.Should().ContainMatch("*It is not allowed to change the tax indicator to Tax for charge*");
             }
 
+            /* INTEGRATION EVENTS */
+
             [Fact]
-            public async Task When_TaxTariffIsCreatedBySystemOperator_Then_ANotificationShouldBeReceivedByGridAccessProvidersAndEnergySuppliers()
+            public async Task When_ChargeInformationIsReceived_Then_ChargeCreatedIntegrationEventIsPublished()
             {
+                // Arrange
                 var (request, correlationId) = Fixture.AsSystemOperator.PrepareHttpPostRequestWithAuthorization(
-                    EndpointUrl, ChargeDocument.TariffSystemOperatorCreate);
+                    EndpointUrl, ChargeDocument.TariffBundleWithCreateAndUpdate);
+                using var eventualChargeCreatedEvent = await Fixture
+                    .ChargeCreatedListener
+                    .ListenForMessageAsync(correlationId)
+                    .ConfigureAwait(false);
 
                 // Act
                 await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Assert
-                using var assertionScope = new AssertionScope();
-                var peekResults =
-                    await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, ResponseFormat.Xml, 8);
-                peekResults.Should().NotContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
-                peekResults.Should().ContainMatch("*NotifyPriceList_MarketDocument*");
-                peekResults.Should().ContainMatch("*8100000000030*");
-                peekResults.Should().ContainMatch("*8100000000016*");
-                peekResults.Should().ContainMatch("*8100000000023*");
-                peekResults.Should().ContainMatch("*8100000000108*");
-                peekResults.Should().ContainMatch("*8510000000013*");
-                peekResults.Should().NotContainMatch("*8900000000005*");
-                peekResults.Should().ContainMatch("*<cim:process.processType>D18</cim:process.processType>*");
-                peekResults.Should().NotContainMatch("*<cim:process.processType>D08</cim:process.processType>*");
+                var isChargeCreatedReceived = eventualChargeCreatedEvent
+                    .MessageAwaiter!
+                    .Wait(TimeSpan.FromSeconds(SecondsToWaitForIntegrationEvents));
+                isChargeCreatedReceived.Should().BeTrue();
             }
 
-            [Fact]
-            public async Task When_ChargeInformationTaxIsCreatedBySystemOperator_Then_ANotificationShouldBeReceivedByActiveGridProvidersAndSuppliersAsJson()
+            /* SAMPLES */
+
+            [Theory]
+            [InlineAutoMoqData(ChargeDocument.ChargeInformationTariffHourlySample, 4, 1)]
+            [InlineAutoMoqData(ChargeDocument.BundledChargeInformationSample, 12, 3)]
+            [InlineAutoMoqData(ChargeDocument.ChargeInformationSubscriptionMonthlySample, 4, 1)]
+            [InlineAutoMoqData(ChargeDocument.ChargeInformationFeeMonthlySample, 4, 1)]
+            public async Task Given_ChargeInformationSampleFile_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply(
+                string testFilePath, int noOfDataAvailableNotificationsExpected, int noOfConfirmedActivityRecordsExpected)
             {
-                var (request, correlationId) = Fixture.AsSystemOperator.PrepareHttpPostRequestWithAuthorization(
-                    EndpointUrl, ChargeDocument.TariffSystemOperatorCreate);
+                // Arrange
+                var (request, correlationId) =
+                    Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(EndpointUrl, testFilePath);
 
                 // Act
-                await Fixture.HostManager.HttpClient.SendAsync(request);
+                var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
+
+                using var assertionScope = new AssertionScope();
+
+                // We expect 4 peek results:
+                // * 1 confirmation
+                // * 3 data available to energy suppliers
+                var peekResults = await Fixture.MessageHubMock
+                    .AssertPeekReceivesRepliesAsync(correlationId, ResponseFormat.Xml, noOfDataAvailableNotificationsExpected);
+
+                peekResults.Count.Should().Be(4);
+                peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
+                peekResults.Should().ContainMatch("*Notify*");
+                peekResults.Should().NotContainMatch("*Reject*");
+
+                var peekResult = peekResults.Single(x => x.Contains("ConfirmRequestChangeOfPriceList_MarketDocument"));
+                var operations = CIMXmlReader.GetActivityRecordElements(
+                    peekResult, "MktActivityRecord", "originalTransactionIDReference_MktActivityRecord.mRID");
+                operations.Count.Should().Be(noOfConfirmedActivityRecordsExpected);
+            }
+
+            [Fact(Skip = "Used for debugging ChargeCommandReceivedEventHandler")]
+            public async Task Given_UpdateRequest_When_GridAccessProviderPeeks_Then_MessageHubReceivesReply()
+            {
+                // Arrange - Create
+                var (createReq, correlationId) = Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
+                    EndpointUrl, ChargeDocument.CreateTariff);
+
+                var response = await Fixture.HostManager.HttpClient.SendAsync(createReq);
+                response.StatusCode.Should().Be(HttpStatusCode.Accepted);
+                await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, ResponseFormat.Xml);
+
+                // Arrange - Update
+                var (updateReq, updateCorrelationId) =
+                    Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
+                        EndpointUrl, ChargeDocument.UpdateTariff);
+
+                // Act
+                var actual = await Fixture.HostManager.HttpClient.SendAsync(updateReq);
 
                 // Assert
                 using var assertionScope = new AssertionScope();
-                var peekResults =
-                    await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, ResponseFormat.Json, 8);
+                actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
 
-                peekResults.Should().NotContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
-                peekResults.Should().ContainMatch("*NotifyPriceList_MarketDocument*");
-                peekResults.Should().ContainMatch("*\"value\": \"D18\"*");
-                peekResults.Should().NotContainMatch("*\"value\": \"D08\"*");
-                peekResults.Should().ContainMatch("*\"value\": \"DDZ\"*");
-                peekResults.Should().ContainMatch("*\"value\": \"DDM\"*");
-                peekResults.Should().ContainMatch("*8100000000030*");
-                peekResults.Should().ContainMatch("*8100000000016*");
-                peekResults.Should().ContainMatch("*8100000000023*");
-                peekResults.Should().NotContainMatch("*8900000000005*");
-                peekResults.Should().ContainMatch("*\"value\": \"DDQ\"*");
-                peekResults.Should().ContainMatch("*8100000000108*");
-                peekResults.Should().ContainMatch("*8510000000013*");
+                // * Expect one for the confirmation (update)
+                var peekResults =
+                    await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(
+                        updateCorrelationId,
+                        ResponseFormat.Xml);
+                peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
             }
         }
     }
