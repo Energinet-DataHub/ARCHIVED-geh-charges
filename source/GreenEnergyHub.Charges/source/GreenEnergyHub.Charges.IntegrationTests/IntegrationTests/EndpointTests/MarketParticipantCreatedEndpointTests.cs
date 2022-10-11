@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
-using Energinet.DataHub.MarketParticipant.Integration.Model.Parsers;
+using Energinet.DataHub.MarketParticipant.Integration.Model.Parsers.Actor;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers;
 using GreenEnergyHub.Charges.FunctionHost.MarketParticipant;
@@ -35,35 +35,26 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 {
     [IntegrationTest]
-    public class MarketParticipantPersisterEndpointTests
+    public class MarketParticipantCreatedEndpointTests
     {
         [Collection(nameof(ChargesFunctionAppCollectionFixture))]
-        public class RunAsync : FunctionAppTestBase<ChargesFunctionAppFixture>, IAsyncLifetime
+        public class RunAsync : FunctionAppTestBase<ChargesFunctionAppFixture>
         {
             public RunAsync(ChargesFunctionAppFixture fixture, ITestOutputHelper testOutputHelper)
                 : base(fixture, testOutputHelper)
             {
             }
 
-            public Task InitializeAsync()
-            {
-                return Task.CompletedTask;
-            }
-
-            public Task DisposeAsync()
-            {
-                return Task.CompletedTask;
-            }
-
-            [Theory]
-            [InlineData(BusinessRoleCode.Ddm, ActorStatus.Inactive)]
-            public async Task When_ReceivingActorIntegrationUpdatedMessage_MarketParticipantIsSavedToDatabase(
-                BusinessRoleCode businessRoleCode, ActorStatus actorStatus)
+            [Fact]
+            public async Task When_ReceivingActorIntegrationUpdatedMessage_MarketParticipantIsSavedToDatabase()
             {
                 // Arrange
                 const string gln = "1234567890123";
-                var role = MarketParticipantRoleMapper.Map(businessRoleCode);
-                var message = CreateServiceBusMessage(gln, actorStatus, new List<BusinessRoleCode> { businessRoleCode });
+                var role = MarketParticipantRoleMapper.Map(BusinessRoleCode.Ddq);
+                var message = CreateServiceBusMessage(gln, ActorStatus.Active, new List<BusinessRoleCode>
+                {
+                    BusinessRoleCode.Ddq,
+                });
 
                 await using var context = Fixture.ChargesDatabaseManager.CreateDbContext();
 
@@ -73,31 +64,35 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
                 // Assert
                 await FunctionAsserts.AssertHasExecutedAsync(
-                    Fixture.HostManager, nameof(MarketParticipantPersisterEndpoint)).ConfigureAwait(false);
+                    Fixture.HostManager, nameof(MarketParticipantCreatedEndpoint)).ConfigureAwait(false);
                 var marketParticipant = context.MarketParticipants.SingleOrDefault(x =>
                     x.MarketParticipantId == gln && x.BusinessProcessRole == role);
                 marketParticipant.Should().NotBeNull();
 
                 // We need to clear host log after each test is done to ensure that we can assert on function executed on each test run because we only check on function name
                 Fixture.HostManager.ClearHostLog();
+                // Remove added actor
+                var addedMarketParticipant = context.MarketParticipants.Single(x => x.MarketParticipantId == gln);
+                context.Remove(addedMarketParticipant);
+                await context.SaveChangesAsync();
             }
 
             private static ServiceBusMessage CreateServiceBusMessage(
                 string actorNumber, ActorStatus status, IEnumerable<BusinessRoleCode> businessRoles)
             {
-                var actorUpdatedIntegrationEvent = new ActorUpdatedIntegrationEvent(
-                    Guid.NewGuid(),
-                    DateTime.UtcNow,
+                var actorUpdatedIntegrationEvent = new ActorCreatedIntegrationEvent(
                     Guid.NewGuid(),
                     Guid.NewGuid(),
                     Guid.NewGuid(),
-                    actorNumber,
                     status,
+                    actorNumber,
+                    "New actor",
                     businessRoles,
-                    CreateActorMarketRoles());
+                    CreateActorMarketRoles(),
+                    DateTime.UtcNow);
 
-                var actorUpdatedIntegrationEventParser = new ActorUpdatedIntegrationEventParser();
-                var message = actorUpdatedIntegrationEventParser.ParseToSharedIntegrationEvent(actorUpdatedIntegrationEvent);
+                var actorCreatedIntegrationEventParser = new ActorCreatedIntegrationEventParser();
+                var message = actorCreatedIntegrationEventParser.ParseToSharedIntegrationEvent(actorUpdatedIntegrationEvent);
 
                 var correlationId = CorrelationIdGenerator.Create();
                 var serviceBusMessage = new ServiceBusMessage(message)
@@ -106,7 +101,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     ApplicationProperties =
                     {
                         new KeyValuePair<string, object>(MessageMetaDataConstants.CorrelationId, correlationId),
-                        new KeyValuePair<string, object>(MessageMetaDataConstants.MessageType, "GridAreaUpdatedIntegrationEvent"),
+                        new KeyValuePair<string, object>(MessageMetaDataConstants.MessageType, "ActorCreated"),
                     },
                 };
 

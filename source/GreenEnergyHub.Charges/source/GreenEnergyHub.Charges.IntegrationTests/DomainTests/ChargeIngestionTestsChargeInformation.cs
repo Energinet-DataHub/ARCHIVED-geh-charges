@@ -233,7 +233,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // Assert
                 actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
 
-                // We expect 6 peeks:
+                // We expect 5 peeks:
                 // * 1 for the confirmation (first operation)
                 // * 1 for the rejection (second operation violating VR.903)
                 // * 3 data available to energy suppliers
