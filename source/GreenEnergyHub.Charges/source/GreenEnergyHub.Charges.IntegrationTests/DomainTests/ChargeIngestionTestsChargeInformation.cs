@@ -115,6 +115,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 actual.StatusCode.Should().Be(HttpStatusCode.BadRequest);
                 var errorMessage = await actual.Content.ReadAsStreamAsync();
                 var document = await XDocument.LoadAsync(errorMessage, LoadOptions.None, CancellationToken.None);
+                document.Element("Code")?.Value.Should().Be("B2B-008");
                 document.Element("Message")?.Value.Should().Be(ErrorMessageConstants.ActorIsNotWhoTheyClaimToBeErrorMessage);
             }
 
