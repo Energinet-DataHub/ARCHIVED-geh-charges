@@ -100,7 +100,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 document.Element("Message")?.Value.Should().Be(ErrorMessageConstants.ActorIsNotWhoTheyClaimToBeErrorMessage);
             }
 
-            /* CONFIRMATIONS */
+            /* CONFIRMATIONS - PLEASE REFER TO SAMPLES BELOW */
+
             /* NOTIFICATIONS */
 
             [Fact]
@@ -176,10 +177,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
 
                 // We expect four peeks:
-                // * A confirmation to GridAccessProvider
-                // * A single notification to EnergySupplier 8100000000108
-                // * A single notification to EnergySupplier 8100000001004
-                // * A single notification to EnergySupplier 8510000000013
+                // * A confirmation to Grid Access Provider
+                // * A single notification to Energy Supplier 8100000000108
+                // * A single notification to Energy Supplier 8100000001004
+                // * A single notification to Energy Supplier 8510000000013
                 using var assertionScope = new AssertionScope();
 
                 var peekResults =
@@ -197,7 +198,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             }
 
             [Fact]
-            public async Task Ingestion_BundleWithTwoOperationsForSameTariffWhere2ndIsInvalid_Confirm1st_Rejects2nd_And_NotifiesAbout1st()
+            public async Task Ingestion_BundleWithTwoOperationsForSameTariffWhere2ndIsInvalid_Confirms1st_Rejects2nd_And_NotifiesAbout1st()
             {
                 // Arrange
                 var (request, correlationId) = Fixture.AsSystemOperator.PrepareHttpPostRequestWithAuthorization(
@@ -212,7 +213,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // We expect 6 peeks:
                 // * Confirmation (first operation) to System Operator
                 // * Rejection (second operation violating VR.903) to System Operator
-                // * 3x notifications to energy suppliers
+                // * 3x notifications to Energy Suppliers
                 using var assertionScope = new AssertionScope();
                 var peekResults =
                     await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, ResponseFormat.Xml, 5);
@@ -221,7 +222,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 peekResults.Should().ContainMatch("*It is not allowed to change the tax indicator to Tax for charge*");
                 peekResults.Should().ContainMatch("*NotifyPriceList_MarketDocument*");
 
-                var notification = peekResults.Single(x => x.Contains("NotifyPriceList_MarketDocument"));
+                var notification = peekResults.First(x => x.Contains("NotifyPriceList_MarketDocument"));
                 var notificationOperations =
                     CIMXmlReader.GetActivityRecordElements(notification, "ChargeType", "description");
                 notificationOperations.Should().HaveCount(1);
