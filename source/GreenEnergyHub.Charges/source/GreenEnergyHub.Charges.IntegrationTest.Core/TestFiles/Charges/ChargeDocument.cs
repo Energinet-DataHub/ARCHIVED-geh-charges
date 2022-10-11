@@ -26,12 +26,12 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.Charges
         public const string AnyInvalid = "TestFiles/Charges/InvalidTariffDocument.xml";
         public const string TariffInvalidSchema = "TestFiles/Charges/InvalidSchemaTariffDocument.xml";
         public const string TariffBundleWithValidAndInvalid = "TestFiles/Charges/TariffBundleWithValidAndInvalid.xml";
-        public const string TariffBundleWithCreateAndUpdate = "TestFiles/Charges/TariffBundleWithCreateAndUpdate.xml";
+        public const string CreateTariffAsSystemOperator = "TestFiles/Charges/CreateTariffAsSystemOperator.xml";
         public const string BundleWithMultipleOperationsForSameTariff = "TestFiles/Charges/BundleWithMultipleOperationsForSameTariff.xml";
         public const string BundleWithTwoOperationsForSameTariffSecondOpViolatingVr903
             = "TestFiles/Charges/BundleWithTwoOperationsForSameTariffSecondOpViolatingVr903.xml";
 
-        public const string TariffSystemOperatorCreate = "TestFiles/Charges/TariffSystemOperatorCreate.xml";
+        public const string CreateTaxTariffAsSystemOperator = "TestFiles/Charges/CreateTaxTariffAsSystemOperator.xml";
 
         public const string ChargeInformationTariffHourlySample = "TestFiles/Samples/Charges/ChargeInformationTariffHourlySample.xml";
         public const string ChargeInformationFeeMonthlySample = "TestFiles/Samples/Charges/ChargeInformationFeeMonthlySample.xml";

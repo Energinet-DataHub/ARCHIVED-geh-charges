@@ -140,7 +140,7 @@ limitations under the License.
     <Content Include="TestFiles\Charges\PriceSeries\TaxTariffPriceSeriesWithInformationToBeIgnored.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestFiles\Charges\TariffBundleWithCreateAndUpdate.xml">
+    <Content Include="TestFiles\Charges\CreateTariffAsSystemOperator.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestFiles\Charges\TariffBundleWithValidAndInvalid.xml">
@@ -158,7 +158,7 @@ limitations under the License.
     <Content Include="TestFiles\Charges\PriceSeries\TariffPriceSeriesWithInvalidBusinessReasonCode.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestFiles\Charges\TariffSystemOperatorCreate.xml">
+    <Content Include="TestFiles\Charges\CreateTaxTariffAsSystemOperator.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestFiles\Samples\ChargeLinks\ChargeLinkSubscriptionSample.xml">
