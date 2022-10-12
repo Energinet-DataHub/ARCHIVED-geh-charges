@@ -1,5 +1,5 @@
 ﻿// Copyright 2020 Energinet DataHub A/S
-//
+
 // Licensed under the Apache License, Version 2.0 (the "License2");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -11,28 +11,13 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Energinet.Charges.Contracts.ChargePoint;
 
-#nullable disable
+namespace GreenEnergyHub.Charges.QueryApi.QueryServices;
 
-using System;
-
-namespace GreenEnergyHub.Charges.QueryApi.Model;
-
-public class ChargePrice
+public interface IChargePointQueryService
 {
-    public Guid Id { get; set; }
-
-    public Guid ChargeId { get; set; }
-
-    public DateTime Time { get; set; }
-
-    public decimal Price { get; set; }
-
-    public bool Retired { get; set; }
-
-    public DateTime? RetiredDateTime { get; set; }
-
-    public Guid ChargeOperationId { get; set; }
-
-    public virtual Charge Charge { get; set; }
+    Task<IList<ChargePointV1Dto>> SearchAsync(SearchCriteriaV1Dto searchCriteria);
 }

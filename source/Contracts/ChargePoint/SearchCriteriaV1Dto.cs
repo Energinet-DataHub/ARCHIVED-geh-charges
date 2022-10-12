@@ -12,23 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Linq;
-using GreenEnergyHub.Charges.QueryApi.Model;
+using System;
 
-namespace GreenEnergyHub.Charges.QueryApi
+// ReSharper disable once CheckNamespace - Type is shared so namespace is not determined by project structure/namespace
+namespace Energinet.Charges.Contracts.ChargePoint
 {
-    public interface IData
-    {
-        public IQueryable<ChargeLink> ChargeLinks { get; }
-
-        public IQueryable<Charge> Charges { get; }
-
-        public IQueryable<ChargePoint> ChargePoints { get; }
-
-        public IQueryable<MeteringPoint> MeteringPoints { get; }
-
-        public IQueryable<MarketParticipant> MarketParticipants { get; }
-
-        public IQueryable<DefaultChargeLink> DefaultChargeLinks { get; }
-    }
+    public record SearchCriteriaV1Dto(
+        Guid ChargeId,
+        DateTime DateTimeFrom,
+        DateTime DateTimeTo);
 }

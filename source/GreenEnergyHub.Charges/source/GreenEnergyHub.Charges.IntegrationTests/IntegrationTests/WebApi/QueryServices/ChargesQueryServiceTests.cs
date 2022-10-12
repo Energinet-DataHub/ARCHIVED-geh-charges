@@ -26,7 +26,7 @@ using GreenEnergyHub.Charges.QueryApi.Model;
 using GreenEnergyHub.Charges.QueryApi.QueryServices;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Builders.Command;
-using GreenEnergyHub.Charges.TestCore.Builders.Query;
+using GreenEnergyHub.Charges.TestCore.Builders.Query.Charge;
 using GreenEnergyHub.TestHelpers;
 using Microsoft.EntityFrameworkCore;
 using NodaTime.Extensions;
@@ -34,7 +34,6 @@ using Xunit;
 using Xunit.Categories;
 using Charge = GreenEnergyHub.Charges.Domain.Charges.Charge;
 using ChargePeriod = GreenEnergyHub.Charges.Domain.Charges.ChargePeriod;
-using ChargePeriodBuilder = GreenEnergyHub.Charges.TestCore.Builders.Command.ChargePeriodBuilder;
 using MarketParticipant = GreenEnergyHub.Charges.Domain.MarketParticipants.MarketParticipant;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryServices

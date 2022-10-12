@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Query
             return this;
         }
 
-        public ChargePeriod Build(Charge charge)
+        public ChargePeriod Build(QueryApi.Model.Charge charge)
         {
             return new ChargePeriod
             {

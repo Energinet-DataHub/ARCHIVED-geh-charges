@@ -18,7 +18,7 @@ using Energinet.Charges.Contracts.Charge;
 using FluentAssertions;
 using GreenEnergyHub.Charges.QueryApi.Validation;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Charges.TestCore.Builders.Query;
+using GreenEnergyHub.Charges.TestCore.Builders.Query.Charge;
 using Xunit;
 using Xunit.Categories;
 
