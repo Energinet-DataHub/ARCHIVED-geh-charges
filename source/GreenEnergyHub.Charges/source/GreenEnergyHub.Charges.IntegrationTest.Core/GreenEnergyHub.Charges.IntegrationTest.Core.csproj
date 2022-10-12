@@ -167,7 +167,7 @@ limitations under the License.
     <Content Include="TestFiles\Samples\Charges\ChargePriceSeriesTariffHourlySample.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestFiles\Charges\PriceSeries\PriceSeriesTaxTariff.xml">
+    <Content Include="TestFiles\Charges\PriceSeries\TaxTariffPriceSeries.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

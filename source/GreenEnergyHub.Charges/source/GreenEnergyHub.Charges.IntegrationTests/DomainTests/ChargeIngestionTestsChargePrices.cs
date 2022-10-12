@@ -112,7 +112,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task Ingestion_ChargePricesRequestForTaxTariff_NotificationsReceivedByGridAccessProvidersAndEnergySuppliers()
             {
                 var (request, correlationId) = Fixture.AsSystemOperator.PrepareHttpPostRequestWithAuthorization(
-                    EndpointUrl, ChargePricesRequests.PriceSeriesTaxTariff);
+                    EndpointUrl, ChargePricesRequests.TaxTariffPriceSeries);
 
                 // Act
                 var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
@@ -150,7 +150,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             {
                 // Arrange
                 var (request, correlationId) = Fixture.AsSystemOperator.PrepareHttpPostRequestWithAuthorization(
-                    EndpointUrl, ChargePricesRequests.PriceSeriesTaxTariff);
+                    EndpointUrl, ChargePricesRequests.TaxTariffPriceSeries);
 
                 // Act
                 var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request);
