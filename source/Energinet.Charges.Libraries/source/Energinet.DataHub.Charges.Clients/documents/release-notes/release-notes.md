@@ -2,7 +2,7 @@
 
 ## Version 4.1.1
 
-Added VatClassification and ChargeName to ChargesV1Dto
+Added VatClassification and ChargeDescription to ChargesV1Dto
 
 ## Version 4.1.0
 
