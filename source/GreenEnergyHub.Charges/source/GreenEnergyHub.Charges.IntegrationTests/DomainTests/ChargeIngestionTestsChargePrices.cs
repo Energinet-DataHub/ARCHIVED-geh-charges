@@ -28,7 +28,6 @@ using GreenEnergyHub.Charges.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTest.Core.MessageHub;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon;
-using GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.Charges;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.Charges.PriceSeries;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
