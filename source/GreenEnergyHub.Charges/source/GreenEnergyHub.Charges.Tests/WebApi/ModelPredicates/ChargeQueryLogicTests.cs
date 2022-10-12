@@ -47,8 +47,10 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
                 (Resolution)charge.Resolution,
                 charge.SenderProvidedChargeId,
                 charge.ChargePeriods.Single().Name,
+                charge.ChargePeriods.Single().Description,
                 charge.Owner.MarketParticipantId,
                 charge.Owner.Name,
+                (VatClassification)charge.ChargePeriods.Single().VatClassification,
                 charge.TaxIndicator,
                 charge.ChargePeriods.Single().TransparentInvoicing,
                 charge.ChargePeriods.Single().StartDateTime,
@@ -63,7 +65,9 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
 
         private static ChargePeriod GenerateChargePeriod(Charge charge)
         {
-            var period = new ChargePeriodBuilder().Build(charge);
+            var period = new ChargePeriodBuilder()
+                .WithVatClassification(GreenEnergyHub.Charges.Domain.Charges.VatClassification.Vat25)
+                .Build(charge);
             return period;
         }
     }

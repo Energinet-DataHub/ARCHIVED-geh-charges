@@ -19,4 +19,4 @@ DECLARE @charge_with_enddate_id UNIQUEIDENTIFIER = NEWID();
 DECLARE @chargeOwnerId UNIQUEIDENTIFIER
 SELECT @chargeOwnerId = Id FROM charges.marketparticipant WHERE marketparticipantid = '8100000000030'
 INSERT INTO [Charges].[Charge] VALUES (@charge_with_enddate_id, 'chg-end', 3, @chargeOwnerId, 0, 2);
-INSERT INTO [Charges].[ChargePeriod] VALUES (NEWID(), @charge_with_enddate_id, 0, 'charge with an enddate desc', 'charge with an enddate', 0,  '2020-12-31T23:00:00',  '2021-12-31T23:00:00');
+INSERT INTO [Charges].[ChargePeriod] VALUES (NEWID(), @charge_with_enddate_id, 0, 'charge with an enddate desc', 'charge with an enddate', 2,  '2020-12-31T23:00:00',  '2021-12-31T23:00:00');
