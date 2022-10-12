@@ -13,6 +13,7 @@ ChargeLinkId
 ChargeLinkPeriod
 ChargeLinkUpdated
 ChargeName
+ChargeDescription
 ChargeOwner
 ChargePeriod
 ChargePeriodUpdated
