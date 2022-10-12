@@ -39,8 +39,22 @@ public static class ChargeQueryLogic
              c.ChargePeriods
                  .OrderBy(cp => cp.StartDateTime)
                  .First()).Name,
+            (c.ChargePeriods
+                 .Where(cp => cp.StartDateTime <= todayAtMidnightUtc)
+                 .OrderByDescending(cp => cp.StartDateTime)
+                 .FirstOrDefault() ??
+             c.ChargePeriods
+                 .OrderBy(cp => cp.StartDateTime)
+                 .First()).Description,
             c.Owner.MarketParticipantId,
             c.Owner.Name,
+            MapVatClassification((Domain.Charges.VatClassification)(c.ChargePeriods
+                                      .Where(cp => cp.StartDateTime <= todayAtMidnightUtc)
+                                      .OrderByDescending(cp => cp.StartDateTime)
+                                      .FirstOrDefault() ??
+                                  c.ChargePeriods
+                                      .OrderBy(cp => cp.StartDateTime)
+                                      .First()).VatClassification),
             c.TaxIndicator,
             (c.ChargePeriods
                  .Where(cp => cp.StartDateTime <= todayAtMidnightUtc)
@@ -58,6 +72,18 @@ public static class ChargeQueryLogic
                  .First()).StartDateTime,
             GetValidToDate(c.ChargePeriods.OrderByDescending(cp => cp.EndDateTime).First().EndDateTime)));
     }
+
+    private static VatClassification MapVatClassification(Domain.Charges.VatClassification vatClassification) =>
+        vatClassification switch
+        {
+            Domain.Charges.VatClassification.NoVat => VatClassification.NoVat,
+            Domain.Charges.VatClassification.Vat25 => VatClassification.Vat25,
+            Domain.Charges.VatClassification.Unknown =>
+                throw new NotSupportedException(
+                    $"VatClassification '{Domain.Charges.VatClassification.Unknown}' is not supported"),
+            _ =>
+                throw new ArgumentOutOfRangeException(nameof(vatClassification)),
+        };
 
     private static DateTime? GetValidToDate(DateTime validToDate)
     {
