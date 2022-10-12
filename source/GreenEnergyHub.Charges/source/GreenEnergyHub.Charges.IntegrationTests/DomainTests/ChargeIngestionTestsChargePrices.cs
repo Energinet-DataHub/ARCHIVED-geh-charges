@@ -131,6 +131,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 peekResults.Should().HaveCount(8);
                 peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
                 peekResults.Should().NotContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
+                peekResults.Should().ContainMatch("*<cim:process.processType>D08</cim:process.processType>*");
+                peekResults.Should().NotContainMatch("*<cim:process.processType>D18</cim:process.processType>*");
 
                 var energySupplierNotifications = peekResults
                     .Where(x => x.Contains("NotifyPriceList_MarketDocument") && x.Contains("DDQ"))
