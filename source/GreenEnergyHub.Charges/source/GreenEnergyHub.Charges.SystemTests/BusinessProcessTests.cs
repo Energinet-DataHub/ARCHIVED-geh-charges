@@ -67,7 +67,7 @@ namespace GreenEnergyHub.Charges.SystemTests
             var bundleId = Guid.NewGuid().ToString();
 
             var body = EmbeddedResourceHelper
-                .GetEmbeddedFile(ChargeInformationRequest.Subscription, currentInstant, ZonedDateTimeServiceHelper.GetZonedDateTimeService(currentInstant))
+                .GetEmbeddedFile(ChargeInformationRequests.Subscription, currentInstant, ZonedDateTimeServiceHelper.GetZonedDateTimeService(currentInstant))
                 .Replace("{{GridAccessProvider}}", Configuration.GridAccessProvider);
 
             var submitRequest = new HttpRequestMessage(HttpMethod.Post, Configuration.ChargeIngestionEndpoint)

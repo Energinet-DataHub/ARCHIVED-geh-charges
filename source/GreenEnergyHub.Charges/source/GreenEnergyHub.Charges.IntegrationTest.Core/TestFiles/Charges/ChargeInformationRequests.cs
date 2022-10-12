@@ -14,7 +14,7 @@
 
 namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.Charges
 {
-    public static class ChargeInformationRequest
+    public static class ChargeInformationRequests
     {
         public const string Subscription = "TestFiles/Charges/Subscription.xml";
         public const string Tariff = "TestFiles/Charges/Tariff.xml";

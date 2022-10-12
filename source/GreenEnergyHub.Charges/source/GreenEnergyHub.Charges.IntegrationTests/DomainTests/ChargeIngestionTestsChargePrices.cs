@@ -79,7 +79,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task Ingestion_NoBearerToken_Http401UnauthorizedResponse()
             {
                 var request = HttpRequestGenerator.CreateHttpPostRequest(
-                    EndpointUrl, ChargeInformationRequest.TariffPriceSeries, GetZonedDateTimeService());
+                    EndpointUrl, ChargeInformationRequests.TariffPriceSeries, GetZonedDateTimeService());
 
                 var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
 
@@ -91,7 +91,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             {
                 // Arrange
                 var (request, _) = Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
-                    EndpointUrl, ChargeInformationRequest.TariffPriceSeriesWithInvalidBusinessReasonCode);
+                    EndpointUrl, ChargeInformationRequests.TariffPriceSeriesWithInvalidBusinessReasonCode);
 
                 // Act
                 var response = await Fixture.HostManager.HttpClient.SendAsync(request);
@@ -111,7 +111,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task Ingestion_ChargePricesRequestForTaxTariff_NotificationsReceivedByGridAccessProvidersAndEnergySuppliers()
             {
                 var (request, correlationId) = Fixture.AsSystemOperator.PrepareHttpPostRequestWithAuthorization(
-                    EndpointUrl, ChargeInformationRequest.PriceSeriesTaxTariff);
+                    EndpointUrl, ChargeInformationRequests.PriceSeriesTaxTariff);
 
                 // Act
                 var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
@@ -149,7 +149,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             {
                 // Arrange
                 var (request, correlationId) = Fixture.AsSystemOperator.PrepareHttpPostRequestWithAuthorization(
-                    EndpointUrl, ChargeInformationRequest.PriceSeriesTaxTariff);
+                    EndpointUrl, ChargeInformationRequests.PriceSeriesTaxTariff);
 
                 // Act
                 var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request);
@@ -189,7 +189,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             {
                 // Arrange
                 var (request, correlationId) = Fixture.AsSystemOperator.PrepareHttpPostRequestWithAuthorization(
-                    EndpointUrl, ChargeInformationRequest.TaxTariffPriceSeriesWithInformationToBeIgnored);
+                    EndpointUrl, ChargeInformationRequests.TaxTariffPriceSeriesWithInformationToBeIgnored);
 
                 // Act
                 var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request);
@@ -227,7 +227,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             {
                 // Arrange
                 var (request, correlationId) = Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
-                    EndpointUrl, ChargeInformationRequest.TariffPriceSeriesWithInvalidRecipientType);
+                    EndpointUrl, ChargeInformationRequests.TariffPriceSeriesWithInvalidRecipientType);
 
                 // Act
                 var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request);
@@ -249,9 +249,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             }
 
             [Theory]
-            [InlineData(ChargeInformationRequest.TariffPriceSeriesInvalidMaximumPrice, "*<cim:code>E90</cim:code>*")]
-            [InlineData(ChargeInformationRequest.TariffPriceSeriesInvalidNumberOfPoints, "*<cim:code>E87</cim:code>*")]
-            [InlineData(ChargeInformationRequest.TariffPriceSeriesInvalidPointsStart, "*<cim:code>E86</cim:code>*")]
+            [InlineData(ChargeInformationRequests.TariffPriceSeriesInvalidMaximumPrice, "*<cim:code>E90</cim:code>*")]
+            [InlineData(ChargeInformationRequests.TariffPriceSeriesInvalidNumberOfPoints, "*<cim:code>E87</cim:code>*")]
+            [InlineData(ChargeInformationRequests.TariffPriceSeriesInvalidPointsStart, "*<cim:code>E86</cim:code>*")]
             public async Task Ingestion_ChargePricesRequestFailsInputValidation_RejectionReceived(
                 string testFilePath,
                 string expectedErrorCode)
@@ -285,7 +285,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             {
                 // Arrange
                 var (request, correlationId) = Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
-                    EndpointUrl, ChargeInformationRequest.TariffPriceSeriesInvalidStartAndEndDate);
+                    EndpointUrl, ChargeInformationRequests.TariffPriceSeriesInvalidStartAndEndDate);
 
                 // Act
                 var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
@@ -312,7 +312,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 var expectedNotificationOperations = new List<string> { "1.100000", "2.200000", "3.300000" };
 
                 var (request, correlationId) = Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
-                    EndpointUrl, ChargeInformationRequest.BundledSubscriptionPriceSeries);
+                    EndpointUrl, ChargeInformationRequests.BundledSubscriptionPriceSeries);
 
                 // Act
                 var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
@@ -344,7 +344,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             {
                 // Arrange
                 var (request, correlationId) = Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
-                    EndpointUrl, ChargeInformationRequest.BundledTariffPriceSeriesFirstOperationInvalidMaximumPrice);
+                    EndpointUrl, ChargeInformationRequests.BundledTariffPriceSeriesFirstOperationInvalidMaximumPrice);
 
                 // Act
                 var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
@@ -372,7 +372,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             {
                 // Arrange
                 var (request, correlationId) = Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
-                    EndpointUrl, ChargeInformationRequest.BundledSubscriptionPriceSeriesSecondOperationChargeOwnerMismatch);
+                    EndpointUrl, ChargeInformationRequests.BundledSubscriptionPriceSeriesSecondOperationChargeOwnerMismatch);
 
                 // Act
                 var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
@@ -406,7 +406,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             {
                 // Arrange
                 var (request, correlationId) = Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
-                    EndpointUrl, ChargeInformationRequest.TariffPriceSeries);
+                    EndpointUrl, ChargeInformationRequests.TariffPriceSeries);
                 using var eventualChargePriceUpdatedEvent = await Fixture
                     .ChargePricesUpdatedListener
                     .ListenForMessageAsync(correlationId)
@@ -425,10 +425,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             /* SAMPLES */
 
             [Theory]
-            [InlineAutoMoqData(ChargeInformationRequest.BundledChargePriceSeriesSample, 12, 3)]
-            [InlineAutoMoqData(ChargeInformationRequest.ChargePriceSeriesSubscriptionMonthlySample, 4, 1)]
-            [InlineAutoMoqData(ChargeInformationRequest.ChargePriceSeriesFeeMonthlySample, 4, 1)]
-            [InlineAutoMoqData(ChargeInformationRequest.ChargePriceSeriesTariffHourlySample, 4, 1)]
+            [InlineAutoMoqData(ChargeInformationRequests.BundledChargePriceSeriesSample, 12, 3)]
+            [InlineAutoMoqData(ChargeInformationRequests.ChargePriceSeriesSubscriptionMonthlySample, 4, 1)]
+            [InlineAutoMoqData(ChargeInformationRequests.ChargePriceSeriesFeeMonthlySample, 4, 1)]
+            [InlineAutoMoqData(ChargeInformationRequests.ChargePriceSeriesTariffHourlySample, 4, 1)]
             public async Task Ingestion_ChargePriceSeriesSample_ConfirmationReceivedByGridAccessProvider(
                 string testFilePath, int noOfDataAvailableNotificationsExpected, int noOfConfirmedActivityRecordsExpected)
             {
@@ -472,7 +472,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 await using var chargesReadDatabaseContext = Fixture.ChargesDatabaseManager.CreateDbContext();
                 var expected = GetCharge(chargesReadDatabaseContext, senderProvidedChargeId, ownerId, chargeType);
                 var (request, _) = Fixture.AsSystemOperator.PrepareHttpPostRequestWithAuthorization(
-                    EndpointUrl, ChargeInformationRequest.TaxTariffPriceSeriesWithInformationToBeIgnored);
+                    EndpointUrl, ChargeInformationRequests.TaxTariffPriceSeriesWithInformationToBeIgnored);
 
                 // Act
                 var actualResponse = await Fixture.HostManager.HttpClient.SendAsync(request);
