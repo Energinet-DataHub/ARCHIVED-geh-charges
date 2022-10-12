@@ -111,22 +111,36 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                     EndpointUrl, ChargeInformationRequests.TaxTariffAsSystemOperator);
 
                 // Act
-                await Fixture.HostManager.HttpClient.SendAsync(request);
+                var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
 
                 // Assert
+                actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
+
+                // We expect at least 8 peek results:
+                // * Confirmation to System Operator
+                // * 3x Notifications to Energy Suppliers
+                // * 4x Notifications to Grid Access Providers
                 using var assertionScope = new AssertionScope();
-                var peekResults =
-                    await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, ResponseFormat.Xml, 8);
+                var peekResults = await Fixture.MessageHubMock
+                    .AssertPeekReceivesRepliesAsync(correlationId, ResponseFormat.Xml, 8);
+
+                peekResults.Should().HaveCount(8);
+                peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
                 peekResults.Should().NotContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
-                peekResults.Should().ContainMatch("*NotifyPriceList_MarketDocument*");
-                peekResults.Should().ContainMatch("*8100000000030*");
-                peekResults.Should().ContainMatch("*8100000000016*");
-                peekResults.Should().ContainMatch("*8100000000023*");
-                peekResults.Should().ContainMatch("*8100000000108*");
-                peekResults.Should().ContainMatch("*8510000000013*");
-                peekResults.Should().NotContainMatch("*8900000000005*");
                 peekResults.Should().ContainMatch("*<cim:process.processType>D18</cim:process.processType>*");
                 peekResults.Should().NotContainMatch("*<cim:process.processType>D08</cim:process.processType>*");
+
+                var energySupplierNotifications = peekResults
+                    .Where(x => x.Contains("NotifyPriceList_MarketDocument") && x.Contains("DDQ"))
+                    .ToList();
+                energySupplierNotifications.Should().HaveCount(3);
+                energySupplierNotifications.Should().ContainMatch("*8100000000108*");
+
+                var gridAccessProviderNotifications = peekResults
+                    .Where(x => x.Contains("NotifyPriceList_MarketDocument") && x.Contains("DDM"))
+                    .ToList();
+                gridAccessProviderNotifications.Should().HaveCount(4);
+                gridAccessProviderNotifications.Should().ContainMatch("*8100000000030*");
             }
 
             [Fact]
