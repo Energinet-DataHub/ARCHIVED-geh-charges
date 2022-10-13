@@ -12,12 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Energinet.Charges.Contracts.ChargePoint;
 
 namespace GreenEnergyHub.Charges.QueryApi.QueryServices;
 
 public interface IChargePointQueryService
 {
-    Task<IList<ChargePointV1Dto>> SearchAsync(ChargePointSearchCriteriaV1Dto chargePointSearchCriteria);
+    IList<ChargePointV1Dto> Search(ChargePointSearchCriteriaV1Dto chargePointSearchCriteria);
 }

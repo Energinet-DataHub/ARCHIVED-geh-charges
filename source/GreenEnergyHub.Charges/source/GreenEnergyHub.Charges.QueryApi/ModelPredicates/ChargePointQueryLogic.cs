@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Energinet.Charges.Contracts.Charge;
 using Energinet.Charges.Contracts.ChargePoint;
@@ -24,17 +25,47 @@ namespace GreenEnergyHub.Charges.QueryApi.ModelPredicates;
 
 public static class ChargePointQueryLogic
 {
-    public static IQueryable<ChargePointV1Dto> AsChargePointV1Dto(
+    public static IList<ChargePointV1Dto> AsChargePointV1Dto(
         this IQueryable<ChargePoint> queryable,
         IIso8601Durations iso8601Durations)
     {
-        return queryable.Select(cp => new ChargePointV1Dto(
-            cp.Price,
-            cp.Time,
-            iso8601Durations.GetTimeFixedToDuration(
-                    DateTime.SpecifyKind(cp.Time, DateTimeKind.Utc).ToInstant(),
-                    ((Resolution)cp.Charge.Resolution).ToString(),
-                    1)
-                .ToDateTimeOffset()));
+        var chargePoints = queryable
+            .OrderBy(c => c.Time)
+            .Select(cp => new ChargePointV1Dto(
+                cp.Price,
+                cp.Time,
+                iso8601Durations.GetTimeFixedToDuration(
+                        DateTime.SpecifyKind(cp.Time, DateTimeKind.Utc).ToInstant(),
+                        ((Resolution)cp.Charge.Resolution).ToString(),
+                        1)
+                    .ToDateTimeUtc()))
+            .ToList();
+
+        return chargePoints
+            .Select((cp, index) => MapChargePointV1Dto(chargePoints, index, cp))
+            .ToList();
+    }
+
+    private static ChargePointV1Dto MapChargePointV1Dto(IList<ChargePointV1Dto> chargePoints, int index, ChargePointV1Dto chargePoint)
+    {
+        var lastIndex = chargePoints.IndexOf(chargePoints.Last());
+        if (index != lastIndex)
+        {
+            var nextPoint = chargePoints[index + 1];
+            var isOverlapping = nextPoint.ActiveFromDateTime < chargePoint.ActiveToDateTime &&
+                                nextPoint.ActiveFromDateTime > chargePoint.ActiveFromDateTime;
+            if (isOverlapping)
+            {
+                return new ChargePointV1Dto(
+                    chargePoint.Price,
+                    chargePoint.ActiveFromDateTime,
+                    nextPoint.ActiveFromDateTime);
+            }
+        }
+
+        return new ChargePointV1Dto(
+            chargePoint.Price,
+            chargePoint.ActiveFromDateTime,
+            chargePoint.ActiveToDateTime);
     }
 }

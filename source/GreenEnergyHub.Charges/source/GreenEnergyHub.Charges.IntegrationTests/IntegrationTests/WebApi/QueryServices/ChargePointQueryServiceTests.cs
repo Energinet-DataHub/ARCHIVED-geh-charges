@@ -76,7 +76,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
                 InstantHelper.GetTodayPlusMinutesAtMidnightUtc(15).ToDateTimeOffset());
 
             // Act
-            var actual = await sut.SearchAsync(searchCriteria);
+            var actual = sut.Search(searchCriteria);
 
             // Assert
             actual.Should().HaveCount(expectedPoints.Count);
@@ -111,7 +111,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
                 InstantHelper.GetTodayPlusMinutesAtMidnightUtc(15).ToDateTimeOffset());
 
             // Act
-            var actual = await sut.SearchAsync(searchCriteria);
+            var actual = sut.Search(searchCriteria);
 
             // Assert
             actual.Should().HaveCount(1);
@@ -146,7 +146,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
                 InstantHelper.GetTomorrowAtMidnightUtc().ToDateTimeUtc());
 
             // Act
-            var actual = await sut.SearchAsync(searchCriteria);
+            var actual = sut.Search(searchCriteria);
 
             // Assert
             actual.Should().HaveCount(points.Count);
@@ -181,7 +181,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
                 InstantHelper.GetTomorrowAtMidnightUtc().ToDateTimeUtc());
 
             // Act
-            var actual = await sut.SearchAsync(searchCriteria);
+            var actual = sut.Search(searchCriteria);
 
             // Assert
             actual.Should().HaveCount(points.Count);
@@ -216,7 +216,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
                 InstantHelper.GetTodayPlusDaysAtMidnightUtc(4).ToDateTimeUtc());
 
             // Act
-            var actual = await sut.SearchAsync(searchCriteria);
+            var actual = sut.Search(searchCriteria);
 
             // Assert
             actual.Should().HaveCount(points.Count);
@@ -251,7 +251,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
                 InstantHelper.GetThisMonthPlusMonthsAtMidnightUtc(4).ToDateTimeUtc());
 
             // Act
-            var actual = await sut.SearchAsync(searchCriteria);
+            var actual = sut.Search(searchCriteria);
 
             // Assert
             actual.Should().HaveCount(points.Count);

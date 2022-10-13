@@ -14,11 +14,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Energinet.Charges.Contracts.ChargePoint;
 using GreenEnergyHub.Charges.QueryApi.ModelPredicates;
 using GreenEnergyHub.Iso8601;
-using Microsoft.EntityFrameworkCore;
 
 namespace GreenEnergyHub.Charges.QueryApi.QueryServices;
 
@@ -33,15 +31,13 @@ public class ChargePointQueryService : IChargePointQueryService
         _iso8601Durations = iso8601Durations;
     }
 
-    public async Task<IList<ChargePointV1Dto>> SearchAsync(ChargePointSearchCriteriaV1Dto chargePointSearchCriteria)
+    public IList<ChargePointV1Dto> Search(ChargePointSearchCriteriaV1Dto chargePointSearchCriteria)
     {
         var chargePoints = _data.ChargePoints
             .Where(cp => cp.ChargeId == chargePointSearchCriteria.ChargeId)
             .Where(c => c.Time >= chargePointSearchCriteria.DateTimeFrom && c.Time <= chargePointSearchCriteria.DateTimeTo);
 
-        return await chargePoints
-            .AsChargePointV1Dto(_iso8601Durations)
-            .ToListAsync()
-            .ConfigureAwait(false);
+        return chargePoints
+            .AsChargePointV1Dto(_iso8601Durations);
     }
 }

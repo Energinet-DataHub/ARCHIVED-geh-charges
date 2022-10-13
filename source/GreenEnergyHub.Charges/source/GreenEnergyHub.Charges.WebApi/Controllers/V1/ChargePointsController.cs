@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
 using Energinet.Charges.Contracts.ChargePoint;
 using GreenEnergyHub.Charges.QueryApi.QueryServices;
 using Microsoft.AspNetCore.Mvc;
@@ -36,13 +35,12 @@ public class ChargePointsController : Controller
     ///     Returns all charge points based on search criteria
     /// </summary>
     /// <returns>Charge points or "404 Not Found"</returns>
-    [HttpPost("SearchAsync")]
+    [HttpPost("Search")]
     [MapToApiVersion(Version1)]
-    public async Task<IActionResult> SearchAsync([FromBody] ChargePointSearchCriteriaV1Dto chargePointSearchCriteria)
+    public IActionResult Search([FromBody] ChargePointSearchCriteriaV1Dto chargePointSearchCriteria)
     {
-        var chargePoints = await _chargePointQueryService
-            .SearchAsync(chargePointSearchCriteria)
-            .ConfigureAwait(false);
+        var chargePoints = _chargePointQueryService
+            .Search(chargePointSearchCriteria);
 
         return Ok(chargePoints);
     }
