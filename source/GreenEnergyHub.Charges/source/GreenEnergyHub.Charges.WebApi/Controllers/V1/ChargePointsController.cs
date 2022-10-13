@@ -34,9 +34,9 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers.V1
         }
 
         /// <summary>
-        ///     Returns all charges
+        ///     Returns all charge points based on search criteria
         /// </summary>
-        /// <returns>Charges data or "404 Not Found"</returns>
+        /// <returns>Charge points or "404 Not Found"</returns>
         [HttpPost("SearchAsync")]
         [MapToApiVersion(Version1)]
         public async Task<IActionResult> SearchAsync([FromBody] SearchCriteriaV1Dto searchCriteria)
