@@ -40,6 +40,7 @@
 
     // Integration, market participant domain
     "MARKET_PARTICIPANT_CHANGED_SUBSCRIPTION_NAME": "market-participant-changed",
+    "MARKET_PARTICIPANT_CREATED_SUBSCRIPTION_NAME": "market-participant-created",
 
     // Integration, message hub
     "MESSAGEHUB_DATAAVAILABLE_QUEUE": "dataavailable",
