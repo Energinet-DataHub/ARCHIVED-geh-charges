@@ -1,8 +1,12 @@
 # Energinet.DataHub.Charges.Clients Release notes
 
-## Version 4.1.1
+## Version 4.1.2
 
 Renamed Client contracts namespace from `Energinet.Charges.Contracts` to `Energinet.DataHub.Charges.Contracts`
+
+## Version 4.1.1
+
+Added VatClassification and ChargeDescription to ChargesV1Dto
 
 ## Version 4.1.0
 

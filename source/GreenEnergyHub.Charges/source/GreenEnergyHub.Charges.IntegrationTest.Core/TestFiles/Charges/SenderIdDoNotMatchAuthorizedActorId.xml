@@ -15,35 +15,29 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <cim:RequestChangeOfPriceList_MarketDocument xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cim="urn:ediel.org:structure:requestchangeofpricelist:0:1" xsi:schemaLocation="urn:ediel.org:structure:requestchangeofpricelist:0:1 urn-ediel-org-structure-requestchangeofpricelist-0-1.xsd">
-    <cim:mRID>DocId{{$isoTimestamp}}</cim:mRID>
+    <cim:mRID>MD{{$isoTimestamp}}</cim:mRID>
     <cim:type>D10</cim:type>
-    <cim:process.processType>D08</cim:process.processType>
+    <cim:process.processType>D18</cim:process.processType>
     <cim:businessSector.type>23</cim:businessSector.type>
-    <cim:sender_MarketParticipant.mRID codingScheme="A10">{{$senderMarketParticipant}}</cim:sender_MarketParticipant.mRID>
+    <cim:sender_MarketParticipant.mRID codingScheme="A10">8100000011111</cim:sender_MarketParticipant.mRID>
     <cim:sender_MarketParticipant.marketRole.type>DDM</cim:sender_MarketParticipant.marketRole.type>
-    <cim:receiver_MarketParticipant.mRID codingScheme="A10">{{$receiverMarketParticipant}}</cim:receiver_MarketParticipant.mRID>
+    <cim:receiver_MarketParticipant.mRID codingScheme="A10">5790001330552</cim:receiver_MarketParticipant.mRID>
     <cim:receiver_MarketParticipant.marketRole.type>DDZ</cim:receiver_MarketParticipant.marketRole.type>
     <cim:createdDateTime>{{$isoTimestamp}}</cim:createdDateTime>
     <cim:MktActivityRecord>
-        <cim:mRID>OpId1_{{$isoTimestamp}}</cim:mRID>
+        <cim:mRID>MD{{$isoTimestamp}}</cim:mRID>
         <cim:ChargeGroup>
             <cim:ChargeType>
-                <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">{{$senderMarketParticipant}}</cim:chargeTypeOwner_MarketParticipant.mRID>
-                <cim:type>D01</cim:type>
-                <cim:mRID>TestSub</cim:mRID>
+                <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">8100000000030</cim:chargeTypeOwner_MarketParticipant.mRID>
+                <cim:type>D03</cim:type>
+                <cim:mRID>{{$randomCharacters}}</cim:mRID>
+                <cim:name>Electric charge</cim:name>
+                <cim:description>The charge description</cim:description>
                 <cim:priceTimeFrame_Period.resolution>P1D</cim:priceTimeFrame_Period.resolution>
                 <cim:effectiveDate>{{$isoTimestampPlusOneMonth}}</cim:effectiveDate>
-                <cim:Series_Period>
-                    <cim:resolution>P1M</cim:resolution>
-                    <cim:timeInterval>
-                        <cim:start>{{$YMDHM_TimestampPlusOneMonth}}</cim:start>
-                        <cim:end>{{$YMDHM_TimestampPlusOneMonthAndOneDay}}</cim:end>
-                    </cim:timeInterval>
-                    <cim:Point>
-                        <cim:position>1</cim:position>
-                        <cim:price.amount>1.001</cim:price.amount>
-                    </cim:Point>
-                </cim:Series_Period>
+                 <cim:VATPayer>D01</cim:VATPayer>
+                <cim:transparentInvoicing>false</cim:transparentInvoicing>
+                <cim:taxIndicator>true</cim:taxIndicator>
             </cim:ChargeType>
         </cim:ChargeGroup>
     </cim:MktActivityRecord>

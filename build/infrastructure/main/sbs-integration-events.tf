@@ -37,3 +37,16 @@ module "sbs_int_events_market_participant_changed" {
     }
   }
 }
+
+module "sbs_int_events_market_participant_created" {
+  source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v9"
+  name                = "market-participant-created"
+  project_name        = var.domain_name_short
+  topic_id            = data.azurerm_key_vault_secret.sbt_domainrelay_integrationevent_received_id.value
+  max_delivery_count  = 1
+  correlation_filter  = {
+    properties     = {
+      "MessageType" = "ActorCreated"
+    }
+  }
+}
