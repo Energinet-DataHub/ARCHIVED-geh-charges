@@ -78,6 +78,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
                 .Replace("{{$YMDHM_TimestampPlusOneMonth}}", ConvertLocalTimeToUtcAsString(zonedDateTimeService, midnightLocalTime31DaysAhead))
                 .Replace("{{$YMDHM_TimestampPlusOneMonthAndOneDay}}", ConvertLocalTimeToUtcAsString(zonedDateTimeService, midnightLocalTime32DaysAhead))
                 .Replace("{{$YMDHM_MidnightLocalTimeTwoMonthAheadOnTheFirst}}", ConvertLocalTimeToUtcAsString(zonedDateTimeService, monthAhead.MidnightLocalTime2MonthAheadOnTheFirst))
+                .Replace("{{$YMDHM_MidnightLocalTimeTwoMonthAheadOnTheSecond}}", ConvertLocalTimeToUtcAsString(zonedDateTimeService, monthAhead.MidnightLocalTime2MonthAheadOnTheFirst.PlusDays(1)))
                 .Replace("{{$YMDHM_MidnightLocalTimeThreeMonthAheadOnTheFirst}}", ConvertLocalTimeToUtcAsString(zonedDateTimeService, monthAhead.MidnightLocalTime3MonthAheadOnTheFirst))
                 .Replace("{{$isoTimestampPlusOneMonthAndOneDay}}", inThirtyoneDays.Plus(Duration.FromDays(1)).ToString())
                 .Replace("{{$isoTimestampPlusOneMonthAndTwoDays}}", inThirtyoneDays.Plus(Duration.FromDays(2)).ToString())

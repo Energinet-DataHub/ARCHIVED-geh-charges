@@ -47,10 +47,10 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
             bool isValidExpectedValue)
         {
             // Arrange
-            var endDate = GetInstantFromMonthAndDay(priceEndDayDateTime, priceEndMonthDateTime);
+            var endDate = GetInstantFromMonthAndDay(priceEndMonthDateTime, priceEndDayDateTime);
             var stopDate = priceStopMonthDateTime == 0
                 ? InstantHelper.GetEndDefault()
-                : GetInstantFromMonthAndDay(priceStopDayDateTime, priceStopMonthDateTime);
+                : GetInstantFromMonthAndDay(priceStopMonthDateTime, priceStopDayDateTime);
             var sut = new MonthlyPriceSeriesEndDateMustBeFirstOfMonthOrEqualChargeStopDateRule(
                 resolution,
                 endDate,
