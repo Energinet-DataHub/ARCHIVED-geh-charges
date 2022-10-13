@@ -55,8 +55,8 @@ runs:
       shell: bash
       run: |
         # Create base directory
-        mkdir -p '${{ inputs.OUTPUT_PATH }}/source' ';'
+        mkdir -p '${{ inputs.OUTPUT_PATH }}/source/GreenEnergyHub.Charges/source' ';'
         # Copy everything from source/GreenEnergyHub.Charges/source to the new directory
-        cp -a source/GreenEnergyHub.Charges/source/. '${{ inputs.OUTPUT_PATH }}/source'
+        cp -a source/GreenEnergyHub.Charges/source/. '${{ inputs.OUTPUT_PATH }}/source/GreenEnergyHub.Charges/source'
         # Remove obj-directories from artifact
         find ${{ inputs.OUTPUT_PATH }}/ -type d -name 'obj' -exec rm -rf {} +

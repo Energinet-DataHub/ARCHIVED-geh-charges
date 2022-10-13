@@ -144,10 +144,10 @@ jobs:
       infrastructure_ci_build,
       # .NET
       dotnet_ci_build,
-      # unit_test,
-      # int_test_charge_information_ingestion,
-      # int_test_charge_prices_ingestion,
-      # int_test,
+      unit_test,
+      int_test_charge_information_ingestion,
+      int_test_charge_prices_ingestion,
+      int_test,
     ]
     if: |
       always() &&
