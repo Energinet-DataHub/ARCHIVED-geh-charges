@@ -22,20 +22,20 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.Busi
     public class MonthlyPriceSeriesEndDateMustBeFirstOfMonthOrEqualChargeStopDateRule : IValidationRule
     {
         private readonly Resolution _resolution;
-        private readonly Instant _priceEndDate;
+        private readonly Instant _pointsIntervalEndDate;
         private readonly Instant _chargeStopDate;
 
         public MonthlyPriceSeriesEndDateMustBeFirstOfMonthOrEqualChargeStopDateRule(Resolution resolution, Instant pointsIntervalEndDate, Instant chargeStopDate)
         {
             _resolution = resolution;
-            _priceEndDate = priceEndDate;
+            _pointsIntervalEndDate = pointsIntervalEndDate;
             _chargeStopDate = chargeStopDate;
         }
 
         public bool IsValid =>
             _resolution is not Resolution.P1M ||
-            _priceEndDate == _chargeStopDate ||
-            IsFirstLocalDayInMonth(_priceEndDate);
+            _pointsIntervalEndDate == _chargeStopDate ||
+            IsFirstLocalDayInMonth(_pointsIntervalEndDate);
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.MonthlyPriceSeriesEndDateMustBeFirstOfMonthOrEqualChargeStopDate;

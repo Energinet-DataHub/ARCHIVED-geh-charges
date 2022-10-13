@@ -78,7 +78,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
                 .Be(ValidationRuleIdentifier.MonthlyPriceSeriesEndDateMustBeFirstOfMonthOrEqualChargeStopDate);
         }
 
-        private static Instant GetInstantFromMonthAndDay(int priceEndDayDateTimeUtc, int priceEndMonthDateTimeUtc)
+        private static Instant GetInstantFromMonthAndDay(int priceEndMonthDateTimeUtc, int priceEndDayDateTimeUtc)
         {
             return Instant.FromDateTimeUtc(new DateTime(
                 2023,
