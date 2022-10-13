@@ -13,10 +13,13 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Parsers;
 using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers;
+using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using Microsoft.Azure.Functions.Worker;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Logging;
 
 namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
@@ -26,15 +29,18 @@ namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
         private const string FunctionName = nameof(MarketParticipantPersisterEndpoint);
         private readonly ISharedIntegrationEventParser _sharedIntegrationEventParser;
         private readonly IMarketParticipantEventHandler _marketParticipantEventHandler;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger _logger;
 
         public MarketParticipantPersisterEndpoint(
             ISharedIntegrationEventParser sharedIntegrationEventParser,
             IMarketParticipantEventHandler marketParticipantEventHandler,
-            ILoggerFactory loggerFactory)
+            ILoggerFactory loggerFactory,
+            IUnitOfWork unitOfWork)
         {
             _sharedIntegrationEventParser = sharedIntegrationEventParser;
             _marketParticipantEventHandler = marketParticipantEventHandler;
+            _unitOfWork = unitOfWork;
             _logger = loggerFactory.CreateLogger(FunctionName);
         }
 
@@ -53,6 +59,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
                 messageEvent.GetType());
 
             await _marketParticipantEventHandler.HandleAsync(messageEvent).ConfigureAwait(false);
+            await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
         }
     }
 }

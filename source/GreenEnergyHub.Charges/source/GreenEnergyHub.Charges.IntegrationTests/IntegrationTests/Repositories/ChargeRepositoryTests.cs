@@ -26,6 +26,7 @@ using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.TestCore.Builders.Command;
+using GreenEnergyHub.Charges.TestCore.Builders.Testables;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 using Xunit.Categories;
@@ -213,13 +214,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             if (marketParticipant != null)
                 return;
 
-            marketParticipant = new MarketParticipant(
-                id: Guid.NewGuid(),
-                actorId: Guid.NewGuid(),
-                b2CActorId: Guid.NewGuid(),
-                MarketParticipantOwnerId,
-                MarketParticipantStatus.Active,
-                MarketParticipantRole.EnergySupplier);
+            marketParticipant = new TestEnergySupplier(MarketParticipantOwnerId);
             context.MarketParticipants.Add(marketParticipant);
             await context.SaveChangesAsync();
 

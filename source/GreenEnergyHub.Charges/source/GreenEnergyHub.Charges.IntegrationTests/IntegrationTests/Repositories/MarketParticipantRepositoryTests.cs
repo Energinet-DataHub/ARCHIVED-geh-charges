@@ -16,13 +16,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoFixture.Xunit2;
+using Castle.Components.DictionaryAdapter.Xml;
+using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.TestCore.Builders.Testables;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 using Xunit.Categories;
@@ -48,11 +52,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             // Arrange
             await using var chargesWriteDatabaseContext = _databaseManager.CreateDbContext();
             var sut = new MarketParticipantRepository(chargesWriteDatabaseContext);
-            var id = Guid.NewGuid();
-            var actorId = Guid.NewGuid();
-            var b2CActorId = Guid.NewGuid();
-            var marketParticipant = new MarketParticipant(
-                id, actorId, b2CActorId, "00001", MarketParticipantStatus.Active, MarketParticipantRole.GridAccessProvider);
+            var marketParticipant = new TestGridAccessProvider("00001");
 
             // Act
             await sut.AddAsync(marketParticipant).ConfigureAwait(false);
@@ -62,9 +62,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             await using var chargesReadDatabaseContext = _databaseManager.CreateDbContext();
             var actual = await chargesReadDatabaseContext.MarketParticipants
                 .SingleAsync(mp => mp.Id == marketParticipant.Id);
-            actual.Id.Should().Be(id);
-            actual.ActorId.Should().Be(actorId);
-            actual.B2CActorId.Should().Be(b2CActorId);
+            actual.Id.Should().Be(marketParticipant.Id);
+            actual.ActorId.Should().Be(marketParticipant.ActorId);
+            actual.B2CActorId.Should().Be(marketParticipant.B2CActorId);
             actual.MarketParticipantId.Should().Be("00001");
             actual.Status.Should().Be(MarketParticipantStatus.Active);
             actual.BusinessProcessRole.Should().Be(MarketParticipantRole.GridAccessProvider);
@@ -352,7 +352,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         private static async Task AddMarketParticipantToContextAndSaveAsync(
             string marketParticipantId, MarketParticipantRole role, MarketParticipantStatus status, ChargesDatabaseContext context)
         {
-            var marketParticipant = new MarketParticipant(
+            var marketParticipant = new TestMarketParticipant(
                 id: Guid.NewGuid(),
                 actorId: Guid.NewGuid(),
                 b2CActorId: Guid.NewGuid(),

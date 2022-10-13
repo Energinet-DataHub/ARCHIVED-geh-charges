@@ -60,7 +60,12 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Command
 
         public MarketParticipant Build()
         {
-            return new MarketParticipant(_id, _actorId, _b2CActorId, _marketParticipantId, _status, _role);
+            return MarketParticipant.Create(
+                _actorId,
+                _b2CActorId,
+                _marketParticipantId,
+                _status,
+                _role);
         }
     }
 }

@@ -26,6 +26,7 @@ using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim;
 using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeReceipt;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.TestCore.Builders.Testables;
 using GreenEnergyHub.Charges.Tests.TestFiles;
 using Moq;
 using NodaTime;
@@ -54,13 +55,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.BundleSpecification.Charges
             // Arrange
             var availableData = GetRejection(noOfReasons);
 
-            var meteringPointAdministrator = new MarketParticipant(
-                id: Guid.NewGuid(),
-                actorId: Guid.NewGuid(),
-                b2CActorId: Guid.NewGuid(),
-                MaxLengthId,
-                MarketParticipantStatus.Active,
-                MarketParticipantRole.GridAccessProvider);
+            var meteringPointAdministrator = new TestGridAccessProvider(MaxLengthId);
 
             marketParticipantRepository
                 .Setup(c => c.GetMeteringPointAdministratorAsync()).

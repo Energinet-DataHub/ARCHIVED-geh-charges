@@ -15,15 +15,17 @@
 using System;
 using System.Linq;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.GridAreas;
-using GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsUpdatedEvents;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 {
-    public static class MarketParticipantDomainEventMapper
+    public static class MarketParticipantEventMapper
     {
-        public static MarketParticipantUpdatedEvent MapFromActorUpdatedIntegrationEvent(
+        public static MarketParticipantUpdatedCommand MapFromActorUpdated(
+            Instant publishedTime,
             ActorUpdatedIntegrationEvent actorUpdatedIntegrationEvent)
         {
             var status = MarketParticipantStatusMapper.Map(actorUpdatedIntegrationEvent.Status);
@@ -41,7 +43,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
                     $"integration event with id '{actorUpdatedIntegrationEvent.Id}'");
             }
 
-            return new MarketParticipantUpdatedEvent(
+            return new MarketParticipantUpdatedCommand(
                 actorUpdatedIntegrationEvent.ActorId,
                 actorUpdatedIntegrationEvent.ExternalActorId,
                 actorUpdatedIntegrationEvent.ActorNumber,
@@ -53,7 +55,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
                         .Select(a => a.Id));
         }
 
-        public static MarketParticipantUpdatedEvent MapFromActorCreatedIntegrationEvent(
+        public static MarketParticipantCreatedCommand MapFromActorCreated(
             ActorCreatedIntegrationEvent actorCreatedIntegrationEvent)
         {
             var status = MarketParticipantStatusMapper.Map(actorCreatedIntegrationEvent.Status);
@@ -71,7 +73,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
                     $"integration event with id '{actorCreatedIntegrationEvent.Id}'");
             }
 
-            return new MarketParticipantUpdatedEvent(
+            return new MarketParticipantCreatedCommand(
                 actorCreatedIntegrationEvent.ActorId,
                 actorCreatedIntegrationEvent.OrganizationId,
                 actorCreatedIntegrationEvent.ActorNumber,

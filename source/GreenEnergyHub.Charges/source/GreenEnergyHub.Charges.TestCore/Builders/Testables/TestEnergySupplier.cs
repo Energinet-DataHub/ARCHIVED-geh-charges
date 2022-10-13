@@ -18,10 +18,13 @@ using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.TestCore.Builders.Testables
 {
-    public class TestMeteringPointAdministrator : MarketParticipant
+    /// <summary>
+    /// Makes it easier to auto-mock grid access providers in tests.
+    /// </summary>
+    public class TestEnergySupplier : MarketParticipant
     {
-        public TestMeteringPointAdministrator(string marketParticipantId)
-            : base(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), marketParticipantId, MarketParticipantStatus.Active, MarketParticipantRole.MeteringPointAdministrator)
+        public TestEnergySupplier(string marketParticipantId)
+            : base(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), marketParticipantId, MarketParticipantStatus.Active, MarketParticipantRole.EnergySupplier)
         {
         }
     }

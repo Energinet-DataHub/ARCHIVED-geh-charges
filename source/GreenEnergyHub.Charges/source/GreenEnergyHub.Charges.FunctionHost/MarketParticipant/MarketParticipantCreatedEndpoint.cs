@@ -16,27 +16,34 @@ using System.Threading.Tasks;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Parsers;
 using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers;
-using GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsUpdatedEvents;
+using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using Microsoft.Azure.Functions.Worker;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
 {
     public class MarketParticipantCreatedEndpoint
     {
         private const string FunctionName = nameof(MarketParticipantCreatedEndpoint);
+        private readonly IClock _clock;
         private readonly ISharedIntegrationEventParser _sharedIntegrationEventParser;
         private readonly IMarketParticipantCreatedHandler _marketParticipantCreatedHandler;
+        private readonly IUnitOfWork _unitOfWork;
 
         public MarketParticipantCreatedEndpoint(
+            IClock clock,
             ISharedIntegrationEventParser sharedIntegrationEventParser,
-            IMarketParticipantCreatedHandler marketParticipantCreatedHandler)
+            IMarketParticipantCreatedHandler marketParticipantCreatedHandler,
+            IUnitOfWork unitOfWork)
         {
+            _clock = clock;
             _sharedIntegrationEventParser = sharedIntegrationEventParser;
             _marketParticipantCreatedHandler = marketParticipantCreatedHandler;
+            _unitOfWork = unitOfWork;
         }
 
-        [Function("MarketParticipantCreatedEndpoint")]
+        [Function(FunctionName)]
         public async Task RunAsync([ServiceBusTrigger(
             "%" + EnvironmentSettingNames.IntegrationEventTopicName + "%",
             "%" + EnvironmentSettingNames.MarketParticipantCreatedSubscriptionName + "%",
@@ -45,8 +52,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
         {
             var messageEvent = (ActorCreatedIntegrationEvent)_sharedIntegrationEventParser.Parse(message);
             var marketParticipantUpdatedEvent =
-                MarketParticipantDomainEventMapper.MapFromActorCreatedIntegrationEvent(messageEvent);
+                MarketParticipantEventMapper.MapFromActorCreated(messageEvent);
             await _marketParticipantCreatedHandler.HandleAsync(marketParticipantUpdatedEvent).ConfigureAwait(false);
+            await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
         }
     }
 }

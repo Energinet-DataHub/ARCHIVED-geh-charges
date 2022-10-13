@@ -15,20 +15,24 @@
 using System.Threading.Tasks;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
 using Microsoft.Extensions.Logging;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 {
     public class MarketParticipantEventHandler : IMarketParticipantEventHandler
     {
+        private readonly IClock _clock;
         private readonly IMarketParticipantPersister _marketParticipantPersister;
         private readonly IGridAreaLinkPersister _gridAreaLinkPersister;
         private readonly ILogger _logger;
 
         public MarketParticipantEventHandler(
+            IClock clock,
             IMarketParticipantPersister marketParticipantPersister,
             IGridAreaLinkPersister gridAreaLinkPersister,
             ILoggerFactory loggerFactory)
         {
+            _clock = clock;
             _marketParticipantPersister = marketParticipantPersister;
             _gridAreaLinkPersister = gridAreaLinkPersister;
             _logger = loggerFactory.CreateLogger(nameof(MarketParticipantEventHandler));
@@ -51,8 +55,8 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
                                 role.ToString());
                         }
 
-                        var marketParticipantUpdatedEvent =
-                            MarketParticipantDomainEventMapper.MapFromActorUpdatedIntegrationEvent(actorEvent);
+                        var marketParticipantUpdatedEvent = MarketParticipantEventMapper
+                            .MapFromActorUpdated(_clock.GetCurrentInstant(), actorEvent);
 
                         foreach (var role in marketParticipantUpdatedEvent.BusinessProcessRoles)
                         {
@@ -81,7 +85,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
                             gridAreaEvent.Code,
                             gridAreaEvent.GridAreaLinkId);
                         var gridAreaUpdatedEvent =
-                            MarketParticipantDomainEventMapper.MapFromGridAreaUpdatedIntegrationEvent(gridAreaEvent);
+                            MarketParticipantEventMapper.MapFromGridAreaUpdatedIntegrationEvent(gridAreaEvent);
                         await _gridAreaLinkPersister
                             .PersistAsync(gridAreaUpdatedEvent)
                             .ConfigureAwait(false);

@@ -26,17 +26,17 @@ namespace GreenEnergyHub.Charges.Tests.Domain.MarketParticipants
     {
         [Theory]
         [MemberData(nameof(InvalidBusinessProcessRoles))]
-        public void Ctor_WhenInvalidBusinessProcessRole_ThrowsArgumentException(MarketParticipantRole invalidRole)
+        public void Create_WhenInvalidBusinessProcessRole_ThrowsArgumentException(MarketParticipantRole invalidRole)
         {
             Assert.Throws<ArgumentException>(() =>
-                new MarketParticipant(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), string.Empty, MarketParticipantStatus.Inactive, invalidRole));
+                MarketParticipant.Create(Guid.NewGuid(), Guid.NewGuid(), string.Empty, MarketParticipantStatus.Inactive, invalidRole));
         }
 
         [Theory]
         [MemberData(nameof(ValidBusinessProcessRoles))]
         public void Ctor_SetsRole(MarketParticipantRole role)
         {
-            var actual = new MarketParticipant(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), string.Empty, MarketParticipantStatus.Inactive, role);
+            var actual = MarketParticipant.Create(Guid.NewGuid(), Guid.NewGuid(), string.Empty, MarketParticipantStatus.Inactive, role);
             actual.BusinessProcessRole.Should().Be(role);
         }
 
@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.MarketParticipants
             .Except(DomainBusinessProcessRoles)
             .Select(r => new object[] { r });
 
-        private static List<MarketParticipantRole> DomainBusinessProcessRoles => new List<MarketParticipantRole>
+        private static List<MarketParticipantRole> DomainBusinessProcessRoles => new()
         {
             MarketParticipantRole.EnergySupplier,
             MarketParticipantRole.SystemOperator,

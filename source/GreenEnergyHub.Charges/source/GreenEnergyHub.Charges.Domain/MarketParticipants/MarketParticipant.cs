@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
             MarketParticipantRole.MeteringPointAdministrator,
         }.AsReadOnly();
 
-        public MarketParticipant(
+        protected MarketParticipant(
             Guid id,
             Guid actorId,
             Guid? b2CActorId,
@@ -45,7 +45,7 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
             B2CActorId = b2CActorId;
             MarketParticipantId = marketParticipantId;
             Status = status;
-            UpdateBusinessProcessRole(businessProcessRole);
+            BusinessProcessRole = businessProcessRole;
         }
 
         // ReSharper disable once UnusedMember.Local - Required by persistence framework
@@ -61,14 +61,14 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
         /// The setter is public as the charges domain doesn't enforce any validation
         /// as it is the responsibility of the market participant domain providing the data.
         /// </summary>
-        public Guid ActorId { get; set; }
+        public Guid ActorId { get; private set; }
 
         /// <summary>
         /// ID used for authentication of B2B requests.
         /// The setter is public as the charges domain doesn't enforce any validation
         /// as it is the responsibility of the market participant domain providing the data.
         /// </summary>
-        public Guid? B2CActorId { get; set; }
+        public Guid? B2CActorId { get; private set; }
 
         /// <summary>
         /// The ID that identifies the market participant. In Denmark this would be the GLN number or EIC code.
@@ -80,21 +80,39 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
         /// <summary>
         /// The roles of the market participant.
         /// </summary>
-        public MarketParticipantRole BusinessProcessRole { get; private set; }
-
-        public void UpdateBusinessProcessRole(MarketParticipantRole role)
-        {
-            if (!_validRoles.Contains(role))
-                throw new ArgumentException($"Business process role '{role}' is not valid in the charges domain.");
-
-            BusinessProcessRole = role;
-        }
+        public MarketParticipantRole BusinessProcessRole { get; }
 
         /// <summary>
         /// Market participants will not be deleted. They will be made in-active.
         /// The setter is public as the charges domain doesn't enforce any validation
         /// as it is the responsibility of the market participant domain providing the data.
         /// </summary>
-        public MarketParticipantStatus Status { get; set; }
+        public MarketParticipantStatus Status { get; private set; }
+
+        public static MarketParticipant Create(
+            Guid actorId,
+            Guid? b2CActorId,
+            string marketParticipantId,
+            MarketParticipantStatus status,
+            MarketParticipantRole businessProcessRole)
+        {
+            if (!_validRoles.Contains(businessProcessRole))
+                throw new ArgumentException($"Business process role '{businessProcessRole}' is not valid in the charges domain.");
+
+            return new MarketParticipant(
+                Guid.NewGuid(),
+                actorId,
+                b2CActorId,
+                marketParticipantId,
+                status,
+                businessProcessRole);
+        }
+
+        public void Update(Guid actorId, Guid? b2CActorId, MarketParticipantStatus status)
+        {
+            ActorId = actorId;
+            B2CActorId = b2CActorId;
+            Status = status;
+        }
     }
 }

@@ -22,6 +22,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.GridAreaLinks;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.TestCore.Builders.Testables;
 using GreenEnergyHub.TestHelpers;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -81,13 +82,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             var gridAreaUpdatedEvent = new GridAreaUpdatedEvent(Guid.NewGuid(), Guid.NewGuid());
 
             var existingGridAreaLink = new GridAreaLink(gridAreaUpdatedEvent.GridAreaLinkId, Guid.NewGuid(), Guid.NewGuid());
-            var marketParticipant = new MarketParticipant(
-                id: Guid.NewGuid(),
-                actorId: Guid.NewGuid(),
-                b2CActorId: Guid.NewGuid(),
-                string.Empty,
-                MarketParticipantStatus.Active,
-                MarketParticipantRole.GridAccessProvider);
+            var marketParticipant = new TestGridAccessProvider(string.Empty);
 
             SetupGridAreaRepositories(
                 gridAreaLinkRepository,
@@ -129,13 +124,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
                 gridAreaLinkRepository,
                 marketParticipantRepository,
                 existingGridAreaLink,
-                new MarketParticipant(
-                    id: Guid.NewGuid(),
-                    actorId: Guid.NewGuid(),
-                    b2CActorId: Guid.NewGuid(),
-                    string.Empty,
-                    MarketParticipantStatus.Active,
-                    MarketParticipantRole.GridAccessProvider));
+                new TestGridAccessProvider(string.Empty));
             var sut = new GridAreaLinkPersister(
                 gridAreaLinkRepository.Object,
                 loggerFactory.Object,

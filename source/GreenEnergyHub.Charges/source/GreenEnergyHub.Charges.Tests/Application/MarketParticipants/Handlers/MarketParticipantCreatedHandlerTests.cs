@@ -16,11 +16,12 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
-using Castle.Components.DictionaryAdapter;
-using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
+using FluentAssertions;
 using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers;
-using GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsUpdatedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using Xunit;
@@ -34,29 +35,35 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
         [Theory]
         [InlineAutoDomainData]
         public async Task
-            HandleMarketParticipantCreatedIntegrationEventAsync_WhenCalled_ShouldCallMarketParticipantPersister(
-                [Frozen] Mock<IMarketParticipantPersister> marketParticipantPersister,
+            HandleAsync_ValidEvent_ShouldAddNewMarketParticipant(
+                [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
                 MarketParticipantCreatedHandler sut)
         {
             // Arrange
-            var m = GetMarketParticipantUpdatedEvent();
+            var marketParticipantCreatedEvent = CreateCreatedEvent();
+            MarketParticipant marketParticipant = null!;
+            marketParticipantRepository.Setup(m => m.AddAsync(It.IsAny<MarketParticipant>()))
+                .Callback<MarketParticipant>(m => marketParticipant = m);
 
             // Act
-            await sut.HandleAsync(m);
+            await sut.HandleAsync(marketParticipantCreatedEvent);
 
             // Assert
-            marketParticipantPersister.Verify(
-                v => v.PersistAsync(It.IsAny<MarketParticipantUpdatedEvent>()),
-                Times.Once);
+            marketParticipant.Should().NotBeNull();
+            marketParticipant.ActorId.Should().Be(marketParticipantCreatedEvent.ActorId);
+            marketParticipant.B2CActorId.Should().Be(marketParticipantCreatedEvent.B2CActorId);
+            marketParticipant.MarketParticipantId.Should().Be(marketParticipantCreatedEvent.MarketParticipantId);
+            marketParticipant.BusinessProcessRole.Should().Be(MarketParticipantRole.GridAccessProvider);
+            marketParticipant.Status.Should().Be(MarketParticipantStatus.Active);
         }
 
-        private static MarketParticipantUpdatedEvent GetMarketParticipantUpdatedEvent()
+        private static MarketParticipantCreatedCommand CreateCreatedEvent()
         {
-            return new MarketParticipantUpdatedEvent(
+            return new MarketParticipantCreatedCommand(
                 actorId: Guid.NewGuid(),
                 b2CActorId: Guid.NewGuid(),
                 "mp123",
-                new EditableList<MarketParticipantRole> { MarketParticipantRole.BalanceResponsibleParty, },
+                new List<MarketParticipantRole> { MarketParticipantRole.GridAccessProvider, },
                 MarketParticipantStatus.Active,
                 new List<Guid> { Guid.NewGuid(), });
         }

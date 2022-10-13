@@ -27,6 +27,7 @@ using GreenEnergyHub.Charges.QueryApi.QueryServices;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Builders.Command;
 using GreenEnergyHub.Charges.TestCore.Builders.Query;
+using GreenEnergyHub.Charges.TestCore.Builders.Testables;
 using GreenEnergyHub.TestHelpers;
 using Microsoft.EntityFrameworkCore;
 using NodaTime.Extensions;
@@ -462,13 +463,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             if (marketParticipant != null)
                 return marketParticipant.Id;
 
-            marketParticipant = new MarketParticipant(
-                id: Guid.NewGuid(),
-                actorId: Guid.NewGuid(),
-                b2CActorId: Guid.NewGuid(),
-                marketParticipantOwnerId,
-                MarketParticipantStatus.Active,
-                MarketParticipantRole.GridAccessProvider);
+            marketParticipant = new TestGridAccessProvider(marketParticipantOwnerId);
             context.MarketParticipants.Add(marketParticipant);
             await context.SaveChangesAsync();
 

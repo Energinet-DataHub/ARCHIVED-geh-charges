@@ -18,8 +18,8 @@ using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
 using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.GridAreas;
-using GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsUpdatedEvents;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using Xunit;
@@ -57,7 +57,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
 
             // Assert
             marketParticipantPersister
-                .Verify(v => v.PersistAsync(It.IsAny<MarketParticipantUpdatedEvent>()), Times.Once);
+                .Verify(v => v.PersistAsync(It.IsAny<MarketParticipantUpdatedCommand>()), Times.Once);
         }
 
         [Theory]

@@ -12,23 +12,37 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsUpdatedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 {
     public class MarketParticipantCreatedHandler : IMarketParticipantCreatedHandler
     {
-        private readonly IMarketParticipantPersister _marketParticipantPersister;
+        private readonly IMarketParticipantRepository _marketParticipantRepository;
 
-        public MarketParticipantCreatedHandler(IMarketParticipantPersister marketParticipantPersister)
+        public MarketParticipantCreatedHandler(
+            IMarketParticipantRepository marketParticipantRepository)
         {
-            _marketParticipantPersister = marketParticipantPersister;
+            _marketParticipantRepository = marketParticipantRepository;
         }
 
-        public async Task HandleAsync(MarketParticipantUpdatedEvent marketParticipantUpdatedEvent)
+        public async Task HandleAsync(MarketParticipantCreatedCommand marketParticipantCreatedCommand)
         {
-            await _marketParticipantPersister.PersistAsync(marketParticipantUpdatedEvent).ConfigureAwait(false);
+            foreach (var role in marketParticipantCreatedCommand.BusinessProcessRoles)
+            {
+                var marketParticipant = MarketParticipant.Create(
+                    marketParticipantCreatedCommand.ActorId,
+                    marketParticipantCreatedCommand.B2CActorId,
+                    marketParticipantCreatedCommand.MarketParticipantId,
+                    marketParticipantCreatedCommand.Status,
+                    role);
+
+                await _marketParticipantRepository.AddAsync(marketParticipant).ConfigureAwait(false);
+            }
         }
     }
 }

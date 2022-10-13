@@ -14,14 +14,14 @@
 
 using System;
 using System.Collections.Generic;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
+using NodaTime;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsUpdatedEvents
+namespace GreenEnergyHub.Charges.Domain.Dtos.Events
 {
-    public class MarketParticipantUpdatedEvent : MessageBase
+    public class MarketParticipantCreatedCommand
     {
-        public MarketParticipantUpdatedEvent(
+        public MarketParticipantCreatedCommand(
             Guid actorId,
             Guid? b2CActorId,
             string marketParticipantId,

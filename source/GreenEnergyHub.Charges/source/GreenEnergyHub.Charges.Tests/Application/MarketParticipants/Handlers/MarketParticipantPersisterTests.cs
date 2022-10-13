@@ -19,11 +19,13 @@ using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers;
 using GreenEnergyHub.Charges.Application.Persistence;
-using GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsUpdatedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.GridAreaLinks;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.TestCore.Builders.Testables;
 using GreenEnergyHub.TestHelpers;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -249,17 +251,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             [Frozen] Mock<IUnitOfWork> unitOfWork)
         {
             // Arrange
-            var existingMarketParticipant = new MarketParticipant(
-                id: Guid.NewGuid(),
-                actorId: Guid.NewGuid(),
-                b2CActorId: Guid.NewGuid(),
-                "mp123",
-                MarketParticipantStatus.Active,
-                MarketParticipantRole.GridAccessProvider);
-
+            var existingMarketParticipant = new TestGridAccessProvider("mp123");
             var marketParticipantUpdatedEvent = GetMarketParticipantUpdatedEvent(
-                new List<MarketParticipantRole> { MarketParticipantRole.EnergySupplier },
-                new List<Guid>());
+            new List<MarketParticipantRole> { MarketParticipantRole.EnergySupplier },
+            new List<Guid>());
 
             SetupRepositories(marketParticipantRepository, null!, gridAreaLinkRepository, null!);
             marketParticipantRepository
@@ -283,7 +278,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
         public async Task PersistAsync_WhenEventIsNull_ThrowsArgumentNullException(MarketParticipantPersister sut)
         {
             // Arrange
-            MarketParticipantUpdatedEvent? marketParticipantUpdatedEvent = null;
+            MarketParticipantUpdatedCommand? marketParticipantUpdatedEvent = null;
 
             // Act / Assert
             await Assert.ThrowsAsync<ArgumentNullException>(
@@ -402,11 +397,11 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             logger.VerifyNoOtherCalls();
         }
 
-        private static MarketParticipantUpdatedEvent GetMarketParticipantUpdatedEvent(
+        private static MarketParticipantUpdatedCommand GetMarketParticipantUpdatedEvent(
             List<MarketParticipantRole> marketParticipantRoleCodes,
             IEnumerable<Guid> gridAreas)
         {
-            return new MarketParticipantUpdatedEvent(
+            return new MarketParticipantUpdatedCommand(
                 actorId: Guid.NewGuid(),
                 b2CActorId: Guid.NewGuid(),
                 "mp123",
@@ -416,15 +411,15 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
         }
 
         private static MarketParticipant GetMarketParticipant(
-            MarketParticipantUpdatedEvent marketParticipantUpdatedEvent)
+            MarketParticipantUpdatedCommand marketParticipantUpdatedCommand)
         {
-            return new MarketParticipant(
+            return new TestMarketParticipant(
                 id: Guid.NewGuid(),
                 actorId: Guid.NewGuid(),
                 b2CActorId: Guid.NewGuid(),
-                marketParticipantUpdatedEvent.MarketParticipantId,
-                marketParticipantUpdatedEvent.Status,
-                marketParticipantUpdatedEvent.BusinessProcessRoles.Single());
+                marketParticipantUpdatedCommand.MarketParticipantId,
+                marketParticipantUpdatedCommand.Status,
+                marketParticipantUpdatedCommand.BusinessProcessRoles.Single());
         }
 
         private static void SetupRepositories(
