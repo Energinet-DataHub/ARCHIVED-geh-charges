@@ -281,13 +281,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 peekResult.Should().NotContainMatch("*<cim:process.processType>D18</cim:process.processType>*");
             }
 
-            // Needs to be refactored once irregular price series validation is merged into main - story 1400
-            [Fact(Skip = "Pending irregular price series validation")]
-            public async Task When_ChargePriceRequestFailsBusinessValidation_Then_ARejectionShouldBeSent()
+            [Fact]
+            public async Task Ingestion_ChargePriceRequestFailsBusinessValidation_RejectionReceived()
             {
                 // Arrange
                 var (request, correlationId) = Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
-                    EndpointUrl, ChargePricesRequests.TariffPriceSeriesInvalidStartAndEndDate);
+                    EndpointUrl, ChargePricesRequests.IrregularPriceSeriesInvalidEndDate);
 
                 // Act
                 var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
@@ -295,14 +294,18 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // Assert
                 actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
 
+                // We expect 1 peek result:
+                // Rejection to Grid Access Provider due to irregular price series end date not matching first of month
                 using var assertionScope = new AssertionScope();
 
-                var peekResult = await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, ResponseFormat.Xml);
+                var peekResult = await Fixture.MessageHubMock
+                    .AssertPeekReceivesRepliesAsync(correlationId, ResponseFormat.Xml);
                 peekResult.Should().ContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
-                peekResult.Should().NotContainMatch("*NotifyPriceList_MarketDocument*");
                 peekResult.Should().ContainMatch("*<cim:process.processType>D08</cim:process.processType>*");
+                peekResult.Should().ContainMatch("*<cim:code>D14</cim:code>*");
+                peekResult.Should().ContainMatch("*has an end time interval that does not match the first of a month or the charge's stop date*");
+                peekResult.Should().NotContainMatch("*NotifyPriceList_MarketDocument*");
                 peekResult.Should().NotContainMatch("*<cim:process.processType>D18</cim:process.processType>*");
-                peekResult.Should().ContainMatch("*<cim:code>E86</cim:code>*");
             }
 
             /* BUNDLING */
