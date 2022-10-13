@@ -55,7 +55,7 @@ namespace GreenEnergyHub.Charges.SystemTests
         private BusinessProcessConfiguration Configuration { get; }
 
         [SystemFact]
-        public async Task When_SubmittingCreateSubscriptionWithPriceDocument_Then_PeekReturnsCorrespondingConfirmation()
+        public async Task When_SubmittingChargeInformationRequestWithNewSubscription_Then_PeekReturnsCorrespondingConfirmation()
         {
             // Setup
             await FlushPostOfficeQueueAsync();
@@ -67,7 +67,7 @@ namespace GreenEnergyHub.Charges.SystemTests
             var bundleId = Guid.NewGuid().ToString();
 
             var body = EmbeddedResourceHelper
-                .GetEmbeddedFile(ChargeDocument.CreateSubscription, currentInstant, ZonedDateTimeServiceHelper.GetZonedDateTimeService(currentInstant))
+                .GetEmbeddedFile(ChargeInformationRequests.Subscription, currentInstant, ZonedDateTimeServiceHelper.GetZonedDateTimeService(currentInstant))
                 .Replace("{{GridAccessProvider}}", Configuration.GridAccessProvider);
 
             var submitRequest = new HttpRequestMessage(HttpMethod.Post, Configuration.ChargeIngestionEndpoint)
