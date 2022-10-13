@@ -25,7 +25,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.Busi
         private readonly Instant _priceEndDate;
         private readonly Instant _chargeStopDate;
 
-        public MonthlyPriceSeriesEndDateMustBeFirstOfMonthOrEqualChargeStopDateRule(Resolution resolution, Instant priceEndDate, Instant chargeStopDate)
+        public MonthlyPriceSeriesEndDateMustBeFirstOfMonthOrEqualChargeStopDateRule(Resolution resolution, Instant pointsIntervalEndDate, Instant chargeStopDate)
         {
             _resolution = resolution;
             _priceEndDate = priceEndDate;
