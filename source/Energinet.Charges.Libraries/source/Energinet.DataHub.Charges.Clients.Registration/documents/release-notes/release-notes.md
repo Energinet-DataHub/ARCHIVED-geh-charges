@@ -1,5 +1,9 @@
 # Energinet.DataHub.Charges.Clients.Registrations Release notes
 
+## Version 4.1.1
+
+Added VatClassification and ChargeDescription to ChargesV1Dto
+
 ## Version 4.1.0
 
 Added `GetMarketParticipants` to Charges client.

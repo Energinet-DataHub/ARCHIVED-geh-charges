@@ -53,6 +53,36 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
                         .Select(a => a.Id));
         }
 
+        public static MarketParticipantUpdatedEvent MapFromActorCreatedIntegrationEvent(
+            ActorCreatedIntegrationEvent actorCreatedIntegrationEvent)
+        {
+            var status = MarketParticipantStatusMapper.Map(actorCreatedIntegrationEvent.Status);
+
+            var rolesUsedInChargesDomain = actorCreatedIntegrationEvent.BusinessRoles
+                .Select(MarketParticipantRoleMapper.Map)
+                .Intersect(MarketParticipant._validRoles)
+                .ToList();
+
+            if (rolesUsedInChargesDomain.Count > 1)
+            {
+                throw new InvalidOperationException(
+                    $"Only 1 role per market participant with ID '{actorCreatedIntegrationEvent.ActorNumber}' is allowed, " +
+                    $"the current market participant has {rolesUsedInChargesDomain.Count} roles associated in the " +
+                    $"integration event with id '{actorCreatedIntegrationEvent.Id}'");
+            }
+
+            return new MarketParticipantUpdatedEvent(
+                actorCreatedIntegrationEvent.ActorId,
+                actorCreatedIntegrationEvent.OrganizationId,
+                actorCreatedIntegrationEvent.ActorNumber,
+                rolesUsedInChargesDomain,
+                status,
+                actorCreatedIntegrationEvent.ActorMarketRoles
+                    .SelectMany(amr => amr.GridAreas)
+                    .DistinctBy(o => o.Id)
+                    .Select(a => a.Id));
+        }
+
         public static GridAreaUpdatedEvent MapFromGridAreaUpdatedIntegrationEvent(
             GridAreaUpdatedIntegrationEvent gridUpdatedIntegrationEvent)
         {
