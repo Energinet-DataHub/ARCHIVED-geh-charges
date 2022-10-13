@@ -58,6 +58,6 @@ runs:
         # Create subfolder hierarchy matching 'bin' folders
         find $searchFolder -type d -name 'bin' -exec mkdir -p '${{ inputs.OUTPUT_PATH }}/tests/{}' ';'
         # Copy 'bin/Release' folders into hierarchy (cannot copy obj folders since we did not create those)
-        find $searchFolder -type d -name 'Release' -exec cp -r '{}' '${{ inputs.OUTPUT_PATH }}/tests/{}' 
+        find $searchFolder -type d -name 'Release' -exec cp -r '{}' '${{ inputs.OUTPUT_PATH }}/tests/{}' ';'
 
         
