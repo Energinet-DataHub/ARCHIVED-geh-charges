@@ -12,22 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-
 // ReSharper disable once CheckNamespace - Type is shared so namespace is not determined by project structure/namespace
 namespace Energinet.Charges.Contracts.Charge
 {
-    public record ChargeV1Dto(
-        ChargeType ChargeType,
-        Resolution Resolution,
-        string ChargeId,
-        string ChargeName,
-        string ChargeDescription,
-        string ChargeOwner,
-        string ChargeOwnerName,
-        VatClassification VatClassification,
-        bool TaxIndicator,
-        bool TransparentInvoicing,
-        DateTimeOffset ValidFromDateTime,
-        DateTimeOffset? ValidToDateTime);
+    /// <summary>
+    /// This enum indicates the VAT value. ("Moms" in Denmark).
+    /// D01 is No VAT | D02 is VAT.
+    /// </summary>
+    public enum VatClassification
+    {
+        NoVat = 1,
+        Vat25 = 2,
+    }
 }
