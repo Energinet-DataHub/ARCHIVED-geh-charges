@@ -16,7 +16,7 @@ limitations under the License.
     <cim:type>D10</cim:type>
     <cim:process.processType>D08</cim:process.processType>
     <cim:businessSector.type>23</cim:businessSector.type>
-    <cim:sender_MarketParticipant.mRID codingScheme="A10">5790000432752</cim:sender_MarketParticipant.mRID>
+    <cim:sender_MarketParticipant.mRID codingScheme="A10">{{$systemOperatorMarketParticipant}}</cim:sender_MarketParticipant.mRID>
     <cim:sender_MarketParticipant.marketRole.type>EZ</cim:sender_MarketParticipant.marketRole.type>
     <cim:receiver_MarketParticipant.mRID codingScheme="A10">{{$receiverMarketParticipant}}</cim:receiver_MarketParticipant.mRID>
     <cim:receiver_MarketParticipant.marketRole.type>DDZ</cim:receiver_MarketParticipant.marketRole.type>
@@ -25,7 +25,7 @@ limitations under the License.
         <cim:mRID>OpId1_{{$isoTimestamp}}</cim:mRID>
         <cim:ChargeGroup>
             <cim:ChargeType>
-                <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">5790000432752</cim:chargeTypeOwner_MarketParticipant.mRID>
+                <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">{{$systemOperatorMarketParticipant}}</cim:chargeTypeOwner_MarketParticipant.mRID>
                 <cim:type>D03</cim:type>
                 <cim:mRID>EA-001</cim:mRID>
                 <cim:priceTimeFrame_Period.resolution>PT1H</cim:priceTimeFrame_Period.resolution>
