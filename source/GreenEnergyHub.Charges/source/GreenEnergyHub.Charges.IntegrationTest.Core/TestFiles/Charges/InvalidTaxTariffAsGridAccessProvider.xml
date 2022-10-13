@@ -34,7 +34,7 @@ limitations under the License.
                 <cim:name>Invalid tariff</cim:name>
                 <cim:description>Grid Access Provider not allowed to create tax tariff - VR508</cim:description>
                 <cim:priceTimeFrame_Period.resolution>P1D</cim:priceTimeFrame_Period.resolution>
-                <cim:effectiveDate>2023-01-14T23:00:00Z</cim:effectiveDate>
+                <cim:effectiveDate>{{$YMDHM_TimestampPlusOneMonth}}</cim:effectiveDate>
                 <cim:VATPayer>D01</cim:VATPayer>
                 <cim:transparentInvoicing>true</cim:transparentInvoicing>
                 <cim:taxIndicator>true</cim:taxIndicator>
