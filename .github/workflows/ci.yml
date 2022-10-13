@@ -62,7 +62,7 @@ jobs:
 
   # Run all tests in 'Tests.dll'
   unit_test:
-    needs: changes
+    needs: dotnet_ci_build
     if: ${{ needs.changes.outputs.dotnet == 'true' }}
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci-test.yml@v8
     with:
@@ -71,7 +71,10 @@ jobs:
 
   # Run tests in 'IntegrationTests.dll' with category ChargeIngestionTestsChargeInformation'
   int_test_charge_information_ingestion:
-    needs: changes
+    needs: [ 
+      changes, 
+      dotnet_ci_build 
+    ]
     if: ${{ needs.changes.outputs.dotnet == 'true' }}
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci-test.yml@v8
     with:
@@ -92,7 +95,10 @@ jobs:
 
   # Run tests in 'IntegrationTests.dll' with category ChargeIngestionTestsChargePrices'
   int_test_charge_prices_ingestion:
-    needs: changes
+    needs: [ 
+      changes, 
+      dotnet_ci_build 
+    ]
     if: ${{ needs.changes.outputs.dotnet == 'true' }}
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci-test.yml@v8
     with:
@@ -113,7 +119,10 @@ jobs:
 
   # Run tests in 'IntegrationTests.dll' NOT covered by previous cases
   int_test:
-    needs: changes
+    needs: [ 
+      changes, 
+      dotnet_ci_build 
+    ]
     if: ${{ needs.changes.outputs.dotnet == 'true' }}
     uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci-test.yml@v8
     with:
