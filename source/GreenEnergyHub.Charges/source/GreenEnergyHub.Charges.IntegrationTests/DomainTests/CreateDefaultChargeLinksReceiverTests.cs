@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
-using Energinet.Charges.Contracts;
+using Energinet.DataHub.Charges.Contracts;
 using Energinet.DataHub.Core.App.Common.Abstractions.ServiceBus;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using Energinet.DataHub.MessageHub.Model.Model;

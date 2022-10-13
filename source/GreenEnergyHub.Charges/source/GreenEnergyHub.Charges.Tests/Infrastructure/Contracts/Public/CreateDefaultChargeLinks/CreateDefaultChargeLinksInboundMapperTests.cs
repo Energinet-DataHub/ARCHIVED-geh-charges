@@ -27,7 +27,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Contracts.Public.CreateDef
         [Theory]
         [InlineAutoMoqData]
         public void Convert_WhenCalled_ShouldMapToDomainObjectWithCorrectValues(
-            Energinet.Charges.Contracts.CreateDefaultChargeLinks createDefaultChargeLinks,
+            Energinet.DataHub.Charges.Contracts.CreateDefaultChargeLinks createDefaultChargeLinks,
             CreateDefaultChargeLinksInboundMapper sut)
         {
             var result = (CreateDefaultChargeLinksRequest)sut.Convert(createDefaultChargeLinks);
