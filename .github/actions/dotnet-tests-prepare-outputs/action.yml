@@ -57,5 +57,10 @@ runs:
         # Create subfolder hierarchy matching 'bin' folders and cs-files
         find source/GreenEnergyHub.Charges/source -type d -name 'bin' -exec mkdir -p '${{ inputs.OUTPUT_PATH }}/source/GreenEnergyHub.Charges/source/{}' ';'
         find source/GreenEnergyHub.Charges/source -type f -name '*.cs' -exec mkdir -p  '${{ inputs.OUTPUT_PATH }}/source/GreenEnergyHub.Charges/source/{}' ';'
+        # Copy 'bin/Release' folders and '*.cs' files into hierarchy
+        find source/GreenEnergyHub.Charges/source -type d -name 'Release' -exec cp -r '{}' '${{ inputs.OUTPUT_PATH }}/source/GreenEnergyHub.Charges/source/{}' ';'
+        # Remove obj-directories from artifact
+        find ${{ inputs.OUTPUT_PATH }}/ -type d -name 'obj' -exec rm -rf {} +
+
 
         
