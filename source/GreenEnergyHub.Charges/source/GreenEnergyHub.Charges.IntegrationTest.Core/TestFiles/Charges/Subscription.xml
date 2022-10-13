@@ -19,23 +19,23 @@ limitations under the License.
     <cim:type>D10</cim:type>
     <cim:process.processType>D18</cim:process.processType>
     <cim:businessSector.type>23</cim:businessSector.type>
-    <cim:sender_MarketParticipant.mRID codingScheme="A10">8100000000030</cim:sender_MarketParticipant.mRID>
+    <cim:sender_MarketParticipant.mRID codingScheme="A10">{{GridAccessProvider}}</cim:sender_MarketParticipant.mRID>
     <cim:sender_MarketParticipant.marketRole.type>DDM</cim:sender_MarketParticipant.marketRole.type>
     <cim:receiver_MarketParticipant.mRID codingScheme="A10">5790001330552</cim:receiver_MarketParticipant.mRID>
     <cim:receiver_MarketParticipant.marketRole.type>DDZ</cim:receiver_MarketParticipant.marketRole.type>
     <cim:createdDateTime>{{$isoTimestamp}}</cim:createdDateTime>
     <cim:MktActivityRecord>
-        <cim:mRID>OpId1_{{$isoTimestamp}}</cim:mRID>
+        <cim:mRID>SysTestOpId{{$isoTimestamp}}</cim:mRID>
         <cim:ChargeGroup>
             <cim:ChargeType>
-                <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">8100000000030</cim:chargeTypeOwner_MarketParticipant.mRID>
-                <cim:type>D03</cim:type>
-                <cim:mRID>ChargeId01</cim:mRID>
-                <cim:name>Charge tariff day Name1</cim:name>
-                <cim:description>UPDATE</cim:description>
-                <cim:priceTimeFrame_Period.resolution>P1D</cim:priceTimeFrame_Period.resolution>
-                <cim:effectiveDate>{{$isoTimestampPlusOneMonthAndTwoDays}}</cim:effectiveDate>
-                <cim:VATPayer>D02</cim:VATPayer>
+                <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">{{GridAccessProvider}}</cim:chargeTypeOwner_MarketParticipant.mRID>
+                <cim:type>D01</cim:type>
+                <cim:mRID>{{$randomCharacters}}</cim:mRID>
+                <cim:name>Charge Sub Name</cim:name>
+                <cim:description>The charge subscription description</cim:description>
+                <cim:priceTimeFrame_Period.resolution>P1M</cim:priceTimeFrame_Period.resolution>
+                <cim:effectiveDate>{{$NextYear}}-05-31T22:00:00Z</cim:effectiveDate>
+                <cim:VATPayer>D01</cim:VATPayer>
                 <cim:transparentInvoicing>false</cim:transparentInvoicing>
                 <cim:taxIndicator>false</cim:taxIndicator>
             </cim:ChargeType>
