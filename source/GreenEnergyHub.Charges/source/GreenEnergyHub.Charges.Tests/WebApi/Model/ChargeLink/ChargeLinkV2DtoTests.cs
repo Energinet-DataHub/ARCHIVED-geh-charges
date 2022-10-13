@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.Charges.Contracts.ChargeLink;
+using Energinet.DataHub.Charges.Contracts.ChargeLink;
 using FluentAssertions;
 using Xunit;
 using Xunit.Categories;

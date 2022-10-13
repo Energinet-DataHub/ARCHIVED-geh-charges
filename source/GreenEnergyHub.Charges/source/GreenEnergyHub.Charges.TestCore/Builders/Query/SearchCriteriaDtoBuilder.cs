@@ -14,7 +14,7 @@
 
 using System;
 using System.Collections.Generic;
-using Energinet.Charges.Contracts.Charge;
+using Energinet.DataHub.Charges.Contracts.Charge;
 
 namespace GreenEnergyHub.Charges.TestCore.Builders.Query
 {
