@@ -32,21 +32,21 @@ public class ChargesQueryService : IChargesQueryService
         _data = data;
     }
 
-    public async Task<IList<ChargeV1Dto>> SearchAsync(SearchCriteriaV1Dto searchCriteria)
+    public async Task<IList<ChargeV1Dto>> SearchAsync(ChargeSearchCriteriaV1Dto chargeSearchCriteria)
     {
         var charges = _data.Charges;
         var todayAtMidnightUtc = DateTime.Now.Date.ToUniversalTime();
 
         charges = ActiveCharges(charges);
 
-        if (!string.IsNullOrWhiteSpace(searchCriteria.ChargeIdOrName))
-            charges = SearchByChargeIdOrName(searchCriteria, charges, todayAtMidnightUtc);
+        if (!string.IsNullOrWhiteSpace(chargeSearchCriteria.ChargeIdOrName))
+            charges = SearchByChargeIdOrName(chargeSearchCriteria, charges, todayAtMidnightUtc);
 
-        if (searchCriteria.OwnerIds != null && searchCriteria.OwnerIds.Any())
-            charges = SearchByOwnerId(searchCriteria.OwnerIds, charges);
+        if (chargeSearchCriteria.OwnerIds != null && chargeSearchCriteria.OwnerIds.Any())
+            charges = SearchByOwnerId(chargeSearchCriteria.OwnerIds, charges);
 
-        if (searchCriteria.ChargeTypes != null && searchCriteria.ChargeTypes.Any())
-            charges = SearchByChargeTypes(searchCriteria.ChargeTypes, charges);
+        if (chargeSearchCriteria.ChargeTypes != null && chargeSearchCriteria.ChargeTypes.Any())
+            charges = SearchByChargeTypes(chargeSearchCriteria.ChargeTypes, charges);
 
         return await charges
             .AsChargeV1Dto()
@@ -55,14 +55,14 @@ public class ChargesQueryService : IChargesQueryService
     }
 
     private static IQueryable<Charge> SearchByChargeIdOrName(
-        SearchCriteriaV1Dto searchCriteria, IQueryable<Charge> charges, DateTime todayAtMidnightUtc)
+        ChargeSearchCriteriaV1Dto chargeSearchCriteria, IQueryable<Charge> charges, DateTime todayAtMidnightUtc)
     {
         charges = charges
-            .Where(c => c.SenderProvidedChargeId.Contains(searchCriteria.ChargeIdOrName)
+            .Where(c => c.SenderProvidedChargeId.Contains(chargeSearchCriteria.ChargeIdOrName)
                         || c.ChargePeriods
                             .OrderByDescending(cp => cp.StartDateTime)
                             .First(cp => cp.StartDateTime <= todayAtMidnightUtc)
-                            .Name.Contains(searchCriteria.ChargeIdOrName));
+                            .Name.Contains(chargeSearchCriteria.ChargeIdOrName));
         return charges;
     }
 

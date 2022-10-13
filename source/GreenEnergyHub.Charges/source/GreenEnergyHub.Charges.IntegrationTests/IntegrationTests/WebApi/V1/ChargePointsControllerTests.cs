@@ -55,7 +55,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
         {
             // Arrange
             var sut = CreateHttpClient(factory);
-            var searchCriteria = new SearchCriteriaV1Dto(Guid.NewGuid(), DateTime.Now, DateTime.Now);
+            var searchCriteria = new ChargePointSearchCriteriaV1Dto(Guid.NewGuid(), DateTime.Now, DateTime.Now);
 
             // Act
             var response = await sut.PostAsJsonAsync($"{BaseUrl}/SearchAsync", searchCriteria);

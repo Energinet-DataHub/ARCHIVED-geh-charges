@@ -17,7 +17,7 @@ using System;
 // ReSharper disable once CheckNamespace - Type is shared so namespace is not determined by project structure/namespace
 namespace Energinet.Charges.Contracts.ChargePoint
 {
-    public record SearchCriteriaV1Dto(
+    public record ChargePointSearchCriteriaV1Dto(
         Guid ChargeId,
         DateTime DateTimeFrom,
         DateTime DateTimeTo);

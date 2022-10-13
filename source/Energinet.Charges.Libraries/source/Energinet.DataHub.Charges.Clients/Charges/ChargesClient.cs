@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -20,6 +21,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Energinet.Charges.Contracts.Charge;
 using Energinet.Charges.Contracts.ChargeLink;
+using Energinet.Charges.Contracts.ChargePoint;
 
 namespace Energinet.DataHub.Charges.Clients.Charges
 {
@@ -74,7 +76,7 @@ namespace Energinet.DataHub.Charges.Clients.Charges
         /// Returns charges based on the search criteria.
         /// </summary>
         /// <returns>A collection of charges(Dtos)</returns>
-        public async Task<IList<ChargeV1Dto>> SearchChargesAsync(SearchCriteriaV1Dto searchCriteria)
+        public async Task<IList<ChargeV1Dto>> SearchChargesAsync(ChargeSearchCriteriaV1Dto searchCriteria)
         {
             var response = await _httpClient
                 .PostAsJsonAsync(ChargesRelativeUris.SearchCharges(), searchCriteria)
@@ -96,10 +98,23 @@ namespace Energinet.DataHub.Charges.Clients.Charges
             return await HandleResultAsync<MarketParticipantV1Dto>(response).ConfigureAwait(false);
         }
 
+        /// <summary>
+        ///     Returns charge points based on the search criteria.
+        /// </summary>
+        /// <returns>A collection of charge points(Dtos)</returns>
+        public async Task<IList<ChargePointV1Dto>> SearchChargePointsAsync(ChargePointSearchCriteriaV1Dto searchCriteria)
+        {
+            var response = await _httpClient
+                .PostAsJsonAsync(ChargesRelativeUris.SearchChargePoints(), searchCriteria)
+                .ConfigureAwait(false);
+
+            return await HandleResultAsync<ChargePointV1Dto>(response).ConfigureAwait(false);
+        }
+
         private static async Task<IList<TModel>> HandleResultAsync<TModel>(HttpResponseMessage response)
         {
             if (!response.IsSuccessStatusCode)
-                return null;
+                throw new Exception($"Charges backend returned HTTP status code {(int)response.StatusCode}");
 
             var options = new JsonSerializerOptions(JsonSerializerDefaults.Web)
             {

@@ -33,11 +33,11 @@ public class ChargePointQueryService : IChargePointQueryService
         _iso8601Durations = iso8601Durations;
     }
 
-    public async Task<IList<ChargePointV1Dto>> SearchAsync(SearchCriteriaV1Dto searchCriteria)
+    public async Task<IList<ChargePointV1Dto>> SearchAsync(ChargePointSearchCriteriaV1Dto chargePointSearchCriteria)
     {
         var chargePoints = _data.ChargePoints
-            .Where(cp => cp.ChargeId == searchCriteria.ChargeId)
-            .Where(c => c.Time >= searchCriteria.DateTimeFrom && c.Time <= searchCriteria.DateTimeTo);
+            .Where(cp => cp.ChargeId == chargePointSearchCriteria.ChargeId)
+            .Where(c => c.Time >= chargePointSearchCriteria.DateTimeFrom && c.Time <= chargePointSearchCriteria.DateTimeTo);
 
         return await chargePoints
             .AsChargePointV1Dto(_iso8601Durations)

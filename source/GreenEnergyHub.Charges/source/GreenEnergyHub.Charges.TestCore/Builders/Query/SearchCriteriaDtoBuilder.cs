@@ -54,9 +54,9 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Query
             return this;
         }
 
-        public SearchCriteriaV1Dto Build()
+        public ChargeSearchCriteriaV1Dto Build()
         {
-            return new SearchCriteriaV1Dto(_chargeIdOrName, _ownerIds, _chargeTypes);
+            return new ChargeSearchCriteriaV1Dto(_chargeIdOrName, _ownerIds, _chargeTypes);
         }
     }
 }

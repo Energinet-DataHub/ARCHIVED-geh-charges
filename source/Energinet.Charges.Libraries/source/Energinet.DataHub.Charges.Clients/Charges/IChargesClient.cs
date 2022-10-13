@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Energinet.Charges.Contracts.Charge;
 using Energinet.Charges.Contracts.ChargeLink;
+using Energinet.Charges.Contracts.ChargePoint;
 
 namespace Energinet.DataHub.Charges.Clients.Charges
 {
@@ -41,12 +42,18 @@ namespace Energinet.DataHub.Charges.Clients.Charges
         /// Returns charges based on the search criteria.
         /// </summary>
         /// <returns>A collection of charges(Dtos)</returns>
-        public Task<IList<ChargeV1Dto>> SearchChargesAsync(SearchCriteriaV1Dto searchCriteria);
+        public Task<IList<ChargeV1Dto>> SearchChargesAsync(ChargeSearchCriteriaV1Dto searchCriteria);
 
         /// <summary>
         /// Gets all market participants.
         /// </summary>
         /// <returns>A collection of Market Participant DTOs</returns>
         public Task<IList<MarketParticipantV1Dto>> GetMarketParticipantsAsync();
+
+        /// <summary>
+        ///     Returns charge points based on the search criteria.
+        /// </summary>
+        /// <returns>A collection of charge points(Dtos)</returns>
+        Task<IList<ChargePointV1Dto>> SearchChargePointsAsync(ChargePointSearchCriteriaV1Dto searchCriteria);
     }
 }

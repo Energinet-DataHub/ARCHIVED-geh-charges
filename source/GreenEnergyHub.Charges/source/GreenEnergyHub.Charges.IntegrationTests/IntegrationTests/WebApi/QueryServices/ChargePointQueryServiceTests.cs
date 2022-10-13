@@ -65,7 +65,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
             var sut = GetSut(chargesDatabaseQueryContext);
-            var searchCriteria = new SearchCriteriaV1Dto(
+            var searchCriteria = new ChargePointSearchCriteriaV1Dto(
                 expectedCharge.Id,
                 InstantHelper.GetTodayAtMidnightUtc().ToDateTimeUtc(),
                 InstantHelper.GetTomorrowAtMidnightUtc().ToDateTimeUtc());
@@ -100,7 +100,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
             var sut = GetSut(chargesDatabaseQueryContext);
-            var searchCriteria = new SearchCriteriaV1Dto(
+            var searchCriteria = new ChargePointSearchCriteriaV1Dto(
                 expectedCharge.Id,
                 InstantHelper.GetTodayAtMidnightUtc().ToDateTimeUtc(),
                 InstantHelper.GetTomorrowAtMidnightUtc().ToDateTimeUtc());
@@ -140,7 +140,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
             var sut = GetSut(chargesDatabaseQueryContext);
-            var searchCriteria = new SearchCriteriaV1Dto(
+            var searchCriteria = new ChargePointSearchCriteriaV1Dto(
                 charge.Id,
                 InstantHelper.GetTodayAtMidnightUtc().ToDateTimeUtc(),
                 InstantHelper.GetTomorrowAtMidnightUtc().ToDateTimeUtc());
@@ -175,7 +175,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
             var sut = GetSut(chargesDatabaseQueryContext);
-            var searchCriteria = new SearchCriteriaV1Dto(
+            var searchCriteria = new ChargePointSearchCriteriaV1Dto(
                 charge.Id,
                 InstantHelper.GetTodayAtMidnightUtc().ToDateTimeUtc(),
                 InstantHelper.GetTomorrowAtMidnightUtc().ToDateTimeUtc());
@@ -210,7 +210,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
             var sut = GetSut(chargesDatabaseQueryContext);
-            var searchCriteria = new SearchCriteriaV1Dto(
+            var searchCriteria = new ChargePointSearchCriteriaV1Dto(
                 charge.Id,
                 InstantHelper.GetTodayPlusDaysAtMidnightUtc(0).ToDateTimeUtc(),
                 InstantHelper.GetTodayPlusDaysAtMidnightUtc(4).ToDateTimeUtc());
@@ -245,7 +245,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
             var sut = GetSut(chargesDatabaseQueryContext);
-            var searchCriteria = new SearchCriteriaV1Dto(
+            var searchCriteria = new ChargePointSearchCriteriaV1Dto(
                 charge.Id,
                 InstantHelper.GetThisMonthPlusMonthsAtMidnightUtc(0).ToDateTimeUtc(),
                 InstantHelper.GetThisMonthPlusMonthsAtMidnightUtc(4).ToDateTimeUtc());

@@ -24,14 +24,14 @@ public static class SearchCriteriaValidator
     /// <summary>
     /// Validate if the search criteria are valid
     /// </summary>
-    /// <param name="searchCriteriaV1Dto"></param>
+    /// <param name="chargeSearchCriteriaV1Dto"></param>
     /// <returns>bool</returns>
-    public static bool Validate(SearchCriteriaV1Dto searchCriteriaV1Dto)
+    public static bool Validate(ChargeSearchCriteriaV1Dto chargeSearchCriteriaV1Dto)
     {
-        if (!IsOwnerIdsValid(searchCriteriaV1Dto.OwnerIds))
+        if (!IsOwnerIdsValid(chargeSearchCriteriaV1Dto.OwnerIds))
             return false;
 
-        if (!IsChargeTypesValid(searchCriteriaV1Dto.ChargeTypes))
+        if (!IsChargeTypesValid(chargeSearchCriteriaV1Dto.ChargeTypes))
             return false;
 
         return true;

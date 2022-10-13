@@ -12,38 +12,38 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Threading.Tasks;
 using Energinet.Charges.Contracts.ChargePoint;
 using GreenEnergyHub.Charges.QueryApi.QueryServices;
 using Microsoft.AspNetCore.Mvc;
 
-namespace GreenEnergyHub.Charges.WebApi.Controllers.V1
+namespace GreenEnergyHub.Charges.WebApi.Controllers.V1;
+
+[ApiController]
+[ApiVersion(Version1)]
+[Route("v{version:apiVersion}/[controller]")]
+public class ChargePointsController : Controller
 {
-    [ApiController]
-    [ApiVersion(Version1)]
-    [Route("v{version:apiVersion}/[controller]")]
-    public class ChargePointsController : Controller
+    public const string Version1 = "1.0";
+    private readonly IChargePointQueryService _chargePointQueryService;
+
+    public ChargePointsController(IChargePointQueryService chargePointQueryService)
     {
-        public const string Version1 = "1.0";
-        private readonly IChargePointQueryService _chargePointQueryService;
+        _chargePointQueryService = chargePointQueryService;
+    }
 
-        public ChargePointsController(IChargePointQueryService chargePointQueryService)
-        {
-            _chargePointQueryService = chargePointQueryService;
-        }
+    /// <summary>
+    ///     Returns all charge points based on search criteria
+    /// </summary>
+    /// <returns>Charge points or "404 Not Found"</returns>
+    [HttpPost("SearchAsync")]
+    [MapToApiVersion(Version1)]
+    public async Task<IActionResult> SearchAsync([FromBody] ChargePointSearchCriteriaV1Dto chargePointSearchCriteria)
+    {
+        var chargePoints = await _chargePointQueryService
+            .SearchAsync(chargePointSearchCriteria)
+            .ConfigureAwait(false);
 
-        /// <summary>
-        ///     Returns all charge points based on search criteria
-        /// </summary>
-        /// <returns>Charge points or "404 Not Found"</returns>
-        [HttpPost("SearchAsync")]
-        [MapToApiVersion(Version1)]
-        public async Task<IActionResult> SearchAsync([FromBody] SearchCriteriaV1Dto searchCriteria)
-        {
-            var chargePoints = await _chargePointQueryService.SearchAsync(searchCriteria).ConfigureAwait(false);
-
-            return Ok(chargePoints);
-        }
+        return Ok(chargePoints);
     }
 }

@@ -23,6 +23,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Energinet.Charges.Contracts.Charge;
 using Energinet.Charges.Contracts.ChargeLink;
+using Energinet.Charges.Contracts.ChargePoint;
 using Energinet.DataHub.Charges.Clients.Charges;
 using FluentAssertions;
 using GreenEnergyHub.TestHelpers;
@@ -128,11 +129,11 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
 
         [Theory]
         [InlineAutoDomainData]
-        public async Task GetChargesAsync_WhenResponseIsNotFound_ReturnsNull(
+        public async Task GetChargesAsync_WhenResponseIsEmptyList_ReturnsEmptyList(
             Mock<IChargesClientFactory> chargesClientFactory)
         {
             // Arrange
-            var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.NotFound, string.Empty);
+            var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.OK, "[]");
             var httpClient = CreateHttpClient(mockHttpMessageHandler);
             chargesClientFactory.Setup(x => x.CreateClient(httpClient))
                 .Returns(new ChargesClient(httpClient));
@@ -143,17 +144,35 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
             var result = await sut.GetChargesAsync().ConfigureAwait(false);
 
             // Assert
-            result.Should().BeNull();
+            result.Should().BeEmpty();
         }
 
         [Theory]
         [InlineAutoDomainData]
-        public async Task SearchChargesAsync_WhenResponseIsNotFound_ReturnsEmptyList(
+        public async Task SearchChargesAsync_WhenResponseIsNotSuccess_ThrowsException(
             Mock<IChargesClientFactory> chargesClientFactory,
-            SearchCriteriaV1Dto searchCriteria)
+            ChargeSearchCriteriaV1Dto searchCriteria)
         {
             // Arrange
-            var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.NotFound, string.Empty);
+            var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.InternalServerError, string.Empty);
+            var httpClient = CreateHttpClient(mockHttpMessageHandler);
+            chargesClientFactory.Setup(x => x.CreateClient(httpClient))
+                .Returns(new ChargesClient(httpClient));
+
+            var sut = chargesClientFactory.Object.CreateClient(httpClient);
+
+            // Act / Assert
+            await Assert.ThrowsAsync<Exception>(async () => await sut.SearchChargesAsync(searchCriteria).ConfigureAwait(false)).ConfigureAwait(false);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task SearchChargesAsync_WhenResponseIsEmptyList_ReturnsEmptyList(
+            Mock<IChargesClientFactory> chargesClientFactory,
+            ChargeSearchCriteriaV1Dto searchCriteria)
+        {
+            // Arrange
+            var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.OK, "[]");
             var httpClient = CreateHttpClient(mockHttpMessageHandler);
             chargesClientFactory.Setup(x => x.CreateClient(httpClient))
                 .Returns(new ChargesClient(httpClient));
@@ -161,17 +180,17 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
             var sut = chargesClientFactory.Object.CreateClient(httpClient);
 
             // Act
-            var result = await sut.SearchChargesAsync(searchCriteria).ConfigureAwait(false);
+            var actual = await sut.SearchChargesAsync(searchCriteria).ConfigureAwait(false);
 
             // Assert
-            result.Should().BeNull();
+            actual.Should().BeEmpty();
         }
 
         [Theory]
         [InlineAutoDomainData]
         public async Task SearchChargesAsync_WhenSuccess_ReturnsCharges(
             Mock<IChargesClientFactory> chargesClientFactory,
-            SearchCriteriaV1Dto searchCriteria,
+            ChargeSearchCriteriaV1Dto searchCriteria,
             ChargeV1Dto chargeDto)
         {
             // Arrange
@@ -236,11 +255,11 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
 
         [Theory]
         [InlineAutoDomainData]
-        public async Task GetMarketParticipantsAsync_WhenResponseIsNotFound_ReturnsNull(
+        public async Task GetMarketParticipantsAsync_WhenResponseIsEmptyList_ReturnsEmptyList(
             Mock<IChargesClientFactory> chargesClientFactory)
         {
             // Arrange
-            var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.NotFound, string.Empty);
+            var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.OK, "[]");
             var httpClient = CreateHttpClient(mockHttpMessageHandler);
             chargesClientFactory.Setup(x => x.CreateClient(httpClient))
                 .Returns(new ChargesClient(httpClient));
@@ -251,7 +270,97 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
             var result = await sut.GetMarketParticipantsAsync().ConfigureAwait(false);
 
             // Assert
-            result.Should().BeNull();
+            result.Should().BeEmpty();
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task GetMarketParticipantsAsync_WhenResponseIsNotSuccess_ThrowsException(
+            Mock<IChargesClientFactory> chargesClientFactory)
+        {
+            // Arrange
+            var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.InternalServerError, string.Empty);
+            var httpClient = CreateHttpClient(mockHttpMessageHandler);
+            chargesClientFactory.Setup(x => x.CreateClient(httpClient))
+                .Returns(new ChargesClient(httpClient));
+
+            var sut = chargesClientFactory.Object.CreateClient(httpClient);
+
+            // Act / Assert
+            await Assert.ThrowsAsync<Exception>(async () => await sut.GetMarketParticipantsAsync().ConfigureAwait(false)).ConfigureAwait(false);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task SearchChargePointsAsync_WhenResponseIsEmptyList_ReturnsEmptyList(
+            Mock<IChargesClientFactory> chargesClientFactory,
+            ChargePointSearchCriteriaV1Dto searchCriteria)
+        {
+            // Arrange
+            var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.OK, "[]");
+            var httpClient = CreateHttpClient(mockHttpMessageHandler);
+            chargesClientFactory.Setup(x => x.CreateClient(httpClient))
+                .Returns(new ChargesClient(httpClient));
+
+            var sut = chargesClientFactory.Object.CreateClient(httpClient);
+
+            // Act
+            var result = await sut.SearchChargePointsAsync(searchCriteria).ConfigureAwait(false);
+
+            // Assert
+            result.Should().BeEmpty();
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task SearchChargePointsAsync_WhenResponseIsNotSuccess_ThrowsException(
+            Mock<IChargesClientFactory> chargesClientFactory,
+            ChargePointSearchCriteriaV1Dto searchCriteria)
+        {
+            // Arrange
+            var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.InternalServerError, string.Empty);
+            var httpClient = CreateHttpClient(mockHttpMessageHandler);
+            chargesClientFactory.Setup(x => x.CreateClient(httpClient))
+                .Returns(new ChargesClient(httpClient));
+
+            var sut = chargesClientFactory.Object.CreateClient(httpClient);
+
+            // Act / Assert
+            await Assert.ThrowsAsync<Exception>(async () => await sut.SearchChargePointsAsync(searchCriteria).ConfigureAwait(false)).ConfigureAwait(false);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task SearchChargePointsAsync_WhenSuccess_ReturnsChargePoints(
+            Mock<IChargesClientFactory> chargesClientFactory,
+            ChargePointSearchCriteriaV1Dto searchCriteria,
+            ChargePointV1Dto chargePointDto)
+        {
+            // Arrange
+            var responseContent = CreateValidResponseContent(chargePointDto);
+            var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.OK, responseContent);
+            var httpClient = CreateHttpClient(mockHttpMessageHandler);
+            chargesClientFactory.Setup(x => x.CreateClient(httpClient))
+                .Returns(new ChargesClient(httpClient));
+
+            var sut = chargesClientFactory.Object.CreateClient(httpClient);
+
+            var expectedUri = new Uri($"{BaseUrl}{ChargesRelativeUris.SearchChargePoints()}");
+
+            // Act
+            var result = await sut.SearchChargePointsAsync(searchCriteria).ConfigureAwait(false);
+
+            // Assert
+            result.Should().NotBeNull();
+            result[0].Price.Should().Be(chargePointDto.Price);
+            result[0].ActiveFromDateTime.Should().Be(chargePointDto.ActiveFromDateTime);
+            result[0].ActiveToDateTime.Should().Be(chargePointDto.ActiveToDateTime);
+
+            mockHttpMessageHandler.Protected().Verify(
+                "SendAsync",
+                Times.Exactly(1),
+                ItExpr.Is<HttpRequestMessage>(req => req.Method == HttpMethod.Post && req.RequestUri == expectedUri),
+                ItExpr.IsAny<CancellationToken>());
         }
 
         private static string CreateValidResponseContent<TModel>(TModel responseDto)
