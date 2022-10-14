@@ -114,7 +114,10 @@ namespace Energinet.DataHub.Charges.Clients.Charges
         private static async Task<IList<TModel>> HandleResultAsync<TModel>(HttpResponseMessage response)
         {
             if (!response.IsSuccessStatusCode)
-                throw new Exception($"Charges backend returned HTTP status code {(int)response.StatusCode}");
+            {
+                var message = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                throw new Exception($"Charges backend returned HTTP status code {(int)response.StatusCode} with message {message}");
+            }
 
             var options = new JsonSerializerOptions(JsonSerializerDefaults.Web)
             {

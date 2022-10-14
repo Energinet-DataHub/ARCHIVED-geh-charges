@@ -167,6 +167,26 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
 
         [Theory]
         [InlineAutoDomainData]
+        public async Task SearchChargesAsync_WhenResponseIsBadRequest_ThrowsExceptionWithMessage(
+            Mock<IChargesClientFactory> chargesClientFactory,
+            ChargeSearchCriteriaV1Dto searchCriteria)
+        {
+            // Arrange
+            var message = "Validation not valid";
+            var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.BadRequest, message);
+            var httpClient = CreateHttpClient(mockHttpMessageHandler);
+            chargesClientFactory.Setup(x => x.CreateClient(httpClient))
+                .Returns(new ChargesClient(httpClient));
+
+            var sut = chargesClientFactory.Object.CreateClient(httpClient);
+
+            // Act / Assert
+            var ex = await Assert.ThrowsAsync<Exception>(async () => await sut.SearchChargesAsync(searchCriteria).ConfigureAwait(false)).ConfigureAwait(false);
+            ex.Message.Should().Contain(message);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
         public async Task SearchChargesAsync_WhenResponseIsEmptyList_ReturnsEmptyList(
             Mock<IChargesClientFactory> chargesClientFactory,
             ChargeSearchCriteriaV1Dto searchCriteria)
