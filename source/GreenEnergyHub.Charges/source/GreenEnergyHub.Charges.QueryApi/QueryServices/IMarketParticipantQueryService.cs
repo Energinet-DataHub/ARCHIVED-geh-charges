@@ -14,11 +14,12 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Energinet.Charges.Contracts.Charge;
+using Energinet.DataHub.Charges.Contracts.Charge;
 
-namespace GreenEnergyHub.Charges.QueryApi.QueryServices;
-
-public interface IMarketParticipantQueryService
+namespace GreenEnergyHub.Charges.QueryApi.QueryServices
 {
-    Task<IList<MarketParticipantV1Dto>> GetAsync();
+    public interface IMarketParticipantQueryService
+    {
+        Task<IList<MarketParticipantV1Dto>> GetAsync();
+    }
 }

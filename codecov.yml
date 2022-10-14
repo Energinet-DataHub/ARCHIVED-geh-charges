@@ -7,7 +7,7 @@ flag_management:
       - source/GreenEnergyHub.Charges
     - name: clientlibraries
       paths:
-      - source/Energinet.Charges.Libraries
+      - source/Energinet.DataHub.Charges.Libraries
 
 # https://docs.codecov.com/docs/ignoring-paths
 # Following will be ignored no matter which flag is used
@@ -15,6 +15,6 @@ ignore:
   - "source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.IntegrationTests"
   - "source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.SystemTests"
   - "source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Tests"
-  - "source/Energinet.Charges.Libraries/source/Energinet.Charges.Libraries.Clients.Tests"
-  - "source/Energinet.Charges.Libraries/source/Energinet.Charges.Libraries.Clients.IntegrationTests"
-  - "source/Energinet.Charges.Libraries/source/Energinet.Charges.Libraries.Clients.RegistrationTests"
+  - "source/Energinet.DataHub.Charges.Libraries/source/Energinet.DataHub.Charges.Libraries.Clients.Tests"
+  - "source/Energinet.DataHub.Charges.Libraries/source/Energinet.DataHub.Charges.Libraries.Clients.IntegrationTests"
+  - "source/Energinet.DataHub.Charges.Libraries/source/Energinet.DataHub.Charges.Libraries.Clients.RegistrationTests"
