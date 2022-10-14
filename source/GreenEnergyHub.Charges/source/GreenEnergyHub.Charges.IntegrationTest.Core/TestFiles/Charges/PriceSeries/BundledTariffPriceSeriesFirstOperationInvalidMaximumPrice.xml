@@ -25,7 +25,7 @@ limitations under the License.
     <cim:receiver_MarketParticipant.marketRole.type>DDZ</cim:receiver_MarketParticipant.marketRole.type>
     <cim:createdDateTime>{{$isoTimestamp}}</cim:createdDateTime>
     <cim:MktActivityRecord>
-        <cim:mRID>OpId1_{{$isoTimestamp}}</cim:mRID>
+        <cim:mRID>OpId1_0000A</cim:mRID>
         <cim:ChargeGroup>
             <cim:ChargeType>
                 <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">{{$senderMarketParticipant}}</cim:chargeTypeOwner_MarketParticipant.mRID>
@@ -140,7 +140,7 @@ limitations under the License.
         </cim:ChargeGroup>
     </cim:MktActivityRecord>
     <cim:MktActivityRecord>
-        <cim:mRID>OpId2_{{$isoTimestamp}}</cim:mRID>
+        <cim:mRID>OpId2_0000A</cim:mRID>
         <cim:ChargeGroup>
             <cim:ChargeType>
                 <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">{{$senderMarketParticipant}}</cim:chargeTypeOwner_MarketParticipant.mRID>

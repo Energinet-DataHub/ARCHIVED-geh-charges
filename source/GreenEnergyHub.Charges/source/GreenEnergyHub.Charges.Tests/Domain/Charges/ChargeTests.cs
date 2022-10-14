@@ -539,39 +539,6 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
         }
 
         [Fact]
-        public void UpdatePrices_WhenChargeIsTaxTariff_AndSenderIsNotSystemOperator_PointsNotUpdated()
-        {
-            // Arrange
-            var points = new List<Point>
-            {
-                new(1.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(0)),
-            };
-            var newPrices = new List<Point>
-            {
-                new(6.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(5)),
-                new(7.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(6)),
-            };
-
-            var sut = new ChargeBuilder()
-                .WithStartDate(InstantHelper.GetTodayPlusDaysAtMidnightUtc(0))
-                .WithPoints(points)
-                .WithMarketParticipantRole(MarketParticipantRole.SystemOperator)
-                .WithType(ChargeType.Tariff)
-                .WithTaxIndicator(TaxIndicator.Tax)
-                .Build();
-
-            // Act
-            // Assert
-            Assert.Throws<ChargeOperationFailedException>(() =>
-                sut.UpdatePrices(
-                    InstantHelper.GetTodayPlusDaysAtMidnightUtc(5),
-                    InstantHelper.GetTodayPlusDaysAtMidnightUtc(7),
-                    newPrices,
-                    Guid.NewGuid().ToString(),
-                    MarketParticipantRole.GridAccessProvider));
-        }
-
-        [Fact]
         public void Create_WithEndDate_ThrowsExceptionWithInvalidRule()
         {
             // Act / Assert
