@@ -60,13 +60,13 @@ public class ChargesController : ControllerBase
     /// <returns>Charges data or "400 Bad request"</returns>
     [HttpPost("SearchAsync")]
     [MapToApiVersion(Version1)]
-    public async Task<IActionResult> SearchAsync(ChargeSearchCriteriaV1Dto chargeSearchCriteria)
+    public async Task<IActionResult> SearchAsync(ChargeSearchCriteriaV1Dto searchCriteria)
     {
-        var isValid = ChargeSearchCriteriaValidator.Validate(chargeSearchCriteria);
+        var isValid = ChargeSearchCriteriaValidator.Validate(searchCriteria);
         if (!isValid)
             return BadRequest("Search criteria is not valid.");
 
-        var charges = await _chargesQueryService.SearchAsync(chargeSearchCriteria).ConfigureAwait(false);
+        var charges = await _chargesQueryService.SearchAsync(searchCriteria).ConfigureAwait(false);
 
         return Ok(charges);
     }

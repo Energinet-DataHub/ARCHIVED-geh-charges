@@ -37,10 +37,9 @@ public class ChargePointsController : Controller
     /// <returns>Charge points or "404 Not Found"</returns>
     [HttpPost("Search")]
     [MapToApiVersion(Version1)]
-    public IActionResult Search([FromBody] ChargePointSearchCriteriaV1Dto chargePointSearchCriteria)
+    public IActionResult Search([FromBody] ChargePointSearchCriteriaV1Dto searchCriteria)
     {
-        var chargePoints = _chargePointQueryService
-            .Search(chargePointSearchCriteria);
+        var chargePoints = _chargePointQueryService.Search(searchCriteria);
 
         return Ok(chargePoints);
     }

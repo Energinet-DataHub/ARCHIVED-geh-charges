@@ -32,21 +32,21 @@ public class ChargesQueryService : IChargesQueryService
         _data = data;
     }
 
-    public async Task<IList<ChargeV1Dto>> SearchAsync(ChargeSearchCriteriaV1Dto chargeSearchCriteria)
+    public async Task<IList<ChargeV1Dto>> SearchAsync(ChargeSearchCriteriaV1Dto searchCriteria)
     {
         var charges = _data.Charges;
         var todayAtMidnightUtc = DateTime.Now.Date.ToUniversalTime();
 
         charges = ActiveCharges(charges);
 
-        if (!string.IsNullOrWhiteSpace(chargeSearchCriteria.ChargeIdOrName))
-            charges = SearchByChargeIdOrName(chargeSearchCriteria, charges, todayAtMidnightUtc);
+        if (!string.IsNullOrWhiteSpace(searchCriteria.ChargeIdOrName))
+            charges = SearchByChargeIdOrName(searchCriteria, charges, todayAtMidnightUtc);
 
-        if (chargeSearchCriteria.OwnerIds != null && chargeSearchCriteria.OwnerIds.Any())
-            charges = SearchByOwnerId(chargeSearchCriteria.OwnerIds, charges);
+        if (searchCriteria.OwnerIds != null && searchCriteria.OwnerIds.Any())
+            charges = SearchByOwnerId(searchCriteria.OwnerIds, charges);
 
-        if (chargeSearchCriteria.ChargeTypes != null && chargeSearchCriteria.ChargeTypes.Any())
-            charges = SearchByChargeTypes(chargeSearchCriteria.ChargeTypes, charges);
+        if (searchCriteria.ChargeTypes != null && searchCriteria.ChargeTypes.Any())
+            charges = SearchByChargeTypes(searchCriteria.ChargeTypes, charges);
 
         return await charges
             .AsChargeV1Dto()
