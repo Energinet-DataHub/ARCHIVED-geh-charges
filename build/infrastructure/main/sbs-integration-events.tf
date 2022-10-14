@@ -46,7 +46,7 @@ module "sbs_int_events_market_participant_created" {
   max_delivery_count  = 1
   correlation_filter  = {
     properties     = {
-      "MessageType" = "ActorCreated"
+      "MessageType" = "ActorCreatedIntegrationEvent"
     }
   }
 }
