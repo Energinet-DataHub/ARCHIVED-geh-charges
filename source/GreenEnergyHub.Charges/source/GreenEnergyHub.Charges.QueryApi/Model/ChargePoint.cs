@@ -16,22 +16,23 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace GreenEnergyHub.Charges.QueryApi.Model;
-
-[Table("ChargePoint", Schema = "Charges")]
-public class ChargePoint
+namespace GreenEnergyHub.Charges.QueryApi.Model
 {
-    [Key]
-    public Guid Id { get; set; }
+    [Table("ChargePoint", Schema = "Charges")]
+    public class ChargePoint
+    {
+        [Key]
+        public Guid Id { get; set; }
 
-    public Guid ChargeId { get; set; }
+        public Guid ChargeId { get; set; }
 
-    public DateTime Time { get; set; }
+        public DateTime Time { get; set; }
 
-    [Column(TypeName = "decimal(14, 6)")]
-    public decimal Price { get; set; }
+        [Column(TypeName = "decimal(14, 6)")]
+        public decimal Price { get; set; }
 
-    [ForeignKey("ChargeId")]
-    [InverseProperty("ChargePoints")]
-    public virtual Charge Charge { get; set; }
+        [ForeignKey("ChargeId")]
+        [InverseProperty("ChargePoints")]
+        public virtual Charge Charge { get; set; }
+    }
 }

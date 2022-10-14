@@ -14,8 +14,8 @@
 
 using System;
 using System.Linq;
-using Energinet.Charges.Contracts.Charge;
-using Energinet.Charges.Contracts.ChargeLink;
+using Energinet.DataHub.Charges.Contracts.Charge;
+using Energinet.DataHub.Charges.Contracts.ChargeLink;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.QueryApi.Model;
 

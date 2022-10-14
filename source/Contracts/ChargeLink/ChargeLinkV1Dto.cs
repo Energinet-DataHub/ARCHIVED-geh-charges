@@ -13,10 +13,10 @@
 // limitations under the License.
 
 using System;
-using Energinet.Charges.Contracts.Charge;
+using Energinet.DataHub.Charges.Contracts.Charge;
 
 // ReSharper disable once CheckNamespace - Type is shared so namespace is not determined by project structure/namespace
-namespace Energinet.Charges.Contracts.ChargeLink
+namespace Energinet.DataHub.Charges.Contracts.ChargeLink
 {
     /// <summary>
     /// Represents a Charge Link
