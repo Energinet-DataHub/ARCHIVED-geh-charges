@@ -12,19 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 
-namespace GreenEnergyHub.Charges.Application.Charges.Handlers
+namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 {
-    /// <summary>
-    /// Handler for commands updating state of charge information.
-    /// </summary>
-    public interface IChargeCommandReceivedEventHandler
+    public interface IActorIntegrationEventMapper
     {
-        /// <summary>
-        /// Asynchronously handle the event.
-        /// </summary>
-        Task HandleAsync(ChargeInformationCommandReceivedEvent chargeInformationCommandReceivedEvent);
+        MarketParticipantCreatedCommand MapFromActorCreated(byte[] message);
     }
 }

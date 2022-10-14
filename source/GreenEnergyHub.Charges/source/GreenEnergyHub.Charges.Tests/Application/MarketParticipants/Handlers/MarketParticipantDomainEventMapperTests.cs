@@ -19,7 +19,6 @@ using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
-using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
 
@@ -48,8 +47,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
 
             // Act
             var actualMarketParticipantUpdatedEvent =
-                MarketParticipantEventMapper.MapFromActorUpdated(
-                    InstantHelper.GetTodayAtMidnightUtc(), actorUpdatedIntegrationEvent);
+                ActorIntegrationEventMapper.MapFromActorUpdated(actorUpdatedIntegrationEvent);
 
             // Assert
             actualMarketParticipantUpdatedEvent.ActorId.Should().Be(actorId);
@@ -77,7 +75,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
 
             // Act
             var actualGridAreaUpdatedEvent =
-                MarketParticipantEventMapper.MapFromGridAreaUpdatedIntegrationEvent(gridAreaUpdatedIntegrationEvent);
+                ActorIntegrationEventMapper.MapFromGridAreaUpdatedIntegrationEvent(gridAreaUpdatedIntegrationEvent);
 
             // Assert
             actualGridAreaUpdatedEvent.GridAreaId.Should().Be(gridAreaId);
