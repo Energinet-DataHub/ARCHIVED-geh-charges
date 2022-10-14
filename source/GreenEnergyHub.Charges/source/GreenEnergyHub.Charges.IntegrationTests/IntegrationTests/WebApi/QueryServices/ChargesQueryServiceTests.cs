@@ -63,7 +63,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             await chargesDatabaseWriteContext.SaveChangesAsync();
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
-            var searchCriteria = new SearchCriteriaDtoBuilder().Build();
+            var searchCriteria = new ChargeSearchCriteriaDtoBuilder().Build();
 
             var expected = GetActiveCharges(chargesDatabaseQueryContext).Count();
             var sut = GetSut(chargesDatabaseQueryContext);
@@ -90,7 +90,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var expected = charge.SenderProvidedChargeId;
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
-            var searchCriteria = new SearchCriteriaDtoBuilder()
+            var searchCriteria = new ChargeSearchCriteriaDtoBuilder()
                 .WithChargeIdOrName(expected)
                 .Build();
 
@@ -126,7 +126,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             && c.Periods.Any(p => p.StartDateTime <= todayAtMidnightUtc));
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
-            var searchCriteria = new SearchCriteriaDtoBuilder()
+            var searchCriteria = new ChargeSearchCriteriaDtoBuilder()
                 .WithChargeType(expectedChargeType)
                 .Build();
 
@@ -155,7 +155,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
             var expected = GetActiveCharges(chargesDatabaseQueryContext).Count();
 
-            var searchCriteria = new SearchCriteriaDtoBuilder()
+            var searchCriteria = new ChargeSearchCriteriaDtoBuilder()
                 .WithChargeTypes(null!)
                 .Build();
 
@@ -184,7 +184,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
                 c.Type == Domain.Charges.ChargeType.Subscription || c.Type == Domain.Charges.ChargeType.Fee);
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
-            var searchCriteria = new SearchCriteriaDtoBuilder()
+            var searchCriteria = new ChargeSearchCriteriaDtoBuilder()
                 .WithChargeTypes(new List<ChargeType> { ChargeType.D01, ChargeType.D02 })
                 .Build();
 
@@ -212,7 +212,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var expected = charge.Periods.First().Name;
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
-            var searchCriteria = new SearchCriteriaDtoBuilder()
+            var searchCriteria = new ChargeSearchCriteriaDtoBuilder()
                 .WithChargeIdOrName(expected)
                 .Build();
 
@@ -240,7 +240,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             await chargesDatabaseWriteContext.SaveChangesAsync();
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
-            var searchCriteria = new SearchCriteriaDtoBuilder()
+            var searchCriteria = new ChargeSearchCriteriaDtoBuilder()
                 .WithChargeIdOrName(expected)
                 .Build();
 
@@ -269,7 +269,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var expected = charge.SenderProvidedChargeId;
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
-            var searchCriteria = new SearchCriteriaDtoBuilder()
+            var searchCriteria = new ChargeSearchCriteriaDtoBuilder()
                 .WithChargeIdOrName(searchName)
                 .Build();
 
@@ -297,7 +297,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
             var expected = GetActiveCharges(chargesDatabaseQueryContext).Count(c => c.OwnerId == marketParticipantId);
-            var searchCriteria = new SearchCriteriaDtoBuilder()
+            var searchCriteria = new ChargeSearchCriteriaDtoBuilder()
                 .WithOwnerId(marketParticipantId)
                 .Build();
 
@@ -328,7 +328,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
             var expected = GetActiveCharges(chargesDatabaseQueryContext).Count(c => c.OwnerId == marketParticipantId || c.OwnerId == marketParticipantId2);
-            var searchCriteria = new SearchCriteriaDtoBuilder()
+            var searchCriteria = new ChargeSearchCriteriaDtoBuilder()
                 .WithOwnerIds(new List<Guid> { marketParticipantId, marketParticipantId2 })
                 .Build();
 
@@ -357,7 +357,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
             var expected = GetActiveCharges(chargesDatabaseQueryContext).Count();
-            var searchCriteria = new SearchCriteriaDtoBuilder()
+            var searchCriteria = new ChargeSearchCriteriaDtoBuilder()
                 .WithOwnerIds(null!)
                 .Build();
 
@@ -387,7 +387,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
                 c => c.Periods.Any(p => p.StartDateTime <= todayAtMidnightUtc));
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
-            var searchCriteria = new SearchCriteriaDtoBuilder()
+            var searchCriteria = new ChargeSearchCriteriaDtoBuilder()
                 .Build();
 
             var sut = GetSut(chargesDatabaseQueryContext);

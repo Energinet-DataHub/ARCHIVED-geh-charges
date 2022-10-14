@@ -19,7 +19,7 @@ using Energinet.Charges.Contracts.Charge;
 
 namespace GreenEnergyHub.Charges.QueryApi.Validation;
 
-public static class SearchCriteriaValidator
+public static class ChargeSearchCriteriaValidator
 {
     /// <summary>
     /// Validate if the search criteria are valid

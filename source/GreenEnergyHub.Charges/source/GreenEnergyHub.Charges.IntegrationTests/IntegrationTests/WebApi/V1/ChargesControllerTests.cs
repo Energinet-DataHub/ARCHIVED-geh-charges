@@ -98,12 +98,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
         [Theory]
         [InlineAutoMoqData]
         public async Task SearchAsync_WhenSearchCriteriaIsValid_ReturnsOkAndCorrectContentType(
-            SearchCriteriaDtoBuilder searchCriteriaDtoBuilder,
+            ChargeSearchCriteriaDtoBuilder chargeSearchCriteriaDtoBuilder,
             WebApiFactory factory)
         {
             // Arrange
             var sut = CreateHttpClient(factory);
-            var searchCriteria = searchCriteriaDtoBuilder.Build();
+            var searchCriteria = chargeSearchCriteriaDtoBuilder.Build();
 
             // Act
             var response = await sut.PostAsJsonAsync($"{BaseUrl}/SearchAsync", searchCriteria);
@@ -117,12 +117,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
         [Theory]
         [InlineAutoMoqData]
         public async Task SearchAsync_WhenSearchCriteriaIsNotValid_ReturnsBadRequest(
-            SearchCriteriaDtoBuilder searchCriteriaDtoBuilder,
+            ChargeSearchCriteriaDtoBuilder chargeSearchCriteriaDtoBuilder,
             WebApiFactory factory)
         {
             // Arrange
             var sut = CreateHttpClient(factory);
-            var searchCriteria = searchCriteriaDtoBuilder
+            var searchCriteria = chargeSearchCriteriaDtoBuilder
                 .WithOwnerId(Guid.Empty)
                 .Build();
 
@@ -136,12 +136,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
         [Theory]
         [InlineAutoMoqData]
         public async Task SearchAsync_WhenRequested_ReturnsChargeInformation(
-            SearchCriteriaDtoBuilder searchCriteriaDtoBuilder,
+            ChargeSearchCriteriaDtoBuilder chargeSearchCriteriaDtoBuilder,
             WebApiFactory factory)
         {
             // Arrange
             var sut = CreateHttpClient(factory);
-            var searchCriteria = searchCriteriaDtoBuilder
+            var searchCriteria = chargeSearchCriteriaDtoBuilder
                 .Build();
 
             // Act

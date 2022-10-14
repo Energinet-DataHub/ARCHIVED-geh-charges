@@ -62,7 +62,7 @@ public class ChargesController : ControllerBase
     [MapToApiVersion(Version1)]
     public async Task<IActionResult> SearchAsync(ChargeSearchCriteriaV1Dto chargeSearchCriteria)
     {
-        var isValid = SearchCriteriaValidator.Validate(chargeSearchCriteria);
+        var isValid = ChargeSearchCriteriaValidator.Validate(chargeSearchCriteria);
         if (!isValid)
             return BadRequest("Search criteria is not valid.");
 

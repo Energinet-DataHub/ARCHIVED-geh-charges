@@ -18,37 +18,37 @@ using Energinet.Charges.Contracts.Charge;
 
 namespace GreenEnergyHub.Charges.TestCore.Builders.Query
 {
-    public class SearchCriteriaDtoBuilder
+    public class ChargeSearchCriteriaDtoBuilder
     {
         private string _chargeIdOrName = string.Empty;
         private List<Guid> _ownerIds = new List<Guid>();
         private List<ChargeType> _chargeTypes = new List<ChargeType>();
 
-        public SearchCriteriaDtoBuilder WithChargeIdOrName(string chargeIdOrName)
+        public ChargeSearchCriteriaDtoBuilder WithChargeIdOrName(string chargeIdOrName)
         {
             _chargeIdOrName = chargeIdOrName;
             return this;
         }
 
-        public SearchCriteriaDtoBuilder WithOwnerId(Guid ownerId)
+        public ChargeSearchCriteriaDtoBuilder WithOwnerId(Guid ownerId)
         {
             _ownerIds.Add(ownerId);
             return this;
         }
 
-        public SearchCriteriaDtoBuilder WithOwnerIds(List<Guid> ownerIds)
+        public ChargeSearchCriteriaDtoBuilder WithOwnerIds(List<Guid> ownerIds)
         {
             _ownerIds = ownerIds;
             return this;
         }
 
-        public SearchCriteriaDtoBuilder WithChargeType(ChargeType chargeType)
+        public ChargeSearchCriteriaDtoBuilder WithChargeType(ChargeType chargeType)
         {
             _chargeTypes = new List<ChargeType> { chargeType };
             return this;
         }
 
-        public SearchCriteriaDtoBuilder WithChargeTypes(List<ChargeType> chargeTypes)
+        public ChargeSearchCriteriaDtoBuilder WithChargeTypes(List<ChargeType> chargeTypes)
         {
             _chargeTypes = chargeTypes;
             return this;
