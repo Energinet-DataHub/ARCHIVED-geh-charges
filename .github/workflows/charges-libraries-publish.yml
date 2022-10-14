@@ -21,8 +21,8 @@ on:
     branches:
       - main
     paths:
-      - source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/**
-      - source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients.Registration/**
+      - source/Energinet.DataHub.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/**
+      - source/Energinet.DataHub.Charges.Libraries/source/Energinet.DataHub.Charges.Clients.Registration/**
       - .github/workflows/charges-libraries-publish.yml
   # Build, test, pack
   # Executed if Libraries folder, dependencies or build scripts has changed; including if documentation or tests has changed
@@ -32,7 +32,7 @@ on:
     branches:
       - main
     paths:
-      - source/Energinet.Charges.Libraries/**
+      - source/Energinet.DataHub.Charges.Libraries/**
       - source/Shared/GreenEnergyHub/source/GreenEnergyHub.TestHelpers/**
       - source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.TestCore/**
       - .github/workflows/charges-libraries-publish.yml
@@ -76,7 +76,7 @@ jobs:
       - name: Build and test solution
         uses: Energinet-DataHub/.github/.github/actions/dotnet-solution-build-and-test@v8
         with:
-          SOLUTION_FILE_PATH: './source/Energinet.Charges.Libraries/Energinet.DataHub.Charges.Libraries.sln'
+          SOLUTION_FILE_PATH: './source/Energinet.DataHub.Charges.Libraries/Energinet.DataHub.Charges.Libraries.sln'
           CODE_COVERAGE_FLAGS: clientlibraries
           AZURE_KEYVAULT_URL: ${{ secrets.AZURE_KEYVAULT_URL }}
           AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
@@ -86,20 +86,20 @@ jobs:
       - name: Pack Clients project
         uses: Energinet-DataHub/.github/.github/actions/nuget-project-pack@v8
         with:
-          PROJECT_PATH: './source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/Energinet.DataHub.Charges.Clients.csproj'
+          PROJECT_PATH: './source/Energinet.DataHub.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/Energinet.DataHub.Charges.Clients.csproj'
 
       - name: Pack Clients.Registration project
         uses: Energinet-DataHub/.github/.github/actions/nuget-project-pack@v8
         with:
-          PROJECT_PATH: './source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients.Registration/Energinet.DataHub.Charges.Clients.Registration.csproj'
+          PROJECT_PATH: './source/Energinet.DataHub.Charges.Libraries/source/Energinet.DataHub.Charges.Clients.Registration/Energinet.DataHub.Charges.Clients.Registration.csproj'
 
       - name: Package content or build has changed
         id: changed-content
         uses: tj-actions/changed-files@v17.2
         with:
           files: |
-            source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/**/*.*
-            source/Energinet.Charges.Libraries/source/Energinet.DataHub.Charges.Clients.Registration/**/*.*
+            source/Energinet.DataHub.Charges.Libraries/source/Energinet.DataHub.Charges.Clients/**/*.*
+            source/Energinet.DataHub.Charges.Libraries/source/Energinet.DataHub.Charges.Clients.Registration/**/*.*
             .github/workflows/charges-libraries-publish.yml
 
       - name: Assert versions of NuGet packages and push them to NuGet.org
@@ -108,4 +108,4 @@ jobs:
           PUSH_PACKAGES: ${{ env.PUSH_PACKAGES }}
           CONTENT_CHANGED: ${{ steps.changed-content.outputs.any_changed }}
           NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
-          NUPKG_RECURSE_PATH: 'source/Energinet.Charges.Libraries/source'
+          NUPKG_RECURSE_PATH: 'source/Energinet.DataHub.Charges.Libraries/source'

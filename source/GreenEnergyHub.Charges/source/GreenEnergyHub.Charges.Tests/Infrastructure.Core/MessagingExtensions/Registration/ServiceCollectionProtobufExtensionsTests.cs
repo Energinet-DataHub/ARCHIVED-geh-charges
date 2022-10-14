@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.Charges.Contracts;
+using Energinet.DataHub.Charges.Contracts;
 using Energinet.DataHub.Core.Messaging.Protobuf;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;

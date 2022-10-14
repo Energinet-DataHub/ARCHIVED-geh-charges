@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using Energinet.Charges.Contracts.Charge;
+using Energinet.DataHub.Charges.Contracts.Charge;
 using GreenEnergyHub.Charges.QueryApi;
 using GreenEnergyHub.Charges.QueryApi.ModelPredicates;
 using GreenEnergyHub.Charges.QueryApi.QueryServices;
@@ -21,53 +21,54 @@ using GreenEnergyHub.Charges.QueryApi.Validation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace GreenEnergyHub.Charges.WebApi.Controllers.V1;
-
-[ApiController]
-[ApiVersion(Version1)]
-[Route("v{version:apiVersion}/[controller]")]
-public class ChargesController : ControllerBase
+namespace GreenEnergyHub.Charges.WebApi.Controllers.V1
 {
-    public const string Version1 = "1.0";
-    private readonly IData _data;
-    private readonly IChargesQueryService _chargesQueryService;
-
-    public ChargesController(IData data, IChargesQueryService chargesQueryService)
+    [ApiController]
+    [ApiVersion(Version1)]
+    [Route("v{version:apiVersion}/[controller]")]
+    public class ChargesController : ControllerBase
     {
-        _data = data;
-        _chargesQueryService = chargesQueryService;
-    }
+        public const string Version1 = "1.0";
+        private readonly IData _data;
+        private readonly IChargesQueryService _chargesQueryService;
 
-    /// <summary>
-    ///     Returns all charges
-    /// </summary>
-    /// <returns>Charges data or "404 Not Found"</returns>
-    [HttpGet("GetAsync")]
-    [MapToApiVersion(Version1)]
-    public async Task<IActionResult> GetAsync()
-    {
-        var charges = await _data.Charges
-            .AsChargeV1Dto()
-            .ToListAsync()
-            .ConfigureAwait(false);
+        public ChargesController(IData data, IChargesQueryService chargesQueryService)
+        {
+            _data = data;
+            _chargesQueryService = chargesQueryService;
+        }
 
-        return Ok(charges);
-    }
+        /// <summary>
+        ///     Returns all charges
+        /// </summary>
+        /// <returns>Charges data or "404 Not Found"</returns>
+        [HttpGet("GetAsync")]
+        [MapToApiVersion(Version1)]
+        public async Task<IActionResult> GetAsync()
+        {
+            var charges = await _data.Charges
+                .AsChargeV1Dto()
+                .ToListAsync()
+                .ConfigureAwait(false);
 
-    /// <summary>
-    ///     Returns all charges based on the search criteria
-    /// </summary>
-    /// <returns>Charges data or "400 Bad request"</returns>
-    [HttpPost("SearchAsync")]
-    [MapToApiVersion(Version1)]
-    public async Task<IActionResult> SearchAsync(SearchCriteriaV1Dto searchCriteria)
-    {
-        var isValid = SearchCriteriaValidator.Validate(searchCriteria);
-        if (!isValid)
-            return BadRequest("Search criteria is not valid.");
+            return Ok(charges);
+        }
 
-        var charges = await _chargesQueryService.SearchAsync(searchCriteria).ConfigureAwait(false);
+        /// <summary>
+        ///     Returns all charges based on the search criteria
+        /// </summary>
+        /// <returns>Charges data or "400 Bad request"</returns>
+        [HttpPost("SearchAsync")]
+        [MapToApiVersion(Version1)]
+        public async Task<IActionResult> SearchAsync(SearchCriteriaV1Dto searchCriteria)
+        {
+            var isValid = SearchCriteriaValidator.Validate(searchCriteria);
+            if (!isValid)
+                return BadRequest("Search criteria is not valid.");
 
-        return Ok(charges);
+            var charges = await _chargesQueryService.SearchAsync(searchCriteria).ConfigureAwait(false);
+
+            return Ok(charges);
+        }
     }
 }

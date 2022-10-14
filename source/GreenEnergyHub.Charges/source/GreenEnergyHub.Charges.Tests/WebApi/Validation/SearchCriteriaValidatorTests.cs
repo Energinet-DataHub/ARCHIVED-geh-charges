@@ -14,7 +14,7 @@
 
 using System;
 using System.Collections.Generic;
-using Energinet.Charges.Contracts.Charge;
+using Energinet.DataHub.Charges.Contracts.Charge;
 using FluentAssertions;
 using GreenEnergyHub.Charges.QueryApi.Validation;
 using GreenEnergyHub.Charges.TestCore.Attributes;

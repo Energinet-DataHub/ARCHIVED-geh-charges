@@ -14,17 +14,18 @@
 
 using GreenEnergyHub.Charges.Domain.Charges;
 
-namespace GreenEnergyHub.Charges.QueryApi.Model;
-
-public partial class Charge
+namespace GreenEnergyHub.Charges.QueryApi.Model
 {
-    public ChargeType GetChargeType()
+    public partial class Charge
     {
-        return (ChargeType)Type;
-    }
+        public ChargeType GetChargeType()
+        {
+            return (ChargeType)Type;
+        }
 
-    public Resolution GetResolution()
-    {
-        return (Resolution)Resolution;
+        public Resolution GetResolution()
+        {
+            return (Resolution)Resolution;
+        }
     }
 }
