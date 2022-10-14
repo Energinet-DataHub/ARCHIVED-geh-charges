@@ -18,9 +18,9 @@ using GreenEnergyHub.Charges.Domain.Dtos.CreateDefaultChargeLinksRequests;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Contracts.Public.CreateDefaultChargeLinks
 {
-    public class CreateDefaultChargeLinksInboundMapper : ProtobufInboundMapper<Energinet.Charges.Contracts.CreateDefaultChargeLinks>
+    public class CreateDefaultChargeLinksInboundMapper : ProtobufInboundMapper<Energinet.DataHub.Charges.Contracts.CreateDefaultChargeLinks>
     {
-        protected override IInboundMessage Convert(Energinet.Charges.Contracts.CreateDefaultChargeLinks command)
+        protected override IInboundMessage Convert(Energinet.DataHub.Charges.Contracts.CreateDefaultChargeLinks command)
         {
             return new CreateDefaultChargeLinksRequest(command.MeteringPointId);
         }

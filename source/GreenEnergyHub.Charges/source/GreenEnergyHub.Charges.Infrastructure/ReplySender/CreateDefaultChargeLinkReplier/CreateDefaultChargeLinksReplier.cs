@@ -14,7 +14,7 @@
 
 using System;
 using System.Threading.Tasks;
-using Energinet.Charges.Contracts;
+using Energinet.DataHub.Charges.Contracts;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using Google.Protobuf;
 using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkReplier;

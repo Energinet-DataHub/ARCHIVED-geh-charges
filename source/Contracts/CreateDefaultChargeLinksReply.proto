@@ -15,7 +15,7 @@
 
 syntax = "proto3";
 
-option csharp_namespace = "Energinet.Charges.Contracts";
+option csharp_namespace = "Energinet.DataHub.Charges.Contracts";
 
 /*
 * This reply is sent by the Charges domain to the Metering Point domain once the CreateDefaultChargeLinks request has been processed.

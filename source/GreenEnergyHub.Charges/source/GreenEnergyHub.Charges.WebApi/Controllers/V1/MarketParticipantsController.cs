@@ -16,32 +16,33 @@ using System.Threading.Tasks;
 using GreenEnergyHub.Charges.QueryApi.QueryServices;
 using Microsoft.AspNetCore.Mvc;
 
-namespace GreenEnergyHub.Charges.WebApi.Controllers.V1;
-
-[ApiController]
-[ApiVersion(Version1)]
-[Route("v{version:apiVersion}/[controller]")]
-public class MarketParticipantsController : ControllerBase
+namespace GreenEnergyHub.Charges.WebApi.Controllers.V1
 {
-    private const string Version1 = "1.0";
-    private readonly IMarketParticipantQueryService _marketParticipantQueryService;
-
-    public MarketParticipantsController(IMarketParticipantQueryService marketParticipantQueryService)
+    [ApiController]
+    [ApiVersion(Version1)]
+    [Route("v{version:apiVersion}/[controller]")]
+    public class MarketParticipantsController : ControllerBase
     {
-        _marketParticipantQueryService = marketParticipantQueryService;
-    }
+        private const string Version1 = "1.0";
+        private readonly IMarketParticipantQueryService _marketParticipantQueryService;
 
-    /// <summary>
-    /// Returns all market participants
-    /// </summary>
-    /// <returns>Returns market participants or "404 Not Found"</returns>
-    [HttpGet("GetAsync")]
-    [MapToApiVersion(Version1)]
-    public async Task<IActionResult> GetAsync()
-    {
-        var marketParticipants =
-            await _marketParticipantQueryService.GetAsync().ConfigureAwait(false);
+        public MarketParticipantsController(IMarketParticipantQueryService marketParticipantQueryService)
+        {
+            _marketParticipantQueryService = marketParticipantQueryService;
+        }
 
-        return Ok(marketParticipants);
+        /// <summary>
+        /// Returns all market participants
+        /// </summary>
+        /// <returns>Returns market participants or "404 Not Found"</returns>
+        [HttpGet("GetAsync")]
+        [MapToApiVersion(Version1)]
+        public async Task<IActionResult> GetAsync()
+        {
+            var marketParticipants =
+                await _marketParticipantQueryService.GetAsync().ConfigureAwait(false);
+
+            return Ok(marketParticipants);
+        }
     }
 }
