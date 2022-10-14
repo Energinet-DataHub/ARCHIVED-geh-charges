@@ -48,9 +48,13 @@ jobs:
       with:
         filters: |
           infrastructure:
+            - '.github/workflows/cd.yml'
             - '.github/workflows/ci.yml'
+            - '.github/workflows/detect-changes.yml'
             - 'build/**'
           dotnet:
+            - '.github/workflows/cd.yml'
             - '.github/workflows/ci.yml'
+            - '.github/workflows/detect-changes.yml'
             - '.github/actions/dotnet-*/**'
             - 'source/**'
