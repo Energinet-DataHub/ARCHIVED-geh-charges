@@ -15,45 +15,46 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Energinet.Charges.Contracts.Charge;
+using Energinet.DataHub.Charges.Contracts.Charge;
 
-namespace GreenEnergyHub.Charges.QueryApi.Validation;
-
-public static class SearchCriteriaValidator
+namespace GreenEnergyHub.Charges.QueryApi.Validation
 {
-    /// <summary>
-    /// Validate if the search criteria are valid
-    /// </summary>
-    /// <param name="searchCriteriaV1Dto"></param>
-    /// <returns>bool</returns>
-    public static bool Validate(SearchCriteriaV1Dto searchCriteriaV1Dto)
+    public static class SearchCriteriaValidator
     {
-        if (!IsOwnerIdsValid(searchCriteriaV1Dto.OwnerIds))
-            return false;
-
-        if (!IsChargeTypesValid(searchCriteriaV1Dto.ChargeTypes))
-            return false;
-
-        return true;
-    }
-
-    private static bool IsChargeTypesValid(List<ChargeType> chargeTypes)
-    {
-        if (chargeTypes == null || !chargeTypes.Any()) return true;
-
-        foreach (var chargeType in chargeTypes)
+        /// <summary>
+        /// Validate if the search criteria are valid
+        /// </summary>
+        /// <param name="searchCriteriaV1Dto"></param>
+        /// <returns>bool</returns>
+        public static bool Validate(SearchCriteriaV1Dto searchCriteriaV1Dto)
         {
-            if (!Enum.IsDefined(typeof(ChargeType), chargeType))
+            if (!IsOwnerIdsValid(searchCriteriaV1Dto.OwnerIds))
                 return false;
+
+            if (!IsChargeTypesValid(searchCriteriaV1Dto.ChargeTypes))
+                return false;
+
+            return true;
         }
 
-        return true;
-    }
+        private static bool IsChargeTypesValid(List<ChargeType> chargeTypes)
+        {
+            if (chargeTypes == null || !chargeTypes.Any()) return true;
 
-    private static bool IsOwnerIdsValid(List<Guid> ownerIds)
-    {
-        if (ownerIds == null || !ownerIds.Any()) return true;
+            foreach (var chargeType in chargeTypes)
+            {
+                if (!Enum.IsDefined(typeof(ChargeType), chargeType))
+                    return false;
+            }
 
-        return ownerIds.All(id => id != Guid.Empty);
+            return true;
+        }
+
+        private static bool IsOwnerIdsValid(List<Guid> ownerIds)
+        {
+            if (ownerIds == null || !ownerIds.Any()) return true;
+
+            return ownerIds.All(id => id != Guid.Empty);
+        }
     }
 }
