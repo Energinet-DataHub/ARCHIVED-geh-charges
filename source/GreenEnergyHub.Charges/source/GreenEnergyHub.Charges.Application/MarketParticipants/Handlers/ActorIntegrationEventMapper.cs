@@ -29,25 +29,14 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
             ActorUpdatedIntegrationEvent actorUpdatedIntegrationEvent)
         {
             var status = MarketParticipantStatusMapper.Map(actorUpdatedIntegrationEvent.Status);
-
-            var rolesUsedInChargesDomain = actorUpdatedIntegrationEvent.BusinessRoles
-                .Select(MarketParticipantRoleMapper.Map)
-                .Intersect(MarketParticipant._validRoles)
-                .ToList();
-
-            if (rolesUsedInChargesDomain.Count > 1)
-            {
-                throw new InvalidOperationException(
-                    $"Only 1 role per market participant with ID '{actorUpdatedIntegrationEvent.ActorNumber}' is allowed, " +
-                    $"the current market participant has {rolesUsedInChargesDomain.Count} roles associated in the " +
-                    $"integration event with id '{actorUpdatedIntegrationEvent.Id}'");
-            }
+            var roles = MarketParticipantRoleMapper
+                .MapMany(actorUpdatedIntegrationEvent.BusinessRoles);
 
             return new MarketParticipantUpdatedCommand(
                 actorUpdatedIntegrationEvent.ActorId,
                 actorUpdatedIntegrationEvent.ExternalActorId,
                 actorUpdatedIntegrationEvent.ActorNumber,
-                rolesUsedInChargesDomain,
+                roles,
                 status,
                 actorUpdatedIntegrationEvent.ActorMarketRoles
                     .SelectMany(amr => amr.GridAreas)
@@ -60,24 +49,14 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
         {
             var status = MarketParticipantStatusMapper.Map(actorCreatedIntegrationEvent.Status);
 
-            var rolesUsedInChargesDomain = actorCreatedIntegrationEvent.BusinessRoles
-                .Select(MarketParticipantRoleMapper.Map)
-                .Intersect(MarketParticipant._validRoles)
-                .ToList();
-
-            if (rolesUsedInChargesDomain.Count > 1)
-            {
-                throw new InvalidOperationException(
-                    $"Only 1 role per market participant with ID '{actorCreatedIntegrationEvent.ActorNumber}' is allowed, " +
-                    $"the current market participant has {rolesUsedInChargesDomain.Count} roles associated in the " +
-                    $"integration event with id '{actorCreatedIntegrationEvent.Id}'");
-            }
+            var roles = MarketParticipantRoleMapper
+                .MapMany(actorCreatedIntegrationEvent.BusinessRoles);
 
             return new MarketParticipantCreatedCommand(
                 actorCreatedIntegrationEvent.ActorId,
                 actorCreatedIntegrationEvent.OrganizationId,
                 actorCreatedIntegrationEvent.ActorNumber,
-                rolesUsedInChargesDomain,
+                roles,
                 status,
                 actorCreatedIntegrationEvent.ActorMarketRoles
                     .SelectMany(amr => amr.GridAreas)

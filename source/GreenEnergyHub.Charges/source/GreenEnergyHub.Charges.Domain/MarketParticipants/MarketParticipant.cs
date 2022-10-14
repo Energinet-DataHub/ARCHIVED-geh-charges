@@ -13,8 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
 namespace GreenEnergyHub.Charges.Domain.MarketParticipants
@@ -24,14 +22,6 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
     /// </summary>
     public class MarketParticipant
     {
-        public static readonly IReadOnlyCollection<MarketParticipantRole> _validRoles = new List<MarketParticipantRole>
-        {
-            MarketParticipantRole.EnergySupplier,
-            MarketParticipantRole.SystemOperator,
-            MarketParticipantRole.GridAccessProvider,
-            MarketParticipantRole.MeteringPointAdministrator,
-        }.AsReadOnly();
-
         protected MarketParticipant(
             Guid id,
             Guid actorId,
@@ -54,6 +44,9 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
             MarketParticipantId = null!;
         }
 
+        /// <summary>
+        /// Unique identifier for this market participant
+        /// </summary>
         public Guid Id { get; }
 
         /// <summary>
@@ -89,6 +82,14 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
         /// </summary>
         public MarketParticipantStatus Status { get; private set; }
 
+        /// <summary>
+        /// Use this method to create a new instance of MarketParticipant.
+        /// </summary>
+        /// <param name="actorId">Globally unique ID inherited from Market Participant domain</param>
+        /// <param name="b2CActorId">Globally unique ID used for authenticating actors sending in messages to charges domain</param>
+        /// <param name="marketParticipantId">Number identifying </param>
+        /// <param name="status"></param>
+        /// <param name="businessProcessRole"></param>
         public static MarketParticipant Create(
             Guid actorId,
             Guid? b2CActorId,
@@ -96,9 +97,6 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
             MarketParticipantStatus status,
             MarketParticipantRole businessProcessRole)
         {
-            if (!_validRoles.Contains(businessProcessRole))
-                throw new ArgumentException($"Business process role '{businessProcessRole}' is not valid in the charges domain.");
-
             return new MarketParticipant(
                 Guid.NewGuid(),
                 actorId,
@@ -108,6 +106,12 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
                 businessProcessRole);
         }
 
+        /// <summary>
+        /// Used for updating actor id, B2CActorId and status of market participant
+        /// </summary>
+        /// <param name="actorId"></param>
+        /// <param name="b2CActorId"></param>
+        /// <param name="status"></param>
         public void Update(Guid actorId, Guid? b2CActorId, MarketParticipantStatus status)
         {
             ActorId = actorId;

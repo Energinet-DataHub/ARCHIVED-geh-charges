@@ -56,32 +56,8 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             actualMarketParticipantUpdatedEvent.B2CActorId.Should().Be(b2CActorId);
             actualMarketParticipantUpdatedEvent.MarketParticipantId.Should().Be(actorNumber);
             actualMarketParticipantUpdatedEvent.Status.Should().Be(MarketParticipantStatus.Active);
-            actualMarketParticipantUpdatedEvent.BusinessProcessRoles.Count.Should().Be(1);
+            actualMarketParticipantUpdatedEvent.BusinessProcessRoles.Count().Should().Be(1);
             actualMarketParticipantUpdatedEvent.GridAreas.Count().Should().Be(2);
-        }
-
-        [Theory]
-        [AutoDomainData]
-        public void MapFromActorIntegrationEvent_WhenSeveralRolesAssociated_ShouldThrowInvalidOperationException(
-            Guid actorId, Guid b2CActorId, string gln)
-        {
-            // Arrange
-            var businessRoles = new List<BusinessRoleCode> { BusinessRoleCode.Ddm, BusinessRoleCode.Ez };
-            var actorUpdatedIntegrationEvent = new ActorUpdatedIntegrationEvent(
-                Guid.Empty,
-                DateTime.UtcNow,
-                actorId,
-                Guid.Empty,
-                b2CActorId,
-                gln,
-                ActorStatus.Active,
-                businessRoles,
-                CreateActorMarketRoles());
-
-            // Act and Assert
-            Assert.Throws<InvalidOperationException>(() =>
-                MarketParticipantEventMapper.MapFromActorUpdated(
-                    InstantHelper.GetTodayAtMidnightUtc(), actorUpdatedIntegrationEvent));
         }
 
         [Fact]

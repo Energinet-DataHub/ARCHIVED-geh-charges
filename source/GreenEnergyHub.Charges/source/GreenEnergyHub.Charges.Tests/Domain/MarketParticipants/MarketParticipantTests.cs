@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using AutoFixture.Xunit2;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
@@ -25,35 +26,47 @@ namespace GreenEnergyHub.Charges.Tests.Domain.MarketParticipants
     public class MarketParticipantTests
     {
         [Theory]
-        [MemberData(nameof(InvalidBusinessProcessRoles))]
-        public void Create_WhenInvalidBusinessProcessRole_ThrowsArgumentException(MarketParticipantRole invalidRole)
+        [AutoData]
+        public void Create_ReturnsMarketParticipant(
+            Guid actorId,
+            Guid b2CActorId,
+            string marketParticipantId,
+            MarketParticipantStatus status,
+            MarketParticipantRole businessProcessRole)
         {
-            Assert.Throws<ArgumentException>(() =>
-                MarketParticipant.Create(Guid.NewGuid(), Guid.NewGuid(), string.Empty, MarketParticipantStatus.Inactive, invalidRole));
+            var actual =
+                MarketParticipant.Create(actorId, b2CActorId, marketParticipantId, status, businessProcessRole);
+
+            actual.ActorId.Should().Be(actorId);
+            actual.B2CActorId.Should().Be(b2CActorId);
+            actual.MarketParticipantId.Should().Be(marketParticipantId);
+            actual.Status.Should().Be(status);
+            actual.BusinessProcessRole.Should().Be(businessProcessRole);
         }
 
         [Theory]
-        [MemberData(nameof(ValidBusinessProcessRoles))]
-        public void Ctor_SetsRole(MarketParticipantRole role)
+        [AutoData]
+        public void Update_ShouldUpdateProperties(
+            Guid actorId,
+            Guid b2CActorId,
+            string marketParticipantId,
+            MarketParticipantStatus status,
+            MarketParticipantRole businessProcessRole,
+            Guid newActorId,
+            Guid newB2CActorId,
+            MarketParticipantStatus newStatus)
         {
-            var actual = MarketParticipant.Create(Guid.NewGuid(), Guid.NewGuid(), string.Empty, MarketParticipantStatus.Inactive, role);
-            actual.BusinessProcessRole.Should().Be(role);
+            // Arrange
+            var actual =
+                MarketParticipant.Create(actorId, b2CActorId, marketParticipantId, status, businessProcessRole);
+
+            // Act
+            actual.Update(newActorId, newB2CActorId, newStatus);
+
+            // Assert
+            actual.ActorId.Should().Be(newActorId);
+            actual.B2CActorId.Should().Be(newB2CActorId);
+            actual.Status.Should().Be(newStatus);
         }
-
-        public static IEnumerable<object[]> ValidBusinessProcessRoles =>
-            DomainBusinessProcessRoles.Select(r => new object[] { r });
-
-        public static IEnumerable<object[]> InvalidBusinessProcessRoles => Enum
-            .GetValues<MarketParticipantRole>()
-            .Except(DomainBusinessProcessRoles)
-            .Select(r => new object[] { r });
-
-        private static List<MarketParticipantRole> DomainBusinessProcessRoles => new()
-        {
-            MarketParticipantRole.EnergySupplier,
-            MarketParticipantRole.SystemOperator,
-            MarketParticipantRole.GridAccessProvider,
-            MarketParticipantRole.MeteringPointAdministrator,
-        };
     }
 }

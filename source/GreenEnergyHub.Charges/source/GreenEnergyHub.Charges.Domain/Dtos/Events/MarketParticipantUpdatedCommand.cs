@@ -25,7 +25,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Events
             Guid actorId,
             Guid? b2CActorId,
             string marketParticipantId,
-            List<MarketParticipantRole> businessProcessRoles,
+            IEnumerable<MarketParticipantRole> businessProcessRoles,
             MarketParticipantStatus status,
             IEnumerable<Guid> gridAreas)
         {
@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Events
 
         public string MarketParticipantId { get; }
 
-        public List<MarketParticipantRole> BusinessProcessRoles { get; }
+        public IEnumerable<MarketParticipantRole> BusinessProcessRoles { get; }
 
         public MarketParticipantStatus Status { get; }
 
