@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
         public async Task
             HandleAsync_ValidEvent_ShouldAddNewMarketParticipant(
                 [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-                MarketParticipantCreatedHandler sut)
+                MarketParticipantCreatedCommandHandler sut)
         {
             // Arrange
             var marketParticipantCreatedEvent = CreateCreatedEvent();

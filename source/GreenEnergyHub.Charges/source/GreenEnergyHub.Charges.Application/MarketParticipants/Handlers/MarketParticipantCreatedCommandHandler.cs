@@ -12,19 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 {
-    public class MarketParticipantCreatedHandler : IMarketParticipantCreatedHandler
+    public class MarketParticipantCreatedCommandHandler : IMarketParticipantCreatedCommandHandler
     {
         private readonly IMarketParticipantRepository _marketParticipantRepository;
 
-        public MarketParticipantCreatedHandler(
+        public MarketParticipantCreatedCommandHandler(
             IMarketParticipantRepository marketParticipantRepository)
         {
             _marketParticipantRepository = marketParticipantRepository;

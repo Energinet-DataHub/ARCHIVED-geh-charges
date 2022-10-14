@@ -28,18 +28,18 @@ namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
         private const string FunctionName = nameof(MarketParticipantCreatedEndpoint);
         private readonly IClock _clock;
         private readonly ISharedIntegrationEventParser _sharedIntegrationEventParser;
-        private readonly IMarketParticipantCreatedHandler _marketParticipantCreatedHandler;
+        private readonly IMarketParticipantCreatedCommandHandler _marketParticipantCreatedCommandHandler;
         private readonly IUnitOfWork _unitOfWork;
 
         public MarketParticipantCreatedEndpoint(
             IClock clock,
             ISharedIntegrationEventParser sharedIntegrationEventParser,
-            IMarketParticipantCreatedHandler marketParticipantCreatedHandler,
+            IMarketParticipantCreatedCommandHandler marketParticipantCreatedCommandHandler,
             IUnitOfWork unitOfWork)
         {
             _clock = clock;
             _sharedIntegrationEventParser = sharedIntegrationEventParser;
-            _marketParticipantCreatedHandler = marketParticipantCreatedHandler;
+            _marketParticipantCreatedCommandHandler = marketParticipantCreatedCommandHandler;
             _unitOfWork = unitOfWork;
         }
 
@@ -51,9 +51,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
             byte[] message)
         {
             var messageEvent = (ActorCreatedIntegrationEvent)_sharedIntegrationEventParser.Parse(message);
-            var marketParticipantUpdatedEvent =
+            var createdCommand =
                 MarketParticipantEventMapper.MapFromActorCreated(messageEvent);
-            await _marketParticipantCreatedHandler.HandleAsync(marketParticipantUpdatedEvent).ConfigureAwait(false);
+            await _marketParticipantCreatedCommandHandler.HandleAsync(createdCommand).ConfigureAwait(false);
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
         }
     }
