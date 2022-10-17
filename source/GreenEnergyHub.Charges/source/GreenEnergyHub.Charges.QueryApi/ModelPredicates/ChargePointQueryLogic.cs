@@ -50,7 +50,7 @@ public static class ChargePointQueryLogic
     /// This mapper ensures that there will be no overlaps between date times.
     /// 'ChargePoints' have to be ordered by time.
     /// </summary>
-    /// <param name="chargePoints">test me</param>
+    /// <param name="chargePoints"></param>
     /// <param name="index"></param>
     /// <param name="chargePoint"></param>
     /// <returns>Returns charge point dto with correct 'ActiveToDateTime' date time</returns>
