@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 using System.Collections.Generic;
-using Energinet.Charges.Contracts.ChargePoint;
+using Energinet.DataHub.Charges.Contracts.ChargePoint;
 
 namespace GreenEnergyHub.Charges.QueryApi.QueryServices;
 

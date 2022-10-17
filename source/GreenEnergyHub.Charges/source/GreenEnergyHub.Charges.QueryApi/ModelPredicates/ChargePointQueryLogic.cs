@@ -15,8 +15,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Energinet.Charges.Contracts.ChargePoint;
 using Energinet.DataHub.Charges.Contracts.Charge;
+using Energinet.DataHub.Charges.Contracts.ChargePoint;
 using GreenEnergyHub.Charges.QueryApi.Model;
 using GreenEnergyHub.Iso8601;
 using NodaTime.Extensions;
@@ -46,6 +46,14 @@ public static class ChargePointQueryLogic
             .ToList();
     }
 
+    /// <summary>
+    /// This mapper ensures that there will be no overlaps between date times.
+    /// 'ChargePoints' have to be ordered by time.
+    /// </summary>
+    /// <param name="chargePoints">test me</param>
+    /// <param name="index"></param>
+    /// <param name="chargePoint"></param>
+    /// <returns>Returns charge point dto with correct 'ActiveToDateTime' date time</returns>
     private static ChargePointV1Dto MapChargePointV1Dto(IList<ChargePointV1Dto> chargePoints, int index, ChargePointV1Dto chargePoint)
     {
         var lastIndex = chargePoints.IndexOf(chargePoints.Last());

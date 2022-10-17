@@ -14,7 +14,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Energinet.Charges.Contracts.ChargePoint;
+using Energinet.DataHub.Charges.Contracts.ChargePoint;
 using GreenEnergyHub.Charges.QueryApi.ModelPredicates;
 using GreenEnergyHub.Iso8601;
 

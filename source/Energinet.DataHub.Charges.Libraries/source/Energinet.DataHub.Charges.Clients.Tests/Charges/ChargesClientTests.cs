@@ -24,6 +24,7 @@ using System.Threading.Tasks;
 using Energinet.DataHub.Charges.Clients.Charges;
 using Energinet.DataHub.Charges.Contracts.Charge;
 using Energinet.DataHub.Charges.Contracts.ChargeLink;
+using Energinet.DataHub.Charges.Contracts.ChargePoint;
 using FluentAssertions;
 using GreenEnergyHub.TestHelpers;
 using Moq;
