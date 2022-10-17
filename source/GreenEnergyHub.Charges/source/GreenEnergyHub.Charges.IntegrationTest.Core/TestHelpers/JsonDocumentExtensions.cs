@@ -56,7 +56,9 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
         {
             var mktActivityRecordElements = GetMktActivityRecords(document);
             var chargeIds = new List<string>();
-            foreach (var chargeType in mktActivityRecordElements.EnumerateArray().Select(record => record.GetProperty(CimMessageConstants.ChargeGroup).GetProperty(CimMessageConstants.ChargeType)))
+            foreach (var chargeType in mktActivityRecordElements.EnumerateArray()
+                         .Select(record => record.GetProperty(CimMessageConstants.ChargeGroup)
+                             .GetProperty(CimMessageConstants.ChargeType)))
             {
                 chargeIds.AddRange(chargeType.EnumerateArray().Select(ct => ct.GetProperty(CimMessageConstants.ChargeId).ToString()));
             }
@@ -68,7 +70,9 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
         {
             var mktActivityRecordElements = GetMktActivityRecords(document);
             var chargeDescriptions = new List<string>();
-            foreach (var chargeType in mktActivityRecordElements.EnumerateArray().Select(record => record.GetProperty(CimMessageConstants.ChargeGroup).GetProperty(CimMessageConstants.ChargeType)))
+            foreach (var chargeType in mktActivityRecordElements.EnumerateArray()
+                         .Select(record => record.GetProperty(CimMessageConstants.ChargeGroup)
+                             .GetProperty(CimMessageConstants.ChargeType)))
             {
                 chargeDescriptions.AddRange(chargeType.EnumerateArray().Select(ct => ct.GetProperty(CimMessageConstants.ChargeDescription).ToString()));
             }
