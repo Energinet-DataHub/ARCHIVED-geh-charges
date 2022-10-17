@@ -125,19 +125,19 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                     .AssertPeekReceivesRepliesAsync(correlationId, ResponseFormat.Xml, 8);
 
                 peekResults.Should().HaveCount(8);
-                peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
-                peekResults.Should().NotContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
+                peekResults.Should().ContainMatch("*" + CimMessageConstants.ConfirmRequestChangeOfPriceListRootElement + "*");
+                peekResults.Should().NotContainMatch("*" + CimMessageConstants.RejectRequestChangeOfPriceListRootElement + "*");
                 peekResults.Should().ContainMatch("*<cim:process.processType>D18</cim:process.processType>*");
                 peekResults.Should().NotContainMatch("*<cim:process.processType>D08</cim:process.processType>*");
 
                 var energySupplierNotifications = peekResults
-                    .Where(x => x.Contains("NotifyPriceList_MarketDocument") && x.Contains("DDQ"))
+                    .Where(x => x.Contains(CimMessageConstants.NotifyPriceListRootElement) && x.Contains("DDQ"))
                     .ToList();
                 energySupplierNotifications.Should().HaveCount(3);
                 energySupplierNotifications.Should().ContainMatch("*8100000000108*");
 
                 var gridAccessProviderNotifications = peekResults
-                    .Where(x => x.Contains("NotifyPriceList_MarketDocument") && x.Contains("DDM"))
+                    .Where(x => x.Contains(CimMessageConstants.NotifyPriceListRootElement) && x.Contains("DDM"))
                     .ToList();
                 gridAccessProviderNotifications.Should().HaveCount(4);
                 gridAccessProviderNotifications.Should().ContainMatch("*8100000000030*");
@@ -164,7 +164,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                     .AssertPeekReceivesRepliesAsync(correlationId, ResponseFormat.Json, 8);
 
                 var energySupplierNotifications = peekResults
-                    .Where(x => x.Contains("NotifyPriceList_MarketDocument") && x.Contains("DDQ"))
+                    .Where(x => x.Contains(CimMessageConstants.NotifyPriceListRootElement) && x.Contains("DDQ"))
                     .ToList();
                 energySupplierNotifications.Should().HaveCount(3);
 
@@ -175,7 +175,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 supplierJsonDocument.GetChargeIds().Single().Should().Be("SYOCharge");
 
                 var gridAccessProviderNotifications = peekResults
-                    .Where(x => x.Contains("NotifyPriceList_MarketDocument") && x.Contains("DDM"))
+                    .Where(x => x.Contains(CimMessageConstants.NotifyPriceListRootElement) && x.Contains("DDM"))
                     .ToList();
                 gridAccessProviderNotifications.Should().HaveCount(4);
 
@@ -207,7 +207,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 var peekResult =
                     await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, ResponseFormat.Xml);
 
-                peekResult.Should().ContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
+                peekResult.Should().ContainMatch("*" + CimMessageConstants.RejectRequestChangeOfPriceListRootElement + "*");
                 peekResult.Should().ContainMatch("*<cim:code>E0I</cim:code>*");
                 peekResult.Should().ContainMatch("*The sender role used is not allowed to set tax indicator to Tax for charge ID*");
             }
@@ -238,14 +238,17 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
 
                 var peekResults = await Fixture.MessageHubMock
                     .AssertPeekReceivesRepliesAsync(correlationId, ResponseFormat.Xml, 16);
-                peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
-                peekResults.Should().ContainMatch("*NotifyPriceList_MarketDocument*");
-                peekResults.Should().NotContainMatch("*Reject*");
+                peekResults.Should().ContainMatch("*" + CimMessageConstants.ConfirmRequestChangeOfPriceListRootElement + "*");
+                peekResults.Should().ContainMatch("*" + CimMessageConstants.NotifyPriceListRootElement + "*");
+                peekResults.Should().NotContainMatch("*" + CimMessageConstants.RejectRequestChangeOfPriceListRootElement + "*");
 
-                foreach (var peekResult in peekResults.Where(x => x.Contains("NotifyPriceList_MarketDocument")))
+                foreach (var peekResult in peekResults.Where(x => x.Contains(CimMessageConstants.NotifyPriceListRootElement)))
                 {
                     var notificationOperations =
-                        CIMXmlReader.GetActivityRecordElements(peekResult, "ChargeType", "description");
+                        CIMXmlReader.GetActivityRecordElements(
+                            peekResult,
+                            CimMessageConstants.ChargeType,
+                            CimMessageConstants.ChargeDescription);
                     notificationOperations.Should().BeEquivalentTo(expectedNotificationOperations);
                 }
             }
@@ -276,7 +279,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                     .AssertPeekReceivesRepliesAsync(correlationId, ResponseFormat.Json, 16);
 
                 var energySupplierNotifications = peekResults
-                    .Where(x => x.Contains("NotifyPriceList_MarketDocument") && x.Contains("DDQ"))
+                    .Where(x => x.Contains(CimMessageConstants.NotifyPriceListRootElement) && x.Contains("DDQ"))
                     .ToList();
                 energySupplierNotifications.Should().HaveCount(3);
 
@@ -304,14 +307,17 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 using var assertionScope = new AssertionScope();
                 var peekResults =
                     await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, ResponseFormat.Xml, 5);
-                peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
-                peekResults.Should().ContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
+                peekResults.Should().ContainMatch("*" + CimMessageConstants.ConfirmRequestChangeOfPriceListRootElement + "*");
+                peekResults.Should().ContainMatch("*" + CimMessageConstants.RejectRequestChangeOfPriceListRootElement + "*");
                 peekResults.Should().ContainMatch("*It is not allowed to change the tax indicator to Tax for charge*");
-                peekResults.Should().ContainMatch("*NotifyPriceList_MarketDocument*");
+                peekResults.Should().ContainMatch("*" + CimMessageConstants.NotifyPriceListRootElement + "*");
 
                 var notification = peekResults.First(x => x.Contains("NotifyPriceList_MarketDocument"));
                 var notificationOperations =
-                    CIMXmlReader.GetActivityRecordElements(notification, "ChargeType", "description");
+                    CIMXmlReader.GetActivityRecordElements(
+                        notification,
+                        CimMessageConstants.ChargeType,
+                        CimMessageConstants.ChargeDescription);
                 notificationOperations.Should().HaveCount(1);
             }
 
@@ -369,13 +375,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                     .AssertPeekReceivesRepliesAsync(correlationId, ResponseFormat.Xml, noOfDataAvailableNotificationsExpected);
 
                 peekResults.Count.Should().Be(4);
-                peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
-                peekResults.Should().ContainMatch("*NotifyPriceList_MarketDocument*");
-                peekResults.Should().NotContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
+                peekResults.Should().ContainMatch("*" + CimMessageConstants.ConfirmRequestChangeOfPriceListRootElement + "*");
+                peekResults.Should().ContainMatch("*" + CimMessageConstants.NotifyPriceListRootElement + "*");
+                peekResults.Should().NotContainMatch("*" + CimMessageConstants.RejectRequestChangeOfPriceListRootElement + "*");
 
-                var peekResult = peekResults.Single(x => x.Contains("ConfirmRequestChangeOfPriceList_MarketDocument"));
+                var peekResult = peekResults.Single(x => x.Contains(CimMessageConstants.ConfirmRequestChangeOfPriceListRootElement));
                 var operations = CIMXmlReader.GetActivityRecordElements(
-                    peekResult, "MktActivityRecord", "originalTransactionIDReference_MktActivityRecord.mRID");
+                    peekResult, CimMessageConstants.MarketActivityRecord, CimMessageConstants.OriginalTransactionId);
                 operations.Count.Should().Be(noOfConfirmedActivityRecordsExpected);
             }
         }

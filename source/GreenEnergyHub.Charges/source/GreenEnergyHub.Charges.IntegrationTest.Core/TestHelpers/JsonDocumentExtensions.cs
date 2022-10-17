@@ -20,19 +20,6 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
 {
     public static class JsonDocumentExtensions
     {
-        private const string NotifyPriceList = "NotifyPriceList_MarketDocument";
-        private const string MarketActivityRecord = "MktActivityRecord";
-        private const string DocumentType = "type";
-        private const string BusinessReasonCode = "process.processType";
-        private const string ReceiverRole = "receiver_MarketParticipant.marketRole.type";
-        private const string ChargeGroup = "ChargeGroup";
-        private const string ChargeType = "ChargeType";
-        private const string ChargeId = "mRID";
-        private const string ChargeDescription = "description";
-        private const string SeriesPeriod = "Series_Period";
-        private const string Point = "Point";
-        private const string Price = "price.amount";
-
         public static JsonDocument AsJsonDocument(string jsonString)
         {
             return JsonDocument.Parse(jsonString);
@@ -41,8 +28,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
         public static string GetDocumentType(this JsonDocument document)
         {
             return document.RootElement
-                .GetProperty(NotifyPriceList)
-                .GetProperty(DocumentType)
+                .GetProperty(CimMessageConstants.NotifyPriceListRootElement)
+                .GetProperty(CimMessageConstants.DocumentType)
                 .GetProperty("value")
                 .ToString();
         }
@@ -50,8 +37,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
         public static string GetBusinessReasonCode(this JsonDocument document)
         {
             return document.RootElement
-                .GetProperty(NotifyPriceList)
-                .GetProperty(BusinessReasonCode)
+                .GetProperty(CimMessageConstants.NotifyPriceListRootElement)
+                .GetProperty(CimMessageConstants.BusinessReasonCode)
                 .GetProperty("value")
                 .ToString();
         }
@@ -59,8 +46,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
         public static string GetReceiverRole(this JsonDocument document)
         {
             return document.RootElement
-                .GetProperty(NotifyPriceList)
-                .GetProperty(ReceiverRole)
+                .GetProperty(CimMessageConstants.NotifyPriceListRootElement)
+                .GetProperty(CimMessageConstants.ReceiverRole)
                 .GetProperty("value")
                 .ToString();
         }
@@ -69,9 +56,9 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
         {
             var mktActivityRecordElements = GetMktActivityRecords(document);
             var chargeIds = new List<string>();
-            foreach (var chargeType in mktActivityRecordElements.EnumerateArray().Select(record => record.GetProperty(ChargeGroup).GetProperty(ChargeType)))
+            foreach (var chargeType in mktActivityRecordElements.EnumerateArray().Select(record => record.GetProperty(CimMessageConstants.ChargeGroup).GetProperty(CimMessageConstants.ChargeType)))
             {
-                chargeIds.AddRange(chargeType.EnumerateArray().Select(ct => ct.GetProperty(ChargeId).ToString()));
+                chargeIds.AddRange(chargeType.EnumerateArray().Select(ct => ct.GetProperty(CimMessageConstants.ChargeId).ToString()));
             }
 
             return chargeIds;
@@ -81,9 +68,9 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
         {
             var mktActivityRecordElements = GetMktActivityRecords(document);
             var chargeDescriptions = new List<string>();
-            foreach (var chargeType in mktActivityRecordElements.EnumerateArray().Select(record => record.GetProperty(ChargeGroup).GetProperty(ChargeType)))
+            foreach (var chargeType in mktActivityRecordElements.EnumerateArray().Select(record => record.GetProperty(CimMessageConstants.ChargeGroup).GetProperty(CimMessageConstants.ChargeType)))
             {
-                chargeDescriptions.AddRange(chargeType.EnumerateArray().Select(ct => ct.GetProperty(ChargeDescription).ToString()));
+                chargeDescriptions.AddRange(chargeType.EnumerateArray().Select(ct => ct.GetProperty(CimMessageConstants.ChargeDescription).ToString()));
             }
 
             return chargeDescriptions;
@@ -95,14 +82,14 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
             var mktActivityRecordElements = GetMktActivityRecords(document);
             foreach (var record in mktActivityRecordElements.EnumerateArray())
             {
-                var chargeType = record.GetProperty(ChargeGroup).GetProperty(ChargeType);
+                var chargeType = record.GetProperty(CimMessageConstants.ChargeGroup).GetProperty(CimMessageConstants.ChargeType);
                 foreach (var period in chargeType.EnumerateArray()
-                             .Select(ct => ct.GetProperty(SeriesPeriod))
+                             .Select(ct => ct.GetProperty(CimMessageConstants.SeriesPeriod))
                              .SelectMany(seriesPeriod => seriesPeriod.EnumerateArray()
-                                 .Select(p => p.GetProperty(Point))))
+                                 .Select(p => p.GetProperty(CimMessageConstants.Point))))
                 {
                     prices.AddRange(period.EnumerateArray()
-                        .Select(point => point.GetProperty(Price).GetProperty("value").ToString()));
+                        .Select(point => point.GetProperty(CimMessageConstants.Price).GetProperty("value").ToString()));
                 }
             }
 
@@ -112,8 +99,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
         private static JsonElement GetMktActivityRecords(this JsonDocument document)
         {
             return document.RootElement
-                .GetProperty(NotifyPriceList)
-                .GetProperty(MarketActivityRecord);
+                .GetProperty(CimMessageConstants.NotifyPriceListRootElement)
+                .GetProperty(CimMessageConstants.MarketActivityRecord);
         }
     }
 }
