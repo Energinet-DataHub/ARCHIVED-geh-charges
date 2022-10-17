@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 // Arrange
                 const string gln = "1234567890123";
                 var role = MarketParticipantRoleMapper.Map(BusinessRoleCode.Ddq);
-                var message = CreateServiceBusMessage(gln, ActorStatus.Active, new List<BusinessRoleCode>
+                var message = CreateServiceBusMessage(gln, ActorStatus.New, new List<BusinessRoleCode>
                 {
                     BusinessRoleCode.Ddq,
                 });
@@ -101,7 +101,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     ApplicationProperties =
                     {
                         new KeyValuePair<string, object>(MessageMetaDataConstants.CorrelationId, correlationId),
-                        new KeyValuePair<string, object>(MessageMetaDataConstants.MessageType, "ActorCreated"),
+                        new KeyValuePair<string, object>(MessageMetaDataConstants.MessageType, "ActorCreatedIntegrationEvent"),
                     },
                 };
 

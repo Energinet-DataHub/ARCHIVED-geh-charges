@@ -13,15 +13,16 @@
 // limitations under the License.
 
 using System.Linq;
-using Energinet.Charges.Contracts.Charge;
+using Energinet.DataHub.Charges.Contracts.Charge;
 using GreenEnergyHub.Charges.QueryApi.Model;
 
-namespace GreenEnergyHub.Charges.QueryApi.ModelPredicates;
-
-public static class MarketParticipantQueryLogic
+namespace GreenEnergyHub.Charges.QueryApi.ModelPredicates
 {
-    public static IQueryable<MarketParticipantV1Dto> AsMarketParticipantV1Dto(this IQueryable<MarketParticipant> queryable)
+    public static class MarketParticipantQueryLogic
     {
-        return queryable.Select(m => new MarketParticipantV1Dto(m.Id, m.Name, m.MarketParticipantId));
+        public static IQueryable<MarketParticipantV1Dto> AsMarketParticipantV1Dto(this IQueryable<MarketParticipant> queryable)
+        {
+            return queryable.Select(m => new MarketParticipantV1Dto(m.Id, m.Name, m.MarketParticipantId));
+        }
     }
 }

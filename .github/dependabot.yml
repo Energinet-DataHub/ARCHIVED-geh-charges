@@ -9,6 +9,6 @@ updates:
     schedule:
       interval: "monthly"
   - package-ecosystem: "nuget"
-    directory: "/source/Energinet.Charges.Libraries"
+    directory: "/source/Energinet.DataHub.Charges.Libraries"
     schedule:
       interval: "monthly"

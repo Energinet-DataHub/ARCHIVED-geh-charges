@@ -15,8 +15,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Energinet.Charges.Contracts.Charge;
 using Energinet.Charges.Contracts.ChargePoint;
+using Energinet.DataHub.Charges.Contracts.Charge;
 using GreenEnergyHub.Charges.QueryApi.Model;
 using GreenEnergyHub.Iso8601;
 using NodaTime.Extensions;

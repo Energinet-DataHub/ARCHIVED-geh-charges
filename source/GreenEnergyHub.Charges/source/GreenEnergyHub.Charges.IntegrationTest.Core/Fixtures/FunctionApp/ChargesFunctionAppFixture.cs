@@ -229,7 +229,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
                 .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.MarketParticipantChangedSubscriptionName)
 
                 .AddSubscription(ChargesServiceBusResourceNames.MarketParticipantCreatedSubscriptionName)
-                .AddMessageTypeFilter("ActorCreated")
+                .AddMessageTypeFilter("ActorCreatedIntegrationEvent")
                 .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.MarketParticipantCreatedSubscriptionName)
 
                 .AddSubscription(ChargesServiceBusResourceNames.MeteringPointCreatedSubscriptionName)

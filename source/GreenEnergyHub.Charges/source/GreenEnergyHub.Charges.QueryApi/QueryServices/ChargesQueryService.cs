@@ -16,70 +16,71 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Energinet.Charges.Contracts.Charge;
+using Energinet.DataHub.Charges.Contracts.Charge;
 using GreenEnergyHub.Charges.QueryApi.Model;
 using GreenEnergyHub.Charges.QueryApi.ModelPredicates;
 using Microsoft.EntityFrameworkCore;
 
-namespace GreenEnergyHub.Charges.QueryApi.QueryServices;
-
-public class ChargesQueryService : IChargesQueryService
+namespace GreenEnergyHub.Charges.QueryApi.QueryServices
 {
-    private readonly IData _data;
-
-    public ChargesQueryService(IData data)
+    public class ChargesQueryService : IChargesQueryService
     {
-        _data = data;
-    }
+        private readonly IData _data;
 
-    public async Task<IList<ChargeV1Dto>> SearchAsync(ChargeSearchCriteriaV1Dto searchCriteria)
-    {
-        var charges = _data.Charges;
-        var todayAtMidnightUtc = DateTime.Now.Date.ToUniversalTime();
+        public ChargesQueryService(IData data)
+        {
+            _data = data;
+        }
 
-        charges = ActiveCharges(charges);
+        public async Task<IList<ChargeV1Dto>> SearchAsync(ChargeSearchCriteriaV1Dto searchCriteria)
+        {
+            var charges = _data.Charges;
+            var todayAtMidnightUtc = DateTime.Now.Date.ToUniversalTime();
 
-        if (!string.IsNullOrWhiteSpace(searchCriteria.ChargeIdOrName))
-            charges = SearchByChargeIdOrName(searchCriteria, charges, todayAtMidnightUtc);
+            charges = ActiveCharges(charges);
 
-        if (searchCriteria.OwnerIds != null && searchCriteria.OwnerIds.Any())
-            charges = SearchByOwnerId(searchCriteria.OwnerIds, charges);
+            if (!string.IsNullOrWhiteSpace(searchCriteria.ChargeIdOrName))
+                charges = SearchByChargeIdOrName(searchCriteria, charges, todayAtMidnightUtc);
 
-        if (searchCriteria.ChargeTypes != null && searchCriteria.ChargeTypes.Any())
-            charges = SearchByChargeTypes(searchCriteria.ChargeTypes, charges);
+            if (searchCriteria.OwnerIds != null && searchCriteria.OwnerIds.Any())
+                charges = SearchByOwnerId(searchCriteria.OwnerIds, charges);
 
-        return await charges
-            .AsChargeV1Dto()
-            .ToListAsync()
-            .ConfigureAwait(false);
-    }
+            if (searchCriteria.ChargeTypes != null && searchCriteria.ChargeTypes.Any())
+                charges = SearchByChargeTypes(searchCriteria.ChargeTypes, charges);
 
-    private static IQueryable<Charge> SearchByChargeIdOrName(
-        ChargeSearchCriteriaV1Dto chargeSearchCriteria, IQueryable<Charge> charges, DateTime todayAtMidnightUtc)
-    {
-        charges = charges
-            .Where(c => c.SenderProvidedChargeId.Contains(chargeSearchCriteria.ChargeIdOrName)
-                        || c.ChargePeriods
-                            .OrderByDescending(cp => cp.StartDateTime)
-                            .First(cp => cp.StartDateTime <= todayAtMidnightUtc)
-                            .Name.Contains(chargeSearchCriteria.ChargeIdOrName));
-        return charges;
-    }
+            return await charges
+                .AsChargeV1Dto()
+                .ToListAsync()
+                .ConfigureAwait(false);
+        }
 
-    private static IQueryable<Charge> SearchByOwnerId(List<Guid> ownerIds, IQueryable<Charge> charges)
-    {
-        return charges.Where(c => ownerIds.Contains(c.OwnerId));
-    }
+        private static IQueryable<Charge> SearchByChargeIdOrName(
+            ChargeSearchCriteriaV1Dto chargeSearchCriteria, IQueryable<Charge> charges, DateTime todayAtMidnightUtc)
+        {
+            charges = charges
+                .Where(c => c.SenderProvidedChargeId.Contains(chargeSearchCriteria.ChargeIdOrName)
+                            || c.ChargePeriods
+                                .OrderByDescending(cp => cp.StartDateTime)
+                                .First(cp => cp.StartDateTime <= todayAtMidnightUtc)
+                                .Name.Contains(chargeSearchCriteria.ChargeIdOrName));
+            return charges;
+        }
 
-    private static IQueryable<Charge> SearchByChargeTypes(ICollection<ChargeType> chargeTypes, IQueryable<Charge> charges)
-    {
-        charges = charges.Where(c => chargeTypes.Contains((ChargeType)c.Type));
-        return charges;
-    }
+        private static IQueryable<Charge> SearchByOwnerId(List<Guid> ownerIds, IQueryable<Charge> charges)
+        {
+            return charges.Where(c => ownerIds.Contains(c.OwnerId));
+        }
 
-    private static IQueryable<Charge> ActiveCharges(IQueryable<Charge> charges)
-    {
-        var todayAtMidnightUtc = DateTime.Now.Date.ToUniversalTime();
-        return charges.Where(c => c.ChargePeriods.Any(cp => cp.StartDateTime <= todayAtMidnightUtc));
+        private static IQueryable<Charge> SearchByChargeTypes(ICollection<ChargeType> chargeTypes, IQueryable<Charge> charges)
+        {
+            charges = charges.Where(c => chargeTypes.Contains((ChargeType)c.Type));
+            return charges;
+        }
+
+        private static IQueryable<Charge> ActiveCharges(IQueryable<Charge> charges)
+        {
+            var todayAtMidnightUtc = DateTime.Now.Date.ToUniversalTime();
+            return charges.Where(c => c.ChargePeriods.Any(cp => cp.StartDateTime <= todayAtMidnightUtc));
+        }
     }
 }
