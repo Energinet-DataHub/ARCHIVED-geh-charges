@@ -73,7 +73,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 
             return new MarketParticipantUpdatedEvent(
                 actorCreatedIntegrationEvent.ActorId,
-                actorCreatedIntegrationEvent.OrganizationId,
+                null,
                 actorCreatedIntegrationEvent.ActorNumber,
                 rolesUsedInChargesDomain,
                 status,
