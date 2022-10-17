@@ -82,15 +82,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
             var mktActivityRecordElements = GetMktActivityRecords(document);
             foreach (var record in mktActivityRecordElements.EnumerateArray())
             {
-                var chargeType = record.GetProperty(CimMessageConstants.ChargeGroup).GetProperty(CimMessageConstants.ChargeType);
-                foreach (var period in chargeType.EnumerateArray()
-                             .Select(ct => ct.GetProperty(CimMessageConstants.SeriesPeriod))
-                             .SelectMany(seriesPeriod => seriesPeriod.EnumerateArray()
-                                 .Select(p => p.GetProperty(CimMessageConstants.Point))))
-                {
-                    prices.AddRange(period.EnumerateArray()
-                        .Select(point => point.GetProperty(CimMessageConstants.Price).GetProperty("value").ToString()));
-                }
+                prices.AddRange(GetPrices(record));
             }
 
             return prices;
@@ -101,6 +93,26 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
             return document.RootElement
                 .GetProperty(CimMessageConstants.NotifyPriceListRootElement)
                 .GetProperty(CimMessageConstants.MarketActivityRecord);
+        }
+
+        private static IEnumerable<string> GetPrices(JsonElement marketActivityRecord)
+        {
+            var prices = new List<string>();
+
+            var priceOperation = marketActivityRecord
+                .GetProperty(CimMessageConstants.ChargeGroup)
+                .GetProperty(CimMessageConstants.ChargeType);
+
+            foreach (var operation in priceOperation.EnumerateArray()
+                         .Select(ct => ct.GetProperty(CimMessageConstants.SeriesPeriod))
+                         .SelectMany(seriesPeriod => seriesPeriod.EnumerateArray()
+                             .Select(p => p.GetProperty(CimMessageConstants.Point))))
+            {
+                prices.AddRange(operation.EnumerateArray()
+                    .Select(point => point.GetProperty(CimMessageConstants.Price).GetProperty("value").ToString()));
+            }
+
+            return prices;
         }
     }
 }
