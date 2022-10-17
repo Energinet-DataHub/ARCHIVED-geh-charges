@@ -51,7 +51,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             // Assert
             marketParticipant.Should().NotBeNull();
             marketParticipant.ActorId.Should().Be(marketParticipantCreatedEvent.ActorId);
-            marketParticipant.B2CActorId.Should().Be(marketParticipantCreatedEvent.B2CActorId);
+            marketParticipant.B2CActorId.Should().BeNull();
             marketParticipant.MarketParticipantId.Should().Be(marketParticipantCreatedEvent.MarketParticipantId);
             marketParticipant.BusinessProcessRole.Should().Be(MarketParticipantRole.GridAccessProvider);
             marketParticipant.Status.Should().Be(MarketParticipantStatus.Active);
@@ -60,8 +60,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
         private static MarketParticipantCreatedCommand CreateCreatedEvent()
         {
             return new MarketParticipantCreatedCommand(
-                actorId: Guid.NewGuid(),
-                b2CActorId: Guid.NewGuid(),
+                ActorId: Guid.NewGuid(),
                 "mp123",
                 new List<MarketParticipantRole> { MarketParticipantRole.GridAccessProvider, },
                 MarketParticipantStatus.Active,

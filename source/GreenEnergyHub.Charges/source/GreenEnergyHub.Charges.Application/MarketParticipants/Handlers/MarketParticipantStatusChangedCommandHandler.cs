@@ -12,34 +12,35 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 {
-    public class MarketParticipantCreatedCommandHandler : IMarketParticipantCreatedCommandHandler
+    public class MarketParticipantStatusChangedCommandHandler : IMarketParticipantStatusChangedCommandHandler
     {
         private readonly IMarketParticipantRepository _marketParticipantRepository;
 
-        public MarketParticipantCreatedCommandHandler(
+        public MarketParticipantStatusChangedCommandHandler(
             IMarketParticipantRepository marketParticipantRepository)
         {
             _marketParticipantRepository = marketParticipantRepository;
         }
 
-        public async Task HandleAsync(MarketParticipantCreatedCommand marketParticipantCreatedCommand)
+        public async Task HandleAsync(MarketParticipantStatusChangedCommand command)
         {
-            foreach (var role in marketParticipantCreatedCommand.BusinessProcessRoles)
-            {
-                var marketParticipant = MarketParticipant.Create(
-                    marketParticipantCreatedCommand.ActorId,
-                    marketParticipantCreatedCommand.MarketParticipantId,
-                    marketParticipantCreatedCommand.Status,
-                    role);
+            var marketParticipant =
+                await _marketParticipantRepository.GetByActorIdAsync(command.ActorId).ConfigureAwait(false);
 
-                await _marketParticipantRepository.AddAsync(marketParticipant).ConfigureAwait(false);
+            if (marketParticipant == null)
+            {
+                throw new InvalidOperationException(
+                    $"Could not update status. Market participant does not exist with id {command.ActorId}");
             }
+
+            marketParticipant.UpdateStatus(command.Status);
         }
     }
 }

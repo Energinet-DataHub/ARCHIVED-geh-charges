@@ -19,7 +19,7 @@ using AutoFixture.Xunit2;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
 using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.Events;
-using GreenEnergyHub.Charges.Domain.Dtos.GridAreas;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.TestHelpers;
 using Moq;
 using Xunit;
@@ -38,19 +38,16 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
                 Guid b2CActorId,
                 string actorNumber,
                 [Frozen] Mock<IMarketParticipantPersister> marketParticipantPersister,
-                MarketParticipantEventHandler sut)
+                MarketParticipantUpdatedCommandHandler sut)
         {
             // Assert
-            var actorUpdatedIntegrationEvent = new ActorUpdatedIntegrationEvent(
-                Guid.Empty,
-                DateTime.UtcNow,
+            var actorUpdatedIntegrationEvent = new MarketParticipantUpdatedCommand(
                 actorId,
-                Guid.Empty,
                 b2CActorId,
                 actorNumber,
-                ActorStatus.New,
-                new List<BusinessRoleCode> { BusinessRoleCode.Ddm },
-                new List<ActorMarketRole>());
+                new List<MarketParticipantRole> { MarketParticipantRole.EnergySupplier },
+                MarketParticipantStatus.Active,
+                new List<Guid>());
 
             // Act
             await sut.HandleAsync(actorUpdatedIntegrationEvent);
@@ -65,14 +62,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
         public async Task
             HandleAsync_WhenCalledWithGridAreaUpdatedIntegrationEvent_ShouldCallGridAreaPersister(
                 [Frozen] Mock<IGridAreaLinkPersister> gridAreaPersister,
-                GridAreaUpdatedIntegrationEvent gridAreaUpdatedIntegrationEvent,
-                MarketParticipantEventHandler sut)
+                MarketParticipantGridAreaUpdatedCommand gridAreaUpdatedIntegrationEvent,
+                MarketParticipantGridAreaUpdatedCommandHandler sut)
         {
             // Act
             await sut.HandleAsync(gridAreaUpdatedIntegrationEvent);
 
             // Assert
-            gridAreaPersister.Verify(v => v.PersistAsync(It.IsAny<GridAreaUpdatedEvent>()), Times.Once);
+            gridAreaPersister.Verify(v => v.PersistAsync(It.IsAny<MarketParticipantGridAreaUpdatedCommand>()), Times.Once);
         }
     }
 }

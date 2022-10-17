@@ -12,17 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Collections.Generic;
-using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
-using NodaTime;
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.Events
+namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 {
-    public record MarketParticipantCreatedCommand(
-        Guid ActorId,
-        string MarketParticipantId,
-        IEnumerable<MarketParticipantRole> BusinessProcessRoles,
-        MarketParticipantStatus Status,
-        IEnumerable<Guid> GridAreas);
+    /// <summary>
+    /// Handle command for updating status new market participants
+    /// </summary>
+    public interface IMarketParticipantStatusChangedCommandHandler
+    {
+        /// <summary>
+        /// Handle status changed command
+        /// </summary>
+        /// <param name="marketParticipantStatusChangedCommand"></param>
+        Task HandleAsync(MarketParticipantStatusChangedCommand marketParticipantStatusChangedCommand);
+    }
 }

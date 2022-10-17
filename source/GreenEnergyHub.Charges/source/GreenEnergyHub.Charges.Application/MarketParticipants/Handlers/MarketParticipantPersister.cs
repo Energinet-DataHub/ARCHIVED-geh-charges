@@ -28,17 +28,14 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
         private readonly IMarketParticipantRepository _marketParticipantRepository;
         private readonly IGridAreaLinkRepository _gridAreaLinkRepository;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly ILogger _logger;
 
         public MarketParticipantPersister(
             IMarketParticipantRepository marketParticipantRepository,
             IGridAreaLinkRepository gridAreaLinkRepository,
-            ILoggerFactory loggerFactory,
             IUnitOfWork unitOfWork)
         {
             _marketParticipantRepository = marketParticipantRepository;
             _gridAreaLinkRepository = gridAreaLinkRepository;
-            _logger = loggerFactory.CreateLogger(nameof(MarketParticipantPersister));
             _unitOfWork = unitOfWork;
         }
 
@@ -102,20 +99,11 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
         {
             var marketParticipant = MarketParticipant.Create(
                 marketParticipantUpdatedCommand.ActorId,
-                marketParticipantUpdatedCommand.B2CActorId,
                 marketParticipantUpdatedCommand.MarketParticipantId,
                 marketParticipantUpdatedCommand.Status,
                 businessProcessRole);
 
             await _marketParticipantRepository.AddAsync(marketParticipant).ConfigureAwait(false);
-
-            _logger.LogInformation(
-                "Market participant with MarketParticipantId '{MarketParticipantId}', ActorId '{ActorId}', B2CActorId " +
-                "'{B2CActorId}' and role '{BusinessProcessRole}' has been persisted",
-                marketParticipant.MarketParticipantId,
-                marketParticipant.ActorId,
-                marketParticipant.B2CActorId,
-                marketParticipant.BusinessProcessRole);
 
             return marketParticipant;
         }
@@ -128,12 +116,6 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
                 marketParticipantUpdatedCommand.ActorId,
                 marketParticipantUpdatedCommand.B2CActorId,
                 marketParticipantUpdatedCommand.Status);
-
-            _logger.LogInformation(
-                "Market participant with MarketParticipantId '{MarketParticipantId}' " +
-                "and role '{BusinessProcessRole}' has changed state",
-                existingMarketParticipant.MarketParticipantId,
-                existingMarketParticipant.BusinessProcessRole);
         }
 
         private async Task ConnectToGridAreaAsync(
@@ -149,14 +131,6 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
                 if (existingGridAreaLink.OwnerId == marketParticipant.Id) return;
 
                 existingGridAreaLink.OwnerId = marketParticipant.Id;
-
-                _logger.LogInformation(
-                    "GridAreaLink ID '{GridAreaLinkId}' has changed Owner ID to '{OwnerId}' " +
-                    "with MarketParticipantId {MarketParticipantId} and B2CActorId {B2CActorId}",
-                    existingGridAreaLink.Id,
-                    existingGridAreaLink.OwnerId,
-                    marketParticipant.MarketParticipantId,
-                    marketParticipant.B2CActorId);
             }
         }
     }

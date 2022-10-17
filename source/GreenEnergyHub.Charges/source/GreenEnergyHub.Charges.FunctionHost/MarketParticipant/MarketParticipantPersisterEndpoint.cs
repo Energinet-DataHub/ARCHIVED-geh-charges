@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading.Tasks;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Parsers;
@@ -28,18 +29,21 @@ namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
     {
         private const string FunctionName = nameof(MarketParticipantPersisterEndpoint);
         private readonly ISharedIntegrationEventParser _sharedIntegrationEventParser;
-        private readonly IMarketParticipantEventHandler _marketParticipantEventHandler;
+        private readonly IMarketParticipantUpdatedCommandHandler _marketParticipantUpdatedCommandHandler;
+        private readonly IMarketParticipantGridAreaUpdatedCommandHandler _marketParticipantGridAreaUpdatedCommandHandler;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger _logger;
 
         public MarketParticipantPersisterEndpoint(
             ISharedIntegrationEventParser sharedIntegrationEventParser,
-            IMarketParticipantEventHandler marketParticipantEventHandler,
+            IMarketParticipantUpdatedCommandHandler marketParticipantUpdatedCommandHandler,
+            IMarketParticipantGridAreaUpdatedCommandHandler marketParticipantGridAreaUpdatedCommandHandler,
             ILoggerFactory loggerFactory,
             IUnitOfWork unitOfWork)
         {
             _sharedIntegrationEventParser = sharedIntegrationEventParser;
-            _marketParticipantEventHandler = marketParticipantEventHandler;
+            _marketParticipantUpdatedCommandHandler = marketParticipantUpdatedCommandHandler;
+            _marketParticipantGridAreaUpdatedCommandHandler = marketParticipantGridAreaUpdatedCommandHandler;
             _unitOfWork = unitOfWork;
             _logger = loggerFactory.CreateLogger(FunctionName);
         }
@@ -53,13 +57,26 @@ namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
             byte[] message)
         {
             var messageEvent = _sharedIntegrationEventParser.Parse(message);
+            var eventType = messageEvent.GetType().Name;
 
             _logger.LogInformation(
                 "Received integration events from Market Participant of type {Type}",
                 messageEvent.GetType());
 
-            await _marketParticipantEventHandler.HandleAsync(messageEvent).ConfigureAwait(false);
-            await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+            if (eventType.Equals(nameof(ActorUpdatedIntegrationEvent)))
+            {
+                var command = ActorIntegrationEventMapper.MapFromActorUpdated(
+                    (ActorUpdatedIntegrationEvent)messageEvent);
+                await _marketParticipantUpdatedCommandHandler.HandleAsync(command).ConfigureAwait(false);
+                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+            }
+            else if (eventType.Equals(nameof(GridAreaUpdatedIntegrationEvent)))
+            {
+                var command = ActorIntegrationEventMapper.MapFromGridAreaUpdatedIntegrationEvent(
+                    (GridAreaUpdatedIntegrationEvent)messageEvent);
+                await _marketParticipantGridAreaUpdatedCommandHandler.HandleAsync(command).ConfigureAwait(false);
+                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+            }
         }
     }
 }

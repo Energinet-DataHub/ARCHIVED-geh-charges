@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Linq;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Parsers;
 using GreenEnergyHub.Charges.Domain.Dtos.Events;
-using GreenEnergyHub.Charges.Domain.Dtos.GridAreas;
 
 namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 {
@@ -58,7 +58,6 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 
             return new MarketParticipantCreatedCommand(
                 actorCreatedIntegrationEvent.ActorId,
-                actorCreatedIntegrationEvent.OrganizationId,
                 actorCreatedIntegrationEvent.ActorNumber,
                 roles,
                 status,
@@ -68,10 +67,25 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
                     .Select(a => a.Id));
         }
 
-        public static GridAreaUpdatedEvent MapFromGridAreaUpdatedIntegrationEvent(
+        public MarketParticipantStatusChangedCommand MapFromActorStatusChanged(byte[] message)
+        {
+            var actorStatusChanged = (ActorStatusChangedIntegrationEvent)_sharedIntegrationEventParser.Parse(message);
+            var status = MarketParticipantStatusMapper.Map(actorStatusChanged.Status);
+            return new MarketParticipantStatusChangedCommand(actorStatusChanged.ActorId, status);
+        }
+
+        public MarketParticipantB2CActorIdChangedCommand MapFromActorExternalIdChanged(byte[] message)
+        {
+            var externalIdChanged = (ActorExternalIdChangedIntegrationEvent)_sharedIntegrationEventParser.Parse(message);
+            return new MarketParticipantB2CActorIdChangedCommand(
+                externalIdChanged.ActorId,
+                externalIdChanged.ExternalActorId);
+        }
+
+        public static MarketParticipantGridAreaUpdatedCommand MapFromGridAreaUpdatedIntegrationEvent(
             GridAreaUpdatedIntegrationEvent gridUpdatedIntegrationEvent)
         {
-            return new GridAreaUpdatedEvent(
+            return new MarketParticipantGridAreaUpdatedCommand(
                 gridUpdatedIntegrationEvent.GridAreaId,
                 gridUpdatedIntegrationEvent.GridAreaLinkId);
         }

@@ -12,12 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Domain.Dtos.Events;
+using System;
 
-namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
+namespace GreenEnergyHub.Charges.Domain.Dtos.Events
 {
-    public interface IActorIntegrationEventMapper
+    public class MarketParticipantGridAreaUpdatedCommand
     {
-        MarketParticipantCreatedCommand MapFromActorCreated(byte[] message);
+        public MarketParticipantGridAreaUpdatedCommand(
+            Guid gridAreaId,
+            Guid gridAreaLinkId)
+        {
+            GridAreaId = gridAreaId;
+            GridAreaLinkId = gridAreaLinkId;
+        }
+
+        public Guid GridAreaId { get; }
+
+        public Guid GridAreaLinkId { get; }
     }
 }

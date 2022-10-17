@@ -13,16 +13,10 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
-using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
-using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.Events
 {
-    public record MarketParticipantCreatedCommand(
+    public record MarketParticipantB2CActorIdChangedCommand(
         Guid ActorId,
-        string MarketParticipantId,
-        IEnumerable<MarketParticipantRole> BusinessProcessRoles,
-        MarketParticipantStatus Status,
-        IEnumerable<Guid> GridAreas);
+        Guid? B2CActorId);
 }

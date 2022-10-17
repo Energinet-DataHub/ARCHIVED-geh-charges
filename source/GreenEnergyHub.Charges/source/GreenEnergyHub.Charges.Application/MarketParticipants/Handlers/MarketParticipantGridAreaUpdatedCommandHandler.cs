@@ -17,15 +17,20 @@ using GreenEnergyHub.Charges.Domain.Dtos.Events;
 
 namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 {
-    /// <summary>
-    /// Handles grid area updates
-    /// </summary>
-    public interface IGridAreaLinkPersister
+    public class MarketParticipantGridAreaUpdatedCommandHandler : IMarketParticipantGridAreaUpdatedCommandHandler
     {
-        /// <summary>
-        /// Adds or update a grid area from an integration event
-        /// </summary>
-        /// <param name="marketParticipantGridAreaUpdatedCommand"></param>
-        Task PersistAsync(MarketParticipantGridAreaUpdatedCommand marketParticipantGridAreaUpdatedCommand);
+        private readonly IGridAreaLinkPersister _gridAreaLinkPersister;
+
+        public MarketParticipantGridAreaUpdatedCommandHandler(IGridAreaLinkPersister gridAreaLinkPersister)
+        {
+            _gridAreaLinkPersister = gridAreaLinkPersister;
+        }
+
+        public async Task HandleAsync(MarketParticipantGridAreaUpdatedCommand command)
+        {
+            await _gridAreaLinkPersister
+                .PersistAsync(command)
+                .ConfigureAwait(false);
+        }
     }
 }

@@ -16,9 +16,7 @@ using System;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers;
-using GreenEnergyHub.Charges.Application.Persistence;
-using GreenEnergyHub.Charges.Domain.Dtos.GridAreas;
-using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.Domain.GridAreaLinks;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.TestCore.Attributes;
@@ -38,14 +36,12 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
         [InlineAutoDomainData]
         public async Task PersistAsync_WhenCalledWithNonExistentGridAreaLink_ShouldPersist(
             [Frozen] Mock<IGridAreaLinkRepository> gridAreaLinkRepository,
-            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            [Frozen] Mock<ILoggerFactory> loggerFactory,
-            [Frozen] Mock<IUnitOfWork> unitOfWork,
-            Mock<ILogger> logger)
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository)
         {
             // Arrange
-            loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
-            var gridAreaUpdatedEvent = new GridAreaUpdatedEvent(Guid.NewGuid(), Guid.NewGuid());
+            var gridAreaUpdatedEvent = new MarketParticipantGridAreaUpdatedCommand(
+                Guid.NewGuid(),
+                Guid.NewGuid());
 
             SetupGridAreaRepositories(
                 gridAreaLinkRepository,
@@ -53,33 +49,23 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
                 null,
                 null);
 
-            var sut = new GridAreaLinkPersister(
-                gridAreaLinkRepository.Object,
-                loggerFactory.Object,
-                unitOfWork.Object);
+            var sut = new GridAreaLinkPersister(gridAreaLinkRepository.Object);
 
             // Act
             await sut.PersistAsync(gridAreaUpdatedEvent).ConfigureAwait(false);
 
             // Assert
             gridAreaLinkRepository.Verify(v => v.AddAsync(It.IsAny<GridAreaLink>()), Times.Exactly(1));
-            logger.VerifyLoggerWasCalled(
-                $"GridAreaLink ID {gridAreaUpdatedEvent.GridAreaLinkId} for GridArea ID {gridAreaUpdatedEvent.GridAreaId} has been persisted",
-                LogLevel.Information);
         }
 
         [Theory]
         [InlineAutoDomainData]
         public async Task PersistAsync_WhenCalledWithExistingGridAreaLinkAndDifferentGridAreaId_ShouldUpdateGridAreaId(
             [Frozen] Mock<IGridAreaLinkRepository> gridAreaLinkRepository,
-            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            [Frozen] Mock<ILoggerFactory> loggerFactory,
-            [Frozen] Mock<IUnitOfWork> unitOfWork,
-            Mock<ILogger> logger)
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository)
         {
             // Arrange
-            loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
-            var gridAreaUpdatedEvent = new GridAreaUpdatedEvent(Guid.NewGuid(), Guid.NewGuid());
+            var gridAreaUpdatedEvent = new MarketParticipantGridAreaUpdatedCommand(Guid.NewGuid(), Guid.NewGuid());
 
             var existingGridAreaLink = new GridAreaLink(gridAreaUpdatedEvent.GridAreaLinkId, Guid.NewGuid(), Guid.NewGuid());
             var marketParticipant = new TestGridAccessProvider(string.Empty);
@@ -89,35 +75,23 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
                 marketParticipantRepository,
                 existingGridAreaLink,
                 marketParticipant);
-            var sut = new GridAreaLinkPersister(
-                gridAreaLinkRepository.Object,
-                loggerFactory.Object,
-                unitOfWork.Object);
+            var sut = new GridAreaLinkPersister(gridAreaLinkRepository.Object);
 
             // Act
             await sut.PersistAsync(gridAreaUpdatedEvent).ConfigureAwait(false);
 
             // Assert
             gridAreaLinkRepository.Verify(v => v.AddAsync(It.IsAny<GridAreaLink>()), Times.Never);
-            logger.VerifyLoggerWasCalled(
-                $"GridAreaLink ID {gridAreaUpdatedEvent.GridAreaLinkId} with OwnerId {existingGridAreaLink.OwnerId} " +
-                $"has changed GridArea ID to {gridAreaUpdatedEvent.GridAreaId}",
-                LogLevel.Information);
-            logger.VerifyNoOtherCalls();
         }
 
         [Theory]
         [InlineAutoDomainData]
         public async Task PersistAsync_WhenCalledWithExistingGridAreaLinkAndSameGridAreaId_ShouldNotUpdateGridAreaId(
             [Frozen] Mock<IGridAreaLinkRepository> gridAreaLinkRepository,
-            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
-            [Frozen] Mock<ILoggerFactory> loggerFactory,
-            [Frozen] Mock<IUnitOfWork> unitOfWork,
-            Mock<ILogger> logger)
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository)
         {
             // Arrange
-            loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
-            var gridAreaUpdatedEvent = new GridAreaUpdatedEvent(Guid.NewGuid(), Guid.NewGuid());
+            var gridAreaUpdatedEvent = new MarketParticipantGridAreaUpdatedCommand(Guid.NewGuid(), Guid.NewGuid());
 
             var existingGridAreaLink = new GridAreaLink(gridAreaUpdatedEvent.GridAreaLinkId, gridAreaUpdatedEvent.GridAreaId, Guid.NewGuid());
             SetupGridAreaRepositories(
@@ -125,17 +99,13 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
                 marketParticipantRepository,
                 existingGridAreaLink,
                 new TestGridAccessProvider(string.Empty));
-            var sut = new GridAreaLinkPersister(
-                gridAreaLinkRepository.Object,
-                loggerFactory.Object,
-                unitOfWork.Object);
+            var sut = new GridAreaLinkPersister(gridAreaLinkRepository.Object);
 
             // Act
             await sut.PersistAsync(gridAreaUpdatedEvent).ConfigureAwait(false);
 
             // Assert
             gridAreaLinkRepository.Verify(v => v.AddAsync(It.IsAny<GridAreaLink>()), Times.Never);
-            logger.VerifyNoOtherCalls();
         }
 
         [Theory]
@@ -143,7 +113,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
         public async Task PersistAsync_WhenEventIsNull_ThrowsArgumentNullException(GridAreaLinkPersister sut)
         {
             // Arrange
-            GridAreaUpdatedEvent? gridAreaChangedEvent = null;
+            MarketParticipantGridAreaUpdatedCommand? gridAreaChangedEvent = null;
 
             // Act / Assert
             await Assert.ThrowsAsync<ArgumentNullException>(

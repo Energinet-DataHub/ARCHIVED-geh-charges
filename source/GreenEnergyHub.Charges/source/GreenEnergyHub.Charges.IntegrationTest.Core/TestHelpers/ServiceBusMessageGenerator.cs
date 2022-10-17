@@ -22,7 +22,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
 {
     public static class ServiceBusMessageGenerator
     {
-        public static ServiceBusMessage CreateServiceBusMessage<T>(T content, string correlationId, string? replyTo = null)
+        public static ServiceBusMessage CreateServiceBusMessage<T>(T content, string correlationId, string? messageType = null, string? replyTo = null)
         {
             ArgumentNullException.ThrowIfNull(content);
 
@@ -30,6 +30,11 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
             {
                 { MessageMetaDataConstants.CorrelationId, correlationId },
             };
+
+            if (messageType != null)
+            {
+                applicationProperties.Add(MessageMetaDataConstants.MessageType, messageType);
+            }
 
             if (replyTo != null)
             {

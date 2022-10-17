@@ -34,7 +34,7 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
         /// Get single actor by ActorId or null
         /// </summary>
         /// <param name="actorId"></param>
-        Task<MarketParticipant?> GetByActorIdAsync(Guid? actorId);
+        Task<MarketParticipant?> GetByActorIdAsync(Guid actorId);
 
         /// <summary>
         /// Get single actor or null from b2CActorId

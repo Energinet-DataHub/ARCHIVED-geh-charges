@@ -12,23 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages;
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.GridAreas
+namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 {
-    public class GridAreaUpdatedEvent : MessageBase
+    public interface IMarketParticipantB2CActorIdChangedCommandHandler
     {
-        public GridAreaUpdatedEvent(
-            Guid gridAreaId,
-            Guid gridAreaLinkId)
-        {
-            GridAreaId = gridAreaId;
-            GridAreaLinkId = gridAreaLinkId;
-        }
-
-        public Guid GridAreaId { get; }
-
-        public Guid GridAreaLinkId { get; }
+        Task HandleAsync(MarketParticipantB2CActorIdChangedCommand marketParticipantB2CActorIdChangedCommand);
     }
 }

@@ -86,13 +86,11 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
         /// Use this method to create a new instance of MarketParticipant.
         /// </summary>
         /// <param name="actorId">Globally unique ID inherited from Market Participant domain</param>
-        /// <param name="b2CActorId">Globally unique ID used for authenticating actors sending in messages to charges domain</param>
         /// <param name="marketParticipantId">Number identifying </param>
         /// <param name="status"></param>
         /// <param name="businessProcessRole"></param>
         public static MarketParticipant Create(
             Guid actorId,
-            Guid? b2CActorId,
             string marketParticipantId,
             MarketParticipantStatus status,
             MarketParticipantRole businessProcessRole)
@@ -100,7 +98,7 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
             return new MarketParticipant(
                 Guid.NewGuid(),
                 actorId,
-                b2CActorId,
+                null,
                 marketParticipantId,
                 status,
                 businessProcessRole);
@@ -117,6 +115,16 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
             ActorId = actorId;
             B2CActorId = b2CActorId;
             Status = status;
+        }
+
+        public void UpdateStatus(MarketParticipantStatus status)
+        {
+            Status = status;
+        }
+
+        public void UpdateB2CActorId(Guid? b2CActorId)
+        {
+            B2CActorId = b2CActorId;
         }
     }
 }

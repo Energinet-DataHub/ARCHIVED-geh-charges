@@ -13,19 +13,24 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 
 namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 {
-    /// <summary>
-    /// Handles integration events from the market participant domain
-    /// </summary>
-    public interface IMarketParticipantEventHandler
+    public class MarketParticipantUpdatedCommandHandler : IMarketParticipantUpdatedCommandHandler
     {
-        /// <summary>
-        /// Handles an integration event from the market participant domain
-        /// </summary>
-        /// <param name="message"></param>
-        Task HandleAsync(BaseIntegrationEvent message);
+        private readonly IMarketParticipantPersister _marketParticipantPersister;
+
+        public MarketParticipantUpdatedCommandHandler(IMarketParticipantPersister marketParticipantPersister)
+        {
+            _marketParticipantPersister = marketParticipantPersister;
+        }
+
+        public async Task HandleAsync(MarketParticipantUpdatedCommand command)
+        {
+            await _marketParticipantPersister
+                .PersistAsync(command)
+                .ConfigureAwait(false);
+        }
     }
 }

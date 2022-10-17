@@ -96,7 +96,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             // Arrange
             await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
             var charge = new ChargeBuilder().Build();
-            var marketParticipant = new MarketParticipantBuilder().WithId(charge.OwnerId).Build();
+            var marketParticipant = new MarketParticipantBuilder().WithActorId(charge.OwnerId).Build();
             await chargesDatabaseContext.MarketParticipants.AddAsync(marketParticipant);
             await chargesDatabaseContext.SaveChangesAsync();
             await chargesDatabaseContext.AddAsync(charge);
