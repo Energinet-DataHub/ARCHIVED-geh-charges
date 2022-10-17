@@ -14,26 +14,27 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Energinet.Charges.Contracts.Charge;
+using Energinet.DataHub.Charges.Contracts.Charge;
 using GreenEnergyHub.Charges.QueryApi.ModelPredicates;
 using Microsoft.EntityFrameworkCore;
 
-namespace GreenEnergyHub.Charges.QueryApi.QueryServices;
-
-public class MarketParticipantQueryService : IMarketParticipantQueryService
+namespace GreenEnergyHub.Charges.QueryApi.QueryServices
 {
-    private readonly IData _data;
-
-    public MarketParticipantQueryService(IData data)
+    public class MarketParticipantQueryService : IMarketParticipantQueryService
     {
-        _data = data;
-    }
+        private readonly IData _data;
 
-    public async Task<IList<MarketParticipantV1Dto>> GetAsync()
-    {
-        return await _data.MarketParticipants
-            .AsMarketParticipantV1Dto()
-            .ToListAsync()
-            .ConfigureAwait(false);
+        public MarketParticipantQueryService(IData data)
+        {
+            _data = data;
+        }
+
+        public async Task<IList<MarketParticipantV1Dto>> GetAsync()
+        {
+            return await _data.MarketParticipants
+                .AsMarketParticipantV1Dto()
+                .ToListAsync()
+                .ConfigureAwait(false);
+        }
     }
 }
