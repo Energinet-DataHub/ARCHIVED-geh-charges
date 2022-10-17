@@ -20,6 +20,15 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
 {
     public static class JsonDocumentExtensions
     {
+        private const string NotifyPriceList = "NotifyPriceList_MarketDocument";
+        private const string MarketActivityRecord = "MktActivityRecord";
+        private const string DocumentType = "type";
+        private const string BusinessReasonCode = "process.processType";
+        private const string ReceiverRole = "receiver_MarketParticipant.marketRole.type";
+        private const string ChargeGroup = "ChargeGroup";
+        private const string ChargeType = "ChargeType";
+        private const string ChargeId = "mRID";
+
         public static JsonDocument AsJsonDocument(string jsonString)
         {
             return JsonDocument.Parse(jsonString);
@@ -28,8 +37,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
         public static string GetDocumentType(this JsonDocument document)
         {
             return document.RootElement
-                .GetProperty("NotifyPriceList_MarketDocument")
-                .GetProperty("type")
+                .GetProperty(NotifyPriceList)
+                .GetProperty(DocumentType)
                 .GetProperty("value")
                 .ToString();
         }
@@ -37,8 +46,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
         public static string GetBusinessReasonCode(this JsonDocument document)
         {
             return document.RootElement
-                .GetProperty("NotifyPriceList_MarketDocument")
-                .GetProperty("process.processType")
+                .GetProperty(NotifyPriceList)
+                .GetProperty(BusinessReasonCode)
                 .GetProperty("value")
                 .ToString();
         }
@@ -46,8 +55,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
         public static string GetReceiverRole(this JsonDocument document)
         {
             return document.RootElement
-                .GetProperty("NotifyPriceList_MarketDocument")
-                .GetProperty("receiver_MarketParticipant.marketRole.type")
+                .GetProperty(NotifyPriceList)
+                .GetProperty(ReceiverRole)
                 .GetProperty("value")
                 .ToString();
         }
@@ -56,9 +65,9 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
         {
             var mktActivityRecordElements = GetMktActivityRecords(document);
             var chargeIds = new List<string>();
-            foreach (var chargeType in mktActivityRecordElements.EnumerateArray().Select(record => record.GetProperty("ChargeGroup").GetProperty("ChargeType")))
+            foreach (var chargeType in mktActivityRecordElements.EnumerateArray().Select(record => record.GetProperty(ChargeGroup).GetProperty(ChargeType)))
             {
-                chargeIds.AddRange(chargeType.EnumerateArray().Select(ct => ct.GetProperty("mRID").ToString()));
+                chargeIds.AddRange(chargeType.EnumerateArray().Select(ct => ct.GetProperty(ChargeId).ToString()));
             }
 
             return chargeIds;
@@ -67,8 +76,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
         private static JsonElement GetMktActivityRecords(this JsonDocument document)
         {
             return document.RootElement
-                .GetProperty("NotifyPriceList_MarketDocument")
-                .GetProperty("MktActivityRecord");
+                .GetProperty(NotifyPriceList)
+                .GetProperty(MarketActivityRecord);
         }
     }
 }
