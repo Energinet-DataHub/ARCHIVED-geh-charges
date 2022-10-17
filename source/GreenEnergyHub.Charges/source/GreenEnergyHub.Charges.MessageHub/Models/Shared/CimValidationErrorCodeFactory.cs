@@ -70,6 +70,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.Shared
                 ValidationRuleIdentifier.ChargeTypeTariffTaxIndicatorOnlyAllowedBySystemOperator => ReasonCode.E0I,
                 ValidationRuleIdentifier.UpdateTaxTariffOnlyAllowedBySystemOperator => ReasonCode.E0I,
                 ValidationRuleIdentifier.MonthlyPriceSeriesEndDateMustBeFirstOfMonthOrEqualChargeStopDate => ReasonCode.D14,
+                ValidationRuleIdentifier.EffectiveDateMustMatchStartDate => ReasonCode.E0H,
                 _ => throw new NotImplementedException(),
             };
         }

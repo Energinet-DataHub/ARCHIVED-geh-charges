@@ -62,5 +62,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
         ChargeTypeTariffTaxIndicatorOnlyAllowedBySystemOperator = 51, // VR508 / E0I
         UpdateTaxTariffOnlyAllowedBySystemOperator = 52, // VR508 / E0I
         MonthlyPriceSeriesEndDateMustBeFirstOfMonthOrEqualChargeStopDate = 53, // VR923 / D14
+        EffectiveDateMustMatchStartDate = 54, // VR924 / E0H
     }
 }
