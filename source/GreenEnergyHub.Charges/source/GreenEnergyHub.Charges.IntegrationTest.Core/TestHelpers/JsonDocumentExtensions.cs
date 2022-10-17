@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 
 namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
@@ -23,39 +25,50 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
             return JsonDocument.Parse(jsonString);
         }
 
-        public static string? GetDocumentType(this JsonDocument document)
+        public static string GetDocumentType(this JsonDocument document)
         {
             return document.RootElement
                 .GetProperty("NotifyPriceList_MarketDocument")
-                .GetProperty("Type")
-                .GetString();
+                .GetProperty("type")
+                .GetProperty("value")
+                .ToString();
         }
 
-        public static string? GetBusinessReasonCode(this JsonDocument document)
+        public static string GetBusinessReasonCode(this JsonDocument document)
         {
             return document.RootElement
                 .GetProperty("NotifyPriceList_MarketDocument")
                 .GetProperty("process.processType")
                 .GetProperty("value")
-                .GetString();
+                .ToString();
         }
 
-        public static string? GetReceiverRole(this JsonDocument document)
+        public static string GetReceiverRole(this JsonDocument document)
         {
             return document.RootElement
                 .GetProperty("NotifyPriceList_MarketDocument")
                 .GetProperty("receiver_MarketParticipant.marketRole.type")
                 .GetProperty("value")
-                .GetString();
+                .ToString();
         }
 
-        public static string? GetReceiverId(this JsonDocument document)
+        public static IEnumerable<string> GetChargeIds(this JsonDocument document)
+        {
+            var mktActivityRecordElements = GetMktActivityRecords(document);
+            var chargeIds = new List<string>();
+            foreach (var chargeType in mktActivityRecordElements.EnumerateArray().Select(record => record.GetProperty("ChargeGroup").GetProperty("ChargeType")))
+            {
+                chargeIds.AddRange(chargeType.EnumerateArray().Select(ct => ct.GetProperty("mRID").ToString()));
+            }
+
+            return chargeIds;
+        }
+
+        private static JsonElement GetMktActivityRecords(this JsonDocument document)
         {
             return document.RootElement
                 .GetProperty("NotifyPriceList_MarketDocument")
-                .GetProperty("receiver_MarketParticipant.mRID")
-                .GetProperty("value")
-                .GetString();
+                .GetProperty("MktActivityRecord");
         }
     }
 }
