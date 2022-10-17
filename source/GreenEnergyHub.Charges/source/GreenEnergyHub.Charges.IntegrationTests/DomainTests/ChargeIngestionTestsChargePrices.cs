@@ -165,25 +165,31 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // * 4x Notifications to Grid Access Providers
                 using var assertionScope = new AssertionScope();
 
-                var peekResult = await Fixture.MessageHubMock
+                var peekResults = await Fixture.MessageHubMock
                     .AssertPeekReceivesRepliesAsync(correlationId, ResponseFormat.Json, 8);
-                peekResult.Should().HaveCount(8);
-                peekResult.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
-                peekResult.Should().ContainMatch("*NotifyPriceList_MarketDocument*");
-                peekResult.Should().NotContainMatch("*RejectRequestChangeOfPriceList_MarketDocument*");
-                peekResult.Should().ContainMatch("*\"value\": \"D08\"*");
-                peekResult.Should().NotContainMatch("*\"value\": \"D18\"*");
-                peekResult.Should().ContainMatch("*\"value\": \"D03\"*");
-                peekResult.Should().ContainMatch("*\"mRID\": \"EA-001\"*");
-                peekResult.Should().ContainMatch("*\"value\": \"DDZ\"*");
-                peekResult.Should().ContainMatch("*\"value\": \"DDM\"*");
-                peekResult.Should().ContainMatch("*8100000000030*");
-                peekResult.Should().ContainMatch("*8100000000016*");
-                peekResult.Should().ContainMatch("*8100000000023*");
-                peekResult.Should().NotContainMatch("*8900000000005*");
-                peekResult.Should().ContainMatch("*\"value\": \"DDQ\"*");
-                peekResult.Should().ContainMatch("*8100000000108*");
-                peekResult.Should().ContainMatch("*8510000000013*");
+
+                var energySupplierNotifications = peekResults
+                    .Where(x => x.Contains("NotifyPriceList_MarketDocument") && x.Contains("DDQ"))
+                    .ToList();
+                energySupplierNotifications.Should().HaveCount(3);
+
+                using var supplierJsonDocument = JsonDocumentExtensions.AsJsonDocument(energySupplierNotifications.First());
+                supplierJsonDocument.GetDocumentType().Should().Be("D12");
+                supplierJsonDocument.GetBusinessReasonCode().Should().Be("D08");
+                supplierJsonDocument.GetReceiverRole().Should().Be("DDQ");
+                supplierJsonDocument.GetChargeIds().Single().Should().Be("EA-001");
+
+                var gridAccessProviderNotifications = peekResults
+                    .Where(x => x.Contains("NotifyPriceList_MarketDocument") && x.Contains("DDM"))
+                    .ToList();
+                gridAccessProviderNotifications.Should().HaveCount(4);
+
+                using var gridAccessProviderJsonDocument =
+                    JsonDocumentExtensions.AsJsonDocument(gridAccessProviderNotifications.First());
+                gridAccessProviderJsonDocument.GetDocumentType().Should().Be("D12");
+                gridAccessProviderJsonDocument.GetBusinessReasonCode().Should().Be("D08");
+                gridAccessProviderJsonDocument.GetReceiverRole().Should().Be("DDM");
+                gridAccessProviderJsonDocument.GetChargeIds().Single().Should().Be("EA-001");
             }
 
             [Fact]
@@ -342,6 +348,37 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                         CIMXmlReader.GetActivityRecordElements(peekResult, "Point", "price.amount");
                     notificationOperations.Should().BeEquivalentTo(expectedNotificationOperations);
                 }
+            }
+
+            [Fact]
+            public async Task Ingestion_BundleWithMultiplePriceSeriesForSameSubscription__NotificationsWithChronologicallyOrderedPriceSeriesAsJson()
+            {
+                // Arrange
+                var expectedNotificationOperations = new List<string> { "1.100000", "2.200000", "3.300000" };
+
+                var (request, correlationId) = Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
+                    EndpointUrl, ChargePricesRequests.BundledSubscriptionPriceSeries);
+
+                // Act
+                var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
+
+                // We expect 4 peek results:
+                // * Confirmation to Grid Access Provider
+                // * 3x Notifications to Energy Suppliers
+                using var assertionScope = new AssertionScope();
+                var peekResults = await Fixture.MessageHubMock
+                    .AssertPeekReceivesRepliesAsync(correlationId, ResponseFormat.Json, 12);
+
+                var energySupplierNotifications = peekResults
+                    .Where(x => x.Contains("NotifyPriceList_MarketDocument") && x.Contains("DDQ"))
+                    .ToList();
+                energySupplierNotifications.Should().HaveCount(3);
+
+                using var supplierJsonDocument = JsonDocumentExtensions.AsJsonDocument(energySupplierNotifications.First());
+                supplierJsonDocument.GetPrices().Should().BeEquivalentTo(expectedNotificationOperations);
             }
 
             [Fact]

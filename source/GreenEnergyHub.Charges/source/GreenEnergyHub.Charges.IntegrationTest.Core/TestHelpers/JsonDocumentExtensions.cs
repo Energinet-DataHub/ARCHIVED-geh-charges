@@ -29,6 +29,9 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
         private const string ChargeType = "ChargeType";
         private const string ChargeId = "mRID";
         private const string ChargeDescription = "description";
+        private const string SeriesPeriod = "Series_Period";
+        private const string Point = "Point";
+        private const string Price = "price.amount";
 
         public static JsonDocument AsJsonDocument(string jsonString)
         {
@@ -84,6 +87,26 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
             }
 
             return chargeDescriptions;
+        }
+
+        public static IEnumerable<string> GetPrices(this JsonDocument document)
+        {
+            var prices = new List<string>();
+            var mktActivityRecordElements = GetMktActivityRecords(document);
+            foreach (var record in mktActivityRecordElements.EnumerateArray())
+            {
+                var chargeType = record.GetProperty(ChargeGroup).GetProperty(ChargeType);
+                foreach (var period in chargeType.EnumerateArray()
+                             .Select(ct => ct.GetProperty(SeriesPeriod))
+                             .SelectMany(seriesPeriod => seriesPeriod.EnumerateArray()
+                                 .Select(p => p.GetProperty(Point))))
+                {
+                    prices.AddRange(period.EnumerateArray()
+                        .Select(point => point.GetProperty(Price).GetProperty("value").ToString()));
+                }
+            }
+
+            return prices;
         }
 
         private static JsonElement GetMktActivityRecords(this JsonDocument document)
