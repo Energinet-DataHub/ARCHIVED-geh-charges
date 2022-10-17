@@ -165,11 +165,11 @@ https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.Data
     <Compile Include="..\..\..\Contracts\ErrorCode.cs">
       <Link>DefaultChargeLink\ErrorCode.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Contracts\ChargePoint\ChargePointSearchCriteriaV1Dto.cs">
-      <Link>Charges\Model\ChargePoint\ChargePointSearchCriteriaV1Dto.cs</Link>
+    <Compile Include="..\..\..\Contracts\ChargePrice\ChargePriceSearchCriteriaV1Dto.cs">
+      <Link>Charges\Model\ChargePrice\ChargePriceSearchCriteriaV1Dto.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Contracts\ChargePoint\ChargePointV1Dto.cs">
-      <Link>Charges\Model\ChargePoint\ChargePointV1Dto.cs</Link>
+    <Compile Include="..\..\..\Contracts\ChargePrice\ChargePriceV1Dto.cs">
+      <Link>Charges\Model\ChargePrice\ChargePriceV1Dto.cs</Link>
     </Compile>
   </ItemGroup>
 </Project>

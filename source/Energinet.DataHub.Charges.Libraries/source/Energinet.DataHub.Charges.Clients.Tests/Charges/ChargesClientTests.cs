@@ -24,7 +24,7 @@ using System.Threading.Tasks;
 using Energinet.DataHub.Charges.Clients.Charges;
 using Energinet.DataHub.Charges.Contracts.Charge;
 using Energinet.DataHub.Charges.Contracts.ChargeLink;
-using Energinet.DataHub.Charges.Contracts.ChargePoint;
+using Energinet.DataHub.Charges.Contracts.ChargePrice;
 using FluentAssertions;
 using GreenEnergyHub.TestHelpers;
 using Moq;
@@ -314,7 +314,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
         [InlineAutoDomainData]
         public async Task SearchChargePointsAsync_WhenResponseIsEmptyList_ReturnsEmptyList(
             Mock<IChargesClientFactory> chargesClientFactory,
-            ChargePointSearchCriteriaV1Dto searchCriteria)
+            ChargePriceSearchCriteriaV1Dto searchCriteria)
         {
             // Arrange
             var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.OK, "[]");
@@ -335,7 +335,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
         [InlineAutoDomainData]
         public async Task SearchChargePointsAsync_WhenResponseIsNotSuccess_ThrowsException(
             Mock<IChargesClientFactory> chargesClientFactory,
-            ChargePointSearchCriteriaV1Dto searchCriteria)
+            ChargePriceSearchCriteriaV1Dto searchCriteria)
         {
             // Arrange
             var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.InternalServerError, string.Empty);
@@ -353,8 +353,8 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
         [InlineAutoDomainData]
         public async Task SearchChargePointsAsync_WhenSuccess_ReturnsChargePoints(
             Mock<IChargesClientFactory> chargesClientFactory,
-            ChargePointSearchCriteriaV1Dto searchCriteria,
-            ChargePointV1Dto chargePointDto)
+            ChargePriceSearchCriteriaV1Dto searchCriteria,
+            ChargePriceV1Dto chargePointDto)
         {
             // Arrange
             var responseContent = CreateValidResponseContent(chargePointDto);

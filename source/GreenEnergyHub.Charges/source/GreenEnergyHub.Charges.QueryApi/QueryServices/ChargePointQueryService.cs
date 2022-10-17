@@ -14,7 +14,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Energinet.DataHub.Charges.Contracts.ChargePoint;
+using Energinet.DataHub.Charges.Contracts.ChargePrice;
 using GreenEnergyHub.Charges.QueryApi.ModelPredicates;
 using GreenEnergyHub.Iso8601;
 
@@ -31,11 +31,11 @@ public class ChargePointQueryService : IChargePointQueryService
         _iso8601Durations = iso8601Durations;
     }
 
-    public IList<ChargePointV1Dto> Search(ChargePointSearchCriteriaV1Dto chargePointSearchCriteria)
+    public IList<ChargePriceV1Dto> Search(ChargePriceSearchCriteriaV1Dto chargePriceSearchCriteria)
     {
         var chargePoints = _data.ChargePoints
-            .Where(cp => cp.ChargeId == chargePointSearchCriteria.ChargeId)
-            .Where(c => c.Time >= chargePointSearchCriteria.DateTimeFrom && c.Time <= chargePointSearchCriteria.DateTimeTo);
+            .Where(cp => cp.ChargeId == chargePriceSearchCriteria.ChargeId)
+            .Where(c => c.Time >= chargePriceSearchCriteria.DateTimeFrom && c.Time <= chargePriceSearchCriteria.DateTimeTo);
 
         return chargePoints
             .AsChargePointV1Dto(_iso8601Durations);

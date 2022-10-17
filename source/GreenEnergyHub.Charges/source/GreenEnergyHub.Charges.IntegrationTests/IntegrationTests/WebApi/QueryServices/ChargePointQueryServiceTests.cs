@@ -16,7 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Energinet.DataHub.Charges.Contracts.ChargePoint;
+using Energinet.DataHub.Charges.Contracts.ChargePrice;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
@@ -65,12 +65,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
             var sut = GetSut(chargesDatabaseQueryContext);
-            var searchCriteria = new ChargePointSearchCriteriaV1Dto(
+            var searchCriteria = new ChargePriceSearchCriteriaV1Dto(
                 expectedCharge.Id,
                 InstantHelper.GetTodayAtMidnightUtc().ToDateTimeUtc(),
                 InstantHelper.GetTomorrowAtMidnightUtc().ToDateTimeUtc());
 
-            var expected = new ChargePointV1Dto(
+            var expected = new ChargePriceV1Dto(
                 expectedPoints.Single().Price,
                 InstantHelper.GetTodayPlusMinutesAtMidnightUtc(0).ToDateTimeOffset(),
                 InstantHelper.GetTodayPlusMinutesAtMidnightUtc(15).ToDateTimeOffset());
@@ -100,12 +100,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
             var sut = GetSut(chargesDatabaseQueryContext);
-            var searchCriteria = new ChargePointSearchCriteriaV1Dto(
+            var searchCriteria = new ChargePriceSearchCriteriaV1Dto(
                 expectedCharge.Id,
                 InstantHelper.GetTodayAtMidnightUtc().ToDateTimeUtc(),
                 InstantHelper.GetTomorrowAtMidnightUtc().ToDateTimeUtc());
 
-            var expected = new ChargePointV1Dto(
+            var expected = new ChargePriceV1Dto(
                 expectedPoint.Price,
                 InstantHelper.GetTodayPlusMinutesAtMidnightUtc(0).ToDateTimeOffset(),
                 InstantHelper.GetTodayPlusMinutesAtMidnightUtc(15).ToDateTimeOffset());
@@ -140,7 +140,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
             var sut = GetSut(chargesDatabaseQueryContext);
-            var searchCriteria = new ChargePointSearchCriteriaV1Dto(
+            var searchCriteria = new ChargePriceSearchCriteriaV1Dto(
                 charge.Id,
                 InstantHelper.GetTodayAtMidnightUtc().ToDateTimeUtc(),
                 InstantHelper.GetTomorrowAtMidnightUtc().ToDateTimeUtc());
@@ -175,7 +175,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
             var sut = GetSut(chargesDatabaseQueryContext);
-            var searchCriteria = new ChargePointSearchCriteriaV1Dto(
+            var searchCriteria = new ChargePriceSearchCriteriaV1Dto(
                 charge.Id,
                 InstantHelper.GetTodayAtMidnightUtc().ToDateTimeUtc(),
                 InstantHelper.GetTomorrowAtMidnightUtc().ToDateTimeUtc());
@@ -210,7 +210,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
             var sut = GetSut(chargesDatabaseQueryContext);
-            var searchCriteria = new ChargePointSearchCriteriaV1Dto(
+            var searchCriteria = new ChargePriceSearchCriteriaV1Dto(
                 charge.Id,
                 InstantHelper.GetTodayPlusDaysAtMidnightUtc(0).ToDateTimeUtc(),
                 InstantHelper.GetTodayPlusDaysAtMidnightUtc(4).ToDateTimeUtc());
@@ -245,7 +245,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
             var sut = GetSut(chargesDatabaseQueryContext);
-            var searchCriteria = new ChargePointSearchCriteriaV1Dto(
+            var searchCriteria = new ChargePriceSearchCriteriaV1Dto(
                 charge.Id,
                 InstantHelper.GetThisMonthPlusMonthsAtMidnightUtc(0).ToDateTimeUtc(),
                 InstantHelper.GetThisMonthPlusMonthsAtMidnightUtc(4).ToDateTimeUtc());

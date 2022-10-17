@@ -16,10 +16,8 @@ using System;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Energinet.DataHub.Charges.Contracts.ChargePoint;
+using Energinet.DataHub.Charges.Contracts.ChargePrice;
 using FluentAssertions;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.WebApi;
 using GreenEnergyHub.Charges.TestCore.Attributes;
@@ -52,7 +50,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
         {
             // Arrange
             var sut = CreateHttpClient(factory);
-            var searchCriteria = new ChargePointSearchCriteriaV1Dto(Guid.NewGuid(), DateTime.Now, DateTime.Now);
+            var searchCriteria = new ChargePriceSearchCriteriaV1Dto(Guid.NewGuid(), DateTime.Now, DateTime.Now);
 
             // Act
             var response = await sut.PostAsJsonAsync($"{BaseUrl}/SearchAsync", searchCriteria);
@@ -69,15 +67,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
             factory.ReconfigureJwtTokenValidatorMock(isValid: true);
             sut.DefaultRequestHeaders.Add("Authorization", "Bearer xxx");
             return sut;
-        }
-
-        private static JsonSerializerOptions GetJsonSerializerOptions()
-        {
-            return new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true,
-                Converters = { new JsonStringEnumConverter() },
-            };
         }
     }
 }

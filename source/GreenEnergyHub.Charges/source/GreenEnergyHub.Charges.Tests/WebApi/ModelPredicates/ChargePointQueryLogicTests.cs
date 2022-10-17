@@ -16,7 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Energinet.DataHub.Charges.Contracts.Charge;
-using Energinet.DataHub.Charges.Contracts.ChargePoint;
+using Energinet.DataHub.Charges.Contracts.ChargePrice;
 using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using FluentAssertions;
 using GreenEnergyHub.Charges.QueryApi.Model;
@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
             chargePoint.Time = new DateTime(2022, 1, 1, 1, 0, 0);
             chargePoint.Charge.Resolution = (int)Resolution.PT15M;
 
-            var expected = new ChargePointV1Dto(
+            var expected = new ChargePriceV1Dto(
                 chargePoint.Price,
                 chargePoint.Time,
                 new DateTime(2022, 1, 1, 2, 15, 0));
@@ -67,7 +67,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
             chargePoint2.Time = DateTime.SpecifyKind(new DateTime(2022, 1, 1, 1, 6, 0), DateTimeKind.Utc);
             chargePoint2.Charge.Resolution = (int)Resolution.PT15M;
 
-            var expected = new List<ChargePointV1Dto>
+            var expected = new List<ChargePriceV1Dto>
             {
                 new(
                     chargePoint.Price,
@@ -106,7 +106,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
             chargePoint3.Time = DateTime.SpecifyKind(new DateTime(2022, 2, 20, 23, 0, 0), DateTimeKind.Utc);
             chargePoint3.Charge.Resolution = (int)Resolution.P1M;
 
-            var expected = new List<ChargePointV1Dto>
+            var expected = new List<ChargePriceV1Dto>
             {
                 new(
                     chargePoint.Price,
@@ -149,7 +149,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
             chargePoint3.Time = DateTime.SpecifyKind(new DateTime(2022, 6, 30, 23, 0, 0), DateTimeKind.Utc);
             chargePoint3.Charge.Resolution = (int)Resolution.P1M;
 
-            var expected = new List<ChargePointV1Dto>
+            var expected = new List<ChargePriceV1Dto>
             {
                 new(
                     chargePoint.Price,
@@ -192,7 +192,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
             chargePoint3.Time = DateTime.SpecifyKind(new DateTime(2022, 1, 1, 2, 0, 0), DateTimeKind.Utc);
             chargePoint3.Charge.Resolution = (int)Resolution.PT1H;
 
-            var expected = new List<ChargePointV1Dto>
+            var expected = new List<ChargePriceV1Dto>
             {
                 new(
                     chargePoint.Price,
@@ -235,7 +235,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
             chargePoint3.Time = DateTime.SpecifyKind(new DateTime(2022, 1, 2, 23, 0, 0), DateTimeKind.Utc);
             chargePoint3.Charge.Resolution = (int)Resolution.P1D;
 
-            var expected = new List<ChargePointV1Dto>
+            var expected = new List<ChargePriceV1Dto>
             {
                 new(
                     chargePoint.Price,

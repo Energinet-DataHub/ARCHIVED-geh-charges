@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.Charges.Contracts.ChargePoint;
+using Energinet.DataHub.Charges.Contracts.ChargePrice;
 using GreenEnergyHub.Charges.QueryApi.QueryServices;
 using Microsoft.AspNetCore.Mvc;
 
@@ -37,7 +37,7 @@ public class ChargePointsController : Controller
     /// <returns>Charge points or "404 Not Found"</returns>
     [HttpPost("Search")]
     [MapToApiVersion(Version1)]
-    public IActionResult Search([FromBody] ChargePointSearchCriteriaV1Dto searchCriteria)
+    public IActionResult Search([FromBody] ChargePriceSearchCriteriaV1Dto searchCriteria)
     {
         var chargePoints = _chargePointQueryService.Search(searchCriteria);
 

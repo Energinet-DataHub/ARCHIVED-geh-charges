@@ -21,7 +21,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Energinet.DataHub.Charges.Contracts.Charge;
 using Energinet.DataHub.Charges.Contracts.ChargeLink;
-using Energinet.DataHub.Charges.Contracts.ChargePoint;
+using Energinet.DataHub.Charges.Contracts.ChargePrice;
 
 namespace Energinet.DataHub.Charges.Clients.Charges
 {
@@ -102,13 +102,13 @@ namespace Energinet.DataHub.Charges.Clients.Charges
         ///     Returns charge points based on the search criteria.
         /// </summary>
         /// <returns>A collection of charge points(Dtos)</returns>
-        public async Task<IList<ChargePointV1Dto>> SearchChargePointsAsync(ChargePointSearchCriteriaV1Dto searchCriteria)
+        public async Task<IList<ChargePriceV1Dto>> SearchChargePointsAsync(ChargePriceSearchCriteriaV1Dto searchCriteria)
         {
             var response = await _httpClient
                 .PostAsJsonAsync(ChargesRelativeUris.SearchChargePoints(), searchCriteria)
                 .ConfigureAwait(false);
 
-            return await HandleResultAsync<ChargePointV1Dto>(response).ConfigureAwait(false);
+            return await HandleResultAsync<ChargePriceV1Dto>(response).ConfigureAwait(false);
         }
 
         private static async Task<IList<TModel>> HandleResultAsync<TModel>(HttpResponseMessage response)
