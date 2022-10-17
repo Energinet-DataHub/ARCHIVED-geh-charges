@@ -28,6 +28,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
         private const string ChargeGroup = "ChargeGroup";
         private const string ChargeType = "ChargeType";
         private const string ChargeId = "mRID";
+        private const string ChargeDescription = "description";
 
         public static JsonDocument AsJsonDocument(string jsonString)
         {
@@ -71,6 +72,18 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
             }
 
             return chargeIds;
+        }
+
+        public static IEnumerable<string> GetChargeDescriptions(this JsonDocument document)
+        {
+            var mktActivityRecordElements = GetMktActivityRecords(document);
+            var chargeDescriptions = new List<string>();
+            foreach (var chargeType in mktActivityRecordElements.EnumerateArray().Select(record => record.GetProperty(ChargeGroup).GetProperty(ChargeType)))
+            {
+                chargeDescriptions.AddRange(chargeType.EnumerateArray().Select(ct => ct.GetProperty(ChargeDescription).ToString()));
+            }
+
+            return chargeDescriptions;
         }
 
         private static JsonElement GetMktActivityRecords(this JsonDocument document)

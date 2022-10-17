@@ -236,8 +236,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 // * A single notification to Energy Supplier 8510000000013
                 using var assertionScope = new AssertionScope();
 
-                var peekResults =
-                    await Fixture.MessageHubMock.AssertPeekReceivesRepliesAsync(correlationId, ResponseFormat.Xml, 16);
+                var peekResults = await Fixture.MessageHubMock
+                    .AssertPeekReceivesRepliesAsync(correlationId, ResponseFormat.Xml, 16);
                 peekResults.Should().ContainMatch("*ConfirmRequestChangeOfPriceList_MarketDocument*");
                 peekResults.Should().ContainMatch("*NotifyPriceList_MarketDocument*");
                 peekResults.Should().NotContainMatch("*Reject*");
@@ -248,6 +248,40 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                         CIMXmlReader.GetActivityRecordElements(peekResult, "ChargeType", "description");
                     notificationOperations.Should().BeEquivalentTo(expectedNotificationOperations);
                 }
+            }
+
+            [Fact]
+            public async Task Ingestion_BundleWithMultipleOperationsForSameCharge_NotificationsWithChronologicallyOrderedOperationsAsJson()
+            {
+                // Arrange
+                var expectedNotificationOperations = new List<string> { "CREATE", "UPDATE", "STOP", "CANCEL STOP" };
+
+                var (request, correlationId) = Fixture.AsGridAccessProvider.PrepareHttpPostRequestWithAuthorization(
+                    EndpointUrl, ChargeInformationRequests.BundleWithMultipleOperationsForSameTariff);
+
+                // Act
+                var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
+
+                // Assert
+                actual.StatusCode.Should().Be(HttpStatusCode.Accepted);
+
+                // We expect four peeks:
+                // * A confirmation to Grid Access Provider
+                // * A single notification to Energy Supplier 8100000000108
+                // * A single notification to Energy Supplier 8100000001004
+                // * A single notification to Energy Supplier 8510000000013
+                using var assertionScope = new AssertionScope();
+
+                var peekResults = await Fixture.MessageHubMock
+                    .AssertPeekReceivesRepliesAsync(correlationId, ResponseFormat.Json, 16);
+
+                var energySupplierNotifications = peekResults
+                    .Where(x => x.Contains("NotifyPriceList_MarketDocument") && x.Contains("DDQ"))
+                    .ToList();
+                energySupplierNotifications.Should().HaveCount(3);
+
+                using var supplierJsonDocument = JsonDocumentExtensions.AsJsonDocument(energySupplierNotifications.First());
+                supplierJsonDocument.GetChargeDescriptions().Should().BeEquivalentTo(expectedNotificationOperations);
             }
 
             [Fact]
