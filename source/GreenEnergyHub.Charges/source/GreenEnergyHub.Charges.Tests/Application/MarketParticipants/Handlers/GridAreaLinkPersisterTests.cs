@@ -22,7 +22,6 @@ using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.TestCore.Builders.Testables;
 using GreenEnergyHub.TestHelpers;
-using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 using Xunit.Categories;

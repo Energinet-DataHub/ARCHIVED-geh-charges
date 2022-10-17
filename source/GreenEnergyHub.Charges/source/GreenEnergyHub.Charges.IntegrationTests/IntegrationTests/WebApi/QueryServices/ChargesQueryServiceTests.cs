@@ -18,7 +18,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.Charges.Contracts.Charge;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using GreenEnergyHub.Charges.QueryApi;
@@ -36,7 +35,6 @@ using Xunit.Categories;
 using Charge = GreenEnergyHub.Charges.Domain.Charges.Charge;
 using ChargePeriod = GreenEnergyHub.Charges.Domain.Charges.ChargePeriod;
 using ChargePeriodBuilder = GreenEnergyHub.Charges.TestCore.Builders.Command.ChargePeriodBuilder;
-using MarketParticipant = GreenEnergyHub.Charges.Domain.MarketParticipants.MarketParticipant;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryServices
 {

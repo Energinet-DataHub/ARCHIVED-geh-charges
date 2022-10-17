@@ -18,7 +18,7 @@ using System.Linq;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
-namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
+namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers.Mappers
 {
     public static class MarketParticipantRoleMapper
     {

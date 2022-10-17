@@ -17,8 +17,14 @@ using GreenEnergyHub.Charges.Domain.Dtos.Events;
 
 namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 {
+    /// <summary>
+    /// Handle commands for updating B2C Actor ID of existing market participants
+    /// </summary>
     public interface IMarketParticipantB2CActorIdChangedCommandHandler
     {
+        /// <summary>
+        /// Handle B2C ActorID changed command
+        /// </summary>
         Task HandleAsync(MarketParticipantB2CActorIdChangedCommand marketParticipantB2CActorIdChangedCommand);
     }
 }

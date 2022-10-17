@@ -25,7 +25,6 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
         /// <summary>
         /// Handle MarketParticipantCreatedCommand
         /// </summary>
-        /// <param name="marketParticipantUpdatedCommand"></param>
         Task HandleAsync(MarketParticipantCreatedCommand marketParticipantUpdatedCommand);
     }
 }

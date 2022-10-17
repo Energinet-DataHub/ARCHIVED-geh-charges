@@ -17,8 +17,14 @@ using GreenEnergyHub.Charges.Domain.Dtos.Events;
 
 namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 {
+    /// <summary>
+    /// Handle updated for market participants
+    /// </summary>
     public interface IMarketParticipantUpdatedCommandHandler
     {
+        /// <summary>
+        /// Handle market participant update command
+        /// </summary>
         Task HandleAsync(MarketParticipantUpdatedCommand message);
     }
 }

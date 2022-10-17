@@ -14,7 +14,7 @@
 
 using GreenEnergyHub.Charges.Domain.Dtos.Events;
 
-namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
+namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers.Mappers
 {
     public interface IActorIntegrationEventMapper
     {
