@@ -73,7 +73,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
             {
                 // Arrange
                 var actorId = Guid.NewGuid();
-                var message = CreateServiceBusMessage(actorId, SeededData.GridAreaLink.Provider8100000000030.GridAreaId);
+                var message = CreateServiceBusMessage("9876543210", actorId, SeededData.GridAreaLink.Provider8100000000030.GridAreaId);
                 await using var context = Fixture.ChargesDatabaseManager.CreateDbContext();
 
                 // Act
@@ -94,7 +94,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
             {
                 // Arrange
                 var actorId = Guid.NewGuid();
-                var message = CreateMessage(actorId, SeededData.GridAreaLink.Provider8500000000013.GridAreaId);
+                var message = CreateMessage("0123456789", actorId, SeededData.GridAreaLink.Provider8500000000013.GridAreaId);
                 await using var writeContext = Fixture.ChargesDatabaseManager.CreateDbContext();
                 var actorIntegrationEventMapper = new ActorIntegrationEventMapper(new SharedIntegrationEventParser());
                 var marketParticipantRepository = new MarketParticipantRepository(writeContext);
@@ -122,9 +122,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 actual.OwnerId.Should().Be(marketParticipant.Id);
             }
 
-            private static ServiceBusMessage CreateServiceBusMessage(Guid actorId, Guid gridAreaId)
+            private static ServiceBusMessage CreateServiceBusMessage(string actorNumber, Guid actorId, Guid gridAreaId)
             {
-                var message = CreateMessage(actorId, gridAreaId);
+                var message = CreateMessage(actorNumber, actorId, gridAreaId);
 
                 var correlationId = Guid.NewGuid().ToString("N");
 
@@ -139,14 +139,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 };
             }
 
-            private static byte[] CreateMessage(Guid actorId, Guid gridAreaId)
+            private static byte[] CreateMessage(string actorNumber, Guid actorId, Guid gridAreaId)
             {
                 var actorCreatedIntegrationEvent = new ActorCreatedIntegrationEvent(
                     Guid.NewGuid(),
                     actorId,
                     Guid.NewGuid(),
                     ActorStatus.New,
-                    "1234567890",
+                    actorNumber,
                     "New actor",
                     new List<BusinessRoleCode>
                     {
