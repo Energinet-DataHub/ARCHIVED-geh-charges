@@ -16,7 +16,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
@@ -176,7 +175,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
         {
             var points = new List<AvailableChargePriceDataPoint>();
 
-            for (int i = 1; i <= noOfPoints; i++)
+            for (var i = 1; i <= noOfPoints; i++)
             {
                 points.Add(new AvailableChargePriceDataPoint(i, i));
             }
