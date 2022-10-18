@@ -48,7 +48,7 @@ The following asynchronous validation rules are currently implemented in the cha
 |VR.921|Tax indicator must be set to false for a fee|D14|✓|||
 |VR.922|The identification of a charge operation consists of maximal 36 characters|E86|✓|✓||
 |VR.923|The monthly price series end date must be 1st of month, unless it matches the charge stop date.|D14||✓||
-|VR.924|Start date and effective date must have the same value.|E0H||✓||
+|VR.924|Price series start interval and effective date must have the same value|E0H||✓||
 
 * VR.152 is not fully implemented. Right now we only validate that it is filled with something
 * VR.679 is not fully implemented. For now it verifies that the charge exist, not checking that the linked period is within the charge's validity period
