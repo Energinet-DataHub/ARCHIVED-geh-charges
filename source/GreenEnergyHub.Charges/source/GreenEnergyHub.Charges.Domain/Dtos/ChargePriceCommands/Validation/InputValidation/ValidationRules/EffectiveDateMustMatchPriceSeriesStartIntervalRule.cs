@@ -16,11 +16,11 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.ValidationRules
 {
-    public class EffectiveDateMustMatchStartDateRule : IValidationRule
+    public class EffectiveDateMustMatchPriceSeriesStartIntervalRule : IValidationRule
     {
         private readonly ChargePriceOperationDto _chargePriceOperationDto;
 
-        public EffectiveDateMustMatchStartDateRule(ChargePriceOperationDto chargePriceOperationDto)
+        public EffectiveDateMustMatchPriceSeriesStartIntervalRule(ChargePriceOperationDto chargePriceOperationDto)
         {
             _chargePriceOperationDto = chargePriceOperationDto;
         }

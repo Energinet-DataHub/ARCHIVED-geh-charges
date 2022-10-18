@@ -41,7 +41,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
                 .WithStartDateTime(startDateTime)
                 .WithPointsInterval(pointStartDateTime, pointStartDateTime).Build();
             chargeOperationDto.Points.Clear();
-            var sut = new EffectiveDateMustMatchStartDateRule(chargeOperationDto);
+            var sut = new EffectiveDateMustMatchPriceSeriesStartIntervalRule(chargeOperationDto);
 
             // Act / Assert
             sut.IsValid.Should().BeTrue();
@@ -54,7 +54,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
             // Arrange
             var chargeOperationDto = CreateInvalidOperation(chargePriceOperationDtoBuilder);
             chargeOperationDto.Points.Clear();
-            var sut = new EffectiveDateMustMatchStartDateRule(chargeOperationDto);
+            var sut = new EffectiveDateMustMatchPriceSeriesStartIntervalRule(chargeOperationDto);
 
             // Act / Assert
             sut.IsValid.Should().BeFalse();
@@ -65,7 +65,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
         public void ValidationRuleIdentifier_ShouldBe_EqualTo(ChargePriceOperationDtoBuilder chargePriceOperationDtoBuilder)
         {
             // Arrange And Act
-            var sut = new EffectiveDateMustMatchStartDateRule(CreateInvalidOperation(chargePriceOperationDtoBuilder));
+            var sut = new EffectiveDateMustMatchPriceSeriesStartIntervalRule(CreateInvalidOperation(chargePriceOperationDtoBuilder));
 
             // Assert
             sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.EffectiveDateMustMatchPriceSeriesStartInterval);
