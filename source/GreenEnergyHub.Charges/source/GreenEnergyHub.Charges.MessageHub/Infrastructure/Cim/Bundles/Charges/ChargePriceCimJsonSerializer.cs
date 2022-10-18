@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
 using System.Text.Json.Nodes;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
@@ -130,9 +131,10 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.Charges
         private static JsonArray GetPoints(AvailableChargePriceData chargePrice)
         {
             var points = new JsonArray();
-            foreach (var pricePoint in chargePrice.Points)
+
+            foreach (var pricePoint in chargePrice.Points.OrderBy(p => p.Position))
             {
-                var point = new JsonObject()
+                var point = new JsonObject
                 {
                     { CimChargeConstants.Position, CimJsonHelper.CreateValueObject(pricePoint.Position) },
                     { CimChargeConstants.Price, CimJsonHelper.CreateValueObject(pricePoint.Price) },
