@@ -249,7 +249,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                             peekResult,
                             CimMessageConstants.ChargeType,
                             CimMessageConstants.ChargeDescription);
-                    notificationOperations.Should().BeEquivalentTo(expectedNotificationOperations);
+                    notificationOperations.Should().ContainInOrder(expectedNotificationOperations);
                 }
             }
 
@@ -284,7 +284,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 energySupplierNotifications.Should().HaveCount(3);
 
                 using var supplierJsonDocument = JsonDocumentExtensions.AsJsonDocument(energySupplierNotifications.First());
-                supplierJsonDocument.GetChargeDescriptions().Should().BeEquivalentTo(expectedNotificationOperations);
+                supplierJsonDocument.GetChargeDescriptions().Should().ContainInOrder(expectedNotificationOperations);
             }
 
             [Fact]
