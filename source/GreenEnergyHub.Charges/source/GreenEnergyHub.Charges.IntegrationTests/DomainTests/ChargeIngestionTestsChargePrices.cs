@@ -346,7 +346,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 {
                     var notificationOperations =
                         CIMXmlReader.GetActivityRecordElements(peekResult, CimMessageConstants.Point, CimMessageConstants.Price);
-                    notificationOperations.Should().BeEquivalentTo(expectedNotificationOperations);
+                    notificationOperations.Should().ContainInOrder(expectedNotificationOperations);
                 }
             }
 
@@ -378,7 +378,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 energySupplierNotifications.Should().HaveCount(3);
 
                 using var supplierJsonDocument = JsonDocumentExtensions.AsJsonDocument(energySupplierNotifications.First());
-                supplierJsonDocument.GetPrices().Should().BeEquivalentTo(expectedNotificationOperations);
+                supplierJsonDocument.GetPrices().Should().ContainInOrder(expectedNotificationOperations);
             }
 
             [Fact]
