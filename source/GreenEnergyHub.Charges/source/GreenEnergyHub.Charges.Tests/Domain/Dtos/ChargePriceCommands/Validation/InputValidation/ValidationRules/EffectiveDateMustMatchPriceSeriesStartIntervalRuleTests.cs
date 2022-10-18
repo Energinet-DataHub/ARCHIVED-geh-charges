@@ -19,7 +19,6 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.InputVal
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.TestCore.Builders.Command;
 using GreenEnergyHub.TestHelpers;
-using NodaTime;
 using NodaTime.Extensions;
 using Xunit;
 using Xunit.Categories;
@@ -27,7 +26,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.ValidationRules
 {
     [UnitTest]
-    public class EffectiveDateMustMatchStartDateRuleTests
+    public class EffectiveDateMustMatchPriceSeriesStartIntervalRuleTests
     {
         [Theory]
         [AutoDomainData]
