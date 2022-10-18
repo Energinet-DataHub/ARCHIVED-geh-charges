@@ -18,7 +18,6 @@ using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using GreenEnergyHub.Charges.Core.DateTime;
-using Microsoft.EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
@@ -74,7 +73,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
                 .Replace("{{$randomCharactersShort}}", Guid.NewGuid().ToString("n")[..5])
                 .Replace("{{$chargeIdForMultipleOperations}}", chargeIdForMultipleOperations)
                 .Replace("{{$isoTimestamp}}", now)
-                .Replace("{{$isoTimestampPlusOneMonth}}", inThirtyoneDays.ToString())
+                .Replace("{{$isoTimestampPlusOneMonth}}", ConvertLocalTimeWithSecondsToUtcAsString(zonedDateTimeService, midnightLocalTime31DaysAhead))
+                .Replace("{{$iso_MidnightLocalTimeTwoMonthAheadOnTheFirst}}", ConvertLocalTimeWithSecondsToUtcAsString(zonedDateTimeService, monthAhead.MidnightLocalTime2MonthAheadOnTheFirst))
                 .Replace("{{$YMDHM_TimestampPlusOneMonth}}", ConvertLocalTimeToUtcAsString(zonedDateTimeService, midnightLocalTime31DaysAhead))
                 .Replace("{{$YMDHM_TimestampPlusOneMonthAndOneDay}}", ConvertLocalTimeToUtcAsString(zonedDateTimeService, midnightLocalTime32DaysAhead))
                 .Replace("{{$YMDHM_MidnightLocalTimeTwoMonthAheadOnTheFirst}}", ConvertLocalTimeToUtcAsString(zonedDateTimeService, monthAhead.MidnightLocalTime2MonthAheadOnTheFirst))
@@ -100,6 +100,12 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
         {
             var zonedDateTime = zonedDateTimeService.GetZonedDateTime(localDateTime, ResolutionStrategy.Leniently);
             return zonedDateTime.ToInstant().ToString("yyyy-MM-dd\\THH:mm\\Z", CultureInfo.InvariantCulture);
+        }
+
+        private static string ConvertLocalTimeWithSecondsToUtcAsString(IZonedDateTimeService zonedDateTimeService, LocalDateTime localDateTime)
+        {
+            var zonedDateTime = zonedDateTimeService.GetZonedDateTime(localDateTime, ResolutionStrategy.Leniently);
+            return zonedDateTime.ToInstant().ToString("yyyy-MM-dd\\THH:mm:ss\\Z", CultureInfo.InvariantCulture);
         }
 
         private static (LocalDateTime MidnightLocalTime2MonthAheadOnTheFirst, LocalDateTime MidnightLocalTime3MonthAheadOnTheFirst)
