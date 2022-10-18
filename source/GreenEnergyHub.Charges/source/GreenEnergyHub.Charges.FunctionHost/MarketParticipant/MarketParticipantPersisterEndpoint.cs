@@ -62,19 +62,25 @@ namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
                 "Received integration events from Market Participant of type {Type}",
                 messageEvent.GetType());
 
-            if (eventType.Equals(nameof(ActorUpdatedIntegrationEvent)))
+            switch (eventType)
             {
-                var command = ActorIntegrationEventMapper.MapFromActorUpdated(
-                    (ActorUpdatedIntegrationEvent)messageEvent);
-                await _marketParticipantUpdatedCommandHandler.HandleAsync(command).ConfigureAwait(false);
-                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-            }
-            else if (eventType.Equals(nameof(GridAreaUpdatedIntegrationEvent)))
-            {
-                var command = ActorIntegrationEventMapper.MapFromGridAreaUpdatedIntegrationEvent(
-                    (GridAreaUpdatedIntegrationEvent)messageEvent);
-                await _marketParticipantGridAreaUpdatedCommandHandler.HandleAsync(command).ConfigureAwait(false);
-                await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+                case nameof(ActorUpdatedIntegrationEvent):
+                    {
+                        var command = ActorIntegrationEventMapper.MapFromActorUpdated(
+                            (ActorUpdatedIntegrationEvent)messageEvent);
+                        await _marketParticipantUpdatedCommandHandler.HandleAsync(command).ConfigureAwait(false);
+                        await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+                        break;
+                    }
+
+                case nameof(GridAreaUpdatedIntegrationEvent):
+                    {
+                        var command = ActorIntegrationEventMapper.MapFromGridAreaUpdated(
+                            (GridAreaUpdatedIntegrationEvent)messageEvent);
+                        await _marketParticipantGridAreaUpdatedCommandHandler.HandleAsync(command).ConfigureAwait(false);
+                        await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+                        break;
+                    }
             }
         }
     }

@@ -12,8 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.Events;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
+using GreenEnergyHub.Charges.Domain.GridAreaLinks;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
@@ -21,24 +25,47 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
     public class MarketParticipantCreatedCommandHandler : IMarketParticipantCreatedCommandHandler
     {
         private readonly IMarketParticipantRepository _marketParticipantRepository;
+        private readonly IGridAreaLinkRepository _gridAreaLinkRepository;
 
         public MarketParticipantCreatedCommandHandler(
-            IMarketParticipantRepository marketParticipantRepository)
+            IMarketParticipantRepository marketParticipantRepository,
+            IGridAreaLinkRepository gridAreaLinkRepository)
         {
             _marketParticipantRepository = marketParticipantRepository;
+            _gridAreaLinkRepository = gridAreaLinkRepository;
         }
 
-        public async Task HandleAsync(MarketParticipantCreatedCommand marketParticipantCreatedCommand)
+        public async Task HandleAsync(MarketParticipantCreatedCommand command)
         {
-            foreach (var role in marketParticipantCreatedCommand.BusinessProcessRoles)
+            foreach (var role in command.BusinessProcessRoles)
             {
                 var marketParticipant = MarketParticipant.Create(
-                    marketParticipantCreatedCommand.ActorId,
-                    marketParticipantCreatedCommand.MarketParticipantId,
-                    marketParticipantCreatedCommand.Status,
+                    command.ActorId,
+                    command.MarketParticipantId,
+                    command.Status,
                     role);
 
                 await _marketParticipantRepository.AddAsync(marketParticipant).ConfigureAwait(false);
+
+                if (marketParticipant.BusinessProcessRole is MarketParticipantRole.GridAccessProvider)
+                {
+                    await AddMarketParticipantAsOwnerOfGridAreasAsync(
+                            command.GridAreas,
+                            marketParticipant.Id)
+                        .ConfigureAwait(false);
+                }
+            }
+        }
+
+        private async Task AddMarketParticipantAsOwnerOfGridAreasAsync(IEnumerable<Guid> gridAreas, Guid marketParticipantId)
+        {
+            foreach (var gridAreaId in gridAreas)
+            {
+                var existingGridAreaLink = await _gridAreaLinkRepository.GetGridAreaOrNullAsync(gridAreaId).ConfigureAwait(false);
+                if (existingGridAreaLink is null) continue;
+                if (existingGridAreaLink.OwnerId == marketParticipantId) return;
+
+                existingGridAreaLink.OwnerId = marketParticipantId;
             }
         }
     }

@@ -15,21 +15,24 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using AutoFixture.Xunit2;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
+using Energinet.DataHub.MarketParticipant.Integration.Model.Parsers.Actor;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers;
 using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers.Mappers;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
+using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.TestHelpers;
+using NodaTime;
 using Xunit;
 
 namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
 {
-    public class MarketParticipantDomainEventMapperTests
+    public class ActorIntegrationEventMapperTests
     {
         [Theory]
         [AutoDomainData]
-        public void MapFromActorIntegrationEvent_ShouldReturnMarketParticipantUpdatedEvent(
+        public void MapFromActorIntegrationEvent_ShouldReturnMarketParticipantUpdatedCommand(
             Guid actorId, Guid b2CActorId, string actorNumber)
         {
             // Arrange
@@ -60,7 +63,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
         }
 
         [Fact]
-        public void MapFromGridAreaUpdatedIntegrationEvent_ShouldReturnGridAreaUpdatedEvent()
+        public void MapFromGridAreaUpdatedIntegrationEvent_ShouldReturnMarketParticipantGridAreaUpdatedCommand()
         {
             // Arrange
             var gridAreaId = Guid.NewGuid();
@@ -76,11 +79,45 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
 
             // Act
             var actualGridAreaUpdatedEvent =
-                ActorIntegrationEventMapper.MapFromGridAreaUpdatedIntegrationEvent(gridAreaUpdatedIntegrationEvent);
+                ActorIntegrationEventMapper.MapFromGridAreaUpdated(gridAreaUpdatedIntegrationEvent);
 
             // Assert
             actualGridAreaUpdatedEvent.GridAreaId.Should().Be(gridAreaId);
             actualGridAreaUpdatedEvent.GridAreaLinkId.Should().Be(gridAreaLinkId);
+        }
+
+        [Theory]
+        [AutoData]
+        public void MapFromActorCreated_ShouldReturnMarketParticipantCreatedCommand(
+            Guid eventId,
+            Guid actorId,
+            Guid orgId,
+            string actorNumber,
+            string name,
+            DateTime eventCreated,
+            ActorCreatedIntegrationEventParser parser,
+            ActorIntegrationEventMapper sut)
+        {
+            var actorCreatedIntegrationEvent = new ActorCreatedIntegrationEvent(
+                eventId,
+                actorId,
+                orgId,
+                ActorStatus.Active,
+                actorNumber,
+                name,
+                new List<BusinessRoleCode> { BusinessRoleCode.Ddq },
+                new List<ActorMarketRole> { new(EicFunction.EnergySupplier, new List<ActorGridArea>()) },
+                eventCreated);
+            var bytes = parser.ParseToSharedIntegrationEvent(actorCreatedIntegrationEvent);
+
+            // Act
+            var actual = sut.MapFromActorCreated(bytes);
+
+            // Assert
+            actual.ActorId.Should().Be(actorId);
+            actual.Status.Should().Be(MarketParticipantStatus.Active);
+            actual.BusinessProcessRoles.Should().Contain(bpr => bpr == MarketParticipantRole.EnergySupplier);
+            actual.BusinessProcessRoles.Should().Contain(bpr => bpr == MarketParticipantRole.EnergySupplier);
         }
 
         private static IEnumerable<ActorMarketRole> CreateActorMarketRoles()

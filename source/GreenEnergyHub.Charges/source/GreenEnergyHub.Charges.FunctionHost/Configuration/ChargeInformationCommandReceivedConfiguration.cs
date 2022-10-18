@@ -52,7 +52,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 AvailableChargeReceiptValidationErrorFactory>();
             serviceCollection.AddScoped<IChargeCommandReceivedEventHandler, ChargeInformationCommandReceivedEventHandler>();
             serviceCollection.AddScoped<JsonMessageDeserializer<ChargeInformationCommandReceivedEvent>>();
-            serviceCollection.AddScoped<IMarketParticipantRepository, MarketParticipantRepository>();
             serviceCollection.AddScoped<IInputValidationRulesFactory<ChargeInformationOperationDto>,
                 ChargeOperationInputValidationRulesFactory>();
             serviceCollection.AddScoped<IInputValidator<ChargeInformationOperationDto>, InputValidator<ChargeInformationOperationDto>>();

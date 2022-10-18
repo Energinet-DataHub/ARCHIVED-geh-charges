@@ -30,8 +30,6 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 using Xunit.Categories;
-using GridAreaLink = GreenEnergyHub.Charges.Domain.GridAreaLinks.GridAreaLink;
-using MarketParticipant = GreenEnergyHub.Charges.Domain.MarketParticipants.MarketParticipant;
 
 namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
 {
