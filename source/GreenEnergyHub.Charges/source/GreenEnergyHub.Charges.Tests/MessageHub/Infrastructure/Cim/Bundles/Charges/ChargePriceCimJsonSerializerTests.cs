@@ -181,7 +181,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
             }
 
             // shuffle points order
-            var shuffledPoints = points.OrderBy(p => _rnd.Next()).ToList();
+            var shuffledPoints = points.OrderBy(_ => _rnd.Next()).ToList();
 
             return shuffledPoints;
         }
