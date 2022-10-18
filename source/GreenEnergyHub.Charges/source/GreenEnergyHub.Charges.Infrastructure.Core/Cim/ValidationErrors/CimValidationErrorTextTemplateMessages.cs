@@ -211,7 +211,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.EffectiveDateMustMatchStartDate)]
         public const string EffectiveDateMustMatchStartDateErrorText =
-            "Start date and effective date must have the same value for charge with ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} owned by {{ChargeOwner}}";
+            "Price series start interval and effective date must have the same value for charge with ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} owned by {{ChargeOwner}}";
 
         public const string Unknown = "unknown";
     }
