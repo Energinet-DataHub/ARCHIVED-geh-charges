@@ -28,6 +28,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.Inpu
         public bool IsValid => _chargePriceOperationDto.StartDateTime == _chargePriceOperationDto.PointsStartInterval;
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
-            ValidationRuleIdentifier.EffectiveDateMustMatchStartDate;
+            ValidationRuleIdentifier.EffectiveDateMustMatchPriceSeriesStartInterval;
     }
 }

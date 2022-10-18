@@ -68,7 +68,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
             var sut = new EffectiveDateMustMatchStartDateRule(CreateInvalidOperation(chargePriceOperationDtoBuilder));
 
             // Assert
-            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.EffectiveDateMustMatchStartDate);
+            sut.ValidationRuleIdentifier.Should().Be(ValidationRuleIdentifier.EffectiveDateMustMatchPriceSeriesStartInterval);
         }
 
         private static ChargePriceOperationDto CreateInvalidOperation(ChargePriceOperationDtoBuilder chargePriceOperationDtoBuilder)
