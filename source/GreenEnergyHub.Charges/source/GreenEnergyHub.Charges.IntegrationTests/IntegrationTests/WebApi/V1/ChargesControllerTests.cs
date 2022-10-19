@@ -98,12 +98,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
         [Theory]
         [InlineAutoMoqData]
         public async Task SearchAsync_WhenSearchCriteriaIsValid_ReturnsOkAndCorrectContentType(
-            ChargeSearchCriteriaV1CriteriaDtoBuilder chargeSearchCriteriaV1CriteriaDtoBuilder,
+            ChargeSearchCriteriaV1DtoBuilder chargeSearchCriteriaV1DtoBuilder,
             WebApiFactory factory)
         {
             // Arrange
             var sut = CreateHttpClient(factory);
-            var searchCriteria = chargeSearchCriteriaV1CriteriaDtoBuilder.Build();
+            var searchCriteria = chargeSearchCriteriaV1DtoBuilder.Build();
 
             // Act
             var response = await sut.PostAsJsonAsync($"{BaseUrl}/SearchAsync", searchCriteria);
@@ -117,12 +117,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
         [Theory]
         [InlineAutoMoqData]
         public async Task SearchAsync_WhenSearchCriteriaIsNotValid_ReturnsBadRequest(
-            ChargeSearchCriteriaV1CriteriaDtoBuilder chargeSearchCriteriaV1CriteriaDtoBuilder,
+            ChargeSearchCriteriaV1DtoBuilder chargeSearchCriteriaV1DtoBuilder,
             WebApiFactory factory)
         {
             // Arrange
             var sut = CreateHttpClient(factory);
-            var searchCriteria = chargeSearchCriteriaV1CriteriaDtoBuilder
+            var searchCriteria = chargeSearchCriteriaV1DtoBuilder
                 .WithOwnerId(Guid.Empty)
                 .Build();
 
@@ -136,12 +136,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
         [Theory]
         [InlineAutoMoqData]
         public async Task SearchAsync_WhenRequested_ReturnsChargeInformation(
-            ChargeSearchCriteriaV1CriteriaDtoBuilder chargeSearchCriteriaV1CriteriaDtoBuilder,
+            ChargeSearchCriteriaV1DtoBuilder chargeSearchCriteriaV1DtoBuilder,
             WebApiFactory factory)
         {
             // Arrange
             var sut = CreateHttpClient(factory);
-            var searchCriteria = chargeSearchCriteriaV1CriteriaDtoBuilder
+            var searchCriteria = chargeSearchCriteriaV1DtoBuilder
                 .Build();
 
             // Act

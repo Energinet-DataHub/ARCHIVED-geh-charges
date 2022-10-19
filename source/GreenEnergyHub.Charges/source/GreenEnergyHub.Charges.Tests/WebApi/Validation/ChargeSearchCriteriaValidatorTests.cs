@@ -30,10 +30,10 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.Validation
         [Theory]
         [InlineAutoMoqData]
         public void Validate_WhenNoSearchCriteriaIsSet_ReturnTrue(
-            ChargeSearchCriteriaV1CriteriaDtoBuilder chargeSearchCriteriaV1CriteriaDtoBuilder)
+            ChargeSearchCriteriaV1DtoBuilder chargeSearchCriteriaV1DtoBuilder)
         {
             // Arrange
-            var searchCriteria = chargeSearchCriteriaV1CriteriaDtoBuilder.Build();
+            var searchCriteria = chargeSearchCriteriaV1DtoBuilder.Build();
 
             // Act
             var actual = ChargeSearchCriteriaValidator.Validate(searchCriteria);
@@ -45,10 +45,10 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.Validation
         [Theory]
         [InlineAutoMoqData]
         public void Validate_WhenSearchCriteriaIsSetCorrect_ReturnTrue(
-            ChargeSearchCriteriaV1CriteriaDtoBuilder chargeSearchCriteriaV1CriteriaDtoBuilder)
+            ChargeSearchCriteriaV1DtoBuilder chargeSearchCriteriaV1DtoBuilder)
         {
             // Arrange
-            var searchCriteria = chargeSearchCriteriaV1CriteriaDtoBuilder
+            var searchCriteria = chargeSearchCriteriaV1DtoBuilder
                 .WithChargeType(ChargeType.D01)
                 .WithChargeIdOrName("test")
                 .WithOwnerId(Guid.NewGuid())
@@ -64,10 +64,10 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.Validation
         [Theory]
         [InlineAutoMoqData]
         public void Validate_WhenSearchCriteriaOwnerIdIsAEmptyGuid_ReturnsFalse(
-            ChargeSearchCriteriaV1CriteriaDtoBuilder chargeSearchCriteriaV1CriteriaDtoBuilder)
+            ChargeSearchCriteriaV1DtoBuilder chargeSearchCriteriaV1DtoBuilder)
         {
             // Arrange
-            var searchCriteria = chargeSearchCriteriaV1CriteriaDtoBuilder
+            var searchCriteria = chargeSearchCriteriaV1DtoBuilder
                 .WithOwnerId(Guid.Empty)
                 .Build();
 
@@ -81,10 +81,10 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.Validation
         [Theory]
         [InlineAutoMoqData]
         public void Validate_WhenSearchCriteriaOwnerIdsIsNull_ReturnsTrue(
-            ChargeSearchCriteriaV1CriteriaDtoBuilder chargeSearchCriteriaV1CriteriaDtoBuilder)
+            ChargeSearchCriteriaV1DtoBuilder chargeSearchCriteriaV1DtoBuilder)
         {
             // Arrange
-            var searchCriteria = chargeSearchCriteriaV1CriteriaDtoBuilder
+            var searchCriteria = chargeSearchCriteriaV1DtoBuilder
                 .WithOwnerIds(null!)
                 .Build();
 
@@ -98,10 +98,10 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.Validation
         [Theory]
         [InlineAutoMoqData]
         public void Validate_WhenSearchCriteriaChargeTypesWithWrongType_ReturnFalse(
-            ChargeSearchCriteriaV1CriteriaDtoBuilder chargeSearchCriteriaV1CriteriaDtoBuilder)
+            ChargeSearchCriteriaV1DtoBuilder chargeSearchCriteriaV1DtoBuilder)
         {
             // Arrange
-            var searchCriteria = chargeSearchCriteriaV1CriteriaDtoBuilder
+            var searchCriteria = chargeSearchCriteriaV1DtoBuilder
                 .WithChargeType((ChargeType)100)
                 .Build();
 
@@ -115,10 +115,10 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.Validation
         [Theory]
         [InlineAutoMoqData]
         public void Validate_WhenSearchCriteriaChargeTypesWithWrongTypes_ReturnFalse(
-            ChargeSearchCriteriaV1CriteriaDtoBuilder chargeSearchCriteriaV1CriteriaDtoBuilder)
+            ChargeSearchCriteriaV1DtoBuilder chargeSearchCriteriaV1DtoBuilder)
         {
             // Arrange
-            var searchCriteria = chargeSearchCriteriaV1CriteriaDtoBuilder
+            var searchCriteria = chargeSearchCriteriaV1DtoBuilder
                 .WithChargeTypes(new List<ChargeType> { (ChargeType)100, (ChargeType)200 })
                 .Build();
 
@@ -132,10 +132,10 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.Validation
         [Theory]
         [InlineAutoMoqData]
         public void Validate_WhenSearchCriteriaChargeTypesWithCorrectChargeTypes_ReturnTrue(
-            ChargeSearchCriteriaV1CriteriaDtoBuilder chargeSearchCriteriaV1CriteriaDtoBuilder)
+            ChargeSearchCriteriaV1DtoBuilder chargeSearchCriteriaV1DtoBuilder)
         {
             // Arrange
-            var searchCriteria = chargeSearchCriteriaV1CriteriaDtoBuilder
+            var searchCriteria = chargeSearchCriteriaV1DtoBuilder
                 .WithChargeTypes(new List<ChargeType> { ChargeType.D01, ChargeType.D02 })
                 .Build();
 

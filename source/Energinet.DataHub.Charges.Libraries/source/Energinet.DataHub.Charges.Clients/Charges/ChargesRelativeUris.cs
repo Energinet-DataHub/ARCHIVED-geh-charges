@@ -64,7 +64,7 @@ namespace Energinet.DataHub.Charges.Clients.Charges
         /// <returns>Relative URI</returns>
         public static Uri SearchChargePrices()
         {
-            return new Uri("v1/ChargePrices/SearchAsync", UriKind.Relative);
+            return new Uri("v1/ChargePrices/Search", UriKind.Relative);
         }
     }
 }

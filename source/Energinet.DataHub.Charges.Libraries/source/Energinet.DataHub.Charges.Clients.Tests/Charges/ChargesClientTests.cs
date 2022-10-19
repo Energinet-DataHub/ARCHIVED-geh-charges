@@ -314,7 +314,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
         [InlineAutoDomainData]
         public async Task SearchChargePointsAsync_WhenResponseIsEmptyList_ReturnsEmptyList(
             Mock<IChargesClientFactory> chargesClientFactory,
-            ChargePriceSearchCriteriaV1Dto searchCriteria)
+            ChargePricesSearchCriteriaV1Dto searchCriteria)
         {
             // Arrange
             var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.OK, "[]");
@@ -335,7 +335,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
         [InlineAutoDomainData]
         public async Task SearchChargePointsAsync_WhenResponseIsNotSuccess_ThrowsException(
             Mock<IChargesClientFactory> chargesClientFactory,
-            ChargePriceSearchCriteriaV1Dto searchCriteria)
+            ChargePricesSearchCriteriaV1Dto searchCriteria)
         {
             // Arrange
             var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.InternalServerError, string.Empty);
@@ -353,7 +353,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
         [InlineAutoDomainData]
         public async Task SearchChargePointsAsync_WhenSuccess_ReturnsChargePoints(
             Mock<IChargesClientFactory> chargesClientFactory,
-            ChargePriceSearchCriteriaV1Dto searchCriteria,
+            ChargePricesSearchCriteriaV1Dto searchCriteria,
             ChargePriceV1Dto chargePointDto)
         {
             // Arrange
@@ -373,8 +373,8 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
             // Assert
             result.Should().NotBeNull();
             result[0].Price.Should().Be(chargePointDto.Price);
-            result[0].ActiveFromDateTime.Should().Be(chargePointDto.ActiveFromDateTime);
-            result[0].ActiveToDateTime.Should().Be(chargePointDto.ActiveToDateTime);
+            result[0].FromDateTime.Should().Be(chargePointDto.FromDateTime);
+            result[0].ToDateTime.Should().Be(chargePointDto.ToDateTime);
 
             mockHttpMessageHandler.Protected().Verify(
                 "SendAsync",
