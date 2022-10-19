@@ -66,7 +66,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
             {
                 case nameof(ActorUpdatedIntegrationEvent):
                     {
-                        var command = ActorIntegrationEventMapper.MapFromActorUpdated(
+                        var command = MarketParticipantIntegrationEventMapper.Map(
                             (ActorUpdatedIntegrationEvent)messageEvent);
                         await _marketParticipantUpdatedCommandHandler.HandleAsync(command).ConfigureAwait(false);
                         await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
@@ -75,7 +75,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
 
                 case nameof(GridAreaUpdatedIntegrationEvent):
                     {
-                        var command = ActorIntegrationEventMapper.MapFromGridAreaUpdated(
+                        var command = MarketParticipantIntegrationEventMapper.Map(
                             (GridAreaUpdatedIntegrationEvent)messageEvent);
                         await _marketParticipantGridAreaUpdatedCommandHandler.HandleAsync(command).ConfigureAwait(false);
                         await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);

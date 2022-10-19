@@ -54,7 +54,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
 
             // Act
             var actualMarketParticipantUpdatedEvent =
-                ActorIntegrationEventMapper.MapFromActorUpdated(actorUpdatedIntegrationEvent);
+                MarketParticipantIntegrationEventMapper.Map(actorUpdatedIntegrationEvent);
 
             // Assert
             actualMarketParticipantUpdatedEvent.ActorId.Should().Be(actorId);
@@ -82,7 +82,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
 
             // Act
             var actualGridAreaUpdatedEvent =
-                ActorIntegrationEventMapper.MapFromGridAreaUpdated(gridAreaUpdatedIntegrationEvent);
+                MarketParticipantIntegrationEventMapper.Map(gridAreaUpdatedIntegrationEvent);
 
             // Assert
             actualGridAreaUpdatedEvent.GridAreaId.Should().Be(gridAreaId);
@@ -104,7 +104,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
                 InstantHelper.GetTodayAtMidnightUtc().ToDateTimeUtc());
 
             // Act
-            var actual = ActorIntegrationEventMapper.MapFromActorCreated(actorCreatedIntegrationEvent);
+            var actual = MarketParticipantIntegrationEventMapper.Map(actorCreatedIntegrationEvent);
 
             // Assert
             actual.ActorId.Should().Be(actorCreatedIntegrationEvent.ActorId);
@@ -133,7 +133,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
                 actorStatus);
 
             // Act
-            var actual = ActorIntegrationEventMapper.MapFromActorStatusChanged(actorStatusChanged);
+            var actual = MarketParticipantIntegrationEventMapper.Map(actorStatusChanged);
 
             // Assert
             actual.ActorId.Should().Be(actorStatusChanged.ActorId);
@@ -154,7 +154,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
                 externalId);
 
             // Act
-            var actual = ActorIntegrationEventMapper.MapFromActorExternalIdChanged(externalIdChanged);
+            var actual = MarketParticipantIntegrationEventMapper.Map(externalIdChanged);
 
             // Assert
             actual.ActorId.Should().Be(actual.ActorId);

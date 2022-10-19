@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
             byte[] message)
         {
             var statusChanged = (ActorStatusChangedIntegrationEvent)_sharedIntegrationEventParser.Parse(message);
-            var command = ActorIntegrationEventMapper.MapFromActorStatusChanged(statusChanged);
+            var command = MarketParticipantIntegrationEventMapper.Map(statusChanged);
             await _marketParticipantStatusChangedCommandHandler.HandleAsync(command).ConfigureAwait(false);
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
         }

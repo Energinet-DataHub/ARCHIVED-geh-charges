@@ -14,14 +14,13 @@
 
 using System.Linq;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
-using Energinet.DataHub.MarketParticipant.Integration.Model.Parsers;
 using GreenEnergyHub.Charges.Domain.Dtos.Events;
 
 namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers.Mappers
 {
-    public static class ActorIntegrationEventMapper
+    public static class MarketParticipantIntegrationEventMapper
     {
-        public static MarketParticipantUpdatedCommand MapFromActorUpdated(ActorUpdatedIntegrationEvent actorUpdatedIntegrationEvent)
+        public static MarketParticipantUpdatedCommand Map(ActorUpdatedIntegrationEvent actorUpdatedIntegrationEvent)
         {
             var status = MarketParticipantStatusMapper.Map(actorUpdatedIntegrationEvent.Status);
             var roles = MarketParticipantRoleMapper
@@ -39,7 +38,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers.Mappers
                         .Select(a => a.Id));
         }
 
-        public static MarketParticipantCreatedCommand MapFromActorCreated(ActorCreatedIntegrationEvent actorCreatedIntegrationEvent)
+        public static MarketParticipantCreatedCommand Map(ActorCreatedIntegrationEvent actorCreatedIntegrationEvent)
         {
             var status = MarketParticipantStatusMapper.Map(actorCreatedIntegrationEvent.Status);
 
@@ -57,20 +56,20 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers.Mappers
                     .Select(a => a.Id));
         }
 
-        public static MarketParticipantStatusChangedCommand MapFromActorStatusChanged(ActorStatusChangedIntegrationEvent actorStatusChanged)
+        public static MarketParticipantStatusChangedCommand Map(ActorStatusChangedIntegrationEvent actorStatusChanged)
         {
             var status = MarketParticipantStatusMapper.Map(actorStatusChanged.Status);
             return new MarketParticipantStatusChangedCommand(actorStatusChanged.ActorId, status);
         }
 
-        public static MarketParticipantB2CActorIdChangedCommand MapFromActorExternalIdChanged(ActorExternalIdChangedIntegrationEvent externalIdChanged)
+        public static MarketParticipantB2CActorIdChangedCommand Map(ActorExternalIdChangedIntegrationEvent externalIdChanged)
         {
             return new MarketParticipantB2CActorIdChangedCommand(
                 externalIdChanged.ActorId,
                 externalIdChanged.ExternalActorId);
         }
 
-        public static MarketParticipantGridAreaUpdatedCommand MapFromGridAreaUpdated(
+        public static MarketParticipantGridAreaUpdatedCommand Map(
             GridAreaUpdatedIntegrationEvent gridUpdatedIntegrationEvent)
         {
             return new MarketParticipantGridAreaUpdatedCommand(

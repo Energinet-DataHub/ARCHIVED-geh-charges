@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
             byte[] message)
         {
             var externalIdChanged = (ActorExternalIdChangedIntegrationEvent)_sharedIntegrationEventParser.Parse(message);
-            var command = ActorIntegrationEventMapper.MapFromActorExternalIdChanged(externalIdChanged);
+            var command = MarketParticipantIntegrationEventMapper.Map(externalIdChanged);
             await _marketParticipantB2CActorIdChangedCommandHandler.HandleAsync(command).ConfigureAwait(false);
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
         }
