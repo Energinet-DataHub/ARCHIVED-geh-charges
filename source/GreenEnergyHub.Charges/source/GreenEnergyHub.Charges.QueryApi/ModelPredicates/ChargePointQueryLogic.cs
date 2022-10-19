@@ -34,21 +34,16 @@ public static class ChargePointQueryLogic
             .Select(cp => new ChargePriceV1Dto(
                 cp.Price,
                 cp.Time,
-                CalculateToDateTime(iso8601Durations, cp)))
+                iso8601Durations.GetTimeFixedToDuration(
+                        DateTime.SpecifyKind(cp.Time, DateTimeKind.Utc).ToInstant(),
+                        ((Resolution)cp.Charge.Resolution).ToString(),
+                        1)
+                    .ToDateTimeUtc()))
             .ToList();
 
         return chargePoints
             .Select((cp, index) => MapChargePointV1Dto(chargePoints, index, cp))
             .ToList();
-    }
-
-    private static DateTime CalculateToDateTime(IIso8601Durations iso8601Durations, ChargePoint cp)
-    {
-        return iso8601Durations.GetTimeFixedToDuration(
-                DateTime.SpecifyKind(cp.Time, DateTimeKind.Utc).ToInstant(),
-                ((Resolution)cp.Charge.Resolution).ToString(),
-                1)
-            .ToDateTimeUtc();
     }
 
     /// <summary>

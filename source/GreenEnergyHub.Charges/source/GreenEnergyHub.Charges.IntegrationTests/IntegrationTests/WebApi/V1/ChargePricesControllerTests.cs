@@ -23,6 +23,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Energinet.DataHub.Charges.Contracts.ChargePrice;
 using FluentAssertions;
+using FluentAssertions.Common;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.WebApi;
 using GreenEnergyHub.Charges.TestCore.Attributes;
@@ -39,7 +40,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
     public class ChargePricesControllerTests :
         WebApiTestBase<ChargesWebApiFixture>,
         IClassFixture<ChargesWebApiFixture>,
-        IClassFixture<ChargesDatabaseFixture>,
         IClassFixture<WebApiFactory>
     {
         private const string BaseUrl = "/v1/ChargePrices";
@@ -47,11 +47,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
 
         public ChargePricesControllerTests(
             ChargesWebApiFixture chargesWebApiFixture,
-            ITestOutputHelper testOutputHelper,
-            ChargesDatabaseFixture fixture)
+            ITestOutputHelper testOutputHelper)
             : base(chargesWebApiFixture, testOutputHelper)
         {
-            _databaseManager = fixture.DatabaseManager;
+            _databaseManager = chargesWebApiFixture.DatabaseManager;
         }
 
         [Theory]
@@ -100,7 +99,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
 
             chargePricesList.Should().HaveCountGreaterThan(0);
             var actual = chargePricesList!.Single(cp => cp.Price == chargePoint.Price);
-            actual.FromDateTime.Should().Be(chargePoint.Time);
+            actual.FromDateTime.Should().Be(chargePoint.Time.ToDateTimeOffset());
         }
 
         private static JsonSerializerOptions GetJsonSerializerOptions()
