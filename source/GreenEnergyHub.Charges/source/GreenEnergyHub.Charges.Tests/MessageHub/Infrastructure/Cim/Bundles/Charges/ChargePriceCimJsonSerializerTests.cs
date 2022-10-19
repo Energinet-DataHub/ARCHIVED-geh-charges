@@ -43,6 +43,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
         private const int NoOfChargesInBundle = 10;
         private const string CimTestId = "00000000000000000000000000000000";
         private const string RecipientId = "Recipient";
+        private static readonly Random _rnd = new Random();
 
         [Theory]
         [InlineAutoDomainData("TestFiles/ExpectedOutputChargeCimJsonSerializerChargePrices.blob")]
@@ -169,12 +170,15 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
         {
             var points = new List<AvailableChargePriceDataPoint>();
 
-            for (int i = 1; i <= noOfPoints; i++)
+            for (var i = 1; i <= noOfPoints; i++)
             {
                 points.Add(new AvailableChargePriceDataPoint(i, i));
             }
 
-            return points;
+            // shuffle points order
+            var shuffledPoints = points.OrderBy(_ => _rnd.Next()).ToList();
+
+            return shuffledPoints;
         }
     }
 }
