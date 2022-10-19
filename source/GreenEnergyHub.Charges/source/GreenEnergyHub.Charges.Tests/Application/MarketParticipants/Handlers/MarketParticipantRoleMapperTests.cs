@@ -13,9 +13,11 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers;
+using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers.Mappers;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
@@ -50,6 +52,40 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             BusinessRoleCode businessRoleCode)
         {
             Assert.Throws<ArgumentOutOfRangeException>(() => MarketParticipantRoleMapper.Map(businessRoleCode));
+        }
+
+        [Fact]
+        public void MapMany_WhenMultipleBusinessRoleCodes_ShouldReturnCorrespondingMarketParticipantRoles()
+        {
+            // Arrange
+            var actorRoles = new List<BusinessRoleCode>()
+            {
+                BusinessRoleCode.Ddm,
+                BusinessRoleCode.Ddq,
+                BusinessRoleCode.Ddz,
+                BusinessRoleCode.Ez,
+                BusinessRoleCode.Ddk,
+                BusinessRoleCode.Ddx,
+                BusinessRoleCode.Dgl,
+                BusinessRoleCode.Mdr,
+                BusinessRoleCode.Sts,
+                BusinessRoleCode.Tso,
+            };
+
+            // Act
+            var actual = MarketParticipantRoleMapper.MapMany(actorRoles).ToList();
+
+            // Assert
+            actual.Should().Contain(r => r == MarketParticipantRole.EnergySupplier);
+            actual.Should().Contain(r => r == MarketParticipantRole.GridAccessProvider);
+            actual.Should().Contain(r => r == MarketParticipantRole.SystemOperator);
+            actual.Should().Contain(r => r == MarketParticipantRole.MeteredDataResponsible);
+            actual.Should().Contain(r => r == MarketParticipantRole.EnergyAgency);
+            actual.Should().Contain(r => r == MarketParticipantRole.MeteredDataAdministrator);
+            actual.Should().Contain(r => r == MarketParticipantRole.MeteringPointAdministrator);
+            actual.Should().Contain(r => r == MarketParticipantRole.BalanceResponsibleParty);
+            actual.Should().Contain(r => r == MarketParticipantRole.ImbalanceSettlementResponsible);
+            actual.Should().Contain(r => r == MarketParticipantRole.TransmissionSystemOperator);
         }
     }
 }
