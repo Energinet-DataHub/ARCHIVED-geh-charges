@@ -156,6 +156,52 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             actual.B2CActorId.Should().Be(externalId);
         }
 
+        [Theory]
+        [AutoData]
+        public void Map_GridAreaAddedToActorIntegrationEvent_ShouldReturnGridAreaAddedToMarketParticipantCommand(
+            Guid actorId,
+            Guid gridAreaId)
+        {
+            // Arrange
+            var gridAreaAddedEvent = new GridAreaAddedToActorIntegrationEvent(
+                Guid.NewGuid(),
+                actorId,
+                Guid.NewGuid(),
+                InstantHelper.GetTodayAtMidnightUtc().ToDateTimeUtc(),
+                EicFunction.GridAccessProvider,
+                gridAreaId,
+                Guid.NewGuid());
+
+            // Act
+            var actual = MarketParticipantIntegrationEventMapper.Map(gridAreaAddedEvent);
+
+            // Assert
+            actual.ActorId.Should().Be(actorId);
+            actual.GridAreaId.Should().Be(gridAreaId);
+        }
+
+        [Theory]
+        [AutoData]
+        public void Map_GridAreaRemovedFromActorIntegrationEvent_ShouldReturnGridAreaRemovedFromMarketParticipantCommand(
+            Guid gridAreaId)
+        {
+            // Arrange
+            var gridAreaRemovedEvent = new GridAreaRemovedFromActorIntegrationEvent(
+                Guid.NewGuid(),
+                Guid.NewGuid(),
+                Guid.NewGuid(),
+                InstantHelper.GetTodayAtMidnightUtc().ToDateTimeUtc(),
+                EicFunction.GridAccessProvider,
+                gridAreaId,
+                Guid.NewGuid());
+
+            // Act
+            var actual = MarketParticipantIntegrationEventMapper.Map(gridAreaRemovedEvent);
+
+            // Assert
+            actual.GridAreaId.Should().Be(gridAreaId);
+        }
+
         private static IEnumerable<ActorMarketRole> CreateActorMarketRoles()
         {
             var gridAreaIdOne = Guid.NewGuid();
