@@ -23,33 +23,33 @@ using Microsoft.Azure.Functions.Worker;
 
 namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
 {
-    public class MarketParticipantCreatedEndpoint
+    public class MarketParticipantStatusChangedEndpoint
     {
-        private const string FunctionName = nameof(MarketParticipantCreatedEndpoint);
+        private const string FunctionName = nameof(MarketParticipantStatusChangedEndpoint);
         private readonly ISharedIntegrationEventParser _sharedIntegrationEventParser;
-        private readonly IMarketParticipantCreatedCommandHandler _marketParticipantCreatedCommandHandler;
+        private readonly IMarketParticipantStatusChangedCommandHandler _marketParticipantStatusChangedCommandHandler;
         private readonly IUnitOfWork _unitOfWork;
 
-        public MarketParticipantCreatedEndpoint(
+        public MarketParticipantStatusChangedEndpoint(
             ISharedIntegrationEventParser sharedIntegrationEventParser,
-            IMarketParticipantCreatedCommandHandler marketParticipantCreatedCommandHandler,
+            IMarketParticipantStatusChangedCommandHandler marketParticipantStatusChangedCommandHandler,
             IUnitOfWork unitOfWork)
         {
             _sharedIntegrationEventParser = sharedIntegrationEventParser;
-            _marketParticipantCreatedCommandHandler = marketParticipantCreatedCommandHandler;
+            _marketParticipantStatusChangedCommandHandler = marketParticipantStatusChangedCommandHandler;
             _unitOfWork = unitOfWork;
         }
 
         [Function(FunctionName)]
         public async Task RunAsync([ServiceBusTrigger(
             "%" + EnvironmentSettingNames.IntegrationEventTopicName + "%",
-            "%" + EnvironmentSettingNames.MarketParticipantCreatedSubscriptionName + "%",
+            "%" + EnvironmentSettingNames.MarketParticipantStatusChangedSubscriptionName + "%",
             Connection = EnvironmentSettingNames.DataHubListenerConnectionString)]
             byte[] message)
         {
-            var actorCreatedEvent = (ActorCreatedIntegrationEvent)_sharedIntegrationEventParser.Parse(message);
-            var command = MarketParticipantIntegrationEventMapper.Map(actorCreatedEvent);
-            await _marketParticipantCreatedCommandHandler.HandleAsync(command).ConfigureAwait(false);
+            var statusChangedEvent = (ActorStatusChangedIntegrationEvent)_sharedIntegrationEventParser.Parse(message);
+            var command = MarketParticipantIntegrationEventMapper.Map(statusChangedEvent);
+            await _marketParticipantStatusChangedCommandHandler.HandleAsync(command).ConfigureAwait(false);
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
         }
     }

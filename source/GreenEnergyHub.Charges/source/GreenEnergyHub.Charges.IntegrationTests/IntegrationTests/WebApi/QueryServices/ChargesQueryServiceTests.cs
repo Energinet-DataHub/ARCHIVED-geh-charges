@@ -18,7 +18,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.Charges.Contracts.Charge;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using GreenEnergyHub.Charges.QueryApi;
@@ -27,6 +26,7 @@ using GreenEnergyHub.Charges.QueryApi.QueryServices;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Builders.Command;
 using GreenEnergyHub.Charges.TestCore.Builders.Query;
+using GreenEnergyHub.Charges.TestCore.Builders.Testables;
 using GreenEnergyHub.TestHelpers;
 using Microsoft.EntityFrameworkCore;
 using NodaTime.Extensions;
@@ -35,7 +35,6 @@ using Xunit.Categories;
 using Charge = GreenEnergyHub.Charges.Domain.Charges.Charge;
 using ChargePeriod = GreenEnergyHub.Charges.Domain.Charges.ChargePeriod;
 using ChargePeriodBuilder = GreenEnergyHub.Charges.TestCore.Builders.Command.ChargePeriodBuilder;
-using MarketParticipant = GreenEnergyHub.Charges.Domain.MarketParticipants.MarketParticipant;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryServices
 {
@@ -462,13 +461,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             if (marketParticipant != null)
                 return marketParticipant.Id;
 
-            marketParticipant = new MarketParticipant(
-                id: Guid.NewGuid(),
-                actorId: Guid.NewGuid(),
-                b2CActorId: Guid.NewGuid(),
-                marketParticipantOwnerId,
-                MarketParticipantStatus.Active,
-                MarketParticipantRole.GridAccessProvider);
+            marketParticipant = new TestGridAccessProvider(marketParticipantOwnerId);
             context.MarketParticipants.Add(marketParticipant);
             await context.SaveChangesAsync();
 

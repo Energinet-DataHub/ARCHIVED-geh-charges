@@ -18,7 +18,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommandReceivedEvents;
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers
 {
     /// <summary>
-    /// Handles document validation of the charge information.
+    /// Handler for commands updating state of charge information.
     /// </summary>
     public interface IChargeCommandReceivedEventHandler
     {

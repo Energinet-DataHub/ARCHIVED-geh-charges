@@ -20,9 +20,7 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Command
 {
     public class MarketParticipantBuilder
     {
-        private readonly Guid _actorId = Guid.NewGuid();
-        private readonly Guid _b2CActorId = Guid.NewGuid();
-        private Guid _id = Guid.NewGuid();
+        private Guid _actorId = Guid.NewGuid();
         private MarketParticipantStatus _status;
         private string _marketParticipantId;
         private MarketParticipantRole _role;
@@ -40,9 +38,9 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Command
             return this;
         }
 
-        public MarketParticipantBuilder WithId(Guid id)
+        public MarketParticipantBuilder WithActorId(Guid actorId)
         {
-            _id = id;
+            _actorId = actorId;
             return this;
         }
 
@@ -60,7 +58,11 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Command
 
         public MarketParticipant Build()
         {
-            return new MarketParticipant(_id, _actorId, _b2CActorId, _marketParticipantId, _status, _role);
+            return MarketParticipant.Create(
+                _actorId,
+                _marketParticipantId,
+                _status,
+                _role);
         }
     }
 }

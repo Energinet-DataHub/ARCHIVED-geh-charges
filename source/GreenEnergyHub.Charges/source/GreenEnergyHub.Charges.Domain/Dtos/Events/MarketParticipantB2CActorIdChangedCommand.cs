@@ -13,16 +13,10 @@
 // limitations under the License.
 
 using System;
-using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
-namespace GreenEnergyHub.Charges.TestCore.Builders.Testables
+namespace GreenEnergyHub.Charges.Domain.Dtos.Events
 {
-    public class TestMeteringPointAdministrator : MarketParticipant
-    {
-        public TestMeteringPointAdministrator(string marketParticipantId)
-            : base(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), marketParticipantId, MarketParticipantStatus.Active, MarketParticipantRole.MeteringPointAdministrator)
-        {
-        }
-    }
+    public record MarketParticipantB2CActorIdChangedCommand(
+        Guid ActorId,
+        Guid? B2CActorId);
 }

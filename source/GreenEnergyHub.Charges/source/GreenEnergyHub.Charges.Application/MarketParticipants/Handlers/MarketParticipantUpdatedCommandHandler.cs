@@ -13,12 +13,24 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsUpdatedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 
 namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 {
-    public interface IMarketParticipantCreatedHandler
+    public class MarketParticipantUpdatedCommandHandler : IMarketParticipantUpdatedCommandHandler
     {
-        Task HandleAsync(MarketParticipantUpdatedEvent marketParticipantUpdatedEvent);
+        private readonly IMarketParticipantPersister _marketParticipantPersister;
+
+        public MarketParticipantUpdatedCommandHandler(IMarketParticipantPersister marketParticipantPersister)
+        {
+            _marketParticipantPersister = marketParticipantPersister;
+        }
+
+        public async Task HandleAsync(MarketParticipantUpdatedCommand command)
+        {
+            await _marketParticipantPersister
+                .PersistAsync(command)
+                .ConfigureAwait(false);
+        }
     }
 }
