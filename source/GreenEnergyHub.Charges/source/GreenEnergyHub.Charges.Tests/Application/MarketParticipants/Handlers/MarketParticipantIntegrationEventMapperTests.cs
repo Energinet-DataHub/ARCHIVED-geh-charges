@@ -17,21 +17,16 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoFixture.Xunit2;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
-using Energinet.DataHub.MarketParticipant.Integration.Model.Parsers;
-using Energinet.DataHub.MarketParticipant.Integration.Model.Parsers.Actor;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers.Mappers;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.TestCore;
-using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.TestHelpers;
-using Moq;
-using NodaTime;
 using Xunit;
 
 namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
 {
-    public class ActorIntegrationEventMapperTests
+    public class MarketParticipantIntegrationEventMapperTests
     {
         [Theory]
         [AutoDomainData]
