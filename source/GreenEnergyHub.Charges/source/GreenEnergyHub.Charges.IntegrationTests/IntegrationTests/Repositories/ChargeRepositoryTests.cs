@@ -18,14 +18,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.TestCore.Builders.Command;
+using GreenEnergyHub.Charges.TestCore.Builders.Testables;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 using Xunit.Categories;
@@ -95,7 +94,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             // Arrange
             await using var chargesDatabaseContext = _databaseManager.CreateDbContext();
             var charge = new ChargeBuilder().Build();
-            var marketParticipant = new MarketParticipantBuilder().WithId(charge.OwnerId).Build();
+            var marketParticipant = new MarketParticipantBuilder().WithActorId(charge.OwnerId).Build();
             await chargesDatabaseContext.MarketParticipants.AddAsync(marketParticipant);
             await chargesDatabaseContext.SaveChangesAsync();
             await chargesDatabaseContext.AddAsync(charge);
@@ -213,13 +212,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             if (marketParticipant != null)
                 return;
 
-            marketParticipant = new MarketParticipant(
-                id: Guid.NewGuid(),
-                actorId: Guid.NewGuid(),
-                b2CActorId: Guid.NewGuid(),
-                MarketParticipantOwnerId,
-                MarketParticipantStatus.Active,
-                MarketParticipantRole.EnergySupplier);
+            marketParticipant = new TestEnergySupplier(MarketParticipantOwnerId);
             context.MarketParticipants.Add(marketParticipant);
             await context.SaveChangesAsync();
 

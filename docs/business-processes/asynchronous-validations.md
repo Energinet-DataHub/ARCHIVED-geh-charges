@@ -19,7 +19,7 @@ The following asynchronous validation rules are currently implemented in the cha
 |VR.447|The description of a charge consists of maximal 2048 characters|E86|✓|||
 |VR.449|The type of a charge has domain values D01 (Subscription), D02 (Fee), D03 (Tariff)|E86|✓|✓||
 |VR.457|The energy price of a charge consists of maximal 14 digits with format 99999999.999999|E86||✓||
-|VR.488|The VAT class of a charge has domain values D01 (No VAT), D02 (VAT)|E86|✓|||
+|VR.488|VAT class must be provided|E86|✓|||
 |VR.505-1|Tariff must have period type Day, Hour or Quarter of Hour|D23|(✓) Tariff only|(✓) Tariff only||
 |VR.505-2|Fee must have period type Month|D23|(✓) Fee only|(✓) Fee only||
 |VR.505-3|Subscription must have period type Month|D23|(✓) Subscription only|(✓) Subscription only||
