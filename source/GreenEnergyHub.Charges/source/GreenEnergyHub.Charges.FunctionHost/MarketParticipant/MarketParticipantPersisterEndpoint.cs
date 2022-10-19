@@ -56,13 +56,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
             byte[] message)
         {
             var messageEvent = _sharedIntegrationEventParser.Parse(message);
-            var eventType = messageEvent.GetType().Name;
 
             _logger.LogInformation(
                 "Received integration events from Market Participant of type {Type}",
                 messageEvent.GetType());
 
-            switch (eventType)
+            switch (messageEvent.GetType().Name)
             {
                 case nameof(ActorUpdatedIntegrationEvent):
                     {
