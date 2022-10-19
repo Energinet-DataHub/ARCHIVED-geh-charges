@@ -99,13 +99,13 @@ namespace Energinet.DataHub.Charges.Clients.Charges
         }
 
         /// <summary>
-        ///     Returns charge points based on the search criteria.
+        ///     Returns charge prices based on the search criteria.
         /// </summary>
-        /// <returns>A collection of charge points(Dtos)</returns>
-        public async Task<IList<ChargePriceV1Dto>> SearchChargePointsAsync(ChargePriceSearchCriteriaV1Dto searchCriteria)
+        /// <returns>A collection of charge prices(Dtos)</returns>
+        public async Task<IList<ChargePriceV1Dto>> SearchChargePricesAsync(ChargePricesSearchCriteriaV1Dto searchCriteria)
         {
             var response = await _httpClient
-                .PostAsJsonAsync(ChargesRelativeUris.SearchChargePoints(), searchCriteria)
+                .PostAsJsonAsync(ChargesRelativeUris.SearchChargePrices(), searchCriteria)
                 .ConfigureAwait(false);
 
             return await HandleResultAsync<ChargePriceV1Dto>(response).ConfigureAwait(false);

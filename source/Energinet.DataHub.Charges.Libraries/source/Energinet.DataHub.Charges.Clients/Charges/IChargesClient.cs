@@ -51,9 +51,9 @@ namespace Energinet.DataHub.Charges.Clients.Charges
         public Task<IList<MarketParticipantV1Dto>> GetMarketParticipantsAsync();
 
         /// <summary>
-        ///     Returns charge points based on the search criteria.
+        ///     Returns charge prices based on the search criteria.
         /// </summary>
-        /// <returns>A collection of charge points(Dtos)</returns>
-        Task<IList<ChargePriceV1Dto>> SearchChargePointsAsync(ChargePriceSearchCriteriaV1Dto searchCriteria);
+        /// <returns>A collection of charge prices(Dtos)</returns>
+        Task<IList<ChargePriceV1Dto>> SearchChargePointsAsync(ChargePricesSearchCriteriaV1Dto searchCriteria);
     }
 }

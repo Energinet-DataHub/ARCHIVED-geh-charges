@@ -2,7 +2,7 @@
 
 ## Version 4.2.0
 
-Added `SearchChargePointsAsync` to Charges client.
+Added `SearchChargePricesAsync` to Charges client.
 Renamed `SearchCriteriaV1Dto` to `ChargeSearchCriteriaV1Dto`.
 Throws exception instead of null if status code is not success.
 

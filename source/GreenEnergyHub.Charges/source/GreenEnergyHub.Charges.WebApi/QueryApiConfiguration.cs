@@ -39,9 +39,8 @@ namespace GreenEnergyHub.Charges.WebApi
             serviceCollection.AddScoped<IData, Data>();
             serviceCollection.AddScoped<IChargesQueryService, ChargesQueryService>();
             serviceCollection.AddScoped<IMarketParticipantQueryService, MarketParticipantQueryService>();
-            serviceCollection.AddScoped<IChargePointQueryService, ChargePointQueryService>();
+            serviceCollection.AddScoped<IChargePointQueryService, ChargePriceQueryService>();
 
-            ConfigureIso8601Services(serviceCollection);
             ConfigureIso8601Services(serviceCollection);
 
             return serviceCollection;

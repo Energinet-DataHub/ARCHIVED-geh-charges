@@ -64,8 +64,8 @@ limitations under the License.
     <Compile Include="..\..\..\Contracts\ChargePrice\ChargePriceV1Dto.cs">
       <Link>Dtos\ChargePrice\ChargePriceV1Dto.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Contracts\ChargePrice\ChargePriceSearchCriteriaV1Dto.cs">
-      <Link>Dtos\ChargePrice\ChargePriceSearchCriteriaV1Dto.cs</Link>
+    <Compile Include="..\..\..\Contracts\ChargePrice\ChargePricesSearchCriteriaV1Dto.cs">
+      <Link>Dtos\ChargePrice\ChargePricesSearchCriteriaV1Dto.cs</Link>
     </Compile>
     <Compile Include="..\..\..\Contracts\MarketParticipant\MarketParticipantV1Dto.cs">
       <Link>Dtos\MarketParticipant\MartketParticipantV1Dto.cs</Link>

@@ -34,16 +34,21 @@ public static class ChargePointQueryLogic
             .Select(cp => new ChargePriceV1Dto(
                 cp.Price,
                 cp.Time,
-                iso8601Durations.GetTimeFixedToDuration(
-                        DateTime.SpecifyKind(cp.Time, DateTimeKind.Utc).ToInstant(),
-                        ((Resolution)cp.Charge.Resolution).ToString(),
-                        1)
-                    .ToDateTimeUtc()))
+                CalculateToDateTime(iso8601Durations, cp)))
             .ToList();
 
         return chargePoints
             .Select((cp, index) => MapChargePointV1Dto(chargePoints, index, cp))
             .ToList();
+    }
+
+    private static DateTime CalculateToDateTime(IIso8601Durations iso8601Durations, ChargePoint cp)
+    {
+        return iso8601Durations.GetTimeFixedToDuration(
+                DateTime.SpecifyKind(cp.Time, DateTimeKind.Utc).ToInstant(),
+                ((Resolution)cp.Charge.Resolution).ToString(),
+                1)
+            .ToDateTimeUtc();
     }
 
     /// <summary>
@@ -60,20 +65,20 @@ public static class ChargePointQueryLogic
         if (index != lastIndex)
         {
             var nextPoint = chargePoints[index + 1];
-            var isOverlapping = nextPoint.ActiveFromDateTime < chargePrice.ActiveToDateTime &&
-                                nextPoint.ActiveFromDateTime > chargePrice.ActiveFromDateTime;
+            var isOverlapping = nextPoint.FromDateTime < chargePrice.ToDateTime &&
+                                nextPoint.FromDateTime > chargePrice.FromDateTime;
             if (isOverlapping)
             {
                 return new ChargePriceV1Dto(
                     chargePrice.Price,
-                    chargePrice.ActiveFromDateTime,
-                    nextPoint.ActiveFromDateTime);
+                    chargePrice.FromDateTime,
+                    nextPoint.FromDateTime);
             }
         }
 
         return new ChargePriceV1Dto(
             chargePrice.Price,
-            chargePrice.ActiveFromDateTime,
-            chargePrice.ActiveToDateTime);
+            chargePrice.FromDateTime,
+            chargePrice.ToDateTime);
     }
 }

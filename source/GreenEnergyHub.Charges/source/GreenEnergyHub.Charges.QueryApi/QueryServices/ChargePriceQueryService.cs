@@ -20,22 +20,22 @@ using GreenEnergyHub.Iso8601;
 
 namespace GreenEnergyHub.Charges.QueryApi.QueryServices;
 
-public class ChargePointQueryService : IChargePointQueryService
+public class ChargePriceQueryService : IChargePointQueryService
 {
     private readonly IData _data;
     private readonly IIso8601Durations _iso8601Durations;
 
-    public ChargePointQueryService(IData data, IIso8601Durations iso8601Durations)
+    public ChargePriceQueryService(IData data, IIso8601Durations iso8601Durations)
     {
         _data = data;
         _iso8601Durations = iso8601Durations;
     }
 
-    public IList<ChargePriceV1Dto> Search(ChargePriceSearchCriteriaV1Dto chargePriceSearchCriteria)
+    public IList<ChargePriceV1Dto> Search(ChargePricesSearchCriteriaV1Dto chargePricesSearchCriteria)
     {
         var chargePoints = _data.ChargePoints
-            .Where(cp => cp.ChargeId == chargePriceSearchCriteria.ChargeId)
-            .Where(c => c.Time >= chargePriceSearchCriteria.DateTimeFrom && c.Time <= chargePriceSearchCriteria.DateTimeTo);
+            .Where(cp => cp.ChargeId == chargePricesSearchCriteria.ChargeId)
+            .Where(c => c.Time >= chargePricesSearchCriteria.FromDateTime && c.Time < chargePricesSearchCriteria.ToDateTime);
 
         return chargePoints
             .AsChargePointV1Dto(_iso8601Durations);

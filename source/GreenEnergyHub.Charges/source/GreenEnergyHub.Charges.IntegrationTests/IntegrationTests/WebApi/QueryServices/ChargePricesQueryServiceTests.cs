@@ -37,12 +37,12 @@ using MarketParticipant = GreenEnergyHub.Charges.Domain.MarketParticipants.Marke
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryServices
 {
     [IntegrationTest]
-    public class ChargePointQueryServiceTests : IClassFixture<ChargesDatabaseFixture>
+    public class ChargePricesQueryServiceTests : IClassFixture<ChargesDatabaseFixture>
     {
         private const string MarketParticipantOwnerId = "MarketParticipantId";
         private readonly ChargesDatabaseManager _databaseManager;
 
-        public ChargePointQueryServiceTests(ChargesDatabaseFixture fixture)
+        public ChargePricesQueryServiceTests(ChargesDatabaseFixture fixture)
         {
             _databaseManager = fixture.DatabaseManager;
         }
@@ -53,10 +53,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
 
-            var expectedPoints = new List<Point> { new(1.00m, InstantHelper.GetTodayPlusMinutesAtMidnightUtc(0)) };
+            var expectedPoints = new List<Point> { new(1.00m, InstantHelper.GetTodayAtMidnightUtc()) };
             var expectedCharge = await GetValidCharge(chargesDatabaseWriteContext, expectedPoints, Resolution.PT15M);
 
-            var unexpectedPoints = new List<Point> { new(100.00m, InstantHelper.GetTodayPlusMinutesAtMidnightUtc(0)) };
+            var unexpectedPoints = new List<Point> { new(100.00m, InstantHelper.GetTodayAtMidnightUtc()) };
             var unexpectedCharge = await GetValidCharge(chargesDatabaseWriteContext, unexpectedPoints, Resolution.PT15M);
 
             chargesDatabaseWriteContext.Charges.Add(unexpectedCharge);
@@ -65,7 +65,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
             var sut = GetSut(chargesDatabaseQueryContext);
-            var searchCriteria = new ChargePriceSearchCriteriaV1Dto(
+            var searchCriteria = new ChargePricesSearchCriteriaV1Dto(
                 expectedCharge.Id,
                 InstantHelper.GetTodayAtMidnightUtc().ToDateTimeUtc(),
                 InstantHelper.GetTomorrowAtMidnightUtc().ToDateTimeUtc());
@@ -89,18 +89,18 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
 
-            var expectedPoint = new Point(1.00m, InstantHelper.GetTodayPlusMinutesAtMidnightUtc(0));
-            var unexpectedPoint = new Point(10.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(2));
-            var expectedPoints = new List<Point> { expectedPoint, unexpectedPoint };
+            var expectedPoint = new Point(1.00m, InstantHelper.GetTodayAtMidnightUtc());
+            var unexpectedPoint = new Point(10.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(1));
+            var points = new List<Point> { expectedPoint, unexpectedPoint };
 
-            var expectedCharge = await GetValidCharge(chargesDatabaseWriteContext, expectedPoints, Resolution.PT15M);
+            var expectedCharge = await GetValidCharge(chargesDatabaseWriteContext, points, Resolution.PT15M);
 
             chargesDatabaseWriteContext.Charges.Add(expectedCharge);
             await chargesDatabaseWriteContext.SaveChangesAsync();
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
             var sut = GetSut(chargesDatabaseQueryContext);
-            var searchCriteria = new ChargePriceSearchCriteriaV1Dto(
+            var searchCriteria = new ChargePricesSearchCriteriaV1Dto(
                 expectedCharge.Id,
                 InstantHelper.GetTodayAtMidnightUtc().ToDateTimeUtc(),
                 InstantHelper.GetTomorrowAtMidnightUtc().ToDateTimeUtc());
@@ -140,7 +140,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
             var sut = GetSut(chargesDatabaseQueryContext);
-            var searchCriteria = new ChargePriceSearchCriteriaV1Dto(
+            var searchCriteria = new ChargePricesSearchCriteriaV1Dto(
                 charge.Id,
                 InstantHelper.GetTodayAtMidnightUtc().ToDateTimeUtc(),
                 InstantHelper.GetTomorrowAtMidnightUtc().ToDateTimeUtc());
@@ -150,7 +150,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             // Assert
             actual.Should().HaveCount(points.Count);
-            Assert.True(actual.All(a => (a.ActiveToDateTime - a.ActiveFromDateTime).Minutes == 15));
+            Assert.True(actual.All(a => (a.ToDateTime - a.FromDateTime).Minutes == 15));
         }
 
         [Fact]
@@ -175,7 +175,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
             var sut = GetSut(chargesDatabaseQueryContext);
-            var searchCriteria = new ChargePriceSearchCriteriaV1Dto(
+            var searchCriteria = new ChargePricesSearchCriteriaV1Dto(
                 charge.Id,
                 InstantHelper.GetTodayAtMidnightUtc().ToDateTimeUtc(),
                 InstantHelper.GetTomorrowAtMidnightUtc().ToDateTimeUtc());
@@ -185,7 +185,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             // Assert
             actual.Should().HaveCount(points.Count);
-            Assert.True(actual.All(a => (a.ActiveToDateTime - a.ActiveFromDateTime).Hours == 1));
+            Assert.True(actual.All(a => (a.ToDateTime - a.FromDateTime).Hours == 1));
         }
 
         [Fact]
@@ -210,17 +210,17 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
             var sut = GetSut(chargesDatabaseQueryContext);
-            var searchCriteria = new ChargePriceSearchCriteriaV1Dto(
+            var searchCriteria = new ChargePricesSearchCriteriaV1Dto(
                 charge.Id,
                 InstantHelper.GetTodayPlusDaysAtMidnightUtc(0).ToDateTimeUtc(),
-                InstantHelper.GetTodayPlusDaysAtMidnightUtc(4).ToDateTimeUtc());
+                InstantHelper.GetTodayPlusDaysAtMidnightUtc(5).ToDateTimeUtc());
 
             // Act
             var actual = sut.Search(searchCriteria);
 
             // Assert
             actual.Should().HaveCount(points.Count);
-            Assert.True(actual.All(a => (a.ActiveToDateTime - a.ActiveFromDateTime).Days == 1));
+            Assert.True(actual.All(a => (a.ToDateTime - a.FromDateTime).Days == 1));
         }
 
         [Fact]
@@ -231,11 +231,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             var points = new List<Point>
             {
-                new(1.00m, InstantHelper.GetThisMonthPlusMonthsAtMidnightUtc(0)),
-                new(2.00m, InstantHelper.GetThisMonthPlusMonthsAtMidnightUtc(1)),
-                new(3.00m, InstantHelper.GetThisMonthPlusMonthsAtMidnightUtc(2)),
-                new(4.00m, InstantHelper.GetThisMonthPlusMonthsAtMidnightUtc(3)),
-                new(5.00m, InstantHelper.GetThisMonthPlusMonthsAtMidnightUtc(4)),
+                new(1.00m, InstantHelper.GetFirstDayOfThisMonthPlusMonthsAtMidnightUtc(0)),
+                new(2.00m, InstantHelper.GetFirstDayOfThisMonthPlusMonthsAtMidnightUtc(1)),
+                new(3.00m, InstantHelper.GetFirstDayOfThisMonthPlusMonthsAtMidnightUtc(2)),
+                new(4.00m, InstantHelper.GetFirstDayOfThisMonthPlusMonthsAtMidnightUtc(3)),
+                new(5.00m, InstantHelper.GetFirstDayOfThisMonthPlusMonthsAtMidnightUtc(4)),
             };
 
             var charge = await GetValidCharge(chargesDatabaseWriteContext, points, Resolution.P1M);
@@ -245,10 +245,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
             var sut = GetSut(chargesDatabaseQueryContext);
-            var searchCriteria = new ChargePriceSearchCriteriaV1Dto(
+            var searchCriteria = new ChargePricesSearchCriteriaV1Dto(
                 charge.Id,
-                InstantHelper.GetThisMonthPlusMonthsAtMidnightUtc(0).ToDateTimeUtc(),
-                InstantHelper.GetThisMonthPlusMonthsAtMidnightUtc(4).ToDateTimeUtc());
+                InstantHelper.GetFirstDayOfThisMonthPlusMonthsAtMidnightUtc(0).ToDateTimeUtc(),
+                InstantHelper.GetFirstDayOfThisMonthPlusMonthsAtMidnightUtc(5).ToDateTimeUtc());
 
             // Act
             var actual = sut.Search(searchCriteria);
@@ -256,9 +256,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             // Assert
             actual.Should().HaveCount(points.Count);
             Assert.True(actual.All(a =>
-                a.ActiveFromDateTime.Month == a.ActiveToDateTime.Month &&
-                a.ActiveFromDateTime.Day == 1 &&
-                DateTime.DaysInMonth(a.ActiveFromDateTime.Year, a.ActiveFromDateTime.Month) == a.ActiveToDateTime.Day));
+                a.FromDateTime.Month != a.ToDateTime.Month &&
+                DateTime.DaysInMonth(a.FromDateTime.DayOfYear, a.FromDateTime.Month) == a.FromDateTime.Day &&
+                DateTime.DaysInMonth(a.ToDateTime.Year, a.ToDateTime.Month) == a.ToDateTime.Day));
         }
 
         private static async Task<Charge> GetValidCharge(
@@ -280,12 +280,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             return charge;
         }
 
-        private static ChargePointQueryService GetSut(QueryDbContext chargesDatabaseQueryContext)
+        private static ChargePriceQueryService GetSut(QueryDbContext chargesDatabaseQueryContext)
         {
             var data = new Data(chargesDatabaseQueryContext);
             var configuration = new Iso8601ConversionConfiguration("Europe/Copenhagen");
             var iso8601Durations = new Iso8601Durations(configuration);
-            var sut = new ChargePointQueryService(data, iso8601Durations);
+            var sut = new ChargePriceQueryService(data, iso8601Durations);
             return sut;
         }
 

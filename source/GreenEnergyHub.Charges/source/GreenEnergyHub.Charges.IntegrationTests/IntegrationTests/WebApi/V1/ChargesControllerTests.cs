@@ -98,12 +98,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
         [Theory]
         [InlineAutoMoqData]
         public async Task SearchAsync_WhenSearchCriteriaIsValid_ReturnsOkAndCorrectContentType(
-            ChargeSearchCriteriaDtoBuilder chargeSearchCriteriaDtoBuilder,
+            ChargeSearchCriteriaV1CriteriaDtoBuilder chargeSearchCriteriaV1CriteriaDtoBuilder,
             WebApiFactory factory)
         {
             // Arrange
             var sut = CreateHttpClient(factory);
-            var searchCriteria = chargeSearchCriteriaDtoBuilder.Build();
+            var searchCriteria = chargeSearchCriteriaV1CriteriaDtoBuilder.Build();
 
             // Act
             var response = await sut.PostAsJsonAsync($"{BaseUrl}/SearchAsync", searchCriteria);
@@ -117,12 +117,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
         [Theory]
         [InlineAutoMoqData]
         public async Task SearchAsync_WhenSearchCriteriaIsNotValid_ReturnsBadRequest(
-            ChargeSearchCriteriaDtoBuilder chargeSearchCriteriaDtoBuilder,
+            ChargeSearchCriteriaV1CriteriaDtoBuilder chargeSearchCriteriaV1CriteriaDtoBuilder,
             WebApiFactory factory)
         {
             // Arrange
             var sut = CreateHttpClient(factory);
-            var searchCriteria = chargeSearchCriteriaDtoBuilder
+            var searchCriteria = chargeSearchCriteriaV1CriteriaDtoBuilder
                 .WithOwnerId(Guid.Empty)
                 .Build();
 
@@ -136,12 +136,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
         [Theory]
         [InlineAutoMoqData]
         public async Task SearchAsync_WhenRequested_ReturnsChargeInformation(
-            ChargeSearchCriteriaDtoBuilder chargeSearchCriteriaDtoBuilder,
+            ChargeSearchCriteriaV1CriteriaDtoBuilder chargeSearchCriteriaV1CriteriaDtoBuilder,
             WebApiFactory factory)
         {
             // Arrange
             var sut = CreateHttpClient(factory);
-            var searchCriteria = chargeSearchCriteriaDtoBuilder
+            var searchCriteria = chargeSearchCriteriaV1CriteriaDtoBuilder
                 .Build();
 
             // Act

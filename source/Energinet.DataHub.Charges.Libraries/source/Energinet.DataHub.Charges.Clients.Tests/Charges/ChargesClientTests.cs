@@ -325,7 +325,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
             var sut = chargesClientFactory.Object.CreateClient(httpClient);
 
             // Act
-            var result = await sut.SearchChargePointsAsync(searchCriteria).ConfigureAwait(false);
+            var result = await sut.SearchChargePricesAsync(searchCriteria).ConfigureAwait(false);
 
             // Assert
             result.Should().BeEmpty();
@@ -346,7 +346,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
             var sut = chargesClientFactory.Object.CreateClient(httpClient);
 
             // Act / Assert
-            await Assert.ThrowsAsync<Exception>(async () => await sut.SearchChargePointsAsync(searchCriteria).ConfigureAwait(false)).ConfigureAwait(false);
+            await Assert.ThrowsAsync<Exception>(async () => await sut.SearchChargePricesAsync(searchCriteria).ConfigureAwait(false)).ConfigureAwait(false);
         }
 
         [Theory]
@@ -365,10 +365,10 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
 
             var sut = chargesClientFactory.Object.CreateClient(httpClient);
 
-            var expectedUri = new Uri($"{BaseUrl}{ChargesRelativeUris.SearchChargePoints()}");
+            var expectedUri = new Uri($"{BaseUrl}{ChargesRelativeUris.SearchChargePrices()}");
 
             // Act
-            var result = await sut.SearchChargePointsAsync(searchCriteria).ConfigureAwait(false);
+            var result = await sut.SearchChargePricesAsync(searchCriteria).ConfigureAwait(false);
 
             // Assert
             result.Should().NotBeNull();

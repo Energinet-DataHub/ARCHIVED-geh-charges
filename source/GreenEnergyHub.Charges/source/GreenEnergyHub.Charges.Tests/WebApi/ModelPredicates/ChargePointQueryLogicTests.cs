@@ -36,13 +36,13 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
             ChargePoint chargePoint)
         {
             // Arrange
-            chargePoint.Time = new DateTime(2022, 1, 1, 1, 0, 0);
+            chargePoint.Time = new DateTime(2022, 1, 1, 1, 0, 0).ToUniversalTime();
             chargePoint.Charge.Resolution = (int)Resolution.PT15M;
 
             var expected = new ChargePriceV1Dto(
                 chargePoint.Price,
                 chargePoint.Time,
-                new DateTime(2022, 1, 1, 2, 15, 0));
+                chargePoint.Time.AddMinutes(15).ToUniversalTime());
 
             var chargePoints = new List<ChargePoint> { chargePoint }.AsQueryable();
             var iso8601Durations = GetIso8601Durations();

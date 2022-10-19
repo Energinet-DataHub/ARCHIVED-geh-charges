@@ -19,6 +19,6 @@ namespace Energinet.DataHub.Charges.Contracts.ChargePrice
 {
     public record ChargePriceV1Dto(
         decimal Price,
-        DateTimeOffset ActiveFromDateTime,
-        DateTimeOffset ActiveToDateTime);
+        DateTimeOffset FromDateTime,
+        DateTimeOffset ToDateTime);
 }

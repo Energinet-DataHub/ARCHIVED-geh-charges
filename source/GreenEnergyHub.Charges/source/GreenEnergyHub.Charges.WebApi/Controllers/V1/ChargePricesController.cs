@@ -21,12 +21,12 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers.V1;
 [ApiController]
 [ApiVersion(Version1)]
 [Route("v{version:apiVersion}/[controller]")]
-public class ChargePointsController : Controller
+public class ChargePricesController : Controller
 {
     public const string Version1 = "1.0";
     private readonly IChargePointQueryService _chargePointQueryService;
 
-    public ChargePointsController(IChargePointQueryService chargePointQueryService)
+    public ChargePricesController(IChargePointQueryService chargePointQueryService)
     {
         _chargePointQueryService = chargePointQueryService;
     }
@@ -37,7 +37,7 @@ public class ChargePointsController : Controller
     /// <returns>Charge points or "404 Not Found"</returns>
     [HttpPost("Search")]
     [MapToApiVersion(Version1)]
-    public IActionResult Search([FromBody] ChargePriceSearchCriteriaV1Dto searchCriteria)
+    public IActionResult Search([FromBody] ChargePricesSearchCriteriaV1Dto searchCriteria)
     {
         var chargePoints = _chargePointQueryService.Search(searchCriteria);
 
