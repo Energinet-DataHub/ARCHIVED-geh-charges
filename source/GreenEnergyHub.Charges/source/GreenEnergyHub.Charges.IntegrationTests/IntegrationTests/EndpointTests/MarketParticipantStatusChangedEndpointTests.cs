@@ -63,10 +63,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
             }
 
             [Fact]
-            public async Task When_ReceivingActorCreatedIntegrationEvent_MarketParticipantIsSavedToDatabase()
+            public async Task When_ReceivingActorStatusChangedIntegrationEvent_NewStatusSaved()
             {
                 // Arrange
-                var actorId = Guid.NewGuid();
+                var actorId = SeededData.MarketParticipants.Provider8100000000030.Id;
                 var message = CreateServiceBusMessage(actorId);
                 await using var context = Fixture.ChargesDatabaseManager.CreateDbContext();
 

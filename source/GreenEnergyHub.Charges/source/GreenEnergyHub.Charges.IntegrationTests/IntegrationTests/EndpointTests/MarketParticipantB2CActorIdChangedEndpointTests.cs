@@ -66,10 +66,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
             [Theory]
             [InlineAutoData("664359b9-f6cc-45d4-9c93-ec35248e5f95")]
             [InlineAutoData(null)]
-            public async Task When_ReceivingActorCreatedIntegrationEvent_MarketParticipantIsSavedToDatabase(Guid externalId)
+            public async Task When_ReceivingExternalActorIdChangedIntegrationEvent_NewMarketParticipantB2CActorIdSaved(
+                Guid externalId)
             {
                 // Arrange
-                var actorId = Guid.NewGuid();
+                var actorId = SeededData.MarketParticipants.Provider8100000000030.Id;
                 var message = CreateServiceBusMessage(actorId, externalId);
                 await using var context = Fixture.ChargesDatabaseManager.CreateDbContext();
 
