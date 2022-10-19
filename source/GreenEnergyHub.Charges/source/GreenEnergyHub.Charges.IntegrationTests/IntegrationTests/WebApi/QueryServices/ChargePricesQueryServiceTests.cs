@@ -28,18 +28,15 @@ using GreenEnergyHub.Charges.QueryApi.QueryServices;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Builders.Command;
 using GreenEnergyHub.Iso8601;
-using Microsoft.EntityFrameworkCore;
 using Xunit;
 using Xunit.Categories;
 using Charge = GreenEnergyHub.Charges.Domain.Charges.Charge;
-using MarketParticipant = GreenEnergyHub.Charges.Domain.MarketParticipants.MarketParticipant;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryServices
 {
     [IntegrationTest]
     public class ChargePricesQueryServiceTests : IClassFixture<ChargesDatabaseFixture>
     {
-        private const string MarketParticipantOwnerId = "MarketParticipantId";
         private readonly ChargesDatabaseManager _databaseManager;
 
         public ChargePricesQueryServiceTests(ChargesDatabaseFixture fixture)
@@ -150,7 +147,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             // Assert
             actual.Should().HaveCount(points.Count);
-            Assert.True(actual.All(a => (a.ToDateTime - a.FromDateTime).Minutes == 15));
+            foreach (var chargePrice in actual)
+                (chargePrice.ToDateTime - chargePrice.FromDateTime).Minutes.Should().Be(15);
         }
 
         [Fact]
@@ -267,7 +265,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             Resolution resolution)
         {
             var marketParticipantId =
-                await GetOrAddMarketParticipantAsync(chargesDatabaseWriteContext, MarketParticipantOwnerId);
+                await QueryServiceAutoMoqDataFixer.GetOrAddMarketParticipantAsync(chargesDatabaseWriteContext);
 
             var charge = new ChargeBuilder()
                 .WithStartDate(InstantHelper.GetTodayAtMidnightUtc())
@@ -289,30 +287,30 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             return sut;
         }
 
-        private static async Task<Guid> GetOrAddMarketParticipantAsync(
-            ChargesDatabaseContext context,
-            string marketParticipantOwnerId)
-        {
-            var marketParticipant = await context
-                .MarketParticipants
-                .SingleOrDefaultAsync(x => x.MarketParticipantId == marketParticipantOwnerId);
+        //private static async Task<Guid> GetOrAddMarketParticipantAsync(
+        //    ChargesDatabaseContext context,
+        //    string marketParticipantOwnerId)
+        //{
+        //    var marketParticipant = await context
+        //        .MarketParticipants
+        //        .SingleOrDefaultAsync(x => x.MarketParticipantId == marketParticipantOwnerId);
 
-            if (marketParticipant != null)
-            {
-                return marketParticipant.Id;
-            }
+        //    if (marketParticipant != null)
+        //    {
+        //        return marketParticipant.Id;
+        //    }
 
-            marketParticipant = new MarketParticipant(
-                Guid.NewGuid(),
-                Guid.NewGuid(),
-                Guid.NewGuid(),
-                marketParticipantOwnerId,
-                MarketParticipantStatus.Active,
-                MarketParticipantRole.GridAccessProvider);
-            context.MarketParticipants.Add(marketParticipant);
-            await context.SaveChangesAsync();
+        //    marketParticipant = new MarketParticipant(
+        //        Guid.NewGuid(),
+        //        Guid.NewGuid(),
+        //        Guid.NewGuid(),
+        //        marketParticipantOwnerId,
+        //        MarketParticipantStatus.Active,
+        //        MarketParticipantRole.GridAccessProvider);
+        //    context.MarketParticipants.Add(marketParticipant);
+        //    await context.SaveChangesAsync();
 
-            return marketParticipant.Id;
-        }
+        //    return marketParticipant.Id;
+        //}
     }
 }
