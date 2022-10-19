@@ -1,5 +1,9 @@
 # Energinet.DataHub.Charges.Clients Release notes
 
+## Version 4.1.3
+
+Updated NuGet packages
+
 ## Version 4.1.2
 
 Renamed Client contracts namespace from `Energinet.Charges.Contracts` to `Energinet.DataHub.Charges.Contracts`
