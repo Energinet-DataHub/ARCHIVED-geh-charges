@@ -286,31 +286,5 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var sut = new ChargePriceQueryService(data, iso8601Durations);
             return sut;
         }
-
-        //private static async Task<Guid> GetOrAddMarketParticipantAsync(
-        //    ChargesDatabaseContext context,
-        //    string marketParticipantOwnerId)
-        //{
-        //    var marketParticipant = await context
-        //        .MarketParticipants
-        //        .SingleOrDefaultAsync(x => x.MarketParticipantId == marketParticipantOwnerId);
-
-        //    if (marketParticipant != null)
-        //    {
-        //        return marketParticipant.Id;
-        //    }
-
-        //    marketParticipant = new MarketParticipant(
-        //        Guid.NewGuid(),
-        //        Guid.NewGuid(),
-        //        Guid.NewGuid(),
-        //        marketParticipantOwnerId,
-        //        MarketParticipantStatus.Active,
-        //        MarketParticipantRole.GridAccessProvider);
-        //    context.MarketParticipants.Add(marketParticipant);
-        //    await context.SaveChangesAsync();
-
-        //    return marketParticipant.Id;
-        //}
     }
 }
