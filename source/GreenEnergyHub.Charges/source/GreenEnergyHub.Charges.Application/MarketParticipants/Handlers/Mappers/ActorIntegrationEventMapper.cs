@@ -19,15 +19,8 @@ using GreenEnergyHub.Charges.Domain.Dtos.Events;
 
 namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers.Mappers
 {
-    public class ActorIntegrationEventMapper : IActorIntegrationEventMapper
+    public static class ActorIntegrationEventMapper
     {
-        private readonly ISharedIntegrationEventParser _sharedIntegrationEventParser;
-
-        public ActorIntegrationEventMapper(ISharedIntegrationEventParser sharedIntegrationEventParser)
-        {
-            _sharedIntegrationEventParser = sharedIntegrationEventParser;
-        }
-
         public static MarketParticipantUpdatedCommand MapFromActorUpdated(ActorUpdatedIntegrationEvent actorUpdatedIntegrationEvent)
         {
             var status = MarketParticipantStatusMapper.Map(actorUpdatedIntegrationEvent.Status);
@@ -46,10 +39,8 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers.Mappers
                         .Select(a => a.Id));
         }
 
-        public MarketParticipantCreatedCommand MapFromActorCreated(byte[] message)
+        public static MarketParticipantCreatedCommand MapFromActorCreated(ActorCreatedIntegrationEvent actorCreatedIntegrationEvent)
         {
-            var actorCreatedIntegrationEvent = (ActorCreatedIntegrationEvent)_sharedIntegrationEventParser.Parse(message);
-
             var status = MarketParticipantStatusMapper.Map(actorCreatedIntegrationEvent.Status);
 
             var roles = MarketParticipantRoleMapper
@@ -66,16 +57,14 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers.Mappers
                     .Select(a => a.Id));
         }
 
-        public MarketParticipantStatusChangedCommand MapFromActorStatusChanged(byte[] message)
+        public static MarketParticipantStatusChangedCommand MapFromActorStatusChanged(ActorStatusChangedIntegrationEvent actorStatusChanged)
         {
-            var actorStatusChanged = (ActorStatusChangedIntegrationEvent)_sharedIntegrationEventParser.Parse(message);
             var status = MarketParticipantStatusMapper.Map(actorStatusChanged.Status);
             return new MarketParticipantStatusChangedCommand(actorStatusChanged.ActorId, status);
         }
 
-        public MarketParticipantB2CActorIdChangedCommand MapFromActorExternalIdChanged(byte[] message)
+        public static MarketParticipantB2CActorIdChangedCommand MapFromActorExternalIdChanged(ActorExternalIdChangedIntegrationEvent externalIdChanged)
         {
-            var externalIdChanged = (ActorExternalIdChangedIntegrationEvent)_sharedIntegrationEventParser.Parse(message);
             return new MarketParticipantB2CActorIdChangedCommand(
                 externalIdChanged.ActorId,
                 externalIdChanged.ExternalActorId);

@@ -13,6 +13,8 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
+using Energinet.DataHub.MarketParticipant.Integration.Model.Parsers;
 using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers;
 using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers.Mappers;
 using GreenEnergyHub.Charges.Application.Persistence;
@@ -24,16 +26,16 @@ namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
     public class MarketParticipantCreatedEndpoint
     {
         private const string FunctionName = nameof(MarketParticipantCreatedEndpoint);
-        private readonly IActorIntegrationEventMapper _actorIntegrationEventMapper;
+        private readonly ISharedIntegrationEventParser _sharedIntegrationEventParser;
         private readonly IMarketParticipantCreatedCommandHandler _marketParticipantCreatedCommandHandler;
         private readonly IUnitOfWork _unitOfWork;
 
         public MarketParticipantCreatedEndpoint(
-            IActorIntegrationEventMapper actorIntegrationEventMapper,
+            ISharedIntegrationEventParser sharedIntegrationEventParser,
             IMarketParticipantCreatedCommandHandler marketParticipantCreatedCommandHandler,
             IUnitOfWork unitOfWork)
         {
-            _actorIntegrationEventMapper = actorIntegrationEventMapper;
+            _sharedIntegrationEventParser = sharedIntegrationEventParser;
             _marketParticipantCreatedCommandHandler = marketParticipantCreatedCommandHandler;
             _unitOfWork = unitOfWork;
         }
@@ -45,8 +47,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
             Connection = EnvironmentSettingNames.DataHubListenerConnectionString)]
             byte[] message)
         {
-            var createdCommand = _actorIntegrationEventMapper.MapFromActorCreated(message);
-            await _marketParticipantCreatedCommandHandler.HandleAsync(createdCommand).ConfigureAwait(false);
+            var actorCreatedEvent = (ActorCreatedIntegrationEvent)_sharedIntegrationEventParser.Parse(message);
+            var command = ActorIntegrationEventMapper.MapFromActorCreated(actorCreatedEvent);
+            await _marketParticipantCreatedCommandHandler.HandleAsync(command).ConfigureAwait(false);
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
         }
     }

@@ -17,19 +17,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
-using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
-using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Parsers;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Parsers.Actor;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers;
-using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers.Mappers;
-using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
-using GreenEnergyHub.Charges.Domain.GridAreaLinks;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.FunctionHost.MarketParticipant;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.Infrastructure.Persistence;
@@ -96,7 +90,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 var actorId = Guid.NewGuid();
                 var message = CreateMessage("0123456789", actorId, SeededData.GridAreaLink.Provider8500000000013.GridAreaId);
                 await using var writeContext = Fixture.ChargesDatabaseManager.CreateDbContext();
-                var actorIntegrationEventMapper = new ActorIntegrationEventMapper(new SharedIntegrationEventParser());
+                var sharedIntegrationEventParser = new SharedIntegrationEventParser();
                 var marketParticipantRepository = new MarketParticipantRepository(writeContext);
                 var gridAreaLinkRepository = new GridAreaLinkRepository(writeContext);
                 var unitOfWork = new UnitOfWork(writeContext);
@@ -106,7 +100,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     gridAreaLinkRepository);
 
                 var sut = new MarketParticipantCreatedEndpoint(
-                    actorIntegrationEventMapper,
+                    sharedIntegrationEventParser,
                     marketParticipantCreatedCommandHandler,
                     unitOfWork);
 

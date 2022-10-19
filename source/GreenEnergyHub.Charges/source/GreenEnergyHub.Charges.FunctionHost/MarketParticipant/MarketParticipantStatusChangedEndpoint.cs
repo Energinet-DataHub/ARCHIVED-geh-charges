@@ -13,6 +13,8 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
+using Energinet.DataHub.MarketParticipant.Integration.Model.Parsers;
 using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers;
 using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers.Mappers;
 using GreenEnergyHub.Charges.Application.Persistence;
@@ -24,16 +26,16 @@ namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
     public class MarketParticipantStatusChangedEndpoint
     {
         private const string FunctionName = nameof(MarketParticipantStatusChangedEndpoint);
-        private readonly IActorIntegrationEventMapper _actorIntegrationEventMapper;
+        private readonly ISharedIntegrationEventParser _sharedIntegrationEventParser;
         private readonly IMarketParticipantStatusChangedCommandHandler _marketParticipantStatusChangedCommandHandler;
         private readonly IUnitOfWork _unitOfWork;
 
         public MarketParticipantStatusChangedEndpoint(
-            IActorIntegrationEventMapper actorIntegrationEventMapper,
+            ISharedIntegrationEventParser sharedIntegrationEventParser,
             IMarketParticipantStatusChangedCommandHandler marketParticipantStatusChangedCommandHandler,
             IUnitOfWork unitOfWork)
         {
-            _actorIntegrationEventMapper = actorIntegrationEventMapper;
+            _sharedIntegrationEventParser = sharedIntegrationEventParser;
             _marketParticipantStatusChangedCommandHandler = marketParticipantStatusChangedCommandHandler;
             _unitOfWork = unitOfWork;
         }
@@ -45,8 +47,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
             Connection = EnvironmentSettingNames.DataHubListenerConnectionString)]
             byte[] message)
         {
-            var updateStatusCommand = _actorIntegrationEventMapper.MapFromActorStatusChanged(message);
-            await _marketParticipantStatusChangedCommandHandler.HandleAsync(updateStatusCommand).ConfigureAwait(false);
+            var statusChanged = (ActorStatusChangedIntegrationEvent)_sharedIntegrationEventParser.Parse(message);
+            var command = ActorIntegrationEventMapper.MapFromActorStatusChanged(statusChanged);
+            await _marketParticipantStatusChangedCommandHandler.HandleAsync(command).ConfigureAwait(false);
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
         }
     }

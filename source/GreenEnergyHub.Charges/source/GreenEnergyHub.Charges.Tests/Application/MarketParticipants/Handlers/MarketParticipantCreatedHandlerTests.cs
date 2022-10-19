@@ -33,8 +33,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
     {
         [Theory]
         [InlineAutoDomainData]
-        public async Task
-            HandleAsync_ValidEvent_ShouldAddNewMarketParticipant(
+        public async Task HandleAsync_ValidEvent_ShouldAddNewMarketParticipant(
                 [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
                 MarketParticipantCreatedCommandHandler sut)
         {
@@ -52,7 +51,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             marketParticipant.ActorId.Should().Be(marketParticipantCreatedEvent.ActorId);
             marketParticipant.B2CActorId.Should().BeNull();
             marketParticipant.MarketParticipantId.Should().Be(marketParticipantCreatedEvent.MarketParticipantId);
-            marketParticipant.BusinessProcessRole.Should().Be(MarketParticipantRole.GridAccessProvider);
+            marketParticipant.BusinessProcessRole.Should().Be(MarketParticipantRole.EnergySupplier);
             marketParticipant.Status.Should().Be(MarketParticipantStatus.Active);
         }
 
@@ -61,7 +60,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             return new MarketParticipantCreatedCommand(
                 ActorId: Guid.NewGuid(),
                 "mp123",
-                new List<MarketParticipantRole> { MarketParticipantRole.GridAccessProvider, },
+                new List<MarketParticipantRole> { MarketParticipantRole.EnergySupplier, },
                 MarketParticipantStatus.Active,
                 new List<Guid> { Guid.NewGuid(), });
         }

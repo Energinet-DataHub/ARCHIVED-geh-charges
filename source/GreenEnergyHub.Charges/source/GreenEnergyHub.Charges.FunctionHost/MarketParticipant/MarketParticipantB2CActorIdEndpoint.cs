@@ -13,6 +13,8 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
+using Energinet.DataHub.MarketParticipant.Integration.Model.Parsers;
 using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers;
 using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers.Mappers;
 using GreenEnergyHub.Charges.Application.Persistence;
@@ -24,16 +26,16 @@ namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
     public class MarketParticipantB2CActorIdEndpoint
     {
         private const string FunctionName = nameof(MarketParticipantB2CActorIdEndpoint);
-        private readonly IActorIntegrationEventMapper _actorIntegrationEventMapper;
+        private readonly ISharedIntegrationEventParser _sharedIntegrationEventParser;
         private readonly IMarketParticipantB2CActorIdChangedCommandHandler _marketParticipantB2CActorIdChangedCommandHandler;
         private readonly IUnitOfWork _unitOfWork;
 
         public MarketParticipantB2CActorIdEndpoint(
-            IActorIntegrationEventMapper actorIntegrationEventMapper,
+            ISharedIntegrationEventParser sharedIntegrationEventParser,
             IMarketParticipantB2CActorIdChangedCommandHandler marketParticipantB2CActorIdChangedCommandHandler,
             IUnitOfWork unitOfWork)
         {
-            _actorIntegrationEventMapper = actorIntegrationEventMapper;
+            _sharedIntegrationEventParser = sharedIntegrationEventParser;
             _marketParticipantB2CActorIdChangedCommandHandler = marketParticipantB2CActorIdChangedCommandHandler;
             _unitOfWork = unitOfWork;
         }
@@ -45,8 +47,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
             Connection = EnvironmentSettingNames.DataHubListenerConnectionString)]
             byte[] message)
         {
-            var externalIdChanged = _actorIntegrationEventMapper.MapFromActorExternalIdChanged(message);
-            await _marketParticipantB2CActorIdChangedCommandHandler.HandleAsync(externalIdChanged).ConfigureAwait(false);
+            var externalIdChanged = (ActorExternalIdChangedIntegrationEvent)_sharedIntegrationEventParser.Parse(message);
+            var command = ActorIntegrationEventMapper.MapFromActorExternalIdChanged(externalIdChanged);
+            await _marketParticipantB2CActorIdChangedCommandHandler.HandleAsync(command).ConfigureAwait(false);
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
         }
     }

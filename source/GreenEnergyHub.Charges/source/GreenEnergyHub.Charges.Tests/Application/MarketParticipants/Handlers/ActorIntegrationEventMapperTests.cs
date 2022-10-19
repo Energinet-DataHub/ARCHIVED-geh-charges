@@ -17,12 +17,15 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoFixture.Xunit2;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
+using Energinet.DataHub.MarketParticipant.Integration.Model.Parsers;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Parsers.Actor;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers.Mappers;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.TestHelpers;
+using Moq;
 using NodaTime;
 using Xunit;
 
@@ -86,38 +89,78 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             actualGridAreaUpdatedEvent.GridAreaLinkId.Should().Be(gridAreaLinkId);
         }
 
-        [Theory]
-        [AutoData]
-        public void MapFromActorCreated_ShouldReturnMarketParticipantCreatedCommand(
-            Guid eventId,
-            Guid actorId,
-            Guid orgId,
-            string actorNumber,
-            string name,
-            DateTime eventCreated,
-            ActorCreatedIntegrationEventParser parser,
-            ActorIntegrationEventMapper sut)
+        [Fact]
+        public void MapFromActorCreated_ShouldReturnMarketParticipantCreatedCommand()
         {
             var actorCreatedIntegrationEvent = new ActorCreatedIntegrationEvent(
-                eventId,
-                actorId,
-                orgId,
+                Guid.NewGuid(),
+                Guid.NewGuid(),
+                Guid.NewGuid(),
                 ActorStatus.Active,
-                actorNumber,
-                name,
+                "actorNumber",
+                "name",
                 new List<BusinessRoleCode> { BusinessRoleCode.Ddq },
                 new List<ActorMarketRole> { new(EicFunction.EnergySupplier, new List<ActorGridArea>()) },
-                eventCreated);
-            var bytes = parser.ParseToSharedIntegrationEvent(actorCreatedIntegrationEvent);
+                InstantHelper.GetTodayAtMidnightUtc().ToDateTimeUtc());
 
             // Act
-            var actual = sut.MapFromActorCreated(bytes);
+            var actual = ActorIntegrationEventMapper.MapFromActorCreated(actorCreatedIntegrationEvent);
 
             // Assert
-            actual.ActorId.Should().Be(actorId);
+            actual.ActorId.Should().Be(actorCreatedIntegrationEvent.ActorId);
+            actual.MarketParticipantId.Should().Be(actorCreatedIntegrationEvent.ActorNumber);
             actual.Status.Should().Be(MarketParticipantStatus.Active);
-            actual.BusinessProcessRoles.Should().Contain(bpr => bpr == MarketParticipantRole.EnergySupplier);
-            actual.BusinessProcessRoles.Should().Contain(bpr => bpr == MarketParticipantRole.EnergySupplier);
+            actual.GridAreas.Should().BeEmpty();
+            actual.BusinessProcessRoles.Should().ContainSingle(bpr => bpr == MarketParticipantRole.EnergySupplier);
+        }
+
+        [Theory]
+        [InlineData(ActorStatus.Active, MarketParticipantStatus.Active)]
+        [InlineData(ActorStatus.Inactive, MarketParticipantStatus.Inactive)]
+        [InlineData(ActorStatus.Deleted, MarketParticipantStatus.Deleted)]
+        [InlineData(ActorStatus.New, MarketParticipantStatus.New)]
+        [InlineData(ActorStatus.Passive, MarketParticipantStatus.Passive)]
+        public void MapFromActorStatusChanged_ShouldReturnMarketParticipantStatusChangedCommand(
+            ActorStatus actorStatus,
+            MarketParticipantStatus expectedStatus)
+        {
+            // Arrange
+            var actorStatusChanged = new ActorStatusChangedIntegrationEvent(
+                Guid.NewGuid(),
+                InstantHelper.GetTodayAtMidnightUtc().ToDateTimeUtc(),
+                Guid.NewGuid(),
+                Guid.NewGuid(),
+                actorStatus);
+
+            // Act
+            var actual = ActorIntegrationEventMapper.MapFromActorStatusChanged(actorStatusChanged);
+
+            // Assert
+            actual.ActorId.Should().Be(actorStatusChanged.ActorId);
+            actual.Status.Should().Be(expectedStatus);
+        }
+
+        [Theory]
+        [InlineAutoData("664359b9-f6cc-45d4-9c93-ec35248e5f95", "664359b9-f6cc-45d4-9c93-ec35248e5f95")]
+        [InlineAutoData(null, null)]
+        public void MapFromActorExternalIdChanged_ShouldReturnMarketParticipantB2CActorIdChangedCommand(
+            Guid newExternalId,
+            Guid expectedId)
+        {
+            // Arrange
+            var externalIdChanged = new ActorExternalIdChangedIntegrationEvent(
+                Guid.NewGuid(),
+                InstantHelper.GetTodayAtMidnightUtc().ToDateTimeUtc(),
+                Guid.NewGuid(),
+                Guid.NewGuid(),
+                newExternalId);
+
+            // Act
+            var actual = ActorIntegrationEventMapper.MapFromActorExternalIdChanged(externalIdChanged);
+
+            // Assert
+            actual.ActorId.Should().Be(actual.ActorId);
+            actual.B2CActorId.Should().Be(expectedId);
         }
 
         private static IEnumerable<ActorMarketRole> CreateActorMarketRoles()
@@ -129,19 +172,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             {
                 new(EicFunction.GridAccessProvider, new List<ActorGridArea>
                 {
-                    CreateActorGridArea(gridAreaIdOne),
-                    CreateActorGridArea(gridAreaIdTwo),
+                    new(gridAreaIdOne, new List<string>()),
+                    new(gridAreaIdTwo, new List<string>()),
                 }),
                 new(EicFunction.MeteredDataAdministrator, new List<ActorGridArea>
                 {
-                    CreateActorGridArea(gridAreaIdTwo),
+                    new(gridAreaIdTwo, new List<string>()),
                 }),
             };
-        }
-
-        private static ActorGridArea CreateActorGridArea(Guid id)
-        {
-            return new ActorGridArea(id, new List<string>());
         }
     }
 }
