@@ -15,6 +15,7 @@
 using System;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.TestCore.Builders.Testables;
 using Moq;
 
 namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared
@@ -31,10 +32,10 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Models.Shared
                 .Setup(r => r.GetMeteringPointAdministratorAsync())
                 .ReturnsAsync(meteringPointAdministrator);
 
-            var sender = new MarketParticipant(
+            var sender = new TestMarketParticipant(
                 marketParticipantDto.Id,
                 actorId,
-                marketParticipantDto.B2CActorId,
+                marketParticipantDto.B2CActorId!.Value,
                 marketParticipantDto.MarketParticipantId,
                 MarketParticipantStatus.Active,
                 marketParticipantDto.BusinessProcessRole);

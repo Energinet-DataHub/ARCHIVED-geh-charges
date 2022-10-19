@@ -12,20 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
+using System;
 
-namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
+namespace GreenEnergyHub.Charges.Domain.Dtos.Events
 {
-    /// <summary>
-    /// Handles integration events from the market participant domain
-    /// </summary>
-    public interface IMarketParticipantEventHandler
+    public class MarketParticipantGridAreaUpdatedCommand
     {
-        /// <summary>
-        /// Handles an integration event from the market participant domain
-        /// </summary>
-        /// <param name="message"></param>
-        Task HandleAsync(BaseIntegrationEvent message);
+        public MarketParticipantGridAreaUpdatedCommand(
+            Guid gridAreaId,
+            Guid gridAreaLinkId)
+        {
+            GridAreaId = gridAreaId;
+            GridAreaLinkId = gridAreaLinkId;
+        }
+
+        public Guid GridAreaId { get; }
+
+        public Guid GridAreaLinkId { get; }
     }
 }

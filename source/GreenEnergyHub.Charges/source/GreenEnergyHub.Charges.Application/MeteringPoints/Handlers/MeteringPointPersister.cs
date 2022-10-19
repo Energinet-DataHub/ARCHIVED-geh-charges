@@ -52,13 +52,13 @@ namespace GreenEnergyHub.Charges.Application.MeteringPoints.Handlers
                 await _meteringPointRepository.AddAsync(meteringPoint).ConfigureAwait(false);
                 await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
                 _logger.LogInformation(
-                    "Metering point persisted: {message}",
+                    "Metering point persisted: {Message}",
                     $"Metering Point ID '{meteringPoint.MeteringPointId}' has been persisted");
             }
             else
             {
                 _logger.LogInformation(
-                    "Metering point already exists: {message}",
+                    "Metering point already exists: {Message}",
                     $"Metering Point ID '{meteringPoint.MeteringPointId}' already exists in storage");
 
                 // Compare and log differences between the integration event data and the persisted metering point's data
@@ -78,7 +78,7 @@ namespace GreenEnergyHub.Charges.Application.MeteringPoints.Handlers
                 var errorMessage = $"Received 'metering point type' event data '{meteringPoint.MeteringPointType}' was " +
                                    $"not equal to the already persisted value '{existingMeteringPoint.MeteringPointType}'" +
                                    $" for Metering Point ID '{meteringPoint.MeteringPointId}'";
-                _logger.LogError("MeteringPointType cannot be changed: {errorMessage}", errorMessage);
+                _logger.LogError("MeteringPointType cannot be changed: {ErrorMessage}", errorMessage);
             }
 
             if (!meteringPoint.HasSameSettlementMethod(existingMeteringPoint))
@@ -86,7 +86,7 @@ namespace GreenEnergyHub.Charges.Application.MeteringPoints.Handlers
                 var errorMessage = $"Received 'settlement method' event data '{meteringPoint.SettlementMethod}' was " +
                                    $"not equal to the already persisted value '{existingMeteringPoint.SettlementMethod}' " +
                                    $"for Metering Point ID '{meteringPoint.MeteringPointId}'";
-                _logger.LogError("Settlement method cannot be changed: {errorMessage}", errorMessage);
+                _logger.LogError("Settlement method cannot be changed: {ErrorMessage}", errorMessage);
             }
 
             if (!meteringPoint.HasSameGridAreaLinkId(existingMeteringPoint))
@@ -94,7 +94,7 @@ namespace GreenEnergyHub.Charges.Application.MeteringPoints.Handlers
                 var errorMessage = $"Received 'grid area link id' event data '{meteringPoint.GridAreaLinkId}' was " +
                                    $"not equal to the already persisted value '{existingMeteringPoint.GridAreaLinkId}' " +
                                    $"for Metering Point ID '{meteringPoint.MeteringPointId}'";
-                _logger.LogError("GridAreaLinkId cannot be changed: {errorMessage}", errorMessage);
+                _logger.LogError("GridAreaLinkId cannot be changed: {ErrorMessage}", errorMessage);
             }
         }
     }

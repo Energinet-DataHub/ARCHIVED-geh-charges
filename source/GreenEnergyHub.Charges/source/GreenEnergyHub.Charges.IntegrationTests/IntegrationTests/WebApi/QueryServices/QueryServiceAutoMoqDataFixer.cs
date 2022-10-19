@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
@@ -39,9 +38,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
                 return marketParticipant.Id;
             }
 
-            marketParticipant = new MarketParticipant(
-                Guid.NewGuid(),
-                Guid.NewGuid(),
+            marketParticipant = MarketParticipant.Create(
                 Guid.NewGuid(),
                 marketParticipantOwnerId,
                 MarketParticipantStatus.Active,
