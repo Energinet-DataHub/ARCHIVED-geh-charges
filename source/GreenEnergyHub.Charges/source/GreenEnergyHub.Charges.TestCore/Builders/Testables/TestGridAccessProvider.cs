@@ -23,8 +23,8 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Testables
     /// </summary>
     public class TestGridAccessProvider : MarketParticipant
     {
-        public TestGridAccessProvider(Guid id, Guid actorId, Guid b2CActorId, string marketParticipantId)
-            : base(id, actorId, b2CActorId, marketParticipantId, MarketParticipantStatus.Active, MarketParticipantRole.GridAccessProvider)
+        public TestGridAccessProvider(string marketParticipantId)
+            : base(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), marketParticipantId, MarketParticipantStatus.Active, MarketParticipantRole.GridAccessProvider)
         {
         }
     }

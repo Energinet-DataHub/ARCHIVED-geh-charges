@@ -21,7 +21,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<IMarketParticipantCreatedHandler, MarketParticipantCreatedHandler>();
+            serviceCollection.AddScoped<IMarketParticipantCreatedCommandHandler, MarketParticipantCreatedCommandHandler>();
+            serviceCollection.AddScoped<IMarketParticipantStatusChangedCommandHandler, MarketParticipantStatusChangedCommandHandler>();
+            serviceCollection.AddScoped<IMarketParticipantB2CActorIdChangedCommandHandler, MarketParticipantB2CActorIdChangedCommandHandler>();
         }
     }
 }

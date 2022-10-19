@@ -19,15 +19,21 @@ using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
+using Energinet.DataHub.MarketParticipant.Integration.Model.Parsers;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Parsers.Actor;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.FunctionHost.MarketParticipant;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
+using GreenEnergyHub.Charges.Infrastructure.Persistence;
+using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
+using GreenEnergyHub.Charges.TestCore;
+using Microsoft.EntityFrameworkCore;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
@@ -38,64 +44,85 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
     public class MarketParticipantCreatedEndpointTests
     {
         [Collection(nameof(ChargesFunctionAppCollectionFixture))]
-        public class RunAsync : FunctionAppTestBase<ChargesFunctionAppFixture>
+        public class RunAsync : FunctionAppTestBase<ChargesFunctionAppFixture>, IAsyncLifetime
         {
             public RunAsync(ChargesFunctionAppFixture fixture, ITestOutputHelper testOutputHelper)
                 : base(fixture, testOutputHelper)
             {
             }
 
+            public Task InitializeAsync()
+            {
+                return Task.CompletedTask;
+            }
+
+            public Task DisposeAsync()
+            {
+                Fixture.HostManager.ClearHostLog();
+                return Task.CompletedTask;
+            }
+
             [Fact]
             public async Task When_ReceivingActorIntegrationUpdatedMessage_MarketParticipantIsSavedToDatabase()
             {
                 // Arrange
-                const string gln = "1234567890123";
-                var role = MarketParticipantRoleMapper.Map(BusinessRoleCode.Ddq);
-                var message = CreateServiceBusMessage(gln, ActorStatus.New, new List<BusinessRoleCode>
-                {
-                    BusinessRoleCode.Ddq,
-                });
-
+                var actorId = Guid.NewGuid();
+                var message = CreateServiceBusMessage("9876543210", actorId, SeededData.GridAreaLink.Provider8100000000030.GridAreaId);
                 await using var context = Fixture.ChargesDatabaseManager.CreateDbContext();
 
                 // Act
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
                     () => Fixture.IntegrationEventTopic.SenderClient.SendMessageAsync(message), message.CorrelationId);
 
-                // Assert
                 await FunctionAsserts.AssertHasExecutedAsync(
                     Fixture.HostManager, nameof(MarketParticipantCreatedEndpoint)).ConfigureAwait(false);
-                var marketParticipant = context.MarketParticipants.SingleOrDefault(x =>
-                    x.MarketParticipantId == gln && x.BusinessProcessRole == role);
-                marketParticipant.Should().NotBeNull();
 
-                // We need to clear host log after each test is done to ensure that we can assert on function executed on each test run because we only check on function name
-                Fixture.HostManager.ClearHostLog();
-                // Remove added actor
-                var addedMarketParticipant = context.MarketParticipants.Single(x => x.MarketParticipantId == gln);
-                context.Remove(addedMarketParticipant);
-                await context.SaveChangesAsync();
+                // Assert
+                var marketParticipant = context.MarketParticipants.Single(x => x.ActorId == actorId);
+                marketParticipant.BusinessProcessRole.Should().Be(MarketParticipantRole.GridAccessProvider);
+                marketParticipant.ActorId.Should().Be(actorId);
             }
 
-            private static ServiceBusMessage CreateServiceBusMessage(
-                string actorNumber, ActorStatus status, IEnumerable<BusinessRoleCode> businessRoles)
+            [Fact]
+            public async Task RunAsync_WhenActorCreatedEventHandled_MarketParticipantSavedAndGridAreaLinksUpdated()
             {
-                var actorUpdatedIntegrationEvent = new ActorCreatedIntegrationEvent(
-                    Guid.NewGuid(),
-                    Guid.NewGuid(),
-                    Guid.NewGuid(),
-                    status,
-                    actorNumber,
-                    "New actor",
-                    businessRoles,
-                    CreateActorMarketRoles(),
-                    DateTime.UtcNow);
+                // Arrange
+                var actorId = Guid.NewGuid();
+                var message = CreateMessage("0123456789", actorId, SeededData.GridAreaLink.Provider8500000000013.GridAreaId);
+                await using var writeContext = Fixture.ChargesDatabaseManager.CreateDbContext();
+                var sharedIntegrationEventParser = new SharedIntegrationEventParser();
+                var marketParticipantRepository = new MarketParticipantRepository(writeContext);
+                var gridAreaLinkRepository = new GridAreaLinkRepository(writeContext);
+                var unitOfWork = new UnitOfWork(writeContext);
 
-                var actorCreatedIntegrationEventParser = new ActorCreatedIntegrationEventParser();
-                var message = actorCreatedIntegrationEventParser.ParseToSharedIntegrationEvent(actorUpdatedIntegrationEvent);
+                var marketParticipantCreatedCommandHandler = new MarketParticipantCreatedCommandHandler(
+                    marketParticipantRepository,
+                    gridAreaLinkRepository);
 
-                var correlationId = CorrelationIdGenerator.Create();
-                var serviceBusMessage = new ServiceBusMessage(message)
+                var sut = new MarketParticipantCreatedEndpoint(
+                    sharedIntegrationEventParser,
+                    marketParticipantCreatedCommandHandler,
+                    unitOfWork);
+
+                // Act
+                await sut.RunAsync(message);
+
+                // Assert
+                await using var readContext = Fixture.ChargesDatabaseManager.CreateDbContext();
+                var marketParticipant = await readContext.MarketParticipants.SingleAsync(mp =>
+                    mp.ActorId == actorId);
+                var actual = await readContext.GridAreaLinks.SingleAsync(gal =>
+                    gal.GridAreaId == SeededData.GridAreaLink.Provider8500000000013.GridAreaId);
+                actual.OwnerId.Should().Be(marketParticipant.Id);
+            }
+
+            private static ServiceBusMessage CreateServiceBusMessage(string actorNumber, Guid actorId, Guid gridAreaId)
+            {
+                var message = CreateMessage(actorNumber, actorId, gridAreaId);
+
+                var correlationId = Guid.NewGuid().ToString("N");
+
+                return new ServiceBusMessage(message)
                 {
                     CorrelationId = correlationId,
                     ApplicationProperties =
@@ -104,19 +131,32 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                         new KeyValuePair<string, object>(MessageMetaDataConstants.MessageType, "ActorCreatedIntegrationEvent"),
                     },
                 };
-
-                return serviceBusMessage;
             }
 
-            private static IEnumerable<ActorMarketRole> CreateActorMarketRoles()
+            private static byte[] CreateMessage(string actorNumber, Guid actorId, Guid gridAreaId)
             {
-                return new List<ActorMarketRole>
-                {
-                    new(EicFunction.GridAccessProvider, new List<ActorGridArea>
+                var actorCreatedIntegrationEvent = new ActorCreatedIntegrationEvent(
+                    Guid.NewGuid(),
+                    actorId,
+                    Guid.NewGuid(),
+                    ActorStatus.New,
+                    actorNumber,
+                    "New actor",
+                    new List<BusinessRoleCode>
                     {
-                        new(Guid.NewGuid(), new[] { string.Empty }),
-                    }),
-                };
+                        BusinessRoleCode.Ddm,
+                    },
+                    new List<ActorMarketRole>
+                    {
+                        new(EicFunction.GridAccessProvider, new List<ActorGridArea>
+                        {
+                            new(gridAreaId, new List<string>()),
+                        }),
+                    },
+                    DateTime.UtcNow);
+
+                var actorCreatedIntegrationEventParser = new ActorCreatedIntegrationEventParser();
+                return actorCreatedIntegrationEventParser.ParseToSharedIntegrationEvent(actorCreatedIntegrationEvent);
             }
         }
     }

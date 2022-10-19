@@ -14,18 +14,17 @@
 
 using System;
 using System.Collections.Generic;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsUpdatedEvents
+namespace GreenEnergyHub.Charges.Domain.Dtos.Events
 {
-    public class MarketParticipantUpdatedEvent : MessageBase
+    public class MarketParticipantUpdatedCommand
     {
-        public MarketParticipantUpdatedEvent(
+        public MarketParticipantUpdatedCommand(
             Guid actorId,
             Guid? b2CActorId,
             string marketParticipantId,
-            List<MarketParticipantRole> businessProcessRoles,
+            IEnumerable<MarketParticipantRole> businessProcessRoles,
             MarketParticipantStatus status,
             IEnumerable<Guid> gridAreas)
         {
@@ -43,7 +42,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsUpdatedEvents
 
         public string MarketParticipantId { get; }
 
-        public List<MarketParticipantRole> BusinessProcessRoles { get; }
+        public IEnumerable<MarketParticipantRole> BusinessProcessRoles { get; }
 
         public MarketParticipantStatus Status { get; }
 

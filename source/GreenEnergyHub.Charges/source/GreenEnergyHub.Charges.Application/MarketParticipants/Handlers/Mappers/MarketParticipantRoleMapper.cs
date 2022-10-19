@@ -13,10 +13,12 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
-namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
+namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers.Mappers
 {
     public static class MarketParticipantRoleMapper
     {
@@ -35,5 +37,10 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
             _ => throw new ArgumentOutOfRangeException(
                 nameof(businessRole), businessRole, $"Role {businessRole} is not implemented"),
         };
+
+        public static IEnumerable<MarketParticipantRole> MapMany(IEnumerable<BusinessRoleCode> businessRoles)
+        {
+            return businessRoles.Select(Map);
+        }
     }
 }
