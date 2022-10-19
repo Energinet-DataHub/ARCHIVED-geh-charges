@@ -232,6 +232,14 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
                 .AddMessageTypeFilter("ActorCreatedIntegrationEvent")
                 .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.MarketParticipantCreatedSubscriptionName)
 
+                .AddSubscription(ChargesServiceBusResourceNames.MarketParticipantStatusChangedSubscriptionName)
+                .AddMessageTypeFilter("ActorStatusChangedIntegrationEvent")
+                .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.MarketParticipantStatusChangedSubscriptionName)
+
+                .AddSubscription(ChargesServiceBusResourceNames.MarketParticipantExternalActorIdChangedSubscriptionName)
+                .AddMessageTypeFilter("ActorExternalIdChangedIntegrationEvent")
+                .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.MarketParticipantExternalActorIdChangedSubscriptionName)
+
                 .AddSubscription(ChargesServiceBusResourceNames.GridAreaAddedToActorSubscriptionName)
                 .AddMessageTypeFilter("GridAreaAddedToActorIntegrationEvent")
                 .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.GridAreaAddedToActorSubscriptionName)
