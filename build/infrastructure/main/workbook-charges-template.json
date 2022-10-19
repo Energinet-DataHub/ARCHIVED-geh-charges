@@ -2,49 +2,49 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "workbookDisplayName": {
-      "type": "string",
+      "type": "String",
       "defaultValue": "${workbook_display_name}",
       "metadata": {
         "description": ""
       }
     },
     "workbookId": {
-      "type": "string",
+      "type": "String",
       "defaultValue": "${workbook_id}",
       "metadata": {
         "description": "The unique guid for this workbook instance"
       }
     },
     "subscriptionId": {
-      "type": "string",
+      "type": "String",
       "defaultValue": "${subscription_id}",
       "metadata": {
         "description": ""
       }
     },
     "resourceGroup": {
-      "type": "string",
+      "type": "String",
       "defaultValue": "${resouce_group_name}",
       "metadata": {
         "description": ""
       }
     },
     "sharedResourceGroup": {
-      "type": "string",
+      "type": "String",
       "defaultValue": "${shared_resouce_group_name}",
       "metadata": {
         "description": ""
       }
     },
     "applicationInsightName": {
-      "type": "string",
+      "type": "String",
       "defaultValue": "${application_insight_name}",
       "metadata": {
         "description": ""
       }
     },
     "sourceId": {
-      "type": "string",
+      "type": "String",
       "defaultValue": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', parameters('sharedResourceGroup'), '/providers/Microsoft.Insights/components/', parameters('applicationInsightName'))]",
       "metadata": {
         "description": ""
@@ -179,7 +179,7 @@
   ],
   "outputs": {
     "workbookId": {
-      "type": "string",
+      "type": "String",
       "value": "[resourceId( 'microsoft.insights/workbooks', parameters('workbookId'))]"
     }
   },
