@@ -27,7 +27,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
 {
     [UnitTest]
-    public class MarketParticipantEventHandlerTests
+    public class MarketParticipantUpdatedCommandHandlerTests
     {
         [Theory]
         [InlineAutoDomainData]
