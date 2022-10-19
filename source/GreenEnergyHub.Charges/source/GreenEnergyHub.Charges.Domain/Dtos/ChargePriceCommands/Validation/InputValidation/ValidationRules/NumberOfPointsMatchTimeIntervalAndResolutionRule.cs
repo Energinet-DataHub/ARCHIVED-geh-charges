@@ -44,7 +44,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.Inpu
                 Resolution.PT15M => interval.Duration.TotalMinutes / 15,
                 Resolution.PT1H => interval.Duration.TotalHours,
                 Resolution.P1D => interval.Duration.TotalDays,
-                Resolution.P1M => TotalMonths(),
+                Resolution.P1M => CalculateMonthsSpannedByInterval(),
                 _ => throw new ArgumentOutOfRangeException(nameof(resolution)),
             };
         }
@@ -55,12 +55,32 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.Inpu
         public bool IsValid =>
             Convert.ToInt32(Math.Round(_expectedPointCount, MidpointRounding.AwayFromZero)) == _actualPointCount;
 
-        private int TotalMonths()
+        private int CalculateMonthsSpannedByInterval()
         {
             // https://stackoverflow.com/a/4639057
             var months = ((_endTime.InUtc().Year - _startTime.InUtc().Year) * 12) + _endTime.InUtc().Month -
                          _startTime.InUtc().Month;
-            return months != 0 ? months : 1;
+
+             /* The 'months' calculation above does not consider the interval to contain an irregular price series;
+             *  where the startTime is within the same month as the endTime. Thus returning 0 spanned month.
+             *  To counter for this, below code checks if the interval startTime contains an irregular price series,
+             *  and if so, adds 1 to 'months', as an irregular price series spans a single month.
+             *  Below code also works when the interval contains several points and is also an irregular price series.
+             */
+            if (IsIrregularPriceSeries(_startTime))
+            {
+                months++;
+            }
+
+            return months;
+        }
+
+        private static bool IsIrregularPriceSeries(Instant startDateTime)
+        {
+            var startDateTimeInUtc = startDateTime.InUtc();
+
+            return startDateTimeInUtc.Day !=
+                   startDateTimeInUtc.Calendar.GetDaysInMonth(startDateTimeInUtc.Year, startDateTimeInUtc.Month);
         }
     }
 }
