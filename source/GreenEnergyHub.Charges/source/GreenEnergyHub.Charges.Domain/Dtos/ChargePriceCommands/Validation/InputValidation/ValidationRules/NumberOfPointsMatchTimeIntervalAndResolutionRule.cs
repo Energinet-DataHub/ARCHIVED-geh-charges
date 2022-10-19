@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using NodaTime;
@@ -21,13 +22,17 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.Inpu
 {
     public class NumberOfPointsMatchTimeIntervalAndResolutionRule : IValidationRule
     {
+        private readonly IZonedDateTimeService _zonedDateTimeService;
         private readonly Instant _startTime;
         private readonly Instant _endTime;
         private readonly int _actualPointCount;
         private double _expectedPointCount;
 
-        public NumberOfPointsMatchTimeIntervalAndResolutionRule(ChargePriceOperationDto chargePriceOperationDto)
+        public NumberOfPointsMatchTimeIntervalAndResolutionRule(
+            ChargePriceOperationDto chargePriceOperationDto,
+            IZonedDateTimeService zonedDateTimeService)
         {
+            _zonedDateTimeService = zonedDateTimeService;
             _startTime = chargePriceOperationDto.PointsStartInterval;
             _endTime = chargePriceOperationDto.PointsEndInterval;
             SetExpectedPointCount(chargePriceOperationDto.Resolution);
@@ -57,9 +62,12 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.Inpu
 
         private int TotalMonths()
         {
+            var localizedStartTime = _zonedDateTimeService.GetZonedDateTime(_startTime);
+            var localizedEndTime = _zonedDateTimeService.GetZonedDateTime(_endTime);
+
             // https://stackoverflow.com/a/4639057
-            var months = ((_endTime.InUtc().Year - _startTime.InUtc().Year) * 12) + _endTime.InUtc().Month -
-                         _startTime.InUtc().Month;
+            var months = ((localizedEndTime.Year - localizedStartTime.Year) * 12) + localizedEndTime.Month -
+                         localizedStartTime.Month;
             return months != 0 ? months : 1;
         }
     }
