@@ -68,6 +68,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Common
         public const string MarketParticipantCreatedSubscriptionName = "MARKET_PARTICIPANT_CREATED_SUBSCRIPTION_NAME";
         public const string MarketParticipantStatusChangedSubscriptionName = "MARKET_PARTICIPANT_STATUS_CHANGED_SUBSCRIPTION_NAME";
         public const string MarketParticipantExternalActorIdChangedSubscriptionName = "MARKET_PARTICIPANT_STATUS_EXTERNAL_ACTOR_ID_CHANGED_SUBSCRIPTION_NAME";
+        public const string GridAreaAddedToActorSubscriptionName = "GRID_AREA_ADDED_TO_ACTOR_SUBSCRIPTION_NAME";
+        public const string GridAreaRemovedFromActorSubscriptionName = "GRID_AREA_REMOVED_FROM_ACTOR_SUBSCRIPTION_NAME";
 
         // Domain event
         [DomainEventSetting]
