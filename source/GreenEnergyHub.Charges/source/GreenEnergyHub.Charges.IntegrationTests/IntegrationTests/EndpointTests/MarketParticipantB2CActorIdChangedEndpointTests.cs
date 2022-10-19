@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoFixture.Xunit2;
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
@@ -41,7 +42,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 {
     [IntegrationTest]
-    public class MarketParticipantCreatedEndpointTests
+    public class MarketParticipantB2CActorIdChangedEndpointTests
     {
         [Collection(nameof(ChargesFunctionAppCollectionFixture))]
         public class RunAsync : FunctionAppTestBase<ChargesFunctionAppFixture>, IAsyncLifetime
@@ -62,12 +63,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 return Task.CompletedTask;
             }
 
-            [Fact]
-            public async Task When_ReceivingActorIntegrationUpdatedMessage_MarketParticipantIsSavedToDatabase()
+            [Theory]
+            [InlineAutoData("664359b9-f6cc-45d4-9c93-ec35248e5f95")]
+            [InlineAutoData(null)]
+            public async Task When_ReceivingActorCreatedIntegrationEvent_MarketParticipantIsSavedToDatabase(Guid externalId)
             {
                 // Arrange
                 var actorId = Guid.NewGuid();
-                var message = CreateServiceBusMessage("9876543210", actorId, SeededData.GridAreaLink.Provider8500000000013.GridAreaId);
+                var message = CreateServiceBusMessage(actorId, externalId);
                 await using var context = Fixture.ChargesDatabaseManager.CreateDbContext();
 
                 // Act
@@ -75,20 +78,16 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     () => Fixture.IntegrationEventTopic.SenderClient.SendMessageAsync(message), message.CorrelationId);
 
                 await FunctionAsserts.AssertHasExecutedAsync(
-                    Fixture.HostManager, nameof(MarketParticipantCreatedEndpoint)).ConfigureAwait(false);
+                    Fixture.HostManager, nameof(MarketParticipantB2CActorIdChangedEndpoint)).ConfigureAwait(false);
 
                 // Assert
                 var marketParticipant = context.MarketParticipants.Single(x => x.ActorId == actorId);
-                marketParticipant.BusinessProcessRole.Should().Be(MarketParticipantRole.GridAccessProvider);
-                marketParticipant.ActorId.Should().Be(actorId);
-                var gridAreaLink = await context.GridAreaLinks.SingleAsync(gal =>
-                    gal.GridAreaId == SeededData.GridAreaLink.Provider8500000000013.GridAreaId);
-                gridAreaLink.OwnerId.Should().Be(marketParticipant.Id);
+                marketParticipant.B2CActorId.Should().Be(externalId);
             }
 
-            private static ServiceBusMessage CreateServiceBusMessage(string actorNumber, Guid actorId, Guid gridAreaId)
+            private static ServiceBusMessage CreateServiceBusMessage(Guid actorId, Guid? externalId)
             {
-                var message = CreateMessage(actorNumber, actorId, gridAreaId);
+                var message = CreateMessage(actorId, externalId);
 
                 var correlationId = Guid.NewGuid().ToString("N");
 
@@ -98,35 +97,22 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     ApplicationProperties =
                     {
                         new KeyValuePair<string, object>(MessageMetaDataConstants.CorrelationId, correlationId),
-                        new KeyValuePair<string, object>(MessageMetaDataConstants.MessageType, "ActorCreatedIntegrationEvent"),
+                        new KeyValuePair<string, object>(MessageMetaDataConstants.MessageType, "ActorExternalIdChangedIntegrationEvent"),
                     },
                 };
             }
 
-            private static byte[] CreateMessage(string actorNumber, Guid actorId, Guid gridAreaId)
+            private static byte[] CreateMessage(Guid actorId, Guid? externalId)
             {
-                var actorCreatedIntegrationEvent = new ActorCreatedIntegrationEvent(
+                var actorExternalIdChangedIntegrationEvent = new ActorExternalIdChangedIntegrationEvent(
                     Guid.NewGuid(),
+                    InstantHelper.GetTodayAtMidnightUtc().ToDateTimeUtc(),
                     actorId,
                     Guid.NewGuid(),
-                    ActorStatus.New,
-                    actorNumber,
-                    "New actor",
-                    new List<BusinessRoleCode>
-                    {
-                        BusinessRoleCode.Ddm,
-                    },
-                    new List<ActorMarketRole>
-                    {
-                        new(EicFunction.GridAccessProvider, new List<ActorGridArea>
-                        {
-                            new(gridAreaId, new List<string>()),
-                        }),
-                    },
-                    DateTime.UtcNow);
+                    externalId);
 
-                var actorCreatedIntegrationEventParser = new ActorCreatedIntegrationEventParser();
-                return actorCreatedIntegrationEventParser.ParseToSharedIntegrationEvent(actorCreatedIntegrationEvent);
+                var actorExternalIdChangedIntegrationEventParser = new ActorExternalIdChangedIntegrationEventParser();
+                return actorExternalIdChangedIntegrationEventParser.ParseToSharedIntegrationEvent(actorExternalIdChangedIntegrationEvent);
             }
         }
     }

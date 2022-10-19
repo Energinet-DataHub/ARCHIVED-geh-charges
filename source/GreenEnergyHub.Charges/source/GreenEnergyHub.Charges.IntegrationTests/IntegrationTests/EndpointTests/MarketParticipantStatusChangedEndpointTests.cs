@@ -41,7 +41,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 {
     [IntegrationTest]
-    public class MarketParticipantCreatedEndpointTests
+    public class MarketParticipantStatusChangedEndpointTests
     {
         [Collection(nameof(ChargesFunctionAppCollectionFixture))]
         public class RunAsync : FunctionAppTestBase<ChargesFunctionAppFixture>, IAsyncLifetime
@@ -63,11 +63,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
             }
 
             [Fact]
-            public async Task When_ReceivingActorIntegrationUpdatedMessage_MarketParticipantIsSavedToDatabase()
+            public async Task When_ReceivingActorCreatedIntegrationEvent_MarketParticipantIsSavedToDatabase()
             {
                 // Arrange
                 var actorId = Guid.NewGuid();
-                var message = CreateServiceBusMessage("9876543210", actorId, SeededData.GridAreaLink.Provider8500000000013.GridAreaId);
+                var message = CreateServiceBusMessage(actorId);
                 await using var context = Fixture.ChargesDatabaseManager.CreateDbContext();
 
                 // Act
@@ -75,20 +75,16 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     () => Fixture.IntegrationEventTopic.SenderClient.SendMessageAsync(message), message.CorrelationId);
 
                 await FunctionAsserts.AssertHasExecutedAsync(
-                    Fixture.HostManager, nameof(MarketParticipantCreatedEndpoint)).ConfigureAwait(false);
+                    Fixture.HostManager, nameof(MarketParticipantStatusChangedEndpoint)).ConfigureAwait(false);
 
                 // Assert
                 var marketParticipant = context.MarketParticipants.Single(x => x.ActorId == actorId);
-                marketParticipant.BusinessProcessRole.Should().Be(MarketParticipantRole.GridAccessProvider);
-                marketParticipant.ActorId.Should().Be(actorId);
-                var gridAreaLink = await context.GridAreaLinks.SingleAsync(gal =>
-                    gal.GridAreaId == SeededData.GridAreaLink.Provider8500000000013.GridAreaId);
-                gridAreaLink.OwnerId.Should().Be(marketParticipant.Id);
+                marketParticipant.Status.Should().Be(MarketParticipantStatus.Passive);
             }
 
-            private static ServiceBusMessage CreateServiceBusMessage(string actorNumber, Guid actorId, Guid gridAreaId)
+            private static ServiceBusMessage CreateServiceBusMessage(Guid actorId)
             {
-                var message = CreateMessage(actorNumber, actorId, gridAreaId);
+                var message = CreateMessage(actorId);
 
                 var correlationId = Guid.NewGuid().ToString("N");
 
@@ -98,35 +94,22 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     ApplicationProperties =
                     {
                         new KeyValuePair<string, object>(MessageMetaDataConstants.CorrelationId, correlationId),
-                        new KeyValuePair<string, object>(MessageMetaDataConstants.MessageType, "ActorCreatedIntegrationEvent"),
+                        new KeyValuePair<string, object>(MessageMetaDataConstants.MessageType, "ActorStatusChangedIntegrationEvent"),
                     },
                 };
             }
 
-            private static byte[] CreateMessage(string actorNumber, Guid actorId, Guid gridAreaId)
+            private static byte[] CreateMessage(Guid actorId)
             {
-                var actorCreatedIntegrationEvent = new ActorCreatedIntegrationEvent(
+                var actorStatusChangedIntegrationEvent = new ActorStatusChangedIntegrationEvent(
                     Guid.NewGuid(),
+                    InstantHelper.GetTodayAtMidnightUtc().ToDateTimeUtc(),
                     actorId,
                     Guid.NewGuid(),
-                    ActorStatus.New,
-                    actorNumber,
-                    "New actor",
-                    new List<BusinessRoleCode>
-                    {
-                        BusinessRoleCode.Ddm,
-                    },
-                    new List<ActorMarketRole>
-                    {
-                        new(EicFunction.GridAccessProvider, new List<ActorGridArea>
-                        {
-                            new(gridAreaId, new List<string>()),
-                        }),
-                    },
-                    DateTime.UtcNow);
+                    ActorStatus.Passive);
 
-                var actorCreatedIntegrationEventParser = new ActorCreatedIntegrationEventParser();
-                return actorCreatedIntegrationEventParser.ParseToSharedIntegrationEvent(actorCreatedIntegrationEvent);
+                var actorStatusChangedIntegrationEventParser = new ActorStatusChangedIntegrationEventParser();
+                return actorStatusChangedIntegrationEventParser.ParseToSharedIntegrationEvent(actorStatusChangedIntegrationEvent);
             }
         }
     }
