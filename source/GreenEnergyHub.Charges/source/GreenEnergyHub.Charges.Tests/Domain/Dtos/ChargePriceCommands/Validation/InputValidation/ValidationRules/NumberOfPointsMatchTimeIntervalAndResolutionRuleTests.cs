@@ -15,10 +15,14 @@
 using System;
 using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.ValidationRules;
+using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Builders.Command;
+using GreenEnergyHub.Iso8601;
 using NodaTime;
+using NodaTime.Testing;
 using Xunit;
 using Xunit.Categories;
 
@@ -38,11 +42,12 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
         [InlineAutoMoqData(Resolution.P1M, 2022, 3, 26, 23, 2022, 4, 26, 22, 1, "switching to Daylight Saving Time must be supported")]
         [InlineAutoMoqData(Resolution.PT1H, 2022, 10, 29, 22, 2022, 10, 30, 23, 25, "switching to Normal Time must be supported")]
         [InlineAutoMoqData(Resolution.P1D, 2022, 10, 29, 22, 2022, 10, 30, 23, 1, "switching to Normal Time must be supported")]
-        [InlineAutoMoqData(Resolution.P1M, 2022, 10, 29, 22, 2022, 11, 30, 23, 1, "switching to Normal Time must be supported")]
+        [InlineAutoMoqData(Resolution.P1M, 2022, 10, 29, 22, 2022, 11, 30, 23, 2, "switching to Normal Time must be supported")]
         [InlineAutoMoqData(Resolution.P1M, 2022, 3, 26, 23, 2022, 3, 31, 22, 1, "switching to Daylight Saving Time, with irregular price series must be supported")]
         [InlineAutoMoqData(Resolution.P1M, 2022, 10, 29, 22, 2022, 10, 31, 23, 1, "switching to Normal Time, with irregular price series must be supported")]
         [InlineAutoMoqData(Resolution.P1D, 2022, 1, 1, 23, 2022, 1, 6, 23, 5, "longer price series must be supported")]
         [InlineAutoMoqData(Resolution.P1M, 2022, 1, 1, 23, 2024, 1, 1, 23, 24, "longer price series spanning years must be supported")]
+        [InlineAutoMoqData(Resolution.P1M, 2022, 6, 14, 22, 2022, 7, 31, 22, 2, "irregular price series must be allowed")]
         public void IsValid_WhenCalledWithCorrectNumberOfPrices_ShouldParse(
             Resolution resolution,
             int startYear,
@@ -66,7 +71,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
                 .WithPointsInterval(start, end)
                 .Build();
 
-            var sut = new NumberOfPointsMatchTimeIntervalAndResolutionRule(dto);
+            var sut = new NumberOfPointsMatchTimeIntervalAndResolutionRule(dto, GetZonedDateTimeService());
 
             // Act
             var actual = sut.IsValid;
@@ -84,7 +89,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
             // Act
             Action act = () =>
             {
-                _ = new NumberOfPointsMatchTimeIntervalAndResolutionRule(dto);
+                _ = new NumberOfPointsMatchTimeIntervalAndResolutionRule(dto, GetZonedDateTimeService());
             };
 
             // Assert
@@ -101,11 +106,17 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
             // Act
             Action act = () =>
             {
-                _ = new NumberOfPointsMatchTimeIntervalAndResolutionRule(dto);
+                _ = new NumberOfPointsMatchTimeIntervalAndResolutionRule(dto, GetZonedDateTimeService());
             };
 
             // Assert
             act.Should().Throw<ArgumentOutOfRangeException>();
+        }
+
+        private static ZonedDateTimeService GetZonedDateTimeService()
+        {
+            var clock = new FakeClock(InstantHelper.GetTodayAtMidnightUtc());
+            return new ZonedDateTimeService(clock, new Iso8601ConversionConfiguration("Europe/Copenhagen"));
         }
     }
 }

@@ -56,7 +56,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.Inpu
                 CreateRuleContainer(new ChargeTypeTariffPriceCountRule(operation), operation.OperationId),
                 CreateRuleContainer(new ChargePriceMaximumDigitsAndDecimalsRule(operation), operation.OperationId),
                 CreateRuleContainer(new MaximumPriceRule(operation), operation.OperationId),
-                CreateRuleContainer(new NumberOfPointsMatchTimeIntervalAndResolutionRule(operation), operation.OperationId),
+                CreateRuleContainer(new NumberOfPointsMatchTimeIntervalAndResolutionRule(operation, _zonedDateTimeService), operation.OperationId),
                 CreateRuleContainer(new PriceListMustStartAndStopAtMidnightValidationRule(_zonedDateTimeService, operation), operation.OperationId),
                 CreateRuleContainer(new StartDateTimeRequiredValidationRule(operation), operation.OperationId),
                 CreateRuleContainer(new StartDateValidationRule(operation, _zonedDateTimeService, _clock), operation.OperationId),
