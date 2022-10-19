@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
 namespace GreenEnergyHub.Charges.TestCore
 {
