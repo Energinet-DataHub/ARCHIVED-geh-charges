@@ -29,7 +29,7 @@ public static class ChargePointQueryLogic
         this IQueryable<ChargePoint> queryable,
         IIso8601Durations iso8601Durations)
     {
-        var chargePoints = queryable
+        var chargePrices = queryable
             .OrderBy(c => c.Time)
             .Select(cp => new ChargePriceV1Dto(
                 cp.Price,
@@ -41,8 +41,8 @@ public static class ChargePointQueryLogic
                     .ToDateTimeUtc()))
             .ToList();
 
-        return chargePoints
-            .Select((cp, index) => MapChargePointV1Dto(chargePoints, index, cp))
+        return chargePrices
+            .Select((cp, index) => MapChargePointV1Dto(chargePrices, index, cp))
             .ToList();
     }
 
@@ -50,16 +50,16 @@ public static class ChargePointQueryLogic
     /// This mapper ensures that there will be no overlaps between date times.
     /// 'ChargePoints' have to be ordered by time.
     /// </summary>
-    /// <param name="chargePoints"></param>
+    /// <param name="chargePrices"></param>
     /// <param name="index"></param>
     /// <param name="chargePrice"></param>
     /// <returns>Returns charge point dto with correct 'ActiveToDateTime' date time</returns>
-    private static ChargePriceV1Dto MapChargePointV1Dto(IList<ChargePriceV1Dto> chargePoints, int index, ChargePriceV1Dto chargePrice)
+    private static ChargePriceV1Dto MapChargePointV1Dto(IList<ChargePriceV1Dto> chargePrices, int index, ChargePriceV1Dto chargePrice)
     {
-        var lastIndex = chargePoints.IndexOf(chargePoints.Last());
+        var lastIndex = chargePrices.IndexOf(chargePrices.Last());
         if (index != lastIndex)
         {
-            var nextPoint = chargePoints[index + 1];
+            var nextPoint = chargePrices[index + 1];
             var isOverlapping = nextPoint.FromDateTime < chargePrice.ToDateTime &&
                                 nextPoint.FromDateTime > chargePrice.FromDateTime;
             if (isOverlapping)

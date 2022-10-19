@@ -32,15 +32,15 @@ public class ChargePricesController : Controller
     }
 
     /// <summary>
-    ///     Returns all charge points based on search criteria
+    ///     Returns all charge prices based on search criteria
     /// </summary>
-    /// <returns>Charge points or "404 Not Found"</returns>
+    /// <returns>Charge prices or "404 Not Found"</returns>
     [HttpPost("Search")]
     [MapToApiVersion(Version1)]
     public IActionResult Search([FromBody] ChargePricesSearchCriteriaV1Dto searchCriteria)
     {
-        var chargePoints = _chargePointQueryService.Search(searchCriteria);
+        var chargePrices = _chargePointQueryService.Search(searchCriteria);
 
-        return Ok(chargePoints);
+        return Ok(chargePrices);
     }
 }
