@@ -20,8 +20,9 @@ using FluentAssertions;
 using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
+using GreenEnergyHub.Charges.Domain.GridAreaLinks;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using GreenEnergyHub.TestHelpers;
+using GreenEnergyHub.Charges.TestCore.Attributes;
 using Moq;
 using Xunit;
 using Xunit.Categories;
@@ -29,16 +30,21 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
 {
     [UnitTest]
-    public class MarketParticipantCreatedHandlerTests
+    public class MarketParticipantCreatedCommandHandlerTests
     {
         [Theory]
-        [InlineAutoDomainData]
+        [InlineAutoMoqData]
         public async Task HandleAsync_ValidEvent_ShouldAddNewMarketParticipant(
                 [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
                 MarketParticipantCreatedCommandHandler sut)
         {
             // Arrange
-            var marketParticipantCreatedEvent = CreateCreatedEvent();
+            var marketParticipantCreatedEvent = new MarketParticipantCreatedCommand(
+                ActorId: Guid.NewGuid(),
+                "mp123",
+                new List<MarketParticipantRole> { MarketParticipantRole.EnergySupplier, },
+                MarketParticipantStatus.Active,
+                new List<Guid>());
             MarketParticipant marketParticipant = null!;
             marketParticipantRepository.Setup(m => m.AddAsync(It.IsAny<MarketParticipant>()))
                 .Callback<MarketParticipant>(m => marketParticipant = m);
@@ -55,14 +61,34 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             marketParticipant.Status.Should().Be(MarketParticipantStatus.Active);
         }
 
-        private static MarketParticipantCreatedCommand CreateCreatedEvent()
+        [Theory]
+        [InlineAutoMoqData]
+        public async Task HandleAsync_WhenGridAccessProvider_ShouldAddMarketParticipantAsGridAreaOwner(
+            Guid gridAreaId,
+            GridAreaLink gridAreaLink,
+            [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
+            [Frozen] Mock<IGridAreaLinkRepository> gridAreaLinkRepository,
+            MarketParticipantCreatedCommandHandler sut)
         {
-            return new MarketParticipantCreatedCommand(
+            // Arrange
+            var marketParticipantCreatedEvent = new MarketParticipantCreatedCommand(
                 ActorId: Guid.NewGuid(),
                 "mp123",
-                new List<MarketParticipantRole> { MarketParticipantRole.EnergySupplier, },
+                new List<MarketParticipantRole> { MarketParticipantRole.GridAccessProvider, },
                 MarketParticipantStatus.Active,
-                new List<Guid> { Guid.NewGuid(), });
+                new List<Guid> { gridAreaId });
+
+            MarketParticipant marketParticipant = null!;
+            marketParticipantRepository
+                .Setup(m => m.AddAsync(It.IsAny<MarketParticipant>()))
+                .Callback<MarketParticipant>(m => marketParticipant = m);
+            gridAreaLinkRepository
+                .Setup(g => g.GetGridAreaOrNullAsync(gridAreaId))
+                .ReturnsAsync(gridAreaLink);
+
+            await sut.HandleAsync(marketParticipantCreatedEvent);
+
+            gridAreaLink.OwnerId.Should().Be(marketParticipant.Id);
         }
     }
 }

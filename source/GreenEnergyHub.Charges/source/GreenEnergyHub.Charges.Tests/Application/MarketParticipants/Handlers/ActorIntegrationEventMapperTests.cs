@@ -141,11 +141,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
         }
 
         [Theory]
-        [InlineAutoData("664359b9-f6cc-45d4-9c93-ec35248e5f95", "664359b9-f6cc-45d4-9c93-ec35248e5f95")]
-        [InlineAutoData(null, null)]
-        public void MapFromActorExternalIdChanged_ShouldReturnMarketParticipantB2CActorIdChangedCommand(
-            Guid newExternalId,
-            Guid expectedId)
+        [InlineAutoData("664359b9-f6cc-45d4-9c93-ec35248e5f95")]
+        [InlineAutoData(null)]
+        public void MapFromActorExternalIdChanged_ShouldReturnMarketParticipantB2CActorIdChangedCommand(Guid externalId)
         {
             // Arrange
             var externalIdChanged = new ActorExternalIdChangedIntegrationEvent(
@@ -153,14 +151,14 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
                 InstantHelper.GetTodayAtMidnightUtc().ToDateTimeUtc(),
                 Guid.NewGuid(),
                 Guid.NewGuid(),
-                newExternalId);
+                externalId);
 
             // Act
             var actual = ActorIntegrationEventMapper.MapFromActorExternalIdChanged(externalIdChanged);
 
             // Assert
             actual.ActorId.Should().Be(actual.ActorId);
-            actual.B2CActorId.Should().Be(expectedId);
+            actual.B2CActorId.Should().Be(externalId);
         }
 
         private static IEnumerable<ActorMarketRole> CreateActorMarketRoles()
