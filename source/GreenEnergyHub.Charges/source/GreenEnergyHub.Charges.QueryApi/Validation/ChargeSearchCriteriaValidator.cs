@@ -19,19 +19,19 @@ using Energinet.DataHub.Charges.Contracts.Charge;
 
 namespace GreenEnergyHub.Charges.QueryApi.Validation
 {
-    public static class SearchCriteriaValidator
+    public static class ChargeSearchCriteriaValidator
     {
         /// <summary>
         /// Validate if the search criteria are valid
         /// </summary>
-        /// <param name="searchCriteriaV1Dto"></param>
+        /// <param name="searchCriteria"></param>
         /// <returns>bool</returns>
-        public static bool Validate(SearchCriteriaV1Dto searchCriteriaV1Dto)
+        public static bool Validate(ChargeSearchCriteriaV1Dto searchCriteria)
         {
-            if (!IsOwnerIdsValid(searchCriteriaV1Dto.OwnerIds))
+            if (!IsOwnerIdsValid(searchCriteria.OwnerIds))
                 return false;
 
-            if (!IsChargeTypesValid(searchCriteriaV1Dto.ChargeTypes))
+            if (!IsChargeTypesValid(searchCriteria.ChargeTypes))
                 return false;
 
             return true;
@@ -39,7 +39,8 @@ namespace GreenEnergyHub.Charges.QueryApi.Validation
 
         private static bool IsChargeTypesValid(List<ChargeType> chargeTypes)
         {
-            if (chargeTypes == null || !chargeTypes.Any()) return true;
+            if (chargeTypes == null || !chargeTypes.Any())
+                return true;
 
             foreach (var chargeType in chargeTypes)
             {
@@ -52,7 +53,8 @@ namespace GreenEnergyHub.Charges.QueryApi.Validation
 
         private static bool IsOwnerIdsValid(List<Guid> ownerIds)
         {
-            if (ownerIds == null || !ownerIds.Any()) return true;
+            if (ownerIds == null || !ownerIds.Any())
+                return true;
 
             return ownerIds.All(id => id != Guid.Empty);
         }
