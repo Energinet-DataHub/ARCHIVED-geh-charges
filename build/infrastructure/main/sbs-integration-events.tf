@@ -20,7 +20,7 @@ module "sbs_int_events_metering_point_created" {
   max_delivery_count  = 1
   correlation_filter  = {
     properties     = {
-      "MessageType" = "MeteringPointCreated"
+      "messageType" = "MeteringPointCreated"
     }
   }
 }
@@ -33,7 +33,7 @@ module "sbs_int_events_market_participant_changed" {
   max_delivery_count  = 1
   correlation_filter  = {
     properties     = {
-      "MessageType" = "ActorUpdatedIntegrationEvent"
+      "messageType" = "ActorUpdatedIntegrationEvent"
     }
   }
 }
@@ -46,7 +46,7 @@ module "sbs_int_events_market_participant_created" {
   max_delivery_count  = 1
   correlation_filter  = {
     properties     = {
-      "MessageType" = "ActorCreatedIntegrationEvent"
+      "messageType" = "ActorCreatedIntegrationEvent"
     }
   }
 }
