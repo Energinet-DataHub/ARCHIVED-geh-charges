@@ -150,13 +150,6 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             ArgumentNullException.ThrowIfNull(newChargePeriod);
             ArgumentNullException.ThrowIfNull(operationId);
 
-            // This should be in a separate rule and handled by ChargeOperationFailedException
-            // in order to notify sender that operation failed because of this constraint
-            if (newChargePeriod.EndDateTime != InstantExtensions.GetEndDefault())
-            {
-                throw new InvalidOperationException("Charge update must not have bound end date.");
-            }
-
             var rules = GenerateRules(newChargePeriod, taxIndicator, resolution, operationId);
             CheckRules(rules);
 
