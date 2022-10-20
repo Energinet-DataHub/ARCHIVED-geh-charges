@@ -16,6 +16,7 @@ using System;
 using GreenEnergyHub.Charges.QueryApi;
 using GreenEnergyHub.Charges.QueryApi.Model;
 using GreenEnergyHub.Charges.QueryApi.QueryServices;
+using GreenEnergyHub.Iso8601;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,8 +39,19 @@ namespace GreenEnergyHub.Charges.WebApi
             serviceCollection.AddScoped<IData, Data>();
             serviceCollection.AddScoped<IChargesQueryService, ChargesQueryService>();
             serviceCollection.AddScoped<IMarketParticipantQueryService, MarketParticipantQueryService>();
+            serviceCollection.AddScoped<IChargePriceQueryService, ChargePriceQueryService>();
+
+            ConfigureIso8601Services(serviceCollection);
 
             return serviceCollection;
+        }
+
+        private static void ConfigureIso8601Services(IServiceCollection serviceCollection)
+        {
+            var timeZoneId = Environment.GetEnvironmentVariable(EnvironmentSettingNames.LocalTimeZoneName);
+            var timeZoneConfiguration = new Iso8601ConversionConfiguration(timeZoneId);
+            serviceCollection.AddSingleton<IIso8601ConversionConfiguration>(timeZoneConfiguration);
+            serviceCollection.AddSingleton<IIso8601Durations, Iso8601Durations>();
         }
     }
 }
