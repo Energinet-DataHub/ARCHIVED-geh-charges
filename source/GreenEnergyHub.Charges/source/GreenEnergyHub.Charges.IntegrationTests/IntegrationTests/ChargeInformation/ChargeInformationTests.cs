@@ -24,6 +24,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.FunctionHost;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Attributes;
@@ -56,6 +57,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.ChargeInforma
             ChargeInformationOperationsHandler sut)
         {
             // Arrange
+            ChargesFunctionApp.ConfigureApplication();
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
             var jsonString = await File.ReadAllTextAsync("IntegrationTests\\ChargeInformation\\ChargeInformationTestTariff.json");
             try
