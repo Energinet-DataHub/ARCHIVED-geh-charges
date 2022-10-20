@@ -13,8 +13,11 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Parsers;
 using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers;
+using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers.Mappers;
+using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
@@ -25,16 +28,22 @@ namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
     {
         private const string FunctionName = nameof(MarketParticipantPersisterEndpoint);
         private readonly ISharedIntegrationEventParser _sharedIntegrationEventParser;
-        private readonly IMarketParticipantEventHandler _marketParticipantEventHandler;
+        private readonly IMarketParticipantUpdatedCommandHandler _marketParticipantUpdatedCommandHandler;
+        private readonly IMarketParticipantGridAreaUpdatedCommandHandler _marketParticipantGridAreaUpdatedCommandHandler;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger _logger;
 
         public MarketParticipantPersisterEndpoint(
             ISharedIntegrationEventParser sharedIntegrationEventParser,
-            IMarketParticipantEventHandler marketParticipantEventHandler,
-            ILoggerFactory loggerFactory)
+            IMarketParticipantUpdatedCommandHandler marketParticipantUpdatedCommandHandler,
+            IMarketParticipantGridAreaUpdatedCommandHandler marketParticipantGridAreaUpdatedCommandHandler,
+            ILoggerFactory loggerFactory,
+            IUnitOfWork unitOfWork)
         {
             _sharedIntegrationEventParser = sharedIntegrationEventParser;
-            _marketParticipantEventHandler = marketParticipantEventHandler;
+            _marketParticipantUpdatedCommandHandler = marketParticipantUpdatedCommandHandler;
+            _marketParticipantGridAreaUpdatedCommandHandler = marketParticipantGridAreaUpdatedCommandHandler;
+            _unitOfWork = unitOfWork;
             _logger = loggerFactory.CreateLogger(FunctionName);
         }
 
@@ -52,7 +61,26 @@ namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
                 "Received integration events from Market Participant of type {Type}",
                 messageEvent.GetType());
 
-            await _marketParticipantEventHandler.HandleAsync(messageEvent).ConfigureAwait(false);
+            switch (messageEvent.GetType().Name)
+            {
+                case nameof(ActorUpdatedIntegrationEvent):
+                    {
+                        var command = MarketParticipantIntegrationEventMapper.Map(
+                            (ActorUpdatedIntegrationEvent)messageEvent);
+                        await _marketParticipantUpdatedCommandHandler.HandleAsync(command).ConfigureAwait(false);
+                        await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+                        break;
+                    }
+
+                case nameof(GridAreaUpdatedIntegrationEvent):
+                    {
+                        var command = MarketParticipantIntegrationEventMapper.Map(
+                            (GridAreaUpdatedIntegrationEvent)messageEvent);
+                        await _marketParticipantGridAreaUpdatedCommandHandler.HandleAsync(command).ConfigureAwait(false);
+                        await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+                        break;
+                    }
+            }
         }
     }
 }

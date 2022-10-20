@@ -12,17 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 
-namespace GreenEnergyHub.Charges.TestCore.Builders.Testables
+namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 {
-    public class TestMeteringPointAdministrator : MarketParticipant
+    /// <summary>
+    /// Handle command for updating status existing market participants
+    /// </summary>
+    public interface IMarketParticipantStatusChangedCommandHandler
     {
-        public TestMeteringPointAdministrator(string marketParticipantId)
-            : base(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), marketParticipantId, MarketParticipantStatus.Active, MarketParticipantRole.MeteringPointAdministrator)
-        {
-        }
+        /// <summary>
+        /// Handle status changed command
+        /// </summary>
+        /// <param name="marketParticipantStatusChangedCommand"></param>
+        Task HandleAsync(MarketParticipantStatusChangedCommand marketParticipantStatusChangedCommand);
     }
 }

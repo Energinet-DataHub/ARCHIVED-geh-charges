@@ -25,6 +25,7 @@ using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim;
 using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.Charges;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
 using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.Charges.TestCore.Builders.Testables;
 using GreenEnergyHub.Charges.Tests.TestHelpers;
 using GreenEnergyHub.Iso8601;
 using GreenEnergyHub.TestHelpers;
@@ -114,13 +115,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
         {
             marketParticipantRepository
                 .Setup(r => r.GetMeteringPointAdministratorAsync())
-                .ReturnsAsync(new MarketParticipant(
-                    id: Guid.NewGuid(),
-                    actorId: Guid.NewGuid(),
-                    b2CActorId: Guid.NewGuid(),
-                    "5790001330552",
-                    MarketParticipantStatus.Active,
-                    MarketParticipantRole.MeteringPointAdministrator));
+                .ReturnsAsync(new TestMeteringPointAdministrator("5790001330552"));
 
             var currentTime = Instant.FromUtc(2021, 10, 22, 15, 30, 41).PlusNanoseconds(4);
             clock.Setup(c => c.GetCurrentInstant()).Returns(currentTime);

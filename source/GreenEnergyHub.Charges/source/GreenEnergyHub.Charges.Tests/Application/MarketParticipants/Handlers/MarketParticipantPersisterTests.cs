@@ -19,18 +19,17 @@ using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers;
 using GreenEnergyHub.Charges.Application.Persistence;
-using GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsUpdatedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.GridAreaLinks;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.TestCore.Builders.Testables;
 using GreenEnergyHub.TestHelpers;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 using Xunit.Categories;
-using GridAreaLink = GreenEnergyHub.Charges.Domain.GridAreaLinks.GridAreaLink;
-using MarketParticipant = GreenEnergyHub.Charges.Domain.MarketParticipants.MarketParticipant;
 
 namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
 {
@@ -42,12 +41,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
         public async Task PersistAsync_WhenCalledWithNonExistentMarketParticipantAndNonExistentGridArea_ShouldPersist(
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IGridAreaLinkRepository> gridAreaLinkRepository,
-            [Frozen] Mock<ILoggerFactory> loggerFactory,
-            [Frozen] Mock<IUnitOfWork> unitOfWork,
-            Mock<ILogger> logger)
+            [Frozen] Mock<IUnitOfWork> unitOfWork)
         {
             // Arrange
-            loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
             var marketParticipantUpdatedEvent = GetMarketParticipantUpdatedEvent(
                 new List<MarketParticipantRole> { MarketParticipantRole.GridAccessProvider },
                 new List<Guid>());
@@ -57,7 +53,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             var sut = new MarketParticipantPersister(
                 marketParticipantRepository.Object,
                 gridAreaLinkRepository.Object,
-                loggerFactory.Object,
                 unitOfWork.Object);
 
             // Act
@@ -65,12 +60,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
 
             // Assert
             marketParticipantRepository.Verify(v => v.AddAsync(It.IsAny<MarketParticipant>()), Times.Once());
-            logger.VerifyLoggerWasCalled(
-                $"Market participant with MarketParticipantId '{marketParticipantUpdatedEvent.MarketParticipantId}', ActorId " +
-                $"'{marketParticipantUpdatedEvent.ActorId}', B2CActorId '{marketParticipantUpdatedEvent.B2CActorId}' " +
-                $"and role '{MarketParticipantRole.GridAccessProvider}' has been persisted",
-                LogLevel.Information);
-            logger.VerifyNoOtherCalls();
         }
 
         [Theory]
@@ -78,12 +67,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
         public async Task PersistAsync_WhenCalledWithExistingMarketParticipantAndNonExistentGridArea_ShouldUpdateExisting(
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IGridAreaLinkRepository> gridAreaLinkRepository,
-            [Frozen] Mock<ILoggerFactory> loggerFactory,
-            [Frozen] Mock<IUnitOfWork> unitOfWork,
-            Mock<ILogger> logger)
+            [Frozen] Mock<IUnitOfWork> unitOfWork)
         {
             // Arrange
-            loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
             var marketParticipantUpdatedEvent = GetMarketParticipantUpdatedEvent(
                 new List<MarketParticipantRole> { MarketParticipantRole.GridAccessProvider },
                 new List<Guid>());
@@ -95,7 +81,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             var sut = new MarketParticipantPersister(
                 marketParticipantRepository.Object,
                 gridAreaLinkRepository.Object,
-                loggerFactory.Object,
                 unitOfWork.Object);
 
             // Act
@@ -103,11 +88,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
 
             // Assert
             marketParticipantRepository.Verify(v => v.AddAsync(It.IsAny<MarketParticipant>()), Times.Never());
-            logger.VerifyLoggerWasCalled(
-                $"Market participant with MarketParticipantId '{existingMarketParticipant.MarketParticipantId}' " +
-                $"and role '{existingMarketParticipant.BusinessProcessRole}' has changed state",
-                LogLevel.Information);
-            logger.VerifyNoOtherCalls();
         }
 
         [Theory]
@@ -115,12 +95,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
         public async Task PersistAsync_WhenCalledWithExistingMarketParticipantMatchingOnActorIdAndNonExistentGridArea_ShouldUpdateExisting(
                 [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
                 [Frozen] Mock<IGridAreaLinkRepository> gridAreaLinkRepository,
-                [Frozen] Mock<ILoggerFactory> loggerFactory,
-                [Frozen] Mock<IUnitOfWork> unitOfWork,
-                Mock<ILogger> logger)
+                [Frozen] Mock<IUnitOfWork> unitOfWork)
         {
             // Arrange
-            loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
             var marketParticipantUpdatedEvent = GetMarketParticipantUpdatedEvent(
                 new List<MarketParticipantRole> { MarketParticipantRole.GridAccessProvider },
                 new List<Guid>());
@@ -135,7 +112,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             var sut = new MarketParticipantPersister(
                 marketParticipantRepository.Object,
                 gridAreaLinkRepository.Object,
-                loggerFactory.Object,
                 unitOfWork.Object);
 
             // Act
@@ -143,11 +119,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
 
             // Assert
             marketParticipantRepository.Verify(v => v.AddAsync(It.IsAny<MarketParticipant>()), Times.Never());
-            logger.VerifyLoggerWasCalled(
-                $"Market participant with MarketParticipantId '{existingMarketParticipant.MarketParticipantId}' " +
-                $"and role '{existingMarketParticipant.BusinessProcessRole}' has changed state",
-                LogLevel.Information);
-            logger.VerifyNoOtherCalls();
         }
 
         [Theory]
@@ -155,15 +126,12 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
         public async Task PersistAsync_WhenCalledWithNonExistentMarketParticipantAndExistentGridAreaLink_ShouldPersist(
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IGridAreaLinkRepository> gridAreaLinkRepository,
-            [Frozen] Mock<ILoggerFactory> loggerFactory,
-            [Frozen] Mock<IUnitOfWork> unitOfWork,
-            Mock<ILogger> logger)
+            [Frozen] Mock<IUnitOfWork> unitOfWork)
         {
             // Arrange
             var gridAreaId = Guid.NewGuid();
             var gridAreaLink = new GridAreaLink(Guid.NewGuid(), gridAreaId, Guid.NewGuid());
 
-            loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
             var marketParticipantUpdatedEvent = GetMarketParticipantUpdatedEvent(
                 new List<MarketParticipantRole> { MarketParticipantRole.GridAccessProvider },
                 new List<Guid> { gridAreaLink.GridAreaId });
@@ -173,7 +141,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             var sut = new MarketParticipantPersister(
                 marketParticipantRepository.Object,
                 gridAreaLinkRepository.Object,
-                loggerFactory.Object,
                 unitOfWork.Object);
 
             // Act
@@ -182,17 +149,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             // Assert
             marketParticipantRepository.Verify(v => v.AddAsync(It.IsAny<MarketParticipant>()), Times.Once);
             gridAreaLinkRepository.Verify(v => v.GetGridAreaOrNullAsync(It.IsAny<Guid>()), Times.Once);
-            logger.VerifyLoggerWasCalled(
-                $"Market participant with MarketParticipantId '{marketParticipantUpdatedEvent.MarketParticipantId}', ActorId " +
-                $"'{marketParticipantUpdatedEvent.ActorId}', B2CActorId '{marketParticipantUpdatedEvent.B2CActorId}' " +
-                $"and role '{MarketParticipantRole.GridAccessProvider}' has been persisted",
-                LogLevel.Information);
-            logger.VerifyLoggerWasCalled(
-                $"GridAreaLink ID '{gridAreaLink.Id}' has changed Owner ID to '{gridAreaLink.OwnerId}' " +
-                $"with MarketParticipantId {marketParticipantUpdatedEvent.MarketParticipantId} and B2CActorId " +
-                $"{marketParticipantUpdatedEvent.B2CActorId}",
-                LogLevel.Information);
-            logger.VerifyNoOtherCalls();
         }
 
         [Theory]
@@ -200,15 +156,12 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
         public async Task PersistAsync_WhenCalledWithNonExistingMarketParticipantAndMultipleExistingGridAreas_ShouldPersist(
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IGridAreaLinkRepository> gridAreaLinkRepository,
-            [Frozen] Mock<ILoggerFactory> loggerFactory,
-            [Frozen] Mock<IUnitOfWork> unitOfWork,
-            Mock<ILogger> logger)
+            [Frozen] Mock<IUnitOfWork> unitOfWork)
         {
             // Arrange
             var gridAreaLink = new GridAreaLink(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid());
             var gridAreas = new List<Guid> { Guid.NewGuid(), Guid.NewGuid() };
 
-            loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
             var marketParticipantUpdatedEvent = GetMarketParticipantUpdatedEvent(
                 new List<MarketParticipantRole> { MarketParticipantRole.GridAccessProvider },
                 gridAreas);
@@ -218,7 +171,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             var sut = new MarketParticipantPersister(
                 marketParticipantRepository.Object,
                 gridAreaLinkRepository.Object,
-                loggerFactory.Object,
                 unitOfWork.Object);
 
             // Act
@@ -227,17 +179,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             // Assert
             marketParticipantRepository.Verify(v => v.AddAsync(It.IsAny<MarketParticipant>()), Times.Once);
             gridAreaLinkRepository.Verify(v => v.GetGridAreaOrNullAsync(It.IsAny<Guid>()), Times.Exactly(2));
-            logger.VerifyLoggerWasCalled(
-                $"Market participant with MarketParticipantId '{marketParticipantUpdatedEvent.MarketParticipantId}', ActorId " +
-                $"'{marketParticipantUpdatedEvent.ActorId}', B2CActorId '{marketParticipantUpdatedEvent.B2CActorId}' " +
-                $"and role '{MarketParticipantRole.GridAccessProvider}' has been persisted",
-                LogLevel.Information);
-            logger.VerifyLoggerWasCalled(
-                $"GridAreaLink ID '{gridAreaLink.Id}' has changed Owner ID to '{gridAreaLink.OwnerId}' " +
-                $"with MarketParticipantId {marketParticipantUpdatedEvent.MarketParticipantId} and B2CActorId " +
-                $"{marketParticipantUpdatedEvent.B2CActorId}",
-                LogLevel.Information);
-            logger.VerifyNoOtherCalls();
         }
 
         [Theory]
@@ -245,21 +186,13 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
         public async Task PersistAsync_WhenCalledWithExistingMarketParticipantWithDifferentRole_ShouldThrowInvalidOperation(
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IGridAreaLinkRepository> gridAreaLinkRepository,
-            [Frozen] Mock<ILoggerFactory> loggerFactory,
             [Frozen] Mock<IUnitOfWork> unitOfWork)
         {
             // Arrange
-            var existingMarketParticipant = new MarketParticipant(
-                id: Guid.NewGuid(),
-                actorId: Guid.NewGuid(),
-                b2CActorId: Guid.NewGuid(),
-                "mp123",
-                MarketParticipantStatus.Active,
-                MarketParticipantRole.GridAccessProvider);
-
+            var existingMarketParticipant = new TestGridAccessProvider("mp123");
             var marketParticipantUpdatedEvent = GetMarketParticipantUpdatedEvent(
-                new List<MarketParticipantRole> { MarketParticipantRole.EnergySupplier },
-                new List<Guid>());
+            new List<MarketParticipantRole> { MarketParticipantRole.EnergySupplier },
+            new List<Guid>());
 
             SetupRepositories(marketParticipantRepository, null!, gridAreaLinkRepository, null!);
             marketParticipantRepository
@@ -269,7 +202,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             var sut = new MarketParticipantPersister(
                 marketParticipantRepository.Object,
                 gridAreaLinkRepository.Object,
-                loggerFactory.Object,
                 unitOfWork.Object);
 
             // Act and Assert
@@ -283,7 +215,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
         public async Task PersistAsync_WhenEventIsNull_ThrowsArgumentNullException(MarketParticipantPersister sut)
         {
             // Arrange
-            MarketParticipantUpdatedEvent? marketParticipantUpdatedEvent = null;
+            MarketParticipantUpdatedCommand? marketParticipantUpdatedEvent = null;
 
             // Act / Assert
             await Assert.ThrowsAsync<ArgumentNullException>(
@@ -313,7 +245,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             var sut = new MarketParticipantPersister(
                 marketParticipantRepository.Object,
                 gridAreaLinkRepository.Object,
-                loggerFactory.Object,
                 unitOfWork.Object);
 
             // Act
@@ -321,11 +252,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
 
             // Assert
             gridAreaLinkRepository.Verify(v => v.GetGridAreaOrNullAsync(It.IsAny<Guid>()), Times.Never());
-            logger.VerifyLoggerWasCalled(
-                $"Market participant with MarketParticipantId '{existingMarketParticipant.MarketParticipantId}' " +
-                $"and role '{existingMarketParticipant.BusinessProcessRole}' has changed state",
-                LogLevel.Information);
-            logger.VerifyNoOtherCalls();
         }
 
         [Theory]
@@ -333,12 +259,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
         public async Task PersistAsync_WhenCalledWithoutGridAreaLink_ShouldNotConnectToGrid(
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IGridAreaLinkRepository> gridAreaLinkRepository,
-            [Frozen] Mock<ILoggerFactory> loggerFactory,
-            [Frozen] Mock<IUnitOfWork> unitOfWork,
-            Mock<ILogger> logger)
+            [Frozen] Mock<IUnitOfWork> unitOfWork)
         {
             // Arrange
-            loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
             var marketParticipantUpdatedEvent = GetMarketParticipantUpdatedEvent(
                 new List<MarketParticipantRole> { MarketParticipantRole.GridAccessProvider },
                 new List<Guid>() { Guid.NewGuid() });
@@ -349,7 +272,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             var sut = new MarketParticipantPersister(
                 marketParticipantRepository.Object,
                 gridAreaLinkRepository.Object,
-                loggerFactory.Object,
                 unitOfWork.Object);
 
             // Act
@@ -357,11 +279,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
 
             // Assert
             gridAreaLinkRepository.Verify(v => v.GetGridAreaOrNullAsync(It.IsAny<Guid>()), Times.Once);
-            logger.VerifyLoggerWasCalled(
-                $"Market participant with MarketParticipantId '{existingMarketParticipant.MarketParticipantId}' " +
-                $"and role '{existingMarketParticipant.BusinessProcessRole}' has changed state",
-                LogLevel.Information);
-            logger.VerifyNoOtherCalls();
         }
 
         [Theory]
@@ -369,12 +286,9 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
         public async Task PersistAsync_WhenCalledWithExistingGridAreaLink_ShouldNotConnectToGrid(
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IGridAreaLinkRepository> gridAreaLinkRepository,
-            [Frozen] Mock<ILoggerFactory> loggerFactory,
-            [Frozen] Mock<IUnitOfWork> unitOfWork,
-            Mock<ILogger> logger)
+            [Frozen] Mock<IUnitOfWork> unitOfWork)
         {
             // Arrange
-            loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
             var gridAreaId = Guid.NewGuid();
             var marketParticipantUpdatedEvent = GetMarketParticipantUpdatedEvent(
                 new List<MarketParticipantRole> { MarketParticipantRole.GridAccessProvider },
@@ -387,7 +301,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             var sut = new MarketParticipantPersister(
                 marketParticipantRepository.Object,
                 gridAreaLinkRepository.Object,
-                loggerFactory.Object,
                 unitOfWork.Object);
 
             // Act
@@ -395,18 +308,13 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
 
             // Assert
             gridAreaLinkRepository.Verify(v => v.GetGridAreaOrNullAsync(It.IsAny<Guid>()), Times.Once());
-            logger.VerifyLoggerWasCalled(
-                $"Market participant with MarketParticipantId '{existingMarketParticipant.MarketParticipantId}' " +
-                $"and role '{existingMarketParticipant.BusinessProcessRole}' has changed state",
-                LogLevel.Information);
-            logger.VerifyNoOtherCalls();
         }
 
-        private static MarketParticipantUpdatedEvent GetMarketParticipantUpdatedEvent(
+        private static MarketParticipantUpdatedCommand GetMarketParticipantUpdatedEvent(
             List<MarketParticipantRole> marketParticipantRoleCodes,
             IEnumerable<Guid> gridAreas)
         {
-            return new MarketParticipantUpdatedEvent(
+            return new MarketParticipantUpdatedCommand(
                 actorId: Guid.NewGuid(),
                 b2CActorId: Guid.NewGuid(),
                 "mp123",
@@ -416,15 +324,15 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
         }
 
         private static MarketParticipant GetMarketParticipant(
-            MarketParticipantUpdatedEvent marketParticipantUpdatedEvent)
+            MarketParticipantUpdatedCommand marketParticipantUpdatedCommand)
         {
-            return new MarketParticipant(
+            return new TestMarketParticipant(
                 id: Guid.NewGuid(),
                 actorId: Guid.NewGuid(),
                 b2CActorId: Guid.NewGuid(),
-                marketParticipantUpdatedEvent.MarketParticipantId,
-                marketParticipantUpdatedEvent.Status,
-                marketParticipantUpdatedEvent.BusinessProcessRoles.Single());
+                marketParticipantUpdatedCommand.MarketParticipantId,
+                marketParticipantUpdatedCommand.Status,
+                marketParticipantUpdatedCommand.BusinessProcessRoles.Single());
         }
 
         private static void SetupRepositories(

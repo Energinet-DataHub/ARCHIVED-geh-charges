@@ -13,22 +13,19 @@
 // limitations under the License.
 
 using System;
-using GreenEnergyHub.Charges.Domain.Dtos.Messages;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.GridAreas
+namespace GreenEnergyHub.Charges.TestCore.Builders.Testables
 {
-    public class GridAreaUpdatedEvent : MessageBase
+    /// <summary>
+    /// Makes it easier to auto-mock grid access providers in tests.
+    /// </summary>
+    public class TestEnergySupplier : MarketParticipant
     {
-        public GridAreaUpdatedEvent(
-            Guid gridAreaId,
-            Guid gridAreaLinkId)
+        public TestEnergySupplier(string marketParticipantId)
+            : base(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), marketParticipantId, MarketParticipantStatus.Active, MarketParticipantRole.EnergySupplier)
         {
-            GridAreaId = gridAreaId;
-            GridAreaLinkId = gridAreaLinkId;
         }
-
-        public Guid GridAreaId { get; }
-
-        public Guid GridAreaLinkId { get; }
     }
 }
