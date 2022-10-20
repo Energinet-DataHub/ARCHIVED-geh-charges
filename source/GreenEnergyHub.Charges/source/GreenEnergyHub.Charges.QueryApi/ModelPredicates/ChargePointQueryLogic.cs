@@ -25,7 +25,7 @@ namespace GreenEnergyHub.Charges.QueryApi.ModelPredicates;
 
 public static class ChargePointQueryLogic
 {
-    public static IList<ChargePriceV1Dto> AsChargePointV1Dto(
+    public static IList<ChargePriceV1Dto> AsChargePriceV1Dto(
         this IQueryable<ChargePoint> queryable,
         IIso8601Durations iso8601Durations)
     {
@@ -42,19 +42,19 @@ public static class ChargePointQueryLogic
             .ToList();
 
         return chargePrices
-            .Select((cp, index) => MapChargePointV1Dto(chargePrices, index, cp))
+            .Select((cp, index) => MapChargePriceV1Dto(chargePrices, index, cp))
             .ToList();
     }
 
     /// <summary>
     /// This mapper ensures that there will be no overlaps between date times.
-    /// 'ChargePoints' have to be ordered by time.
+    /// 'ChargePrices' have to be ordered by time.
     /// </summary>
     /// <param name="chargePrices"></param>
     /// <param name="index"></param>
     /// <param name="chargePrice"></param>
-    /// <returns>Returns charge point dto with correct 'ActiveToDateTime' date time</returns>
-    private static ChargePriceV1Dto MapChargePointV1Dto(IList<ChargePriceV1Dto> chargePrices, int index, ChargePriceV1Dto chargePrice)
+    /// <returns>Returns charge price dto with correct 'ToDateTime' date time</returns>
+    private static ChargePriceV1Dto MapChargePriceV1Dto(IList<ChargePriceV1Dto> chargePrices, int index, ChargePriceV1Dto chargePrice)
     {
         var lastIndex = chargePrices.IndexOf(chargePrices.Last());
         if (index != lastIndex)

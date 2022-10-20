@@ -16,7 +16,7 @@ using Energinet.DataHub.Charges.Contracts.ChargePrice;
 
 namespace GreenEnergyHub.Charges.QueryApi.QueryServices;
 
-public interface IChargePointQueryService
+public interface IChargePriceQueryService
 {
     IList<ChargePriceV1Dto> Search(ChargePricesSearchCriteriaV1Dto chargePricesSearchCriteria);
 }

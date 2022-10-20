@@ -99,8 +99,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var sut = GetSut(chargesDatabaseQueryContext);
             var searchCriteria = new ChargePricesSearchCriteriaV1Dto(
                 expectedCharge.Id,
-                InstantHelper.GetTodayAtMidnightUtc().ToDateTimeUtc(),
-                InstantHelper.GetTomorrowAtMidnightUtc().ToDateTimeUtc());
+                InstantHelper.GetTodayAtMidnightUtc().ToDateTimeOffset(),
+                InstantHelper.GetTomorrowAtMidnightUtc().ToDateTimeOffset());
 
             var expected = new ChargePriceV1Dto(
                 expectedPoint.Price,
@@ -139,8 +139,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var sut = GetSut(chargesDatabaseQueryContext);
             var searchCriteria = new ChargePricesSearchCriteriaV1Dto(
                 charge.Id,
-                InstantHelper.GetTodayAtMidnightUtc().ToDateTimeUtc(),
-                InstantHelper.GetTomorrowAtMidnightUtc().ToDateTimeUtc());
+                InstantHelper.GetTodayAtMidnightUtc().ToDateTimeOffset(),
+                InstantHelper.GetTomorrowAtMidnightUtc().ToDateTimeOffset());
 
             // Act
             var actual = sut.Search(searchCriteria);
@@ -175,8 +175,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var sut = GetSut(chargesDatabaseQueryContext);
             var searchCriteria = new ChargePricesSearchCriteriaV1Dto(
                 charge.Id,
-                InstantHelper.GetTodayAtMidnightUtc().ToDateTimeUtc(),
-                InstantHelper.GetTomorrowAtMidnightUtc().ToDateTimeUtc());
+                InstantHelper.GetTodayAtMidnightUtc().ToDateTimeOffset(),
+                InstantHelper.GetTomorrowAtMidnightUtc().ToDateTimeOffset());
 
             // Act
             var actual = sut.Search(searchCriteria);
@@ -211,8 +211,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var sut = GetSut(chargesDatabaseQueryContext);
             var searchCriteria = new ChargePricesSearchCriteriaV1Dto(
                 charge.Id,
-                InstantHelper.GetTodayPlusDaysAtMidnightUtc(0).ToDateTimeUtc(),
-                InstantHelper.GetTodayPlusDaysAtMidnightUtc(5).ToDateTimeUtc());
+                InstantHelper.GetTodayPlusDaysAtMidnightUtc(0).ToDateTimeOffset(),
+                InstantHelper.GetTodayPlusDaysAtMidnightUtc(5).ToDateTimeOffset());
 
             // Act
             var actual = sut.Search(searchCriteria);
@@ -247,8 +247,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var sut = GetSut(chargesDatabaseQueryContext);
             var searchCriteria = new ChargePricesSearchCriteriaV1Dto(
                 charge.Id,
-                InstantHelper.GetFirstDayOfThisMonthPlusMonthsAtMidnightUtc(0).ToDateTimeUtc(),
-                InstantHelper.GetFirstDayOfThisMonthPlusMonthsAtMidnightUtc(5).ToDateTimeUtc());
+                InstantHelper.GetFirstDayOfThisMonthPlusMonthsAtMidnightUtc(0).ToDateTimeOffset(),
+                InstantHelper.GetFirstDayOfThisMonthPlusMonthsAtMidnightUtc(5).ToDateTimeOffset());
 
             // Act
             var actual = sut.Search(searchCriteria);

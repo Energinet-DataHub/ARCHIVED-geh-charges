@@ -20,7 +20,7 @@ using GreenEnergyHub.Iso8601;
 
 namespace GreenEnergyHub.Charges.QueryApi.QueryServices;
 
-public class ChargePriceQueryService : IChargePointQueryService
+public class ChargePriceQueryService : IChargePriceQueryService
 {
     private readonly IData _data;
     private readonly IIso8601Durations _iso8601Durations;
@@ -38,6 +38,6 @@ public class ChargePriceQueryService : IChargePointQueryService
             .Where(c => c.Time >= chargePricesSearchCriteria.FromDateTime && c.Time < chargePricesSearchCriteria.ToDateTime);
 
         return chargePoints
-            .AsChargePointV1Dto(_iso8601Durations);
+            .AsChargePriceV1Dto(_iso8601Durations);
     }
 }

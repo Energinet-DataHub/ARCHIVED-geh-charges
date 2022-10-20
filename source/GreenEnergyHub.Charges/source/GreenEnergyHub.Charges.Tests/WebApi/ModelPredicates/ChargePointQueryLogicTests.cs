@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
     {
         [Theory]
         [InlineAutoMoqData]
-        public void AsChargePointV1Dto_WhenResolutionIsPT15M_SetsAllPropertiesCorrectly(
+        public void AsChargePriceV1Dto_WhenResolutionIsPT15M_SetsAllPropertiesCorrectly(
             ChargePoint chargePoint)
         {
             // Arrange
@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
             var iso8601Durations = GetIso8601Durations();
 
             // Act
-            var actual = chargePoints.AsChargePointV1Dto(iso8601Durations);
+            var actual = chargePoints.AsChargePriceV1Dto(iso8601Durations);
 
             // Assert
             actual.Single().Should().Be(expected);
@@ -56,7 +56,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
 
         [Theory]
         [InlineAutoMoqData]
-        public void AsChargePointV1Dto_WhenResolutionIsPT15M_TimeShouldNotOverlap(
+        public void AsChargePriceV1Dto_WhenResolutionIsPT15M_TimeShouldNotOverlap(
             ChargePoint chargePoint,
             ChargePoint chargePoint2)
         {
@@ -83,7 +83,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
             var iso8601Durations = GetIso8601Durations();
 
             // Act
-            var actual = chargePoints.AsChargePointV1Dto(iso8601Durations);
+            var actual = chargePoints.AsChargePriceV1Dto(iso8601Durations);
 
             // Assert
             actual.Should().BeEquivalentTo(expected);
@@ -91,7 +91,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
 
         [Theory]
         [InlineAutoMoqData]
-        public void AsChargePointV1Dto_WhenResolutionIsP1M_DatesShouldNotOverlap(
+        public void AsChargePriceV1Dto_WhenResolutionIsP1M_DatesShouldNotOverlap(
             ChargePoint chargePoint,
             ChargePoint chargePoint2,
             ChargePoint chargePoint3)
@@ -126,7 +126,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
             var iso8601Durations = GetIso8601Durations();
 
             // Act
-            var actual = chargePoints.AsChargePointV1Dto(iso8601Durations);
+            var actual = chargePoints.AsChargePriceV1Dto(iso8601Durations);
 
             // Assert
             actual.ToList().Should().BeEquivalentTo(expected);
@@ -134,7 +134,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
 
         [Theory]
         [InlineAutoMoqData]
-        public void AsChargePointV1Dto_WhenResolutionIsP1MWithMultiplePoints_ReturnsChargePointsWithCorrectDates(
+        public void AsChargePriceV1Dto_WhenResolutionIsP1MWithMultiplePoints_ReturnsChargePointsWithCorrectDates(
             ChargePoint chargePoint,
             ChargePoint chargePoint2,
             ChargePoint chargePoint3)
@@ -169,7 +169,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
             var iso8601Durations = GetIso8601Durations();
 
             // Act
-            var actual = chargePoints.AsChargePointV1Dto(iso8601Durations);
+            var actual = chargePoints.AsChargePriceV1Dto(iso8601Durations);
 
             // Assert
             actual.ToList().Should().BeEquivalentTo(expected);
@@ -177,7 +177,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
 
         [Theory]
         [InlineAutoMoqData]
-        public void AsChargePointV1Dto_WhenResolutionIsPT1H_TimeShouldNotOverlap(
+        public void AsChargePriceV1Dto_WhenResolutionIsPT1H_TimeShouldNotOverlap(
             ChargePoint chargePoint,
             ChargePoint chargePoint2,
             ChargePoint chargePoint3)
@@ -212,7 +212,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
             var iso8601Durations = GetIso8601Durations();
 
             // Act
-            var actual = chargePoints.AsChargePointV1Dto(iso8601Durations);
+            var actual = chargePoints.AsChargePriceV1Dto(iso8601Durations);
 
             // Assert
             actual.ToList().Should().BeEquivalentTo(expected);
@@ -220,7 +220,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
 
         [Theory]
         [InlineAutoMoqData]
-        public void AsChargePointV1Dto_WhenResolutionIsP1D_DatesShouldNotOverlap(
+        public void AsChargePriceV1Dto_WhenResolutionIsP1D_DatesShouldNotOverlap(
             ChargePoint chargePoint,
             ChargePoint chargePoint2,
             ChargePoint chargePoint3)
@@ -255,7 +255,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
             var iso8601Durations = GetIso8601Durations();
 
             // Act
-            var actual = chargePoints.AsChargePointV1Dto(iso8601Durations);
+            var actual = chargePoints.AsChargePriceV1Dto(iso8601Durations);
 
             // Assert
             actual.ToList().Should().BeEquivalentTo(expected);

@@ -85,7 +85,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
             var searchCriteria =
                 new ChargePricesSearchCriteriaV1Dto(
                     chargePoint.ChargeId,
-                    chargePoint.Time.AddDays(-1),
+                    chargePoint.Time,
                     chargePoint.Time.AddDays(1));
 
             // Act
