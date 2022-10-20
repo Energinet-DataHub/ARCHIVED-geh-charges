@@ -23,8 +23,8 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Testables
     /// </summary>
     public class TestMarketParticipant : MarketParticipant
     {
-        public TestMarketParticipant(Guid id, Guid actorId, Guid b2CActorId, string marketParticipantId)
-            : base(id, actorId, b2CActorId, marketParticipantId, MarketParticipantStatus.Active, MarketParticipantRole.GridAccessProvider)
+        public TestMarketParticipant(Guid id, Guid actorId, Guid b2CActorId, string marketParticipantId, MarketParticipantStatus status, MarketParticipantRole role)
+            : base(id, actorId, b2CActorId, marketParticipantId, status, role)
         {
         }
     }

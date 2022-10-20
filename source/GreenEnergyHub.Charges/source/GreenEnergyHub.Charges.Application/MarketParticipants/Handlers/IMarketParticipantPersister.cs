@@ -13,7 +13,7 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.MarketParticipantsUpdatedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 
 namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 {
@@ -25,7 +25,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
         /// <summary>
         /// Adds or update a market participant from an integration event
         /// </summary>
-        /// <param name="marketParticipantUpdatedEvent"></param>
-        Task PersistAsync(MarketParticipantUpdatedEvent marketParticipantUpdatedEvent);
+        /// <param name="marketParticipantUpdatedCommand"></param>
+        Task PersistAsync(MarketParticipantUpdatedCommand marketParticipantUpdatedCommand);
     }
 }

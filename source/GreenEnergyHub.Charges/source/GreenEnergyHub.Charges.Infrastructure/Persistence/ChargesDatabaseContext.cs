@@ -38,6 +38,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence
 
         public DbSet<Charge> Charges { get; private set; }
 
+        public DbSet<ChargeMessage> ChargeMessages { get; private set; }
+
         public DbSet<MarketParticipant> MarketParticipants { get; private set; }
 
         public DbSet<MeteringPoint> MeteringPoints { get; private set; }
@@ -60,6 +62,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence
             if (modelBuilder == null) throw new ArgumentNullException(nameof(modelBuilder));
 
             modelBuilder.ApplyConfiguration(new ChargeEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new ChargeMessageEntityConfiguration());
             modelBuilder.ApplyConfiguration(new ChargeLinkEntityConfiguration());
             modelBuilder.ApplyConfiguration(new DefaultChargeLinkEntityConfiguration());
             modelBuilder.ApplyConfiguration(new MarketParticipantEntityConfiguration());

@@ -16,7 +16,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using FluentAssertions;
@@ -27,6 +26,7 @@ using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim;
 using GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.Charges;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeData;
 using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.Charges.TestCore.Builders.Testables;
 using GreenEnergyHub.Charges.Tests.TestHelpers;
 using GreenEnergyHub.Iso8601;
 using GreenEnergyHub.TestHelpers;
@@ -43,6 +43,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
         private const int NoOfChargesInBundle = 10;
         private const string CimTestId = "00000000000000000000000000000000";
         private const string RecipientId = "Recipient";
+        private static readonly Random _rnd = new Random();
 
         [Theory]
         [InlineAutoDomainData("TestFiles/ExpectedOutputChargeCimJsonSerializerChargePrices.blob")]
@@ -87,13 +88,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
         {
             marketParticipantRepository
                 .Setup(r => r.GetMeteringPointAdministratorAsync())
-                .ReturnsAsync(new MarketParticipant(
-                    id: Guid.NewGuid(),
-                    actorId: Guid.NewGuid(),
-                    b2CActorId: Guid.NewGuid(),
-                    "5790001330552",
-                    MarketParticipantStatus.Active,
-                    MarketParticipantRole.MeteringPointAdministrator));
+                .ReturnsAsync(new TestMeteringPointAdministrator("5790001330552"));
 
             var currentTime = Instant.FromUtc(2021, 10, 22, 15, 30, 41).PlusNanoseconds(4);
             clock.Setup(c => c.GetCurrentInstant()).Returns(currentTime);
@@ -175,12 +170,15 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim.Bundles.Cha
         {
             var points = new List<AvailableChargePriceDataPoint>();
 
-            for (int i = 1; i <= noOfPoints; i++)
+            for (var i = 1; i <= noOfPoints; i++)
             {
                 points.Add(new AvailableChargePriceDataPoint(i, i));
             }
 
-            return points;
+            // shuffle points order
+            var shuffledPoints = points.OrderBy(_ => _rnd.Next()).ToList();
+
+            return shuffledPoints;
         }
     }
 }

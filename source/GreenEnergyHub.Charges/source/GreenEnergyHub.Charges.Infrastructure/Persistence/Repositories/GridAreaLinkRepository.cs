@@ -45,7 +45,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
         {
             return await _chargesDatabaseContext
                 .GridAreaLinks
-                .SingleOrDefaultAsync(gal => gal.GridAreaId == gridAreaId).ConfigureAwait(false);
+                .SingleOrDefaultAsync(gal => gal.GridAreaId == gridAreaId)
+                .ConfigureAwait(false);
         }
     }
 }

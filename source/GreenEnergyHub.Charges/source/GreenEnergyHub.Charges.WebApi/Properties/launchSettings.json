@@ -24,7 +24,8 @@
       "launchUrl": "swagger",
       "applicationUrl": "https://localhost:5002;http://localhost:5003",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "LOCAL_TIMEZONENAME": "Europe/Copenhagen"
       }
     }
   }

@@ -19,7 +19,7 @@ The following asynchronous validation rules are currently implemented in the cha
 |VR.447|The description of a charge consists of maximal 2048 characters|E86|✓|||
 |VR.449|The type of a charge has domain values D01 (Subscription), D02 (Fee), D03 (Tariff)|E86|✓|✓||
 |VR.457|The energy price of a charge consists of maximal 14 digits with format 99999999.999999|E86||✓||
-|VR.488|The VAT class of a charge has domain values D01 (No VAT), D02 (VAT)|E86|✓|||
+|VR.488|VAT class must be provided|E86|✓|||
 |VR.505-1|Tariff must have period type Day, Hour or Quarter of Hour|D23|(✓) Tariff only|(✓) Tariff only||
 |VR.505-2|Fee must have period type Month|D23|(✓) Fee only|(✓) Fee only||
 |VR.505-3|Subscription must have period type Month|D23|(✓) Subscription only|(✓) Subscription only||
@@ -48,6 +48,7 @@ The following asynchronous validation rules are currently implemented in the cha
 |VR.921|Tax indicator must be set to false for a fee|D14|✓|||
 |VR.922|The identification of a charge operation consists of maximal 36 characters|E86|✓|✓||
 |VR.923|The monthly price series end date must be 1st of month, unless it matches the charge stop date.|D14||✓||
+|VR.924|Price series start interval and effective date must have the same value|E0H||✓||
 
 * VR.152 is not fully implemented. Right now we only validate that it is filled with something
 * VR.679 is not fully implemented. For now it verifies that the charge exist, not checking that the linked period is within the charge's validity period
