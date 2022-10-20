@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
         [InlineAutoMoqData(Resolution.P1M, 2021, 12, 31, 23, 2023, 12, 31, 23, 24, "longer price series spanning years must be supported")]
         [InlineAutoMoqData(Resolution.P1M, 2022, 6, 14, 22, 2022, 7, 31, 22, 2, "irregular price series covering more than a single month must be supported")]
         [InlineAutoMoqData(Resolution.P1M, 2022, 6, 14, 22, 2022, 06, 20, 22, 1, "irregular price series starting and stopping within a single month must be supported")]
-        [InlineAutoMoqData(Resolution.P1M, 2022, 6, 14, 22, 2022, 10, 31, 23, 5, "longer irregular price series spanning months must be supported")]
+        [InlineAutoMoqData(Resolution.P1M, 2022, 6, 14, 22, 2022, 10, 31, 23, 5, "longer irregular price series spanning months including switch to Normal Time must be supported")]
         public void IsValid_WhenCalledWithCorrectNumberOfPrices_ShouldParse(
             Resolution resolution,
             int startYear,
