@@ -21,7 +21,7 @@ namespace Energinet.DataHub.Charges.Contracts.Charge
         Guid Id,
         ChargeType ChargeType,
         Resolution Resolution,
-        string ChargeId,
+        string ChargeId, // Is SenderProvidedChargeId.
         string ChargeName,
         string ChargeDescription,
         string ChargeOwner,
