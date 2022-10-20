@@ -42,7 +42,7 @@
     "MARKET_PARTICIPANT_CHANGED_SUBSCRIPTION_NAME": "market-participant-changed",
     "MARKET_PARTICIPANT_CREATED_SUBSCRIPTION_NAME": "market-participant-created",
     "MARKET_PARTICIPANT_STATUS_CHANGED_SUBSCRIPTION_NAME": "market-participant-status-changed",
-    "MARKET_PARTICIPANT_STATUS_EXTERNAL_ACTOR_ID_CHANGED_SUBSCRIPTION_NAME": "market-part-external-id-changed",
+    "MARKET_PARTICIPANT_EXTERNAL_ACTOR_ID_CHANGED_SUBSCRIPTION_NAME": "market-part-external-id-changed",
 
     // Integration, message hub
     "MESSAGEHUB_DATAAVAILABLE_QUEUE": "dataavailable",
