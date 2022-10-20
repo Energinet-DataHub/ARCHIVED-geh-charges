@@ -64,7 +64,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.ChargeInforma
         }
 
         [Fact]
-        public async Task HandleAsync_WhenValidationFails_ThenRejectedEventRaised()
+        public async Task HandleAsync_WhenValidChargeInformationCommandReceivedEvent_ThenChargeIsPersisted()
         {
             // Arrange
             await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
