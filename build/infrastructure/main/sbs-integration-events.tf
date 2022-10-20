@@ -59,7 +59,7 @@ module "sbs_int_events_market_participant_status_changed" {
   max_delivery_count  = 1
   correlation_filter  = {
     properties     = {
-      "MessageType" = "ActorStatusChangedIntegrationEvent"
+      "messageType" = "ActorStatusChangedIntegrationEvent"
     }
   }
 }
@@ -72,7 +72,7 @@ module "sbs_int_events_market_part_external_id_changed" {
   max_delivery_count  = 1
   correlation_filter  = {
     properties     = {
-      "MessageType" = "ActorExternalIdChangedIntegrationEvent"
+      "messageType" = "ActorExternalIdChangedIntegrationEvent"
     }
   }
 }
