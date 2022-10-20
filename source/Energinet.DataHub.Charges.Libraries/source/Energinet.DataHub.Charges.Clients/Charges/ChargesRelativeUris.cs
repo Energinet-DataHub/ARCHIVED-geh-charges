@@ -59,7 +59,7 @@ namespace Energinet.DataHub.Charges.Clients.Charges
         }
 
         /// <summary>
-        /// Provides the relative uri for searching in charge prices.
+        /// Provides the relative uri for searching charge prices.
         /// </summary>
         /// <returns>Relative URI</returns>
         public static Uri SearchChargePrices()

@@ -172,8 +172,9 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
             ChargeSearchCriteriaV1Dto searchCriteria)
         {
             // Arrange
-            var message = "Validation not valid";
-            var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.BadRequest, message);
+            var responseBody = "Validation not valid";
+            var exceptionMessage = $"Charges backend returned HTTP status code {(int)HttpStatusCode.BadRequest} with message {responseBody}";
+            var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.BadRequest, responseBody);
             var httpClient = CreateHttpClient(mockHttpMessageHandler);
             chargesClientFactory.Setup(x => x.CreateClient(httpClient))
                 .Returns(new ChargesClient(httpClient));
@@ -182,7 +183,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
 
             // Act / Assert
             var ex = await Assert.ThrowsAsync<Exception>(async () => await sut.SearchChargesAsync(searchCriteria).ConfigureAwait(false)).ConfigureAwait(false);
-            ex.Message.Should().Contain(message);
+            ex.Message.Should().Be(exceptionMessage);
         }
 
         [Theory]

@@ -64,8 +64,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var sut = GetSut(chargesDatabaseQueryContext);
             var searchCriteria = new ChargePricesSearchCriteriaV1Dto(
                 expectedCharge.Id,
-                InstantHelper.GetTodayAtMidnightUtc().ToDateTimeUtc(),
-                InstantHelper.GetTomorrowAtMidnightUtc().ToDateTimeUtc());
+                InstantHelper.GetTodayAtMidnightUtc().ToDateTimeOffset(),
+                InstantHelper.GetTomorrowAtMidnightUtc().ToDateTimeOffset());
 
             var expected = new ChargePriceV1Dto(
                 expectedPoints.Single().Price,
@@ -183,7 +183,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             // Assert
             actual.Should().HaveCount(points.Count);
-            Assert.True(actual.All(a => (a.ToDateTime - a.FromDateTime).Hours == 1));
+            foreach (var chargePrice in actual)
+                (chargePrice.ToDateTime - chargePrice.FromDateTime).Hours.Should().Be(1);
         }
 
         [Fact]
@@ -218,7 +219,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             // Assert
             actual.Should().HaveCount(points.Count);
-            Assert.True(actual.All(a => (a.ToDateTime - a.FromDateTime).Days == 1));
+            foreach (var chargePrice in actual)
+                (chargePrice.ToDateTime - chargePrice.FromDateTime).Days.Should().Be(1);
         }
 
         [Fact]
@@ -253,10 +255,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             // Assert
             actual.Should().HaveCount(points.Count);
-            Assert.True(actual.All(a =>
-                a.FromDateTime.Month != a.ToDateTime.Month &&
-                DateTime.DaysInMonth(a.FromDateTime.DayOfYear, a.FromDateTime.Month) == a.FromDateTime.Day &&
-                DateTime.DaysInMonth(a.ToDateTime.Year, a.ToDateTime.Month) == a.ToDateTime.Day));
+            foreach (var chargePrice in actual)
+            {
+                chargePrice.FromDateTime.Month.Should().NotBe(chargePrice.ToDateTime.Month);
+                DateTime.DaysInMonth(chargePrice.FromDateTime.DayOfYear, chargePrice.FromDateTime.Month).Should()
+                    .Be(chargePrice.FromDateTime.Day);
+                DateTime.DaysInMonth(chargePrice.ToDateTime.Year, chargePrice.ToDateTime.Month).Should()
+                    .Be(chargePrice.ToDateTime.Day);
+            }
         }
 
         private static async Task<Charge> GetValidCharge(
