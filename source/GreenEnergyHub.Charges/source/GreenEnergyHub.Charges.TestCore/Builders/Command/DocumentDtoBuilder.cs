@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
+using GreenEnergyHub.Charges.TestCore.Data;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.TestCore.Builders.Command

@@ -20,7 +20,7 @@ using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers.Mappers;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
-using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.Charges.TestCore.TestHelpers;
 using GreenEnergyHub.TestHelpers;
 using Xunit;
 
