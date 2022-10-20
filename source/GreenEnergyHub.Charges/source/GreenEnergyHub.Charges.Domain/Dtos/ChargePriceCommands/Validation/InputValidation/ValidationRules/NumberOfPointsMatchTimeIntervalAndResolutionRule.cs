@@ -61,12 +61,11 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.Inpu
             var months = ((_endTime.InUtc().Year - _startTime.InUtc().Year) * 12) + _endTime.InUtc().Month -
                          _startTime.InUtc().Month;
 
-             /* The 'months' calculation above does not consider the interval to contain an irregular price series;
-             *  where the startTime is within the same month as the endTime. Thus returning 0 spanned month.
-             *  To counter for this, below code checks if the interval startTime contains an irregular price series,
-             *  and if so, adds 1 to 'months', as an irregular price series spans a single month.
-             *  Below code also works when the interval contains several points and is also an irregular price series.
-             */
+            // The 'months' calculation above does not consider the interval to contain an irregular price series;
+            // where the startTime is within the same month as the endTime. Thus returning 0 spanned month.
+            // To counter for this, below code checks if the interval startTime contains an irregular price series,
+            // and if so, adds 1 to 'months', as an irregular price series spans a single month.
+            // Below code also works when the interval contains several points and is also an irregular price series.
             if (IsIrregularPriceSeries(_startTime))
             {
                 months++;
