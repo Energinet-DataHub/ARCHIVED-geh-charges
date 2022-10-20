@@ -18,17 +18,17 @@ ON c.Id = cp.ChargeId
 WHERE cp.ChargeId is null;
 
 DECLARE @currentRowId INT;
-SET @currentRowId = 1
+SET @currentRowId = 1;
 
 DECLARE @RowCount INT;
 SET @RowCount = (SELECT COUNT(*) FROM #temp);
 
-DECLARE @chargeId NVARCHAR(36)
+DECLARE @chargeId NVARCHAR(36);
 
 WHILE(@currentRowId <= @RowCount)
     BEGIN
-		SET @chargeId = (SELECT Id FROM #temp where RowId = @currentRowId);
-        INSERT INTO Charges.ChargePeriod VALUES (NEWID(), @chargeId, 0, 'Description', 'Name', 0, '2022-12-31 23:00:00', '2022-12-31 23:00:00')
+        SET @chargeId = (SELECT Id FROM #temp where RowId = @currentRowId);
+        INSERT INTO Charges.ChargePeriod VALUES (NEWID(), @chargeId, 0, 'Description', 'Name', 0, '2022-12-31 23:00:00', '2022-12-31 23:00:00');
         SET @currentRowId += 1;
     END
 DROP TABLE #temp;
