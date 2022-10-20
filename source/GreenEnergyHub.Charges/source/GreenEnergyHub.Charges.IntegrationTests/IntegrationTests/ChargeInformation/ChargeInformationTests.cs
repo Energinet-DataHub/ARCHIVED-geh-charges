@@ -13,26 +13,29 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
+using Energinet.DataHub.Core.FunctionApp.TestCommon.FunctionAppHost;
 using Energinet.DataHub.Core.JsonSerialization;
+using FluentAssertions;
+using GreenEnergyHub.Charges.Application.Charges.Factories;
 using GreenEnergyHub.Charges.Application.Charges.Handlers.ChargeInformation;
+using GreenEnergyHub.Charges.Application.Common.Services;
+using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
-using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.FunctionHost;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
-using GreenEnergyHub.Charges.TestCore;
-using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Charges.TestCore.Builders.Command;
-using Moq;
+using GreenEnergyHub.Charges.TestCore.TestHelpers;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Xunit;
 using Xunit.Categories;
-using JsonSerializer = Energinet.DataHub.Core.JsonSerialization.JsonSerializer;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.ChargeInformation
 {
@@ -44,247 +47,61 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.ChargeInforma
     {
         private readonly ChargesDatabaseManager _databaseManager;
         private readonly IJsonSerializer _jsonSerializer;
+        private readonly IHost _host;
+        private readonly IUnitOfWork _unitOfWork;
 
         public ChargeInformationTests(ChargesDatabaseFixture fixture)
         {
             _databaseManager = fixture.DatabaseManager;
             _jsonSerializer = new JsonSerializer();
+            var configuration = new FunctionAppHostConfigurationBuilder().BuildLocalSettingsConfiguration();
+            FunctionHostEnvironmentSettingHelper.SetFunctionHostEnvironmentVariablesFromSampleSettingsFile(configuration);
+            Environment.SetEnvironmentVariable("CHARGE_DB_CONNECTION_STRING", _databaseManager.ConnectionString);
+            _host = ChargesFunctionApp.ConfigureApplication();
+            _unitOfWork = (IUnitOfWork)_host.Services.GetService(typeof(IUnitOfWork))!;
+            var correlationContext = (ICorrelationContext)_host.Services.GetService(typeof(ICorrelationContext))!;
+            correlationContext.SetId(Guid.NewGuid().ToString());
         }
 
-        [Theory]
-        [InlineAutoMoqData]
-        public async Task HandleAsync_WhenValidationFails_ThenRejectedEventRaised(
-            ChargeInformationOperationsHandler sut)
+        [Fact]
+        public async Task HandleAsync_WhenValidationFails_ThenRejectedEventRaised()
         {
             // Arrange
-            ChargesFunctionApp.ConfigureApplication();
-            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
+            await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
+            var sut = BuildChargeInformationOperationsHandler();
             var jsonString = await File.ReadAllTextAsync("IntegrationTests\\ChargeInformation\\ChargeInformationTestTariff.json");
-            try
-            {
-                var receivedEvent = _jsonSerializer.Deserialize<ChargeInformationCommandReceivedEvent>(jsonString);
 
-                // Act
-                await sut.HandleAsync(receivedEvent);
-
-                // Assert
-                var senderProvidedChargeId = receivedEvent.Command.Operations.First().SenderProvidedChargeId;
-                var charge = chargesDatabaseWriteContext.Charges.Single(x => x.Id.ToString() == senderProvidedChargeId);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
-        }
-
-        /*[Theory]
-        [InlineAutoMoqData]
-        public async Task HandleAsync_IfValidUpdateEvent_ChargeUpdated(
-            [Frozen] Mock<IChargeIdentifierFactory> chargeIdentifierFactory,
-            [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
-            [Frozen] Mock<IInputValidator<ChargeInformationOperationDto>> inputValidator,
-            [Frozen] Mock<IChargeInformationOperationsAcceptedEventFactory> chargeInformationOperationsAcceptedEventFactory,
-            ChargeInformationOperationsAcceptedEventBuilder chargeInformationOperationsAcceptedEventBuilder,
-            ChargeBuilder chargeBuilder,
-            ChargePeriodBuilder chargePeriodBuilder,
-            ChargeInformationCommandBuilder chargeInformationCommandBuilder,
-            ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder,
-            ChargeInformationOperationsHandler sut)
-        {
-            // Arrange
-            var charge = chargeBuilder.Build();
-            var updateOperationDto = chargeInformationOperationDtoBuilder
-                .WithStartDateTime(InstantHelper.GetTodayAtMidnightUtc())
-                .Build();
-            var chargeCommand = chargeInformationCommandBuilder.WithChargeOperation(updateOperationDto).Build();
-            var receivedEvent = new ChargeInformationCommandReceivedEvent(InstantHelper.GetTodayAtMidnightUtc(), chargeCommand);
-            var validationResult = ValidationResult.CreateSuccess();
-            SetupValidators(inputValidator, validationResult);
-            var newPeriod = chargePeriodBuilder
-                .WithStartDateTime(updateOperationDto.StartDateTime)
-                .Build();
-            SetupChargeIdentifierFactoryMock(chargeIdentifierFactory);
-            chargePeriodFactory.Setup(cpf => cpf.CreateFromChargeOperationDto(updateOperationDto))
-                .Returns(newPeriod);
-            var chargeInformationOperationsAcceptedEvent = chargeInformationOperationsAcceptedEventBuilder.Build();
-            chargeInformationOperationsAcceptedEventFactory
-                .Setup(c => c.Create(
-                    It.IsAny<DocumentDto>(),
-                    It.IsAny<IReadOnlyCollection<ChargeInformationOperationDto>>()))
-                .Returns(chargeInformationOperationsAcceptedEvent);
+            var receivedEvent = _jsonSerializer.Deserialize<ChargeInformationCommandReceivedEvent>(jsonString);
 
             // Act
             await sut.HandleAsync(receivedEvent);
+            await _unitOfWork.SaveChangesAsync();
 
             // Assert
-            var timeline = charge.Periods.OrderBy(p => p.StartDateTime).ToList();
-            var firstPeriod = timeline[0];
-            var secondPeriod = timeline[1];
+            var senderProvidedChargeId = receivedEvent.Command.Operations.First().SenderProvidedChargeId;
+            var charge = chargesDatabaseReadContext.Charges
+                .First(x => x.SenderProvidedChargeId == senderProvidedChargeId);
 
-            firstPeriod.StartDateTime.Should().Be(InstantHelper.GetStartDefault());
-            firstPeriod.EndDateTime.Should().Be(newPeriod.StartDateTime);
-            secondPeriod.StartDateTime.Should().Be(newPeriod.StartDateTime);
-            secondPeriod.EndDateTime.Should().Be(newPeriod.EndDateTime);
+            charge.Should().NotBeNull();
         }
 
-        [Theory]
-        [InlineAutoMoqData]
-        public async Task HandleAsync_IfValidStopEvent_ChargeStopped(
-            [Frozen] Mock<IChargeIdentifierFactory> chargeIdentifierFactory,
-            [Frozen] Mock<IInputValidator<ChargeInformationOperationDto>> inputValidator,
-            [Frozen] Mock<IChargeInformationOperationsAcceptedEventFactory> chargeInformationOperationsAcceptedEventFactory,
-            ChargeInformationOperationsAcceptedEventBuilder chargeInformationOperationsAcceptedEventBuilder,
-            ChargeBuilder chargeBuilder,
-            ChargeInformationCommandBuilder chargeInformationCommandBuilder,
-            ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder,
-            ChargeInformationOperationsHandler sut)
+        private ChargeInformationOperationsHandler BuildChargeInformationOperationsHandler()
         {
-            // Arrange
-            var stopDate = InstantHelper.GetTodayAtMidnightUtc();
-            var stopOperationDto = chargeInformationOperationDtoBuilder.WithStartDateTime(stopDate).WithEndDateTime(stopDate).Build();
-            var chargeCommand = chargeInformationCommandBuilder.WithChargeOperation(stopOperationDto).Build();
-            var receivedEvent = new ChargeInformationCommandReceivedEvent(InstantHelper.GetTodayAtMidnightUtc(), chargeCommand);
-            var charge = chargeBuilder.Build();
-            var validationResult = ValidationResult.CreateSuccess();
-            SetupValidators(inputValidator, validationResult);
-            SetupChargeIdentifierFactoryMock(chargeIdentifierFactory);
-            var chargeInformationOperationsAcceptedEvent = chargeInformationOperationsAcceptedEventBuilder.Build();
-            chargeInformationOperationsAcceptedEventFactory
-                .Setup(c => c.Create(
-                    It.IsAny<DocumentDto>(),
-                    It.IsAny<IReadOnlyCollection<ChargeInformationOperationDto>>()))
-                .Returns(chargeInformationOperationsAcceptedEvent);
-
-            // Act
-            await sut.HandleAsync(receivedEvent);
-
-            // Assert
-            charge.Periods.Count.Should().Be(1);
-            var actual = charge.Periods.Single();
-            actual.EndDateTime.Should().Be(stopDate);
+            return new ChargeInformationOperationsHandler(
+                GetService<IInputValidator<ChargeInformationOperationDto>>(),
+                GetService<IChargeRepository>(),
+                GetService<IMarketParticipantRepository>(),
+                GetService<IChargeFactory>(),
+                GetService<IChargePeriodFactory>(),
+                GetService<IDomainEventPublisher>(),
+                GetService<ILoggerFactory>(),
+                GetService<IChargeInformationOperationsAcceptedEventFactory>(),
+                GetService<IChargeInformationOperationsRejectedEventFactory>());
         }
 
-        [Theory]
-        [InlineAutoMoqData]
-        public async Task HandleAsync_WhenValidCancelStop_ThenStopCancelled(
-            [Frozen] Mock<IChargeIdentifierFactory> chargeIdentifierFactory,
-            [Frozen] Mock<IInputValidator<ChargeInformationOperationDto>> inputValidator,
-            [Frozen] Mock<IChargePeriodFactory> chargePeriodFactory,
-            [Frozen] Mock<IChargeInformationOperationsAcceptedEventFactory> chargeInformationOperationsAcceptedEventFactory,
-            ChargeInformationOperationsAcceptedEventBuilder chargeInformationOperationsAcceptedEventBuilder,
-            ChargeInformationCommandBuilder chargeInformationCommandBuilder,
-            ChargeBuilder chargeBuilder,
-            ChargeInformationOperationDtoBuilder chargeInformationOperationDtoBuilder,
-            ChargeInformationOperationsHandler sut)
+        private T GetService<T>()
         {
-            // Arrange
-            var validationResult = ValidationResult.CreateSuccess();
-            SetupValidators(inputValidator, validationResult);
-            var chargeOperationDto = chargeInformationOperationDtoBuilder
-                .WithStartDateTime(InstantHelper.GetTomorrowAtMidnightUtc())
-                .WithEndDateTime(InstantHelper.GetEndDefault())
-                .Build();
-            var chargeCommand = chargeInformationCommandBuilder
-                .WithChargeOperation(chargeOperationDto)
-                .Build();
-            var receivedEvent = new ChargeInformationCommandReceivedEvent(InstantHelper.GetTodayAtMidnightUtc(), chargeCommand);
-            var charge = chargeBuilder.WithStopDate(InstantHelper.GetTomorrowAtMidnightUtc()).Build();
-            SetupChargeIdentifierFactoryMock(chargeIdentifierFactory);
-            SetupChargePeriodFactory(chargePeriodFactory);
-            var chargeInformationOperationsAcceptedEvent = chargeInformationOperationsAcceptedEventBuilder.Build();
-            chargeInformationOperationsAcceptedEventFactory
-                .Setup(c => c.Create(
-                    It.IsAny<DocumentDto>(),
-                    It.IsAny<IReadOnlyCollection<ChargeInformationOperationDto>>()))
-                .Returns(chargeInformationOperationsAcceptedEvent);
-
-            // Act
-            await sut.HandleAsync(receivedEvent);
-
-            // Assert
-            charge.Periods.Count.Should().Be(2);
-            var actual = charge.Periods.OrderByDescending(p => p.StartDateTime).First();
-            actual.StartDateTime.Should().Be(InstantHelper.GetTomorrowAtMidnightUtc());
-            actual.EndDateTime.Should().Be(InstantHelper.GetEndDefault());
-        }*/
-
-        private static void SetupChargeIdentifierFactoryMock(Mock<IChargeIdentifierFactory> chargeIdentifierFactory)
-        {
-            chargeIdentifierFactory
-                .Setup(x => x.CreateAsync(
-                    It.IsAny<string>(),
-                    It.IsAny<ChargeType>(),
-                    It.IsAny<string>()))
-                .ReturnsAsync(It.IsAny<ChargeIdentifier>());
-        }
-
-        private static void SetupChargePeriodFactory(Mock<IChargePeriodFactory> chargePeriodFactory, ChargePeriod? period = null)
-        {
-            if (period is null)
-            {
-                period = new ChargePeriodBuilder()
-                    .WithStartDateTime(InstantHelper.GetTomorrowAtMidnightUtc())
-                    .Build();
-            }
-
-            chargePeriodFactory
-                .Setup(r => r.CreateFromChargeOperationDto(It.IsAny<ChargeInformationOperationDto>()))
-                .Returns(period);
-        }
-
-        private static (ChargeInformationCommandReceivedEvent ReceivedEvent, string InvalidOperationId) CreateReceivedEventWithChargeOperations()
-        {
-            var validChargeOperationDto = new ChargeInformationOperationDtoBuilder()
-                .WithChargeOperationId("Operation1")
-                .WithStartDateTime(InstantHelper.GetYesterdayAtMidnightUtc())
-                .Build();
-            var invalidChargeOperationDto = new ChargeInformationOperationDtoBuilder()
-                .WithChargeOperationId("Operation2")
-                .WithTaxIndicator(TaxIndicator.NoTax)
-                .WithStartDateTime(InstantHelper.GetYesterdayAtMidnightUtc())
-                .Build();
-            var failedChargeOperationDto = new ChargeInformationOperationDtoBuilder()
-                .WithChargeOperationId("Operation3")
-                .WithStartDateTime(InstantHelper.GetYesterdayAtMidnightUtc())
-                .Build();
-            var anotherFailedChargeOperationDto = new ChargeInformationOperationDtoBuilder()
-                .WithChargeOperationId("Operation4")
-                .WithStartDateTime(InstantHelper.GetYesterdayAtMidnightUtc())
-                .Build();
-            var chargeCommand = new ChargeInformationCommandBuilder()
-                .WithChargeOperations(
-                    new List<ChargeInformationOperationDto>
-                    {
-                        validChargeOperationDto,
-                        invalidChargeOperationDto,
-                        failedChargeOperationDto,
-                        anotherFailedChargeOperationDto,
-                    })
-                .Build();
-            var receivedEvent = new ChargeInformationCommandReceivedEventBuilder()
-                .WithCommand(chargeCommand)
-                .Build();
-            return (ReceivedEvent: receivedEvent, InvalidOperationId: invalidChargeOperationDto.OperationId);
-        }
-
-        private static ValidationResult GetFailedValidationResult()
-        {
-            var failedRule = new Mock<IValidationRule>();
-            failedRule.Setup(r => r.IsValid).Returns(false);
-
-            return ValidationResult.CreateFailure(
-                new List<IValidationRuleContainer> { new DocumentValidationRuleContainer(failedRule.Object) });
-        }
-
-        private static void SetupValidators(
-            Mock<IInputValidator<ChargeInformationOperationDto>> inputValidator,
-            ValidationResult validationResult)
-        {
-            inputValidator
-                .Setup(v => v.Validate(
-                    It.IsAny<ChargeInformationOperationDto>(), It.IsAny<DocumentDto>()))
-                .Returns(validationResult);
+            return (T)_host.Services.GetService(typeof(T))!;
         }
     }
 }
