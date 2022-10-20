@@ -29,6 +29,7 @@ namespace GreenEnergyHub.Charges.QueryApi.ModelPredicates
             var todayAtMidnightUtc = DateTime.Now.Date.ToUniversalTime();
 
             return queryable.Select(c => new ChargeV1Dto(
+                c.Id,
                 MapChargeType(c.GetChargeType()),
                 MapResolution(c.GetResolution()),
                 c.SenderProvidedChargeId,
