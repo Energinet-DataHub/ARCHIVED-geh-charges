@@ -53,12 +53,14 @@ limitations under the License.
       <EmbeddedResource Include="Scripts\Model\202209271553 Change Market Participant type to support all states.sql" />
       <EmbeddedResource Include="Scripts\Model\202209141409 Remove AvailableChargeDataPoints table.sql" />
       <EmbeddedResource Include="Scripts\Model\202210071101 Add Name column to Market Participant table.sql" />
+      <EmbeddedResource Include="Scripts\Model\202210200734 Rename unique constraint on Charge Link script.sql" />
       <EmbeddedResource Include="Scripts\Seed\202201261740 Add default charges owner.sql" />
       <EmbeddedResource Include="Scripts\Seed\202201261741 Add default charges.sql" />
       <EmbeddedResource Include="Scripts\Seed\202201261742 Add default charge links.sql" />
       <EmbeddedResource Include="Scripts\Seed\202203251356 Alter default charges.sql" />
+      <EmbeddedResource Include="Scripts\Seed\202210201120 Add ChargePeriod to Charges without any.sql" />
       <EmbeddedResource Include="Scripts\Test\202201261750 Add test data.sql" />
-      <EmbeddedResource Include="Scripts\Model\280320221347 Add unique constraint on Charge Link.sql" />
+      <EmbeddedResource Include="Scripts\Model\202203281347 Add unique constraint on Charge Link.sql" />
       <EmbeddedResource Include="Scripts\Test\202209281245 Add market participant test users.sql" />
       <EmbeddedResource Include="Scripts\Test\202207251045 Add test price data.sql" />
       <EmbeddedResource Include="Scripts\Test\202206030818 Add test data to gridarealinks.sql" />

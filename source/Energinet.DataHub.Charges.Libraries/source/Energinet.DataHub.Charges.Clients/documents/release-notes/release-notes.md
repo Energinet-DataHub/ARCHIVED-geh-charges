@@ -1,5 +1,11 @@
 # Energinet.DataHub.Charges.Clients Release notes
 
+## Version 4.2.0
+
+Added `SearchChargePricesAsync` to Charges client.
+Renamed `SearchCriteriaV1Dto` to `ChargeSearchCriteriaV1Dto`.
+Throws exception instead of null if status code is not success.
+
 ## Version 4.1.3
 
 Updated NuGet packages
