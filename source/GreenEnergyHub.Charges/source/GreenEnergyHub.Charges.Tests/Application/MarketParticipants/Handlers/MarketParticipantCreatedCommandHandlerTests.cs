@@ -42,6 +42,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             var marketParticipantCreatedEvent = new MarketParticipantCreatedCommand(
                 ActorId: Guid.NewGuid(),
                 "mp123",
+                "name",
                 new List<MarketParticipantRole> { MarketParticipantRole.EnergySupplier, },
                 MarketParticipantStatus.Active,
                 new List<Guid>());
@@ -74,6 +75,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             var marketParticipantCreatedEvent = new MarketParticipantCreatedCommand(
                 ActorId: Guid.NewGuid(),
                 "mp123",
+                "name",
                 new List<MarketParticipantRole> { MarketParticipantRole.GridAccessProvider, },
                 MarketParticipantStatus.Active,
                 new List<Guid> { gridAreaId });
