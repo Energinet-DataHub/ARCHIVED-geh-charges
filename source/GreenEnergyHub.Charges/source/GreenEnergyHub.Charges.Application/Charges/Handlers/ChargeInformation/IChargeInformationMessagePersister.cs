@@ -13,22 +13,17 @@
 // limitations under the License.
 
 using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 
-namespace GreenEnergyHub.Charges.Domain.Charges
+namespace GreenEnergyHub.Charges.Application.Charges.Handlers.ChargeInformation
 {
-    /// <summary>
-    /// Contract defining the capabilities of the infrastructure component facilitating interaction with the charge messages data store.
-    /// </summary>
-    public interface IChargeMessageRepository
+    public interface IChargeInformationMessagePersister
     {
         /// <summary>
-        /// Add a ChargeMessage.
+        /// Persists message related to a charge
         /// </summary>
-        /// <param name="chargeMessage"></param>
+        /// <param name="chargeInformationOperationsAcceptedEvent"></param>
         /// <returns>A <see cref="Task"/>.</returns>
-        Task AddAsync(ChargeMessage chargeMessage);
-
-        // Todo: only Get in query model
-        // Task<IReadOnlyCollection<ChargeMessage>> GetByChargeIdAsync(Guid chargeId);
+        Task PersistMessagesAsync(ChargeInformationOperationsAcceptedEvent chargeInformationOperationsAcceptedEvent);
     }
 }
