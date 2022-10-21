@@ -59,7 +59,6 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database
 
         public Task InitializeAsync()
         {
-            CorrelationContext.SetId(Guid.NewGuid().ToString());
             return DatabaseManager.CreateDatabaseAsync();
         }
 

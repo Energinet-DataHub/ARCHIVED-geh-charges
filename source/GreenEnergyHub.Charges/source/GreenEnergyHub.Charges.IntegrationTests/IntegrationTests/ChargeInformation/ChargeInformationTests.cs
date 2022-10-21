@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -40,7 +41,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.ChargeInforma
     /// Tests ChargeInformation flow with managed dependencies
     /// </summary>
     [IntegrationTest]
-    public class ChargeInformationTests : IClassFixture<ChargesManagedDependenciesTestFixture>
+    public class ChargeInformationTests : IClassFixture<ChargesManagedDependenciesTestFixture>, IAsyncLifetime
     {
         private readonly ChargesManagedDependenciesTestFixture _fixture;
         private readonly IJsonSerializer _jsonSerializer;
@@ -49,6 +50,17 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.ChargeInforma
         {
             _fixture = fixture;
             _jsonSerializer = _fixture.GetService<IJsonSerializer>();
+        }
+
+        public Task InitializeAsync()
+        {
+            _fixture.CorrelationContext.SetId(Guid.NewGuid().ToString());
+            return Task.CompletedTask;
+        }
+
+        public Task DisposeAsync()
+        {
+            return Task.CompletedTask;
         }
 
         [Fact]
