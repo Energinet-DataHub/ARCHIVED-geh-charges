@@ -43,6 +43,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
             var charges = new List<Charge> { charge, }.AsQueryable();
 
             var expected = new ChargeV1Dto(
+                charge.Id,
                 (ChargeType)charge.Type,
                 (Resolution)charge.Resolution,
                 charge.SenderProvidedChargeId,

@@ -20,7 +20,7 @@ module "sbs_int_events_metering_point_created" {
   max_delivery_count  = 1
   correlation_filter  = {
     properties     = {
-      "MessageType" = "MeteringPointCreated"
+      "messageType" = "MeteringPointCreated"
     }
   }
 }
@@ -33,7 +33,7 @@ module "sbs_int_events_market_participant_changed" {
   max_delivery_count  = 1
   correlation_filter  = {
     properties     = {
-      "MessageType" = "ActorUpdatedIntegrationEvent"
+      "messageType" = "ActorUpdatedIntegrationEvent"
     }
   }
 }
@@ -46,7 +46,7 @@ module "sbs_int_events_market_participant_created" {
   max_delivery_count  = 1
   correlation_filter  = {
     properties     = {
-      "MessageType" = "ActorCreatedIntegrationEvent"
+      "messageType" = "ActorCreatedIntegrationEvent"
     }
   }
 }
@@ -59,20 +59,20 @@ module "sbs_int_events_market_participant_status_changed" {
   max_delivery_count  = 1
   correlation_filter  = {
     properties     = {
-      "MessageType" = "ActorStatusChangedIntegrationEvent"
+      "messageType" = "ActorStatusChangedIntegrationEvent"
     }
   }
 }
 
-module "sbs_int_events_market_participant_external_id_changed" {
+module "sbs_int_events_market_part_external_id_changed" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v9"
-  name                = "market-participant-external-id-changed"
+  name                = "market-part-external-id-changed"
   project_name        = var.domain_name_short
   topic_id            = data.azurerm_key_vault_secret.sbt_domainrelay_integrationevent_received_id.value
   max_delivery_count  = 1
   correlation_filter  = {
     properties     = {
-      "MessageType" = "ActorExternalIdChangedIntegrationEvent"
+      "messageType" = "ActorExternalIdChangedIntegrationEvent"
     }
   }
 }

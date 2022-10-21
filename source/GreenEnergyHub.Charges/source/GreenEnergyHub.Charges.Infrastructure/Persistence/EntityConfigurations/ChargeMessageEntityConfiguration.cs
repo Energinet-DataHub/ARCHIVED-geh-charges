@@ -12,14 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Collections.Generic;
+using GreenEnergyHub.Charges.Domain.Charges;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-// ReSharper disable once CheckNamespace - Type is shared so namespace is not determined by project structure/namespace
-namespace Energinet.DataHub.Charges.Contracts.Charge
+namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
 {
-    public record SearchCriteriaV1Dto(
-        string ChargeIdOrName,
-        List<Guid> OwnerIds,
-        List<ChargeType> ChargeTypes);
+    public class ChargeMessageEntityConfiguration : IEntityTypeConfiguration<ChargeMessage>
+    {
+        public void Configure(EntityTypeBuilder<ChargeMessage> builder)
+        {
+            builder.ToTable(nameof(ChargeMessage));
+
+            builder.HasKey(c => c.Id);
+
+            builder.Property(c => c.ChargeId);
+            builder.Property(c => c.MessageId);
+        }
+    }
 }

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 module "func_functionhost" {
-  source                                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/function-app?ref=7.0.0"
+  source                                    = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/function-app?ref=v9"
 
   name                                      = "functionhost"
   project_name                              = var.domain_name_short
@@ -69,6 +69,8 @@ module "func_functionhost" {
     METERING_POINT_CREATED_SUBSCRIPTION_NAME                                = module.sbs_int_events_metering_point_created.name
     MARKET_PARTICIPANT_CHANGED_SUBSCRIPTION_NAME                            = module.sbs_int_events_market_participant_changed.name
     MARKET_PARTICIPANT_CREATED_SUBSCRIPTION_NAME                            = module.sbs_int_events_market_participant_created.name
+    MARKET_PARTICIPANT_STATUS_CHANGED_SUBSCRIPTION_NAME                     = module.sbs_int_events_market_participant_status_changed.name
+    MARKET_PARTICIPANT_EXTERNAL_ACTOR_ID_CHANGED_SUBSCRIPTION_NAME          = module.sbs_int_events_market_part_external_id_changed.name
 
     # Shared resources
     INTEGRATIONEVENT_SENDER_CONNECTION_STRING                               = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-send-connection-string)"

@@ -28,7 +28,7 @@ limitations under the License.
   <!-- Configuration for NuGet package -->
   <PropertyGroup>
     <PackageId>Energinet.DataHub.Charges.Clients</PackageId>
-    <PackageVersion>4.1.3$(VersionSuffix)</PackageVersion>
+    <PackageVersion>4.2.1$(VersionSuffix)</PackageVersion>
     <Title>Energinet.DataHub.Charges.Clients</Title>
     <Company>Energinet DataHub A/S</Company>
     <Authors>DataHub</Authors>
@@ -139,31 +139,37 @@ https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.Data
 
   <ItemGroup>
     <Compile Include="..\..\..\Contracts\ChargeLink\ChargeLinkV1Dto.cs">
-      <Link>Charges\Model\ChargeLinkV1Dto.cs</Link>
+      <Link>Charges\Model\ChargeLink\ChargeLinkV1Dto.cs</Link>
     </Compile>
     <Compile Include="..\..\..\Contracts\ChargeLink\ChargeLinkV2Dto.cs">
-      <Link>Charges\Model\ChargeLinkV2Dto.cs</Link>
+      <Link>Charges\Model\ChargeLink\ChargeLinkV2Dto.cs</Link>
     </Compile>
     <Compile Include="..\..\..\Contracts\Charge\ChargeType.cs">
-      <Link>Charges\Model\ChargeType.cs</Link>
+      <Link>Charges\Model\Charge\ChargeType.cs</Link>
     </Compile>
     <Compile Include="..\..\..\Contracts\Charge\Resolution.cs">
-      <Link>Charges\Model\Resolution.cs</Link>
+      <Link>Charges\Model\Charge\Resolution.cs</Link>
     </Compile>
     <Compile Include="..\..\..\Contracts\Charge\ChargeV1Dto.cs">
-      <Link>Charges\Model\ChargeV1Dto.cs</Link>
+      <Link>Charges\Model\Charge\ChargeV1Dto.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Contracts\Charge\SearchCriteriaV1Dto.cs">
-      <Link>Charges\Model\SearchCriteriaV1Dto.cs</Link>
+    <Compile Include="..\..\..\Contracts\Charge\ChargeSearchCriteriaV1Dto.cs">
+      <Link>Charges\Model\Charge\ChargeSearchCriteriaV1Dto.cs</Link>
     </Compile>
     <Compile Include="..\..\..\Contracts\MarketParticipant\MarketParticipantV1Dto.cs">
-      <Link>Charges\Model\MarketParticipantV1Dto.cs</Link>
+      <Link>Charges\Model\MarketParticipant\MarketParticipantV1Dto.cs</Link>
     </Compile>
     <Compile Include="..\..\..\Contracts\Charge\VatClassification.cs">
-      <Link>Charges\Model\VatClassification.cs</Link>
+      <Link>Charges\Model\Charge\VatClassification.cs</Link>
     </Compile>
     <Compile Include="..\..\..\Contracts\ErrorCode.cs">
       <Link>DefaultChargeLink\ErrorCode.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Contracts\ChargePrice\ChargePricesSearchCriteriaV1Dto.cs">
+      <Link>Charges\Model\ChargePrice\ChargePricesSearchCriteriaV1Dto.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\Contracts\ChargePrice\ChargePriceV1Dto.cs">
+      <Link>Charges\Model\ChargePrice\ChargePriceV1Dto.cs</Link>
     </Compile>
   </ItemGroup>
 </Project>

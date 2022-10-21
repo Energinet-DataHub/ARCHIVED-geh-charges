@@ -27,6 +27,7 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
             Guid actorId,
             Guid? b2CActorId,
             string marketParticipantId,
+            string marketParticipantName,
             MarketParticipantStatus status,
             MarketParticipantRole businessProcessRole)
         {
@@ -34,6 +35,7 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
             ActorId = actorId;
             B2CActorId = b2CActorId;
             MarketParticipantId = marketParticipantId;
+            Name = marketParticipantName;
             Status = status;
             BusinessProcessRole = businessProcessRole;
         }
@@ -42,6 +44,7 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
         private MarketParticipant()
         {
             MarketParticipantId = null!;
+            Name = null!;
         }
 
         /// <summary>
@@ -71,6 +74,11 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
         public string MarketParticipantId { get; }
 
         /// <summary>
+        /// The name of the Market Participant
+        /// </summary>
+        public string Name { get; private set; }
+
+        /// <summary>
         /// The roles of the market participant.
         /// </summary>
         public MarketParticipantRole BusinessProcessRole { get; }
@@ -87,11 +95,13 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
         /// </summary>
         /// <param name="actorId">Globally unique ID inherited from Market Participant domain</param>
         /// <param name="marketParticipantId">Number identifying </param>
+        /// <param name="marketParticipantName">Name of the Market Participant</param>
         /// <param name="status"></param>
         /// <param name="businessProcessRole"></param>
         public static MarketParticipant Create(
             Guid actorId,
             string marketParticipantId,
+            string marketParticipantName,
             MarketParticipantStatus status,
             MarketParticipantRole businessProcessRole)
         {
@@ -100,6 +110,7 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
                 actorId,
                 null,
                 marketParticipantId,
+                marketParticipantName,
                 status,
                 businessProcessRole);
         }
