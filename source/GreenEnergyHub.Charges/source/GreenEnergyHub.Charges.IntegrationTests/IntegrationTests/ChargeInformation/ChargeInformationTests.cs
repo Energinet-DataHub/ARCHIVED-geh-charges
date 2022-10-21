@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,8 +24,11 @@ using GreenEnergyHub.Charges.Application.Common.Services;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Charges.Infrastructure.Outbox;
+using GreenEnergyHub.Charges.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using Microsoft.Extensions.Logging;
 using Xunit;
@@ -61,16 +65,52 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.ChargeInforma
             await _fixture.UnitOfWork.SaveChangesAsync();
 
             // Assert
+            var (charge, outboxMessages) = GetResultFromDatabase(receivedEvent, chargesDatabaseReadContext);
+
+            charge.Should().NotBeNull();
+            outboxMessages.Should().Contain(x => x.Type == ChargeInformationOperationsAcceptedEventFullName);
+        }
+
+        [Fact]
+        public async Task HandleAsync_BundleWithTwoOperationsForSameTariffWhere2ndIsInvalid_Confirms1st_Rejects2nd_And_NotifiesAbout1st()
+        {
+            // Arrange
+            await using var chargesDatabaseReadContext = _fixture.DatabaseManager.CreateDbContext();
+            var sut = BuildChargeInformationOperationsHandler();
+            var receivedEvent = await GetTestDataFromFile<ChargeInformationCommandReceivedEvent>(
+                "ChargeInformationBundleWithTwoOperationsForSameTariffSecondOpViolatingVr903.json");
+
+            // Act
+            await sut.HandleAsync(receivedEvent);
+            await _fixture.UnitOfWork.SaveChangesAsync();
+
+            // Assert
+            var (charge, outboxMessages) = GetResultFromDatabase(receivedEvent, chargesDatabaseReadContext);
+
+            charge.Should().NotBeNull();
+            charge.TaxIndicator.Should().BeFalse();
+            outboxMessages.Should().Contain(x => x.Type == ChargeInformationOperationsAcceptedEventFullName);
+            outboxMessages.Single(x => x.Type == ChargeInformationOperationsRejectedEventFullName).Data.Should()
+                .Contain($@"ValidationRuleIdentifier"":{(int)ValidationRuleIdentifier.ChangingTariffTaxValueNotAllowed}");
+        }
+
+        private (Charge Charge, IList<OutboxMessage> OutboxMessages) GetResultFromDatabase(
+            ChargeInformationCommandReceivedEvent receivedEvent,
+            IChargesDatabaseContext chargesDatabaseReadContext)
+        {
             var senderProvidedChargeId = receivedEvent.Command.Operations.First().SenderProvidedChargeId;
             var charge = chargesDatabaseReadContext.Charges
                 .First(x => x.SenderProvidedChargeId == senderProvidedChargeId);
 
-            charge.Should().NotBeNull();
+            var outboxMessages = chargesDatabaseReadContext.OutboxMessages
+                .Where(x => x.CorrelationId == _fixture.CorrelationContext.Id).ToList();
+
+            return (charge, outboxMessages);
         }
 
         private async Task<T> GetTestDataFromFile<T>(string filename)
         {
-            var jsonString = await File.ReadAllTextAsync($"IntegrationTests\\ChargeInformation\\{filename}");
+            var jsonString = await File.ReadAllTextAsync($"IntegrationTests\\ChargeInformation\\TestData\\{filename}");
             return _jsonSerializer.Deserialize<T>(jsonString);
         }
 
@@ -87,5 +127,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.ChargeInforma
                 _fixture.GetService<IChargeInformationOperationsAcceptedEventFactory>(),
                 _fixture.GetService<IChargeInformationOperationsRejectedEventFactory>());
         }
+
+        private static string? ChargeInformationOperationsAcceptedEventFullName =>
+            typeof(ChargeInformationOperationsAcceptedEvent).FullName;
+
+        private static string? ChargeInformationOperationsRejectedEventFullName =>
+            typeof(ChargeInformationOperationsRejectedEvent).FullName;
     }
 }

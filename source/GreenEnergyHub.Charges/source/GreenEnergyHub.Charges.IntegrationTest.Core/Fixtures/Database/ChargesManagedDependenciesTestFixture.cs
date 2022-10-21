@@ -53,9 +53,9 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database
 
         public IUnitOfWork UnitOfWork { get; }
 
-        private IHost Host { get; }
+        public ICorrelationContext CorrelationContext { get; }
 
-        private ICorrelationContext CorrelationContext { get; }
+        private IHost Host { get; }
 
         public Task InitializeAsync()
         {

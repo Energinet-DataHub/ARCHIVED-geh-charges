@@ -287,6 +287,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 supplierJsonDocument.GetChargeDescriptions().Should().ContainInOrder(expectedNotificationOperations);
             }
 
+            // TODO: Remove? (Similar test is added to "ChargeInformationTests.cs")
             [Fact]
             public async Task Ingestion_BundleWithTwoOperationsForSameTariffWhere2ndIsInvalid_Confirms1st_Rejects2nd_And_NotifiesAbout1st()
             {
