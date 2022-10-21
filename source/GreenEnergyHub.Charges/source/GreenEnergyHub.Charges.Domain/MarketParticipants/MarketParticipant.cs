@@ -133,11 +133,6 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
             Status = status;
         }
 
-        public void UpdateName(string name)
-        {
-            Name = name;
-        }
-
         public void UpdateB2CActorId(Guid? b2CActorId)
         {
             B2CActorId = b2CActorId;
