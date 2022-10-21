@@ -48,12 +48,18 @@ public class ChargePriceQueryService : IChargePriceQueryService
         return SortChargePrices(searchCriteria, chargePrices);
     }
 
-    private static IList<ChargePriceV1Dto> SortChargePrices(ChargePricesSearchCriteriaV1Dto searchCriteria, IList<ChargePriceV1Dto> chargePoints)
+    private static IList<ChargePriceV1Dto> SortChargePrices(ChargePricesSearchCriteriaV1Dto searchCriteria, IList<ChargePriceV1Dto> chargePrices)
     {
-        var sortColumnName = searchCriteria.SortColumnName.ToString();
-        return searchCriteria.IsDescending
-            ? chargePoints.OrderByDescending(cp => cp.GetType().GetProperty(sortColumnName)?.GetValue(cp)).ToList()
-            : chargePoints.OrderBy(cp => cp.GetType().GetProperty(sortColumnName)?.GetValue(cp)).ToList();
+        return searchCriteria.SortColumnName switch
+        {
+            SortColumnName.FromDateTime => searchCriteria.IsDescending
+                ? chargePrices.OrderByDescending(cp => cp.FromDateTime).ToList()
+                : chargePrices.OrderBy(cp => cp.FromDateTime).ToList(),
+            SortColumnName.Price => searchCriteria.IsDescending
+                ? chargePrices.OrderByDescending(cp => cp.Price).ToList()
+                : chargePrices.OrderBy(cp => cp.Price).ToList(),
+            _ => chargePrices,
+        };
     }
 
     private static IQueryable<ChargePoint> SortChargePoints(
