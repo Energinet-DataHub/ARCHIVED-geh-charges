@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace GreenEnergyHub.Charges.Domain.Charges
 {
@@ -21,10 +22,13 @@ namespace GreenEnergyHub.Charges.Domain.Charges
     /// </summary>
     public class ChargeMessage
     {
-        private ChargeMessage(Guid chargeId, string messageId)
+        private ChargeMessage(
+            string senderProvidedChargeId, ChargeType type, string marketParticipantId, string messageId)
         {
             Id = Guid.NewGuid();
-            ChargeId = chargeId;
+            SenderProvidedChargeId = senderProvidedChargeId;
+            Type = type;
+            MarketParticipantId = marketParticipantId;
             MessageId = messageId;
         }
 
@@ -34,7 +38,8 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         // ReSharper disable once UnusedMember.Local - used by EF Core
         private ChargeMessage()
         {
-            ChargeId = Guid.Empty;
+            SenderProvidedChargeId = string.Empty;
+            MarketParticipantId = string.Empty;
             MessageId = string.Empty;
         }
 
@@ -43,22 +48,33 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         /// </summary>
         public Guid Id { get; }
 
-        /// <summary>
-        /// The charge id
-        /// </summary>
-        public Guid ChargeId { get; }
+        [Required]
+        [StringLength(35)]
+        public string SenderProvidedChargeId { get; }
+
+        public ChargeType Type { get; }
+
+        [Required]
+        [StringLength(35)]
+        public string MarketParticipantId { get; }
 
         /// <summary>
         /// The message id
         /// </summary>
         public string MessageId { get; }
 
-        public static ChargeMessage Create(Guid chargeId, string messageId)
+        public static ChargeMessage Create(
+            string senderProvidedChargeId,
+            ChargeType chargeType,
+            string marketParticipantId,
+            string messageId)
         {
-            ArgumentNullException.ThrowIfNull(chargeId);
+            ArgumentNullException.ThrowIfNull(senderProvidedChargeId);
+            ArgumentNullException.ThrowIfNull(chargeType);
+            ArgumentNullException.ThrowIfNull(marketParticipantId);
             ArgumentNullException.ThrowIfNull(messageId);
 
-            return new ChargeMessage(chargeId, messageId);
+            return new ChargeMessage(senderProvidedChargeId, chargeType, marketParticipantId, messageId);
         }
     }
 }
