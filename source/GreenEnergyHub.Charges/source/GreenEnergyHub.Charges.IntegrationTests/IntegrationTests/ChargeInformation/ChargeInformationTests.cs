@@ -12,27 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
-using Energinet.DataHub.Core.FunctionApp.TestCommon.FunctionAppHost;
 using Energinet.DataHub.Core.JsonSerialization;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.Charges.Factories;
 using GreenEnergyHub.Charges.Application.Charges.Handlers.ChargeInformation;
 using GreenEnergyHub.Charges.Application.Common.Services;
-using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
-using GreenEnergyHub.Charges.FunctionHost;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
-using GreenEnergyHub.Charges.TestCore.TestHelpers;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Xunit;
 using Xunit.Categories;
@@ -43,39 +36,29 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.ChargeInforma
     /// Tests ChargeInformation flow with managed dependencies
     /// </summary>
     [IntegrationTest]
-    public class ChargeInformationTests : IClassFixture<ChargesDatabaseFixture>
+    public class ChargeInformationTests : IClassFixture<ChargesManagedDependenciesTestFixture>
     {
-        private readonly ChargesDatabaseManager _databaseManager;
+        private readonly ChargesManagedDependenciesTestFixture _fixture;
         private readonly IJsonSerializer _jsonSerializer;
-        private readonly IHost _host;
-        private readonly IUnitOfWork _unitOfWork;
 
-        public ChargeInformationTests(ChargesDatabaseFixture fixture)
+        public ChargeInformationTests(ChargesManagedDependenciesTestFixture fixture)
         {
-            _databaseManager = fixture.DatabaseManager;
-            _jsonSerializer = new JsonSerializer();
-            var configuration = new FunctionAppHostConfigurationBuilder().BuildLocalSettingsConfiguration();
-            FunctionHostEnvironmentSettingHelper.SetFunctionHostEnvironmentVariablesFromSampleSettingsFile(configuration);
-            Environment.SetEnvironmentVariable("CHARGE_DB_CONNECTION_STRING", _databaseManager.ConnectionString);
-            _host = ChargesFunctionApp.ConfigureApplication();
-            _unitOfWork = (IUnitOfWork)_host.Services.GetService(typeof(IUnitOfWork))!;
-            var correlationContext = (ICorrelationContext)_host.Services.GetService(typeof(ICorrelationContext))!;
-            correlationContext.SetId(Guid.NewGuid().ToString());
+            _fixture = fixture;
+            _jsonSerializer = _fixture.GetService<IJsonSerializer>();
         }
 
         [Fact]
         public async Task HandleAsync_WhenValidChargeInformationCommandReceivedEvent_ThenChargeIsPersisted()
         {
             // Arrange
-            await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
+            await using var chargesDatabaseReadContext = _fixture.DatabaseManager.CreateDbContext();
             var sut = BuildChargeInformationOperationsHandler();
-            var jsonString = await File.ReadAllTextAsync("IntegrationTests\\ChargeInformation\\ChargeInformationTestTariff.json");
-
-            var receivedEvent = _jsonSerializer.Deserialize<ChargeInformationCommandReceivedEvent>(jsonString);
+            var receivedEvent =
+                await GetTestDataFromFile<ChargeInformationCommandReceivedEvent>("ChargeInformationTestTariff.json");
 
             // Act
             await sut.HandleAsync(receivedEvent);
-            await _unitOfWork.SaveChangesAsync();
+            await _fixture.UnitOfWork.SaveChangesAsync();
 
             // Assert
             var senderProvidedChargeId = receivedEvent.Command.Operations.First().SenderProvidedChargeId;
@@ -85,23 +68,24 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.ChargeInforma
             charge.Should().NotBeNull();
         }
 
+        private async Task<T> GetTestDataFromFile<T>(string filename)
+        {
+            var jsonString = await File.ReadAllTextAsync($"IntegrationTests\\ChargeInformation\\{filename}");
+            return _jsonSerializer.Deserialize<T>(jsonString);
+        }
+
         private ChargeInformationOperationsHandler BuildChargeInformationOperationsHandler()
         {
             return new ChargeInformationOperationsHandler(
-                GetService<IInputValidator<ChargeInformationOperationDto>>(),
-                GetService<IChargeRepository>(),
-                GetService<IMarketParticipantRepository>(),
-                GetService<IChargeFactory>(),
-                GetService<IChargePeriodFactory>(),
-                GetService<IDomainEventPublisher>(),
-                GetService<ILoggerFactory>(),
-                GetService<IChargeInformationOperationsAcceptedEventFactory>(),
-                GetService<IChargeInformationOperationsRejectedEventFactory>());
-        }
-
-        private T GetService<T>()
-        {
-            return (T)_host.Services.GetService(typeof(T))!;
+                _fixture.GetService<IInputValidator<ChargeInformationOperationDto>>(),
+                _fixture.GetService<IChargeRepository>(),
+                _fixture.GetService<IMarketParticipantRepository>(),
+                _fixture.GetService<IChargeFactory>(),
+                _fixture.GetService<IChargePeriodFactory>(),
+                _fixture.GetService<IDomainEventPublisher>(),
+                _fixture.GetService<ILoggerFactory>(),
+                _fixture.GetService<IChargeInformationOperationsAcceptedEventFactory>(),
+                _fixture.GetService<IChargeInformationOperationsRejectedEventFactory>());
         }
     }
 }
