@@ -41,6 +41,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             marketParticipant = MarketParticipant.Create(
                 Guid.NewGuid(),
                 marketParticipantOwnerId,
+                "MarketParticipant Name",
                 MarketParticipantStatus.Active,
                 MarketParticipantRole.GridAccessProvider);
             context.MarketParticipants.Add(marketParticipant);

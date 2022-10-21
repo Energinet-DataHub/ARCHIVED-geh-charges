@@ -42,6 +42,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             var marketParticipantCreatedEvent = new MarketParticipantCreatedCommand(
                 ActorId: Guid.NewGuid(),
                 "mp123",
+                "name",
                 new List<MarketParticipantRole> { MarketParticipantRole.EnergySupplier, },
                 MarketParticipantStatus.Active,
                 new List<Guid>());
@@ -59,6 +60,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             marketParticipant.MarketParticipantId.Should().Be(marketParticipantCreatedEvent.MarketParticipantId);
             marketParticipant.BusinessProcessRole.Should().Be(MarketParticipantRole.EnergySupplier);
             marketParticipant.Status.Should().Be(MarketParticipantStatus.Active);
+            marketParticipant.Name.Should().Be(marketParticipantCreatedEvent.Name);
         }
 
         [Theory]
@@ -74,6 +76,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             var marketParticipantCreatedEvent = new MarketParticipantCreatedCommand(
                 ActorId: Guid.NewGuid(),
                 "mp123",
+                "name",
                 new List<MarketParticipantRole> { MarketParticipantRole.GridAccessProvider, },
                 MarketParticipantStatus.Active,
                 new List<Guid> { gridAreaId });
