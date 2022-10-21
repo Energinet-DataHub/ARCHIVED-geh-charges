@@ -18,5 +18,5 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices;
 
 public interface IChargePriceQueryService
 {
-    IList<ChargePriceV1Dto> Search(ChargePricesSearchCriteriaV1Dto chargePricesSearchCriteria);
+    IList<ChargePriceV1Dto> Search(ChargePricesSearchCriteriaV1Dto searchCriteria);
 }
