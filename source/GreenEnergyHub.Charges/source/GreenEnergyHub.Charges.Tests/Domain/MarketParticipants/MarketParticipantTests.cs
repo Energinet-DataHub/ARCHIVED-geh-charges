@@ -28,17 +28,19 @@ namespace GreenEnergyHub.Charges.Tests.Domain.MarketParticipants
         public void Create_ReturnsMarketParticipant(
             Guid actorId,
             string marketParticipantId,
+            string marketParticipantName,
             MarketParticipantStatus status,
             MarketParticipantRole businessProcessRole)
         {
             var actual =
-                MarketParticipant.Create(actorId, marketParticipantId, status, businessProcessRole);
+                MarketParticipant.Create(actorId, marketParticipantId, marketParticipantName, status, businessProcessRole);
 
             actual.ActorId.Should().Be(actorId);
             actual.B2CActorId.Should().BeNull();
             actual.MarketParticipantId.Should().Be(marketParticipantId);
             actual.Status.Should().Be(status);
             actual.BusinessProcessRole.Should().Be(businessProcessRole);
+            actual.Name.Should().Be(marketParticipantName);
         }
 
         [Theory]
@@ -46,6 +48,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.MarketParticipants
         public void Update_ShouldUpdateProperties(
             Guid actorId,
             string marketParticipantId,
+            string marketParticipantName,
             MarketParticipantStatus status,
             MarketParticipantRole businessProcessRole,
             Guid newActorId,
@@ -54,7 +57,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.MarketParticipants
         {
             // Arrange
             var actual =
-                MarketParticipant.Create(actorId, marketParticipantId, status, businessProcessRole);
+                MarketParticipant.Create(actorId, marketParticipantId, marketParticipantName, status, businessProcessRole);
 
             // Act
             actual.Update(newActorId, newB2CActorId, newStatus);
@@ -70,13 +73,14 @@ namespace GreenEnergyHub.Charges.Tests.Domain.MarketParticipants
         public void UpdateStatus_ShouldUpdateStatus(
             Guid actorId,
             string marketParticipantId,
+            string marketParticipantName,
             MarketParticipantStatus status,
             MarketParticipantRole businessProcessRole,
             MarketParticipantStatus newStatus)
         {
             // Arrange
             var actual =
-                MarketParticipant.Create(actorId, marketParticipantId, status, businessProcessRole);
+                MarketParticipant.Create(actorId, marketParticipantId, marketParticipantName, status, businessProcessRole);
 
             // Act
             actual.UpdateStatus(newStatus);
@@ -91,12 +95,13 @@ namespace GreenEnergyHub.Charges.Tests.Domain.MarketParticipants
             Guid newB2CActorId,
             Guid actorId,
             string marketParticipantId,
+            string marketParticipantName,
             MarketParticipantStatus status,
             MarketParticipantRole businessProcessRole)
         {
             // Arrange
             var actual =
-                MarketParticipant.Create(actorId, marketParticipantId, status, businessProcessRole);
+                MarketParticipant.Create(actorId, marketParticipantId, marketParticipantName, status, businessProcessRole);
 
             // Act
             actual.UpdateB2CActorId(newB2CActorId);
@@ -110,18 +115,40 @@ namespace GreenEnergyHub.Charges.Tests.Domain.MarketParticipants
         public void UpdateB2CActorId_WhenIdIsNull_ShouldUpdateB2CActorId(
             Guid actorId,
             string marketParticipantId,
+            string marketParticipantName,
             MarketParticipantStatus status,
             MarketParticipantRole businessProcessRole)
         {
             // Arrange
             var actual =
-                MarketParticipant.Create(actorId, marketParticipantId, status, businessProcessRole);
+                MarketParticipant.Create(actorId, marketParticipantId, marketParticipantName, status, businessProcessRole);
 
             // Act
             actual.UpdateB2CActorId(null);
 
             // Assert
             actual.B2CActorId.Should().BeNull();
+        }
+
+        [Theory]
+        [AutoData]
+        public void UpdateName_WhenCalled_ShouldSetName(
+            Guid actorId,
+            string marketParticipantId,
+            string marketParticipantName,
+            MarketParticipantStatus status,
+            MarketParticipantRole businessProcessRole)
+        {
+            // Arrange
+            var newName = "new name";
+            var actual =
+                MarketParticipant.Create(actorId, marketParticipantId, marketParticipantName, status, businessProcessRole);
+
+            // Act
+            actual.UpdateName(newName);
+
+            // Assert
+            actual.Name.Should().Be(newName);
         }
     }
 }
