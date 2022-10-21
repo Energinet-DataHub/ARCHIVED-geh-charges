@@ -13,9 +13,10 @@ flag_management:
 # Following will be ignored no matter which flag is used
 ignore:
   - "source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.IntegrationTests"
+  - "source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.IntegrationTest.Core"
   - "source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.SystemTests"
   - "source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.Tests"
-  - "source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.IntegrationTest.Core"
+  - "source/GreenEnergyHub.Charges/source/GreenEnergyHub.Charges.TestCore"
   - "source/Energinet.DataHub.Charges.Libraries/source/Energinet.DataHub.Charges.Libraries.Clients.Tests"
   - "source/Energinet.DataHub.Charges.Libraries/source/Energinet.DataHub.Charges.Libraries.Clients.IntegrationTests"
   - "source/Energinet.DataHub.Charges.Libraries/source/Energinet.DataHub.Charges.Libraries.Clients.RegistrationTests"
