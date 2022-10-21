@@ -1,5 +1,9 @@
 # Energinet.DataHub.Charges.Clients.Registrations Release notes
 
+## Version 4.3.0
+
+Added pagination functionality to `SearchChargePricesAsync`.
+
 ## Version 4.2.1
 
 Added Id to `ChargeV1Dto`.
