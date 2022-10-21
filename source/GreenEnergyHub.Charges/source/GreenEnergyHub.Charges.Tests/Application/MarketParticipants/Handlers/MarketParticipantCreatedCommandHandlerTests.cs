@@ -60,6 +60,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             marketParticipant.MarketParticipantId.Should().Be(marketParticipantCreatedEvent.MarketParticipantId);
             marketParticipant.BusinessProcessRole.Should().Be(MarketParticipantRole.EnergySupplier);
             marketParticipant.Status.Should().Be(MarketParticipantStatus.Active);
+            marketParticipant.Name.Should().Be(marketParticipantCreatedEvent.Name);
         }
 
         [Theory]

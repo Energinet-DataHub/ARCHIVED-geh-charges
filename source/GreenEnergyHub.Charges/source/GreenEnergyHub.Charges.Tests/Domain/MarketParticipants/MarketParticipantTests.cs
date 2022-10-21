@@ -40,6 +40,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.MarketParticipants
             actual.MarketParticipantId.Should().Be(marketParticipantId);
             actual.Status.Should().Be(status);
             actual.BusinessProcessRole.Should().Be(businessProcessRole);
+            actual.Name.Should().Be(marketParticipantName);
         }
 
         [Theory]
