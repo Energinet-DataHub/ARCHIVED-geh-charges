@@ -64,6 +64,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             actual.MarketParticipantId.Should().Be("00001");
             actual.Status.Should().Be(MarketParticipantStatus.Active);
             actual.BusinessProcessRole.Should().Be(MarketParticipantRole.GridAccessProvider);
+            actual.Name.Should().Be(marketParticipant.Name);
         }
 
         [Fact]
@@ -113,8 +114,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         {
             // Arrange
             await using var writeDatabaseContext = _databaseManager.CreateDbContext();
-            await AddMarketParticipantToContextAndSaveAsync("1337", MarketParticipantRole.GridAccessProvider, MarketParticipantStatus.Active, writeDatabaseContext);
-            await AddMarketParticipantToContextAndSaveAsync("1337", MarketParticipantRole.EnergySupplier, MarketParticipantStatus.Active, writeDatabaseContext);
+            const string name = "mp name";
+            await AddMarketParticipantToContextAndSaveAsync("1337", name, MarketParticipantRole.GridAccessProvider, MarketParticipantStatus.Active, writeDatabaseContext);
+            await AddMarketParticipantToContextAndSaveAsync("1337", name, MarketParticipantRole.EnergySupplier, MarketParticipantStatus.Active, writeDatabaseContext);
 
             await using var readDatabaseContext = _databaseManager.CreateDbContext();
             var sut = new MarketParticipantRepository(readDatabaseContext);
@@ -126,6 +128,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             actual.Should().NotBeNull();
             actual!.MarketParticipantId.Should().Be("1337");
             actual.BusinessProcessRole.Should().Be(MarketParticipantRole.GridAccessProvider);
+            actual.Name.Should().Be(name);
         }
 
         [Fact]
@@ -288,6 +291,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             const string marketParticipantId = SeededData.MarketParticipants.SystemOperator.Gln;
             await AddMarketParticipantToContextAndSaveAsync(
                 marketParticipantId,
+                "mp name",
                 MarketParticipantRole.GridAccessProvider,
                 MarketParticipantStatus.Inactive,
                 writeDatabaseContext);
@@ -346,13 +350,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         }
 
         private static async Task AddMarketParticipantToContextAndSaveAsync(
-            string marketParticipantId, MarketParticipantRole role, MarketParticipantStatus status, ChargesDatabaseContext context)
+            string marketParticipantId, string name, MarketParticipantRole role, MarketParticipantStatus status, ChargesDatabaseContext context)
         {
             var marketParticipant = new TestMarketParticipant(
                 id: Guid.NewGuid(),
                 actorId: Guid.NewGuid(),
                 b2CActorId: Guid.NewGuid(),
                 marketParticipantId,
+                name,
                 status,
                 role);
             await context.AddAsync(marketParticipant);

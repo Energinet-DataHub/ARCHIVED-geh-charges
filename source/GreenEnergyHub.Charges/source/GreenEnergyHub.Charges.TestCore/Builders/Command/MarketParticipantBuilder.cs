@@ -24,12 +24,14 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Command
         private MarketParticipantStatus _status;
         private string _marketParticipantId;
         private MarketParticipantRole _role;
+        private string _marketParticipantName;
 
         public MarketParticipantBuilder()
         {
             _marketParticipantId = Guid.NewGuid().ToString().Substring(0, 35);
             _role = MarketParticipantRole.GridAccessProvider;
             _status = MarketParticipantStatus.Active;
+            _marketParticipantName = "mp name";
         }
 
         public MarketParticipantBuilder WithStatus(MarketParticipantStatus status)
@@ -56,11 +58,18 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Command
             return this;
         }
 
+        public MarketParticipantBuilder WithName(string marketParticipantName)
+        {
+            _marketParticipantName = marketParticipantName;
+            return this;
+        }
+
         public MarketParticipant Build()
         {
             return MarketParticipant.Create(
                 _actorId,
                 _marketParticipantId,
+                _marketParticipantName,
                 _status,
                 _role);
         }

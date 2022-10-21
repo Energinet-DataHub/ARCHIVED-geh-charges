@@ -331,6 +331,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
                 actorId: Guid.NewGuid(),
                 b2CActorId: Guid.NewGuid(),
                 marketParticipantUpdatedCommand.MarketParticipantId,
+                "name",
                 marketParticipantUpdatedCommand.Status,
                 marketParticipantUpdatedCommand.BusinessProcessRoles.Single());
         }
