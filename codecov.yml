@@ -19,4 +19,3 @@ ignore:
   - "source/Energinet.DataHub.Charges.Libraries/source/Energinet.DataHub.Charges.Libraries.Clients.Tests"
   - "source/Energinet.DataHub.Charges.Libraries/source/Energinet.DataHub.Charges.Libraries.Clients.IntegrationTests"
   - "source/Energinet.DataHub.Charges.Libraries/source/Energinet.DataHub.Charges.Libraries.Clients.RegistrationTests"
-  
