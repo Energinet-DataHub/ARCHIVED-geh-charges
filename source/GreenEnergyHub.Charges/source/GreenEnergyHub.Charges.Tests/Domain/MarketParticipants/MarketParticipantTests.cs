@@ -129,5 +129,26 @@ namespace GreenEnergyHub.Charges.Tests.Domain.MarketParticipants
             // Assert
             actual.B2CActorId.Should().BeNull();
         }
+
+        [Theory]
+        [AutoData]
+        public void UpdateName_WhenCalled_ShouldSetName(
+            Guid actorId,
+            string marketParticipantId,
+            string marketParticipantName,
+            MarketParticipantStatus status,
+            MarketParticipantRole businessProcessRole)
+        {
+            // Arrange
+            var newName = "new name";
+            var actual =
+                MarketParticipant.Create(actorId, marketParticipantId, marketParticipantName, status, businessProcessRole);
+
+            // Act
+            actual.UpdateName(newName);
+
+            // Assert
+            actual.Name.Should().Be(newName);
+        }
     }
 }
