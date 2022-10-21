@@ -32,7 +32,7 @@ public class ChargePriceQueryService : IChargePriceQueryService
         _iso8601Durations = iso8601Durations;
     }
 
-    public IList<ChargePriceV1Dto> Search(ChargePricesSearchCriteriaV1Dto searchCriteria)
+    public ChargePricesV1Dto Search(ChargePricesSearchCriteriaV1Dto searchCriteria)
     {
         var chargePoints = _data.ChargePoints
             .Where(cp => cp.ChargeId == searchCriteria.ChargeId)
@@ -45,7 +45,13 @@ public class ChargePriceQueryService : IChargePriceQueryService
             .Take(searchCriteria.Take)
             .AsChargePriceV1Dto(_iso8601Durations);
 
-        return SortChargePrices(searchCriteria, chargePrices);
+        var chargePricesCount = chargePoints.Count();
+        return MapToChargePricesV1Dto(SortChargePrices(searchCriteria, chargePrices), chargePricesCount);
+    }
+
+    private ChargePricesV1Dto MapToChargePricesV1Dto(IList<ChargePriceV1Dto> chargePrices, int chargePricesCount)
+    {
+        return new ChargePricesV1Dto(chargePrices.ToList(), chargePricesCount);
     }
 
     private static IList<ChargePriceV1Dto> SortChargePrices(ChargePricesSearchCriteriaV1Dto searchCriteria, IList<ChargePriceV1Dto> chargePrices)

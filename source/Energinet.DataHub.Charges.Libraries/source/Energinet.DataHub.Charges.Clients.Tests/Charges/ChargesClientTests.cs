@@ -47,7 +47,8 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
             Mock<IChargesClientFactory> chargesClientFactory)
         {
             // Arrange
-            var responseContent = CreateValidResponseContent(chargeLinkDto);
+            var chargeLinksDto = new List<ChargeLinkV1Dto> { chargeLinkDto };
+            var responseContent = CreateValidResponseContent(chargeLinksDto);
             var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.OK, responseContent);
             var httpClient = CreateHttpClient(mockHttpMessageHandler);
             chargesClientFactory.Setup(x => x.CreateClient(httpClient))
@@ -101,7 +102,8 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
             Mock<IChargesClientFactory> chargesClientFactory)
         {
             // Arrange
-            var responseContent = CreateValidResponseContent(chargeDto);
+            var chargesDto = new List<ChargeV1Dto> { chargeDto };
+            var responseContent = CreateValidResponseContent(chargesDto);
             var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.OK, responseContent);
             var httpClient = CreateHttpClient(mockHttpMessageHandler);
             chargesClientFactory.Setup(x => x.CreateClient(httpClient))
@@ -215,7 +217,8 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
             ChargeV1Dto chargeDto)
         {
             // Arrange
-            var responseContent = CreateValidResponseContent(chargeDto);
+            var chargeDtos = new List<ChargeV1Dto> { chargeDto };
+            var responseContent = CreateValidResponseContent(chargeDtos);
             var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.OK, responseContent);
             var httpClient = CreateHttpClient(mockHttpMessageHandler);
             chargesClientFactory.Setup(x => x.CreateClient(httpClient))
@@ -248,7 +251,8 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
             Mock<IChargesClientFactory> chargesClientFactory)
         {
             // Arrange
-            var responseContent = CreateValidResponseContent(marketParticipantDto);
+            var marketParticipantDtos = new List<MarketParticipantV1Dto> { marketParticipantDto };
+            var responseContent = CreateValidResponseContent(marketParticipantDtos);
             var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.OK, responseContent);
             var httpClient = CreateHttpClient(mockHttpMessageHandler);
             chargesClientFactory.Setup(x => x.CreateClient(httpClient))
@@ -313,12 +317,13 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
 
         [Theory]
         [InlineAutoDomainData]
-        public async Task SearchChargePointsAsync_WhenResponseIsEmptyList_ReturnsEmptyList(
+        public async Task SearchChargePricesAsync_WhenResponseIsEmptyList_ReturnsEmptyList(
             Mock<IChargesClientFactory> chargesClientFactory,
             ChargePricesSearchCriteriaV1Dto searchCriteria)
         {
             // Arrange
-            var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.OK, "[]");
+            var emptyChargePrices = "{\r\n  \"chargePrices\": [],\r\n  \"totalAmount\": 0\r\n}";
+            var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.OK, emptyChargePrices);
             var httpClient = CreateHttpClient(mockHttpMessageHandler);
             chargesClientFactory.Setup(x => x.CreateClient(httpClient))
                 .Returns(new ChargesClient(httpClient));
@@ -329,7 +334,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
             var result = await sut.SearchChargePricesAsync(searchCriteria).ConfigureAwait(false);
 
             // Assert
-            result.Should().BeEmpty();
+            result.ChargePrices.Should().BeEmpty();
         }
 
         [Theory]
@@ -352,10 +357,10 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
 
         [Theory]
         [InlineAutoDomainData]
-        public async Task SearchChargePointsAsync_WhenSuccess_ReturnsChargePoints(
+        public async Task SearchChargePricesAsync_WhenSuccess_ReturnsChargePoints(
             Mock<IChargesClientFactory> chargesClientFactory,
             ChargePricesSearchCriteriaV1Dto searchCriteria,
-            ChargePriceV1Dto chargePointDto)
+            ChargePricesV1Dto chargePointDto)
         {
             // Arrange
             var responseContent = CreateValidResponseContent(chargePointDto);
@@ -373,9 +378,11 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
 
             // Assert
             result.Should().NotBeNull();
-            result[0].Price.Should().Be(chargePointDto.Price);
-            result[0].FromDateTime.Should().Be(chargePointDto.FromDateTime);
-            result[0].ToDateTime.Should().Be(chargePointDto.ToDateTime);
+            result.ChargePrices.Should().NotBeNull();
+            result.TotalAmount.Should().BeGreaterThan(0);
+            result.ChargePrices[0].Price.Should().Be(chargePointDto.ChargePrices[0].Price);
+            result.ChargePrices[0].FromDateTime.Should().Be(chargePointDto.ChargePrices[0].FromDateTime);
+            result.ChargePrices[0].ToDateTime.Should().Be(chargePointDto.ChargePrices[0].ToDateTime);
 
             mockHttpMessageHandler.Protected().Verify(
                 "SendAsync",
@@ -386,10 +393,9 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
 
         private static string CreateValidResponseContent<TModel>(TModel responseDto)
         {
-            var responseDtos = new List<TModel> { responseDto };
             var options = new JsonSerializerOptions(JsonSerializerDefaults.Web) { Converters = { new JsonStringEnumConverter() } };
 
-            var responseContent = JsonSerializer.Serialize<IList<TModel>>(responseDtos, options);
+            var responseContent = JsonSerializer.Serialize(responseDto, options);
             return responseContent;
         }
 
