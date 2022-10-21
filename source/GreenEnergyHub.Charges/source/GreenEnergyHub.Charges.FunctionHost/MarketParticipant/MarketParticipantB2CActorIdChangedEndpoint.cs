@@ -23,14 +23,14 @@ using Microsoft.Azure.Functions.Worker;
 
 namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
 {
-    public class MarketParticipantB2CActorIdEndpoint
+    public class MarketParticipantB2CActorIdChangedEndpoint
     {
-        private const string FunctionName = nameof(MarketParticipantB2CActorIdEndpoint);
+        private const string FunctionName = nameof(MarketParticipantB2CActorIdChangedEndpoint);
         private readonly ISharedIntegrationEventParser _sharedIntegrationEventParser;
         private readonly IMarketParticipantB2CActorIdChangedCommandHandler _marketParticipantB2CActorIdChangedCommandHandler;
         private readonly IUnitOfWork _unitOfWork;
 
-        public MarketParticipantB2CActorIdEndpoint(
+        public MarketParticipantB2CActorIdChangedEndpoint(
             ISharedIntegrationEventParser sharedIntegrationEventParser,
             IMarketParticipantB2CActorIdChangedCommandHandler marketParticipantB2CActorIdChangedCommandHandler,
             IUnitOfWork unitOfWork)
