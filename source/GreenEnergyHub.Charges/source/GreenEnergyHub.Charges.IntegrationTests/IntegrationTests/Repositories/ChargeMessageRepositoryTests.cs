@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         {
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-            var charge = await GetCharge(chargesDatabaseWriteContext);
+            var charge = await GetCharge(chargesDatabaseWriteContext, "40000");
             var chargeMessage = chargeMessageBuilder.WithChargeId(charge.Id).Build();
             var sut = new ChargeMessageRepository(chargesDatabaseWriteContext);
 
@@ -99,7 +99,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             IChargesDatabaseContext chargesDatabaseWriteContext, ChargeMessageBuilder chargeMessageBuilder)
         {
             var chargeMessages = new List<ChargeMessage>();
-            var charge = await GetCharge(chargesDatabaseWriteContext);
+            var charge = await GetCharge(chargesDatabaseWriteContext, "45012");
             for (var i = 0; i < 3; i++)
                 chargeMessages.Add(chargeMessageBuilder.WithChargeId(charge.Id).WithMessageId($"MessageId{i}").Build());
 
@@ -108,9 +108,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             return chargeMessages;
         }
 
-        private static async Task<Charge> GetCharge(IChargesDatabaseContext chargesDatabaseWriteContext)
+        private static async Task<Charge> GetCharge(IChargesDatabaseContext chargesDatabaseWriteContext, string id)
         {
-            return await chargesDatabaseWriteContext.Charges.FirstAsync();
+            return await chargesDatabaseWriteContext.Charges.FirstAsync(x => x.SenderProvidedChargeId == id);
         }
     }
 }
