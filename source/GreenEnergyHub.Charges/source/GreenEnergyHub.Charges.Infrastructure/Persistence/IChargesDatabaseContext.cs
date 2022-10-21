@@ -24,20 +24,49 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Persistence
 {
+    /// <summary>
+    /// Context representing the Charges database
+    /// </summary>
     public interface IChargesDatabaseContext
     {
+        /// <summary>
+        /// Charges
+        /// </summary>
         DbSet<Charge> Charges { get; }
 
+        /// <summary>
+        /// ChargeMessages
+        /// </summary>
+        DbSet<ChargeMessage> ChargeMessages { get; }
+
+        /// <summary>
+        /// MarketParticipants
+        /// </summary>
         DbSet<MarketParticipant> MarketParticipants { get; }
 
+        /// <summary>
+        /// MeteringPoints
+        /// </summary>
         DbSet<MeteringPoint> MeteringPoints { get; }
 
+        /// <summary>
+        /// GridAreaLinks
+        /// </summary>
         DbSet<GridAreaLink> GridAreaLinks { get; }
 
+        /// <summary>
+        /// ChargesLinks
+        /// </summary>
         DbSet<ChargeLink> ChargeLinks { get; }
 
+        /// <summary>
+        /// DefaultChargeLinks
+        /// </summary>
         DbSet<DefaultChargeLink> DefaultChargeLinks { get; }
 
+        /// <summary>
+        /// OutboxMessages
+        /// </summary>
         DbSet<OutboxMessage> OutboxMessages { get; }
 
         /// <summary>
