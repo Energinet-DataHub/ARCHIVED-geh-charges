@@ -24,7 +24,7 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Testables
     public class TestEnergySupplier : MarketParticipant
     {
         public TestEnergySupplier(string marketParticipantId)
-            : base(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), marketParticipantId, MarketParticipantStatus.Active, MarketParticipantRole.EnergySupplier)
+            : base(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), marketParticipantId, "mp name", MarketParticipantStatus.Active, MarketParticipantRole.EnergySupplier)
         {
         }
     }

@@ -21,6 +21,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Events
     public record MarketParticipantCreatedCommand(
         Guid ActorId,
         string MarketParticipantId,
+        string Name,
         IEnumerable<MarketParticipantRole> BusinessProcessRoles,
         MarketParticipantStatus Status,
         IEnumerable<Guid> GridAreas);

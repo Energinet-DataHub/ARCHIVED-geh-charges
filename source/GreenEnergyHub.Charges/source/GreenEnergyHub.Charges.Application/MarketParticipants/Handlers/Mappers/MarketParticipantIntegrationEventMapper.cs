@@ -48,6 +48,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers.Mappers
             return new MarketParticipantCreatedCommand(
                 actorCreatedIntegrationEvent.ActorId,
                 actorCreatedIntegrationEvent.ActorNumber,
+                actorCreatedIntegrationEvent.Name,
                 roles,
                 status,
                 actorCreatedIntegrationEvent.ActorMarketRoles

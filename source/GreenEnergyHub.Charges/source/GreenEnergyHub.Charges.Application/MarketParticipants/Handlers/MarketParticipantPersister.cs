@@ -99,6 +99,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
             var marketParticipant = MarketParticipant.Create(
                 marketParticipantUpdatedCommand.ActorId,
                 marketParticipantUpdatedCommand.MarketParticipantId,
+                string.Empty,
                 marketParticipantUpdatedCommand.Status,
                 businessProcessRole);
 
