@@ -38,7 +38,7 @@ namespace GreenEnergyHub.Charges.SystemTests
     [Collection(nameof(SystemTestCollectionFixture))]
     public class BusinessProcessTests : IClassFixture<BusinessProcessConfiguration>
     {
-        private readonly B2CAppAuthenticationClient _authenticationClient;
+        private readonly B2CAppAuthenticationClient _gridAccessProviderAppAuthenticationClient;
 
         public BusinessProcessTests()
         {
@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.SystemTests
 
             var clientApp = Configuration.AuthorizationConfiguration.ClientApps["endk-ddm3"];
 
-            _authenticationClient = new B2CAppAuthenticationClient(
+            _gridAccessProviderAppAuthenticationClient = new B2CAppAuthenticationClient(
                 Configuration.AuthorizationConfiguration.TenantId,
                 Configuration.AuthorizationConfiguration.BackendApp,
                 clientApp);
@@ -164,7 +164,7 @@ namespace GreenEnergyHub.Charges.SystemTests
 
         private async Task<HttpClient> CreateConfidentialHttpClientAsync()
         {
-            var authenticationResult = await _authenticationClient.GetAuthenticationTokenAsync();
+            var authenticationResult = await _gridAccessProviderAppAuthenticationClient.GetAuthenticationTokenAsync();
             return new HttpClient
             {
                 BaseAddress = Configuration.AuthorizationConfiguration.ApiManagementBaseAddress,
