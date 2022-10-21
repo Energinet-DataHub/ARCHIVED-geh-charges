@@ -39,17 +39,21 @@ namespace GreenEnergyHub.Charges.SystemTests
     public class BusinessProcessTests : IClassFixture<BusinessProcessConfiguration>
     {
         private readonly B2CAppAuthenticationClient _gridAccessProviderAppAuthenticationClient;
+        private readonly B2CAppAuthenticationClient _energySupplierAppAuthenticationClient;
 
         public BusinessProcessTests()
         {
             Configuration = new BusinessProcessConfiguration();
 
-            var clientApp = Configuration.AuthorizationConfiguration.ClientApps["endk-ddm3"];
-
             _gridAccessProviderAppAuthenticationClient = new B2CAppAuthenticationClient(
                 Configuration.AuthorizationConfiguration.TenantId,
                 Configuration.AuthorizationConfiguration.BackendApp,
-                clientApp);
+                Configuration.AuthorizationConfiguration.ClientApps["endk-ddm3"]);
+
+            _energySupplierAppAuthenticationClient = new B2CAppAuthenticationClient(
+                Configuration.AuthorizationConfiguration.TenantId,
+                Configuration.AuthorizationConfiguration.BackendApp,
+                Configuration.AuthorizationConfiguration.ClientApps["5178861303303"]);
         }
 
         private BusinessProcessConfiguration Configuration { get; }
@@ -61,7 +65,7 @@ namespace GreenEnergyHub.Charges.SystemTests
             await FlushPostOfficeQueueAsync();
 
             // Arrange
-            using var httpClient = await CreateConfidentialHttpClientAsync();
+            using var gridAccessProviderClient = await CreateConfidentialHttpClientAsync(_gridAccessProviderAppAuthenticationClient);
             var currentInstant = SystemClock.Instance.GetCurrentInstant();
             var expectedOpId = $"<cim:originalTransactionIDReference_MktActivityRecord.mRID>SysTestOpId{currentInstant}</cim:originalTransactionIDReference_MktActivityRecord.mRID>";
             var bundleId = Guid.NewGuid().ToString();
@@ -75,7 +79,7 @@ namespace GreenEnergyHub.Charges.SystemTests
                 Content = new StringContent(body, Encoding.UTF8, "application/xml"),
             };
 
-            using var actualResponse = await httpClient.SendAsync(submitRequest);
+            using var actualResponse = await gridAccessProviderClient.SendAsync(submitRequest);
             actualResponse.StatusCode.Should().Be(HttpStatusCode.Accepted);
 
             // Peek
@@ -83,7 +87,7 @@ namespace GreenEnergyHub.Charges.SystemTests
             await Awaiter.WaitUntilConditionAsync(
                 async () =>
                 {
-                    peekResponse = await PeekAsync(httpClient, bundleId);
+                    peekResponse = await PeekAsync(gridAccessProviderClient, bundleId);
                     return peekResponse.StatusCode == HttpStatusCode.OK;
                 },
                 TimeSpan.FromMinutes(1),
@@ -100,7 +104,34 @@ namespace GreenEnergyHub.Charges.SystemTests
             await Awaiter.WaitUntilConditionAsync(
                 async () =>
                 {
-                    var dequeueResponse = await DequeueOkAsync(httpClient, bundleId);
+                    var dequeueResponse = await DequeueOkAsync(gridAccessProviderClient, bundleId);
+                    return dequeueResponse.StatusCode == HttpStatusCode.OK;
+                },
+                TimeSpan.FromMinutes(1),
+                TimeSpan.FromSeconds(1));
+
+            // Peek - as Energy Supplier
+            using var energySupplierClient = await CreateConfidentialHttpClientAsync(_energySupplierAppAuthenticationClient);
+            HttpResponseMessage? peekResponseEnergySupplier = null;
+            var bundleId2 = Guid.NewGuid().ToString();
+            await Awaiter.WaitUntilConditionAsync(
+                async () =>
+                {
+                    peekResponseEnergySupplier = await PeekAsync(energySupplierClient, bundleId2);
+                    return peekResponseEnergySupplier.StatusCode == HttpStatusCode.OK;
+                },
+                TimeSpan.FromMinutes(1),
+                TimeSpan.FromSeconds(1));
+
+            // Assert - Energy Supplier response
+            var messageType2 = peekResponseEnergySupplier!.Headers.GetValues("MessageType").FirstOrDefault();
+            messageType2!.Should().Be(nameof(DocumentType.NotifyPriceList));
+
+            // Dequeue - as Energy Supplier - throws XUnitException if dequeue not succeeding
+            await Awaiter.WaitUntilConditionAsync(
+                async () =>
+                {
+                    var dequeueResponse = await DequeueOkAsync(energySupplierClient, bundleId2);
                     return dequeueResponse.StatusCode == HttpStatusCode.OK;
                 },
                 TimeSpan.FromMinutes(1),
@@ -109,7 +140,7 @@ namespace GreenEnergyHub.Charges.SystemTests
 
         private async Task FlushPostOfficeQueueAsync()
         {
-            using var httpClient = await CreateConfidentialHttpClientAsync();
+            using var httpClient = await CreateConfidentialHttpClientAsync(_gridAccessProviderAppAuthenticationClient);
             await Awaiter.WaitUntilConditionAsync(
                 async () =>
                 {
@@ -162,9 +193,9 @@ namespace GreenEnergyHub.Charges.SystemTests
             return await httpClient.SendAsync(dequeueRequest);
         }
 
-        private async Task<HttpClient> CreateConfidentialHttpClientAsync()
+        private async Task<HttpClient> CreateConfidentialHttpClientAsync(B2CAppAuthenticationClient client)
         {
-            var authenticationResult = await _gridAccessProviderAppAuthenticationClient.GetAuthenticationTokenAsync();
+            var authenticationResult = await client.GetAuthenticationTokenAsync();
             return new HttpClient
             {
                 BaseAddress = Configuration.AuthorizationConfiguration.ApiManagementBaseAddress,
