@@ -33,15 +33,5 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
 
             await _chargesDatabaseContext.ChargeMessages.AddAsync(chargeMessage).ConfigureAwait(false);
         }
-
-        // Todo: only Get in query model
-        /*public async Task<IReadOnlyCollection<ChargeMessage>> GetByChargeIdAsync(Guid chargeId)
-        {
-            var chargeMessages = await _chargesDatabaseContext.ChargeMessages
-                .Where(chargeMessage => chargeMessage.ChargeId == chargeId)
-                .ToListAsync().ConfigureAwait(false);
-
-            return new ReadOnlyCollection<ChargeMessage>(chargeMessages);
-        }*/
     }
 }

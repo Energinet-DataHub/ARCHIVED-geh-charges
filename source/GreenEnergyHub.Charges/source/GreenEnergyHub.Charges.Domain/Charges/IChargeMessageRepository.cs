@@ -27,8 +27,5 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         /// <param name="chargeMessage"></param>
         /// <returns>A <see cref="Task"/>.</returns>
         Task AddAsync(ChargeMessage chargeMessage);
-
-        // Todo: only Get in query model
-        // Task<IReadOnlyCollection<ChargeMessage>> GetByChargeIdAsync(Guid chargeId);
     }
 }
