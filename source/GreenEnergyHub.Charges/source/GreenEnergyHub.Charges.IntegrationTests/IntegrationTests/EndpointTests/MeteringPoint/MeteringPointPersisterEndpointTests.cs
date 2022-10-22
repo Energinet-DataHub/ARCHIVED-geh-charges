@@ -33,7 +33,7 @@ using Xunit.Abstractions;
 using Xunit.Categories;
 using static Energinet.DataHub.MeteringPoints.IntegrationEventContracts.MeteringPointCreated.Types;
 
-namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
+namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests.MeteringPoint
 {
     [IntegrationTest]
     public class MeteringPointPersisterEndpointTests
