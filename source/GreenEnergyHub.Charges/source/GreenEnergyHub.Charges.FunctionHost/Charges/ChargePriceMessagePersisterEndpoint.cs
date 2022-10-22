@@ -50,7 +50,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
             var chargeCommandAcceptedEvent = (ChargePriceOperationsAcceptedEvent)await _deserializer
                 .FromBytesAsync(message).ConfigureAwait(false);
 
-            await _chargePriceMessagePersister.PersistMessagesAsync(chargeCommandAcceptedEvent).ConfigureAwait(false);
+            await _chargePriceMessagePersister.PersistMessageAsync(chargeCommandAcceptedEvent).ConfigureAwait(false);
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
         }
     }

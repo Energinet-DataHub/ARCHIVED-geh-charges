@@ -17,6 +17,9 @@ using GreenEnergyHub.Charges.Domain.Dtos.Events;
 
 namespace GreenEnergyHub.Charges.Application.Charges.Handlers.ChargePrice
 {
+    /// <summary>
+    /// Persist message with relation to charge
+    /// </summary>
     public interface IChargePriceMessagePersister
     {
         /// <summary>
@@ -24,6 +27,6 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers.ChargePrice
         /// </summary>
         /// <param name="chargePriceOperationsAcceptedEvent"></param>
         /// <returns>A <see cref="Task"/>.</returns>
-        Task PersistMessagesAsync(ChargePriceOperationsAcceptedEvent chargePriceOperationsAcceptedEvent);
+        Task PersistMessageAsync(ChargePriceOperationsAcceptedEvent chargePriceOperationsAcceptedEvent);
     }
 }

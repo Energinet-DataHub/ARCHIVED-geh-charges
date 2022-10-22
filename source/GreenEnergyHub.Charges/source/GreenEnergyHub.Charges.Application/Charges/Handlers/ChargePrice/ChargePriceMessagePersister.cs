@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.Events;
@@ -28,19 +29,18 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers.ChargePrice
             _chargeMessageRepository = chargeMessageRepository;
         }
 
-        public async Task PersistMessagesAsync(ChargePriceOperationsAcceptedEvent chargePriceOperationsAcceptedEvent)
+        public async Task PersistMessageAsync(ChargePriceOperationsAcceptedEvent chargePriceOperationsAcceptedEvent)
         {
             ArgumentNullException.ThrowIfNull(chargePriceOperationsAcceptedEvent);
 
-            foreach (var chargePriceOperationDto in chargePriceOperationsAcceptedEvent.Operations)
-            {
-                var chargeMessage = ChargeMessage.Create(
-                    chargePriceOperationDto.SenderProvidedChargeId,
-                    chargePriceOperationDto.ChargeType,
-                    chargePriceOperationDto.ChargeOwner,
-                    chargePriceOperationsAcceptedEvent.Document.Id);
-                await _chargeMessageRepository.AddAsync(chargeMessage).ConfigureAwait(false);
-            }
+            // Charge id, type and owner is the same for all operations at this point
+            var chargePriceOperationDto = chargePriceOperationsAcceptedEvent.Operations.First();
+            var chargeMessage = ChargeMessage.Create(
+                chargePriceOperationDto.SenderProvidedChargeId,
+                chargePriceOperationDto.ChargeType,
+                chargePriceOperationDto.ChargeOwner,
+                chargePriceOperationsAcceptedEvent.Document.Id);
+            await _chargeMessageRepository.AddAsync(chargeMessage).ConfigureAwait(false);
         }
     }
 }
