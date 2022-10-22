@@ -23,7 +23,10 @@ namespace GreenEnergyHub.Charges.Domain.Charges
     public class ChargeMessage
     {
         private ChargeMessage(
-            string senderProvidedChargeId, ChargeType type, string marketParticipantId, string messageId)
+            string senderProvidedChargeId,
+            ChargeType type,
+            string marketParticipantId,
+            string messageId)
         {
             Id = Guid.NewGuid();
             SenderProvidedChargeId = senderProvidedChargeId;
