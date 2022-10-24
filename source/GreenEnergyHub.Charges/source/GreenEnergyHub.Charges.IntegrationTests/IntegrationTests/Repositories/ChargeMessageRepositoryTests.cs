@@ -49,13 +49,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
             var charge = await chargesDatabaseWriteContext.Charges.FirstAsync();
-            var chargeIdentifier = await GetChargeIdentifier(
-                chargesDatabaseWriteContext,
-                charge,
-                SeededData.MarketParticipants.SystemOperator.Gln);
             var chargeMessage = chargeMessageBuilder
-                .WithSenderProvidedChargeId(chargeIdentifier.SenderProvidedChargeId)
-                .WithChargeType(chargeIdentifier.ChargeType)
+                .WithSenderProvidedChargeId(charge.SenderProvidedChargeId)
+                .WithChargeType(charge.Type)
                 .WithMarketParticipantId(SeededData.MarketParticipants.SystemOperator.Gln)
                 .Build();
             var sut = new ChargeMessageRepository(chargesDatabaseWriteContext);
@@ -79,18 +75,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
             // Act / Assert
             await Assert.ThrowsAsync<ArgumentNullException>(() => sut.AddAsync(chargeMessage!));
-        }
-
-        private static async Task<ChargeIdentifier> GetChargeIdentifier(
-            IChargesDatabaseContext chargesDatabaseWriteContext,
-            Charge charge,
-            string chargeOwner)
-        {
-            var marketParticipantRepository = new MarketParticipantRepository(chargesDatabaseWriteContext);
-            var chargeIdentifierFactory = new ChargeIdentifierFactory(marketParticipantRepository);
-            var chargeIdentifier = await chargeIdentifierFactory.CreateAsync(
-                charge.SenderProvidedChargeId, charge.Type, chargeOwner).ConfigureAwait(false);
-            return chargeIdentifier;
         }
     }
 }
