@@ -30,6 +30,8 @@ namespace GreenEnergyHub.Charges.SystemTests.Fixtures
             PeekEndpoint = "/v1.0/cim/masterdata?bundleId=";
             DequeueEndpoint = "/v1.0/cim/dequeue/";
             GridAccessProvider = Root.GetValue<string>("GRID_ACCESS_PROVIDER");
+            GridAccessProviderClientName = Root.GetValue<string>("GRID_ACCESS_PROVIDER_CLIENT_NAME");
+            EnergySupplierClientName = Root.GetValue<string>("ENERGY_SUPPLIER_CLIENT_NAME");
         }
 
         /// <summary>
@@ -51,5 +53,15 @@ namespace GreenEnergyHub.Charges.SystemTests.Fixtures
         /// Grid access provider for submitted charges
         /// </summary>
         public string GridAccessProvider { get; }
+
+        /// <summary>
+        /// Grid access provider client name, required for acquiring bearer token
+        /// </summary>
+        public string GridAccessProviderClientName { get; }
+
+        /// <summary>
+        /// Energy Supplier client name, required for acquiring bearer token
+        /// </summary>
+        public string EnergySupplierClientName { get; }
     }
 }

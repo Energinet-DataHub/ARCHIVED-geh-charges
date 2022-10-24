@@ -48,12 +48,12 @@ namespace GreenEnergyHub.Charges.SystemTests
             _gridAccessProviderAppAuthenticationClient = new B2CAppAuthenticationClient(
                 Configuration.AuthorizationConfiguration.TenantId,
                 Configuration.AuthorizationConfiguration.BackendApp,
-                Configuration.AuthorizationConfiguration.ClientApps["endk-ddm3"]);
+                Configuration.AuthorizationConfiguration.ClientApps[Configuration.GridAccessProviderClientName]);
 
             _energySupplierAppAuthenticationClient = new B2CAppAuthenticationClient(
                 Configuration.AuthorizationConfiguration.TenantId,
                 Configuration.AuthorizationConfiguration.BackendApp,
-                Configuration.AuthorizationConfiguration.ClientApps["5178861303303"]);
+                Configuration.AuthorizationConfiguration.ClientApps[Configuration.EnergySupplierClientName]);
         }
 
         private BusinessProcessConfiguration Configuration { get; }
