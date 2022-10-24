@@ -68,7 +68,7 @@ namespace GreenEnergyHub.Charges.SystemTests
         public async Task InitializeAsync()
         {
             await AcquireTokensForClients();
-            await FlushMessageHubQueuesAsync();
+            await EmptyMessageHubQueuesAsync();
         }
 
         public Task DisposeAsync()
@@ -128,10 +128,10 @@ namespace GreenEnergyHub.Charges.SystemTests
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authenticationResult.AccessToken);
         }
 
-        private async Task FlushMessageHubQueuesAsync()
+        private async Task EmptyMessageHubQueuesAsync()
         {
-            await FlushMessageHubQueueAsync(GridAccessProviderClient);
-            await FlushMessageHubQueueAsync(EnergySupplierClient);
+            await EmptyMessageHubQueueAsync(GridAccessProviderClient);
+            await EmptyMessageHubQueueAsync(EnergySupplierClient);
         }
 
         private HttpRequestMessage PrepareRequest(string testFilePath, Instant currentInstant)
@@ -173,7 +173,7 @@ namespace GreenEnergyHub.Charges.SystemTests
                 TimeSpan.FromSeconds(1));
         }
 
-        private async Task FlushMessageHubQueueAsync(HttpClient httpClient)
+        private async Task EmptyMessageHubQueueAsync(HttpClient httpClient)
         {
             await Awaiter.WaitUntilConditionAsync(
                 async () =>
