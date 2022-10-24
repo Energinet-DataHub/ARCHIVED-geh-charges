@@ -33,12 +33,15 @@ namespace GreenEnergyHub.Charges.WebApi
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             Configuration = configuration;
+            Environment = environment;
         }
 
         public IConfiguration Configuration { get; }
+
+        private IWebHostEnvironment Environment { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -86,9 +89,18 @@ namespace GreenEnergyHub.Charges.WebApi
             services.ConfigureOptions<ConfigureSwaggerOptions>();
             services.AddQueryApi(Configuration);
 
-            var metadataAddress = EnvironmentHelper.GetEnv(EnvironmentSettingNames.FrontEndOpenIdUrl);
-            var audience = EnvironmentHelper.GetEnv(EnvironmentSettingNames.FrontEndServiceAppId);
-            services.AddJwtTokenSecurity(metadataAddress, audience);
+            if (Environment.IsDevelopment())
+            {
+                var metadataAddress = Configuration.GetValue<string>(EnvironmentSettingNames.FrontEndOpenIdUrl);
+                var audience = Configuration.GetValue<string>(EnvironmentSettingNames.FrontEndServiceAppId);
+                services.AddJwtTokenSecurity(metadataAddress, audience);
+            }
+            else
+            {
+                var metadataAddress = EnvironmentHelper.GetEnv(EnvironmentSettingNames.FrontEndOpenIdUrl);
+                var audience = EnvironmentHelper.GetEnv(EnvironmentSettingNames.FrontEndServiceAppId);
+                services.AddJwtTokenSecurity(metadataAddress, audience);
+            }
 
             // Health check
             services.AddHealthChecks()
