@@ -24,10 +24,8 @@ using GreenEnergyHub.Charges.Application.Charges.Handlers.ChargeInformation;
 using GreenEnergyHub.Charges.Application.Common.Services;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommandReceivedEvents;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Infrastructure.Outbox;
 using GreenEnergyHub.Charges.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
@@ -41,12 +39,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.ChargeInforma
     /// Tests ChargeInformation flow with managed dependencies
     /// </summary>
     [IntegrationTest]
-    public class ChargeInformationTests : IClassFixture<ChargesManagedDependenciesTestFixture>, IAsyncLifetime
+    public class ChargeInformationCommandReceivedEventHandlerTests : IClassFixture<ChargesManagedDependenciesTestFixture>, IAsyncLifetime
     {
         private readonly ChargesManagedDependenciesTestFixture _fixture;
         private readonly IJsonSerializer _jsonSerializer;
 
-        public ChargeInformationTests(ChargesManagedDependenciesTestFixture fixture)
+        public ChargeInformationCommandReceivedEventHandlerTests(ChargesManagedDependenciesTestFixture fixture)
         {
             _fixture = fixture;
             _jsonSerializer = _fixture.GetService<IJsonSerializer>();
@@ -68,7 +66,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.ChargeInforma
         {
             // Arrange
             await using var chargesDatabaseReadContext = _fixture.DatabaseManager.CreateDbContext();
-            var sut = BuildChargeInformationOperationsHandler();
+            var sut = BuildChargeInformationCommandReceivedEventHandler();
             var receivedEvent =
                 await GetTestDataFromFile<ChargeInformationCommandReceivedEvent>("ChargeInformationTestTariff.json");
 
@@ -88,7 +86,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.ChargeInforma
         {
             // Arrange
             await using var chargesDatabaseReadContext = _fixture.DatabaseManager.CreateDbContext();
-            var sut = BuildChargeInformationOperationsHandler();
+            var sut = BuildChargeInformationCommandReceivedEventHandler();
             var receivedEvent = await GetTestDataFromFile<ChargeInformationCommandReceivedEvent>(
                 "ChargeInformationBundleWithTwoOperationsForSameTariffSecondOpViolatingVr903.json");
 
@@ -126,17 +124,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.ChargeInforma
             return _jsonSerializer.Deserialize<T>(jsonString);
         }
 
-        private ChargeInformationOperationsHandler BuildChargeInformationOperationsHandler()
+        private ChargeInformationCommandReceivedEventHandler BuildChargeInformationCommandReceivedEventHandler()
         {
-            return new ChargeInformationOperationsHandler(
-                _fixture.GetService<IInputValidator<ChargeInformationOperationDto>>(),
-                _fixture.GetService<IChargeRepository>(),
-                _fixture.GetService<IMarketParticipantRepository>(),
-                _fixture.GetService<IChargeFactory>(),
-                _fixture.GetService<IChargePeriodFactory>(),
-                _fixture.GetService<IDomainEventPublisher>(),
+            return new ChargeInformationCommandReceivedEventHandler(
                 _fixture.GetService<ILoggerFactory>(),
-                _fixture.GetService<IChargeInformationOperationsAcceptedEventFactory>(),
+                _fixture.GetService<IChargeInformationOperationsHandler>(),
+                _fixture.GetService<IDocumentValidator>(),
+                _fixture.GetService<IDomainEventPublisher>(),
                 _fixture.GetService<IChargeInformationOperationsRejectedEventFactory>());
         }
 
