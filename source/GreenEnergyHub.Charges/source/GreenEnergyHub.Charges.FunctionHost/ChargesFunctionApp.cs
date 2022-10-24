@@ -65,6 +65,8 @@ namespace GreenEnergyHub.Charges.FunctionHost
             ChargeDataAvailableNotifierConfiguration.ConfigureServices(serviceCollection);
             ChargePriceConfirmedDataAvailableNotifierEndpointConfiguration.ConfigureServices(serviceCollection);
             ChargePriceRejectedDataAvailableNotifierEndpointConfiguration.ConfigureServices(serviceCollection);
+            ChargeInformationMessagePersisterEndpointConfiguration.ConfigureServices(serviceCollection);
+            ChargePriceMessagePersisterEndpointConfiguration.ConfigureServices(serviceCollection);
 
             // Integration events
             ChargeIntegrationEventsPublisherEndpointConfiguration.ConfigureServices(serviceCollection);
