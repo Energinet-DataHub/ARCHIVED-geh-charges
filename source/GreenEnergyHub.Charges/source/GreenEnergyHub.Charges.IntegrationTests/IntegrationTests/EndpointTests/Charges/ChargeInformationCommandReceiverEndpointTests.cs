@@ -36,7 +36,7 @@ using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
+namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests.Charges
 {
     [IntegrationTest]
     public class ChargeInformationCommandReceiverEndpointTests

@@ -19,29 +19,22 @@ using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
-using Energinet.DataHub.MarketParticipant.Integration.Model.Parsers;
-using Energinet.DataHub.MarketParticipant.Integration.Model.Parsers.Actor;
+using Energinet.DataHub.MarketParticipant.Integration.Model.Parsers.GridArea;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers;
-using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.FunctionHost.MarketParticipant;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
-using GreenEnergyHub.Charges.Infrastructure.Persistence;
-using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
-using GreenEnergyHub.Charges.TestCore;
-using Microsoft.EntityFrameworkCore;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
+namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests.MarketParticipant
 {
     [IntegrationTest]
-    public class MarketParticipantNameChangedEndpointTests
+    public class GridAreaLinkPersisterEndPointTests
     {
         [Collection(nameof(ChargesFunctionAppCollectionFixture))]
         public class RunAsync : FunctionAppTestBase<ChargesFunctionAppFixture>, IAsyncLifetime
@@ -58,59 +51,55 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
             public Task DisposeAsync()
             {
-                Fixture.HostManager.ClearHostLog();
                 return Task.CompletedTask;
             }
 
             [Fact]
-            public async Task When_ReceivingMarketParticipantNameChangedEvent_NameIsUpdatedInTheDatabase()
+            public async Task When_ReceivingGridAreaIntegrationUpdatedMessage_GridAreaLinkIsSavedToDatabase()
             {
                 // Arrange
-                var actorId = SeededData.MarketParticipants.SystemOperator.Id;
-                const string marketParticipantName = "super new name";
-                var message = CreateServiceBusMessage(actorId, marketParticipantName);
                 await using var context = Fixture.ChargesDatabaseManager.CreateDbContext();
+                var id = Guid.NewGuid();
+                var message = CreateServiceBusMessage(id);
 
                 // Act
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(
                     () => Fixture.IntegrationEventTopic.SenderClient.SendMessageAsync(message), message.CorrelationId);
 
-                await FunctionAsserts.AssertHasExecutedAsync(
-                    Fixture.HostManager, nameof(MarketParticipantNameChangedEndpoint)).ConfigureAwait(false);
-
                 // Assert
-                var marketParticipant = context.MarketParticipants.Single(x => x.ActorId == actorId);
-                marketParticipant.Name.Should().Be(marketParticipantName);
+                await FunctionAsserts.AssertHasExecutedAsync(Fixture.HostManager, nameof(MarketParticipantPersisterEndpoint)).ConfigureAwait(false);
+                var gridAreaLink = context.GridAreaLinks.SingleOrDefault(x => x.Id == id);
+                gridAreaLink.Should().NotBeNull();
+
+                // We need to clear host log after each test is done to ensure that we can assert on function executed
+                // on each test run because we only check on function name.
+                Fixture.HostManager.ClearHostLog();
             }
 
-            private static ServiceBusMessage CreateServiceBusMessage(Guid actorId, string name)
+            private static ServiceBusMessage CreateServiceBusMessage(Guid id)
             {
-                var message = CreateMessage(actorId, name);
+                var gridAreaIntegrationEvent = new GridAreaUpdatedIntegrationEvent(
+                    Guid.NewGuid(),
+                    Guid.NewGuid(),
+                    "name",
+                    "code",
+                    PriceAreaCode.DK1,
+                    id);
+                var gridAreaUpdatedIntegrationEventParser = new GridAreaUpdatedIntegrationEventParser();
+                var message = gridAreaUpdatedIntegrationEventParser.ParseToSharedIntegrationEvent(gridAreaIntegrationEvent);
 
-                var correlationId = Guid.NewGuid().ToString("N");
-
-                return new ServiceBusMessage(message)
+                var correlationId = CorrelationIdGenerator.Create();
+                var serviceBusMessage = new ServiceBusMessage(message)
                 {
                     CorrelationId = correlationId,
                     ApplicationProperties =
                     {
                         new KeyValuePair<string, object>(MessageMetaDataConstants.CorrelationId, correlationId),
-                        new KeyValuePair<string, object>(MessageMetaDataConstants.MessageType, "ActorNameChangedIntegrationEvent"),
+                        new KeyValuePair<string, object>(MessageMetaDataConstants.MessageType, "GridAreaUpdatedIntegrationEvent"),
                     },
                 };
-            }
 
-            private static byte[] CreateMessage(Guid actorId, string name)
-            {
-                var actorNameChangedIntegrationEvent = new ActorNameChangedIntegrationEvent(
-                    Guid.NewGuid(),
-                    new DateTime(2022, 1, 1, 0, 0, 0, DateTimeKind.Utc),
-                    actorId,
-                    Guid.NewGuid(),
-                    name);
-
-                var actorNameChangedIntegrationEventParser = new ActorNameChangedIntegrationEventParser();
-                return actorNameChangedIntegrationEventParser.ParseToSharedIntegrationEvent(actorNameChangedIntegrationEvent);
+                return serviceBusMessage;
             }
         }
     }
