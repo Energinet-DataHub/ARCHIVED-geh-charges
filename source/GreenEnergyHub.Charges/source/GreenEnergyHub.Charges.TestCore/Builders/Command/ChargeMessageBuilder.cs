@@ -19,12 +19,26 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Command
 {
     public class ChargeMessageBuilder
     {
-        private static Guid _chargeId = Guid.NewGuid();
+        private static string _senderProvidedChargeId = Guid.NewGuid().ToString();
+        private static ChargeType _chargeType = ChargeType.Unknown;
+        private static string _marketParticipantId = Guid.NewGuid().ToString();
         private static string _messageId = "messageId";
 
-        public ChargeMessageBuilder WithChargeId(Guid chargeId)
+        public ChargeMessageBuilder WithSenderProvidedChargeId(string senderProvidedChargeId)
         {
-            _chargeId = chargeId;
+            _senderProvidedChargeId = senderProvidedChargeId;
+            return this;
+        }
+
+        public ChargeMessageBuilder WithChargeType(ChargeType chargeType)
+        {
+            _chargeType = chargeType;
+            return this;
+        }
+
+        public ChargeMessageBuilder WithMarketParticipantId(string marketParticipantId)
+        {
+            _marketParticipantId = marketParticipantId;
             return this;
         }
 
@@ -36,7 +50,11 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Command
 
         public ChargeMessage Build()
         {
-            return ChargeMessage.Create(_chargeId, _messageId);
+            return ChargeMessage.Create(
+                _senderProvidedChargeId,
+                _chargeType,
+                _marketParticipantId,
+                _messageId);
         }
     }
 }

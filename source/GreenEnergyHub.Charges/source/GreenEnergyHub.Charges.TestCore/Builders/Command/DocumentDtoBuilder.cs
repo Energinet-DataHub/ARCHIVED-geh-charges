@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using NodaTime;
 
@@ -30,7 +31,7 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Command
 
         public DocumentDtoBuilder()
         {
-            _id = "id";
+            _id = Guid.NewGuid().ToString("N");
             _recipient = new MarketParticipantDtoBuilder()
                 .WithMarketParticipantId(SeededData.MarketParticipants.MeteringPointAdministrator.Gln)
                 .WithMarketParticipantRole(MarketParticipantRole.MeteringPointAdministrator)

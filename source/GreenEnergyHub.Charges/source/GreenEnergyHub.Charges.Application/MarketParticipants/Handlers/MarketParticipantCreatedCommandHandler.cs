@@ -66,7 +66,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
                 if (existingGridAreaLink is null) continue;
                 if (existingGridAreaLink.OwnerId == marketParticipantId) return;
 
-                existingGridAreaLink.OwnerId = marketParticipantId;
+                existingGridAreaLink.UpdateOwner(marketParticipantId);
             }
         }
     }
