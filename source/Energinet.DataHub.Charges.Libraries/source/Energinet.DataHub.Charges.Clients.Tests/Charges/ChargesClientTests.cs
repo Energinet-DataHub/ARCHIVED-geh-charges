@@ -322,7 +322,8 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
             ChargePricesSearchCriteriaV1Dto searchCriteria)
         {
             // Arrange
-            var emptyChargePrices = "{\r\n  \"chargePrices\": [],\r\n  \"totalAmount\": 0\r\n}";
+            var chargePrices = new ChargePricesV1Dto(new List<ChargePriceV1Dto>(), 0);
+            var emptyChargePrices = CreateValidResponseContent(chargePrices);
             var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.OK, emptyChargePrices);
             var httpClient = CreateHttpClient(mockHttpMessageHandler);
             chargesClientFactory.Setup(x => x.CreateClient(httpClient))

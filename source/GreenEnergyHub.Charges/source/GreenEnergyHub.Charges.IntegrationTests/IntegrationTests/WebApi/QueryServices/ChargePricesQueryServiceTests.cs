@@ -192,6 +192,39 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
         }
 
         [Fact]
+        public async Task SearchAsync_WhenSortColumnNameIsNotValid_ReturnsPricesSortedByFromDateTime()
+        {
+            // Arrange
+            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
+
+            var point1 = new Point(10m, InstantHelper.GetTodayAtMidnightUtc());
+            var point2 = new Point(50m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(1));
+            var point3 = new Point(20m, InstantHelper.GetTodayPlusHoursAtMidnightUtc(1));
+
+            var points = new List<Point> { point1, point2, point3 };
+            var charge = await GetValidCharge(chargesDatabaseWriteContext, points, Resolution.P1D);
+
+            chargesDatabaseWriteContext.Charges.Add(charge);
+            await chargesDatabaseWriteContext.SaveChangesAsync();
+
+            await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
+            var sut = GetSut(chargesDatabaseQueryContext);
+            var searchCriteria = new ChargePricesSearchCriteriaV1DtoBuilder()
+                .WithChargeId(charge.Id)
+                .WithFromDateTime(InstantHelper.GetTodayAtMidnightUtc().ToDateTimeOffset())
+                .WithToDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(2).ToDateTimeOffset())
+                .WithSortColumnName((SortColumnName)(-1))
+                .Build();
+
+            // Act
+            var actual = sut.Search(searchCriteria);
+
+            // Assert
+            actual.ChargePrices.Should().HaveCount(points.Count);
+            actual.ChargePrices.Should().BeInAscendingOrder(cp => cp.FromDateTime);
+        }
+
+        [Fact]
         public async Task SearchAsync_WhenSearchingIsDescendingOrderOnFromDateTime_ReturnsPricesInDescendingOrder()
         {
             // Arrange

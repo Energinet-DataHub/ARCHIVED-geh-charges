@@ -53,7 +53,7 @@ namespace Energinet.DataHub.Charges.Clients.Charges
         /// <summary>
         /// Returns charge prices based on the search criteria.
         /// </summary>
-        /// <returns>A charge prices(Dto)</returns>
+        /// <returns>A <see cref="ChargePricesV1Dto"/></returns>
         Task<ChargePricesV1Dto> SearchChargePricesAsync(ChargePricesSearchCriteriaV1Dto searchCriteria);
     }
 }
