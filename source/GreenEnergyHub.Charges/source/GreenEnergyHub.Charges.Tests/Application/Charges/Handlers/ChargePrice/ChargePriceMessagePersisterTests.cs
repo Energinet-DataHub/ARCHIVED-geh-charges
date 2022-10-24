@@ -31,7 +31,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers.ChargePrice
     {
         [Theory]
         [InlineAutoDomainData]
-        public async Task HandleAsync_WhenCalled_ShouldCallChargeMessageRepository(
+        public async Task PersistMessageAsync_WhenCalled_ShouldCallChargeMessageRepository(
             [Frozen] Mock<IChargeMessageRepository> chargeMessageRepository,
             ChargePriceOperationDtoBuilder chargePriceOperationDtoBuilder,
             ChargePriceOperationsAcceptedEventBuilder chargePriceOperationsAcceptedEventBuilder,
