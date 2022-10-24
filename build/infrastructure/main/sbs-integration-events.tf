@@ -98,7 +98,7 @@ module "sbs_int_events_grid_area_added_to_actor" {
   max_delivery_count  = 1
   correlation_filter  = {
     properties     = {
-      "MessageType" = "GridAreaAddedToActorIntegrationEvent"
+      "messageType" = "GridAreaAddedToActorIntegrationEvent"
     }
   }
 }
@@ -111,7 +111,7 @@ module "sbs_int_events_grid_area_removed_from_actor" {
   max_delivery_count  = 1
   correlation_filter  = {
     properties     = {
-      "MessageType" = "GridAreaRemovedFromActorIntegrationEvent"
+      "messageType" = "GridAreaRemovedFromActorIntegrationEvent"
     }
   }
 }
