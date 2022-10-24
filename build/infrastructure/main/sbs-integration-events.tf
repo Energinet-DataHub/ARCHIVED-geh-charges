@@ -64,9 +64,9 @@ module "sbs_int_events_market_part_status_changed" {
   }
 }
 
-module "sbs_int_events_market_part_b2c_id_changed" {
+module "sbs_int_events_market_part_b2c_actor_id_changed" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v9"
-  name                = "market-part-b2c-id-changed"
+  name                = "market-part-b2c-actor-id-changed"
   project_name        = var.domain_name_short
   topic_id            = data.azurerm_key_vault_secret.sbt_domainrelay_integrationevent_received_id.value
   max_delivery_count  = 1
