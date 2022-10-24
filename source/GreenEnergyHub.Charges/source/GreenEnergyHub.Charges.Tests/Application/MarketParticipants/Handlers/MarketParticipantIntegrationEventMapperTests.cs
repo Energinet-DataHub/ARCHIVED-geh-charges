@@ -28,62 +28,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
 {
     public class MarketParticipantIntegrationEventMapperTests
     {
-        [Theory]
-        [AutoDomainData]
-        public void MapFromActorIntegrationEvent_ShouldReturnMarketParticipantUpdatedCommand(
-            Guid actorId, Guid b2CActorId, string actorNumber)
-        {
-            // Arrange
-            var businessRoles = new List<BusinessRoleCode> { BusinessRoleCode.Ddm };
-
-            var actorUpdatedIntegrationEvent = new ActorUpdatedIntegrationEvent(
-                Guid.Empty,
-                DateTime.UtcNow,
-                actorId,
-                Guid.Empty,
-                b2CActorId,
-                actorNumber,
-                ActorStatus.Active,
-                businessRoles,
-                CreateActorMarketRoles());
-
-            // Act
-            var actualMarketParticipantUpdatedEvent =
-                MarketParticipantIntegrationEventMapper.Map(actorUpdatedIntegrationEvent);
-
-            // Assert
-            actualMarketParticipantUpdatedEvent.ActorId.Should().Be(actorId);
-            actualMarketParticipantUpdatedEvent.B2CActorId.Should().Be(b2CActorId);
-            actualMarketParticipantUpdatedEvent.MarketParticipantId.Should().Be(actorNumber);
-            actualMarketParticipantUpdatedEvent.Status.Should().Be(MarketParticipantStatus.Active);
-            actualMarketParticipantUpdatedEvent.BusinessProcessRoles.Count().Should().Be(1);
-            actualMarketParticipantUpdatedEvent.GridAreas.Count().Should().Be(2);
-        }
-
-        [Fact]
-        public void MapFromGridAreaUpdatedIntegrationEvent_ShouldReturnMarketParticipantGridAreaUpdatedCommand()
-        {
-            // Arrange
-            var gridAreaId = Guid.NewGuid();
-            var gridAreaLinkId = Guid.NewGuid();
-
-            var gridAreaUpdatedIntegrationEvent = new GridAreaUpdatedIntegrationEvent(
-                Guid.NewGuid(),
-                gridAreaId,
-                string.Empty,
-                string.Empty,
-                PriceAreaCode.DK1,
-                gridAreaLinkId);
-
-            // Act
-            var actualGridAreaUpdatedEvent =
-                MarketParticipantIntegrationEventMapper.Map(gridAreaUpdatedIntegrationEvent);
-
-            // Assert
-            actualGridAreaUpdatedEvent.GridAreaId.Should().Be(gridAreaId);
-            actualGridAreaUpdatedEvent.GridAreaLinkId.Should().Be(gridAreaLinkId);
-        }
-
         [Fact]
         public void MapFromActorCreated_ShouldReturnMarketParticipantCreatedCommand()
         {

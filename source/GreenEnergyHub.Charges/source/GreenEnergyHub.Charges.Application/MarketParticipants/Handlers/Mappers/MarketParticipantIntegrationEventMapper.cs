@@ -20,24 +20,6 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers.Mappers
 {
     public static class MarketParticipantIntegrationEventMapper
     {
-        public static MarketParticipantUpdatedCommand Map(ActorUpdatedIntegrationEvent actorUpdatedIntegrationEvent)
-        {
-            var status = MarketParticipantStatusMapper.Map(actorUpdatedIntegrationEvent.Status);
-            var roles = MarketParticipantRoleMapper
-                .MapMany(actorUpdatedIntegrationEvent.BusinessRoles);
-
-            return new MarketParticipantUpdatedCommand(
-                actorUpdatedIntegrationEvent.ActorId,
-                actorUpdatedIntegrationEvent.ExternalActorId,
-                actorUpdatedIntegrationEvent.ActorNumber,
-                roles,
-                status,
-                actorUpdatedIntegrationEvent.ActorMarketRoles
-                    .SelectMany(amr => amr.GridAreas)
-                        .DistinctBy(o => o.Id)
-                        .Select(a => a.Id));
-        }
-
         public static MarketParticipantCreatedCommand Map(ActorCreatedIntegrationEvent actorCreatedIntegrationEvent)
         {
             var status = MarketParticipantStatusMapper.Map(actorCreatedIntegrationEvent.Status);
@@ -68,14 +50,6 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers.Mappers
             return new MarketParticipantB2CActorIdChangedCommand(
                 externalIdChanged.ActorId,
                 externalIdChanged.ExternalActorId);
-        }
-
-        public static MarketParticipantGridAreaUpdatedCommand Map(
-            GridAreaUpdatedIntegrationEvent gridUpdatedIntegrationEvent)
-        {
-            return new MarketParticipantGridAreaUpdatedCommand(
-                gridUpdatedIntegrationEvent.GridAreaId,
-                gridUpdatedIntegrationEvent.GridAreaLinkId);
         }
 
         public static MarketParticipantNameChangedCommand Map(
