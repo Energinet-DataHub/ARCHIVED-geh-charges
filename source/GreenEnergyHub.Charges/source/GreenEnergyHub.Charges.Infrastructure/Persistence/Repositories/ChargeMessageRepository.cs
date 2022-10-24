@@ -13,12 +13,8 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Charges;
-using Microsoft.EntityFrameworkCore;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
 {
@@ -36,15 +32,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories
             ArgumentNullException.ThrowIfNull(chargeMessage);
 
             await _chargesDatabaseContext.ChargeMessages.AddAsync(chargeMessage).ConfigureAwait(false);
-        }
-
-        public async Task<IReadOnlyCollection<ChargeMessage>> GetByChargeIdAsync(Guid chargeId)
-        {
-            var chargeMessages = await _chargesDatabaseContext.ChargeMessages
-                .Where(chargeMessage => chargeMessage.ChargeId == chargeId)
-                .ToListAsync().ConfigureAwait(false);
-
-            return new ReadOnlyCollection<ChargeMessage>(chargeMessages);
         }
     }
 }
