@@ -20,11 +20,11 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
     /// <summary>
     /// Handle commands for adding grid areas to market participants
     /// </summary>
-    public interface IGridAreaAddedToMarketParticipantCommandHandler
+    public interface IGridAreaOwnerAddedCommandHandler
     {
         /// <summary>
         /// Handle grid area added to market participant command
         /// </summary>
-        Task HandleAsync(GridAreaAddedToMarketParticipantCommand command);
+        Task HandleAsync(GridAreaOwnerAddedCommand command);
     }
 }

@@ -20,12 +20,12 @@ using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 {
-    public class GridAreaAddedToMarketParticipantCommandHandler : IGridAreaAddedToMarketParticipantCommandHandler
+    public class GridAreaOwnerOwnerAddedCommandHandler : IGridAreaOwnerAddedCommandHandler
     {
         private readonly IMarketParticipantRepository _marketParticipantRepository;
         private readonly IGridAreaLinkRepository _gridAreaLinkRepository;
 
-        public GridAreaAddedToMarketParticipantCommandHandler(
+        public GridAreaOwnerOwnerAddedCommandHandler(
             IMarketParticipantRepository marketParticipantRepository,
             IGridAreaLinkRepository gridAreaLinkRepository)
         {
@@ -33,7 +33,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
             _gridAreaLinkRepository = gridAreaLinkRepository;
         }
 
-        public async Task HandleAsync(GridAreaAddedToMarketParticipantCommand command)
+        public async Task HandleAsync(GridAreaOwnerAddedCommand command)
         {
             var marketParticipant = await _marketParticipantRepository.GetByActorIdAsync(command.ActorId).ConfigureAwait(false);
             if (marketParticipant == null)

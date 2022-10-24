@@ -24,20 +24,20 @@ using Microsoft.Azure.Functions.Worker;
 
 namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
 {
-    public class MarketParticipantGridAreaAddedEndpoint
+    public class GridAreaOwnerAddedEndpoint
     {
-        private const string FunctionName = nameof(MarketParticipantGridAreaAddedEndpoint);
+        private const string FunctionName = nameof(GridAreaOwnerAddedEndpoint);
         private readonly ISharedIntegrationEventParser _sharedIntegrationEventParser;
-        private readonly IGridAreaAddedToMarketParticipantCommandHandler _gridAreaAddedToMarketParticipantCommandHandler;
+        private readonly IGridAreaOwnerAddedCommandHandler _gridAreaOwnerAddedCommandHandler;
         private readonly IUnitOfWork _unitOfWork;
 
-        public MarketParticipantGridAreaAddedEndpoint(
+        public GridAreaOwnerAddedEndpoint(
             ISharedIntegrationEventParser sharedIntegrationEventParser,
-            IGridAreaAddedToMarketParticipantCommandHandler gridAreaAddedToMarketParticipantCommandHandler,
+            IGridAreaOwnerAddedCommandHandler gridAreaOwnerAddedCommandHandler,
             IUnitOfWork unitOfWork)
         {
             _sharedIntegrationEventParser = sharedIntegrationEventParser;
-            _gridAreaAddedToMarketParticipantCommandHandler = gridAreaAddedToMarketParticipantCommandHandler;
+            _gridAreaOwnerAddedCommandHandler = gridAreaOwnerAddedCommandHandler;
             _unitOfWork = unitOfWork;
         }
 
@@ -50,7 +50,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
         {
             var gridAreaAddedEvent = (GridAreaAddedToActorIntegrationEvent)_sharedIntegrationEventParser.Parse(message);
             var command = MarketParticipantIntegrationEventMapper.Map(gridAreaAddedEvent);
-            await _gridAreaAddedToMarketParticipantCommandHandler.HandleAsync(command).ConfigureAwait(false);
+            await _gridAreaOwnerAddedCommandHandler.HandleAsync(command).ConfigureAwait(false);
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
         }
     }

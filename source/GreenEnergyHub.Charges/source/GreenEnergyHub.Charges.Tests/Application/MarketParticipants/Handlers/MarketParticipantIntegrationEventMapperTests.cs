@@ -159,7 +159,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
 
         [Theory]
         [AutoData]
-        public void Map_GridAreaAddedToActorIntegrationEvent_ShouldReturnGridAreaAddedToMarketParticipantCommand(
+        public void Map_GridAreaAddedToActorIntegrationEvent_ShouldReturnGridAreaOwnerAddedCommand(
             Guid actorId,
             Guid gridAreaId)
         {
@@ -177,6 +177,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             var actual = MarketParticipantIntegrationEventMapper.Map(gridAreaAddedEvent);
 
             // Assert
+            actual.Should().BeOfType(typeof(GridAreaOwnerAddedCommand));
             actual.ActorId.Should().Be(actorId);
             actual.GridAreaId.Should().Be(gridAreaId);
         }

@@ -24,7 +24,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IMarketParticipantCreatedCommandHandler, MarketParticipantCreatedCommandHandler>();
             serviceCollection.AddScoped<IMarketParticipantStatusChangedCommandHandler, MarketParticipantStatusChangedCommandHandler>();
             serviceCollection.AddScoped<IMarketParticipantB2CActorIdChangedCommandHandler, MarketParticipantB2CActorIdChangedCommandHandler>();
-            serviceCollection.AddScoped<IGridAreaAddedToMarketParticipantCommandHandler, GridAreaAddedToMarketParticipantCommandHandler>();
+            serviceCollection.AddScoped<IGridAreaOwnerAddedCommandHandler, GridAreaOwnerOwnerAddedCommandHandler>();
             serviceCollection.AddScoped<IGridAreaOwnerRemovedCommandHandler, GridAreaOwnerFromGridAreaOwnerRemovedCommandHandler>();
             serviceCollection.AddScoped<IMarketParticipantNameChangedCommandHandler, MarketParticipantNameChangedCommandHandler>();
         }

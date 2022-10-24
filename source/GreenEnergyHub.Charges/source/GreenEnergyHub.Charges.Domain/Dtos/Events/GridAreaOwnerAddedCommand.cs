@@ -16,7 +16,7 @@ using System;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.Events
 {
-    public record GridAreaAddedToMarketParticipantCommand(
+    public record GridAreaOwnerAddedCommand(
         Guid ActorId,
         Guid GridAreaId);
 }

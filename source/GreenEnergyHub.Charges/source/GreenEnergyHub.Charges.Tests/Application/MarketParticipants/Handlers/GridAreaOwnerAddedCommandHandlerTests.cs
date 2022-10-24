@@ -29,7 +29,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
 {
     [UnitTest]
-    public class GridAreaAddedToMarketParticipantCommandHandlerTests
+    public class GridAreaOwnerAddedCommandHandlerTests
     {
         [Theory]
         [InlineAutoMoqData]
@@ -38,10 +38,10 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             GridAreaLink gridAreaLink,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IGridAreaLinkRepository> gridAreaLinkRepository,
-            GridAreaAddedToMarketParticipantCommandHandler sut)
+            GridAreaOwnerOwnerAddedCommandHandler sut)
         {
             // Arrange
-            var command = new GridAreaAddedToMarketParticipantCommand(
+            var command = new GridAreaOwnerAddedCommand(
                 Guid.NewGuid(),
                 Guid.NewGuid());
             marketParticipantRepository
