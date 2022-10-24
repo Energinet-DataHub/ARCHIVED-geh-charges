@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
                     $"Could not add grid area to market participant. Grid area not found by grid area id: {command.GridAreaId}");
             }
 
-            gridArea.OwnerId = marketParticipant.Id;
+            gridArea.UpdateOwner(marketParticipant.Id);
         }
     }
 }

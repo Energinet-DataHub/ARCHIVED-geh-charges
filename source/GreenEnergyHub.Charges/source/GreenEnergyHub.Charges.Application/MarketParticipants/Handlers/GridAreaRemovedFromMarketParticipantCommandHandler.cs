@@ -39,7 +39,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
                     $"Could not removed grid area from market participant. Grid area not found by grid area id: {command.GridAreaId}");
             }
 
-            gridArea.OwnerId = null;
+            gridArea.RemoveOwner();
         }
     }
 }
