@@ -49,7 +49,7 @@ public class ChargePriceQueryService : IChargePriceQueryService
         return MapToChargePricesV1Dto(SortChargePrices(searchCriteria, chargePrices), chargePricesCount);
     }
 
-    private ChargePricesV1Dto MapToChargePricesV1Dto(IList<ChargePriceV1Dto> chargePrices, int chargePricesCount)
+    private static ChargePricesV1Dto MapToChargePricesV1Dto(IList<ChargePriceV1Dto> chargePrices, int chargePricesCount)
     {
         return new ChargePricesV1Dto(chargePrices.ToList(), chargePricesCount);
     }
