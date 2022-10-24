@@ -86,17 +86,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
         public async Task SearchAsync_WhenSearchingHasSkip_ReturnsPrices()
         {
             // Arrange
-            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-
-            var pointToSkip = new Point(10m, InstantHelper.GetTodayAtMidnightUtc());
-            var pointToSkip2 = new Point(50m, InstantHelper.GetTodayAtMidnightUtc());
-            var expectedPoint = new Point(20m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(1));
-
-            var points = new List<Point> { pointToSkip, pointToSkip2, expectedPoint };
-            var charge = await GetValidCharge(chargesDatabaseWriteContext, points, Resolution.P1D);
-
-            chargesDatabaseWriteContext.Charges.Add(charge);
-            await chargesDatabaseWriteContext.SaveChangesAsync();
+            var charge = await GenerateChargeWithPointsAsync();
+            var expectedPoint = charge.Points.Last();
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
             var sut = GetSut(chargesDatabaseQueryContext);
@@ -124,17 +115,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
         public async Task SearchAsync_WhenSearchingHasNoSkip_ReturnsPrices()
         {
             // Arrange
-            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-
-            var expectedPoint = new Point(10m, InstantHelper.GetTodayAtMidnightUtc());
-            var point1 = new Point(50m, InstantHelper.GetTodayPlusHoursAtMidnightUtc(1));
-            var point2 = new Point(20m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(1));
-
-            var points = new List<Point> { point1, point2, expectedPoint };
-            var charge = await GetValidCharge(chargesDatabaseWriteContext, points, Resolution.P1D);
-
-            chargesDatabaseWriteContext.Charges.Add(charge);
-            await chargesDatabaseWriteContext.SaveChangesAsync();
+            var charge = await GenerateChargeWithPointsAsync();
+            var expectedPoint = charge.Points.First();
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
             var sut = GetSut(chargesDatabaseQueryContext);
@@ -162,17 +144,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
         public async Task SearchAsync_WhenSearching_ReturnsTotalAmountOfPrices()
         {
             // Arrange
-            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-
-            var point1 = new Point(10m, InstantHelper.GetTodayAtMidnightUtc());
-            var point2 = new Point(50m, InstantHelper.GetTodayPlusHoursAtMidnightUtc(1));
-            var point3 = new Point(20m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(1));
-
-            var points = new List<Point> { point1, point2, point3 };
-            var charge = await GetValidCharge(chargesDatabaseWriteContext, points, Resolution.P1D);
-
-            chargesDatabaseWriteContext.Charges.Add(charge);
-            await chargesDatabaseWriteContext.SaveChangesAsync();
+            var charge = await GenerateChargeWithPointsAsync();
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
             var sut = GetSut(chargesDatabaseQueryContext);
@@ -188,24 +160,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             // Assert
             actual.ChargePrices.Should().HaveCount(1);
-            actual.TotalAmount.Should().Be(points.Count);
+            actual.TotalAmount.Should().Be(charge.Points.Count);
         }
 
         [Fact]
         public async Task SearchAsync_WhenSortColumnNameIsNotValid_ReturnsPricesSortedByFromDateTime()
         {
             // Arrange
-            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-
-            var point1 = new Point(10m, InstantHelper.GetTodayAtMidnightUtc());
-            var point2 = new Point(50m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(1));
-            var point3 = new Point(20m, InstantHelper.GetTodayPlusHoursAtMidnightUtc(1));
-
-            var points = new List<Point> { point1, point2, point3 };
-            var charge = await GetValidCharge(chargesDatabaseWriteContext, points, Resolution.P1D);
-
-            chargesDatabaseWriteContext.Charges.Add(charge);
-            await chargesDatabaseWriteContext.SaveChangesAsync();
+            var charge = await GenerateChargeWithPointsAsync();
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
             var sut = GetSut(chargesDatabaseQueryContext);
@@ -220,7 +182,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var actual = sut.Search(searchCriteria);
 
             // Assert
-            actual.ChargePrices.Should().HaveCount(points.Count);
+            actual.ChargePrices.Should().HaveCount(charge.Points.Count);
             actual.ChargePrices.Should().BeInAscendingOrder(cp => cp.FromDateTime);
         }
 
@@ -228,17 +190,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
         public async Task SearchAsync_WhenSearchingIsDescendingOrderOnFromDateTime_ReturnsPricesInDescendingOrder()
         {
             // Arrange
-            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-
-            var point1 = new Point(10m, InstantHelper.GetTodayAtMidnightUtc());
-            var point2 = new Point(50m, InstantHelper.GetTodayPlusHoursAtMidnightUtc(1));
-            var point3 = new Point(20m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(1));
-
-            var points = new List<Point> { point2, point3,  point1 };
-            var charge = await GetValidCharge(chargesDatabaseWriteContext, points, Resolution.P1D);
-
-            chargesDatabaseWriteContext.Charges.Add(charge);
-            await chargesDatabaseWriteContext.SaveChangesAsync();
+            var charge = await GenerateChargeWithPointsAsync();
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
             var sut = GetSut(chargesDatabaseQueryContext);
@@ -253,7 +205,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var actual = sut.Search(searchCriteria);
 
             // Assert
-            actual.ChargePrices.Should().HaveCount(points.Count);
+            actual.ChargePrices.Should().HaveCount(charge.Points.Count);
             actual.ChargePrices.Should().BeInDescendingOrder(cp => cp.FromDateTime);
         }
 
@@ -261,17 +213,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
         public async Task SearchAsync_WhenSearchingIsAscendingOrderOnFromDateTime_ReturnsPricesInAscendingOrder()
         {
             // Arrange
-            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-
-            var point1 = new Point(10m, InstantHelper.GetTodayAtMidnightUtc());
-            var point2 = new Point(50m, InstantHelper.GetTodayPlusHoursAtMidnightUtc(1));
-            var point3 = new Point(20m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(1));
-
-            var points = new List<Point> { point2, point3, point1 };
-            var charge = await GetValidCharge(chargesDatabaseWriteContext, points, Resolution.P1D);
-
-            chargesDatabaseWriteContext.Charges.Add(charge);
-            await chargesDatabaseWriteContext.SaveChangesAsync();
+            var charge = await GenerateChargeWithPointsAsync();
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
             var sut = GetSut(chargesDatabaseQueryContext);
@@ -286,7 +228,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var actual = sut.Search(searchCriteria);
 
             // Assert
-            actual.ChargePrices.Should().HaveCount(points.Count);
+            actual.ChargePrices.Should().HaveCount(charge.Points.Count);
             actual.ChargePrices.Should().BeInAscendingOrder(cp => cp.FromDateTime);
         }
 
@@ -294,17 +236,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
         public async Task SearchAsync_WhenSearchingIsAscendingOrderOnPrice_ReturnsPricesInAscendingOrder()
         {
             // Arrange
-            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-
-            var point1 = new Point(100m, InstantHelper.GetTodayAtMidnightUtc());
-            var point2 = new Point(200m, InstantHelper.GetTodayPlusHoursAtMidnightUtc(1));
-            var point3 = new Point(20m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(1));
-
-            var points = new List<Point> { point2, point3, point1 };
-            var charge = await GetValidCharge(chargesDatabaseWriteContext, points, Resolution.P1D);
-
-            chargesDatabaseWriteContext.Charges.Add(charge);
-            await chargesDatabaseWriteContext.SaveChangesAsync();
+            var charge = await GenerateChargeWithPointsAsync();
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
             var sut = GetSut(chargesDatabaseQueryContext);
@@ -320,7 +252,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var actual = sut.Search(searchCriteria);
 
             // Assert
-            actual.ChargePrices.Should().HaveCount(points.Count);
+            actual.ChargePrices.Should().HaveCount(charge.Points.Count);
             actual.ChargePrices.Should().BeInAscendingOrder(cp => cp.Price);
         }
 
@@ -328,17 +260,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
         public async Task SearchAsync_WhenSearchingIsDescendingOrderOnPrice_ReturnsPricesInDescendingOrder()
         {
             // Arrange
-            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-
-            var point1 = new Point(100m, InstantHelper.GetTodayAtMidnightUtc());
-            var point2 = new Point(200m, InstantHelper.GetTodayPlusHoursAtMidnightUtc(1));
-            var point3 = new Point(20m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(1));
-
-            var points = new List<Point> { point2, point3, point1 };
-            var charge = await GetValidCharge(chargesDatabaseWriteContext, points, Resolution.P1D);
-
-            chargesDatabaseWriteContext.Charges.Add(charge);
-            await chargesDatabaseWriteContext.SaveChangesAsync();
+            var charge = await GenerateChargeWithPointsAsync();
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
             var sut = GetSut(chargesDatabaseQueryContext);
@@ -354,7 +276,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var actual = sut.Search(searchCriteria);
 
             // Assert
-            actual.ChargePrices.Should().HaveCount(points.Count);
+            actual.ChargePrices.Should().HaveCount(charge.Points.Count);
             actual.ChargePrices.Should().BeInDescendingOrder(cp => cp.Price);
         }
 
@@ -574,6 +496,22 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var iso8601Durations = new Iso8601Durations(configuration);
             var sut = new ChargePriceQueryService(data, iso8601Durations);
             return sut;
+        }
+
+        private async Task<Charge> GenerateChargeWithPointsAsync()
+        {
+            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
+
+            var point1 = new Point(10m, InstantHelper.GetTodayAtMidnightUtc());
+            var point2 = new Point(20m, InstantHelper.GetTodayPlusHoursAtMidnightUtc(1));
+            var point3 = new Point(50m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(1));
+
+            var points = new List<Point> { point1, point2, point3 };
+            var charge = await GetValidCharge(chargesDatabaseWriteContext, points, Resolution.P1D);
+
+            chargesDatabaseWriteContext.Charges.Add(charge);
+            await chargesDatabaseWriteContext.SaveChangesAsync();
+            return charge;
         }
     }
 }
