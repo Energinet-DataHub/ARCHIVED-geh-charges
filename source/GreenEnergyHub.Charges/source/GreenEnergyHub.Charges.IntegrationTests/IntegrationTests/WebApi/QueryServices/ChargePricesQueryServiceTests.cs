@@ -27,6 +27,7 @@ using GreenEnergyHub.Charges.QueryApi.Model;
 using GreenEnergyHub.Charges.QueryApi.QueryServices;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Builders.Command;
+using GreenEnergyHub.Charges.TestCore.Builders.Query;
 using GreenEnergyHub.Iso8601;
 using Xunit;
 using Xunit.Categories;
@@ -62,10 +63,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
             var sut = GetSut(chargesDatabaseQueryContext);
-            var searchCriteria = new ChargePricesSearchCriteriaV1Dto(
-                expectedCharge.Id,
-                InstantHelper.GetTodayAtMidnightUtc().ToDateTimeOffset(),
-                InstantHelper.GetTomorrowAtMidnightUtc().ToDateTimeOffset());
+            var searchCriteria = new ChargePricesSearchCriteriaV1DtoBuilder()
+                .WithChargeId(expectedCharge.Id)
+                .WithFromDateTime(InstantHelper.GetTodayAtMidnightUtc().ToDateTimeOffset())
+                .WithToDateTime(InstantHelper.GetTomorrowAtMidnightUtc().ToDateTimeOffset())
+                .Build();
 
             var expected = new ChargePriceV1Dto(
                 expectedPoints.Single().Price,
@@ -76,8 +78,206 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var actual = sut.Search(searchCriteria);
 
             // Assert
-            actual.Should().HaveCount(expectedPoints.Count);
-            actual.Single().Should().Be(expected);
+            actual.ChargePrices.Should().HaveCount(expectedPoints.Count);
+            actual.ChargePrices.Single().Should().Be(expected);
+        }
+
+        [Fact]
+        public async Task SearchAsync_WhenSearchingHasSkip_ReturnsPrices()
+        {
+            // Arrange
+            var charge = await GenerateChargeWithPointsAsync();
+            var expectedPoint = charge.Points.Last();
+
+            await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
+            var sut = GetSut(chargesDatabaseQueryContext);
+            var searchCriteria = new ChargePricesSearchCriteriaV1DtoBuilder()
+                .WithChargeId(charge.Id)
+                .WithFromDateTime(InstantHelper.GetTodayAtMidnightUtc().ToDateTimeOffset())
+                .WithToDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(2).ToDateTimeOffset())
+                .WithSkip(2)
+                .Build();
+
+            var expected = new ChargePriceV1Dto(
+                expectedPoint.Price,
+                InstantHelper.GetTodayPlusDaysAtMidnightUtc(1).ToDateTimeOffset(),
+                InstantHelper.GetTodayPlusDaysAtMidnightUtc(2).ToDateTimeOffset());
+
+            // Act
+            var actual = sut.Search(searchCriteria);
+
+            // Assert
+            actual.ChargePrices.Should().HaveCount(1);
+            actual.ChargePrices.Single().Should().Be(expected);
+        }
+
+        [Fact]
+        public async Task SearchAsync_WhenSearchingHasNoSkip_ReturnsPrices()
+        {
+            // Arrange
+            var charge = await GenerateChargeWithPointsAsync();
+            var expectedPoint = charge.Points.First();
+
+            await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
+            var sut = GetSut(chargesDatabaseQueryContext);
+            var searchCriteria = new ChargePricesSearchCriteriaV1DtoBuilder()
+                .WithChargeId(charge.Id)
+                .WithFromDateTime(InstantHelper.GetTodayAtMidnightUtc().ToDateTimeOffset())
+                .WithToDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(2).ToDateTimeOffset())
+                .WithTake(1)
+                .Build();
+
+            var expected = new ChargePriceV1Dto(
+                expectedPoint.Price,
+                InstantHelper.GetTodayAtMidnightUtc().ToDateTimeOffset(),
+                InstantHelper.GetTodayPlusDaysAtMidnightUtc(1).ToDateTimeOffset());
+
+            // Act
+            var actual = sut.Search(searchCriteria);
+
+            // Assert
+            actual.ChargePrices.Should().HaveCount(1);
+            actual.ChargePrices.Single().Should().Be(expected);
+        }
+
+        [Fact]
+        public async Task SearchAsync_WhenSearching_ReturnsTotalAmountOfPrices()
+        {
+            // Arrange
+            var charge = await GenerateChargeWithPointsAsync();
+
+            await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
+            var sut = GetSut(chargesDatabaseQueryContext);
+            var searchCriteria = new ChargePricesSearchCriteriaV1DtoBuilder()
+                .WithChargeId(charge.Id)
+                .WithFromDateTime(InstantHelper.GetTodayAtMidnightUtc().ToDateTimeOffset())
+                .WithToDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(2).ToDateTimeOffset())
+                .WithTake(1)
+                .Build();
+
+            // Act
+            var actual = sut.Search(searchCriteria);
+
+            // Assert
+            actual.ChargePrices.Should().HaveCount(1);
+            actual.TotalAmount.Should().Be(charge.Points.Count);
+        }
+
+        [Fact]
+        public async Task SearchAsync_WhenSortColumnNameIsNotValid_ReturnsPricesSortedByFromDateTime()
+        {
+            // Arrange
+            var charge = await GenerateChargeWithPointsAsync();
+
+            await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
+            var sut = GetSut(chargesDatabaseQueryContext);
+            var searchCriteria = new ChargePricesSearchCriteriaV1DtoBuilder()
+                .WithChargeId(charge.Id)
+                .WithFromDateTime(InstantHelper.GetTodayAtMidnightUtc().ToDateTimeOffset())
+                .WithToDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(2).ToDateTimeOffset())
+                .WithSortColumnName((SortColumnName)(-1))
+                .Build();
+
+            // Act
+            var actual = sut.Search(searchCriteria);
+
+            // Assert
+            actual.ChargePrices.Should().HaveCount(charge.Points.Count);
+            actual.ChargePrices.Should().BeInAscendingOrder(cp => cp.FromDateTime);
+        }
+
+        [Fact]
+        public async Task SearchAsync_WhenSearchingIsDescendingOrderOnFromDateTime_ReturnsPricesInDescendingOrder()
+        {
+            // Arrange
+            var charge = await GenerateChargeWithPointsAsync();
+
+            await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
+            var sut = GetSut(chargesDatabaseQueryContext);
+            var searchCriteria = new ChargePricesSearchCriteriaV1DtoBuilder()
+                .WithChargeId(charge.Id)
+                .WithFromDateTime(InstantHelper.GetTodayAtMidnightUtc().ToDateTimeOffset())
+                .WithToDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(2).ToDateTimeOffset())
+                .WithIsDescending(true)
+                .Build();
+
+            // Act
+            var actual = sut.Search(searchCriteria);
+
+            // Assert
+            actual.ChargePrices.Should().HaveCount(charge.Points.Count);
+            actual.ChargePrices.Should().BeInDescendingOrder(cp => cp.FromDateTime);
+        }
+
+        [Fact]
+        public async Task SearchAsync_WhenSearchingIsAscendingOrderOnFromDateTime_ReturnsPricesInAscendingOrder()
+        {
+            // Arrange
+            var charge = await GenerateChargeWithPointsAsync();
+
+            await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
+            var sut = GetSut(chargesDatabaseQueryContext);
+            var searchCriteria = new ChargePricesSearchCriteriaV1DtoBuilder()
+                .WithChargeId(charge.Id)
+                .WithFromDateTime(InstantHelper.GetTodayAtMidnightUtc().ToDateTimeOffset())
+                .WithToDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(2).ToDateTimeOffset())
+                .WithIsDescending(false)
+                .Build();
+
+            // Act
+            var actual = sut.Search(searchCriteria);
+
+            // Assert
+            actual.ChargePrices.Should().HaveCount(charge.Points.Count);
+            actual.ChargePrices.Should().BeInAscendingOrder(cp => cp.FromDateTime);
+        }
+
+        [Fact]
+        public async Task SearchAsync_WhenSearchingIsAscendingOrderOnPrice_ReturnsPricesInAscendingOrder()
+        {
+            // Arrange
+            var charge = await GenerateChargeWithPointsAsync();
+
+            await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
+            var sut = GetSut(chargesDatabaseQueryContext);
+            var searchCriteria = new ChargePricesSearchCriteriaV1DtoBuilder()
+                .WithChargeId(charge.Id)
+                .WithFromDateTime(InstantHelper.GetTodayAtMidnightUtc().ToDateTimeOffset())
+                .WithToDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(2).ToDateTimeOffset())
+                .WithSortColumnName(SortColumnName.Price)
+                .WithIsDescending(false)
+                .Build();
+
+            // Act
+            var actual = sut.Search(searchCriteria);
+
+            // Assert
+            actual.ChargePrices.Should().HaveCount(charge.Points.Count);
+            actual.ChargePrices.Should().BeInAscendingOrder(cp => cp.Price);
+        }
+
+        [Fact]
+        public async Task SearchAsync_WhenSearchingIsDescendingOrderOnPrice_ReturnsPricesInDescendingOrder()
+        {
+            // Arrange
+            var charge = await GenerateChargeWithPointsAsync();
+
+            await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
+            var sut = GetSut(chargesDatabaseQueryContext);
+            var searchCriteria = new ChargePricesSearchCriteriaV1DtoBuilder()
+                .WithChargeId(charge.Id)
+                .WithFromDateTime(InstantHelper.GetTodayAtMidnightUtc().ToDateTimeOffset())
+                .WithToDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(2).ToDateTimeOffset())
+                .WithSortColumnName(SortColumnName.Price)
+                .WithIsDescending(true)
+                .Build();
+
+            // Act
+            var actual = sut.Search(searchCriteria);
+
+            // Assert
+            actual.ChargePrices.Should().HaveCount(charge.Points.Count);
+            actual.ChargePrices.Should().BeInDescendingOrder(cp => cp.Price);
         }
 
         [Fact]
@@ -97,10 +297,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
             var sut = GetSut(chargesDatabaseQueryContext);
-            var searchCriteria = new ChargePricesSearchCriteriaV1Dto(
-                expectedCharge.Id,
-                InstantHelper.GetTodayAtMidnightUtc().ToDateTimeOffset(),
-                InstantHelper.GetTomorrowAtMidnightUtc().ToDateTimeOffset());
+            var searchCriteria = new ChargePricesSearchCriteriaV1DtoBuilder()
+                .WithChargeId(expectedCharge.Id)
+                .WithFromDateTime(InstantHelper.GetTodayAtMidnightUtc().ToDateTimeOffset())
+                .WithToDateTime(InstantHelper.GetTomorrowAtMidnightUtc().ToDateTimeOffset())
+                .Build();
 
             var expected = new ChargePriceV1Dto(
                 expectedPoint.Price,
@@ -111,8 +312,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var actual = sut.Search(searchCriteria);
 
             // Assert
-            actual.Should().HaveCount(1);
-            actual.Single().Should().Be(expected);
+            actual.ChargePrices.Should().HaveCount(1);
+            actual.ChargePrices.Single().Should().Be(expected);
         }
 
         [Fact]
@@ -137,17 +338,18 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
             var sut = GetSut(chargesDatabaseQueryContext);
-            var searchCriteria = new ChargePricesSearchCriteriaV1Dto(
-                charge.Id,
-                InstantHelper.GetTodayAtMidnightUtc().ToDateTimeOffset(),
-                InstantHelper.GetTomorrowAtMidnightUtc().ToDateTimeOffset());
+            var searchCriteria = new ChargePricesSearchCriteriaV1DtoBuilder()
+                .WithChargeId(charge.Id)
+                .WithFromDateTime(InstantHelper.GetTodayAtMidnightUtc().ToDateTimeOffset())
+                .WithToDateTime(InstantHelper.GetTomorrowAtMidnightUtc().ToDateTimeOffset())
+                .Build();
 
             // Act
             var actual = sut.Search(searchCriteria);
 
             // Assert
-            actual.Should().HaveCount(points.Count);
-            foreach (var chargePrice in actual)
+            actual.ChargePrices.Should().HaveCount(points.Count);
+            foreach (var chargePrice in actual.ChargePrices)
                 (chargePrice.ToDateTime - chargePrice.FromDateTime).Minutes.Should().Be(15);
         }
 
@@ -173,17 +375,18 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
             var sut = GetSut(chargesDatabaseQueryContext);
-            var searchCriteria = new ChargePricesSearchCriteriaV1Dto(
-                charge.Id,
-                InstantHelper.GetTodayAtMidnightUtc().ToDateTimeOffset(),
-                InstantHelper.GetTomorrowAtMidnightUtc().ToDateTimeOffset());
+            var searchCriteria = new ChargePricesSearchCriteriaV1DtoBuilder()
+                .WithChargeId(charge.Id)
+                .WithFromDateTime(InstantHelper.GetTodayAtMidnightUtc().ToDateTimeOffset())
+                .WithToDateTime(InstantHelper.GetTomorrowAtMidnightUtc().ToDateTimeOffset())
+                .Build();
 
             // Act
             var actual = sut.Search(searchCriteria);
 
             // Assert
-            actual.Should().HaveCount(points.Count);
-            foreach (var chargePrice in actual)
+            actual.ChargePrices.Should().HaveCount(points.Count);
+            foreach (var chargePrice in actual.ChargePrices)
                 (chargePrice.ToDateTime - chargePrice.FromDateTime).Hours.Should().Be(1);
         }
 
@@ -209,17 +412,18 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
             var sut = GetSut(chargesDatabaseQueryContext);
-            var searchCriteria = new ChargePricesSearchCriteriaV1Dto(
-                charge.Id,
-                InstantHelper.GetTodayPlusDaysAtMidnightUtc(0).ToDateTimeOffset(),
-                InstantHelper.GetTodayPlusDaysAtMidnightUtc(5).ToDateTimeOffset());
+            var searchCriteria = new ChargePricesSearchCriteriaV1DtoBuilder()
+                .WithChargeId(charge.Id)
+                .WithFromDateTime(InstantHelper.GetTodayAtMidnightUtc().ToDateTimeOffset())
+                .WithToDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(5).ToDateTimeOffset())
+                .Build();
 
             // Act
             var actual = sut.Search(searchCriteria);
 
             // Assert
-            actual.Should().HaveCount(points.Count);
-            foreach (var chargePrice in actual)
+            actual.ChargePrices.Should().HaveCount(points.Count);
+            foreach (var chargePrice in actual.ChargePrices)
                 (chargePrice.ToDateTime - chargePrice.FromDateTime).Days.Should().Be(1);
         }
 
@@ -245,17 +449,18 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
             var sut = GetSut(chargesDatabaseQueryContext);
-            var searchCriteria = new ChargePricesSearchCriteriaV1Dto(
-                charge.Id,
-                InstantHelper.GetFirstDayOfThisMonthPlusMonthsAtMidnightUtc(0).ToDateTimeOffset(),
-                InstantHelper.GetFirstDayOfThisMonthPlusMonthsAtMidnightUtc(5).ToDateTimeOffset());
+            var searchCriteria = new ChargePricesSearchCriteriaV1DtoBuilder()
+                .WithChargeId(charge.Id)
+                .WithFromDateTime(InstantHelper.GetFirstDayOfThisMonthPlusMonthsAtMidnightUtc(0).ToDateTimeOffset())
+                .WithToDateTime(InstantHelper.GetFirstDayOfThisMonthPlusMonthsAtMidnightUtc(5).ToDateTimeOffset())
+                .Build();
 
             // Act
             var actual = sut.Search(searchCriteria);
 
             // Assert
-            actual.Should().HaveCount(points.Count);
-            foreach (var chargePrice in actual)
+            actual.ChargePrices.Should().HaveCount(points.Count);
+            foreach (var chargePrice in actual.ChargePrices)
             {
                 chargePrice.FromDateTime.Month.Should().NotBe(chargePrice.ToDateTime.Month);
                 DateTime.DaysInMonth(chargePrice.FromDateTime.DayOfYear, chargePrice.FromDateTime.Month).Should()
@@ -291,6 +496,22 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var iso8601Durations = new Iso8601Durations(configuration);
             var sut = new ChargePriceQueryService(data, iso8601Durations);
             return sut;
+        }
+
+        private async Task<Charge> GenerateChargeWithPointsAsync()
+        {
+            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
+
+            var point1 = new Point(10m, InstantHelper.GetTodayAtMidnightUtc());
+            var point2 = new Point(20m, InstantHelper.GetTodayPlusHoursAtMidnightUtc(1));
+            var point3 = new Point(50m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(1));
+
+            var points = new List<Point> { point1, point2, point3 };
+            var charge = await GetValidCharge(chargesDatabaseWriteContext, points, Resolution.P1D);
+
+            chargesDatabaseWriteContext.Charges.Add(charge);
+            await chargesDatabaseWriteContext.SaveChangesAsync();
+            return charge;
         }
     }
 }
