@@ -182,7 +182,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
 
         [Theory]
         [AutoData]
-        public void Map_GridAreaRemovedFromActorIntegrationEvent_ShouldReturnGridAreaRemovedFromMarketParticipantCommand(
+        public void Map_GridAreaRemovedFromActorIntegrationEvent_ShouldReturnRemoveOwnerFromGridAreaCommand(
             Guid gridAreaId)
         {
             // Arrange

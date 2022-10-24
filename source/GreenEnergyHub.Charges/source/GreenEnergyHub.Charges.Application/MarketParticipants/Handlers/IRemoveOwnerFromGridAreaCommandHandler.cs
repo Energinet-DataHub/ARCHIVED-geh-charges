@@ -12,10 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.Events
+namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 {
-    public record GridAreaRemovedFromMarketParticipantCommand(
-        Guid GridAreaId);
+    /// <summary>
+    /// Handle commands for removing grid areas from market participants
+    /// </summary>
+    public interface IRemoveOwnerFromGridAreaCommandHandler
+    {
+        /// <summary>
+        /// Handle grid area removed from market participant command
+        /// </summary>
+        Task HandleAsync(RemoveOwnerFromGridAreaCommand command);
+    }
 }

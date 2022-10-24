@@ -29,17 +29,17 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
 {
     [UnitTest]
-    public class GridAreaRemovedFromMarketParticipantCommandHandlerTests
+    public class RemoveOwnerFromGridAreaCommandHandlerTests
     {
         [Theory]
         [InlineAutoMoqData]
         public async Task HandleAsync_ValidEvent_ShouldRemoveGridAreaOwner(
             GridAreaLink gridAreaLink,
             [Frozen] Mock<IGridAreaLinkRepository> gridAreaLinkRepository,
-            GridAreaRemovedFromMarketParticipantCommandHandler sut)
+            RemoveOwnerFromRemoveOwnerFromGridAreaCommandHandler sut)
         {
             // Arrange
-            var command = new GridAreaRemovedFromMarketParticipantCommand(
+            var command = new RemoveOwnerFromGridAreaCommand(
                 Guid.NewGuid());
             gridAreaLinkRepository
                 .Setup(g => g.GetGridAreaOrNullAsync(It.IsAny<Guid>()))
