@@ -72,6 +72,8 @@ module "func_functionhost" {
     MARKET_PARTICIPANT_STATUS_CHANGED_SUBSCRIPTION_NAME                     = module.sbs_int_events_market_participant_status_changed.name
     MARKET_PARTICIPANT_EXTERNAL_ACTOR_ID_CHANGED_SUBSCRIPTION_NAME          = module.sbs_int_events_market_part_external_id_changed.name
     MARKET_PARTICIPANT_NAME_CHANGED_SUBSCRIPTION_NAME                       = module.sbs_int_events_market_part_name_changed.name
+    GRID_AREA_ADDED_TO_ACTOR_SUBSCRIPTION_NAME                              = module.sbs_int_events_grid_area_added_to_actor.name
+    GRID_AREA_REMOVED_FROM_ACTOR_SUBSCRIPTION_NAME                          = module.sbs_int_events_grid_area_removed_from_actor.name
 
     # Shared resources
     INTEGRATIONEVENT_SENDER_CONNECTION_STRING                               = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-send-connection-string)"
