@@ -25,9 +25,7 @@
       "applicationUrl": "https://localhost:5002;http://localhost:5003",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "FRONTEND_OPEN_ID_URL": "https://devdatahubb2c.b2clogin.com/4a7411ea-ac71-4b63-9647-b8bd4c5a20e0/B2C_1_u001_signin/v2.0/.well-known/openid-configuration",
-        "FRONTEND_SERVICE_APP_ID": "d91c10bb-1441-4ae5-9bf9-e6845567d018",
-        "APPINSIGHTS_INSTRUMENTATIONKEY": "25b9828c-f3ab-445e-8fdf-213025009989",
+        "FRONTEND_OPEN_ID_URL": "",
         "LOCAL_TIMEZONENAME": "Europe/Copenhagen"
       }
     }
