@@ -38,7 +38,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             GridAreaLink gridAreaLink,
             [Frozen] Mock<IMarketParticipantRepository> marketParticipantRepository,
             [Frozen] Mock<IGridAreaLinkRepository> gridAreaLinkRepository,
-            GridAreaOwnerOwnerAddedCommandHandler sut)
+            GridAreaOwnerAddedCommandHandler sut)
         {
             // Arrange
             var command = new GridAreaOwnerAddedCommand(

@@ -20,12 +20,12 @@ using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 {
-    public class GridAreaOwnerOwnerAddedCommandHandler : IGridAreaOwnerAddedCommandHandler
+    public class GridAreaOwnerAddedCommandHandler : IGridAreaOwnerAddedCommandHandler
     {
         private readonly IMarketParticipantRepository _marketParticipantRepository;
         private readonly IGridAreaLinkRepository _gridAreaLinkRepository;
 
-        public GridAreaOwnerOwnerAddedCommandHandler(
+        public GridAreaOwnerAddedCommandHandler(
             IMarketParticipantRepository marketParticipantRepository,
             IGridAreaLinkRepository gridAreaLinkRepository)
         {
