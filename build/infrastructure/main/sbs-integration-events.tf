@@ -27,7 +27,7 @@ module "sbs_int_events_metering_point_created" {
 
 module "sbs_int_events_market_participant_changed" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v9"
-  name                = "market-participant-changed"
+  name                = "market-part-changed"
   project_name        = var.domain_name_short
   topic_id            = data.azurerm_key_vault_secret.sbt_domainrelay_integrationevent_received_id.value
   max_delivery_count  = 1
@@ -40,7 +40,7 @@ module "sbs_int_events_market_participant_changed" {
 
 module "sbs_int_events_market_participant_created" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v9"
-  name                = "market-participant-created"
+  name                = "market-part-created"
   project_name        = var.domain_name_short
   topic_id            = data.azurerm_key_vault_secret.sbt_domainrelay_integrationevent_received_id.value
   max_delivery_count  = 1
@@ -53,7 +53,7 @@ module "sbs_int_events_market_participant_created" {
 
 module "sbs_int_events_market_participant_status_changed" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v9"
-  name                = "market-participant-status-changed"
+  name                = "market-part-status-changed"
   project_name        = var.domain_name_short
   topic_id            = data.azurerm_key_vault_secret.sbt_domainrelay_integrationevent_received_id.value
   max_delivery_count  = 1
@@ -79,7 +79,7 @@ module "sbs_int_events_market_part_external_id_changed" {
 
 module "sbs_int_events_market_part_name_changed" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v9"
-  name                = "market-participant-name-changed"
+  name                = "market-part-name-changed"
   project_name        = var.domain_name_short
   topic_id            = data.azurerm_key_vault_secret.sbt_domainrelay_integrationevent_received_id.value
   max_delivery_count  = 1

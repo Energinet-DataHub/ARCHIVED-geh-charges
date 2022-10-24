@@ -49,13 +49,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.InternalMessaging
         public const string RequestResponseLoggingContainerName = "marketoplogs";
 
         // Integration, marketparticipants domain
-        public const string MarketParticipantChangedSubscriptionName = "market-participant-changed";
-        public const string MarketParticipantCreatedSubscriptionName = "market-participant-created";
-        public const string MarketParticipantStatusChangedSubscriptionName = "market-participant-status-changed";
+        public const string MarketParticipantChangedSubscriptionName = "market-partchanged";
+        public const string MarketParticipantCreatedSubscriptionName = "market-partcreated";
+        public const string MarketParticipantStatusChangedSubscriptionName = "market-partstatus-changed";
         public const string GridAreaAddedToActorSubscriptionName = "grid-area-added-to-actor";
         public const string GridAreaRemovedFromActorSubscriptionName = "grid-area-removed-from-actor";
         public const string MarketParticipantExternalActorIdChangedSubscriptionName = "market-part-external-id-changed";
-        public const string MarketParticipantNameChangedSubscriptionName = "market-participant-name-changed";
+        public const string MarketParticipantNameChangedSubscriptionName = "market-partname-changed";
 
         // Domain event
         [DomainEventSetting]
