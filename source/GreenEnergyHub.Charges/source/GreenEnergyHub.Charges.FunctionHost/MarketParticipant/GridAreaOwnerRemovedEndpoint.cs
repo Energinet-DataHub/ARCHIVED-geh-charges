@@ -23,20 +23,20 @@ using Microsoft.Azure.Functions.Worker;
 
 namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
 {
-    public class MarketParticipantGridAreaRemovedEndpoint
+    public class GridAreaOwnerRemovedEndpoint
     {
-        private const string FunctionName = nameof(MarketParticipantGridAreaRemovedEndpoint);
+        private const string FunctionName = nameof(GridAreaOwnerRemovedEndpoint);
         private readonly ISharedIntegrationEventParser _sharedIntegrationEventParser;
-        private readonly IRemoveOwnerFromGridAreaCommandHandler _removeOwnerFromGridAreaCommandHandler;
+        private readonly IGridAreaOwnerRemovedCommandHandler _gridAreaOwnerRemovedCommandHandler;
         private readonly IUnitOfWork _unitOfWork;
 
-        public MarketParticipantGridAreaRemovedEndpoint(
+        public GridAreaOwnerRemovedEndpoint(
             ISharedIntegrationEventParser sharedIntegrationEventParser,
-            IRemoveOwnerFromGridAreaCommandHandler removeOwnerFromGridAreaCommandHandler,
+            IGridAreaOwnerRemovedCommandHandler gridAreaOwnerRemovedCommandHandler,
             IUnitOfWork unitOfWork)
         {
             _sharedIntegrationEventParser = sharedIntegrationEventParser;
-            _removeOwnerFromGridAreaCommandHandler = removeOwnerFromGridAreaCommandHandler;
+            _gridAreaOwnerRemovedCommandHandler = gridAreaOwnerRemovedCommandHandler;
             _unitOfWork = unitOfWork;
         }
 
@@ -49,7 +49,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
         {
             var gridAreaRemovedEvent = (GridAreaRemovedFromActorIntegrationEvent)_sharedIntegrationEventParser.Parse(message);
             var command = MarketParticipantIntegrationEventMapper.Map(gridAreaRemovedEvent);
-            await _removeOwnerFromGridAreaCommandHandler.HandleAsync(command).ConfigureAwait(false);
+            await _gridAreaOwnerRemovedCommandHandler.HandleAsync(command).ConfigureAwait(false);
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
         }
     }

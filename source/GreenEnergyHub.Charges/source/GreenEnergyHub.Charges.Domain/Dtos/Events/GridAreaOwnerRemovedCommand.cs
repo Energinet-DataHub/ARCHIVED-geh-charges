@@ -16,6 +16,6 @@ using System;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.Events
 {
-    public record RemoveOwnerFromGridAreaCommand(
+    public record GridAreaOwnerRemovedCommand(
         Guid GridAreaId);
 }

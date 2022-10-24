@@ -19,6 +19,7 @@ using AutoFixture.Xunit2;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers.Mappers;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.TestHelpers;
@@ -182,7 +183,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
 
         [Theory]
         [AutoData]
-        public void Map_GridAreaRemovedFromActorIntegrationEvent_ShouldReturnRemoveOwnerFromGridAreaCommand(
+        public void Map_GridAreaRemovedFromActorIntegrationEvent_ShouldReturnGridAreaOwnerRemovedCommand(
             Guid gridAreaId)
         {
             // Arrange
@@ -199,6 +200,7 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             var actual = MarketParticipantIntegrationEventMapper.Map(gridAreaRemovedEvent);
 
             // Assert
+            actual.Should().BeOfType(typeof(GridAreaOwnerRemovedCommand));
             actual.GridAreaId.Should().Be(gridAreaId);
         }
 

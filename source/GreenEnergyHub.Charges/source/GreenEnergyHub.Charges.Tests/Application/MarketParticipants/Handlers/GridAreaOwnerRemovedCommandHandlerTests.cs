@@ -19,9 +19,7 @@ using FluentAssertions;
 using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.Domain.GridAreaLinks;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Charges.TestCore.Builders.Testables;
 using Moq;
 using Xunit;
 using Xunit.Categories;
@@ -29,17 +27,17 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
 {
     [UnitTest]
-    public class RemoveOwnerFromGridAreaCommandHandlerTests
+    public class GridAreaOwnerRemovedCommandHandlerTests
     {
         [Theory]
         [InlineAutoMoqData]
         public async Task HandleAsync_ValidEvent_ShouldRemoveGridAreaOwner(
             GridAreaLink gridAreaLink,
             [Frozen] Mock<IGridAreaLinkRepository> gridAreaLinkRepository,
-            RemoveOwnerFromRemoveOwnerFromGridAreaCommandHandler sut)
+            GridAreaOwnerFromGridAreaOwnerRemovedCommandHandler sut)
         {
             // Arrange
-            var command = new RemoveOwnerFromGridAreaCommand(
+            var command = new GridAreaOwnerRemovedCommand(
                 Guid.NewGuid());
             gridAreaLinkRepository
                 .Setup(g => g.GetGridAreaOrNullAsync(It.IsAny<Guid>()))

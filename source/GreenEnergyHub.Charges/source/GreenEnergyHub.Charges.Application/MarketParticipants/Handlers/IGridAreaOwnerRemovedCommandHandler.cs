@@ -20,11 +20,11 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
     /// <summary>
     /// Handle commands for removing grid areas from market participants
     /// </summary>
-    public interface IRemoveOwnerFromGridAreaCommandHandler
+    public interface IGridAreaOwnerRemovedCommandHandler
     {
         /// <summary>
         /// Handle grid area removed from market participant command
         /// </summary>
-        Task HandleAsync(RemoveOwnerFromGridAreaCommand command);
+        Task HandleAsync(GridAreaOwnerRemovedCommand command);
     }
 }

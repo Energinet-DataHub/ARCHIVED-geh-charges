@@ -16,21 +16,20 @@ using System;
 using System.Threading.Tasks;
 using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.Domain.GridAreaLinks;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
 
 namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 {
-    public class RemoveOwnerFromRemoveOwnerFromGridAreaCommandHandler : IRemoveOwnerFromGridAreaCommandHandler
+    public class GridAreaOwnerFromGridAreaOwnerRemovedCommandHandler : IGridAreaOwnerRemovedCommandHandler
     {
         private readonly IGridAreaLinkRepository _gridAreaLinkRepository;
 
-        public RemoveOwnerFromRemoveOwnerFromGridAreaCommandHandler(
+        public GridAreaOwnerFromGridAreaOwnerRemovedCommandHandler(
             IGridAreaLinkRepository gridAreaLinkRepository)
         {
             _gridAreaLinkRepository = gridAreaLinkRepository;
         }
 
-        public async Task HandleAsync(RemoveOwnerFromGridAreaCommand command)
+        public async Task HandleAsync(GridAreaOwnerRemovedCommand command)
         {
             var gridArea = await _gridAreaLinkRepository.GetGridAreaOrNullAsync(command.GridAreaId).ConfigureAwait(false);
             if (gridArea == null)

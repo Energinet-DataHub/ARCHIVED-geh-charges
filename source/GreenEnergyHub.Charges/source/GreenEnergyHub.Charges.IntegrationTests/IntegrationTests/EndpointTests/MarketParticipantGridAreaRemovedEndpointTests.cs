@@ -56,7 +56,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     () => Fixture.IntegrationEventTopic.SenderClient.SendMessageAsync(serviceBusMessage), serviceBusMessage.CorrelationId);
 
                 await FunctionAsserts.AssertHasExecutedAsync(
-                    Fixture.HostManager, nameof(MarketParticipantGridAreaRemovedEndpoint)).ConfigureAwait(false);
+                    Fixture.HostManager, nameof(GridAreaOwnerRemovedEndpoint)).ConfigureAwait(false);
 
                 // Assert
                 await using var context = Fixture.ChargesDatabaseManager.CreateDbContext();
