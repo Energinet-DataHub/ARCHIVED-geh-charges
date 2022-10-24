@@ -27,8 +27,23 @@ namespace GreenEnergyHub.Charges.Domain.GridAreaLinks
 
         public Guid Id { get; }
 
-        public Guid GridAreaId { get; set; }
+        public Guid GridAreaId { get; }
 
-        public Guid? OwnerId { get; set; }
+        public Guid? OwnerId { get; private set; }
+
+        public void UpdateOwner(Guid ownerId)
+        {
+            OwnerId = ownerId;
+        }
+
+        public void RemoveOwner()
+        {
+            OwnerId = null;
+        }
+
+        public GridAreaLink Create(Guid id, Guid gridAreaId, Guid? ownerId = null)
+        {
+            return new GridAreaLink(id, gridAreaId, ownerId);
+        }
     }
 }
