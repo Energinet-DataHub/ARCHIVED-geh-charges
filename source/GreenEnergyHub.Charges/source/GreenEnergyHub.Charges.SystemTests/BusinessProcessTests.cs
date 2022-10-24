@@ -62,95 +62,103 @@ namespace GreenEnergyHub.Charges.SystemTests
         public async Task When_SubmittingChargeInformationRequestWithNewSubscription_Then_PeekReturnsCorrespondingConfirmation()
         {
             // Setup
-            await FlushPostOfficeQueueAsync();
+            using var gridAccessProviderClient = await CreateConfidentialHttpClientAsync(_gridAccessProviderAppAuthenticationClient);
+            await FlushPostOfficeQueueAsync(gridAccessProviderClient);
+            using var energySupplierClient = await CreateConfidentialHttpClientAsync(_energySupplierAppAuthenticationClient);
+            await FlushPostOfficeQueueAsync(energySupplierClient);
 
             // Arrange
-            using var gridAccessProviderClient = await CreateConfidentialHttpClientAsync(_gridAccessProviderAppAuthenticationClient);
             var currentInstant = SystemClock.Instance.GetCurrentInstant();
-            var expectedOpId = $"<cim:originalTransactionIDReference_MktActivityRecord.mRID>SysTestOpId{currentInstant}</cim:originalTransactionIDReference_MktActivityRecord.mRID>";
-            var bundleId = Guid.NewGuid().ToString();
+            var expectedConfirmedOperationId = $"<cim:originalTransactionIDReference_MktActivityRecord.mRID>SysTestOpId{currentInstant}</cim:originalTransactionIDReference_MktActivityRecord.mRID>";
 
+            var request = PrepareRequest(ChargeInformationRequests.Subscription, currentInstant);
+            using var actualResponse = await gridAccessProviderClient.SendAsync(request);
+            actualResponse.StatusCode.Should().Be(HttpStatusCode.Accepted);
+
+            // Peek confirmation - as Grid Access Supplier
+            var gridBundleId = Guid.NewGuid().ToString();
+            var peekedConfirmation = await PeekAsync(gridAccessProviderClient, gridBundleId);
+
+            // Assert confirmation
+            peekedConfirmation!.Headers.GetValues("MessageType").FirstOrDefault()
+                .Should().Be(nameof(DocumentType.ConfirmRequestChangeOfPriceList));
+            var content = await peekedConfirmation.Content.ReadAsStringAsync();
+            content.Should().Contain("ConfirmRequestChangeOfPriceList_MarketDocument");
+            content.Should().Contain(expectedConfirmedOperationId);
+
+            // Dequeue - throws XUnitException if dequeue not succeeding
+            await DequeueAsync(gridAccessProviderClient, gridBundleId);
+
+            // Peek notification - as Energy Supplier
+            var supplierBundleId = Guid.NewGuid().ToString();
+            var peekedNotification = await PeekAsync(energySupplierClient, supplierBundleId);
+
+            // Assert notification
+            peekedNotification!.Headers.GetValues("MessageType").FirstOrDefault()
+                .Should().Be(nameof(DocumentType.NotifyPriceList));
+
+            // Dequeue - as Energy Supplier - throws XUnitException if dequeue not succeeding
+            await DequeueAsync(energySupplierClient, supplierBundleId);
+        }
+
+        private HttpRequestMessage PrepareRequest(string testFilePath, Instant currentInstant)
+        {
             var body = EmbeddedResourceHelper
-                .GetEmbeddedFile(ChargeInformationRequests.Subscription, currentInstant, ZonedDateTimeServiceHelper.GetZonedDateTimeService(currentInstant))
+                .GetEmbeddedFile(testFilePath, currentInstant, ZonedDateTimeServiceHelper.GetZonedDateTimeService(currentInstant))
                 .Replace("{{GridAccessProvider}}", Configuration.GridAccessProvider);
 
-            var submitRequest = new HttpRequestMessage(HttpMethod.Post, Configuration.ChargeIngestionEndpoint)
+            return new HttpRequestMessage(HttpMethod.Post, Configuration.ChargeIngestionEndpoint)
             {
                 Content = new StringContent(body, Encoding.UTF8, "application/xml"),
             };
+        }
 
-            using var actualResponse = await gridAccessProviderClient.SendAsync(submitRequest);
-            actualResponse.StatusCode.Should().Be(HttpStatusCode.Accepted);
-
-            // Peek
+        private async Task<HttpResponseMessage?> PeekAsync(HttpClient gridAccessProviderClient, string bundleId)
+        {
             HttpResponseMessage? peekResponse = null;
             await Awaiter.WaitUntilConditionAsync(
                 async () =>
                 {
-                    peekResponse = await PeekAsync(gridAccessProviderClient, bundleId);
+                    peekResponse = await SendPeekAsync(gridAccessProviderClient, bundleId);
                     return peekResponse.StatusCode == HttpStatusCode.OK;
                 },
                 TimeSpan.FromMinutes(1),
                 TimeSpan.FromSeconds(1));
 
-            // Assert
-            var messageType = peekResponse!.Headers.GetValues("MessageType").FirstOrDefault();
-            messageType!.Should().Be(nameof(DocumentType.ConfirmRequestChangeOfPriceList));
-            var content = await peekResponse!.Content.ReadAsStringAsync();
-            content.Should().Contain("ConfirmRequestChangeOfPriceList_MarketDocument");
-            content.Should().Contain(expectedOpId);
+            return peekResponse!;
+        }
 
-            // Dequeue - throws XUnitException if dequeue not succeeding
+        private async Task DequeueAsync(HttpClient httpClient, string bundleId)
+        {
             await Awaiter.WaitUntilConditionAsync(
                 async () =>
                 {
-                    var dequeueResponse = await DequeueOkAsync(gridAccessProviderClient, bundleId);
-                    return dequeueResponse.StatusCode == HttpStatusCode.OK;
-                },
-                TimeSpan.FromMinutes(1),
-                TimeSpan.FromSeconds(1));
-
-            // Peek - as Energy Supplier
-            using var energySupplierClient = await CreateConfidentialHttpClientAsync(_energySupplierAppAuthenticationClient);
-            HttpResponseMessage? peekResponseEnergySupplier = null;
-            var bundleId2 = Guid.NewGuid().ToString();
-            await Awaiter.WaitUntilConditionAsync(
-                async () =>
-                {
-                    peekResponseEnergySupplier = await PeekAsync(energySupplierClient, bundleId2);
-                    return peekResponseEnergySupplier.StatusCode == HttpStatusCode.OK;
-                },
-                TimeSpan.FromMinutes(1),
-                TimeSpan.FromSeconds(1));
-
-            // Assert - Energy Supplier response
-            var messageType2 = peekResponseEnergySupplier!.Headers.GetValues("MessageType").FirstOrDefault();
-            messageType2!.Should().Be(nameof(DocumentType.NotifyPriceList));
-
-            // Dequeue - as Energy Supplier - throws XUnitException if dequeue not succeeding
-            await Awaiter.WaitUntilConditionAsync(
-                async () =>
-                {
-                    var dequeueResponse = await DequeueOkAsync(energySupplierClient, bundleId2);
+                    var dequeueResponse = await DequeueOkAsync(httpClient, bundleId);
                     return dequeueResponse.StatusCode == HttpStatusCode.OK;
                 },
                 TimeSpan.FromMinutes(1),
                 TimeSpan.FromSeconds(1));
         }
 
-        private async Task FlushPostOfficeQueueAsync()
+        private async Task FlushPostOfficeQueueAsync(HttpClient httpClient)
         {
-            using var httpClient = await CreateConfidentialHttpClientAsync(_gridAccessProviderAppAuthenticationClient);
             await Awaiter.WaitUntilConditionAsync(
                 async () =>
                 {
                     var bundleId = Guid.NewGuid().ToString();
-                    var response = await PeekAsync(httpClient, bundleId);
+                    var response = await SendPeekAsync(httpClient, bundleId);
                     await HandleResponseAsync(httpClient, response, bundleId);
                     return response.StatusCode == HttpStatusCode.NoContent;
                 },
                 TimeSpan.FromMinutes(1),
                 TimeSpan.FromSeconds(1));
+        }
+
+        private async Task<HttpResponseMessage> SendPeekAsync(HttpClient httpClient, string bundleId)
+        {
+            var peekEndpoint = Configuration.PeekEndpoint + bundleId;
+            var peekRequest = new HttpRequestMessage(HttpMethod.Get, peekEndpoint);
+            return await httpClient.SendAsync(peekRequest);
         }
 
         private async Task HandleResponseAsync(HttpClient httpClient, HttpResponseMessage response, string bundleId)
@@ -166,28 +174,21 @@ namespace GreenEnergyHub.Charges.SystemTests
                 case HttpStatusCode.NoContent:
                     return;
                 default:
-                    throw new InvalidOperationException("Cannot handle response from Peek. StatusCode not handled.");
+                    throw new InvalidOperationException($"Cannot handle response from Peek. StatusCode {response.StatusCode} not handled.");
             }
-        }
-
-        private async Task<HttpResponseMessage> PeekAsync(HttpClient httpClient, string bundleId)
-        {
-            var peekEndpoint = Configuration.PeekEndpoint + bundleId;
-            var peekRequest = new HttpRequestMessage(HttpMethod.Get, peekEndpoint);
-            return await httpClient.SendAsync(peekRequest);
-        }
-
-        private async Task<HttpResponseMessage> DequeueOkAsync(HttpClient httpClient, string bundleId)
-        {
-            var dequeueUri = Configuration.DequeueEndpoint + bundleId;
-            var dequeueRequest = new HttpRequestMessage(HttpMethod.Delete, dequeueUri);
-            return await httpClient.SendAsync(dequeueRequest);
         }
 
         private async Task<HttpResponseMessage> DequeueBadRequestAsync(HttpClient httpClient, HttpResponseMessage response)
         {
             var content = await response.Content.ReadAsStringAsync();
             var bundleId = content.Substring(111, 37);
+            var dequeueUri = Configuration.DequeueEndpoint + bundleId;
+            var dequeueRequest = new HttpRequestMessage(HttpMethod.Delete, dequeueUri);
+            return await httpClient.SendAsync(dequeueRequest);
+        }
+
+        private async Task<HttpResponseMessage> DequeueOkAsync(HttpClient httpClient, string bundleId)
+        {
             var dequeueUri = Configuration.DequeueEndpoint + bundleId;
             var dequeueRequest = new HttpRequestMessage(HttpMethod.Delete, dequeueUri);
             return await httpClient.SendAsync(dequeueRequest);
