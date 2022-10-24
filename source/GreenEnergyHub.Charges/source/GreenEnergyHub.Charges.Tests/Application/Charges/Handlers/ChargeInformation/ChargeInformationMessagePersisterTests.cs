@@ -12,9 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
+using FluentAssertions;
 using GreenEnergyHub.Charges.Application.Charges.Handlers.ChargeInformation;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
@@ -51,6 +53,17 @@ namespace GreenEnergyHub.Charges.Tests.Application.Charges.Handlers.ChargeInform
 
             // Assert
             chargeMessageRepository.Verify(x => x.AddAsync(It.IsAny<ChargeMessage>()), Times.Once());
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public async Task PersistMessageAsync_WhenEventIsNull_ThrowsArgumentNullException(
+            ChargeInformationMessagePersister sut)
+        {
+            await sut
+                .Invoking(notifier => notifier.PersistMessageAsync(null!))
+                .Should()
+                .ThrowExactlyAsync<ArgumentNullException>();
         }
     }
 }
