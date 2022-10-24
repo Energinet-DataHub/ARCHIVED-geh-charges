@@ -65,12 +65,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 // Arrange
                 await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
 
-                var operationsConfirmedEvent = chargePriceOperationsAcceptedEventBuilder.Build();
-                var documentId = operationsConfirmedEvent.Document.Id;
-                var operationDto = operationsConfirmedEvent.Operations.Last();
+                var operationsAcceptedEvent = chargePriceOperationsAcceptedEventBuilder.Build();
+                var documentId = operationsAcceptedEvent.Document.Id;
+                var operationDto = operationsAcceptedEvent.Operations.Last();
 
                 var correlationId = CorrelationIdGenerator.Create();
-                var message = ServiceBusMessageGenerator.CreateServiceBusMessage(operationsConfirmedEvent, correlationId);
+                var message = ServiceBusMessageGenerator.CreateServiceBusMessage(operationsAcceptedEvent, correlationId);
 
                 // Act
                 await MockTelemetryClient.WrappedOperationWithTelemetryDependencyInformationAsync(

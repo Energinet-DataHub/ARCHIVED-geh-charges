@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         {
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-            var charge = await GetCharge(chargesDatabaseWriteContext);
+            var charge = await chargesDatabaseWriteContext.Charges.FirstAsync();
             var chargeIdentifier = await GetChargeIdentifier(
                 chargesDatabaseWriteContext,
                 charge,
@@ -70,27 +70,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
             actual.Should().BeEquivalentTo(chargeMessage);
         }
 
-        /*[Theory]
-        [InlineAutoMoqData]
-        public async Task GetByChargeIdAsync_WhenExistingChargeMessagesForCharge_ChargeMessagesAreReturned(
-            ChargeMessageBuilder chargeMessageBuilder)
-        {
-            // Arrange
-            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-            var expected = await SetupValidChargeMessagesForAChargeAsync(chargesDatabaseWriteContext, chargeMessageBuilder);
-            var chargeId = expected.First().ChargeId;
-
-            await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
-            var sut = new ChargeMessageRepository(chargesDatabaseReadContext);
-
-            // Act
-            var actual = await sut.GetByChargeIdAsync(chargeId);
-
-            // Assert
-            actual.Count.Should().Be(3);
-            actual.Should().BeEquivalentTo(expected);
-        }*/
-
         [Theory]
         [InlineAutoMoqData]
         public async Task AddAsync_WhenChargeIsNull_ThrowsArgumentNullException(ChargeMessageRepository sut)
@@ -100,31 +79,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
             // Act / Assert
             await Assert.ThrowsAsync<ArgumentNullException>(() => sut.AddAsync(chargeMessage!));
-        }
-
-        /*private static async Task<List<ChargeMessage>> SetupValidChargeMessagesForAChargeAsync(
-            IChargesDatabaseContext chargesDatabaseWriteContext, ChargeMessageBuilder chargeMessageBuilder)
-        {
-            var chargeMessages = new List<ChargeMessage>();
-            var charge = await GetCharge(chargesDatabaseWriteContext);
-            for (var i = 0; i < 3; i++)
-            {
-                var chargeMessage = chargeMessageBuilder
-                    .WithSenderProvidedChargeId(charge.SenderProvidedChargeId)
-                    .WithChargeType(charge.Type)
-                    .WithMarketParticipantId(charge.OwnerId.ToString())
-                    .WithMessageId($"MessageId{i}").Build();
-                chargeMessages.Add(chargeMessage);
-            }
-
-            await chargesDatabaseWriteContext.ChargeMessages.AddRangeAsync(chargeMessages);
-            await chargesDatabaseWriteContext.SaveChangesAsync();
-            return chargeMessages;
-        }*/
-
-        private static async Task<Charge> GetCharge(IChargesDatabaseContext chargesDatabaseWriteContext)
-        {
-            return await chargesDatabaseWriteContext.Charges.FirstAsync();
         }
 
         private static async Task<ChargeIdentifier> GetChargeIdentifier(
