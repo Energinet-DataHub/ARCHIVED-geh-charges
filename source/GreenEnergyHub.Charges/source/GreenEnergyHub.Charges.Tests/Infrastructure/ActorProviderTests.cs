@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure
         {
             // Arrange
             var b2CActorId = Guid.NewGuid();
-            marketParticipantRepository.Setup(x => x.SingleOrNullAsync(b2CActorId)).ReturnsAsync(null as MarketParticipant);
+            marketParticipantRepository.Setup(x => x.GetByB2CActorIdAsync(b2CActorId)).ReturnsAsync(null as MarketParticipant);
 
             var sut = new ActorProvider(marketParticipantRepository.Object);
 
@@ -53,7 +53,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure
             // Arrange
             var b2CActorId = Guid.NewGuid();
             var marketParticipant = new MarketParticipantBuilder().Build();
-            marketParticipantRepository.Setup(x => x.SingleOrNullAsync(b2CActorId)).ReturnsAsync(marketParticipant);
+            marketParticipantRepository.Setup(x => x.GetByB2CActorIdAsync(b2CActorId)).ReturnsAsync(marketParticipant);
 
             var sut = new ActorProvider(marketParticipantRepository.Object);
 

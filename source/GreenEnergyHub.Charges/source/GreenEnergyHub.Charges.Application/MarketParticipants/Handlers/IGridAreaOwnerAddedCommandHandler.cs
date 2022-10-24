@@ -18,13 +18,13 @@ using GreenEnergyHub.Charges.Domain.Dtos.Events;
 namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 {
     /// <summary>
-    /// Handle commands for updating B2C ID of existing market participants
+    /// Handle commands for adding grid areas to market participants
     /// </summary>
-    public interface IMarketParticipantB2CActorIdChangedCommandHandler
+    public interface IGridAreaOwnerAddedCommandHandler
     {
         /// <summary>
-        /// Handle B2C ID changed command
+        /// Handle grid area added to market participant command
         /// </summary>
-        Task HandleAsync(MarketParticipantB2CActorIdChangedCommand marketParticipantB2CActorIdChangedCommand);
+        Task HandleAsync(GridAreaOwnerAddedCommand command);
     }
 }

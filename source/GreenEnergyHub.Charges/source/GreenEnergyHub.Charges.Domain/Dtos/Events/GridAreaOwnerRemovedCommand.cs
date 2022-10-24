@@ -12,19 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.Events;
+using System;
 
-namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
+namespace GreenEnergyHub.Charges.Domain.Dtos.Events
 {
-    /// <summary>
-    /// Handle commands for updating B2C ID of existing market participants
-    /// </summary>
-    public interface IMarketParticipantB2CActorIdChangedCommandHandler
-    {
-        /// <summary>
-        /// Handle B2C ID changed command
-        /// </summary>
-        Task HandleAsync(MarketParticipantB2CActorIdChangedCommand marketParticipantB2CActorIdChangedCommand);
-    }
+    public record GridAreaOwnerRemovedCommand(
+        Guid GridAreaId);
 }

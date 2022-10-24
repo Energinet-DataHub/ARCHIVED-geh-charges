@@ -52,7 +52,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
                     return;
                 }
 
-                existingGridAreaLink.GridAreaId = marketParticipantGridAreaUpdatedCommand.GridAreaId;
+                existingGridAreaLink.UpdateOwner(marketParticipantGridAreaUpdatedCommand.GridAreaId);
             }
         }
     }
