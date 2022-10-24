@@ -44,7 +44,7 @@
     "MARKET_PARTICIPANT_STATUS_CHANGED_SUBSCRIPTION_NAME": "market-part-status-changed",
     "GRID_AREA_OWNER_ADDED_SUBSCRIPTION_NAME": "grid-area-owner-added",
     "GRID_AREA_OWNER_REMOVED_SUBSCRIPTION_NAME": "grid-area-owner-removed",
-    "MARKET_PARTICIPANT_EXTERNAL_ACTOR_ID_CHANGED_SUBSCRIPTION_NAME": "market-part-external-id-changed",
+    "MARKET_PARTICIPANT_EXTERNAL_ACTOR_ID_CHANGED_SUBSCRIPTION_NAME": "market-part-b2c-actor-id-changed",
     "MARKET_PARTICIPANT_NAME_CHANGED_SUBSCRIPTION_NAME": "market-part-name-changed",
 
     // Integration, message hub
