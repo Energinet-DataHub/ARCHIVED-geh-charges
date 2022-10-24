@@ -70,7 +70,7 @@ module "func_functionhost" {
     MARKET_PARTICIPANT_CHANGED_SUBSCRIPTION_NAME                            = module.sbs_int_events_market_part_changed.name
     MARKET_PARTICIPANT_CREATED_SUBSCRIPTION_NAME                            = module.sbs_int_events_market_part_created.name
     MARKET_PARTICIPANT_STATUS_CHANGED_SUBSCRIPTION_NAME                     = module.sbs_int_events_market_part_status_changed.name
-    MARKET_PARTICIPANT_EXTERNAL_ACTOR_ID_CHANGED_SUBSCRIPTION_NAME          = module.sbs_int_events_market_part_external_id_changed.name
+    MARKET_PARTICIPANT_EXTERNAL_ACTOR_ID_CHANGED_SUBSCRIPTION_NAME          = module.sbs_int_events_market_part_b2c_actor_id_changed.name
     MARKET_PARTICIPANT_NAME_CHANGED_SUBSCRIPTION_NAME                       = module.sbs_int_events_market_part_name_changed.name
     GRID_AREA_OWNER_ADDED_SUBSCRIPTION_NAME                                 = module.sbs_int_events_grid_area_owner_added.name
     GRID_AREA_OWNER_REMOVED_SUBSCRIPTION_NAME                               = module.sbs_int_events_grid_area_owner_removed.name
