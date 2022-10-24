@@ -49,6 +49,8 @@ limitations under the License.
     <Compile Include="..\..\..\Contracts\ErrorCode.cs">
       <Link>ChargeLinks\CreateDefaultChargeLinkReplier\ErrorCode.cs</Link>
     </Compile>
+    <Compile Remove="MarketParticipants\Handlers\MarketParticipantGridAreaUpdatedCommandHandler.cs" />
+    <Compile Remove="MarketParticipants\Handlers\IMarketParticipantPersister.cs" />
   </ItemGroup>
 
 </Project>

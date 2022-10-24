@@ -172,4 +172,8 @@ limitations under the License.
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
     </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Application\MarketParticipants\Handlers\GridAreaLinkPersisterTests.cs" />
+    </ItemGroup>
 </Project>
