@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.SystemTests
     /// Contains business process tests at a system level through API Management
     /// </summary>
     [Collection(nameof(SystemTestCollectionFixture))]
-    public class BusinessProcessTests : IClassFixture<BusinessProcessConfiguration>
+    public class BusinessProcessTests : IClassFixture<BusinessProcessConfiguration>, IAsyncLifetime
     {
         private readonly B2CAppAuthenticationClient _gridAccessProviderAppAuthenticationClient;
         private readonly B2CAppAuthenticationClient _energySupplierAppAuthenticationClient;
@@ -65,13 +65,22 @@ namespace GreenEnergyHub.Charges.SystemTests
 
         private HttpClient EnergySupplierClient { get; }
 
+        public async Task InitializeAsync()
+        {
+            await AcquireTokensForClients();
+            await FlushMessageHubQueuesAsync();
+        }
+
+        public Task DisposeAsync()
+        {
+            GridAccessProviderClient.Dispose();
+            EnergySupplierClient.Dispose();
+            return Task.CompletedTask;
+        }
+
         [SystemFact]
         public async Task When_SubmittingChargeInformationRequestWithNewSubscription_Then_PeekReturnsCorrespondingConfirmation()
         {
-            // Setup
-            await AcquireTokensForClients();
-            await FlushMessageHubQueuesAsync();
-
             // Arrange
             var currentInstant = SystemClock.Instance.GetCurrentInstant();
             var expectedConfirmedOperationId = $"<cim:originalTransactionIDReference_MktActivityRecord.mRID>SysTestOpId{currentInstant}</cim:originalTransactionIDReference_MktActivityRecord.mRID>";
