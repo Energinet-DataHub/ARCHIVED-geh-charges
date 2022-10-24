@@ -42,8 +42,8 @@
     "MARKET_PARTICIPANT_CHANGED_SUBSCRIPTION_NAME": "market-part-changed",
     "MARKET_PARTICIPANT_CREATED_SUBSCRIPTION_NAME": "market-part-created",
     "MARKET_PARTICIPANT_STATUS_CHANGED_SUBSCRIPTION_NAME": "market-part-status-changed",
-    "GRID_AREA_ADDED_TO_ACTOR_SUBSCRIPTION_NAME": "grid-area-added-to-actor",
-    "GRID_AREA_REMOVED_FROM_ACTOR_SUBSCRIPTION_NAME": "grid-area-removed-from-actor",
+    "GRID_AREA_OWNER_ADDED_SUBSCRIPTION_NAME": "grid-area-owner-added",
+    "GRID_AREA_OWNER_REMOVED_SUBSCRIPTION_NAME": "grid-area-owner-removed",
     "MARKET_PARTICIPANT_EXTERNAL_ACTOR_ID_CHANGED_SUBSCRIPTION_NAME": "market-part-external-id-changed",
     "MARKET_PARTICIPANT_NAME_CHANGED_SUBSCRIPTION_NAME": "market-part-name-changed",
 

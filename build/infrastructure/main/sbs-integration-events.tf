@@ -25,7 +25,7 @@ module "sbs_int_events_metering_point_created" {
   }
 }
 
-module "sbs_int_events_market_participant_changed" {
+module "sbs_int_events_market_part_changed" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v9"
   name                = "market-part-changed"
   project_name        = var.domain_name_short
@@ -38,7 +38,7 @@ module "sbs_int_events_market_participant_changed" {
   }
 }
 
-module "sbs_int_events_market_participant_created" {
+module "sbs_int_events_market_part_created" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v9"
   name                = "market-part-created"
   project_name        = var.domain_name_short
@@ -51,7 +51,7 @@ module "sbs_int_events_market_participant_created" {
   }
 }
 
-module "sbs_int_events_market_participant_status_changed" {
+module "sbs_int_events_market_part_status_changed" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v9"
   name                = "market-part-status-changed"
   project_name        = var.domain_name_short
@@ -64,9 +64,9 @@ module "sbs_int_events_market_participant_status_changed" {
   }
 }
 
-module "sbs_int_events_market_part_external_id_changed" {
+module "sbs_int_events_market_part_b2c_id_changed" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v9"
-  name                = "market-part-external-id-changed"
+  name                = "market-part-b2c-id-changed"
   project_name        = var.domain_name_short
   topic_id            = data.azurerm_key_vault_secret.sbt_domainrelay_integrationevent_received_id.value
   max_delivery_count  = 1
@@ -90,9 +90,9 @@ module "sbs_int_events_market_part_name_changed" {
   }
 }
 
-module "sbs_int_events_grid_area_added_to_actor" {
+module "sbs_int_events_grid_area_owner_added" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v9"
-  name                = "grid-area-added-to-actor"
+  name                = "grid-area-owner-added"
   project_name        = var.domain_name_short
   topic_id            = data.azurerm_key_vault_secret.sbt_domainrelay_integrationevent_received_id.value
   max_delivery_count  = 1
@@ -103,9 +103,9 @@ module "sbs_int_events_grid_area_added_to_actor" {
   }
 }
 
-module "sbs_int_events_grid_area_removed_from_actor" {
+module "sbs_int_events_grid_area_owner_removed" {
   source              = "git::https://github.com/Energinet-DataHub/geh-terraform-modules.git//azure/service-bus-topic-subscription?ref=v9"
-  name                = "grid-area-removed-from-actor"
+  name                = "grid-area-owner-removed"
   project_name        = var.domain_name_short
   topic_id            = data.azurerm_key_vault_secret.sbt_domainrelay_integrationevent_received_id.value
   max_delivery_count  = 1

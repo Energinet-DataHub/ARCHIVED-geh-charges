@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
             }
 
             [Fact]
-            public async Task RunAsync_WhenValidGridAreaRemovedFromMarketParticipantEventHandled_GridAreaShouldHaveNoOwner()
+            public async Task RunAsync_WhenEventHandled_GridAreaShouldHaveNoOwner()
             {
                 // Arrange
                 var serviceBusMessage = CreateServiceBusMessage();

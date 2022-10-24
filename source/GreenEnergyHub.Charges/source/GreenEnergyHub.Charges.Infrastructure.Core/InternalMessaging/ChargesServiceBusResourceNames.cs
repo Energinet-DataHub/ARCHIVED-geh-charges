@@ -52,8 +52,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.InternalMessaging
         public const string MarketParticipantChangedSubscriptionName = "market-partchanged";
         public const string MarketParticipantCreatedSubscriptionName = "market-partcreated";
         public const string MarketParticipantStatusChangedSubscriptionName = "market-partstatus-changed";
-        public const string GridAreaAddedToActorSubscriptionName = "grid-area-added-to-actor";
-        public const string GridAreaRemovedFromActorSubscriptionName = "grid-area-removed-from-actor";
+        public const string GridAreaOwnerAddedSubscriptionName = "grid-area-owner-added";
+        public const string GridAreaOwnerRemovedSubscriptionName = "grid-area-owner-removed";
         public const string MarketParticipantExternalActorIdChangedSubscriptionName = "market-part-external-id-changed";
         public const string MarketParticipantNameChangedSubscriptionName = "market-partname-changed";
 
