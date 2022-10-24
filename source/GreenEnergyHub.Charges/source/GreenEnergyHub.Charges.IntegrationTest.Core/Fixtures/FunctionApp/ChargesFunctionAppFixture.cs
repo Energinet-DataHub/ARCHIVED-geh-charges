@@ -240,9 +240,17 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
                 .AddMessageTypeFilter("ActorStatusChangedIntegrationEvent")
                 .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.MarketParticipantStatusChangedSubscriptionName)
 
-                .AddSubscription(ChargesServiceBusResourceNames.MarketParticipantExternalActorIdChangedSubscriptionName)
+                .AddSubscription(ChargesServiceBusResourceNames.MarketParticipantB2CActorIdChangedSubscriptionName)
                 .AddMessageTypeFilter("ActorExternalIdChangedIntegrationEvent")
-                .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.MarketParticipantExternalActorIdChangedSubscriptionName)
+                .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.MarketParticipantB2CActorIdChangedSubscriptionName)
+
+                .AddSubscription(ChargesServiceBusResourceNames.GridAreaOwnerAddedSubscriptionName)
+                .AddMessageTypeFilter("GridAreaAddedToActorIntegrationEvent")
+                .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.GridAreaOwnerAddedSubscriptionName)
+
+                .AddSubscription(ChargesServiceBusResourceNames.GridAreaOwnerRemovedSubscriptionName)
+                .AddMessageTypeFilter("GridAreaRemovedFromActorIntegrationEvent")
+                .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.GridAreaOwnerRemovedSubscriptionName)
 
                 .AddSubscription(ChargesServiceBusResourceNames.MarketParticipantNameChangedSubscriptionName)
                 .AddMessageTypeFilter("ActorNameChangedIntegrationEvent")

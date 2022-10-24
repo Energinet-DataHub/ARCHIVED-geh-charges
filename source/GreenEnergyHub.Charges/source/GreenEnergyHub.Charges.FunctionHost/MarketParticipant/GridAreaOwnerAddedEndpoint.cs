@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading.Tasks;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Parsers;
@@ -23,33 +24,33 @@ using Microsoft.Azure.Functions.Worker;
 
 namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
 {
-    public class MarketParticipantB2CActorIdChangedEndpoint
+    public class GridAreaOwnerAddedEndpoint
     {
-        private const string FunctionName = nameof(MarketParticipantB2CActorIdChangedEndpoint);
+        private const string FunctionName = nameof(GridAreaOwnerAddedEndpoint);
         private readonly ISharedIntegrationEventParser _sharedIntegrationEventParser;
-        private readonly IMarketParticipantB2CActorIdChangedCommandHandler _marketParticipantB2CActorIdChangedCommandHandler;
+        private readonly IGridAreaOwnerAddedCommandHandler _gridAreaOwnerAddedCommandHandler;
         private readonly IUnitOfWork _unitOfWork;
 
-        public MarketParticipantB2CActorIdChangedEndpoint(
+        public GridAreaOwnerAddedEndpoint(
             ISharedIntegrationEventParser sharedIntegrationEventParser,
-            IMarketParticipantB2CActorIdChangedCommandHandler marketParticipantB2CActorIdChangedCommandHandler,
+            IGridAreaOwnerAddedCommandHandler gridAreaOwnerAddedCommandHandler,
             IUnitOfWork unitOfWork)
         {
             _sharedIntegrationEventParser = sharedIntegrationEventParser;
-            _marketParticipantB2CActorIdChangedCommandHandler = marketParticipantB2CActorIdChangedCommandHandler;
+            _gridAreaOwnerAddedCommandHandler = gridAreaOwnerAddedCommandHandler;
             _unitOfWork = unitOfWork;
         }
 
         [Function(FunctionName)]
         public async Task RunAsync([ServiceBusTrigger(
             "%" + EnvironmentSettingNames.IntegrationEventTopicName + "%",
-            "%" + EnvironmentSettingNames.MarketParticipantB2CActorIdChangedSubscriptionName + "%",
+            "%" + EnvironmentSettingNames.GridAreaOwnerAddedSubscriptionName + "%",
             Connection = EnvironmentSettingNames.DataHubListenerConnectionString)]
             byte[] message)
         {
-            var externalIdChangedEvent = (ActorExternalIdChangedIntegrationEvent)_sharedIntegrationEventParser.Parse(message);
-            var command = MarketParticipantIntegrationEventMapper.Map(externalIdChangedEvent);
-            await _marketParticipantB2CActorIdChangedCommandHandler.HandleAsync(command).ConfigureAwait(false);
+            var gridAreaAddedEvent = (GridAreaAddedToActorIntegrationEvent)_sharedIntegrationEventParser.Parse(message);
+            var command = MarketParticipantIntegrationEventMapper.Map(gridAreaAddedEvent);
+            await _gridAreaOwnerAddedCommandHandler.HandleAsync(command).ConfigureAwait(false);
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
         }
     }

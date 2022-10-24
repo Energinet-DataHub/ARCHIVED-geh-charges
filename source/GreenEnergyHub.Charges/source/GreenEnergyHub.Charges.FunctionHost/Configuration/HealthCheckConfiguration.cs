@@ -96,10 +96,10 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                     topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.IntegrationEventTopicName),
                     subscriptionName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.MarketParticipantStatusChangedSubscriptionName))
                 .AddAzureServiceBusSubscription(
-                    name: "MarketParticipantExternalActorIdChangedSubscriptionExists",
+                    name: "MarketParticipantB2CActorIdChangedSubscriptionExists",
                     connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubManagerConnectionString),
                     topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.IntegrationEventTopicName),
-                    subscriptionName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.MarketParticipantExternalActorIdChangedSubscriptionName))
+                    subscriptionName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.MarketParticipantB2CActorIdChangedSubscriptionName))
                 .AddAzureServiceBusSubscription(
                     name: "MarketParticipantNameChangedSubscriptionExists",
                     connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubManagerConnectionString),
