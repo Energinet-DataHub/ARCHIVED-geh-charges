@@ -89,18 +89,9 @@ namespace GreenEnergyHub.Charges.WebApi
             services.ConfigureOptions<ConfigureSwaggerOptions>();
             services.AddQueryApi(Configuration);
 
-            if (Environment.IsDevelopment())
-            {
-                var metadataAddress = Configuration.GetValue<string>(EnvironmentSettingNames.FrontEndOpenIdUrl);
-                var audience = Configuration.GetValue<string>(EnvironmentSettingNames.FrontEndServiceAppId);
-                services.AddJwtTokenSecurity(metadataAddress, audience);
-            }
-            else
-            {
-                var metadataAddress = EnvironmentHelper.GetEnv(EnvironmentSettingNames.FrontEndOpenIdUrl);
-                var audience = EnvironmentHelper.GetEnv(EnvironmentSettingNames.FrontEndServiceAppId);
-                services.AddJwtTokenSecurity(metadataAddress, audience);
-            }
+            var metadataAddress = Configuration.GetValue<string>(EnvironmentSettingNames.FrontEndOpenIdUrl);
+            var audience = Configuration.GetValue<string>(EnvironmentSettingNames.FrontEndServiceAppId);
+            services.AddJwtTokenSecurity(metadataAddress, audience);
 
             // Health check
             services.AddHealthChecks()
