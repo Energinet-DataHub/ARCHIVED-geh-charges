@@ -88,7 +88,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                     mp.MarketParticipantId == SeededData.MarketParticipants.Inactive8900000000005.Gln);
 
             // Act
-            var actual = await sut.SingleOrNullAsync(existingMarketParticipant.B2CActorId ?? Guid.NewGuid());
+            var actual = await sut.GetByB2CActorIdAsync(existingMarketParticipant.B2CActorId ?? Guid.NewGuid());
 
             // Assert
             actual!.MarketParticipantId.Should().Be(SeededData.MarketParticipants.Inactive8900000000005.Gln);

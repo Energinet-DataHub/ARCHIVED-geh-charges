@@ -19,6 +19,7 @@ using AutoFixture.Xunit2;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers.Mappers;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.TestCore.TestHelpers;
 using GreenEnergyHub.TestHelpers;
@@ -154,6 +155,54 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             // Assert
             actual.ActorId.Should().Be(actual.ActorId);
             actual.B2CActorId.Should().Be(externalId);
+        }
+
+        [Theory]
+        [AutoData]
+        public void Map_GridAreaAddedToActorIntegrationEvent_ShouldReturnGridAreaOwnerAddedCommand(
+            Guid actorId,
+            Guid gridAreaId)
+        {
+            // Arrange
+            var gridAreaAddedEvent = new GridAreaAddedToActorIntegrationEvent(
+                Guid.NewGuid(),
+                actorId,
+                Guid.NewGuid(),
+                InstantHelper.GetTodayAtMidnightUtc().ToDateTimeUtc(),
+                EicFunction.GridAccessProvider,
+                gridAreaId,
+                Guid.NewGuid());
+
+            // Act
+            var actual = MarketParticipantIntegrationEventMapper.Map(gridAreaAddedEvent);
+
+            // Assert
+            actual.Should().BeOfType(typeof(GridAreaOwnerAddedCommand));
+            actual.ActorId.Should().Be(actorId);
+            actual.GridAreaId.Should().Be(gridAreaId);
+        }
+
+        [Theory]
+        [AutoData]
+        public void Map_GridAreaRemovedFromActorIntegrationEvent_ShouldReturnGridAreaOwnerRemovedCommand(
+            Guid gridAreaId)
+        {
+            // Arrange
+            var gridAreaRemovedEvent = new GridAreaRemovedFromActorIntegrationEvent(
+                Guid.NewGuid(),
+                Guid.NewGuid(),
+                Guid.NewGuid(),
+                InstantHelper.GetTodayAtMidnightUtc().ToDateTimeUtc(),
+                EicFunction.GridAccessProvider,
+                gridAreaId,
+                Guid.NewGuid());
+
+            // Act
+            var actual = MarketParticipantIntegrationEventMapper.Map(gridAreaRemovedEvent);
+
+            // Assert
+            actual.Should().BeOfType(typeof(GridAreaOwnerRemovedCommand));
+            actual.GridAreaId.Should().Be(gridAreaId);
         }
 
         [Fact]

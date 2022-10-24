@@ -12,17 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-
 // ReSharper disable once CheckNamespace - Type is shared so namespace is not determined by project structure/namespace
 namespace Energinet.DataHub.Charges.Contracts.ChargePrice
 {
-    public record ChargePricesSearchCriteriaV1Dto(
-        Guid ChargeId,
-        DateTimeOffset FromDateTime,
-        DateTimeOffset ToDateTime,
-        SortColumnName SortColumnName,
-        bool IsDescending,
-        int Skip,
-        int Take);
+    public enum SortColumnName
+    {
+        FromDateTime,
+        Price,
+    }
 }
