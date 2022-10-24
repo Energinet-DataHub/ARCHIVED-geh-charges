@@ -35,7 +35,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 {
     [IntegrationTest]
-    public class MarketParticipantGridAreaAddedEndpointTests
+    public class GridAreaOwnerRemovedEndpointTests
     {
         [Collection(nameof(ChargesFunctionAppCollectionFixture))]
         public class RunAsync : FunctionAppTestBase<ChargesFunctionAppFixture>
@@ -46,7 +46,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
             }
 
             [Fact]
-            public async Task RunAsync_WhenValidGridAreaAddedToMarketParticipantEventHandled_GridAreaShouldHaveUpdatedOwner()
+            public async Task RunAsync_WhenEventHandled_GridAreaShouldHaveNoOwner()
             {
                 // Arrange
                 var serviceBusMessage = CreateServiceBusMessage();
@@ -56,28 +56,28 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     () => Fixture.IntegrationEventTopic.SenderClient.SendMessageAsync(serviceBusMessage), serviceBusMessage.CorrelationId);
 
                 await FunctionAsserts.AssertHasExecutedAsync(
-                    Fixture.HostManager, nameof(GridAreaOwnerAddedEndpoint)).ConfigureAwait(false);
+                    Fixture.HostManager, nameof(GridAreaOwnerRemovedEndpoint)).ConfigureAwait(false);
 
                 // Assert
                 await using var context = Fixture.ChargesDatabaseManager.CreateDbContext();
                 var gridAreaLink = await context.GridAreaLinks.SingleAsync(g =>
-                    g.GridAreaId == SeededData.GridAreaLink.Provider8500000000013.GridAreaId);
-                gridAreaLink.OwnerId.Should().Be(SeededData.MarketParticipants.Provider8100000000030.Id);
+                    g.GridAreaId == SeededData.GridAreaLink.Provider8100000000030.GridAreaId);
+                gridAreaLink.OwnerId.Should().BeNull();
             }
 
             private static ServiceBusMessage CreateServiceBusMessage()
             {
-                var gridAreaAddedToActorIntegrationEvent = new GridAreaAddedToActorIntegrationEvent(
+                var gridAreaRemovedFromActorIntegrationEvent = new GridAreaRemovedFromActorIntegrationEvent(
                     Guid.NewGuid(),
-                    SeededData.MarketParticipants.Provider8100000000030.Id,
+                    Guid.NewGuid(),
                     Guid.NewGuid(),
                     InstantHelper.GetTodayAtMidnightUtc().ToDateTimeUtc(),
                     EicFunction.GridAccessProvider,
-                    SeededData.GridAreaLink.Provider8500000000013.GridAreaId,
+                    SeededData.GridAreaLink.Provider8100000000030.GridAreaId,
                     Guid.NewGuid());
-                var gridAreaAddedToActorIntegrationEventParser = new GridAreaAddedToActorIntegrationEventParser();
-                var message =
-                    gridAreaAddedToActorIntegrationEventParser.ParseToSharedIntegrationEvent(gridAreaAddedToActorIntegrationEvent);
+                var gridAreaRemovedFromActorIntegrationEventParser = new GridAreaRemovedFromActorIntegrationEventParser();
+                var message = gridAreaRemovedFromActorIntegrationEventParser.ParseToSharedIntegrationEvent(
+                    gridAreaRemovedFromActorIntegrationEvent);
                 var correlationId = Guid.NewGuid().ToString("N");
                 var serviceBusMessage = new ServiceBusMessage(message)
                 {
@@ -89,7 +89,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                             correlationId),
                         new KeyValuePair<string, object>(
                             MessageMetaDataConstants.MessageType,
-                            "GridAreaAddedToActorIntegrationEvent"),
+                            "GridAreaRemovedFromActorIntegrationEvent"),
                     },
                 };
                 return serviceBusMessage;
