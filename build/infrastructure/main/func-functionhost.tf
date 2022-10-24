@@ -70,10 +70,12 @@ module "func_functionhost" {
     CREATE_LINKS_REQUEST_QUEUE_NAME                                         = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbq-create-link-request-name)"
     INTEGRATION_EVENT_TOPIC_NAME                                            = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sbt-sharedres-integrationevent-received-name)"
     METERING_POINT_CREATED_SUBSCRIPTION_NAME                                = module.sbs_int_events_metering_point_created.name
-    MARKET_PARTICIPANT_CREATED_SUBSCRIPTION_NAME                            = module.sbs_int_events_market_participant_created.name
-    MARKET_PARTICIPANT_STATUS_CHANGED_SUBSCRIPTION_NAME                     = module.sbs_int_events_market_participant_status_changed.name
-    MARKET_PARTICIPANT_EXTERNAL_ACTOR_ID_CHANGED_SUBSCRIPTION_NAME          = module.sbs_int_events_market_part_external_id_changed.name
+    MARKET_PARTICIPANT_CREATED_SUBSCRIPTION_NAME                            = module.sbs_int_events_market_part_created.name
+    MARKET_PARTICIPANT_STATUS_CHANGED_SUBSCRIPTION_NAME                     = module.sbs_int_events_market_part_status_changed.name
+    MARKET_PARTICIPANT_EXTERNAL_ACTOR_ID_CHANGED_SUBSCRIPTION_NAME          = module.sbs_int_events_market_part_b2c_actor_id_changed.name
     MARKET_PARTICIPANT_NAME_CHANGED_SUBSCRIPTION_NAME                       = module.sbs_int_events_market_part_name_changed.name
+    GRID_AREA_OWNER_ADDED_SUBSCRIPTION_NAME                                 = module.sbs_int_events_grid_area_owner_added.name
+    GRID_AREA_OWNER_REMOVED_SUBSCRIPTION_NAME                               = module.sbs_int_events_grid_area_owner_removed.name
 
     # Shared resources
     INTEGRATIONEVENT_SENDER_CONNECTION_STRING                               = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-send-connection-string)"
