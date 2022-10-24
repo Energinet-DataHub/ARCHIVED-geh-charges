@@ -53,6 +53,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.InternalMessaging
         public const string MarketParticipantCreatedSubscriptionName = "market-participant-created";
         public const string MarketParticipantStatusChangedSubscriptionName = "market-participant-status-changed";
         public const string MarketParticipantExternalActorIdChangedSubscriptionName = "market-part-external-id-changed";
+        public const string MarketParticipantNameChangedSubscriptionName = "market-participant-name-changed";
 
         // Domain event
         [DomainEventSetting]
@@ -73,6 +74,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.InternalMessaging
         public const string ChargeInformationOperationsAcceptedSubscriptionName = "sbtsub-charges-info-operations-accepted";
         [DomainEventSetting]
         public const string ChargeInformationOperationsAcceptedPublishSubscriptionName = "sbtsub-charges-info-operations-accepted-publish";
+        [DomainEventSetting]
+        public const string ChargeInformationOperationsAcceptedPersistMessageSubscriptionName = "sbtsub-charges-info-operations-accepted-persist";
 
         // Domain event, charge, rejected
         [DomainEventSetting]
@@ -89,6 +92,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.InternalMessaging
         public const string ChargePriceOperationsAcceptedDataAvailableSubscriptionName = "sbtsub-charges-price-operations-accepted-da";
         [DomainEventSetting]
         public const string ChargePriceOperationsAcceptedPublishSubscriptionName = "sbtsub-charges-price-operations-accepted-publish";
+        [DomainEventSetting]
+        public const string ChargePriceOperationsAcceptedPersistMessageSubscriptionName = "sbtsub-charges-price-operations-accepted-persist";
 
         // Domain event, charge links, received
         [DomainEventSetting]

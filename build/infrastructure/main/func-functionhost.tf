@@ -55,11 +55,14 @@ module "func_functionhost" {
     CHARGE_INFORMATION_OPERATIONS_ACCEPTED_DATAAVAILABLE_SUBSCRIPTION_NAME  = module.sbtsub-charges-info-operations-accepted-da.name
     CHARGE_INFORMATION_OPERATIONS_ACCEPTED_PUBLISH_SUBSCRIPTION_NAME        = module.sbtsub-charges-info-operations-accepted-publish.name
     CHARGE_INFORMATION_OPERATIONS_ACCEPTED_SUBSCRIPTION_NAME                = module.sbtsub-charges-info-operations-accepted.name
+    CHARGE_INFORMATION_OPERATIONS_ACCEPTED_PERSIST_MESSAGE_SUBSCRIPTION_NAME= module.sbtsub-charges-info-operations-accepted-persist.name
     CHARGE_INFORMATION_OPERATIONS_REJECTED_SUBSCRIPTION_NAME                = module.sbtsub-charges-info-operations-rejected.name
+
     CHARGE_PRICE_COMMAND_RECEIVED_SUBSCRIPTION_NAME                         = module.sbtsub-charges-price-command-received.name
     CHARGE_PRICE_OPERATIONS_ACCEPTED_DATAAVAILABLE_SUBSCRIPTION_NAME        = module.sbtsub-charges-price-operations-accepted-da.name
     CHARGE_PRICE_OPERATIONS_ACCEPTED_PUBLISH_SUBSCRIPTION_NAME              = module.sbtsub-charges-price-operations-accepted-publish.name
     CHARGE_PRICE_OPERATIONS_ACCEPTED_SUBSCRIPTION_NAME                      = module.sbtsub-charges-price-operations-accepted.name
+    CHARGE_PRICE_OPERATIONS_ACCEPTED_PERSIST_MESSAGE_SUBSCRIPTION_NAME      = module.sbtsub-charges-price-operations-accepted-persist.name
     CHARGE_PRICE_OPERATIONS_REJECTED_SUBSCRIPTION_NAME                      = module.sbtsub-charges-price-operations-rejected.name
     DEFAULT_CHARGE_LINKS_DATAAVAILABLE_SUBSCRIPTION_NAME                    = module.sbtsub-charges-default-charge-links-da.name
 
@@ -71,6 +74,7 @@ module "func_functionhost" {
     MARKET_PARTICIPANT_CREATED_SUBSCRIPTION_NAME                            = module.sbs_int_events_market_participant_created.name
     MARKET_PARTICIPANT_STATUS_CHANGED_SUBSCRIPTION_NAME                     = module.sbs_int_events_market_participant_status_changed.name
     MARKET_PARTICIPANT_EXTERNAL_ACTOR_ID_CHANGED_SUBSCRIPTION_NAME          = module.sbs_int_events_market_part_external_id_changed.name
+    MARKET_PARTICIPANT_NAME_CHANGED_SUBSCRIPTION_NAME                       = module.sbs_int_events_market_part_name_changed.name
 
     # Shared resources
     INTEGRATIONEVENT_SENDER_CONNECTION_STRING                               = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=sb-domain-relay-send-connection-string)"

@@ -137,5 +137,10 @@ namespace GreenEnergyHub.Charges.Domain.MarketParticipants
         {
             B2CActorId = b2CActorId;
         }
+
+        public void UpdateName(string name)
+        {
+            Name = name;
+        }
     }
 }

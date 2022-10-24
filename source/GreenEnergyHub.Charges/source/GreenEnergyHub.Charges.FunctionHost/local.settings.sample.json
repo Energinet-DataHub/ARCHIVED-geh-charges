@@ -43,6 +43,7 @@
     "MARKET_PARTICIPANT_CREATED_SUBSCRIPTION_NAME": "market-participant-created",
     "MARKET_PARTICIPANT_STATUS_CHANGED_SUBSCRIPTION_NAME": "market-participant-status-changed",
     "MARKET_PARTICIPANT_EXTERNAL_ACTOR_ID_CHANGED_SUBSCRIPTION_NAME": "market-part-external-id-changed",
+    "MARKET_PARTICIPANT_NAME_CHANGED_SUBSCRIPTION_NAME": "market-participant-name-changed",
 
     // Integration, message hub
     "MESSAGEHUB_DATAAVAILABLE_QUEUE": "dataavailable",
@@ -66,7 +67,8 @@
     "CHARGE_INFORMATION_OPERATIONS_ACCEPTED_DATAAVAILABLE_SUBSCRIPTION_NAME": "sbtsub-charges-info-operations-accepted-da",
     "CHARGE_INFORMATION_OPERATIONS_ACCEPTED_SUBSCRIPTION_NAME": "sbtsub-charges-info-operations-accepted",
     "CHARGE_INFORMATION_OPERATIONS_ACCEPTED_PUBLISH_SUBSCRIPTION_NAME": "sbtsub-charges-info-operations-accepted-publish",
-
+    "CHARGE_INFORMATION_OPERATIONS_ACCEPTED_PERSIST_MESSAGE_SUBSCRIPTION_NAME": "sbtsub-charges-info-operations-accepted-persist",
+    
     // Internal, charge, rejected
     "CHARGE_INFORMATION_OPERATIONS_REJECTED_SUBSCRIPTION_NAME": "sbtsub-charges-info-operations-rejected",
 
@@ -74,6 +76,7 @@
     "CHARGE_PRICE_OPERATIONS_ACCEPTED_SUBSCRIPTION_NAME": "sbtsub-charges-price-operations-accepted",
     "CHARGE_PRICE_OPERATIONS_ACCEPTED_DATAAVAILABLE_SUBSCRIPTION_NAME": "sbtsub-charges-price-operations-accepted-da",
     "CHARGE_PRICE_OPERATIONS_ACCEPTED_PUBLISH_SUBSCRIPTION_NAME": "sbtsub-charges-price-operations-accepted-publish",
+    "CHARGE_PRICE_OPERATIONS_ACCEPTED_PERSIST_MESSAGE_SUBSCRIPTION_NAME": "sbtsub-charges-price-operations-accepted-persist",
 
     // Internal, charge price, rejected
     "CHARGE_PRICE_OPERATIONS_REJECTED_SUBSCRIPTION_NAME": "sbtsub-charges-price-operations-rejected",

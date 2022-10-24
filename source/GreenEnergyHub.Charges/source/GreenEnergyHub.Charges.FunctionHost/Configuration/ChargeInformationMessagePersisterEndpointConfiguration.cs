@@ -12,19 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers;
+using GreenEnergyHub.Charges.Application.Charges.Handlers.ChargeInformation;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
-    internal static class IntegrationEventHandlersConfiguration
+    internal static class ChargeInformationMessagePersisterEndpointConfiguration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<IMarketParticipantCreatedCommandHandler, MarketParticipantCreatedCommandHandler>();
-            serviceCollection.AddScoped<IMarketParticipantStatusChangedCommandHandler, MarketParticipantStatusChangedCommandHandler>();
-            serviceCollection.AddScoped<IMarketParticipantB2CActorIdChangedCommandHandler, MarketParticipantB2CActorIdChangedCommandHandler>();
-            serviceCollection.AddScoped<IMarketParticipantNameChangedCommandHandler, MarketParticipantNameChangedCommandHandler>();
+            serviceCollection.AddScoped<JsonMessageDeserializer<ChargeInformationOperationsAcceptedEvent>>();
+            serviceCollection.AddScoped<IChargeInformationMessagePersister, ChargeInformationMessagePersister>();
         }
     }
 }

@@ -12,20 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
+using System;
 
-namespace GreenEnergyHub.Charges.Domain.Charges
+namespace GreenEnergyHub.Charges.Domain.Dtos.Events
 {
-    /// <summary>
-    /// Contract defining the capabilities of the infrastructure component facilitating interaction with the charge messages data store.
-    /// </summary>
-    public interface IChargeMessageRepository
-    {
-        /// <summary>
-        /// Add a ChargeMessage.
-        /// </summary>
-        /// <param name="chargeMessage"></param>
-        /// <returns>A <see cref="Task"/>.</returns>
-        Task AddAsync(ChargeMessage chargeMessage);
-    }
+    public record MarketParticipantNameChangedCommand(
+        Guid ActorId,
+        string Name);
 }
