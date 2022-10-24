@@ -33,6 +33,7 @@ module "app_webapi" {
     APPINSIGHTS_INSTRUMENTATIONKEY = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=appi-shared-instrumentation-key)",
     FRONTEND_OPEN_ID_URL = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=frontend-open-id-url)",
     FRONTEND_SERVICE_APP_ID = "@Microsoft.KeyVault(VaultName=${var.shared_resources_keyvault_name};SecretName=frontend-service-app-id)",
+    LOCAL_TIMEZONENAME = "Europe/Copenhagen",
   }
 
   connection_strings = [
