@@ -12,28 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#nullable disable
+using GreenEnergyHub.Charges.Domain.Charges;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-using System;
-
-namespace GreenEnergyHub.Charges.QueryApi.Model
+namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
 {
-    public class ChargePrice
+    public class ChargeMessageEntityConfiguration : IEntityTypeConfiguration<ChargeMessage>
     {
-        public Guid Id { get; set; }
+        public void Configure(EntityTypeBuilder<ChargeMessage> builder)
+        {
+            builder.ToTable(nameof(ChargeMessage));
 
-        public Guid ChargeId { get; set; }
+            builder.HasKey(c => c.Id);
 
-        public DateTime Time { get; set; }
-
-        public decimal Price { get; set; }
-
-        public bool Retired { get; set; }
-
-        public DateTime? RetiredDateTime { get; set; }
-
-        public Guid ChargeOperationId { get; set; }
-
-        public virtual Charge Charge { get; set; }
+            builder.Property(c => c.ChargeId);
+            builder.Property(c => c.MessageId);
+        }
     }
 }

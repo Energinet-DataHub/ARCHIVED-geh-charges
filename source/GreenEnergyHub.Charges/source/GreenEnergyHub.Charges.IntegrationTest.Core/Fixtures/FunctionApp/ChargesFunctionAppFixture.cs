@@ -248,6 +248,10 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
                 .AddMessageTypeFilter("GridAreaRemovedFromActorIntegrationEvent")
                 .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.GridAreaRemovedFromActorSubscriptionName)
 
+                .AddSubscription(ChargesServiceBusResourceNames.MarketParticipantNameChangedSubscriptionName)
+                .AddMessageTypeFilter("ActorNameChangedIntegrationEvent")
+                .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.MarketParticipantNameChangedSubscriptionName)
+
                 .AddSubscription(ChargesServiceBusResourceNames.MeteringPointCreatedSubscriptionName)
                 .AddMessageTypeFilter("MeteringPointCreated")
                 .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.MeteringPointCreatedSubscriptionName)

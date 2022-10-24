@@ -60,9 +60,9 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers.V1
         /// <returns>Charges data or "400 Bad request"</returns>
         [HttpPost("SearchAsync")]
         [MapToApiVersion(Version1)]
-        public async Task<IActionResult> SearchAsync(SearchCriteriaV1Dto searchCriteria)
+        public async Task<IActionResult> SearchAsync(ChargeSearchCriteriaV1Dto searchCriteria)
         {
-            var isValid = SearchCriteriaValidator.Validate(searchCriteria);
+            var isValid = ChargeSearchCriteriaValidator.Validate(searchCriteria);
             if (!isValid)
                 return BadRequest("Search criteria is not valid.");
 

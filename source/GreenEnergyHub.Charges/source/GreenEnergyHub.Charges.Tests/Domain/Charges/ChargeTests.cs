@@ -176,32 +176,6 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
         }
 
         [Fact]
-        public void UpdateCharge_WhenEndDateIsBound_ThenThrowException()
-        {
-            // Arrange
-            var existingPeriod = new ChargePeriodBuilder()
-                .WithName("ExistingPeriod")
-                .WithStartDateTime(InstantHelper.GetTodayAtMidnightUtc())
-                .Build();
-
-            var sut = new ChargeBuilder()
-                .AddPeriod(existingPeriod)
-                .Build();
-
-            var newPeriod = new ChargePeriodBuilder()
-                .WithStartDateTime(InstantHelper.GetYesterdayAtMidnightUtc())
-                .WithEndDateTime(InstantHelper.GetTomorrowAtMidnightUtc())
-                .Build();
-
-            // Act
-            Assert.Throws<InvalidOperationException>(() => sut.Update(
-                newPeriod,
-                sut.TaxIndicator ? TaxIndicator.Tax : TaxIndicator.NoTax,
-                sut.Resolution,
-                Guid.NewGuid().ToString()));
-        }
-
-        [Fact]
         public void UpdateCharge_NewPeriodStartsBeforeExistingStopDate_InsertNewPeriodAndKeepStopDate()
         {
             // Arrange

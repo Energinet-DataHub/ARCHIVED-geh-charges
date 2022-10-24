@@ -12,14 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Collections.Generic;
+using System.Threading.Tasks;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 
-// ReSharper disable once CheckNamespace - Type is shared so namespace is not determined by project structure/namespace
-namespace Energinet.DataHub.Charges.Contracts.Charge
+namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
 {
-    public record SearchCriteriaV1Dto(
-        string ChargeIdOrName,
-        List<Guid> OwnerIds,
-        List<ChargeType> ChargeTypes);
+    /// <summary>
+    /// Handle commands for updating Name of existing market participants
+    /// </summary>
+    public interface IMarketParticipantNameChangedCommandHandler
+    {
+        /// <summary>
+        /// Handle Market Participant name changed command
+        /// </summary>
+        Task HandleAsync(MarketParticipantNameChangedCommand marketParticipantNameChangedCommand);
+    }
 }

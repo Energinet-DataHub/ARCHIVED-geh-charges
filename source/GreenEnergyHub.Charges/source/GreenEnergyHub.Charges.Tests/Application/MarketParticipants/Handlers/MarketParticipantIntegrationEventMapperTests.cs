@@ -202,6 +202,23 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             actual.GridAreaId.Should().Be(gridAreaId);
         }
 
+        [Fact]
+        public void MapFromActorNameChangedIntegrationEvent_ShouldReturnMarketParticipantNameChangedCommand()
+        {
+            // Arrange
+            var actorId = Guid.NewGuid();
+            var name = "some name";
+            var actorNameChangedIntegrationEvent =
+                new ActorNameChangedIntegrationEvent(Guid.NewGuid(), DateTime.Now, actorId, Guid.NewGuid(), name);
+
+            // Act
+            var actual = MarketParticipantIntegrationEventMapper.Map(actorNameChangedIntegrationEvent);
+
+            // Assert
+            actual.ActorId.Should().Be(actorId);
+            actual.Name.Should().Be(name);
+        }
+
         private static IEnumerable<ActorMarketRole> CreateActorMarketRoles()
         {
             var gridAreaIdOne = Guid.NewGuid();

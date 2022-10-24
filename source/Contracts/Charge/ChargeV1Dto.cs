@@ -18,9 +18,10 @@ using System;
 namespace Energinet.DataHub.Charges.Contracts.Charge
 {
     public record ChargeV1Dto(
+        Guid Id,
         ChargeType ChargeType,
         Resolution Resolution,
-        string ChargeId,
+        string ChargeId, // Is SenderProvidedChargeId.
         string ChargeName,
         string ChargeDescription,
         string ChargeOwner,

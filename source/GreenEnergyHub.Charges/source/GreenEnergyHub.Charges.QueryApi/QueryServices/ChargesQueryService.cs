@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices
             _data = data;
         }
 
-        public async Task<IList<ChargeV1Dto>> SearchAsync(SearchCriteriaV1Dto searchCriteria)
+        public async Task<IList<ChargeV1Dto>> SearchAsync(ChargeSearchCriteriaV1Dto searchCriteria)
         {
             var charges = _data.Charges;
             var todayAtMidnightUtc = DateTime.Now.Date.ToUniversalTime();
@@ -55,14 +55,14 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices
         }
 
         private static IQueryable<Charge> SearchByChargeIdOrName(
-            SearchCriteriaV1Dto searchCriteria, IQueryable<Charge> charges, DateTime todayAtMidnightUtc)
+            ChargeSearchCriteriaV1Dto chargeSearchCriteria, IQueryable<Charge> charges, DateTime todayAtMidnightUtc)
         {
             charges = charges
-                .Where(c => c.SenderProvidedChargeId.Contains(searchCriteria.ChargeIdOrName)
+                .Where(c => c.SenderProvidedChargeId.Contains(chargeSearchCriteria.ChargeIdOrName)
                             || c.ChargePeriods
                                 .OrderByDescending(cp => cp.StartDateTime)
                                 .First(cp => cp.StartDateTime <= todayAtMidnightUtc)
-                                .Name.Contains(searchCriteria.ChargeIdOrName));
+                                .Name.Contains(chargeSearchCriteria.ChargeIdOrName));
             return charges;
         }
 

@@ -16,10 +16,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Energinet.DataHub.Charges.Contracts.Charge;
 
-namespace GreenEnergyHub.Charges.QueryApi.QueryServices
+namespace GreenEnergyHub.Charges.QueryApi.QueryServices;
+
+public interface IChargesQueryService
 {
-    public interface IChargesQueryService
-    {
-        Task<IList<ChargeV1Dto>> SearchAsync(SearchCriteriaV1Dto searchCriteria);
-    }
+    Task<IList<ChargeV1Dto>> SearchAsync(ChargeSearchCriteriaV1Dto searchCriteria);
 }

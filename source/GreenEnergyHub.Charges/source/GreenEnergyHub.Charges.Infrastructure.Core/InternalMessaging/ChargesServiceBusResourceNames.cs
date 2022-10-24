@@ -52,9 +52,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.InternalMessaging
         public const string MarketParticipantChangedSubscriptionName = "market-participant-changed";
         public const string MarketParticipantCreatedSubscriptionName = "market-participant-created";
         public const string MarketParticipantStatusChangedSubscriptionName = "market-participant-status-changed";
-        public const string MarketParticipantExternalActorIdChangedSubscriptionName = "market-participant-external-id-changed";
         public const string GridAreaAddedToActorSubscriptionName = "grid-area-added-to-actor";
         public const string GridAreaRemovedFromActorSubscriptionName = "grid-area-removed-from-actor";
+        public const string MarketParticipantExternalActorIdChangedSubscriptionName = "market-part-external-id-changed";
+        public const string MarketParticipantNameChangedSubscriptionName = "market-participant-name-changed";
 
         // Domain event
         [DomainEventSetting]
