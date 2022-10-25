@@ -23,7 +23,6 @@ using Energinet.DataHub.Core.FunctionApp.TestCommon.Configuration.B2C;
 using Energinet.DataHub.Core.TestCommon;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
-using GreenEnergyHub.Charges.IntegrationTest.Core.TestFiles.Charges;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.SystemTests.Fixtures;
 using GreenEnergyHub.Charges.TestCore.TestHelpers;
@@ -38,6 +37,7 @@ namespace GreenEnergyHub.Charges.SystemTests
     [Collection(nameof(SystemTestCollectionFixture))]
     public class BusinessProcessTests : IClassFixture<BusinessProcessConfiguration>, IAsyncLifetime
     {
+        private const string SubscriptionTestFilePath = "TestFiles/Charges/Subscription.xml";
         private readonly B2CAppAuthenticationClient _gridAccessProviderAppAuthenticationClient;
         private readonly B2CAppAuthenticationClient _energySupplierAppAuthenticationClient;
 
@@ -85,7 +85,7 @@ namespace GreenEnergyHub.Charges.SystemTests
             var currentInstant = SystemClock.Instance.GetCurrentInstant();
             var expectedConfirmedOperationId = $"<cim:originalTransactionIDReference_MktActivityRecord.mRID>SysTestOpId{currentInstant}</cim:originalTransactionIDReference_MktActivityRecord.mRID>";
             var chargeId = Guid.NewGuid().ToString("n")[..10];
-            var request = PrepareRequest(ChargeInformationRequests.Subscription, currentInstant, chargeId);
+            var request = PrepareRequest(SubscriptionTestFilePath, currentInstant, chargeId);
 
             var response = await GridAccessProviderClient.SendAsync(request);
             response.StatusCode.Should().Be(HttpStatusCode.Accepted);
@@ -113,6 +113,7 @@ namespace GreenEnergyHub.Charges.SystemTests
                 .Should().Be(nameof(DocumentType.NotifyPriceList));
             var notificationContent = await peekedNotification.Content.ReadAsStringAsync();
             notificationContent.Should().Contain(CimMessageConstants.NotifyPriceListRootElement);
+            notificationContent.Should().Contain("<cim:process.processType>D18</cim:process.processType>");
             notificationContent.Should().Contain(chargeId);
 
             // Dequeue - as Energy Supplier - throws XUnitException if dequeue not succeeding
