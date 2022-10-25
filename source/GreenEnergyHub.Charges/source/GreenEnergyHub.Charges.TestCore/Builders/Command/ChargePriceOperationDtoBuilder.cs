@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
+using GreenEnergyHub.Charges.TestCore.TestHelpers;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.TestCore.Builders.Command
