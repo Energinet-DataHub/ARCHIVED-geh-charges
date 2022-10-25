@@ -14,6 +14,7 @@
 
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
+using GreenEnergyHub.Charges.TestCore.TestHelpers;
 
 namespace GreenEnergyHub.Charges.TestCore.Builders.Command
 {

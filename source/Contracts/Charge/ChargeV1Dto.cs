@@ -29,6 +29,7 @@ namespace Energinet.DataHub.Charges.Contracts.Charge
         VatClassification VatClassification,
         bool TaxIndicator,
         bool TransparentInvoicing,
+        bool HasAnyPrices,
         DateTimeOffset ValidFromDateTime,
         DateTimeOffset? ValidToDateTime);
 }

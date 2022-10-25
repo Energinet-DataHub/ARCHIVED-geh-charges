@@ -20,7 +20,7 @@ using FluentAssertions;
 using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers.Mappers;
 using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
-using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.Charges.TestCore.TestHelpers;
 using Xunit;
 
 namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
