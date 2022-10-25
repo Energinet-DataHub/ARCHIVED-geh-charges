@@ -14,6 +14,8 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Charges
 {
@@ -26,7 +28,9 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             string senderProvidedChargeId,
             ChargeType type,
             string marketParticipantId,
-            string messageId)
+            string messageId,
+            DocumentType documentType,
+            Instant documentRequestDate)
         {
             Id = Guid.NewGuid();
             SenderProvidedChargeId = senderProvidedChargeId;
@@ -70,14 +74,24 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             string senderProvidedChargeId,
             ChargeType chargeType,
             string marketParticipantId,
-            string messageId)
+            string messageId,
+            DocumentType documentType,
+            Instant documentRequestDate)
         {
             ArgumentNullException.ThrowIfNull(senderProvidedChargeId);
             ArgumentNullException.ThrowIfNull(chargeType);
             ArgumentNullException.ThrowIfNull(marketParticipantId);
             ArgumentNullException.ThrowIfNull(messageId);
+            ArgumentNullException.ThrowIfNull(documentType);
+            ArgumentNullException.ThrowIfNull(documentRequestDate);
 
-            return new ChargeMessage(senderProvidedChargeId, chargeType, marketParticipantId, messageId);
+            return new ChargeMessage(
+                senderProvidedChargeId,
+                chargeType,
+                marketParticipantId,
+                messageId,
+                documentType,
+                documentRequestDate);
         }
     }
 }

@@ -16,7 +16,8 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.Charges.Contracts.ChargeMessage;
-using GreenEnergyHub.Charges.QueryApi.ModelPredicates;
+using GreenEnergyHub.Charges.Domain.MarketParticipants;
+using GreenEnergyHub.Iso8601;
 using Microsoft.EntityFrameworkCore;
 
 namespace GreenEnergyHub.Charges.QueryApi.QueryServices
@@ -24,10 +25,12 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices
     public class ChargeMessageQueryService : IChargeMessageQueryService
     {
         private readonly IData _data;
+        private readonly Iso8601Durations _iso8601Durations;
 
-        public ChargeMessageQueryService(IData data)
+        public ChargeMessageQueryService(IData data, Iso8601Durations iso8601Durations)
         {
             _data = data;
+            _iso8601Durations = iso8601Durations;
         }
 
         public async Task<ChargeMessagesV1Dto> GetAsync(ChargeMessagesSearchCriteriaV1Dto chargeMessagesSearchCriteriaV1Dto)
@@ -38,10 +41,12 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices
 
             if (charge == null) throw new ArgumentException("Charge not found");
 
+            var marketParticipant = await _data.MarketParticipants.SingleAsync(mp => mp.Id == charge.OwnerId!).ConfigureAwait(false);
+
             var chargeMessages = _data.ChargeMessages.Where(x =>
                 x.SenderProvidedChargeId == charge.SenderProvidedChargeId &&
                 x.Type == charge.Type &&
-                x.MarketParticipantId == charge.Owner.MarketParticipantId);
+                x.MarketParticipantId == marketParticipant.MarketParticipantId);
 
             return new ChargeMessagesV1Dto(charge.Id, chargeMessages.Select(x => x.MessageId).ToList());
 
