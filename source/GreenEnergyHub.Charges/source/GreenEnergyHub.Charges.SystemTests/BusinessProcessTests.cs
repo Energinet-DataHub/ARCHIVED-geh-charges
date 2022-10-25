@@ -84,7 +84,8 @@ namespace GreenEnergyHub.Charges.SystemTests
             // Arrange
             var currentInstant = SystemClock.Instance.GetCurrentInstant();
             var expectedConfirmedOperationId = $"<cim:originalTransactionIDReference_MktActivityRecord.mRID>SysTestOpId{currentInstant}</cim:originalTransactionIDReference_MktActivityRecord.mRID>";
-            var request = PrepareRequest(ChargeInformationRequests.Subscription, currentInstant);
+            var chargeId = Guid.NewGuid().ToString("n")[..10];
+            var request = PrepareRequest(ChargeInformationRequests.Subscription, currentInstant, chargeId);
 
             var response = await GridAccessProviderClient.SendAsync(request);
             response.StatusCode.Should().Be(HttpStatusCode.Accepted);
@@ -112,6 +113,7 @@ namespace GreenEnergyHub.Charges.SystemTests
                 .Should().Be(nameof(DocumentType.NotifyPriceList));
             var notificationContent = await peekedNotification.Content.ReadAsStringAsync();
             notificationContent.Should().Contain(CimMessageConstants.NotifyPriceListRootElement);
+            notificationContent.Should().Contain(chargeId);
 
             // Dequeue - as Energy Supplier - throws XUnitException if dequeue not succeeding
             await DequeueAsync(EnergySupplierClient, supplierBundleId);
@@ -136,11 +138,12 @@ namespace GreenEnergyHub.Charges.SystemTests
             await EmptyMessageHubQueueAsync(EnergySupplierClient);
         }
 
-        private HttpRequestMessage PrepareRequest(string testFilePath, Instant currentInstant)
+        private HttpRequestMessage PrepareRequest(string testFilePath, Instant currentInstant, string chargeId)
         {
             var body = EmbeddedResourceHelper
                 .GetEmbeddedFile(testFilePath, currentInstant, ZonedDateTimeServiceHelper.GetZonedDateTimeService(currentInstant))
-                .Replace("{{GridAccessProvider}}", Configuration.GridAccessProvider);
+                .Replace("{{GridAccessProvider}}", Configuration.GridAccessProvider)
+                .Replace("{{SystemTestRandomChargeId}}", chargeId);
 
             return new HttpRequestMessage(HttpMethod.Post, Configuration.ChargeIngestionEndpoint)
             {
