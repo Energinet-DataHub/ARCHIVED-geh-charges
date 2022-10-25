@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Energinet.DataHub.MarketParticipant.Integration.Model.Parsers;
 using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -27,6 +28,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IGridAreaOwnerAddedCommandHandler, GridAreaOwnerAddedCommandHandler>();
             serviceCollection.AddScoped<IGridAreaOwnerRemovedCommandHandler, GridAreaOwnerFromGridAreaOwnerRemovedCommandHandler>();
             serviceCollection.AddScoped<IMarketParticipantNameChangedCommandHandler, MarketParticipantNameChangedCommandHandler>();
+            serviceCollection.AddScoped<ISharedIntegrationEventParser, SharedIntegrationEventParser>();
         }
     }
 }
