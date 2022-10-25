@@ -12,19 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
-using GreenEnergyHub.Charges.Domain.Dtos.Events;
+using System.IO;
 
-namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
+namespace GreenEnergyHub.Charges.TestCore.Extensions
 {
-    /// <summary>
-    /// Handle command for updating grid area information of existing market participants
-    /// </summary>
-    public interface IMarketParticipantGridAreaUpdatedCommandHandler
+    public static class StreamExtensions
     {
-        /// <summary>
-        /// Handle grid area updated command
-        /// </summary>
-        Task HandleAsync(MarketParticipantGridAreaUpdatedCommand command);
+        public static string AsString(this Stream stream)
+        {
+            using var reader = new StreamReader(stream);
+            return reader.ReadToEnd();
+        }
     }
 }

@@ -13,8 +13,9 @@
 // limitations under the License.
 
 using System.IO;
+using GreenEnergyHub.Charges.TestCore.Extensions;
 
-namespace GreenEnergyHub.Charges.TestCore
+namespace GreenEnergyHub.Charges.TestCore.TestHelpers
 {
     public static class ContentStreamHelper
     {
