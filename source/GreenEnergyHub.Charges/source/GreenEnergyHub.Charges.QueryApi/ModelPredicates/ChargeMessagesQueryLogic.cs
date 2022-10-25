@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Collections.Generic;
 using System.Linq;
 using Energinet.DataHub.Charges.Contracts.ChargeMessage;
 using GreenEnergyHub.Charges.QueryApi.Model;
@@ -22,7 +23,7 @@ namespace GreenEnergyHub.Charges.QueryApi.ModelPredicates
     {
         public static IQueryable<ChargeMessagesV1Dto> AsChargeMessageV1Dto(this IQueryable<ChargeMessage> queryable)
         {
-            return new ChargeMessagesV1Dto();
+            return queryable.Select(x => new ChargeMessagesV1Dto(x.Id, new List<string> { "dummy" }));
         }
     }
 }

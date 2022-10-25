@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.Charges.Contracts.ChargeMessage;
 using GreenEnergyHub.Charges.QueryApi.ModelPredicates;
@@ -30,10 +32,23 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices
 
         public async Task<ChargeMessagesV1Dto> GetAsync(ChargeMessagesSearchCriteriaV1Dto chargeMessagesSearchCriteriaV1Dto)
         {
-            return await _data.ChargeMessages
+            var charge = await _data.Charges
+                .SingleOrDefaultAsync(c => c.Id == chargeMessagesSearchCriteriaV1Dto.ChargeId)
+                .ConfigureAwait(false);
+
+            if (charge == null) throw new ArgumentException("Charge not found");
+
+            var chargeMessages = _data.ChargeMessages.Where(x =>
+                x.SenderProvidedChargeId == charge.SenderProvidedChargeId &&
+                x.Type == charge.Type &&
+                x.MarketParticipantId == charge.Owner.MarketParticipantId);
+
+            return new ChargeMessagesV1Dto(charge.Id, chargeMessages.Select(x => x.MessageId).ToList());
+
+            /*return await chargeMessages
                 .AsChargeMessageV1Dto()
                 .ToListAsync()
-                .ConfigureAwait(false);
+                .ConfigureAwait(false);*/
         }
     }
 }
