@@ -30,7 +30,6 @@ public static class ChargePointQueryLogic
         IIso8601Durations iso8601Durations)
     {
         var chargePrices = queryable
-            .OrderBy(c => c.Time)
             .Select(cp => new ChargePriceV1Dto(
                 cp.Price,
                 cp.Time,
@@ -41,6 +40,7 @@ public static class ChargePointQueryLogic
                     .ToDateTimeUtc()))
             .ToList();
 
+        chargePrices = chargePrices.OrderBy(cp => cp.FromDateTime).ToList();
         return chargePrices
             .Select((cp, index) => MapChargePriceV1Dto(chargePrices, index, cp))
             .ToList();

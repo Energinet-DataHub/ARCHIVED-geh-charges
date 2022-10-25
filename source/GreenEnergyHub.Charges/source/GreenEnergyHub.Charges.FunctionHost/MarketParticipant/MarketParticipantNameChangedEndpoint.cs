@@ -23,33 +23,33 @@ using Microsoft.Azure.Functions.Worker;
 
 namespace GreenEnergyHub.Charges.FunctionHost.MarketParticipant
 {
-    public class MarketParticipantB2CActorIdEndpoint
+    public class MarketParticipantNameChangedEndpoint
     {
-        private const string FunctionName = nameof(MarketParticipantB2CActorIdEndpoint);
+        private const string FunctionName = nameof(MarketParticipantNameChangedEndpoint);
         private readonly ISharedIntegrationEventParser _sharedIntegrationEventParser;
-        private readonly IMarketParticipantB2CActorIdChangedCommandHandler _marketParticipantB2CActorIdChangedCommandHandler;
+        private readonly IMarketParticipantNameChangedCommandHandler _marketParticipantNameChangedCommandHandler;
         private readonly IUnitOfWork _unitOfWork;
 
-        public MarketParticipantB2CActorIdEndpoint(
+        public MarketParticipantNameChangedEndpoint(
             ISharedIntegrationEventParser sharedIntegrationEventParser,
-            IMarketParticipantB2CActorIdChangedCommandHandler marketParticipantB2CActorIdChangedCommandHandler,
+            IMarketParticipantNameChangedCommandHandler marketParticipantNameChangedCommandHandler,
             IUnitOfWork unitOfWork)
         {
             _sharedIntegrationEventParser = sharedIntegrationEventParser;
-            _marketParticipantB2CActorIdChangedCommandHandler = marketParticipantB2CActorIdChangedCommandHandler;
+            _marketParticipantNameChangedCommandHandler = marketParticipantNameChangedCommandHandler;
             _unitOfWork = unitOfWork;
         }
 
         [Function(FunctionName)]
         public async Task RunAsync([ServiceBusTrigger(
-            "%" + EnvironmentSettingNames.IntegrationEventTopicName + "%",
-            "%" + EnvironmentSettingNames.MarketParticipantExternalActorIdChangedSubscriptionName + "%",
-            Connection = EnvironmentSettingNames.DataHubListenerConnectionString)]
+                "%" + EnvironmentSettingNames.IntegrationEventTopicName + "%",
+                "%" + EnvironmentSettingNames.MarketParticipantNameChangedSubscriptionName + "%",
+                Connection = EnvironmentSettingNames.DataHubListenerConnectionString)]
             byte[] message)
         {
-            var externalIdChangedEvent = (ActorExternalIdChangedIntegrationEvent)_sharedIntegrationEventParser.Parse(message);
-            var command = MarketParticipantIntegrationEventMapper.Map(externalIdChangedEvent);
-            await _marketParticipantB2CActorIdChangedCommandHandler.HandleAsync(command).ConfigureAwait(false);
+            var actorNameChangedIntegrationEvent = (ActorNameChangedIntegrationEvent)_sharedIntegrationEventParser.Parse(message);
+            var command = MarketParticipantIntegrationEventMapper.Map(actorNameChangedIntegrationEvent);
+            await _marketParticipantNameChangedCommandHandler.HandleAsync(command).ConfigureAwait(false);
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
         }
     }

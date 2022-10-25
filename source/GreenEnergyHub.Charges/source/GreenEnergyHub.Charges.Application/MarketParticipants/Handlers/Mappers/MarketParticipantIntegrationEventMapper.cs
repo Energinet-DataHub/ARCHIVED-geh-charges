@@ -48,6 +48,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers.Mappers
             return new MarketParticipantCreatedCommand(
                 actorCreatedIntegrationEvent.ActorId,
                 actorCreatedIntegrationEvent.ActorNumber,
+                actorCreatedIntegrationEvent.Name,
                 roles,
                 status,
                 actorCreatedIntegrationEvent.ActorMarketRoles
@@ -75,6 +76,29 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers.Mappers
             return new MarketParticipantGridAreaUpdatedCommand(
                 gridUpdatedIntegrationEvent.GridAreaId,
                 gridUpdatedIntegrationEvent.GridAreaLinkId);
+        }
+
+        public static GridAreaOwnerAddedCommand Map(
+            GridAreaAddedToActorIntegrationEvent gridUpdatedIntegrationEvent)
+        {
+            return new GridAreaOwnerAddedCommand(
+                gridUpdatedIntegrationEvent.ActorId,
+                gridUpdatedIntegrationEvent.GridAreaId);
+        }
+
+        public static GridAreaOwnerRemovedCommand Map(
+            GridAreaRemovedFromActorIntegrationEvent gridUpdatedIntegrationEvent)
+        {
+            return new GridAreaOwnerRemovedCommand(
+                gridUpdatedIntegrationEvent.GridAreaId);
+        }
+
+        public static MarketParticipantNameChangedCommand Map(
+            ActorNameChangedIntegrationEvent actorNameChangedIntegrationEvent)
+        {
+            return new MarketParticipantNameChangedCommand(
+                actorNameChangedIntegrationEvent.ActorId,
+                actorNameChangedIntegrationEvent.Name);
         }
     }
 }

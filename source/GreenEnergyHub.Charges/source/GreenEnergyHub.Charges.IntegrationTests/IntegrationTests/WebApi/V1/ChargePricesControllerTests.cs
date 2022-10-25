@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -27,6 +26,7 @@ using FluentAssertions.Common;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.WebApi;
 using GreenEnergyHub.Charges.TestCore.Attributes;
+using GreenEnergyHub.Charges.TestCore.Builders.Query;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 using Xunit.Abstractions;
@@ -60,7 +60,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
         {
             // Arrange
             var sut = CreateHttpClient(factory);
-            var searchCriteria = new ChargePricesSearchCriteriaV1Dto(Guid.NewGuid(), DateTime.Now, DateTime.Now);
+            var searchCriteria = new ChargePricesSearchCriteriaV1DtoBuilder().Build();
 
             // Act
             var response = await sut.PostAsJsonAsync($"{BaseUrl}/Search", searchCriteria);
@@ -83,10 +83,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
 
             var sut = CreateHttpClient(factory);
             var searchCriteria =
-                new ChargePricesSearchCriteriaV1Dto(
-                    chargePoint.ChargeId,
-                    chargePoint.Time,
-                    chargePoint.Time.AddDays(1));
+                new ChargePricesSearchCriteriaV1DtoBuilder()
+                    .WithChargeId(chargePoint.ChargeId)
+                    .WithFromDateTime(chargePoint.Time)
+                    .WithToDateTime(chargePoint.Time.AddDays(1))
+                    .Build();
 
             // Act
             var response = await sut.PostAsJsonAsync($"{BaseUrl}/Search", searchCriteria);

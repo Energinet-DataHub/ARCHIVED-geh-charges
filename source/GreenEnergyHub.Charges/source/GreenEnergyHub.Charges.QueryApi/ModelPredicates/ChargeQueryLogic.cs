@@ -64,6 +64,7 @@ namespace GreenEnergyHub.Charges.QueryApi.ModelPredicates
                  c.ChargePeriods
                      .OrderBy(cp => cp.StartDateTime)
                      .First()).TransparentInvoicing,
+                c.ChargePoints.Any(),
                 (c.ChargePeriods
                      .Where(cp => cp.StartDateTime <= todayAtMidnightUtc)
                      .OrderByDescending(cp => cp.StartDateTime)

@@ -99,6 +99,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
             var marketParticipant = MarketParticipant.Create(
                 marketParticipantUpdatedCommand.ActorId,
                 marketParticipantUpdatedCommand.MarketParticipantId,
+                string.Empty,
                 marketParticipantUpdatedCommand.Status,
                 businessProcessRole);
 
@@ -129,7 +130,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
                 if (existingGridAreaLink is null) return;
                 if (existingGridAreaLink.OwnerId == marketParticipant.Id) return;
 
-                existingGridAreaLink.OwnerId = marketParticipant.Id;
+                existingGridAreaLink.UpdateOwner(marketParticipant.Id);
             }
         }
     }
