@@ -97,7 +97,7 @@ namespace GreenEnergyHub.Charges.SystemTests
             peekedConfirmation!.Headers.GetValues("MessageType").FirstOrDefault()
                 .Should().Be(nameof(DocumentType.ConfirmRequestChangeOfPriceList));
             var content = await peekedConfirmation.Content.ReadAsStringAsync();
-            content.Should().Contain("ConfirmRequestChangeOfPriceList_MarketDocument");
+            content.Should().Contain(CimMessageConstants.ConfirmRequestChangeOfPriceListRootElement);
             content.Should().Contain(expectedConfirmedOperationId);
 
             // Dequeue - throws XUnitException if dequeue not succeeding
@@ -110,6 +110,8 @@ namespace GreenEnergyHub.Charges.SystemTests
             // Assert notification
             peekedNotification!.Headers.GetValues("MessageType").FirstOrDefault()
                 .Should().Be(nameof(DocumentType.NotifyPriceList));
+            var notificationContent = await peekedNotification.Content.ReadAsStringAsync();
+            notificationContent.Should().Contain(CimMessageConstants.NotifyPriceListRootElement);
 
             // Dequeue - as Energy Supplier - throws XUnitException if dequeue not succeeding
             await DequeueAsync(EnergySupplierClient, supplierBundleId);
