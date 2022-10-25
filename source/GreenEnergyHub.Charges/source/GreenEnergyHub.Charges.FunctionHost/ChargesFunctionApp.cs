@@ -88,9 +88,6 @@ namespace GreenEnergyHub.Charges.FunctionHost
             // Message Hub
             BundleSenderEndpointConfiguration.ConfigureServices(serviceCollection);
 
-            // Market participant registry
-            MarketParticipantPersisterConfiguration.ConfigureServices(serviceCollection);
-
             // Integration test
             IntegrationEventHandlersConfiguration.ConfigureServices(serviceCollection);
         }
