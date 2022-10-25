@@ -14,7 +14,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using AutoFixture.Xunit2;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
 using FluentAssertions;
@@ -22,7 +21,6 @@ using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers.Mappers;
 using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.TestCore;
-using GreenEnergyHub.TestHelpers;
 using Xunit;
 
 namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
@@ -164,25 +162,6 @@ namespace GreenEnergyHub.Charges.Tests.Application.MarketParticipants.Handlers
             // Assert
             actual.ActorId.Should().Be(actorId);
             actual.Name.Should().Be(name);
-        }
-
-        private static IEnumerable<ActorMarketRole> CreateActorMarketRoles()
-        {
-            var gridAreaIdOne = Guid.NewGuid();
-            var gridAreaIdTwo = Guid.NewGuid();
-
-            return new List<ActorMarketRole>
-            {
-                new(EicFunction.GridAccessProvider, new List<ActorGridArea>
-                {
-                    new(gridAreaIdOne, new List<string>()),
-                    new(gridAreaIdTwo, new List<string>()),
-                }),
-                new(EicFunction.MeteredDataAdministrator, new List<ActorGridArea>
-                {
-                    new(gridAreaIdTwo, new List<string>()),
-                }),
-            };
         }
     }
 }

@@ -16,7 +16,6 @@ using System;
 using System.Threading.Tasks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using GreenEnergyHub.Charges.TestCore;
