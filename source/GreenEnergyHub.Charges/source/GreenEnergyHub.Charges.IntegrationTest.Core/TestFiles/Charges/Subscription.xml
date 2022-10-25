@@ -30,7 +30,7 @@ limitations under the License.
             <cim:ChargeType>
                 <cim:chargeTypeOwner_MarketParticipant.mRID codingScheme="A10">{{$senderMarketParticipant}}</cim:chargeTypeOwner_MarketParticipant.mRID>
                 <cim:type>D01</cim:type>
-                <cim:mRID>{{$SystemTestRandomChargeId}}</cim:mRID> <!-- used in system test -->
+                <cim:mRID>{{$randomCharacters}}</cim:mRID>
                 <cim:name>Charge Sub Name</cim:name>
                 <cim:description>The charge subscription description</cim:description>
                 <cim:priceTimeFrame_Period.resolution>P1M</cim:priceTimeFrame_Period.resolution>
