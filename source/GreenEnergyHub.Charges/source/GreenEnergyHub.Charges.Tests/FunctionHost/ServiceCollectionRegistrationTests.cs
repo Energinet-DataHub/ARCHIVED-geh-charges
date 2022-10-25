@@ -18,7 +18,7 @@ using System.Linq;
 using System.Reflection;
 using FluentAssertions;
 using GreenEnergyHub.Charges.FunctionHost;
-using GreenEnergyHub.Charges.Tests.TestHelpers;
+using GreenEnergyHub.Charges.TestCore.TestHelpers;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Configuration;
 using Xunit;
