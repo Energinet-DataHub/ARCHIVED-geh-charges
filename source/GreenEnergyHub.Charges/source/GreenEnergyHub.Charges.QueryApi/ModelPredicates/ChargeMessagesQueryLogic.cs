@@ -12,13 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+using System.Linq;
+using Energinet.DataHub.Charges.Contracts.ChargeMessage;
+using GreenEnergyHub.Charges.QueryApi.Model;
 
-// ReSharper disable once CheckNamespace - Type is shared so namespace is not determined by project structure/namespace
-namespace Energinet.DataHub.Charges.Contracts.ChargeMessage
+namespace GreenEnergyHub.Charges.QueryApi.ModelPredicates
 {
-    public record ChargeMessageV1Dto(
-        decimal Price,
-        DateTimeOffset FromDateTime,
-        DateTimeOffset ToDateTime);
+    public static class ChargeMessagesQueryLogic
+    {
+        public static IQueryable<ChargeMessagesV1Dto> AsChargeMessageV1Dto(this IQueryable<ChargeMessage> queryable)
+        {
+            return new ChargeMessagesV1Dto();
+        }
+    }
 }

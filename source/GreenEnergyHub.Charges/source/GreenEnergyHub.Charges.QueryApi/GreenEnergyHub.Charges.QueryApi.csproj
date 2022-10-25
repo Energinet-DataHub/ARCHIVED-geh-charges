@@ -55,9 +55,6 @@ limitations under the License.
     <Compile Include="..\..\..\Contracts\ChargeMessage\ChargeMessagesV1Dto.cs">
       <Link>Dtos\ChargeMessage\ChargeMessagesV1Dto.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Contracts\ChargeMessage\ChargeMessageV1Dto.cs">
-      <Link>Dtos\ChargeMessage\ChargeMessageV1Dto.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\Contracts\ChargeMessage\SortColumnName.cs">
       <Link>Dtos\ChargeMessage\SortColumnName.cs</Link>
     </Compile>
