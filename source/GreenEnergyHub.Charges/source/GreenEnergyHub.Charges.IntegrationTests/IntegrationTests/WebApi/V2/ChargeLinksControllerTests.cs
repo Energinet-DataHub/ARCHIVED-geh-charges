@@ -22,7 +22,7 @@ using System.Threading.Tasks;
 using Energinet.DataHub.Charges.Contracts.ChargeLink;
 using FluentAssertions;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.WebApi;
-using GreenEnergyHub.Charges.TestCore;
+using GreenEnergyHub.Charges.TestCore.Data;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;

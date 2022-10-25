@@ -14,7 +14,7 @@
 
 using System;
 
-namespace GreenEnergyHub.Charges.TestCore
+namespace GreenEnergyHub.Charges.TestCore.Data
 {
     /// <summary>
     /// Provide a unified compile time safe way to access values corresponding to the seeded data
