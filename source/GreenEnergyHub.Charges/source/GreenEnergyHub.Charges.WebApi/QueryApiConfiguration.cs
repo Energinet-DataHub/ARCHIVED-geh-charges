@@ -41,14 +41,14 @@ namespace GreenEnergyHub.Charges.WebApi
             serviceCollection.AddScoped<IMarketParticipantQueryService, MarketParticipantQueryService>();
             serviceCollection.AddScoped<IChargePriceQueryService, ChargePriceQueryService>();
 
-            ConfigureIso8601Services(serviceCollection);
+            ConfigureIso8601Services(serviceCollection, configuration);
 
             return serviceCollection;
         }
 
-        private static void ConfigureIso8601Services(IServiceCollection serviceCollection)
+        private static void ConfigureIso8601Services(IServiceCollection serviceCollection, IConfiguration configuration)
         {
-            var timeZoneId = Environment.GetEnvironmentVariable(EnvironmentSettingNames.LocalTimeZoneName);
+            var timeZoneId = configuration.GetValue<string>(EnvironmentSettingNames.LocalTimeZoneName);
             var timeZoneConfiguration = new Iso8601ConversionConfiguration(timeZoneId);
             serviceCollection.AddSingleton<IIso8601ConversionConfiguration>(timeZoneConfiguration);
             serviceCollection.AddSingleton<IIso8601Durations, Iso8601Durations>();
