@@ -14,7 +14,7 @@
 
 using System;
 
-namespace GreenEnergyHub.Charges.TestCore
+namespace GreenEnergyHub.Charges.TestCore.Data
 {
     /// <summary>
     /// Provide a unified compile time safe way to access values corresponding to the seeded data
@@ -55,6 +55,11 @@ namespace GreenEnergyHub.Charges.TestCore
             public static class Inactive8900000000005
             {
                 public const string Gln = "8900000000005";
+            }
+
+            public static class Provider8100000000030
+            {
+                public static readonly Guid Id = new("e009b9b2-edce-4f74-b466-98d0bbb0a94a");
             }
         }
 

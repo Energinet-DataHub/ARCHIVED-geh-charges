@@ -14,25 +14,14 @@
 
 using System.IO;
 
-namespace GreenEnergyHub.Charges.TestCore
+namespace GreenEnergyHub.Charges.TestCore.Extensions
 {
-    public static class ContentStreamHelper
+    public static class StreamExtensions
     {
-        public static Stream GetFileAsStream(Stream memoryStream, string filePath)
+        public static string AsString(this Stream stream)
         {
-            using var fileStream = File.OpenRead(filePath);
-            fileStream.Position = 0;
-            fileStream.CopyTo(memoryStream);
-
-            memoryStream.Position = 0;
-            return memoryStream;
-        }
-
-        public static string GetFileAsString(string streamPath)
-        {
-            using var memoryStream = new MemoryStream();
-            GetFileAsStream(memoryStream, streamPath);
-            return memoryStream.AsString().ReplaceLineEndings();
+            using var reader = new StreamReader(stream);
+            return reader.ReadToEnd();
         }
     }
 }

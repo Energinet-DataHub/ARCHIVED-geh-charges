@@ -21,8 +21,8 @@ using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
-using GreenEnergyHub.Charges.TestCore;
 using GreenEnergyHub.Charges.TestCore.Builders.Testables;
+using GreenEnergyHub.Charges.TestCore.Data;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 using Xunit.Categories;
@@ -88,7 +88,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
                     mp.MarketParticipantId == SeededData.MarketParticipants.Inactive8900000000005.Gln);
 
             // Act
-            var actual = await sut.SingleOrNullAsync(existingMarketParticipant.B2CActorId ?? Guid.NewGuid());
+            var actual = await sut.GetByB2CActorIdAsync(existingMarketParticipant.B2CActorId ?? Guid.NewGuid());
 
             // Assert
             actual!.MarketParticipantId.Should().Be(SeededData.MarketParticipants.Inactive8900000000005.Gln);

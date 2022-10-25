@@ -15,7 +15,7 @@
 using System;
 using NodaTime;
 
-namespace GreenEnergyHub.Charges.TestCore
+namespace GreenEnergyHub.Charges.TestCore.TestHelpers
 {
     public static class InstantHelper
     {

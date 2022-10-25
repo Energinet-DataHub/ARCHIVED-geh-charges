@@ -16,7 +16,7 @@ using System;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
 
-namespace GreenEnergyHub.Charges.Tests.TestHelpers
+namespace GreenEnergyHub.Charges.TestCore.TestHelpers
 {
     public static class FunctionHostEnvironmentSettingHelper
     {
