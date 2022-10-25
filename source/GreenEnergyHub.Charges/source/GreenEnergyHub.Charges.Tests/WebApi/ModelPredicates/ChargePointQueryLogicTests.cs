@@ -70,16 +70,16 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
             var expected = new List<ChargePriceV1Dto>
             {
                 new(
-                    chargePoint.Price,
-                    chargePoint.Time,
-                    DateTime.SpecifyKind(new DateTime(2022, 1, 1, 1, 6, 0), DateTimeKind.Utc)),
-                new(
                     chargePoint2.Price,
                     chargePoint2.Time,
                     DateTime.SpecifyKind(new DateTime(2022, 1, 1, 1, 15, 0), DateTimeKind.Utc)),
+                new(
+                    chargePoint.Price,
+                    chargePoint.Time,
+                    DateTime.SpecifyKind(new DateTime(2022, 1, 1, 1, 6, 0), DateTimeKind.Utc)),
             };
 
-            var chargePoints = new List<ChargePoint> { chargePoint, chargePoint2 }.AsQueryable();
+            var chargePoints = new List<ChargePoint> { chargePoint2, chargePoint }.AsQueryable();
             var iso8601Durations = GetIso8601Durations();
 
             // Act

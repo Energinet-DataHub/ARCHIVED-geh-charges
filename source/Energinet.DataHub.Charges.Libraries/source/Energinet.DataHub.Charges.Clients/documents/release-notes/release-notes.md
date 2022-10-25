@@ -1,5 +1,14 @@
 # Energinet.DataHub.Charges.Clients Release notes
 
+## Version 4.3.1
+
+Added `HasAnyPrices` to `ChargeV1Dto`.
+
+## Version 4.3.0
+
+Added pagination functionality to `SearchChargePricesAsync`.
+`SearchChargePricesAsync` now return `ChargePricesV1Dto` instead of a list.
+
 ## Version 4.2.1
 
 Added Id to `ChargeV1Dto`.

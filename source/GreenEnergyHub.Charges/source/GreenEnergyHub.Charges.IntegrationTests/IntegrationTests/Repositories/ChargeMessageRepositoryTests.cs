@@ -13,16 +13,14 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.Charges.TestCore.Builders.Command;
+using GreenEnergyHub.Charges.TestCore.Data;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 using Xunit.Categories;
@@ -49,8 +47,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
         {
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-            var charge = await GetCharge(chargesDatabaseWriteContext);
-            var chargeMessage = chargeMessageBuilder.WithChargeId(charge.Id).Build();
+            var charge = await chargesDatabaseWriteContext.Charges.FirstAsync();
+            var chargeMessage = chargeMessageBuilder
+                .WithSenderProvidedChargeId(charge.SenderProvidedChargeId)
+                .WithChargeType(charge.Type)
+                .WithMarketParticipantId(SeededData.MarketParticipants.SystemOperator.Gln)
+                .Build();
             var sut = new ChargeMessageRepository(chargesDatabaseWriteContext);
 
             // Act
@@ -65,27 +67,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
         [Theory]
         [InlineAutoMoqData]
-        public async Task GetByChargeIdAsync_WhenExistingChargeMessagesForCharge_ChargeMessagesAreReturned(
-            ChargeMessageBuilder chargeMessageBuilder)
-        {
-            // Arrange
-            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
-            var expected = await SetupValidChargeMessagesForAChargeAsync(chargesDatabaseWriteContext, chargeMessageBuilder);
-            var chargeId = expected.First().ChargeId;
-
-            await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
-            var sut = new ChargeMessageRepository(chargesDatabaseReadContext);
-
-            // Act
-            var actual = await sut.GetByChargeIdAsync(chargeId);
-
-            // Assert
-            actual.Count.Should().Be(3);
-            actual.Should().BeEquivalentTo(expected);
-        }
-
-        [Theory]
-        [InlineAutoMoqData]
         public async Task AddAsync_WhenChargeIsNull_ThrowsArgumentNullException(ChargeMessageRepository sut)
         {
             // Arrange
@@ -93,24 +74,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.Repositories
 
             // Act / Assert
             await Assert.ThrowsAsync<ArgumentNullException>(() => sut.AddAsync(chargeMessage!));
-        }
-
-        private static async Task<List<ChargeMessage>> SetupValidChargeMessagesForAChargeAsync(
-            IChargesDatabaseContext chargesDatabaseWriteContext, ChargeMessageBuilder chargeMessageBuilder)
-        {
-            var chargeMessages = new List<ChargeMessage>();
-            var charge = await GetCharge(chargesDatabaseWriteContext);
-            for (var i = 0; i < 3; i++)
-                chargeMessages.Add(chargeMessageBuilder.WithChargeId(charge.Id).WithMessageId($"MessageId{i}").Build());
-
-            await chargesDatabaseWriteContext.ChargeMessages.AddRangeAsync(chargeMessages);
-            await chargesDatabaseWriteContext.SaveChangesAsync();
-            return chargeMessages;
-        }
-
-        private static async Task<Charge> GetCharge(IChargesDatabaseContext chargesDatabaseWriteContext)
-        {
-            return await chargesDatabaseWriteContext.Charges.FirstAsync();
         }
     }
 }

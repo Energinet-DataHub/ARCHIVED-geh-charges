@@ -54,6 +54,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
                 (VatClassification)charge.ChargePeriods.Single().VatClassification,
                 charge.TaxIndicator,
                 charge.ChargePeriods.Single().TransparentInvoicing,
+                charge.ChargePoints.Any(),
                 charge.ChargePeriods.Single().StartDateTime,
                 null);
 

@@ -17,6 +17,7 @@ using System.Linq;
 using FluentAssertions;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.InternalMessaging;
+using GreenEnergyHub.Charges.TestCore.TestHelpers;
 using GreenEnergyHub.Charges.Tests.TestHelpers;
 using Microsoft.Extensions.Configuration;
 using Xunit;

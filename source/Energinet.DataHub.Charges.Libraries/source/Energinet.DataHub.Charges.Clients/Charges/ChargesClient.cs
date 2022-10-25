@@ -69,7 +69,7 @@ namespace Energinet.DataHub.Charges.Clients.Charges
                 .GetAsync(ChargesRelativeUris.GetCharges())
                 .ConfigureAwait(false);
 
-            return await HandleResultAsync<ChargeV1Dto>(response).ConfigureAwait(false);
+            return await HandleResultAsync<IList<ChargeV1Dto>>(response).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace Energinet.DataHub.Charges.Clients.Charges
                 .PostAsJsonAsync(ChargesRelativeUris.SearchCharges(), searchCriteria)
                 .ConfigureAwait(false);
 
-            return await HandleResultAsync<ChargeV1Dto>(response).ConfigureAwait(false);
+            return await HandleResultAsync<IList<ChargeV1Dto>>(response).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -95,23 +95,23 @@ namespace Energinet.DataHub.Charges.Clients.Charges
                 .GetAsync(ChargesRelativeUris.GetMarketParticipants())
                 .ConfigureAwait(false);
 
-            return await HandleResultAsync<MarketParticipantV1Dto>(response).ConfigureAwait(false);
+            return await HandleResultAsync<IList<MarketParticipantV1Dto>>(response).ConfigureAwait(false);
         }
 
         /// <summary>
         ///     Returns charge prices based on the search criteria.
         /// </summary>
         /// <returns>A collection of charge prices(Dtos)</returns>
-        public async Task<IList<ChargePriceV1Dto>> SearchChargePricesAsync(ChargePricesSearchCriteriaV1Dto searchCriteria)
+        public async Task<ChargePricesV1Dto> SearchChargePricesAsync(ChargePricesSearchCriteriaV1Dto searchCriteria)
         {
             var response = await _httpClient
                 .PostAsJsonAsync(ChargesRelativeUris.SearchChargePrices(), searchCriteria)
                 .ConfigureAwait(false);
 
-            return await HandleResultAsync<ChargePriceV1Dto>(response).ConfigureAwait(false);
+            return await HandleResultAsync<ChargePricesV1Dto>(response).ConfigureAwait(false);
         }
 
-        private static async Task<IList<TModel>> HandleResultAsync<TModel>(HttpResponseMessage response)
+        private static async Task<TModel> HandleResultAsync<TModel>(HttpResponseMessage response)
         {
             if (!response.IsSuccessStatusCode)
             {
@@ -125,7 +125,7 @@ namespace Energinet.DataHub.Charges.Clients.Charges
             };
 
             var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            return JsonSerializer.Deserialize<List<TModel>>(content, options);
+            return JsonSerializer.Deserialize<TModel>(content, options);
         }
     }
 }
