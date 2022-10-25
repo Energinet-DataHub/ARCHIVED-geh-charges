@@ -142,8 +142,8 @@ namespace GreenEnergyHub.Charges.SystemTests
         {
             var body = EmbeddedResourceHelper
                 .GetEmbeddedFile(testFilePath, currentInstant, ZonedDateTimeServiceHelper.GetZonedDateTimeService(currentInstant))
-                .Replace("{{GridAccessProvider}}", Configuration.GridAccessProvider)
-                .Replace("{{SystemTestRandomChargeId}}", chargeId);
+                .Replace("{{$GridAccessProvider}}", Configuration.GridAccessProvider)
+                .Replace("{{$SystemTestRandomChargeId}}", chargeId);
 
             return new HttpRequestMessage(HttpMethod.Post, Configuration.ChargeIngestionEndpoint)
             {
