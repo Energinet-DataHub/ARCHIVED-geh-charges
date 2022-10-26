@@ -19,26 +19,22 @@ using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Dtos;
-using Energinet.DataHub.MarketParticipant.Integration.Model.Parsers;
 using Energinet.DataHub.MarketParticipant.Integration.Model.Parsers.Actor;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.FunctionHost.MarketParticipant;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
-using GreenEnergyHub.Charges.Infrastructure.Persistence;
-using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestCommon;
 using GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers;
 using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
-using GreenEnergyHub.Charges.TestCore;
-using Microsoft.EntityFrameworkCore;
+using GreenEnergyHub.Charges.TestCore.Data;
+using GreenEnergyHub.Charges.TestCore.TestHelpers;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
 
-namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
+namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests.MarketParticipant
 {
     [IntegrationTest]
     public class MarketParticipantStatusChangedEndpointTests
