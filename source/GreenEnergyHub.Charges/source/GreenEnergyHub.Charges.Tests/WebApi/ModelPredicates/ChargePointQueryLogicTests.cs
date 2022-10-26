@@ -22,7 +22,6 @@ using FluentAssertions;
 using GreenEnergyHub.Charges.QueryApi.Model;
 using GreenEnergyHub.Charges.QueryApi.ModelPredicates;
 using GreenEnergyHub.Iso8601;
-using NodaTime;
 using Xunit;
 using Xunit.Categories;
 
@@ -264,7 +263,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.ModelPredicates
 
         private static Iso8601Durations GetIso8601Durations()
         {
-            var configuration = new Iso8601ConversionConfiguration(DateTimeZoneProviders.Tzdb.GetSystemDefault().Id);
+            var configuration = new Iso8601ConversionConfiguration("Europe/Copenhagen");
             var iso8601Durations = new Iso8601Durations(configuration);
             return iso8601Durations;
         }
