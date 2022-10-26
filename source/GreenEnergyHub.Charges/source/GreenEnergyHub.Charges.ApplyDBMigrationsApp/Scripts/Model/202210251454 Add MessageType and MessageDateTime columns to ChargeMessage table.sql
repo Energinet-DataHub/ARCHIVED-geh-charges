@@ -1,12 +1,12 @@
 ﻿------------------------------------------------------------------------------------------------------------------------
--- Add MessageType and MessageDate to ChargeMessage table
+-- Add MessageType and MessageDateTime to ChargeMessage table
 ------------------------------------------------------------------------------------------------------------------------
 
 ALTER TABLE Charges.ChargeMessage
-ADD [MessageType] [int] not null default 0,
-    [MessageDateTime] [datetime2](7) NOT NULL default getdate()
+ADD [MessageType] [int] CONSTRAINT DF_ChargeMessage_MessageType default 0 NOT NULL,
+    [MessageDateTime] [datetime2](7) CONSTRAINT DF_ChargeMessage_MessageDateTime default getdate() NOT NULL
 GO
 
-ALTER TABLE Charges.ChargeMessage ALTER COLUMN [MessageType] [int] not null
-ALTER TABLE Charges.ChargeMessage ALTER COLUMN [MessageDateTime] [datetime2](7) NOT NULL
+ALTER TABLE Charges.ChargeMessage DROP CONSTRAINT DF_ChargeMessage_MessageType
+ALTER TABLE Charges.ChargeMessage DROP CONSTRAINT DF_ChargeMessage_MessageDateTime
 GO

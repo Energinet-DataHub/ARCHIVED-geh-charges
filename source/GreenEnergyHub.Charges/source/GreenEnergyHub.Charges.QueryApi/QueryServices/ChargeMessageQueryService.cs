@@ -13,10 +13,11 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.Charges.Contracts.ChargeMessage;
-using GreenEnergyHub.Iso8601;
+using GreenEnergyHub.Charges.QueryApi.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace GreenEnergyHub.Charges.QueryApi.QueryServices
@@ -24,35 +25,62 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices
     public class ChargeMessageQueryService : IChargeMessageQueryService
     {
         private readonly IData _data;
-        private readonly Iso8601Durations _iso8601Durations;
 
-        public ChargeMessageQueryService(IData data, Iso8601Durations iso8601Durations)
+        public ChargeMessageQueryService(IData data)
         {
             _data = data;
-            _iso8601Durations = iso8601Durations;
         }
 
-        public async Task<ChargeMessagesV1Dto> GetAsync(ChargeMessagesSearchCriteriaV1Dto chargeMessagesSearchCriteriaV1Dto)
+        public async Task<ChargeMessagesV1Dto> SearchAsync(ChargeMessagesSearchCriteriaV1Dto searchCriteria)
         {
             var charge = await _data.Charges
-                .SingleOrDefaultAsync(c => c.Id == chargeMessagesSearchCriteriaV1Dto.ChargeId)
+                .SingleOrDefaultAsync(c => c.Id == searchCriteria.ChargeId)
                 .ConfigureAwait(false);
 
             if (charge == null) throw new ArgumentException("Charge not found");
 
-            var marketParticipant = await _data.MarketParticipants.SingleAsync(mp => mp.Id == charge.OwnerId!).ConfigureAwait(false);
+            var marketParticipant = await _data.MarketParticipants
+                .SingleAsync(mp => mp.Id == charge.OwnerId!)
+                .ConfigureAwait(false);
 
-            var chargeMessages = _data.ChargeMessages
+            var chargeMessages = QueryChargeMessages(searchCriteria, charge, marketParticipant);
+            var chargeMessagesList = SortChargeMessages(chargeMessages, searchCriteria);
+
+            return new ChargeMessagesV1Dto(charge.Id, chargeMessagesList.Select(x => x.MessageId).ToList());
+        }
+
+        private IQueryable<ChargeMessage> QueryChargeMessages(
+            ChargeMessagesSearchCriteriaV1Dto searchCriteria,
+            Charge charge,
+            MarketParticipant marketParticipant)
+        {
+            return _data.ChargeMessages
                 .Where(cm => cm.SenderProvidedChargeId == charge.SenderProvidedChargeId &&
                              cm.Type == charge.Type &&
-                             cm.MarketParticipantId == marketParticipant.MarketParticipantId);
-                //.Where(cm => cm. Time >= searchCriteria.FromDateTime && c.Time < searchCriteria.ToDateTime);
-            return new ChargeMessagesV1Dto(charge.Id, chargeMessages.Select(x => x.MessageId).ToList());
+                             cm.MarketParticipantId == marketParticipant.MarketParticipantId)
+                .Where(cm => cm.MessageDateTime >= searchCriteria.FromDateTime &&
+                             cm.MessageDateTime < searchCriteria.ToDateTime)
+                .Skip(searchCriteria.Skip)
+                .Take(searchCriteria.Take);
+        }
 
-            /*return await chargeMessages
-                .AsChargeMessageV1Dto()
-                .ToListAsync()
-                .ConfigureAwait(false);*/
+        private static IEnumerable<ChargeMessage> SortChargeMessages(
+            IQueryable<ChargeMessage> chargeMessages,
+            ChargeMessagesSearchCriteriaV1Dto searchCriteria)
+        {
+            return searchCriteria.SortColumnName switch
+            {
+                SortColumnName.MessageId => searchCriteria.IsDescending
+                    ? chargeMessages.OrderByDescending(cm => cm.MessageId).ToList()
+                    : chargeMessages.OrderBy(cm => cm.MessageId).ToList(),
+                SortColumnName.MessageType => searchCriteria.IsDescending
+                    ? chargeMessages.OrderByDescending(cm => cm.MessageType).ToList()
+                    : chargeMessages.OrderBy(cm => cm.MessageType).ToList(),
+                SortColumnName.MessageDateTime => searchCriteria.IsDescending
+                    ? chargeMessages.OrderByDescending(cm => cm.MessageDateTime).ToList()
+                    : chargeMessages.OrderBy(cm => cm.MessageDateTime).ToList(),
+                _ => chargeMessages.ToList(),
+            };
         }
     }
 }

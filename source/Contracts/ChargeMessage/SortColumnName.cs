@@ -17,7 +17,8 @@ namespace Energinet.DataHub.Charges.Contracts.ChargeMessage
 {
     public enum SortColumnName
     {
-        FromDateTime,
-        Price,
+        MessageId,
+        MessageType,
+        MessageDateTime,
     }
 }

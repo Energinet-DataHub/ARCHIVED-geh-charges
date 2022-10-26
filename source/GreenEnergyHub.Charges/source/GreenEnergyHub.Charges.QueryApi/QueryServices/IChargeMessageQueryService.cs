@@ -27,6 +27,6 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices
         /// Get messages related to charge
         /// </summary>
         /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-        Task<ChargeMessagesV1Dto> GetAsync(ChargeMessagesSearchCriteriaV1Dto chargeMessagesSearchCriteriaV1Dto);
+        Task<ChargeMessagesV1Dto> SearchAsync(ChargeMessagesSearchCriteriaV1Dto searchCriteria);
     }
 }

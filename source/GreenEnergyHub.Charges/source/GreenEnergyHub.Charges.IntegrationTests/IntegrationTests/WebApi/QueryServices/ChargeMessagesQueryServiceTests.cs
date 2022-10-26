@@ -28,7 +28,6 @@ using GreenEnergyHub.Charges.TestCore.Builders.Command;
 using GreenEnergyHub.Charges.TestCore.Builders.Query;
 using GreenEnergyHub.Charges.TestCore.Data;
 using GreenEnergyHub.Charges.TestCore.TestHelpers;
-using GreenEnergyHub.Iso8601;
 using NodaTime;
 using Xunit;
 using Xunit.Categories;
@@ -47,7 +46,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
         }
 
         [Fact]
-        public async Task GetAsync_WhenCalled_ReturnsMessagesBasedOnSearchCriteria()
+        public async Task SearchAsync_WhenCalled_ReturnsMessagesBasedOnSearchCriteria()
         {
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
@@ -64,7 +63,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
                 .Build();
 
             // Act
-            var actual = await sut.GetAsync(searchCriteria);
+            var actual = await sut.SearchAsync(searchCriteria);
 
             // Assert
             var expectedMessageIds = chargeMessages
@@ -72,12 +71,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
                 .Select(x => x.MessageId)
                 .ToList();
 
-            actual.MessageIds.Should().BeEquivalentTo(expectedMessageIds);
+            actual.ChargeId.Should().Be(expectedCharge.Id);
+            actual.MessageIds.Should().ContainInOrder(expectedMessageIds);
             actual.MessageIds.Should().NotContain("MessageId4");
         }
 
         [Fact]
-        public void GetAsync_WhenSearchingHasSkip_ReturnsPrices()
+        public void SearchAsync_WhenSearchingHasSkip_ReturnsPrices()
         {
             // Arrange
 
@@ -87,18 +87,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
         }
 
         [Fact]
-        public Task GetAsync_WhenSearchingHasNoSkip_ReturnsPrices()
-        {
-            // Arrange
-
-            // Act
-
-            // Assert
-            return Task.CompletedTask;
-        }
-
-        [Fact]
-        public Task GetAsync_WhenSortColumnNameIsNotValid_ReturnsPricesSortedByFromDateTime()
+        public Task SearchAsync_WhenSearchingHasNoSkip_ReturnsPrices()
         {
             // Arrange
 
@@ -109,7 +98,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
         }
 
         [Fact]
-        public Task GetAsync_WhenSearchingIsDescendingOrderOnFromDateTime_ReturnsPricesInDescendingOrder()
+        public Task SearchAsync_WhenSortColumnNameIsNotValid_ReturnsPricesSortedByFromDateTime()
         {
             // Arrange
 
@@ -120,7 +109,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
         }
 
         [Fact]
-        public Task GetAsync_WhenSearchingIsAscendingOrderOnFromDateTime_ReturnsPricesInAscendingOrder()
+        public Task SearchAsync_WhenSearchingIsDescendingOrderOnFromDateTime_ReturnsPricesInDescendingOrder()
         {
             // Arrange
 
@@ -131,7 +120,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
         }
 
         [Fact]
-        public Task GetAsync_WhenSearchingIsAscendingOrderOnPrice_ReturnsPricesInAscendingOrder()
+        public Task SearchAsync_WhenSearchingIsAscendingOrderOnFromDateTime_ReturnsPricesInAscendingOrder()
         {
             // Arrange
 
@@ -142,7 +131,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
         }
 
         [Fact]
-        public Task GetAsync_WhenSearchingIsDescendingOrderOnPrice_ReturnsPricesInDescendingOrder()
+        public Task SearchAsync_WhenSearchingIsAscendingOrderOnPrice_ReturnsPricesInAscendingOrder()
         {
             // Arrange
 
@@ -153,7 +142,18 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
         }
 
         [Fact]
-        public Task GetAsync_WhenSearching_ReturnsPricesInsideSearchDateInterval()
+        public Task SearchAsync_WhenSearchingIsDescendingOrderOnPrice_ReturnsPricesInDescendingOrder()
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+            return Task.CompletedTask;
+        }
+
+        [Fact]
+        public Task SearchAsync_WhenSearching_ReturnsPricesInsideSearchDateInterval()
         {
             // Arrange
 
@@ -190,28 +190,28 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
                     "MarketParticipantId",
                     "MessageId1",
                     DocumentType.RequestChangeBillingMasterData,
-                    SystemClock.Instance.GetCurrentInstant()),
+                    SystemClock.Instance.GetCurrentInstant().Plus(Duration.FromSeconds(1))),
                 Domain.Charges.ChargeMessage.Create(
                     charge.SenderProvidedChargeId,
                     charge.Type,
                     "MarketParticipantId",
                     "MessageId2",
                     DocumentType.RequestChangeBillingMasterData,
-                    SystemClock.Instance.GetCurrentInstant()),
+                    SystemClock.Instance.GetCurrentInstant().Plus(Duration.FromSeconds(2))),
                 Domain.Charges.ChargeMessage.Create(
                     charge.SenderProvidedChargeId,
                     charge.Type,
                     "MarketParticipantId",
                     "MessageId3",
                     DocumentType.RequestChangeOfPriceList,
-                    SystemClock.Instance.GetCurrentInstant()),
+                    SystemClock.Instance.GetCurrentInstant().Plus(Duration.FromSeconds(3))),
                 Domain.Charges.ChargeMessage.Create(
                     "40000",
                     ChargeType.Tariff,
                     SeededData.MarketParticipants.SystemOperator.Gln,
                     "MessageId4",
                     DocumentType.RequestChangeOfPriceList,
-                    SystemClock.Instance.GetCurrentInstant()),
+                    SystemClock.Instance.GetCurrentInstant().Plus(Duration.FromSeconds(4))),
             };
 
             await chargesDatabaseContext.ChargeMessages.AddRangeAsync(chargeMessages);
@@ -222,9 +222,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
         private static ChargeMessageQueryService GetSut(QueryDbContext chargesDatabaseQueryContext)
         {
             var data = new Data(chargesDatabaseQueryContext);
-            var configuration = new Iso8601ConversionConfiguration("Europe/Copenhagen");
-            var iso8601Durations = new Iso8601Durations(configuration);
-            var sut = new ChargeMessageQueryService(data, iso8601Durations);
+            var sut = new ChargeMessageQueryService(data);
             return sut;
         }
     }
