@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.SystemTests
     [Collection(nameof(SystemTestCollectionFixture))]
     public class BusinessProcessTests : IClassFixture<BusinessProcessConfiguration>, IAsyncLifetime
     {
-        private const string SubscriptionTestFilePath = "TestFiles/Charges/Subscription.xml";
+        private const string SubscriptionTestFilePath = "TestFiles/Subscription.xml";
         private readonly B2CAppAuthenticationClient _gridAccessProviderAppAuthenticationClient;
         private readonly B2CAppAuthenticationClient _energySupplierAppAuthenticationClient;
 
@@ -79,7 +79,7 @@ namespace GreenEnergyHub.Charges.SystemTests
         }
 
         [SystemFact]
-        public async Task When_SubmittingChargeInformationRequestWithNewSubscription_Then_PeekReturnsCorrespondingConfirmation()
+        public async Task When_SubmittingChargeInformationRequestWithNewSubscription_Then_PeeksReturnConfirmationAndNotification()
         {
             // Arrange
             var currentInstant = SystemClock.Instance.GetCurrentInstant();
