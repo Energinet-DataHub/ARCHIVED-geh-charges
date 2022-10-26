@@ -43,7 +43,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.Busi
         private static bool IsFirstLocalDayInMonth(Instant priceEndDate)
         {
             return priceEndDate != InstantExtensions.GetEndDefault() &&
-                   priceEndDate.Plus(Duration.FromDays(1)).ToDateTimeUtc().Day == 1;
+                   priceEndDate.Plus(Duration.FromDays(1)).InUtc().Day == 1;
         }
     }
 }
