@@ -485,7 +485,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
         private static async Task<Charge> GetValidCharge(
             ChargesDatabaseContext chargesDatabaseWriteContext,
-            List<Point> points,
+            IEnumerable<Point> points,
             Resolution resolution)
         {
             var marketParticipantId =
