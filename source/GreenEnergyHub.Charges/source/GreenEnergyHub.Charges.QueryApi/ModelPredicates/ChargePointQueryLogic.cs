@@ -37,7 +37,7 @@ public static class ChargePointQueryLogic
                         DateTime.SpecifyKind(cp.Time, DateTimeKind.Utc).ToInstant(),
                         ((Resolution)cp.Charge.Resolution).ToString(),
                         1)
-                    .ToDateTimeUtc()))
+                    .ToDateTimeOffset()))
             .ToList();
 
         chargePrices = chargePrices.OrderBy(cp => cp.FromDateTime).ToList();
