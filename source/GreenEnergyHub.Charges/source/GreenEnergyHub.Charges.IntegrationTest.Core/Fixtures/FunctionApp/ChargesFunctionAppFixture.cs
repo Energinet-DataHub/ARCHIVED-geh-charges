@@ -228,9 +228,6 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp
             IntegrationEventTopic = await ServiceBusResourceProvider
                 .BuildTopic(ChargesServiceBusResourceNames.IntegrationEventTopicKey)
                 .SetEnvironmentVariableToTopicName(EnvironmentSettingNames.IntegrationEventTopicName)
-                .AddSubscription(ChargesServiceBusResourceNames.MarketParticipantChangedSubscriptionName)
-                .AddMessageTypeFilter("GridAreaUpdatedIntegrationEvent")
-                .SetEnvironmentVariableToSubscriptionName(EnvironmentSettingNames.MarketParticipantChangedSubscriptionName)
 
                 .AddSubscription(ChargesServiceBusResourceNames.MarketParticipantCreatedSubscriptionName)
                 .AddMessageTypeFilter("ActorCreatedIntegrationEvent")
