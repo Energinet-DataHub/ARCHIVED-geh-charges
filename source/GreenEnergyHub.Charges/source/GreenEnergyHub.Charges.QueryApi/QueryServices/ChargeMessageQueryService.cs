@@ -16,7 +16,6 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.Charges.Contracts.ChargeMessage;
-using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Iso8601;
 using Microsoft.EntityFrameworkCore;
 
@@ -43,11 +42,11 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices
 
             var marketParticipant = await _data.MarketParticipants.SingleAsync(mp => mp.Id == charge.OwnerId!).ConfigureAwait(false);
 
-            var chargeMessages = _data.ChargeMessages.Where(x =>
-                x.SenderProvidedChargeId == charge.SenderProvidedChargeId &&
-                x.Type == charge.Type &&
-                x.MarketParticipantId == marketParticipant.MarketParticipantId);
-
+            var chargeMessages = _data.ChargeMessages
+                .Where(cm => cm.SenderProvidedChargeId == charge.SenderProvidedChargeId &&
+                             cm.Type == charge.Type &&
+                             cm.MarketParticipantId == marketParticipant.MarketParticipantId);
+                //.Where(cm => cm. Time >= searchCriteria.FromDateTime && c.Time < searchCriteria.ToDateTime);
             return new ChargeMessagesV1Dto(charge.Id, chargeMessages.Select(x => x.MessageId).ToList());
 
             /*return await chargeMessages
