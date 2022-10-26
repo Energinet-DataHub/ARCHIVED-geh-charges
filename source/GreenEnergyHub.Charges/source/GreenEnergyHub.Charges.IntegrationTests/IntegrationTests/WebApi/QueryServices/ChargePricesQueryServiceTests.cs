@@ -39,14 +39,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
     public class ChargePricesQueryServiceTests : IClassFixture<ChargesDatabaseFixture>
     {
         private readonly ChargesDatabaseManager _databaseManager;
-        private readonly Iso8601Durations _iso8601Durations;
 
         public ChargePricesQueryServiceTests(ChargesDatabaseFixture fixture)
         {
             _databaseManager = fixture.DatabaseManager;
             var iso8601Configuration = new Iso8601ConversionConfiguration("Europe/Copenhagen"); // For expected data creation
-            _iso8601Durations = new Iso8601Durations(iso8601Configuration);
+            Iso8601Durations = new Iso8601Durations(iso8601Configuration);
         }
+
+        private Iso8601Durations Iso8601Durations { get; }
 
         [Fact]
         public async Task SearchAsync_WhenSearching_ReturnsPricesBasedOnSearchCriteria()
@@ -133,7 +134,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var expected = new ChargePriceV1Dto(
                 expectedPoint.Price,
                 expectedPoint.Time.ToDateTimeUtc(),
-                _iso8601Durations.GetTimeFixedToDuration(
+                Iso8601Durations.GetTimeFixedToDuration(
                     expectedPoint.Time,
                     charge.Resolution.ToString(),
                     1).ToDateTimeOffset());
