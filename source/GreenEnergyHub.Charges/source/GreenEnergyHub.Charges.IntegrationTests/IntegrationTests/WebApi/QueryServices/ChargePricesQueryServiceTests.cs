@@ -29,7 +29,6 @@ using GreenEnergyHub.Charges.TestCore.Builders.Command;
 using GreenEnergyHub.Charges.TestCore.Builders.Query;
 using GreenEnergyHub.Charges.TestCore.TestHelpers;
 using GreenEnergyHub.Iso8601;
-using NodaTime;
 using Xunit;
 using Xunit.Categories;
 using Charge = GreenEnergyHub.Charges.Domain.Charges.Charge;
@@ -493,7 +492,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
         private static ChargePriceQueryService GetSut(QueryDbContext chargesDatabaseQueryContext)
         {
             var data = new Data(chargesDatabaseQueryContext);
-            var configuration = new Iso8601ConversionConfiguration(DateTimeZoneProviders.Tzdb.GetSystemDefault().Id);
+            var configuration = new Iso8601ConversionConfiguration("Europe/Copenhagen");
             var iso8601Durations = new Iso8601Durations(configuration);
             var sut = new ChargePriceQueryService(data, iso8601Durations);
             return sut;
