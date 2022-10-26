@@ -80,13 +80,16 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
 
             var charge = chargesDatabaseContext.Charges.Include(c => c.ChargePoints).Single(c => c.SenderProvidedChargeId == "TestTariff");
             var chargePoint = charge.ChargePoints.First();
+            var expectedTotalAmount = (int)chargePoint.Price;
+            var expectedFromDate = chargePoint.Time;
+            var expectedToDate = chargePoint.Time.AddDays(1);
 
             var sut = CreateHttpClient(factory);
             var searchCriteria =
                 new ChargePricesSearchCriteriaV1DtoBuilder()
                     .WithChargeId(chargePoint.ChargeId)
-                    .WithFromDateTime(chargePoint.Time)
-                    .WithToDateTime(chargePoint.Time.AddDays(1))
+                    .WithFromDateTime(expectedFromDate)
+                    .WithToDateTime(expectedToDate)
                     .Build();
 
             // Act
@@ -94,13 +97,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
 
             // Assert
             var jsonString = await response.Content.ReadAsStringAsync();
-            var chargePricesList = JsonSerializer.Deserialize<List<ChargePriceV1Dto>>(
+            var chargePricesV1Dto = JsonSerializer.Deserialize<ChargePricesV1Dto>(
                 jsonString,
-                GetJsonSerializerOptions());
+                GetJsonSerializerOptions())!;
 
-            chargePricesList.Should().HaveCountGreaterThan(0);
-            var actual = chargePricesList!.Single(cp => cp.Price == chargePoint.Price);
-            actual.FromDateTime.Should().Be(chargePoint.Time.ToDateTimeOffset());
+            chargePricesV1Dto.ChargePrices.Should().NotBeEmpty();
+            chargePricesV1Dto.TotalAmount.Should().Be(expectedTotalAmount);
+            var actualPrice = chargePricesV1Dto.ChargePrices.First();
+            actualPrice.Price.Should().Be(chargePoint.Price);
+            actualPrice.FromDateTime.Should().Be(expectedFromDate.ToDateTimeOffset());
         }
 
         private static JsonSerializerOptions GetJsonSerializerOptions()

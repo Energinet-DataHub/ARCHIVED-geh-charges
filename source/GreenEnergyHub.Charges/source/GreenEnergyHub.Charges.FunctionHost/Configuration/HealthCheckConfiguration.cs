@@ -81,11 +81,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                     subscriptionName: EnvironmentHelper.GetEnv(EnvironmentSettingNames
                         .MeteringPointCreatedSubscriptionName))
                 .AddAzureServiceBusSubscription(
-                    name: "MarketParticipantChangedSubscriptionExists",
-                    connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubManagerConnectionString),
-                    topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.IntegrationEventTopicName),
-                    subscriptionName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.MarketParticipantChangedSubscriptionName))
-                .AddAzureServiceBusSubscription(
                     name: "MarketParticipantCreatedSubscriptionExists",
                     connectionString: EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubManagerConnectionString),
                     topicName: EnvironmentHelper.GetEnv(EnvironmentSettingNames.IntegrationEventTopicName),
