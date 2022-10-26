@@ -29,7 +29,6 @@ using GreenEnergyHub.Charges.TestCore.Builders.Command;
 using GreenEnergyHub.Charges.TestCore.Builders.Query;
 using GreenEnergyHub.Charges.TestCore.TestHelpers;
 using GreenEnergyHub.Iso8601;
-using Microsoft.EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using Xunit;
 using Xunit.Categories;
 using Charge = GreenEnergyHub.Charges.Domain.Charges.Charge;
@@ -40,10 +39,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
     public class ChargePricesQueryServiceTests : IClassFixture<ChargesDatabaseFixture>
     {
         private readonly ChargesDatabaseManager _databaseManager;
+        private readonly Iso8601Durations _iso8601Durations;
 
         public ChargePricesQueryServiceTests(ChargesDatabaseFixture fixture)
         {
             _databaseManager = fixture.DatabaseManager;
+            var iso8601Configuration = new Iso8601ConversionConfiguration("Europe/Copenhagen");
+            _iso8601Durations = new Iso8601Durations(iso8601Configuration);
         }
 
         [Fact]
@@ -130,8 +132,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             var expected = new ChargePriceV1Dto(
                 expectedPoint.Price,
-                expectedPoint.Time.ToDateTimeOffset(),
-                expectedPoint.Time.PlusDays(1).ToDateTimeOffset());
+                expectedPoint.Time.ToDateTimeUtc(),
+                _iso8601Durations.GetTimeFixedToDuration(
+                    expectedPoint.Time,
+                    charge.Resolution.ToString(),
+                    1).ToDateTimeOffset());
 
             // Act
             var actual = sut.Search(searchCriteria);
