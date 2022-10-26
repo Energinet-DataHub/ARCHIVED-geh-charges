@@ -83,7 +83,8 @@ namespace GreenEnergyHub.Charges.SystemTests
         {
             // Arrange
             var currentInstant = SystemClock.Instance.GetCurrentInstant();
-            var expectedConfirmedOperationId = $"<cim:originalTransactionIDReference_MktActivityRecord.mRID>SysTestOpId{currentInstant}</cim:originalTransactionIDReference_MktActivityRecord.mRID>";
+            var expectedConfirmedOperationId =
+                $"<cim:originalTransactionIDReference_MktActivityRecord.mRID>SysTestOpId{currentInstant}</cim:originalTransactionIDReference_MktActivityRecord.mRID>";
             var chargeId = Guid.NewGuid().ToString("n")[..10];
             var request = PrepareRequest(SubscriptionTestFilePath, currentInstant, chargeId);
 
