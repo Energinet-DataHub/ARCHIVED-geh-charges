@@ -44,7 +44,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
         public ChargePricesQueryServiceTests(ChargesDatabaseFixture fixture)
         {
             _databaseManager = fixture.DatabaseManager;
-            var iso8601Configuration = new Iso8601ConversionConfiguration("Europe/Copenhagen");
+            var iso8601Configuration = new Iso8601ConversionConfiguration("Europe/Copenhagen"); // For expected data creation
             _iso8601Durations = new Iso8601Durations(iso8601Configuration);
         }
 
