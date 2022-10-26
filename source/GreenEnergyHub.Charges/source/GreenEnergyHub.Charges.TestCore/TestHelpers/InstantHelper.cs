@@ -49,6 +49,12 @@ namespace GreenEnergyHub.Charges.TestCore.TestHelpers
             return Instant.FromDateTimeUtc(DateTime.Now.AddDays(noOfDaysToAdd).Date.ToUniversalTime());
         }
 
+        public static Instant GetFirstDayOfThisMonthAtMidnightUtc()
+        {
+            var startOfMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            return Instant.FromDateTimeUtc(startOfMonth.Date.ToUniversalTime());
+        }
+
         public static Instant GetFirstDayOfThisMonthPlusMonthsAtMidnightUtc(int noOfMonthsToAdd)
         {
             var startOfMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
