@@ -77,7 +77,31 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
         }
 
         [Fact]
-        public void SearchAsync_WhenSearchingHasSkip_ReturnsPrices()
+        public async Task SearchAsync_WhenCalled_ReturnsNoMessagesBasedOnSearchCriteria()
+        {
+            // Arrange
+            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
+            var expectedCharge = await CreateValidCharge(chargesDatabaseWriteContext);
+            await chargesDatabaseWriteContext.SaveChangesAsync();
+
+            await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
+            var sut = GetSut(chargesDatabaseQueryContext);
+            var searchCriteria = new ChargeMessagesSearchCriteriaV1DtoBuilder()
+                .WithChargeId(expectedCharge.Id)
+                .WithFromDateTime(InstantHelper.GetTodayAtMidnightUtc().ToDateTimeOffset())
+                .WithToDateTime(InstantHelper.GetTomorrowAtMidnightUtc().ToDateTimeOffset())
+                .Build();
+
+            // Act
+            var actual = await sut.SearchAsync(searchCriteria);
+
+            // Assert
+            actual.ChargeId.Should().Be(expectedCharge.Id);
+            actual.MessageIds.Should().ContainInOrder(new List<string>());
+        }
+
+        [Fact]
+        public void SearchAsync_WhenSearchingHasSkip_ReturnsMessages()
         {
             // Arrange
 
@@ -87,40 +111,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
         }
 
         [Fact]
-        public Task SearchAsync_WhenSearchingHasNoSkip_ReturnsPrices()
-        {
-            // Arrange
-
-            // Act
-
-            // Assert
-            return Task.CompletedTask;
-        }
-
-        [Fact]
-        public Task SearchAsync_WhenSortColumnNameIsNotValid_ReturnsPricesSortedByFromDateTime()
-        {
-            // Arrange
-
-            // Act
-
-            // Assert
-            return Task.CompletedTask;
-        }
-
-        [Fact]
-        public Task SearchAsync_WhenSearchingIsDescendingOrderOnFromDateTime_ReturnsPricesInDescendingOrder()
-        {
-            // Arrange
-
-            // Act
-
-            // Assert
-            return Task.CompletedTask;
-        }
-
-        [Fact]
-        public Task SearchAsync_WhenSearchingIsAscendingOrderOnFromDateTime_ReturnsPricesInAscendingOrder()
+        public Task SearchAsync_WhenSearchingHasNoSkip_ReturnsMessages()
         {
             // Arrange
 
@@ -131,7 +122,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
         }
 
         [Fact]
-        public Task SearchAsync_WhenSearchingIsAscendingOrderOnPrice_ReturnsPricesInAscendingOrder()
+        public Task SearchAsync_WhenSortColumnNameIsNotValid_ReturnsMessagesSortedByFromDateTime()
         {
             // Arrange
 
@@ -142,7 +133,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
         }
 
         [Fact]
-        public Task SearchAsync_WhenSearchingIsDescendingOrderOnPrice_ReturnsPricesInDescendingOrder()
+        public Task SearchAsync_WhenSearchingIsDescendingOrderOnMessageDateTime_ReturnsMessagesInDescendingOrder()
         {
             // Arrange
 
@@ -153,7 +144,62 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
         }
 
         [Fact]
-        public Task SearchAsync_WhenSearching_ReturnsPricesInsideSearchDateInterval()
+        public Task SearchAsync_WhenSearchingIsAscendingOrderOnMessageDateTime_ReturnsMessagesInAscendingOrder()
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+            return Task.CompletedTask;
+        }
+
+        [Fact]
+        public Task SearchAsync_WhenSearchingIsAscendingOrderOnMessageId_ReturnsMessagesInAscendingOrder()
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+            return Task.CompletedTask;
+        }
+
+        [Fact]
+        public Task SearchAsync_WhenSearchingIsDescendingOrderOnMessageId_ReturnsMessagesInDescendingOrder()
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+            return Task.CompletedTask;
+        }
+
+        [Fact]
+        public Task SearchAsync_WhenSearchingIsAscendingOrderOnMessageType_ReturnsMessagesInAscendingOrder()
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+            return Task.CompletedTask;
+        }
+
+        [Fact]
+        public Task SearchAsync_WhenSearchingIsDescendingOrderOnMessageType_ReturnsMessagesInDescendingOrder()
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+            return Task.CompletedTask;
+        }
+
+        [Fact]
+        public Task SearchAsync_WhenSearching_ReturnsMessagesInsideSearchDateInterval()
         {
             // Arrange
 
