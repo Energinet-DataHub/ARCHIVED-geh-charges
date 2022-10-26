@@ -29,6 +29,7 @@ using GreenEnergyHub.Charges.TestCore.Builders.Command;
 using GreenEnergyHub.Charges.TestCore.Builders.Query;
 using GreenEnergyHub.Charges.TestCore.TestHelpers;
 using GreenEnergyHub.Iso8601;
+using Microsoft.EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using Xunit;
 using Xunit.Categories;
 using Charge = GreenEnergyHub.Charges.Domain.Charges.Charge;
@@ -129,8 +130,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             var expected = new ChargePriceV1Dto(
                 expectedPoint.Price,
-                InstantHelper.GetTodayAtMidnightUtc().ToDateTimeOffset(),
-                InstantHelper.GetTodayPlusDaysAtMidnightUtc(1).ToDateTimeOffset());
+                expectedPoint.Time.ToDateTimeOffset(),
+                expectedPoint.Time.PlusDays(1).ToDateTimeOffset());
 
             // Act
             var actual = sut.Search(searchCriteria);
