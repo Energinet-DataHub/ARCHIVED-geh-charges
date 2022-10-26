@@ -30,6 +30,7 @@ using GreenEnergyHub.Charges.TestCore.Builders.Query;
 using GreenEnergyHub.Charges.TestCore.Data;
 using GreenEnergyHub.Charges.TestCore.TestHelpers;
 using GreenEnergyHub.Iso8601;
+using NodaTime;
 using Xunit;
 using Xunit.Categories;
 using Charge = GreenEnergyHub.Charges.Domain.Charges.Charge;
@@ -184,10 +185,34 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
         {
             var chargeMessages = new List<Domain.Charges.ChargeMessage>
             {
-                /*Domain.Charges.ChargeMessage.Create(charge.SenderProvidedChargeId, charge.Type, "MarketParticipantId", "MessageId1"),
-                Domain.Charges.ChargeMessage.Create(charge.SenderProvidedChargeId, charge.Type, "MarketParticipantId", "MessageId2"),
-                Domain.Charges.ChargeMessage.Create(charge.SenderProvidedChargeId, charge.Type, "MarketParticipantId", "MessageId3"),
-                Domain.Charges.ChargeMessage.Create("40000", ChargeType.Tariff, SeededData.MarketParticipants.SystemOperator.Gln, "MessageId4"),*/
+                Domain.Charges.ChargeMessage.Create(
+                    charge.SenderProvidedChargeId,
+                    charge.Type,
+                    "MarketParticipantId",
+                    "MessageId1",
+                    DocumentType.RequestChangeBillingMasterData,
+                    SystemClock.Instance.GetCurrentInstant()),
+                Domain.Charges.ChargeMessage.Create(
+                    charge.SenderProvidedChargeId,
+                    charge.Type,
+                    "MarketParticipantId",
+                    "MessageId2",
+                    DocumentType.RequestChangeBillingMasterData,
+                    SystemClock.Instance.GetCurrentInstant()),
+                Domain.Charges.ChargeMessage.Create(
+                    charge.SenderProvidedChargeId,
+                    charge.Type,
+                    "MarketParticipantId",
+                    "MessageId3",
+                    DocumentType.RequestChangeOfPriceList,
+                    SystemClock.Instance.GetCurrentInstant()),
+                Domain.Charges.ChargeMessage.Create(
+                    "40000",
+                    ChargeType.Tariff,
+                    SeededData.MarketParticipants.SystemOperator.Gln,
+                    "MessageId4",
+                    DocumentType.RequestChangeOfPriceList,
+                    SystemClock.Instance.GetCurrentInstant()),
             };
 
             await chargesDatabaseContext.ChargeMessages.AddRangeAsync(chargeMessages);
