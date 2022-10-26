@@ -104,8 +104,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             var expected = new ChargePriceV1Dto(
                 expectedPoint.Price,
-                InstantHelper.GetTodayPlusDaysAtMidnightUtc(2).ToDateTimeOffset(),
-                InstantHelper.GetTodayPlusDaysAtMidnightUtc(3).ToDateTimeOffset());
+                expectedPoint.Time.ToDateTimeOffset(),
+                Iso8601Durations.GetTimeFixedToDuration(
+                    expectedPoint.Time,
+                    charge.Resolution.ToString(),
+                    1)
+                    .ToDateTimeOffset());
 
             // Act
             var actual = sut.Search(searchCriteria);
