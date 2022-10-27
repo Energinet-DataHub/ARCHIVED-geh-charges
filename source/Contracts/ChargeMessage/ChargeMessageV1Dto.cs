@@ -13,12 +13,13 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
+using Energinet.DataHub.Charges.Contracts.Charge;
 
 // ReSharper disable once CheckNamespace - Type is shared so namespace is not determined by project structure/namespace
 namespace Energinet.DataHub.Charges.Contracts.ChargeMessage
 {
-    public record ChargeMessagesV1Dto(
-        Guid ChargeId,
-        IList<string> MessageIds);
+    public record ChargeMessageV1Dto(
+        string MessageId,
+        DocumentType MessageType,
+        DateTimeOffset MessageDateTime);
 }

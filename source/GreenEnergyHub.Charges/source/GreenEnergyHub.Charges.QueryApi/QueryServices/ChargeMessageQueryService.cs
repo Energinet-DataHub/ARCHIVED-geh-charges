@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Energinet.DataHub.Charges.Contracts.Charge;
 using Energinet.DataHub.Charges.Contracts.ChargeMessage;
 using GreenEnergyHub.Charges.QueryApi.Model;
 using Microsoft.EntityFrameworkCore;
@@ -31,7 +32,7 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices
             _data = data;
         }
 
-        public async Task<ChargeMessagesV1Dto> SearchAsync(ChargeMessagesSearchCriteriaV1Dto searchCriteria)
+        public async Task<IEnumerable<ChargeMessageV1Dto>> SearchAsync(ChargeMessagesSearchCriteriaV1Dto searchCriteria)
         {
             var charge = await _data.Charges
                 .SingleOrDefaultAsync(c => c.Id == searchCriteria.ChargeId)
@@ -44,9 +45,20 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices
                 .ConfigureAwait(false);
 
             var chargeMessages = QueryChargeMessages(searchCriteria, charge, marketParticipant);
-            var chargeMessagesList = SortChargeMessages(chargeMessages, searchCriteria);
+            var sortedChargeMessages = await SortChargeMessages(chargeMessages, searchCriteria)
+                .ToListAsync().ConfigureAwait(false);
 
-            return new ChargeMessagesV1Dto(charge.Id, chargeMessagesList.Select(x => x.MessageId).ToList());
+            return MapToChargeMessageV1Dtos(sortedChargeMessages);
+        }
+
+        private static IEnumerable<ChargeMessageV1Dto> MapToChargeMessageV1Dtos(
+            IEnumerable<ChargeMessage> chargeMessagesList)
+        {
+            return chargeMessagesList.Select(cm =>
+                new ChargeMessageV1Dto(
+                    cm.MessageId,
+                    MapDocumentType(cm.MessageType), //maybe we need to cast
+                    cm.MessageDateTime));
         }
 
         private IQueryable<ChargeMessage> QueryChargeMessages(
@@ -64,23 +76,35 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices
                 .Take(searchCriteria.Take);
         }
 
-        private static IEnumerable<ChargeMessage> SortChargeMessages(
+        private static IOrderedQueryable<ChargeMessage> SortChargeMessages(
             IQueryable<ChargeMessage> chargeMessages,
             ChargeMessagesSearchCriteriaV1Dto searchCriteria)
         {
             return searchCriteria.ChargeMessageSortColumnName switch
             {
                 ChargeMessageSortColumnName.MessageId => searchCriteria.IsDescending
-                    ? chargeMessages.OrderByDescending(cm => cm.MessageId).ToList()
-                    : chargeMessages.OrderBy(cm => cm.MessageId).ToList(),
+                    ? chargeMessages.OrderByDescending(cm => cm.MessageId)
+                    : chargeMessages.OrderBy(cm => cm.MessageId),
                 ChargeMessageSortColumnName.MessageType => searchCriteria.IsDescending
-                    ? chargeMessages.OrderByDescending(cm => cm.MessageType).ToList()
-                    : chargeMessages.OrderBy(cm => cm.MessageType).ToList(),
+                    ? chargeMessages.OrderByDescending(cm => cm.MessageType)
+                    : chargeMessages.OrderBy(cm => cm.MessageType),
                 ChargeMessageSortColumnName.MessageDateTime => searchCriteria.IsDescending
-                    ? chargeMessages.OrderByDescending(cm => cm.MessageDateTime).ToList()
-                    : chargeMessages.OrderBy(cm => cm.MessageDateTime).ToList(),
-                _ => chargeMessages.ToList(),
+                    ? chargeMessages.OrderByDescending(cm => cm.MessageDateTime)
+                    : chargeMessages.OrderBy(cm => cm.MessageDateTime),
+                _ => chargeMessages.OrderBy(cm => cm.MessageDateTime),
             };
         }
+
+        private static DocumentType MapDocumentType(Charges.Domain.Dtos.SharedDtos.DocumentType documentType) =>
+            documentType switch
+            {
+                Domain.Dtos.SharedDtos.DocumentType.RequestChangeBillingMasterData => DocumentType.D05,
+                Domain.Dtos.SharedDtos.DocumentType.RequestChangeOfPriceList => DocumentType.D10,
+                Domain.Dtos.SharedDtos.DocumentType.Unknown =>
+                    throw new NotSupportedException(
+                        $"DocumentType '{Domain.Dtos.SharedDtos.DocumentType.Unknown}' is not supported"),
+                _ =>
+                    throw new ArgumentOutOfRangeException(nameof(documentType)),
+            };
     }
 }
