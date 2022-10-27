@@ -14,6 +14,8 @@
 
 using System.Linq;
 using GreenEnergyHub.Charges.QueryApi.Model;
+using Charge = GreenEnergyHub.Charges.QueryApi.Model.Charge;
+using ChargeMessage = GreenEnergyHub.Charges.QueryApi.Model.ChargeMessage;
 
 namespace GreenEnergyHub.Charges.QueryApi
 {
@@ -24,6 +26,8 @@ namespace GreenEnergyHub.Charges.QueryApi
         public IQueryable<Charge> Charges { get; }
 
         public IQueryable<ChargePoint> ChargePoints { get; }
+
+        public IQueryable<ChargeMessage> ChargeMessages { get; }
 
         public IQueryable<MeteringPoint> MeteringPoints { get; }
 
