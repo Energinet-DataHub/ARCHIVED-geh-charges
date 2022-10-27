@@ -47,6 +47,8 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
         [Column("B2CActorId")]
         public Guid? B2cactorId { get; set; }
 
+        [Required]
+        [StringLength(255)]
         public string Name { get; set; }
 
         [InverseProperty("Owner")]

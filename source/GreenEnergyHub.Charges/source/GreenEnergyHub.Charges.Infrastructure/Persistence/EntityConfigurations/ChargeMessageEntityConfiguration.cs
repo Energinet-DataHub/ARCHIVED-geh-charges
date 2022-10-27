@@ -30,6 +30,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Persistence.EntityConfigurations
             builder.Property(c => c.Type);
             builder.Property(c => c.MarketParticipantId);
             builder.Property(c => c.MessageId);
+            builder.Property(c => c.MessageType);
+            builder.Property(c => c.MessageDateTime);
         }
     }
 }

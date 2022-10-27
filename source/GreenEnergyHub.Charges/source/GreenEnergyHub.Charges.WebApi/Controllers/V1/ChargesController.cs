@@ -55,7 +55,7 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers.V1
         }
 
         /// <summary>
-        ///     Returns all charges based on the search criteria
+        /// Returns all charges based on the search criteria
         /// </summary>
         /// <returns>Charges data or "400 Bad request"</returns>
         [HttpPost("SearchAsync")]
@@ -64,7 +64,7 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers.V1
         {
             var isValid = ChargeSearchCriteriaValidator.Validate(searchCriteria);
             if (!isValid)
-                return BadRequest("Search criteria is not valid.");
+                return BadRequest("SearchAsync criteria is not valid.");
 
             var charges = await _chargesQueryService.SearchAsync(searchCriteria).ConfigureAwait(false);
 
