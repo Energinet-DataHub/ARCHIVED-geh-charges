@@ -408,13 +408,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
 
+            var firstDay = Iso8601Durations.GetBeginningOfDay(SystemClock.Instance.GetCurrentInstant());
+
             var points = new List<Point>
             {
-                new(1.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(0)),
-                new(2.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(1)),
-                new(3.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(2)),
-                new(4.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(3)),
-                new(5.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(4)),
+                new(1.00m, firstDay),
+                new(2.00m, Iso8601Durations.AddDuration(firstDay, Resolution.P1D.ToString(), 1)),
+                new(3.00m, Iso8601Durations.AddDuration(firstDay, Resolution.P1D.ToString(), 2)),
+                new(4.00m, Iso8601Durations.AddDuration(firstDay, Resolution.P1D.ToString(), 3)),
+                new(5.00m, Iso8601Durations.AddDuration(firstDay, Resolution.P1D.ToString(), 4)),
             };
 
             var charge = await GetValidCharge(chargesDatabaseWriteContext, points, Resolution.P1D);
@@ -426,8 +428,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var sut = GetSut(chargesDatabaseQueryContext);
             var searchCriteria = new ChargePricesSearchCriteriaV1DtoBuilder()
                 .WithChargeId(charge.Id)
-                .WithFromDateTime(InstantHelper.GetTodayAtMidnightUtc().ToDateTimeOffset())
-                .WithToDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(5).ToDateTimeOffset())
+                .WithFromDateTime(firstDay.ToDateTimeOffset())
+                .WithToDateTime(Iso8601Durations.AddDuration(firstDay, Resolution.P1D.ToString(), 5).ToDateTimeOffset())
                 .Build();
 
             // Act
@@ -445,8 +447,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
 
-            // var firstOfThisMonthUtc = InstantHelper.GetFirstDayOfThisMonthAtMidnightUtc();
-            var firstOfThisMonthUtc = Iso8601Durations.GetStart(SystemClock.Instance.GetCurrentInstant());
+            var firstOfThisMonthUtc = Iso8601Durations.GetBeginningOfMonth(SystemClock.Instance.GetCurrentInstant());
 
             var points = new List<Point>
             {

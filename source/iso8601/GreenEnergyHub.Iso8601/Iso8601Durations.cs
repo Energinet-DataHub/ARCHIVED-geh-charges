@@ -49,9 +49,14 @@ namespace GreenEnergyHub.Iso8601
             return AddDuration(fixedStart, duration, numberOfDurations);
         }
 
-        public Instant GetStart(Instant time)
+        public Instant GetBeginningOfMonth(Instant time)
         {
             return GetStartOfMonth(time);
+        }
+
+        public Instant GetBeginningOfDay(Instant time)
+        {
+            return GetStartOfDay(time);
         }
 
         private Instant AddMonthDuration(Instant startInstant, int numberOfDurations)
