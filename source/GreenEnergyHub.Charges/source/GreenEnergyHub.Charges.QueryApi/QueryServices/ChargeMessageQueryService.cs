@@ -68,15 +68,15 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices
             IQueryable<ChargeMessage> chargeMessages,
             ChargeMessagesSearchCriteriaV1Dto searchCriteria)
         {
-            return searchCriteria.SortColumnName switch
+            return searchCriteria.ChargeMessageSortColumnName switch
             {
-                SortColumnName.MessageId => searchCriteria.IsDescending
+                ChargeMessageSortColumnName.MessageId => searchCriteria.IsDescending
                     ? chargeMessages.OrderByDescending(cm => cm.MessageId).ToList()
                     : chargeMessages.OrderBy(cm => cm.MessageId).ToList(),
-                SortColumnName.MessageType => searchCriteria.IsDescending
+                ChargeMessageSortColumnName.MessageType => searchCriteria.IsDescending
                     ? chargeMessages.OrderByDescending(cm => cm.MessageType).ToList()
                     : chargeMessages.OrderBy(cm => cm.MessageType).ToList(),
-                SortColumnName.MessageDateTime => searchCriteria.IsDescending
+                ChargeMessageSortColumnName.MessageDateTime => searchCriteria.IsDescending
                     ? chargeMessages.OrderByDescending(cm => cm.MessageDateTime).ToList()
                     : chargeMessages.OrderBy(cm => cm.MessageDateTime).ToList(),
                 _ => chargeMessages.ToList(),
