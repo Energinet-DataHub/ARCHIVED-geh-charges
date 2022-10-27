@@ -466,8 +466,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var sut = GetSut(chargesDatabaseQueryContext);
             var searchCriteria = new ChargePricesSearchCriteriaV1DtoBuilder()
                 .WithChargeId(charge.Id)
-                .WithFromDateTime(InstantHelper.GetFirstDayOfThisMonthPlusMonthsAtMidnightUtc(0).ToDateTimeOffset())
-                .WithToDateTime(InstantHelper.GetFirstDayOfThisMonthPlusMonthsAtMidnightUtc(5).ToDateTimeOffset())
+                .WithFromDateTime(firstOfThisMonthUtc.ToDateTimeOffset())
+                .WithToDateTime(Iso8601Durations.AddDuration(firstOfThisMonthUtc, Resolution.P1M.ToString(), 5).ToDateTimeOffset())
                 .Build();
 
             // Act
