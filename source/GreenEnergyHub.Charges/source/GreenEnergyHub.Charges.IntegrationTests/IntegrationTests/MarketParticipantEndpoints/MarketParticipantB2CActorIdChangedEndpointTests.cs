@@ -23,7 +23,7 @@ using FluentAssertions;
 using GreenEnergyHub.Charges.Application.MarketParticipants.Handlers;
 using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.FunctionHost.MarketParticipant;
-using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
+using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures;
 using GreenEnergyHub.Charges.TestCore.Builders.Testables;
 using GreenEnergyHub.Charges.TestCore.TestHelpers;
 using Xunit;

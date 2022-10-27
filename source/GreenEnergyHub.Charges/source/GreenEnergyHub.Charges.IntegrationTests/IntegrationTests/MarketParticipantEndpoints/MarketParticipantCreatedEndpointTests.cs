@@ -25,7 +25,7 @@ using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Domain.GridAreaLinks;
 using GreenEnergyHub.Charges.FunctionHost.MarketParticipant;
-using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
+using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures;
 using GreenEnergyHub.Charges.TestCore.Builders.Testables;
 using Microsoft.EntityFrameworkCore;
 using Xunit;

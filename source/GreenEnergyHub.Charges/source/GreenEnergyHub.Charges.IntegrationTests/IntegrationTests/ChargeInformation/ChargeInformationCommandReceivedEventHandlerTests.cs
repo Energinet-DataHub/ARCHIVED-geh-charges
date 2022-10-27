@@ -28,7 +28,7 @@ using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Infrastructure.Outbox;
 using GreenEnergyHub.Charges.Infrastructure.Persistence;
-using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
+using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures;
 using Microsoft.Extensions.Logging;
 using Xunit;
 using Xunit.Categories;

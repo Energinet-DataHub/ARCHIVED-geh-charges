@@ -18,11 +18,12 @@ using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.FunctionAppHost;
 using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.FunctionHost;
+using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using GreenEnergyHub.Charges.TestCore.TestHelpers;
 using Microsoft.Extensions.Hosting;
 using Xunit;
 
-namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database
+namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures
 {
     /// <summary>
     /// A xUnit fixture for sharing managed dependencies for integration tests.
