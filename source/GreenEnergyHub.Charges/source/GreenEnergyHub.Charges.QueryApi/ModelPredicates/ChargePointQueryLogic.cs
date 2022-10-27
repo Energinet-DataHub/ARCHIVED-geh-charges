@@ -32,12 +32,12 @@ public static class ChargePointQueryLogic
         var chargePrices = queryable
             .Select(cp => new ChargePriceV1Dto(
                 cp.Price,
-                cp.Time,
+                DateTime.SpecifyKind(cp.Time, DateTimeKind.Utc),
                 iso8601Durations.GetTimeFixedToDuration(
                         DateTime.SpecifyKind(cp.Time, DateTimeKind.Utc).ToInstant(),
                         ((Resolution)cp.Charge.Resolution).ToString(),
                         1)
-                    .ToDateTimeUtc()))
+                    .ToDateTimeOffset()))
             .ToList();
 
         chargePrices = chargePrices.OrderBy(cp => cp.FromDateTime).ToList();

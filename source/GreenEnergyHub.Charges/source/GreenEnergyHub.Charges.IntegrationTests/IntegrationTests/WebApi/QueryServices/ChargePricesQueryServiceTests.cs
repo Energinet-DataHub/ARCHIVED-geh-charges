@@ -29,6 +29,7 @@ using GreenEnergyHub.Charges.TestCore.Builders.Command;
 using GreenEnergyHub.Charges.TestCore.Builders.Query;
 using GreenEnergyHub.Charges.TestCore.TestHelpers;
 using GreenEnergyHub.Iso8601;
+using NodaTime;
 using Xunit;
 using Xunit.Categories;
 using Charge = GreenEnergyHub.Charges.Domain.Charges.Charge;
@@ -43,7 +44,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
         public ChargePricesQueryServiceTests(ChargesDatabaseFixture fixture)
         {
             _databaseManager = fixture.DatabaseManager;
+            var iso8601Configuration = new Iso8601ConversionConfiguration("Europe/Copenhagen"); // For expected data creation
+            Iso8601Durations = new Iso8601Durations(iso8601Configuration);
         }
+
+        private Iso8601Durations Iso8601Durations { get; }
 
         [Fact]
         public async Task SearchAsync_WhenSearching_ReturnsPricesBasedOnSearchCriteria()
@@ -94,14 +99,18 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var searchCriteria = new ChargePricesSearchCriteriaV1DtoBuilder()
                 .WithChargeId(charge.Id)
                 .WithFromDateTime(InstantHelper.GetTodayAtMidnightUtc().ToDateTimeOffset())
-                .WithToDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(2).ToDateTimeOffset())
+                .WithToDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(3).ToDateTimeOffset())
                 .WithSkip(2)
                 .Build();
 
             var expected = new ChargePriceV1Dto(
                 expectedPoint.Price,
-                InstantHelper.GetTodayPlusDaysAtMidnightUtc(1).ToDateTimeOffset(),
-                InstantHelper.GetTodayPlusDaysAtMidnightUtc(2).ToDateTimeOffset());
+                expectedPoint.Time.ToDateTimeOffset(),
+                Iso8601Durations.GetTimeFixedToDuration(
+                    expectedPoint.Time,
+                    charge.Resolution.ToString(),
+                    1)
+                    .ToDateTimeOffset());
 
             // Act
             var actual = sut.Search(searchCriteria);
@@ -129,8 +138,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             var expected = new ChargePriceV1Dto(
                 expectedPoint.Price,
-                InstantHelper.GetTodayAtMidnightUtc().ToDateTimeOffset(),
-                InstantHelper.GetTodayPlusDaysAtMidnightUtc(1).ToDateTimeOffset());
+                expectedPoint.Time.ToDateTimeUtc(),
+                Iso8601Durations.GetTimeFixedToDuration(
+                    expectedPoint.Time,
+                    charge.Resolution.ToString(),
+                    1).ToDateTimeOffset());
 
             // Act
             var actual = sut.Search(searchCriteria);
@@ -151,7 +163,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var searchCriteria = new ChargePricesSearchCriteriaV1DtoBuilder()
                 .WithChargeId(charge.Id)
                 .WithFromDateTime(InstantHelper.GetTodayAtMidnightUtc().ToDateTimeOffset())
-                .WithToDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(2).ToDateTimeOffset())
+                .WithToDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(3).ToDateTimeOffset())
                 .WithTake(1)
                 .Build();
 
@@ -174,7 +186,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var searchCriteria = new ChargePricesSearchCriteriaV1DtoBuilder()
                 .WithChargeId(charge.Id)
                 .WithFromDateTime(InstantHelper.GetTodayAtMidnightUtc().ToDateTimeOffset())
-                .WithToDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(2).ToDateTimeOffset())
+                .WithToDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(3).ToDateTimeOffset())
                 .WithSortColumnName((SortColumnName)(-1))
                 .Build();
 
@@ -197,7 +209,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var searchCriteria = new ChargePricesSearchCriteriaV1DtoBuilder()
                 .WithChargeId(charge.Id)
                 .WithFromDateTime(InstantHelper.GetTodayAtMidnightUtc().ToDateTimeOffset())
-                .WithToDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(2).ToDateTimeOffset())
+                .WithToDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(3).ToDateTimeOffset())
                 .WithIsDescending(true)
                 .Build();
 
@@ -220,7 +232,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var searchCriteria = new ChargePricesSearchCriteriaV1DtoBuilder()
                 .WithChargeId(charge.Id)
                 .WithFromDateTime(InstantHelper.GetTodayAtMidnightUtc().ToDateTimeOffset())
-                .WithToDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(2).ToDateTimeOffset())
+                .WithToDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(3).ToDateTimeOffset())
                 .WithIsDescending(false)
                 .Build();
 
@@ -243,7 +255,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var searchCriteria = new ChargePricesSearchCriteriaV1DtoBuilder()
                 .WithChargeId(charge.Id)
                 .WithFromDateTime(InstantHelper.GetTodayAtMidnightUtc().ToDateTimeOffset())
-                .WithToDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(2).ToDateTimeOffset())
+                .WithToDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(3).ToDateTimeOffset())
                 .WithSortColumnName(SortColumnName.Price)
                 .WithIsDescending(false)
                 .Build();
@@ -267,7 +279,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var searchCriteria = new ChargePricesSearchCriteriaV1DtoBuilder()
                 .WithChargeId(charge.Id)
                 .WithFromDateTime(InstantHelper.GetTodayAtMidnightUtc().ToDateTimeOffset())
-                .WithToDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(2).ToDateTimeOffset())
+                .WithToDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(3).ToDateTimeOffset())
                 .WithSortColumnName(SortColumnName.Price)
                 .WithIsDescending(true)
                 .Build();
@@ -396,13 +408,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
 
+            var firstDay = Iso8601Durations.GetBeginningOfDay(SystemClock.Instance.GetCurrentInstant());
+
             var points = new List<Point>
             {
-                new(1.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(0)),
-                new(2.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(1)),
-                new(3.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(2)),
-                new(4.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(3)),
-                new(5.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(4)),
+                new(1.00m, firstDay),
+                new(2.00m, Iso8601Durations.AddDuration(firstDay, Resolution.P1D.ToString(), 1)),
+                new(3.00m, Iso8601Durations.AddDuration(firstDay, Resolution.P1D.ToString(), 2)),
+                new(4.00m, Iso8601Durations.AddDuration(firstDay, Resolution.P1D.ToString(), 3)),
+                new(5.00m, Iso8601Durations.AddDuration(firstDay, Resolution.P1D.ToString(), 4)),
             };
 
             var charge = await GetValidCharge(chargesDatabaseWriteContext, points, Resolution.P1D);
@@ -414,8 +428,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var sut = GetSut(chargesDatabaseQueryContext);
             var searchCriteria = new ChargePricesSearchCriteriaV1DtoBuilder()
                 .WithChargeId(charge.Id)
-                .WithFromDateTime(InstantHelper.GetTodayAtMidnightUtc().ToDateTimeOffset())
-                .WithToDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(5).ToDateTimeOffset())
+                .WithFromDateTime(firstDay.ToDateTimeOffset())
+                .WithToDateTime(Iso8601Durations.AddDuration(firstDay, Resolution.P1D.ToString(), 5).ToDateTimeOffset())
                 .Build();
 
             // Act
@@ -433,13 +447,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
 
+            var firstOfThisMonthUtc = Iso8601Durations.GetBeginningOfMonth(SystemClock.Instance.GetCurrentInstant());
+
             var points = new List<Point>
             {
-                new(1.00m, InstantHelper.GetFirstDayOfThisMonthPlusMonthsAtMidnightUtc(0)),
-                new(2.00m, InstantHelper.GetFirstDayOfThisMonthPlusMonthsAtMidnightUtc(1)),
-                new(3.00m, InstantHelper.GetFirstDayOfThisMonthPlusMonthsAtMidnightUtc(2)),
-                new(4.00m, InstantHelper.GetFirstDayOfThisMonthPlusMonthsAtMidnightUtc(3)),
-                new(5.00m, InstantHelper.GetFirstDayOfThisMonthPlusMonthsAtMidnightUtc(4)),
+                new(1.00m, firstOfThisMonthUtc),
+                new(2.00m, Iso8601Durations.AddDuration(firstOfThisMonthUtc, Resolution.P1M.ToString(), 1)),
+                new(3.00m, Iso8601Durations.AddDuration(firstOfThisMonthUtc, Resolution.P1M.ToString(), 2)),
+                new(4.00m, Iso8601Durations.AddDuration(firstOfThisMonthUtc, Resolution.P1M.ToString(), 3)),
+                new(5.00m, Iso8601Durations.AddDuration(firstOfThisMonthUtc, Resolution.P1M.ToString(), 4)),
             };
 
             var charge = await GetValidCharge(chargesDatabaseWriteContext, points, Resolution.P1M);
@@ -451,8 +467,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var sut = GetSut(chargesDatabaseQueryContext);
             var searchCriteria = new ChargePricesSearchCriteriaV1DtoBuilder()
                 .WithChargeId(charge.Id)
-                .WithFromDateTime(InstantHelper.GetFirstDayOfThisMonthPlusMonthsAtMidnightUtc(0).ToDateTimeOffset())
-                .WithToDateTime(InstantHelper.GetFirstDayOfThisMonthPlusMonthsAtMidnightUtc(5).ToDateTimeOffset())
+                .WithFromDateTime(firstOfThisMonthUtc.ToDateTimeOffset())
+                .WithToDateTime(Iso8601Durations.AddDuration(firstOfThisMonthUtc, Resolution.P1M.ToString(), 5).ToDateTimeOffset())
                 .Build();
 
             // Act
@@ -472,7 +488,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
         private static async Task<Charge> GetValidCharge(
             ChargesDatabaseContext chargesDatabaseWriteContext,
-            List<Point> points,
+            IEnumerable<Point> points,
             Resolution resolution)
         {
             var marketParticipantId =
@@ -503,8 +519,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
 
             var point1 = new Point(10m, InstantHelper.GetTodayAtMidnightUtc());
-            var point2 = new Point(20m, InstantHelper.GetTodayPlusHoursAtMidnightUtc(1));
-            var point3 = new Point(50m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(1));
+            var point2 = new Point(20m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(1));
+            var point3 = new Point(50m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(2));
 
             var points = new List<Point> { point1, point2, point3 };
             var charge = await GetValidCharge(chargesDatabaseWriteContext, points, Resolution.P1D);
