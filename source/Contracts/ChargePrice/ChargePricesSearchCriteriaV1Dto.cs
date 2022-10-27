@@ -19,8 +19,8 @@ namespace Energinet.DataHub.Charges.Contracts.ChargePrice
 {
     public record ChargePricesSearchCriteriaV1Dto(
         Guid ChargeId,
-        DateTimeOffset FromDateTime,
-        DateTimeOffset ToDateTime,
+        DateTimeOffset FromDateTimeUtc,
+        DateTimeOffset ToDateTimeUtc,
         SortColumnName SortColumnName,
         bool IsDescending,
         int Skip,
