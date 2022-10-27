@@ -286,8 +286,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
 
-            var expectedPoint = new Point(1.00m, InstantHelper.GetTodayAtMidnightUtc());
-            var unexpectedPoint = new Point(10.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(1));
+            var expectedPoint = new Point(1.00m, InstantHelper.GetTomorrowAtMidnightUtc());
+            var unexpectedPoint = new Point(10.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(2));
             var points = new List<Point> { expectedPoint, unexpectedPoint };
 
             var expectedCharge = await GetValidCharge(chargesDatabaseWriteContext, points, Resolution.PT15M);
@@ -305,8 +305,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             var expected = new ChargePriceV1Dto(
                 expectedPoint.Price,
-                InstantHelper.GetTodayPlusMinutesAtMidnightUtc(0).ToDateTimeOffset(),
-                InstantHelper.GetTodayPlusMinutesAtMidnightUtc(15).ToDateTimeOffset());
+                expectedPoint.Time.ToDateTimeUtc(),
+                expectedPoint.Time.ToDateTimeUtc().AddMinutes(15));
 
             // Act
             var actual = sut.Search(searchCriteria);

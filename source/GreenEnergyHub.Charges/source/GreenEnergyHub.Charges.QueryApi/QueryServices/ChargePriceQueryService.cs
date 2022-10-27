@@ -36,7 +36,7 @@ public class ChargePriceQueryService : IChargePriceQueryService
     {
         var chargePoints = _data.ChargePoints
             .Where(cp => cp.ChargeId == searchCriteria.ChargeId)
-            .Where(c => c.Time >= searchCriteria.FromDateTimeUtc && c.Time < searchCriteria.ToDateTimeUtc);
+            .Where(c => c.Time >= searchCriteria.FromDateTimeUtc && c.Time <= searchCriteria.ToDateTimeUtc);
 
         chargePoints = SortChargePoints(searchCriteria, chargePoints);
 
