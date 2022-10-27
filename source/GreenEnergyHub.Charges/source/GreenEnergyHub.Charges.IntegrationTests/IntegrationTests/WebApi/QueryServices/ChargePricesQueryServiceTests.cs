@@ -175,7 +175,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
                 .WithChargeId(charge.Id)
                 .WithFromDateTime(InstantHelper.GetTodayAtMidnightUtc().ToDateTimeOffset())
                 .WithToDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(2).ToDateTimeOffset())
-                .WithSortColumnName((SortColumnName)(-1))
+                .WithSortColumnName((ChargePriceSortColumnName)(-1))
                 .Build();
 
             // Act
@@ -244,7 +244,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
                 .WithChargeId(charge.Id)
                 .WithFromDateTime(InstantHelper.GetTodayAtMidnightUtc().ToDateTimeOffset())
                 .WithToDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(2).ToDateTimeOffset())
-                .WithSortColumnName(SortColumnName.Price)
+                .WithSortColumnName(ChargePriceSortColumnName.Price)
                 .WithIsDescending(false)
                 .Build();
 
@@ -268,7 +268,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
                 .WithChargeId(charge.Id)
                 .WithFromDateTime(InstantHelper.GetTodayAtMidnightUtc().ToDateTimeOffset())
                 .WithToDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(2).ToDateTimeOffset())
-                .WithSortColumnName(SortColumnName.Price)
+                .WithSortColumnName(ChargePriceSortColumnName.Price)
                 .WithIsDescending(true)
                 .Build();
 

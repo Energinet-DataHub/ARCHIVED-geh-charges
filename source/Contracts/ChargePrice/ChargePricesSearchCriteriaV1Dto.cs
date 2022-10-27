@@ -21,7 +21,7 @@ namespace Energinet.DataHub.Charges.Contracts.ChargePrice
         Guid ChargeId,
         DateTimeOffset FromDateTimeUtc,
         DateTimeOffset ToDateTimeUtc,
-        SortColumnName SortColumnName,
+        ChargePriceSortColumnName SortColumnName,
         bool IsDescending,
         int Skip,
         int Take);

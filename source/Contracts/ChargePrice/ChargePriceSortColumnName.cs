@@ -15,7 +15,7 @@
 // ReSharper disable once CheckNamespace - Type is shared so namespace is not determined by project structure/namespace
 namespace Energinet.DataHub.Charges.Contracts.ChargePrice
 {
-    public enum SortColumnName
+    public enum ChargePriceSortColumnName
     {
         FromDateTime,
         Price,

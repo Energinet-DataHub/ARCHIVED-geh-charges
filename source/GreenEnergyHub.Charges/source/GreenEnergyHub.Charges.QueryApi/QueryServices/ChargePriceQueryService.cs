@@ -56,12 +56,12 @@ public class ChargePriceQueryService : IChargePriceQueryService
 
     private static IList<ChargePriceV1Dto> SortChargePrices(ChargePricesSearchCriteriaV1Dto searchCriteria, IList<ChargePriceV1Dto> chargePrices)
     {
-        return searchCriteria.SortColumnName switch
+        return searchCriteria.ChargePriceSortColumnName switch
         {
-            SortColumnName.FromDateTime => searchCriteria.IsDescending
+            ChargePriceSortColumnName.FromDateTime => searchCriteria.IsDescending
                 ? chargePrices.OrderByDescending(cp => cp.FromDateTime).ToList()
                 : chargePrices.OrderBy(cp => cp.FromDateTime).ToList(),
-            SortColumnName.Price => searchCriteria.IsDescending
+            ChargePriceSortColumnName.Price => searchCriteria.IsDescending
                 ? chargePrices.OrderByDescending(cp => cp.Price).ToList()
                 : chargePrices.OrderBy(cp => cp.Price).ToList(),
             _ => chargePrices,
@@ -72,12 +72,12 @@ public class ChargePriceQueryService : IChargePriceQueryService
         ChargePricesSearchCriteriaV1Dto searchCriteria,
         IQueryable<ChargePoint> chargePoints)
     {
-        return searchCriteria.SortColumnName switch
+        return searchCriteria.ChargePriceSortColumnName switch
         {
-            SortColumnName.FromDateTime => searchCriteria.IsDescending
+            ChargePriceSortColumnName.FromDateTime => searchCriteria.IsDescending
                 ? chargePoints.OrderByDescending(cp => cp.Time)
                 : chargePoints.OrderBy(cp => cp.Time),
-            SortColumnName.Price => searchCriteria.IsDescending
+            ChargePriceSortColumnName.Price => searchCriteria.IsDescending
                 ? chargePoints.OrderByDescending(cp => cp.Price)
                 : chargePoints.OrderBy(cp => cp.Price),
             _ => chargePoints,
