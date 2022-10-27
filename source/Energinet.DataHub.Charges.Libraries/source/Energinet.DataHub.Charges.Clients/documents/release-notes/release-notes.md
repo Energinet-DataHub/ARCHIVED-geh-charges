@@ -1,5 +1,10 @@
 # Energinet.DataHub.Charges.Clients Release notes
 
+## Version 4.3.2
+
+Added 'Utc' to dates in `ChargePricesSearchCriteriaV1Dto`.
+Renamed `SortColumnName` to `ChargePriceSortColumnName`.
+
 ## Version 4.3.1
 
 Added `HasAnyPrices` to `ChargeV1Dto`.
