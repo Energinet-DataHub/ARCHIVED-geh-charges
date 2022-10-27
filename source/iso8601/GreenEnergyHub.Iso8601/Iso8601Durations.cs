@@ -49,6 +49,11 @@ namespace GreenEnergyHub.Iso8601
             return AddDuration(fixedStart, duration, numberOfDurations);
         }
 
+        public Instant GetStart(Instant time)
+        {
+            return GetStartOfMonth(time);
+        }
+
         private Instant AddMonthDuration(Instant startInstant, int numberOfDurations)
         {
             /* Month handling in time is tricky, as that requires an understanding of what a month is in local time, instead of UTC as we normally use.

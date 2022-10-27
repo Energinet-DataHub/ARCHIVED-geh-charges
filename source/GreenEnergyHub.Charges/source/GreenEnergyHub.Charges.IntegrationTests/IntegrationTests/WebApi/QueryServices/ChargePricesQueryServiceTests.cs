@@ -29,6 +29,7 @@ using GreenEnergyHub.Charges.TestCore.Builders.Command;
 using GreenEnergyHub.Charges.TestCore.Builders.Query;
 using GreenEnergyHub.Charges.TestCore.TestHelpers;
 using GreenEnergyHub.Iso8601;
+using NodaTime;
 using Xunit;
 using Xunit.Categories;
 using Charge = GreenEnergyHub.Charges.Domain.Charges.Charge;
@@ -444,7 +445,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
 
-            var firstOfThisMonthUtc = InstantHelper.GetFirstDayOfThisMonthAtMidnightUtc();
+            // var firstOfThisMonthUtc = InstantHelper.GetFirstDayOfThisMonthAtMidnightUtc();
+            var firstOfThisMonthUtc = Iso8601Durations.GetStart(SystemClock.Instance.GetCurrentInstant());
 
             var points = new List<Point>
             {
