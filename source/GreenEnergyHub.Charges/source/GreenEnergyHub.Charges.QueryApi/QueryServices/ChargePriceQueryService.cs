@@ -56,7 +56,7 @@ public class ChargePriceQueryService : IChargePriceQueryService
 
     private static IList<ChargePriceV1Dto> SortChargePrices(ChargePricesSearchCriteriaV1Dto searchCriteria, IList<ChargePriceV1Dto> chargePrices)
     {
-        return searchCriteria.ChargePriceSortColumnName switch
+        return searchCriteria.SortColumnName switch
         {
             ChargePriceSortColumnName.FromDateTime => searchCriteria.IsDescending
                 ? chargePrices.OrderByDescending(cp => cp.FromDateTime).ToList()
@@ -72,7 +72,7 @@ public class ChargePriceQueryService : IChargePriceQueryService
         ChargePricesSearchCriteriaV1Dto searchCriteria,
         IQueryable<ChargePoint> chargePoints)
     {
-        return searchCriteria.ChargePriceSortColumnName switch
+        return searchCriteria.SortColumnName switch
         {
             ChargePriceSortColumnName.FromDateTime => searchCriteria.IsDescending
                 ? chargePoints.OrderByDescending(cp => cp.Time)
