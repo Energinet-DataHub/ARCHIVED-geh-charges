@@ -57,7 +57,7 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices
             return chargeMessagesList.Select(cm =>
                 new ChargeMessageV1Dto(
                     cm.MessageId,
-                    MapDocumentType(cm.MessageType), //maybe we need to cast
+                    MapDocumentType(cm.MessageType),
                     cm.MessageDateTime));
         }
 
