@@ -105,7 +105,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var searchCriteria = new ChargePricesSearchCriteriaV1DtoBuilder()
                 .WithChargeId(charge.Id)
                 .WithFromDateTime(startOfTodayUtc.ToDateTimeOffset())
-                .WithToDateTime(startOfTodayUtc.ToDateTimeOffset().AddDays(2))
+                .WithToDateTime(expectedPoint.Time.ToDateTimeOffset())
                 .WithSkip(2)
                 .Build();
 
