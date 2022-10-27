@@ -37,6 +37,42 @@ namespace GreenEnergyHub.Charges.Core.DateTime
                 .InZone(timeZone);
         }
 
+        public ZonedDateTime AtStartOfDay()
+        {
+            var timeZone = GetTimeZone();
+            var now = _clock.GetCurrentInstant();
+            var today = now.InZone(timeZone).Date;
+            return timeZone.AtStartOfDay(today);
+        }
+
+        public ZonedDateTime AtStartOfMonth()
+        {
+            var timeZone = GetTimeZone();
+            var now = _clock.GetCurrentInstant();
+            var today = now.InZone(timeZone).Date;
+            var startMonth = today.PlusDays(1 - today.Day);
+            return timeZone.AtStartOfDay(startMonth);
+        }
+
+        public ZonedDateTime AtStartOfTodayPlusDays(int numberOfDaysToAdd)
+        {
+            var timeZone = GetTimeZone();
+            var now = _clock.GetCurrentInstant();
+            var localNow = now.InZone(timeZone);
+            var localWithDaysAdded = localNow.Date.PlusDays(numberOfDaysToAdd);
+            return timeZone.AtStartOfDay(localWithDaysAdded);
+        }
+
+        public ZonedDateTime AtStartOfThisMonthPlusMonths(int numberOfMonthsToAdd)
+        {
+            var timeZone = GetTimeZone();
+            var now = _clock.GetCurrentInstant();
+            var localNow = now.InZone(timeZone).Date;
+            var localStartOfMonth = localNow.PlusDays(1 - localNow.Day);
+            var localWithMonthsAdded = localStartOfMonth.PlusMonths(numberOfMonthsToAdd);
+            return timeZone.AtStartOfDay(localWithMonthsAdded);
+        }
+
         public ZonedDateTime GetZonedDateTime(LocalDateTime localDateTime, ResolutionStrategy strategy)
         {
             if (strategy != ResolutionStrategy.Leniently) throw new NotImplementedException();
