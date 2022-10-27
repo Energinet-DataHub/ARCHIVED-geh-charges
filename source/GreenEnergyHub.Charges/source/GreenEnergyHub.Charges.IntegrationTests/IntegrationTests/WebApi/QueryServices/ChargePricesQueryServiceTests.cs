@@ -105,7 +105,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var searchCriteria = new ChargePricesSearchCriteriaV1DtoBuilder()
                 .WithChargeId(charge.Id)
                 .WithFromDateTime(startOfTodayUtc.ToDateTimeOffset())
-                .WithToDateTime(startOfTodayUtc.ToDateTimeOffset().AddDays(3))
+                .WithToDateTime(startOfTodayUtc.ToDateTimeOffset().AddDays(2))
                 .WithSkip(2)
                 .Build();
 
@@ -170,7 +170,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var searchCriteria = new ChargePricesSearchCriteriaV1DtoBuilder()
                 .WithChargeId(charge.Id)
                 .WithFromDateTime(InstantHelper.GetTodayAtMidnightUtc().ToDateTimeOffset())
-                .WithToDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(3).ToDateTimeOffset())
+                .WithToDateTime(InstantHelper.GetTodayPlusDaysAtMidnightUtc(2).ToDateTimeOffset())
                 .WithTake(1)
                 .Build();
 
@@ -193,7 +193,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var searchCriteria = new ChargePricesSearchCriteriaV1DtoBuilder()
                 .WithChargeId(charge.Id)
                 .WithFromDateTime(charge.Points.First().Time.ToDateTimeOffset())
-                .WithToDateTime(charge.Points.Last().Time.ToDateTimeOffset().AddDays(2))
+                .WithToDateTime(charge.Points.Last().Time.ToDateTimeOffset())
                 .WithSortColumnName((ChargePriceSortColumnName)(-1))
                 .Build();
 
@@ -262,7 +262,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var searchCriteria = new ChargePricesSearchCriteriaV1DtoBuilder()
                 .WithChargeId(charge.Id)
                 .WithFromDateTime(charge.Points.First().Time.ToDateTimeOffset())
-                .WithToDateTime(charge.Points.Last().Time.ToDateTimeOffset().AddDays(2))
+                .WithToDateTime(charge.Points.Last().Time.ToDateTimeOffset())
                 .WithSortColumnName(ChargePriceSortColumnName.Price)
                 .WithIsDescending(false)
                 .Build();
@@ -286,7 +286,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var searchCriteria = new ChargePricesSearchCriteriaV1DtoBuilder()
                 .WithChargeId(charge.Id)
                 .WithFromDateTime(charge.Points.First().Time.ToDateTimeOffset())
-                .WithToDateTime(charge.Points.Last().Time.ToDateTimeOffset().AddDays(2))
+                .WithToDateTime(charge.Points.Last().Time.ToDateTimeOffset())
                 .WithSortColumnName(ChargePriceSortColumnName.Price)
                 .WithIsDescending(true)
                 .Build();
@@ -436,7 +436,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var searchCriteria = new ChargePricesSearchCriteriaV1DtoBuilder()
                 .WithChargeId(charge.Id)
                 .WithFromDateTime(todayUtc.ToDateTimeOffset())
-                .WithToDateTime(_zonedDateTimeService.AtStartOfTodayPlusDays(5).ToDateTimeUtc().ToDateTimeOffset())
+                .WithToDateTime(_zonedDateTimeService.AtStartOfTodayPlusDays(4).ToDateTimeUtc().ToDateTimeOffset())
                 .Build();
 
             // Act
@@ -475,7 +475,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var searchCriteria = new ChargePricesSearchCriteriaV1DtoBuilder()
                 .WithChargeId(charge.Id)
                 .WithFromDateTime(startOfMonthUtc.ToDateTimeOffset())
-                .WithToDateTime(_zonedDateTimeService.AtStartOfThisMonthPlusMonths(6).ToDateTimeUtc().ToDateTimeOffset())
+                .WithToDateTime(_zonedDateTimeService.AtStartOfThisMonthPlusMonths(4).ToDateTimeUtc().ToDateTimeOffset())
                 .Build();
 
             // Act
