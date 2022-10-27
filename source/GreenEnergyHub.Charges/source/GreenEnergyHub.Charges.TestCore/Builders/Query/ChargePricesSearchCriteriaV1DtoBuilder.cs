@@ -22,7 +22,7 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Query
         private Guid _chargeId = Guid.NewGuid();
         private DateTimeOffset _fromDateTime = DateTimeOffset.MinValue;
         private DateTimeOffset _toDateTime = DateTimeOffset.MaxValue;
-        private SortColumnName _sortColumnName = SortColumnName.FromDateTime;
+        private ChargePriceSortColumnName _chargePriceSortColumnName = ChargePriceSortColumnName.FromDateTime;
         private bool _isDescending;
         private int _skip;
         private int _take = 10;
@@ -45,9 +45,9 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Query
             return this;
         }
 
-        public ChargePricesSearchCriteriaV1DtoBuilder WithSortColumnName(SortColumnName sortColumnName)
+        public ChargePricesSearchCriteriaV1DtoBuilder WithSortColumnName(ChargePriceSortColumnName chargePriceSortColumnName)
         {
-            _sortColumnName = sortColumnName;
+            _chargePriceSortColumnName = chargePriceSortColumnName;
             return this;
         }
 
@@ -75,7 +75,7 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Query
                 _chargeId,
                 _fromDateTime,
                 _toDateTime,
-                _sortColumnName,
+                _chargePriceSortColumnName,
                 _isDescending,
                 _skip,
                 _take);
