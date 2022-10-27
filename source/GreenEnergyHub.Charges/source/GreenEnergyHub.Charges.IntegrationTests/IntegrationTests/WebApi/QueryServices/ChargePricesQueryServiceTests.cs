@@ -44,14 +44,15 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
     {
         private readonly ChargesDatabaseManager _databaseManager;
         private readonly ZonedDateTimeService _zonedDateTimeService;
+        private readonly Iso8601Durations _iso8601Durations;
 
         public ChargePricesQueryServiceTests(ChargesDatabaseFixture fixture)
         {
             _databaseManager = fixture.DatabaseManager;
+            var configuration = new Iso8601ConversionConfiguration("Europe/Copenhagen");
             _zonedDateTimeService =
-                ZonedDateTimeServiceHelper.GetZonedDateTimeService(
-                    new Iso8601ConversionConfiguration("Europe/Copenhagen"),
-                    SystemClock.Instance.GetCurrentInstant());
+                ZonedDateTimeServiceHelper.GetZonedDateTimeService(configuration, SystemClock.Instance.GetCurrentInstant());
+            _iso8601Durations = new Iso8601Durations(configuration);
         }
 
         [Fact]
@@ -111,7 +112,11 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var expected = new ChargePriceV1Dto(
                 expectedPoint.Price,
                 expectedPoint.Time.ToDateTimeOffset(),
-                expectedPoint.Time.ToDateTimeOffset().AddDays(1));
+                _iso8601Durations.GetTimeFixedToDuration(
+                    expectedPoint.Time,
+                    charge.Resolution.ToString(),
+                    1)
+                    .ToDateTimeOffset());
 
             // Act
             var actual = sut.Search(searchCriteria);
@@ -139,8 +144,12 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             var expected = new ChargePriceV1Dto(
                 expectedPoint.Price,
-                InstantHelper.GetTodayAtMidnightUtc().ToDateTimeOffset(),
-                InstantHelper.GetTodayPlusDaysAtMidnightUtc(1).ToDateTimeOffset());
+                expectedPoint.Time.ToDateTimeOffset(),
+                _iso8601Durations.GetTimeFixedToDuration(
+                        expectedPoint.Time,
+                        charge.Resolution.ToString(),
+                        1)
+                    .ToDateTimeOffset());
 
             // Act
             var actual = sut.Search(searchCriteria);
