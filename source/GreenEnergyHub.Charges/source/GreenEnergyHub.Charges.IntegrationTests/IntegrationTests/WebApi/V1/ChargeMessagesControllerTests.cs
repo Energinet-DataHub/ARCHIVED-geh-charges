@@ -29,11 +29,9 @@ using GreenEnergyHub.Charges.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.WebApi;
 using GreenEnergyHub.Charges.TestCore.Attributes;
-using GreenEnergyHub.Charges.TestCore.Builders.Command;
 using GreenEnergyHub.Charges.TestCore.Builders.Query;
 using GreenEnergyHub.Charges.TestCore.Data;
 using Microsoft.EntityFrameworkCore;
-using NodaTime.Extensions;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
@@ -69,7 +67,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
         {
             // Arrange
             await using var chargesDbContext = _databaseManager.CreateDbContext();
-            var charge = await GetChargeAsync(chargesDbContext);
+            var charge = await GetSeededChargeAsync(chargesDbContext);
 
             var sut = CreateHttpClient(factory);
             var searchCriteria = new ChargeMessagesSearchCriteriaV1DtoBuilder().WithChargeId(charge.Id).Build();
@@ -89,7 +87,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
         {
             // Arrange
             await using var chargesDbContext = _databaseManager.CreateDbContext();
-            var charge = await GetChargeAsync(chargesDbContext);
+            var charge = await GetSeededChargeAsync(chargesDbContext);
             var expectedChargeMessage = await GetSeededChargeMessageAsync(chargesDbContext);
 
             var sut = CreateHttpClient(factory);
@@ -129,22 +127,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
             return sut;
         }
 
-        private static ChargeMessage CreateChargeMessage()
-        {
-            return new ChargeMessageBuilder()
-                .WithSenderProvidedChargeId(ChargeId)
-                .WithChargeType(ChargeType.Tariff)
-                .WithMarketParticipantId(SeededData.MarketParticipants.Provider8100000000030.Gln)
-                .Build();
-        }
-
-        private static async Task AddChargeMessageDataAsync(IChargesDatabaseContext context, ChargeMessage message)
-        {
-            context.ChargeMessages.Add(message);
-            await context.SaveChangesAsync();
-        }
-
-        private static async Task<Charge> GetChargeAsync(IChargesDatabaseContext context)
+        private static async Task<Charge> GetSeededChargeAsync(IChargesDatabaseContext context)
         {
             return await context.Charges
                 .SingleAsync(c => c.SenderProvidedChargeId == ChargeId
