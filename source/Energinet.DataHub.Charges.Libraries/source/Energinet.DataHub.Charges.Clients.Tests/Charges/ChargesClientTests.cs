@@ -446,7 +446,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
 
         [Theory]
         [InlineAutoDomainData]
-        public async Task SearchChargeMessagesAsync_WhenSuccess_ReturnsChargePoints(
+        public async Task SearchChargeMessagesAsync_WhenSuccess_ReturnsChargeMessages(
             Mock<IChargesClientFactory> chargesClientFactory,
             ChargeMessagesSearchCriteriaV1Dto searchCriteria,
             IList<ChargeMessageV1Dto> chargeMessageV1Dtos)
