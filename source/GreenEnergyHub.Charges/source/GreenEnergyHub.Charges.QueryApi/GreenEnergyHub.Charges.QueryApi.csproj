@@ -58,7 +58,7 @@ limitations under the License.
     <Compile Include="..\..\..\Contracts\ChargeMessage\ChargeMessageSortColumnName.cs">
       <Link>Dtos\ChargeMessage\ChargeMessageSortColumnName.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\Contracts\ChargeMessage\DocumentType.cs">
+    <Compile Include="..\..\..\Contracts\ChargeMessage\ChargeMessageDocumentType.cs">
       <Link>Dtos\ChargeMessage\DocumentType.cs</Link>
     </Compile>
     <Compile Include="..\..\..\Contracts\Charge\ChargeType.cs">

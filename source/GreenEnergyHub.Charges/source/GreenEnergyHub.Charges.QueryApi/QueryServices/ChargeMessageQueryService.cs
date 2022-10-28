@@ -95,11 +95,11 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices
             };
         }
 
-        private static DocumentType MapDocumentType(Charges.Domain.Dtos.SharedDtos.DocumentType documentType) =>
+        private static ChargeMessageDocumentType MapDocumentType(Charges.Domain.Dtos.SharedDtos.DocumentType documentType) =>
             documentType switch
             {
-                Domain.Dtos.SharedDtos.DocumentType.RequestChangeBillingMasterData => DocumentType.D05,
-                Domain.Dtos.SharedDtos.DocumentType.RequestChangeOfPriceList => DocumentType.D10,
+                Domain.Dtos.SharedDtos.DocumentType.RequestChangeBillingMasterData => ChargeMessageDocumentType.D05,
+                Domain.Dtos.SharedDtos.DocumentType.RequestChangeOfPriceList => ChargeMessageDocumentType.D10,
                 Domain.Dtos.SharedDtos.DocumentType.Unknown =>
                     throw new NotSupportedException(
                         $"DocumentType '{Domain.Dtos.SharedDtos.DocumentType.Unknown}' is not supported"),
