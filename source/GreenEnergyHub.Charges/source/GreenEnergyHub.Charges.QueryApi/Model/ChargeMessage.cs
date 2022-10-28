@@ -15,6 +15,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 
 namespace GreenEnergyHub.Charges.QueryApi.Model
 {
@@ -39,7 +40,7 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
         public string MessageId { get; set; }
 
         [Required]
-        public int MessageType { get; set; }
+        public DocumentType MessageType { get; set; }
 
         [Required]
         public DateTime MessageDateTime { get; set; }

@@ -50,6 +50,15 @@ namespace Energinet.DataHub.Charges.Clients.Charges
         }
 
         /// <summary>
+        /// Provides the relative uri for searching charges messages.
+        /// </summary>
+        /// <returns>Relative URI</returns>
+        public static Uri SearchChargeMessages()
+        {
+            return new Uri("v1/ChargeMessages/SearchAsync", UriKind.Relative);
+        }
+
+        /// <summary>
         /// Provides the relative uri for getting all market participants
         /// </summary>
         /// <returns>Relative URI</returns>

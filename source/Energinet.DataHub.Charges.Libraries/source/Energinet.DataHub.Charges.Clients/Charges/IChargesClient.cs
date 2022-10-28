@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Energinet.DataHub.Charges.Contracts.Charge;
 using Energinet.DataHub.Charges.Contracts.ChargeLink;
+using Energinet.DataHub.Charges.Contracts.ChargeMessage;
 using Energinet.DataHub.Charges.Contracts.ChargePrice;
 
 namespace Energinet.DataHub.Charges.Clients.Charges
@@ -55,5 +56,11 @@ namespace Energinet.DataHub.Charges.Clients.Charges
         /// </summary>
         /// <returns>A <see cref="ChargePricesV1Dto"/></returns>
         Task<ChargePricesV1Dto> SearchChargePricesAsync(ChargePricesSearchCriteriaV1Dto searchCriteria);
+
+        /// <summary>
+        /// Returns charge messages based on the search criteria.
+        /// </summary>
+        /// <returns>Charge messages(Dto) with collection of messages</returns>
+        Task<IList<ChargeMessageV1Dto>> SearchChargeMessagesAsync(ChargeMessagesSearchCriteriaV1Dto searchCriteria);
     }
 }
