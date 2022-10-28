@@ -12,7 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Energinet.DataHub.Charges.Contracts.ChargePrice;
+using System.Threading.Tasks;
+using Energinet.DataHub.Charges.Contracts.ChargeMessage;
 using GreenEnergyHub.Charges.QueryApi.QueryServices;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,26 +22,26 @@ namespace GreenEnergyHub.Charges.WebApi.Controllers.V1;
 [ApiController]
 [ApiVersion(Version1)]
 [Route("v{version:apiVersion}/[controller]")]
-public class ChargePricesController : Controller
+public class ChargeMessagesController : Controller
 {
     public const string Version1 = "1.0";
-    private readonly IChargePriceQueryService _chargePriceQueryService;
+    private readonly IChargeMessageQueryService _chargeMessageQueryService;
 
-    public ChargePricesController(IChargePriceQueryService chargePriceQueryService)
+    public ChargeMessagesController(IChargeMessageQueryService chargeMessageQueryService)
     {
-        _chargePriceQueryService = chargePriceQueryService;
+        _chargeMessageQueryService = chargeMessageQueryService;
     }
 
     /// <summary>
-    /// Returns all charge prices based on search criteria
+    /// Returns all charge messages based on search criteria
     /// </summary>
-    /// <returns>Charge prices or "404 Not Found"</returns>
-    [HttpPost("Search")]
+    /// <returns>Charge Messages</returns>
+    [HttpPost("SearchAsync")]
     [MapToApiVersion(Version1)]
-    public IActionResult Search([FromBody] ChargePricesSearchCriteriaV1Dto searchCriteria)
+    public async Task<IActionResult> SearchAsync([FromBody] ChargeMessagesSearchCriteriaV1Dto searchCriteria)
     {
-        var chargePrices = _chargePriceQueryService.Search(searchCriteria);
+        var chargeMessages = await _chargeMessageQueryService.SearchAsync(searchCriteria).ConfigureAwait(false);
 
-        return Ok(chargePrices);
+        return Ok(chargeMessages);
     }
 }

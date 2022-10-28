@@ -31,6 +31,8 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
 
         public virtual DbSet<ChargeLink> ChargeLinks { get; set; }
 
+        public virtual DbSet<ChargeMessage> ChargeMessages { get; set; }
+
         public virtual DbSet<ChargePeriod> ChargePeriods { get; set; }
 
         public virtual DbSet<ChargePoint> ChargePoints { get; set; }
@@ -77,6 +79,14 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
                     .HasForeignKey(d => d.MeteringPointId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ChargeLink_MeteringPoint");
+            });
+
+            modelBuilder.Entity<ChargeMessage>(entity =>
+            {
+                entity.HasKey(e => e.Id)
+                    .IsClustered(false);
+
+                entity.Property(e => e.Id).ValueGeneratedNever();
             });
 
             modelBuilder.Entity<ChargePeriod>(entity =>
@@ -143,6 +153,8 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.ActorId).HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.Name).HasDefaultValueSql("('Pending charge owner name')");
             });
 
             modelBuilder.Entity<MeteringPoint>(entity =>

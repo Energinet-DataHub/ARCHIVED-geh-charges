@@ -13,11 +13,12 @@
 // limitations under the License.
 
 // ReSharper disable once CheckNamespace - Type is shared so namespace is not determined by project structure/namespace
-namespace Energinet.DataHub.Charges.Contracts.ChargePrice
+namespace Energinet.DataHub.Charges.Contracts.ChargeMessage
 {
-    public enum SortColumnName
+    public enum ChargeMessageSortColumnName
     {
-        FromDateTime,
-        Price,
+        MessageId,
+        MessageType,
+        MessageDateTime,
     }
 }

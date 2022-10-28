@@ -26,5 +26,13 @@ namespace GreenEnergyHub.Charges.TestCore.TestHelpers
             var clock = new FakeClock(instant);
             return new ZonedDateTimeService(clock, new Iso8601ConversionConfiguration(DateTimeZoneProviders.Tzdb.GetSystemDefault().Id));
         }
+
+        public static ZonedDateTimeService GetZonedDateTimeService(
+            Iso8601ConversionConfiguration iso8601ConversionConfiguration,
+            Instant instant)
+        {
+            var clock = new FakeClock(instant);
+            return new ZonedDateTimeService(clock, iso8601ConversionConfiguration);
+        }
     }
 }

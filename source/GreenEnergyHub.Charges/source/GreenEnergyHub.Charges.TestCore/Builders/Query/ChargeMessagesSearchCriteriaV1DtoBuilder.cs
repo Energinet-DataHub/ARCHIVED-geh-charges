@@ -13,69 +13,69 @@
 // limitations under the License.
 
 using System;
-using Energinet.DataHub.Charges.Contracts.ChargePrice;
+using Energinet.DataHub.Charges.Contracts.ChargeMessage;
 
 namespace GreenEnergyHub.Charges.TestCore.Builders.Query
 {
-    public class ChargePricesSearchCriteriaV1DtoBuilder
+    public class ChargeMessagesSearchCriteriaV1DtoBuilder
     {
         private Guid _chargeId = Guid.NewGuid();
         private DateTimeOffset _fromDateTime = DateTimeOffset.MinValue;
         private DateTimeOffset _toDateTime = DateTimeOffset.MaxValue;
-        private ChargePriceSortColumnName _chargePriceSortColumnName = ChargePriceSortColumnName.FromDateTime;
+        private ChargeMessageSortColumnName _chargeMessageSortColumnName = ChargeMessageSortColumnName.MessageDateTime;
         private bool _isDescending;
         private int _skip;
         private int _take = 10;
 
-        public ChargePricesSearchCriteriaV1DtoBuilder WithChargeId(Guid chargeId)
+        public ChargeMessagesSearchCriteriaV1DtoBuilder WithChargeId(Guid chargeId)
         {
             _chargeId = chargeId;
             return this;
         }
 
-        public ChargePricesSearchCriteriaV1DtoBuilder WithFromDateTime(DateTimeOffset fromDateTime)
+        public ChargeMessagesSearchCriteriaV1DtoBuilder WithFromDateTime(DateTimeOffset fromDateTime)
         {
             _fromDateTime = fromDateTime;
             return this;
         }
 
-        public ChargePricesSearchCriteriaV1DtoBuilder WithToDateTime(DateTimeOffset toDateTime)
+        public ChargeMessagesSearchCriteriaV1DtoBuilder WithToDateTime(DateTimeOffset toDateTime)
         {
             _toDateTime = toDateTime;
             return this;
         }
 
-        public ChargePricesSearchCriteriaV1DtoBuilder WithSortColumnName(ChargePriceSortColumnName chargePriceSortColumnName)
+        public ChargeMessagesSearchCriteriaV1DtoBuilder WithSortColumnName(ChargeMessageSortColumnName chargeMessageSortColumnName)
         {
-            _chargePriceSortColumnName = chargePriceSortColumnName;
+            _chargeMessageSortColumnName = chargeMessageSortColumnName;
             return this;
         }
 
-        public ChargePricesSearchCriteriaV1DtoBuilder WithIsDescending(bool isDescending)
+        public ChargeMessagesSearchCriteriaV1DtoBuilder WithIsDescending(bool isDescending)
         {
             _isDescending = isDescending;
             return this;
         }
 
-        public ChargePricesSearchCriteriaV1DtoBuilder WithSkip(int skip)
+        public ChargeMessagesSearchCriteriaV1DtoBuilder WithSkip(int skip)
         {
             _skip = skip;
             return this;
         }
 
-        public ChargePricesSearchCriteriaV1DtoBuilder WithTake(int take)
+        public ChargeMessagesSearchCriteriaV1DtoBuilder WithTake(int take)
         {
             _take = take;
             return this;
         }
 
-        public ChargePricesSearchCriteriaV1Dto Build()
+        public ChargeMessagesSearchCriteriaV1Dto Build()
         {
-            return new ChargePricesSearchCriteriaV1Dto(
+            return new ChargeMessagesSearchCriteriaV1Dto(
                 _chargeId,
                 _fromDateTime,
                 _toDateTime,
-                _chargePriceSortColumnName,
+                _chargeMessageSortColumnName,
                 _isDescending,
                 _skip,
                 _take);

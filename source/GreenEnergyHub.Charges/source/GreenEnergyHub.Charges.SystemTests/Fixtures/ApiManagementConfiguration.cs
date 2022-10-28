@@ -35,7 +35,11 @@ namespace GreenEnergyHub.Charges.SystemTests.Fixtures
                 Root.GetValue<string>("ENVIRONMENT_SHORT") +
                 Root.GetValue<string>("ENVIRONMENT_INSTANCE");
 
-            var clientNames = new List<string> { Root.GetValue<string>("CLIENT_NAME") };
+            var clientNames = new List<string>
+            {
+                Root.GetValue<string>("GRID_ACCESS_PROVIDER_CLIENT_NAME"),
+                Root.GetValue<string>("ENERGY_SUPPLIER_CLIENT_NAME"),
+            };
 
             AuthorizationConfiguration = new B2CAuthorizationConfiguration(
                 usedForSystemTests: true,

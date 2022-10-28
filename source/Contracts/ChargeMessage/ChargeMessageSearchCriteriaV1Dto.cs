@@ -15,13 +15,13 @@
 using System;
 
 // ReSharper disable once CheckNamespace - Type is shared so namespace is not determined by project structure/namespace
-namespace Energinet.DataHub.Charges.Contracts.ChargePrice
+namespace Energinet.DataHub.Charges.Contracts.ChargeMessage
 {
-    public record ChargePricesSearchCriteriaV1Dto(
+    public record ChargeMessagesSearchCriteriaV1Dto(
         Guid ChargeId,
-        DateTimeOffset FromDateTimeUtc,
-        DateTimeOffset ToDateTimeUtc,
-        ChargePriceSortColumnName SortColumnName,
+        DateTimeOffset FromDateTime,
+        DateTimeOffset ToDateTime,
+        ChargeMessageSortColumnName ChargeMessageSortColumnName,
         bool IsDescending,
         int Skip,
         int Take);

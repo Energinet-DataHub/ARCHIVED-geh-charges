@@ -14,6 +14,8 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.Domain.Charges
 {
@@ -26,13 +28,17 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             string senderProvidedChargeId,
             ChargeType type,
             string marketParticipantId,
-            string messageId)
+            string messageId,
+            DocumentType messageType,
+            Instant messageDateTime)
         {
             Id = Guid.NewGuid();
             SenderProvidedChargeId = senderProvidedChargeId;
             Type = type;
             MarketParticipantId = marketParticipantId;
             MessageId = messageId;
+            MessageType = messageType;
+            MessageDateTime = messageDateTime;
         }
 
         /// <summary>
@@ -64,20 +70,44 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         /// <summary>
         /// The message id
         /// </summary>
+        [Required]
+        [StringLength(255)]
         public string MessageId { get; }
+
+        /// <summary>
+        /// The message type
+        /// </summary>
+        [Required]
+        public DocumentType MessageType { get; }
+
+        /// <summary>
+        /// The message date time
+        /// </summary>
+        [Required]
+        public Instant MessageDateTime { get; }
 
         public static ChargeMessage Create(
             string senderProvidedChargeId,
             ChargeType chargeType,
             string marketParticipantId,
-            string messageId)
+            string messageId,
+            DocumentType messageType,
+            Instant messageDateTime)
         {
             ArgumentNullException.ThrowIfNull(senderProvidedChargeId);
             ArgumentNullException.ThrowIfNull(chargeType);
             ArgumentNullException.ThrowIfNull(marketParticipantId);
             ArgumentNullException.ThrowIfNull(messageId);
+            ArgumentNullException.ThrowIfNull(messageType);
+            ArgumentNullException.ThrowIfNull(messageDateTime);
 
-            return new ChargeMessage(senderProvidedChargeId, chargeType, marketParticipantId, messageId);
+            return new ChargeMessage(
+                senderProvidedChargeId,
+                chargeType,
+                marketParticipantId,
+                messageId,
+                messageType,
+                messageDateTime);
         }
     }
 }
