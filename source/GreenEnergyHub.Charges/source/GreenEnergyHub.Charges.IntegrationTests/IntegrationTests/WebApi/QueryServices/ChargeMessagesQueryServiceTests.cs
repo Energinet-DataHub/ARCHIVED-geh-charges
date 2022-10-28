@@ -71,9 +71,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
                 .Select(x => x.MessageId)
                 .ToList();
 
-            actual.ChargeId.Should().Be(expectedCharge.Id);
-            actual.MessageIds.Should().ContainInOrder(expectedMessageIds);
-            actual.MessageIds.Should().NotContain("MessageId4");
+            actual.Select(x => x.MessageId).Should().ContainInOrder(expectedMessageIds);
+            actual.Select(x => x.MessageId).Should().NotContain("MessageId4");
         }
 
         [Fact]
@@ -96,8 +95,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var actual = await sut.SearchAsync(searchCriteria);
 
             // Assert
-            actual.ChargeId.Should().Be(expectedCharge.Id);
-            actual.MessageIds.Should().ContainInOrder(new List<string>());
+            actual.Select(x => x.MessageId).Should().ContainInOrder(new List<string>());
         }
 
         [Fact]
