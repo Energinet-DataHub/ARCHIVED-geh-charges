@@ -17,7 +17,7 @@ namespace Energinet.DataHub.Charges.Contracts.Charge
 {
     public enum ChargeMessageDocumentType
     {
-        D05 = 1, // CimRequestChangeBillingMasterData;
-        D10 = 2, // CimRequestChangeOfPriceList;
+        D05 = 1, // RequestChangeBillingMasterData
+        D10 = 2, // RequestChangeOfPriceList
     }
 }
