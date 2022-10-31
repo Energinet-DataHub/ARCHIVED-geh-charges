@@ -213,6 +213,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         public const string EffectiveDateMustMatchPriceSeriesStartIntervalErrorText =
             "Price series start interval and effective date must have the same value for charge with ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} owned by {{ChargeOwner}}";
 
+        [ErrorMessageFor(ValidationRuleIdentifier.PriceSeriesResolutionMustMatchChargeResolution)]
+        public const string PriceSeriesResolutionMustMatchChargeResolutionErrorText =
+            "The price series with transaction id {{ChargeOperationId}} contains a resolution {{ChargeResolution}} that does not match the charge with ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} owned by {{ChargeOwner}}";
+
         public const string Unknown = "unknown";
     }
 }

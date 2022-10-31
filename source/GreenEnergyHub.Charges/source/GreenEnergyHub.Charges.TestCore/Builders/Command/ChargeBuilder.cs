@@ -147,6 +147,7 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Command
             if (_points.Any())
             {
                 charge.UpdatePrices(
+                    _resolution,
                     _points.Min(p => p.Time),
                     _points.Max(p => p.Time),
                     _points,
