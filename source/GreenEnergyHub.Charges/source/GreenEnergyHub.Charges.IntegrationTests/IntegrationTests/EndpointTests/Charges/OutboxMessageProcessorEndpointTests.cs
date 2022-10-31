@@ -36,6 +36,7 @@ using GreenEnergyHub.Charges.IntegrationTests.Fixtures;
 using GreenEnergyHub.Charges.TestCore.Builders.Command;
 using GreenEnergyHub.Charges.TestCore.TestHelpers;
 using Microsoft.Azure.Functions.Worker;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NodaTime;
 using Xunit;
@@ -134,6 +135,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 [Frozen] Mock<IClock> clock,
                 [Frozen] Mock<IDomainEventDispatcher> dispatcher,
                 [Frozen] Mock<IOutboxMessageParser> outboxMessageParser,
+                [Frozen] Mock<ILoggerFactory> loggerFactory,
                 ChargePriceOperationsRejectedEventBuilder chargePriceOperationsRejectedEventBuilder,
                 TimerInfo timerInfo,
                 CorrelationContext correlationContext,
@@ -158,7 +160,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     clock.Object,
                     correlationContext,
                     dispatcher.Object,
-                    unitOfWork);
+                    unitOfWork,
+                    loggerFactory.Object);
 
                 // Act & Assert
                 dispatcher.Setup(d => d.DispatchAsync(
