@@ -150,6 +150,9 @@ https://github.com/Energinet-DataHub/geh-charges/tree/main/source/Energinet.Data
     <Compile Include="..\..\..\Contracts\ChargeMessage\ChargeMessageSortColumnName.cs">
       <Link>Charges\Model\ChargeMessage\ChargeMessageSortColumnName.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\Contracts\ChargeMessage\ChargeMessagesV1Dto.cs">
+      <Link>Charges\Model\ChargeMessage\ChargeMessagesV1Dto.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\Contracts\ChargeMessage\ChargeMessageV1Dto.cs">
       <Link>Charges\Model\ChargeMessage\ChargeMessageV1Dto.cs</Link>
     </Compile>

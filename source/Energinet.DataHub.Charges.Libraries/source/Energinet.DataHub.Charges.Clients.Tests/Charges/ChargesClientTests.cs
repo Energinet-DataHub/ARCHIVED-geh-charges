@@ -408,7 +408,7 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
             ChargeMessagesSearchCriteriaV1Dto searchCriteria)
         {
             // Arrange
-            var chargeMessages = new List<ChargeMessageV1Dto>();
+            var chargeMessages = new ChargeMessagesV1Dto(0, new List<ChargeMessageV1Dto>());
             var emptyChargeMessages = CreateValidResponseContent(chargeMessages);
             var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.OK, emptyChargeMessages);
             var httpClient = CreateHttpClient(mockHttpMessageHandler);
@@ -421,7 +421,8 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
             var result = await sut.SearchChargeMessagesAsync(searchCriteria).ConfigureAwait(false);
 
             // Assert
-            result.Should().BeEmpty();
+            result.TotalCount.Should().Be(0);
+            result.ChargeMessages.Should().BeEmpty();
         }
 
         [Theory]
@@ -452,7 +453,8 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
             IList<ChargeMessageV1Dto> chargeMessageV1Dtos)
         {
             // Arrange
-            var responseContent = CreateValidResponseContent(chargeMessageV1Dtos);
+            var chargeMessagesV1Dto = new ChargeMessagesV1Dto(chargeMessageV1Dtos.Count, chargeMessageV1Dtos);
+            var responseContent = CreateValidResponseContent(chargeMessagesV1Dto);
             var mockHttpMessageHandler = GetMockHttpMessageHandler(HttpStatusCode.OK, responseContent);
             var httpClient = CreateHttpClient(mockHttpMessageHandler);
             chargesClientFactory.Setup(x => x.CreateClient(httpClient))
@@ -467,8 +469,9 @@ namespace Energinet.DataHub.Charges.Clients.CreateDefaultChargeLink.Tests.Charge
 
             // Assert
             result.Should().NotBeNull();
-            result.Should().NotBeEmpty();
-            result.Should().ContainInOrder(chargeMessageV1Dtos);
+            result.TotalCount.Should().Be(chargeMessageV1Dtos.Count);
+            result.ChargeMessages.Should().NotBeNullOrEmpty();
+            result.ChargeMessages.Should().ContainInOrder(chargeMessageV1Dtos);
 
             mockHttpMessageHandler.Protected().Verify(
                 "SendAsync",
