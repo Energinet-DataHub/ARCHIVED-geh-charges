@@ -61,6 +61,6 @@ namespace Energinet.DataHub.Charges.Clients.Charges
         /// Returns charge messages based on the search criteria.
         /// </summary>
         /// <returns>Charge messages(Dto) with collection of messages</returns>
-        Task<IList<ChargeMessageV1Dto>> SearchChargeMessagesAsync(ChargeMessagesSearchCriteriaV1Dto searchCriteria);
+        Task<ChargeMessagesV1Dto> SearchChargeMessagesAsync(ChargeMessagesSearchCriteriaV1Dto searchCriteria);
     }
 }
