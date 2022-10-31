@@ -29,7 +29,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         {
             serviceCollection.AddScoped<IChargeLinkCreatedEventFactory, ChargeLinkCreatedEventFactory>();
             serviceCollection.AddScoped<IChargeLinkEventPublishHandler, ChargeLinkEventPublishHandler>();
-            serviceCollection.AddScoped<JsonMessageDeserializer<ChargeLinksAcceptedEvent>>();
             serviceCollection
                 .AddExternalMessageDispatcher<ChargeLinkCreatedEvent>(EnvironmentSettingNames.ChargeLinksCreatedTopicName);
         }

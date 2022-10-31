@@ -39,7 +39,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 ChargePriceCimValidationErrorTextFactory>();
             serviceCollection.AddScoped<BundleSpecification<AvailableChargeReceiptData, ChargePriceOperationsRejectedEvent>,
                 ChargePriceRejectionBundleSpecification>();
-            serviceCollection.AddScoped<JsonMessageDeserializer<ChargePriceOperationsRejectedEvent>>();
         }
     }
 }

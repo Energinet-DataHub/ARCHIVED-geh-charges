@@ -23,7 +23,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<JsonMessageDeserializer<ChargeInformationOperationsAcceptedEvent>>();
             serviceCollection.AddScoped<IChargeInformationMessagePersister, ChargeInformationMessagePersister>();
         }
     }

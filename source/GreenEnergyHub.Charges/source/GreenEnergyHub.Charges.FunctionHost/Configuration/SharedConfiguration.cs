@@ -31,6 +31,12 @@ using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkRepl
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksAcceptedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksDataAvailableNotifiedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksRejectionEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommandReceivedEvents;
+using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.Domain.GridAreaLinks;
 using GreenEnergyHub.Charges.Domain.MarketParticipants;
 using GreenEnergyHub.Charges.Domain.MeteringPoints;
@@ -39,6 +45,7 @@ using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factories;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using GreenEnergyHub.Charges.Infrastructure.Core.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeCreated;
 using GreenEnergyHub.Charges.Infrastructure.Persistence;
@@ -72,6 +79,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped(typeof(IClock), _ => SystemClock.Instance);
             serviceCollection.AddLogging();
             serviceCollection.AddScoped<CorrelationIdMiddleware>();
+            serviceCollection.AddScoped<IHttpResponseBuilder, HttpResponseBuilder>();
             serviceCollection.AddScoped<FunctionTelemetryScopeMiddleware>();
             serviceCollection.AddScoped<MessageMetaDataMiddleware>();
             serviceCollection.AddScoped<FunctionInvocationLoggingMiddleware>();
@@ -155,6 +163,20 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddSingleton<IJsonSerializer, JsonSerializer>();
             serviceCollection.ConfigureProtobufReception();
             serviceCollection.SendProtobuf<ChargeCreated>();
+            AddJsonDeserialization(serviceCollection);
+        }
+
+        private static void AddJsonDeserialization(IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddScoped<JsonMessageDeserializer<ChargeInformationCommandReceivedEvent>>();
+            serviceCollection.AddScoped<JsonMessageDeserializer<ChargeInformationOperationsAcceptedEvent>>();
+            serviceCollection.AddScoped<JsonMessageDeserializer<ChargeInformationOperationsRejectedEvent>>();
+            serviceCollection.AddScoped<JsonMessageDeserializer<ChargePriceCommandReceivedEvent>>();
+            serviceCollection.AddScoped<JsonMessageDeserializer<ChargePriceOperationsAcceptedEvent>>();
+            serviceCollection.AddScoped<JsonMessageDeserializer<ChargePriceOperationsRejectedEvent>>();
+            serviceCollection.AddScoped<JsonMessageDeserializer<ChargeLinksAcceptedEvent>>();
+            serviceCollection.AddScoped<JsonMessageDeserializer<ChargeLinksRejectedEvent>>();
+            serviceCollection.AddScoped<JsonMessageDeserializer<ChargeLinksDataAvailableNotifiedEvent>>();
         }
 
         private static void ConfigureSharedCim(IServiceCollection serviceCollection)
@@ -234,7 +256,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         private static void AddApplicationServices(this IServiceCollection serviceCollection)
         {
             serviceCollection.AddSingleton<IDataAvailableNotificationSender, DataAvailableNotificationSender>();
-            serviceCollection.AddSingleton<IRequestBundleParser, RequestBundleParser>();
             serviceCollection.AddSingleton<IResponseBundleParser, ResponseBundleParser>();
             serviceCollection.AddSingleton<IDataBundleResponseSender, DataBundleResponseSender>();
             serviceCollection.AddSingleton<IDequeueNotificationParser, DequeueNotificationParser>();

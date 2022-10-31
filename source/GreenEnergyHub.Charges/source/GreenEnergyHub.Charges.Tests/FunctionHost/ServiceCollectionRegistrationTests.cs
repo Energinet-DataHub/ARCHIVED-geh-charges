@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using AutoFixture;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using FluentAssertions;
 using GreenEnergyHub.Charges.FunctionHost;
@@ -37,20 +38,23 @@ namespace GreenEnergyHub.Charges.Tests.FunctionHost
         }
 
         [Fact]
-        public void WhenApplicationIsConfigured_ThenAllApplicationDependenciesMustBeRegistered()
+        public void WhenApplicationIsConfigured_ThenAllApplicationDependenciesMustBeRegisteredOnlyOnce()
         {
             // Arrange
             var host = ChargesFunctionApp.ConfigureApplication();
             var functionAppDependencies = FindDependenciesForType(typeof(ChargesFunctionApp));
+            var typesToResolve = new List<Type>();
 
             // Act
-            IEnumerable<Type> constructorParameters = new List<Type>();
             foreach (var dependency in functionAppDependencies)
-                constructorParameters = GetConstructorParametersForDependency(dependency);
+                typesToResolve.AddRange(GetConstructorParametersForDependency(dependency));
 
             // Assert
-            foreach (var constructorParameter in constructorParameters)
-                host.Services.GetService(constructorParameter).Should().NotBeNull();
+            foreach (var type in typesToResolve.Distinct())
+            {
+                var services = host.Services.GetServices(type);
+                services.Count().Should().Be(1, $"Found more than one registered service of type {type}");
+            }
         }
 
         private static IEnumerable<Type> GetConstructorParametersForDependency(Type dependency)

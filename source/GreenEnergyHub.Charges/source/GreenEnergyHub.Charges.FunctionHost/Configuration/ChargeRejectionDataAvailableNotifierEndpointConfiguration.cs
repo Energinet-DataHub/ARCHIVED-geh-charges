@@ -44,7 +44,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 AvailableDataNotificationFactory<AvailableChargeReceiptData>>();
             serviceCollection.AddScoped<BundleSpecification<AvailableChargeReceiptData, ChargeInformationOperationsRejectedEvent>,
                 ChargeRejectionBundleSpecification>();
-            serviceCollection.AddScoped<JsonMessageDeserializer<ChargeInformationOperationsRejectedEvent>>();
         }
     }
 }
