@@ -70,6 +70,7 @@ limitations under the License.
       <EmbeddedResource Include="Scripts\Model\202207151427 Increase OriginalOperationId length.sql" />
       <EmbeddedResource Include="Scripts\Model\202209141117 Remove EndDateTime from AvailableChargePriceData.sql" />
       <EmbeddedResource Include="Scripts\Test\202210071310 Update market participant name.sql" />
+      <EmbeddedResource Include="Scripts\Test\202210281455 Add charge message test data.sql" />
     </ItemGroup>
 
 </Project>
