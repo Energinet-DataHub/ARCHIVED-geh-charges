@@ -1,5 +1,9 @@
 # Energinet.DataHub.Charges.Clients Release notes
 
+## Version 4.4.0
+
+Added `SearchChargeMessagesAsync` to Charges client.
+
 ## Version 4.3.2
 
 Added 'Utc' to dates in `ChargePricesSearchCriteriaV1Dto`.
