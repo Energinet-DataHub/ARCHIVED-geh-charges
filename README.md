@@ -70,7 +70,7 @@ If you are interested in the public contracts of the Charges domain, please visi
 
 Planned work for Charges:
 
-1. Add a variety of frontend capabilities:
+1. Add a variety of front end capabilities:
 
 * Show and access messages received for a given charge.
 * Show a charge's active timeline as per a user-defined date and time. Implicitly this entails defining and implement a charge historical data model.
