@@ -90,13 +90,13 @@ namespace Energinet.DataHub.Charges.Clients.Charges
         /// Returns charge messages based on the search criteria.
         /// </summary>
         /// <returns>Charge messages(Dto) with collection of messages</returns>
-        public async Task<IList<ChargeMessageV1Dto>> SearchChargeMessagesAsync(ChargeMessagesSearchCriteriaV1Dto searchCriteria)
+        public async Task<ChargeMessagesV1Dto> SearchChargeMessagesAsync(ChargeMessagesSearchCriteriaV1Dto searchCriteria)
         {
             var response = await _httpClient
                 .PostAsJsonAsync(ChargesRelativeUris.SearchChargeMessages(), searchCriteria)
                 .ConfigureAwait(false);
 
-            return await HandleResultAsync<IList<ChargeMessageV1Dto>>(response).ConfigureAwait(false);
+            return await HandleResultAsync<ChargeMessagesV1Dto>(response).ConfigureAwait(false);
         }
 
         /// <summary>
