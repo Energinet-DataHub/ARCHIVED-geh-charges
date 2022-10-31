@@ -47,7 +47,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 AvailableChargeLinksReceiptValidationErrorFactory>();
             serviceCollection.AddScoped<ICimValidationErrorTextFactory<ChargeLinkOperationDto>,
                 ChargeLinksCimValidationErrorTextFactory>();
-            serviceCollection.AddScoped<JsonMessageDeserializer<ChargeLinksReceivedEvent>>();
         }
     }
 }

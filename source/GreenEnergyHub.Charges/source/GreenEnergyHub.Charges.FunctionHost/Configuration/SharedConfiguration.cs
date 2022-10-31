@@ -156,6 +156,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         private static void ConfigureSharedMessaging(IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<ICorrelationContext, CorrelationContext>();
+            serviceCollection.AddScoped<JsonMessageDeserializer>();
             serviceCollection.AddScoped<MessageDispatcher>();
             serviceCollection.AddScoped<MessageExtractor>();
             serviceCollection.AddScoped<IServiceBusMessageFactory, ServiceBusMessageFactory>();
@@ -163,20 +164,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddSingleton<IJsonSerializer, JsonSerializer>();
             serviceCollection.ConfigureProtobufReception();
             serviceCollection.SendProtobuf<ChargeCreated>();
-            AddJsonDeserialization(serviceCollection);
-        }
-
-        private static void AddJsonDeserialization(IServiceCollection serviceCollection)
-        {
-            serviceCollection.AddScoped<JsonMessageDeserializer<ChargeInformationCommandReceivedEvent>>();
-            serviceCollection.AddScoped<JsonMessageDeserializer<ChargeInformationOperationsAcceptedEvent>>();
-            serviceCollection.AddScoped<JsonMessageDeserializer<ChargeInformationOperationsRejectedEvent>>();
-            serviceCollection.AddScoped<JsonMessageDeserializer<ChargePriceCommandReceivedEvent>>();
-            serviceCollection.AddScoped<JsonMessageDeserializer<ChargePriceOperationsAcceptedEvent>>();
-            serviceCollection.AddScoped<JsonMessageDeserializer<ChargePriceOperationsRejectedEvent>>();
-            serviceCollection.AddScoped<JsonMessageDeserializer<ChargeLinksAcceptedEvent>>();
-            serviceCollection.AddScoped<JsonMessageDeserializer<ChargeLinksRejectedEvent>>();
-            serviceCollection.AddScoped<JsonMessageDeserializer<ChargeLinksDataAvailableNotifiedEvent>>();
         }
 
         private static void ConfigureSharedCim(IServiceCollection serviceCollection)
