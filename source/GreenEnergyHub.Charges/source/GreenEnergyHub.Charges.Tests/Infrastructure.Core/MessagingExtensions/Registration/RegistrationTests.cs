@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Core.Messaging.Protobuf;
 using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factories;
@@ -36,12 +37,13 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions.R
             var anyValidConnectionString = "Endpoint=foo/;SharedAccessKeyName=foo;SharedAccessKey=foo";
             var services = new ServiceCollection();
             services.AddScoped<IClock>(_ => SystemClock.Instance);
+            services.AddSingleton(_ => new ServiceBusClient(anyValidConnectionString));
 
             // Act
             services.AddScoped<IServiceBusMessageFactory, ServiceBusMessageFactory>();
             services.SendProtobuf<TestMessageContract>();
             services.AddMessagingProtobuf()
-                .AddExternalMessageDispatcher<TestMessage>(anyValidConnectionString, anyTopicName);
+                .AddExternalMessageDispatcher<TestMessage>(anyTopicName);
 
             // Assert
             var provider = services.BuildServiceProvider();

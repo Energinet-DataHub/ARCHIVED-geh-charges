@@ -45,23 +45,28 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         /// <summary>
         /// Adds registrations of JwtTokenMiddleware and corresponding dependencies.
         /// </summary>
-        /// <param name="services">ServiceCollection container</param>
-        /// <param name="metadataAddress">OpenID Configuration URL used for acquiring metadata</param>
-        /// <param name="audience">Audience used for validation of JWT token</param>
-        public static IServiceCollection AddJwtTokenSecurity(this IServiceCollection services, string metadataAddress, string audience)
+        public static IServiceCollection AddJwtTokenSecurity(this IServiceCollection services)
         {
             services.AddSingleton<ISecurityTokenValidator, JwtSecurityTokenHandler>();
             services.AddSingleton<IConfigurationManager<OpenIdConnectConfiguration>>(_ =>
-                new ConfigurationManager<OpenIdConnectConfiguration>(
+            {
+                var tenantId = EnvironmentHelper.GetEnv(EnvironmentSettingNames.B2CTenantId);
+                var metadataAddress =
+                    $"https://login.microsoftonline.com/{tenantId}/v2.0/.well-known/openid-configuration";
+                return new ConfigurationManager<OpenIdConnectConfiguration>(
                     metadataAddress,
-                    new OpenIdConnectConfigurationRetriever()));
+                    new OpenIdConnectConfigurationRetriever());
+            });
 
             services.AddScoped<IJwtTokenValidator>(sp =>
-                new JwtTokenValidator(
+            {
+                var audience = EnvironmentHelper.GetEnv(EnvironmentSettingNames.BackendServiceAppId);
+                return new JwtTokenValidator(
                     sp.GetRequiredService<ILogger<JwtTokenValidator>>(),
                     sp.GetRequiredService<ISecurityTokenValidator>(),
                     sp.GetRequiredService<IConfigurationManager<OpenIdConnectConfiguration>>(),
-                    audience));
+                    audience);
+            });
 
             services.AddScoped<ClaimsPrincipalContext>();
             services.AddScoped<IClaimsPrincipalAccessor, ClaimsPrincipalAccessor>();
@@ -78,7 +83,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         /// <summary>
         /// Adds registration of ActorMiddleware, ActorContext and ActorProvider.
         /// </summary>
-        /// <param name="serviceCollection">ServiceCollection container</param>
         public static void AddActorContext(this IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped(_ => new ActorMiddleware(
@@ -90,14 +94,18 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IActorProvider, ActorProvider>();
         }
 
-        public static void AddDomainEventPublishing(this IServiceCollection serviceCollection, ServiceBusClient serviceBusClient)
+        public static void AddDomainEventPublishing(this IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
-            var topicName = EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesDomainEventTopicName);
 
             // Must be a singleton as per documentation of ServiceBusClient and ServiceBusSender
             serviceCollection.AddSingleton<IServiceBusDispatcher>(
-                _ => new ServiceBusDispatcher(serviceBusClient, topicName));
+                sp =>
+                {
+                    var topicName = EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargesDomainEventTopicName);
+                    var serviceBusClient = sp.GetRequiredService<ServiceBusClient>();
+                    return new ServiceBusDispatcher(serviceBusClient, topicName);
+                });
         }
     }
 }

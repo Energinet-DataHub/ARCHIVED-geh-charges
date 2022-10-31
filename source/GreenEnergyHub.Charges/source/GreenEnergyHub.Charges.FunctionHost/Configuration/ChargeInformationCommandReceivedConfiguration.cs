@@ -59,17 +59,23 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
         private static void ConfigureIso8601Timezones(IServiceCollection serviceCollection)
         {
-            var timeZoneId = EnvironmentHelper.GetEnv(EnvironmentSettingNames.LocalTimeZoneName);
-            var timeZoneConfiguration = new Iso8601ConversionConfiguration(timeZoneId);
-            serviceCollection.AddSingleton<IIso8601ConversionConfiguration>(timeZoneConfiguration);
+            serviceCollection.AddSingleton<IIso8601ConversionConfiguration>(_ =>
+            {
+                var timeZoneId = EnvironmentHelper.GetEnv(EnvironmentSettingNames.LocalTimeZoneName);
+                var timeZoneConfiguration = new Iso8601ConversionConfiguration(timeZoneId);
+                return timeZoneConfiguration;
+            });
             serviceCollection.AddScoped<IZonedDateTimeService, ZonedDateTimeService>();
         }
 
         private static void ConfigureIso4217Currency(IServiceCollection serviceCollection)
         {
-            var currency = EnvironmentHelper.GetEnv(EnvironmentSettingNames.Currency);
-            var iso4217Currency = new CurrencyConfigurationIso4217(currency);
-            serviceCollection.AddSingleton(iso4217Currency);
+            serviceCollection.AddSingleton(_ =>
+            {
+                var currency = EnvironmentHelper.GetEnv(EnvironmentSettingNames.Currency);
+                var iso4217Currency = new CurrencyConfigurationIso4217(currency);
+                return iso4217Currency;
+            });
         }
     }
 }
