@@ -19,16 +19,16 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.Busi
 {
     public class PriceSeriesResolutionMustMatchChargeResolutionRule : IValidationRule
     {
-        private readonly Resolution _existingResolution;
+        private readonly Resolution _existingChargeResolution;
         private readonly Resolution _priceResolution;
 
-        public PriceSeriesResolutionMustMatchChargeResolutionRule(Resolution existingResolution, Resolution priceResolution)
+        public PriceSeriesResolutionMustMatchChargeResolutionRule(Resolution existingChargeResolution, Resolution priceResolution)
         {
-            _existingResolution = existingResolution;
+            _existingChargeResolution = existingChargeResolution;
             _priceResolution = priceResolution;
         }
 
-        public bool IsValid => _existingResolution == _priceResolution;
+        public bool IsValid => _existingChargeResolution == _priceResolution;
 
         public ValidationRuleIdentifier ValidationRuleIdentifier =>
             ValidationRuleIdentifier.PriceSeriesResolutionMustMatchChargeResolution;
