@@ -36,7 +36,6 @@ using Xunit;
 using Xunit.Abstractions;
 using Xunit.Categories;
 using ChargeType = GreenEnergyHub.Charges.Domain.Charges.ChargeType;
-using JsonSerializerOptions = System.Text.Json.JsonSerializerOptions;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
 {
@@ -106,8 +105,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
 
             actual.MessageId.Should().Be(expectedChargeMessage.MessageId);
             actual.MessageType.Should().Be(ChargeMessageDocumentType.D10);
-
-            // actual.MessageDateTime.Should().Be(expectedChargeMessage.MessageDateTime.ToDateTimeOffset());
+            actual.MessageDateTime.LocalDateTime.Should().Be(expectedChargeMessage.MessageDateTime.ToDateTimeUtc());
         }
 
         private static JsonSerializerOptions GetJsonSerializerOptions()
