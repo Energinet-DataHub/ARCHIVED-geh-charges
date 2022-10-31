@@ -209,7 +209,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         }
 
         public void UpdatePrices(
-            Resolution resolution,
+            Resolution priceResolution,
             Instant startDate,
             Instant endDate,
             IReadOnlyList<Point> newPrices,
@@ -234,7 +234,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
                 new(
                     new PriceSeriesResolutionMustMatchChargeResolutionRule(
                         Resolution,
-                        resolution),
+                        priceResolution),
                     operationId),
             };
             CheckRules(rules);
