@@ -78,8 +78,6 @@ jobs:
     with:
       TESTS_DLL_FILE_PATH: '\source\GreenEnergyHub.Charges\source\GreenEnergyHub.Charges.IntegrationTests\bin\Release\net6.0\GreenEnergyHub.Charges.IntegrationTests.dll'
       TESTS_FILTER_EXPRESSION: 'Category=ChargeIngestionTestsChargeInformation'
-      ASPNETCORE_TEST_CONTENTROOT_VARIABLE_NAME: ASPNETCORE_TEST_CONTENTROOT_GREENENERGYHUB_CHARGES_WEBAPI
-      ASPNETCORE_TEST_CONTENTROOT_VARIABLE_VALUE: '\source\GreenEnergyHub.Charges\source\GreenEnergyHub.Charges.WebApi'
       DOWNLOAD_ATTEMPT_LIMIT: 12
       USE_AZURE_FUNCTIONS_TOOLS: true
       CODE_COVERAGE_FLAGS: business
@@ -99,8 +97,6 @@ jobs:
     with:
       TESTS_DLL_FILE_PATH: '\source\GreenEnergyHub.Charges\source\GreenEnergyHub.Charges.IntegrationTests\bin\Release\net6.0\GreenEnergyHub.Charges.IntegrationTests.dll'
       TESTS_FILTER_EXPRESSION: 'Category=ChargeIngestionTestsChargePrices'
-      ASPNETCORE_TEST_CONTENTROOT_VARIABLE_NAME: ASPNETCORE_TEST_CONTENTROOT_GREENENERGYHUB_CHARGES_WEBAPI
-      ASPNETCORE_TEST_CONTENTROOT_VARIABLE_VALUE: '\source\GreenEnergyHub.Charges\source\GreenEnergyHub.Charges.WebApi'
       DOWNLOAD_ATTEMPT_LIMIT: 12
       USE_AZURE_FUNCTIONS_TOOLS: true
       CODE_COVERAGE_FLAGS: business
@@ -151,8 +147,13 @@ jobs:
       int_test,
     ]
     if: |
-      always() &&
-      !contains(needs.*.result, 'failure') &&
-      !contains(needs.*.result, 'cancelled')
+      always()
     steps:
-      - run: echo "${{ toJSON(needs) }}"
+      - name: Verify if merge is allowed
+        run: |
+          echo "${{ toJSON(needs) }}"
+
+          if [[ ${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }} = true ]]; then
+              echo "Failed"
+              exit 1
+          fi

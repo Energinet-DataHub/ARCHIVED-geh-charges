@@ -20,6 +20,7 @@ using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Outbox;
 using GreenEnergyHub.Charges.Infrastructure.Persistence.Repositories;
 using Microsoft.Azure.Functions.Worker;
+using Microsoft.Extensions.Logging;
 using NodaTime;
 
 namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
@@ -33,6 +34,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
         private readonly ICorrelationContext _correlationContext;
         private readonly IDomainEventDispatcher _domainEventDispatcher;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ILogger _logger;
 
         public OutboxMessageProcessorEndpoint(
             IOutboxMessageRepository outboxMessageRepository,
@@ -40,7 +42,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
             IClock clock,
             ICorrelationContext correlationContext,
             IDomainEventDispatcher domainEventDispatcher,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            ILoggerFactory loggerFactory)
         {
             _outboxMessageRepository = outboxMessageRepository;
             _outboxMessageParser = outboxMessageParser;
@@ -48,6 +51,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
             _correlationContext = correlationContext;
             _domainEventDispatcher = domainEventDispatcher;
             _unitOfWork = unitOfWork;
+            _logger = loggerFactory.CreateLogger(nameof(OutboxMessageProcessorEndpoint));
         }
 
         [Function(FunctionName)]
@@ -57,6 +61,9 @@ namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
 
             while ((outboxMessage = _outboxMessageRepository.GetNext()) != null)
             {
+                _logger.LogInformation(
+                    "Starting processing of outbox message with correlation id {0}",
+                    outboxMessage.CorrelationId);
                 var domainEvent = _outboxMessageParser.Parse(outboxMessage.Type, outboxMessage.Data);
                 _correlationContext.SetId(outboxMessage.CorrelationId);
                 await _domainEventDispatcher.DispatchAsync(domainEvent).ConfigureAwait(false);
