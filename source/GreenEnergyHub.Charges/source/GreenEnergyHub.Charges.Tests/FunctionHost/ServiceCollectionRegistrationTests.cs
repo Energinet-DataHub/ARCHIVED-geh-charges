@@ -16,11 +16,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using FluentAssertions;
 using GreenEnergyHub.Charges.FunctionHost;
 using GreenEnergyHub.Charges.TestCore.TestHelpers;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using Xunit.Categories;
 

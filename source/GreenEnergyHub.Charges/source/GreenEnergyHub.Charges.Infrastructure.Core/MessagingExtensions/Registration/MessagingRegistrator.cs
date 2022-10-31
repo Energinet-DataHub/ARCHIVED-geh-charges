@@ -12,43 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Azure.Messaging.ServiceBus;
-using Energinet.DataHub.Core.Messaging.Transport;
-using GreenEnergyHub.Charges.Application.Messaging;
-using GreenEnergyHub.Charges.Infrastructure.Core.Registration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration
 {
     public class MessagingRegistrator
     {
-        private readonly IServiceCollection _services;
-
         internal MessagingRegistrator(IServiceCollection services)
         {
-            _services = services;
-        }
-
-        /// <summary>
-        /// Register services required to resolve a <see cref="IMessageDispatcher{TOutboundMessage}"/>.
-        /// Which is used when sending messages out of the Charges domain.
-        /// </summary>
-        public MessagingRegistrator AddExternalMessageDispatcher<TOutboundMessage>(string serviceBusTopicName)
-            where TOutboundMessage : IOutboundMessage
-        {
-            _services.AddScoped<IMessageDispatcher<TOutboundMessage>, MessageDispatcher<TOutboundMessage>>();
-            _services.AddScoped<Channel<TOutboundMessage>, ServiceBusChannel<TOutboundMessage>>();
-
-            // Must be a singleton as per documentation of ServiceBusClient and ServiceBusSender
-            _services.AddSingleton<IServiceBusSender<TOutboundMessage>>(
-                sp =>
-                {
-                    var client = sp.GetRequiredService<ServiceBusClient>();
-                    var instance = client.CreateSender(serviceBusTopicName);
-                    return new ServiceBusSender<TOutboundMessage>(instance);
-                });
-
-            return this;
         }
     }
 }

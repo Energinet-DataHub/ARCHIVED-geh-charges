@@ -42,8 +42,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions.R
             // Act
             services.AddScoped<IServiceBusMessageFactory, ServiceBusMessageFactory>();
             services.SendProtobuf<TestMessageContract>();
-            services.AddMessagingProtobuf()
-                .AddExternalMessageDispatcher<TestMessage>(anyTopicName);
+            services.AddExternalMessageDispatcher<TestMessage>(anyTopicName);
 
             // Assert
             var provider = services.BuildServiceProvider();

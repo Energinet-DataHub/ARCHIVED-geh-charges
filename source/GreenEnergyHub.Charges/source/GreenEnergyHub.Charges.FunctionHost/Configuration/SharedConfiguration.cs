@@ -16,6 +16,7 @@ using System;
 using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Core.App.FunctionApp.FunctionTelemetryScope;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
+using Energinet.DataHub.Core.JsonSerialization;
 using Energinet.DataHub.Core.Logging.RequestResponseMiddleware.Storage;
 using Energinet.DataHub.Core.Messaging.Protobuf;
 using Energinet.DataHub.Core.Messaging.Transport;
@@ -27,6 +28,7 @@ using Energinet.DataHub.MessageHub.Client.Storage;
 using Energinet.DataHub.MessageHub.Model.Dequeue;
 using Energinet.DataHub.MessageHub.Model.Peek;
 using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkReplier;
+using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.GridAreaLinks;
@@ -145,11 +147,14 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
         private static void ConfigureSharedMessaging(IServiceCollection serviceCollection)
         {
+            serviceCollection.AddScoped<ICorrelationContext, CorrelationContext>();
             serviceCollection.AddScoped<MessageDispatcher>();
+            serviceCollection.AddScoped<MessageExtractor>();
             serviceCollection.AddScoped<IServiceBusMessageFactory, ServiceBusMessageFactory>();
+            serviceCollection.AddScoped<IMessageMetaDataContext, MessageMetaDataContext>();
+            serviceCollection.AddSingleton<IJsonSerializer, JsonSerializer>();
             serviceCollection.ConfigureProtobufReception();
             serviceCollection.SendProtobuf<ChargeCreated>();
-            serviceCollection.AddMessaging();
         }
 
         private static void ConfigureSharedCim(IServiceCollection serviceCollection)

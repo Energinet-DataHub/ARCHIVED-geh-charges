@@ -75,7 +75,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions.S
         private static IJsonSerializer GetMessagingDeserializer()
         {
             var services = new ServiceCollection();
-            services.AddMessaging();
+            services.AddSingleton<IJsonSerializer, JsonSerializer>();
             return services
                 .BuildServiceProvider()
                 .GetRequiredService<IJsonSerializer>();

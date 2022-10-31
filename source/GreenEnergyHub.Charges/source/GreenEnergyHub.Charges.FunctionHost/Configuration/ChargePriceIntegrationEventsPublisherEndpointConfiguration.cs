@@ -35,8 +35,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IChargePriceIntegrationEventsPublisher, ChargePriceIntegrationEventsPublisher>();
             serviceCollection.AddScoped<JsonMessageDeserializer<ChargePriceOperationsAcceptedEvent>>();
 
-            serviceCollection.AddMessagingProtobuf()
-                .AddExternalMessageDispatcher<ChargePricesUpdatedEvent>(EnvironmentSettingNames.ChargePricesUpdatedTopicName);
+            serviceCollection.AddExternalMessageDispatcher<ChargePricesUpdatedEvent>(EnvironmentSettingNames.ChargePricesUpdatedTopicName);
         }
     }
 }
