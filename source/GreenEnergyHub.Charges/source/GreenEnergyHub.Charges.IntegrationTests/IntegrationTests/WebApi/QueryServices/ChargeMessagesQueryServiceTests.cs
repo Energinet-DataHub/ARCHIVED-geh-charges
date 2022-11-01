@@ -28,6 +28,7 @@ using GreenEnergyHub.Charges.TestCore.Builders.Command;
 using GreenEnergyHub.Charges.TestCore.Builders.Query;
 using GreenEnergyHub.Charges.TestCore.Data;
 using GreenEnergyHub.Charges.TestCore.TestHelpers;
+using Microsoft.EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using NodaTime;
 using Xunit;
 using Xunit.Categories;
@@ -40,6 +41,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
     {
         private const string MarketParticipantId = "MarketParticipantId";
         private readonly ChargesDatabaseManager _databaseManager;
+        private readonly Instant _now = SystemClock.Instance.GetCurrentInstant();
 
         public ChargeMessagesQueryServiceTests(ChargesDatabaseFixture fixture)
         {
@@ -52,15 +54,19 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
             var expectedCharge = await CreateValidCharge(chargesDatabaseWriteContext);
-            var chargeMessages = await CreateChargeMessages(chargesDatabaseWriteContext, expectedCharge);
+            var chargeMessages = await CreateChargeMessages(chargesDatabaseWriteContext, expectedCharge, _now);
             await chargesDatabaseWriteContext.SaveChangesAsync();
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
             var sut = GetSut(chargesDatabaseQueryContext);
+
+            var searchFromDateTime = _now.PlusSeconds(1);
+            var searchToDateTime = _now.PlusDays(1);
+
             var searchCriteria = new ChargeMessagesSearchCriteriaV1DtoBuilder()
                 .WithChargeId(expectedCharge.Id)
-                .WithFromDateTime(InstantHelper.GetTodayAtMidnightUtc().ToDateTimeOffset())
-                .WithToDateTime(InstantHelper.GetTomorrowAtMidnightUtc().ToDateTimeOffset())
+                .WithFromDateTime(searchFromDateTime.ToDateTimeOffset())
+                .WithToDateTime(searchToDateTime.ToDateTimeOffset())
                 .Build();
 
             // Act
@@ -71,6 +77,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
                 .Where(cm => cm.SenderProvidedChargeId == expectedCharge.SenderProvidedChargeId
                              && cm.Type == expectedCharge.Type
                              && cm.MarketParticipantId == MarketParticipantId)
+                .Where(cm => cm.MessageDateTime >= searchFromDateTime
+                             && cm.MessageDateTime < searchToDateTime.PlusDays(1))
                 .Select(x => x.MessageId)
                 .ToList();
 
@@ -242,9 +250,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
         }
 
         private static async Task<IList<Domain.Charges.ChargeMessage>> CreateChargeMessages(
-            IChargesDatabaseContext chargesDatabaseContext, Charge charge)
+            IChargesDatabaseContext chargesDatabaseContext, Charge charge, Instant now)
         {
-            var now = SystemClock.Instance.GetCurrentInstant();
             var chargeMessages = new List<Domain.Charges.ChargeMessage>
             {
                 Domain.Charges.ChargeMessage.Create(
@@ -253,28 +260,42 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
                     MarketParticipantId,
                     "MessageId1",
                     DocumentType.RequestChangeBillingMasterData,
-                    now.Plus(Duration.FromSeconds(1))),
+                    now),
                 Domain.Charges.ChargeMessage.Create(
                     charge.SenderProvidedChargeId,
                     charge.Type,
                     MarketParticipantId,
                     "MessageId2",
                     DocumentType.RequestChangeBillingMasterData,
-                    now.Plus(Duration.FromSeconds(2))),
+                    now.Plus(Duration.FromSeconds(1))),
                 Domain.Charges.ChargeMessage.Create(
                     charge.SenderProvidedChargeId,
                     charge.Type,
                     MarketParticipantId,
                     "MessageId3",
                     DocumentType.RequestChangeOfPriceList,
-                    now.Plus(Duration.FromSeconds(3))),
+                    now.Plus(Duration.FromDays(1))),
+                Domain.Charges.ChargeMessage.Create(
+                    charge.SenderProvidedChargeId,
+                    charge.Type,
+                    MarketParticipantId,
+                    "MessageId4",
+                    DocumentType.RequestChangeOfPriceList,
+                    now.Plus(Duration.FromDays(2)).Plus(Duration.FromSeconds(-1))),
+                Domain.Charges.ChargeMessage.Create(
+                    charge.SenderProvidedChargeId,
+                    charge.Type,
+                    MarketParticipantId,
+                    "MessageId5",
+                    DocumentType.RequestChangeOfPriceList,
+                    now.Plus(Duration.FromDays(2))),
 
                 // Does not match SenderProvidedChargeId
                 Domain.Charges.ChargeMessage.Create(
                     "TestFee",
                     charge.Type,
                     MarketParticipantId,
-                    "MessageId4",
+                    "MessageId6",
                     DocumentType.RequestChangeOfPriceList,
                     now.Plus(Duration.FromSeconds(3))),
 
@@ -283,7 +304,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
                     charge.SenderProvidedChargeId,
                     ChargeType.Fee,
                     MarketParticipantId,
-                    "MessageId5",
+                    "MessageId7",
                     DocumentType.RequestChangeOfPriceList,
                     now.Plus(Duration.FromSeconds(3))),
 
