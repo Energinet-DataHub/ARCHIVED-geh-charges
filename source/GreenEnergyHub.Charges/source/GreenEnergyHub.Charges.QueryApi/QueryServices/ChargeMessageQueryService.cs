@@ -49,10 +49,10 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices
             var sortedChargeMessages = await SortChargeMessages(takenChargeMessages, searchCriteria)
                 .ToListAsync().ConfigureAwait(false);
 
-            return MapToChargeMessageV1Dtos(sortedChargeMessages, chargeMessages.Count());
+            return MapToChargeMessagesV1Dtos(sortedChargeMessages, chargeMessages.Count());
         }
 
-        private static ChargeMessagesV1Dto MapToChargeMessageV1Dtos(
+        private static ChargeMessagesV1Dto MapToChargeMessagesV1Dtos(
             IEnumerable<ChargeMessage> chargeMessagesList, int totalCount)
         {
             var chargeMessagesV1Dto = new ChargeMessagesV1Dto(
