@@ -110,14 +110,37 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             actual.ChargeMessages.Select(x => x.MessageId).Should().ContainInOrder(new List<string>());
         }
 
-        [Fact]
-        public void SearchAsync_WhenSearchingHasSkip_ReturnsMessages()
+        [Theory]
+        [InlineData(0, 0, 0)]
+        [InlineData(2, 3, 3)]
+        [InlineData(4, 2, 1)]
+        public async Task SearchAsync_WhenSearchingHasSkipAndTake_ReturnsMessages(
+            int skip,
+            int take,
+            int expectedMessages)
         {
             // Arrange
+            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
+            var expectedCharge = await CreateValidCharge(chargesDatabaseWriteContext);
+            var chargeMessages = await CreateChargeMessages(chargesDatabaseWriteContext, expectedCharge, _now);
+            await chargesDatabaseWriteContext.SaveChangesAsync();
+
+            await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
+            var sut = GetSut(chargesDatabaseQueryContext);
+
+            var searchCriteria = new ChargeMessagesSearchCriteriaV1DtoBuilder()
+                .WithChargeId(expectedCharge.Id)
+                .WithFromDateTime(_now.ToDateTimeOffset())
+                .WithToDateTime(_now.PlusDays(2).ToDateTimeOffset())
+                .WithSkip(skip)
+                .WithTake(take)
+                .Build();
 
             // Act
+            var actual = await sut.SearchAsync(searchCriteria);
 
             // Assert
+            actual.TotalCount.Should().Be(expectedMessages);
         }
 
         [Fact]
