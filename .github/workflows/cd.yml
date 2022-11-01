@@ -68,7 +68,7 @@ jobs:
       always() &&
       !contains(needs.*.result, 'failure') &&
       !contains(needs.*.result, 'cancelled') &&
-      !needs.dotnet_promote_prerelease.result == 'skipped'
+      !(needs.dotnet_promote_prerelease.result == 'skipped')
     steps:
       - run: echo "${{ toJSON(needs) }}"
 
