@@ -3,6 +3,7 @@ ADR
 ApplicationProperty
 Architechtural
 Azurite
+BusinessReasonCode
 CancelledEndDateTime
 ChargeCreated
 ChargeDiscontinuationCancelled
