@@ -91,6 +91,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers.ChargePrice
                     }
 
                     charge.UpdatePrices(
+                        operation.Resolution,
                         operation.PointsStartInterval,
                         operation.PointsEndInterval,
                         operation.Points,
