@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Energinet.DataHub.Charges.Contracts.ChargeMessage;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
@@ -112,9 +113,10 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
         [Theory]
         [InlineData(0, 0, 0)]
+        [InlineData(0, 10, 5)]
         [InlineData(2, 3, 3)]
         [InlineData(4, 2, 1)]
-        public async Task SearchAsync_WhenSearchingHasSkipAndTake_ReturnsMessages(
+        public async Task SearchAsync_SkipAndTakeValues_ReturnsExpectedMessages(
             int skip,
             int take,
             int expectedMessages)
@@ -144,25 +146,28 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
         }
 
         [Fact]
-        public Task SearchAsync_WhenSearchingHasNoSkip_ReturnsMessages()
+        public async Task SearchAsync_WhenSortColumnNameIsNotValid_ReturnsMessagesSortedByMessageDateTimeInAscendingOrder()
         {
             // Arrange
+            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
+            var expectedCharge = await CreateValidCharge(chargesDatabaseWriteContext);
+            var chargeMessages = await CreateChargeMessages(chargesDatabaseWriteContext, expectedCharge, _now);
+            await chargesDatabaseWriteContext.SaveChangesAsync();
+
+            await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
+            var sut = GetSut(chargesDatabaseQueryContext);
+
+            var searchCriteria = new ChargeMessagesSearchCriteriaV1DtoBuilder()
+                .WithChargeId(expectedCharge.Id)
+                .WithSortColumnName((ChargeMessageSortColumnName)(-1))
+                .Build();
 
             // Act
+            var actual = await sut.SearchAsync(searchCriteria);
 
             // Assert
-            return Task.CompletedTask;
-        }
-
-        [Fact]
-        public Task SearchAsync_WhenSortColumnNameIsNotValid_ReturnsMessagesSortedByFromDateTime()
-        {
-            // Arrange
-
-            // Act
-
-            // Assert
-            return Task.CompletedTask;
+            actual.TotalCount.Should().Be(5);
+            actual.ChargeMessages.Should().BeInAscendingOrder(cm => cm.MessageDateTime);
         }
 
         [Fact]
@@ -222,17 +227,6 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
         [Fact]
         public Task SearchAsync_WhenSearchingIsDescendingOrderOnMessageType_ReturnsMessagesInDescendingOrder()
-        {
-            // Arrange
-
-            // Act
-
-            // Assert
-            return Task.CompletedTask;
-        }
-
-        [Fact]
-        public Task SearchAsync_WhenSearching_ReturnsMessagesInsideSearchDateInterval()
         {
             // Arrange
 
