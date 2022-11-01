@@ -97,15 +97,16 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
 
             // Assert
             var jsonString = await response.Content.ReadAsStringAsync();
-            var chargeMessageV1Dtos = JsonSerializer.Deserialize<List<ChargeMessageV1Dto>>(
+            var actual = JsonSerializer.Deserialize<ChargeMessagesV1Dto>(
                 jsonString,
                 GetJsonSerializerOptions())!;
 
-            var actual = chargeMessageV1Dtos.Single();
+            actual.TotalCount.Should().Be(1);
 
-            actual.MessageId.Should().Be(expectedChargeMessage.MessageId);
-            actual.MessageType.Should().Be(ChargeMessageDocumentType.D10);
-            actual.MessageDateTime.LocalDateTime.Should().Be(expectedChargeMessage.MessageDateTime.ToDateTimeUtc());
+            var actualChargeMessageV1Dto = actual.ChargeMessages.Single();
+            actualChargeMessageV1Dto.MessageId.Should().Be(expectedChargeMessage.MessageId);
+            actualChargeMessageV1Dto.MessageType.Should().Be(ChargeMessageDocumentType.D10);
+            actualChargeMessageV1Dto.MessageDateTime.LocalDateTime.Should().Be(expectedChargeMessage.MessageDateTime.ToDateTimeUtc());
         }
 
         private static JsonSerializerOptions GetJsonSerializerOptions()
