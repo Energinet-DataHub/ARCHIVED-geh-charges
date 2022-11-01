@@ -32,7 +32,7 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices
             _data = data;
         }
 
-        public async Task<IEnumerable<ChargeMessageV1Dto>> SearchAsync(ChargeMessagesSearchCriteriaV1Dto searchCriteria)
+        public async Task<ChargeMessagesV1Dto> SearchAsync(ChargeMessagesSearchCriteriaV1Dto searchCriteria)
         {
             var charge = await _data.Charges
                 .SingleOrDefaultAsync(c => c.Id == searchCriteria.ChargeId)
@@ -45,20 +45,24 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices
                 .ConfigureAwait(false);
 
             var chargeMessages = QueryChargeMessages(searchCriteria, charge, marketParticipant);
-            var sortedChargeMessages = await SortChargeMessages(chargeMessages, searchCriteria)
+            var takenChargeMessages = chargeMessages.Skip(searchCriteria.Skip).Take(searchCriteria.Take);
+            var sortedChargeMessages = await SortChargeMessages(takenChargeMessages, searchCriteria)
                 .ToListAsync().ConfigureAwait(false);
 
-            return MapToChargeMessageV1Dtos(sortedChargeMessages);
+            return MapToChargeMessageV1Dtos(sortedChargeMessages, chargeMessages.Count());
         }
 
-        private static IEnumerable<ChargeMessageV1Dto> MapToChargeMessageV1Dtos(
-            IEnumerable<ChargeMessage> chargeMessagesList)
+        private static ChargeMessagesV1Dto MapToChargeMessageV1Dtos(
+            IEnumerable<ChargeMessage> chargeMessagesList, int totalCount)
         {
-            return chargeMessagesList.Select(cm =>
-                new ChargeMessageV1Dto(
-                    cm.MessageId,
-                    MapDocumentType(cm.MessageType),
-                    cm.MessageDateTime));
+            var chargeMessagesV1Dto = new ChargeMessagesV1Dto(
+                totalCount,
+                chargeMessagesList.Select(cm =>
+                    new ChargeMessageV1Dto(
+                        cm.MessageId,
+                        MapDocumentType(cm.MessageType),
+                        cm.MessageDateTime)));
+            return chargeMessagesV1Dto;
         }
 
         private IQueryable<ChargeMessage> QueryChargeMessages(
@@ -71,9 +75,7 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices
                              cm.Type == charge.Type &&
                              cm.MarketParticipantId == marketParticipant.MarketParticipantId)
                 .Where(cm => cm.MessageDateTime >= searchCriteria.FromDateTime &&
-                             cm.MessageDateTime < searchCriteria.ToDateTime)
-                .Skip(searchCriteria.Skip)
-                .Take(searchCriteria.Take);
+                             cm.MessageDateTime <= searchCriteria.ToDateTime);
         }
 
         private static IOrderedQueryable<ChargeMessage> SortChargeMessages(

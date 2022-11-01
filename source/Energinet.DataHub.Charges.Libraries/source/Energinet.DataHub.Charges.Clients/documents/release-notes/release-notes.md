@@ -1,5 +1,9 @@
 # Energinet.DataHub.Charges.Clients Release notes
 
+## Version 4.4.1
+
+`SearchChargeMessagesAsync` returns an object with total count and messages
+
 ## Version 4.4.0
 
 Added `SearchChargeMessagesAsync` to Charges client.

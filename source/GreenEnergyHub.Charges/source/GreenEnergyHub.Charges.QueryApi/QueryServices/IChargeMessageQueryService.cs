@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Energinet.DataHub.Charges.Contracts.ChargeMessage;
 
@@ -26,7 +25,7 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices
         /// <summary>
         /// Get messages related to charge
         /// </summary>
-        /// <returns>A collection of <see cref="ChargeMessageV1Dto"/>.</returns>
-        Task<IEnumerable<ChargeMessageV1Dto>> SearchAsync(ChargeMessagesSearchCriteriaV1Dto searchCriteria);
+        /// <returns>A <see cref="ChargeMessagesV1Dto"/>.</returns>
+        Task<ChargeMessagesV1Dto> SearchAsync(ChargeMessagesSearchCriteriaV1Dto searchCriteria);
     }
 }
