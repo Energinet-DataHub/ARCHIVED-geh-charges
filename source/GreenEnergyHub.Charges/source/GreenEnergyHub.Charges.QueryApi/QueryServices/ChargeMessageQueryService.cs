@@ -97,7 +97,7 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices
             };
         }
 
-        private static ChargeMessageDocumentType MapDocumentType(Charges.Domain.Dtos.SharedDtos.DocumentType documentType) =>
+        private static ChargeMessageDocumentType MapDocumentType(Domain.Dtos.SharedDtos.DocumentType documentType) =>
             documentType switch
             {
                 Domain.Dtos.SharedDtos.DocumentType.RequestChangeBillingMasterData => ChargeMessageDocumentType.D05,
