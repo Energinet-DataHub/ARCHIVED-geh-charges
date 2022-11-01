@@ -38,6 +38,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
     [IntegrationTest]
     public class ChargeMessagesQueryServiceTests : IClassFixture<ChargesDatabaseFixture>
     {
+        private const string MarketParticipantId = "MarketParticipantId";
         private readonly ChargesDatabaseManager _databaseManager;
 
         public ChargeMessagesQueryServiceTests(ChargesDatabaseFixture fixture)
@@ -67,13 +68,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             // Assert
             var expectedMessageIds = chargeMessages
-                .Where(cm => cm.SenderProvidedChargeId == expectedCharge.SenderProvidedChargeId)
+                .Where(cm => cm.SenderProvidedChargeId == expectedCharge.SenderProvidedChargeId
+                             && cm.Type == expectedCharge.Type
+                             && cm.MarketParticipantId == MarketParticipantId)
                 .Select(x => x.MessageId)
                 .ToList();
 
             actual.TotalCount.Should().Be(3);
             actual.ChargeMessages.Select(x => x.MessageId).Should().ContainInOrder(expectedMessageIds);
-            actual.ChargeMessages.Select(x => x.MessageId).Should().NotContain("MessageId4");
         }
 
         [Fact]
@@ -242,36 +244,66 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
         private static async Task<IList<Domain.Charges.ChargeMessage>> CreateChargeMessages(
             IChargesDatabaseContext chargesDatabaseContext, Charge charge)
         {
+            var now = SystemClock.Instance.GetCurrentInstant();
             var chargeMessages = new List<Domain.Charges.ChargeMessage>
             {
                 Domain.Charges.ChargeMessage.Create(
                     charge.SenderProvidedChargeId,
                     charge.Type,
-                    "MarketParticipantId",
+                    MarketParticipantId,
                     "MessageId1",
                     DocumentType.RequestChangeBillingMasterData,
-                    SystemClock.Instance.GetCurrentInstant().Plus(Duration.FromSeconds(1))),
+                    now.Plus(Duration.FromSeconds(1))),
                 Domain.Charges.ChargeMessage.Create(
                     charge.SenderProvidedChargeId,
                     charge.Type,
-                    "MarketParticipantId",
+                    MarketParticipantId,
                     "MessageId2",
                     DocumentType.RequestChangeBillingMasterData,
-                    SystemClock.Instance.GetCurrentInstant().Plus(Duration.FromSeconds(2))),
+                    now.Plus(Duration.FromSeconds(2))),
                 Domain.Charges.ChargeMessage.Create(
                     charge.SenderProvidedChargeId,
                     charge.Type,
-                    "MarketParticipantId",
+                    MarketParticipantId,
                     "MessageId3",
                     DocumentType.RequestChangeOfPriceList,
-                    SystemClock.Instance.GetCurrentInstant().Plus(Duration.FromSeconds(3))),
+                    now.Plus(Duration.FromSeconds(3))),
+
+                // Does not match SenderProvidedChargeId
+                Domain.Charges.ChargeMessage.Create(
+                    "TestFee",
+                    charge.Type,
+                    MarketParticipantId,
+                    "MessageId4",
+                    DocumentType.RequestChangeOfPriceList,
+                    now.Plus(Duration.FromSeconds(3))),
+
+                // Does not match charge type
+                Domain.Charges.ChargeMessage.Create(
+                    charge.SenderProvidedChargeId,
+                    ChargeType.Fee,
+                    MarketParticipantId,
+                    "MessageId5",
+                    DocumentType.RequestChangeOfPriceList,
+                    now.Plus(Duration.FromSeconds(3))),
+
+                // Does not match owner (MarketParticipantId)
+                Domain.Charges.ChargeMessage.Create(
+                    charge.SenderProvidedChargeId,
+                    ChargeType.Fee,
+                    "OtherMarketParticipantId",
+                    "MessageId1",
+                    DocumentType.RequestChangeOfPriceList,
+                    now.Plus(Duration.FromSeconds(3))),
+
+                // Other charge, other owner
                 Domain.Charges.ChargeMessage.Create(
                     "40000",
                     ChargeType.Tariff,
                     SeededData.MarketParticipants.SystemOperator.Gln,
-                    "MessageId4",
+                    "MessageId1",
                     DocumentType.RequestChangeOfPriceList,
-                    SystemClock.Instance.GetCurrentInstant().Plus(Duration.FromSeconds(4))),
+                    now.Plus(Duration.FromSeconds(1))),
             };
 
             await chargesDatabaseContext.ChargeMessages.AddRangeAsync(chargeMessages);
