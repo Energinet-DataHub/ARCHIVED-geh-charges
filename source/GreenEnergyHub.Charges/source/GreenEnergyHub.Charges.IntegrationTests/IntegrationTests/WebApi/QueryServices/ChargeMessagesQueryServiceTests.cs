@@ -209,6 +209,20 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             return Task.CompletedTask;
         }
 
+        [Fact]
+        public async Task SearchAsync_WhenChargeDoesntExist_ThrowsArgumentException()
+        {
+            // Arrange
+            await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
+            var sut = GetSut(chargesDatabaseQueryContext);
+            var searchCriteria = new ChargeMessagesSearchCriteriaV1DtoBuilder()
+                .WithChargeId(Guid.NewGuid())
+                .Build();
+
+            // Act / Assert
+            await Assert.ThrowsAsync<ArgumentException>(() => sut.SearchAsync(searchCriteria));
+        }
+
         private static async Task<Charge> CreateValidCharge(ChargesDatabaseContext chargesDatabaseWriteContext)
         {
             var marketParticipantId =
