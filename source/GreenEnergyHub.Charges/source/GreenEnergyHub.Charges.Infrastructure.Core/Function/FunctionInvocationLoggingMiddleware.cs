@@ -45,16 +45,8 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
                 context.InvocationId);
 
             await next(context).ConfigureAwait(false);
-            var correlationId = string.Empty;
-            try
-            {
-                correlationId = _correlationContext.Id;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
 
+            var correlationId = _correlationContext.Id;
             logger.LogInformation(
                 "Function {FunctionName} ended to process a request with invocation ID {InvocationId} and correlation ID {CorrelationId}",
                 functionEndpointName,
