@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.QueryApi.Model
         public string MessageId { get; set; }
 
         [Required]
-        public DocumentType MessageType { get; set; }
+        public int MessageType { get; set; }
 
         [Required]
         public DateTime MessageDateTime { get; set; }
