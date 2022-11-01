@@ -56,7 +56,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
             }
 
             logger.LogInformation(
-                "Function {FunctionName} ended to process a request with invocation ID {InvocationId} and correlation ID {CorrelationId}",
+                "Function {functionEndpointName} ended to process a request with invocation ID {InvocationId} and correlation ID {correlationId}",
                 functionEndpointName,
                 context.InvocationId,
                 correlationId);
