@@ -51,6 +51,7 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
             string endpointUrl, string testFilePath, IZonedDateTimeService zonedDateTimeService)
         {
             var request = CreateHttpRequest(HttpMethod.Post, endpointUrl);
+            request.Headers.Add(HttpRequestHeaderConstants.CorrelationId, Guid.NewGuid().ToString());
 
             var currentInstant = SystemClock.Instance.GetCurrentInstant();
             var chargeXml = EmbeddedResourceHelper.GetEmbeddedFile(testFilePath, currentInstant, zonedDateTimeService);
@@ -61,7 +62,9 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
 
         public static HttpRequestMessage CreateHttpGetRequest(string endpointUrl)
         {
-            return CreateHttpRequest(HttpMethod.Get, endpointUrl);
+            var request = CreateHttpRequest(HttpMethod.Get, endpointUrl);
+            request.Headers.Add(HttpRequestHeaderConstants.CorrelationId, Guid.NewGuid().ToString());
+            return request;
         }
 
         public static HttpRequestMessage CreateHttpPutRequest(string endpointUrl)

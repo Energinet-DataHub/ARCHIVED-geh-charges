@@ -25,7 +25,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
         private readonly ILoggerFactory _loggerFactory;
         private readonly ICorrelationContext _correlationContext;
 
-        public FunctionInvocationLoggingMiddleware(ILoggerFactory loggerFactory, ICorrelationContext correlationContext)
+        public FunctionInvocationLoggingMiddleware(
+            ILoggerFactory loggerFactory,
+            ICorrelationContext correlationContext)
         {
             _loggerFactory = loggerFactory;
             _correlationContext = correlationContext;
@@ -37,10 +39,9 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
             var logger = _loggerFactory.CreateLogger(functionEndpointName);
 
             logger.LogInformation(
-                "Function {FunctionName} started to process a request with invocation ID {InvocationId} and correlation ID {CorrelationId}",
+                "Function {FunctionName} started to process a request with invocation ID {InvocationId}",
                 functionEndpointName,
-                context.InvocationId,
-                _correlationContext.Id);
+                context.InvocationId);
 
             await next(context).ConfigureAwait(false);
 

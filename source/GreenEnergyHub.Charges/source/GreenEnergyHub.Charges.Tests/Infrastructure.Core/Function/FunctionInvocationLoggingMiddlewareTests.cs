@@ -16,6 +16,7 @@ using System;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
+using Energinet.DataHub.Core.JsonSerialization;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.TestHelpers;
@@ -56,7 +57,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Function
             var invocationId = executionContext.InvocationId;
 
             logger.VerifyLoggerWasCalled(
-                $"Function {functionName} started to process a request with invocation ID {invocationId} and correlation ID {guid}",
+                $"Function {functionName} started to process a request with invocation ID {invocationId}",
                 LogLevel.Information);
 
             logger.VerifyLoggerWasCalled(
