@@ -171,69 +171,159 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
         }
 
         [Fact]
-        public Task SearchAsync_WhenSearchingIsDescendingOrderOnMessageDateTime_ReturnsMessagesInDescendingOrder()
+        public async Task SearchAsync_WhenSearchingIsDescendingOrderOnMessageDateTime_ReturnsMessagesInDescendingOrder()
         {
             // Arrange
+            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
+            var expectedCharge = await CreateValidCharge(chargesDatabaseWriteContext);
+            var chargeMessages = await CreateChargeMessages(chargesDatabaseWriteContext, expectedCharge, _now);
+            await chargesDatabaseWriteContext.SaveChangesAsync();
+
+            await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
+            var sut = GetSut(chargesDatabaseQueryContext);
+
+            var searchCriteria = new ChargeMessagesSearchCriteriaV1DtoBuilder()
+                .WithChargeId(expectedCharge.Id)
+                .WithSortColumnName(ChargeMessageSortColumnName.MessageDateTime)
+                .WithIsDescending(true)
+                .Build();
 
             // Act
+            var actual = await sut.SearchAsync(searchCriteria);
 
             // Assert
-            return Task.CompletedTask;
+            actual.TotalCount.Should().Be(5);
+            actual.ChargeMessages.Should().BeInDescendingOrder(cm => cm.MessageDateTime);
         }
 
         [Fact]
-        public Task SearchAsync_WhenSearchingIsAscendingOrderOnMessageDateTime_ReturnsMessagesInAscendingOrder()
+        public async Task SearchAsync_WhenSearchingIsAscendingOrderOnMessageDateTime_ReturnsMessagesInAscendingOrder()
         {
             // Arrange
+            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
+            var expectedCharge = await CreateValidCharge(chargesDatabaseWriteContext);
+            var chargeMessages = await CreateChargeMessages(chargesDatabaseWriteContext, expectedCharge, _now);
+            await chargesDatabaseWriteContext.SaveChangesAsync();
+
+            await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
+            var sut = GetSut(chargesDatabaseQueryContext);
+
+            var searchCriteria = new ChargeMessagesSearchCriteriaV1DtoBuilder()
+                .WithChargeId(expectedCharge.Id)
+                .WithSortColumnName(ChargeMessageSortColumnName.MessageDateTime)
+                .WithIsDescending(false)
+                .Build();
 
             // Act
+            var actual = await sut.SearchAsync(searchCriteria);
 
             // Assert
-            return Task.CompletedTask;
+            actual.TotalCount.Should().Be(5);
+            actual.ChargeMessages.Should().BeInAscendingOrder(cm => cm.MessageDateTime);
         }
 
         [Fact]
-        public Task SearchAsync_WhenSearchingIsAscendingOrderOnMessageId_ReturnsMessagesInAscendingOrder()
+        public async Task SearchAsync_WhenSearchingIsAscendingOrderOnMessageId_ReturnsMessagesInAscendingOrder()
         {
             // Arrange
+            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
+            var expectedCharge = await CreateValidCharge(chargesDatabaseWriteContext);
+            var chargeMessages = await CreateChargeMessages(chargesDatabaseWriteContext, expectedCharge, _now);
+            await chargesDatabaseWriteContext.SaveChangesAsync();
+
+            await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
+            var sut = GetSut(chargesDatabaseQueryContext);
+
+            var searchCriteria = new ChargeMessagesSearchCriteriaV1DtoBuilder()
+                .WithChargeId(expectedCharge.Id)
+                .WithSortColumnName(ChargeMessageSortColumnName.MessageId)
+                .WithIsDescending(false)
+                .Build();
 
             // Act
+            var actual = await sut.SearchAsync(searchCriteria);
 
             // Assert
-            return Task.CompletedTask;
+            actual.TotalCount.Should().Be(5);
+            actual.ChargeMessages.Should().BeInAscendingOrder(cm => cm.MessageId);
         }
 
         [Fact]
-        public Task SearchAsync_WhenSearchingIsDescendingOrderOnMessageId_ReturnsMessagesInDescendingOrder()
+        public async Task SearchAsync_WhenSearchingIsDescendingOrderOnMessageId_ReturnsMessagesInDescendingOrder()
         {
             // Arrange
+            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
+            var expectedCharge = await CreateValidCharge(chargesDatabaseWriteContext);
+            var chargeMessages = await CreateChargeMessages(chargesDatabaseWriteContext, expectedCharge, _now);
+            await chargesDatabaseWriteContext.SaveChangesAsync();
+
+            await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
+            var sut = GetSut(chargesDatabaseQueryContext);
+
+            var searchCriteria = new ChargeMessagesSearchCriteriaV1DtoBuilder()
+                .WithChargeId(expectedCharge.Id)
+                .WithSortColumnName(ChargeMessageSortColumnName.MessageId)
+                .WithIsDescending(true)
+                .Build();
 
             // Act
+            var actual = await sut.SearchAsync(searchCriteria);
 
             // Assert
-            return Task.CompletedTask;
+            actual.TotalCount.Should().Be(5);
+            actual.ChargeMessages.Should().BeInDescendingOrder(cm => cm.MessageId);
         }
 
         [Fact]
-        public Task SearchAsync_WhenSearchingIsAscendingOrderOnMessageType_ReturnsMessagesInAscendingOrder()
+        public async Task SearchAsync_WhenSearchingIsAscendingOrderOnMessageType_ReturnsMessagesInAscendingOrder()
         {
             // Arrange
+            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
+            var expectedCharge = await CreateValidCharge(chargesDatabaseWriteContext);
+            var chargeMessages = await CreateChargeMessages(chargesDatabaseWriteContext, expectedCharge, _now);
+            await chargesDatabaseWriteContext.SaveChangesAsync();
+
+            await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
+            var sut = GetSut(chargesDatabaseQueryContext);
+
+            var searchCriteria = new ChargeMessagesSearchCriteriaV1DtoBuilder()
+                .WithChargeId(expectedCharge.Id)
+                .WithSortColumnName(ChargeMessageSortColumnName.MessageType)
+                .WithIsDescending(false)
+                .Build();
 
             // Act
+            var actual = await sut.SearchAsync(searchCriteria);
 
             // Assert
-            return Task.CompletedTask;
+            actual.TotalCount.Should().Be(5);
+            actual.ChargeMessages.Should().BeInAscendingOrder(cm => cm.MessageType);
         }
 
         [Fact]
-        public Task SearchAsync_WhenSearchingIsDescendingOrderOnMessageType_ReturnsMessagesInDescendingOrder()
+        public async Task SearchAsync_WhenSearchingIsDescendingOrderOnMessageType_ReturnsMessagesInDescendingOrder()
         {
             // Arrange
+            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
+            var expectedCharge = await CreateValidCharge(chargesDatabaseWriteContext);
+            var chargeMessages = await CreateChargeMessages(chargesDatabaseWriteContext, expectedCharge, _now);
+            await chargesDatabaseWriteContext.SaveChangesAsync();
+
+            await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
+            var sut = GetSut(chargesDatabaseQueryContext);
+
+            var searchCriteria = new ChargeMessagesSearchCriteriaV1DtoBuilder()
+                .WithChargeId(expectedCharge.Id)
+                .WithSortColumnName(ChargeMessageSortColumnName.MessageType)
+                .WithIsDescending(true)
+                .Build();
 
             // Act
+            var actual = await sut.SearchAsync(searchCriteria);
 
             // Assert
-            return Task.CompletedTask;
+            actual.TotalCount.Should().Be(5);
+            actual.ChargeMessages.Should().BeInDescendingOrder(cm => cm.MessageType);
         }
 
         [Fact]
