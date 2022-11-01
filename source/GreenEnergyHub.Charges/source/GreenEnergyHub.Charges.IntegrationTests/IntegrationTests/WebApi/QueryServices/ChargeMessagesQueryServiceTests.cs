@@ -235,28 +235,28 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
                     charge.Type,
                     "MarketParticipantId",
                     "MessageId1",
-                    DocumentType.RequestChangeBillingMasterData,
+                    BusinessReasonCode.UpdateChargeInformation,
                     SystemClock.Instance.GetCurrentInstant().Plus(Duration.FromSeconds(1))),
                 Domain.Charges.ChargeMessage.Create(
                     charge.SenderProvidedChargeId,
                     charge.Type,
                     "MarketParticipantId",
                     "MessageId2",
-                    DocumentType.RequestChangeBillingMasterData,
+                    BusinessReasonCode.UpdateChargeInformation,
                     SystemClock.Instance.GetCurrentInstant().Plus(Duration.FromSeconds(2))),
                 Domain.Charges.ChargeMessage.Create(
                     charge.SenderProvidedChargeId,
                     charge.Type,
                     "MarketParticipantId",
                     "MessageId3",
-                    DocumentType.RequestChangeOfPriceList,
+                    BusinessReasonCode.UpdateChargePrices,
                     SystemClock.Instance.GetCurrentInstant().Plus(Duration.FromSeconds(3))),
                 Domain.Charges.ChargeMessage.Create(
                     "40000",
                     ChargeType.Tariff,
                     SeededData.MarketParticipants.SystemOperator.Gln,
                     "MessageId4",
-                    DocumentType.RequestChangeOfPriceList,
+                    BusinessReasonCode.UpdateChargePrices,
                     SystemClock.Instance.GetCurrentInstant().Plus(Duration.FromSeconds(4))),
             };
 
