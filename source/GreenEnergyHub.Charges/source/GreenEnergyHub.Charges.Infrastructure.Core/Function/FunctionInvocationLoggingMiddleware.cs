@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using Microsoft.Azure.Functions.Worker;
@@ -44,12 +45,21 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
                 context.InvocationId);
 
             await next(context).ConfigureAwait(false);
+            var correlationId = string.Empty;
+            try
+            {
+                correlationId = Guid.NewGuid().ToString();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
 
             logger.LogInformation(
                 "Function {FunctionName} ended to process a request with invocation ID {InvocationId} and correlation ID {CorrelationId}",
                 functionEndpointName,
                 context.InvocationId,
-                _correlationContext.Id);
+                correlationId);
         }
     }
 }
