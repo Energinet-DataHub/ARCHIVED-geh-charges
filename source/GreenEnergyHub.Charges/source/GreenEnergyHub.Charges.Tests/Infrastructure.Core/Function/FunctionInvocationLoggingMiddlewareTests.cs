@@ -12,8 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
+using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using GreenEnergyHub.Charges.TestCore.Attributes;
 using GreenEnergyHub.TestHelpers;
@@ -33,15 +35,18 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Function
         public async Task Invoke_WhenCalled_ThenLoggingIsPerformed(
             [Frozen] Mock<FunctionContext> executionContextMock,
             [Frozen] Mock<ILoggerFactory> loggerFactory,
-            [Frozen] Mock<ILogger> logger)
+            [Frozen] Mock<ILogger> logger,
+            [Frozen] Mock<ICorrelationContext> correlationContext)
         {
             // Arrange
             executionContextMock.Setup(x => x.FunctionDefinition.Name).Returns("TestFunction");
             executionContextMock.Setup(x => x.InvocationId).Returns("TestInvocationId");
             var executionContext = executionContextMock.Object;
             loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(logger.Object);
+            var guid = Guid.NewGuid();
+            correlationContext.Setup(x => x.Id).Returns(guid.ToString);
 
-            var sut = new FunctionInvocationLoggingMiddleware(loggerFactory.Object);
+            var sut = new FunctionInvocationLoggingMiddleware(loggerFactory.Object, correlationContext.Object);
 
             // Act
             await sut.Invoke(executionContext, Next);
@@ -51,11 +56,11 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.Function
             var invocationId = executionContext.InvocationId;
 
             logger.VerifyLoggerWasCalled(
-                $"Function {functionName} started to process a request with invocation ID {invocationId}",
+                $"Function {functionName} started to process a request with invocation ID {invocationId} and correlation ID {guid}",
                 LogLevel.Information);
 
             logger.VerifyLoggerWasCalled(
-                $"Function {functionName} ended to process a request with invocation ID {invocationId}",
+                $"Function {functionName} ended to process a request with invocation ID {invocationId} and correlation ID {guid}",
                 LogLevel.Information);
         }
 
