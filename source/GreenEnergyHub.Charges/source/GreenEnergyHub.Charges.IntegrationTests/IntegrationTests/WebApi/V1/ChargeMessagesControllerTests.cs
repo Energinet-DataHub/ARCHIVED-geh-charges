@@ -105,8 +105,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
 
             var actualChargeMessageV1Dto = actual.ChargeMessages.Single();
             actualChargeMessageV1Dto.MessageId.Should().Be(expectedChargeMessage.MessageId);
-            actualChargeMessageV1Dto.MessageType.Should().Be(ChargeMessageType.D08);
-            actualChargeMessageV1Dto.MessageDateTime.LocalDateTime.Should().Be(expectedChargeMessage.MessageDateTime.ToDateTimeUtc());
+            actualChargeMessageV1Dto.MessageType.Should().Be(ChargeMessageType.D18);
+            actualChargeMessageV1Dto.MessageDateTime.Should().Be(expectedChargeMessage.MessageDateTime.ToDateTimeUtc());
         }
 
         private static JsonSerializerOptions GetJsonSerializerOptions()

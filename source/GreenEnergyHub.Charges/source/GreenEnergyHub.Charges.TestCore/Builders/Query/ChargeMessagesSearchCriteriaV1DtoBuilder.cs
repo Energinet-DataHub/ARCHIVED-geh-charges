@@ -21,7 +21,7 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Query
     {
         private Guid _chargeId = Guid.NewGuid();
         private DateTimeOffset _fromDateTime = DateTimeOffset.MinValue;
-        private DateTimeOffset _toDateTime = DateTimeOffset.MaxValue;
+        private DateTimeOffset _toDateTime = DateTimeOffset.MaxValue.AddDays(-1);
         private ChargeMessageSortColumnName _chargeMessageSortColumnName = ChargeMessageSortColumnName.MessageDateTime;
         private bool _isDescending;
         private int _skip;
