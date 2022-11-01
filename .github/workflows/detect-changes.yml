@@ -23,8 +23,6 @@ name: Detect changes
 on:
   workflow_call:
     outputs:
-      infrastructure:
-        value: ${{ jobs.changes.outputs.infrastructure }}
       dotnet:
         value: ${{ jobs.changes.outputs.dotnet }}
 
@@ -34,7 +32,6 @@ jobs:
     runs-on: ubuntu-latest
     # Set job outputs to values from filter step
     outputs:
-      infrastructure: ${{ steps.filter.outputs.infrastructure }}
       dotnet: ${{ steps.filter.outputs.dotnet }}
     steps:
     # For pull requests it's not necessary to checkout the code because GitHub REST API is used to determine changes
@@ -47,11 +44,6 @@ jobs:
       id: filter
       with:
         filters: |
-          infrastructure:
-            - '.github/workflows/cd.yml'
-            - '.github/workflows/ci.yml'
-            - '.github/workflows/detect-changes.yml'
-            - 'build/**'
           dotnet:
             - '.github/workflows/cd.yml'
             - '.github/workflows/ci.yml'
