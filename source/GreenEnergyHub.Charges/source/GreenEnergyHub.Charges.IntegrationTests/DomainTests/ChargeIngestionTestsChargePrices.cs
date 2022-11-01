@@ -80,7 +80,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
             public async Task Ingestion_NoBearerToken_Http401UnauthorizedResponse()
             {
                 var request = HttpRequestGenerator.CreateHttpPostRequest(
-                    EndpointUrl, ChargePricesRequests.TariffPriceSeries, GetZonedDateTimeService());
+                    EndpointUrl, ChargePricesRequests.TariffPriceSeries, GetZonedDateTimeService(), CorrelationIdGenerator.Create());
 
                 var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
 

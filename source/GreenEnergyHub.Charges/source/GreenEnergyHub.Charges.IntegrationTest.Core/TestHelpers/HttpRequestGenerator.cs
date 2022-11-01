@@ -38,20 +38,19 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.TestHelpers
 
             var clock = new FakeClock(SystemClock.Instance.GetCurrentInstant());
             var zonedDateTimeService = new ZonedDateTimeService(clock, new Iso8601ConversionConfiguration(localTimeZoneName));
-            var request = CreateHttpPostRequest(endpointUrl, testFilePath, zonedDateTimeService);
             var correlationId = CorrelationIdGenerator.Create();
+            var request = CreateHttpPostRequest(endpointUrl, testFilePath, zonedDateTimeService, correlationId);
 
             request.Headers.Add(HttpRequestHeaderConstants.Authorization, $"Bearer {accessToken}");
-            request.Headers.Add(HttpRequestHeaderConstants.CorrelationId, correlationId);
 
             return (request, correlationId);
         }
 
         public static HttpRequestMessage CreateHttpPostRequest(
-            string endpointUrl, string testFilePath, IZonedDateTimeService zonedDateTimeService)
+            string endpointUrl, string testFilePath, IZonedDateTimeService zonedDateTimeService, string correlationId)
         {
             var request = CreateHttpRequest(HttpMethod.Post, endpointUrl);
-            request.Headers.Add(HttpRequestHeaderConstants.CorrelationId, Guid.NewGuid().ToString());
+            request.Headers.Add(HttpRequestHeaderConstants.CorrelationId, correlationId);
 
             var currentInstant = SystemClock.Instance.GetCurrentInstant();
             var chargeXml = EmbeddedResourceHelper.GetEmbeddedFile(testFilePath, currentInstant, zonedDateTimeService);

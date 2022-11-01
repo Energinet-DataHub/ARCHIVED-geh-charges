@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Linq;
 using System.Net;
 using System.Threading;
@@ -63,7 +64,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.DomainTests
                 var request = HttpRequestGenerator.CreateHttpPostRequest(
                     EndpointUrl,
                     ChargeLinkDocument.AnyValid,
-                    ZonedDateTimeServiceHelper.GetZonedDateTimeService(InstantHelper.GetTodayAtMidnightUtc()));
+                    ZonedDateTimeServiceHelper.GetZonedDateTimeService(InstantHelper.GetTodayAtMidnightUtc()),
+                    CorrelationIdGenerator.Create());
 
                 var actual = await Fixture.HostManager.HttpClient.SendAsync(request);
 

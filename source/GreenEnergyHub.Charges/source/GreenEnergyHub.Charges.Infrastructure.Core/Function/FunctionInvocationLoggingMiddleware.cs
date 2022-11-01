@@ -48,7 +48,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
             var correlationId = string.Empty;
             try
             {
-                correlationId = Guid.NewGuid().ToString();
+                correlationId = _correlationContext.Id;
             }
             catch (Exception e)
             {
