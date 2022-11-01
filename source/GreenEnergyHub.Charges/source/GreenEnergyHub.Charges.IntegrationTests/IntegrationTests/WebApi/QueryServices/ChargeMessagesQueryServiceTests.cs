@@ -16,9 +16,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Energinet.DataHub.Charges.Contracts.Charge;
 using Energinet.DataHub.Charges.Contracts.ChargeMessage;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
@@ -34,6 +34,7 @@ using NodaTime;
 using Xunit;
 using Xunit.Categories;
 using Charge = GreenEnergyHub.Charges.Domain.Charges.Charge;
+using ChargeType = GreenEnergyHub.Charges.Domain.Charges.ChargeType;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryServices
 {
@@ -85,6 +86,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             actual.TotalCount.Should().Be(3);
             actual.ChargeMessages.Select(x => x.MessageId).Should().ContainInOrder(expectedMessageIds);
+            actual.ChargeMessages.First().MessageType.Should().Be(ChargeMessageDocumentType.D05);
+            actual.ChargeMessages.Last().MessageType.Should().Be(ChargeMessageDocumentType.D10);
         }
 
         [Fact]
