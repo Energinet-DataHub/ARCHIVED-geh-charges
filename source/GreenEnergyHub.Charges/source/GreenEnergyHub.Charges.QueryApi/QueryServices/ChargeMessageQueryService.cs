@@ -61,7 +61,7 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices
                     new ChargeMessageV1Dto(
                         cm.MessageId,
                         MapDocumentType(cm.MessageType),
-                        cm.MessageDateTime)));
+                        DateTime.SpecifyKind(cm.MessageDateTime, DateTimeKind.Utc))));
             return chargeMessagesV1Dto;
         }
 
