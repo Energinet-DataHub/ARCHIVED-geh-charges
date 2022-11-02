@@ -23,7 +23,6 @@
       {
         "Name": "ApplicationInsights",
         "Args": {
-          "connectionString": "[your connection string here]",
           "telemetryConverter": "Serilog.Sinks.ApplicationInsights.TelemetryConverters.TraceTelemetryConverter, Serilog.Sinks.ApplicationInsights"
         }
       }
