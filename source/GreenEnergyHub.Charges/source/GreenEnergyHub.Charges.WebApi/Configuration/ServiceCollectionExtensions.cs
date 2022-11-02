@@ -32,6 +32,9 @@ namespace GreenEnergyHub.Charges.WebApi.Configuration
         /// <summary>
         /// Adds registrations of JwtTokenMiddleware and corresponding dependencies.
         /// </summary>
+        /// ///
+        /// <param name="services">ServiceCollection container</param>
+        /// <param name="configuration">Configuration containing application properties</param>
         public static IServiceCollection AddJwtTokenSecurity(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddSingleton<ISecurityTokenValidator, JwtSecurityTokenHandler>();
