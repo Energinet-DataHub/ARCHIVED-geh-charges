@@ -49,10 +49,10 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices
             var sortedChargeMessages = await SortChargeMessages(takenChargeMessages, searchCriteria)
                 .ToListAsync().ConfigureAwait(false);
 
-            return MapToChargeMessageV1Dtos(sortedChargeMessages, chargeMessages.Count());
+            return MapToChargeMessagesV1Dtos(sortedChargeMessages, takenChargeMessages.Count());
         }
 
-        private static ChargeMessagesV1Dto MapToChargeMessageV1Dtos(
+        private static ChargeMessagesV1Dto MapToChargeMessagesV1Dtos(
             IEnumerable<ChargeMessage> chargeMessagesList, int totalCount)
         {
             var chargeMessagesV1Dto = new ChargeMessagesV1Dto(
@@ -61,7 +61,7 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices
                     new ChargeMessageV1Dto(
                         cm.MessageId,
                         MapDocumentType(cm.MessageType),
-                        cm.MessageDateTime)));
+                        DateTime.SpecifyKind(cm.MessageDateTime, DateTimeKind.Utc))));
             return chargeMessagesV1Dto;
         }
 
@@ -75,7 +75,7 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices
                              cm.Type == charge.Type &&
                              cm.MarketParticipantId == marketParticipant.MarketParticipantId)
                 .Where(cm => cm.MessageDateTime >= searchCriteria.FromDateTime &&
-                             cm.MessageDateTime <= searchCriteria.ToDateTime);
+                             cm.MessageDateTime < searchCriteria.ToDateTime.AddDays(1));
         }
 
         private static IOrderedQueryable<ChargeMessage> SortChargeMessages(
@@ -97,7 +97,7 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices
             };
         }
 
-        private static ChargeMessageDocumentType MapDocumentType(Charges.Domain.Dtos.SharedDtos.DocumentType documentType) =>
+        private static ChargeMessageDocumentType MapDocumentType(Domain.Dtos.SharedDtos.DocumentType documentType) =>
             documentType switch
             {
                 Domain.Dtos.SharedDtos.DocumentType.RequestChangeBillingMasterData => ChargeMessageDocumentType.D05,
