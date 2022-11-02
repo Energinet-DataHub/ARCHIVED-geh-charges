@@ -145,7 +145,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var actual = await sut.SearchAsync(searchCriteria);
 
             // Assert
-            actual.TotalCount.Should().Be(expectedMessages);
+            actual.ChargeMessages.Count().Should().Be(expectedMessages);
+            actual.TotalCount.Should().Be(5);
         }
 
         [Fact]
