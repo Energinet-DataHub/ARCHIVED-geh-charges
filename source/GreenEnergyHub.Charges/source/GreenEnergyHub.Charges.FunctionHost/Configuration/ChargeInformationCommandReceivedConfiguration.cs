@@ -18,12 +18,10 @@ using GreenEnergyHub.Charges.Application.Charges.Handlers.ChargeInformation;
 using GreenEnergyHub.Charges.Core.Currency;
 using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Charges;
-using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommandReceivedEvents;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands.Validation.InputValidation.Factories;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.FunctionHost.Common;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using GreenEnergyHub.Charges.Infrastructure.Core.Registration;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
@@ -49,7 +47,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IAvailableChargeReceiptValidationErrorFactory,
                 AvailableChargeReceiptValidationErrorFactory>();
             serviceCollection.AddScoped<IChargeCommandReceivedEventHandler, ChargeInformationCommandReceivedEventHandler>();
-            serviceCollection.AddScoped<JsonMessageDeserializer<ChargeInformationCommandReceivedEvent>>();
             serviceCollection.AddScoped<IInputValidationRulesFactory<ChargeInformationOperationDto>,
                 ChargeOperationInputValidationRulesFactory>();
             serviceCollection.AddScoped<IInputValidator<ChargeInformationOperationDto>, InputValidator<ChargeInformationOperationDto>>();
@@ -59,17 +56,23 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
         private static void ConfigureIso8601Timezones(IServiceCollection serviceCollection)
         {
-            var timeZoneId = EnvironmentHelper.GetEnv(EnvironmentSettingNames.LocalTimeZoneName);
-            var timeZoneConfiguration = new Iso8601ConversionConfiguration(timeZoneId);
-            serviceCollection.AddSingleton<IIso8601ConversionConfiguration>(timeZoneConfiguration);
+            serviceCollection.AddSingleton<IIso8601ConversionConfiguration>(_ =>
+            {
+                var timeZoneId = EnvironmentHelper.GetEnv(EnvironmentSettingNames.LocalTimeZoneName);
+                var timeZoneConfiguration = new Iso8601ConversionConfiguration(timeZoneId);
+                return timeZoneConfiguration;
+            });
             serviceCollection.AddScoped<IZonedDateTimeService, ZonedDateTimeService>();
         }
 
         private static void ConfigureIso4217Currency(IServiceCollection serviceCollection)
         {
-            var currency = EnvironmentHelper.GetEnv(EnvironmentSettingNames.Currency);
-            var iso4217Currency = new CurrencyConfigurationIso4217(currency);
-            serviceCollection.AddSingleton(iso4217Currency);
+            serviceCollection.AddSingleton(_ =>
+            {
+                var currency = EnvironmentHelper.GetEnv(EnvironmentSettingNames.Currency);
+                var iso4217Currency = new CurrencyConfigurationIso4217(currency);
+                return iso4217Currency;
+            });
         }
     }
 }
