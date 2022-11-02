@@ -83,7 +83,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddJwtTokenSecurity(metadataAddress, audience);
 
             serviceCollection.AddActorContext();
-            serviceCollection.AddApplicationInsightsTelemetryWorkerService();
             serviceCollection.AddDomainEventPublishing(serviceBusClient);
 
             ConfigureSharedDatabase(serviceCollection);
