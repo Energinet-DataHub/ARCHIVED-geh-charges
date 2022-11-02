@@ -18,6 +18,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Energinet.DataHub.Charges.Contracts.Charge;
 using Energinet.DataHub.Charges.Contracts.ChargeMessage;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.QueryApi.Model;
 using Microsoft.EntityFrameworkCore;
 
@@ -49,7 +50,7 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices
             var sortedChargeMessages = await SortChargeMessages(takenChargeMessages, searchCriteria)
                 .ToListAsync().ConfigureAwait(false);
 
-            return MapToChargeMessagesV1Dtos(sortedChargeMessages, takenChargeMessages.Count());
+            return MapToChargeMessagesV1Dtos(sortedChargeMessages, chargeMessages.Count());
         }
 
         private static ChargeMessagesV1Dto MapToChargeMessagesV1Dtos(
@@ -60,7 +61,7 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices
                 chargeMessagesList.Select(cm =>
                     new ChargeMessageV1Dto(
                         cm.MessageId,
-                        MapDocumentType(cm.MessageType),
+                        MapBusinessReasonCode((BusinessReasonCode)cm.MessageType),
                         DateTime.SpecifyKind(cm.MessageDateTime, DateTimeKind.Utc))));
             return chargeMessagesV1Dto;
         }
@@ -97,16 +98,13 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices
             };
         }
 
-        private static ChargeMessageDocumentType MapDocumentType(Domain.Dtos.SharedDtos.DocumentType documentType) =>
-            documentType switch
+        private static ChargeMessageType MapBusinessReasonCode(BusinessReasonCode businessReasonCode) =>
+            businessReasonCode switch
             {
-                Domain.Dtos.SharedDtos.DocumentType.RequestChangeBillingMasterData => ChargeMessageDocumentType.D05,
-                Domain.Dtos.SharedDtos.DocumentType.RequestChangeOfPriceList => ChargeMessageDocumentType.D10,
-                Domain.Dtos.SharedDtos.DocumentType.Unknown =>
-                    throw new NotSupportedException(
-                        $"DocumentType '{Domain.Dtos.SharedDtos.DocumentType.Unknown}' is not supported"),
-                _ =>
-                    throw new ArgumentOutOfRangeException(nameof(documentType)),
+                BusinessReasonCode.UpdateChargeInformation => ChargeMessageType.D18,
+                BusinessReasonCode.UpdateChargePrices => ChargeMessageType.D08,
+                _ => throw new NotSupportedException(
+                    $"BusinessReasonCode '{nameof(businessReasonCode)}' is not supported"),
             };
     }
 }

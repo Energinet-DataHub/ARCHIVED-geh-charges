@@ -20,6 +20,6 @@ namespace Energinet.DataHub.Charges.Contracts.ChargeMessage
 {
     public record ChargeMessageV1Dto(
         string MessageId,
-        ChargeMessageDocumentType MessageType,
+        ChargeMessageType MessageType,
         DateTimeOffset MessageDateTime);
 }

@@ -49,4 +49,4 @@ jobs:
             - '.github/workflows/ci.yml'
             - '.github/workflows/detect-changes.yml'
             - '.github/actions/dotnet-*/**'
-            - 'source/**'
+            - 'source/!(Energinet.DataHub.Charges.Libraries/**)/**'
