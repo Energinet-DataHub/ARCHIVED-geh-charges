@@ -23,9 +23,7 @@ using Energinet.DataHub.Core.JsonSerialization;
 using Energinet.DataHub.Core.Messaging.Transport;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Dtos.Messages;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
 using GreenEnergyHub.Charges.Tests.TestCore;
-using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using Xunit.Categories;
 
@@ -47,7 +45,7 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions.S
         public async Task FromBytesAsync_CreatesMessage(IInboundMessage expected)
         {
             // Arrange
-            var jsonSerializer = GetMessagingDeserializer();
+            var jsonSerializer = new JsonSerializer();
             await using var stream = GetStream(expected, jsonSerializer);
 
             // Act
@@ -67,18 +65,6 @@ namespace GreenEnergyHub.Charges.Tests.Infrastructure.Core.MessagingExtensions.S
             var jsonString = deserializer.Serialize(expected);
             var bytes = Encoding.UTF8.GetBytes(jsonString);
             return new MemoryStream(bytes);
-        }
-
-        /// <summary>
-        /// Try to make sure that we use the same implementation of deserialization that is used in the messaging framework.
-        /// </summary>
-        private static IJsonSerializer GetMessagingDeserializer()
-        {
-            var services = new ServiceCollection();
-            services.AddMessaging();
-            return services
-                .BuildServiceProvider()
-                .GetRequiredService<IJsonSerializer>();
         }
 
         /// <summary>

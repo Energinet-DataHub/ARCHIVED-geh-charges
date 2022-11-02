@@ -25,12 +25,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
     public class ChargePriceMessagePersisterEndpoint
     {
         private const string FunctionName = nameof(ChargePriceMessagePersisterEndpoint);
-        private readonly JsonMessageDeserializer<ChargePriceOperationsAcceptedEvent> _deserializer;
+        private readonly JsonMessageDeserializer _deserializer;
         private readonly IChargePriceMessagePersister _chargePriceMessagePersister;
         private readonly IUnitOfWork _unitOfWork;
 
         public ChargePriceMessagePersisterEndpoint(
-            JsonMessageDeserializer<ChargePriceOperationsAcceptedEvent> deserializer,
+            JsonMessageDeserializer deserializer,
             IChargePriceMessagePersister chargePriceMessagePersister,
             IUnitOfWork unitOfWork)
         {
@@ -47,8 +47,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             byte[] message)
         {
-            var chargeCommandAcceptedEvent = (ChargePriceOperationsAcceptedEvent)await _deserializer
-                .FromBytesAsync(message).ConfigureAwait(false);
+            var chargeCommandAcceptedEvent = await _deserializer
+                .FromBytesAsync<ChargePriceOperationsAcceptedEvent>(message).ConfigureAwait(false);
 
             await _chargePriceMessagePersister.PersistMessageAsync(chargeCommandAcceptedEvent).ConfigureAwait(false);
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);
