@@ -13,8 +13,6 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Application.Charges.Handlers.ChargePrice;
-using GreenEnergyHub.Charges.Domain.Dtos.Events;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration

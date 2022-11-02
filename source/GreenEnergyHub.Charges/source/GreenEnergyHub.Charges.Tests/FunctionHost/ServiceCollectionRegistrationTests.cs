@@ -16,8 +16,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using AutoFixture;
-using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using FluentAssertions;
 using GreenEnergyHub.Charges.FunctionHost;
 using GreenEnergyHub.Charges.TestCore.TestHelpers;

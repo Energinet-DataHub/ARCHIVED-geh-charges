@@ -19,7 +19,6 @@ using GreenEnergyHub.Charges.Domain.Dtos.Messages.Command;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 using GreenEnergyHub.Charges.Domain.Dtos.Validation.DocumentValidation.Factories;
 using GreenEnergyHub.Charges.Infrastructure.CimDeserialization.ChargeBundle;
-using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
 using Microsoft.Extensions.DependencyInjection;
 
