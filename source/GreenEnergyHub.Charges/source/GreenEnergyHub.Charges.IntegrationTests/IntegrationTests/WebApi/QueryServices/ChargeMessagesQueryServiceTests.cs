@@ -127,7 +127,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
             var expectedCharge = await CreateValidCharge(chargesDatabaseWriteContext);
-            var chargeMessages = await CreateChargeMessages(chargesDatabaseWriteContext, expectedCharge, _now);
+            await CreateChargeMessages(chargesDatabaseWriteContext, expectedCharge, _now);
             await chargesDatabaseWriteContext.SaveChangesAsync();
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
@@ -154,7 +154,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
             var expectedCharge = await CreateValidCharge(chargesDatabaseWriteContext);
-            var chargeMessages = await CreateChargeMessages(chargesDatabaseWriteContext, expectedCharge, _now);
+            await CreateChargeMessages(chargesDatabaseWriteContext, expectedCharge, _now);
             await chargesDatabaseWriteContext.SaveChangesAsync();
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
@@ -179,7 +179,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
             var expectedCharge = await CreateValidCharge(chargesDatabaseWriteContext);
-            var chargeMessages = await CreateChargeMessages(chargesDatabaseWriteContext, expectedCharge, _now);
+            await CreateChargeMessages(chargesDatabaseWriteContext, expectedCharge, _now);
             await chargesDatabaseWriteContext.SaveChangesAsync();
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
@@ -205,7 +205,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
             var expectedCharge = await CreateValidCharge(chargesDatabaseWriteContext);
-            var chargeMessages = await CreateChargeMessages(chargesDatabaseWriteContext, expectedCharge, _now);
+            await CreateChargeMessages(chargesDatabaseWriteContext, expectedCharge, _now);
             await chargesDatabaseWriteContext.SaveChangesAsync();
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
@@ -231,7 +231,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
             var expectedCharge = await CreateValidCharge(chargesDatabaseWriteContext);
-            var chargeMessages = await CreateChargeMessages(chargesDatabaseWriteContext, expectedCharge, _now);
+            await CreateChargeMessages(chargesDatabaseWriteContext, expectedCharge, _now);
             await chargesDatabaseWriteContext.SaveChangesAsync();
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
@@ -257,7 +257,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
             var expectedCharge = await CreateValidCharge(chargesDatabaseWriteContext);
-            var chargeMessages = await CreateChargeMessages(chargesDatabaseWriteContext, expectedCharge, _now);
+            await CreateChargeMessages(chargesDatabaseWriteContext, expectedCharge, _now);
             await chargesDatabaseWriteContext.SaveChangesAsync();
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
@@ -283,7 +283,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
             var expectedCharge = await CreateValidCharge(chargesDatabaseWriteContext);
-            var chargeMessages = await CreateChargeMessages(chargesDatabaseWriteContext, expectedCharge, _now);
+            await CreateChargeMessages(chargesDatabaseWriteContext, expectedCharge, _now);
             await chargesDatabaseWriteContext.SaveChangesAsync();
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
@@ -309,7 +309,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
             var expectedCharge = await CreateValidCharge(chargesDatabaseWriteContext);
-            var chargeMessages = await CreateChargeMessages(chargesDatabaseWriteContext, expectedCharge, _now);
+            await CreateChargeMessages(chargesDatabaseWriteContext, expectedCharge, _now);
             await chargesDatabaseWriteContext.SaveChangesAsync();
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
