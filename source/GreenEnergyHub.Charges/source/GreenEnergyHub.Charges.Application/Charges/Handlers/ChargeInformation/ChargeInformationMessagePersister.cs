@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers.ChargeInformation
                 chargeInformationOperationDto.ChargeType,
                 chargeInformationOperationDto.ChargeOwner,
                 chargeInformationOperationsAcceptedEvent.Document.Id,
-                chargeInformationOperationsAcceptedEvent.Document.Type,
+                chargeInformationOperationsAcceptedEvent.Document.BusinessReasonCode,
                 chargeInformationOperationsAcceptedEvent.Document.RequestDate);
             await _chargeMessageRepository.AddAsync(chargeMessage).ConfigureAwait(false);
         }
