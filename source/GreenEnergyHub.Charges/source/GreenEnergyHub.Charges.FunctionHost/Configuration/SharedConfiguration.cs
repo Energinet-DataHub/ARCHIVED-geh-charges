@@ -51,6 +51,7 @@ using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeLinksReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableChargeReceiptData;
 using GreenEnergyHub.Charges.MessageHub.Models.AvailableData;
 using GreenEnergyHub.Iso8601;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -107,6 +108,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 logging.ClearProviders();
                 logging.AddSerilog(Log.Logger);
             });
+            var serviceProvider = serviceCollection.BuildServiceProvider();
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.ApplicationInsights(
+                    serviceProvider.GetRequiredService<TelemetryConfiguration>(),
+                    TelemetryConverter.Traces)
+                .CreateLogger();
         }
 
         private static void AddCreateDefaultChargeLinksReplier(
