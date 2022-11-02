@@ -55,6 +55,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NodaTime;
+using Serilog;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
@@ -100,6 +101,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 new MessageHubConfig(dataAvailableQueue, messageHubReplyQueue),
                 storageServiceConnectionString,
                 new StorageConfig(azureBlobStorageContainerName));
+
+            serviceCollection.AddLogging(logging =>
+            {
+                logging.ClearProviders();
+                logging.AddSerilog(Log.Logger);
+            });
         }
 
         private static void AddCreateDefaultChargeLinksReplier(
