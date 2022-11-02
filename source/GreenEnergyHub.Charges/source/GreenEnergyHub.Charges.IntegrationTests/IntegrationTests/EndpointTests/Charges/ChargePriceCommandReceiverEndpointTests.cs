@@ -116,7 +116,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
 
                 var newPrices = existingCharge.Points.Select(point => new Point(point.Price + 100, point.Time)).ToList();
                 var chargePriceCommandReceivedEvent = CreateChargePriceCommandReceivedEvent(
-                    chargePriceCommandBuilder, documentDtoBuilder, operationDtoBuilder, chargeId, ownerGln, chargeType, newPrices);
+                    chargePriceCommandBuilder,
+                    documentDtoBuilder,
+                    operationDtoBuilder,
+                    chargeId,
+                    ownerGln,
+                    chargeType,
+                    Resolution.PT1H,
+                    newPrices);
                 var message = ServiceBusMessageGenerator.CreateServiceBusMessage(
                     chargePriceCommandReceivedEvent,
                     correlationId);
@@ -159,7 +166,14 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     GetChargePredicate(chargeId, ownerId, chargeType));
 
                 var chargePriceCommandReceivedEvent = CreateChargePriceCommandReceivedEvent(
-                    commandBuilder, documentDtoBuilder, operationDtoBuilder, chargeId, ownerGln, chargeType, expectedCharge.Points.ToList());
+                    commandBuilder,
+                    documentDtoBuilder,
+                    operationDtoBuilder,
+                    chargeId,
+                    ownerGln,
+                    chargeType,
+                    Resolution.PT1H,
+                    expectedCharge.Points.ToList());
                 var correlationId = CorrelationIdGenerator.Create();
                 var message = ServiceBusMessageGenerator.CreateServiceBusMessage(
                     chargePriceCommandReceivedEvent,
@@ -208,6 +222,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 string chargeId,
                 string ownerId,
                 ChargeType chargeType,
+                Resolution resolution,
                 List<Point> points)
             {
                 var document = documentDtoBuilder
@@ -222,7 +237,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                     .WithOwner(ownerId)
                     .WithChargeId(chargeId)
                     .WithChargeType(chargeType)
-                    .WithPriceResolution(Resolution.P1D)
+                    .WithPriceResolution(resolution)
                     .WithPointsInterval(pointsStartDateTime, pointsEndTime)
                     .WithStartDateTime(pointsStartDateTime);
 

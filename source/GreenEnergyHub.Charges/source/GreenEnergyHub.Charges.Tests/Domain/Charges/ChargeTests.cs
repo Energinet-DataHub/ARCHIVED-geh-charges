@@ -458,6 +458,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
 
             // Act
             sut.UpdatePrices(
+                sut.Resolution,
                 InstantHelper.GetTodayPlusDaysAtMidnightUtc(2),
                 InstantHelper.GetTodayPlusDaysAtMidnightUtc(4),
                 newPrices,
@@ -498,6 +499,7 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
 
             // Act
             sut.UpdatePrices(
+                sut.Resolution,
                 InstantHelper.GetTodayPlusDaysAtMidnightUtc(5),
                 InstantHelper.GetTodayPlusDaysAtMidnightUtc(7),
                 newPrices,
@@ -552,6 +554,33 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Charges
 
             // Assert
             charge.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void UpdatePrice_WithWrongResolution_ThrowsExceptionWithInvalidRule()
+        {
+            // Arrange
+            var newPrices = new List<Point>
+            {
+                new(6.00m, InstantHelper.GetTodayPlusDaysAtMidnightUtc(0)),
+            };
+
+            var sut = new ChargeBuilder()
+                .WithResolution(Resolution.P1D)
+                .Build();
+
+            // Act
+            var ex = Assert.Throws<ChargeOperationFailedException>(() => sut.UpdatePrices(
+                Resolution.PT1H,
+                InstantHelper.GetTodayPlusDaysAtMidnightUtc(0),
+                InstantHelper.GetTodayPlusDaysAtMidnightUtc(1),
+                newPrices,
+                Guid.NewGuid().ToString(),
+                MarketParticipantRole.GridAccessProvider));
+
+            // Assert
+            ex.InvalidRules.Should().Contain(r =>
+                r.ValidationRule.ValidationRuleIdentifier == ValidationRuleIdentifier.PriceSeriesResolutionMustMatchChargeResolution);
         }
 
         private static List<ChargePeriod> AddTwoPeriods()

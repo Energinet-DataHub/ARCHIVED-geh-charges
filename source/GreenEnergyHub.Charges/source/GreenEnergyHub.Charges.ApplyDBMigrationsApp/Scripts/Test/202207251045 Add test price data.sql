@@ -9,9 +9,19 @@ DECLARE @tariff_charge_id UNIQUEIDENTIFIER = (SELECT TOP(1) [Id] from [Charges].
 DECLARE @fee_charge_id UNIQUEIDENTIFIER = (SELECT TOP(1) [Id] from [Charges].[Charge] where [SenderProvidedChargeId] = 'TestFee');
 DECLARE @subscription_charge_id UNIQUEIDENTIFIER = (SELECT TOP(1) [Id] from [Charges].[Charge] where [SenderProvidedChargeId] = 'TestSub');
 
+-- Creating 24 ChargePoints for TestTariff, it has a PT1H resolution
 DECLARE @point_time [datetime2] = '2022-02-1 23:00:00';
+DECLARE @minute_step int = 60
+DECLARE @numPoints int = 24
+DECLARE @pointCounter int = 1.0;
 
-INSERT INTO [Charges].[ChargePoint] VALUES (@tariff_id, @tariff_charge_id, @point_time, 1.0, 1);
+WHILE @pointCounter <= @numPoints
+    BEGIN
+        INSERT INTO [Charges].[ChargePoint] VALUES (NEWID(), @tariff_charge_id, @point_time, 1.0 * @pointCounter, 1);
+        SET @point_time = DATEADD(minute, @minute_step, @point_time);
+        SET @pointCounter = @pointCounter + 1;
+    END
+
 INSERT INTO [Charges].[ChargePoint] VALUES (@fee_id, @fee_charge_id, @point_time, 1.0, 1);
 INSERT INTO [Charges].[ChargePoint] VALUES (@subscription_id, @subscription_charge_id, @point_time, 1.0, 1);
 
