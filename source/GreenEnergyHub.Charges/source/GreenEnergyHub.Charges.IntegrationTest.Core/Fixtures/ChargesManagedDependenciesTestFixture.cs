@@ -18,6 +18,7 @@ using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using Energinet.DataHub.Core.FunctionApp.TestCommon.FunctionAppHost;
 using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.FunctionHost;
+using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using GreenEnergyHub.Charges.TestCore.TestHelpers;
 using Microsoft.Extensions.Hosting;
@@ -42,7 +43,8 @@ namespace GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures
 
             var configuration = new FunctionAppHostConfigurationBuilder().BuildLocalSettingsConfiguration();
             FunctionHostEnvironmentSettingHelper.SetFunctionHostEnvironmentVariablesFromSampleSettingsFile(configuration);
-            Environment.SetEnvironmentVariable("CHARGE_DB_CONNECTION_STRING", DatabaseManager.ConnectionString);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.ChargeDbConnectionString, DatabaseManager.ConnectionString);
+            Environment.SetEnvironmentVariable(EnvironmentSettingNames.LocalTimeZoneName, "Europe/Copenhagen");
 
             Host = ChargesFunctionApp.ConfigureApplication();
 

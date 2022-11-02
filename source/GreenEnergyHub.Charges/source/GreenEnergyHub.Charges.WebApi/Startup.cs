@@ -17,6 +17,7 @@ using System.Text.Json.Serialization;
 using Energinet.DataHub.Core.App.Common.Diagnostics.HealthChecks;
 using Energinet.DataHub.Core.App.WebApp.Diagnostics.HealthChecks;
 using Energinet.DataHub.Core.App.WebApp.Middleware;
+using GreenEnergyHub.Charges.Infrastructure.Core.Registration;
 using GreenEnergyHub.Charges.WebApi.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -84,17 +85,14 @@ namespace GreenEnergyHub.Charges.WebApi
 
             services.ConfigureOptions<ConfigureSwaggerOptions>();
             services.AddQueryApi(Configuration);
-
-            var metadataAddress = Configuration.GetValue<string>(EnvironmentSettingNames.FrontEndOpenIdUrl);
-            var audience = Configuration.GetValue<string>(EnvironmentSettingNames.FrontEndServiceAppId);
-            services.AddJwtTokenSecurity(metadataAddress, audience);
+            services.AddJwtTokenSecurity(Configuration);
 
             // Health check
             services.AddHealthChecks()
                 .AddLiveCheck()
                 .AddSqlServer(
-                    name: "ChargeDb",
-                    connectionString: Configuration.GetConnectionString(EnvironmentSettingNames.ChargeDbConnectionString));
+                    _ => Configuration.GetConnectionString(EnvironmentSettingNames.ChargeDbConnectionString),
+                    name: "ChargeDb");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

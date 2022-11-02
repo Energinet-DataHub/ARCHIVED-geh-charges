@@ -18,6 +18,7 @@ using Energinet.DataHub.Core.App.Common.Abstractions.Security;
 using Energinet.DataHub.Core.App.Common.Identity;
 using Energinet.DataHub.Core.App.Common.Security;
 using Energinet.DataHub.Core.App.WebApp.Middleware;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Protocols;
@@ -31,23 +32,26 @@ namespace GreenEnergyHub.Charges.WebApi.Configuration
         /// <summary>
         /// Adds registrations of JwtTokenMiddleware and corresponding dependencies.
         /// </summary>
-        /// <param name="services">ServiceCollection container</param>
-        /// <param name="metadataAddress">OpenID Configuration URL used for acquiring metadata</param>
-        /// <param name="audience">Audience used for validation of JWT token</param>
-        public static IServiceCollection AddJwtTokenSecurity(this IServiceCollection services, string metadataAddress, string audience)
+        public static IServiceCollection AddJwtTokenSecurity(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddSingleton<ISecurityTokenValidator, JwtSecurityTokenHandler>();
             services.AddSingleton<IConfigurationManager<OpenIdConnectConfiguration>>(_ =>
-                new ConfigurationManager<OpenIdConnectConfiguration>(
-                    metadataAddress,
-                    new OpenIdConnectConfigurationRetriever()));
+                {
+                    var metadataAddress = configuration.GetValue<string>(EnvironmentSettingNames.FrontEndOpenIdUrl);
+                    return new ConfigurationManager<OpenIdConnectConfiguration>(
+                        metadataAddress,
+                        new OpenIdConnectConfigurationRetriever());
+                });
 
             services.AddScoped<IJwtTokenValidator>(sp =>
-                new JwtTokenValidator(
+            {
+                var audience = configuration.GetValue<string>(EnvironmentSettingNames.FrontEndServiceAppId);
+                return new JwtTokenValidator(
                     sp.GetRequiredService<ILogger<JwtTokenValidator>>(),
                     sp.GetRequiredService<ISecurityTokenValidator>(),
                     sp.GetRequiredService<IConfigurationManager<OpenIdConnectConfiguration>>(),
-                    audience));
+                    audience);
+            });
 
             services.AddScoped<ClaimsPrincipalContext>();
             services.AddScoped<IClaimsPrincipalAccessor, ClaimsPrincipalAccessor>();
