@@ -86,8 +86,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             actual.TotalCount.Should().Be(3);
             actual.ChargeMessages.Select(x => x.MessageId).Should().ContainInOrder(expectedMessageIds);
-            actual.ChargeMessages.First().MessageType.Should().Be(ChargeMessageDocumentType.D05);
-            actual.ChargeMessages.Last().MessageType.Should().Be(ChargeMessageDocumentType.D10);
+            actual.ChargeMessages.First().MessageType.Should().Be(ChargeMessageType.D18);
+            actual.ChargeMessages.Last().MessageType.Should().Be(ChargeMessageType.D08);
         }
 
         [Fact]
@@ -145,7 +145,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             var actual = await sut.SearchAsync(searchCriteria);
 
             // Assert
-            actual.TotalCount.Should().Be(expectedMessages);
+            actual.ChargeMessages.Count().Should().Be(expectedMessages);
+            actual.TotalCount.Should().Be(5);
         }
 
         [Fact]
@@ -369,35 +370,35 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
                     charge.Type,
                     MarketParticipantId,
                     "MessageId1",
-                    DocumentType.RequestChangeBillingMasterData,
+                    BusinessReasonCode.UpdateChargeInformation,
                     now),
                 Domain.Charges.ChargeMessage.Create(
                     charge.SenderProvidedChargeId,
                     charge.Type,
                     MarketParticipantId,
                     "MessageId2",
-                    DocumentType.RequestChangeBillingMasterData,
+                    BusinessReasonCode.UpdateChargeInformation,
                     now.Plus(Duration.FromSeconds(1))),
                 Domain.Charges.ChargeMessage.Create(
                     charge.SenderProvidedChargeId,
                     charge.Type,
                     MarketParticipantId,
                     "MessageId3",
-                    DocumentType.RequestChangeOfPriceList,
+                    BusinessReasonCode.UpdateChargePrices,
                     now.Plus(Duration.FromDays(1))),
                 Domain.Charges.ChargeMessage.Create(
                     charge.SenderProvidedChargeId,
                     charge.Type,
                     MarketParticipantId,
                     "MessageId4",
-                    DocumentType.RequestChangeOfPriceList,
+                    BusinessReasonCode.UpdateChargePrices,
                     now.Plus(Duration.FromDays(2)).Plus(Duration.FromSeconds(-1))),
                 Domain.Charges.ChargeMessage.Create(
                     charge.SenderProvidedChargeId,
                     charge.Type,
                     MarketParticipantId,
                     "MessageId5",
-                    DocumentType.RequestChangeOfPriceList,
+                    BusinessReasonCode.UpdateChargePrices,
                     now.Plus(Duration.FromDays(2))),
 
                 // Does not match SenderProvidedChargeId
@@ -406,7 +407,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
                     charge.Type,
                     MarketParticipantId,
                     "MessageId6",
-                    DocumentType.RequestChangeOfPriceList,
+                    BusinessReasonCode.UpdateChargePrices,
                     now.Plus(Duration.FromSeconds(3))),
 
                 // Does not match charge type
@@ -415,7 +416,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
                     ChargeType.Fee,
                     MarketParticipantId,
                     "MessageId7",
-                    DocumentType.RequestChangeOfPriceList,
+                    BusinessReasonCode.UpdateChargePrices,
                     now.Plus(Duration.FromSeconds(3))),
 
                 // Does not match owner (MarketParticipantId)
@@ -424,7 +425,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
                     ChargeType.Fee,
                     "OtherMarketParticipantId",
                     "MessageId1",
-                    DocumentType.RequestChangeOfPriceList,
+                    BusinessReasonCode.UpdateChargePrices,
                     now.Plus(Duration.FromSeconds(3))),
 
                 // Other charge, other owner
@@ -433,7 +434,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
                     ChargeType.Tariff,
                     SeededData.MarketParticipants.SystemOperator.Gln,
                     "MessageId1",
-                    DocumentType.RequestChangeOfPriceList,
+                    BusinessReasonCode.UpdateChargePrices,
                     now.Plus(Duration.FromSeconds(1))),
             };
 
