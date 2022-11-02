@@ -20,6 +20,7 @@ using Energinet.DataHub.Core.Logging.RequestResponseMiddleware;
 using GreenEnergyHub.Charges.FunctionHost.Configuration;
 using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
+using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -44,6 +45,9 @@ namespace GreenEnergyHub.Charges.FunctionHost
                     worker.UseMiddleware<RequestResponseLoggingMiddleware>();
                     worker.UseMiddleware<JwtTokenMiddleware>();
                     worker.UseMiddleware<ActorMiddleware>();
+                    worker
+                        .AddApplicationInsights()
+                        .AddApplicationInsightsLogger();
                 })
                 .ConfigureServices(ConfigureServices)
                 .Build();
