@@ -50,7 +50,7 @@ namespace GreenEnergyHub.Charges.QueryApi.QueryServices
             var sortedChargeMessages = await SortChargeMessages(takenChargeMessages, searchCriteria)
                 .ToListAsync().ConfigureAwait(false);
 
-            return MapToChargeMessagesV1Dtos(sortedChargeMessages, takenChargeMessages.Count());
+            return MapToChargeMessagesV1Dtos(sortedChargeMessages, chargeMessages.Count());
         }
 
         private static ChargeMessagesV1Dto MapToChargeMessagesV1Dtos(
