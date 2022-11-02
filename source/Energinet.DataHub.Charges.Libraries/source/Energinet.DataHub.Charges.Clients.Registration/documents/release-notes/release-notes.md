@@ -1,5 +1,18 @@
 # Energinet.DataHub.Charges.Clients.Registrations Release notes
 
+## Version 4.4.1
+
+`SearchChargeMessagesAsync` returns an object with total count and messages
+
+## Version 4.4.0
+
+Added `SearchChargeMessagesAsync` to Charges client.
+
+## Version 4.3.2
+
+Added 'Utc' to dates in `ChargePricesSearchCriteriaV1Dto`.
+Renamed `SortColumnName` to `ChargePriceSortColumnName`.
+
 ## Version 4.3.1
 
 Added `HasAnyPrices` to `ChargeV1Dto`.

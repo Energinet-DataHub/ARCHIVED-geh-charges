@@ -68,11 +68,13 @@ If you are interested in the public contracts of the Charges domain, please visi
 
 ## Domain Road Map
 
-Planned work for the current program increment (PI):
+Planned work for Charges:
 
-1. When a charge owner submits a charge price series, using the new business reason code `D08`, the Charges domain will be able to receive, validate, persist and forward it to relevant market participants. When this is implemented, it will no longer be possible to include price series with charge information request submitted with business reason code `D18`.
+1. Add a variety of front end capabilities:
 
-2. Subscribe to and use the integration events published by the [Market Participant](https://github.com/Energinet-DataHub/geh-market-participant) domain, thereby replacing the existing manual data synchronization process.
+* Show and access messages received for a given charge.
+* Show a charge's active timeline as per a user-defined date and time. Implicitly this entails defining and implement a charge historical data model.
+* Enable traceability between the operation id causing the state change on the timeline and the message in which it was received.
 
 ## Where can I get more help?
 

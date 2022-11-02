@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -80,9 +81,9 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
 
             var charge = chargesDatabaseContext.Charges.Include(c => c.ChargePoints).Single(c => c.SenderProvidedChargeId == "TestTariff");
             var chargePoint = charge.ChargePoints.First();
-            var expectedTotalAmount = (int)chargePoint.Price;
-            var expectedFromDate = chargePoint.Time;
-            var expectedToDate = chargePoint.Time.AddDays(1);
+            var expectedTotalAmount = charge.ChargePoints.Count;
+            var expectedFromDate = charge.ChargePoints.First().Time;
+            var expectedToDate = charge.ChargePoints.Last().Time.AddHours(1);
 
             var sut = CreateHttpClient(factory);
             var searchCriteria =
@@ -90,6 +91,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
                     .WithChargeId(chargePoint.ChargeId)
                     .WithFromDateTime(expectedFromDate)
                     .WithToDateTime(expectedToDate)
+                    .WithTake(24)
                     .Build();
 
             // Act

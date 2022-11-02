@@ -32,7 +32,7 @@ public class ChargePricesController : Controller
     }
 
     /// <summary>
-    ///     Returns all charge prices based on search criteria
+    /// Returns all charge prices based on search criteria
     /// </summary>
     /// <returns>Charge prices or "404 Not Found"</returns>
     [HttpPost("Search")]

@@ -26,7 +26,7 @@ jobs:
   #
 
   ci_base:
-    uses: Energinet-DataHub/.github/.github/workflows/ci-base.yml@v8
+    uses: Energinet-DataHub/.github/.github/workflows/ci-base.yml@v9
 
   #
   # Detect changes to start relevant jobs
@@ -36,19 +36,6 @@ jobs:
     uses: ./.github/workflows/detect-changes.yml
 
   #
-  # CI Infrastructure
-  #
-
-  infrastructure_ci_build:
-    needs: changes
-    if: ${{ needs.changes.outputs.infrastructure == 'true' }}
-    uses: Energinet-DataHub/.github/.github/workflows/infrastructure-build-prerelease.yml@v8
-    with:
-      TERRAFORM_WORKING_DIRECTORY: './build/infrastructure/main'
-      TERRAFORM_VERSION: '1.2.2'
-      INFRASTRUCTURE_PATH: './build/infrastructure'
-
-  #
   # CI .NET
   #
 
@@ -56,7 +43,7 @@ jobs:
   dotnet_ci_build:
     needs: changes
     if: ${{ needs.changes.outputs.dotnet == 'true' }}
-    uses: Energinet-DataHub/.github/.github/workflows/dotnet-build-prerelease.yml@v8
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-build-prerelease.yml@v9
     with:
       SOLUTION_FILE_PATH: 'source/GreenEnergyHub.Charges/GreenEnergyHub.Charges.sln'
 
@@ -64,7 +51,7 @@ jobs:
   unit_test:
     needs: changes
     if: ${{ needs.changes.outputs.dotnet == 'true' }}
-    uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci-test.yml@v8
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-postbuild-test.yml@v9
     with:
       TESTS_DLL_FILE_PATH: '\source\GreenEnergyHub.Charges\source\GreenEnergyHub.Charges.Tests\bin\Release\net6.0\GreenEnergyHub.Charges.Tests.dll'
       DOWNLOAD_ATTEMPT_LIMIT: 12
@@ -74,12 +61,10 @@ jobs:
   int_test_charge_information_ingestion:
     needs: changes
     if: ${{ needs.changes.outputs.dotnet == 'true' }}
-    uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci-test.yml@v8
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-postbuild-test.yml@v9
     with:
       TESTS_DLL_FILE_PATH: '\source\GreenEnergyHub.Charges\source\GreenEnergyHub.Charges.IntegrationTests\bin\Release\net6.0\GreenEnergyHub.Charges.IntegrationTests.dll'
       TESTS_FILTER_EXPRESSION: 'Category=ChargeIngestionTestsChargeInformation'
-      ASPNETCORE_TEST_CONTENTROOT_VARIABLE_NAME: ASPNETCORE_TEST_CONTENTROOT_GREENENERGYHUB_CHARGES_WEBAPI
-      ASPNETCORE_TEST_CONTENTROOT_VARIABLE_VALUE: '\source\GreenEnergyHub.Charges\source\GreenEnergyHub.Charges.WebApi'
       DOWNLOAD_ATTEMPT_LIMIT: 12
       USE_AZURE_FUNCTIONS_TOOLS: true
       CODE_COVERAGE_FLAGS: business
@@ -95,12 +80,10 @@ jobs:
   int_test_charge_prices_ingestion:
     needs: changes
     if: ${{ needs.changes.outputs.dotnet == 'true' }}
-    uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci-test.yml@v8
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-postbuild-test.yml@v9
     with:
       TESTS_DLL_FILE_PATH: '\source\GreenEnergyHub.Charges\source\GreenEnergyHub.Charges.IntegrationTests\bin\Release\net6.0\GreenEnergyHub.Charges.IntegrationTests.dll'
       TESTS_FILTER_EXPRESSION: 'Category=ChargeIngestionTestsChargePrices'
-      ASPNETCORE_TEST_CONTENTROOT_VARIABLE_NAME: ASPNETCORE_TEST_CONTENTROOT_GREENENERGYHUB_CHARGES_WEBAPI
-      ASPNETCORE_TEST_CONTENTROOT_VARIABLE_VALUE: '\source\GreenEnergyHub.Charges\source\GreenEnergyHub.Charges.WebApi'
       DOWNLOAD_ATTEMPT_LIMIT: 12
       USE_AZURE_FUNCTIONS_TOOLS: true
       CODE_COVERAGE_FLAGS: business
@@ -116,7 +99,7 @@ jobs:
   int_test:
     needs: changes
     if: ${{ needs.changes.outputs.dotnet == 'true' }}
-    uses: Energinet-DataHub/.github/.github/workflows/dotnet-solution-ci-test.yml@v8
+    uses: Energinet-DataHub/.github/.github/workflows/dotnet-postbuild-test.yml@v9
     with:
       TESTS_DLL_FILE_PATH: '\source\GreenEnergyHub.Charges\source\GreenEnergyHub.Charges.IntegrationTests\bin\Release\net6.0\GreenEnergyHub.Charges.IntegrationTests.dll'
       TESTS_FILTER_EXPRESSION: 'Category!=ChargeIngestionTestsChargeInformation&Category!=ChargeIngestionTestsChargePrices'
@@ -141,8 +124,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: [
       ci_base,
-      # Infrastructure
-      infrastructure_ci_build,
       # .NET
       dotnet_ci_build,
       unit_test,
@@ -151,8 +132,13 @@ jobs:
       int_test,
     ]
     if: |
-      always() &&
-      !contains(needs.*.result, 'failure') &&
-      !contains(needs.*.result, 'cancelled')
+      always()
     steps:
-      - run: echo "${{ toJSON(needs) }}"
+      - name: Verify if merge is allowed
+        run: |
+          echo "${{ toJSON(needs) }}"
+
+          if [[ ${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }} = true ]]; then
+              echo "Failed"
+              exit 1
+          fi

@@ -14,6 +14,9 @@
 
 using System;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
+using GreenEnergyHub.Charges.TestCore.TestHelpers;
+using NodaTime;
 
 namespace GreenEnergyHub.Charges.TestCore.Builders.Command
 {
@@ -23,6 +26,8 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Command
         private static ChargeType _chargeType = ChargeType.Unknown;
         private static string _marketParticipantId = Guid.NewGuid().ToString();
         private static string _messageId = "messageId";
+        private static DocumentType _messageType = DocumentType.RequestChangeOfPriceList;
+        private static Instant _messageDateTime = InstantHelper.GetTodayAtMidnightUtc();
 
         public ChargeMessageBuilder WithSenderProvidedChargeId(string senderProvidedChargeId)
         {
@@ -54,7 +59,9 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Command
                 _senderProvidedChargeId,
                 _chargeType,
                 _marketParticipantId,
-                _messageId);
+                _messageId,
+                _messageType,
+                _messageDateTime);
         }
     }
 }
