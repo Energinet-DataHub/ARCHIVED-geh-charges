@@ -15,9 +15,9 @@
 // ReSharper disable once CheckNamespace - Type is shared so namespace is not determined by project structure/namespace
 namespace Energinet.DataHub.Charges.Contracts.Charge
 {
-    public enum ChargeMessageDocumentType
+    public enum ChargeMessageType
     {
-        D05 = 1, // RequestChangeBillingMasterData
-        D10 = 2, // RequestChangeOfPriceList
+        D18 = 1, // UpdateChargeInformation
+        D08 = 2, // UpdatePriceInformation
     }
 }
