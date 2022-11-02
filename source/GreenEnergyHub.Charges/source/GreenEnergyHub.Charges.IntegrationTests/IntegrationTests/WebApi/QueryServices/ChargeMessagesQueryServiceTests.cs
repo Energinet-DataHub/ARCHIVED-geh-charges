@@ -16,8 +16,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Energinet.DataHub.Charges.Contracts.Charge;
+using Energinet.DataHub.Charges.Contracts.ChargeMessage;
 using FluentAssertions;
-using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.Persistence;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
@@ -28,17 +29,21 @@ using GreenEnergyHub.Charges.TestCore.Builders.Command;
 using GreenEnergyHub.Charges.TestCore.Builders.Query;
 using GreenEnergyHub.Charges.TestCore.Data;
 using GreenEnergyHub.Charges.TestCore.TestHelpers;
+using Microsoft.EntityFrameworkCore.SqlServer.NodaTime.Extensions;
 using NodaTime;
 using Xunit;
 using Xunit.Categories;
 using Charge = GreenEnergyHub.Charges.Domain.Charges.Charge;
+using ChargeType = GreenEnergyHub.Charges.Domain.Charges.ChargeType;
 
 namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryServices
 {
     [IntegrationTest]
     public class ChargeMessagesQueryServiceTests : IClassFixture<ChargesDatabaseFixture>
     {
+        private const string MarketParticipantId = "MarketParticipantId";
         private readonly ChargesDatabaseManager _databaseManager;
+        private readonly Instant _now = SystemClock.Instance.GetCurrentInstant();
 
         public ChargeMessagesQueryServiceTests(ChargesDatabaseFixture fixture)
         {
@@ -51,15 +56,19 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             // Arrange
             await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
             var expectedCharge = await CreateValidCharge(chargesDatabaseWriteContext);
-            var chargeMessages = await CreateChargeMessages(chargesDatabaseWriteContext, expectedCharge);
+            var chargeMessages = await CreateChargeMessages(chargesDatabaseWriteContext, expectedCharge, _now);
             await chargesDatabaseWriteContext.SaveChangesAsync();
 
             await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
             var sut = GetSut(chargesDatabaseQueryContext);
+
+            var searchFromDateTime = _now.PlusSeconds(1);
+            var searchToDateTime = _now.PlusDays(1);
+
             var searchCriteria = new ChargeMessagesSearchCriteriaV1DtoBuilder()
                 .WithChargeId(expectedCharge.Id)
-                .WithFromDateTime(InstantHelper.GetTodayAtMidnightUtc().ToDateTimeOffset())
-                .WithToDateTime(InstantHelper.GetTomorrowAtMidnightUtc().ToDateTimeOffset())
+                .WithFromDateTime(searchFromDateTime.ToDateTimeOffset())
+                .WithToDateTime(searchToDateTime.ToDateTimeOffset())
                 .Build();
 
             // Act
@@ -67,13 +76,18 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
 
             // Assert
             var expectedMessageIds = chargeMessages
-                .Where(cm => cm.SenderProvidedChargeId == expectedCharge.SenderProvidedChargeId)
+                .Where(cm => cm.SenderProvidedChargeId == expectedCharge.SenderProvidedChargeId
+                             && cm.Type == expectedCharge.Type
+                             && cm.MarketParticipantId == MarketParticipantId)
+                .Where(cm => cm.MessageDateTime >= searchFromDateTime
+                             && cm.MessageDateTime < searchToDateTime.PlusDays(1))
                 .Select(x => x.MessageId)
                 .ToList();
 
             actual.TotalCount.Should().Be(3);
             actual.ChargeMessages.Select(x => x.MessageId).Should().ContainInOrder(expectedMessageIds);
-            actual.ChargeMessages.Select(x => x.MessageId).Should().NotContain("MessageId4");
+            actual.ChargeMessages.First().MessageType.Should().Be(ChargeMessageDocumentType.D05);
+            actual.ChargeMessages.Last().MessageType.Should().Be(ChargeMessageDocumentType.D10);
         }
 
         [Fact]
@@ -100,113 +114,233 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
             actual.ChargeMessages.Select(x => x.MessageId).Should().ContainInOrder(new List<string>());
         }
 
-        [Fact]
-        public void SearchAsync_WhenSearchingHasSkip_ReturnsMessages()
+        [Theory]
+        [InlineData(0, 0, 0)]
+        [InlineData(0, 10, 5)]
+        [InlineData(2, 3, 3)]
+        [InlineData(4, 2, 1)]
+        public async Task SearchAsync_SkipAndTakeValues_ReturnsExpectedMessages(
+            int skip,
+            int take,
+            int expectedMessages)
         {
             // Arrange
+            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
+            var expectedCharge = await CreateValidCharge(chargesDatabaseWriteContext);
+            await CreateChargeMessages(chargesDatabaseWriteContext, expectedCharge, _now);
+            await chargesDatabaseWriteContext.SaveChangesAsync();
+
+            await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
+            var sut = GetSut(chargesDatabaseQueryContext);
+
+            var searchCriteria = new ChargeMessagesSearchCriteriaV1DtoBuilder()
+                .WithChargeId(expectedCharge.Id)
+                .WithFromDateTime(_now.ToDateTimeOffset())
+                .WithToDateTime(_now.PlusDays(2).ToDateTimeOffset())
+                .WithSkip(skip)
+                .WithTake(take)
+                .Build();
 
             // Act
+            var actual = await sut.SearchAsync(searchCriteria);
 
             // Assert
+            actual.TotalCount.Should().Be(expectedMessages);
         }
 
         [Fact]
-        public Task SearchAsync_WhenSearchingHasNoSkip_ReturnsMessages()
+        public async Task SearchAsync_WhenSortColumnNameIsNotValid_ReturnsMessagesSortedByMessageDateTimeInAscendingOrder()
         {
             // Arrange
+            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
+            var expectedCharge = await CreateValidCharge(chargesDatabaseWriteContext);
+            await CreateChargeMessages(chargesDatabaseWriteContext, expectedCharge, _now);
+            await chargesDatabaseWriteContext.SaveChangesAsync();
+
+            await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
+            var sut = GetSut(chargesDatabaseQueryContext);
+
+            var searchCriteria = new ChargeMessagesSearchCriteriaV1DtoBuilder()
+                .WithChargeId(expectedCharge.Id)
+                .WithSortColumnName((ChargeMessageSortColumnName)(-1))
+                .Build();
 
             // Act
+            var actual = await sut.SearchAsync(searchCriteria);
 
             // Assert
-            return Task.CompletedTask;
+            actual.TotalCount.Should().Be(5);
+            actual.ChargeMessages.Should().BeInAscendingOrder(cm => cm.MessageDateTime);
         }
 
         [Fact]
-        public Task SearchAsync_WhenSortColumnNameIsNotValid_ReturnsMessagesSortedByFromDateTime()
+        public async Task SearchAsync_WhenSearchingIsDescendingOrderOnMessageDateTime_ReturnsMessagesInDescendingOrder()
         {
             // Arrange
+            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
+            var expectedCharge = await CreateValidCharge(chargesDatabaseWriteContext);
+            await CreateChargeMessages(chargesDatabaseWriteContext, expectedCharge, _now);
+            await chargesDatabaseWriteContext.SaveChangesAsync();
+
+            await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
+            var sut = GetSut(chargesDatabaseQueryContext);
+
+            var searchCriteria = new ChargeMessagesSearchCriteriaV1DtoBuilder()
+                .WithChargeId(expectedCharge.Id)
+                .WithSortColumnName(ChargeMessageSortColumnName.MessageDateTime)
+                .WithIsDescending(true)
+                .Build();
 
             // Act
+            var actual = await sut.SearchAsync(searchCriteria);
 
             // Assert
-            return Task.CompletedTask;
+            actual.TotalCount.Should().Be(5);
+            actual.ChargeMessages.Should().BeInDescendingOrder(cm => cm.MessageDateTime);
         }
 
         [Fact]
-        public Task SearchAsync_WhenSearchingIsDescendingOrderOnMessageDateTime_ReturnsMessagesInDescendingOrder()
+        public async Task SearchAsync_WhenSearchingIsAscendingOrderOnMessageDateTime_ReturnsMessagesInAscendingOrder()
         {
             // Arrange
+            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
+            var expectedCharge = await CreateValidCharge(chargesDatabaseWriteContext);
+            await CreateChargeMessages(chargesDatabaseWriteContext, expectedCharge, _now);
+            await chargesDatabaseWriteContext.SaveChangesAsync();
+
+            await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
+            var sut = GetSut(chargesDatabaseQueryContext);
+
+            var searchCriteria = new ChargeMessagesSearchCriteriaV1DtoBuilder()
+                .WithChargeId(expectedCharge.Id)
+                .WithSortColumnName(ChargeMessageSortColumnName.MessageDateTime)
+                .WithIsDescending(false)
+                .Build();
 
             // Act
+            var actual = await sut.SearchAsync(searchCriteria);
 
             // Assert
-            return Task.CompletedTask;
+            actual.TotalCount.Should().Be(5);
+            actual.ChargeMessages.Should().BeInAscendingOrder(cm => cm.MessageDateTime);
         }
 
         [Fact]
-        public Task SearchAsync_WhenSearchingIsAscendingOrderOnMessageDateTime_ReturnsMessagesInAscendingOrder()
+        public async Task SearchAsync_WhenSearchingIsAscendingOrderOnMessageId_ReturnsMessagesInAscendingOrder()
         {
             // Arrange
+            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
+            var expectedCharge = await CreateValidCharge(chargesDatabaseWriteContext);
+            await CreateChargeMessages(chargesDatabaseWriteContext, expectedCharge, _now);
+            await chargesDatabaseWriteContext.SaveChangesAsync();
+
+            await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
+            var sut = GetSut(chargesDatabaseQueryContext);
+
+            var searchCriteria = new ChargeMessagesSearchCriteriaV1DtoBuilder()
+                .WithChargeId(expectedCharge.Id)
+                .WithSortColumnName(ChargeMessageSortColumnName.MessageId)
+                .WithIsDescending(false)
+                .Build();
 
             // Act
+            var actual = await sut.SearchAsync(searchCriteria);
 
             // Assert
-            return Task.CompletedTask;
+            actual.TotalCount.Should().Be(5);
+            actual.ChargeMessages.Should().BeInAscendingOrder(cm => cm.MessageId);
         }
 
         [Fact]
-        public Task SearchAsync_WhenSearchingIsAscendingOrderOnMessageId_ReturnsMessagesInAscendingOrder()
+        public async Task SearchAsync_WhenSearchingIsDescendingOrderOnMessageId_ReturnsMessagesInDescendingOrder()
         {
             // Arrange
+            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
+            var expectedCharge = await CreateValidCharge(chargesDatabaseWriteContext);
+            await CreateChargeMessages(chargesDatabaseWriteContext, expectedCharge, _now);
+            await chargesDatabaseWriteContext.SaveChangesAsync();
+
+            await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
+            var sut = GetSut(chargesDatabaseQueryContext);
+
+            var searchCriteria = new ChargeMessagesSearchCriteriaV1DtoBuilder()
+                .WithChargeId(expectedCharge.Id)
+                .WithSortColumnName(ChargeMessageSortColumnName.MessageId)
+                .WithIsDescending(true)
+                .Build();
 
             // Act
+            var actual = await sut.SearchAsync(searchCriteria);
 
             // Assert
-            return Task.CompletedTask;
+            actual.TotalCount.Should().Be(5);
+            actual.ChargeMessages.Should().BeInDescendingOrder(cm => cm.MessageId);
         }
 
         [Fact]
-        public Task SearchAsync_WhenSearchingIsDescendingOrderOnMessageId_ReturnsMessagesInDescendingOrder()
+        public async Task SearchAsync_WhenSearchingIsAscendingOrderOnMessageType_ReturnsMessagesInAscendingOrder()
         {
             // Arrange
+            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
+            var expectedCharge = await CreateValidCharge(chargesDatabaseWriteContext);
+            await CreateChargeMessages(chargesDatabaseWriteContext, expectedCharge, _now);
+            await chargesDatabaseWriteContext.SaveChangesAsync();
+
+            await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
+            var sut = GetSut(chargesDatabaseQueryContext);
+
+            var searchCriteria = new ChargeMessagesSearchCriteriaV1DtoBuilder()
+                .WithChargeId(expectedCharge.Id)
+                .WithSortColumnName(ChargeMessageSortColumnName.MessageType)
+                .WithIsDescending(false)
+                .Build();
 
             // Act
+            var actual = await sut.SearchAsync(searchCriteria);
 
             // Assert
-            return Task.CompletedTask;
+            actual.TotalCount.Should().Be(5);
+            actual.ChargeMessages.Should().BeInAscendingOrder(cm => cm.MessageType);
         }
 
         [Fact]
-        public Task SearchAsync_WhenSearchingIsAscendingOrderOnMessageType_ReturnsMessagesInAscendingOrder()
+        public async Task SearchAsync_WhenSearchingIsDescendingOrderOnMessageType_ReturnsMessagesInDescendingOrder()
         {
             // Arrange
+            await using var chargesDatabaseWriteContext = _databaseManager.CreateDbContext();
+            var expectedCharge = await CreateValidCharge(chargesDatabaseWriteContext);
+            await CreateChargeMessages(chargesDatabaseWriteContext, expectedCharge, _now);
+            await chargesDatabaseWriteContext.SaveChangesAsync();
+
+            await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
+            var sut = GetSut(chargesDatabaseQueryContext);
+
+            var searchCriteria = new ChargeMessagesSearchCriteriaV1DtoBuilder()
+                .WithChargeId(expectedCharge.Id)
+                .WithSortColumnName(ChargeMessageSortColumnName.MessageType)
+                .WithIsDescending(true)
+                .Build();
 
             // Act
+            var actual = await sut.SearchAsync(searchCriteria);
 
             // Assert
-            return Task.CompletedTask;
+            actual.TotalCount.Should().Be(5);
+            actual.ChargeMessages.Should().BeInDescendingOrder(cm => cm.MessageType);
         }
 
         [Fact]
-        public Task SearchAsync_WhenSearchingIsDescendingOrderOnMessageType_ReturnsMessagesInDescendingOrder()
+        public async Task SearchAsync_WhenChargeDoesntExist_ThrowsArgumentException()
         {
             // Arrange
+            await using var chargesDatabaseQueryContext = _databaseManager.CreateDbQueryContext();
+            var sut = GetSut(chargesDatabaseQueryContext);
+            var searchCriteria = new ChargeMessagesSearchCriteriaV1DtoBuilder()
+                .WithChargeId(Guid.NewGuid())
+                .Build();
 
-            // Act
-
-            // Assert
-            return Task.CompletedTask;
-        }
-
-        [Fact]
-        public Task SearchAsync_WhenSearching_ReturnsMessagesInsideSearchDateInterval()
-        {
-            // Arrange
-
-            // Act
-
-            // Assert
-            return Task.CompletedTask;
+            // Act / Assert
+            await Assert.ThrowsAsync<ArgumentException>(() => sut.SearchAsync(searchCriteria));
         }
 
         private static async Task<Charge> CreateValidCharge(ChargesDatabaseContext chargesDatabaseWriteContext)
@@ -226,38 +360,81 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.QueryS
         }
 
         private static async Task<IList<Domain.Charges.ChargeMessage>> CreateChargeMessages(
-            IChargesDatabaseContext chargesDatabaseContext, Charge charge)
+            IChargesDatabaseContext chargesDatabaseContext, Charge charge, Instant now)
         {
             var chargeMessages = new List<Domain.Charges.ChargeMessage>
             {
                 Domain.Charges.ChargeMessage.Create(
                     charge.SenderProvidedChargeId,
                     charge.Type,
-                    "MarketParticipantId",
+                    MarketParticipantId,
                     "MessageId1",
                     DocumentType.RequestChangeBillingMasterData,
-                    SystemClock.Instance.GetCurrentInstant().Plus(Duration.FromSeconds(1))),
+                    now),
                 Domain.Charges.ChargeMessage.Create(
                     charge.SenderProvidedChargeId,
                     charge.Type,
-                    "MarketParticipantId",
+                    MarketParticipantId,
                     "MessageId2",
                     DocumentType.RequestChangeBillingMasterData,
-                    SystemClock.Instance.GetCurrentInstant().Plus(Duration.FromSeconds(2))),
+                    now.Plus(Duration.FromSeconds(1))),
                 Domain.Charges.ChargeMessage.Create(
                     charge.SenderProvidedChargeId,
                     charge.Type,
-                    "MarketParticipantId",
+                    MarketParticipantId,
                     "MessageId3",
                     DocumentType.RequestChangeOfPriceList,
-                    SystemClock.Instance.GetCurrentInstant().Plus(Duration.FromSeconds(3))),
+                    now.Plus(Duration.FromDays(1))),
+                Domain.Charges.ChargeMessage.Create(
+                    charge.SenderProvidedChargeId,
+                    charge.Type,
+                    MarketParticipantId,
+                    "MessageId4",
+                    DocumentType.RequestChangeOfPriceList,
+                    now.Plus(Duration.FromDays(2)).Plus(Duration.FromSeconds(-1))),
+                Domain.Charges.ChargeMessage.Create(
+                    charge.SenderProvidedChargeId,
+                    charge.Type,
+                    MarketParticipantId,
+                    "MessageId5",
+                    DocumentType.RequestChangeOfPriceList,
+                    now.Plus(Duration.FromDays(2))),
+
+                // Does not match SenderProvidedChargeId
+                Domain.Charges.ChargeMessage.Create(
+                    "TestFee",
+                    charge.Type,
+                    MarketParticipantId,
+                    "MessageId6",
+                    DocumentType.RequestChangeOfPriceList,
+                    now.Plus(Duration.FromSeconds(3))),
+
+                // Does not match charge type
+                Domain.Charges.ChargeMessage.Create(
+                    charge.SenderProvidedChargeId,
+                    ChargeType.Fee,
+                    MarketParticipantId,
+                    "MessageId7",
+                    DocumentType.RequestChangeOfPriceList,
+                    now.Plus(Duration.FromSeconds(3))),
+
+                // Does not match owner (MarketParticipantId)
+                Domain.Charges.ChargeMessage.Create(
+                    charge.SenderProvidedChargeId,
+                    ChargeType.Fee,
+                    "OtherMarketParticipantId",
+                    "MessageId1",
+                    DocumentType.RequestChangeOfPriceList,
+                    now.Plus(Duration.FromSeconds(3))),
+
+                // Other charge, other owner
                 Domain.Charges.ChargeMessage.Create(
                     "40000",
                     ChargeType.Tariff,
                     SeededData.MarketParticipants.SystemOperator.Gln,
-                    "MessageId4",
+                    "MessageId1",
                     DocumentType.RequestChangeOfPriceList,
-                    SystemClock.Instance.GetCurrentInstant().Plus(Duration.FromSeconds(4))),
+                    now.Plus(Duration.FromSeconds(1))),
             };
 
             await chargesDatabaseContext.ChargeMessages.AddRangeAsync(chargeMessages);
