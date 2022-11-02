@@ -85,9 +85,9 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeLin
                 new XElement(cimNamespace + CimChargeLinkConstants.EffectiveDate, chargeLink.StartDateTime.ToString()),
                 CimXmlHelper.GetElementIfNeeded(
                     cimNamespace,
-                    chargeLink.EndDateTime.IsEndDefault(),
                     CimChargeLinkConstants.TerminationDate,
-                    () => chargeLink.EndDateTime.ToString()));
+                    () => chargeLink.EndDateTime.ToString(),
+                    chargeLink.EndDateTime.IsEndDefault()));
         }
     }
 }

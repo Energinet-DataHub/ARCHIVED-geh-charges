@@ -87,19 +87,16 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.Charges
                 // Charge name
                 CimXmlHelper.GetElementIfNeeded(
                     cimNamespace,
-                    string.IsNullOrEmpty(charge.ChargeName),
                     CimChargeConstants.ChargeName,
                     () => charge.ChargeName),
                 // Charge description
                 CimXmlHelper.GetElementIfNeeded(
                     cimNamespace,
-                    string.IsNullOrEmpty(charge.ChargeDescription),
                     CimChargeConstants.ChargeDescription,
                     () => charge.ChargeDescription),
                 // Charge resolution
                 CimXmlHelper.GetElementIfNeeded(
                     cimNamespace,
-                    charge.Resolution == Resolution.Unknown,
                     CimChargeConstants.ChargeResolution,
                     () => ResolutionMapper.Map(charge.Resolution)),
                 // EffectiveDate
@@ -107,27 +104,22 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.Charges
                 // TerminationDate
                 CimXmlHelper.GetElementIfNeeded(
                     cimNamespace,
-                    charge.EndDateTime.IsEndDefault(),
                     CimChargeConstants.TerminationDate,
-                    () => charge.EndDateTime.ToString()),
+                    () => charge.EndDateTime.ToString(),
+                    charge.EndDateTime.IsEndDefault()),
                 // VatClassification
                 CimXmlHelper.GetElementIfNeeded(
                     cimNamespace,
-                    charge.VatClassification == VatClassification.Unknown,
                     CimChargeConstants.VatClassification,
                     () => VatClassificationMapper.Map(charge.VatClassification)),
                 // TransparentInvoicing
                 CimXmlHelper.GetElementIfNeeded(
                     cimNamespace,
-                    // Right now, charge name is our best bet of determining whether to include transparent invoicing
-                    string.IsNullOrEmpty(charge.ChargeName),
                     CimChargeConstants.TransparentInvoicing,
                     () => charge.TransparentInvoicing),
                 // TaxIndicator
                 CimXmlHelper.GetElementIfNeeded(
                     cimNamespace,
-                    // Right now, charge name is our best bet of determining whether to include tax indicator
-                    string.IsNullOrEmpty(charge.ChargeName),
                     CimChargeConstants.TaxIndicator,
                     () => charge.TaxIndicator));
         }
