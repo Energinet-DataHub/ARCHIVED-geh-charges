@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using Energinet.DataHub.Core.FunctionApp.TestCommon;
 using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using FluentAssertions;
+using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.FunctionHost.Charges;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.Database;
 using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures.FunctionApp;
@@ -66,7 +67,7 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 await using var chargesDatabaseReadContext = _databaseManager.CreateDbContext();
 
                 var operationsAcceptedEvent = chargePriceOperationsAcceptedEventBuilder.Build();
-                var documentId = operationsAcceptedEvent.Document.Id;
+                var documentDto = operationsAcceptedEvent.Document;
                 var operationDto = operationsAcceptedEvent.Operations.Last();
 
                 var correlationId = CorrelationIdGenerator.Create();
@@ -80,10 +81,13 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.EndpointTests
                 await FunctionAsserts.AssertHasExecutedAsync(
                     Fixture.HostManager, nameof(ChargePriceMessagePersisterEndpoint));
 
-                var actual = chargesDatabaseReadContext.ChargeMessages.Single(x => x.MessageId == documentId);
+                var actual = chargesDatabaseReadContext.ChargeMessages.Single(x => x.MessageId == documentDto.Id);
                 actual.SenderProvidedChargeId.Should().Be(operationDto.SenderProvidedChargeId);
                 actual.Type.Should().Be(operationDto.ChargeType);
                 actual.MarketParticipantId.Should().Be(operationDto.ChargeOwner);
+                actual.MessageId.Should().Be(documentDto.Id);
+                actual.MessageType.Should().Be((int)BusinessReasonCode.UpdateChargePrices);
+                actual.MessageDateTime.Should().Be(documentDto.RequestDate);
             }
         }
     }

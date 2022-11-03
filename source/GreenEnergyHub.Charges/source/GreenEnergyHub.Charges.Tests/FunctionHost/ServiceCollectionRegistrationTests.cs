@@ -21,6 +21,7 @@ using GreenEnergyHub.Charges.FunctionHost;
 using GreenEnergyHub.Charges.TestCore.TestHelpers;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using Xunit.Categories;
 
@@ -35,20 +36,23 @@ namespace GreenEnergyHub.Charges.Tests.FunctionHost
         }
 
         [Fact]
-        public void WhenApplicationIsConfigured_ThenAllApplicationDependenciesMustBeRegistered()
+        public void WhenApplicationIsConfigured_ThenAllApplicationDependenciesMustBeRegisteredOnlyOnce()
         {
             // Arrange
             var host = ChargesFunctionApp.ConfigureApplication();
             var functionAppDependencies = FindDependenciesForType(typeof(ChargesFunctionApp));
+            var typesToResolve = new List<Type>();
 
             // Act
-            IEnumerable<Type> constructorParameters = new List<Type>();
             foreach (var dependency in functionAppDependencies)
-                constructorParameters = GetConstructorParametersForDependency(dependency);
+                typesToResolve.AddRange(GetConstructorParametersForDependency(dependency));
 
             // Assert
-            foreach (var constructorParameter in constructorParameters)
-                host.Services.GetService(constructorParameter).Should().NotBeNull();
+            foreach (var type in typesToResolve.Distinct())
+            {
+                var services = host.Services.GetServices(type);
+                services.Count().Should().Be(1, $"Found more than one registered service of type {type}");
+            }
         }
 
         private static IEnumerable<Type> GetConstructorParametersForDependency(Type dependency)

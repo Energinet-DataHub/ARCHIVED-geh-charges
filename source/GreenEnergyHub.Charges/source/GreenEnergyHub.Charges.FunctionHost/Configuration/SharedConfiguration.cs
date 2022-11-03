@@ -17,6 +17,7 @@ using Azure.Messaging.ServiceBus;
 using Energinet.DataHub.Core.App.FunctionApp.Extensions.DependencyInjection;
 using Energinet.DataHub.Core.App.FunctionApp.FunctionTelemetryScope;
 using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
+using Energinet.DataHub.Core.JsonSerialization;
 using Energinet.DataHub.Core.Logging.RequestResponseMiddleware.Storage;
 using Energinet.DataHub.Core.Messaging.Protobuf;
 using Energinet.DataHub.Core.Messaging.Transport;
@@ -28,6 +29,7 @@ using Energinet.DataHub.MessageHub.Client.Storage;
 using Energinet.DataHub.MessageHub.Model.Dequeue;
 using Energinet.DataHub.MessageHub.Model.Peek;
 using GreenEnergyHub.Charges.Application.ChargeLinks.CreateDefaultChargeLinkReplier;
+using GreenEnergyHub.Charges.Application.Messaging;
 using GreenEnergyHub.Charges.Application.Persistence;
 using GreenEnergyHub.Charges.Domain.Charges;
 using GreenEnergyHub.Charges.Domain.GridAreaLinks;
@@ -38,6 +40,7 @@ using GreenEnergyHub.Charges.Infrastructure.Core.Function;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessageMetaData;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factories;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
+using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using GreenEnergyHub.Charges.Infrastructure.Core.Registration;
 using GreenEnergyHub.Charges.Infrastructure.Integration.ChargeCreated;
 using GreenEnergyHub.Charges.Infrastructure.Persistence;
@@ -63,29 +66,23 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            var serviceBusConnectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString);
-            var dataAvailableQueue = EnvironmentHelper.GetEnv(EnvironmentSettingNames.MessageHubDataAvailableQueue);
-            var messageHubReplyQueue = EnvironmentHelper.GetEnv(EnvironmentSettingNames.MessageHubReplyQueue);
-            var storageServiceConnectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.MessageHubStorageConnectionString);
-            var azureBlobStorageContainerName = EnvironmentHelper.GetEnv(EnvironmentSettingNames.MessageHubStorageContainer);
-
-            var serviceBusClient = new ServiceBusClient(serviceBusConnectionString);
-
+            serviceCollection.AddSingleton(_ =>
+            {
+                var connectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString);
+                return new ServiceBusClient(connectionString);
+            });
             serviceCollection.AddScoped(typeof(IClock), _ => SystemClock.Instance);
             serviceCollection.AddLogging();
             serviceCollection.AddScoped<CorrelationIdMiddleware>();
+            serviceCollection.AddScoped<IHttpResponseBuilder, HttpResponseBuilder>();
             serviceCollection.AddScoped<FunctionTelemetryScopeMiddleware>();
             serviceCollection.AddScoped<MessageMetaDataMiddleware>();
             serviceCollection.AddScoped<FunctionInvocationLoggingMiddleware>();
 
-            var tenantId = EnvironmentHelper.GetEnv(EnvironmentSettingNames.B2CTenantId);
-            var audience = EnvironmentHelper.GetEnv(EnvironmentSettingNames.BackendServiceAppId);
-            var metadataAddress = $"https://login.microsoftonline.com/{tenantId}/v2.0/.well-known/openid-configuration";
-            serviceCollection.AddJwtTokenSecurity(metadataAddress, audience);
-
+            serviceCollection.AddJwtTokenSecurity();
             serviceCollection.AddActorContext();
             serviceCollection.AddApplicationInsightsTelemetryWorkerService();
-            serviceCollection.AddDomainEventPublishing(serviceBusClient);
+            serviceCollection.AddDomainEventPublishing();
 
             ConfigureSharedDatabase(serviceCollection);
             ConfigureSharedMessaging(serviceCollection);
@@ -94,39 +91,38 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
             AddRequestResponseLogging(serviceCollection);
 
-            AddCreateDefaultChargeLinksReplier(serviceCollection, serviceBusClient);
-            AddPostOfficeCommunication(
-                serviceCollection,
-                serviceBusConnectionString,
-                new MessageHubConfig(dataAvailableQueue, messageHubReplyQueue),
-                storageServiceConnectionString,
-                new StorageConfig(azureBlobStorageContainerName));
+            AddCreateDefaultChargeLinksReplier(serviceCollection);
+            AddPostOfficeCommunication(serviceCollection);
         }
 
-        private static void AddCreateDefaultChargeLinksReplier(
-            IServiceCollection serviceCollection,
-            ServiceBusClient serviceBusClient)
+        private static void AddCreateDefaultChargeLinksReplier(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddSingleton<IServiceBusReplySenderProvider>(_ =>
-                new ServiceBusReplySenderProvider(serviceBusClient));
+            serviceCollection.AddSingleton<IServiceBusReplySenderProvider>(sp =>
+            {
+                var serviceBusClient = sp.GetRequiredService<ServiceBusClient>();
+                return new ServiceBusReplySenderProvider(serviceBusClient);
+            });
             serviceCollection.AddScoped<ICreateDefaultChargeLinksReplier, CreateDefaultChargeLinksReplier>();
         }
 
         private static void ConfigureSharedDatabase(IServiceCollection serviceCollection)
         {
-            var connectionString = Environment.GetEnvironmentVariable(EnvironmentSettingNames.ChargeDbConnectionString) ??
-                                   throw new ArgumentNullException(
-                                       EnvironmentSettingNames.ChargeDbConnectionString,
-                                       "does not exist in configuration settings");
-
             serviceCollection.AddDbContext<ChargesDatabaseContext>(
-                options => options.UseSqlServer(connectionString, o => o.UseNodaTime()));
+                options =>
+                {
+                    var connectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeDbConnectionString);
+                    options.UseSqlServer(connectionString, o => o.UseNodaTime());
+                });
 
             serviceCollection.AddScoped<IChargesDatabaseContext, ChargesDatabaseContext>();
             serviceCollection.AddScoped<IUnitOfWork, UnitOfWork>();
 
             serviceCollection.AddDbContext<MessageHubDatabaseContext>(
-                options => options.UseSqlServer(connectionString, o => o.UseNodaTime()));
+                options =>
+                {
+                    var connectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargeDbConnectionString);
+                    options.UseSqlServer(connectionString, o => o.UseNodaTime());
+                });
 
             serviceCollection.AddScoped<IMessageHubDatabaseContext, MessageHubDatabaseContext>();
 
@@ -154,11 +150,15 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
         private static void ConfigureSharedMessaging(IServiceCollection serviceCollection)
         {
+            serviceCollection.AddScoped<ICorrelationContext, CorrelationContext>();
+            serviceCollection.AddScoped<JsonMessageDeserializer>();
             serviceCollection.AddScoped<MessageDispatcher>();
+            serviceCollection.AddScoped<MessageExtractor>();
             serviceCollection.AddScoped<IServiceBusMessageFactory, ServiceBusMessageFactory>();
+            serviceCollection.AddScoped<IMessageMetaDataContext, MessageMetaDataContext>();
+            serviceCollection.AddSingleton<IJsonSerializer, JsonSerializer>();
             serviceCollection.ConfigureProtobufReception();
             serviceCollection.SendProtobuf<ChargeCreated>();
-            serviceCollection.AddMessaging();
         }
 
         private static void ConfigureSharedCim(IServiceCollection serviceCollection)
@@ -168,9 +168,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 
         private static void ConfigureIso8601Services(IServiceCollection serviceCollection)
         {
-            var timeZoneId = EnvironmentHelper.GetEnv(EnvironmentSettingNames.LocalTimeZoneName);
-            var timeZoneConfiguration = new Iso8601ConversionConfiguration(timeZoneId);
-            serviceCollection.AddSingleton<IIso8601ConversionConfiguration>(timeZoneConfiguration);
+            serviceCollection.AddSingleton<IIso8601ConversionConfiguration>(_ =>
+            {
+                var timeZoneId = EnvironmentHelper.GetEnv(EnvironmentSettingNames.LocalTimeZoneName);
+                var timeZoneConfiguration = new Iso8601ConversionConfiguration(timeZoneId);
+                return timeZoneConfiguration;
+            });
             serviceCollection.AddSingleton<IIso8601Durations, Iso8601Durations>();
         }
 
@@ -179,33 +182,24 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         /// and thus not applicable in this function host. See also
         /// https://github.com/Energinet-DataHub/geh-post-office/blob/main/source/PostOffice.Communicator.SimpleInjector/source/PostOffice.Communicator.SimpleInjector/ServiceCollectionExtensions.cs
         /// </summary>
-        private static void AddPostOfficeCommunication(
-            IServiceCollection serviceCollection,
-            string serviceBusConnectionString,
-            MessageHubConfig messageHubConfig,
-            string storageServiceConnectionString,
-            StorageConfig storageConfig)
+        private static void AddPostOfficeCommunication(IServiceCollection serviceCollection)
         {
-            if (serviceCollection == null)
-                throw new ArgumentNullException(nameof(serviceCollection));
-
-            if (string.IsNullOrWhiteSpace(serviceBusConnectionString))
-                throw new ArgumentNullException(nameof(serviceBusConnectionString));
-
-            if (messageHubConfig == null)
-                throw new ArgumentNullException(nameof(messageHubConfig));
-
-            if (string.IsNullOrWhiteSpace(storageServiceConnectionString))
-                throw new ArgumentNullException(nameof(storageServiceConnectionString));
-
-            if (storageConfig == null)
-                throw new ArgumentNullException(nameof(storageConfig));
-
-            serviceCollection.AddSingleton(_ => messageHubConfig);
-            serviceCollection.AddSingleton(_ => storageConfig);
-            serviceCollection.AddServiceBus(serviceBusConnectionString);
+            serviceCollection.AddSingleton(_ =>
+            {
+                var dataAvailableQueue = EnvironmentHelper.GetEnv(EnvironmentSettingNames.MessageHubDataAvailableQueue);
+                var messageHubReplyQueue = EnvironmentHelper.GetEnv(EnvironmentSettingNames.MessageHubReplyQueue);
+                var messageHubConfig = new MessageHubConfig(dataAvailableQueue, messageHubReplyQueue);
+                return messageHubConfig;
+            });
+            serviceCollection.AddSingleton(_ =>
+            {
+                var azureBlobStorageContainerName = EnvironmentHelper.GetEnv(EnvironmentSettingNames.MessageHubStorageContainer);
+                var storageConfig = new StorageConfig(azureBlobStorageContainerName);
+                return storageConfig;
+            });
+            serviceCollection.AddServiceBus();
             serviceCollection.AddApplicationServices();
-            serviceCollection.AddStorageHandler(storageServiceConnectionString);
+            serviceCollection.AddStorageHandler();
         }
 
         private static void AddRequestResponseLogging(IServiceCollection serviceCollection)
@@ -220,10 +214,11 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             });
         }
 
-        private static void AddServiceBus(this IServiceCollection serviceCollection, string serviceBusConnectionString)
+        private static void AddServiceBus(this IServiceCollection serviceCollection)
         {
             serviceCollection.AddSingleton<IServiceBusClientFactory>(_ =>
             {
+                var serviceBusConnectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString);
                 if (string.IsNullOrWhiteSpace(serviceBusConnectionString))
                 {
                     throw new InvalidOperationException(
@@ -243,16 +238,16 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
         private static void AddApplicationServices(this IServiceCollection serviceCollection)
         {
             serviceCollection.AddSingleton<IDataAvailableNotificationSender, DataAvailableNotificationSender>();
-            serviceCollection.AddSingleton<IRequestBundleParser, RequestBundleParser>();
             serviceCollection.AddSingleton<IResponseBundleParser, ResponseBundleParser>();
             serviceCollection.AddSingleton<IDataBundleResponseSender, DataBundleResponseSender>();
             serviceCollection.AddSingleton<IDequeueNotificationParser, DequeueNotificationParser>();
         }
 
-        private static void AddStorageHandler(this IServiceCollection serviceCollection, string storageServiceConnectionString)
+        private static void AddStorageHandler(this IServiceCollection serviceCollection)
         {
             serviceCollection.AddSingleton<IStorageServiceClientFactory>(_ =>
             {
+                var storageServiceConnectionString = EnvironmentHelper.GetEnv(EnvironmentSettingNames.MessageHubStorageConnectionString);
                 if (string.IsNullOrWhiteSpace(storageServiceConnectionString))
                 {
                     throw new InvalidOperationException(

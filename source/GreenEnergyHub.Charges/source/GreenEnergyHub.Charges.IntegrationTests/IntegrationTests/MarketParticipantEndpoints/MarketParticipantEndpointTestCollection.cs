@@ -12,12 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// ReSharper disable once CheckNamespace - Type is shared so namespace is not determined by project structure/namespace
-namespace Energinet.DataHub.Charges.Contracts.Charge
+using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures;
+using Xunit;
+
+namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.MarketParticipantEndpoints
 {
-    public enum ChargeMessageDocumentType
+    [CollectionDefinition(nameof(MarketParticipantEndpointTestCollection))]
+    public class MarketParticipantEndpointTestCollection : ICollectionFixture<ChargesManagedDependenciesTestFixture>
     {
-        D05 = 1, // RequestChangeBillingMasterData
-        D10 = 2, // RequestChangeOfPriceList
     }
 }

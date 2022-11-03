@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -105,8 +104,8 @@ namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.WebApi.V1
 
             var actualChargeMessageV1Dto = actual.ChargeMessages.Single();
             actualChargeMessageV1Dto.MessageId.Should().Be(expectedChargeMessage.MessageId);
-            actualChargeMessageV1Dto.MessageType.Should().Be(ChargeMessageDocumentType.D10);
-            actualChargeMessageV1Dto.MessageDateTime.LocalDateTime.Should().Be(expectedChargeMessage.MessageDateTime.ToDateTimeUtc());
+            actualChargeMessageV1Dto.MessageType.Should().Be(ChargeMessageType.D18);
+            actualChargeMessageV1Dto.MessageDateTime.Should().Be(expectedChargeMessage.MessageDateTime.ToDateTimeOffset());
         }
 
         private static JsonSerializerOptions GetJsonSerializerOptions()

@@ -15,12 +15,10 @@
 using System.IO;
 using System.Threading.Tasks;
 using Energinet.DataHub.Core.JsonSerialization;
-using GreenEnergyHub.Charges.Domain.Dtos.Events;
 
 namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization
 {
-    public class JsonMessageDeserializer<TDomainEvent>
-      where TDomainEvent : DomainEvent
+    public class JsonMessageDeserializer
     {
         private readonly IJsonSerializer _jsonSerializer;
 
@@ -29,13 +27,13 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Seriali
             _jsonSerializer = jsonSerializer;
         }
 
-        public async Task<DomainEvent> FromBytesAsync(byte[] data)
+        public async Task<T> FromBytesAsync<T>(byte[] data)
         {
             var stream = new MemoryStream(data);
             await using (stream.ConfigureAwait(false))
             {
-                return (TDomainEvent)await _jsonSerializer.DeserializeAsync(
-                    stream, typeof(TDomainEvent)).ConfigureAwait(false);
+                return (T)await _jsonSerializer.DeserializeAsync(
+                    stream, typeof(T)).ConfigureAwait(false);
             }
         }
     }

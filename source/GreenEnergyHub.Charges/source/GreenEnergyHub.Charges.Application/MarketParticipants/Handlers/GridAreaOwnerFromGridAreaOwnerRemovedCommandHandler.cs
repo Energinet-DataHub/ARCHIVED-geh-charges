@@ -35,7 +35,7 @@ namespace GreenEnergyHub.Charges.Application.MarketParticipants.Handlers
             if (gridArea == null)
             {
                 throw new InvalidOperationException(
-                    $"Could not removed grid area from market participant. Grid area not found by grid area id: {command.GridAreaId}");
+                    $"Could not remove grid area from market participant. Grid area not found by grid area id: {command.GridAreaId}");
             }
 
             gridArea.RemoveOwner();

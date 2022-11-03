@@ -26,7 +26,7 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Command
         private static ChargeType _chargeType = ChargeType.Unknown;
         private static string _marketParticipantId = Guid.NewGuid().ToString();
         private static string _messageId = "messageId";
-        private static DocumentType _messageType = DocumentType.RequestChangeOfPriceList;
+        private static BusinessReasonCode _businessReasonCode = BusinessReasonCode.UpdateChargePrices;
         private static Instant _messageDateTime = InstantHelper.GetTodayAtMidnightUtc();
 
         public ChargeMessageBuilder WithSenderProvidedChargeId(string senderProvidedChargeId)
@@ -60,7 +60,7 @@ namespace GreenEnergyHub.Charges.TestCore.Builders.Command
                 _chargeType,
                 _marketParticipantId,
                 _messageId,
-                _messageType,
+                _businessReasonCode,
                 _messageDateTime);
         }
     }
