@@ -64,5 +64,6 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
         MonthlyPriceSeriesEndDateMustBeFirstOfMonthOrEqualChargeStopDate = 53, // VR923 / D14
         EffectiveDateMustMatchPriceSeriesStartInterval = 54, // VR924 / E0H
         PriceSeriesResolutionMustMatchChargeResolution = 55, // VR925 / D14
+        PointsRequired = 56, // VR926 / E87
     }
 }

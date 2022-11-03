@@ -72,6 +72,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.Shared
                 ValidationRuleIdentifier.MonthlyPriceSeriesEndDateMustBeFirstOfMonthOrEqualChargeStopDate => ReasonCode.D14,
                 ValidationRuleIdentifier.EffectiveDateMustMatchPriceSeriesStartInterval => ReasonCode.E0H,
                 ValidationRuleIdentifier.PriceSeriesResolutionMustMatchChargeResolution => ReasonCode.D14,
+                ValidationRuleIdentifier.PointsRequired => ReasonCode.E87,
                 _ => throw new NotImplementedException(),
             };
         }
