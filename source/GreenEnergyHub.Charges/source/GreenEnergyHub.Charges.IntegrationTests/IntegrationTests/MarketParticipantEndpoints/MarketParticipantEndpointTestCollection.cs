@@ -12,22 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures;
+using Xunit;
 
-namespace GreenEnergyHub.Charges.Domain.Dtos.Events
+namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.MarketParticipantEndpoints
 {
-    public class MarketParticipantGridAreaUpdatedCommand
+    [CollectionDefinition(nameof(MarketParticipantEndpointTestCollection))]
+    public class MarketParticipantEndpointTestCollection : ICollectionFixture<ChargesManagedDependenciesTestFixture>
     {
-        public MarketParticipantGridAreaUpdatedCommand(
-            Guid gridAreaId,
-            Guid gridAreaLinkId)
-        {
-            GridAreaId = gridAreaId;
-            GridAreaLinkId = gridAreaLinkId;
-        }
-
-        public Guid GridAreaId { get; }
-
-        public Guid GridAreaLinkId { get; }
     }
 }

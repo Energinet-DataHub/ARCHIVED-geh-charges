@@ -18,9 +18,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
 {
-    internal static class IntegrationEventHandlersConfiguration
+    public static class IntegrationEventHandlersConfiguration
     {
-        internal static void ConfigureServices(IServiceCollection serviceCollection)
+        public static void ConfigureServices(IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<IMarketParticipantCreatedCommandHandler, MarketParticipantCreatedCommandHandler>();
             serviceCollection.AddScoped<IMarketParticipantStatusChangedCommandHandler, MarketParticipantStatusChangedCommandHandler>();
