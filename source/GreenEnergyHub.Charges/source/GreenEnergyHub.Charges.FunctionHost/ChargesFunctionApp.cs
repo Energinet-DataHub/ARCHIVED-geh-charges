@@ -45,9 +45,6 @@ namespace GreenEnergyHub.Charges.FunctionHost
                     worker.UseMiddleware<RequestResponseLoggingMiddleware>();
                     worker.UseMiddleware<JwtTokenMiddleware>();
                     worker.UseMiddleware<ActorMiddleware>();
-                    worker
-                        .AddApplicationInsights()
-                        .AddApplicationInsightsLogger();
                 })
                 .ConfigureServices(ConfigureServices)
                 .Build();
