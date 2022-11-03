@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim
                 cimNamespace,
                 elementName,
                 () => throw new InvalidOperationException(),
-                true);
+                false);
 
             // Assert
             actual.Should().BeEmpty();

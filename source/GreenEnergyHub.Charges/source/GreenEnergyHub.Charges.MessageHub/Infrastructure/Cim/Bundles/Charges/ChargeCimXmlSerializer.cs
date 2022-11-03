@@ -84,44 +84,19 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.Charges
                     charge.ChargeOwner),
                 new XElement(cimNamespace + CimChargeConstants.ChargeType, ChargeTypeMapper.Map(charge.ChargeType)),
                 new XElement(cimNamespace + CimChargeConstants.ChargeId, charge.ChargeId),
-                // Charge name
-                CimXmlHelper.GetElementIfNeeded(
-                    cimNamespace,
-                    CimChargeConstants.ChargeName,
-                    () => charge.ChargeName),
-                // Charge description
-                CimXmlHelper.GetElementIfNeeded(
-                    cimNamespace,
-                    CimChargeConstants.ChargeDescription,
-                    () => charge.ChargeDescription),
-                // Charge resolution
-                CimXmlHelper.GetElementIfNeeded(
-                    cimNamespace,
-                    CimChargeConstants.ChargeResolution,
-                    () => ResolutionMapper.Map(charge.Resolution)),
-                // EffectiveDate
+                new XElement(cimNamespace + CimChargeConstants.ChargeName, charge.ChargeName),
+                new XElement(cimNamespace + CimChargeConstants.ChargeDescription, charge.ChargeDescription),
+                new XElement(cimNamespace + CimChargeConstants.ChargeResolution, ResolutionMapper.Map(charge.Resolution)),
                 new XElement(cimNamespace + CimChargeConstants.EffectiveDate, charge.StartDateTime.ToString()),
                 // TerminationDate
                 CimXmlHelper.GetElementIfNeeded(
                     cimNamespace,
                     CimChargeConstants.TerminationDate,
                     () => charge.EndDateTime.ToString(),
-                    charge.EndDateTime.IsEndDefault()),
-                // VatClassification
-                CimXmlHelper.GetElementIfNeeded(
-                    cimNamespace,
-                    CimChargeConstants.VatClassification,
-                    () => VatClassificationMapper.Map(charge.VatClassification)),
-                // TransparentInvoicing
-                CimXmlHelper.GetElementIfNeeded(
-                    cimNamespace,
-                    CimChargeConstants.TransparentInvoicing,
-                    () => charge.TransparentInvoicing),
-                // TaxIndicator
-                CimXmlHelper.GetElementIfNeeded(
-                    cimNamespace,
-                    CimChargeConstants.TaxIndicator,
-                    () => charge.TaxIndicator));
+                    !charge.EndDateTime.IsEndDefault()),
+                new XElement(cimNamespace + CimChargeConstants.VatClassification, VatClassificationMapper.Map(charge.VatClassification)),
+                new XElement(cimNamespace + CimChargeConstants.TransparentInvoicing, charge.TransparentInvoicing),
+                new XElement(cimNamespace + CimChargeConstants.TaxIndicator, charge.TaxIndicator));
         }
     }
 }

@@ -104,7 +104,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeRec
                     cimNamespace,
                     CimChargeReceiptConstants.ReasonText,
                     () => validationError.Text,
-                    string.IsNullOrWhiteSpace(validationError.Text)));
+                    !string.IsNullOrWhiteSpace(validationError.Text)));
         }
 
         private static bool IsConfirmation(IEnumerable<AvailableChargeReceiptData> receipts)

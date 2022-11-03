@@ -87,7 +87,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.ChargeLin
                     cimNamespace,
                     CimChargeLinkConstants.TerminationDate,
                     () => chargeLink.EndDateTime.ToString(),
-                    chargeLink.EndDateTime.IsEndDefault()));
+                    !chargeLink.EndDateTime.IsEndDefault()));
         }
     }
 }
