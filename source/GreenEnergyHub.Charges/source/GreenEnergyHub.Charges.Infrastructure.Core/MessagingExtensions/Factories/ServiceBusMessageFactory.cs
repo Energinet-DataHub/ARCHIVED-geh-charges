@@ -71,7 +71,6 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Factori
             return new ServiceBusMessage(data)
             {
                 Subject = messageType,
-                CorrelationId = _correlationContext.Id,
                 ApplicationProperties =
                 {
                     new KeyValuePair<string, object>(
