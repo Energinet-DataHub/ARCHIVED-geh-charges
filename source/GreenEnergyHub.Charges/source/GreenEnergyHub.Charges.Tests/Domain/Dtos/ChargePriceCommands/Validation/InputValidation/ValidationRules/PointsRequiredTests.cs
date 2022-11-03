@@ -23,7 +23,7 @@ using Xunit.Categories;
 namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.ValidationRules
 {
     [UnitTest]
-    public class PointsIsRequiredTests
+    public class PointsRequiredTests
     {
         [Theory]
         [InlineAutoDomainData]
@@ -33,14 +33,12 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
             // Arrange
             var chargePriceOperationDto = chargePriceOperationDtoBuilder.Build();
             chargePriceOperationDto.Points.Clear();
-            var sut = new PointsIsRequiredRule(chargePriceOperationDto);
+            var sut = new PointsRequiredRule(chargePriceOperationDto);
 
             // Act
             var actual = sut.IsValid;
 
             // Assert
-            sut.ValidationRuleIdentifier.Should()
-                .Be(ValidationRuleIdentifier.PointsIsRequired);
             actual.Should().Be(false);
         }
 
@@ -51,15 +49,29 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
         {
             // Arrange
             var chargePriceOperationDto = chargePriceOperationDtoBuilder.Build();
-            var sut = new PointsIsRequiredRule(chargePriceOperationDto);
+            var sut = new PointsRequiredRule(chargePriceOperationDto);
 
             // Act
             var actual = sut.IsValid;
 
             // Assert
-            sut.ValidationRuleIdentifier.Should()
-                .Be(ValidationRuleIdentifier.PointsIsRequired);
             actual.Should().Be(true);
+        }
+
+        [Theory]
+        [InlineAutoDomainData]
+        public void ValidationRuleIdentifier_ShouldBy_EqualTo(
+            ChargePriceOperationDtoBuilder chargePriceOperationDtoBuilder)
+        {
+            // Arrange
+            var chargePriceOperationDto = chargePriceOperationDtoBuilder.Build();
+
+            // Act
+            var sut = new PointsRequiredRule(chargePriceOperationDto);
+
+            // Assert
+            sut.ValidationRuleIdentifier.Should()
+                .Be(ValidationRuleIdentifier.PointsRequired);
         }
     }
 }

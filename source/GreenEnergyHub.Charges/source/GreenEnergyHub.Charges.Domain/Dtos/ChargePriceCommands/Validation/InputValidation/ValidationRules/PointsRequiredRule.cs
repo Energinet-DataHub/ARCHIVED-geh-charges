@@ -17,17 +17,17 @@ using GreenEnergyHub.Charges.Domain.Dtos.Validation;
 
 namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.ValidationRules
 {
-    public class PointsIsRequiredRule : IValidationRule
+    public class PointsRequiredRule : IValidationRule
     {
         private readonly ChargePriceOperationDto _chargePriceOperationDto;
 
-        public PointsIsRequiredRule(ChargePriceOperationDto chargePriceOperationDto)
+        public PointsRequiredRule(ChargePriceOperationDto chargePriceOperationDto)
         {
             _chargePriceOperationDto = chargePriceOperationDto;
         }
 
         public bool IsValid => _chargePriceOperationDto.Points.Any();
 
-        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.PointsIsRequired;
+        public ValidationRuleIdentifier ValidationRuleIdentifier => ValidationRuleIdentifier.PointsRequired;
     }
 }

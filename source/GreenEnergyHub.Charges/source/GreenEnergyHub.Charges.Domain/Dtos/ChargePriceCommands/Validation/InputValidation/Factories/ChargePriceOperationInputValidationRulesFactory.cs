@@ -65,7 +65,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.Inpu
                 CreateRuleContainer(new ResolutionFeeValidationRule(operation), operation.OperationId),
                 CreateRuleContainer(new ResolutionIsRequiredRule(operation), operation.OperationId),
                 CreateRuleContainer(new EffectiveDateMustMatchPriceSeriesStartIntervalRule(operation), operation.OperationId),
-                CreateRuleContainer(new PointsIsRequiredRule(operation), operation.OperationId),
+                CreateRuleContainer(new PointsRequiredRule(operation), operation.OperationId),
             };
 
             return rules;
