@@ -35,9 +35,9 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim
             // Act
             var actual = CimXmlHelper.GetElementIfNeeded(
                 cimNamespace,
-                true,
                 elementName,
-                () => throw new InvalidOperationException());
+                () => throw new InvalidOperationException(),
+                false);
 
             // Assert
             actual.Should().BeEmpty();
@@ -53,7 +53,6 @@ namespace GreenEnergyHub.Charges.Tests.MessageHub.Infrastructure.Cim
             // Act
             var actual = CimXmlHelper.GetElementIfNeeded(
                 cimNamespace,
-                false,
                 elementName,
                 () => value).ToArray();
 
