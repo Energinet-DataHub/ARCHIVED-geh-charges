@@ -24,11 +24,11 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
     public class ChargeIntegrationEventsPublisherEndpoint
     {
         private const string FunctionName = nameof(ChargeIntegrationEventsPublisherEndpoint);
-        private readonly JsonMessageDeserializer<ChargeInformationOperationsAcceptedEvent> _deserializer;
+        private readonly JsonMessageDeserializer _deserializer;
         private readonly IChargeIntegrationEventsPublisher _chargeIntegrationEventsPublisher;
 
         public ChargeIntegrationEventsPublisherEndpoint(
-            JsonMessageDeserializer<ChargeInformationOperationsAcceptedEvent> deserializer,
+            JsonMessageDeserializer deserializer,
             IChargeIntegrationEventsPublisher chargeIntegrationEventsPublisher)
         {
             _deserializer = deserializer;
@@ -43,8 +43,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             byte[] message)
         {
-            var chargeCommandAcceptedEvent = (ChargeInformationOperationsAcceptedEvent)await _deserializer
-                .FromBytesAsync(message).ConfigureAwait(false);
+            var chargeCommandAcceptedEvent = await _deserializer
+                .FromBytesAsync<ChargeInformationOperationsAcceptedEvent>(message).ConfigureAwait(false);
 
             await _chargeIntegrationEventsPublisher.PublishAsync(chargeCommandAcceptedEvent).ConfigureAwait(false);
         }

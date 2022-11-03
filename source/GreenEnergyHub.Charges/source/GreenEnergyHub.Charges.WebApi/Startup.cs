@@ -84,17 +84,14 @@ namespace GreenEnergyHub.Charges.WebApi
 
             services.ConfigureOptions<ConfigureSwaggerOptions>();
             services.AddQueryApi(Configuration);
-
-            var metadataAddress = Configuration.GetValue<string>(EnvironmentSettingNames.FrontEndOpenIdUrl);
-            var audience = Configuration.GetValue<string>(EnvironmentSettingNames.FrontEndServiceAppId);
-            services.AddJwtTokenSecurity(metadataAddress, audience);
+            services.AddJwtTokenSecurity(Configuration);
 
             // Health check
             services.AddHealthChecks()
                 .AddLiveCheck()
                 .AddSqlServer(
-                    name: "ChargeDb",
-                    connectionString: Configuration.GetConnectionString(EnvironmentSettingNames.ChargeDbConnectionString));
+                    _ => Configuration.GetConnectionString(EnvironmentSettingNames.ChargeDbConnectionString),
+                    name: "ChargeDb");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

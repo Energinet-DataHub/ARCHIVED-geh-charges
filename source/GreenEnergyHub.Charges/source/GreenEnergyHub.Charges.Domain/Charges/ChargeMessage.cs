@@ -29,7 +29,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             ChargeType type,
             string marketParticipantId,
             string messageId,
-            DocumentType messageType,
+            BusinessReasonCode businessReasonCode,
             Instant messageDateTime)
         {
             Id = Guid.NewGuid();
@@ -37,7 +37,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             Type = type;
             MarketParticipantId = marketParticipantId;
             MessageId = messageId;
-            MessageType = messageType;
+            MessageType = (int)businessReasonCode;
             MessageDateTime = messageDateTime;
         }
 
@@ -78,7 +78,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
         /// The message type
         /// </summary>
         [Required]
-        public DocumentType MessageType { get; }
+        public int MessageType { get; }
 
         /// <summary>
         /// The message date time
@@ -91,14 +91,14 @@ namespace GreenEnergyHub.Charges.Domain.Charges
             ChargeType chargeType,
             string marketParticipantId,
             string messageId,
-            DocumentType messageType,
+            BusinessReasonCode businessReasonCode,
             Instant messageDateTime)
         {
             ArgumentNullException.ThrowIfNull(senderProvidedChargeId);
             ArgumentNullException.ThrowIfNull(chargeType);
             ArgumentNullException.ThrowIfNull(marketParticipantId);
             ArgumentNullException.ThrowIfNull(messageId);
-            ArgumentNullException.ThrowIfNull(messageType);
+            ArgumentNullException.ThrowIfNull(businessReasonCode);
             ArgumentNullException.ThrowIfNull(messageDateTime);
 
             return new ChargeMessage(
@@ -106,7 +106,7 @@ namespace GreenEnergyHub.Charges.Domain.Charges
                 chargeType,
                 marketParticipantId,
                 messageId,
-                messageType,
+                businessReasonCode,
                 messageDateTime);
         }
     }

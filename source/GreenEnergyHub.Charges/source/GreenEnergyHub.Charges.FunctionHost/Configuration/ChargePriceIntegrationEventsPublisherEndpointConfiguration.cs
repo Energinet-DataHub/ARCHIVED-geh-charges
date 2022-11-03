@@ -19,8 +19,6 @@ using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.FunctionHost.Common;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions;
 using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Registration;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
-using GreenEnergyHub.Charges.Infrastructure.Core.Registration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
@@ -33,12 +31,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection.AddScoped<IChargePricesUpdatedEventFactory, ChargePricesUpdatedEventFactory>();
             serviceCollection.AddScoped<IChargePricesUpdatedPublisher, ChargePricesUpdatedPublisher>();
             serviceCollection.AddScoped<IChargePriceIntegrationEventsPublisher, ChargePriceIntegrationEventsPublisher>();
-            serviceCollection.AddScoped<JsonMessageDeserializer<ChargePriceOperationsAcceptedEvent>>();
-
-            serviceCollection.AddMessagingProtobuf()
-                .AddExternalMessageDispatcher<ChargePricesUpdatedEvent>(
-                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.DataHubSenderConnectionString),
-                    EnvironmentHelper.GetEnv(EnvironmentSettingNames.ChargePricesUpdatedTopicName));
+            serviceCollection.AddExternalMessageDispatcher<ChargePricesUpdatedEvent>(EnvironmentSettingNames.ChargePricesUpdatedTopicName);
         }
     }
 }

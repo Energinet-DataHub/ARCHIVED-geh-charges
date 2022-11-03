@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.Dtos.Events;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification.Charges;
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
@@ -34,7 +33,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 ChargePriceOperationsAcceptedReceiptFactory>();
             serviceCollection.AddScoped<BundleSpecification<AvailableChargeReceiptData, ChargePriceOperationsAcceptedEvent>,
                 ChargePriceConfirmationBundleSpecification>();
-            serviceCollection.AddScoped<JsonMessageDeserializer<ChargePriceOperationsAcceptedEvent>>();
         }
     }
 }

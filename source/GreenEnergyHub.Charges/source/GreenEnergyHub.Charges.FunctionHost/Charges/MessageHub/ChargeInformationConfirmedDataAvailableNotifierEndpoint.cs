@@ -31,11 +31,11 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
     {
         private const string FunctionName = nameof(ChargeInformationConfirmedDataAvailableNotifierEndpoint);
         private readonly IAvailableDataNotifier<AvailableChargeReceiptData, ChargeInformationOperationsAcceptedEvent> _availableDataNotifier;
-        private readonly JsonMessageDeserializer<ChargeInformationOperationsAcceptedEvent> _deserializer;
+        private readonly JsonMessageDeserializer _deserializer;
 
         public ChargeInformationConfirmedDataAvailableNotifierEndpoint(
             IAvailableDataNotifier<AvailableChargeReceiptData, ChargeInformationOperationsAcceptedEvent> availableDataNotifier,
-            JsonMessageDeserializer<ChargeInformationOperationsAcceptedEvent> deserializer)
+            JsonMessageDeserializer deserializer)
         {
             _availableDataNotifier = availableDataNotifier;
             _deserializer = deserializer;
@@ -49,7 +49,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges.MessageHub
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             byte[] message)
         {
-            var acceptedEvent = (ChargeInformationOperationsAcceptedEvent)await _deserializer.FromBytesAsync(message).ConfigureAwait(false);
+            var acceptedEvent = await _deserializer
+                .FromBytesAsync<ChargeInformationOperationsAcceptedEvent>(message).ConfigureAwait(false);
             await _availableDataNotifier.NotifyAsync(acceptedEvent).ConfigureAwait(false);
         }
     }

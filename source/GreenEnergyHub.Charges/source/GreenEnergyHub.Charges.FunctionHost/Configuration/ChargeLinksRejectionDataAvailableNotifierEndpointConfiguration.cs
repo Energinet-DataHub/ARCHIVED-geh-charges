@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksRejectionEvents;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification.ChargeLinks;
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
@@ -39,7 +38,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
             serviceCollection
                 .AddScoped<BundleSpecification<AvailableChargeLinksReceiptData, ChargeLinksRejectedEvent>,
                     ChargeLinksRejectionBundleSpecification>();
-            serviceCollection.AddScoped<JsonMessageDeserializer<ChargeLinksRejectedEvent>>();
         }
     }
 }

@@ -12,22 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-
-namespace GreenEnergyHub.Charges.Domain.Dtos.Events
+// ReSharper disable once CheckNamespace - Type is shared so namespace is not determined by project structure/namespace
+namespace Energinet.DataHub.Charges.Contracts.Charge
 {
-    public class MarketParticipantGridAreaUpdatedCommand
+    public enum ChargeMessageType
     {
-        public MarketParticipantGridAreaUpdatedCommand(
-            Guid gridAreaId,
-            Guid gridAreaLinkId)
-        {
-            GridAreaId = gridAreaId;
-            GridAreaLinkId = gridAreaLinkId;
-        }
-
-        public Guid GridAreaId { get; }
-
-        public Guid GridAreaLinkId { get; }
+        D18 = 1, // UpdateChargeInformation
+        D08 = 2, // UpdatePriceInformation
     }
 }
