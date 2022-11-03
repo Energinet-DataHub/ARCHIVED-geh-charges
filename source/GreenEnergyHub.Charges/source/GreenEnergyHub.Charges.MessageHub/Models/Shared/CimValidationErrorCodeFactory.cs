@@ -68,11 +68,11 @@ namespace GreenEnergyHub.Charges.MessageHub.Models.Shared
                 ValidationRuleIdentifier.ChargeOperationIdLengthValidation => ReasonCode.E86,
                 ValidationRuleIdentifier.ChargeOwnerMustMatchSender => ReasonCode.E0I,
                 ValidationRuleIdentifier.ChargeTypeTariffTaxIndicatorOnlyAllowedBySystemOperator => ReasonCode.E0I,
-                ValidationRuleIdentifier.UpdateTaxTariffOnlyAllowedBySystemOperator => ReasonCode.E0I,
                 ValidationRuleIdentifier.MonthlyPriceSeriesEndDateMustBeFirstOfMonthOrEqualChargeStopDate => ReasonCode.D14,
                 ValidationRuleIdentifier.EffectiveDateMustMatchPriceSeriesStartInterval => ReasonCode.E0H,
                 ValidationRuleIdentifier.PriceSeriesResolutionMustMatchChargeResolution => ReasonCode.D14,
                 ValidationRuleIdentifier.PointsRequired => ReasonCode.E87,
+                ValidationRuleIdentifier.PriceSeriesChargeDoesNotExist => ReasonCode.D14,
                 _ => throw new NotImplementedException(),
             };
         }

@@ -60,10 +60,10 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.Validation
         ChargeOperationIdLengthValidation = 49, // VR922 / E86
         ChargeOwnerMustMatchSender = 50, // VR513 / E0I
         ChargeTypeTariffTaxIndicatorOnlyAllowedBySystemOperator = 51, // VR508 / E0I
-        UpdateTaxTariffOnlyAllowedBySystemOperator = 52, // VR508 / E0I
         MonthlyPriceSeriesEndDateMustBeFirstOfMonthOrEqualChargeStopDate = 53, // VR923 / D14
         EffectiveDateMustMatchPriceSeriesStartInterval = 54, // VR924 / E0H
         PriceSeriesResolutionMustMatchChargeResolution = 55, // VR925 / D14
         PointsRequired = 56, // VR926 / E87
+        PriceSeriesChargeDoesNotExist = 57, // VR927 / D14
     }
 }

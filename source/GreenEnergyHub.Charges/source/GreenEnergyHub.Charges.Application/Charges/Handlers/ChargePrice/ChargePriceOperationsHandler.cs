@@ -82,12 +82,12 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers.ChargePrice
                 }
 
                 var charge = await GetChargeAsync(operation).ConfigureAwait(false);
-
                 try
                 {
                     if (charge is null)
                     {
-                        throw new InvalidOperationException($"Charge ID '{operation.SenderProvidedChargeId}' does not exist.");
+                        var invalidRules = ChargeDoesNotExistFailure(charge!, operation);
+                        throw new ChargeOperationFailedException(invalidRules);
                     }
 
                     charge.UpdatePrices(
@@ -114,6 +114,19 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers.ChargePrice
 
             HandleConfirmations(document, operationsToBeConfirmed);
             HandleRejections(document, operationsToBeRejected, rejectionRules);
+        }
+
+        private static IList<IValidationRuleContainer> ChargeDoesNotExistFailure(Charge charge, ChargePriceOperationDto operation)
+        {
+            var rules = new List<IValidationRuleContainer>
+            {
+                new OperationValidationRuleContainer(
+                    new PriceSeriesChargeMustExistRule(charge),
+                    operation.OperationId),
+            };
+
+            var result = ValidationResult.CreateFailure(rules);
+            return result.InvalidRules;
         }
 
         private void HandleConfirmations(
