@@ -217,6 +217,10 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
         public const string PriceSeriesResolutionMustMatchChargeResolutionErrorText =
             "The price series with transaction id {{ChargeOperationId}} contains a resolution {{ChargeResolution}} that does not match the charge with ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} owned by {{ChargeOwner}}.";
 
+        [ErrorMessageFor(ValidationRuleIdentifier.PointsIsRequired)]
+        public const string PointsIsRequiredErrorText =
+            "The price series with transaction id {{ChargeOperationId}} does not contain any prices.";
+
         public const string Unknown = "unknown";
     }
 }
