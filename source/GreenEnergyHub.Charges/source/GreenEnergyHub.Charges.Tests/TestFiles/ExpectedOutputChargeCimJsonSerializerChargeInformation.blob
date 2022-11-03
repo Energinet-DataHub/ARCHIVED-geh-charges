@@ -71,7 +71,6 @@
               "name": "Name2",
               "priceTimeFrame_Period.resolution": "PT1H",
               "taxIndicator": true,
-              "terminationDate": "9999-12-31T23:59:59Z",
               "transparentInvoicing": false,
               "type": {
                 "value": "D03"
@@ -125,7 +124,6 @@
               "name": "Name4",
               "priceTimeFrame_Period.resolution": "P1M",
               "taxIndicator": true,
-              "terminationDate": "9999-12-31T23:59:59Z",
               "transparentInvoicing": false,
               "type": {
                 "value": "D02"
@@ -179,7 +177,6 @@
               "name": "Name6",
               "priceTimeFrame_Period.resolution": "P1M",
               "taxIndicator": true,
-              "terminationDate": "9999-12-31T23:59:59Z",
               "transparentInvoicing": false,
               "type": {
                 "value": "D01"
@@ -233,7 +230,6 @@
               "name": "Name8",
               "priceTimeFrame_Period.resolution": "PT1H",
               "taxIndicator": true,
-              "terminationDate": "9999-12-31T23:59:59Z",
               "transparentInvoicing": false,
               "type": {
                 "value": "D03"
@@ -287,7 +283,6 @@
               "name": "Name10",
               "priceTimeFrame_Period.resolution": "P1M",
               "taxIndicator": true,
-              "terminationDate": "9999-12-31T23:59:59Z",
               "transparentInvoicing": false,
               "type": {
                 "value": "D02"
