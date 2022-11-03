@@ -14,6 +14,7 @@
 
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
 namespace GreenEnergyHub.Charges.WebApi
@@ -22,14 +23,18 @@ namespace GreenEnergyHub.Charges.WebApi
     {
         public static async Task Main(string[] args)
         {
-            using var host = ConfigureApplication();
+            using var host = ConfigureApplication(args);
             await host.RunAsync().ConfigureAwait(false);
         }
 
-        public static IHost ConfigureApplication()
+        public static IHost ConfigureApplication(string[] args = default)
             => new HostBuilder()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    var config = new ConfigurationBuilder()
+                        .AddCommandLine(args)
+                        .Build();
+                    webBuilder.UseConfiguration(config);
                     webBuilder.UseStartup<Startup>();
                 })
                 .Build();
