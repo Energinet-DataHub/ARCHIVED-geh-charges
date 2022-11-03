@@ -12,31 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
 namespace GreenEnergyHub.Charges.WebApi
 {
     public static class Program
     {
-        public static async Task Main(string[] args)
+        public static void Main(string[] args)
         {
-            using var host = ConfigureApplication(args);
-            await host.RunAsync().ConfigureAwait(false);
+            CreateHostBuilder(args).Build().Run();
         }
 
-        public static IHost ConfigureApplication(string[] args = default)
-            => new HostBuilder()
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    var config = new ConfigurationBuilder()
-                        .AddCommandLine(args)
-                        .Build();
-                    webBuilder.UseConfiguration(config);
                     webBuilder.UseStartup<Startup>();
-                })
-                .Build();
+                });
     }
 }

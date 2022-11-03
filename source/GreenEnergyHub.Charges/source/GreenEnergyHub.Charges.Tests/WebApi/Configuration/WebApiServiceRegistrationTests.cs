@@ -36,7 +36,7 @@ namespace GreenEnergyHub.Charges.Tests.WebApi.Configuration
         public void WhenWebApiIsConfigured_ThenAllApplicationDependenciesMustBeRegisteredOnlyOnce()
         {
             // Arrange
-            var host = Program.ConfigureApplication();
+            var host = Program.CreateHostBuilder(null).Build();
             var dependencies = DependencyHelper.FindDependenciesForType(typeof(Program));
 
             // Act
