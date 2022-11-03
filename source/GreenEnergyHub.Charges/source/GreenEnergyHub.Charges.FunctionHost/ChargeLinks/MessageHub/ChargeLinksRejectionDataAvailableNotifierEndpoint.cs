@@ -26,11 +26,11 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
     {
         private const string FunctionName = nameof(ChargeLinksRejectionDataAvailableNotifierEndpoint);
         private readonly IAvailableDataNotifier<AvailableChargeLinksReceiptData, ChargeLinksRejectedEvent> _availableDataNotifier;
-        private readonly JsonMessageDeserializer<ChargeLinksRejectedEvent> _deserializer;
+        private readonly JsonMessageDeserializer _deserializer;
 
         public ChargeLinksRejectionDataAvailableNotifierEndpoint(
             IAvailableDataNotifier<AvailableChargeLinksReceiptData, ChargeLinksRejectedEvent> availableDataNotifier,
-            JsonMessageDeserializer<ChargeLinksRejectedEvent> deserializer)
+            JsonMessageDeserializer deserializer)
         {
             _availableDataNotifier = availableDataNotifier;
             _deserializer = deserializer;
@@ -44,7 +44,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks.MessageHub
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             byte[] message)
         {
-            var rejectedEvent = (ChargeLinksRejectedEvent)await _deserializer.FromBytesAsync(message).ConfigureAwait(false);
+            var rejectedEvent = await _deserializer
+                .FromBytesAsync<ChargeLinksRejectedEvent>(message).ConfigureAwait(false);
             await _availableDataNotifier.NotifyAsync(rejectedEvent).ConfigureAwait(false);
         }
     }

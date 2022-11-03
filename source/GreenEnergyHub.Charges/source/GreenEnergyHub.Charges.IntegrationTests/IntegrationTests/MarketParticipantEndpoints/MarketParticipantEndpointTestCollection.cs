@@ -12,23 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
+using GreenEnergyHub.Charges.IntegrationTest.Core.Fixtures;
+using Xunit;
 
-namespace GreenEnergyHub.Charges.WebApi
+namespace GreenEnergyHub.Charges.IntegrationTests.IntegrationTests.MarketParticipantEndpoints
 {
-    public class Program
+    [CollectionDefinition(nameof(MarketParticipantEndpointTestCollection))]
+    public class MarketParticipantEndpointTestCollection : ICollectionFixture<ChargesManagedDependenciesTestFixture>
     {
-        public static void Main(string[] args)
-        {
-            CreateHostBuilder(args).Build().Run();
-        }
-
-        private static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
     }
 }

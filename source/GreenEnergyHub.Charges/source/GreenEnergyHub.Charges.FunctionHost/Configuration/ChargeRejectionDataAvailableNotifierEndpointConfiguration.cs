@@ -15,7 +15,6 @@
 using GreenEnergyHub.Charges.Domain.Dtos.ChargeInformationCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.Events;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification;
 using GreenEnergyHub.Charges.MessageHub.BundleSpecification.Charges;
 using GreenEnergyHub.Charges.MessageHub.MessageHub;
@@ -44,7 +43,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
                 AvailableDataNotificationFactory<AvailableChargeReceiptData>>();
             serviceCollection.AddScoped<BundleSpecification<AvailableChargeReceiptData, ChargeInformationOperationsRejectedEvent>,
                 ChargeRejectionBundleSpecification>();
-            serviceCollection.AddScoped<JsonMessageDeserializer<ChargeInformationOperationsRejectedEvent>>();
         }
     }
 }

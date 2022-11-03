@@ -62,7 +62,7 @@ namespace GreenEnergyHub.Charges.FunctionHost.MessageHub
             while ((outboxMessage = _outboxMessageRepository.GetNext()) != null)
             {
                 _logger.LogInformation(
-                    "Starting processing of outbox message with correlation id {0}",
+                    "Starting processing of outbox message with correlation id {CorrelationId}",
                     outboxMessage.CorrelationId);
                 var domainEvent = _outboxMessageParser.Parse(outboxMessage.Type, outboxMessage.Data);
                 _correlationContext.SetId(outboxMessage.CorrelationId);

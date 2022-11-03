@@ -25,16 +25,18 @@ namespace GreenEnergyHub.Charges.WebApi
 {
     public static class QueryApiConfiguration
     {
-        public static IServiceCollection AddQueryApi(
-            this IServiceCollection serviceCollection,
-            IConfiguration configuration)
+        public static IServiceCollection AddQueryApi(this IServiceCollection serviceCollection, IConfiguration configuration)
         {
-            var connectionString = configuration.GetConnectionString(EnvironmentSettingNames.ChargeDbConnectionString);
-            if (connectionString == null)
-                throw new ArgumentNullException(EnvironmentSettingNames.ChargeDbConnectionString, "does not exist in configuration settings");
-
             serviceCollection.AddDbContext<QueryDbContext>(
-                options => options.UseSqlServer(connectionString));
+                options =>
+                {
+                    var connectionString = configuration.GetConnectionString(EnvironmentSettingNames.ChargeDbConnectionString);
+
+                    if (connectionString == null)
+                        throw new ArgumentNullException(EnvironmentSettingNames.ChargeDbConnectionString, "does not exist in configuration settings");
+
+                    options.UseSqlServer(connectionString);
+                });
 
             serviceCollection.AddScoped<IData, Data>();
             serviceCollection.AddScoped<IChargesQueryService, ChargesQueryService>();
@@ -49,9 +51,12 @@ namespace GreenEnergyHub.Charges.WebApi
 
         private static void ConfigureIso8601Services(IServiceCollection serviceCollection, IConfiguration configuration)
         {
-            var timeZoneId = configuration.GetValue<string>(EnvironmentSettingNames.LocalTimeZoneName);
-            var timeZoneConfiguration = new Iso8601ConversionConfiguration(timeZoneId);
-            serviceCollection.AddSingleton<IIso8601ConversionConfiguration>(timeZoneConfiguration);
+            serviceCollection.AddSingleton<IIso8601ConversionConfiguration>(_ =>
+            {
+                var timeZoneId = configuration.GetValue<string>(EnvironmentSettingNames.LocalTimeZoneName);
+                var timeZoneConfiguration = new Iso8601ConversionConfiguration(timeZoneId);
+                return timeZoneConfiguration;
+            });
             serviceCollection.AddSingleton<IIso8601Durations, Iso8601Durations>();
         }
     }
