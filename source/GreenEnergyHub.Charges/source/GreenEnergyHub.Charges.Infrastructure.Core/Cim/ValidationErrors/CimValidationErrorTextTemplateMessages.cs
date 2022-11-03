@@ -219,7 +219,7 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Cim.ValidationErrors
 
         [ErrorMessageFor(ValidationRuleIdentifier.PointsIsRequired)]
         public const string PointsIsRequiredErrorText =
-            "The price series with transaction id {{ChargeOperationId}} does not contain any prices.";
+            "Price series with transaction id {{ChargeOperationId}} does not contain any series period with positions for charge with ID {{DocumentSenderProvidedChargeId}} of type {{ChargeType}} owned by {{ChargeOwner}}.";
 
         public const string Unknown = "unknown";
     }
