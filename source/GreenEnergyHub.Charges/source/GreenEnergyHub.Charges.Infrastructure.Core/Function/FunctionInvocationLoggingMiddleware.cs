@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Threading.Tasks;
+using Energinet.DataHub.Core.App.FunctionApp.Middleware.CorrelationId;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Middleware;
 using Microsoft.Extensions.Logging;
@@ -22,10 +24,14 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
     public class FunctionInvocationLoggingMiddleware : IFunctionsWorkerMiddleware
     {
         private readonly ILoggerFactory _loggerFactory;
+        private readonly ICorrelationContext _correlationContext;
 
-        public FunctionInvocationLoggingMiddleware(ILoggerFactory loggerFactory)
+        public FunctionInvocationLoggingMiddleware(
+            ILoggerFactory loggerFactory,
+            ICorrelationContext correlationContext)
         {
             _loggerFactory = loggerFactory;
+            _correlationContext = correlationContext;
         }
 
         public async Task Invoke(FunctionContext context, FunctionExecutionDelegate next)
@@ -39,11 +45,21 @@ namespace GreenEnergyHub.Charges.Infrastructure.Core.Function
                 context.InvocationId);
 
             await next(context).ConfigureAwait(false);
+            var correlationId = string.Empty;
+            try
+            {
+                correlationId = _correlationContext.Id;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
 
             logger.LogInformation(
-                "Function {FunctionName} ended to process a request with invocation ID {InvocationId}",
+                "Function {functionEndpointName} ended to process a request with invocation ID {InvocationId} and correlation ID {correlationId}",
                 functionEndpointName,
-                context.InvocationId);
+                context.InvocationId,
+                correlationId);
         }
     }
 }
