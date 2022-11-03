@@ -114,7 +114,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargeLinksCommands
                         systemOperator.BusinessProcessRole,
                         Guid.Empty),
                     new MarketParticipantDto(
-                        systemOperator.Id,
+                        meteringPointAdministrator.Id,
                         meteringPointAdministrator.MarketParticipantId,
                         meteringPointAdministrator.BusinessProcessRole,
                         Guid.Empty),
