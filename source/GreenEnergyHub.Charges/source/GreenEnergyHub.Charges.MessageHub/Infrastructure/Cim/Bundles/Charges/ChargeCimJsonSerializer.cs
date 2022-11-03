@@ -13,7 +13,9 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using System.Text.Json.Nodes;
+using GreenEnergyHub.Charges.Core.DateTime;
 using GreenEnergyHub.Charges.Domain.Dtos.SharedDtos;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.Charges;
 using GreenEnergyHub.Charges.Infrastructure.Core.Cim.MarketDocument;
@@ -68,7 +70,7 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.Charges
 
         private static JsonObject GetChargeInformation(AvailableChargeData charge)
         {
-            var chargeInformation = new JsonObject()
+            var chargeInformation = new JsonObject
             {
                 { CimChargeConstants.ChargeId, charge.ChargeId },
                 {
@@ -81,10 +83,16 @@ namespace GreenEnergyHub.Charges.MessageHub.Infrastructure.Cim.Bundles.Charges
                 { CimChargeConstants.ChargeName, charge.ChargeName },
                 { CimChargeConstants.ChargeResolution, ResolutionMapper.Map(charge.Resolution) },
                 { CimChargeConstants.TaxIndicator, charge.TaxIndicator },
-                { CimChargeConstants.TerminationDate, charge.EndDateTime.ToDateTimeUtc() },
-                { CimChargeConstants.TransparentInvoicing, charge.TransparentInvoicing },
-                { CimChargeConstants.ChargeType, CimJsonHelper.CreateValueObject(ChargeTypeMapper.Map(charge.ChargeType)) },
             };
+
+            if (charge.EndDateTime != InstantExtensions.GetEndDefault())
+            {
+                chargeInformation.Add(CimChargeConstants.TerminationDate, charge.EndDateTime.ToDateTimeUtc());
+            }
+
+            chargeInformation.Add(CimChargeConstants.TransparentInvoicing, charge.TransparentInvoicing);
+            chargeInformation.Add(CimChargeConstants.ChargeType, CimJsonHelper.CreateValueObject(ChargeTypeMapper.Map(charge.ChargeType)));
+
             return chargeInformation;
         }
     }

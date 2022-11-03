@@ -25,12 +25,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
     public class ChargeInformationMessagePersisterEndpoint
     {
         private const string FunctionName = nameof(ChargeInformationMessagePersisterEndpoint);
-        private readonly JsonMessageDeserializer<ChargeInformationOperationsAcceptedEvent> _deserializer;
+        private readonly JsonMessageDeserializer _deserializer;
         private readonly IChargeInformationMessagePersister _chargeInformationMessagePersister;
         private readonly IUnitOfWork _unitOfWork;
 
         public ChargeInformationMessagePersisterEndpoint(
-            JsonMessageDeserializer<ChargeInformationOperationsAcceptedEvent> deserializer,
+            JsonMessageDeserializer deserializer,
             IChargeInformationMessagePersister chargeInformationMessagePersister,
             IUnitOfWork unitOfWork)
         {
@@ -47,8 +47,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.Charges
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             byte[] message)
         {
-            var chargeCommandAcceptedEvent = (ChargeInformationOperationsAcceptedEvent)await _deserializer
-                .FromBytesAsync(message).ConfigureAwait(false);
+            var chargeCommandAcceptedEvent = await _deserializer
+                .FromBytesAsync<ChargeInformationOperationsAcceptedEvent>(message).ConfigureAwait(false);
 
             await _chargeInformationMessagePersister.PersistMessageAsync(chargeCommandAcceptedEvent).ConfigureAwait(false);
             await _unitOfWork.SaveChangesAsync().ConfigureAwait(false);

@@ -24,12 +24,12 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
     public class ChargeLinksCommandReceiverEndpoint
     {
         private const string FunctionName = nameof(ChargeLinksCommandReceiverEndpoint);
-        private readonly JsonMessageDeserializer<ChargeLinksReceivedEvent> _deserializer;
+        private readonly JsonMessageDeserializer _deserializer;
         private readonly IChargeLinksReceivedEventHandler _chargeLinksReceivedEventHandler;
 
         public ChargeLinksCommandReceiverEndpoint(
             IChargeLinksReceivedEventHandler chargeLinksReceivedEventHandler,
-            JsonMessageDeserializer<ChargeLinksReceivedEvent> deserializer)
+            JsonMessageDeserializer deserializer)
         {
             _chargeLinksReceivedEventHandler = chargeLinksReceivedEventHandler;
             _deserializer = deserializer;
@@ -43,8 +43,8 @@ namespace GreenEnergyHub.Charges.FunctionHost.ChargeLinks
                 Connection = EnvironmentSettingNames.DomainEventListenerConnectionString)]
             byte[] data)
         {
-            var chargeLinkReceivedEvent =
-                (ChargeLinksReceivedEvent)await _deserializer.FromBytesAsync(data).ConfigureAwait(false);
+            var chargeLinkReceivedEvent = await _deserializer
+                .FromBytesAsync<ChargeLinksReceivedEvent>(data).ConfigureAwait(false);
             await _chargeLinksReceivedEventHandler.HandleAsync(chargeLinkReceivedEvent).ConfigureAwait(false);
         }
     }

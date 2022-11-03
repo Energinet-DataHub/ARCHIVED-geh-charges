@@ -13,8 +13,6 @@
 // limitations under the License.
 
 using GreenEnergyHub.Charges.Application.Charges.Handlers.ChargeInformation;
-using GreenEnergyHub.Charges.Domain.Dtos.Events;
-using GreenEnergyHub.Charges.Infrastructure.Core.MessagingExtensions.Serialization;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GreenEnergyHub.Charges.FunctionHost.Configuration
@@ -23,7 +21,6 @@ namespace GreenEnergyHub.Charges.FunctionHost.Configuration
     {
         internal static void ConfigureServices(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<JsonMessageDeserializer<ChargeInformationOperationsAcceptedEvent>>();
             serviceCollection.AddScoped<IChargeInformationMessagePersister, ChargeInformationMessagePersister>();
         }
     }
