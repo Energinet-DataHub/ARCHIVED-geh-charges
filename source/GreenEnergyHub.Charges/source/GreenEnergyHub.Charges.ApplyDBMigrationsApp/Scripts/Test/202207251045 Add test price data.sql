@@ -10,9 +10,9 @@ DECLARE @fee_charge_id UNIQUEIDENTIFIER = (SELECT TOP(1) [Id] from [Charges].[Ch
 DECLARE @subscription_charge_id UNIQUEIDENTIFIER = (SELECT TOP(1) [Id] from [Charges].[Charge] where [SenderProvidedChargeId] = 'TestSub');
 
 -- Creating 24 ChargePoints for TestTariff, it has a PT1H resolution
-DECLARE @point_time [datetime2] = '2022-02-1 23:00:00';
+DECLARE @point_time [datetime2] = '2022-10-29 22:00:00';
 DECLARE @minute_step int = 60
-DECLARE @numPoints int = 24
+DECLARE @numPoints int = 25
 DECLARE @pointCounter int = 1.0;
 
 WHILE @pointCounter <= @numPoints
