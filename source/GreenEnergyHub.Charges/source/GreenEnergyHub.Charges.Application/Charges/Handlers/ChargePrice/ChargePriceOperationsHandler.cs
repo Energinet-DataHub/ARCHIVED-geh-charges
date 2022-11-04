@@ -118,7 +118,7 @@ namespace GreenEnergyHub.Charges.Application.Charges.Handlers.ChargePrice
         }
 
         private static ValidationResult CreateFailure(
-            PriceSeriesChargeMustExistRule chargeExist,
+            IValidationRule chargeExist,
             ChargePriceOperationDto operation)
         {
             var rules = new List<IValidationRuleContainer>
