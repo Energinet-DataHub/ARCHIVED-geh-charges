@@ -1,5 +1,9 @@
 # Energinet.DataHub.Charges.Clients Release notes
 
+## Version 4.4.3
+
+Added `Role` to `MarketParticipantV1Dto`
+
 ## Version 4.4.2
 
 `ChargeMessageType` is changed to reflect Charge BusinessReasonCode
