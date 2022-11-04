@@ -40,7 +40,7 @@ namespace GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.Inpu
 
             _expectedPointCount = resolution switch
             {
-                Resolution.Unknown => throw new ArgumentException("Resolution may not be unknown"),
+                Resolution.Unknown => 0,
                 Resolution.PT15M => interval.Duration.TotalMinutes / 15,
                 Resolution.PT1H => interval.Duration.TotalHours,
                 Resolution.P1D => interval.Duration.TotalDays,
