@@ -13,11 +13,14 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
 using Energinet.DataHub.Core.TestCommon.AutoFixture.Attributes;
 using FluentAssertions;
 using GreenEnergyHub.Charges.Domain.Charges;
+using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands;
 using GreenEnergyHub.Charges.Domain.Dtos.ChargePriceCommands.Validation.InputValidation.ValidationRules;
 using GreenEnergyHub.Charges.TestCore.Builders.Command;
+using Microsoft.Azure.Amqp.Serialization;
 using NodaTime;
 using Xunit;
 using Xunit.Categories;
@@ -80,19 +83,28 @@ namespace GreenEnergyHub.Charges.Tests.Domain.Dtos.ChargePriceCommands.Validatio
         }
 
         [Fact]
-        public void IsValid_WhenCalledWithUnknownPriceResolution_ShouldThrowArgumentException()
+        public void IsValid_WhenCalledWithUnknownPriceResolution_ShouldParse()
         {
             // Arrange
-            var dto = new ChargePriceOperationDtoBuilder().WithPriceResolution(Resolution.Unknown).Build();
+            var dto = new ChargePriceOperationDto(
+                "operationId",
+                ChargeType.Tariff,
+                "chargeId",
+                "owner",
+                Instant.MinValue,
+                Instant.MinValue,
+                Instant.MinValue,
+                Instant.MinValue,
+                Resolution.Unknown,
+                new List<Point>());
+
+            var sut = new NumberOfPointsMatchTimeIntervalAndResolutionRule(dto);
 
             // Act
-            Action act = () =>
-            {
-                _ = new NumberOfPointsMatchTimeIntervalAndResolutionRule(dto);
-            };
+            var actual = sut.IsValid;
 
             // Assert
-            act.Should().Throw<ArgumentException>();
+            actual.Should().BeTrue("To avoid throwing an exception, instead it parses with 0 points expected");
         }
 
         [Fact]
